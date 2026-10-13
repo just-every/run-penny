@@ -44,6 +44,8 @@ async function navigateFrame({parent,parentOrigin,target,allowed,capture,label,w
 }
 export async function reviewFrameOrigins({page,browser,origin,capture,width,db,runtime}) {
  const allowed=await parentServer(origin),denied=await parentServer(origin);let context
+ // Reloaded textarea text becomes part of its wrapping label's text. Keep the native form/control identity.
+ const origins=page.getByRole('form',{name:'Portal embedding',exact:true}).locator('textarea[name=origins]')
  try {
   // The completeness fixture starts unpublished; earlier rejection checks consume 00–04.
   const request=await db.prepare('SELECT slug FROM requests WHERE id=?').bind(proofId(1,55)).first()
@@ -63,11 +65,11 @@ export async function reviewFrameOrigins({page,browser,origin,capture,width,db,r
    {name:'updates',path:'/portal/updates',finalPath:'/portal/updates'},
   ]
   await page.goto(origin+'/app/settings')
-  await page.getByLabel('Allowed parent origins',{exact:true}).fill(allowed.origin)
+  await origins.fill(allowed.origin)
   const saved=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/operator/settings/frames'&&r.request().method()==='PUT')
   await page.getByRole('button',{name:'Save portal embedding',exact:true}).click()
   assert.equal((await saved).status(),200)
-  await page.reload();assert.equal(await page.getByLabel('Allowed parent origins',{exact:true}).inputValue(),allowed.origin)
+  await page.reload();assert.equal(await origins.inputValue(),allowed.origin)
   await capture('REQ-027-persisted-frame-settings',page)
   context=await browser.newContext({viewport:{width,height:width===390?844:900},extraHTTPHeaders:{'CF-Connecting-IP':'198.51.100.40'}})
   await pacePublicContext(context,runtime,'198.51.100.40')
@@ -82,11 +84,11 @@ export async function reviewFrameOrigins({page,browser,origin,capture,width,db,r
   try{for(const path of ['/app/settings','/signin','/setup'])
    await navigateFrame({parent:privateParent,parentOrigin:allowed.origin,target:{path},allowed:false,capture,label:`REQ-027-private-iframe-${path.slice(1).replaceAll('/','-')}`,width,axe})
   }finally{await privateParent.close()}
-  await page.getByLabel('Allowed parent origins',{exact:true}).fill('')
+  await origins.fill('')
   const cleared=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/operator/settings/frames'&&r.request().method()==='PUT')
   await page.getByRole('button',{name:'Save portal embedding',exact:true}).click()
   assert.equal((await cleared).status(),200)
-  await page.reload();assert.equal(await page.getByLabel('Allowed parent origins',{exact:true}).inputValue(),'')
+  await page.reload();assert.equal(await origins.inputValue(),'')
   await capture('REQ-027-cleared-frame-settings',page)
   for(const target of targets)
    await navigate({parentOrigin:allowed.origin,target,allowed:false,label:`REQ-027-cleared-iframe-${target.name}`})

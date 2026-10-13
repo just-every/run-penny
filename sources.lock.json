@@ -7998,7 +7998,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-security.mjs": {
-      "sha256": "7b5b075d543f2eb2029b0f300a4e916fda28cb7a349ff67ed2c33ed66a9f5913",
+      "sha256": "4cc1bd98204cf900eeb7f9ee467a836b683a5dc01074877eda340f1a52f40c68",
       "executable": false
     },
     "tests/browser/operator-completeness-transport.mjs": {
