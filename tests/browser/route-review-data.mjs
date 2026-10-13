@@ -7,6 +7,8 @@ register({ tsconfig: 'tsconfig.app.json' })
 const { importPennySample } = await import('../../src/core/features/sample-data/service.ts')
 const { createDatabaseConnection } = await import('../../src/core/platform/database.ts')
 const { unsubscribeUrl } = await import('../../src/core/features/notifications/unsubscribe.ts')
+const { releaseDraftSchema, saveReleaseDraft } = await import('../../src/core/features/releases/drafts.ts')
+const { publishRelease } = await import('../../src/core/features/releases/publication.ts')
 
 export const routeFixtures = {
   account: 'northstar-health',
@@ -26,6 +28,8 @@ export async function seedRouteReviewDatabase(db) {
   const sample = JSON.parse(await readFile(resolve('sample-data/penny.v1.json'), 'utf8'))
   const now = new Date().toISOString()
   sample.operators[0].email = 'owner@penny.invalid'
+  const nativeOwner = await db.prepare("SELECT id FROM oa_operators WHERE email = ? AND role = 'owner' AND status = 'active'").bind(sample.operators[0].email).first()
+  if (!nativeOwner) throw new Error('Bootstrap the native route-review owner before seeding the sample.')
   // The signed-in owner already exists, so the sample's operator keeps that identity.
   const owner = await db.prepare('SELECT id FROM operators WHERE email = ?').bind('owner@penny.invalid').first()
   if (owner && owner.id !== sample.operators[0].id) {
@@ -58,15 +62,28 @@ export async function seedRouteReviewDatabase(db) {
   sample.requests[0].publicState = 'shipped'
   sample.requests[0].comments[0].body = `We shipped the identity improvement ${longCustomerText}.`
   sample.evidence[0].wording = `Customer evidence records the account blocker ${longCustomerText}.`
-  sample.releases[0].state = 'published'
-  sample.releases[0].publishedAt = now
+  sample.releases[0].state = 'draft'
+  sample.releases[0].publishedAt = null
   sample.releases[0].version.title = `SCIM ${longCustomerText}`
   sample.releases[0].version.body = `Admins can provision and deprovision users. Customer reference: ${longCustomerText}.`
-  sample.releases[0].version.publicationDate = now
-  sample.releases[0].version.isPortalCurrent = true
+  sample.releases[0].version.publicationDate = now.slice(0, 10)
+  sample.releases[0].version.isPortalCurrent = false
   sample.releases[0].version.outcomePrompt = `Did this solve the identity problem ${longCustomerText}?`
 
   await importPennySample(createDatabaseConnection(db), sample, now)
+  // Capture current approvals and mappings, then let publication seal its own snapshots.
+  const release = sample.releases[0]
+  await saveReleaseDraft(db, releaseDraftSchema.parse({
+    title: release.version.title,
+    body: release.version.body,
+    releaseType: release.version.releaseType,
+    tagIds: release.version.subjectTagIds,
+    publicationDate: release.version.publicationDate,
+    setupUrl: release.version.setupUrl ?? '',
+    targetIds: release.targetRoadmapItemIds,
+    authorOperatorId: release.authorOperatorId,
+  }), release.slug, now)
+  await publishRelease(db, release.slug, now)
   routeFixtures.publicRoadmapSlug = (await db.prepare('SELECT p.public_slug AS slug FROM roadmap_publications p JOIN roadmap_items i ON i.id = p.roadmap_item_id WHERE i.slug = ?').bind('scim-provisioning').first()).slug
   await db.prepare(`
     INSERT INTO requests (
