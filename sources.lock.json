@@ -613,7 +613,7 @@
       "executable": false
     },
     ".oxlintrc.json": {
-      "sha256": "b3a576e37eb43eabda9833183a69ffdb4730209d4acc91abc5cf2702211c57bb",
+      "sha256": "4055ddbb6bb52cef76572d76a29a38c9bbe1d6dfd0b519c711d2f400005d71d4",
       "executable": false
     },
     "ACCEPTANCE.md": {
@@ -7781,7 +7781,7 @@
       "executable": false
     },
     "tests/browser/no-mail-journey.mjs": {
-      "sha256": "053b2da8a7b02084825161453dd9f2fcb5f9516ba1e85ae1868e857ce76c7a55",
+      "sha256": "9a8c3488360a9b2c2ddbb2b35a7219573f0dd326a89db874903aed6502519468",
       "executable": false
     },
     "tests/browser/operator-navigation.mjs": {
@@ -8069,7 +8069,7 @@
       "executable": false
     },
     "tests/e2e/worker/read-spine.test.ts": {
-      "sha256": "d8ee19f437856c2e5c6c659908b205fdd96416b1c1590a9e36498c67f9aeb4c2",
+      "sha256": "ec19763cae29488e4e314d4e57ac23c50e1c9bd03b90d916e8e7c91b923c5476",
       "executable": false
     },
     "tests/e2e/worker/requester-activity-identity.test.ts": {

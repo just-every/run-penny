@@ -25,7 +25,7 @@ try {
    assert.equal(await page.getByLabel('Operator email',{exact:true}).isEnabled(),true)
    await audit(page,'G.3-no-mail-signin',{axeZero:true})
    await page.getByRole('link',{name:'Back to feedback',exact:true}).click()
-   await page.waitForURL(url=>url.pathname==='/portal/feedback')
+   await page.waitForURL(url=>url.pathname==='/')
    await page.getByRole('heading',{name:'What should we improve?',exact:true}).waitFor()
    await audit(page,'G.3-no-mail-public-reading',{axeZero:true})
    await page.goto(runtime.origin+'/portal/feedback/new',{waitUntil:'networkidle'})

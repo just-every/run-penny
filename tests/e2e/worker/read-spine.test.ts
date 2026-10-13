@@ -182,9 +182,10 @@ describe('D1 read spine', () => {
         .bind('01J0000000000000000000000D', 'withdrawn-request', '0000000000000000000000000C', 'Withdrawn', 'Withdrawn', 'approved', 'withdrawn', 'Withdrawn', 'Withdrawn', now, now, now, now),
     ])
     const browser = { headers: { Accept: 'text/html' } }
+    const boardQuery = '?board=enterprise-identity&sort=votes'
     const [portal, portalSlash, feedback, existing, withdrawn, internal, draftRelease, submission, unknown] = await Promise.all([
-      request('/portal', { ...browser, redirect: 'manual' }),
-      request('/portal/', { ...browser, redirect: 'manual' }),
+      request(`/portal${boardQuery}`, { ...browser, redirect: 'manual' }),
+      request(`/portal/${boardQuery}`, { ...browser, redirect: 'manual' }),
       request('/portal/feedback', { ...browser, redirect: 'manual' }),
       request('/portal/feedback/scim-provisioning', browser),
       request('/portal/feedback/withdrawn-request', browser),
@@ -196,7 +197,15 @@ describe('D1 read spine', () => {
 
     expect([portal.status, portalSlash.status, feedback.status, existing.status, withdrawn.status, internal.status, draftRelease.status, submission.status, unknown.status])
       .toEqual([302, 302, 200, 200, 410, 404, 404, 200, 404])
-    expect([portal.headers.get('Location'), portalSlash.headers.get('Location')]).toEqual(['/portal/feedback', '/portal/feedback'])
+    const publicBoardLocations = [portal.headers.get('Location'), portalSlash.headers.get('Location')]
+    expect(publicBoardLocations).toEqual([`/${boardQuery}`, `/${boardQuery}`])
+    const publicBoards = await Promise.all(publicBoardLocations.map((location) => request(location!, browser)))
+    expect(publicBoards.map((response) => response.status)).toEqual([200, 200])
+    for (const response of publicBoards) {
+      const html = await response.text()
+      expect(html).toContain('SCIM provisioning')
+      expect(html).not.toContain('Shared external threads')
+    }
     await expect(feedback.clone().text()).resolves.toContain('What should we improve?')
     const existingHtml = existing.clone()
     await expect(existingHtml.text()).resolves.toContain('Automated provisioning')
