@@ -3,24 +3,40 @@ import { Chip, type ChipTone } from '@/core/ui/app/Chip'
 import { dataLabelClass, fieldLabelClass, primaryButtonClass, secondaryButtonClass } from '@/core/ui/app/classes'
 import { fieldClass, postJson } from '@/core/features/auth/client-mutations'
 import { usePublicResource } from '@/core/features/portal/ui/public-resource'
+import type { OperatorRequestCard } from '@/core/shared/api/operator'
 import { useRouter } from '@tanstack/react-router'
 import { useState, type FormEvent } from 'react'
 import { OperatorRequestControls } from './operator-request-controls'
+import type { ModerationAvailability } from '../operator-availability'
 
-export interface QueueRequest { slug: string; title: string; description: string; boardSlug: string; displayName: string | null; moderationState: string; reason: string | null }
+export interface QueueRequest extends Pick<OperatorRequestCard, 'slug' | 'title' | 'description' | 'moderationState' | 'publicState'> {
+  boardSlug: string
+  displayName: string | null
+  reason: string | null
+  moderationAvailability: ModerationAvailability
+}
 
 const stateTones: Record<string, ChipTone> = { awaiting_review: 'copper', approved: 'moss', rejected: 'muted' }
+const historyLabels = { withdrawn: 'Withdrawn', merged: 'Merged', inactive_author: 'Inactive author' }
+const historyDescriptions = {
+  withdrawn: 'This feedback request was withdrawn. Its private context is retained; moderation is unavailable.',
+  merged: 'This feedback request was merged into another request. Its private context is retained; moderation is unavailable while it remains merged.',
+  inactive_author: 'The author is blocked or their identity was merged. Private context is retained; moderation is unavailable.',
+}
 
 export function ModerationCard({ row, report }: { row: QueueRequest; report: (message: string) => void }) {
+  const history = row.moderationAvailability === 'current' ? null : row.moderationAvailability
+  const statusLabel = history ? historyLabels[history] : row.moderationState.replaceAll('_', ' ')
   return (
     <OperatorCard as="article" id={`request-${row.slug}`} className="p-5 sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="min-w-0 text-xl font-bold tracking-[-0.02em] break-words text-penny-ink">{row.title}</h2>
-        <Chip tone={stateTones[row.moderationState] ?? 'neutral'}><span className="first-letter:uppercase">{row.moderationState.replaceAll('_', ' ')}</span></Chip>
+        <Chip tone={history ? 'muted' : stateTones[row.moderationState] ?? 'neutral'}><span className="first-letter:uppercase">{statusLabel}</span></Chip>
       </div>
-      {row.moderationState !== 'awaiting_review' ? (
+      {history || row.moderationState !== 'awaiting_review' ? (
         <>
           <p className="mt-3 leading-7 whitespace-pre-wrap text-penny-ink">{row.description}</p>
+          {history ? <p className="mt-3 text-sm text-penny-muted">{historyDescriptions[history]}</p> : null}
           {row.reason ? <p className="mt-3 text-sm text-penny-muted"><span className={dataLabelClass}>Review reason</span><br />{row.reason}</p> : null}
         </>
       ) : <ReviewForm row={row} report={report} />}

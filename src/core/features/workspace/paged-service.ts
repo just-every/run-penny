@@ -4,12 +4,14 @@ import { DecisionsReadRepository } from '@/core/features/decisions/read-reposito
 import { EvidenceReadRepository } from '@/core/features/evidence/read-repository'
 import { ReleasesReadRepository } from '@/core/features/releases/read-repository'
 import { RequestsReadRepository } from '@/core/features/requests/read-repository'
+import { currentModerationRequest } from '@/core/features/requests/moderation-claim'
+import { moderationAvailabilitySql, type ModerationAvailability } from '@/core/features/requests/operator-availability'
 import { RoadmapReadRepository } from '@/core/features/roadmap/read-repository'
 import { listIds } from './list-repository'
 import type { ListEntity, ListQuery } from './list-query'
 export interface OperatorRequesterCard {id:string;displayName:string;email:string|null}
-export async function pagedList(database:DatabaseConnection,entity:ListEntity,query:ListQuery) {
- const {ids,...page}=await listIds(database,entity,query)
+export async function pagedList(database:DatabaseConnection,entity:ListEntity,query:ListQuery,extra?:string) {
+ const {ids,...page}=await listIds(database,entity,query,extra)
  const rows = entity==='requests' ? await new RequestsReadRepository(database).list(ids)
  : entity==='evidence' ? await new EvidenceReadRepository(database).list(undefined,undefined,ids)
  : entity==='decisions' ? await new DecisionsReadRepository(database).list(ids)
@@ -21,10 +23,16 @@ export async function pagedList(database:DatabaseConnection,entity:ListEntity,qu
  return {items,...page}
 }
 export async function pagedModeration(database:DatabaseConnection,query:ListQuery) {
- const page=await pagedList(database,'requests',query)
- const reasons=await database.binding.prepare(`SELECT request_id AS id,reason FROM request_moderation_events WHERE id IN (SELECT id FROM request_moderation_events ev WHERE ev.subject_type='request' AND ev.subject_id IN (${page.items.length?page.items.map(()=>'?').join(','):'NULL'}) AND ev.id=(SELECT id FROM request_moderation_events e WHERE e.subject_type='request' AND e.subject_id=ev.subject_id ORDER BY e.rowid DESC LIMIT 1)) LIMIT 25`).bind(...page.items.map(row=>row.id)).all<{id:string;reason:string|null}>()
+ // Account continuations, explicit withdrawn status and focused items include history; ordinary
+ // moderation uses the same eligibility predicate as overview and verdicts.
+ const page=await pagedList(database,'requests',query,query.account||query.status==='withdrawn'||query.item?undefined:currentModerationRequest('x'))
+ const details=await database.binding.prepare(`SELECT r.id,${moderationAvailabilitySql('r')} AS moderationAvailability,
+ (SELECT reason FROM request_moderation_events e WHERE e.subject_type='request' AND e.subject_id=r.id ORDER BY e.rowid DESC LIMIT 1) AS reason
+ FROM requests r WHERE r.id IN (${page.items.length?page.items.map(()=>'?').join(','):'NULL'}) LIMIT 25`).bind(...page.items.map(row=>row.id)).all<{id:string;reason:string|null;moderationAvailability:ModerationAvailability}>()
  return {...page,items:page.items.map(row=>{
  if(!('board' in row)||!('author' in row))throw new Error('Invalid request projection')
- return {...row,boardSlug:row.board.slug,displayName:row.author?.displayName??null,reason:reasons.results.find(reason=>reason.id===row.id)?.reason??null}
+ const detail=details.results.find(detail=>detail.id===row.id)
+ if(!detail)throw new Error('Missing moderation availability')
+ return {...row,boardSlug:row.board.slug,displayName:row.author?.displayName??null,reason:detail.reason,moderationAvailability:detail.moderationAvailability}
  })}
 }

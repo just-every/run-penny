@@ -1,3 +1,4 @@
+import type { OperatorPage } from '../../../src/core/features/workspace/list-query'
 import { digest } from '../../../src/core/features/auth/native-tokens'
 import { applyD1Migrations } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
@@ -21,7 +22,7 @@ describe('Writable evidence',()=>{
   expect(target).toBeTruthy()
   for(const stance of ['supporting','contradicting']){await link(e.id,b.id,stance);await json(request(`/api/operator/evidence/${e.id}/links`,'PUT',{target:'request',targetId:target,stance}));expect(await row('evidence_items',e.id)).toEqual(before);expect(await row('evidence_versions',e.versionId)).toEqual(version)}
   expect(await row('decisions',d.id)).toMatchObject({state:'ready'})
-  const queue=await json<Record<string,unknown>[]>(request('/api/operator/decisions'));expect(queue.find(item=>item.id===d.id)).toMatchObject({lastAction:'decision.evidence_changed',evidenceCount:1})
+  const queue=await json<OperatorPage<Record<string,unknown>>>(request('/api/operator/decisions'));expect(queue.items.find(item=>item.id===d.id)).toMatchObject({lastAction:'decision.evidence_changed',evidenceCount:1})
   await link(e.id,b.id,'supporting','DELETE');expect(await row('decisions',d.id)).toMatchObject({state:'draft'})
   await json(request(`/api/operator/evidence/${e.id}/links`,'DELETE',{target:'request',targetId:target}));expect(await row('evidence_items',e.id)).toEqual(before)
   expect((await request(`/api/operator/evidence/${e.id}/review`,'POST',{reviewed:true,reason:' '})).status).toBe(422)

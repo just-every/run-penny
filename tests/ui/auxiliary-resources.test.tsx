@@ -15,7 +15,8 @@ vi.mock('@/core/app/ui/operator-resource', () => ({
 }))
 const contextPath = '/api/operator/roadmap/item/context'
 const optionsPath = '/api/operator/loop/options'
-const evidencePath = '/api/operator/evidence'
+const evidencePath = '/api/operator/evidence?q=&page=1'
+const evidencePage = { items: [{ id: 'linked-evidence', wording: 'Stored evidence' }], total: 2, page: 1, pageSize: 1 }
 const item = { id: 'item', status: 'planned' } as OperatorRoadmapCard
 const root = createRootRoute()
 const routeTree = root.addChildren([createRoute({ getParentRoute: () => root, path: '/signin' })])
@@ -26,11 +27,11 @@ beforeEach(() => {
   resources.clear()
   resources.set(contextPath, { kind: 'ready', data: {
     item: { title: 'Internal title', summary: 'Internal summary' },
-    evidenceIds: ['linked-evidence'], proposed: [{ id: 'request', title: 'Selected request' }],
+    evidenceIds: ['linked-evidence', 'offscreen-evidence'], proposed: [{ id: 'request', title: 'Selected request' }],
     mappings: [], publication: null, transitions: [],
   } })
   resources.set(optionsPath, { kind: 'ready', data: { operators: [], decisions: [], bets: [], boards: [], requests: [] } })
-  resources.set(evidencePath, { kind: 'ready', data: [{ id: 'linked-evidence', wording: 'Stored evidence' }] })
+  resources.set(evidencePath, { kind: 'ready', data: evidencePage })
 })
 describe('Auxiliary editing resources', () => {
   it('[ROAD-002][EVID-004] cannot save an evidence replacement while its selector is unavailable', () => {
@@ -41,9 +42,19 @@ describe('Auxiliary editing resources', () => {
     expect(edit).toMatch(/<button[^>]*\sdisabled=/)
     expect(edit).toContain('Could not load linked evidence')
     expect(edit).toContain('Try again')
-    resources.set(evidencePath, { kind: 'ready', data: [{ id: 'linked-evidence', wording: 'Stored evidence' }] })
+    for (const kind of ['loading', 'not_found', 'session_expired'] as const) {
+      resources.set(evidencePath, { kind })
+      const unavailable = render(<RoadmapActions item={item} onSaved={() => {}} />)
+        .match(/<form[^>]*aria-label="Edit internal record"[\s\S]*?<\/form>/)?.[0]
+      expect(unavailable).toMatch(/<button[^>]*\sdisabled=/)
+      expect(unavailable).toContain('name="evidenceIds" value="linked-evidence"')
+      expect(unavailable).toContain('name="evidenceIds" value="offscreen-evidence"')
+    }
+    resources.set(evidencePath, { kind: 'ready', data: evidencePage })
     const ready = render(<RoadmapActions item={item} onSaved={() => {}} />)
-    expect(ready).toMatch(/checked=""[^>]*value="linked-evidence"/)
+    expect(ready).toMatch(/type="checkbox" checked=""/)
+    expect(ready).toContain('name="evidenceIds" value="linked-evidence"')
+    expect(ready).toContain('name="evidenceIds" value="offscreen-evidence"')
     expect(ready).not.toMatch(/<button[^>]*\sdisabled=/)
   })
   for (const path of [contextPath, optionsPath]) {

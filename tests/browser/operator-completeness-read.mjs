@@ -57,7 +57,7 @@ export async function reviewDurableLists({page,origin,capture}) {
   await page.goto(origin+path+(path.includes('?')?'&':'?')+query+'&page=2')
   await page.getByRole('link',{name:'Previous page',exact:true}).waitFor()
   assert.equal(await page.getByLabel('Tag',{exact:true}).inputValue(),'proof-tag')
-  assert.equal(await page.getByLabel('Sort',{exact:true}).inputValue(),'age')
+  assert.equal(await page.getByRole('combobox',{name:'Sort',exact:true}).inputValue(),'age')
   await page.reload()
   assert.equal(await page.getByLabel('Tag',{exact:true}).inputValue(),'proof-tag')
   await page.getByRole('link',{name:'Next page',exact:true}).click()
@@ -126,7 +126,7 @@ async function reviewAccountCollections({page,origin,capture}) {
   assert.equal(await page.getByLabel('Account',{exact:true}).inputValue(),account.slug,'[EVID-005] account relationship filter is visible')
   await page.reload()
   assert.equal(await page.getByLabel('Account',{exact:true}).inputValue(),account.slug,'[EVID-005] filtered continuation survives reload')
-  if(entity==='evidence')assert.equal(await page.getByLabel('Sort',{exact:true}).inputValue(),'observed','[EVID-005] full chronology retains observed-time sorting')
+  if(entity==='evidence')assert.equal(await page.getByRole('combobox',{name:'Sort',exact:true}).inputValue(),'observed','[EVID-005] full chronology retains observed-time sorting')
   const route=new URL(page.url()),ids=[]
   for(let number=1;number<=Math.ceil(total/25);number++) {
    const query=new URLSearchParams(route.search);query.set('page',String(number))

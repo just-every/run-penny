@@ -1,6 +1,7 @@
+import { nativeOwnerCookie } from '../../predecessor-native-authority'
 import { applyD1Migrations,type D1Migration } from 'cloudflare:test'
 import { inject,it,expect } from 'vitest'
-import { env,createUlid,opaqueToken,digest,call } from './requester-board-fixture'
+import { env,createUlid,opaqueToken,digest,call,bindings } from './requester-board-fixture'
 it('[DATA-002 REQ-009] populated 0005 chain upgrades preserving product cells and R2 bytes with explicit predecessor credential revocation',async()=>{
  const migrations=inject('migrations') as D1Migration[]
  await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0006'))
@@ -48,7 +49,7 @@ it('[DATA-002 REQ-009] populated 0005 chain upgrades preserving product cells an
  expect((await call('/api/auth/magic-link',{email:'reviewer@example.test'})).status).toBe(202)
  const link=(await db.prepare("SELECT token FROM local_auth_outbox WHERE recipient='reviewer@example.test'").first<{token:string}>())!
  const signedIn=await call('/api/auth/magic-link/consume?token='+link.token);expect(signedIn.status).toBe(302)
- const headers={Cookie:signedIn.headers.get('Set-Cookie')!.split(';')[0]}
+ const headers={Cookie:`${signedIn.headers.get('Set-Cookie')!.split(';')[0]}; ${await nativeOwnerCookie(bindings)}`,Origin:bindings.APP_ORIGIN}
  for(const source of [a,b])expect((await call(`/api/operator/requests/${slug(source)}/unmerge`,{},headers)).status).toBe(200)
  expect((await db.prepare('SELECT request_id,requester_id FROM request_votes').all()).results).toEqual([{request_id:a,requester_id:who}])
  expect((await db.prepare('SELECT request_id,requester_id FROM request_follows').all()).results).toEqual([{request_id:a,requester_id:who}])

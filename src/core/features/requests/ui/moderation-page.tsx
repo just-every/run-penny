@@ -5,13 +5,16 @@ import { Icon } from '@/core/ui/app/Icon'
 import { secondaryButtonClass } from '@/core/ui/app/classes'
 import { useOperatorList, ListControls } from '@/core/features/workspace/ui/list-controls'
 import { useState } from 'react'
+import { useLocation } from '@tanstack/react-router'
 import { ModerationCard, type QueueRequest } from './moderation-card'
 
 export function ModerationPage() {
   const [resource, refresh, page] = useOperatorList<QueueRequest>('/api/operator/moderation'), [message, setMessage] = useState('')
+  const includesAccountHistory = new URLSearchParams(useLocation().searchStr).has('account')
   return (
     <section>
       <OperatorPageHeader eyebrow="Customer feedback" title="Review feedback before it becomes public." art={resource.kind === 'ready' && resource.data.length === 0 || resource.kind === 'error' ? null : { note: 'Nothing goes public until approved.' }} action={<a href="/app/settings" className={secondaryButtonClass}><Icon name="settings" />Feedback settings</a>}>Approve customer-safe wording, board and display name explicitly. Original evidence remains private and unchanged.</OperatorPageHeader><ListControls page={page} entity="requests"/>
+      {includesAccountHistory ? <p className="text-sm text-penny-muted">Account results include current feedback and retained history, including withdrawn and merged requests and inactive authors.</p> : null}
       <p role="status" className="mt-5 text-base font-semibold text-penny-ink empty:hidden">{message}</p>
       <div className="mt-6 sm:mt-8">
         {resource.kind === 'loading' ? <OperatorResourceLoading label="Loading moderation queue…" /> : null}

@@ -5,10 +5,8 @@ import { fieldLabelClass, insetPanelClass, primaryButtonClass, secondaryButtonCl
 import { fieldClass } from '@/core/features/auth/client-mutations'
 import { quietButtonClass } from './form-classes'
 import type { SettingsAct } from './settings-boards'
-import { CustomFieldSettings } from '@/core/features/settings/ui/custom-field-settings'
 
 export interface Tag { id: string; name: string }
-export interface CustomField { id: string; name: string; entity_type: string; field_type: string }
 
 const input = fieldClass
 
@@ -41,14 +39,4 @@ export function CreateTagCard({ act }: { act: SettingsAct }) {
       </form>
     </div>
   )
-}
-
-export function FieldList({ fields }: { fields: CustomField[] }) {
-  void fields
-  return null
-}
-
-export function CreateFieldCard({ act }: { act: SettingsAct }) {
-  void act
-  return <div className="lg:col-span-2"><CustomFieldSettings embedded /></div>
 }

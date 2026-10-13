@@ -4,7 +4,7 @@ import { fieldClass } from '@/core/features/auth/client-mutations'
 import { checkboxClass, checkRowClass, quietButtonClass, subformClass } from './form-classes'
 import { operatorMutation } from './operator-client'
 
-export function StatusUpdateForm({slug,onSaved,onMessage,onReverse}:{slug:string;onSaved:()=>void;onMessage:(message:string)=>void;onReverse:()=>void}) {
+export function StatusUpdateForm({slug,onSaved,onMessage,onReverse}:{slug:string;onSaved:()=>void;onMessage:(message:string)=>void;onReverse?:()=>void}) {
  const action=useRef<{body:string;key:string}|null>(null),sending=useRef(false)
  const [pending,setPending]=useState(false)
  async function publish(form:HTMLFormElement){
@@ -26,10 +26,10 @@ export function StatusUpdateForm({slug,onSaved,onMessage,onReverse}:{slug:string
    <label className={checkRowClass}><input type="checkbox" name="pinned" className={checkboxClass}/>Pin above comments</label>
    <div className="flex flex-wrap items-center gap-3">
     <button className={primaryButtonClass}>{pending?'Publishing…':'Publish status update'}</button>
-    <button type="button" className={quietButtonClass} onClick={event=>{
+    {onReverse ? <button type="button" className={quietButtonClass} onClick={event=>{
      // An explicit reversal ends even an uncertain preceding publication action.
      action.current=null;event.currentTarget.form?.reset();onReverse()
-    }}>Reverse decline</button>
+    }}>Reverse decline</button> : null}
    </div>
   </fieldset>
  </form>

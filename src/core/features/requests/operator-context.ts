@@ -3,6 +3,7 @@ import type { DatabaseConnection } from '@/core/platform/database'
 import { MutationError } from '@/core/app/operator-mutations'
 import { createUlid } from '@/core/shared/ulid'
 import { createRequestSlug } from './lifecycle-ids'
+import { requestAvailability } from './operator-availability'
 
 // A UserVoice proxy vote stays visibly proxy; a supporter with any unmarked
 // origin vote is shown unmarked. Native and Canny votes have no source type.
@@ -11,7 +12,7 @@ const supporterType = `CASE WHEN ${supporterOrigins('unmarked')} THEN 'unmarked'
 
 export async function requestContext(database: DatabaseConnection, slug: string) {
   const db = database.binding
-  const request = await db.prepare('SELECT id FROM requests WHERE slug = ?').bind(slug).first<{ id: string }>()
+  const request = await requestAvailability(database, slug)
   if (!request) throw new MutationError(404, 'Request not found.')
   const [voters, accounts, notes, comments, edits, attachments, commentEdits, appeals, uploads] = await Promise.all([
     db.prepare(`SELECT r.id, r.display_name AS displayName, v.created_at AS votedAt, ${supporterType} AS supporterType, a.email, account.id AS accountId,account.slug AS accountSlug,account.name AS accountName FROM request_votes v JOIN requesters r ON r.id = v.requester_id AND r.blocked_at IS NULL LEFT JOIN requester_addresses a ON a.requester_id = r.id AND a.verified_at IS NOT NULL LEFT JOIN requester_account_links ral ON ral.requester_id=r.id LEFT JOIN accounts account ON account.id=ral.account_id WHERE v.request_id = ? ORDER BY r.id, a.id,account.id`).bind(request.id).all(),
@@ -25,7 +26,7 @@ export async function requestContext(database: DatabaseConnection, slug: string)
     db.prepare('SELECT id,original_filename,writing FROM request_attachment_uploads WHERE request_id=? ORDER BY created_at').bind(request.id).all(),
   ])
   const votesByAccount=await db.prepare('SELECT a.id AS accountId,a.slug,a.name,count(DISTINCT v.requester_id) AS voteCount FROM request_votes v JOIN requesters r ON r.id=v.requester_id AND r.blocked_at IS NULL JOIN requester_account_links l ON l.requester_id=r.id JOIN accounts a ON a.id=l.account_id WHERE v.request_id=? GROUP BY a.id ORDER BY a.name').bind(request.id).all()
-  return { statusVersions:await requestVersionDeliveryCounts(db,request.id), deliveryCounts:await requestDeliveryCounts(db,request.id), votesByAccount:votesByAccount.results,requestId: request.id, voters: voters.results, accounts: accounts.results, notes: notes.results, comments: comments.results, edits: edits.results, attachments: attachments.results, commentEdits: commentEdits.results, appeals: appeals.results, uploads:uploads.results }
+  return { actions:request.actions, statusVersions:await requestVersionDeliveryCounts(db,request.id), deliveryCounts:await requestDeliveryCounts(db,request.id), votesByAccount:votesByAccount.results,requestId: request.id, voters: voters.results, accounts: accounts.results, notes: notes.results, comments: comments.results, edits: edits.results, attachments: attachments.results, commentEdits: commentEdits.results, appeals: appeals.results, uploads:uploads.results }
 }
 
 export async function createOperatorRequest(database: DatabaseConnection, input: { title: string; description: string; boardSlug: string; evidenceIds: string[] }, operatorId: string) {

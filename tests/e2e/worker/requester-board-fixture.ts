@@ -2,9 +2,12 @@ import { env } from 'cloudflare:workers'
 import { createPennyApi } from '../../../src/core/app/api'
 import { createUlid } from '../../../src/core/shared/ulid'
 import { digest, opaqueToken } from '../../../src/core/features/auth/native-tokens'
+import { nativeAuthoritySettings, nativeOwnerCookie } from '../../predecessor-native-authority'
 export {env,createUlid,opaqueToken,digest}
-export const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['reviewer@example.test'],workspaceTimezone:'UTC',publicOriginAllowlist:['https://penny.test']}})
-export const bindings={...env,APP_ORIGIN:'https://penny.test',PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox',PORTAL_IDENTITY_SECRET:'isolated-host-fixture-key'}
+export const bindings={...env,...nativeAuthoritySettings,PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox',PORTAL_IDENTITY_SECRET:'isolated-host-fixture-key'}
+export const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['reviewer@example.test'],workspaceTimezone:'UTC',publicOriginAllowlist:[bindings.APP_ORIGIN]}})
+let nativeCookie=''
+// Preserve caller headers so absent and foreign Origin requests remain testable.
 export async function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST') {
  return app.fetch(new Request(`${bindings.APP_ORIGIN}${path}`,{method,headers:{...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},body:body===undefined?undefined:JSON.stringify(body)}),bindings)
 }
@@ -16,7 +19,10 @@ export async function fixture() {
   env.DB.prepare('INSERT INTO operators(id,email,display_name,created_at,updated_at) VALUES(?,?,?,?,?)').bind(operator,'reviewer@example.test','Reviewer',now,now),
   env.DB.prepare('INSERT INTO operator_sessions(id,operator_id,token_hash,expires_at,last_used_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').bind(createUlid(),operator,await digest(cookie),new Date(Date.now()+86400000).toISOString(),now,now,now),
  ])
- return {board:`board-${board.toLowerCase()}`,operator,headers:{Cookie:`penny_operator_session=${cookie}`}}
+ // Current transaction guards require independently issued native authority;
+ // the historical session alone must never authorize those mutations.
+ nativeCookie=await nativeOwnerCookie(bindings,nativeCookie)
+ return {board:`board-${board.toLowerCase()}`,operator,headers:{Cookie:`penny_operator_session=${cookie}; ${nativeCookie}`,Origin:bindings.APP_ORIGIN}}
 }
 export async function person() {
  const email=`${createUlid().toLowerCase()}@example.test`

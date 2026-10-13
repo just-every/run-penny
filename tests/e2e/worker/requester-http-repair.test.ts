@@ -1,4 +1,3 @@
-import { nativeAuthoritySettings, nativeOwnerCookie } from '../../predecessor-native-authority'
 import { it,expect } from 'vitest'
 import { repairDatabase,boardGraph,fixture,person,submit,change,env,call,auth,app,bindings,opaqueToken,createUlid } from './requester-repair-fixture'
 import { base64urlEncode,sign } from '../../../src/core/features/auth/tokens'
@@ -27,6 +26,7 @@ it('[F04 EVID-009] native evidence tag transport enforces operator authority, va
  const tag=await (await call('/api/operator/catalog/tags',{name:'Internal priority marker'},f.headers)).json() as {id:string}
  const path=`/api/operator/evidence/${evidence!.id}/tag`
  expect((await call(path,{tagId:tag.id}, {},'PUT')).status).toBe(401)
+ expect((await call(path,{tagId:tag.id},{Cookie:f.headers.Cookie},'PUT')).status).toBe(403)
  expect((await call(path,{tagId:tag.id},{...f.headers,Origin:'https://foreign.invalid'},'PUT')).status).toBe(403)
  expect((await call(path,{tagId:'missing'},f.headers,'PUT')).status).toBe(404)
  for(let i=0;i<2;i++)expect((await call(path,{tagId:tag.id},f.headers,'PUT')).status).toBe(200)
@@ -59,12 +59,53 @@ it('[F06 REQ-017] repeated and concurrent declines preserve the preceding state;
  expect((await call(`/api/operator/requests/${r.slug}/decline/reverse`,{},f.headers)).status).toBe(409)
 })
 
-it('[F07 REQ-021] withdrawal removes a pending item from moderation and prevents approval',async()=>{
+it('[F07 REQ-021] moderation excludes inactive requests while account and item history remain complete',async()=>{
  const f=await fixture(),who=await person(),r=await submit(f.board,who.token)
  await change(r.slug,'withdraw',who.token)
- expect(await (await call('/api/operator/moderation',undefined,f.headers)).json()).toEqual([])
+ expect(await (await call('/api/operator/moderation',undefined,f.headers)).json()).toMatchObject({items:[],total:0})
+ expect(await (await call('/api/operator/moderation?status=withdrawn',undefined,f.headers)).json()).toMatchObject({items:[{slug:r.slug,publicState:'withdrawn',moderationAvailability:'withdrawn'}],total:1})
+ const request=await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(r.slug).first<{id:string}>()
+ expect(await (await call(`/api/operator/moderation?item=${request!.id}`,undefined,f.headers)).json()).toMatchObject({items:[{slug:r.slug,publicState:'withdrawn',moderationAvailability:'withdrawn'}],total:1})
+ expect(await (await call(`/api/operator/requests/${r.slug}/context`,undefined,f.headers)).json()).toMatchObject({actions:{moderation:false,publish:false,reverseDecline:false,merge:true,unmerge:false}})
  expect((await call(`/api/operator/moderation/${r.slug}`,{verdict:'approved',title:'Published',description:'Safe',boardSlug:f.board,displayName:'Public'},f.headers)).status).toBe(409)
  expect((await env.DB.prepare('SELECT * FROM evidence_versions').all()).results).toHaveLength(1)
+ const activeAuthor=await person(),blockedAuthor=await person()
+ const merged=await submit(f.board,activeAuthor.token,'Merged feedback'),current=await submit(f.board,activeAuthor.token,'Current feedback'),blocked=await submit(f.board,blockedAuthor.token,'Blocked author feedback')
+ expect((await call(`/api/operator/requests/${merged.slug}/merge`,{targetSlug:current.slug},f.headers)).status).toBe(200)
+ expect((await call(`/api/operator/requesters/${blockedAuthor.id}/block`,{},f.headers)).status).toBe(200)
+ const account=createUlid(),now=new Date().toISOString()
+ await env.DB.batch([
+  env.DB.prepare('INSERT INTO accounts(id,slug,name,created_at,updated_at) VALUES(?,?,?,?,?)').bind(account,'history-account','History account',now,now),
+  ...[who,activeAuthor,blockedAuthor].map(author=>env.DB.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(author.id,account,now)),
+ ])
+ expect(await (await call('/api/operator/moderation',undefined,f.headers)).json()).toMatchObject({items:[{slug:current.slug,moderationAvailability:'current'}],total:1})
+ const history=await (await call('/api/operator/moderation?account=history-account&sort=name',undefined,f.headers)).json() as {items:{id:string;slug:string;moderationAvailability:string}[];total:number;pageSize:number}
+ expect(history.total).toBe(4)
+ expect(history.items.map(item=>[item.slug,item.moderationAvailability])).toEqual([[blocked.slug,'inactive_author'],[current.slug,'current'],[merged.slug,'merged'],[r.slug,'withdrawn']])
+ const preview=await (await call('/api/operator/accounts/history-account',undefined,f.headers)).json() as {linkedRequestCount:number;requests:{id:string}[]}
+ expect(preview.linkedRequestCount).toBe(history.total)
+ expect(preview.requests.map(item=>item.id)).toEqual(history.items.map(item=>item.id))
+ for(const slug of [merged.slug,blocked.slug]){
+  const item=history.items.find(item=>item.slug===slug)!
+  expect(await (await call(`/api/operator/moderation?item=${item.id}`,undefined,f.headers)).json()).toMatchObject({items:[item],total:1})
+  expect(await (await call(`/api/operator/requests/${slug}/context`,undefined,f.headers)).json()).toMatchObject({actions:{moderation:false,publish:false,merge:slug!==merged.slug,unmerge:slug===merged.slug}})
+  expect((await call(`/api/operator/moderation/${slug}`,{verdict:'approved',title:'Published',description:'Safe',boardSlug:f.board,displayName:'Public'},f.headers)).status).toBe(409)
+ }
+ expect(await (await call('/api/operator/moderation?account=history-account&status=withdrawn',undefined,f.headers)).json()).toMatchObject({items:[{slug:r.slug}],total:1})
+ // Move retained history beyond the account preview, then follow its real continuation.
+ const extra=Array.from({length:history.pageSize+1-history.total},()=>createUlid())
+ await env.DB.batch(extra.map(id=>env.DB.prepare(`INSERT INTO requests(id,slug,board_id,author_requester_id,title,description,moderation_state,public_state,created_at,updated_at)
+  SELECT ?,?,board_id,author_requester_id,?,'Account feedback','awaiting_review','unpublished',?,? FROM requests WHERE slug=?`).bind(id,`history-${id.toLowerCase()}`,`Additional feedback ${id}`,now,now,current.slug)))
+ const first=await (await call('/api/operator/moderation?account=history-account&sort=name',undefined,f.headers)).json() as typeof history
+ const next=await (await call('/api/operator/moderation?account=history-account&sort=name&page=2',undefined,f.headers)).json() as typeof history
+ const accountDetail=await (await call('/api/operator/accounts/history-account',undefined,f.headers)).json() as typeof preview
+ expect(first.total).toBe(history.total+extra.length)
+ expect(next.total).toBe(first.total)
+ expect(first.items).toHaveLength(first.pageSize)
+ expect(next.items).toMatchObject([{slug:r.slug,moderationAvailability:'withdrawn'}])
+ expect(new Set([...first.items,...next.items].map(item=>item.id)).size).toBe(first.total)
+ expect(accountDetail.linkedRequestCount).toBe(first.total)
+ expect(accountDetail.requests.map(item=>item.id)).toEqual(first.items.map(item=>item.id))
 })
 
 it('[F08 REQ-014] rejected host or bearer credentials cannot become pending actions; absent identity can',async()=>{
@@ -81,18 +122,13 @@ it('[F08 REQ-014] rejected host or bearer credentials cannot become pending acti
 
 it('[F09 DATA-004] roadmapItem custom fields accept values and stay operator-only',async()=>{
  const f=await fixture(),id=createUlid(),now=new Date().toISOString()
- const nativeBindings={...bindings,...nativeAuthoritySettings}
- const nativeCookie=await nativeOwnerCookie(nativeBindings)
- const nativeHeaders={Cookie:`${f.headers.Cookie}; ${nativeCookie}`}
- const fieldCall=(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST')=>
-  app.fetch(new Request(nativeAuthoritySettings.APP_ORIGIN+path,{method,headers:{Origin:nativeAuthoritySettings.APP_ORIGIN,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),nativeBindings)
  await env.DB.prepare("INSERT INTO roadmap_items(id,slug,title,summary,status,created_at,updated_at) VALUES(?,?,?,?,'exploring',?,?)").bind(id,'private-roadmap','Private roadmap','Private details',now,now).run()
- const created=await fieldCall('/api/operator/settings/custom-fields',{entityType:'roadmapItem',name:'Internal budget',fieldType:'number'},nativeHeaders);expect(created.status).toBe(201)
+ const created=await call('/api/operator/settings/custom-fields',{entityType:'roadmapItem',name:'Internal budget',fieldType:'number'},f.headers);expect(created.status).toBe(201)
  const field=await created.json() as {id:string}
- expect((await fieldCall(`/api/operator/custom-fields/roadmapItem/${field.id}/${id}`,{value:43019},nativeHeaders,'PUT')).status).toBe(200)
- expect(await (await fieldCall(`/api/operator/custom-fields/roadmapItem/${id}`,undefined,nativeHeaders)).json()).toMatchObject([{name:'Internal budget',value:43019}])
- expect((await fieldCall(`/api/operator/custom-fields/roadmapItem/${id}`)).status).toBe(401)
- expect((await fieldCall('/api/operator/custom-fields/__proto__/anything',undefined,nativeHeaders)).status).toBe(400)
+ expect((await call(`/api/operator/custom-fields/roadmapItem/${field.id}/${id}`,{value:43019},f.headers,'PUT')).status).toBe(200)
+ expect(await (await call(`/api/operator/custom-fields/roadmapItem/${id}`,undefined,f.headers)).json()).toMatchObject([{name:'Internal budget',value:43019}])
+ expect((await call(`/api/operator/custom-fields/roadmapItem/${id}`)).status).toBe(401)
+ expect((await call('/api/operator/custom-fields/__proto__/anything',undefined,f.headers)).status).toBe(400)
 })
 
 it('[REQ-023] held submission replay has the same idempotency key/body as direct submission',async()=>{

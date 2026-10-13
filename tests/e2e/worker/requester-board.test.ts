@@ -1,4 +1,3 @@
-import { nativeAuthoritySettings, nativeOwnerCookie } from '../../predecessor-native-authority'
 import { describe,it,expect } from 'vitest'
 import { repairDatabase,env,fixture,person,submit,publish,call,auth,opaqueToken,bindings,app } from './requester-repair-fixture'
 import { base64urlEncode,sign } from '../../../src/core/features/auth/tokens'
@@ -134,16 +133,11 @@ it('[REQ-023] expired held actions are discarded without creating a vote',async(
 })
 it('[REQ-018 EVID-009 EVID-006] native boards, private tags and typed custom fields retain their boundaries',async()=>{
  const f=await fixture(),who=await person(),r=await submit(f.board,who.token);await publish(r.slug,f.board,f.headers)
- const nativeBindings={...bindings,...nativeAuthoritySettings}
- const nativeCookie=await nativeOwnerCookie(nativeBindings)
- const nativeHeaders={Cookie:`${f.headers.Cookie}; ${nativeCookie}`}
- const fieldCall=(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST')=>
-  app.fetch(new Request(nativeAuthoritySettings.APP_ORIGIN+path,{method,headers:{Origin:nativeAuthoritySettings.APP_ORIGIN,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),nativeBindings)
- expect((await fieldCall('/api/operator/settings/custom-fields',{entityType:'request',name:'Customer cost',fieldType:'number'})).status).toBe(401)
- const fieldResponse=await fieldCall('/api/operator/settings/custom-fields',{entityType:'request',name:'Customer cost',fieldType:'number'},nativeHeaders);expect(fieldResponse.status).toBe(201)
+ expect((await call('/api/operator/settings/custom-fields',{entityType:'request',name:'Customer cost',fieldType:'number'})).status).toBe(401)
+ const fieldResponse=await call('/api/operator/settings/custom-fields',{entityType:'request',name:'Customer cost',fieldType:'number'},f.headers);expect(fieldResponse.status).toBe(201)
  const field=await fieldResponse.json() as {id:string},request=await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(r.slug).first<{id:string}>()
- expect((await fieldCall(`/api/operator/custom-fields/request/${field.id}/${request!.id}`,{value:'not a number'},nativeHeaders,'PUT')).status).toBe(400)
- expect((await fieldCall(`/api/operator/custom-fields/request/${field.id}/${request!.id}`,{value:5173},nativeHeaders,'PUT')).status).toBe(200)
+ expect((await call(`/api/operator/custom-fields/request/${field.id}/${request!.id}`,{value:'not a number'},f.headers,'PUT')).status).toBe(400)
+ expect((await call(`/api/operator/custom-fields/request/${field.id}/${request!.id}`,{value:5173},f.headers,'PUT')).status).toBe(200)
  const tagResponse=await call('/api/operator/catalog/tags',{name:'Private acquisition'},f.headers);expect(tagResponse.status).toBe(201)
  const tag=await tagResponse.json() as {id:string};expect((await call(`/api/operator/catalog/requests/${request!.id}/tags/${tag.id}`,{},f.headers,'PUT')).status).toBe(200)
  const body=await (await call(`/api/public/requests/${r.slug}`)).text();expect(body).not.toContain('Customer cost');expect(body).not.toContain('5173');expect(body).not.toContain('Private acquisition')

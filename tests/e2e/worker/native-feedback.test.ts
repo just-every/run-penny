@@ -1,3 +1,4 @@
+import { nativeAuthoritySettings, nativeOwnerCookie } from '../../predecessor-native-authority'
 import { applyD1Migrations, type D1Migration } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeAll,describe,expect,inject,it } from 'vitest'
@@ -8,12 +9,14 @@ import sample from '../../../sample-data/penny.v1.json'
 import { createUlid } from '../../../src/core/shared/ulid'
 import { digest } from '../../../src/core/features/auth/native-tokens'
 const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['owner@penny.invalid'],workspaceTimezone:'Australia/Brisbane',publicOriginAllowlist:['http://localhost:15300']}})
-const bindings={...env,PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox'}
+const bindings={...env,...nativeAuthoritySettings,PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox'}
+let nativeCookie=''
 let testIp=1
-const request=(path:string,body?:unknown,headers:Record<string,string>={},transport=true)=>app.fetch(new Request(`http://penny.test${path}`,{method:body===undefined?'GET':'POST',headers:{'CF-Connecting-IP':`192.0.2.${testIp++}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),transport?bindings:{...bindings,PENNY_AUTH_TRANSPORT:undefined})
+const request=(path:string,body?:unknown,headers:Record<string,string>={},transport=true)=>app.fetch(new Request(`${bindings.APP_ORIGIN}${path}`,{method:body===undefined?'GET':'POST',headers:{'CF-Connecting-IP':`192.0.2.${testIp++}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),transport?bindings:{...bindings,PENNY_AUTH_TRANSPORT:undefined})
 const randomEmail=()=>`${crypto.randomUUID()}@example.test`
 async function mail(email:string,purpose:string){return (await env.DB.prepare('SELECT token FROM local_auth_outbox WHERE recipient=? AND purpose=? ORDER BY created_at DESC LIMIT 1').bind(email,purpose).first<{token:string}>())!.token}
-async function operator(){expect((await request('/api/auth/magic-link',{email:'owner@penny.invalid'})).status).toBe(202);const response=await request(`/api/auth/magic-link/consume?token=${await mail('owner@penny.invalid','operator')}`);expect(response.status).toBe(302);return response.headers.get('Set-Cookie')!.split(';')[0]}
+// Current guarded writes additionally require separately issued Base authority.
+async function operator(){expect((await request('/api/auth/magic-link',{email:'owner@penny.invalid'})).status).toBe(202);const response=await request(`/api/auth/magic-link/consume?token=${await mail('owner@penny.invalid','operator')}`);expect(response.status).toBe(302);nativeCookie=await nativeOwnerCookie(bindings,nativeCookie);return `${response.headers.get('Set-Cookie')!.split(';')[0]}; ${nativeCookie}`}
 async function requester(){const email=randomEmail();expect((await request('/api/public/identity/email',{email,displayName:'Private original name'})).status).toBe(202);const response=await request('/api/public/identity/email/verify',{token:await mail(email,'requester')});expect(response.status).toBe(200);expect(response.headers.get('Set-Cookie')).toBeNull();return {email,...await response.json() as {token:string}}}
 function submission(){return {title:`Private original ${crypto.randomUUID()}`,description:'Private original wording',boardSlug:'enterprise-identity',proposedSolution:'Sensitive proposed solution',impactStatement:'Sensitive impact',idempotencyKey:crypto.randomUUID()}}
 const bearer=(token:string)=>({Authorization:`Bearer ${token}`})
@@ -27,14 +30,14 @@ describe('bounded native identity and feedback journey',()=>{
     expect((await request('/api/auth/outbox')).status).toBe(404)
     const body=JSON.stringify({email:'owner@penny.invalid'})
     for(const extra of [{APP_ORIGIN:'https://remote.test'},{PENNY_ENVIRONMENT:'production',APP_ORIGIN:'https://remote.test',AUTH_SECRET:'synthetic-test-secret',MAIL_FROM:'local@example.test',MAIL_PROVIDER_API_KEY:'synthetic-no-provider-key',MAIL_WEBHOOK_SECRET:'synthetic-test-webhook'}]){
-      const result=await app.fetch(new Request('http://penny.test/api/auth/magic-link',{method:'POST',headers:{'Content-Type':'application/json'},body}),{...bindings,...extra})
+      const result=await app.fetch(new Request(bindings.APP_ORIGIN+'/api/auth/magic-link',{method:'POST',headers:{'Content-Type':'application/json'},body}),{...bindings,...extra})
       expect(result.status).toBe(503);expect(await result.text()).not.toContain('token')
     }
     expect((await request('/api/public/identity/email',{email:randomEmail(),displayName:'x'.repeat(40000)})).status).toBe(400)
   })
   it('[BASE-ACCESS-001/002] atomically consumes one link, rejects replay/expiry and revokes sign-out',async()=>{
-    const cookie=await operator();expect((await request('/api/auth/session',undefined,{Cookie:cookie})).status).toBe(200)
-    expect((await request('/api/auth/sign-out',{}, {Cookie:cookie})).status).toBe(204);expect((await request('/api/auth/session',undefined,{Cookie:cookie})).status).toBe(401)
+    const cookie=await operator();expect((await request('/api/auth/session',undefined,{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(200)
+    expect((await request('/api/auth/sign-out',{}, {Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(204);expect((await request('/api/auth/session',undefined,{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(401)
     const email=randomEmail();await request('/api/public/identity/email',{email,displayName:'Expiry'});const token=await mail(email,'requester');await env.DB.prepare("UPDATE native_magic_links SET expires_at='2000-01-01' WHERE token_hash=?").bind(await digest(token)).run();expect((await request('/api/public/identity/email/verify',{token})).status).toBe(401)
     const email2=randomEmail();await request('/api/public/identity/email',{email:email2,displayName:'Race'});const token2=await mail(email2,'requester');const responses=await Promise.all([request('/api/public/identity/email/verify',{token:token2}),request('/api/public/identity/email/verify',{token:token2})]);expect(responses.map(r=>r.status).sort()).toEqual([200,401]);expect((await request('/api/public/identity/email/verify',{token:token2})).status).toBe(401)
   })
@@ -51,19 +54,19 @@ describe('bounded native identity and feedback journey',()=>{
     const hidden=await request(`/api/public/requests/${first.slug}`);expect(hidden.status).toBe(404)
     expect((await request('/api/public/requests',{...input,title:'Changed'},bearer(identity.token))).status).toBe(409)
     const graph=await env.DB.prepare('SELECT COUNT(*) AS count FROM request_evidence_links l JOIN requests r ON r.id=l.request_id WHERE r.slug=?').bind(first.slug).first<{count:number}>();expect(graph?.count).toBe(1)
-    const cookie=await operator();expect((await request('/api/operator/moderation',undefined,{Cookie:cookie})).status).toBe(200)
+    const cookie=await operator();expect((await request('/api/operator/moderation',undefined,{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(200)
     const approval={verdict:'approved',title:'Customer-safe published title',description:'Customer-safe public wording',boardSlug:'enterprise-identity',displayName:'Approved public name'}
-    expect((await request(`/api/operator/moderation/${first.slug}`,approval,{Cookie:cookie})).status).toBe(200)
+    expect((await request(`/api/operator/moderation/${first.slug}`,approval,{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(200)
     const published=await request(`/api/public/requests/${first.slug}`),body=await published.text();expect(published.status).toBe(200);expect(body).toContain(approval.title);expect(body).toContain(approval.displayName);for(const value of [identity.email,input.title,input.description,input.proposedSolution,input.impactStatement,'Private original name'])expect(body).not.toContain(value)
     const wording=await env.DB.prepare('SELECT v.wording FROM evidence_versions v JOIN request_evidence_links l ON l.evidence_id=v.evidence_id JOIN requests r ON r.id=l.request_id WHERE r.slug=?').bind(first.slug).first<{wording:string}>();expect(wording?.wording).toContain(input.description)
     const audit=await env.DB.prepare('SELECT count(*) AS count FROM audit_entries WHERE entity_id=(SELECT id FROM requests WHERE slug=?)').bind(first.slug).first<{count:number}>();expect(audit?.count).toBe(2)
-    expect((await request(`/api/operator/moderation/${first.slug}`,approval,{Cookie:cookie})).status).toBe(409)
+    expect((await request(`/api/operator/moderation/${first.slug}`,approval,{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(409)
   })
   it('[REQ-005 DATA-002] uses an opaque valid public slug for titles ending at a punctuation boundary',async()=>{
     const identity=await requester(),input={...submission(),title:'a'.repeat(59)+' b'}
     const created=await request('/api/public/requests',input,bearer(identity.token));expect(created.status).toBe(201)
     const result=await created.json() as {slug:string};expect(result.slug).not.toContain('--');expect(result.slug).not.toContain('a'.repeat(10))
-    const cookie=await operator();expect((await request(`/api/operator/moderation/${result.slug}`,{verdict:'approved',title:'Safe title',description:'Safe description',boardSlug:'enterprise-identity',displayName:'Safe name'},{Cookie:cookie})).status).toBe(200)
+    const cookie=await operator();expect((await request(`/api/operator/moderation/${result.slug}`,{verdict:'approved',title:'Safe title',description:'Safe description',boardSlug:'enterprise-identity',displayName:'Safe name'},{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(200)
     expect((await request(`/api/public/requests/${result.slug}`)).status).toBe(200)
   })
   it('[REQ-005/018/019/022] refuses blocked identity, unavailable boards and rejected publication',async()=>{
@@ -72,10 +75,10 @@ describe('bounded native identity and feedback journey',()=>{
     for(const [slug,visibility,archived] of [['native-internal','internal',null],['native-archived','public','2026-10-02']] as const){await env.DB.prepare('INSERT INTO boards(id,slug,name,visibility,position,archived_at,created_at,updated_at) VALUES(?,?,?,?,0,?,?,?)').bind(createUlid(),slug,slug,visibility,archived,new Date().toISOString(),new Date().toISOString()).run();expect((await request('/api/public/requests',{...submission(),boardSlug:slug},bearer(good.token))).status).toBe(409)}
     expect((await request('/api/public/requests',{...submission(),boardSlug:'missing'},bearer(good.token))).status).toBe(409)
     const input=submission(),first=await (await request('/api/public/requests',input,bearer(good.token))).json() as {slug:string};const cookie=await operator()
-    expect((await request(`/api/operator/moderation/${first.slug}`,{verdict:'rejected',reason:''},{Cookie:cookie})).status).toBe(400)
-    expect((await request(`/api/operator/moderation/${first.slug}`,{verdict:'approved',title:'Safe',description:'Safe',boardSlug:'missing',displayName:'Safe'},{Cookie:cookie})).status).toBe(409)
-    expect((await request(`/api/operator/moderation/${first.slug}`,{verdict:'approved',title:'Safe',description:'Safe',boardSlug:'native-internal',displayName:'Safe'},{Cookie:cookie})).status).toBe(409)
-    expect((await request(`/api/operator/moderation/${first.slug}`,{verdict:'rejected',reason:'Not enough detail'},{Cookie:cookie})).status).toBe(200);expect((await request(`/api/public/requests/${first.slug}`)).status).toBe(404)
+    expect((await request(`/api/operator/moderation/${first.slug}`,{verdict:'rejected',reason:''},{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(400)
+    expect((await request(`/api/operator/moderation/${first.slug}`,{verdict:'approved',title:'Safe',description:'Safe',boardSlug:'missing',displayName:'Safe'},{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(409)
+    expect((await request(`/api/operator/moderation/${first.slug}`,{verdict:'approved',title:'Safe',description:'Safe',boardSlug:'native-internal',displayName:'Safe'},{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(409)
+    expect((await request(`/api/operator/moderation/${first.slug}`,{verdict:'rejected',reason:'Not enough detail'},{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(200);expect((await request(`/api/public/requests/${first.slug}`)).status).toBe(404)
   })
   it('[REQ-003/013] rolls back request/evidence/key/audit together on a storage failure',async()=>{
     const identity=await requester(),input=submission()

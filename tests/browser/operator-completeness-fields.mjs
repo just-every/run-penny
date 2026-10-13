@@ -6,15 +6,15 @@ export async function reviewCustomFields({page,peer,origin,capture,db}) {
  const definitions=[]
  for(const [entity,,path,kind] of entities) {
   await page.goto(origin+'/app/settings')
-  const section=page.locator('#settings-fields')
+  const section=page.getByRole('region',{name:'Private custom fields',exact:true})
   await section.getByLabel('Custom field entity type',{exact:true}).selectOption(entity)
   await section.getByLabel('New field name',{exact:true}).fill(`customproof-${entity}`)
-  await section.locator('form').filter({has:section.getByRole('button',{name:'Create field',exact:true})}).getByLabel('Field type',{exact:true}).selectOption('text')
+  await section.locator('form').filter({has:page.getByRole('button',{name:'Create field',exact:true})}).getByRole('combobox',{name:'Field type',exact:true}).selectOption('text')
   const created=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/operator/settings/custom-fields'&&r.request().method()==='POST')
   await section.getByRole('button',{name:'Create field',exact:true}).click()
   const response=await created;assert.equal(response.status(),201)
   const definition=await response.json();definitions.push(definition)
-  const form=section.locator('form').filter({has:section.getByLabel('Field name',{exact:true})}).filter({has:section.locator(`input[value="customproof-${entity}"]`)})
+  const form=section.locator('form').filter({has:page.getByLabel('Field name',{exact:true})}).filter({has:page.locator(`input[value="customproof-${entity}"]`)})
   await form.getByLabel('Field name',{exact:true}).fill(`customproof-edited-${entity}`)
   const edited=page.waitForResponse(r=>new URL(r.url()).pathname===`/api/operator/settings/custom-fields/${definition.id}`&&r.request().method()==='PATCH')
   await form.getByRole('button',{name:'Save field definition',exact:true}).click()

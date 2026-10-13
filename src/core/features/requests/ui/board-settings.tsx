@@ -7,12 +7,13 @@ import {ApiKeys} from '../../integrations/ui/api-keys'
 import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { useState } from 'react'
 import { usePublicResource } from '@/core/features/portal/ui/public-resource'
+import { CustomFieldSettings } from '@/core/features/settings/ui/custom-field-settings'
 import { operatorMutation } from './operator-client'
 import { DeliveryReview } from './delivery-review'
 import { BoardCard, CreateBoardCard, type Board } from './settings-boards'
-import { CreateFieldCard, CreateTagCard, FieldList, SettingsSection, TagCard, type CustomField, type Tag } from './settings-catalog'
+import { CreateTagCard, SettingsSection, TagCard, type Tag } from './settings-catalog'
 
-interface Settings { boards: Board[]; tags: Tag[]; fields: CustomField[] }
+interface Settings { boards: Board[]; tags: Tag[] }
 
 export function BoardSettings() {
   const [data, refresh] = usePublicResource<Settings>('/api/operator/catalog/settings'), [message, setMessage] = useState(''), [success, setSuccess] = useState(false)
@@ -46,8 +47,7 @@ export function BoardSettings() {
           </div>
         </SettingsSection>
         <SettingsSection id="settings-fields" icon="form" title="Private custom fields">
-          {ready ? <FieldList fields={ready.fields} /> : null}
-          <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2"><CreateFieldCard act={act} /></div>
+          <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2"><div className="lg:col-span-2"><CustomFieldSettings embedded /></div></div>
         </SettingsSection>
       </div>
       <p role="status" className={`sticky bottom-4 z-10 mt-6 w-fit max-w-full rounded-lg border bg-penny-card px-4 py-2.5 text-sm font-bold shadow-[0_4px_14px_rgb(92_62_32_/_0.14)] empty:hidden ${success ? 'border-penny-moss/40 text-penny-moss' : 'border-penny-danger/40 text-penny-danger'}`}>{message}</p>

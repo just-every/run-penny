@@ -1,3 +1,4 @@
+import type { OperatorPage } from '../../../src/core/features/workspace/list-query'
 import { applyD1Migrations } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeAll,describe,expect,inject,it } from 'vitest'
@@ -61,9 +62,9 @@ it('[DEC-001] queue retains all states with distinct evidence, owner and latest 
  await json(request(`/api/operator/decisions/${c.d.id}/commit`,'POST',commitInput(c.a.id)))
  await env.DB.prepare("UPDATE decisions SET state='review_due' WHERE id=?").bind(review.d.id).run()
  await link(r.e.id,r.b.id)
- const list=await json<OperatorDecisionBrief[]>(request('/api/operator/decisions'))
- for(const [id,state] of [[draft.id,'draft'],[r.d.id,'ready'],[c.d.id,'committed'],[review.d.id,'review_due']])expect(list.find(d=>d.id===id)).toMatchObject({state,owner:{id:operatorId}})
- expect(list.find(d=>d.id===r.d.id)).toMatchObject({evidenceCount:1,lastAction:'decision.evidence_changed'})
+ const list=await json<OperatorPage<OperatorDecisionBrief>>(request('/api/operator/decisions'))
+ for(const [id,state] of [[draft.id,'draft'],[r.d.id,'ready'],[c.d.id,'committed'],[review.d.id,'review_due']])expect(list.items.find(d=>d.id===id)).toMatchObject({state,owner:{id:operatorId}})
+ expect(list.items.find(d=>d.id===r.d.id)).toMatchObject({evidenceCount:1,lastAction:'decision.evidence_changed'})
 })
 
 it('[DEC-001][DEC-004][DEC-005] a concurrent blank-question edit cannot create a committed blank brief',async()=>{

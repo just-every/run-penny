@@ -1,3 +1,4 @@
+import type { OperatorPage } from '../../../src/core/features/workspace/list-query'
 import { applyD1Migrations } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeAll, expect, inject, it } from 'vitest'
@@ -10,8 +11,8 @@ it('[EVID-002][DEC-003][DEC-004] preserves and orders every accepted fractional 
  const d=await decision(),a=await bet(d.id);await bet(d.id,'Alternative')
  const observations=Array.from({length:9},(_,index)=>`2026-10-08T00:00:00.${'1'.repeat(index+1)}Z`),ids:string[]=[]
  for(const observedAt of observations){const e=await evidence({observedAt});ids.push(e.id);await link(e.id,a.id)}
- const inbox=await json<OperatorEvidenceCard[]>(request('/api/operator/evidence'))
- expect(inbox.filter(item=>ids.includes(item.id)).map(item=>item.observedAt)).toEqual([...observations].reverse())
+ const inbox=await json<OperatorPage<OperatorEvidenceCard>>(request('/api/operator/evidence?sort=observed'))
+ expect(inbox.items.filter(item=>ids.includes(item.id)).map(item=>item.observedAt)).toEqual([...observations].reverse())
  const brief=await json<OperatorDecisionBrief>(request(`/api/operator/decisions/${d.slug}`))
  expect(brief.bets.find(candidate=>candidate.id===a.id)?.metrics.latestSupportAt).toBe(observations[8])
  const result=await json(request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id)))

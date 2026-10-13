@@ -23,7 +23,7 @@ export function EvidenceInboxPage() {
         {evidence.kind === 'not_found' ? <OperatorResourceNotFound title="Evidence inbox unavailable">This workspace evidence route is not available.</OperatorResourceNotFound> : null}
         {evidence.kind === 'error' ? <OperatorResourceFailure title="We could not load evidence." status={evidence.status} onRetry={retry} /> : null}
         {empty ? <OperatorEmpty title={unreviewed ? 'No evidence is awaiting review.' : 'No evidence has been recorded.'}>{unreviewed ? 'All recorded evidence currently has a review state.' : 'Recorded sales, support, interview, email, and portal signals will appear here.'}</OperatorEmpty> : null}
-        {evidence.kind === 'ready' ? <div className="grid min-w-0 grid-cols-1 items-start gap-4 xl:grid-cols-2">{visibleEvidence.map((item) => <div key={item.id} id={`evidence-${item.id}`}><EvidenceCard evidence={item} onSaved={retry} /></div>)}</div> : null}
+        {evidence.kind === 'ready' ? <div className="grid min-w-0 grid-cols-1 items-start gap-4 xl:grid-cols-2">{visibleEvidence.map((item) => <div key={item.id}><EvidenceCard evidence={item} onSaved={retry} /></div>)}</div> : null}
       </section>
     </>
   )
