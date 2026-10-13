@@ -32,6 +32,12 @@ function diagnosticPath(value) {
 function diagnosticMessage(value) {
   return value.replace(/https?:\/\/[^\s)]+/g,diagnosticPath)
 }
+function sanitizeDiagnosticError(error) {
+  if(!error||typeof error!=='object')return
+  if(typeof error.message==='string')error.message=diagnosticMessage(error.message)
+  if(typeof error.stack==='string')error.stack=diagnosticMessage(error.stack)
+  if(Array.isArray(error.errors))error.errors.forEach(sanitizeDiagnosticError)
+}
 async function capturePage(width,label,targetPage,details={}) {
   await targetPage.evaluate(async()=>{await document.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))})
   assert.equal(await targetPage.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)>innerWidth),false,`[OPS-003] ${label} overflow at ${width}`)
@@ -46,7 +52,7 @@ try {
   if(!completenessOnly)hosted = await prepareHostedDataReview()
   const options=browserOptions()
   browser = await chromium.launch({...options,args:[...options.args,...(hosted?[hosted.trustArgument]:[])]})
-  for (const width of [1440,390]) {
+  async function reviewWidth(width) {
     const runtime = await startBrowserRuntime({bindings:localProofBindings})
     let context
     try {
@@ -142,13 +148,24 @@ try {
       await reviewOperatorCompleteness({page,browser,runtime,width,capture,checks})
       assert.deepEqual(errors,[],`No console or page errors; failed requests: ${JSON.stringify(failedRequests)}`)
       assert.deepEqual(external,[],'No external browser requests')
-    } finally {await context?.close();await runtime.close()}
+    } finally {
+      try {await context?.close()}
+      finally {await runtime.close()}
+    }
     if(!completenessOnly)await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
+  }
+  if(completenessOnly) {
+    // Both isolated runtimes must finish cleanup before the shared browser closes.
+    const results=await Promise.allSettled([1440,390].map(reviewWidth))
+    const failures=results.filter(result=>result.status==='rejected')
+    if(failures.length===1)throw failures[0].reason
+    if(failures.length>1)throw new AggregateError(failures.map(result=>result.reason),'Operator completeness failed at both widths')
+  } else {
+    for(const width of [1440,390])await reviewWidth(width)
   }
   await writeFile(join(output,'results.json'),JSON.stringify({clauses:'[OPS-001 OPS-002 OPS-004 REQ-027 REQ-028 EVID-009 DATA-004 BASE-ACCESS-003 BASE-OPS-005 OPS-003 REQ-014 REQ-030 EVID-003 DEC-001 ROAD-007 ROAD-008 REL-001 DATA-001 DATA-003]',checks,negativeChecks},null,2)+'\n')
   console.log(`operator-pages: ${checks.length} captures passed`)
 } catch(error) {
-  error.message=diagnosticMessage(error.message)
-  if(typeof error.stack==='string')error.stack=diagnosticMessage(error.stack)
+  sanitizeDiagnosticError(error)
   throw error
 } finally {try{await browser?.close()}finally{await hosted?.close()}}

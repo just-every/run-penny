@@ -8033,7 +8033,7 @@
       "executable": false
     },
     "tests/browser/operator-pages.mjs": {
-      "sha256": "61b01622ae460210652efeb541a95ecd0f0ebf9c359fa1df58abd9cb6fca02de",
+      "sha256": "8cbe2d3f180ae9fcf34630123b1ffcd78c0e029381055796bf7cfaa29d655c5d",
       "executable": false
     },
     "tests/browser/public-entry-pacing.mjs": {
