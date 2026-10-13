@@ -1,54 +1,53 @@
-import {Buffer} from 'node:buffer'
 import {digest,NativeError} from '../auth/native-tokens'
-import {base64urlDecode,base64urlEncode,equalBytes,sign} from '../auth/tokens'
+import {openPreview,sealPreview,type PreviewTokenContext} from './preview-token'
 
 export type CopyHold={table:string;key:string;columns:string[]}
-export type CopyScanOptions={secret:string;subject:string;continuation?:string;scope?:string}
-type Checkpoint={scope:string;next:number;holds:CopyHold[];expires:number}
+export type CopyScanOptions={secret:string;subject:string;continuation?:string}
+export type CopyScope={jobs:string[];identities:string[];values:string[];holds:CopyHold[]}
+export type CopyCheckpoint<T>={version:1;snapshot:string;native:T;copy:CopyScope;next:number;expires:number}
 export class CopyScanPending extends Error {
  readonly continuation:string
  constructor(continuation:string){super('erasure_preview_pending');this.continuation=continuation}
 }
 const changed=()=>new NativeError('erasure_plan_changed',409)
-/** Only monotonic custody metadata enters a checkpoint, never decoded source
- * text. These Base revisions cover plans/chunks, index, provenance and pages. */
-export async function copySnapshot(db:D1Database):Promise<string>{
- const rows=(await db.prepare("SELECT j.id,c.revision FROM ik_jobs j LEFT JOIN ik_d1_custody_states c ON c.job_id=j.id WHERE j.destination='penny-feedback' ORDER BY j.id").all<{id:string;revision:number|null}>()).results
- if(rows.some(row=>row.revision===null))throw changed()
- return digest(JSON.stringify(rows))
+/** Native product and import metadata counters cover same-size edits. Base's
+ * per-job counters fence plans/chunks, indexes, provenance, streams and originals.
+ * Include every job: the plaintext-copy search also sees other destinations. */
+export async function readCopyFence(db:D1Database):Promise<{snapshot:string;tables:{name:string;sql:string}[]}>{
+ const revision=await db.prepare(`SELECT n.revision native,p.revision metadata,s.origin,s.epoch,s.phase,s.lock_id,
+  (SELECT json_group_array(json_array(name,sql)) FROM (SELECT name,sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' AND name NOT LIKE 'rer_portability_%' ORDER BY name)) schema_tables,
+  (SELECT json_group_array(json_object('id',id,'revision',revision)) FROM
+   (SELECT j.id,c.revision FROM ik_jobs j LEFT JOIN ik_d1_custody_states c ON c.job_id=j.id ORDER BY j.id)) jobs
+  FROM feedback_import_native_revision n,feedback_import_preview_revision p,data_state s
+  WHERE n.singleton=1 AND p.singleton=1 AND s.singleton=1`).first<{native:number;metadata:number;jobs:string;schema_tables:string}>()
+ if(!revision||!Number.isSafeInteger(revision.native)||!Number.isSafeInteger(revision.metadata))throw changed()
+ const jobs=JSON.parse(revision.jobs) as {id:string;revision:number|null}[]
+ if(jobs.some(row=>!Number.isSafeInteger(row.revision)||row.revision!<0))throw changed()
+ return {snapshot:await digest(JSON.stringify(revision)),tables:(JSON.parse(revision.schema_tables) as [string,string][]).map(([name,sql])=>({name,sql}))}
 }
-const signed=(secret:string,body:string)=>sign(secret,'penny-erasure-copy-scan:'+body)
-async function checkpoint(options:CopyScanOptions,scope:string):Promise<Checkpoint>{
- if(!options.continuation)return {scope,next:0,holds:[],expires:Date.now()+60*60*1000}
- const [body,signature,extra]=options.continuation.split('.')
- const bytes=base64urlDecode(signature??'')
- if(extra!==undefined||!body||!bytes||!equalBytes(bytes,await signed(options.secret,body)))throw changed()
- let value:Checkpoint
- try{value=JSON.parse(Buffer.from(body,'base64url').toString('utf8'))}catch{throw changed()}
- if(value.scope!==scope||value.expires<Date.now()||!Number.isSafeInteger(value.next)||value.next<0||!Array.isArray(value.holds))throw changed()
- return value
+export async function copySnapshot(db:D1Database):Promise<string>{return (await readCopyFence(db)).snapshot}
+export async function resumeCopyScan<T>(db:D1Database,context:PreviewTokenContext,continuation:string):Promise<CopyCheckpoint<T>>{
+ const saved=await openPreview<CopyCheckpoint<T>>(continuation,context)
+ if(saved.version!==1||!Number.isSafeInteger(saved.expires)||saved.expires<Date.now()||!Number.isSafeInteger(saved.next)||saved.next<0||saved.next>saved.copy.jobs.length||saved.snapshot!==await copySnapshot(db))throw changed()
+ return saved
 }
-/** A signed, stateless continuation works across Worker isolates. Every request
- * rechecks the native scope and all import revisions, including unapplied jobs.
- * Each page is decoded and validated by the ordinary custody reader. */
-export async function scanCopyPages(db:D1Database,jobs:string[],snapshot:string,context:unknown,read:(job:string)=>Promise<CopyHold[]>,options?:CopyScanOptions):Promise<CopyHold[]>{
- const scope=await digest(JSON.stringify([options?.subject,options?.scope,snapshot,jobs,context]))
- const saved=options?await checkpoint(options,scope):{scope,next:0,holds:[],expires:0}
- if(saved.next>jobs.length)throw changed()
- let end=jobs.length
- if(options){
-  // Small retained jobs fit together; large compressed pages each get their
-  // own request. The bound is based on stored custody bytes, not wall time.
-  const candidates=jobs.slice(saved.next,saved.next+32)
+export async function deferCopyScan<T>(db:D1Database,saved:CopyCheckpoint<T>,context:PreviewTokenContext):Promise<never>{
+ if(await copySnapshot(db)!==saved.snapshot)throw changed()
+ throw new CopyScanPending(await sealPreview(saved,context))
+}
+/** Each decoded page is released before reading the next. Large pages receive
+ * a separate request; native closure rounds have their own request budget. */
+export async function scanCopyPages<T>(db:D1Database,saved:CopyCheckpoint<T>,read:(job:string)=>Promise<CopyHold[]>,context?:PreviewTokenContext):Promise<CopyHold[]>{
+ let end=saved.copy.jobs.length
+ if(context){
+  const candidates=saved.copy.jobs.slice(saved.next,saved.next+32)
   const sizes=(await db.prepare("SELECT id,COALESCE(json_extract(plan_json,'$.size'),length(CAST(plan_json AS BLOB))) bytes FROM ik_jobs WHERE id IN (SELECT value FROM json_each(?))").bind(JSON.stringify(candidates)).all<{id:string;bytes:number}>()).results
   const bytes=new Map(sizes.map(row=>[row.id,row.bytes]));let total=0;end=saved.next
-  for(const job of candidates){const size=bytes.get(job);if(size===undefined)throw changed();if(end>saved.next&&total+size>64*1024)break;total+=size;end++}
+  for(const job of candidates){const size=bytes.get(job);if(size===undefined||!Number.isSafeInteger(size)||size<0)throw changed();if((end>saved.next)&&total+size>64*1024)break;total+=size;end++}
  }
- for(let i=saved.next;i<end;i++)saved.holds.push(...await read(jobs[i]))
- if(await copySnapshot(db)!==snapshot)throw changed()
- if(end<jobs.length){
-  const body=Buffer.from(JSON.stringify({...saved,next:end})).toString('base64url')
-  throw new CopyScanPending(body+'.'+base64urlEncode(await signed(options!.secret,body)))
- }
- return saved.holds
+ for(let i=saved.next;i<end;i++)saved.copy.holds.push(...await read(saved.copy.jobs[i]))
+ saved.next=end
+ if(await copySnapshot(db)!==saved.snapshot)throw changed()
+ if(end<saved.copy.jobs.length)throw new CopyScanPending(await sealPreview(saved,context!))
+ return saved.copy.holds
 }

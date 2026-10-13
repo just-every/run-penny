@@ -4,21 +4,21 @@ import { NativeError, digest } from '@/core/features/auth/native-tokens'
 import { createUlid } from '@/core/shared/ulid'
 import inventory from './schema-inventory.json'
 import {hostErasureStatements} from '../auth/host-custody'
-import {readErasureFrontier,checkErasureRead} from './erasure-read'
 import {admitFlatImportErasure} from '../imports/erasure-admission'
-import {importCopyHolds} from '../imports/erasure-scope'
-import type {CopyScanOptions} from '../imports/copy-scan'
+import {importCopyHolds,prepareCopyScope,readCopyPage} from '../imports/erasure-scope'
+import {copySnapshot,readCopyFence,resumeCopyScan,scanCopyPages,deferCopyScan,type CopyScanOptions,type CopyCheckpoint} from '../imports/copy-scan'
 import { importErasureStatements } from '../imports/erasure'
 import {retainErasureWork,resumeImportErasure} from '../imports/erasure-work'
 import { validateFeedbackArchive } from '../imports/archive-custody'
 import { feedbackRestoreCustody } from '../imports/archive-restore'
 import {eraseArchivedSourceOptions,eraseExportedSourceOptions} from '../imports/archive-source-erasure'
-import { checkClauseErasureEdges, clauseDeletionOrder, expandClauseErasure, erasureFiles } from './erasure-dependencies'
+import { clauseDeletionOrder } from './erasure-dependencies'
+import {startNativeScope,stepNativeScope,finishNativeScope,type NativeScope,type ErasureTable} from './erasure-native'
 import { assertDataAuthority, dataBatch, type DataAuthority } from './authority'
 export type Cell=string|number|null
 export type Row=Record<string,Cell>
 type ForeignKey={table:string;from:string;to:string;id:number;seq:number;on_delete:string}
-type Table={name:string;sql:string;columns:{name:string;pk:number}[];foreignKeys:ForeignKey[]}
+export type Table={name:string;sql:string;columns:{name:string;pk:number}[];foreignKeys:ForeignKey[]}
 type State={origin:string;epoch:number;phase:string;lock_id:string|null}
 export const ERASURE_LIMITS={rows:20000,recordBytes:24*1024*1024}
 export const DATA_LIMITS={rows:2000,recordBytes:4*1024*1024,fileBytes:10*1024*1024,filesBytes:20*1024*1024,archiveBytes:32*1024*1024}
@@ -37,22 +37,31 @@ const hash=(value:unknown)=>digest(canonical(value))
 function fail(code:string,status:400|409|413|503=409):never{throw new NativeError(code,status)}
 function foreignGroups(keys:ForeignKey[]):Map<number,ForeignKey[]>{const groups=new Map<number,ForeignKey[]>();for(const key of keys)groups.set(key.id,[...(groups.get(key.id)??[]),key]);return groups}
 const ident=(name:string)=>{if(!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name))fail('unsupported_schema');return '"'+name+'"'}
-const keyColumns=(table:Table)=>table.columns.some(column=>column.pk>0)?table.columns.filter(column=>column.pk>0).sort((a,b)=>a.pk-b.pk):table.columns
-const rowKey=(table:Table,row:Row)=>canonical(keyColumns(table).map(column=>row[column.name]))
+const keyColumns=(table:Pick<Table,'columns'>)=>table.columns.some(column=>column.pk>0)?table.columns.filter(column=>column.pk>0).sort((a,b)=>a.pk-b.pk):table.columns
+const rowKey=(table:Pick<Table,'columns'>,row:Row)=>canonical(keyColumns(table).map(column=>row[column.name]))
 const schemaHash=(tables:Table[])=>hash(tables.map(table=>({name:table.name,sql:table.sql})))
 const state=(db:D1Database)=>db.prepare('SELECT origin,epoch,phase,lock_id FROM data_state WHERE singleton=1').first<State>()
-export async function schema(db:D1Database):Promise<Table[]>{
- const result=await db.prepare("SELECT name,sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' AND name NOT LIKE 'rer_portability_%' ORDER BY name").all<{name:string;sql:string}>()
- const namesJson=JSON.stringify(result.results.map(table=>table.name)),definitions=await db.batch([db.prepare('SELECT names.value native_table,p.* FROM json_each(?) names,pragma_table_info(names.value) p').bind(namesJson),db.prepare('SELECT names.value native_table,p.* FROM json_each(?) names,pragma_foreign_key_list(names.value) p').bind(namesJson)])
+export type TableHeader={name:string;sql:string}
+export async function schemaHeaders(db:D1Database):Promise<TableHeader[]>{
+ return (await db.prepare("SELECT name,sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' AND name NOT LIKE 'rer_portability_%' ORDER BY name").all<TableHeader>()).results
+}
+export function checkSchemaHeaders(headers:{name:string}[]):void{
+ const classified=inventory as Record<string,{classification:string;columns:string[]}>,names=new Set(headers.map(table=>table.name))
+ if(headers.some(table=>!classified[table.name])||Object.entries(classified).some(([name,definition])=>definition.classification!=='installation'&&!names.has(name)))fail('unclassified_archive_schema',503)
+}
+export async function schemaPart<T extends {name:string}>(db:D1Database,headers:T[]):Promise<(T&Pick<Table,'columns'|'foreignKeys'>)[]>{
+ const namesJson=JSON.stringify(headers.map(table=>table.name)),definitions=await db.batch([db.prepare('SELECT names.value native_table,p.name,p.pk FROM json_each(?) names,pragma_table_info(names.value) p').bind(namesJson),db.prepare('SELECT names.value native_table,p.id,p.seq,p."table",p."from",p."to",p.on_delete FROM json_each(?) names,pragma_foreign_key_list(names.value) p').bind(namesJson)])
  const classified=inventory as Record<string,{classification:string;columns:string[]}>
- const names=new Set(result.results.map(table=>table.name))
- if(result.results.some(table=>!classified[table.name])||Object.entries(classified).some(([name,definition])=>definition.classification!=='installation'&&!names.has(name)))fail('unclassified_archive_schema',503)
- return result.results.map(table=>{
+ return headers.map(table=>{
   const columns=(definitions[0].results as (Table['columns'][number]&{native_table:string})[]).filter(row=>row.native_table===table.name),expected=classified[table.name]
   if(canonical(columns.map(column=>column.name))!==canonical(expected.columns))fail('unclassified_archive_schema',503)
   return {...table,columns,foreignKeys:(definitions[1].results as (ForeignKey&{native_table:string})[]).filter(row=>row.native_table===table.name)}
  }).filter(table=>classified[table.name].classification==='product')
 }
+export async function schema(db:D1Database):Promise<Table[]>{
+ const headers=await schemaHeaders(db);checkSchemaHeaders(headers);return schemaPart(db,headers)
+}
+
 async function rows(db:D1Database,tables:Table[]):Promise<Record<string,Row[]>>{
  // Fetch one overflow row, never an unbounded table. The archive is refused
  // before it can claim a silently truncated result.
@@ -224,93 +233,50 @@ export async function abortRestore(db:D1Database,bucket:R2Bucket,id:string,autho
  try{const payload=JSON.parse(operation.payload_json) as {keys:string[];r2Owned?:boolean};if(payload.r2Owned===true){await assertDataAuthority(db,authority);await bucket.delete(payload.keys)}await finish(db,id,'aborted',authority)}catch(error){await releaseRunner(db,id,'running','pending');throw error}
 }
 const roots=new Set(['requesters','requests','evidence_items','accounts'])
-type ErasurePlan={table:string;id:string;planHash:string;counts:Record<string,number>;files:string[];blockedCopies:{table:string;key:string;columns:string[]}[];selected:Record<string,Row[]>;audit:Row[];tables:Table[]}
-function strings(value:Cell):string[]{
- if(typeof value!=='string')return []
- try{const parsed=JSON.parse(value) as unknown;const walk=(item:unknown):string[]=>typeof item==='string'?[item]:Array.isArray(item)?item.flatMap(walk):item!==null&&typeof item==='object'?Object.values(item).flatMap(walk):[];return [value,...walk(parsed)]}catch{return [value]}
-}
-export async function planErasure(db:D1Database,tableName:string,id:string,copyScan?:CopyScanOptions):Promise<ErasurePlan>{
- if(!roots.has(tableName))fail('unsupported_erasure_entity',400)
- const tables=await schema(db),data:Record<string,Row[]>=Object.fromEntries(tables.map(table=>[table.name,[]]))
- const found=await db.prepare(`SELECT * FROM ${ident(tableName)} WHERE id=?`).bind(id).first<Row>();if(found)data[tableName].push(found)
- checkClauseErasureEdges(tables)
- const root=data[tableName].find(row=>row.id===id);if(!root)fail('entity_not_found',400)
- const identities=await db.batch<Row>([db.prepare('SELECT id,display_name FROM requesters LIMIT 50001'),db.prepare('SELECT id,email FROM requester_addresses LIMIT 50001'),db.prepare('SELECT id,name FROM accounts LIMIT 50001')])
- if(identities.some(result=>result.results.length>50000))fail('erasure_identity_scope_limit',413)
- const privateIdentityAtoms=identities.flatMap(result=>result.results.flatMap(row=>Object.values(row))).filter((value):value is string=>typeof value==='string'&&value.length>0)
- // Approved public wording is installation-wide, not frontier-local: a phrase
- // must be known before the first round turns a matching title into a literal.
- const published=await db.batch<Row>([db.prepare("SELECT public_title,public_description FROM requests WHERE moderation_state='approved' AND published_at IS NOT NULL LIMIT 50001"),db.prepare('SELECT title,problem,body FROM roadmap_update_versions WHERE published_at IS NOT NULL LIMIT 50001'),db.prepare('SELECT public_title,public_summary FROM roadmap_publications WHERE approved_at IS NOT NULL LIMIT 50001')])
- if(published.some(result=>result.results.length>50000))fail('erasure_identity_scope_limit',413)
- const approvedPhrases=new Set(published.flatMap(result=>result.results.flatMap(row=>Object.values(row))).filter((value):value is string=>typeof value==='string'&&value.length>0&&!privateIdentityAtoms.some(atom=>value.includes(atom))))
- const selected:Record<string,Row[]>=Object.fromEntries(tables.map(table=>[table.name,[]]));selected[tableName].push(root)
- const marked=(table:Table,row:Row)=>selected[table.name].some(other=>rowKey(table,other)===rowKey(table,row))
- const literals=new Set<string>(),ids=new Set<string>()
- let changed=true
- while(changed){changed=false
-  if(expandClauseErasure(data,selected))changed=true
-  for(const table of tables)for(const row of selected[table.name]){
-   if(typeof row.id==='string')ids.add(row.id)
-   // Removing a comparison copy does not turn its duplicated business dimensions
-   // into new personal literals; root/evidence literals still fence personal copies.
-   for(const [column,value]of Object.entries(row))if(table.name!=='decision_bet_snapshots'&&!(table.name==='mail_event_records'&&column==='value_json')&&!(column==='title'&&['release_recipient_contexts','roadmap_update_contexts'].includes(table.name)&&typeof value==='string'&&approvedPhrases.has(value))&&['email','recipient','display_name','name','title','public_title','description','public_description','wording','body','proposed_solution','impact_statement','approved_author_name','source_label','named_speaker','review_reason','original_filename','rejection_reason','declined_reason','reason','rationale','question','summary','outcome_prompt','note','health','value_json'].includes(column)&&typeof value==='string'&&value.length>0)strings(value).forEach(text=>literals.add(text))
-  }
-  const readIds=new Set([...ids,...await Promise.all([...ids,...selected.requester_addresses.map(row=>String(row.email))].map(digest))])
-  if(await readErasureFrontier(db,tables,data,selected,readIds,literals))changed=true
-  checkErasureRead(data)
-  const evidenceLinks=[...data.request_evidence_links,...(data.request_evidence_contributions??[])]
-  // Erasing a request also erases its original evidence, including shared copies.
-  for(const link of evidenceLinks)if(selected.requests.some(row=>row.id===link.request_id)){
-   const evidence=data.evidence_items.find(row=>row.id===link.evidence_id)!,definition=tables.find(table=>table.name==='evidence_items')!
-   if(evidence&&!marked(definition,evidence)){selected.evidence_items.push(evidence);changed=true}
-  }
-  for(const link of evidenceLinks)if(selected.evidence_items.some(row=>row.id===link.evidence_id&&row.source_type==='portal_request')){
-   const request=data.requests.find(row=>row.id===link.request_id)!,definition=tables.find(table=>table.name==='requests')!
-   if(request&&!marked(definition,request)){selected.requests.push(request);changed=true}
-  }
-  // Comparison snapshots inherit the evidence snapshot's erasure provenance.
-  for(const snapshot of selected.decision_evidence_snapshots??[])for(const comparison of data.decision_bet_snapshots??[]){
-   const definition=tables.find(table=>table.name==='decision_bet_snapshots')!
-   if(comparison.decision_revision_id===snapshot.decision_revision_id&&comparison.candidate_bet_id===snapshot.candidate_bet_id&&!marked(definition,comparison)){selected.decision_bet_snapshots.push(comparison);changed=true}
-  }
-  const emails=new Set(selected.requester_addresses.map(row=>String(row.email)))
-  const subjectHashes=new Set(await Promise.all([...ids,...emails].map(digest)))
-  for(const table of tables){
-   if(['operators','operator_sessions','audit_entries','feedback_import_tombstones','host_identity_tombstones','ik_d1_erased_sources','ik_d1_erased_targets'].includes(table.name))continue
-   const groups=foreignGroups(table.foreignKeys)
-   for(const row of data[table.name]){
-    if(marked(table,row))continue
-    const referenced=[...groups.values()].some(group=>selected[group[0].table]?.some(parent=>group.every(key=>row[key.from]!==null&&parent[key.to]===row[key.from])))
-    const copied=Object.values(row).flatMap(strings).some(text=>[...ids].some(id=>text.includes(id)))
-    const address=(table.name==='native_magic_links'&&emails.has(String(row.email)))||(table.name==='local_auth_outbox'&&emails.has(String(row.recipient)))
-    const rate=table.name==='native_rate_limits'&&subjectHashes.has(String(row.subject_hash))
-    if(referenced||copied||address||rate){selected[table.name].push(row);changed=true}
-   }
-  }
+type ErasurePlan={table:string;id:string;planHash:string;counts:Record<string,number>;files:string[];blockedCopies:{table:string;key:string;columns:string[]}[];selected:Record<string,Row[]>;audit:Row[];tables:ErasureTable[]}
+type ErasureReview=Omit<ErasurePlan,'tables'>
+type CachedErasure={phase:'native';scope:NativeScope}|{phase:'prepare'|'copy';current:State;plan:Omit<ErasureReview,'planHash'>;literals?:string[]}
+const emptyCopy=()=>({jobs:[],identities:[],values:[],holds:[]})
+async function advancePreview(db:D1Database,saved:CopyCheckpoint<CachedErasure>,context:{secret:string;subject:string;table:string;id:string}):Promise<ErasureReview>{
+ if(saved.native.phase==='native'){
+  if(await stepNativeScope(db,saved.native.scope,true))return deferCopyScan(db,saved,context)
+  const {plan,literals}=finishNativeScope(saved.native.scope),{tables:definitions,...cached}=plan;void definitions
+  saved.native={phase:'prepare',current:(await state(db))!,plan:cached,literals}
+  return deferCopyScan(db,saved,context)
  }
- if(data.operators.some(row=>[row.email,row.display_name].flatMap(strings).some(text=>[...literals].some(literal=>text===literal))))fail('erasure_crosses_operator_hold')
- // Audit details are other people's history too: only an exact ID or JSON value
- // marks a row for anonymizing. A literal inside longer text is ambiguous.
- const exact=(row:Row)=>strings(row.details_json).some(text=>ids.has(text)||literals.has(text))
- const audits=data.audit_entries.filter(row=>ids.has(String(row.entity_id))||ids.has(String(row.actor_id))||exact(row))
- // Approved public wording has independent publication custody. Repeating an
- // explicitly approved public request/problem phrase does not turn that wording
- // into a recipient record; private text, addresses and copied IDs still refuse.
- const publishedReleases=new Set(data.releases.filter(row=>row.state==='published').map(row=>row.id))
- const publishedVersions=new Set(data.release_versions.filter(row=>publishedReleases.has(row.release_id)&&row.snapshot_sealed_at!==null).map(row=>row.id))
- const independentPublicPhrase=(table:string,row:Row,column:string,literal:string)=>approvedPhrases.has(literal)&&(
-  (table==='release_versions'&&publishedVersions.has(row.id)&&['title','body'].includes(column))||
-  (table==='roadmap_update_versions'&&row.published_at!==null&&['title','problem','body'].includes(column)))
- const blockedCopies:{table:string;key:string;columns:string[]}[]=[]
- for(const table of tables){if(['audit_entries','operators','operator_sessions'].includes(table.name))continue;for(const row of data[table.name]){if(marked(table,row))continue;const columns=Object.entries(row).filter(([column,value])=>!['id','created_at','updated_at','token_hash','token','slug','storage_key','subject_hash','key_hash','body_hash'].includes(column)&&strings(value).some(text=>[...literals].some(literal=>text.includes(literal)&&!independentPublicPhrase(table.name,row,column,literal)))).map(([column])=>column);if(columns.length)blockedCopies.push({table:table.name,key:rowKey(table,row),columns})}}
- for(const row of data.audit_entries)if(!audits.includes(row)&&strings(row.details_json).some(text=>[...ids,...literals].some(literal=>text.includes(literal))))blockedCopies.push({table:'audit_entries',key:rowKey(tables.find(table=>table.name==='audit_entries')!,row),columns:['details_json']})
- const current=(await state(db))!
- const scope=copyScan?await hash({current,table:tableName,id,selected,audits,blockedCopies}):undefined
- blockedCopies.push(...await importCopyHolds(db,selected.feedback_import_records,new Set([...literals,...ids]),copyScan?{...copyScan,scope}:undefined))
- const files=erasureFiles(selected)
- const counts=Object.fromEntries(tables.map(table=>[table.name,selected[table.name].length]).filter(([,count])=>count!==0));counts.audit_anonymized=audits.length
- const planHash=await hash({origin:current.origin,epoch:current.epoch,table:tableName,id,selected,audits,files,blockedCopies})
- return {table:tableName,id,planHash,counts,files,blockedCopies,selected,audit:audits,tables}
+ if(saved.native.phase==='prepare'){
+  saved.copy=await prepareCopyScope(db,saved.native.plan.selected.feedback_import_records,new Set(saved.native.literals))
+  delete saved.native.literals;saved.native.phase='copy'
+  return deferCopyScan(db,saved,context)
+ }
+ const holds=await scanCopyPages(db,saved,job=>readCopyPage(db,saved.copy,job),context)
+ const {current,plan}=saved.native,blockedCopies=[...plan.blockedCopies,...holds]
+ const planHash=await hash({origin:current.origin,epoch:current.epoch,table:plan.table,id:plan.id,selected:plan.selected,audits:plan.audit,files:plan.files,blockedCopies})
+ if(await copySnapshot(db)!==saved.snapshot)fail('erasure_plan_changed')
+ return {...plan,blockedCopies,planHash}
+}
+export function planErasure(db:D1Database,tableName:string,id:string):Promise<ErasurePlan>
+export function planErasure(db:D1Database,tableName:string,id:string,copyScan:CopyScanOptions):Promise<ErasureReview>
+export async function planErasure(db:D1Database,tableName:string,id:string,copyScan?:CopyScanOptions):Promise<ErasurePlan|ErasureReview>{
+ if(!roots.has(tableName))fail('unsupported_erasure_entity',400)
+ const context=copyScan?{...copyScan,table:tableName,id}:undefined
+ if(copyScan?.continuation)return advancePreview(db,await resumeCopyScan<CachedErasure>(db,context!,copyScan.continuation),context!)
+ const fence=copyScan?await readCopyFence(db):undefined,snapshot=fence?.snapshot
+ const retained=copyScan?await db.prepare("SELECT count(*) count FROM ik_jobs WHERE destination='penny-feedback'").first<number>('count'):0
+ const scope=await startNativeScope(db,tableName,id,retained!>32?fence!.tables:undefined)
+ if(copyScan){
+  if(retained!>32)return deferCopyScan(db,{version:1,snapshot:snapshot!,native:{phase:'native',scope},copy:emptyCopy(),next:0,expires:Date.now()+60*60*1000},context!)
+ }
+ while(await stepNativeScope(db,scope)){ /* The destructive path independently closes the complete graph. */ }
+ const {plan,literals}=finishNativeScope(scope),current=(await state(db))!
+ if(copyScan){
+  const copy=await prepareCopyScope(db,plan.selected.feedback_import_records,new Set(literals)),{tables:definitions,...cached}=plan;void definitions
+  const saved:CopyCheckpoint<CachedErasure>={version:1,snapshot:snapshot!,native:{phase:'copy',current,plan:cached},copy,next:0,expires:Date.now()+60*60*1000}
+  return advancePreview(db,saved,context!)
+ }
+ plan.blockedCopies.push(...await importCopyHolds(db,plan.selected.feedback_import_records,new Set(literals)))
+ const planHash=await hash({origin:current.origin,epoch:current.epoch,table:tableName,id,selected:plan.selected,audits:plan.audit,files:plan.files,blockedCopies:plan.blockedCopies})
+ return {...plan,planHash}
 }
 export async function resumeErasure(db:D1Database,bucket:R2Bucket,id:string,authority?:DataAuthority):Promise<{operationId:string;status:string}>{
  let operation=await dataOperation(db,id)

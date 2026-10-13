@@ -8,6 +8,7 @@ import { NativeError } from '@/core/features/auth/native-tokens'
 import { DATA_LIMITS,abortInterruptedExport,abortPendingErasure,abortRestore,dataOperation,eraseEntity,exportArchive,planErasure,readErasureJournal,recoverInterruptedRunner,resumeErasure,restoreArchive } from './archive'
 import { assertDataAuthority, type DataAuthority } from './authority'
 import {CopyScanPending} from '../imports/copy-scan'
+import {PREVIEW_TOKEN_BYTES} from '../imports/preview-token'
 type Environment={Bindings:AppBindings;Variables:{runtime:PennyRuntime;dataAuthority?:DataAuthority}}
 function authority(c:Context<Environment>):DataAuthority{
  const session=c.get('dataAuthority')
@@ -46,7 +47,7 @@ export function registerDataRoutes(app:Hono<Environment>):void{
   return c.json(result,result.status==='complete'?200:202)
  })
  app.post('/api/operator/data/erasure/preview',async c=>{
-  const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160),continuation:z.string().max(24*1024*1024).optional()}).strict(),DATA_LIMITS.archiveBytes)
+  const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160),continuation:z.string().max(PREVIEW_TOKEN_BYTES).optional()}).strict(),DATA_LIMITS.archiveBytes)
   const session=authority(c),secret=c.get('runtime').configuration.authSecret!
   try{
    const plan=await planErasure(c.env.DB,input.table,input.id,{secret,subject:session.operatorId+':'+session.id,continuation:input.continuation})

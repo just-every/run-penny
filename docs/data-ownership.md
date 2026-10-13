@@ -154,12 +154,17 @@ pnpm run data:erase -- private/plan.json --journal-out private/latest-journal.js
 pnpm run data:resume-erasure -- <operation-id> --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
 ```
 
-A large preview may return HTTP 202 with a signed `continuation`. The app and
+A large preview may return HTTP 202 with an encrypted `continuation`. The app and
 `data:erase-preview` command follow it automatically until the complete HTTP 200
 preview is ready. Other HTTP clients send the same table and ID with that
-continuation. A changed record, import custody or session invalidates the scan;
-start a new preview in that case. The final review hash and copy holds retain
-the same meaning, and erasure still checks the complete plan before removal.
+continuation. It carries the already reviewed native scope and copy-search
+results, bound to the current session, installation secret and selected root.
+It expires after one hour and works across Worker restarts. A changed record,
+schema, import custody or session invalidates the scan; start a new preview in
+that case. The final review hash and copy holds retain the same meaning, and
+erasure still checks the complete plan before removal. Migration 0050 tracks
+Penny's import metadata changes in an installation-only counter; it preserves
+portable product rows and their archive schema.
 
 For a genuinely interrupted runner, first stop it and quiesce its writers. Never
 use recovery against a live runner. The server requires explicit confirmation

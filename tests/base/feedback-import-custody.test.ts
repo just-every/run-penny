@@ -2,7 +2,7 @@ import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,expect,inject,it } from 'vitest'
 import { Buffer } from 'node:buffer'
 import { call,env,origin,owner,requester,mockMail } from './support'
-import { apply,complete,counts,feedbackFixture,exportFeedbackFixture,importPath,preview } from './feedback-import-fixture'
+import { apply,complete,counts,erasurePreview,feedbackFixture,exportFeedbackFixture,importPath,preview } from './feedback-import-fixture'
 import { stableFeedbackId } from '@/core/features/imports/mapping-support'
 import { canonical,exportArchive,restoreArchive } from '@/core/features/data/archive'
 import { digest } from '@/core/features/auth/native-tokens'
@@ -160,7 +160,7 @@ it.each(['current','legacy'] as const)('[IMP-005][DATA-001] erasure purges exact
  const restored=await exportArchive(env.DB,env.FILES)
  for(const table of Object.keys(snapshot.archive.tables).filter(name=>name.startsWith('ik_')||name.startsWith('feedback_import_')))expect(restored.archive.tables[table],table).toEqual(snapshot.archive.tables[table])
  expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual(authority)
- const previewResponse=await call('/api/operator/data/erasure/preview',{table:'requesters',id},operator);expect(previewResponse.status,await previewResponse.clone().text()).toBe(200)
+ const previewResponse=await erasurePreview('requesters',id,operator)
  const plan=await previewResponse.json() as {planHash:string;blockedCopies:unknown[]};expect(plan.blockedCopies).toEqual([])
  const erased=await call('/api/operator/data/erasure',{table:'requesters',id,planHash:plan.planHash},operator);await finishErasure(erased,operator)
  expect((await call(importPath+'/jobs/'+job.id+'/receipt',undefined,operator)).status).toBe(200)

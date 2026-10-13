@@ -2,7 +2,7 @@ import { applyD1Migrations,reset } from 'cloudflare:test'
 import { afterEach,beforeEach,expect,inject,it,vi } from 'vitest'
 import { Buffer } from 'node:buffer'
 import { call,env,messages,mockMail,owner } from './support'
-import { apply,complete,counts,importPath,preview } from './feedback-import-fixture'
+import { apply,complete,counts,erasurePreview,importPath,preview } from './feedback-import-fixture'
 import { created,defaultIdeas,defaultVoters,ideaHeadings,largeUservoiceFixture,pagedUservoiceFixture,uservoiceCsv,uservoiceFixture } from './uservoice-fixture'
 import { stableFeedbackId } from '@/core/features/imports/mapping-support'
 import type { FeedbackReceipt } from '@/core/features/imports/receipt'
@@ -108,11 +108,11 @@ it.each(['requesters','requests'] as const)('[IMP-008][IMP-004][IMP-005] fences 
  const before=await kept();expect((await call(importPath+'/jobs/'+job.id+'/undo',{},operator)).status).toBe(409);expect(await kept()).toEqual(before)
  // u2 and u3 share a name and an address. Erasing either would rewrite the
  // other person's retained copy, so it is refused rather than guessed.
- const shared=await(await call('/api/operator/data/erasure/preview',{table:'requesters',id:stableFeedbackId(source.namespace,'users','uservoice-user:u2')},operator)).json() as {planHash:string;blockedCopies:unknown[]}
+ const shared=await(await erasurePreview('requesters',stableFeedbackId(source.namespace,'users','uservoice-user:u2'),operator)).json() as {planHash:string;blockedCopies:unknown[]}
  expect(shared.blockedCopies.length).toBeGreaterThan(0);expect((await call('/api/operator/data/erasure',{table:'requesters',id:stableFeedbackId(source.namespace,'users','uservoice-user:u2'),planHash:shared.planHash},operator)).status).toBe(409)
  const id=table==='requesters'?stableFeedbackId(source.namespace,'users','uservoice-user:u1'):stableFeedbackId(source.namespace,'posts','102')
  const rows={before:Object.fromEntries(await Promise.all(['requesters','requests','request_vote_contributions','request_vote_supporter_types','evidence_items','feedback_import_records','ik_d1_original_chunks','ik_d1_erased_targets'].map(async name=>[name,await count(name)])))}
- const previewResponse=await call('/api/operator/data/erasure/preview',{table,id},operator);expect(previewResponse.status,await previewResponse.clone().text()).toBe(200)
+ const previewResponse=await erasurePreview(table,id,operator)
  const plan=await previewResponse.json() as {planHash:string;blockedCopies:unknown[]};expect(plan.blockedCopies).toEqual([])
  await finishErasure(await call('/api/operator/data/erasure',{table,id,planHash:plan.planHash},operator),operator)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM '+table+' WHERE id=?').bind(id).first('n')).toBe(0)
@@ -137,7 +137,7 @@ it('[IMP-008][IMP-005] a paged UserVoice import keeps every supporter and erases
  const id=stableFeedbackId(source.namespace,'users','uservoice-user:spanning')
  const votes=async()=>(await env.DB.prepare('SELECT COUNT(*) n FROM request_vote_contributions WHERE requester_id=?').bind(id).first<{n:number}>())!.n
  expect(await votes()).toBe(2)
- const previewResponse=await call('/api/operator/data/erasure/preview',{table:'requesters',id},operator);expect(previewResponse.status,await previewResponse.clone().text()).toBe(200)
+ const previewResponse=await erasurePreview('requesters',id,operator)
  const plan=await previewResponse.json() as {planHash:string;blockedCopies:unknown[]};expect(plan.blockedCopies).toEqual([])
  await finishErasure(await call('/api/operator/data/erasure',{table:'requesters',id,planHash:plan.planHash},operator),operator)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM requesters WHERE id=?').bind(id).first('n')).toBe(0)

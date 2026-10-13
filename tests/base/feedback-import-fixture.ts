@@ -29,6 +29,16 @@ export async function preview(source:SavedFeedbackInput,operator:Record<string,s
  const response=await call(importPath+'/preview',source,operator);expect(response.status,await response.clone().text()).toBe(200)
  return await response.json() as {fingerprint:string;counts:{rejected:number;mapped:number;byKind:Record<string,number>};rows:{kind:string;applied:number;rejection:string|null;omissions:{field?:string;reason:string}[]}[]}
 }
+export async function erasurePreview(table:'requesters'|'requests',id:string,operator:Record<string,string>){
+ let response=await call('/api/operator/data/erasure/preview',{table,id},operator)
+ while(response.status===202){
+  const {continuation}=await response.json() as {continuation:string}
+  expect(continuation).toEqual(expect.any(String))
+  response=await call('/api/operator/data/erasure/preview',{table,id,continuation},operator)
+ }
+ expect(response.status,await response.clone().text()).toBe(200)
+ return response
+}
 export async function complete(job:{id:string;state:string;checkpoint:number},operator:Record<string,string>) {
  for(let i=0;i<20&&!['completed','undone','rolled_back'].includes(job.state);i++){
   const response=await call(importPath+'/jobs/'+job.id+'/resume',{},operator);expect(response.status,await response.clone().text()).toBe(200)

@@ -2347,5 +2347,12 @@
       "intent",
       "ordinal"
     ]
+  },
+  "feedback_import_preview_revision": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "revision"
+    ]
   }
 }

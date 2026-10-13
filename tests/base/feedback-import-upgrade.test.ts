@@ -8,7 +8,7 @@ import { importPennySample } from '@/core/features/sample-data/service'
 import { createDatabaseConnection } from '@/core/platform/database'
 import sample from '../../sample-data/penny.v1.json'
 import { populateLegacyFeedback } from './legacy-feedback-fixture'
-import { feedbackFixture,complete,apply,importPath } from './feedback-import-fixture'
+import { feedbackFixture,complete,apply,erasurePreview,importPath } from './feedback-import-fixture'
 import { exportArchive,type Row } from '@/core/features/data/archive'
 import { d1ReversalFenceSchema } from '../../base/modules/import-kit/src/d1/index'
 afterEach(()=>vi.restoreAllMocks())
@@ -111,7 +111,7 @@ it.each(['0034_','0038_'])('[IMP-003][IMP-007][IMP-008][DATA-001] upgrades popul
  const supporter={namespace:'main-retired',statuses:{},files:[{name:'retired-person.json',kind:'users' as const,version:'v2' as const,base64:Buffer.from(JSON.stringify({users:[{id:'retired-person',name:'Quillon Vandermeer',created:'2024-07-08T09:10:11.000Z'}]})).toString('base64')}]}
  await populateFeedback(supporter,operator)
  const person=stableFeedbackId(supporter.namespace,'users','retired-person')
-const erasure=await(await call('/api/operator/data/erasure/preview',{table:'requesters',id:person},operator)).json() as {planHash:string;blockedCopies:unknown[]};expect(erasure.blockedCopies).toEqual([])
+ const erasure=await(await erasurePreview('requesters',person,operator)).json() as {planHash:string;blockedCopies:unknown[]};expect(erasure.blockedCopies).toEqual([])
  const erased=await call('/api/operator/data/erasure',{table:'requesters',id:person,planHash:erasure.planHash},operator);expect([200,202],await erased.clone().text()).toContain(erased.status)
  let operation=await erased.json() as {operationId:string;status:string};for(let step=0;step<100&&operation.status!=='complete';step++)operation=await(await call('/api/operator/data/operations/'+operation.operationId+'/resume',{},operator)).json() as typeof operation
  expect(operation.status).toBe('complete')
