@@ -83,7 +83,9 @@ it.each([1, 2])('[BASE-OPS-002 DATA-001] isolates added notification state with 
   const columns = (await env.DB.prepare('PRAGMA table_info(request_status_updates)').all<{ name: string }>()).results.map(row => row.name)
   expect(columns).toContain('action_key')
   expect(columns).toContain('publication_version')
-  await writeNotificationState()
+  // The next scenario's cleanup must preserve this scenario's validated audit
+  // as well as every earlier legacy cell in the shared database.
+  legacyRows = await writeNotificationState()
   await expect(env.DB.prepare("DELETE FROM notification_events WHERE id='isolation-event'").run()).rejects.toThrow('FOREIGN KEY constraint failed')
   expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

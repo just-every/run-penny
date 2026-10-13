@@ -7041,7 +7041,7 @@
       "executable": false
     },
     "src/core/features/settings/ui/custom-field-settings.tsx": {
-      "sha256": "9d516eaee3b9883dbedfdd0b4020ac76b906b98f836075cde75be3bf54a86b0f",
+      "sha256": "d50f2cc75d13d3854c4ddbe398d8a8287c62f6bb36f2d0493d67791324423054",
       "executable": false
     },
     "src/core/features/settings/ui/custom-fields-editor.tsx": {
@@ -7977,7 +7977,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-fields.mjs": {
-      "sha256": "82ee319ed6aca6143ea5ae842fb9a06971cba39c7db42a0720cf57c219dffed9",
+      "sha256": "0d00cc5139b99d47c17120cf3b719f42a5060fe497df908ddf90dfbb0e85d11c",
       "executable": false
     },
     "tests/browser/operator-completeness-notices.mjs": {
@@ -7985,7 +7985,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-read.mjs": {
-      "sha256": "70aa57f627f0053cf130ee046551161ad15d9850d92b76249be0670615130519",
+      "sha256": "2414b2e3b26efc9d98393c1dc1e7b09c13e63c42a0ea4fd6e2e7e71578309bdd",
       "executable": false
     },
     "tests/browser/operator-completeness-requester.mjs": {
@@ -8289,7 +8289,7 @@
       "executable": false
     },
     "tests/e2e/worker/predecessor-isolation.test.ts": {
-      "sha256": "3991e3920d478934e72fbc648cac67f5808677114c7ef45e3a513e73f9a56a24",
+      "sha256": "d74295e50a9449511804792b85c593a2909e42560c5c9f6cd03691e37060c432",
       "executable": false
     },
     "tests/e2e/worker/read-spine.test.ts": {

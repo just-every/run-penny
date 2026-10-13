@@ -31,8 +31,9 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
    assert.ok([302,303,401].includes(response.status()),`[OPS-004] anonymous private read denied ${path}`)
    assert.doesNotMatch(await response.text(),/privateproof/)
   }
-  for(const path of ['/','/portal/feedback','/portal/roadmap','/portal/releases','/api/public/requests','/api/public/roadmap','/api/public/releases']) {
+  for(const path of ['/','/portal/feedback','/portal/roadmap','/portal/updates','/api/public/requests','/api/public/roadmap','/api/public/releases']) {
    const response=await anonymous.request.get(origin+path)
+   assert.equal(response.status(),200,'[OPS-004 DATA-004] public privacy probe opens a real document/API')
    assert.doesNotMatch(await response.text(),/privateproof|customproof/,'[OPS-004 DATA-004] public documents/API contain no private fixture fields')
   }
  }finally{await anonymous.close()}

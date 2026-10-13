@@ -46,7 +46,7 @@ function CustomFieldSettingsContent() {
 
   return <div className="space-y-4">
     <label className={fieldLabelClass}>Entity type
-      <select aria-label="Custom field entity type" value={entityType} onChange={event => setEntityType(event.target.value as typeof entityType)} className={fieldClass}>
+      <select aria-label="Custom field entity type" disabled={definitions.kind !== 'ready'} value={entityType} onChange={event => setEntityType(event.target.value as typeof entityType)} className={fieldClass}>
         {entityOptions.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
       </select>
     </label>
