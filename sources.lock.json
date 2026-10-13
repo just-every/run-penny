@@ -7593,7 +7593,7 @@
       "executable": false
     },
     "tests/base/feedback-import-upgrade.test.ts": {
-      "sha256": "3c6f6a6ed319e3687b9f16ab4591cfbec5e65b35ec27abbd78b3fcedd2e238a6",
+      "sha256": "83ebc629d39ad2d51854ccd9d0aa59677058b9c36f4b74563eff7a49589f4887",
       "executable": false
     },
     "tests/base/feedback-import-uservoice.test.ts": {

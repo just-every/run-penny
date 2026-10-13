@@ -184,7 +184,7 @@ it('[IMP-003][DATA-001] upgrades populated 0036 custody and closes maintenance w
  ])
  const bytes=new Uint8Array([0,255,13,10,195,169]);await env.FILES.put('maintenance-upgrade-original',bytes)
  const tables=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' ORDER BY name").all<{name:string}>()).results
- const read=async()=>(await env.DB.batch(tables.map(({name})=>env.DB.prepare('SELECT * FROM "'+name+'" ORDER BY rowid')))).map(result=>result.results)
+ const read=async()=>(await env.DB.batch<Row>(tables.map(({name})=>env.DB.prepare('SELECT * FROM "'+name+'" ORDER BY rowid')))).map(result=>result.results)
  const before=await read(),receipt=await(await call(importPath+'/jobs/'+job.id+'/receipt',undefined,operator)).json()
  // Authenticated receipt reads do not change the stored history we preserve.
  const prior=await read()
