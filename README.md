@@ -10,6 +10,25 @@
 
 <p align="center"><a href="https://run-penny.com">run-penny.com</a> · <a href="https://justevery.com">Part of Just Every</a> · <a href="LICENSE">MIT licensed</a></p>
 
+<p align="center">
+  <a href="https://justevery.com/#vol-penny"><img src=".github/assets/media/preview.gif" width="800" alt="Penny: Export invoices to CSV is published, thirteen emails go out to everyone who asked, and Marco's page reads Shipped"></a>
+</p>
+<p align="center"><a href="https://justevery.com/#vol-penny"><b>Watch the full demo</b></a> · 45 seconds</p>
+
+<p align="center">
+  <img src=".github/assets/media/flow.webp" width="800" alt="Marco's duplicate is matched to Export invoices to CSV, the release email is sent to 13 people, and his request reads Shipped with 13 votes">
+</p>
+
+<p align="center">
+  <img src=".github/assets/media/screen-1.webp" width="800" alt="Penny's Evidence and alternatives: CSV export with four supporting customer quotes beside Accounting API with one contradicting quote"><br>
+  <sub>Compare bets side by side, with the customers' own words as evidence.</sub>
+</p>
+
+<p align="center">
+  <img src=".github/assets/media/screen-2.webp" width="800" alt="Penny's release detail for Export invoices to CSV: the published customer-safe update and its publication readiness, 13 recipients"><br>
+  <sub>Publish the release and tell everyone who asked.</sub>
+</p>
+
 # Penny
 
 Penny is a self-hosted customer-feedback decision product for one B2B software
