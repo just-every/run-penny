@@ -135,6 +135,8 @@ it('[OPS-002] initial owner self-removal requires a verified successor and survi
  expect((await call(management,{email:'pending-owner@example.test'},first)).status).toBe(202)
  expect((await call(`${management}/${initial.id}`,{},first,'DELETE')).status).toBe(409)
  const peer=await invited(first,'successor@example.test')
+ const issued=await call('/api/operator/integrations/keys',{name:'Successor key',scopes:['requests:read']},peer.cookie)
+ expect(issued.status).toBe(201);const key=await issued.json() as {token:string}
  await call('/api/auth/magic-link',{email:'owner@penny.invalid'})
  const held=new URL(messages.findLast(m=>m.to==='owner@penny.invalid')!.url).searchParams.get('token')!
  expect((await call(`${management}/${initial.id}`,{},first,'DELETE')).status).toBe(200)
@@ -150,6 +152,10 @@ it('[OPS-002] initial owner self-removal requires a verified successor and survi
  expect((await call('/api/operator/settings/branding',undefined,successor)).status).toBe(200)
  expect((await call(`${management}/${initial.id}`,{},successor,'DELETE')).status).toBe(403)
  expect((await call(management,undefined,peer.cookie)).status).toBe(401)
+ // Taking over ownership keeps the successor's own keys working.
+ expect((await call('/api/v1/requests',undefined,{Authorization:`Bearer ${key.token}`})).status).toBe(200)
+ // The former owner can be invited back as an equal operator.
+ expect((await invited(successor,'owner@penny.invalid')).id).toBe(initial.id)
 })
 it('[OPS-002 BASE-OPS-005] management refuses maintenance and audit failure without leaving membership changes',async()=>{
  const first=await owner(),peer=await invited(first,'retained@example.test')

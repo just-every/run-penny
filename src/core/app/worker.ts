@@ -2,6 +2,7 @@ import { type Context } from 'hono'
 import { createPennyApi } from './api'
 import { hasOperatorSession } from '@/core/features/auth/operator'
 import { portalReadService } from '@/core/features/portal/service'
+import { invalidListQuery } from '@/core/features/workspace/list-query'
 import type { PennyRuntime } from './runtime'
 import { isDeclaredSessionlessPath, isLocalViteModulePath, isPublicAssetPath, isPublicDocumentPath } from './public-paths'
 import type { RuntimeConfigurationSource } from '@/core/platform/configuration'
@@ -80,7 +81,10 @@ async function serveOperatorWorkspace(context: PennyWorkerContext) {
     return context.json({ authenticated: false }, 401)
   }
 
-  return renderDocument(context)
+  const response = await renderDocument(context)
+  // A list page renders its refusal for a filter or page it does not have; that is the address's fault, not the server's.
+  const query = Object.fromEntries(new URL(context.req.url).searchParams)
+  return response.status === 500 && invalidListQuery(query) ? new Response(response.body, { status: 400, headers: response.headers }) : response
 }
 
 async function renderDocument(context: PennyWorkerContext) {

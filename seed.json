@@ -394,6 +394,7 @@
     "releases": 10000,
     "recipientsPerRelease": 50000,
     "publicReadRequestsPerMinutePerIp": 120,
+    "publicAssetRequestsPerMinutePerIp": 1200,
     "publicWriteRequestsPerMinutePerIp": 30,
     "publicWritesPerMinutePerIdentity": 20,
     "identityActionsPerMinutePerIp": 10,

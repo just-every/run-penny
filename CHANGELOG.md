@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Removing the installation owner keeps the successor's API keys, webhook, Slack and receiver destinations and tracker connections working (only the successor's sessions end), and a removed former owner can be invited back as an operator. Operator list and search pages read numbers such as 2024 or 1.0 as typed text, and an invalid filter or page gets a 400 page with a way back to the plain list instead of a server error. Page assets (/assets/, /fonts/, /brand/, /rer-theme.css) have their own per-client limit (`publicAssetRequestsPerMinutePerIp`, 1200 a minute) instead of counting against page reads.
 - Pace the final hydration verification through Penny's real public admission window: serial fresh page loads wait 61 seconds, including the first, while retaining every tamper and recovery assertion. Two CLI files are explicitly owned adaptations with immutable Base comparison origins; unchanged CLI files retain exact custody. Product limits and applied migrations are unchanged. Focused hydration and full exact-source CI receipts remain required.
 
 - Feedback settings manages native email invitations and immediate operator removal. Operators have equal product access; only the setup owner can remove themselves, with explicit transfer of installation controls to a verified active peer. Persisted membership replaces the old source allowlist gate.

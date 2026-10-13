@@ -22,5 +22,9 @@ export function validateListSearch(input: Record<string, unknown>): ListQuery {
  for(const key of ['unreviewed','attention','active']) if(input[key] === true || input[key] === 'true') result[key]=true
  return result as ListQuery
 }
+/** Whether a list address's own query is one validateListSearch refuses. */
+export function invalidListQuery(search: Record<string, unknown>): boolean {
+ try { validateListSearch(search); return false } catch(error) { if(error instanceof ListQueryError)return true; throw error }
+}
 export function queryString(query: ListQuery): string { const params=new URLSearchParams(); for(const [key,value] of Object.entries(query)) if(value !== undefined && value !== '') params.set(key,String(value)); return params.size ? `?${params}` : '' }
 export function boundedIds(alias: string, ids?: readonly string[]): string { return ids ? ` WHERE ${alias}.id IN (${ids.length ? ids.map(()=>'?').join(',') : 'NULL'})` : '' }

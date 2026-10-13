@@ -7,6 +7,9 @@ import {digest} from '@/core/features/auth/native-tokens'
 // allowance. Existing identity, mail and mutation limits remain independent.
 export const publicRatePolicy={scope:'public_entry',allowance:manifest.limits.publicReadRequestsPerMinutePerIp,windowMs:60_000,maxClients:10_000} as const
 export const publicWriteRatePolicy={...publicRatePolicy,scope:'public_entry_write',allowance:manifest.limits.publicWriteRequestsPerMinutePerIp} as const
+// A browser revalidates every asset of a document on each load; charging those
+// to page reads would refuse a few fresh tabs. Assets keep their own bound.
+export const publicAssetRatePolicy={...publicRatePolicy,scope:'public_entry_asset',allowance:manifest.limits.publicAssetRequestsPerMinutePerIp} as const
 const mailEventRatePolicy={...publicRatePolicy,scope:'public_entry_mail',allowance:manifest.limits.mailEventsPerMinutePerIp} as const
 const admitted=new WeakSet<Request>()
 
@@ -28,7 +31,7 @@ export async function admitPublicRequest(request:Request,bindings:AppBindings):P
  const path=new URL(request.url).pathname
  if(!isDeclaredSessionlessPath(path)&&!isPublicAssetPath(path)&&!path.startsWith('/api/public/')&&!path.startsWith('/auth/')&&!path.startsWith('/.well-known/'))return null
  const read=['GET','HEAD','OPTIONS'].includes(request.method)||path.startsWith('/_serverFn/')
- const policy=read?publicRatePolicy:path==='/api/public/mail/events'?mailEventRatePolicy:publicWriteRatePolicy
+ const policy=read?isPublicAssetPath(path)?publicAssetRatePolicy:publicRatePolicy:path==='/api/public/mail/events'?mailEventRatePolicy:publicWriteRatePolicy
  const {scope,allowance,windowMs,maxClients}=policy,now=new Date().toISOString()
  try{
   const db=bindings.DB,subject=await digest(clientAddress(request))

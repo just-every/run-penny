@@ -76,9 +76,14 @@ export async function removeOperator(runtime:PennyRuntime, session:Session, targ
   if(successor){
     statements.push(audit(db,session.operatorId,'operator.installation_owner_transferred',successor.id,{previousOwner:target.id}))
     statements.push(db.prepare("UPDATE oa_operators SET role='owner' WHERE id=?").bind(successor.id))
+    // The role change bumps the successor's version, which ends their sessions.
+    // Their keys and integrations stay theirs: move only the ones current before the transfer.
+    for(const table of ['penny_api_issuers','penny_integration_destinations','penny_tracker_connections','penny_tracker_commands'])
+      statements.push(db.prepare(`UPDATE ${table} SET operator_version=(SELECT version FROM oa_operators WHERE id=?) WHERE native_operator_id=? AND operator_version=?`).bind(successor.id,successor.id,successor.version))
   }
   statements.push(audit(db,session.operatorId,'operator.removed',target.id))
-  statements.push(db.prepare("UPDATE oa_operators SET status='inactive' WHERE id=?").bind(target.id))
+  // A removed owner returns only as an equal member, through a new invitation.
+  statements.push(db.prepare("UPDATE oa_operators SET status='inactive',role='member' WHERE id=?").bind(target.id))
   // Preserve the inactive identity and bootstrap claim. Only a new explicit
   // invitation may restore a former member; stale cookies/links stay revoked.
   statements.push(db.prepare('INSERT INTO oa_invitation_cancellations(operator_id,operator_version) SELECT id,version FROM oa_operators WHERE id=? ON CONFLICT(operator_id) DO UPDATE SET operator_version=excluded.operator_version').bind(target.id))

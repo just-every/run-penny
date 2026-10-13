@@ -106,6 +106,9 @@ export function registerOperatorReadFlows() {
   expect((await(await call('/api/operator/search?q=marker&tag=missing-tag',undefined,cookie)).json() as OperatorPage<SearchResult>).total).toBe(0)
   expect((await (await call('/api/operator/search?q=no-such-marker',undefined,cookie)).json() as OperatorPage<SearchResult>).items).toEqual([])
   expect((await call('/api/operator/search?page=999999999999',undefined,cookie)).status).toBe(400)
+  // Pages read numeric text as text and refuse an invalid filter as a 400 page.
+  const numeric=await call('/app/search?q=2024',undefined,{...cookie,Accept:'text/html'});expect(numeric.status).toBe(200);await numeric.body?.cancel()
+  const invalid=await call('/app/feedback?sort=bogus',undefined,{...cookie,Accept:'text/html'});expect(invalid.status).toBe(400);await invalid.body?.cancel()
   const timingStart=performance.now();expect((await call('/api/operator/search?q=marker',undefined,cookie)).status).toBe(200);console.info('Bounded fixture search first page ms',performance.now()-timingStart)
  })
  it('[REQ-028 EVID-009] every entity list applies tags, bounded paging, stable ties and request filters',async()=>{

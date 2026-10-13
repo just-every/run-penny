@@ -112,9 +112,11 @@ export async function reviewPublicRate({page,origin,db}) {
  for(const path of [`/assets/${asset}`,`/fonts/${font}`])assert.equal((await page.context().request.get(origin+path,{headers:{'CF-Connecting-IP':'198.51.100.203'}})).status(),200,'[BASE-ACCESS-003] real emitted bytes normally readable')
  const representativePrefixes={'/assets/':`/assets/${asset}`,'/fonts/':`/fonts/${font}`,'/brand/':'/brand/penny-mark.svg','/api/public/requests/':'/api/public/requests/proof-request-00','/api/public/roadmap/':'/api/public/roadmap/proof-roadmap-00','/api/public/releases/':'/api/public/releases/proof-release-00','/portal/':'/portal/feedback','/docs/':'/docs/data-ownership','/_serverFn/':'/_serverFn/rate-proof'}
  const declared=manifest.deploy.publicPaths.map(path=>representativePrefixes[path]??path)
+ const pageAsset=path=>['/assets/','/fonts/','/brand/'].some(prefix=>path.startsWith(prefix))||path==='/rer-theme.css'
  for(const path of declared)for(const method of ['GET','HEAD','OPTIONS']) {
   const response=await page.context().request.fetch(origin+path,{...options,method})
-  assert.equal(response.status(),429,`[BASE-ACCESS-003] Worker admission before read/asset ${method} ${path}`)
+  if(pageAsset(path))assert.notEqual(response.status(),429,`[BASE-ACCESS-003] page assets are not charged to page reads ${method} ${path}`)
+  else assert.equal(response.status(),429,`[BASE-ACCESS-003] Worker admission before read ${method} ${path}`)
  }
  assert.equal((await page.context().request.get(origin+'/api/public/boards',{headers:{'CF-Connecting-IP':'198.51.100.202'}})).status(),200,'second ingress client proceeds')
  // Let this client's real admission window expire without changing its bucket.
