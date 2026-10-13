@@ -212,7 +212,19 @@ it.each(['request','requester','evidence','streamed evidence','legacy evidence']
  if(evidenceRoot){
   expect(erased.status).toBe(202);const pending=await erased.clone().json() as {operationId:string;status:string};expect(pending.status).toBe('pending_import')
   expect(await nativeRows()).toEqual(nativeBefore)
-  expect((await call('/api/operator/requests/feedback-'+requestId.toLowerCase()+'/notes',{body:'Must wait for privacy cleanup'},operator)).status).toBe(503)
+  // The restoring owner's native session remains admitted. Ordinary request
+  // writes additionally require idle data custody in their transaction guard.
+  const authorityRows=async()=>(await env.DB.batch(['oa_operators','oa_sessions','operators'].map(table=>env.DB.prepare('SELECT * FROM '+table+' ORDER BY id')))).map(result=>result.results)
+  const authorityBefore=await authorityRows(),session=await call('/auth/session',undefined,operator)
+  expect(session.status,await session.clone().text()).toBe(200)
+  const admitted=await session.json()
+  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'locked',lock_id:pending.operationId})
+  const held=await call('/api/operator/requests/feedback-'+requestId.toLowerCase()+'/notes',{body:'Must wait for privacy cleanup'},operator)
+  expect(held.status,await held.clone().text()).toBe(401);expect(await held.json()).toEqual({error:'integration_authority_changed'})
+  const stillAdmitted=await call('/auth/session',undefined,operator)
+  expect(stillAdmitted.status).toBe(200);expect(await stillAdmitted.json()).toEqual(admitted)
+  expect(await authorityRows()).toEqual(authorityBefore);expect(await nativeRows()).toEqual(nativeBefore)
+  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'locked',lock_id:pending.operationId})
   // A survivor changed inside the actual custody transaction must invalidate
   // publication and roll back. The same operation then resumes unchanged.
   await env.DB.prepare("CREATE TRIGGER interrupt_privacy_cleanup AFTER UPDATE OF complete ON feedback_import_erasure_work WHEN NEW.complete=1 BEGIN UPDATE requests SET description='Concurrent native description'; END").run()
@@ -248,6 +260,7 @@ it.each(['request','requester','evidence','streamed evidence','legacy evidence']
  for(const [name,rows]of Object.entries(after.archive.tables).filter(([name])=>name.startsWith('ik_')||name.startsWith('feedback_import_'))){void rows;const retained=JSON.stringify((await env.DB.prepare('SELECT * FROM '+name).all()).results);expect(retained).not.toContain('Exact café');for(const file of source.files)expect(retained).not.toContain(file.base64)}
  expect(after.archive.tables.ik_d1_erased_sources.length).toBeGreaterThan(0);expect(after.archive.tables.ik_d1_erased_targets.length).toBeGreaterThan(0)
  for(const table of ['notification_outbox','notification_intents','local_auth_outbox'])expect(after.archive.tables[table]).toHaveLength(0)
+ if(evidenceRoot)expect((await call('/api/operator/requests/feedback-'+requestId.toLowerCase()+'/notes',{body:'Native work resumes after privacy cleanup'},operator)).status).toBe(201)
 },60000)
 it('[IMP-003][IMP-005][DATA-001] validates a bounded stream archive and keeps its receipt and exact originals after restore',async()=>{
  const {boundedFeedbackFixture}=await import('./feedback-import-fixture'),{validateFeedbackArchive}=await import('@/core/features/imports/archive-custody')

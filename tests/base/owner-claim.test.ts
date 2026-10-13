@@ -2,16 +2,20 @@ import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,expect,inject,it} from 'vitest'
 import {Buffer} from 'node:buffer'
 import {createPennyApi} from '@/core/app/api'
+import {publicRatePolicy,publicWriteRatePolicy} from '@/core/app/public-rate'
+import {digest} from '@/core/features/auth/native-tokens'
 import {env,origin,owner,call} from './support'
 import type {AppBindings} from '@/core/shared/bindings'
-const issuer='https://management.example.test',installationId='test-penny-installation'
+const issuer='https://management.example.test',installationId='test-penny-installation',claimIp='192.0.2.31'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 async function fixture(){
  const keys=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},true,['sign','verify'])
  const publicKey=await crypto.subtle.exportKey('jwk',keys.publicKey)
- const bindings={...env,RER_OWNER_CLAIM_ISSUER:issuer,RER_OWNER_CLAIM_PUBLIC_KEYS:JSON.stringify({test:publicKey}),RER_INSTALLATION_ID:installationId} as AppBindings
+ // Installation identity also enables editor document headers, so managed
+ // owner claims need the installation's management origin alongside its ID.
+ const bindings={...env,RER_OWNER_CLAIM_ISSUER:issuer,RER_OWNER_CLAIM_PUBLIC_KEYS:JSON.stringify({test:publicKey}),RER_INSTALLATION_ID:installationId,RER_MANAGEMENT_ORIGIN:issuer} as AppBindings
  const api=createPennyApi()
- const request=(body?:unknown,headers:Record<string,string>={})=>api.fetch(new Request(origin+'/auth/owner-claim',{method:body===undefined?'GET':'POST',headers:{Host:'penny.test',Origin:origin,'CF-Connecting-IP':'192.0.2.31',...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings)
+ const request=(body?:unknown,headers:Record<string,string>={})=>api.fetch(new Request(origin+'/auth/owner-claim',{method:body===undefined?'GET':'POST',headers:{Host:'penny.test',Origin:origin,'CF-Connecting-IP':claimIp,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings)
  async function signed(overrides:Record<string,unknown>={}){
   const now=Math.floor(Date.now()/1000),header=Buffer.from(JSON.stringify({alg:'ES256',typ:'rer-owner-claim+jwt',kid:'test'})).toString('base64url')
   const payload=Buffer.from(JSON.stringify({v:1,iss:issuer,aud:origin,installationId,email:'owner@penny.invalid',jti:crypto.randomUUID(),iat:now,exp:now+240,...overrides})).toString('base64url')
@@ -22,8 +26,9 @@ async function fixture(){
 }
 async function authority(){return Object.fromEntries(await Promise.all(['oa_operators','oa_sessions','oa_bootstrap','oa_limits','oc_owner_claims'].map(async table=>[table,await env.DB.prepare('SELECT COUNT(*) n FROM '+table).first('n')])))}
 it('[BASE-ACCESS-004][OWN-001] rejects invalid claim credentials before authority writes and keeps confirmation read-only',async()=>{
- const {request,signed}=await fixture(),before=await authority()
- expect((await request()).status).toBe(200);expect(await authority()).toEqual(before)
+ const {request,signed}=await fixture(),before=await authority(),confirmation=await request()
+ const error=confirmation.status===200?undefined:((await confirmation.json()) as {error?:string}).error
+ expect(confirmation.status,error).toBe(200);expect(await authority()).toEqual(before)
  for(const fields of [{aud:'https://foreign.example.test'},{iss:'https://foreign.example.test'},{email:'other@example.test'},{installationId:'other-installation'},{iat:1,exp:2}]){
   expect((await request({token:await signed(fields)})).status).toBe(403);expect(await authority()).toEqual(before)
  }
@@ -66,14 +71,28 @@ it('[OWN-001][BASE-OPS-002][DATA-001] upgrades populated native and imported his
  const bytes=new Uint8Array([0,255,17,18]);await env.FILES.put('owner-upgrade-original',bytes)
  const definitions=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' ORDER BY name").all<{name:string}>()).results
  const tables=await Promise.all(definitions.map(async({name})=>({name,columns:(await env.DB.prepare('PRAGMA table_info("'+name+'")').all<{name:string}>()).results.map(column=>column.name)})))
- const read=()=>env.DB.batch(tables.map(({name,columns})=>env.DB.prepare('SELECT '+columns.map(column=>'"'+column+'"').join(',')+' FROM "'+name+'" ORDER BY rowid')))
+ const read=()=>env.DB.batch<Record<string,unknown>>(tables.map(({name,columns})=>env.DB.prepare('SELECT '+columns.map(column=>'"'+column+'"').join(',')+' FROM "'+name+'" ORDER BY rowid')))
  const before=(await read()).map(result=>result.results)
  for(const migration of migrations.slice(boundary)){await applyD1Migrations(env.DB,[migration]);expect((await read()).map(result=>result.results),migration.name).toEqual(before)}
  await applyD1Migrations(env.DB,migrations);expect((await read()).map(result=>result.results)).toEqual(before)
  expect(new Uint8Array(await(await env.FILES.get('owner-upgrade-original'))!.arrayBuffer())).toEqual(bytes)
- expect((await call('/auth/session',undefined,g.operator)).status).toBe(401)
+ const admissionStarted=Date.now()
+ expect((await call('/auth/session',undefined,{...g.operator,'CF-Connecting-IP':claimIp})).status).toBe(401)
  const {request,signed}=await fixture();expect((await request({token:await signed()})).status).toBe(409)
- expect((await read()).map(result=>result.results)).toEqual(before)
+ // Both denied HTTP requests still consume public admission. Account for each
+ // exact new bucket while retaining byte equality for every historical row.
+ const after=(await read()).map(result=>result.results),admissionIndex=tables.findIndex(table=>table.name==='penny_public_admission'),subjectHash=await digest(claimIp)
+ const newBuckets=after[admissionIndex].filter(row=>row.subject_hash===subjectHash)
+ expect(before[admissionIndex].filter(row=>row.subject_hash===subjectHash)).toEqual([])
+ expect(newBuckets).toHaveLength(2)
+ for(const policy of [publicRatePolicy,publicWriteRatePolicy]){
+  const bucket=newBuckets.find(row=>row.scope===policy.scope)!
+  expect(bucket).toEqual({scope:policy.scope,subject_hash:subjectHash,count:1,expires_at:expect.any(String)})
+  expect(Date.parse(bucket.expires_at as string)).toBeGreaterThanOrEqual(admissionStarted+policy.windowMs)
+  expect(Date.parse(bucket.expires_at as string)).toBeLessThanOrEqual(Date.now()+policy.windowMs)
+ }
+ const expected=structuredClone(before);expected[admissionIndex].push(...newBuckets)
+ expect(after).toEqual(expected)
  const published=await call('/api/public/releases/'+release.slug)
  expect(published.status).toBe(200);expect(await published.json()).toMatchObject(release)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])

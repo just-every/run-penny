@@ -11,6 +11,8 @@ import { populateLegacyFeedback } from './legacy-feedback-fixture'
 import { feedbackFixture,complete,apply,erasurePreview,importPath } from './feedback-import-fixture'
 import { exportArchive,type Row } from '@/core/features/data/archive'
 import { d1ReversalFenceSchema } from '../../base/modules/import-kit/src/d1/index'
+import { digest } from '@/core/features/auth/native-tokens'
+import { publicRatePolicy } from '@/core/app/public-rate'
 afterEach(()=>vi.restoreAllMocks())
 it('[IMP-001][BASE-ACCESS-002][DATA-001] upgrades the populated complete predecessor without changing authority, history or files',async()=>{
  await reset();const migrations=inject('migrations') as D1Migration[],boundary=migrations.findIndex(m=>m.name.startsWith('0017_'))
@@ -187,13 +189,29 @@ it('[IMP-003][DATA-001] upgrades populated 0036 custody and closes maintenance w
  // Authenticated receipt reads do not change the stored history we preserve.
  const prior=await read()
  for(const migration of migrations.slice(boundary)){await applyD1Migrations(env.DB,[migration]);expect(await read(),migration.name).toEqual(prior)}
- await applyD1Migrations(env.DB,migrations);expect(await read()).toEqual(prior)
+ const migrationHistory=async()=>(await env.DB.prepare('SELECT * FROM d1_migrations ORDER BY id').all()).results,migrated=await migrationHistory()
+ await applyD1Migrations(env.DB,migrations);expect(await read()).toEqual(prior);expect(await migrationHistory()).toEqual(migrated)
  expect(new Uint8Array(await(await env.FILES.get('maintenance-upgrade-original'))!.arrayBuffer())).toEqual(bytes)
- expect((await call('/auth/session',undefined,operator)).status).toBe(200)
+ // A native session check is a public entry request: it records exactly one
+ // installation admission, while every retained business/authority cell stays.
+ const admissionIndex=tables.findIndex(({name})=>name==='penny_public_admission'),client='192.0.2.77',subject=await digest(client)
+ expect(admissionIndex).toBeGreaterThanOrEqual(0)
+ expect(prior[admissionIndex].some(row=>row.scope===publicRatePolicy.scope&&row.subject_hash===subject)).toBe(false)
+ const admittedAt=Date.now()
+ expect((await call('/auth/session',undefined,{...operator,'CF-Connecting-IP':client})).status).toBe(200)
+ const admittedBy=Date.now(),admission=await env.DB.prepare('SELECT * FROM penny_public_admission WHERE scope=? AND subject_hash=?').bind(publicRatePolicy.scope,subject).first<{scope:string;subject_hash:string;count:number;expires_at:string}>()
+ expect(admission).not.toBeNull()
+ expect(admission).toEqual({scope:publicRatePolicy.scope,subject_hash:subject,count:1,expires_at:admission!.expires_at})
+ expect(Date.parse(admission!.expires_at)).toBeGreaterThanOrEqual(admittedAt+publicRatePolicy.windowMs)
+ expect(Date.parse(admission!.expires_at)).toBeLessThanOrEqual(admittedBy+publicRatePolicy.windowMs)
+ const afterAdmission=structuredClone(prior);afterAdmission[admissionIndex].push(admission!)
+ expect(await read()).toEqual(afterAdmission)
  expect(await(await call(importPath+'/jobs/'+job.id+'/receipt',undefined,operator)).json()).toEqual(receipt)
  expect(before).toEqual(prior)
  await checkFeedbackMaintenance()
- expect(await read()).toEqual(prior)
+ expect(await read()).toEqual(afterAdmission)
+ expect(await migrationHistory()).toEqual(migrated)
+ expect(new Uint8Array(await(await env.FILES.get('maintenance-upgrade-original'))!.arrayBuffer())).toEqual(bytes)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
  await env.FILES.delete('maintenance-upgrade-original')
 })

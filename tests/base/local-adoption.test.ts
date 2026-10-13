@@ -3,7 +3,6 @@ import { env } from 'cloudflare:workers'
 import { beforeEach, expect, inject, it } from 'vitest'
 import { createPennyApi } from '@/core/app/api'
 import { createPennyRuntime } from '@/core/app/runtime'
-import { operatorAuth } from '@/core/features/auth/operator'
 import { localOutbox } from '@/core/features/auth/local-outbox'
 import { authMail } from '@/core/features/auth/mail'
 import { exportArchive, planErasure, eraseEntity } from '@/core/features/data/archive'
@@ -12,8 +11,8 @@ const devKey='synthetic-checkout-dev-key-for-worker-tests-0123456789'
 const bindings=()=>({...env,PENNY_ENVIRONMENT:'local',APP_ORIGIN:origin,MAIL_PROVIDER:'development',SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined,RER_DEV_KEY:devKey})
 const runtime=()=>createPennyRuntime(bindings())
 const app=createPennyApi()
-function call(path:string,body?:unknown,headers:Record<string,string>={},mode=bindings()) {
- return app.fetch(new Request(origin+path,{method:body===undefined?'GET':'POST',headers:{Host:'127.0.0.1:8787',Origin:origin,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),mode)
+function call(path:string,body?:unknown,headers:Record<string,string>={},mode=bindings(),method=body===undefined?'GET':'POST') {
+ return app.fetch(new Request(origin+path,{method,headers:{Host:'127.0.0.1:8787',Origin:origin,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),mode)
 }
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 it('[BASE-ACCESS-001 BASE-ACCESS-003 REQ-023] both identities use the real Base D1 outbox, confirm once, and retain private custody',async()=>{
@@ -60,17 +59,30 @@ it('[BASE-ACCESS-001 BASE-ACCESS-003 REQ-023] both identities use the real Base 
 })
 it('[BASE-ACCESS-002 OPS-002] branded invitation is multipart and cancelled identities can receive a fresh same-role invitation',async()=>{
  const bootstrap=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'})
- const cookie=bootstrap.headers.get('set-cookie')!.split(';')[0]
- const rt=createPennyRuntime(bindings(),{operatorAllowlist:['owner@penny.invalid','invitee@example.test'],workspaceTimezone:'UTC',publicOriginAllowlist:[origin]})
- const auth=operatorAuth(rt),request=new Request(origin+'/auth/invite',{method:'POST',headers:{Host:'127.0.0.1:8787',Origin:origin,Cookie:cookie}})
- await auth.invite(request,{email:'invitee@example.test',displayName:'Invitee'})
+ expect(bootstrap.status).toBe(303)
+ const owner={Cookie:bootstrap.headers.get('set-cookie')!.split(';')[0]}
+ const rt=runtime(),management='/api/operator/settings/operators'
+ const invite=()=>call(management,{email:'invitee@example.test'},owner)
+ const invitation=await invite();expect(invitation.status,await invitation.clone().text()).toBe(202)
  const first=(await localOutbox(rt)!.list())[0]
  expect(first.message.subject).toBe("You're invited to Penny");expect(first.message.text).toContain('Penny');expect(first.message.html).toContain('Penny')
- const person=await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind('invitee@example.test').first<{id:string}>()
- await auth.cancelInvitation(request,person!.id)
- await auth.invite(request,{email:'invitee@example.test',displayName:'Invitee'})
- expect((await localOutbox(rt)!.list())).toHaveLength(2)
- expect((await env.DB.prepare('SELECT id,status FROM oa_operators WHERE email=?').bind('invitee@example.test').first())).toEqual({id:person!.id,status:'invited'})
+ const person=await env.DB.prepare('SELECT id,role FROM oa_operators WHERE email=?').bind('invitee@example.test').first<{id:string;role:string}>()
+ expect((await call(`${management}/${person!.id}`,{},owner,bindings(),'DELETE')).status).toBe(200)
+ expect(await env.DB.prepare('SELECT status FROM oa_operators WHERE id=?').bind(person!.id).first()).toEqual({status:'inactive'})
+ const reinvitation=await invite();expect(reinvitation.status,await reinvitation.clone().text()).toBe(202)
+ const invitations=await localOutbox(rt)!.list();expect(invitations).toHaveLength(2)
+ expect(await env.DB.prepare('SELECT id,status,role FROM oa_operators WHERE email=?').bind('invitee@example.test').first()).toEqual({...person,status:'invited'})
+ const token=(text:string)=>new URL(text.match(/http:\/\/\S+/)![0]).searchParams.get('token')!
+ expect((await call('/auth/confirm',{token:token(first.message.text!)})).status).toBe(400)
+ const fresh=invitations.find(message=>message.id!==first.id)!
+ expect(fresh.message.text).toContain('Penny');expect(fresh.message.html).toContain('Penny')
+ const confirmation=await call('/auth/confirm',{token:token(fresh.message.text!)})
+ expect(confirmation.status).toBe(303)
+ const invitee={Cookie:confirmation.headers.get('set-cookie')!.split(';')[0]}
+ expect((await call(management,undefined,invitee)).status).toBe(200)
+ // An accepted native member can invite a peer with the same product authority.
+ expect((await call(management,{email:'peer@example.test'},invitee)).status).toBe(202)
+ expect(await env.DB.prepare('SELECT status,role FROM oa_operators WHERE id=?').bind(person!.id).first()).toEqual({status:'active',role:person!.role})
 })
 it('[BASE-ACCESS-001 REQ-023] deployed no-provider forms remain readable and never expose development capture',async()=>{
  const deployed={...bindings(),PENNY_ENVIRONMENT:'production',APP_ORIGIN:'https://penny.test',MAIL_PROVIDER:undefined,MAIL_FROM:undefined}

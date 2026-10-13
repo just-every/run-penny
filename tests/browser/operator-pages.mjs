@@ -65,10 +65,10 @@ try {
       await context.addCookies([{name:pair.slice(0,split),value:pair.slice(split+1),url:origin,httpOnly:true,sameSite:'Lax'}])
       const page = await context.newPage(), errors=[], external=[], failedRequests=[]
       let phase='first-run'
-      page.on('pageerror',error=>errors.push({phase,message:diagnosticMessage(error.message)}))
+      page.on('pageerror',error=>errors.push({width,phase,message:diagnosticMessage(error.message)}))
       page.on('console',message=>{
         if(message.type()!=='error')return
-        const diagnostic={phase,message:diagnosticMessage(message.text()),path:diagnosticPath(message.location().url)}
+        const diagnostic={width,phase,message:diagnosticMessage(message.text()),path:diagnosticPath(message.location().url)}
         errors.push(diagnostic)
         console.error('operator-pages browser error: '+JSON.stringify(diagnostic))
       })
