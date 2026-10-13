@@ -600,8 +600,8 @@
       "sha256": "ec7ec7380d839f2cdb9d77a1c8438daf5590e7aae53b66dc8e196a589d449118",
       "executable": false
     },
-    ".github/workflows/run-site-probe.yml": {
-      "sha256": "9ac51e623e31ad1d09a71638596866995f4308915c1d7123ea7fa69bced6808b",
+    ".github/workflows/run-site.yml": {
+      "sha256": "85930033bfe684bef7ee0898208f20aa6be7fcf022876a1a808635259df53bfb",
       "executable": false
     },
     ".github/workflows/verify.yml": {
