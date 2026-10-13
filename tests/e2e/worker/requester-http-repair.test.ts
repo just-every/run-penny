@@ -5,16 +5,16 @@ import { base64urlEncode,sign } from '../../../src/core/features/auth/tokens'
 repairDatabase()
 
 async function hostHeaders(email='host-repair@example.test') {
- const encoded=base64urlEncode(new TextEncoder().encode(JSON.stringify({aud:'http://penny.test',issuedAt:new Date().toISOString(),displayName:'Host',email})))
+ const encoded=base64urlEncode(new TextEncoder().encode(JSON.stringify({aud:bindings.APP_ORIGIN,issuedAt:new Date().toISOString(),displayName:'Host',email})))
  return {'X-Penny-Identity':encoded,'X-Penny-Identity-Signature':base64urlEncode(await sign(bindings.PORTAL_IDENTITY_SECRET,encoded))}
 }
 it('[F03 REQ-003] unavailable transport refuses submissions before host provisioning or anonymous holding',async()=>{
  const f=await fixture(),payload={title:'Held',description:'A truthful boundary',boardSlug:f.board,idempotencyKey:crypto.randomUUID()}
  const unavailable={...bindings,PENNY_AUTH_TRANSPORT:undefined}
- const caps=await app.fetch(new Request('http://penny.test/api/auth/capabilities'),unavailable)
+ const caps=await app.fetch(new Request(`${bindings.APP_ORIGIN}/api/auth/capabilities`),unavailable)
  expect(await caps.json()).toEqual({transport:'unavailable'})
  for(const headers of [await hostHeaders(),{'X-Penny-Pending-Token':opaqueToken()}]){
-  const response=await app.fetch(new Request('http://penny.test/api/public/requests',{method:'POST',headers:{'Content-Type':'application/json',...headers},body:JSON.stringify(payload)}),unavailable)
+  const response=await app.fetch(new Request(`${bindings.APP_ORIGIN}/api/public/requests`,{method:'POST',headers:{'Content-Type':'application/json',...headers},body:JSON.stringify(payload)}),unavailable)
   expect(response.status).toBe(503);expect(await response.json()).toEqual({error:'mail_unavailable'})
  }
  for(const table of ['requests','evidence_items','requesters','requester_pending_actions'])expect((await env.DB.prepare(`SELECT * FROM ${table}`).all()).results).toHaveLength(0)
@@ -137,7 +137,7 @@ it('[BASE-ACCESS-003] one identity cannot evade its write limit by changing IP',
 
 it('[BASE-INPUT-003] multipart extras and total streamed oversize cannot persist D1 or R2 attachments',async()=>{
  const f=await boardGraph(1),[r]=f.requests
- const send=(body:FormData)=>app.fetch(new Request(`http://penny.test/api/public/requests/${r.slug}/attachments`,{method:'POST',headers:auth(f.owner.token),body}),bindings)
+ const send=(body:FormData)=>app.fetch(new Request(`${bindings.APP_ORIGIN}/api/public/requests/${r.slug}/attachments`,{method:'POST',headers:auth(f.owner.token),body}),bindings)
  const extra=new FormData();extra.set('file',new File(['tiny'],'tiny.png',{type:'image/png'}));extra.set('ignored','surprise')
  expect((await send(extra)).status).toBe(400)
  const huge=new FormData();huge.set('file',new File(['tiny'],'tiny.png',{type:'image/png'}));huge.set('extra',new File([new Uint8Array(25*1024*1024)],'extra.bin'))

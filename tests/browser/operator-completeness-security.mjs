@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import {pacePublicContext} from './public-entry-pacing.mjs'
 import {createServer} from 'node:http'
 import {once} from 'node:events'
 import {readFile,readdir} from 'node:fs/promises'
@@ -41,7 +42,7 @@ async function navigateFrame({parent,parentOrigin,target,allowed,capture,label,w
   await capture(label,parent)
  }finally{parent.off('console',onConsole)}
 }
-export async function reviewFrameOrigins({page,browser,origin,capture,width,db}) {
+export async function reviewFrameOrigins({page,browser,origin,capture,width,db,runtime}) {
  const allowed=await parentServer(origin),denied=await parentServer(origin);let context
  try {
   // The completeness fixture starts unpublished; earlier rejection checks consume 00–04.
@@ -69,6 +70,7 @@ export async function reviewFrameOrigins({page,browser,origin,capture,width,db})
   await page.reload();assert.equal(await page.getByLabel('Allowed parent origins',{exact:true}).inputValue(),allowed.origin)
   await capture('REQ-027-persisted-frame-settings',page)
   context=await browser.newContext({viewport:{width,height:width===390?844:900},extraHTTPHeaders:{'CF-Connecting-IP':'198.51.100.40'}})
+  await pacePublicContext(context,runtime,'198.51.100.40')
   const parent=await context.newPage()
   const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
   const navigate=options=>navigateFrame({parent,capture,width,axe,...options})

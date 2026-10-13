@@ -1,4 +1,5 @@
 import { reviewOperatorCompleteness } from './operator-completeness.mjs'
+import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
 import { localProofBindings } from './operator-completeness-auth.mjs'
 import { reviewClauseStates } from './operator-pages-clause-states.mjs'
 import { browserOptions } from './browser-options.mjs'
@@ -54,6 +55,7 @@ try {
       assert.equal(bootstrap.status,303)
       const pair = bootstrap.headers.get('set-cookie').split(';')[0], split=pair.indexOf('=')
       context = await browser.newContext({viewport:{width,height:width===390?844:900},timezoneId:'Australia/Brisbane',extraHTTPHeaders:{'CF-Connecting-IP':width===390?'198.51.100.10':'198.51.100.11'}})
+      await pacePublicContext(context,runtime,width===390?'198.51.100.10':'198.51.100.11')
       await context.addCookies([{name:pair.slice(0,split),value:pair.slice(split+1),url:origin,httpOnly:true,sameSite:'Lax'}])
       const page = await context.newPage(), errors=[], external=[], failedRequests=[]
       let phase='first-run'
@@ -70,6 +72,7 @@ try {
       async function capture(label,targetPage=page) {
         phase=label
         await capturePage(width,label,targetPage)
+        await pacePublicPhase(targetPage)
       }
       async function goto(path) { phase=diagnosticPath(origin+path);const response=await page.goto(origin+path);assert.equal(response.status(),200);await page.locator('main h1').waitFor() }
       await goto('/setup')

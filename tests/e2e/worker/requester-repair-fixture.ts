@@ -5,8 +5,9 @@ export * from './requester-board-fixture'
 export function repairDatabase() {
   beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'))})
   beforeEach(async()=>{
-    // Keep the installation's native and preview revision witnesses across fixture cleanup.
-    const tables=await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT LIKE 'data_%' AND name NOT IN ('d1_migrations','feedback_import_native_revision','feedback_import_preview_revision')").all<{name:string}>()
+    // Keep native installation authority (including its guarded last owner) and
+    // revision witnesses. nativeOwnerCookie signs in through the retained owner.
+    const tables=await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT LIKE 'data_%' AND name NOT GLOB 'oa_*' AND name NOT IN ('d1_migrations','feedback_import_native_revision','feedback_import_preview_revision')").all<{name:string}>()
     await env.DB.batch([env.DB.prepare('PRAGMA defer_foreign_keys=ON'),...tables.results.map(t=>env.DB.prepare(`DELETE FROM "${t.name}"`))])
   })
 }

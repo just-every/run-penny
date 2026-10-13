@@ -1,14 +1,8 @@
 import { nativeAuthoritySettings, nativeOwnerCookie } from '../../predecessor-native-authority'
-import { applyD1Migrations } from 'cloudflare:test'
-import { beforeAll,beforeEach,describe,it,expect,inject } from 'vitest'
-import { env,fixture,person,submit,publish,call,auth,opaqueToken,bindings,app } from './requester-board-fixture'
+import { describe,it,expect } from 'vitest'
+import { repairDatabase,env,fixture,person,submit,publish,call,auth,opaqueToken,bindings,app } from './requester-repair-fixture'
 import { base64urlEncode,sign } from '../../../src/core/features/auth/tokens'
-beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'))})
-beforeEach(async()=>{
- // Keep the installation's native and preview revision witnesses across fixture cleanup.
- const tables=await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT LIKE 'data_%' AND name NOT IN ('d1_migrations','feedback_import_native_revision','feedback_import_preview_revision')").all<{name:string}>()
- await env.DB.batch([env.DB.prepare('PRAGMA defer_foreign_keys=ON'),...tables.results.map(t=>env.DB.prepare(`DELETE FROM "${t.name}"`))])
-})
+repairDatabase()
 describe('requester board on real local D1',()=>{
  it('[REQ-006/010/022] distinct votes, explicit consent, removals and blocked identity',async()=>{
   const f=await fixture(),who=await person(),r=await submit(f.board,who.token);await publish(r.slug,f.board,f.headers)
@@ -83,7 +77,7 @@ describe('requester board on real local D1',()=>{
  it('[REQ-011/018/019] attachments require separate approval; archived boards refuse submissions and internal moves hide public files',async()=>{
   const f=await fixture(),who=await person(),r=await submit(f.board,who.token);await publish(r.slug,f.board,f.headers)
   const form=new FormData();form.set('file',new File([new Uint8Array([137,80,78,71])],'diagram.png',{type:'image/png'}))
-  const upload=await app.fetch(new Request(`http://penny.test/api/public/requests/${r.slug}/attachments`,{method:'POST',headers:auth(who.token),body:form}),bindings);expect(upload.status).toBe(201)
+  const upload=await app.fetch(new Request(`${bindings.APP_ORIGIN}/api/public/requests/${r.slug}/attachments`,{method:'POST',headers:auth(who.token),body:form}),bindings);expect(upload.status).toBe(201)
   const file=await upload.json() as {id:string};expect((await call(`/api/public/attachments/${file.id}`)).status).toBe(404)
   expect((await call(`/api/operator/attachments/${file.id}/moderate`,{verdict:'approved'},f.headers)).status).toBe(200)
   const published=await call(`/api/public/attachments/${file.id}`);expect(published.status).toBe(200);expect(published.headers.get('Content-Disposition')).toContain('inline;')
@@ -96,7 +90,7 @@ describe('requester board on real local D1',()=>{
   expect((await call(`/api/public/requests/${r.slug}`)).status).toBe(404)
  })
  it('[REQ-014/031 EVID-006] host signatures bind identity and keep account claims private',async()=>{
-  const f=await fixture(),claims={aud:'http://penny.test',issuedAt:new Date().toISOString(),displayName:'Host requester',email:'host@example.test',accountId:'private-external-account',accountName:'Private account',revenueCents:819200}
+  const f=await fixture(),claims={aud:bindings.APP_ORIGIN,issuedAt:new Date().toISOString(),displayName:'Host requester',email:'host@example.test',accountId:'private-external-account',accountName:'Private account',revenueCents:819200}
   async function headers(value:typeof claims){const encoded=base64urlEncode(new TextEncoder().encode(JSON.stringify(value)));return {'X-Penny-Identity':encoded,'X-Penny-Identity-Signature':base64urlEncode(await sign(bindings.PORTAL_IDENTITY_SECRET,encoded))}}
   const payload={title:'Host problem',description:'Host supplied description',boardSlug:f.board,idempotencyKey:crypto.randomUUID()}
   expect((await call('/api/public/requests',payload,await headers({...claims,issuedAt:'2000-01-01T00:00:00.000Z'}))).status).toBe(401)

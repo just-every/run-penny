@@ -2853,7 +2853,7 @@
       "executable": false
     },
     "rer-project.json": {
-      "sha256": "d6c48719d4d4bfb703c66c420e954dc7f26091aa682bb35c1581e934f7f00f12",
+      "sha256": "8049284b68d566ad5043693e5c67e1c2653b5df50b2572abb9277266e8faa3e3",
       "executable": false
     },
     "rer-setup.json": {
@@ -7957,7 +7957,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-auth.mjs": {
-      "sha256": "30bbc84c0f7b66aaac7e2d3e5eaf789372d48bb7d2c21aa4a35e20d17f09a1c9",
+      "sha256": "aaf6ac0b2c18065264bbec5542ce9c0bfbc428c9db79f46bb75283dbfa494cc4",
       "executable": false
     },
     "tests/browser/operator-completeness-data.mjs": {
@@ -7977,11 +7977,11 @@
       "executable": false
     },
     "tests/browser/operator-completeness-requester.mjs": {
-      "sha256": "04667791925b1065fcef070e69cf4157dfc242f9887bc407bc1b3a7f1bd572f5",
+      "sha256": "0224ca5702b4c2edd8b59abdeff886fa4156578a6646077d48792675f8aed797",
       "executable": false
     },
     "tests/browser/operator-completeness-security.mjs": {
-      "sha256": "85808da6108505b066cdfa53d898ddd63534375ab5e6409f73c5817f49275ca4",
+      "sha256": "7b5b075d543f2eb2029b0f300a4e916fda28cb7a349ff67ed2c33ed66a9f5913",
       "executable": false
     },
     "tests/browser/operator-completeness-transport.mjs": {
@@ -8021,7 +8021,11 @@
       "executable": false
     },
     "tests/browser/operator-pages.mjs": {
-      "sha256": "9cc12d8f0d874faca132ecd74ce282581bfca983027852d97fcee1d75c18fae1",
+      "sha256": "61b01622ae460210652efeb541a95ecd0f0ebf9c359fa1df58abd9cb6fca02de",
+      "executable": false
+    },
+    "tests/browser/public-entry-pacing.mjs": {
+      "sha256": "efd48607ac2bec4aa6e9bf3ef4a633bfce3c2b64a8da1f62844119bef8244af8",
       "executable": false
     },
     "tests/browser/requester-board.mjs": {
@@ -8297,7 +8301,7 @@
       "executable": false
     },
     "tests/e2e/worker/requester-board-fixture.ts": {
-      "sha256": "793760bfc526d35c383a4d0d4734d19dcc4f19f7c2ef465d48820d4a9b86056f",
+      "sha256": "5b995d41d6628743f5c148d775134e8ec1efe54ea3e30cb0b4e577e93a43ed23",
       "executable": false
     },
     "tests/e2e/worker/requester-board-upgrade.test.ts": {
@@ -8305,7 +8309,7 @@
       "executable": false
     },
     "tests/e2e/worker/requester-board.test.ts": {
-      "sha256": "49ff207df048a43f1c28a71ae458ea31cea08794c28a93c5dfe540dab76fc9cb",
+      "sha256": "3ea9d397ac898784ef3e6e39b53b3a833ee0d1b7aaed68e5ffccf8cb97e3213f",
       "executable": false
     },
     "tests/e2e/worker/requester-custody-repair.test.ts": {
@@ -8345,7 +8349,7 @@
       "executable": false
     },
     "tests/e2e/worker/requester-http-repair.test.ts": {
-      "sha256": "e44ab27503e1917aa36f5864fefc2abf961ace9d75836709df338b74b253aaf4",
+      "sha256": "56679d1fa7712c2ee80c4456bae4ef648a8b15fc76a4d43bab90d79d592f2c30",
       "executable": false
     },
     "tests/e2e/worker/requester-identity-target.cases.ts": {
@@ -8361,7 +8365,7 @@
       "executable": false
     },
     "tests/e2e/worker/requester-repair-fixture.ts": {
-      "sha256": "f8ac443dd98f15672cf179b5e440fcc896d838d79e9a9efec980b02d30a41b1a",
+      "sha256": "a7468c2b65c8ec15656ec31427c94f0a94a67154afca63ab8c39ce920abc9ef8",
       "executable": false
     },
     "tests/e2e/worker/review-heldout.test.ts": {

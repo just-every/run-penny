@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import {generatedOperatorTransport,generatedHeaders} from './operator-completeness-transport.mjs'
+import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
 export const localProofKey='synthetic-browser-local-gate-proof-1234567890'
 const offset=((12-new Date().getUTCHours()+12)%24)-12
 const businessTimezone=offset===0?'Etc/GMT':`Etc/GMT${offset>0?'-':'+'}${Math.abs(offset)}`
@@ -12,7 +13,7 @@ export async function gate(page,origin) {
  await page.goto(`${origin}/__dev/key#rer-dev=${localProofKey}&next=%2F__dev%2Foutbox`)
  await page.getByRole('heading',{name:'Development outbox',exact:true}).waitFor()
 }
-export async function invitePeer({page,browser,origin,width,capture,email='proof-peer@example.test'}) {
+export async function invitePeer({page,browser,origin,width,capture,runtime,email='proof-peer@example.test'}) {
  await page.goto(origin+'/app/settings')
  const section=page.locator('#settings-operators')
  await section.getByLabel('Email',{exact:true}).fill(email)
@@ -22,6 +23,7 @@ export async function invitePeer({page,browser,origin,width,capture,email='proof
  await capture(email==='proof-peer@example.test'?'OPS-001-invited-settings':'OPS-002-successor-invited',page)
  const peerContext=await browser.newContext({viewport:{width,height:width===390?844:900},extraHTTPHeaders:{'CF-Connecting-IP':email==='proof-peer@example.test'?'198.51.100.20':'198.51.100.21'}})
  try {
+  await pacePublicContext(peerContext,runtime,email==='proof-peer@example.test'?'198.51.100.20':'198.51.100.21')
   const peer=await peerContext.newPage()
   assert.equal((await peerContext.request.get(origin+'/__dev/outbox')).status(),404,'[OPS-001] anonymous outbox denied')
   await gate(peer,origin)
@@ -32,6 +34,7 @@ export async function invitePeer({page,browser,origin,width,capture,email='proof
   await peer.getByRole('button',{name:'Confirm',exact:true}).waitFor()
   assert.equal((await peerContext.request.get(origin+'/api/auth/session')).status(),401,'GET preview does not consume link or create session')
   await peer.reload()
+  await pacePublicPhase(peer)
   await peer.getByRole('button',{name:'Confirm',exact:true}).click()
   await peer.waitForURL(url=>['/app','/app/','/app/overview'].includes(url.pathname))
   await peer.goto(origin+'/app/settings')

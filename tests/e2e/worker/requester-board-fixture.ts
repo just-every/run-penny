@@ -3,10 +3,10 @@ import { createPennyApi } from '../../../src/core/app/api'
 import { createUlid } from '../../../src/core/shared/ulid'
 import { digest, opaqueToken } from '../../../src/core/features/auth/native-tokens'
 export {env,createUlid,opaqueToken,digest}
-export const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['reviewer@example.test'],workspaceTimezone:'UTC',publicOriginAllowlist:['http://penny.test']}})
-export const bindings={...env,APP_ORIGIN:'http://penny.test',PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox',PORTAL_IDENTITY_SECRET:'isolated-host-fixture-key'}
+export const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['reviewer@example.test'],workspaceTimezone:'UTC',publicOriginAllowlist:['https://penny.test']}})
+export const bindings={...env,APP_ORIGIN:'https://penny.test',PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox',PORTAL_IDENTITY_SECRET:'isolated-host-fixture-key'}
 export async function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST') {
- return app.fetch(new Request(`http://penny.test${path}`,{method,headers:{...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},body:body===undefined?undefined:JSON.stringify(body)}),bindings)
+ return app.fetch(new Request(`${bindings.APP_ORIGIN}${path}`,{method,headers:{...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},body:body===undefined?undefined:JSON.stringify(body)}),bindings)
 }
 export const auth=(token:string)=>({Authorization:`Bearer ${token}`})
 export async function fixture() {

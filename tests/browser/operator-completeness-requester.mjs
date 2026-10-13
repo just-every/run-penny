@@ -2,9 +2,11 @@ import assert from 'node:assert/strict'
 import {proofId} from './operator-completeness-data.mjs'
 import {gate} from './operator-completeness-auth.mjs'
 import {generatedOperatorTransport,generatedHeaders} from './operator-completeness-transport.mjs'
-export async function reviewRequesterPrivacy({browser,origin,width,capture}) {
+import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
+export async function reviewRequesterPrivacy({browser,origin,width,capture,runtime}) {
  const context=await browser.newContext({viewport:{width,height:width===390?844:900},extraHTTPHeaders:{'CF-Connecting-IP':'198.51.100.50'}})
  try {
+  await pacePublicContext(context,runtime,'198.51.100.50')
   const page=await context.newPage()
   await page.goto(origin+'/portal/feedback/new')
   await page.getByLabel('Display name',{exact:true}).fill('Privacy proof requester')
@@ -15,6 +17,7 @@ export async function reviewRequesterPrivacy({browser,origin,width,capture}) {
   await gate(page,origin)
   await page.getByRole('link',{name:'Read message',exact:true}).first().click()
   await page.getByRole('link',{name:'Open this link',exact:true}).click()
+  await pacePublicPhase(page)
   await page.getByRole('button',{name:'Verify email',exact:true}).click()
   await page.getByText('Email verified.',{exact:true}).waitFor()
   const token=await page.evaluate(()=>localStorage.getItem('penny_requester_session'))
