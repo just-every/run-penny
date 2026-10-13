@@ -3,6 +3,7 @@ import {pacePublicContext} from './public-entry-pacing.mjs'
 import {createServer} from 'node:http'
 import {once} from 'node:events'
 import {readFile,readdir} from 'node:fs/promises'
+import {setTimeout as delay} from 'node:timers/promises'
 import {api} from './operator-completeness-auth.mjs'
 import {proofId} from './operator-completeness-data.mjs'
 async function parentServer(origin) {
@@ -116,10 +117,13 @@ export async function reviewPublicRate({page,origin,db}) {
   assert.equal(response.status(),429,`[BASE-ACCESS-003] Worker admission before read/asset ${method} ${path}`)
  }
  assert.equal((await page.context().request.get(origin+'/api/public/boards',{headers:{'CF-Connecting-IP':'198.51.100.202'}})).status(),200,'second ingress client proceeds')
- // Move only this test fixture's limiter window; no sleeps or fake endpoints.
+ // Let this client's real admission window expire without changing its bucket.
  const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip))
  const subject=Array.from(new Uint8Array(digest),byte=>byte.toString(16).padStart(2,'0')).join('')
- await db.prepare('UPDATE penny_public_admission SET expires_at=? WHERE scope=? AND subject_hash=?').bind('2000-01-01T00:00:00.000Z',scope,subject).run()
+ const bucket=await db.prepare('SELECT expires_at FROM penny_public_admission WHERE scope=? AND subject_hash=?').bind(scope,subject).first()
+ const expiresAt=Date.parse(bucket?.expires_at)
+ assert.ok(Number.isFinite(expiresAt),'[BASE-ACCESS-003] exhausted bucket has a real expiry')
+ await delay(Math.max(0,expiresAt-Date.now())+25)
  assert.equal((await page.context().request.get(origin+'/api/public/boards',options)).status(),200,'[BASE-ACCESS-003] expired real bucket admits next window')
  await db.prepare("CREATE TRIGGER browser_rate_storage_failure BEFORE INSERT ON penny_public_admission BEGIN SELECT RAISE(ABORT,'test storage refusal'); END").run()
  try{assert.equal((await page.context().request.get(origin+'/api/public/boards',{headers:{'CF-Connecting-IP':'198.51.100.204'}})).status(),503,'[BASE-ACCESS-003] actual limiter storage failure refuses admission')}finally{await db.prepare('DROP TRIGGER browser_rate_storage_failure').run()}

@@ -42,12 +42,11 @@ export function createPennyApp(options: PennyAppOptions = {}) {
   app.get('/portal/updates', renderDocument)
   app.get('/portal/updates/', renderDocument)
   app.get('/portal/feedback/:slug', servePublicRequestDetail)
+  app.get('/portal/feedback/:slug/', servePublicRequestDetail)
   app.get('/portal/updates/:slug', servePublicReleaseDetail)
-  app.get('/portal/roadmap/:slug',async context=>{
-    const {PublicRoadmapReadRepository}=await import('@/core/features/roadmap/public-read-repository')
-    const item=await new PublicRoadmapReadRepository(context.get('runtime').database).find(context.req.param('slug'))
-    return item?renderDocument(context):renderDocumentWithStatus(context,404)
-  })
+  app.get('/portal/updates/:slug/', servePublicReleaseDetail)
+  app.get('/portal/roadmap/:slug', servePublicRoadmapDetail)
+  app.get('/portal/roadmap/:slug/', servePublicRoadmapDetail)
   app.get('/portal/*', (context) => renderDocumentWithStatus(context, 404))
 
   app.all('/app', serveOperatorWorkspace)
@@ -116,6 +115,14 @@ async function servePublicReleaseDetail(context: PennyWorkerContext): Promise<Re
   if (!slug) return renderDocumentWithStatus(context, 404)
   const release = await portalReadService(context.get('runtime').database).getRelease(slug)
   return release ? renderDocument(context) : renderDocumentWithStatus(context, 404)
+}
+
+async function servePublicRoadmapDetail(context: PennyWorkerContext): Promise<Response> {
+  const slug = context.req.param('slug')
+  if (!slug) return renderDocumentWithStatus(context, 404)
+  const { PublicRoadmapReadRepository } = await import('@/core/features/roadmap/public-read-repository')
+  const item = await new PublicRoadmapReadRepository(context.get('runtime').database).find(slug)
+  return item ? renderDocument(context) : renderDocumentWithStatus(context, 404)
 }
 
 async function renderDocumentWithStatus(context: PennyWorkerContext, status: 404 | 410): Promise<Response> {

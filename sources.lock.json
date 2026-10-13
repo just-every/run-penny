@@ -5458,7 +5458,7 @@
       "executable": false
     },
     "src/core/app/worker.ts": {
-      "sha256": "83aa449187b7156107b803ce004ad6f7920f6cae3add83a5bc8e5fd8ec29042c",
+      "sha256": "83f53dae4b6ae64af07020ccc2a0dcb8ad6b974736695b1af1dc88f929b26606",
       "executable": false
     },
     "src/core/features/accounts/index.ts": {
@@ -7998,7 +7998,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-security.mjs": {
-      "sha256": "4cc1bd98204cf900eeb7f9ee467a836b683a5dc01074877eda340f1a52f40c68",
+      "sha256": "e3aaa1d9508d7047aaaac687c16a1766b87b88fae6627268535e0f2167c6b576",
       "executable": false
     },
     "tests/browser/operator-completeness-transport.mjs": {
