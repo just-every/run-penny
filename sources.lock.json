@@ -8281,7 +8281,7 @@
       "executable": false
     },
     "tests/e2e/worker/moderation-winner.test.ts": {
-      "sha256": "368630050efd3e220404188dae28340349b687fd88e948a50a64fd3fea6fa842",
+      "sha256": "ed906aa5be3a54e2b3cac9207fa94baa741c24d49d36b2b04b3f8d54db7b12b7",
       "executable": false
     },
     "tests/e2e/worker/native-feedback.test.ts": {
@@ -8289,7 +8289,7 @@
       "executable": false
     },
     "tests/e2e/worker/predecessor-isolation.test.ts": {
-      "sha256": "05db760c9749141b1478755a98a74c4b64c323be0b7653cc98b99ccca6f30121",
+      "sha256": "3991e3920d478934e72fbc648cac67f5808677114c7ef45e3a513e73f9a56a24",
       "executable": false
     },
     "tests/e2e/worker/read-spine.test.ts": {
@@ -8325,7 +8325,7 @@
       "executable": false
     },
     "tests/e2e/worker/requester-custody-repair.test.ts": {
-      "sha256": "2dd5c0c7db28a5afd479b7931223fb1501636b5deb66bdadccfe4dca7cb11a34",
+      "sha256": "3d0a9b7a47dba363f9fd33768d414d50ba30538330c9baa99e38db1810daf7f6",
       "executable": false
     },
     "tests/e2e/worker/requester-final-custody.cases.ts": {

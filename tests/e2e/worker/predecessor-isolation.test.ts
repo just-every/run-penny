@@ -22,6 +22,7 @@ async function readLegacyRows() {
 }
 
 async function writeNotificationState() {
+  const before = await readLegacyRows()
   await env.DB.batch([
     env.DB.prepare("INSERT INTO notification_events(id,request_id,kind,subject_id,body,created_at,updated_at) VALUES('isolation-event',?,'status','isolation-subject','Public wording',?,?)").bind(requestId, stamp, stamp),
     env.DB.prepare("INSERT INTO notification_batches(id,requester_id,address_id,request_id,first_event_id,window_start,window_end,state,next_attempt_at,created_at,updated_at) VALUES('isolation-batch',?,?,?,'isolation-event',?,?,'queued',?,?,?)").bind(requesterId, addressId, requestId, stamp, stamp, stamp, stamp, stamp),
@@ -30,6 +31,22 @@ async function writeNotificationState() {
     env.DB.prepare('INSERT INTO request_notification_mutes(requester_id,request_id,created_at,updated_at) VALUES(?,?,?,?)').bind(requesterId, requestId, stamp, stamp),
     env.DB.prepare('INSERT INTO requester_notification_preferences(requester_id,muted_at,created_at,updated_at) VALUES(?,?,?,?)').bind(requesterId, stamp, stamp, stamp),
   ])
+  // Seeding an attempt appends its durable effect audit. Every prior cell,
+  // including existing audit rows, must survive both seeding and cleanup.
+  const after = await readLegacyRows()
+  expect(after).toEqual(before.map((rows, index) => legacyTables[index] === 'audit_entries' ? [...rows, {
+    id: expect.any(String),
+    actor_type: 'system',
+    actor_id: 'request_notifications',
+    action: 'request_mail.attempt.rejected',
+    entity_type: 'notification_batch',
+    entity_id: 'isolation-batch',
+    occurred_at: stamp,
+    details_json: null,
+    created_at: stamp,
+    updated_at: stamp,
+  }] : rows))
+  return after
 }
 
 beforeAll(async () => {
@@ -44,8 +61,7 @@ beforeAll(async () => {
   legacyTables = (await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' ORDER BY name").all<{ name: string }>()).results
     // This derived installation counter advances for notification writes and cleanup.
     .map(row => row.name).filter(name => name !== 'feedback_import_native_revision' && !notificationTables.includes(name as typeof notificationTables[number]))
-  legacyRows = await readLegacyRows()
-  await writeNotificationState()
+  legacyRows = await writeNotificationState()
   seededRevision = (await revision())!
 })
 
@@ -73,7 +89,8 @@ it.each([1, 2])('[BASE-OPS-002 DATA-001] isolates added notification state with 
 })
 
 it('[DATA-001] preserves protected maintenance state and leaves its recovery to the original fixture', async () => {
-  await writeNotificationState()
+  expect(await readLegacyRows()).toEqual(legacyRows)
+  const beforeMaintenance = await writeNotificationState()
   await env.DB.prepare("UPDATE data_state SET phase='locked',lock_id='isolation-maintenance' WHERE singleton=1").run()
   const beforeRevision = await revision()
   const before = await env.DB.batch(notificationTables.map(table => env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`)))
@@ -84,5 +101,5 @@ it('[DATA-001] preserves protected maintenance state and leaves its recovery to 
   expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({ phase: 'locked', lock_id: 'isolation-maintenance' })
   await expect(env.DB.prepare('DELETE FROM notification_intents').run()).rejects.toThrow('data maintenance in progress')
   await env.DB.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1").run()
-  expect(await readLegacyRows()).toEqual(legacyRows)
+  expect(await readLegacyRows()).toEqual(beforeMaintenance)
 })

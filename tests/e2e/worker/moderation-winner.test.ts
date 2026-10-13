@@ -1,4 +1,7 @@
 import { expect,it } from 'vitest'
+import { createPennyRuntime } from '../../../src/core/app/runtime'
+import { localOutbox } from '../../../src/core/features/auth/local-outbox'
+import { drainRejectionNotices } from '../../../src/core/features/notifications/rejection-delivery'
 import { assertWinner,call,env,moderationFixture,pauseBeforeBatch,repairDatabase,subjects, type Verdict } from './moderation-winner-fixture'
 repairDatabase()
 for(const type of subjects)for(const [stale,winner] of [['rejected','approved'],['approved','rejected'],['approved','approved'],['rejected','rejected']] as [Verdict,Verdict][])
@@ -24,12 +27,25 @@ it(`[REQ-030 DATA-001] ${type} ${verdict} rolls back public content, verdict and
 })
 
 for(const type of subjects.filter(type=>type!=='attachment'))
-it(`[REQ-019 REQ-030] ${type} rejection records its verdict but queues no internal-board notice`,async()=>{
+it(`[REQ-019 REQ-030] ${type} rejection retains a visible suppressed receipt without sending an internal-board notice`,async()=>{
   const f=await moderationFixture(type)
   await env.DB.prepare("UPDATE boards SET visibility='internal' WHERE slug=?").bind(f.board).run()
   expect((await call(f.path,{...f.input('rejected'),reason:'Private internal rationale'},f.headers)).status).toBe(200)
   expect((await env.DB.prepare('SELECT verdict FROM request_moderation_events WHERE subject_type=? AND subject_id=?').bind(type,f.id).all()).results).toEqual([{verdict:'rejected'}])
-  expect((await env.DB.prepare('SELECT id FROM notification_outbox WHERE subject_id=?').bind(f.id).all()).results).toEqual([])
+  const runtime=createPennyRuntime({...env,PENNY_ENVIRONMENT:'local',APP_ORIGIN:'http://127.0.0.1:8787',MAIL_PROVIDER:'development',MAIL_FROM:'Penny <penny@example.test>',WORKSPACE_TIMEZONE:'UTC'})
+  const outbox=localOutbox(runtime)!,before=await outbox.list()
+  const drainAt=new Date(Date.now()+86400000).setUTCHours(9,0,0,0)
+  await drainRejectionNotices(runtime,()=>drainAt)
+  await drainRejectionNotices(runtime,()=>drainAt+3600000)
+  const notices=(await env.DB.prepare('SELECT id,event_type,requester_id,delivery_state,failure_reason,accepted_at,provider_message_id FROM notification_outbox WHERE subject_id=?').bind(f.id).all<{id:string}>()).results
+  expect(notices).toEqual([{id:expect.any(String),event_type:'moderation_rejected',requester_id:f.owner.id,delivery_state:'suppressed',failure_reason:'board_not_public',accepted_at:null,provider_message_id:null}])
+  expect((await env.DB.prepare('SELECT state,failure_reason,recipient_email,provider_message_id FROM notification_outbox_attempts WHERE outbox_id=?').bind(notices[0].id).all()).results).toEqual([{state:'suppressed',failure_reason:'board_not_public',recipient_email:null,provider_message_id:null}])
+  expect(await outbox.list()).toEqual(before)
+  const response=await call('/api/operator/notifications',undefined,f.headers)
+  expect(response.status).toBe(200)
+  const summary=await response.json() as {deliveries:{id:string;state:string;failureReason:string}[]}
+  expect(summary.deliveries.find(row=>row.id===notices[0].id)).toMatchObject({state:'suppressed',failureReason:'board_not_public'})
+  expect(JSON.stringify(summary)).not.toContain('Private internal rationale')
   expect((await call(`/api/public/requests/${f.r.slug}`)).status).toBe(404)
 })
 

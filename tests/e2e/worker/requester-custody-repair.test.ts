@@ -165,7 +165,7 @@ it('[REQ-011 DATA-001] missing stored bytes recover only with the matching origi
  expect((await call(path,{},f.headers)).status).toBe(409)
  for(const [content,status] of [['wrong bytes',409],[bytes,200]] as const){
   const form=new FormData();form.append('file',new File([content],'original.pdf',{type:'application/pdf'}))
-  const response=await app.fetch(new Request(`http://penny.test${path}`,{method:'POST',headers:f.headers,body:form}),bindings)
+  const response=await app.fetch(new Request(`${bindings.APP_ORIGIN}${path}`,{method:'POST',headers:f.headers,body:form}),bindings)
   expect(response.status).toBe(status)
  }
  expect(await (await env.FILES.get(pending.storage_key))!.text()).toBe(bytes)
