@@ -7094,7 +7094,7 @@
       "executable": false
     },
     "src/core/features/workspace/ui/list-controls.tsx": {
-      "sha256": "da258f21ef61470dc0dffed0e4aa29a53cf0562a8ec432e93203ad0c4d8c3e11",
+      "sha256": "e52eae9a433e12031d126c243ec2ff97ffb13fc8283b0265144a89a63032f378",
       "executable": false
     },
     "src/core/features/workspace/ui/requester-directory.tsx": {
