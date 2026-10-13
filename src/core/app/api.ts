@@ -1,3 +1,7 @@
+import {registerOperatorManagementRoutes} from '@/core/features/auth/operator-management-routes'
+import {editorDocumentHeaders} from '@/core/features/editor/headers'
+import {registerFrameSettings} from '@/core/features/settings/frame-settings'
+import {admitPublicRequest} from './public-rate'
 import {MutationError} from './operator-mutations'
 import {ZodError} from 'zod'
 import {registerIntegrationApi} from '@/core/features/integrations/api-routes'
@@ -53,6 +57,8 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   const app = new Hono<PennyWorkerEnvironment>()
 
   app.use('*', async (context, next) => {
+    const refusal=await admitPublicRequest(context.req.raw,context.env)
+    if(refusal)return refusal
     context.set('runtime', createPennyRuntime(context.env, options.runtimeConfiguration))
     if (!['GET', 'HEAD', 'OPTIONS'].includes(context.req.method)) {
       const origin = context.req.header('Origin')
@@ -68,10 +74,12 @@ export function createPennyApi(options: PennyAppOptions = {}) {
     }
     if (context.req.path.startsWith('/api/auth/') || context.req.path.startsWith('/api/public/identity/')) context.header('Cache-Control', 'no-store')
     await next()
+    context.res = await editorDocumentHeaders(context.res, context.get('runtime'), context.req.path)
   })
 
   registerIntegrationApi(app)
   registerBrandingRoutes(app)
+  registerFrameSettings(app)
   registerDeliveryRoutes(app)
   registerTrackerRoutes(app)
   registerEditorRoutes(app)
@@ -85,6 +93,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerOwnerClaimRoutes(app)
   registerDependencyRoutes(app)
   registerOperatorAuthRoutes(app)
+  registerOperatorManagementRoutes(app)
   registerNativeAuthRoutes(app)
   registerReleaseMutationRoutes(app)
   registerNotificationRoutes(app)

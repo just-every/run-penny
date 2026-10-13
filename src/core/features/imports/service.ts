@@ -34,7 +34,7 @@ export async function importContext(runtime:PennyRuntime,request:Request,namespa
  if(!actor)throw new NativeError('unauthenticated',401)
  const db=runtime.database.binding
  const context:D1ImportContext={destination:'penny-feedback',namespace,mappingVersion:feedbackMappingVersion,batchSize:10,maxBatches:1,
-  storage:{database:withoutLiveEffects(db),targets:feedbackTargets(namespace,await nativeDependencies(db),reversing)},
+  storage:{database:withoutLiveEffects(db),targets:feedbackTargets(namespace,await nativeDependencies(db),reversing,actor.id)},
   authorization:{principalId:jobPrincipal,predicate:()=>importAuthorityPredicate(session)}}
  return {context:reserveReturn(requestContext(context),32),actor:actor.id}
 }

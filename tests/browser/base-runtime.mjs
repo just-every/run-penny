@@ -12,7 +12,7 @@ export async function startBrowserRuntime({bindings={},https=false,port}={}){
  const origin=`${https?'https':'http'}://127.0.0.1:${port}`,outbox=[],state=await mkdtemp(join(tmpdir(),'penny-base-browser-'))
  const modules=[];for(const path of await readdir('dist/server',{recursive:true}))if(/\.(js|mjs)$/.test(path))modules.push({type:'ESModule',path:resolve('dist/server',path),contents:await readFile(join('dist/server',path),'utf8')})
  modules.sort((a,b)=>a.path.endsWith('/index.js')?-1:b.path.endsWith('/index.js')?1:0)
- const options=convertV4MiniflareOptions({port,host:'127.0.0.1',https,cf:false,resourcePersistencePath:state,
+ const configuration={port,host:'127.0.0.1',https,cf:false,resourcePersistencePath:state,
   modules,modulesRoot:resolve('dist/server'),
   compatibilityDate:'2026-08-31',compatibilityFlags:['nodejs_compat'],
   d1Databases:{DB:'browser-db'},r2Buckets:{FILES:'browser-files'},queueProducers:{JOBS:'browser-jobs'},
@@ -24,12 +24,13 @@ export async function startBrowserRuntime({bindings={},https=false,port}={}){
    outbox.push({email:body.personalizations[0].to[0].email,url:text.match(/https?:\/\/[^\s]+/)[0]})
    return new Response(null,{status:202,headers:{'x-message-id':'synthetic-browser-message'}})
   },
- })
+ }
+ let options=convertV4MiniflareOptions(configuration)
  let mf=new Miniflare(options)
  try{
   console.log("browser-runtime: waiting for workerd");await mf.ready;console.log("browser-runtime: ready")
   let db=await mf.getD1Database('DB');console.log('browser-runtime: D1 ready')
   for(const migration of await readD1Migrations(resolve('migrations/core'))){console.log('browser-runtime: migration',migration.name);await db.batch(migration.queries.map(sql=>db.prepare(sql)))}
-  return {origin,outbox,get db(){return db},restart:async()=>{await mf.dispose();mf=new Miniflare(options);await mf.ready;db=await mf.getD1Database('DB')},close:async()=>{await mf.dispose();await rm(state,{recursive:true,force:true})}}
+  return {origin,outbox,get db(){return db},configure:async patch=>{configuration.bindings={...configuration.bindings,...patch};options=convertV4MiniflareOptions(configuration);await mf.setOptions(options);await mf.ready;db=await mf.getD1Database('DB')},schedule:async()=>{const worker=await mf.getWorker();const result=await worker.scheduled({cron:'* * * * *',scheduledTime:new Date()});if(result.outcome!==undefined&&result.outcome!=='ok')throw new Error('Native Worker scheduled event did not complete');return result},restart:async()=>{await mf.dispose();mf=new Miniflare(options);await mf.ready;db=await mf.getD1Database('DB')},close:async()=>{await mf.dispose();await rm(state,{recursive:true,force:true})}}
  }catch(error){await mf.dispose();await rm(state,{recursive:true,force:true});throw error}
 }

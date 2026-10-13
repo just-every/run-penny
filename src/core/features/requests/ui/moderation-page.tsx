@@ -3,15 +3,15 @@ import { OperatorEmpty, OperatorResourceLoading } from '@/core/app/ui/operator-r
 import { OperatorCard } from '@/core/app/ui/operator-primitives'
 import { Icon } from '@/core/ui/app/Icon'
 import { secondaryButtonClass } from '@/core/ui/app/classes'
-import { usePublicResource } from '@/core/features/portal/ui/public-resource'
+import { useOperatorList, ListControls } from '@/core/features/workspace/ui/list-controls'
 import { useState } from 'react'
 import { ModerationCard, type QueueRequest } from './moderation-card'
 
 export function ModerationPage() {
-  const [resource, refresh] = usePublicResource<QueueRequest[]>('/api/operator/moderation'), [message, setMessage] = useState('')
+  const [resource, refresh, page] = useOperatorList<QueueRequest>('/api/operator/moderation'), [message, setMessage] = useState('')
   return (
     <section>
-      <OperatorPageHeader eyebrow="Customer feedback" title="Review feedback before it becomes public." art={resource.kind === 'ready' && resource.data.length === 0 || resource.kind === 'error' ? null : { note: 'Nothing goes public until approved.' }} action={<a href="/app/settings" className={secondaryButtonClass}><Icon name="settings" />Feedback settings</a>}>Approve customer-safe wording, board and display name explicitly. Original evidence remains private and unchanged.</OperatorPageHeader>
+      <OperatorPageHeader eyebrow="Customer feedback" title="Review feedback before it becomes public." art={resource.kind === 'ready' && resource.data.length === 0 || resource.kind === 'error' ? null : { note: 'Nothing goes public until approved.' }} action={<a href="/app/settings" className={secondaryButtonClass}><Icon name="settings" />Feedback settings</a>}>Approve customer-safe wording, board and display name explicitly. Original evidence remains private and unchanged.</OperatorPageHeader><ListControls page={page} entity="requests"/>
       <p role="status" className="mt-5 text-base font-semibold text-penny-ink empty:hidden">{message}</p>
       <div className="mt-6 sm:mt-8">
         {resource.kind === 'loading' ? <OperatorResourceLoading label="Loading moderation queue…" /> : null}

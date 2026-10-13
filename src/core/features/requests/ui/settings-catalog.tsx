@@ -5,6 +5,7 @@ import { fieldLabelClass, insetPanelClass, primaryButtonClass, secondaryButtonCl
 import { fieldClass } from '@/core/features/auth/client-mutations'
 import { quietButtonClass } from './form-classes'
 import type { SettingsAct } from './settings-boards'
+import { CustomFieldSettings } from '@/core/features/settings/ui/custom-field-settings'
 
 export interface Tag { id: string; name: string }
 export interface CustomField { id: string; name: string; entity_type: string; field_type: string }
@@ -43,18 +44,11 @@ export function CreateTagCard({ act }: { act: SettingsAct }) {
 }
 
 export function FieldList({ fields }: { fields: CustomField[] }) {
-  if (fields.length === 0) return null
-  return <div className={`${insetPanelClass} mb-4`}><ul className="m-0 list-none divide-y divide-penny-line p-0">{fields.map((f) => <li key={f.id} className="px-5 py-3 text-base text-penny-ink">{f.name} · {f.entity_type} · {f.field_type}</li>)}</ul></div>
+  void fields
+  return null
 }
 
 export function CreateFieldCard({ act }: { act: SettingsAct }) {
-  return (
-    <div className={`${settingsPanelClass} border-dashed`}>
-      <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); const d = new FormData(e.currentTarget); void act('/api/operator/settings/custom-fields', { name: d.get('name'), entityType: 'request', fieldType: d.get('fieldType') }) }}>
-        <label className={fieldLabelClass}>Request field name<input name="name" required className={input} /></label>
-        <label className={fieldLabelClass}>Type<select name="fieldType" className={input}>{['text', 'number', 'boolean', 'date'].map((type) => <option key={type}>{type}</option>)}</select></label>
-        <button className={primaryButtonClass}>Create field</button>
-      </form>
-    </div>
-  )
+  void act
+  return <div className="lg:col-span-2"><CustomFieldSettings embedded /></div>
 }

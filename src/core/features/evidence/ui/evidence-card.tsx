@@ -1,3 +1,4 @@
+import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { EvidenceHistory } from './evidence-history'
 import { EvidenceActions } from './evidence-actions'
 import type { OperatorEvidenceCard } from '@/core/shared/api/operator'
@@ -23,6 +24,7 @@ export function EvidenceCard({ evidence, onSaved }: { readonly evidence: Operato
       {evidence.namedSpeaker ? <p className="mt-3 text-base text-penny-ink">Named speaker: {evidence.namedSpeaker}</p> : null}
       {evidence.tags.length > 0 ? <ul className="mt-4 flex list-none flex-wrap gap-2 p-0" aria-label="Evidence tags">{evidence.tags.map((tag) => <li key={tag}><Chip tone="sand">{tag}</Chip></li>)}</ul> : null}
       {evidence.reviewReason ? <p className="mt-4 flex gap-2 border-t border-penny-line pt-4 text-base leading-normal text-penny-muted"><Icon name="check" className="mt-1 size-4 shrink-0 text-penny-moss" />{evidence.reviewReason}</p> : null}
+      <CustomFieldsEditor entityType="evidence" entityId={evidence.id} />
       {onSaved ? <><EvidenceActions evidence={evidence} onSaved={onSaved} /><EvidenceHistory id={evidence.id} onSaved={onSaved} /></> : null}
     </OperatorCard>
   )

@@ -69,12 +69,13 @@ export async function operatorResources(href: string): Promise<Resources> {
   }
   if (!operator) throw redirect({ to: '/signin' })
   if (setup) throw redirect({ href: '/setup', reloadDocument: true })
-  const path = new URL(href, 'https://document.invalid').pathname.replace(/\/$/, '')
-  const routes: Record<string, string> = { '/app': 'overview', '/app/overview': 'overview', '/app/feedback': 'evidence', '/app/moderation': 'moderation', '/app/decisions': 'decisions', '/app/roadmap': 'roadmap', '/app/releases': 'releases', '/app/customers': 'accounts' }
+  const operatorUrl = new URL(href, 'https://document.invalid')
+  const path = operatorUrl.pathname.replace(/\/$/, '')
+  const routes: Record<string, string> = { '/app': 'overview', '/app/overview': 'overview', '/app/feedback': 'evidence', '/app/moderation': 'moderation', '/app/decisions': 'decisions', '/app/roadmap': 'roadmap', '/app/releases': 'releases', '/app/customers': operatorUrl.searchParams.get('directory') === 'requesters' ? 'requesters' : 'accounts', '/app/search': 'search' }
   const route = routes[path]
   if (path === '/app/settings') return read(['/api/operator/catalog/settings'])
   if (path === '/app/data') return read(['/api/operator/data/overview'])
-  if (route) return read([`/api/operator/${route}`])
+  if (route) return read([`/api/operator/${route}${operatorUrl.search}`])
   const match = /^\/app\/(decisions|releases|customers)\/([a-z0-9-]+)$/.exec(path)
   return match ? read([`/api/operator/${match[1] === 'customers' ? 'accounts' : match[1]}/${match[2]}`]) : {}
 }

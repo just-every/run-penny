@@ -1,14 +1,18 @@
+import { useLocation } from '@tanstack/react-router'
+import { ListControls } from '@/core/features/workspace/ui/list-controls'
+import type { OperatorPage } from '@/core/features/workspace/list-query'
+import type { StatusDraft } from '@/core/features/workspace/update-list'
 import { useState } from 'react'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure, OperatorResourceLoading, OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
 import { paperCardClass, primaryButtonClass, secondaryButtonClass } from '@/core/ui/app/classes'
 import { operatorMutation } from '@/core/features/requests/ui/operator-client'
 
-type StatusDraft = { id: string; title: string; body: string; publishedAt: string | null; publicationState: 'published' | 'discarded' | 'ready' | 'stale' }
 export function StatusDrafts() {
- const [resource, refresh] = useOperatorResource<StatusDraft[]>('/api/operator/roadmap-updates')
+ const params=new URLSearchParams(useLocation().searchStr),query=new URLSearchParams({status:'pending'});for(const key of ['q','tag','sort','page']){const value=params.get(`updates${key[0].toUpperCase()}${key.slice(1)}`);if(value)query.set(key,value)}
+ const [resource, refresh] = useOperatorResource<OperatorPage<StatusDraft>>(`/api/operator/roadmap-updates?${query}`)
  const [message, setMessage] = useState(''), [busy, setBusy] = useState<string | null>(null)
- const drafts = resource.kind === 'ready' ? resource.data.filter(row => row.publicationState === 'ready' || row.publicationState === 'stale') : []
+ const drafts = resource.kind === 'ready' ? resource.data.items : []
  async function act(draft: StatusDraft) {
   setBusy(draft.id)
   try {
@@ -21,6 +25,7 @@ export function StatusDrafts() {
  return <section className="mt-8" aria-label="Pending status updates">
   <h2 className="text-xl font-bold tracking-[-0.02em] text-penny-ink">Pending status updates</h2>
   <p className="mt-2 text-sm leading-6 text-penny-muted">Review the approved public wording, then publish to the mapped requests and their eligible followers.</p>
+  <ListControls entity="updates" prefix="updates" page={resource.kind==='ready'?resource.data:null}/>
   {message ? <p role="status" className="mt-3 text-sm font-semibold text-penny-ink">{message}</p> : null}
   {resource.kind === 'loading' ? <OperatorResourceLoading label="Loading status updates…"/> : null}
   {resource.kind === 'session_expired' ? <OperatorSessionExpired/> : null}

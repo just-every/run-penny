@@ -79,7 +79,7 @@ export class EvidenceReadRepository {
     this.connection = connection
   }
 
-  async list(reviewState?: 'unreviewed' | 'reviewed', accountSlug?: string): Promise<readonly OperatorEvidenceCard[]> {
+  async list(reviewState?: 'unreviewed' | 'reviewed', accountSlug?: string, ids?: readonly string[]): Promise<readonly OperatorEvidenceCard[]> {
     const conditions: string[] = []
     const values: string[] = []
     if (reviewState) {
@@ -90,11 +90,13 @@ export class EvidenceReadRepository {
       conditions.push('a.slug = ?')
       values.push(accountSlug)
     }
+    if (ids) { conditions.push(`e.id IN (${ids.length ? ids.map(()=>'?').join(',') : 'NULL'})`); values.push(...ids) }
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
     const result = await this.connection.binding.prepare(`
       ${evidenceReadSelect}
       ${where}
       ORDER BY ${observedTimeOrderSql('e.observed_at')}, e.id ASC
+      LIMIT 25
     `).bind(...values).all<EvidenceReadRow>()
     return result.results.map(mapEvidenceRead)
   }

@@ -15,18 +15,23 @@ export function mockMail(){
 }
 let ip=0
 export function call(path:string, body?:unknown, headers:Record<string,string>={}, method=body===undefined?'GET':'POST') {
- return exports.default.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'penny.test',Origin:origin,'CF-Connecting-IP':`192.0.2.${++ip}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}))
+ return exports.default.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'penny.test',Origin:origin,'CF-Connecting-IP':`198.18.${Math.floor(ip / 254) % 256}.${++ip % 254 + 1}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}))
 }
 export function finishFirstRun(cookie:{Cookie:string}){
  return exports.default.fetch(new Request(origin+'/setup',{method:'POST',redirect:'manual',headers:{Host:'penny.test',Origin:origin,...cookie,'Content-Type':'application/x-www-form-urlencoded'},body:'confirm=yes'}))
 }
 // The owner signs in with first-run setup finished, so app documents open; pass false to start from an unfinished setup.
-/** The populated-upgrade tests stop the schema at a prior migration, then sign in on it. Base's auth runtime reads its
- * additive provider, domain and dependency tables on every sign-in, so those migrations (0042 to 0049, which touch
- * no product or import table) go in first, as an upgraded installation has them. Later migrations skip what applied. */
+/** Populated-upgrade fixtures use current HTTP admission to create historical
+ * product rows. Install its additive auth, integration guard and admission
+ * prerequisites first; the product/import schema remains at the chosen head.
+ * The upgrade still compares every prior table/column and skips applied SQL. */
 async function installAuthSchema(){
- if(await env.DB.prepare("SELECT 1 AS present FROM sqlite_master WHERE name='oa_auth_settings'").first())return
- await applyD1Migrations(env.DB,(inject('migrations') as {name:string}[]).filter(migration=>/^004[2-9]_/.test(migration.name)) as never)
+ const tables=new Set((await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('oa_auth_settings','penny_integration_guards','penny_public_admission')").all<{name:string}>()).results.map(row=>row.name))
+ const prerequisites=(inject('migrations') as {name:string}[]).filter(migration=>
+  (!tables.has('oa_auth_settings')&&/^004[2-9]_/.test(migration.name))
+  ||(!tables.has('penny_integration_guards')&&/^002[01]_/.test(migration.name))
+  ||(!tables.has('penny_public_admission')&&/^0055_/.test(migration.name)))
+ if(prerequisites.length)await applyD1Migrations(env.DB,prerequisites as never)
 }
 export async function owner({finishSetup=true}={}){await installAuthSchema();const r=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner',returnTo:'/app'});expect(r.status,await r.clone().text()).toBe(303);const cookie={Cookie:r.headers.get('Set-Cookie')!.split(';')[0]};// A store still on a prior schema head has no first-run record yet; the migration marks its existing owner done.
 if(finishSetup&&await env.DB.prepare("SELECT 1 AS present FROM sqlite_master WHERE name='oa_first_run'").first())expect((await finishFirstRun(cookie)).status).toBe(303);return cookie}

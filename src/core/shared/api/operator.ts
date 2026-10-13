@@ -112,6 +112,8 @@ export interface OperatorAccountCard extends OperatorAccountReference {
 }
 
 export interface OperatorAccountDetail extends OperatorAccountCard {
+  readonly linkedRequestCount: number
+  readonly linkedDecisionCount: number
   readonly requests: readonly { readonly id: string; readonly slug: string; readonly title: string }[]
   readonly requesters: readonly { readonly id: string; readonly displayName: string; readonly email: string | null }[]
   readonly evidence: readonly OperatorEvidenceCard[]

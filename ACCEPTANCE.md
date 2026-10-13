@@ -58,7 +58,7 @@ signature alone does not remove either boundary.
 The dated feature-head source proofs below cover EVID-005/007/008/010,
 DEC-006/007/008 with NOTIFY-003, and REL-003/008/009/012. The integrated head
 requires its own affected checks and exact-head receipt.
-REL-007, REL-011 and the live obligations above remain open. Wider queue filters,
+REL-007, REL-011 and the live obligations above remain open. Declared-capacity queue/search latency,
 general accessibility/load limits, universal portability and customer-outcome/
 economic acceptance remain required. Existing
 appeals/duplicate/account variants are not new gates for this bounded candidate.

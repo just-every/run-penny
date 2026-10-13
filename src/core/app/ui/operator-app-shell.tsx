@@ -15,6 +15,7 @@ const navigation = [
   { to: '/app/roadmap', label: 'Roadmap', icon: 'roadmap' },
   { to: '/app/releases', label: 'Releases', icon: 'releases' },
   { to: '/app/customers', label: 'Accounts', icon: 'accounts' },
+  { to: '/app/search', label: 'Search', icon: 'search' },
   { to: '/app/settings', label: 'Feedback settings', icon: 'settings' },
   { to: '/app/data', label: 'Data', icon: 'data' },
 ] as const

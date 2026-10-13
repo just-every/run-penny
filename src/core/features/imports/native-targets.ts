@@ -1,4 +1,5 @@
-import { canonicalJson } from '../../../../base/modules/import-kit/src/d1/index.ts'
+import {createUlid} from '@/core/shared/ulid'
+import { canonicalJson,sha256 } from '../../../../base/modules/import-kit/src/d1/index.ts'
 import type { D1Database as KitDatabase, D1TargetAdapter, D1Sql } from '../../../../base/modules/import-kit/src/d1/index.ts'
 import type { Json, TargetRow } from '../../../../base/modules/import-kit/src/types.ts'
 import type { NativeImportValue } from './types'
@@ -16,7 +17,7 @@ function conjunction(parts:string[]):string {
  const middle=Math.floor(parts.length/2)
  return '('+conjunction(parts.slice(0,middle))+' AND '+conjunction(parts.slice(middle))+')'
 }
-export function feedbackTargets(namespace:string,dependencies:NativeDependency[],reversing=false):D1TargetAdapter {
+export function feedbackTargets(namespace:string,dependencies:NativeDependency[],reversing:boolean,actorId:string):D1TargetAdapter {
  const records='feedback_import_records'
  const removal=new Map<string,NativeKey[]>()
  const columns=new Map(dependencies.map(dependency=>[dependency.table,dependency.columns]))
@@ -76,6 +77,8 @@ export function feedbackTargets(namespace:string,dependencies:NativeDependency[]
    const keys=removal.get(kind+':'+id);if(!keys)throw new Error('IMPORT_REMOVAL_SNAPSHOT_MISSING')
    const statements:D1Sql[]=keys.toReversed().map(key=>{const where=keyPredicate(key);return {sql:`DELETE FROM ${quote(key.table)} WHERE ${where.sql}`,params:where.params}})
    statements.push({sql:`DELETE FROM ${records} WHERE target_kind=? AND target_id=?`,params:[kind,id]})
+   const now=new Date().toISOString()
+   statements.push({sql:`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'operator',?,?,'import_target',?,?,?,?)`,params:[createUlid(),actorId,reversing?'import.target_reversed':'import.target_replaced',sha256(canonicalJson([namespace,kind,id])),now,now,now]})
    for(const key of keys.filter(k=>k.table==='request_vote_contributions'))statements.push(...voteProjection(String(key.keys.request_id)))
    return statements
   },

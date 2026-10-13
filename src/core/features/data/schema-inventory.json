@@ -2354,5 +2354,34 @@
       "singleton",
       "revision"
     ]
+  },
+  "penny_frame_settings": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "public_origin_allowlist",
+      "updated_at"
+    ]
+  },
+  "penny_public_admission": {
+    "classification": "installation",
+    "columns": [
+      "scope",
+      "subject_hash",
+      "count",
+      "expires_at"
+    ]
+  },
+  "penny_auth_mail_attempts": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "feature",
+      "outcome",
+      "phase",
+      "transport",
+      "started_at",
+      "finished_at"
+    ]
   }
 }

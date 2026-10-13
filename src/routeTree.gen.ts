@@ -22,6 +22,7 @@ import { Route as AppModerationRouteImport } from './routes/app.moderation'
 import { Route as AppOverviewRouteImport } from './routes/app.overview'
 import { Route as AppReleasesRouteImport } from './routes/app.releases'
 import { Route as AppRoadmapRouteImport } from './routes/app.roadmap'
+import { Route as AppSearchRouteImport } from './routes/app.search'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as DocsSlugRouteImport } from './routes/docs.$slug'
@@ -108,6 +109,11 @@ const AppReleasesRoute = AppReleasesRouteImport.update({
 const AppRoadmapRoute = AppRoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSearchRoute = AppSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/app/overview': typeof AppOverviewRoute
   '/app/releases': typeof AppReleasesRouteWithChildren
   '/app/roadmap': typeof AppRoadmapRoute
+  '/app/search': typeof AppSearchRoute
   '/app/settings': typeof AppSettingsRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/portal/feedback': typeof PortalFeedbackRouteWithChildren
@@ -270,6 +277,7 @@ export interface FileRoutesByTo {
   '/app/moderation': typeof AppModerationRoute
   '/app/overview': typeof AppOverviewRoute
   '/app/roadmap': typeof AppRoadmapRoute
+  '/app/search': typeof AppSearchRoute
   '/app/settings': typeof AppSettingsRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/portal/verify': typeof PortalVerifyRoute
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/app/overview': typeof AppOverviewRoute
   '/app/releases': typeof AppReleasesRouteWithChildren
   '/app/roadmap': typeof AppRoadmapRoute
+  '/app/search': typeof AppSearchRoute
   '/app/settings': typeof AppSettingsRoute
   '/docs/$slug': typeof DocsSlugRoute
   '/portal/feedback': typeof PortalFeedbackRouteWithChildren
@@ -344,6 +353,7 @@ export interface FileRouteTypes {
     | '/app/overview'
     | '/app/releases'
     | '/app/roadmap'
+    | '/app/search'
     | '/app/settings'
     | '/docs/$slug'
     | '/portal/feedback'
@@ -376,6 +386,7 @@ export interface FileRouteTypes {
     | '/app/moderation'
     | '/app/overview'
     | '/app/roadmap'
+    | '/app/search'
     | '/app/settings'
     | '/docs/$slug'
     | '/portal/verify'
@@ -410,6 +421,7 @@ export interface FileRouteTypes {
     | '/app/overview'
     | '/app/releases'
     | '/app/roadmap'
+    | '/app/search'
     | '/app/settings'
     | '/docs/$slug'
     | '/portal/feedback'
@@ -535,6 +547,13 @@ declare module '@tanstack/react-router' {
       path: '/roadmap'
       fullPath: '/app/roadmap'
       preLoaderRoute: typeof AppRoadmapRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/search': {
+      id: '/app/search'
+      path: '/search'
+      fullPath: '/app/search'
+      preLoaderRoute: typeof AppSearchRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/settings': {
@@ -745,6 +764,7 @@ interface AppRouteChildren {
   AppOverviewRoute: typeof AppOverviewRoute
   AppReleasesRoute: typeof AppReleasesRouteWithChildren
   AppRoadmapRoute: typeof AppRoadmapRoute
+  AppSearchRoute: typeof AppSearchRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -758,6 +778,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppOverviewRoute: AppOverviewRoute,
   AppReleasesRoute: AppReleasesRouteWithChildren,
   AppRoadmapRoute: AppRoadmapRoute,
+  AppSearchRoute: AppSearchRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
 }

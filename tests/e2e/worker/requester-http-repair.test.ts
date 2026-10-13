@@ -1,3 +1,4 @@
+import { nativeAuthoritySettings, nativeOwnerCookie } from '../../predecessor-native-authority'
 import { it,expect } from 'vitest'
 import { repairDatabase,boardGraph,fixture,person,submit,change,env,call,auth,app,bindings,opaqueToken,createUlid } from './requester-repair-fixture'
 import { base64urlEncode,sign } from '../../../src/core/features/auth/tokens'
@@ -80,13 +81,18 @@ it('[F08 REQ-014] rejected host or bearer credentials cannot become pending acti
 
 it('[F09 DATA-004] roadmapItem custom fields accept values and stay operator-only',async()=>{
  const f=await fixture(),id=createUlid(),now=new Date().toISOString()
+ const nativeBindings={...bindings,...nativeAuthoritySettings}
+ const nativeCookie=await nativeOwnerCookie(nativeBindings)
+ const nativeHeaders={Cookie:`${f.headers.Cookie}; ${nativeCookie}`}
+ const fieldCall=(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST')=>
+  app.fetch(new Request(nativeAuthoritySettings.APP_ORIGIN+path,{method,headers:{Origin:nativeAuthoritySettings.APP_ORIGIN,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),nativeBindings)
  await env.DB.prepare("INSERT INTO roadmap_items(id,slug,title,summary,status,created_at,updated_at) VALUES(?,?,?,?,'exploring',?,?)").bind(id,'private-roadmap','Private roadmap','Private details',now,now).run()
- const created=await call('/api/operator/settings/custom-fields',{entityType:'roadmapItem',name:'Internal budget',fieldType:'number'},f.headers);expect(created.status).toBe(201)
+ const created=await fieldCall('/api/operator/settings/custom-fields',{entityType:'roadmapItem',name:'Internal budget',fieldType:'number'},nativeHeaders);expect(created.status).toBe(201)
  const field=await created.json() as {id:string}
- expect((await call(`/api/operator/custom-fields/${field.id}/${id}`,{value:43019},f.headers,'PUT')).status).toBe(200)
- expect(await (await call(`/api/operator/custom-fields/roadmapItem/${id}`,undefined,f.headers)).json()).toMatchObject([{name:'Internal budget',value:43019}])
- expect((await call(`/api/operator/custom-fields/roadmapItem/${id}`)).status).toBe(401)
- expect((await call('/api/operator/custom-fields/__proto__/anything',undefined,f.headers)).status).toBe(400)
+ expect((await fieldCall(`/api/operator/custom-fields/roadmapItem/${field.id}/${id}`,{value:43019},nativeHeaders,'PUT')).status).toBe(200)
+ expect(await (await fieldCall(`/api/operator/custom-fields/roadmapItem/${id}`,undefined,nativeHeaders)).json()).toMatchObject([{name:'Internal budget',value:43019}])
+ expect((await fieldCall(`/api/operator/custom-fields/roadmapItem/${id}`)).status).toBe(401)
+ expect((await fieldCall('/api/operator/custom-fields/__proto__/anything',undefined,nativeHeaders)).status).toBe(400)
 })
 
 it('[REQ-023] held submission replay has the same idempotency key/body as direct submission',async()=>{

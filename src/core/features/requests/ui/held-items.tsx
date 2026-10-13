@@ -21,12 +21,13 @@ export function AppealReview({ appeal, act }: { appeal: Appeal; act: Act }) {
 
 export function HeldItemForm({ item, path, label, act }: { item: ModeratedItem; path: string; label: string; act: Act }) {
   return (
-    <form className={`${subformClass} space-y-3`} onSubmit={(e) => { e.preventDefault(); const d = new FormData(e.currentTarget), verdict = (e.nativeEvent as SubmitEvent).submitter?.getAttribute('value') ?? 'approved'; void act(path, { verdict, ...(verdict === 'rejected' ? { reason: d.get('reason') } : { publicAuthorDisplayName: d.get('displayName') || undefined }) }) }}>
+    <form className={`${subformClass} space-y-3`} onSubmit={(e) => { e.preventDefault(); const d = new FormData(e.currentTarget), verdict = (e.nativeEvent as SubmitEvent).submitter?.getAttribute('value') ?? 'approved'; void act(path, { verdict, ...(verdict === 'rejected' ? { reason: d.get('reason'), ...(label !== 'Attachment' ? {notifyAuthor: d.get('notifyAuthor') === 'on'} : {}) } : { publicAuthorDisplayName: d.get('displayName') || undefined }) }) }}>
       <h3 className="font-bold text-penny-ink">{label}</h3>
       <p className="break-words whitespace-pre-wrap text-penny-ink">{item.title} {item.body ?? item.description ?? item.original_filename}</p>
       {label === 'Attachment' ? <a className="inline-flex min-h-11 items-center font-semibold break-words text-penny-ink underline decoration-penny-ink/40 underline-offset-4 hover:decoration-penny-copper" href={`/api/operator/attachments/${item.id}`}>Download for review</a> : null}
       <label className={fieldLabelClass}>Approved display name<input name="displayName" className={fieldClass} /></label>
       <label className={fieldLabelClass}>Rejection reason<input name="reason" className={fieldClass} /></label>
+      {label !== 'Attachment' ? <label className="flex items-start gap-3 text-sm leading-6 text-penny-ink"><input type="checkbox" name="notifyAuthor" className="mt-1 size-4" />Email the author this rejection reason</label> : null}
       <div className="flex flex-wrap items-center gap-3"><button className={primaryButtonClass} value="approved">Approve {label.toLowerCase()}</button><button className={quietButtonClass} value="rejected">Reject</button></div>
     </form>
   )

@@ -103,10 +103,10 @@ async function reserve(db:D1Database,kind:'export'|'restore'|'erase',payload:unk
  if(result[0].results.length!==1)fail('data_busy');return id
 }
 async function finish(db:D1Database,id:string,status:'complete'|'aborted',authority?:DataAuthority):Promise<void>{
- await dataBatch(db,[db.prepare("UPDATE data_operations SET status=?,payload_json='{}',updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(status,new Date().toISOString(),id,id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id)],authority)
+ await dataBatch(db,[db.prepare("UPDATE data_operations SET status=?,payload_json='{}',updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(status,new Date().toISOString(),id,id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id),...(status==='complete'?[db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,?,?,'data.erasure_completed','data_operation',id,?,?,? FROM data_operations WHERE id=? AND kind='erase' AND status='complete' AND changes()>0`).bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',new Date().toISOString(),new Date().toISOString(),new Date().toISOString(),id)]:[])],authority)
 }
 const applyStart=(db:D1Database,id:string)=>[db.prepare("INSERT INTO data_apply_claims(operation_id) VALUES((SELECT lock_id FROM data_state WHERE singleton=1 AND lock_id=? AND phase='locked'))").bind(id),db.prepare("UPDATE data_state SET phase='applying' WHERE singleton=1 AND lock_id=?").bind(id),db.prepare('PRAGMA defer_foreign_keys=ON')]
-const audit=(db:D1Database,action:string,id:string)=>{const now=new Date().toISOString();return db.prepare("INSERT INTO audit_entries(id,actor_type,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'system',?,'data_operation',?,?,?,?)").bind(createUlid(),action,id,now,now,now)}
+const audit=(db:D1Database,action:string,id:string,authority?:DataAuthority,details:string|null=null)=>{const now=new Date().toISOString();return db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,details_json,created_at,updated_at) VALUES(?,?,?,?,'data_operation',?,?,?,?,?)").bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',action,id,now,details,now,now)}
 export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:DataAuthority):Promise<{archive:Archive;journal:ErasureJournal}>{
  const id=await reserve(db,'export',{},authority)
  try {
@@ -213,7 +213,7 @@ export async function restoreArchive(db:D1Database,bucket:R2Bucket,value:unknown
   statements.push(...importCustody.after)
   // Never delete a destination erasure journal. Validation requires a superset.
   for(const item of journal.tombstones)statements.push(db.prepare('INSERT OR IGNORE INTO data_tombstones(epoch,table_name,key_hash) VALUES(?,?,?)').bind(item.epoch,item.table_name,item.key_hash))
-  statements.push(db.prepare('UPDATE data_state SET origin=?,epoch=? WHERE singleton=1 AND lock_id=?').bind(journal.origin,journal.epoch,id),audit(db,'data.restored',id),db.prepare("UPDATE data_operations SET status='complete',payload_json='{}',updated_at=? WHERE id=?").bind(new Date().toISOString(),id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id))
+  statements.push(db.prepare('UPDATE data_state SET origin=?,epoch=? WHERE singleton=1 AND lock_id=?').bind(journal.origin,journal.epoch,id),audit(db,'data.restored',id,authority),db.prepare("UPDATE data_operations SET status='complete',payload_json='{}',updated_at=? WHERE id=?").bind(new Date().toISOString(),id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id))
   await dataBatch(db,statements,authority)
   return {operationId:id,status:'complete'}
  }catch(error){
@@ -333,7 +333,7 @@ export async function eraseEntity(db:D1Database,bucket:R2Bucket,tableName:string
   }
   const anonymousReference=`erased:${crypto.randomUUID()}`
   for(const row of plan.audit)statements.push(db.prepare("UPDATE audit_entries SET entity_id=?,actor_id=NULL,details_json=NULL,updated_at=? WHERE id=?").bind(anonymousReference,new Date().toISOString(),row.id))
-  statements.push(audit(db,'data.erased',id),db.prepare('UPDATE data_state SET epoch=?,phase=\'locked\' WHERE singleton=1 AND lock_id=?').bind(epoch,id),db.prepare("UPDATE data_operations SET status=?,payload_json=?,updated_at=? WHERE id=?").bind(plan.selected.feedback_import_records.length?'pending_import':'pending_r2',canonical({keys:plan.files}),new Date().toISOString(),id))
+  statements.push(audit(db,'data.erased',id,authority,JSON.stringify({phase:'native_rows_erased',targetType:tableName,targetReference:await hash([current.origin,tableName,entityId])})),db.prepare('UPDATE data_state SET epoch=?,phase=\'locked\' WHERE singleton=1 AND lock_id=?').bind(epoch,id),db.prepare("UPDATE data_operations SET status=?,payload_json=?,updated_at=? WHERE id=?").bind(plan.selected.feedback_import_records.length?'pending_import':'pending_r2',canonical({keys:plan.files}),new Date().toISOString(),id))
   await dataBatch(db,statements,authority)
  }catch(error){const operation=await dataOperation(db,id);if(['pending_r2','pending_import'].includes(operation?.status??''))return resumeErasure(db,bucket,id,authority);await finish(db,id,'aborted');throw error}
  const pending=await dataOperation(db,id);if(pending?.status==='pending_import')return {operationId:id,status:'pending_import'}

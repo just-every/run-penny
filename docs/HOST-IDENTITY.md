@@ -8,8 +8,10 @@ fails. First-time identity provisioning retains the configured-mail boundary;
 existing verified identities may participate while mail is unavailable.
 
 Set the same private `PORTAL_IDENTITY_SECRET` on both servers, with at least 32
-characters. Set Penny's `PORTAL_FRAME_ORIGINS` to a JSON array of exact host HTTPS
-origins. Local/test installations also accept explicit loopback HTTP origins.
+characters. Save the exact host HTTPS origins in **Feedback settings → Portal
+embedding** (`publicOriginAllowlist`). Remove the former `PORTAL_FRAME_ORIGINS`
+binding when upgrading; it is no longer an independent framing policy. Local/test
+installations also accept explicit loopback HTTP origins.
 Only public portal documents allow these frame ancestors; operator documents
 remain restricted to their own origin. Never send a signing key to the browser.
 

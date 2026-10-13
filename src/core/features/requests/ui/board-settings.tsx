@@ -1,6 +1,8 @@
 import {IntegrationDestinations} from '../../integrations/ui/destinations'
 import {TrackerSettings} from '../../integrations/ui/tracker-settings'
 import {BrandingSettings} from '../../settings/ui/branding-settings'
+import { FrameSettings } from '../../settings/ui/frame-settings'
+import { OperatorSettings } from '../../auth/ui/operator-settings'
 import {ApiKeys} from '../../integrations/ui/api-keys'
 import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { useState } from 'react'
@@ -22,11 +24,13 @@ export function BoardSettings() {
     <section className="min-w-0">
       <OperatorPageHeader eyebrow="Customer feedback" title="Feedback settings" art={data.kind === 'error' ? null : { note: 'Better feedback builds better products.' }}>Requester submissions, edits and comments are reviewed before publication.</OperatorPageHeader>
       <div className="mt-6 space-y-6 sm:mt-8">
+        <OperatorSettings />
         <DeliveryReview />
         <ApiKeys />
         <IntegrationDestinations />
         <TrackerSettings />
         <BrandingSettings />
+        <FrameSettings />
         <SettingsSection id="settings-boards" icon="board" title="Boards">
           {data.kind !== 'ready' ? <p className="text-base text-penny-muted">Loading settings…</p> : null}
           {ready && ready.boards.length === 0 ? <p className="mb-4 text-base text-penny-muted">No boards yet</p> : null}

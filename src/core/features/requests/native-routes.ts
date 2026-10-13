@@ -9,7 +9,8 @@ import { identityOrHold } from './public-routes'
 import { parseInput } from '@/core/features/auth/native-routes'
 import { NativeError,takeRateLimit } from '@/core/features/auth/native-tokens'
 import { submitNativeRequest } from './native-submission'
-import { listNativeModeration,moderateNativeRequest } from './native-moderation'
+import { decisionDatabase } from '../decisions/authority'
+import { moderateNativeRequest } from './native-moderation'
 type Environment={Bindings:AppBindings;Variables:{runtime:PennyRuntime}}
 const title=z.string().trim().min(1).max(200),description=z.string().trim().min(1).max(10000),boardSlug=z.string().trim().min(1).max(160)
 export function registerNativeRequestRoutes(app:Hono<Environment>):void{
@@ -29,18 +30,14 @@ export function registerNativeRequestRoutes(app:Hono<Environment>):void{
     await takeRateLimit(runtime.database.binding,'public_write_identity',identity.id,20,60000)
     return c.json(await submitNativeRequest(runtime.database,identity,input),201)
   })
-  app.get('/api/operator/moderation',async c=>{
-    if(!await currentOperator(c))throw new NativeError('unauthenticated',401)
-    c.header('Cache-Control','no-store')
-    return c.json(await listNativeModeration(c.get('runtime')))
-  })
   app.post('/api/operator/moderation/:slug',async c=>{
     const operator=await currentOperator(c);if(!operator)throw new NativeError('unauthenticated',401)
     const input=await parseInput(c.req.raw,z.discriminatedUnion('verdict',[
       z.object({verdict:z.literal('approved'),title,description,boardSlug,displayName:z.string().trim().min(1).max(160)}).strict(),
-      z.object({verdict:z.literal('rejected'),reason:z.string().trim().min(1).max(2000)}).strict(),
+      z.object({verdict:z.literal('rejected'),notifyAuthor:z.boolean().optional(),reason:z.string().trim().min(1).max(2000)}).strict(),
     ]))
-    await moderateNativeRequest(c.get('runtime'),operator.id,c.req.param('slug'),input)
+    const runtime=c.get('runtime'),binding=await decisionDatabase(runtime,c.req.raw)
+    await moderateNativeRequest({...runtime,database:{...runtime.database,binding}},operator.id,c.req.param('slug'),input)
     return c.json({moderationState:input.verdict})
   })
 }

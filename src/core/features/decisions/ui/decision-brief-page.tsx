@@ -1,3 +1,4 @@
+import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { DecisionReview } from './decision-review'
 import { DecisionPostRelease } from './decision-post-release'
 import { DecisionActions } from './decision-actions'
@@ -62,6 +63,7 @@ function DecisionContent({ decision, onSaved }: { readonly decision: OperatorDec
         {decision.bets.length === 0 && editable ? <p className={nextStepClass}>Next: add a candidate bet using Add candidate bet below.</p> : null}
         {decision.evidenceCount === 0 ? <p className={nextStepClass}>Next: <Link to="/app/feedback" className={textLinkClass}>record evidence in the Evidence inbox</Link>{decision.bets.length > 0 ? ', then link it using Manage this bet.' : '. Add a candidate bet in a draft brief to compare it.'}</p> : null}
         <DecisionActions decision={decision} onSaved={onSaved} /><DecisionReview decision={decision} onSaved={onSaved}/>{!editable?<DecisionPostRelease id={decision.id}/>:null}
+        <CustomFieldsEditor entityType="decision" entityId={decision.id} />
         <TrackerActions card decisionId={decision.id} reload={onSaved} />
       </div>
     </>

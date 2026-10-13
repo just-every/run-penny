@@ -1,8 +1,9 @@
+import { EvidencePicker } from './evidence-picker'
 import {useRef} from 'react'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorOptionsState } from '@/core/app/ui/operator-options-state'
 import { Field,LoopForm,nullableForm,useLoopOptions } from '@/core/app/ui/loop-form'
-import type { OperatorEvidenceCard,OperatorRoadmapCard } from '@/core/shared/api/operator'
+import type { OperatorRoadmapCard } from '@/core/shared/api/operator'
 import { fieldLabelClass } from '@/core/ui/app/classes'
 interface RoadmapContext {
  item:{title:string;summary:string;owner_operator_id:string|null;target_window:string|null;delivery_notes:string|null;confidence:string|null;account_impact:string|null;decision_id:string|null;candidate_bet_id:string|null;public_title_draft:string|null;public_summary_draft:string|null}
@@ -13,7 +14,6 @@ interface RoadmapContext {
 export function RoadmapActions({item,onSaved}:{item:OperatorRoadmapCard;onSaved:()=>void}){
  const [context,reload]=useOperatorResource<RoadmapContext>(`/api/operator/roadmap/${item.id}/context`)
  const options=useLoopOptions()
- const [evidence,reloadEvidence]=useOperatorResource<readonly OperatorEvidenceCard[]>('/api/operator/evidence')
  const moveAction=useRef<{body:string;key:string}|null>(null)
  const save=()=>{reload();onSaved()}
  const movePayload=(data:FormData)=>{const payload=Object.fromEntries(data),body=JSON.stringify(payload);if(moveAction.current?.body!==body)moveAction.current={body,key:crypto.randomUUID()};return {...payload,idempotencyKey:moveAction.current.key}}
@@ -21,11 +21,11 @@ export function RoadmapActions({item,onSaved}:{item:OperatorRoadmapCard;onSaved:
  if(options.kind!=='ready')return <OperatorOptionsState state={options} loading="Loading editing options…" failure="Could not load editing options" reload={options.reload}/>
  const record=context.data.item,base=`/api/operator/roadmap/${item.id}`,choices=options.data
  return <div className="mt-2 min-w-0 space-y-4" key={JSON.stringify(context.data)}>
- <LoopForm title="Edit internal record" action={base} method="PATCH" onSaved={save} disabled={evidence.kind!=='ready'} transform={data=>({...nullableForm(data),summary:data.get('summary')??'',evidenceIds:data.getAll('evidenceIds')})}>
+ <LoopForm title="Edit internal record" action={base} method="PATCH" onSaved={save} transform={data=>({...nullableForm(data),summary:data.get('summary')??'',evidenceIds:data.getAll('evidenceIds')})}>
  <Field name="title" label="Internal title" value={record.title} required/><Field name="summary" label="Internal summary" value={record.summary} type="textarea"/>
  <Field name="ownerOperatorId" label="Owner" choices={choices.operators} value={record.owner_operator_id}/><Field name="targetWindow" label="Target window" value={record.target_window}/>
  <Field name="decisionId" label="Linked decision" choices={choices.decisions} value={record.decision_id}/><Field name="candidateBetId" label="Linked bet" choices={choices.bets} value={record.candidate_bet_id}/>
- <fieldset className="min-w-0"><legend className={fieldLabelClass}>Linked evidence</legend>{evidence.kind==='ready'?evidence.data.map(e=><label key={e.id} className="flex min-h-11 items-start gap-2 text-sm text-penny-ink"><input className="mt-1 size-4 accent-penny-ink" type="checkbox" name="evidenceIds" value={e.id} defaultChecked={context.data.evidenceIds.includes(e.id)}/><span className="min-w-0 break-words [overflow-wrap:anywhere]">{e.wording}</span></label>):<OperatorOptionsState state={evidence} loading="Loading linked evidence…" failure="Could not load linked evidence" reload={reloadEvidence}/>}<p className="text-xs text-penny-muted">The linked bet’s evidence is also included.</p></fieldset>
+ <EvidencePicker key={JSON.stringify(context.data.evidenceIds)} initialIds={context.data.evidenceIds}/>
  <Field name="accountImpact" label="Account impact" value={record.account_impact} type="textarea"/><Field name="confidence" label="Confidence" value={record.confidence} choices={['low','medium','high'].map(id=>({id,label:id}))}/><Field name="deliveryNotes" label="Delivery notes" value={record.delivery_notes} type="textarea"/>
  <Field name="publicTitle" label="Draft customer-safe title" value={record.public_title_draft}/><Field name="publicSummary" label="Draft customer-safe summary" value={record.public_summary_draft} type="textarea"/><p className="text-sm text-penny-muted">Saving drafts keeps the last approved public wording. Approve explicitly below to publish new wording.</p>
  </LoopForm>

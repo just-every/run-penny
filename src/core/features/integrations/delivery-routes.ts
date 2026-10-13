@@ -1,3 +1,4 @@
+import {revokeConfiguration} from './revocation'
 import type {Hono} from 'hono'
 import type {OperatorMutationEnvironment} from '@/core/app/operator-mutations'
 import {z} from 'zod'
@@ -16,7 +17,7 @@ export function registerDeliveryRoutes(app:Hono<OperatorMutationEnvironment>) {
   return c.json({destinations,deliveries,attempts,transport:runtime.bindings.PENNY_EGRESS?'configured':'configuration-disabled'})
  })
  app.post('/api/operator/integrations/destinations',async c=>c.json(await createDestination(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,destinationInput)),201))
- app.delete('/api/operator/integrations/destinations/:id',async c=>{const {db}=await integrationOperator(c.get('runtime'),c.req.raw);await db.prepare('UPDATE penny_integration_destinations SET revoked_at=? WHERE id=?').bind(Date.now(),c.req.param('id')).run();return c.json({revoked:true})})
+ app.delete('/api/operator/integrations/destinations/:id',async c=>{await revokeConfiguration(c.get('runtime'),c.req.raw,c.req.param('id'),'destination');return c.json({revoked:true})})
  app.post('/api/operator/integrations/deliveries/:id/reconcile',async c=>{
   const {db}=await integrationOperator(c.get('runtime'),c.req.raw),input=await parseInput(c.req.raw,z.object({outcome:z.enum(['accepted','rejected']),evidenceCode:z.string().regex(/^[a-z][a-z0-9_]{0,63}$/)}).strict())
   await new IntegrationsRepository(new D1SqlDatabase(db),deliveryNamespace).resolve(c.req.param('id'),{kind:input.outcome,code:input.evidenceCode},Date.now())

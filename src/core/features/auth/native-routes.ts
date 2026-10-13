@@ -13,7 +13,7 @@ type Environment={Bindings:AppBindings;Variables:{runtime:PennyRuntime}}
 const email=z.string().trim().toLowerCase().email().max(254)
 const token=z.string().regex(/^[A-Za-z0-9_-]{43}$/)
 export function registerNativeAuthRoutes(app:Hono<Environment>):void {
-  app.get('/api/public/identity/host/frames',c=>c.json({origins:hostFrameOrigins(c.get('runtime'))}))
+  app.get('/api/public/identity/host/frames',async c=>c.json({origins:await hostFrameOrigins(c.get('runtime'))}))
   app.post('/api/public/identity/host',async c=>{
     const runtime=c.get('runtime'),claims=await verifyHostClaims(runtime,c.req.header('X-Penny-Identity')??'',c.req.header('X-Penny-Identity-Signature')??'')
     if(c.req.header('Origin')!==runtime.configuration.appOrigin||c.req.header('Authorization'))return c.json({error:'requester_identity_required'},401)

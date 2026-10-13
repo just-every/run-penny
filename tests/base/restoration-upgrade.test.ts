@@ -21,7 +21,7 @@ it('[BASE-OPS-002 BASE-ACCESS-002 DATA-001 NOTIFY-002] populated 0015 upgrades p
   env.DB.prepare("UPDATE oa_sessions SET revoked_at=100 WHERE id=(SELECT id FROM oa_sessions LIMIT 1)"),
  ])
  const bytes=new Uint8Array([0,255,31,9]);await env.FILES.put('upgrade-original',bytes)
- const names=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' ORDER BY name").all<{name:string}>()).results.map(row=>row.name)
+ const names=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT IN ('d1_migrations','penny_public_admission') ORDER BY name").all<{name:string}>()).results.map(row=>row.name)
  const columns=await Promise.all(names.map(async name=>(await env.DB.prepare(`PRAGMA table_info(${quote(name)})`).all<{name:string}>()).results.map(row=>row.name)))
  const statements=names.map((name,i)=>env.DB.prepare(`SELECT ${columns[i].map(quote).join(',')} FROM ${quote(name)} ORDER BY rowid`))
  const before=(await env.DB.batch(statements)).map(result=>result.results)
@@ -49,7 +49,7 @@ it('[DATA-001 DATA-003 BASE-OPS-002 BASE-ACCESS-002] populated 0029 clause upgra
  await env.DB.prepare("UPDATE native_requester_sessions SET token_hash=? WHERE id='prior-requester-session'").bind(await digest(token)).run()
  const checkAuthority=await priorUpgradeAuthority(operator)
  await checkAuthority()
- const names=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' ORDER BY name").all<{name:string}>()).results.map(row=>row.name)
+ const names=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT IN ('d1_migrations','penny_public_admission') ORDER BY name").all<{name:string}>()).results.map(row=>row.name)
  const columns=await Promise.all(names.map(async name=>(await env.DB.prepare(`PRAGMA table_info(${quote(name)})`).all<{name:string}>()).results.map(row=>row.name)))
  const statements=names.map((name,i)=>env.DB.prepare(`SELECT ${columns[i].map(quote).join(',')} FROM ${quote(name)} ORDER BY rowid`))
  const before=(await env.DB.batch(statements)).map(result=>result.results)

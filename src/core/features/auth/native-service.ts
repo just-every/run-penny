@@ -1,4 +1,5 @@
-import { authMail, mailReady } from './mail'
+import { mailReady } from './mail'
+import { auditedIdentityMail } from './mail-audit'
 import { bindPendingRequesterActions, replayPendingRequesterAction } from '@/core/features/requests/pending-actions'
 import type { PennyRuntime } from '@/core/app/runtime'
 import { createUlid } from '@/core/shared/ulid'
@@ -25,10 +26,12 @@ export async function issueNativeLink(runtime: PennyRuntime, purpose: 'requester
   try {
     const url = new URL('/portal/verify', runtime.configuration.appOrigin)
     url.hash = new URLSearchParams({token}).toString()
-    const sent = await authMail(runtime)!.send({ deliveryId: id, from: runtime.configuration.mailFrom!, to: [email], subject: 'Verify your Penny email', text: `Verify your email to continue. This single-use link expires in 30 minutes.\n\n${url.href}`, headers: { 'Auto-Submitted': 'auto-generated' } })
+    const sent = await auditedIdentityMail(runtime,'requester_verification')!.send({ deliveryId: id, from: runtime.configuration.mailFrom!, to: [email], subject: 'Verify your Penny email', text: `Verify your email to continue. This single-use link expires in 30 minutes.\n\n${url.href}`, headers: { 'Auto-Submitted': 'auto-generated' } })
     if (sent.status !== 'accepted' && !(sent.status === 'development' && runtime.configuration.environment === 'local')) throw new Error('mail_not_accepted')
   } catch {
-    await db.prepare('UPDATE native_magic_links SET consumed_at=?,updated_at=? WHERE id=?').bind(now,now,id).run()
+    // An unusable send is not a consumption. Its independent audit survives
+    // removal of the credential, including an ambiguous provider effect.
+    await db.prepare('DELETE FROM native_magic_links WHERE id=?').bind(id).run()
     throw new NativeError('mail_unavailable',503)
   }
 }

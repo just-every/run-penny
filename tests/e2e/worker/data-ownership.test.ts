@@ -13,6 +13,7 @@ const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['owner@penny.
 const bindings={...env,...nativeAuthoritySettings,PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox'}
 let cookie='',nativeCookie=''
 const call=(path:string,body?:unknown,headers:Record<string,string>={Cookie:cookie})=>app.fetch(new Request(nativeAuthoritySettings.APP_ORIGIN+path,{method:body===undefined?'GET':'POST',headers:{Origin:nativeAuthoritySettings.APP_ORIGIN,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings)
+const callMethod=(path:string,method:string,body?:unknown,headers:Record<string,string>={Cookie:cookie})=>app.fetch(new Request(nativeAuthoritySettings.APP_ORIGIN+path,{method,headers:{Origin:nativeAuthoritySettings.APP_ORIGIN,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings)
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'))})
 beforeEach(async()=>{await clearTarget();await env.DB.batch([env.DB.prepare('DELETE FROM data_apply_claims'),env.DB.prepare('DELETE FROM data_operations'),env.DB.prepare('DELETE FROM data_tombstones'),env.DB.prepare('UPDATE data_state SET origin=?,epoch=0 WHERE singleton=1').bind(crypto.randomUUID().replaceAll('-',''))]);await importPennySample(createDatabaseConnection(env.DB),sample);await owner()})
 async function owner(){const now=new Date().toISOString();await env.DB.prepare('INSERT OR IGNORE INTO operators(id,email,display_name,created_at,updated_at) VALUES(?,?,?,?,?)').bind('data-owner','owner@penny.invalid','Data review operator',now,now).run();await env.DB.prepare('INSERT OR REPLACE INTO operator_sessions(id,operator_id,token_hash,expires_at,last_used_at,created_at,updated_at) SELECT ?,id,?,?,?,?,? FROM operators WHERE email=?').bind('data-owner-session',await digest('data-owner-fixture'),'2099-01-01',now,now,now,'owner@penny.invalid').run()
@@ -270,4 +271,105 @@ it('never claims or deletes unrelated files after an interruption before empty-t
  const resumeId=await interrupted();await expect(restoreArchive(env.DB,env.FILES,snapshot.archive,snapshot.journal,resumeId)).rejects.toMatchObject({code:'restore_requires_empty_bucket'})
  expect(new Uint8Array(await(await env.FILES.get(original.key))!.arrayBuffer())).toEqual(other)
  expect((await env.DB.prepare('SELECT count(*) AS n FROM requests').first<{n:number}>())!.n).toBe(0)
+})
+it('defines and edits private typed fields for every seeded entity while preserving authority, values, audit, export and public boundaries',async()=>{
+ const entities=[
+  {type:'account',table:'accounts'},
+  {type:'requester',table:'requesters'},
+  {type:'evidence',table:'evidence_items'},
+  {type:'request',table:'requests'},
+  {type:'decision',table:'decisions'},
+  {type:'roadmapItem',table:'roadmap_items'},
+  {type:'release',table:'releases'},
+ ] as const
+ const records=await Promise.all(entities.map(async entity=>({type:entity.type,id:(await env.DB.prepare(`SELECT id FROM ${entity.table} ORDER BY id LIMIT 1`).first<{id:string}>())!.id})))
+ const marker=`Private custom field marker ${crypto.randomUUID()}`
+ const definitions=new Map<string,{id:string;name:string;entityType:string;fieldType:string}>()
+ const requestId=records.find(record=>record.type==='request')!.id
+ expect((await callMethod('/api/operator/settings/custom-fields','GET',undefined,{})).status).toBe(401)
+ expect((await callMethod(`/api/operator/custom-fields/request/${requestId}`,'GET',undefined,{})).status).toBe(401)
+
+ for(const record of records){
+  const name=`${marker} ${record.type}`
+  const response=await callMethod('/api/operator/settings/custom-fields','POST',{entityType:record.type,name,fieldType:'text'})
+  expect(response.status).toBe(201)
+  const definition=await response.json() as {id:string;name:string;entityType:string;fieldType:string}
+  definitions.set(record.type,definition)
+  const emptyFields=await (await callMethod(`/api/operator/custom-fields/${record.type}/${record.id}`,'GET')).json() as {id:string;hasValue:boolean;value:unknown}[]
+  expect(emptyFields.find(field=>field.id===definition.id)).toMatchObject({hasValue:false,value:null})
+  const saved=await callMethod(`/api/operator/custom-fields/${record.type}/${definition.id}/${record.id}`,'PUT',{value:name})
+  expect(saved.status).toBe(200)
+  const values=await (await callMethod(`/api/operator/custom-fields/${record.type}/${record.id}`,'GET')).json() as {id:string;hasValue:boolean;value:unknown}[]
+  expect(values.find(field=>field.id===definition.id)).toMatchObject({hasValue:true,value:name})
+ }
+ for(const record of records){
+  const definition=definitions.get(record.type)!
+  const name=`${definition.name} edited`
+  expect((await callMethod(`/api/operator/settings/custom-fields/${definition.id}`,'PATCH',{name,fieldType:'text'})).status).toBe(200)
+  definition.name=name
+  const fields=await (await callMethod('/api/operator/settings/custom-fields','GET')).json() as {id:string;name:string;entityType:string;fieldType:string}[]
+  expect(fields.find(field=>field.id===definition.id)).toMatchObject({name,entityType:record.type,fieldType:'text'})
+ }
+
+ const requestDefinition=definitions.get('request')!
+ const createDefinition=async(name:string,fieldType:string)=>{
+  const response=await callMethod('/api/operator/settings/custom-fields','POST',{entityType:'request',name,fieldType})
+  expect(response.status).toBe(201)
+  return await response.json() as {id:string;name:string;entityType:string;fieldType:string}
+ }
+ const emptyText=await createDefinition(`${marker} empty text`,'text')
+ const zero=await createDefinition(`${marker} zero`,'number')
+ const falseValue=await createDefinition(`${marker} false`,'boolean')
+ const calendarDate=await createDefinition(`${marker} calendar date`,'date')
+ const nullable=await createDefinition(`${marker} nullable`,'number')
+ const convertible=await createDefinition(`${marker} convertible`,'number')
+ for(const [definition,value] of [[emptyText,''],[zero,0],[falseValue,false],[calendarDate,'2024-02-29'],[nullable,null]] as const){
+  const response=await callMethod(`/api/operator/custom-fields/request/${definition.id}/${requestId}`,'PUT',{value})
+  expect(response.status).toBe(200)
+ }
+ const typed=await (await callMethod(`/api/operator/custom-fields/request/${requestId}`,'GET')).json() as {id:string;hasValue:boolean;value:unknown}[]
+ expect(typed.find(field=>field.id===emptyText.id)).toMatchObject({hasValue:true,value:''})
+ expect(typed.find(field=>field.id===zero.id)).toMatchObject({hasValue:true,value:0})
+ expect(typed.find(field=>field.id===falseValue.id)).toMatchObject({hasValue:true,value:false})
+ expect(typed.find(field=>field.id===calendarDate.id)).toMatchObject({hasValue:true,value:'2024-02-29'})
+ expect(typed.find(field=>field.id===nullable.id)).toMatchObject({hasValue:true,value:null})
+ expect((await callMethod(`/api/operator/custom-fields/request/${convertible.id}/${requestId}`,'PUT',{value:'wrong type'})).status).toBe(400)
+ expect((await callMethod(`/api/operator/custom-fields/request/${calendarDate.id}/${requestId}`,'PUT',{value:'2026-02-30'})).status).toBe(400)
+ expect((await callMethod(`/api/operator/custom-fields/request/${zero.id}/${requestId}`,'PUT',{value:'0'})).status).toBe(400)
+ expect((await callMethod(`/api/operator/settings/custom-fields/${zero.id}`,'PATCH',{name:`${marker} rejected type change`,fieldType:'text'})).status).toBe(409)
+
+ const renamed=`${requestDefinition.name} renamed`
+ expect((await callMethod(`/api/operator/settings/custom-fields/${requestDefinition.id}`,'PATCH',{name:renamed,fieldType:'text'})).status).toBe(200)
+ expect((await callMethod(`/api/operator/settings/custom-fields/${requestDefinition.id}`,'PATCH',{name:renamed,fieldType:'number'})).status).toBe(409)
+ expect((await callMethod(`/api/operator/settings/custom-fields/${convertible.id}`,'PATCH',{name:`${marker} converted`,fieldType:'text'})).status).toBe(200)
+ expect((await callMethod(`/api/operator/custom-fields/request/${convertible.id}/${requestId}`,'PUT',{value:'editable type'})).status).toBe(200)
+ expect((await callMethod('/api/operator/settings/custom-fields','POST',{entityType:'request',name:renamed,fieldType:'text'})).status).toBe(409)
+ const roadmapName=`${marker} roadmap alias`
+ expect((await callMethod('/api/operator/settings/custom-fields','POST',{entityType:'roadmapItem',name:roadmapName,fieldType:'text'})).status).toBe(201)
+ expect((await callMethod('/api/operator/settings/custom-fields','POST',{entityType:'roadmap',name:roadmapName,fieldType:'text'})).status).toBe(409)
+ expect((await callMethod('/api/operator/settings/custom-fields/missing-definition','PATCH',{name:'Missing',fieldType:'text'})).status).toBe(404)
+ expect((await callMethod(`/api/operator/custom-fields/request/missing-definition/${requestId}`,'PUT',{value:'missing'})).status).toBe(404)
+ expect((await callMethod(`/api/operator/custom-fields/request/${requestDefinition.id}/missing-entity`,'PUT',{value:'missing'})).status).toBe(404)
+ expect((await callMethod(`/api/operator/custom-fields/not-a-real-entity-type/${requestId}`,'GET')).status).toBe(400)
+ expect((await callMethod(`/api/operator/custom-fields/request/${requestDefinition.id}/${records.find(record=>record.type==='account')!.id}`,'PUT',{value:'cross entity'})).status).toBe(404)
+ expect((await callMethod(`/api/operator/custom-fields/request/${definitions.get('account')!.id}/${requestId}`,'PUT',{value:'cross entity'})).status).toBe(409)
+ expect((await callMethod('/api/operator/settings/custom-fields','POST',{entityType:'account',name:`${marker} denied`,fieldType:'text'},{})).status).toBe(401)
+
+ expect((await callMethod(`/api/operator/custom-fields/request/${zero.id}/${requestId}`,'PUT',{value:null})).status).toBe(200)
+ const cleared=await (await callMethod(`/api/operator/custom-fields/request/${requestId}`,'GET')).json() as {id:string;hasValue:boolean;value:unknown}[]
+ expect(cleared.find(field=>field.id===zero.id)).toMatchObject({hasValue:true,value:null})
+ expect(await env.DB.prepare("SELECT id FROM audit_entries WHERE action='custom_field.value_cleared' AND entity_type='request' AND entity_id=? AND actor_id='data-owner'").bind(requestId).first()).not.toBeNull()
+ expect(await env.DB.prepare("SELECT id FROM audit_entries WHERE action='custom_field.definition_updated' AND entity_id=? AND actor_id='data-owner'").bind(requestDefinition.id).first()).not.toBeNull()
+
+ const snapshot=await exportArchive(env.DB,env.FILES)
+ expect(snapshot.archive.tables.custom_field_definitions.some(row=>row.id===requestDefinition.id&&row.name===renamed)).toBe(true)
+ expect(snapshot.archive.tables.custom_field_values.some(row=>row.definition_id===falseValue.id&&row.value_json==='false')).toBe(true)
+ for(const path of ['/api/public/requests','/api/public/requests?q='+encodeURIComponent(marker),'/api/public/requests/scim-provisioning','/api/public/roadmap','/api/public/releases']){
+  const publicResponse=await call(path,undefined,{})
+  expect(publicResponse.status).toBe(200)
+  const publicJson=JSON.stringify(await publicResponse.json())
+  expect(publicJson).not.toContain(marker)
+  expect(publicJson).not.toContain(renamed)
+ }
+ expect((await callMethod(`/api/operator/custom-fields/request/${requestId}`,'GET',undefined,{})).status).toBe(401)
 })

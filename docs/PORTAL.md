@@ -84,7 +84,7 @@ If you were included when a release was first published, its page lets you answe
 
 ## Embedding
 
-Penny's server configuration has a list for the origins you allow to embed the portal, `publicOriginAllowlist` in `src/ext/config.server.ts`. Penny does not currently use that list to set framing rules on portal pages, so do not rely on it to control embedding. Treat embedding the portal in an iframe as not supported yet.
+In **Feedback settings → Portal embedding**, save one exact HTTPS parent origin per line. The saved `publicOriginAllowlist` controls the next portal response’s `frame-ancestors` policy; an empty list permits only Penny’s own origin. Local/test installations also accept explicit loopback HTTP origins. Operator, setup and sign-in pages remain protected. Before a list is saved, the server-only `publicOriginAllowlist` is the initial policy.
 
 ## Customer-safe by design
 

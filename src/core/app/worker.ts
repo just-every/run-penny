@@ -1,4 +1,3 @@
-import {editorDocumentHeaders} from '@/core/features/editor/headers'
 import { type Context } from 'hono'
 import { createPennyApi } from './api'
 import { hasOperatorSession } from '@/core/features/auth/operator'
@@ -88,7 +87,7 @@ async function serveOperatorWorkspace(context: PennyWorkerContext) {
 async function renderDocument(context: PennyWorkerContext) {
   const render = context.get('renderDocument')
   if (!render) throw new Error('Missing TanStack Start document handler.')
-  const response = editorDocumentHeaders(await render(context.req.raw),context.get('runtime'),new URL(context.req.url).pathname)
+  const response = await render(context.req.raw)
   const headers = new Headers(response.headers)
   const cache = headers.get('cache-control')
   headers.set('cache-control', [cache, 'no-transform'].filter(Boolean).join(', '))

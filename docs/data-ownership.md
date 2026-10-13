@@ -58,6 +58,12 @@ capabilities disabled. Pending requester actions are claimed/disabled, and queue
 operational lock/runner bookkeeping belong to the target, not the business
 archive. The separate journal preserves erasure fences.
 
+Public entry rate limits and ordinary sign-in/verification mail attempt history
+also belong to the installation. Migration 0055 gives them independent tables,
+so rate admission and durable mail receipts continue during product maintenance.
+The mail history retains only an opaque attempt reference, feature, transport,
+outcome and timestamps; product exports do not transfer this authentication custody.
+
 Authenticated archive limits: 2,000 business rows, 4 MiB record JSON, 10 MiB per file, 20 MiB original
 files total, 32 MiB request/archive input and 33 MiB combined CLI response. These are bounded local review limits,
 not tested production capacities. Reads stop on an overflow row; no truncated success is returned. Unknown versions/schema, invalid keys/FKs,

@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import { MutationError } from '@/core/app/operator-mutations'
 import type { PennyRuntime } from '@/core/app/runtime'
-import { operatorAuth } from '../auth/operator'
+import { operatorAuth,authenticateOperator } from '../auth/operator'
+import {sessionGuard} from '../integrations/keys'
 import { NativeError } from '../auth/native-tokens'
 import { publicationGuard } from './publication-policy'
 import { createUlid } from '@/core/shared/ulid'
@@ -10,9 +11,12 @@ export const correctionSchema=z.object({expectedVersionId:z.string().min(1),titl
 export type ReleaseCorrection=z.infer<typeof correctionSchema>
 export interface ReleaseVersion {id:string;versionNumber:number;title:string;body:string;setupUrl:string|null;outcomePrompt:string;isCurrent:boolean;deliveryRequestedAt:string|null;createdAt:string;deliveryCounts:DeliveryCounts}
 export async function releaseOperatorGuard(runtime:PennyRuntime,request:Request){
- const session=await operatorAuth(runtime).getSession(request)
- if(!session)throw new NativeError('operator_session_required',401)
- return {sql:`EXISTS(SELECT 1 FROM oa_sessions s JOIN oa_operators o ON o.id=s.operator_id WHERE s.id=? AND s.revoked_at IS NULL AND s.expires_at>unixepoch('subsec')*1000 AND o.status='active' AND o.version=s.operator_version AND o.version=?)`,values:[session.id,session.operator.version] as (string|number|null)[]}
+ if(request.method!=='GET'&&request.headers.get('Origin')!==runtime.configuration.appOrigin)throw new NativeError('forbidden_origin',403)
+ const session=await operatorAuth(runtime).getSession(request),actor=await authenticateOperator(runtime,request)
+ if(!session||!actor)throw new NativeError('operator_session_required',401)
+ const guard=sessionGuard(session)
+ return {sql:guard.sql,values:guard.params,actorId:actor.id}
+
 }
 type Authority=Awaited<ReturnType<typeof releaseOperatorGuard>>
 export async function correctRelease(db:D1Database,slug:string,input:ReleaseCorrection,authority:Authority){
@@ -27,6 +31,7 @@ export async function correctRelease(db:D1Database,slug:string,input:ReleaseCorr
   db.prepare('UPDATE release_versions SET is_portal_current=0 WHERE release_id=?').bind(old.release_id),
   db.prepare('UPDATE release_versions SET is_portal_current=1 WHERE id=?').bind(id),
   db.prepare('UPDATE releases SET current_version_id=?,updated_at=? WHERE id=?').bind(id,now,old.release_id),
+  db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'operator',?,'release.corrected','release',?,?,?,?)`).bind(createUlid(),authority.actorId,old.release_id,now,now,now),
   db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(guard),
  ])}catch(error){if(String(error).includes('requester_write_admitted'))throw new MutationError(409,'Authority or the current release changed. Refresh before correcting it.');throw error}
  return {id:old.release_id,versionId:id,versionNumber:old.version_number+1}
@@ -40,6 +45,7 @@ export async function requestReleaseDelivery(db:D1Database,slug:string,versionId
   db.prepare(`INSERT INTO notification_outbox(id,event_type,subject_id,event_version,requester_id,dedupe_key,payload_json,delivery_state,available_at,address_id,release_snapshot_id,created_at,updated_at)
    SELECT 'release:'||v.id||':'||s.requester_id,'release_version',v.id,v.version_number,s.requester_id,'release:'||v.id||':'||s.requester_id,'{}','queued',?,s.requester_address_id,s.id,?,?
    FROM release_versions v JOIN release_recipient_snapshots s ON s.release_version_id=COALESCE(v.original_publication_version_id,v.id) WHERE v.id=? AND v.delivery_requested_at IS NULL`).bind(now,now,now,versionId),
+  db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,'operator',?,'release.delivery_requested','release_version',id,?,?,? FROM release_versions WHERE id=? AND delivery_requested_at IS NULL`).bind(createUlid(),authority.actorId,now,now,now,versionId),
   db.prepare('UPDATE release_versions SET delivery_requested_at=? WHERE id=? AND delivery_requested_at IS NULL').bind(now,versionId),
   db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(guard),
  ])}catch(error){if(String(error).includes('requester_write_admitted'))throw new NativeError('operator_session_required',401);throw error}

@@ -60,23 +60,27 @@ export class RequestOperatorRepository {
   }
 
   async setRequesterBlocked(requesterId: string, blocked: boolean, operatorId: string, now: string): Promise<void> {
-    const result = await this.connection.binding.prepare(`UPDATE requesters SET blocked_at = ?, updated_at = ? WHERE id = ? RETURNING 1 AS affected`).bind(blocked ? now : null, now, requesterId).all()
-    if (result.results.length !== 1) throw new RequestLifecycleError(404, 'not_found', 'The requester does not exist.')
-    await this.connection.binding.prepare(`
-      INSERT INTO audit_entries (id, actor_type, actor_id, action, entity_type, entity_id, occurred_at, details_json, created_at, updated_at)
-      VALUES (?, 'operator', ?, ?, 'requester', ?, ?, NULL, ?, ?)
-    `).bind(createRequestId(), operatorId, blocked ? 'requester.blocked' : 'requester.unblocked', requesterId, now, now, now).run()
+    const db=this.connection.binding
+    const results=await db.batch([
+      db.prepare(`UPDATE requesters SET blocked_at=?,updated_at=? WHERE id=? RETURNING 1 AS affected`).bind(blocked?now:null,now,requesterId),
+      db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at)
+        SELECT ?,'operator',?,?,'requester',?,?,?,? WHERE changes()>0`).bind(createRequestId(),operatorId,blocked?'requester.blocked':'requester.unblocked',requesterId,now,now,now),
+    ])
+    if(results[0].results.length!==1)throw new RequestLifecycleError(404,'not_found','The requester does not exist.')
   }
 
   async mergeRequesters(sourceRequesterId: string, targetRequesterId: string, operatorId: string, now: string): Promise<void> {
     return mergeRequesterIdentities(this.connection, sourceRequesterId, targetRequesterId, operatorId, now)
   }
 
-  async moveRequest(slug: string, boardSlug: string, now: string): Promise<void> {
+  async moveRequest(slug: string, boardSlug: string, now: string, actorId:string): Promise<void> {
     const board = await this.findBoard(boardSlug)
     if (!board) throw new RequestLifecycleError(404, 'board_not_found', 'The board does not exist.')
-    const result = await this.connection.binding.prepare(`UPDATE requests SET board_id = ?, updated_at = ? WHERE slug = ? RETURNING 1 AS affected`).bind(board.id, now, slug).all()
-    if (result.results.length !== 1) throw new RequestLifecycleError(404, 'not_found', 'The request does not exist.')
+    const db=this.connection.binding,result=await db.batch([
+      db.prepare(`UPDATE requests SET board_id=?,updated_at=? WHERE slug=? RETURNING 1 AS affected`).bind(board.id,now,slug),
+      db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,'operator',?,'request.board_changed','request',id,?,?,? FROM requests WHERE slug=? AND changes()>0`).bind(createRequestId(),actorId,now,now,now,slug),
+    ])
+    if (result[0].results.length !== 1) throw new RequestLifecycleError(404, 'not_found', 'The request does not exist.')
   }
 
   async createBoard(input: { readonly slug: string; readonly name: string; readonly visibility: 'public' | 'internal'; readonly now: string }): Promise<void> {
@@ -86,13 +90,16 @@ export class RequestOperatorRepository {
     `).bind(createRequestId(), input.slug, input.name, input.visibility, position?.position ?? 0, input.now, input.now).run()
   }
 
-  async updateBoard(input: { readonly slug: string; readonly name?: string; readonly visibility?: 'public' | 'internal'; readonly position?: number; readonly archived?: boolean; readonly now: string }): Promise<void> {
-    const result = await this.connection.binding.prepare(`
-      UPDATE boards SET name = COALESCE(?, name), visibility = COALESCE(?, visibility), position = COALESCE(?, position),
-        archived_at = CASE WHEN ? IS NULL THEN archived_at WHEN ? = 1 THEN ? ELSE NULL END, updated_at = ?
-      WHERE slug = ? RETURNING 1 AS affected
-    `).bind(input.name ?? null, input.visibility ?? null, input.position ?? null, input.archived === undefined ? null : 1, input.archived ? 1 : 0, input.now, input.now, input.slug).all()
-    if (result.results.length !== 1) throw new RequestLifecycleError(404, 'board_not_found', 'The board does not exist.')
+  async updateBoard(input: { readonly operatorId: string; readonly slug: string; readonly name?: string; readonly visibility?: 'public' | 'internal'; readonly position?: number; readonly archived?: boolean; readonly now: string }): Promise<void> {
+    const db=this.connection.binding
+    const result=await db.batch([
+      db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at)
+        SELECT ?,'operator',?,?,'board',id,?,?,? FROM boards WHERE slug=?`).bind(createRequestId(),input.operatorId,input.archived===true?'board.archived':'board.settings_updated',input.now,input.now,input.now,input.slug),
+      db.prepare(`UPDATE boards SET name=COALESCE(?,name),visibility=COALESCE(?,visibility),position=COALESCE(?,position),
+        archived_at=CASE WHEN ? IS NULL THEN archived_at WHEN ?=1 THEN ? ELSE NULL END,updated_at=? WHERE slug=? RETURNING 1 AS affected`)
+        .bind(input.name??null,input.visibility??null,input.position??null,input.archived===undefined?null:1,input.archived?1:0,input.now,input.now,input.slug),
+    ])
+    if(result[1].results.length!==1)throw new RequestLifecycleError(404,'board_not_found','The board does not exist.')
   }
 
   async moderateAttachment(input: Parameters<typeof moderateAttachment>[1]): Promise<void> {

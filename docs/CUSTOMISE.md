@@ -20,16 +20,19 @@ Two small files hold the settings most owners change first.
 
 | Setting | What it changes |
 |---|---|
-| `operatorAllowlist` | A gate on who may hold an operator account. An operator whose address is not on the list cannot sign in. The `OPERATOR_EMAIL` you set at deploy is added to it automatically. It does not create accounts: being on the list does not make someone an operator. |
+| Operator membership | Managed in **Feedback settings → Operators**. Source configuration cannot reinstate a removed operator. |
 | `workspaceTimezone` | The timezone for requester quiet hours. The default is Australia/Brisbane. A `WORKSPACE_TIMEZONE` value set at deploy overrides it. |
-| `publicOriginAllowlist` | A list of origins in the server configuration. Penny does not currently use it to control embedding. |
+| `publicOriginAllowlist` | Initial exact parent origins for public portal embedding; defaults to empty. **Feedback settings → Portal embedding** saves the installation’s current list. |
 
-Penny currently has exactly one operator: the `OPERATOR_EMAIL` owner, created when you run the first-session step in [Install and deploy](/docs/install#create-the-first-operator-session). There is no invite screen yet, so adding an address to `operatorAllowlist` does not let that person sign in. They would ask for a link and no email would arrive. A second operator needs a change to the source, which is a good job for your own agent.
+The `OPERATOR_EMAIL` owner is created during setup. In **Feedback settings → Operators**, any operator can invite an email address and remove peers. The invitee confirms the email link to join with equal product access. Removal immediately revokes sessions, pending links and API keys. Only the setup owner can remove themselves; the confirmation names the verified active peer who will receive installation controls. Removing the last usable owner is refused. Development invitations arrive in the gated local outbox.
 
 ## Things you change inside the app
 
 You do not need code for these. They live in the operator app, under **Feedback settings**:
 
+- **Operators:** invite people by email, cancel invitations and remove operators.
+- **Portal embedding:** save exact allowed parent origins.
+- **Private custom fields:** create and edit definitions for accounts, requesters, evidence, requests, decisions, roadmap items and releases; edit typed values on their operator views.
 - **Boards:** create, rename, reorder, archive, and set each one public or internal.
 - **Tags:** create, rename, merge and delete private tags. You need at least one subject tag before you can save a release.
 - **Custom fields:** add private fields to requests, of type text, number, boolean or date. They are never shown to the public.
@@ -82,3 +85,11 @@ Keep your own work in recognisable places, for example `src/ext/`, so an update 
 If you change Penny deeply, you can still take later improvements. Your agent can read what changed upstream and adapt it to your version.
 
 For what Penny is and does today, see the [overview](/docs).
+
+## Finding and filtering operator records
+
+**Search** in the operator navigation searches request titles/descriptions, evidence wording, decision questions/rationales, roadmap titles/summaries, release titles/bodies, requester names/email addresses and account names. Public visitors cannot use this private search. A result opens its record; list-backed records open a focused record in the existing view.
+
+Operator lists keep search, tags, sort and page in the URL. Request queues also filter moderation, board, public status, linked decision and account, and sort by votes, recent activity or age. Requests and evidence use their direct tags. Decisions inherit linked evidence and active mapped-request tags; roadmap items inherit mapped-request and linked-evidence tags; releases include their subject tags and target context. Accounts inherit tags from their evidence and linked requesters’ requests; requesters inherit tags from their evidence and authored requests. Tag filters never make these private tags public.
+
+Requester records and their fields are available under the requester directory on **Accounts**. Custom fields preserve zero, false, empty text and a cleared value distinctly. An incompatible definition type change is refused while stored values use the old type.

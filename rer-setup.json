@@ -213,13 +213,6 @@
       "ownerVisible": true,
       "group": "host",
       "required": false
-    },
-    {
-      "name": "PORTAL_FRAME_ORIGINS",
-      "label": "Allowed host application origins (JSON array)",
-      "kind": "text",
-      "group": "host",
-      "runtimeEditable": false
     }
   ],
   "runtime": {

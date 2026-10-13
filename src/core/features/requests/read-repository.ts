@@ -1,3 +1,4 @@
+import { boundedIds } from '@/core/features/workspace/list-query'
 import type { OperatorRequestCard } from '@/core/shared/api/operator'
 import type { DatabaseConnection } from '@/core/platform/database'
 
@@ -8,7 +9,7 @@ export class RequestsReadRepository {
     this.connection = connection
   }
 
-  async list(): Promise<readonly OperatorRequestCard[]> {
+  async list(ids?: readonly string[]): Promise<readonly OperatorRequestCard[]> {
     const result = await this.connection.binding.prepare(`
       SELECT
         r.id AS id, r.slug AS slug, r.title AS title, r.description AS description,
@@ -34,8 +35,10 @@ export class RequestsReadRepository {
       FROM requests r
       INNER JOIN boards b ON b.id = r.board_id
       LEFT JOIN requesters author ON author.id = r.author_requester_id
+      ${boundedIds('r', ids)}
       ORDER BY r.updated_at DESC, r.id ASC
-    `).all<{
+      LIMIT 25
+    `).bind(...(ids ?? [])).all<{
       readonly id: string; readonly slug: string; readonly title: string; readonly description: string
       readonly moderationState: OperatorRequestCard['moderationState']; readonly publicState: OperatorRequestCard['publicState']
       readonly boardSlug: string; readonly boardName: string; readonly boardVisibility: 'public' | 'internal'

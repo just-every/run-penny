@@ -13,7 +13,7 @@ let browser
 try{
  browser=await chromium.launch(browserOptions())
  for(const width of [1440,390]){
-  const runtime=await startBrowserRuntime({bindings:{PORTAL_IDENTITY_SECRET:secret,PORTAL_FRAME_ORIGINS:JSON.stringify([hostOrigin])}})
+  const runtime=await startBrowserRuntime({bindings:{PORTAL_IDENTITY_SECRET:secret}})
   const host=createHostExample({appOrigin:runtime.origin,secret,password,user:{email:'host-browser@example.test',displayName:'Host customer',accountId:'private-host-account',accountName:'Private supplied company',revenueCents:99123}})
   let context
   try{
@@ -21,6 +21,9 @@ try{
    const bootstrap=await fetch(runtime.origin+'/auth/bootstrap',{method:'POST',redirect:'manual',headers:{Origin:runtime.origin,'Content-Type':'application/json'},body:JSON.stringify({token:'synthetic-base-browser-setup-token-12345',displayName:'Owner',returnTo:'/app'})})
    assert.equal(bootstrap.status,303)
    const cookie=bootstrap.headers.get('set-cookie').split(';')[0]
+   const frames=await fetch(runtime.origin+'/api/operator/settings/frames',{method:'PUT',headers:{Origin:runtime.origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify({publicOriginAllowlist:[hostOrigin]})})
+   assert.equal(frames.status,200)
+   assert.deepEqual(await frames.json(),{publicOriginAllowlist:[hostOrigin]})
    const board=await fetch(runtime.origin+'/api/operator/boards',{method:'POST',headers:{Origin:runtime.origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify({name:'Product feedback',slug:'feedback',visibility:'public'})});assert.equal(board.status,201)
    context=await browser.newContext({viewport:{width,height:width===390?844:900}})
    const page=await context.newPage(),errors=[],external=[]

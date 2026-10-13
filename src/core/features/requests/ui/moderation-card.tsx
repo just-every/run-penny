@@ -40,9 +40,9 @@ function ReviewForm({ row, report }: { row: QueueRequest; report: (message: stri
     if (verdict === 'rejected' && !String(data.get('reason') ?? '').trim()) { report('A rejection needs a reason.'); return }
     setBusy(true); report('')
     try {
-      await postJson(`/api/operator/moderation/${row.slug}`, verdict === 'rejected' ? { verdict, reason: data.get('reason') } : { verdict, title: data.get('title'), description: data.get('description'), boardSlug: data.get('boardSlug'), displayName: data.get('displayName') })
+      await postJson(`/api/operator/moderation/${row.slug}`, verdict === 'rejected' ? { verdict, reason: data.get('reason'), notifyAuthor: data.get('notifyAuthor') === 'on' } : { verdict, title: data.get('title'), description: data.get('description'), boardSlug: data.get('boardSlug'), displayName: data.get('displayName') })
       await router.invalidate()
-      report(verdict === 'approved' ? 'Approved wording is now public.' : 'Feedback rejected with its reason retained.')
+      report(verdict === 'approved' ? 'Approved wording is now public.' : data.get('notifyAuthor') === 'on' ? 'Feedback rejected. The private author notice is queued for eligibility and delivery checks.' : 'Feedback rejected without an email notice.')
     } catch (error) { report(error instanceof Error ? error.message : 'Review failed.') } finally { setBusy(false) }
   }
   return (
@@ -54,6 +54,7 @@ function ReviewForm({ row, report }: { row: QueueRequest; report: (message: stri
         <label className={fieldLabelClass}>Approved display name<input name="displayName" defaultValue={row.displayName ?? 'Customer'} className={fieldClass} required maxLength={160} /></label>
       </div>
       <label className={fieldLabelClass}>Reason (required for rejection)<textarea name="reason" className={fieldClass} rows={2} maxLength={2000} /></label>
+      <label className="flex items-start gap-3 text-sm leading-6 text-penny-ink"><input type="checkbox" name="notifyAuthor" className="mt-1 size-4" />Email the author this rejection reason</label>
       <div className="flex flex-wrap gap-3">
         <button className={primaryButtonClass} value="approved" disabled={busy}>Approve and publish</button>
         <button className={secondaryButtonClass} value="rejected" disabled={busy} formNoValidate>Reject feedback</button>

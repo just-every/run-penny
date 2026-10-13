@@ -1,6 +1,7 @@
 // The app's line icons on a 24px grid, drawn in the current colour: the operator navigation, row and section marks, and the
 // marks inside chips and icon discs. One set, so a meaning keeps one picture across the portal, the operator app and sign-in.
 const iconPaths = {
+  search: 'M10.5 18a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15Zm5.3-2.2L21 21',
   moderation: 'M12 3 20 6v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Zm-4 9 3 3 5-6',
   settings: 'M19.25 10.53 21.42 10.77 21.42 13.23 19.25 13.47 18.17 16.09 19.53 17.79 17.79 19.53 16.09 18.17 13.47 19.25 13.23 21.42 10.77 21.42 10.53 19.25 7.91 18.17 6.21 19.53 4.47 17.79 5.83 16.09 4.75 13.47 2.58 13.23 2.58 10.77 4.75 10.53 5.83 7.91 4.47 6.21 6.21 4.47 7.91 5.83 10.53 4.75 10.77 2.58 13.23 2.58 13.47 4.75 16.09 5.83 17.79 4.47 19.53 6.21 18.17 7.91ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z',
   data: 'M4 6c0-4 16-4 16 0s-16 4-16 0Zm0 0v12c0 4 16 4 16 0V6M4 12c0 4 16 4 16 0',

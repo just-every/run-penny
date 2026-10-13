@@ -1,3 +1,4 @@
+import { boundedIds } from '@/core/features/workspace/list-query'
 import { releaseDeliveryCounts } from './counts'
 import type { OperatorReleaseCard, OperatorReleaseDetail } from '@/core/shared/api/operator'
 import type { DatabaseConnection } from '@/core/platform/database'
@@ -10,7 +11,7 @@ export class ReleasesReadRepository {
     this.connection = connection
   }
 
-  async list(): Promise<readonly OperatorReleaseCard[]> {
+  async list(ids?: readonly string[]): Promise<readonly OperatorReleaseCard[]> {
     const result = await this.connection.binding.prepare(`
       SELECT
         r.id AS id, r.slug AS slug, r.state AS state, rv.title AS title, rv.release_type AS releaseType,
@@ -37,8 +38,10 @@ export class ReleasesReadRepository {
       FROM releases r
       INNER JOIN release_versions rv ON rv.id = r.current_version_id
       INNER JOIN operators author ON author.id = r.author_operator_id
+      ${boundedIds('r', ids)}
       ORDER BY COALESCE(rv.publication_date, r.created_at) DESC, r.slug ASC
-    `).all<{
+      LIMIT 25
+    `).bind(...(ids ?? [])).all<{
       readonly id: string; readonly slug: string; readonly state: OperatorReleaseCard['state']; readonly title: string; readonly releaseType: OperatorReleaseCard['releaseType']
       readonly publicationDate: string | null; readonly publishedAt: string | null; readonly authorId: string; readonly authorName: string; readonly tagNamesJson: string; readonly recipientSnapshotCount: number | null; readonly outcomeTotal: number | null
     }>()
@@ -51,7 +54,8 @@ export class ReleasesReadRepository {
   }
 
   async find(slug: string): Promise<OperatorReleaseDetail | null> {
-    const release = (await this.list()).find((candidate) => candidate.slug === slug)
+    const record = await this.connection.binding.prepare('SELECT id FROM releases WHERE slug=? LIMIT 1').bind(slug).first<{id:string}>()
+    const release = record ? (await this.list([record.id]))[0] : undefined
     if (!release) return null
     const version = await this.connection.binding.prepare(`
       SELECT rv.id AS versionId,rv.subject_tags_json AS tagIdsJson, rv.body AS body, rv.setup_url AS setupUrl, rv.outcome_prompt AS outcomePrompt

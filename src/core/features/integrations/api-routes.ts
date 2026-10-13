@@ -1,3 +1,4 @@
+import {revokeKey} from './revocation'
 import type {Hono} from 'hono'
 import {z} from 'zod'
 import type {OperatorMutationEnvironment} from '@/core/app/operator-mutations'
@@ -26,7 +27,7 @@ export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
   try{return c.json(await service.issue(null,input),201)}catch(error){if(error instanceof NativeError)throw error;if(error instanceof Error&&/Invalid token expiry|Token grant rejected/.test(error.message))throw new NativeError('integration_key_refused',422);throw error}
  })
  app.delete('/api/operator/integrations/keys/:id',async c=>{
-  const service=await managedKeys(c.get('runtime'),c.req.raw);await service.revoke(null,c.req.param('id'));return c.json({revoked:true})
+  await revokeKey(c.get('runtime'),c.req.raw,c.req.param('id'));return c.json({revoked:true})
  })
  app.get('/api/v1/requests',async c=>{const auth=await apiAuthority(c.get('runtime'),c.req.raw,'requests:read','requests');return c.json(await portalReadService(auth.database).listRequests({}))})
  app.get('/api/v1/requests/:slug',async c=>{
@@ -61,11 +62,11 @@ export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
  })
  app.post('/api/v1/releases',async c=>{
   const auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases'),input=await parseInput(c.req.raw,releaseDraftSchema.omit({authorOperatorId:true}))
-  return c.json(await saveReleaseDraft(auth.database.binding,{...input,authorOperatorId:auth.actor.id}),201)
+  return c.json(await saveReleaseDraft(auth.database.binding,{...input,authorOperatorId:auth.actor.id},undefined,undefined,auth.actor.id),201)
  })
  app.post('/api/v1/releases/:slug/publish',async c=>{
   const key=slug.parse(c.req.param('slug')),auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases');await parseInput(c.req.raw,z.object({approve:z.literal(true)}).strict())
-  return c.json(await publishRelease(auth.database.binding,key))
+  return c.json(await publishRelease(auth.database.binding,key,undefined,auth.actor.id))
  })
  app.all('/api/v1/*',c=>c.json({error:'integration_route_not_found'},404))
 }

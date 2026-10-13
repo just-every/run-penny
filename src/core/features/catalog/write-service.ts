@@ -6,8 +6,8 @@ import { CatalogWriteRepository } from './write-repository'
 export class CatalogWriteService {
   private readonly repository: CatalogWriteRepository
 
-  constructor(database: DatabaseConnection) {
-    this.repository = new CatalogWriteRepository(database)
+  constructor(database: DatabaseConnection, actorId: string) {
+    this.repository = new CatalogWriteRepository(database, actorId)
   }
 
   async createTag(name: string, now = new Date().toISOString()): Promise<{ readonly id: string }> {
@@ -65,6 +65,6 @@ export class CatalogWriteService {
   }
 }
 
-export function catalogWriteService(database: DatabaseConnection): CatalogWriteService {
-  return new CatalogWriteService(database)
+export function catalogWriteService(database: DatabaseConnection, actorId: string): CatalogWriteService {
+  return new CatalogWriteService(database, actorId)
 }

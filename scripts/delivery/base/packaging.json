@@ -79,7 +79,6 @@
         "RER_MANAGEMENT_ORIGIN",
         "RER_DEPLOY_SOURCE",
         "RER_DEPLOY_FINGERPRINT",
-        "PORTAL_FRAME_ORIGINS",
         "IDENTITY_PROVIDER"
       ],
       "secretNames": [

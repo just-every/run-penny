@@ -4,7 +4,7 @@ import { publicationGuard } from './publication-policy'
 import { createUlid } from '@/core/shared/ulid'
 export const releaseDraftSchema=z.object({title:z.string().trim().max(300),body:z.string().trim().max(30000),releaseType:z.enum(['new','improved','fixed']),tagIds:z.array(z.string().min(1)).min(1),publicationDate:z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(value=>{const parsed=new Date(value+'T00:00:00Z');return Number.isFinite(parsed.getTime())&&parsed.toISOString().slice(0,10)===value}),setupUrl:z.union([z.url().refine(v=>/^https?:\/\//.test(v)),z.literal('')]).optional(),targetIds:z.array(z.string().min(1)),authorOperatorId:z.string().min(1)}).strict()
 export type ReleaseDraft=z.infer<typeof releaseDraftSchema>
-export async function saveReleaseDraft(db:D1Database,input:ReleaseDraft,slug?:string,now=new Date().toISOString()){
+export async function saveReleaseDraft(db:D1Database,input:ReleaseDraft,slug?:string,now=new Date().toISOString(),actorId?:string){
  const old=slug?await db.prepare('SELECT id,current_version_id AS versionId,state FROM releases WHERE slug=?').bind(slug).first<{id:string;versionId:string;state:string}>():null
  if(slug&&!old)throw new MutationError(404,'Release not found.')
  if(old?.state==='published')throw new MutationError(409,'Published wording is immutable.')
@@ -36,6 +36,7 @@ export async function saveReleaseDraft(db:D1Database,input:ReleaseDraft,slug?:st
    db.prepare(`INSERT INTO release_draft_mappings(release_id,roadmap_item_id,request_id,approval_at,approval_updated_at,created_at,updated_at)
    SELECT ?,roadmap_item_id,request_id,approved_at,updated_at,?,? FROM roadmap_request_mappings WHERE roadmap_item_id=? AND approved_at IS NOT NULL AND withdrawn_at IS NULL`).bind(id,now,now,item),
   ]),
+  db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,?,?,?,'release',?,?,?,?)`).bind(createUlid(),actorId?'operator':'system',actorId??'release.drafts',old?'release.draft_replaced':'release.draft_created',id,now,now,now),
   db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(guard),
  ])
  return {id,slug:releaseSlug,versionId}

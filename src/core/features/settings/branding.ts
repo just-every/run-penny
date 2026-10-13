@@ -1,3 +1,4 @@
+import {createUlid} from '@/core/shared/ulid'
 import {z} from 'zod'
 import type {Hono} from 'hono'
 import type {OperatorMutationEnvironment} from '@/core/app/operator-mutations'
@@ -21,10 +22,13 @@ export function registerBrandingRoutes(app:Hono<OperatorMutationEnvironment>){
  app.get('/api/public/branding',async c=>c.json(await portalBranding(c.get('runtime'))))
  app.get('/api/operator/settings/branding',async c=>{const {session}=await integrationOperator(c.get('runtime'),c.req.raw);return c.json({...await portalBranding(c.get('runtime')),owner:session.operator.role==='owner'})})
  app.put('/api/operator/settings/branding',async c=>{
-  const input=await parseInput(c.req.raw,brandingInput),runtime=c.get('runtime'),{session}=await integrationOperator(runtime,c.req.raw)
+  const input=await parseInput(c.req.raw,brandingInput),runtime=c.get('runtime'),{session,actor}=await integrationOperator(runtime,c.req.raw)
   if(session.operator.role!=='owner')throw new NativeError('owner_required',403)
   const guard=sessionGuard(session);guard.sql+=" AND EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND role='owner')";guard.params.push(session.operatorId)
-  await guardedDatabase(runtime.database.binding,guard).prepare('INSERT INTO penny_portal_branding(singleton,description,accent,show_logo,updated_at) VALUES(1,?,?,?,?) ON CONFLICT(singleton) DO UPDATE SET description=excluded.description,accent=excluded.accent,show_logo=excluded.show_logo,updated_at=excluded.updated_at').bind(input.description,input.accent,Number(input.showLogo),Date.now()).run()
+  const db=guardedDatabase(runtime.database.binding,guard),now=new Date().toISOString()
+  await db.batch([db.prepare('INSERT INTO penny_portal_branding(singleton,description,accent,show_logo,updated_at) VALUES(1,?,?,?,?) ON CONFLICT(singleton) DO UPDATE SET description=excluded.description,accent=excluded.accent,show_logo=excluded.show_logo,updated_at=excluded.updated_at').bind(input.description,input.accent,Number(input.showLogo),Date.now()),
+   db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'operator',?,'portal.branding_replaced','settings','branding',?,?,?)`).bind(createUlid(),actor.id,now,now,now),
+  ])
   return c.json({saved:true})
  })
 }

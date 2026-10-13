@@ -18,7 +18,7 @@ it.each(['reapproval','withdrawal'] as const)('[ROAD-007/008 BASE-ACCESS-002/004
  expect((await call(`/api/operator/roadmap-updates/${id}/publish`, {}, g.operator)).status).toBe(409)
  const overview = await (await call('/api/operator/overview', undefined, g.operator)).json() as { unpublishedStatusUpdates: { id: string }[] }
  expect(overview.unpublishedStatusUpdates.map(v => v.id)).not.toContain(id)
- const list = await (await call('/api/operator/roadmap-updates', undefined, g.operator)).json() as { id: string; publicationState: string }[]
+ const list = (await (await call('/api/operator/roadmap-updates', undefined, g.operator)).json() as {items:{ id: string; publicationState: string }[]}).items
  expect(list.find(v => v.id === id)?.publicationState).toBe('stale')
  expect((await call(`/api/operator/roadmap-updates/${id}/discard`, {})).status).toBe(401)
  expect((await call(`/api/operator/roadmap-updates/${id}/discard`, {}, await requester('Outside operator authority'))).status).toBe(401)

@@ -3,13 +3,6 @@ import { createUlid } from '@/core/shared/ulid'
 import { publicationGuard } from '../releases/publication-policy'
 import { validRoadmapUpdateDraft } from './update-policy'
 
-export async function listRoadmapUpdates(db: D1Database) {
- return (await db.prepare(`SELECT v.id,v.title,v.body,v.public_status AS publicStatus,v.roadmap_item_id AS roadmapItemId,v.published_at AS publishedAt,
- CASE WHEN v.published_at IS NOT NULL THEN 'published' WHEN v.discarded_at IS NOT NULL THEN 'discarded'
- WHEN ${validRoadmapUpdateDraft} THEN 'ready' ELSE 'stale' END AS publicationState
- FROM roadmap_update_versions v ORDER BY v.created_at DESC,v.id DESC`).all()).results
-}
-
 /** Discard retains the rejected witness and wording; only a later deliberate
  * roadmap transition prepares a new draft under the current approval. */
 export async function discardStaleRoadmapUpdate(db: D1Database, id: string, actor: string, now = new Date().toISOString()) {

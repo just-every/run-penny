@@ -20,7 +20,8 @@ export function predecessorAuth(): Plugin {
   if (!match || !names.has(match[1]) || source.includes('/tests/predecessor-src-root/')) return null
   const importingFile = importer?.split('?')[0]
   const importingFeature = importingFile && /\/src\/core\/features\/([^/]+)\//.exec(importingFile)?.[1]
-  if (match[1]==='operator' && importingFeature && nativeOperatorFeatures.has(importingFeature)) return null
+  // Operator management also requires current Base sessions and actor mapping.
+  if (match[1]==='operator' && ((importingFeature && nativeOperatorFeatures.has(importingFeature)) || importingFile === resolve(root,'src/core/features/auth/operator-management.ts'))) return null
   if (match[1]==='mail' && (!importingFile || !historicalMailConsumers.has(importingFile))) return null
   return resolve(root,'tests/predecessor-src-root/src/core/features/auth',match[1]+'.ts')
  }, transform(code,id) {

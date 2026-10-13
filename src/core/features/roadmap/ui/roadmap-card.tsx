@@ -1,3 +1,4 @@
+import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import type { ReactNode } from 'react'
 import { RoadmapActions } from './roadmap-actions'
 import type { OperatorRoadmapCard } from '@/core/shared/api/operator'
@@ -30,6 +31,7 @@ export function RoadmapCard({ item, onSaved }: { readonly item: OperatorRoadmapC
           </DataField>
         ) : null}
       </dl>
+      <CustomFieldsEditor entityType="roadmapItem" entityId={item.id} />
       <details className="group mt-3 border-t border-penny-line pt-1">
         <summary className={disclosureSummaryClass}>Edit, approve or move</summary>
         <RoadmapActions item={item} onSaved={onSaved} />

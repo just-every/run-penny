@@ -168,6 +168,7 @@ export class RequestWriteRepository {
         WHERE id IN (SELECT evidence_id FROM request_evidence_contributions WHERE request_id = ?) AND source_type = 'portal_request'
       `).bind(now, now, request.id),
       ...projectContributions(this.connection,[request.id]),
+      this.connection.binding.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,details_json,created_at,updated_at) VALUES(?,'system',?,'request.withdrawn','request',?,?,'{"actorType":"requester","feature":"portal.withdraw"}',?,?)`).bind(createRequestId(),identity.requesterId,request.id,now,now,now),
     ],{sql:'EXISTS(SELECT 1 FROM requests WHERE id=? AND author_requester_id=? AND withdrawn_at IS NULL)',values:[request.id,identity.requesterId]})
   }
 

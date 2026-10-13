@@ -1,3 +1,4 @@
+import { registerOperatorReadFlows } from './operator-read-flows'
 import { applyD1Migrations, reset } from 'cloudflare:test'
 import { beforeEach, expect, inject, it } from 'vitest'
 import { env, call, owner } from './support'
@@ -24,3 +25,5 @@ it('[DEC-001 EVID-003 ROAD-007 ROAD-008 REL-001 REQ-014] overview retains contex
   await env.DB.prepare("UPDATE releases SET state='published',published_at=? WHERE id='attention-draft-release'").bind(new Date().toISOString()).run()
   expect((await (await call('/api/operator/overview',undefined,cookie)).json() as WorkspaceOverviewDto).shippedWithoutRelease).toEqual([])
 })
+
+registerOperatorReadFlows()

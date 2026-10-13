@@ -246,11 +246,11 @@ describe('D1 read spine', () => {
       request('/api/operator/decisions/decision-scim-q4', { headers }),
     ])
 
-    const requestRows = await requests.json() as Array<{ slug: string; author: { email: string | null } | null }>
+    const requestRows = (await requests.json() as {items:Array<{ slug: string; author: { email: string | null } | null }>}).items
     expect(requestRows).toHaveLength(2)
     expect(requestRows.find((row) => row.slug === 'scim-provisioning')?.author?.email).toBe('priya.s@example.test')
 
-    const evidenceRows = await evidence.json() as Array<{ id: string; requester: { email: string | null } | null; tags: string[] }>
+    const evidenceRows = (await evidence.json() as {items:Array<{ id: string; requester: { email: string | null } | null; tags: string[] }>}).items
     expect(evidenceRows).toHaveLength(3)
     const scimEvidence = evidenceRows.find((row) => row.id === '0000000000000000000000000H')
     expect(scimEvidence?.requester?.email).toBe('priya.s@example.test')

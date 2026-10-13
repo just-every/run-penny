@@ -50,8 +50,21 @@ it.each(['revoked','expired'])('[BASE-ACCESS-002 BASE-ACCESS-003 DATA-001] produ
  expect((await call(recoveryPath,{confirmPriorRunnerStopped:true},oldCookie)).status).toBe(401)
  expect((await env.DB.prepare('SELECT * FROM operators').all()).results).toEqual(attribution)
  expect(await env.DB.prepare('SELECT phase FROM data_state').first('phase')).toBe('locked')
+ const attempts=(await env.DB.prepare('SELECT feature,outcome,phase FROM penny_auth_mail_attempts').all()).results
+ expect(attempts).toEqual([{feature:'operator_magic_link',outcome:'accepted',phase:'finished'}])
+ expect(await env.DB.prepare("SELECT count FROM penny_public_admission WHERE scope='public_entry_write'").first<number>('count')).toBeGreaterThan(0)
+ // Maintenance keeps the audit requirement: a failed pre-send claim must
+ // refuse recovery mail without an unaudited provider call.
+ const sends=vi.mocked(fetch).mock.calls.length
+ await env.DB.exec("CREATE TRIGGER refuse_maintenance_mail_audit BEFORE INSERT ON penny_auth_mail_attempts BEGIN SELECT RAISE(ABORT,'audit unavailable'); END")
+ expect((await call('/api/auth/magic-link',{email:'owner@penny.invalid'})).status).toBe(503)
+ expect(vi.mocked(fetch)).toHaveBeenCalledTimes(sends)
+ expect((await env.DB.prepare('SELECT feature,outcome,phase FROM penny_auth_mail_attempts').all()).results).toEqual(attempts)
  expect((await call('/api/auth/sign-out',{},freshCookie)).status).toBe(204)
  expect((await call(recoveryPath,{confirmPriorRunnerStopped:true},freshCookie)).status).toBe(401)
  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'locked',lock_id:'interrupted-export'})
  expect((await call('/api/operator/data/overview',undefined,oldCookie)).status).toBe(401)
+ // The independent admission ledger also fails closed during maintenance.
+ await env.DB.exec("CREATE TRIGGER refuse_maintenance_admission BEFORE INSERT ON penny_public_admission BEGIN SELECT RAISE(ABORT,'admission unavailable'); END")
+ expect((await call('/auth/session',undefined,freshCookie)).status).toBe(503)
 })

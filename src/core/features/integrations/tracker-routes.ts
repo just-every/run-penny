@@ -1,3 +1,4 @@
+import {revokeConfiguration} from './revocation'
 import type {Hono} from 'hono'
 import type {OperatorMutationEnvironment} from '@/core/app/operator-mutations'
 import {parseInput} from '../auth/native-routes'
@@ -20,7 +21,7 @@ export function registerTrackerRoutes(app:Hono<OperatorMutationEnvironment>) {
   return c.json({links})
  })
  app.post('/api/operator/integrations/trackers/connections',async c=>c.json(await createTrackerConnection(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,trackerConnectionInput)),201))
- app.delete('/api/operator/integrations/trackers/connections/:id',async c=>{const {db}=await integrationOperator(c.get('runtime'),c.req.raw);await db.prepare('UPDATE penny_tracker_connections SET revoked_at=? WHERE id=?').bind(Date.now(),c.req.param('id')).run();return c.json({revoked:true})})
+ app.delete('/api/operator/integrations/trackers/connections/:id',async c=>{await revokeConfiguration(c.get('runtime'),c.req.raw,c.req.param('id'),'tracker');return c.json({revoked:true})})
  app.post('/api/operator/integrations/trackers/links',async c=>c.json(await linkTracker(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,trackerLinkInput)),201))
  app.post('/api/operator/integrations/trackers/create',async c=>c.json(await createTracker(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,trackerCreateInput)),202))
  app.post('/api/operator/integrations/trackers/commands/:id/reconcile',async c=>c.json(await linkTracker(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,trackerLinkInput),c.req.param('id'))))

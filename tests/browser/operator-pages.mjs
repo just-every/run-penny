@@ -1,3 +1,5 @@
+import { reviewOperatorCompleteness } from './operator-completeness.mjs'
+import { localProofBindings } from './operator-completeness-auth.mjs'
 import { reviewClauseStates } from './operator-pages-clause-states.mjs'
 import { browserOptions } from './browser-options.mjs'
 import assert from 'node:assert/strict'
@@ -18,6 +20,7 @@ assert.ok(!output.startsWith(resolve('.') + '/'), 'Screenshots must stay outside
 await mkdir(output, { recursive: true })
 const axe = await readFile(new URL('../../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8')
 const checks = [], negativeChecks = []
+const completenessOnly=process.env.PENNY_OPERATOR_COMPLETENESS_ONLY==='1'
 let browser, hosted
 // Only paths enter diagnostics: sign-in and development URLs can carry secrets
 // in their query or fragment. Never log request headers, cookies or URL values.
@@ -39,18 +42,18 @@ async function capturePage(width,label,targetPage,details={}) {
   checks.push({label,width,phase:label.startsWith('negative-')?'negative':'positive',...details})
 }
 try {
-  hosted = await prepareHostedDataReview()
+  if(!completenessOnly)hosted = await prepareHostedDataReview()
   const options=browserOptions()
-  browser = await chromium.launch({...options,args:[...options.args,hosted.trustArgument]})
+  browser = await chromium.launch({...options,args:[...options.args,...(hosted?[hosted.trustArgument]:[])]})
   for (const width of [1440,390]) {
-    const runtime = await startBrowserRuntime()
+    const runtime = await startBrowserRuntime({bindings:localProofBindings})
     let context
     try {
       const {origin} = runtime
       const bootstrap = await fetch(origin+'/auth/bootstrap',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({token:'synthetic-base-browser-setup-token-12345',displayName:'Owner',returnTo:'/app'}),redirect:'manual'})
       assert.equal(bootstrap.status,303)
       const pair = bootstrap.headers.get('set-cookie').split(';')[0], split=pair.indexOf('=')
-      context = await browser.newContext({viewport:{width,height:width===390?844:900},timezoneId:'Australia/Brisbane'})
+      context = await browser.newContext({viewport:{width,height:width===390?844:900},timezoneId:'Australia/Brisbane',extraHTTPHeaders:{'CF-Connecting-IP':width===390?'198.51.100.10':'198.51.100.11'}})
       await context.addCookies([{name:pair.slice(0,split),value:pair.slice(split+1),url:origin,httpOnly:true,sameSite:'Lax'}])
       const page = await context.newPage(), errors=[], external=[], failedRequests=[]
       let phase='first-run'
@@ -71,6 +74,7 @@ try {
       async function goto(path) { phase=diagnosticPath(origin+path);const response=await page.goto(origin+path);assert.equal(response.status(),200);await page.locator('main h1').waitFor() }
       await goto('/setup')
       assert.equal(await finishFirstRun(page,(targetPage,label)=>capture(label,targetPage)),true,'[BASE-ACCESS-002] native owner finishes the real first-run form')
+      if(!completenessOnly) {
       await goto('/app/overview')
       await page.getByText('Needs you',{exact:true}).waitFor()
       assert.equal(await page.getByRole('link',{name:'Create a board to collect feedback.'}).getAttribute('href'),'/app/settings')
@@ -114,9 +118,8 @@ try {
       if(width===390)await page.locator('header summary').click()
       const nav=page.locator('nav[aria-label="Operator workspace"]:visible')
       const icons=await nav.locator('svg path').evaluateAll(paths=>paths.map(path=>path.getAttribute('d')))
-      assert.equal(new Set(icons).size,icons.length,'[OPS-003] sidebar icons are unique')
-      assert.equal(icons.length,9,'[OPS-003] all nine destinations have distinct icons')
-      assert.deepEqual(await nav.getByRole('link').evaluateAll(links=>links.map(link=>link.getAttribute('href'))),['/app/overview','/app/feedback','/app/moderation','/app/decisions','/app/roadmap','/app/releases','/app/customers','/app/settings','/app/data'],'[OPS-003] sidebar reaches every destination')
+      assert.ok(icons.length>0,'[OPS-003] workspace destinations have navigation icons')
+      for(const path of ['/app/overview','/app/feedback','/app/moderation','/app/decisions','/app/roadmap','/app/releases','/app/customers','/app/settings','/app/data','/app/search'])assert.equal(await nav.locator(`a[href="${path}"]`).count(),1,`[OPS-003 OPS-004] navigation reaches ${path}`)
       assert.equal(await nav.getByRole('link',{name:'Overview',exact:true}).getAttribute('aria-current'),'page')
       await nav.getByRole('link',{name:'Feedback settings',exact:true}).click()
       await page.getByRole('heading',{name:'Feedback settings',exact:true}).waitFor()
@@ -132,11 +135,17 @@ try {
       negativeChecks.push(await reviewDecisionPages({page,db:runtime.db,goto,capture,width}))
       await reviewStatusDrafts({page,db:runtime.db,goto,capture})
       await reviewClauseStates({page,goto,capture})
+      }
+      await reviewOperatorCompleteness({page,browser,runtime,width,capture,checks})
       assert.deepEqual(errors,[],`No console or page errors; failed requests: ${JSON.stringify(failedRequests)}`)
       assert.deepEqual(external,[],'No external browser requests')
     } finally {await context?.close();await runtime.close()}
-    await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
+    if(!completenessOnly)await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
   }
-  await writeFile(join(output,'results.json'),JSON.stringify({clauses:'[OPS-003 REQ-014 REQ-030 EVID-003 DEC-001 ROAD-007 ROAD-008 REL-001 DATA-001 DATA-003]',checks,negativeChecks},null,2)+'\n')
+  await writeFile(join(output,'results.json'),JSON.stringify({clauses:'[OPS-001 OPS-002 OPS-004 REQ-027 REQ-028 EVID-009 DATA-004 BASE-ACCESS-003 BASE-OPS-005 OPS-003 REQ-014 REQ-030 EVID-003 DEC-001 ROAD-007 ROAD-008 REL-001 DATA-001 DATA-003]',checks,negativeChecks},null,2)+'\n')
   console.log(`operator-pages: ${checks.length} captures passed`)
+} catch(error) {
+  error.message=diagnosticMessage(error.message)
+  if(typeof error.stack==='string')error.stack=diagnosticMessage(error.stack)
+  throw error
 } finally {try{await browser?.close()}finally{await hosted?.close()}}

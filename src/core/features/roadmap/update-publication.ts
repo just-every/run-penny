@@ -7,7 +7,7 @@ import { publicationGuard } from '../releases/publication-policy'
  * withdrawal or new approval requires reviewing a fresh draft, never silently
  * broadening the old version's authority. */
 
-export async function publishRoadmapUpdate(db:D1Database,id:string,now=new Date().toISOString()){
+export async function publishRoadmapUpdate(db:D1Database,id:string,now=new Date().toISOString(),actorId?:string){
  const exists=await db.prepare('SELECT id FROM roadmap_update_versions WHERE id=?').bind(id).first()
  if(!exists)throw new MutationError(404,'Status update not found.')
  const claim=createUlid()
@@ -26,6 +26,7 @@ export async function publishRoadmapUpdate(db:D1Database,id:string,now=new Date(
    SELECT e.id,c.requester_id,c.address_id,?,? FROM roadmap_update_contexts c JOIN notification_events e ON e.roadmap_update_version_id=c.version_id AND e.request_id=c.request_id
    JOIN roadmap_update_versions v ON v.id=c.version_id WHERE v.id=? AND v.publication_claim=?
    AND c.request_id=(SELECT MIN(first.request_id) FROM roadmap_update_contexts first WHERE first.version_id=c.version_id AND first.requester_id=c.requester_id)`).bind(now,now,id,claim),
+  db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,?,?,'roadmap.update_published','roadmap_update',?,?,?,? WHERE EXISTS(SELECT 1 FROM roadmap_update_versions WHERE id=? AND publication_claim=?)`).bind(createUlid(),actorId?'operator':'system',actorId??'roadmap.update_publication',id,now,now,now,id,claim),
   db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(claim),
  ])}catch(error){if(String(error).includes('requester_write_admitted')||String(error).includes('permitted'))throw new MutationError(409,'Approved wording, mappings or request visibility changed. Review the status draft.');throw error}
  return {id}

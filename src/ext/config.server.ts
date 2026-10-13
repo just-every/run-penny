@@ -3,11 +3,11 @@
  * the public `config.ts` module: importing the public landing must never bundle an
  * operator address or an embedding allow-list into the client.
  *
- * Example: add `owner@northstar.example` to `operatorAllowlist` when that
- * person may receive a real D1-backed operator session.
+ * Operator membership is managed in Feedback settings. The installation's
+ * initial operator configuration does not grant removed members access again.
  */
 export const runtimeConfiguration = {
   operatorAllowlist: ['owner@penny.invalid'],
   workspaceTimezone: 'Australia/Brisbane',
-  publicOriginAllowlist: ['http://localhost:5173'],
+  publicOriginAllowlist: [],
 } as const

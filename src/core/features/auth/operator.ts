@@ -3,10 +3,10 @@ import type { Hono } from 'hono'
 import type { PennyRuntime } from '@/core/app/runtime'
 import type { AppBindings } from '@/core/shared/bindings'
 import { authMail } from './mail'
+import { auditedIdentityMail } from './mail-audit'
 import { createUlid } from '@/core/shared/ulid'
 import { NativeError } from './native-tokens'
 import branding from '@/branding.json'
-import { devPersonaEmails } from './dev-personas'
 
 export interface AuthenticatedOperator { readonly id: string; readonly email: string; readonly displayName: string }
 type Environment = { Bindings: AppBindings; Variables: { runtime: PennyRuntime } }
@@ -20,14 +20,15 @@ export function authConfig(runtime: PennyRuntime): AuthConfig {
     SETUP_TOKEN: c.setupToken, MAIL_FROM: authMail(runtime) ? c.mailFrom : undefined,
     branding: { productName: branding.name, accentColor: branding.accent, signInPath: '/signin', theme: '/rer-theme.css' },
     limitWindowSeconds: 3600, emailLimit: 5, ipLimit: 10, dependencies: true,
-    // Local runtimes also admit the dev personas, which exist only in local stores.
-    allowList: [...c.operatorAllowlist, ...(local ? devPersonaEmails() : [])], local,
+    // Persisted native membership is authoritative. Configuration never grants
+    // or restores membership, and invitations may name a new email address.
+    local,
   }
 }
 export function operatorAuth(runtime: PennyRuntime): OperatorAuth {
   const c = runtime.configuration
   return createOperatorAuth({ db: runtime.database.binding, config: authConfig(runtime),
-  mailSender: authMail(runtime), clientIp: request => request.headers.get('CF-Connecting-IP') ?? (['local','test'].includes(c.environment) ? 'local' : ''),
+  mailSender: auditedIdentityMail(runtime,'operator_magic_link'), clientIp: request => request.headers.get('CF-Connecting-IP') ?? (['local','test'].includes(c.environment) ? 'local' : ''),
   // Penny operators are equals. Base still preserves the last active owner.
   rolePolicy: () => true })
 }

@@ -4,7 +4,7 @@ import type { AppBindings } from '@/core/shared/bindings'
 const runtimeConfigurationSchema = z.object({
   operatorAllowlist: z.array(z.string().trim().toLowerCase().email()).min(1),
   workspaceTimezone: z.string().trim().min(1),
-  publicOriginAllowlist: z.array(z.string().trim().min(1)).min(1),
+  publicOriginAllowlist: z.array(z.string().min(1)).max(10),
 }).strict()
 
 export interface RuntimeConfigurationSource {
@@ -47,12 +47,14 @@ export function loadRuntimeConfiguration(
 
   const workspaceTimezone = env.WORKSPACE_TIMEZONE === undefined ? parsed.data.workspaceTimezone : env.WORKSPACE_TIMEZONE.trim()
   validateTimezone(workspaceTimezone)
-  const publicOriginAllowlist = new Set(parsed.data.publicOriginAllowlist.map(parseOrigin))
   const environment = env.PENNY_ENVIRONMENT ?? 'local'
 
   if (environment !== 'local' && environment !== 'test' && environment !== 'preview' && environment !== 'production') {
     throw new ConfigurationError(`PENNY_ENVIRONMENT must be local, test, preview, or production; received ${environment}.`)
   }
+
+  const publicOriginAllowlist = new Set(validateFrameOrigins(parsed.data.publicOriginAllowlist, environment))
+  if (env.PORTAL_FRAME_ORIGINS) throw new ConfigurationError('PORTAL_FRAME_ORIGINS is retired; move exact origins to publicOriginAllowlist or Portal embedding settings.')
 
   if (environment === 'preview' || environment === 'production') {
     const required = ['APP_ORIGIN','AUTH_SECRET','OPERATOR_EMAIL'] as const
@@ -102,4 +104,18 @@ function parseOrigin(value: string): string {
   } catch {
     throw new ConfigurationError(`publicOriginAllowlist and APP_ORIGIN values must be origins without a path; received ${value}.`)
   }
+}
+
+/** Exact origins only: normalization must not silently broaden an operator's input. */
+export function validateFrameOrigins(values: unknown, environment: string): string[] {
+  if (!Array.isArray(values) || values.length > 10) throw new ConfigurationError('Use at most ten exact origins.')
+  return [...new Set(values.map(value => {
+    try {
+      if (typeof value !== 'string') throw new Error()
+      const url = new URL(value)
+      const local = ['local', 'test'].includes(environment) && ['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)
+      if (url.origin !== value || url.username || url.password || url.origin === 'null' || url.hostname.includes('*') || !(url.protocol === 'https:' || (local && url.protocol === 'http:'))) throw new Error()
+      return value
+    } catch { throw new ConfigurationError('Use exact HTTPS origins without paths, credentials or wildcards. Local loopback HTTP is allowed only in local mode.') }
+  }))]
 }

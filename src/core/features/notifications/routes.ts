@@ -47,9 +47,15 @@ export function registerNotificationRoutes(app:Hono<Environment>){
   const runtime=c.get('runtime')
   const operator=await authenticateOperator(runtime,c.req.raw)
   if(!operator)return c.json({error:'operator_session_required'},401)
-  const rows=await runtime.database.binding.prepare(`SELECT id,request_id AS requestId,state,provider,provider_message_id AS providerMessageId,
+  const rows=await runtime.database.binding.prepare(`SELECT id,'update' AS kind,request_id AS requestId,state,provider,provider_message_id AS providerMessageId,
    attempt_count AS attemptCount,failure_reason AS failureReason,window_start AS windowStart,window_end AS windowEnd,next_attempt_at AS nextAttemptAt,updated_at AS updatedAt
    FROM notification_batches ORDER BY created_at DESC,id DESC LIMIT 100`).all()
-  return c.json({deliveries:rows.results,reviews:await reviewNotifications(runtime.database.binding,operator.id)})
+  const rejections=await runtime.database.binding.prepare(`SELECT id,'rejection' AS kind,subject_id AS subjectId,json_extract(payload_json,'$.requestId') AS requestId,
+   CASE WHEN delivery_state='queued' AND claim_id IS NOT NULL THEN 'sending' ELSE delivery_state END AS state,provider,provider_message_id AS providerMessageId,
+   attempt_count AS attemptCount,failure_reason AS failureReason,NULL AS windowStart,NULL AS windowEnd,
+   CASE WHEN delivery_state='queued' AND claim_id IS NULL THEN available_at END AS nextAttemptAt,updated_at AS updatedAt
+   FROM notification_outbox WHERE event_type='moderation_rejected' ORDER BY created_at DESC,id DESC LIMIT 100`).all()
+  c.header('Cache-Control','no-store')
+  return c.json({deliveries:[...rows.results,...rejections.results],reviews:await reviewNotifications(runtime.database.binding,operator.id)})
  })
 }

@@ -1,3 +1,4 @@
+import {integrationOperator} from '../integrations/destinations'
 import { readAttachment } from './mutation-boundaries'
 import { NativeError } from '@/core/features/auth/native-tokens'
 import { recoverAttachment,releaseInterruptedAttachmentWriter } from './attachment-upload'
@@ -133,8 +134,8 @@ export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironm
     const input = await parseMutationBody(context, moveSchema)
     const requestSlug = slug.safeParse(context.req.param('slug'))
     if (!input || !requestSlug.success) return invalid(context)
-    return operatorMutation(context, async () => {
-      await new RequestOperatorRepository(context.get('runtime').database).moveRequest(requestSlug.data, input.boardSlug, now())
+    return operatorMutation(context, async (operator) => {
+      await new RequestOperatorRepository(context.get('runtime').database).moveRequest(requestSlug.data, input.boardSlug, now(), operator.id)
       return context.json({ ok: true })
     })
   })
@@ -209,8 +210,8 @@ export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironm
     const input = await parseMutationBody(context, boardUpdateSchema)
     const boardSlug = slug.safeParse(context.req.param('slug'))
     if (!input || !boardSlug.success) return invalid(context)
-    return operatorMutation(context, async () => {
-      await new RequestOperatorRepository(context.get('runtime').database).updateBoard({ ...input, slug: boardSlug.data, now: now() })
+    return operatorMutation(context, async (operator) => {
+      await new RequestOperatorRepository(context.get('runtime').database).updateBoard({ ...input, operatorId:operator.id, slug: boardSlug.data, now: now() })
       return context.json({ ok: true })
     })
   })
@@ -220,6 +221,8 @@ async function operatorMutation(context: Context<OperatorMutationEnvironment>, a
   const operator = await requireOperator(context)
   if (!operator) return context.json({ authenticated: false }, 401)
   try {
+    const runtime=context.get('runtime'),{db}=await integrationOperator(runtime,context.req.raw)
+    context.set('runtime',{...runtime,database:{binding:db}})
     return await action(operator)
   } catch (error) {
     if (error instanceof RequestLifecycleError || error instanceof NativeError) return context.json({ error: error.code }, error.status)

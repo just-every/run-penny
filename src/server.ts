@@ -1,3 +1,6 @@
+import {isDeclaredSessionlessPath} from './core/app/public-paths'
+import {admitPublicRequest} from './core/app/public-rate'
+import {editorDocumentHeaders} from './core/features/editor/headers'
 import { runNotificationSchedule } from './core/features/notifications/scheduled'
 import start from '@tanstack/react-start/server-entry'
 import { createPennyRuntime } from './core/app/runtime'
@@ -14,13 +17,15 @@ import { identity } from './identity'
 export default {
   scheduled: runNotificationSchedule,
   async fetch(request: Request, bindings: AppBindings, execution: ExecutionContext): Promise<Response> {
-    const asset = await staticAssetResponse(request, bindings)
-    if (asset) return asset
     bindings = withLocalOrigin(bindings)
     const url = new URL(request.url)
     const configured = bindings.APP_ORIGIN
     if (configured && url.origin !== new URL(configured).origin) return new Response('Not found', { status: 404 })
     if (!configured && !['localhost', '127.0.0.1', 'penny.test'].includes(url.hostname)) return new Response('Not found', { status: 404 })
+    const refusal = await admitPublicRequest(request, bindings)
+    if (refusal) return refusal
+    const asset = isDeclaredSessionlessPath(url.pathname) ? await staticAssetResponse(request, bindings) : null
+    if (asset) return editorDocumentHeaders(asset, createPennyRuntime(bindings), url.pathname)
     // Native Base documents use the browser's conventional icon request. Point
     // it at Penny's served mark without changing those copied documents.
     if (url.pathname === '/favicon.ico' && ['GET', 'HEAD'].includes(request.method)) {
@@ -29,11 +34,11 @@ export default {
     return pennyRequest.run({ bindings }, async () => {
       const installation = { DB: bindings.DB, AUTH_ORIGIN: createPennyRuntime(bindings, requestContext().configuration).configuration.appOrigin ?? '' }
       const state = await setupStateResponse(request, installation)
-      if (state) return state
+      if (state) return editorDocumentHeaders(state, createPennyRuntime(bindings, requestContext().configuration), url.pathname)
       const lobby = await lobbyResponse(request, installation, identity)
-      if (lobby) return lobby
+      if (lobby) return editorDocumentHeaders(lobby, createPennyRuntime(bindings, requestContext().configuration), url.pathname)
       const setup = await firstRunDocument(request, bindings, requestContext().configuration)
-      if (setup) return setup
+      if (setup) return editorDocumentHeaders(setup, createPennyRuntime(bindings, requestContext().configuration), url.pathname)
       if (url.pathname.startsWith('/_serverFn/')) {
         const origin = request.headers.get('Origin')
         if (origin && origin !== url.origin) return new Response('Forbidden', { status: 403 })
