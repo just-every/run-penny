@@ -107,7 +107,7 @@ export async function reviewPublicRate({page,origin,db}) {
   assert.equal(response.status(),200,'[BASE-ACCESS-003] normal admission before exhaustion')
  }
  assert.equal(denied,true,'[BASE-ACCESS-003] actual configured allowance exhausted')
- const asset=(await readdir('dist/client/assets')).find(file=>/\.(js|css)$/.test(file)),font=(await readdir('dist/client/fonts')).find(file=>/\.woff2?$/.test(file))
+ const asset=(await readdir('dist/client/assets')).find(file=>/\.(js|css)$/.test(file)),font=(await readdir('dist/client/fonts',{recursive:true})).find(file=>/\.woff2?$/.test(file))
  assert.ok(asset&&font,'[BASE-ACCESS-003] emitted actual assets and font available')
  for(const path of [`/assets/${asset}`,`/fonts/${font}`])assert.equal((await page.context().request.get(origin+path,{headers:{'CF-Connecting-IP':'198.51.100.203'}})).status(),200,'[BASE-ACCESS-003] real emitted bytes normally readable')
  const representativePrefixes={'/assets/':`/assets/${asset}`,'/fonts/':`/fonts/${font}`,'/brand/':'/brand/penny-mark.svg','/api/public/requests/':'/api/public/requests/proof-request-00','/api/public/roadmap/':'/api/public/roadmap/proof-roadmap-00','/api/public/releases/':'/api/public/releases/proof-release-00','/portal/':'/portal/feedback','/docs/':'/docs/data-ownership','/_serverFn/':'/_serverFn/rate-proof'}
