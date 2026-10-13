@@ -6,7 +6,7 @@ type InkProps = { d: string; className?: string; draw?: boolean }
 
 /** One ink stroke. `draw` makes it the stroke that draws itself once on load (hero motion only). */
 export function Ink({ d, className = '', draw = false }: InkProps) {
-  return <path d={d} className={`pl-ink${draw ? ' pl-draw' : ''} ${className}`.trim()} pathLength={draw ? 1 : undefined} vectorEffect="non-scaling-stroke" />
+  return <path data-intro={draw ? '' : undefined} d={d} className={`pl-ink${draw ? ' pl-draw' : ''} ${className}`.trim()} pathLength={draw ? 1 : undefined} vectorEffect="non-scaling-stroke" />
 }
 
 type ArrowProps = { d: string; hx: number; hy: number; angle: number; size?: number; halo?: boolean }

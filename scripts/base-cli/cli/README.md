@@ -20,6 +20,18 @@ boundary and imports the existing `scripts/base-onboarding/`; no second onboardi
 tree or neighboring checkout is used. The foundation composition maps copy these
 same sources from an explicit committed Base revision and record their provenance.
 
+`node scripts/export-cli.mjs --to-package SEED_ROOT [--version X]` instead moves a
+vendored seed to package mode: it pins `@runeditrun/rer` exactly (default: the
+latest published version), locks it, rewrites imports into the copy to the
+package's exports and the command targets to `rer VERB`, rewrites delivery
+operations, the shell scripts they and CI workflows run, and workflow lines to
+`pnpm exec rer VERB` (`scripts/export-cli/calls.mjs`), and removes the copy; it
+refuses, listing them, when the copy holds local edits. `cli/package-mode.mjs`
+names what each mode's command targets are and reads the lockfile entry that
+`check` requires (SC-13); `cli/package-calls.mjs` finds any of those commands
+that still calls the removed copy, which `check` refuses (SC-13.package.calls). `global/README.md` lists the exports and the vendored
+path each replaces.
+
 `node scripts/export-reference.mjs NEW_PATH` creates a standalone copy of the
 reference with runtime imports relocated into its own source tree and an explicit
 transformation inventory. It preserves source/tool pins and the real app; it does
@@ -168,7 +180,7 @@ expiry clean up owned descendants before releasing state and capacity.
 
 The private registry defaults to the OS user's `~/.rer/servers` independently
 of checkout and Codex home; `RER_SERVERS_DIR` selects an isolated directory.
-The combined dev/preview cap is 10 (`RER_SERVER_LIMIT`, positive integer; a limit recorded by a server that did not set it never lowers the cap).
+The combined dev/preview cap is 10 (`RER_SERVER_LIMIT`, positive integer). A start that sets `RER_SERVER_LIMIT` is capped by that value, higher or lower, whatever running servers recorded; a start that sets nothing is capped by the lowest limit a running server's person set explicitly, and a limit recorded by a server that did not set it never lowers the cap.
 Starting reservations count. At the cap a start is refused with a plain message
 naming each running server, its checkout and its stop command; rer never stops
 another checkout's server to make room, in any mode. A run that declares itself
@@ -207,6 +219,15 @@ Heavy verbs alone accept `--no-queue`, only with `CI=true`. Synthesized install
 child CI does not change the original decision. Inspection/help/outbox URL,
 stop and reset inventory/removal do not start a heavy job or application.
 
+After the seed's verification target, `verify` runs two checks on the production
+build served as `rer deploy` hosts it: `hosted-output.mjs` (built files and the deploy
+identity) and `hydration/` (page sections hydrate as separate units; split into
+`check.mjs` for the entry and standalone command, `browser.mjs` for Chromium, serving
+and one load, `probe.mjs` for the in-page probe, `cases.mjs` for pages, cases and the
+Cloudflare rewrite, `scripts.mjs` for which scripts are the application's, and
+`verdict.mjs` for failures). SEED-COMMAND-CONTRACT.md,
+"Hydration units", describes the check.
+
 Run the CLI contract and current first-party seed checks as part of Base's
 documented verification workflow. Structural `check` results and local runtime
 checks do not establish hosted acceptance or provider delivery.
@@ -233,11 +254,15 @@ is the tarball's path. `global/package.json` is the one file that names the next
 release version; a build from a commit not tagged `rer-v<version>` is stamped
 `<version>-dev.g<sha8>`. The installed `rer` finds the nearest `OPERATIONS.json`
 (or exactly `--cwd`, with no upward search) and runs the checkout's pinned `node_modules/@runeditrun/rer`, else
-its vendored `scripts/rer.mjs` in process, else its own bundled `bin/rer.mjs`.
+its vendored `scripts/rer.mjs` in process, else its own bundled `bin/rer.mjs`. A
+pinned package that `node_modules` does not hold yet is installed by `rer install`
+and `rer dev` first (the frozen `pnpm install`).
 Global verbs: `rer cli status|install|uninstall`, `rer list [DIR]`, `rer update`,
 and the zero-setup `rer dev`, which composes the pinned dispatcher's public verbs so it
 works on every pin. `global/README.md` is the package's own README; the package
 root also carries the script installer, `install.sh`, kept in `global/`. The build is
 reproducible and `.github/workflows/rer-release.yml` publishes it; see
 `scripts/rer-package/README.md`. `verify:rer` packs, installs and launches it end
-to end, and drives `install.sh` and `rer update` against a local registry.
+to end on the package-mode reference (served from a local registry, see
+`scripts/rer-package/registry.mjs`), and drives `install.sh` and `rer update`
+against that registry.

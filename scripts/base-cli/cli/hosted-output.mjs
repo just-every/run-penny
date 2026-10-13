@@ -32,8 +32,11 @@ async function miniflareFor(root) {
  return import(pathToFileURL(createRequire(wrangler).resolve('miniflare')));
 }
 
-// Deploy binds its declared secrets; stand-ins follow the setup manifest's kind or default.
-const standIn = field => field?.kind === 'email' ? 'owner@example.com' : typeof field?.default === 'string' && field.default ? field.default : randomBytes(24).toString('hex');
+// Deploy binds its declared secrets. A secret item's verifyStandIn is the
+// hosted-valid value this check uses (MAIL_PROVIDER: "resend" where the setup
+// default "development" is refused once deployed); otherwise stand-ins follow
+// the setup manifest's kind or default.
+const standIn = (item, field) => typeof item.verifyStandIn === 'string' && item.verifyStandIn ? item.verifyStandIn : field?.kind === 'email' ? 'owner@example.com' : typeof field?.default === 'string' && field.default ? field.default : randomBytes(24).toString('hex');
 const links = html => [...html.matchAll(/(?:src|href)=["'](\/[^"'#?\s]+)/g)].map(match => match[1].slice(1)).filter(path => !path.startsWith('/') && /\.[A-Za-z0-9]+$/.test(path));
 
 /** The build served as rer deploy hosts it, with the vars, origin and (stand-in) secrets of its
@@ -51,7 +54,7 @@ export async function serveHosted(root, { declaration: declarationPath = 'deploy
  const entry = join(build, config.main);
  const modules = [entry, ...(await files(build)).map(path => join(build, path)).filter(path => path !== entry && moduleTypes[extname(path)])].map(path => ({ type: moduleTypes[extname(path)], path }));
  const identity = { sourceSha: createHash('sha1').update(randomBytes(16)).digest('hex'), fingerprint: createHash('sha256').update(randomBytes(16)).digest('hex'), versionId: crypto.randomUUID() };
- const secrets = Object.fromEntries((declaration.secrets ?? []).map(item => [item.binding, standIn(manifest.fields?.find(field => field.name === item.binding))]));
+ const secrets = Object.fromEntries((declaration.secrets ?? []).map(item => [item.binding, standIn(item, manifest.fields?.find(field => field.name === item.binding))]));
  const mf = new Miniflare(convertV4MiniflareOptions({ host: '127.0.0.1', port: 0, cf: false, workers: [{ name: 'ingress', modules: true, script: ingress, serviceBindings: { APP: 'app' } }, {
   name: 'app', modules, modulesRoot: build, compatibilityDate: config.compatibility_date, compatibilityFlags: config.compatibility_flags,
   bindings: { ...config.vars, ...declaration.vars, ...secrets, ...(declaration.originVar ? { [declaration.originVar]: ORIGIN } : {}),
@@ -83,15 +86,22 @@ export async function serveHosted(root, { declaration: declarationPath = 'deploy
 export async function checkHostedOutput(root, options) {
  const hosted = await serveHosted(root, options), { client, identity } = hosted, failures = [];
  try {
-  const request = async path => { const response = await hosted.fetch(path); return { status: response.status, type: response.headers.get('content-type') ?? '', body: await response.text() }; };
+  const request = async path => { const response = await hosted.fetch(path); return { status: response.status, type: response.headers.get('content-type') ?? '', etag: response.headers.get('etag'), body: await response.text() }; };
   const built = await files(client).catch(() => []);
   const documents = await Promise.all(built.filter(path => extname(path) === '.html').map(path => readFile(join(client, path), 'utf8')));
   const home = await request('');
   if (home.status === 200 && home.type.includes('text/html')) documents.push(home.body);
-  const paths = [...new Set([...publicAssetPaths(built).map(path => path.split('/').map(encodeURIComponent).join('/')), ...documents.flatMap(links)])];
+  // Every built file answers 200 by its own path, built `.html` documents included.
+  const html = built.filter(path => extname(path) === '.html' && !path.split('/').some(part => part.startsWith('.')));
+  const paths = [...new Set([...[...publicAssetPaths(built), ...html].map(path => path.split('/').map(encodeURIComponent).join('/')), ...documents.flatMap(links)])];
   for (let i = 0; i < paths.length; i += 8) await Promise.all(paths.slice(i, i + 8).map(async path => {
    const answer = await request(path);
    if (answer.status !== 200) failures.push(`${answer.status} /${path}`);
+   // A browser revisits a built .html with If-None-Match: it must answer 304, not the app's 404.
+   else if (answer.etag && path.endsWith('.html')) {
+    const again = await hosted.fetch(path, { headers: { 'if-none-match': answer.etag } }); await again.body?.cancel();
+    if (again.status !== 304) failures.push(`${again.status} /${path} (If-None-Match)`);
+   }
   }));
   failures.sort();
   const health = await request('health');

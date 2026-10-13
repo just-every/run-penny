@@ -58,7 +58,9 @@ const definitions = {
 }
 const lifecycle = localInstaller(definitions)
 export const commandAdapter = createCommandAdapter(lifecycle, {
-  product: 'Penny', setup: { manifestFile: 'rer-setup.json' }, browserModule: 'scripts/installer/ui/seed.mjs',
+  product: 'Penny',
+  site: { entry: 'src/site/pages.tsx', output: 'dist/site', declaration: 'deploy-site.json', config: 'vite.site.config.ts' },
+  setup: { manifestFile: 'rer-setup.json' }, browserModule: 'scripts/installer/ui/seed.mjs',
   input: { names: { email: 'OPERATOR_EMAIL', name: 'displayName' }, defaults: async () => ({ target: 'local', MAIL_PROVIDER: 'later', WORKSPACE_TIMEZONE: 'UTC' }) },
   // Penny's own environment (no inherited secrets), plus this run's origin, the
   // checkout's dev key and the Local Explorer off.

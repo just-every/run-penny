@@ -1,3 +1,4 @@
+import { HydrationUnit } from '@/base/hydration/unit'
 import { Link, useParams } from '@tanstack/react-router'
 import type { PublicRoadmapItem } from '@/core/shared/api/public'
 import { PortalBackLink } from '@/core/features/portal/ui/portal-back-link'
@@ -15,7 +16,7 @@ export function PublicRoadmapDetail({ content }: { content: PublicPortalContent 
       <div className="mx-auto max-w-3xl">
         <PortalBackLink to="/portal/roadmap">All roadmap items</PortalBackLink>
         {resource.kind === 'loading' ? <div className="mt-5"><ResourceLoading label="Loading roadmap item…" /></div> : resource.kind === 'ready' ? (
-          <article className="mt-3">
+          <HydrationUnit><article className="mt-3">
             <PublicStatus status={resource.data.status} />
             <PageTitle id="roadmap-detail-heading" className="mt-4">{resource.data.title}</PageTitle>
             <PublicCard className="mt-6 p-5 sm:p-7">
@@ -27,7 +28,7 @@ export function PublicRoadmapDetail({ content }: { content: PublicPortalContent 
                 </ul>
               ) : null}
             </PublicCard>
-          </article>
+          </article></HydrationUnit>
         ) : <div className="mt-5"><ResourceFailure status={resource.kind === 'error' ? resource.status : 404} onRetry={retry} /></div>}
       </div>
     </PublicPortalLayout>

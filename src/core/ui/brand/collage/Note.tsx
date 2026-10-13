@@ -23,7 +23,7 @@ export function Note({ x, y, w, h, r = 0, tone = 'card', cut = 'a', settle, clas
   const style = { '--x': x, '--y': y, '--w': w, '--h': h, '--r': r, ...(settle === undefined ? {} : { '--d': settle }) } as CSSProperties
   const classes = ['pl-note', `pl-note--${tone}`, settle === undefined ? '' : 'pl-settle', className].filter(Boolean).join(' ')
   return (
-    <div className={classes} style={style}>
+    <div data-intro={settle === undefined ? undefined : ''} className={classes} style={style}>
       <div className={`pl-paper pl-cut-${cut}`}>{children}</div>
       {outside}
     </div>

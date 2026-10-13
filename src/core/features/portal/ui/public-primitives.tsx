@@ -1,3 +1,4 @@
+import { HydrationUnit } from '@/base/hydration/unit'
 import type { ReactNode } from 'react'
 import type { PublicRequestStatus, PublicRelease } from '@/core/shared/api/public'
 import { Chip, type ChipTone } from '@/core/ui/app/Chip'
@@ -54,7 +55,7 @@ export function ReleaseType({ type }: { readonly type: PublicRelease['releaseTyp
 }
 
 export function PublicCard({ children, className = '' }: { readonly children: ReactNode; readonly className?: string }) {
-  return <section className={`${paperCardClass} ${className}`}>{children}</section>
+  return <HydrationUnit><section className={`${paperCardClass} ${className}`}>{children}</section></HydrationUnit>
 }
 
 export function ResourceLoading({ label = 'Loading public information…' }: { readonly label?: string }) {

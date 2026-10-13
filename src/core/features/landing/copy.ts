@@ -8,13 +8,13 @@
 export const copy = {
   meta: {
     title: 'Penny — Every customer, heard.',
-    description: 'Collect requests, decide with real evidence, and tell everyone who asked when it ships. Open source, on your own Cloudflare account. 100% free, open source alternative to Canny, UserVoice and Productboard.',
+    description: 'Collect requests, decide with real evidence, and tell everyone who asked when it ships. Open source. 100% free, open source alternative to Canny, UserVoice and Productboard.',
   },
   skip: 'Skip to content',
   hero: {
     title: 'Every customer, heard.',
     key: 'heard.',
-    sub: 'Collect requests, decide with real evidence, and tell everyone who asked when it ships. Open source, on your own Cloudflare account.',
+    sub: 'Collect requests, decide with real evidence, and tell everyone who asked when it ships. Open source.',
     // Plain text for search and for people who need to know what Penny replaces; the owner's own wording (12 Oct 2026).
     alternative: { lead: '100% free, open source alternative to', names: ['Canny', 'UserVoice', 'Productboard'] },
     primary: 'Deploy your own',
@@ -39,7 +39,7 @@ export const copy = {
     title: 'Tell everyone who asked.',
     key: 'who asked.',
     body: 'When the roadmap moves, followers hear about it. When it ships, the release note goes to every customer who asked — held during your quiet hours.',
-    points: ['Public roadmap and updates', 'Release notes in your own words', 'Email through SendGrid or Resend'],
+    points: ['Public roadmap and updates', 'Release notes in your own words', 'Email updates'],
   },
   privacy: {
     eyebrow: 'Private by default',
@@ -52,8 +52,8 @@ export const copy = {
     eyebrow: 'Yours',
     title: 'Yours to run, yours to change.',
     key: 'yours to change.',
-    body: 'Penny is MIT-licensed source that runs on your own Cloudflare account. Download an archive of your business data from the operator app, and change anything with your own coding agent.',
-    points: ['One Cloudflare Worker', 'Download a data archive', 'No telemetry'],
+    body: 'Penny is MIT-licensed source. Download an archive of your business data from the operator app, and change anything with your own coding agent.',
+    points: ['One Worker', 'Download a data archive', 'No telemetry'],
   },
   closing: {
     title: 'Give every customer an answer.',

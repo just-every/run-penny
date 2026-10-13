@@ -1,3 +1,4 @@
+import { useSiteVariant } from '@/core/ui/site/SiteVariant'
 import { copy } from '../copy'
 import { HeroArt } from '../drawings/hero/HeroArt'
 import { links } from '../links'
@@ -23,6 +24,7 @@ function AlternativeLine({ lead, names }: { lead: string; names: readonly string
 
 /** The first viewport: the page's one h1, the promise in one line, the two actions and the request's journey. */
 export function Hero() {
+  const site = useSiteVariant() === 'site'
   return (
     <section className="pl-hero" id="top" aria-labelledby="hero-title">
       <div className="pl-hero-copy">
@@ -30,7 +32,7 @@ export function Hero() {
         <p className="pl-hero-sub">{hero.sub}</p>
         <p className="pl-hero-alt"><AlternativeLine lead={hero.alternative.lead} names={hero.alternative.names} /></p>
         <div className="pl-actions">
-          <SiteLink className="pl-pill pl-pill--large" href={links.install}>{hero.primary}</SiteLink>
+          <SiteLink className="pl-pill pl-pill--large" href={site ? '/run' : links.install}>{site ? 'Run Penny' : hero.primary}</SiteLink>
           <SiteLink className="pl-text-link" href={links.docs}>{hero.secondary}</SiteLink>
         </div>
       </div>

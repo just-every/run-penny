@@ -15,6 +15,7 @@
     ]}
   ],
   "githubOnly": [
+    { "source": "HOMEPAGE-VARIANTS.md", "reason": "Shared Base installed-home and run-site adoption contract for maintainers" },
     { "source": "RELEASE.md", "reason": "How Penny's versions are released, for maintainers" },
     { "source": "ACCEPTANCE.md", "reason": "Release acceptance evidence mapped to contract clauses, for maintainers" },
     { "source": "AGENTS.consumer.md", "reason": "Instructions for coding agents working in an owner's copy of the source" },

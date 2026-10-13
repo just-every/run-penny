@@ -41,6 +41,6 @@ export function SubmitFeedbackPage({content}:{readonly content:PublicPortalConte
           <label className={fieldLabelClass}>Display name<input name="displayName" className={fieldClass} required maxLength={160}/></label><label className={fieldLabelClass}>Email<input name="email" type="email" autoComplete="email" className={fieldClass} required maxLength={254}/></label><button className={buttonClass} disabled={!ready||busy}>{busy?'Requesting…':'Send verification link'}</button>
         </form></>}
       <p role="status" className="mt-4 text-sm leading-6 text-penny-ink">{message}</p>
-    </PublicCard><Link to="/portal/feedback" className={`${textLinkClass} mt-6 inline-flex min-h-11 items-center`}>Browse published feedback</Link>
+    </PublicCard><Link to="/" className={`${textLinkClass} mt-6 inline-flex min-h-11 items-center`}>Browse published feedback</Link>
   </div></PublicPortalLayout>
 }

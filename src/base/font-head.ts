@@ -1,7 +1,7 @@
-// Penny declares its own fonts here; Base's default (Outfit) does not apply. The root renderer links
-// fontLinks, and the no-JavaScript first-run document (/setup) links fontHead; its look is public/rer-theme.css.
+// Shared by the root renderer and the no-JavaScript first-run document.
+// Edition owners can replace these self-hosted URLs with their brand assets.
 export const fontLinks = [
-  { rel: 'preload', href: '/fonts/inter-tight/inter-tight-latin-wght-normal.woff2', as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
+  { rel: 'preload', href: '/fonts/outfit/outfit-latin-wght-normal.woff2', as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
   { rel: 'stylesheet', href: '/fonts/fonts.css' },
 ] as const
 

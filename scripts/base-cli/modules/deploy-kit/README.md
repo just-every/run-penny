@@ -140,11 +140,44 @@ When a token lacks a permission, the CLI prints which one instead of only a stat
 A seed carries a copy of `modules/deploy-kit/` from a Base pin. Refresh the copy, write a `deploy.json` from the plan the seed already builds, and point `deploy`, and the hosting step of `setup`, at `owner-cli.mjs`. Keep any throwaway controller only for proofs. In `deploy.json` declare:
 
 - the bindings the app uses (`DB`, `FILES`, `JOBS` and so on), with each queue's consumer and dead-letter queue and each SQLite Durable Object class;
-- the secrets the app reads, such as its session secret and the mail provider's key;
+- the secrets the app reads, such as its session secret and the mail provider's key. A secret item may add `verifyStandIn`, the hosted-valid value `rer verify`'s hosted check binds in its place (`{"binding": "MAIL_PROVIDER", "environment": "MAIL_PROVIDER", "verifyStandIn": "resend"}`); the kit validates it (a non-empty string), leaves it out of the plan and its fingerprint, and never sends it or makes it a secret value;
 - any Cron schedule and the public setup fields the app takes in `vars`;
 - `originVar`, the variable that holds the app's public origin (for example `APP_ORIGIN`).
 
 A seed whose setup provisions nothing declares the same bindings and deploys through its own `deploy` verb. Resource names change from `rer-seedproof-*` or a chosen prefix to `<project>-<environment>-*`. The kit refuses rather than adopts an earlier installation's resources.
+
+### Run site (`rer deploy --site`)
+
+A seed's run site (`run-<seed>.com`: its marketing homepage, `/run` and docs, written by `rer build --site`) deploys to the owner's account as a **Base-generated site Worker** (`site.mjs`). The seed declares only the apex domain, beside `deploy.json`, in the file its `commandAdapter` `site.declaration` names (Base's seeds: `deploy-site.json`):
+
+```json
+{ "version": 1, "domain": "run-cradle.com" }
+```
+
+The domain is an apex hostname: no scheme, path, port, upper case or `www.`. The plan (`sitePlan`) names:
+
+- the Worker `<project>-<environment>--site`. Owner Worker names never contain `--`, so it can never be the installed app's Worker (`<project>-<environment>`), and a site deploy never reads or writes the app Worker or any of its resources;
+- its one module, `site-worker.mjs` (`SITE_WORKER`): fixed content Base generates, with no seed code. Its only binding is the assets (`ASSETS`), it runs first on every request (`run_worker_first`), and it has no secrets, no schedules and workers.dev off. A request to `www.<domain>` gets a 301 to `https://<domain>` with path and query kept; every other request is answered from the assets exactly as an assets-only Worker would answer it: the `rer build --site` folder with `html_handling: auto-trailing-slash` (`/run` serves `run.html`) and `not_found_handling: 404-page`;
+- the apex as a Workers Custom Domain, and `www.<domain>` as a second Custom Domain on the same Worker, so the www host has DNS and a certificate and its requests reach the Worker's redirect.
+
+No zone ruleset is read or written. Every request now invokes the Worker: one page view costs one Worker request for the page and one per same-origin file it loads (the default seed's run site: at most 7 per uncached page view).
+
+`rer deploy --site --dry-run` builds the site and prints that plan (`--json`: a `site` event and a result with `dryRun: true`, `deployed: false` and the same `site` object) with no provider request and nothing written, even with `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` set. Without `--dry-run` it needs both inputs. Ownership is read from the provider alone, so a deploy from a fresh checkout (a CI runner with no `.rer/`) recognises the site it deployed before:
+
+- the Worker is the kit's when its latest deployment serves, at 100%, the Worker's newest version, and that version's message annotation is the kit's `rer-site:<fingerprint>` (every site upload sets it);
+- a Custom Domain is the kit's when its service is the kit's Worker.
+
+A read-only preflight reads the zone (it must be in this account, else `site-zone-missing`), the Worker and the zone's Custom Domains, and refuses before any write: `resource-name-collision` for a Worker of the name whose live version the kit did not upload, or for a hostname attached to another service (or to a Worker that is not the kit's); `owned-resource-replaced` for a kit Worker whose latest deployment is not the kit's upload (a dashboard rollback or a split deployment). It then uploads the assets and the site Worker, checks that the new version is live, turns workers.dev off, attaches each missing hostname, and reads the Worker and both domains back. A repeat attaches nothing new. `.rer/deploy/site-<environment>.json` receives a receipt for the person; it is never read. The real path is tested only against the fake Cloudflare API in `tests/site-provider.mjs`, where every zone ruleset path answers 403; it has not run against a live account.
+
+The token needs, beyond the owner-account permissions above:
+
+| Permission | Scope | Used for |
+| --- | --- | --- |
+| Workers Scripts: Edit | the account | the site Worker upload, its assets, versions and deployments, workers.dev, and Workers Custom Domains (`/workers/domains`) |
+| Zone: Read | the run site zones | finding the zone by name |
+| Workers Routes: Edit | the run site zones | Workers Custom Domains, which also create their DNS records and certificates |
+
+No Single Redirect (dynamic redirect ruleset) permission is needed. Base's references declare reserved `.example` domains (`run-default-seed.example`, `run-<edition>.example` for a new foundation), so a real deploy of either stops at `site-zone-missing`.
 
 ## Migration safety
 

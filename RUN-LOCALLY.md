@@ -2,9 +2,11 @@
 
 Install the `rer` command once: `npx -y @runeditrun/rer cli install`, or the
 installer script on the RER site (`curl -fsSL https://runeditrun.com/install.sh | sh`).
-`rer` runs every verb with the checkout's own pinned copy: the vendored
-`scripts/rer.mjs`, the `OPERATIONS.json` argv and the `package.json` aliases
-remain the machine contract until package mode, and `rer` runs them.
+`rer` runs every verb with the checkout's own pinned copy: a vendored
+`scripts/rer.mjs`, or in package mode the exact `@runeditrun/rer` devDependency in
+`node_modules`. The `OPERATIONS.json` argv and the `package.json` aliases are the
+machine contract (`node scripts/rer.mjs VERB` vendored, `rer VERB` in package
+mode), and `rer` runs them.
 
 ## Launch with one command
 
@@ -35,6 +37,14 @@ with exit 3 and a message naming the field.
   activity. Set `--idle-timeout SECONDS` or `RER_SERVER_IDLE_SECONDS=N` to change
   it.
 - **Stopping.** `rer dev --stop` stops the server, and any launch still preparing.
+- **The run site.** A seed that declares a run site also prints `RER_SITE URL`
+  after the ready lines: its static marketing homepage, `/run` and docs, built
+  from edition identity and served on the first free port above the app's. The
+  app itself (`RER_READY`) is the installed instance: its `/` is the Lobby, with
+  Sign in, or Finish setup until the owner confirms first-run setup.
+  `rer build --site` writes the same site to its declared folder and names it;
+  `rer deploy --site --dry-run` prints the site Worker, custom domains and www
+  redirect it would create, with no provider request.
 
 ## Install for a real owner
 
@@ -115,7 +125,8 @@ first if it should be restored, and import only into an empty destination.
 Queue waits report immediately with a reason and numeric one-based position,
 then refresh about every 15 seconds while waiting. From the runnable project
 root, inspect the live queue with
-`node scripts/base-cli/modules/job-queue/cli.mjs status`.
+`node scripts/base-cli/modules/job-queue/cli.mjs status` (in package mode,
+`node node_modules/@runeditrun/rer/modules/job-queue/cli.mjs status`).
 
 For the real owner mailbox, `setup` can prompt instead of receiving
 `--owner-email` on the command line. Setup builds the app, applies local
@@ -209,9 +220,9 @@ hosted health or mail delivery.
 `rer describe` reads the current checkout's actual verbs,
 flags, aliases, pins, effects and local state without installing or running
 project commands. New verbs accept `--help`, `--cwd PATH`, `--non-interactive`
-and `--json`. Setup also accepts `--owner-name`, `--port`, `--host` and a
-private JSON `--answers FILE`. Dev and preview accept `--port`, `--host`,
-`--idle-timeout`, and `--stop`. Deploy accepts `--environment` and `--dry-run`;
+and `--json`. Setup also accepts `--owner-name`, `--port`, `--host`, a
+private JSON `--answers FILE` and `--door`. Dev and preview accept `--port`,
+`--host`, `--idle-timeout`, and `--stop`; dev also `--door` and `--direct`. Deploy accepts `--environment` and `--dry-run`;
 export/import accept their target, file and restore options. `check` accepts
 `--profile first-party`. Heavy commands accept `--no-queue` only when the
 original caller has `CI=true`. Release retains its own compatibility flags.
@@ -246,3 +257,49 @@ The first-party command profile is optional for independently authored
 projects. They may keep their own runtime, tools, installer, commands and
 provider choices. RER executes only their declared operations and does not
 impose Base pins, aliases, outbox or state layout.
+
+## The front door (opt-in)
+
+With the installed `rer` command, one process on one port can serve every
+checkout on this computer at its own name, starting each on its first visit
+and stopping it when idle:
+
+```sh
+rer door enable            # port 8700, 10 servers, 12 hours idle
+rer door add ~/review/*    # register checkouts; prints each URL
+```
+
+`rer door enable --port N --server-limit N --idle-timeout S` changes the
+policy. The door stores it with the `RER_*` variables in effect when you
+enable it, and every checkout it starts runs with exactly those, whoever
+starts the door later.
+
+Each checkout is then at `http://NAME.localhost:8700`, where NAME is its
+folder name (a second `cradle` becomes `cradle-2`); `http://localhost:8700`
+lists them with their state. Opening a stopped checkout's URL in a browser
+starts it (a page reloads once it is ready); images, scripts, API calls and
+WebSockets never start one. A checkout the door started stops after the idle
+time, and at the server limit the door stops its own least recently used one,
+never a server you started with `rer dev`; when it cannot make room, the page
+names what holds the limit. Each name is its own site, so sign-in cookies stay
+apart. A name stays with its checkout: `rer door remove NAME` stops serving
+it there but keeps the name reserved, and that checkout's next `rer dev` (or
+`rer door add`) registers it again. A checkout you move or rename keeps its
+name, address and sign-in: run `rer dev` (or `rer door add`) in its new folder.
+A copy of a checkout gets a name of its own.
+
+`rer door status` shows the door and every checkout; `--json` gives the same
+as data and `--links` adds sign-in links that start a checkout and sign that
+browser in. While the door is enabled, `rer dev` sets a fresh checkout up at
+its door URL. An existing checkout moves with `rer dev --door`, which keeps its
+data and changes only its saved address; `rer dev --direct` moves it back, and
+`rer dev --port N` always serves directly at `http://127.0.0.1:N`. A checkout
+whose pinned Base predates the door stays direct: the door lists it and a visit
+to its door URL starts it and sends the browser to its own address.
+
+Stay direct for a checkout that signs in through an external identity
+provider (Google, Microsoft and others reject `*.localhost` callback
+addresses). `rer door restart` drains and restarts the door: checkouts that
+were starting finish starting, and open tabs reconnect. After a reboot or logout the door needs `rer door start` (or any
+`rer dev` in a checkout that uses it); `rer door stop` and `rer door disable`
+stop it and opt this computer out.

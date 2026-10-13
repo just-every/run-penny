@@ -55,12 +55,13 @@ function memoryMessage(counted,available,floor,mode) {
  const list=counted.length?`Running now:\n${counted.map(listing).join('\n')}\nA dev server holds about 0.5-1.3 GiB and a preview 0.4-0.8 GiB; stopping one with its command above frees that.`:'No dev or preview server is running, so something else is using the memory.';
  return `${head}\n${list}\nTo start anyway, lower the floor, for example RER_SERVERS_MIN_MEMORY_BYTES=${Math.floor(floor/2)} rer ${mode} (0 turns it off).`;
 }
-function limitMessage(counted,cap,limit,mode) {
- const holders=cap<limit?counted.filter(item=>item.explicit&&item.limit===cap):[];
+function limitMessage(counted,cap,explicit,mode) {
+ const holders=explicit?[]:counted.filter(item=>item.explicit&&item.limit===cap);
  const head=`Not started: ${counted.length} dev or preview ${counted.length===1?'server is':'servers are'} running on this computer and the limit is ${cap}.`;
  const list=`Running now:\n${counted.map(listing).join('\n')}`;
  const raise=holders.length
   ?`The limit is ${cap} because ${holders.length===1?'a server was':'servers were'} started with RER_SERVER_LIMIT=${cap} (${holders.map(item=>item.checkout).join(', ')}). Stop ${holders.length===1?'it':'them'} and start again, or start everything with a higher RER_SERVER_LIMIT=N.`
+  :explicit?`This start set RER_SERVER_LIMIT=${cap}; to allow more, start it with a higher RER_SERVER_LIMIT=N.`
   :`To allow more, start this one with a higher limit, for example RER_SERVER_LIMIT=${cap*2} rer ${mode}. Servers started without RER_SERVER_LIMIT allow ${defaultServerLimit}.`;
  return `${head}\n${list}\nTo make room, stop one with its command above. ${raise}`;
 }
@@ -71,9 +72,11 @@ function limitMessage(counted,cap,limit,mode) {
 // before queue admission/local operation. Stop waits for process+state cleanup,
 // which never needs the machine transaction. Generation removal happens last.
 // The limit is 10 unless the person sets RER_SERVER_LIMIT. Every record keeps the
-// limit it started with and whether the person set it. Across the running
-// servers the cap is the lowest limit a person set explicitly, so a deliberate
-// "RER_SERVER_LIMIT=3" keeps holding every start. A recorded default (including
+// limit it started with and whether the person set it. A start that sets
+// RER_SERVER_LIMIT is capped by that value alone, higher or lower than any
+// running server's. A start that sets nothing is capped by the lowest limit a
+// running server's person set explicitly, so a deliberate "RER_SERVER_LIMIT=3"
+// keeps holding starts that do not say otherwise. A recorded default (including
 // the old default of 2 in records written before this rule) never lowers the cap
 // below the current default.
 export const defaultServerLimit=serverDefaults.serverLimit;
@@ -132,8 +135,8 @@ export async function serverRegistry(root,{env=process.env,memory=availableMemor
    const same=state.running.find(item=>item.checkout===checkout);
    if(same)return {existing:same};
    // Journeys are listed but uncounted: they neither use nor lower the cap.
-   const counted=state.running.filter(item=>!item.journey),cap=Math.min(limit,...counted.filter(item=>item.explicit).map(item=>item.limit));
-   if(!journey&&counted.length>=cap)throw refuse(limitMessage(counted,cap,limit,mode));
+   const counted=state.running.filter(item=>!item.journey),cap=explicit?limit:Math.min(limit,...counted.filter(item=>item.explicit).map(item=>item.limit));
+   if(!journey&&counted.length>=cap)throw refuse(limitMessage(counted,cap,explicit,mode));
    // Unreadable memory is not a reason to refuse; only a reading below the floor is.
    const available=journey||floor===0?NaN:await memory();
    if(available<floor)throw refuse(memoryMessage(counted,available,floor,mode));

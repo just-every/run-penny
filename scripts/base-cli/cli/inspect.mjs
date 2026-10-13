@@ -1,19 +1,23 @@
 import { dependencyDoctor } from './dependency-doctor.mjs';
 import { inventory } from './export.mjs';
-import { readFile } from 'node:fs/promises';
+import { lstat, readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { resolve } from 'node:path';
+import { delimiter, dirname, resolve } from 'node:path';
 import { aliases, pins, requiredHooks, serverDefaults, verbs, releaseFlags } from './contract.mjs';
 import { runningVersion } from './version.mjs';
 import { contained, readPackage } from './project.mjs';
 import { shared } from './shared.mjs';
-import { missing } from './errors.mjs';
+import { missing, RerError } from './errors.mjs';
 import { projectNodePin } from './node-runtime-discovery.mjs';
 import { localSettingKeys, requiredLocalSettings } from './settings.mjs';
 import { localAiDiagnostics } from './ai-local.mjs';
 import { authCopyClauses } from './auth-copy.mjs';
 import { cacheWarnings } from './cache-doctor.mjs';
 import { deployedMain } from './deploy-config.mjs';
+import { commandArgv, commandLine, declaredPackage, exactVersion, lockedPackage, packageName, vendoredPaths } from './package-mode.mjs';
+import { vendoredCalls } from './package-calls.mjs';
+import { doorProtocol } from './door.mjs';
+import { savedOrigin } from './door-mode.mjs';
 
 // cliVersion: the rer version of the code answering (absent for a vendored copy
 // too old to record one). defaults: what a server start applies when the person
@@ -28,8 +32,10 @@ export async function describe(project) {
  const capabilities = project.adapter?.verbs ?? {};
  return { contractVersion: 1, ...versioned, profile: 'first-party', defaults, pins: { node: pkg.engines?.node, pnpm: pkg.packageManager?.replace(/^pnpm@/, '') },
   verbs: Object.fromEntries(Object.entries(capabilities).map(([verb, capability]) => [verb, { flags: (verbs[verb]?.flags ?? releaseFlags).filter(flag => capability.flags?.includes(flag)), effects: verbs[verb]?.effects ?? 'Existing Base release producer.' }])),
-  aliases: Object.fromEntries(Object.entries(aliases).filter(([alias, verb]) => pkg.scripts?.[alias] === `node scripts/rer.mjs${verb ? ' ' + verb : ''}`)),
-  local: { state: project.adapter?.state, settings: project.adapter?.settings ?? [], installerState: '.seed/installer', outbox: '/__dev/outbox', ...await localState(project), ...(project.adapter?.devIdentity ? { devIdentity: true, devKey: '.rer/local/dev-key.env' } : {}) },
+  aliases: Object.fromEntries(Object.entries(aliases).filter(([alias, verb]) => pkg.scripts?.[alias] === commandLine(verb, declaredPackage(pkg) !== undefined))),
+  local: { state: project.adapter?.state, settings: project.adapter?.settings ?? [], installerState: '.seed/installer', outbox: '/__dev/outbox', ...await localState(project), origin: await savedOrigin(project), ...(project.adapter?.devIdentity ? { devIdentity: true, devKey: '.rer/local/dev-key.env' } : {}) },
+  // This pin serves a checkout through the machine's front door (rer door).
+  door: { protocol: doorProtocol },
  };
 }
 
@@ -57,6 +63,9 @@ export async function check(project, explicitProfile) {
  for (const loop of project.descriptor.loops ?? []) add('SC-10.loop.' + loop.id, !loop.required || loop.enabled, `Enable the required ${loop.id} loop or correct its declaration.`);
  if (project.profile === 'first-party' || explicitProfile === 'first-party') {
   const adapter = project.adapter, pkg = await readPackage(project.root), marker = project.descriptor.seedContract;
+  // Package mode (an @runeditrun/rer pin) and vendored mode differ only in
+  // where rer comes from: the command targets and the source clauses below.
+  const packaged = declaredPackage(pkg) !== undefined;
   add('SC-09.profile', marker?.version === 1 && marker?.profile === 'first-party', 'Restore OPERATIONS v2 seedContract version 1, profile first-party and the adapter pointer.');
   add('SC-01.adapter', adapter?.version === 1, 'Export commandAdapter version 1 from scripts/installer/local.mjs.');
   for (const hook of requiredHooks) add('SC-01.hook.' + hook, adapter?.[hook] ?? adapter?.hooks?.[hook], `Missing ${hook} hook/inventory; adopt the shared command adapter with a real ${hook} target.`);
@@ -64,14 +73,18 @@ export async function check(project, explicitProfile) {
    const declaration = project.descriptor.commands[verb];
    add('SC-01.verb.' + verb, declaration && adapter?.verbs?.[verb], `Missing ${verb}; declare it in OPERATIONS and expose its shared implementation.`);
    for (const flag of definition.flags) add('SC-01.flag.' + verb + '.' + flag.slice(2), adapter?.verbs?.[verb]?.flags?.includes(flag), `Missing ${verb} ${flag}; restore the shared implementation supporting this flag.`);
-   add('SC-02.target.' + verb, declaration?.argv?.join('\0') === ['node', 'scripts/rer.mjs', verb].join('\0'), `Declare ${verb} argv as node scripts/rer.mjs ${verb}.`);
+   const argv = commandArgv(verb, packaged);
+   add('SC-02.target.' + verb, declaration?.argv?.join('\0') === argv.join('\0'), `Declare ${verb} argv as ${argv.join(' ')}.`);
   }
-  for (const [alias, verb] of Object.entries(aliases)) add('SC-02.alias.' + alias, pkg.scripts?.[alias] === `node scripts/rer.mjs${verb ? ' ' + verb : ''}`, `Set package script ${alias} to node scripts/rer.mjs${verb ? ' ' + verb : ''}.`);
+  for (const [alias, verb] of Object.entries(aliases)) add('SC-02.alias.' + alias, pkg.scripts?.[alias] === commandLine(verb, packaged), `Set package script ${alias} to ${commandLine(verb, packaged)}.`);
   add('SC-02.install-lifecycle', !pkg.scripts?.install, 'Remove the install lifecycle alias; use deps or frozen pnpm install.');
   let nodeFile; try { nodeFile = (await readFile(resolve(project.root, '.node-version'), 'utf8')).trim(); } catch {}
   add('SC-02.node-file', nodeFile === pins.node, `Set .node-version to ${pins.node}.`);
   add('SC-02.node-engine', pkg.engines?.node === pins.node, `Pin package.json engines.node to ${pins.node}.`);
   add('SC-02.pnpm', pkg.packageManager === `pnpm@${pins.pnpm}`, `Pin packageManager to pnpm@${pins.pnpm}.`);
+  if (packaged) for (const [id, ok, message] of await packageClauses(project.root, pkg)) add(id, ok, message);
+  // Vendored mode: the copy and its recorded inventory.
+  else {
   for (const path of ['scripts/rer.mjs', 'scripts/base-cli/inventory.json', 'scripts/base-onboarding/adapter.mjs']) {
    let exists = false; try { await contained(project.root, path); exists = true; } catch {}
    add('SC-01.portable.' + path, exists, `Restore portable source ${path} through the documented export tool.`);
@@ -94,6 +107,7 @@ export async function check(project, explicitProfile) {
     add('SC-01.inventory.' + path, exact, `Restore stale or missing portable CLI source ${path} with the source export tool.`);
    }
   } catch { add('SC-01.inventory', false, 'Restore the deterministic portable CLI source inventory.'); }
+  }
   add('SC-08.portability', typeof adapter?.portability?.export === 'function' && typeof adapter?.portability?.import === 'function', 'Adopt the reviewed mainline complete local portability API; archive support remains unavailable until then.');
   if (adapter?.devIdentity) for (const [id, ok, message] of await devIdentityClauses(project.root, adapter)) add(id, ok, message);
   for (const [id, ok, message] of await authCopyClauses(project.root)) add(id, ok, message);
@@ -102,12 +116,40 @@ export async function check(project, explicitProfile) {
  return { clauses, ok: clauses.every(clause => clause.ok) };
 }
 
+// Package mode: the exact pin, its lockfile entry, no vendored copy and no
+// command still calling one.
+async function packageClauses(root, pkg) {
+ const declared = declaredPackage(pkg), locked = await lockedPackage(root), clauses = [];
+ clauses.push(['SC-13.package.pin', pkg.devDependencies?.[packageName] === declared && exactVersion.test(declared), `Pin ${packageName} in devDependencies to an exact version (for example "0.2.0"), not ${JSON.stringify(declared)} or a runtime dependency.`]);
+ clauses.push(['SC-13.package.lockfile', locked?.locked && locked.specifier === declared && locked.version === declared, `Run pnpm install so pnpm-lock.yaml locks ${packageName} ${declared}${locked?.version ? ` (it locks ${locked.version})` : ''}.`]);
+ for (const path of vendoredPaths) {
+  let present = true; try { await lstat(resolve(root, path)); } catch { present = false; }
+  clauses.push(['SC-13.package.vendored.' + path, !present, `Remove ${path}: a checkout that pins ${packageName} runs the package, not a vendored copy (node scripts/export-cli.mjs --to-package converts one).`]);
+ }
+ // Delivery operations, the scripts they run and CI workflows call the package too.
+ const calls = await vendoredCalls(root);
+ clauses.push(['SC-13.package.calls', !calls.length, `Run pnpm exec rer VERB instead of the removed vendored copy (pnpm install --frozen-lockfile first where nothing has installed yet) in ${calls.length} place${calls.length === 1 ? '' : 's'}:\n${calls.slice(0, 20).join('\n')}${calls.length > 20 ? `\n...and ${calls.length - 20} more` : ''}`]);
+ return clauses;
+}
+
+// Without the pinned pnpm on PATH, rer provides it for this command only
+// (cli/pnpm-runtime.mjs); it never changes global tools.
 export async function tools(root, store, signal) {
  const node = await projectNodePin(root);
  if (node && process.versions.node !== node) throw missing(`Node ${node} is required. Run it with rer, with automatic project runtime selection enabled.`);
- const version = await probePnpm(root, store, signal);
- if (version !== pins.pnpm) throw missing(`pnpm ${pins.pnpm} is required. Install/select the documented pin; rer never changes global tools.`);
+ const found = await probePnpm(root, store, signal).catch(error => { if (signal?.aborted) throw error; return null; });
+ if (found === pins.pnpm) return;
+ const { cachedPnpm, downloadPnpm } = await import('./pnpm-runtime.mjs');
+ let directory = await cachedPnpm(pins.pnpm);
+ if (!directory) {
+  store.report?.(`Fetching pnpm ${pins.pnpm} for this project (PATH has ${found ? `pnpm ${found}` : 'no pnpm'}); rer keeps it in its own cache.`);
+  try { directory = await downloadPnpm(pins.pnpm, signal); }
+  catch (error) { if (signal?.aborted || error instanceof RerError) throw error; throw missing(`pnpm ${pins.pnpm} is required and could not be fetched (${error.message}). Check the connection, or install pnpm ${pins.pnpm} yourself.`); }
+ }
+ usePnpm(directory);
+ if (await probePnpm(root, store, signal) !== pins.pnpm) throw missing(`pnpm ${pins.pnpm} is required. The pnpm rer provides did not report it; install pnpm ${pins.pnpm} yourself.`);
 }
+const usePnpm = directory => { process.env.PATH = [dirname(process.execPath), directory, process.env.PATH].filter(Boolean).join(delimiter); };
 
 export async function doctor(project, store, signal) {
  const { inspectOperations } = await import('../operations/operations.mjs');
@@ -127,6 +169,11 @@ export async function doctor(project, store, signal) {
    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) values = parsed;
   } catch {}
   try { pnpm = await probePnpm(project.root, store, signal); } catch (error) { if (signal?.aborted) throw error; }
+  // A pnpm rer already provides counts; doctor never fetches one.
+  if (pnpm !== pins.pnpm) {
+   const directory = await (await import('./pnpm-runtime.mjs')).cachedPnpm(pins.pnpm).catch(() => undefined);
+   if (directory) { usePnpm(directory); try { pnpm = await probePnpm(project.root, store, signal); } catch (error) { if (signal?.aborted) throw error; } }
+  }
  }
  const aiIssues = await localAiDiagnostics(project,process.env);
  const dependencies=project.profile==='first-party'?await dependencyDoctor(project.root):[];

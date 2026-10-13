@@ -4,7 +4,7 @@ import { publicLandingConfig } from '@/core/app/extension-config'
 import { PennyNotFound } from '@/core/app/root-layout'
 import { PennyRootLayout } from '@/core/app/root-layout'
 import { coinFaviconLinks } from '@/core/ui/brand/coin'
-import { fontLinks } from '@/base/font-head'
+import { fontLinks } from '@/core/ui/brand/font-head'
 
 export const Route = createRootRoute({
   loader: () => loadEditorAdmission(),

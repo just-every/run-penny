@@ -1,3 +1,4 @@
+import { HydrationUnit } from '@/base/hydration/unit'
 import { Link } from '@tanstack/react-router'
 import type { PublicRoadmapItem, PublicRequestStatus } from '@/core/shared/api/public'
 import type { PublicPortalContent } from '@/core/features/portal/ui/public-portal-layout'
@@ -14,7 +15,7 @@ export function PublicRoadmapPage({ content }: { readonly content: PublicPortalC
 
   return (
     <PublicPortalLayout content={content}>
-      <section aria-labelledby="roadmap-heading">
+      <HydrationUnit><section aria-labelledby="roadmap-heading">
         <header className="min-w-0"><PageTitle id="roadmap-heading" eyebrow="Roadmap">What we're working toward</PageTitle><p className={ledeClass}>Only approved customer-safe roadmap items are shown here. Delivery dates are not published.</p></header>
         <div className="mt-8">
           {roadmap.kind === 'loading' ? <ResourceLoading label="Loading the public roadmap…" /> : null}
@@ -22,7 +23,7 @@ export function PublicRoadmapPage({ content }: { readonly content: PublicPortalC
           {roadmap.kind === 'ready' && roadmap.data.length === 0 ? <PublicEmpty title="No roadmap items are published">Approved roadmap items will appear here.</PublicEmpty> : null}
           {roadmap.kind === 'ready' && roadmap.data.length > 0 ? <RoadmapBoard items={roadmap.data} /> : null}
         </div>
-      </section>
+      </section></HydrationUnit>
     </PublicPortalLayout>
   )
 }
@@ -32,13 +33,13 @@ function RoadmapBoard({ items }: { readonly items: readonly PublicRoadmapItem[] 
     <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {roadmapStatuses.map((status) => {
         const statusItems = items.filter((item) => item.status === status)
-        return <section key={status} className="min-w-0" aria-label={`Roadmap status ${status.replace('_', ' ')}`}>
+        return <HydrationUnit><section key={status} className="min-w-0" aria-label={`Roadmap status ${status.replace('_', ' ')}`}>
           <div className="mb-3 flex items-center gap-2"><PublicStatus status={status} /><span className="text-xs font-semibold tabular-nums text-penny-muted">{statusItems.length}</span></div>
           <div className="space-y-3">
             {statusItems.length === 0 ? <div className="rounded-xl border border-dashed border-penny-line-strong/60 px-4 py-5 text-sm leading-6 text-penny-muted">No items in this status.</div> : null}
             {statusItems.map((item) => <RoadmapItemCard key={item.slug} item={item} />)}
           </div>
-        </section>
+        </section></HydrationUnit>
       })}
     </div>
   )
