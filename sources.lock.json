@@ -5617,7 +5617,7 @@
       "executable": false
     },
     "src/core/features/auth/ui/operator-settings.tsx": {
-      "sha256": "c7039c587cb22bb1be544b63b37375673473bdc367ad5f9572737248c2935554",
+      "sha256": "4101d940d2f0d1ae87d45aae2aab9e7eb3d60b4f912af8799d7bb04e9ae2002f",
       "executable": false
     },
     "src/core/features/auth/ui/sign-in-shell.tsx": {

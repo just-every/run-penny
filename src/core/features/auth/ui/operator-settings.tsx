@@ -42,15 +42,15 @@ export function OperatorSettings() {
         const successor=operators.find(o=>o.id!==operator.id&&o.status==='active'&&o.canSucceed)
         const allowed=(!operator.initialOwner||operator.self)&&(!operator.installationOwner||Boolean(successor))
         return <li key={operator.id} className="p-4 sm:px-6 sm:py-5">
-          <div className="flex min-w-0 flex-wrap items-center gap-3 sm:gap-5">
+          <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-center gap-x-3 gap-y-2 sm:flex sm:flex-wrap sm:gap-5">
             <span aria-hidden="true" className="flex size-11 shrink-0 items-center justify-center rounded-full bg-penny-paper text-sm font-semibold text-penny-muted">{operator.displayName.slice(0,2).toUpperCase()}</span>
             <div className="min-w-0 flex-1"><p className="break-words font-semibold">{operator.displayName}</p><p className="break-all text-sm text-penny-muted">{operator.email}</p></div>
-            <div className="flex flex-wrap gap-2 text-xs">
+            <div className="col-span-2 flex flex-wrap gap-2 text-xs sm:col-auto">
               {operator.self?<span className="rounded-full bg-penny-accent px-2.5 py-1 font-semibold text-white">You</span>:null}
               {operator.initialOwner?<span className="rounded-full bg-penny-paper px-2.5 py-1">Setup owner</span>:null}
               {operator.status==='invited'?<span className="rounded-full bg-penny-paper px-2.5 py-1">Pending invitation</span>:null}
             </div>
-            <button type="button" className={`${button} sm:ml-auto`} disabled={busy||!allowed} aria-label={`${operator.status==='invited'?'Cancel invitation for':'Remove'} ${operator.email}`} onClick={()=>setRemoving(operator.id)}>{operator.status==='invited'?'Cancel invitation':'Remove'}</button>
+            <button type="button" className={`${button} col-span-2 justify-self-end sm:ml-auto`} disabled={busy||!allowed} aria-label={`${operator.status==='invited'?'Cancel invitation for':'Remove'} ${operator.email}`} onClick={()=>setRemoving(operator.id)}>{operator.status==='invited'?'Cancel invitation':'Remove'}</button>
           </div>
           {removing===operator.id?<div className="mt-4 rounded-lg border border-penny-accent/30 p-4" role="group" aria-label={`Confirm removal of ${operator.email}`}>
             <p className="text-sm">{operator.self?'Remove yourself from this workspace?':'Remove this operator?'} Existing sessions, links and API keys will stop working immediately.</p>
