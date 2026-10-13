@@ -1,4 +1,5 @@
 import {copyPlan} from './copy-plan'
+import type {ImportPlan} from '../../../../base/modules/import-kit/src/types'
 import type {Row} from '../data/archive'
 import {NativeError} from '../auth/native-tokens'
 import {targetIdentity} from '../../../../base/modules/import-kit/src/d1/erasure-index'
@@ -42,8 +43,11 @@ export async function prepareCopyScope(db:D1Database,records:Row[],literals:Set<
  return {jobs:[...new Set([...jobs,...compressed])],identities:[...identities],values,holds:blocked}
 }
 export async function readCopyPage(db:D1Database,scope:CopyScope,job:string):Promise<CopyHold[]>{
+ return copyPageHolds(scope,job,await copyPlan(db,job))
+}
+export function copyPageHolds(scope:CopyScope,job:string,plan:ImportPlan):CopyHold[]{
  const identities=new Set(scope.identities),holds:CopyHold[]=[]
- for(const entry of (await copyPlan(db,job)).entries){
+ for(const entry of plan.entries){
   if(identities.has(entry.identity))continue
   const body=JSON.stringify({sourceId:entry.source.sourceId,payload:entry.source.payload,effects:entry.effects,unmapped:entry.unmapped})
   if(scope.values.some(value=>body.includes(value)))holds.push({table:'ik_jobs',key:job+':'+entry.identity,columns:['retained source entry']})

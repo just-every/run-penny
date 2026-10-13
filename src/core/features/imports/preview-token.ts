@@ -24,17 +24,21 @@ export async function sealPreview(value:unknown,context:PreviewTokenContext):Pro
  const encrypted=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad(context)},await key(context),new Uint8Array(compressed))
  return 'p1.'+Buffer.concat([iv,Buffer.from(encrypted)]).toString('base64url')
 }
-function expand(plain:ArrayBuffer):unknown{
+function expand(plain:ArrayBuffer):string{
  const input=Buffer.from(plain),result=inflateRawSync(input,{info:true,maxOutputLength:PREVIEW_SCOPE_BYTES}) as unknown as {buffer:Buffer;engine:{bytesWritten:number}}
  if(result.engine.bytesWritten!==input.length)throw changed()
- return JSON.parse(result.buffer.toString('utf8'))
+ return result.buffer.toString('utf8')
+}
+async function decrypt(token:string,context:PreviewTokenContext):Promise<ArrayBuffer>{
+ const bytes=Buffer.from(token.slice(3),'base64url')
+ if(bytes.length<29||bytes.length>compressedLimit+28||bytes.toString('base64url')!==token.slice(3))throw changed()
+ return crypto.subtle.decrypt({name:'AES-GCM',iv:bytes.subarray(0,12),additionalData:aad(context)},await key(context),bytes.subarray(12))
 }
 export async function openPreview<T>(token:string,context:PreviewTokenContext):Promise<T>{
  if(token.length>PREVIEW_TOKEN_BYTES||!/^p1\.[A-Za-z0-9_-]+$/.test(token))throw changed()
  try{
-  const bytes=Buffer.from(token.slice(3),'base64url')
-  if(bytes.length<29||bytes.length>compressedLimit+28||bytes.toString('base64url')!==token.slice(3))throw changed()
-  const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes.subarray(0,12),additionalData:aad(context)},await key(context),bytes.subarray(12))
-  return expand(plain) as T
+  // End the ciphertext and inflate-buffer scopes before allocating decoded
+  // records, so the largest native frame does not retain all representations.
+  return JSON.parse(expand(await decrypt(token,context))) as T
  }catch{throw changed()}
 }

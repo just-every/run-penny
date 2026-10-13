@@ -1,6 +1,6 @@
 import {NativeError,digest} from '../auth/native-tokens'
 import {canonical,schema,checkSchemaHeaders,schemaPart,type TableHeader,type Row,type Cell,type Table} from './archive'
-import {readErasureFrontier,checkErasureRead,importCustody} from './erasure-read'
+import {readErasureFrontier,checkErasureRead,importCustody,type FrontierPage} from './erasure-read'
 import {checkClauseErasureEdges,expandClauseErasure,erasureFiles} from './erasure-dependencies'
 
 function fail(code:string,status:400|409|413=409):never{throw new NativeError(code,status)}
@@ -8,7 +8,7 @@ const ident=(name:string)=>'"'+name+'"'
 const rowKey=(table:ErasureTable,row:Row)=>canonical((table.columns.some(c=>c.pk>0)?table.columns.filter(c=>c.pk>0).sort((a,b)=>a.pk-b.pk):table.columns).map(c=>row[c.name]))
 const foreignGroups=(keys:Table['foreignKeys'])=>{const groups=new Map<number,Table['foreignKeys']>();for(const key of keys)groups.set(key.id,[...(groups.get(key.id)??[]),key]);return groups}
 export type ErasureTable=Pick<Table,'name'|'columns'|'foreignKeys'>
-export type NativeScope={table:string;id:string;tables:ErasureTable[];data:Record<string,Row[]>;selected:Record<string,number[]>;literals:string[];ids:string[];approvedPhrases:string[];prepared:boolean;schema?:{name:string}[];round?:{offset:number;changed:boolean;readIds:string[];releaseVersionCount:number}}
+export type NativeScope={table:string;id:string;tables:ErasureTable[];data:Record<string,Row[]>;selected:Record<string,number[]>;literals:string[];ids:string[];approvedPhrases:string[];prepared:boolean;schema?:{name:string}[];round?:{offset:number;changed:boolean;readIds:string[];releaseVersionCount:number;row?:{after:string;matches:number}}}
 const selectedRows=(scope:NativeScope):Record<string,Row[]>=>Object.fromEntries(Object.entries(scope.selected).map(([table,indices])=>[table,indices.map(index=>scope.data[table][index])]))
 function strings(value:Cell):string[]{
  if(typeof value!=='string')return []
@@ -59,10 +59,11 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
   const readIds=new Set([...ids,...await Promise.all([...ids,...selected.requester_addresses.map(row=>String(row.email))].map(digest))])
   scope.round={offset:0,changed,readIds:[...readIds],releaseVersionCount:data.release_versions.length}
  }
- const page=incremental?{start:scope.round.offset,count:8,releaseVersionCount:scope.round.releaseVersionCount}:undefined
+ const page:FrontierPage|undefined=incremental?{start:scope.round.offset,count:8,releaseVersionCount:scope.round.releaseVersionCount,row:scope.round.row}:undefined
  if(await readErasureFrontier(db,tables,data,selected,new Set(scope.round.readIds),literals,page))changed=true
  checkErasureRead(data)
- scope.round.offset+=8;scope.round.changed=changed
+ if(page){scope.round.offset=page.start;scope.round.row=page.row}
+ scope.round.changed=changed
  scope.selected=Object.fromEntries(tables.map(table=>[table.name,selected[table.name].map(row=>data[table.name].indexOf(row))]))
  scope.literals=[...literals];scope.ids=[...ids]
  if(incremental&&scope.round.offset<tables.filter(table=>!importCustody(table.name)).length)return true

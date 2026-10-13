@@ -4,7 +4,8 @@ import { env,fixture,person,submit,publish,call,auth,opaqueToken,bindings,app } 
 import { base64urlEncode,sign } from '../../../src/core/features/auth/tokens'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'))})
 beforeEach(async()=>{
- const tables=await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT LIKE 'data_%' AND name!='d1_migrations'").all<{name:string}>()
+ // Keep the installation's native and preview revision witnesses across fixture cleanup.
+ const tables=await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT LIKE 'data_%' AND name NOT IN ('d1_migrations','feedback_import_native_revision','feedback_import_preview_revision')").all<{name:string}>()
  await env.DB.batch([env.DB.prepare('PRAGMA defer_foreign_keys=ON'),...tables.results.map(t=>env.DB.prepare(`DELETE FROM "${t.name}"`))])
 })
 describe('requester board on real local D1',()=>{

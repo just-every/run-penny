@@ -7,7 +7,8 @@ export const importCustody=(name:string)=>name.startsWith('ik_')||name.startsWit
 const identity=(table:Table,row:Row)=>JSON.stringify((table.columns.some(c=>c.pk)?table.columns.filter(c=>c.pk):table.columns).map(c=>row[c.name]))
 /** Read only the graph frontier and possible private copies. Each SQL query
  * returns bounded native rows; a large unrelated import never enters JS. */
-export async function readErasureFrontier(db:D1Database,tables:Table[],data:Record<string,Row[]>,selected:Record<string,Row[]>,ids:Set<string>,literals:Set<string>,page?:{start:number;count:number;releaseVersionCount:number}):Promise<boolean>{
+export type FrontierPage={start:number;count:number;releaseVersionCount:number;row?:{after:string;matches:number}}
+export async function readErasureFrontier(db:D1Database,tables:Table[],data:Record<string,Row[]>,selected:Record<string,Row[]>,ids:Set<string>,literals:Set<string>,page?:FrontierPage):Promise<boolean>{
  const parents=[...Object.entries(selected).flatMap(([table,rows])=>rows.map(row=>({table,row}))),...data.release_versions.slice(0,page?.releaseVersionCount).map(row=>({table:'candidate_release_versions',row}))]
  const parentJson=JSON.stringify(parents),idJson=JSON.stringify([...ids]),literalJson=JSON.stringify([...literals].flatMap(value=>[value,JSON.stringify(value).slice(1,-1)]))
  if([parentJson,idJson,literalJson].some(value=>new TextEncoder().encode(value).length>512*1024))throw new NativeError('Selected erasure graph exceeds the bounded 512 KiB frontier. No records were removed.',413)
@@ -30,19 +31,42 @@ export async function readErasureFrontier(db:D1Database,tables:Table[],data:Reco
   if(table.name==='decision_bet_snapshots')extra.push(`EXISTS(SELECT 1 FROM ${parents} p WHERE json_extract(p.value,'$.table')='decision_evidence_snapshots' AND n.decision_revision_id IS json_extract(p.value,'$.row.decision_revision_id') AND n.candidate_bet_id IS json_extract(p.value,'$.row.candidate_bet_id'))`)
   for(const [child,column] of table.name==='evidence_items'?[['request_evidence_links','evidence_id'],['request_evidence_contributions','evidence_id']]:table.name==='requesters'?[['requester_identity_merges','source_requester_id']]:[])extra.push(`n.id IN (SELECT json_extract(p.value,'$.row.${column}') FROM ${parents} p WHERE json_extract(p.value,'$.table')='${child}')`)
   if(table.name==='requests')extra.push(`n.id IN (SELECT request_id FROM request_evidence_links WHERE evidence_id IN (SELECT json_extract(p.value,'$.row.id') FROM ${parents} p WHERE json_extract(p.value,'$.table')='evidence_items' AND json_extract(p.value,'$.row.source_type')='portal_request'))`)
-  return {table,sql:`SELECT '${table.name}' table_name,${cells} body FROM ${quote(table.name)} n WHERE ${[...references,copied('ids'),copied('literals'),...extra].join(' OR ')} LIMIT 2001`}
+  const predicate=[...references,copied('ids'),copied('literals'),...extra].join(' OR ')
+  return {table,cells,predicate,sql:`SELECT '${table.name}' table_name,${cells} body FROM ${quote(table.name)} n WHERE ${predicate} LIMIT 2001`}
  })
  let changed=false
- // A shared three-binding CTE batches four bounded table scans per query,
- // preserving the paid D1 invocation budget across closure rounds.
- const groupSize=page?1:4
- for(let start=0;start<queries.length;start+=groupSize){const group=queries.slice(start,start+groupSize)
-  const result=await db.prepare('WITH frontier AS (SELECT json(?) parents,json(?) ids,json(?) literals) '+group.map(item=>'SELECT * FROM ('+item.sql+')').join(' UNION ALL ')).bind(parentJson,idJson,literalJson).all<{table_name:string;body:string}>()
-  for(const {table} of group){const rows=result.results.filter(row=>row.table_name===table.name).map(row=>JSON.parse(row.body) as Row);if(rows.length>2000)throw new NativeError('Selected erasure graph or private-copy candidates exceed 2000 rows in '+table.name+'. No records were removed.',413)
-   const known=new Set(data[table.name].map(row=>identity(table,row)))
-   for(const row of rows){const key=identity(table,row);if(!known.has(key)){data[table.name].push(row);known.add(key);changed=true}}
-  }
+ const accept=(table:Table,rows:Row[])=>{
+  const known=new Set(data[table.name].map(row=>identity(table,row)))
+  for(const row of rows){const key=identity(table,row);if(!known.has(key)){data[table.name].push(row);known.add(key);changed=true}}
   checkErasureRead(data)
+ }
+ if(page){
+  // Limit source rows examined, including unrelated rows. A LIMIT on matching
+  // rows alone still makes SQLite scan an arbitrarily large native table.
+  // The frozen revision fence makes rowid traversal stable; decimal strings
+  // preserve SQLite's full signed 64-bit rowid without a JS number conversion.
+  let remaining=4096
+  for(const {table,cells,predicate} of queries){
+   const result=await db.prepare(`WITH frontier AS (SELECT json(?) parents,json(?) ids,json(?) literals),
+    scan AS MATERIALIZED (SELECT rowid FROM ${quote(table.name)} ${page.row?'WHERE rowid>CAST(? AS INTEGER)':''} ORDER BY rowid LIMIT ?)
+    SELECT '' table_name,json_object('after',CAST(max(rowid) AS TEXT),'count',count(*)) body FROM scan
+    UNION ALL SELECT * FROM (SELECT '${table.name}' table_name,${cells} body FROM scan s CROSS JOIN ${quote(table.name)} n WHERE n.rowid=s.rowid AND (${predicate}) ORDER BY n.rowid LIMIT 2001)`)
+    .bind(parentJson,idJson,literalJson,...(page.row?[page.row.after]:[]),remaining).all<{table_name:string;body:string}>()
+   const progress=JSON.parse(result.results[0].body) as {after:string|null;count:number},rows=result.results.slice(1).map(row=>JSON.parse(row.body) as Row),matches=(page.row?.matches??0)+rows.length
+   if(matches>2000)throw new NativeError('Selected erasure graph or private-copy candidates exceed 2000 rows in '+table.name+'. No records were removed.',413)
+   accept(table,rows)
+   if(progress.count===remaining){page.row={after:progress.after!,matches};break}
+   remaining-=progress.count;delete page.row;page.start++
+  }
+ }else{
+  // The independent destructive recheck closes every table in this invocation.
+  for(let start=0;start<queries.length;start+=4){const group=queries.slice(start,start+4)
+   const result=await db.prepare('WITH frontier AS (SELECT json(?) parents,json(?) ids,json(?) literals) '+group.map(item=>'SELECT * FROM ('+item.sql+')').join(' UNION ALL ')).bind(parentJson,idJson,literalJson).all<{table_name:string;body:string}>()
+   for(const {table} of group){const rows=result.results.filter(row=>row.table_name===table.name).map(row=>JSON.parse(row.body) as Row)
+    if(rows.length>2000)throw new NativeError('Selected erasure graph or private-copy candidates exceed 2000 rows in '+table.name+'. No records were removed.',413)
+    accept(table,rows)
+   }
+  }
  }
  return changed
 }
