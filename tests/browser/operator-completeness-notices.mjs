@@ -4,7 +4,7 @@ import {proofId} from './operator-completeness-data.mjs'
 async function waitForReviewForm(card) {
  // The SSR form precedes hydration; real board options arrive from the mounted resource.
  // Wait before filling so a native pre-hydration submit cannot navigate without the mutation.
- await card.getByLabel('Public board',{exact:true}).locator('option[value]:not([value=""])').first().waitFor({state:'attached'})
+ await card.locator('select[name=boardSlug] option[value]:not([value=""])').first().waitFor({state:'attached'})
 }
 async function rejectRequest(page,origin,index,notify) {
  await page.goto(origin+`/app/moderation?item=${proofId(1,index)}`)
