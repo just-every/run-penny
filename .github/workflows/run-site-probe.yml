@@ -27,6 +27,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           node --input-type=module <<'PROBE'
+          import { cloudflare } from './scripts/base-cli/modules/deploy-kit/provider.mjs';
           const account = process.env.CLOUDFLARE_ACCOUNT_ID;
           const token = process.env.CLOUDFLARE_API_TOKEN;
           const domain = 'run-penny.com';
@@ -36,63 +37,54 @@ jobs:
           const check = (condition, label) => {
             if (!condition) throw new ProbeFailure(label);
           };
-          async function get(path, label, expectedStatus = 200, optional = false) {
-            let response;
+          // Use the deploy kit's envelope contract for every account and zone response.
+          async function get(path, label, { expectedStatus = 200, optional = false, zone = false } = {}) {
+            let status;
             try {
-              response = await fetch(`https://api.cloudflare.com/client/v4${path}`, {
-                method: 'GET',
-                headers: { Authorization: `Bearer ${token}` },
-                redirect: 'error',
-                signal: AbortSignal.timeout(20000),
+              const api = cloudflare({
+                accountId: account, token, timeoutMs: 20000,
+                fetch: async (url, options) => {
+                  check(options.method === 'GET' && options.body === undefined && new URL(url).origin === 'https://api.cloudflare.com', 'Read-only Cloudflare request required');
+                  const response = await fetch(url, options);
+                  status = response.status;
+                  console.log(`${label}: HTTP ${status}`);
+                  return response;
+                },
               });
-            } catch {
+              const result = await (zone ? api.zoneRequest(path) : api.request(path));
+              check(status === expectedStatus, `${label}: unexpected HTTP status`);
+              return result;
+            } catch (error) {
+              if (expectedStatus === 404 && error?.status === 404) return;
               if (optional) {
                 console.log(`${label}: unavailable; live HTTP redirect proof required`);
                 return;
               }
-              throw new ProbeFailure(`${label}: request failed`);
+              throw error instanceof ProbeFailure ? error : new ProbeFailure(`${label}: request or API response failed`);
             }
-            console.log(`${label}: HTTP ${response.status}`);
-            if (optional && response.status !== expectedStatus) return;
-            check(response.status === expectedStatus, `${label}: unexpected HTTP status`);
-            if (expectedStatus === 404) return;
-            let body;
-            try {
-              body = await response.json();
-            } catch {
-              if (optional) return;
-              throw new ProbeFailure(`${label}: invalid API response`);
-            }
-            if (optional && body?.success !== true) return;
-            check(body?.success === true, `${label}: API success required`);
-            if (!optional) {
-              check(Array.isArray(body.errors) && body.errors.length === 0, `${label}: API errors must be empty`);
-              check(Object.hasOwn(body, 'result'), `${label}: API result required`);
-            }
-            return body.result;
           }
           try {
             check(typeof account === 'string' && /^[a-f0-9]{32}$/.test(account), 'Account variable missing or invalid');
             check(typeof token === 'string' && token.length > 0, 'Token secret missing');
-            const verified = await get(`/accounts/${account}/tokens/verify`, 'Token verification');
+            const verified = await get('/tokens/verify', 'Token verification');
             check(verified?.status === 'active', 'Token must be active');
             console.log('Token active: yes');
-            const zones = await get(`/zones?name=${domain}&account.id=${account}`, 'Intended zone');
+            const zones = await get(`/zones?name=${domain}&account.id=${account}`, 'Intended zone', { zone: true });
             check(Array.isArray(zones) && zones.length === 1, 'Exactly one intended zone required');
             const zone = zones[0];
             check(zone.name === domain && zone.status === 'active', 'Intended zone must be active');
             check(zone.account?.id === account, 'Zone must belong to the configured account');
             check(typeof zone.id === 'string' && /^[a-f0-9]{32}$/.test(zone.id), 'Invalid zone identity');
             console.log('Zone active and account matches: yes');
-            const domains = await get(`/accounts/${account}/workers/domains?zone_id=${zone.id}`, 'Worker domains');
+            const domains = await get(`/workers/domains?zone_id=${zone.id}`, 'Worker domains');
             check(Array.isArray(domains), 'Worker domains must be a list');
             check(domains.every((entry) => entry && typeof entry.hostname === 'string'), 'Invalid Worker domain response');
             const intended = domains.filter((entry) => [domain, `www.${domain}`].includes(entry.hostname.toLowerCase()));
             check(intended.length === 0, 'Apex and www Worker domains must be absent before first deployment');
             console.log('Apex/www Worker domains absent: yes');
-            await get(`/accounts/${account}/workers/scripts/${script}/settings`, 'First-deploy Worker absence', 404);
+            await get(`/workers/scripts/${script}/settings`, 'First-deploy Worker absence', { expectedStatus: 404 });
             // This setting is not called by the deploy kit; missing read permission is not a deploy gate.
-            const https = await get(`/zones/${zone.id}/settings/always_use_https`, 'Always Use HTTPS', 200, true);
+            const https = await get(`/zones/${zone.id}/settings/always_use_https`, 'Always Use HTTPS', { zone: true, optional: true });
             check(!(https?.id === 'always_use_https' && https.value === 'off'), 'Always Use HTTPS is confirmed off');
             console.log(https?.id === 'always_use_https' && https.value === 'on'
               ? 'Always Use HTTPS: on; live HTTP redirect proof still required'
