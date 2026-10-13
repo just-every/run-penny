@@ -39,7 +39,14 @@ export async function readCopyPlanPage(db:D1Database,id:string,expectedWitness?:
  return {...native,witness,body,compressed:false,size:Buffer.byteLength(body),expandedSha}
 }
 export function decodeCopyPlanPage(page:CopyPlanPage):ImportPlan{
- return JSON.parse(page.compressed?inflateRawSync(Buffer.from(page.body,'base64'),{maxOutputLength:page.size}).toString('utf8'):page.body) as ImportPlan
+ let body=page.body
+ if(page.compressed){
+  const input=Buffer.from(body,'base64')
+  const result=inflateRawSync(input,{info:true,maxOutputLength:page.size}) as unknown as {buffer:Buffer;engine:{bytesWritten:number}}
+  if(result.engine.bytesWritten!==input.length||result.buffer.length!==page.size)return changed()
+  body=result.buffer.toString('utf8')
+ }
+ return JSON.parse(body) as ImportPlan
 }
 export function verifyCopyPlanPage(page:CopyPlanPage):ImportPlan{
  const plan=decodeCopyPlanPage(page)
