@@ -1,0 +1,12 @@
+/* DOCS-001. On this page, beside the article from 1200px: a small uppercase label and the page's sections, the one being
+   read underlined with the copper hand stroke. */
+.penny-docs .docs-toc { padding: clamp(24px, 2.4vw, 34px) 0 32px clamp(28px, 2.8vw, 40px); }
+.penny-docs .docs-toc-title { margin: 0 0 14px; color: var(--penny-docs-muted); font-size: 13.5px; font-weight: 650; letter-spacing: 0.15em; line-height: 1.3; text-transform: uppercase; }
+.penny-docs .docs-toc ul { margin: 0; padding: 0; list-style: none; }
+.penny-docs .docs-toc li { padding: 5px 0; }
+.penny-docs .docs-toc a { position: relative; display: inline-block; font-size: 16.5px; line-height: 1.4; transition: color 0.18s; }
+.penny-docs .docs-toc a:hover { color: var(--penny-docs-accent-text); }
+.penny-docs .docs-toc ul ul { margin: 4px 0 2px; padding-left: 16px; border-left: 1px solid var(--penny-docs-rule); }
+.penny-docs .docs-toc ul ul a { color: var(--penny-docs-muted); font-size: 15px; }
+.penny-docs .docs-toc a[aria-current="location"] { color: var(--penny-docs-ink); }
+.penny-docs .docs-toc-stroke { position: absolute; left: -2px; right: -6px; bottom: -6px; width: calc(100% + 8px); height: 7px; }

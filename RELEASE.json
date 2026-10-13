@@ -1,0 +1,379 @@
+{
+  "version": "0.0.0",
+  "date": "2026-10-11",
+  "contractChanges": {
+    "NOTIFY-001": {
+      "change": "changed",
+      "summary": "Extend requester updates to public replies and approved comments while retaining consent and customer-safe visibility.",
+      "was": "A follower receives published request status updates, declines, and mapped roadmap status updates subject to mute and suppression; republishing a version sends nothing again.",
+      "now": "Followers receive only customer-safe published status updates, declines, mapped roadmap status updates, public operator replies and approved requester comments, subject to current visibility, consent, mute and suppression; held comments and internal notes send nothing.",
+      "migrationIds": [
+        "0010_request_notifications.sql"
+      ]
+    },
+    "NOTIFY-002": {
+      "change": "changed",
+      "summary": "Define the fixed first-event coalescing window and durable minute-Cron quiet-hours drain.",
+      "was": "One-click unsubscribe and request/all-email mute are checked before send; default quiet hours are 20:00–08:00 workspace time and updates within one hour are coalesced.",
+      "now": "The first pending event opens a fixed one-hour requester/request coalescing window; later events never extend it. A minute Cron drain sends eligible windows after the boundary and 20:00–08:00 workspace quiet hours, rechecking visibility and preferences immediately before sending. An optional validated WORKSPACE_TIMEZONE deployment input selects the IANA workspace timezone before setup; the existing Australia/Brisbane default and fixed windows remain unchanged. Published release versions use independent recipient commands outside request coalescing, due immediately during permitted hours or at next 08:00, with minute Cron dispatch.",
+      "migrationIds": [
+        "0010_request_notifications.sql",
+        "0014_release_delivery.sql"
+      ]
+    },
+    "REL-006": {
+      "change": "changed",
+      "summary": "Retain ambiguous SendGrid outcomes as unknown without automatic retry.",
+      "was": "Unknown sends retried under a provider idempotency key.",
+      "now": "SendGrid lacks provider duplicate suppression; ambiguous/interrupted sends remain unknown and are never automatically retried. REL-007 provider-idempotency remains unsatisfied; local claims and delivery correlation are not an exactly-once provider guarantee."
+    },
+    "BASE-SECRET-002": {
+      "change": "changed",
+      "summary": "Allow deployed public reading and already verified requester actions before mail is configured.",
+      "was": "Mail provider and sender are required deployment inputs.",
+      "now": "Both mail provider and sender may be absent together. New emailed sign-in and verification explain that delivery is unavailable. Existing verified native sessions and valid host assertions for a stored verified address may submit; an already delivered verification link can complete once and replay its bound pending actions. First-time host provisioning and anonymous holds retain the transport admission boundary. Partial or invalid mail configuration still fails."
+    },
+    "DATA-001": {
+      "change": "changed",
+      "summary": "Enable authenticated hosted product archive and erasure-journal downloads with explicit custody bounds.",
+      "was": "Archive downloads were limited to local/test installations.",
+      "now": "Current native operators may download the bounded classified product archive and latest erasure journal over authenticated HTTPS. Original R2 bytes retain hashes; unknown schema, missing files and overflow refuse completion. Guarded restore and erasure now use current native authority, same-origin mutation, maintenance, empty-target, latest-known-journal and preview-hash fences in hosted mode as well as local/test. Hosted proof is source-only, local TLS; a real installation and universal data acceptance remain owner/live and open.",
+      "migrationIds": [
+        "0016_restored_notification_hold.sql"
+      ]
+    },
+    "OWN-001": {
+      "change": "added",
+      "summary": "Optional platform-signed first-owner claim uses native bootstrap admission, exact installation/audience binding and permanent replay/installed-owner protection.",
+      "now": "A configured trusted signing-key ring may admit only the first native owner of an empty installation. The original setup token remains compatible; no public invented signer or takeover is admitted."
+    },
+    "EDIT-001": {
+      "change": "added",
+      "summary": "Optional copied editor configuration is gated by current native owner authority and a bounded lease; compiled visual edits use the maintained data-only contract.",
+      "now": "Equal product operators do not acquire owner editor configuration. Validated management origins and versioned handshake are explicit; public compiled edits remain source data. Local composition does not establish hosted source publication."
+    },
+    "IMP-001": {
+      "change": "added",
+      "summary": "Import documented saved CSV/API-response feedback history with exact supplied provenance and non-authorizing historical identities.",
+      "now": "Import documented saved CSV/API-response feedback history with exact supplied provenance and non-authorizing historical identities."
+    },
+    "IMP-002": {
+      "change": "added",
+      "summary": "Review separately counted mappings, omissions and all references before explicit apply; malformed late input never silently succeeds.",
+      "now": "Review separately counted mappings, omissions and all references before explicit apply; malformed late input never silently succeeds."
+    },
+    "IMP-003": {
+      "change": "added",
+      "summary": "Persist bounded native D1 checkpoints, original files and attribution atomically; exact repeat is idempotent and changed source identities conflict.",
+      "now": "Persist bounded native D1 checkpoints, original files and attribution atomically; exact repeat is idempotent and changed source identities conflict."
+    },
+    "IMP-004": {
+      "change": "added",
+      "summary": "Undo or roll back only owned unchanged effects with current authority and native value/relationship fences; later work refuses reversal.",
+      "now": "Undo or roll back only owned unchanged effects with current authority and native value/relationship fences; later work refuses reversal."
+    },
+    "IMP-005": {
+      "change": "added",
+      "summary": "Classify import personal custody for archive and erasure, refuse resurrection, and retain fixture-only status without replacement claims.",
+      "now": "Classify import personal custody for archive and erasure, refuse resurrection, and retain fixture-only status without replacement claims."
+    },
+    "API-001": {
+      "change": "added",
+      "summary": "Native operators issue reveal-once random scoped API keys; only hashes and safe usage metadata persist.",
+      "now": "Native operators issue reveal-once random scoped API keys; only hashes and safe usage metadata persist.",
+      "migrationIds": [
+        "0020_base_integrations.sql",
+        "0021_integration_authority.sql"
+      ]
+    },
+    "API-002": {
+      "change": "added",
+      "summary": "Current native issuer, key revocation, expiry and route-selected scope guard the same-database business transaction.",
+      "now": "Current native issuer, key revocation, expiry and route-selected scope guard the same-database business transaction.",
+      "migrationIds": [
+        "0020_base_integrations.sql",
+        "0021_integration_authority.sql"
+      ]
+    },
+    "API-003": {
+      "change": "added",
+      "summary": "The documented REST namespace reuses native validation and separately approved public projections without granting consent or broad HTML authority.",
+      "now": "The documented REST namespace reuses native validation and separately approved public projections without granting consent or broad HTML authority.",
+      "migrationIds": [
+        "0020_base_integrations.sql",
+        "0021_integration_authority.sql"
+      ]
+    },
+    "INT-001": {
+      "change": "added",
+      "summary": "Native publication commits selected minimal public webhook and Slack events with their durable business identities; imported and restored history cannot enqueue new effects.",
+      "now": "Native publication commits selected minimal public webhook and Slack events with their durable business identities; imported and restored history cannot enqueue new effects.",
+      "migrationIds": [
+        "0022_integration_events.sql"
+      ]
+    },
+    "INT-002": {
+      "change": "added",
+      "summary": "Outbound integrations require an enforcing installation-owned RPC port; absent transport is configuration-disabled with no fetch fallback.",
+      "now": "Outbound integrations require an enforcing installation-owned RPC port; absent transport is configuration-disabled with no fetch fallback.",
+      "migrationIds": [
+        "0022_integration_events.sql"
+      ]
+    },
+    "INT-003": {
+      "change": "added",
+      "summary": "Delivery attempts, bounded retry, uncertainty and explicit reconciliation persist across restarts; ambiguous effects never automatically resend.",
+      "now": "Delivery attempts, bounded retry, uncertainty and explicit reconciliation persist across restarts; ambiguous effects never automatically resend.",
+      "migrationIds": [
+        "0022_integration_events.sql"
+      ]
+    },
+    "INT-004": {
+      "change": "added",
+      "summary": "Bounded signed raw-byte inbound webhooks commit replay identity and internal notes atomically without publication or identity grants.",
+      "now": "Bounded signed raw-byte inbound webhooks commit replay identity and internal notes atomically without publication or identity grants.",
+      "migrationIds": [
+        "0022_integration_events.sql"
+      ]
+    },
+    "INT-005": {
+      "change": "added",
+      "summary": "Operators deliberately create or link known Linear or Jira issues; durable create commands retain uncertainty and reconcile known issues without duplication.",
+      "now": "Operators deliberately create or link known Linear or Jira issues; durable create commands retain uncertainty and reconcile known issues without duplication.",
+      "migrationIds": [
+        "0023_tracker_links.sql"
+      ]
+    },
+    "INT-006": {
+      "change": "added",
+      "summary": "Provider-specific authenticated tracker state receipts commit source order and replay identity atomically; private state never publishes Penny updates.",
+      "now": "Provider-specific authenticated tracker state receipts commit source order and replay identity atomically; private state never publishes Penny updates.",
+      "migrationIds": [
+        "0023_tracker_links.sql"
+      ]
+    },
+    "INT-007": {
+      "change": "added",
+      "summary": "Native owners configure the public description and readable accent with Penny’s own vector logo; product branding is portable while provider credentials are not.",
+      "now": "Native owners configure the public description and readable accent with Penny’s own vector logo; product branding is portable while provider credentials are not.",
+      "migrationIds": [
+        "0024_portal_branding.sql"
+      ]
+    },
+    "HOME-001": {
+      "change": "removed",
+      "summary": "The public feedback board no longer occupies `/`; HOME-002 supersedes this clause and the board is served at /portal/feedback.",
+      "was": "Penny served the deployment's public feedback portal at `/`, identifying the workspace with the owner's configured one-line portal description and making no vendor, pricing, testimonial or metric claims."
+    },
+    "REQ-001": {
+      "change": "changed",
+      "summary": "The portal's published-request listing lives at /portal/feedback alongside request detail, roadmap and updates.",
+      "was": "The portal's published-request listing is served at / and request detail, roadmap and updates under /portal/.",
+      "now": "The published-request listing is served at /portal/feedback, so every public portal surface is under /portal/; visibility and reads are unchanged. A request to / carrying the old board's q, status, board or sort parameters redirects to /portal/feedback with the same query."
+    },
+    "DOCS-001": {
+      "change": "added",
+      "summary": "Public first-party documentation at /docs and /docs/<slug>, rendered at build time from the Markdown docs/site.json publishes, under the product landing's header and footer; a broken internal link fails the build and an unknown page is a 404."
+    },
+    "HOME-002": {
+      "change": "added",
+      "summary": "`/` serves Penny's server-rendered public product landing that names only shipped capabilities and links to /docs, the public board at /portal/feedback, the source and /signin.",
+      "now": "A header, a hero with one heading, illustrated sections for the moderated board, evidence-based decisions, closing the loop, private context and self-hosted ownership, a closing call to action and a footer with the switchable runeditrun.com credit. No pricing, testimonials, logos or metrics; no workspace data, cookies or third-party loads; one-shot motion that is off under reduced motion and never hides content."
+    },
+    "EVID-005": {
+      "change": "changed",
+      "summary": "Account context includes commercial fields, requesters, time-ordered evidence and transaction-linked requests and decisions.",
+      "now": "Account context includes commercial fields, requesters, time-ordered evidence and transaction-linked requests and decisions.",
+      "migrationIds": [
+        "0030_penny_evidence.sql"
+      ]
+    },
+    "EVID-007": {
+      "change": "changed",
+      "summary": "Lexical suggestions return up to five matching requests with matched terms; requester suggestions include only published requests and never merge or link implicitly.",
+      "now": "Lexical suggestions return up to five matching requests with matched terms; requester suggestions include only published requests and never merge or link implicitly.",
+      "migrationIds": [
+        "0030_penny_evidence.sql"
+      ]
+    },
+    "EVID-008": {
+      "change": "changed",
+      "summary": "Original evidence files remain operator-only, within declared input limits, with durable upload custody, export and erasure coverage.",
+      "now": "Original evidence files remain operator-only, within declared input limits, with durable upload custody, export and erasure coverage.",
+      "migrationIds": [
+        "0030_penny_evidence.sql"
+      ]
+    },
+    "EVID-010": {
+      "change": "changed",
+      "summary": "Evidence wording changes append operator-readable versions behind a current-version witness without changing the evidence identity.",
+      "now": "Evidence wording changes append operator-readable versions behind a current-version witness without changing the evidence identity.",
+      "migrationIds": [
+        "0030_penny_evidence.sql"
+      ]
+    },
+    "DEC-006": {
+      "change": "changed",
+      "summary": "Decision revisions preserve prior rationale, bets and evidence snapshots and atomically return a superseded roadmap selection to Exploring, withdraw approval and prepare a status draft.",
+      "now": "Decision revisions preserve prior rationale, bets and evidence snapshots and atomically return a superseded roadmap selection to Exploring, withdraw approval and prepare a status draft.",
+      "migrationIds": [
+        "0032_penny_decision_reviews.sql"
+      ]
+    },
+    "DEC-007": {
+      "change": "changed",
+      "summary": "A minute Cron marks passed workspace review dates due without changing selected bets or roadmap/public state; a note plus reschedule or revision completes review.",
+      "now": "A minute Cron marks passed workspace review dates due without changing selected bets or roadmap/public state; a note plus reschedule or revision completes review.",
+      "migrationIds": [
+        "0032_penny_decision_reviews.sql",
+        "0033_decision_review_completion.sql"
+      ]
+    },
+    "NOTIFY-003": {
+      "change": "changed",
+      "summary": "Each due review generation queues one owner email without quiet hours and one dismissible in-app notification; restored pending emails remain held.",
+      "now": "Each due review generation queues one owner email without quiet hours and one dismissible in-app notification; restored pending emails remain held.",
+      "migrationIds": [
+        "0032_penny_decision_reviews.sql",
+        "0033_decision_review_completion.sql"
+      ]
+    },
+    "DEC-008": {
+      "change": "changed",
+      "summary": "Private requester outcomes and release-linked evidence appear immediately in the decision post-release timeline without changing commitment evidence snapshots.",
+      "now": "Private requester outcomes and release-linked evidence appear immediately in the decision post-release timeline without changing commitment evidence snapshots.",
+      "migrationIds": [
+        "0032_penny_decision_reviews.sql"
+      ]
+    },
+    "REL-003": {
+      "change": "changed",
+      "summary": "Published corrections append a marked current portal version while retaining operator-readable earlier versions; only an explicit delivery command sends each new version.",
+      "now": "Published corrections append a marked current portal version while retaining operator-readable earlier versions; only an explicit delivery command sends each new version.",
+      "migrationIds": [
+        "0031_penny_release_outcomes.sql"
+      ]
+    },
+    "REL-008": {
+      "change": "changed",
+      "summary": "Only original snapshot recipients can record per-target adoption answers; changed answers append revisions and identical repeats append none, independent of mute or subscription withdrawal.",
+      "now": "Only original snapshot recipients can record per-target adoption answers; changed answers append revisions and identical repeats append none, independent of mute or subscription withdrawal.",
+      "migrationIds": [
+        "0031_penny_release_outcomes.sql"
+      ]
+    },
+    "REL-009": {
+      "change": "changed",
+      "summary": "Private operators see current-answer counts and snapshot-linked individual context. Coverage divides responses by original recipient count per target and across the release; the whole-release ratio can exceed 100 percent for multiple targets.",
+      "now": "Private operators see current-answer counts and snapshot-linked individual context. Coverage divides responses by original recipient count per target and across the release; the whole-release ratio can exceed 100 percent for multiple targets.",
+      "migrationIds": [
+        "0031_penny_release_outcomes.sql"
+      ]
+    },
+    "REL-012": {
+      "change": "changed",
+      "summary": "Verified addresses explicitly grant timestamped subscribe-all permission from updates and withdraw it there or through notification unsubscribe without removing requests, votes or follows.",
+      "now": "Verified addresses explicitly grant timestamped subscribe-all permission from updates and withdraw it there or through notification unsubscribe without removing requests, votes or follows.",
+      "migrationIds": [
+        "0031_penny_release_outcomes.sql"
+      ]
+    },
+    "DATA-003": {
+      "change": "changed",
+      "summary": "Erasure includes new history dependencies and original files, inserts per-row tombstones before deletion and retains anonymised audit references; journal fences refuse resurrection. Hosted proof remains source-only, local TLS.",
+      "now": "Erasure includes new history dependencies and original files, inserts per-row tombstones before deletion and retains anonymised audit references; journal fences refuse resurrection. Hosted proof remains source-only, local TLS.",
+      "migrationIds": [
+        "0030_penny_evidence.sql"
+      ]
+    }
+  },
+  "extensionPointChanges": [],
+  "migrations": [
+    {
+      "id": "0010_request_notifications.sql",
+      "buyerSteps": "Apply after immutable 0001–0009 with the hash-ledger deploy controller. Adds requester notification preferences/mutes, public event triggers, address-bound intents, batches and attempts; status action keys and per-request publication versions prevent retries from publishing again, and persisted late-event coalescing times keep closed deliveries immutable. Preserves existing product rows and legacy outbox records without replaying old unsent intent because it lacks address-bound consent. Do not downgrade while the scheduler is active. Retain exact source and a consistent D1/R2 backup; reconcile sending/unknown attempts after recovery instead of automatically resending ambiguous provider acceptance."
+    },
+    {
+      "id": "0011_notification_delivery_events.sql",
+      "buyerSteps": "Apply after immutable 0001–0010. Adds address-bound link generations, attempt recipient/message binding, durable Base mail receipts/state and atomic suppression. Configure the selected provider Event Webhook and SENDGRID_EVENT_PUBLIC_KEY or RESEND_WEBHOOK_SECRET. Preserve receipt records; no old sends are replayed. Historical accepted attempts without the new recipient snapshot or attempt correlation remain ineligible for event mutation. Delayed or asynchronous bounces without sg_message_id are rejected by the retained Base intake. Penny suppression for these excluded events is not implemented; REL-011 is not fully satisfied. Review provider-side suppression separately. Identity merge returns identity_merge_notification_active (409) while either endpoint has a sending batch; retry the merge after sends settle."
+    },
+    {
+      "id": "0012_base_local_auth.sql",
+      "buyerSteps": "Apply after immutable 0001–0011. Adds Base invitation cancellation custody and the local-only development mail outbox without changing existing operators, sessions, notifications or business records. Local setup starts an empty workspace and loads no sample records. Never expose the development outbox on preview or production."
+    },
+    {
+      "id": "0013_decision_loop.sql",
+      "buyerSteps": "Apply after immutable 0001–0012. Adds nullable evidence speaker, evidence stance, roadmap account impact and draft wording columns, decision comparison snapshots, mapping history, roadmap evidence links, safe status-update versions, opaque public roadmap identities and database guards for commitment and approval. Existing rows are kept; existing roadmap publications receive an opaque public identity and keep their approved wording. Quiesce writers for maintenance; a decision is committed once and its snapshots are immutable."
+    },
+    {
+      "id": "0014_release_delivery.sql",
+      "buyerSteps": "Apply after immutable 0001–0013 using the hash-ledger controller. Adds grouped public status histories, immutable release target/recipient context custody, outbox delivery claims and genuine Base event ownership. All historical rows remain; legacy outbox entries are not enrolled for sending. Preserve complete D1/R2 archives and erasure journals. Quiesce active writers for maintenance; queued release rows in exports restore as unknown and inert. SendGrid correlation is not provider duplicate suppression (REL-007 remains unsatisfied); do not automatically retry accepted, unknown or interrupted sends. Configure signed provider events and retain the documented Base missing-message-ID limitations."
+    },
+    {
+      "id": "0015_publication_seals.sql",
+      "buyerSteps": "Apply after immutable 0001–0014. Adds durable seals for already published status/release versions and fences exact target, recipient and context membership. Native publication writes complete sealed snapshots transactionally before delivery. Controlled applying-phase restoration and erasure retain their maintenance guards. Preserve expanded schema on rollback, stop old writers before upgrade and retain original files, notification custody and latest erasure journal."
+    },
+    {
+      "id": "0016_restored_notification_hold.sql",
+      "buyerSteps": "Apply after immutable 0001–0015. Adds nullable restoration_hold_at to notification intents without changing prior values. Archive export stamps held history; restore preserves it, and batching excludes held intents. Queued batches retain their original state with an explicit restore-review hold; the drain classifies them as unknown or suppressed without creating an attempt. Release outbox entries restore as unknown for explicit reconciliation. Native future publication retains consent and delivery checks. Keep expanded schema on rollback, and do not run a pre-0016 mail drain against a restored installation. Download the latest separate erasure journal before isolated restore; retain destination native authority and re-enter non-portable credentials."
+    },
+    {
+      "id": "0017_saved_feedback_import.sql",
+      "buyerSteps": "Apply after immutable 0001–0016. Adds the maintained import-kit D1 journal, original-byte custody, creation snapshots, source identities and undo provenance, plus native historical-private comments and opaque erasure fences. No history is automatically imported, published or sent. Review saved-file mappings explicitly; resume by persisted job ID. Changed source identities and later native work conflict instead of overwriting or deleting. Product archives include these personal records; erasure purges affected originals and preserves opaque resurrection refusal. Keep the expanded schema and every journal on source rollback; old actor-bound jobs confer no destination authority. See docs/MOVE-IN.md."
+    },
+    {
+      "id": "0018_owner_claim.sql",
+      "buyerSteps": "Apply after all prior migrations, preserving Base bootstrap/operators/sessions and every imported original/journal. Adds the exact native signed-owner-claim ledger and empty-authority gate. Provision trusted issuer, public signing keys, installation ID and app origin through installation configuration; map existing AUTH_SECRET to Base session authority and the hidden generated SETUP_TOKEN once. Existing setup-token bootstrap stays compatible and an installed owner cannot be taken over. Retain both permanent admission ledgers on rollback; no claim credential is stored or included in portable archives. Public stage signing-key transport and registry admission remain separate."
+    },
+    {
+      "id": "0019_host_identity_custody.sql",
+      "buyerSteps": "Apply after all prior migrations. Adds product-owned signed host claim receipts and opaque erased-identity fences without granting operator authority, email consent or a native requester session. Host servers must add the exact app audience to their signed claims and configure allowed frame origins. Existing native email authority and prior data remain intact. Signing keys stay non-portable; rotate through installation configuration and issue fresh host assertions. Preserve expanded schema on source rollback."
+    },
+    {
+      "id": "0020_base_integrations.sql",
+      "buyerSteps": "Apply in numbered order after the complete previous migration inventory. Add exact maintained Base integration token, delivery, attempt, resolution and inbound replay ledgers. No external effect is initiated by migration. Retain original files, latest erasure journal, immutable snapshots and native session revocation; isolated recovery never replays pending effects."
+    },
+    {
+      "id": "0021_integration_authority.sql",
+      "buyerSteps": "Apply in numbered order after the complete previous migration inventory. Add native issuer/version custody and same-transaction issuance guards. Existing tokens cannot grant HTML, export or owner authority. Retain original files, latest erasure journal, immutable snapshots and native session revocation; isolated recovery never replays pending effects."
+    },
+    {
+      "id": "0022_integration_events.sql",
+      "buyerSteps": "Apply in numbered order after the complete previous migration inventory. Add native public event/selected-target custody, private destination credentials and processed inbound-note receipts. Imported history suppresses effects atomically; restored events and ambiguous sends remain held for explicit reconciliation. Configure an enforcing service binding before outbound use. Retain original files, latest erasure journal, immutable snapshots and native session revocation; isolated recovery never replays pending effects."
+    },
+    {
+      "id": "0023_tracker_links.sql",
+      "buyerSteps": "Apply in numbered order after the complete previous migration inventory. Add deliberate tracker links, durable create commands and ordered signed receipt custody. Provider credentials remain installation-only; restores hold commands, do not replay creates, and require re-entered secrets. Reconcile uncertain creates with a known provider issue instead of retrying. Retain original files, latest erasure journal, immutable snapshots and native session revocation; isolated recovery never replays pending effects."
+    },
+    {
+      "id": "0024_portal_branding.sql",
+      "buyerSteps": "Apply in numbered order after the complete previous migration inventory. Add owner-configured safe portal description, readable accent and Penny mark display choice. Preserve expanded schema and existing product rows on source rollback. Retain original files, latest erasure journal, immutable snapshots and native session revocation; isolated recovery never replays pending effects."
+    },
+    {
+      "id": "0028_operator_dev_sessions.sql",
+      "buyerSteps": "Apply after immutable 0001–0027 with writers quiescent. Rebuilds native sessions to admit local dev identity while retaining existing sessions, expiry and revocation. Adds installation-only dev credential custody. The local Worker requires the checkout key for dev sessions; production refuses them. Preserve the expanded schema on source rollback; do not export installation authority."
+    },
+    {
+      "id": "0029_dev_minted_api_tokens.sql",
+      "buyerSteps": "Apply after 0028. Adds transient API issuance provenance and records dev-minted tokens in installation-only credential custody in the same transaction. Ordinary credentials remain ordinary; dev credentials require the local key gate and are refused in production. Preserve issuer, revocation and credential custody on rollback; portable product archives exclude these installation credentials."
+    },
+    {
+      "id": "0030_penny_evidence.sql",
+      "buyerSteps": "Apply in order after immutable reviewed-main 0001–0029 with writers quiescent. Adds release-linked private evidence and durable evidence upload reservations; existing wording versions and attachment rows remain intact. Preserve original R2 files and latest erasure journals. Pending uploads must be recovered before export; active writers fence maintenance. No evidence file is public."
+    },
+    {
+      "id": "0031_penny_release_outcomes.sql",
+      "buyerSteps": "Apply after 0030, the evidence extension. Adds correction ancestry and per-version delivery intent while preserving original publication snapshots. Corrections do not enqueue mail until an explicit native delivery command. Keep expanded schema and publication history on rollback; restored queued effects remain inert. Existing outcome and permission tables retain prior records."
+    },
+    {
+      "id": "0032_penny_decision_reviews.sql",
+      "buyerSteps": "Apply after 0031, the release extension. Adds decision review generations, review notes and durable owner notifications. Existing commitments remain unchanged. The minute Cron handles review due without changing roadmap state; restored pending reminders remain held. Preserve all revision snapshots and erasure tombstones on source rollback. Provider delivery and real hosted Cron acceptance require owner evidence."
+    },
+    {
+      "id": "0033_decision_review_completion.sql",
+      "buyerSteps": "Apply after 0032. Adds a nullable completion marker without changing existing commitments or schedules. A note plus revision retaining the date completes that schedule; a changed date clears completion and schedules another reminder. Retain this column through export, restore and erasure, and preserve expanded schema on rollback."
+    }
+  ],
+  "breaking": false,
+  "agentUpdateInstructions": "First declared 0.0.0 source release, not a universal product acceptance claim. Preserve all owner customizations, exact applied migration history, Base authority and private/public projection boundaries. Apply additive notification migration after retained 0001–0009; never replay changed history. Select SendGrid or Resend with its matching key and verified MAIL_FROM; align OPERATIONS.json mail-loop provider with MAIL_PROVIDER. Require minute Cron and inspect uncertain provider attempts before retrying. Stop old workers for the 0009 credential transition and reissue credentials. The bounded local archive excludes Base authority and is not a full backup. Re-lock only intentional integrated source using the shipped actual authoring tool; provider delivery, hosted Cron and whole-product release acceptance need independent evidence. Apply 0011 without altering existing migration history. Signed Base event intake suppresses only verified, correlated hard bounces and complaints; configure provider callbacks and verify hosted delivery separately. SendGrid lacks provider duplicate suppression (REL-007); never automatically retry unknown sends. Apply 0012 after 0011 for Base invitation cancellation custody and local development capture. Use node scripts/rer.mjs setup for the first empty local workspace; local data lives only in .wrangler/state. Optional WORKSPACE_TIMEZONE must be chosen before deployment; never shift an active notification window to hurry mail. Apply migration 0017 in order, retain full native and import journal/original custody on rollback, and use the saved-file migration guide. Fixture-only status does not authorize a replacement or public registry claim. Apply owner-claim and signed host custody migrations in order. Native owner claim cannot take over an installed owner; trusted platform keys and audience remain explicit installation configuration. Host servers add app audience, use fresh assertions after key rotation, and preserve non-authorizing history and erasure fences. See docs/HOST-IDENTITY.md. `/` is now the product landing (HOME-002) and the public feedback board's canonical address is /portal/feedback (/portal redirects there): carry any owner customisation of the old `/` portal home to /portal/feedback, point owner links and bookmarks there, and set showPoweredByCredit in src/ext/config.ts to keep or drop the landing credit. /docs and /docs/ are new declared public paths serving build-time documentation from docs/site.json; keep every Markdown file published or listed as GitHub-only, and keep owner-edited docs pages when updating. Apply Penny clause migrations 0030–0033 in numbered order after the retained reviewed-main 0001–0029 inventory. Erasure outranks version preservation. Follow OWNER-STEPS.md only with owner authorization for real hosted actions; all current hosted restore and erasure evidence is source-only, local TLS. REL-007 and REL-011 remain open."
+}

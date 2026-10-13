@@ -1,0 +1,121 @@
+{
+  "posts": [
+    {
+      "id": "post-0",
+      "title": "Readable labels",
+      "details": "A supplied customer quote.",
+      "created": "2024-07-08T09:10:11.000Z",
+      "status": "open",
+      "board": {
+        "id": "public-board"
+      },
+      "author": {
+        "id": "user-0",
+        "name": "Zoë Rivera",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-0@example.test",
+        "isAdmin": false
+      },
+      "tags": [
+        {
+          "id": "tag-0"
+        }
+      ],
+      "score": 10,
+      "mergeHistory": [
+        {
+          "created": "2024-07-08T09:10:11.000Z",
+          "post": {
+            "id": "post-1",
+            "title": "Duplicate labels",
+            "details": "The same problem on mobile.",
+            "created": "2024-07-08T09:10:11.000Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "post-1",
+      "title": "Duplicate labels",
+      "details": "The same problem on mobile.",
+      "created": "2024-07-08T09:10:11.000Z",
+      "status": "open",
+      "board": {
+        "id": "public-board"
+      },
+      "author": {
+        "id": "user-1",
+        "name": "Kai 测试",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-1@example.test",
+        "isAdmin": false
+      },
+      "tags": [
+        {
+          "id": "tag-0"
+        }
+      ],
+      "score": 10,
+      "mergeHistory": [
+        {
+          "created": "2024-07-08T09:10:11.000Z",
+          "post": {
+            "id": "post-2",
+            "title": "Older duplicate",
+            "details": "Original older request.",
+            "created": "2024-07-08T09:10:11.000Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "post-2",
+      "title": "Older duplicate",
+      "details": "Original older request.",
+      "created": "2024-07-08T09:10:11.000Z",
+      "status": "open",
+      "board": {
+        "id": "public-board"
+      },
+      "author": {
+        "id": "user-2",
+        "name": "Historical customer",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-2@example.test",
+        "isAdmin": false
+      },
+      "tags": [
+        {
+          "id": "tag-0"
+        }
+      ],
+      "score": 10,
+      "mergeHistory": []
+    },
+    {
+      "id": "post-3",
+      "title": "Private account problem",
+      "details": "Private strategy and customer context.",
+      "created": "2024-07-08T09:10:11.000Z",
+      "status": "planned",
+      "board": {
+        "id": "internal-board"
+      },
+      "author": {
+        "id": "user-0",
+        "name": "Zoë Rivera",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-0@example.test",
+        "isAdmin": false
+      },
+      "tags": [
+        {
+          "id": "tag-1"
+        }
+      ],
+      "score": 10,
+      "mergeHistory": []
+    }
+  ],
+  "hasMore": false
+}

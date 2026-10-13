@@ -1,0 +1,17 @@
+{
+  "boards": [
+    {
+      "id": "public-board",
+      "name": "Ideas",
+      "isPrivate": false,
+      "created": "2024-07-08T09:10:11.000Z",
+      "privateComments": true
+    },
+    {
+      "id": "internal-board",
+      "name": "Internal research",
+      "isPrivate": true,
+      "created": "2024-07-08T09:10:11.000Z"
+    }
+  ]
+}

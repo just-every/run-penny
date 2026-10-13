@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://runeditrun.com/schema/COMPOSITION.schema.json",
+  "title": "Source edition assembly",
+  "description": "Committed family edition export. Sources are relative to the selected repository commit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "base",
+    "family",
+    "edition",
+    "modules",
+    "source",
+    "copies"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "base": {
+      "$ref": "#/$defs/slug"
+    },
+    "family": {
+      "$ref": "#/$defs/slug"
+    },
+    "edition": {
+      "$ref": "#/$defs/slug"
+    },
+    "modules": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/slug"
+      }
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "copies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "component",
+          "source",
+          "target",
+          "repository"
+        ],
+        "properties": {
+          "component": {
+            "$ref": "#/$defs/slug"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-][A-Za-z0-9._/-]*$"
+          },
+          "repository": {
+            "enum": [
+              "family",
+              "base"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Lower case, digits, single hyphens between parts."
+    }
+  }
+}

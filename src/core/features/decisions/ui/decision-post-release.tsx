@@ -1,0 +1,10 @@
+import { Link } from '@tanstack/react-router'
+import { useOperatorResource } from '@/core/app/ui/operator-resource'
+import { OperatorOptionsState } from '@/core/app/ui/operator-options-state'
+import { OperatorCard } from '@/core/app/ui/operator-primitives'
+import { textLinkClass } from '@/core/ui/app/classes'
+import type { DecisionPostRelease as PostRelease } from '../history'
+export function DecisionPostRelease({id}:{id:string}){
+ const [entries,reload]=useOperatorResource<PostRelease>(`/api/operator/decisions/${id}/post-release`)
+ return <OperatorCard className="p-5"><h2 className="text-xl font-bold text-penny-ink">Post-release evidence</h2><p className="mt-2 text-sm leading-6 text-penny-muted">New evidence and requester outcomes are kept apart from the evidence snapshot supporting each commitment.</p><div className="mt-4"><OperatorOptionsState state={entries} loading="Loading post-release evidence…" failure="Could not load post-release evidence." reload={reload}/>{entries.kind==='ready'?entries.data.timeline.length?<ol className="space-y-4">{entries.data.timeline.map(entry=><li key={entry.id} className="border-t border-penny-line pt-3"><p className="text-xs text-penny-muted">{entry.kind==='outcome'?'Requester outcome':'Recorded evidence'} · {entry.createdAt}</p><p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6">{entry.kind==='outcome'?`Requester outcome · ${entry.outcome?.replaceAll('_',' ')}`:entry.wording}</p><div className="mt-2 flex flex-wrap gap-4 text-sm"><Link className={textLinkClass} to="/app/releases/$releaseSlug" params={{releaseSlug:entry.releaseSlug}}>{entry.releaseTitle}</Link>{entry.kind==='outcome'?entry.requests.map(request=><Link key={request.requestId} className={textLinkClass} to="/app/moderation" hash={`request-${request.requestSlug}`}>Snapshotted request</Link>):null}{entry.evidenceId?<Link className={textLinkClass} to="/app/feedback" hash={`evidence-${entry.evidenceId}`}>Original evidence</Link>:null}</div></li>)}</ol>:<p className="text-sm text-penny-muted">No post-release evidence yet.</p>:null}</div></OperatorCard>
+}

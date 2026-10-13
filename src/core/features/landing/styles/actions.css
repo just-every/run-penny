@@ -1,0 +1,5 @@
+/* The landing's calls to action: the large pill (the shared sign-in pill, bigger) and the underlined text link. */
+.penny-landing .pl-pill.pl-pill--large { min-height: clamp(54px, 4.15vw, 64px); padding: 0 clamp(30px, 2.8vw, 43px); font-size: clamp(18px, 1.3vw, 20px); font-weight: 600; }
+.penny-landing .pl-text-link { font-size: clamp(18px, 1.3vw, 20px); font-weight: 500; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 7px; transition: text-decoration-color 0.18s; }
+.penny-landing .pl-text-link:hover { text-decoration-color: var(--copper); }
+.penny-landing .pl-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 18px clamp(24px, 2.1vw, 32px); }

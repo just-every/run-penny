@@ -1,0 +1,13 @@
+/* The hero collage's notes. Its pencilled mountain is the shared kit's (src/core/ui/brand/collage). */
+.penny-landing .pl-hero-request .pl-paper { gap: calc(17 * var(--u)); padding: calc(24 * var(--u)) calc(20 * var(--u)) calc(12 * var(--u)); }
+.penny-landing .pl-hero-request .pl-row { gap: calc(9 * var(--u)); }
+.penny-landing .pl-hero-request .pl-lines { gap: calc(10 * var(--u)); padding-left: calc(4 * var(--u)); }
+/* The vote mark centres over its count; the pair stays at the note's left, close under the pencil lines. */
+.penny-landing .pl-votes { display: flex; flex-direction: column; align-items: center; align-self: flex-start; gap: calc(2 * var(--u)); margin-top: calc(6 * var(--u)); padding-left: calc(6 * var(--u)); }
+/* Each status stays on one line; on a narrow stage the note widens to the labels' readable minimum. */
+.penny-landing .pl-hero-status { min-width: max-content; }
+.penny-landing .pl-hero-status .pl-paper { padding: calc(28 * var(--u)) calc(22 * var(--u)) calc(24 * var(--u)); white-space: nowrap; }
+.penny-landing .pl-hero-letter .pl-paper { flex-direction: row; align-items: flex-start; gap: calc(22 * var(--u)); padding: calc(30 * var(--u)) calc(26 * var(--u)); }
+.penny-landing .pl-letter-copy { display: flex; flex: 1; flex-direction: column; gap: calc(26 * var(--u)); padding-top: calc(2 * var(--u)); }
+.penny-landing .pl-letter-copy .pl-lines { gap: calc(13 * var(--u)); }
+.penny-landing .pl-letter-copy .pl-t--hand { max-width: 9.4em; }

@@ -1,0 +1,10 @@
+// DOCS-001. The docs page's styles, every rule scoped to .penny-docs and coloured from docs-theme.css.
+import './layout.css'
+import './nav.css'
+import './toc.css'
+import './menu.css'
+import './prose.css'
+import './code.css'
+import './callout.css'
+import './table.css'
+import './pager.css'

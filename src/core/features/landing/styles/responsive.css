@@ -1,0 +1,35 @@
+/* Narrower screens. Two columns hold down to 1024px; below that copy stacks above its drawing, and on a phone the drawings
+   run nearly edge to edge (the header's own narrow rules are the shared chrome's). */
+@media (max-width: 1279px) {
+  .penny-landing .pl-hero { grid-template-columns: minmax(0, 43fr) minmax(0, 57fr); }
+  .penny-landing .pl-sec, .penny-landing .pl-sec--copy-right { grid-template-columns: minmax(0, 1fr) minmax(0, 1.18fr); }
+  .penny-landing .pl-sec--copy-right { grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr); }
+}
+
+@media (max-width: 1023px) {
+  .penny-landing .pl-hero { grid-template-columns: minmax(0, 1fr); gap: clamp(36px, 6vw, 56px); padding-right: var(--gutter); }
+  .penny-landing .pl-h1 { font-size: clamp(42px, 8vw, 66px); }
+  .penny-landing .pl-hero-copy { max-width: 640px; padding-bottom: 0; }
+  .penny-landing .pl-hero-art, .penny-landing .pl-sec-art { width: 100%; max-width: 760px; justify-self: center; }
+  .penny-landing .pl-sec, .penny-landing .pl-sec--copy-right { grid-template-columns: minmax(0, 1fr); gap: clamp(32px, 5vw, 48px); }
+  .penny-landing .pl-sec--copy-right .pl-sec-copy { order: 0; }
+  .penny-landing .pl-sec-copy { max-width: 640px; }
+  .penny-landing .pl-h2 { font-size: clamp(34px, 6.2vw, 50px); }
+}
+
+@media (max-width: 639px) {
+  .penny-landing .pl-pill.pl-pill--large { min-height: 54px; padding: 0 28px; font-size: 17px; }
+  .penny-landing .pl-text-link { font-size: 17px; }
+  .penny-landing .pl-hero { padding-top: 18px; }
+  .penny-landing .pl-h1 { font-size: clamp(40px, 11.5vw, 52px); }
+  .penny-landing .pl-hero-sub { margin-top: 30px; font-size: 17px; }
+  .penny-landing .pl-hero-art, .penny-landing .pl-sec-art { justify-self: stretch; width: auto; max-width: none; margin-inline: calc(8px - var(--gutter)); }
+  .penny-landing .pl-sec { padding-block: 40px; }
+  .penny-landing .pl-h2 { font-size: clamp(32px, 9.8vw, 41px); }
+  .penny-landing .pl-eyebrow { font-size: 13px; }
+  .penny-landing .pl-sec-body { margin-top: 28px; font-size: 17px; }
+  .penny-landing .pl-points li { font-size: 16px; }
+  .penny-landing .pl-closing { padding-top: 112px; padding-bottom: 150px; }
+  .penny-landing .pl-closing-left { top: 8px; left: 0; width: 130px; transform: none; }
+  .penny-landing .pl-closing-right { top: auto; right: 0; bottom: 6px; width: 170px; transform: none; }
+}

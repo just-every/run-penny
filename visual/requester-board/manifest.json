@@ -1,0 +1,104 @@
+{
+  "sourceCommit": "a29e79f019454467964bf652dca0ccc41cd9796d",
+  "generatedAt": "2026-10-06T04:24:58.960Z",
+  "runtime": "local workerd with isolated D1 and native local auth; no provider calls",
+  "captures": [
+    {
+      "file": "submitted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41869/portal/feedback/new",
+      "overflow": false
+    },
+    {
+      "file": "approve-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41869/app/moderation",
+      "overflow": false
+    },
+    {
+      "file": "vote-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41869/portal/feedback/feedback-01m47q9qkhn2z8yh9f9j8y8qn5",
+      "overflow": false
+    },
+    {
+      "file": "follow-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41869/portal/feedback/feedback-01m47q9qkhn2z8yh9f9j8y8qn5",
+      "overflow": false
+    },
+    {
+      "file": "comment-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41869/portal/feedback/feedback-01m47q9qkhn2z8yh9f9j8y8qn5",
+      "overflow": false
+    },
+    {
+      "file": "status-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41869/portal/feedback/feedback-01m47q9qkhn2z8yh9f9j8y8qn5",
+      "overflow": false
+    },
+    {
+      "file": "your-feedback-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41869/portal/feedback/activity",
+      "overflow": false
+    },
+    {
+      "file": "search-filter-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41869/?q=Scheduled+exports&status=under_review",
+      "overflow": false
+    },
+    {
+      "file": "submitted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41869/portal/feedback/new",
+      "overflow": false
+    },
+    {
+      "file": "approve-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41869/app/moderation",
+      "overflow": false
+    },
+    {
+      "file": "vote-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41869/portal/feedback/feedback-01m47qa55q78w2nvts9xdnazn7",
+      "overflow": false
+    },
+    {
+      "file": "follow-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41869/portal/feedback/feedback-01m47qa55q78w2nvts9xdnazn7",
+      "overflow": false
+    },
+    {
+      "file": "comment-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41869/portal/feedback/feedback-01m47qa55q78w2nvts9xdnazn7",
+      "overflow": false
+    },
+    {
+      "file": "status-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41869/portal/feedback/feedback-01m47qa55q78w2nvts9xdnazn7",
+      "overflow": false
+    },
+    {
+      "file": "your-feedback-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41869/portal/feedback/activity",
+      "overflow": false
+    },
+    {
+      "file": "search-filter-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41869/?q=Scheduled+exports&status=under_review",
+      "overflow": false
+    }
+  ],
+  "pageErrors": []
+}

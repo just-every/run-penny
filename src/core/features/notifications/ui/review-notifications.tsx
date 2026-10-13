@@ -1,0 +1,10 @@
+import { Link } from '@tanstack/react-router'
+import { useOperatorResource } from '@/core/app/ui/operator-resource'
+import { OperatorOptionsState } from '@/core/app/ui/operator-options-state'
+import { LoopForm } from '@/core/app/ui/loop-form'
+import { disclosureSummaryClass, textLinkClass } from '@/core/ui/app/classes'
+import type { ReviewNotification } from '../decision-reviews'
+export function ReviewNotifications(){
+ const [notifications,reload]=useOperatorResource<{reviews:ReviewNotification[]}>('/api/operator/notifications')
+ return <details className="group mb-6 rounded-xl border border-penny-line bg-penny-card p-4"><summary className={disclosureSummaryClass}>Review notifications{notifications.kind==='ready'?` (${notifications.data.reviews.length})`:''}</summary><div className="mt-3 space-y-3"><OperatorOptionsState state={notifications} loading="Loading review notifications…" failure="Could not load review notifications." reload={reload}/>{notifications.kind==='ready'?notifications.data.reviews.length?notifications.data.reviews.map(notification=><LoopForm key={notification.id} title="Decision review due" action={`/api/operator/notifications/${notification.id}/dismiss`} submit="Dismiss notification" onSaved={reload} transform={()=>({})}><Link className={`${textLinkClass} inline-flex min-h-11 items-center break-words`} to="/app/decisions/$decisionSlug" params={{decisionSlug:notification.decisionSlug}}>{notification.title}</Link><p className="text-xs text-penny-muted">Review due · {notification.createdAt} · Email {notification.state}</p>{notification.failureReason?<p role="alert" className="text-sm text-penny-danger">Email delivery needs attention: {notification.failureReason.replaceAll('_',' ')}</p>:null}<p className="text-sm text-penny-muted">Dismissal removes this notification. Complete the review from the decision brief.</p></LoopForm>):<p className="text-sm text-penny-muted">No review notifications.</p>:null}</div></details>
+}

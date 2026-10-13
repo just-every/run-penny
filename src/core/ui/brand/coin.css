@@ -1,0 +1,12 @@
+/* Penny's coin mark (CoinMark): the coin alone, in a box the surface sizes by its slot, holding the one drawing the use site chose
+   (`tier`: the full drawing, a <use> of the page's CoinSprite symbol, for the landing drawings' small coins, the inline 32-unit
+   drawing everywhere else). Unscoped, because the landing, docs, portal, sign-in, 404 and operator app all wear it; each rule names
+   the box and the drawing, so it outweighs a page's own `svg` rule (the landing and docs set `svg { display: block }`).
+   A surface sets `--coin-slot`: the height it gives the mark, which also fixes the lockup's height. A drawing fills its grid, so
+   the box is `--coin-fill` times narrower than its slot, which keeps the coin the size it has always been in every lockup, and
+   `--coin-edge`, the grid margin around the drawn coin as a share of its width, is pulled back so the coin sits flush against the
+   gap to its name. The drawing is centred in the box, so the coin is centred on the line beside it. */
+.pl-mark { display: block; width: calc(var(--coin-slot) / var(--coin-fill)); height: var(--coin-slot); margin-inline: calc(var(--coin-slot) / var(--coin-fill) * var(--coin-edge) * -1); }
+.pl-mark--medium { --coin-fill: 1.2; --coin-edge: 0.0425; }
+.pl-mark--full { --coin-fill: 1.25; --coin-edge: 0.0562; }
+.pl-mark > .pl-mark-art { display: block; width: 100%; height: 100%; overflow: visible; }

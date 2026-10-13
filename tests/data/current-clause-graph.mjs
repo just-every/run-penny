@@ -1,0 +1,19 @@
+import {priorClauseGraph,priorStamp} from './prior-clause-graph.mjs'
+// Complete historical + current archive fixture, including pending effects that must restore held.
+export async function currentClauseGraph(db,bucket,operatorId){
+ const {insert,stamped}=await priorClauseGraph(db,bucket,operatorId)
+ await insert('evidence_versions',stamped({id:'current-evidence-version',evidence_id:'prior-evidence',version_number:2,wording:'Updated evidence wording',edited_by_operator_id:operatorId}))
+ await db.prepare("UPDATE evidence_items SET release_id='prior-release' WHERE id='prior-evidence'").run()
+ await insert('decision_revisions',stamped({id:'current-revision',decision_id:'prior-decision',revision_number:2,selected_candidate_bet_id:'prior-selected',rationale:'Revised commitment rationale',confidence:'medium',review_at:'2026-10-02',committed_by_operator_id:operatorId,owner_operator_id:operatorId,roadmap_item_id:'prior-item'}))
+ await insert('decision_evidence_snapshots',stamped({id:'current-evidence-snapshot',decision_revision_id:'current-revision',evidence_id:'prior-evidence',evidence_version_id:'current-evidence-version',candidate_bet_id:'prior-selected',stance:'supporting'}))
+ await insert('decision_bet_snapshots',stamped({id:'current-bet-snapshot',decision_revision_id:'current-revision',candidate_bet_id:'prior-selected',disposition:'selected',title:'Selected at revision',summary:'Revised comparison',affected_requester_count:1,affected_account_count:1,supporting_count:1,latest_support_at:priorStamp,contradicting_count:0}))
+ await db.prepare("UPDATE decisions SET rationale='Revised commitment rationale',confidence='medium',review_at='2026-10-02',state='review_due',review_generation=1 WHERE id='prior-decision'").run()
+ await insert('decision_reviews',stamped({id:'current-review',decision_id:'prior-decision',operator_id:operatorId,note:'Completed review with a revised commitment',review_at:'2026-10-02',decision_revision_id:'current-revision'}))
+ await insert('decision_review_notifications',stamped({id:'current-review-notification',decision_id:'prior-decision',owner_operator_id:operatorId,review_generation:1,review_at:'2026-10-02',state:'queued',next_attempt_at:priorStamp}))
+ await db.prepare("UPDATE release_versions SET is_portal_current=0,delivery_requested_at=? WHERE id='prior-release-version'").bind(priorStamp).run()
+ await insert('release_versions',stamped({id:'current-release-version',release_id:'prior-release',version_number:2,title:'Corrected release title',release_type:'improved',body:'Corrected release body',publication_date:'2026-10-01',outcome_prompt:'Did this help?',subject_tags_json:'["prior-tag"]',is_portal_current:1,author_name:'Owner',tag_names_json:'["Historical improvement"]',snapshot_sealed_at:priorStamp,original_publication_version_id:'prior-release-version',delivery_requested_at:priorStamp}))
+ await db.prepare("UPDATE releases SET current_version_id='current-release-version' WHERE id='prior-release'").run()
+ await insert('notification_outbox',stamped({id:'current-delivery',event_type:'release_version',subject_id:'current-release-version',event_version:2,requester_id:'prior-person',dedupe_key:'current-release-delivery',payload_json:'{}',delivery_state:'queued',available_at:priorStamp,address_id:'prior-address',release_snapshot_id:'prior-recipient'}))
+ for(const [revision,outcome] of [[1,'not_yet'],[2,'adopted']])await insert('release_outcomes',stamped({id:'current-outcome-'+revision,release_version_id:'prior-release-version',requester_id:'prior-person',roadmap_item_id:'prior-item',outcome,revision_number:revision}))
+ await insert('requester_update_permissions',stamped({id:'current-subscription',requester_id:'prior-person',requester_address_id:'prior-address',request_id:null,source:'subscription',granted_at:priorStamp}))
+}

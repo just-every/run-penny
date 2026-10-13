@@ -1,0 +1,110 @@
+import {requestContext,reserveReturn} from '../../../../base/modules/import-kit/src/d1/budget'
+import {atomic} from '../../../../base/modules/import-kit/src/d1/database'
+import {prepareReversal,reversalDatabase} from './reversal'
+import {jobReceipt} from './receipt-read'
+import { applyD1ImportBatches,createD1ImportJob,readD1ImportJob,resumeD1Import,undoD1Import,rollbackD1Import,readD1ImportOriginals } from '../../../../base/modules/import-kit/src/d1/index.ts'
+import type { D1ImportContext } from '../../../../base/modules/import-kit/src/d1/index.ts'
+import type { PennyRuntime } from '@/core/app/runtime'
+import { operatorAuth,authenticateOperator } from '../auth/operator'
+import { importAuthority,restoredPrincipal } from './job-authority'
+import { NativeError } from '../auth/native-tokens'
+import { feedbackTargets } from './native-targets'
+import { nativeDependencies } from './native-relations'
+import { feedbackMappingVersion } from './mapping'
+import { type SavedFeedbackInput } from './types'
+import {prepareFeedback} from './planning'
+import {retainBundle,bundleOriginals,sealedContext} from './bundle'
+import {createD1ImportStream,resumeD1ImportStream,readD1ImportStream,undoD1ImportStream} from '../../../../base/modules/import-kit/src/d1/index'
+import {withoutLiveEffects} from '../integrations/effect-suppression'
+
+function forwardContext(context:D1ImportContext,id:string):D1ImportContext {
+ const original=context.authorization.predicate
+ return {...context,authorization:{...context.authorization,predicate(action,destination){const guard=original(action,destination);return action==='apply'?{sql:`(${guard.sql}) AND NOT EXISTS(SELECT 1 FROM feedback_import_reversal_scans WHERE job_id=?)`,params:[...guard.params??[],id]}:guard}}}
+}
+async function admitApply(job:{id:string;state:string},context:D1ImportContext):Promise<D1ImportContext>{
+ const scan=await context.storage.database.prepare('SELECT intent FROM feedback_import_reversal_scans WHERE job_id=?').bind(job.id).first()
+ if(scan||['undoing','rolling_back'].includes(job.state))throw new NativeError('This import is reversing. Resume existing job '+job.id+' to continue its chosen reversal.',409)
+ return forwardContext(context,job.id)
+}
+
+export async function importContext(runtime:PennyRuntime,request:Request,namespace:string,reversing=false,restoredPrincipal?:string):Promise<{context:D1ImportContext;actor:string}> {
+ const session=await operatorAuth(runtime).getSession(request)
+ if(!session)throw new NativeError('unauthenticated',401)
+ if(request.method!=='GET'&&request.headers.get('Origin')!==runtime.configuration.appOrigin)throw new NativeError('forbidden_origin',403)
+ const actor=await authenticateOperator(runtime,request)
+ if(!actor)throw new NativeError('unauthenticated',401)
+ const db=runtime.database.binding
+ const context:D1ImportContext={destination:'penny-feedback',namespace,mappingVersion:feedbackMappingVersion,batchSize:10,maxBatches:1,
+  storage:{database:withoutLiveEffects(db),targets:feedbackTargets(namespace,await nativeDependencies(db),reversing)},
+  authorization:{principalId:restoredPrincipal??session.operatorId,predicate:()=>({sql:`EXISTS(SELECT 1 FROM oa_sessions s JOIN oa_operators o ON o.id=s.operator_id WHERE s.id=? AND s.operator_id=? AND s.revoked_at IS NULL AND s.expires_at>unixepoch('subsec')*1000 AND o.status='active'${restoredPrincipal?" AND o.role='owner' AND NOT EXISTS(SELECT 1 FROM oa_operators creator WHERE creator.id=?)":''} AND o.version=s.operator_version AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle'))`,params:[session.id,session.operatorId,...restoredPrincipal?[restoredPrincipal]:[]]})}}
+ return {context:reserveReturn(requestContext(context),32),actor:actor.id}
+}
+export async function previewFeedback(runtime:PennyRuntime,request:Request,input:SavedFeedbackInput) {
+ const {context,actor}=await importContext(runtime,request,input.namespace)
+ return prepareFeedback(input,context,actor)
+}
+export async function applyFeedback(runtime:PennyRuntime,request:Request,input:SavedFeedbackInput,fingerprint:string) {
+ const {context,actor}=await importContext(runtime,request,input.namespace)
+ const prepared=await prepareFeedback(input,context,actor)
+ if(prepared.counts.rejected||prepared.receipt.unresolved.length||prepared.diagnostics.some(d=>d.severity==='error'))throw new NativeError('feedback_mapping_rejected',422)
+ if(prepared.fingerprint!==fingerprint)throw new NativeError('feedback_review_changed',409)
+ context.reviewedFingerprint=fingerprint
+ // An unchanged legacy review may already own this import. Compute its exact
+ // former fingerprint in memory, then let Base validate its durable custody.
+ // Never create another job with the obsolete mapper-only source property.
+ if(prepared.legacyFingerprint){
+  const legacyFingerprint=prepared.legacyFingerprint
+  const legacy=await context.storage.database.prepare("SELECT id,state FROM ik_jobs WHERE destination=? AND namespace=? AND principal_id=? AND fingerprint=? AND state NOT IN ('undone','rolled_back') ORDER BY rowid LIMIT 1").bind(context.destination,context.namespace,context.authorization.principalId,legacyFingerprint).first<{id:string;state:string}>()
+  if(legacy){context.reviewedFingerprint=legacyFingerprint;return applyD1ImportBatches(legacy.id,await admitApply(legacy,context))}
+ }
+ // A finished reversal releases ownership. Re-applying reviewed originals is a
+ // new generation; replay of a live/completed generation remains idempotent.
+ const prior=await runtime.database.binding.prepare("SELECT COUNT(*) n FROM ik_jobs j LEFT JOIN ik_d1_streams s ON s.id=j.id WHERE j.principal_id=? AND j.namespace=? AND COALESCE(s.fingerprint,j.fingerprint)=? AND j.state IN ('undone','rolled_back')").bind(context.authorization.principalId,input.namespace,fingerprint).first<{n:number}>()
+ context.operationKey=prior?.n?fingerprint+':'+prior.n:fingerprint
+ if(prepared.stream){
+  const job=await createD1ImportStream(prepared.stream,context)
+  await admitApply(job,context)
+  await retainBundle(job.id,fingerprint,prepared.receipt,prepared.artifacts,context)
+  return readD1ImportStream(job.id,sealedContext({...context,reviewedFingerprint:undefined},job.id))
+ }
+ const job=await createD1ImportJob(prepared.ordinary!,context)
+ return await applyD1ImportBatches(job.id,await admitApply(job,context))
+}
+export async function feedbackJob(runtime:PennyRuntime,request:Request,id:string,action:'read'|'resume'|'undo'|'rollback'|'originals'|'receipt') {
+ // Admission precedes job existence: unauthenticated requests cannot enumerate.
+ if(!await operatorAuth(runtime).getSession(request))throw new NativeError('unauthenticated',401)
+ const db=runtime.database.binding, row=await db.prepare('SELECT j.namespace,j.principal_id,COALESCE(s.state,j.state) state FROM ik_jobs j LEFT JOIN ik_d1_streams s ON s.id=j.id WHERE j.id=?').bind(id).first<{namespace:string;principal_id:string;state:string}>()
+ if(!row)throw new NativeError('feedback_job_not_found',404)
+ const scan=await db.prepare('SELECT revision,ordinal,intent FROM feedback_import_reversal_scans WHERE job_id=?').bind(id).first<{revision:number;ordinal:number;intent:'undo'|'rollback'}>()
+ const execution=scan&&['resume','undo','rollback'].includes(action)?scan.intent:action
+ const reversing=['undo','rollback'].includes(action)||(action==='resume'&&(Boolean(scan)||['undoing','rolling_back'].includes(row.state)))
+ const admitted=await importContext(runtime,request,row.namespace,reversing,await restoredPrincipal(runtime,await importAuthority(runtime,request),row.principal_id));let context=admitted.context
+ if(reversing&&row.principal_id!==context.authorization.principalId)throw new NativeError('feedback_import_actor_changed',403)
+ const stream=await db.prepare('SELECT id FROM ik_d1_streams WHERE id=?').bind(id).first()
+ if(stream){context.batchSize=100;if(['resume','undo','rollback'].includes(action))context=sealedContext(context,id)}
+ if(reversing){
+  const prior=await db.prepare('SELECT revision FROM feedback_import_reversals WHERE job_id=? AND revision=(SELECT revision FROM feedback_import_native_revision WHERE singleton=1)').bind(id).first()
+  if(!prior&&!await prepareReversal(id,context,Boolean(stream),await nativeDependencies(db),execution==='rollback'?'rollback':'undo',action==='resume')){const job=stream?await readD1ImportStream(id,context):await readD1ImportJob(id,context);return {...job,state:'preflighting',stage:'Checking every owned value and relationship before undo'}}
+  context.storage.database=reversalDatabase(context.storage.database,id)
+ }else if(action==='resume')context=forwardContext(context,id)
+ if(action==='receipt')return jobReceipt(id,context,Boolean(stream))
+ if(stream){
+  const sealed=await db.prepare('SELECT sealed FROM feedback_import_bundles WHERE id=?').bind(id).first<{sealed:number}>();if(!sealed?.sealed)throw new NativeError('feedback_originals_incomplete',409)
+  if(action==='originals'){await readD1ImportStream(id,context);return bundleOriginals(id,context)}
+  if(execution==='resume')return resumeD1ImportStream(id,context)
+  if(execution==='undo'||execution==='rollback'){
+   const job=await undoD1ImportStream(id,context)
+   await atomic(context,'undo',[{sql:'DELETE FROM feedback_import_reversal_scans WHERE job_id=?',params:[id]}])
+   return job
+  }
+  const job=await readD1ImportStream(id,context);return scan?{...job,state:'preflighting',stage:'Checking every owned value and relationship before undo'}:job
+ }
+ if(action==='originals')return readD1ImportOriginals(id,context)
+ if(execution==='resume')return resumeD1Import(id,context)
+ if(execution==='undo'||execution==='rollback'){
+  const job=await (execution==='undo'?undoD1Import(id,context):rollbackD1Import(id,context))
+  await atomic(context,'undo',[{sql:'DELETE FROM feedback_import_reversal_scans WHERE job_id=?',params:[id]}])
+  return job
+ }
+ const job=await readD1ImportJob(id,context);return scan?{...job,state:'preflighting',stage:'Checking every owned value and relationship before undo'}:job
+}

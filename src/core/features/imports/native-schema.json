@@ -1,0 +1,638 @@
+{
+  "boards": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "slug",
+        "default": null
+      },
+      {
+        "name": "name",
+        "default": null
+      },
+      {
+        "name": "visibility",
+        "default": null
+      },
+      {
+        "name": "position",
+        "default": null
+      },
+      {
+        "name": "archived_at",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "requesters": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "display_name",
+        "default": null
+      },
+      {
+        "name": "blocked_at",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "tags": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "name",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "requests": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "slug",
+        "default": null
+      },
+      {
+        "name": "board_id",
+        "default": null
+      },
+      {
+        "name": "author_requester_id",
+        "default": null
+      },
+      {
+        "name": "title",
+        "default": null
+      },
+      {
+        "name": "description",
+        "default": null
+      },
+      {
+        "name": "proposed_solution",
+        "default": null
+      },
+      {
+        "name": "impact_statement",
+        "default": null
+      },
+      {
+        "name": "moderation_state",
+        "default": null
+      },
+      {
+        "name": "public_state",
+        "default": null
+      },
+      {
+        "name": "public_title",
+        "default": null
+      },
+      {
+        "name": "public_description",
+        "default": null
+      },
+      {
+        "name": "published_at",
+        "default": null
+      },
+      {
+        "name": "declined_reason",
+        "default": null
+      },
+      {
+        "name": "withdrawn_at",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      },
+      {
+        "name": "approved_author_name",
+        "default": null
+      },
+      {
+        "name": "merged_into_request_id",
+        "default": null
+      },
+      {
+        "name": "merged_at",
+        "default": null
+      },
+      {
+        "name": "public_author_display_name",
+        "default": null
+      },
+      {
+        "name": "author_operator_id",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "request_content_submissions": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "request_id",
+        "default": null
+      },
+      {
+        "name": "requester_id",
+        "default": null
+      },
+      {
+        "name": "title",
+        "default": null
+      },
+      {
+        "name": "description",
+        "default": null
+      },
+      {
+        "name": "proposed_solution",
+        "default": null
+      },
+      {
+        "name": "impact_statement",
+        "default": null
+      },
+      {
+        "name": "moderation_state",
+        "default": null
+      },
+      {
+        "name": "rejection_reason",
+        "default": null
+      },
+      {
+        "name": "approved_at",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      },
+      {
+        "name": "is_initial",
+        "default": "0"
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "evidence_items": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "source_type",
+        "default": null
+      },
+      {
+        "name": "source_label",
+        "default": null
+      },
+      {
+        "name": "account_id",
+        "default": null
+      },
+      {
+        "name": "requester_id",
+        "default": null
+      },
+      {
+        "name": "recorded_by_operator_id",
+        "default": null
+      },
+      {
+        "name": "observed_at",
+        "default": null
+      },
+      {
+        "name": "review_state",
+        "default": null
+      },
+      {
+        "name": "review_reason",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      },
+      {
+        "name": "withdrawn_at",
+        "default": null
+      },
+      {
+        "name": "named_speaker",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "evidence_versions": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "evidence_id",
+        "default": null
+      },
+      {
+        "name": "version_number",
+        "default": null
+      },
+      {
+        "name": "wording",
+        "default": null
+      },
+      {
+        "name": "edited_by_operator_id",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "request_evidence_contributions": {
+    "columns": [
+      {
+        "name": "request_id",
+        "default": null
+      },
+      {
+        "name": "evidence_id",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "request_id",
+      "evidence_id"
+    ]
+  },
+  "request_evidence_links": {
+    "columns": [
+      {
+        "name": "request_id",
+        "default": null
+      },
+      {
+        "name": "evidence_id",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "stance",
+        "default": "'supporting'"
+      }
+    ],
+    "keys": [
+      "request_id",
+      "evidence_id"
+    ]
+  },
+  "request_tag_assignments": {
+    "columns": [
+      {
+        "name": "request_id",
+        "default": null
+      },
+      {
+        "name": "tag_id",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "request_id",
+      "tag_id"
+    ]
+  },
+  "request_vote_contributions": {
+    "columns": [
+      {
+        "name": "request_id",
+        "default": null
+      },
+      {
+        "name": "requester_id",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "request_id",
+      "requester_id"
+    ]
+  },
+  "request_comments": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "request_id",
+        "default": null
+      },
+      {
+        "name": "requester_id",
+        "default": null
+      },
+      {
+        "name": "operator_id",
+        "default": null
+      },
+      {
+        "name": "body",
+        "default": null
+      },
+      {
+        "name": "moderation_state",
+        "default": null
+      },
+      {
+        "name": "published_at",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      },
+      {
+        "name": "rejection_reason",
+        "default": null
+      },
+      {
+        "name": "edited_at",
+        "default": null
+      },
+      {
+        "name": "public_author_display_name",
+        "default": null
+      },
+      {
+        "name": "public_author_kind",
+        "default": null
+      },
+      {
+        "name": "origin_request_id",
+        "default": null
+      },
+      {
+        "name": "historical_private",
+        "default": "0"
+      },
+      {
+        "name": "historical_parent_id",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "request_merges": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "source_request_id",
+        "default": null
+      },
+      {
+        "name": "target_request_id",
+        "default": null
+      },
+      {
+        "name": "actor_operator_id",
+        "default": null
+      },
+      {
+        "name": "merged_at",
+        "default": null
+      },
+      {
+        "name": "unmerged_at",
+        "default": null
+      },
+      {
+        "name": "unmerged_by_operator_id",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
+  },
+  "request_merge_evidence_transfers": {
+    "columns": [
+      {
+        "name": "merge_id",
+        "default": null
+      },
+      {
+        "name": "evidence_id",
+        "default": null
+      },
+      {
+        "name": "target_was_linked",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "merge_id",
+      "evidence_id"
+    ]
+  },
+  "request_merge_vote_transfers": {
+    "columns": [
+      {
+        "name": "merge_id",
+        "default": null
+      },
+      {
+        "name": "requester_id",
+        "default": null
+      },
+      {
+        "name": "target_had_vote",
+        "default": null
+      },
+      {
+        "name": "source_created_at",
+        "default": null
+      },
+      {
+        "name": "source_updated_at",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "merge_id",
+      "requester_id"
+    ]
+  },
+  "request_merge_comment_transfers": {
+    "columns": [
+      {
+        "name": "merge_id",
+        "default": null
+      },
+      {
+        "name": "comment_id",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      }
+    ],
+    "keys": []
+  },
+  "request_vote_supporter_types": {
+    "columns": [
+      {
+        "name": "request_id",
+        "default": null
+      },
+      {
+        "name": "requester_id",
+        "default": null
+      },
+      {
+        "name": "supporter_type",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "request_id",
+      "requester_id"
+    ]
+  }
+}

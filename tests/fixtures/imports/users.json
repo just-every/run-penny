@@ -1,0 +1,26 @@
+{
+  "hasNextPage": false,
+  "users": [
+    {
+      "id": "user-0",
+      "name": "Zoë Rivera",
+      "created": "2024-07-08T09:10:11.000Z",
+      "email": "historical-0@example.test",
+      "isAdmin": false
+    },
+    {
+      "id": "user-1",
+      "name": "Kai 测试",
+      "created": "2024-07-08T09:10:11.000Z",
+      "email": "historical-1@example.test",
+      "isAdmin": false
+    },
+    {
+      "id": "user-2",
+      "name": "Historical customer",
+      "created": "2024-07-08T09:10:11.000Z",
+      "email": "historical-2@example.test",
+      "isAdmin": false
+    }
+  ]
+}

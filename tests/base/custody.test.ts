@@ -1,0 +1,36 @@
+import {applyD1Migrations,reset} from 'cloudflare:test'
+import {beforeEach,expect,inject,it} from 'vitest'
+import {env,owner,call} from './support'
+import {exportArchive} from '../../src/core/features/data/archive'
+beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
+it('[DATA-001 BASE-ACCESS-002] local product archive retains attribution and excludes transferable Base authority',async()=>{
+ await owner()
+ const before=await env.DB.prepare('SELECT * FROM oa_sessions').all()
+ const snapshot=await exportArchive(env.DB,env.FILES)
+ expect(Object.keys(snapshot.archive.tables).filter(name=>name.startsWith('oa_'))).toEqual([])
+ expect(snapshot.archive.tables).toHaveProperty('operators')
+ expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual(before.results)
+})
+
+it('[DATA-001 BASE-ACCESS-002] admitted Base operator can inspect and recover a locked maintenance operation without identity writes',async()=>{
+ const cookie=await owner()
+ expect((await call('/api/operator/moderation',undefined,cookie)).status).toBe(200)
+ const before=await env.DB.prepare('SELECT * FROM operators').all()
+ await env.DB.prepare("INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) VALUES('interrupted-export','export','pending','{}','2026-10-07','2026-10-07')").run()
+ await env.DB.prepare("UPDATE data_state SET phase='locked',lock_id='interrupted-export' WHERE singleton=1").run()
+ expect((await call('/api/operator/data/overview',undefined,cookie)).status).toBe(200)
+ expect((await call('/api/operator/moderation',undefined,cookie)).status).toBe(200)
+ expect((await env.DB.prepare('SELECT * FROM operators').all()).results).toEqual(before.results)
+ expect((await call('/api/auth/sign-out',{},cookie)).status).toBe(204)
+ expect((await call('/api/operator/data/overview',undefined,cookie)).status).toBe(401)
+})
+
+it('[DATA-001 BASE-ACCESS-002] recovery uses Base authority even when restored product data has no matching attribution',async()=>{
+ const cookie=await owner()
+ expect((await env.DB.prepare('SELECT * FROM operators').all()).results).toEqual([])
+ await env.DB.prepare("INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) VALUES('interrupted-export','export','pending','{}','2026-10-07','2026-10-07')").run()
+ await env.DB.prepare("UPDATE data_state SET phase='locked',lock_id='interrupted-export' WHERE singleton=1").run()
+ expect((await call('/app/data',undefined,{...cookie,Accept:'text/html'})).status).toBe(200)
+ expect((await call('/api/operator/data/operations/interrupted-export/abort-export',{confirmPriorRunnerStopped:true},cookie)).status).toBe(204)
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+})

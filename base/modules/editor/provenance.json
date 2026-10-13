@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "repository": "urn:git:commit:1ddd0b3a8da53bb739af8436d99955c864aef64f",
+  "revision": "1ddd0b3a8da53bb739af8436d99955c864aef64f",
+  "sourceDirectory": "widget",
+  "status": "At the recorded full Git revision, all eight source files are byte-for-byte identical to this module. Hashes describe this module; the private edition-authoring Base copy record binds the copied metadata to its Base origin path, full revision and file hashes.",
+  "sha256": {
+    "src/widget/editor-widget.ts": "6535e9598b742575c50ed5e6c2483579821d5df8ff036292c0b6ed0cb9954e3b",
+    "src/widget/editor-protocol.ts": "7c3bc495c9a8c9166f56597681d3a0d2cb87621070e2b20c9d64a438f6820adc",
+    "src/widget/editor-icons.ts": "29f323dccea8fff24d377e1765a30ccfca29898eeb7777a1fa00ea0d1909e951",
+    "src/widget/editor-surface.ts": "f0d692922abe6f9fe341eca3cc0872b1a0a52f0a9b87d0ad0829fd3fb6359efc",
+    "src/widget/live-edit-contracts.ts": "2577ccb77819532e18776174b8997fdb3da4b3e6ef20051081b8371694dd1358",
+    "src/widget/live-edit-dom.ts": "6c1b455d1fdadf989ea3fb104e666f78c896e568c13bd007adbe55fcae7b30b4",
+    "src/widget/live-edit-runtime.ts": "a448aebb74d9a504635fc4f96742928d979bde024ae79f2e7ff50002d0f1abbd",
+    "src/widget/visual-style.ts": "29f8f23c5347e699a0ff207b9d62cc80032562e7b8831bb4e0accb3eba052c10"
+  }
+}

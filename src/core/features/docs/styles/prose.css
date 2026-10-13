@@ -1,0 +1,42 @@
+/* DOCS-001. The article: a copper section eyebrow, the title in the landing's bold grotesque over its copper hand stroke
+   (headings at the face's own spacing, as on the landing, so no two glyphs touch),
+   then the running text on a 36em measure. Tables may run past the measure into the rest of the column before they scroll,
+   because their identifiers cannot wrap. */
+/* The head shrinks to its title, so the stroke never runs past a short one. */
+.penny-docs .docs-page-head { --title-size: clamp(40px, 4.45vw, 64px); width: fit-content; max-width: min(36em, 100%); margin-bottom: clamp(30px, 3.2vw, 44px); }
+.penny-docs .docs-eyebrow { margin: 0 0 clamp(10px, 1vw, 14px); color: var(--penny-docs-accent-text); font-size: 16px; font-weight: 700; letter-spacing: 0.14em; line-height: 1.2; text-transform: uppercase; }
+.penny-docs .docs-title { margin: 0; color: var(--penny-docs-ink); font-size: var(--title-size); font-weight: 800; letter-spacing: 0; line-height: 1.06; text-wrap: balance; overflow-wrap: anywhere; scroll-margin-top: 24px; }
+.penny-docs .docs-title-stroke { width: min(calc(var(--title-size) * 5.1), 100%); height: calc(var(--title-size) * 0.17); margin: calc(var(--title-size) * 0.16) 0 0 -0.1em; }
+
+.penny-docs .docs-prose { font-size: 1em; line-height: 1.7; color: var(--penny-docs-ink); overflow-wrap: break-word; }
+.penny-docs .docs-prose > :not(.docs-table) { max-width: 36em; }
+.penny-docs .docs-prose > .docs-table { width: fit-content; min-width: min(36em, 100%); }
+.penny-docs .docs-prose > p:first-child { font-size: 1.1em; line-height: 1.62; }
+.penny-docs .docs-prose :is(p, ul, ol, blockquote) { margin: 0 0 1.1em; }
+.penny-docs .docs-prose :is(ul, ol) { padding-left: 1.35em; }
+.penny-docs .docs-prose ul { list-style: disc; }
+.penny-docs .docs-prose ol { list-style: decimal; }
+.penny-docs .docs-prose li::marker { color: var(--penny-docs-accent); }
+.penny-docs .docs-prose ol > li::marker { font-weight: 700; }
+.penny-docs .docs-prose li + li { margin-top: 0.4em; }
+.penny-docs .docs-prose li > :is(ul, ol) { margin: 0.4em 0 0; }
+.penny-docs .docs-prose li > p { margin-bottom: 0.5em; }
+.penny-docs .docs-prose :is(h2, h3, h4, h5, h6) { color: var(--penny-docs-ink); scroll-margin-top: 24px; text-wrap: balance; }
+.penny-docs .docs-prose h2 { margin: 1.9em 0 0.55em; font-size: clamp(28px, 2.6vw, 38px); font-weight: 800; line-height: 1.12; letter-spacing: 0; }
+.penny-docs .docs-prose h3 { margin: 1.7em 0 0.45em; font-size: clamp(21px, 1.75vw, 25px); font-weight: 750; line-height: 1.25; letter-spacing: 0; }
+.penny-docs .docs-prose :is(h4, h5, h6) { margin: 1.5em 0 0.4em; font-size: 1.06em; font-weight: 700; line-height: 1.4; letter-spacing: 0; }
+.penny-docs .docs-prose > :first-child { margin-top: 0; }
+.penny-docs .docs-prose :is(strong, b) { font-weight: 700; }
+.penny-docs .docs-prose hr { height: 2px; margin: 2.4em 0; border: 0; border-radius: 2px; background: var(--penny-docs-rule); transform: rotate(-0.4deg); }
+
+/* Links in the text: ink, underlined in copper, the underline turning ink on hover. External links get an arrow. */
+.penny-docs .docs-prose a { color: var(--penny-docs-ink); text-decoration: underline 2px var(--penny-docs-accent); text-underline-offset: 4px; transition: text-decoration-color 0.18s; }
+.penny-docs .docs-prose a:hover { text-decoration-color: var(--penny-docs-ink); }
+.penny-docs .docs-prose a:is([href^="http:"], [href^="https:"])::after { content: "\2197" / ""; display: inline-block; margin-left: 0.12em; font-size: 0.8em; text-decoration: none; }
+
+/* Inline code: a chip of sand. */
+.penny-docs .docs-prose code { padding: 0.1em 0.36em; border-radius: 5px; background: var(--penny-docs-tint); color: var(--penny-docs-ink); font-family: var(--penny-docs-mono); font-size: 0.84em; letter-spacing: 0; overflow-wrap: anywhere; }
+
+/* Quotes that are not callouts. */
+.penny-docs .docs-prose blockquote { margin-left: 0; padding-left: 20px; border-left: 3px solid var(--penny-docs-accent); }
+.penny-docs .docs-prose blockquote > :last-child { margin-bottom: 0; }

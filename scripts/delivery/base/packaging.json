@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "project": {
+    "schema": 1,
+    "projectId": "just-every/penny",
+    "name": "Penny",
+    "license": "MIT",
+    "deployment": {
+      "target": "cloudflare-workers",
+      "artifactFile": "penny-worker-artifact.json"
+    },
+    "operations": {
+      "setup": "node scripts/delivery/setup-build.mjs",
+      "build": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && node scripts/rer.mjs build",
+      "verify": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && node scripts/rer.mjs verify",
+      "artifact": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && node scripts/build-delivery-artifact.mjs",
+      "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API/provider/signing keys are excluded from portable archives; reconfigure them explicitly. Imported/restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled."
+    },
+    "sourceRepository": "https://github.com/just-every/run-penny",
+    "verification": {
+      "sensitivePaths": [
+        "src/core/features/auth/**",
+        "src/core/features/integrations/**",
+        "src/core/features/data/**",
+        "src/core/features/imports/**",
+        "src/core/features/editor/**",
+        "migrations/core/**",
+        "src/server.ts",
+        "src/base/**",
+        "base/**",
+        "scripts/installer/**",
+        "scripts/base-onboarding/**",
+        "scripts/base-cli/**",
+        "scripts/rer.mjs",
+        "scripts/delivery/**",
+        "rer-setup.json",
+        ".github/workflows/rer-managed.yml"
+      ],
+      "migrationDirectories": [
+        "migrations/core"
+      ],
+      "guidanceFiles": [
+        "AGENTS.md",
+        "CONTRACT.md",
+        "OPERATIONS.md"
+      ],
+      "testPatterns": [
+        "tests/**/*.test.mjs",
+        "tests/**/*.test.ts",
+        "tests/browser/*.mjs"
+      ]
+    }
+  },
+  "managed": {
+    "workflowRef": "runeditrun/delivery/.github/workflows/trusted-build.yml@bf7a25abb44bec1457a7bc738ff63921d90fb52e",
+    "artifactFile": "penny-worker-artifact.json",
+    "buildProfile": "project",
+    "verificationProfiles": [
+      "full"
+    ],
+    "pnpmVersion": "10.12.4"
+  },
+  "setup": {
+    "manifestFile": "rer-setup.json"
+  },
+  "artifact": {
+    "specInputs": {
+      "publicVariableNames": [
+        "APP_ORIGIN",
+        "PENNY_ENVIRONMENT",
+        "WORKSPACE_TIMEZONE",
+        "OPERATOR_EMAIL",
+        "MAIL_PROVIDER",
+        "MAIL_FROM",
+        "SENDGRID_EVENT_PUBLIC_KEY",
+        "RER_OWNER_CLAIM_ISSUER",
+        "RER_OWNER_CLAIM_PUBLIC_KEYS",
+        "RER_INSTALLATION_ID",
+        "RER_MANAGEMENT_ORIGIN",
+        "RER_DEPLOY_SOURCE",
+        "RER_DEPLOY_FINGERPRINT",
+        "PORTAL_FRAME_ORIGINS",
+        "IDENTITY_PROVIDER"
+      ],
+      "secretNames": [
+        "AUTH_SECRET",
+        "SETUP_TOKEN"
+      ],
+      "optionalSecretNames": [
+        "SENDGRID_API_KEY",
+        "RESEND_API_KEY",
+        "RESEND_WEBHOOK_SECRET",
+        "PORTAL_IDENTITY_SECRET"
+      ],
+      "healthPath": "/health",
+      "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API/provider/signing keys are excluded from portable archives; reconfigure them explicitly. Imported/restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled.",
+      "providerEffects": [
+        "outbound-mail"
+      ],
+      "surfaces": {
+        "app": {
+          "path": "/signin",
+          "originVariable": "APP_ORIGIN",
+          "readiness": [
+            {
+              "path": "/health",
+              "statuses": [
+                200
+              ],
+              "pendingSetupStatuses": [
+                503
+              ]
+            }
+          ]
+        },
+        "page": {
+          "path": "/",
+          "originVariable": "APP_ORIGIN",
+          "readiness": [
+            {
+              "path": "/",
+              "statuses": [
+                200
+              ],
+              "pendingSetupStatuses": [
+                503
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

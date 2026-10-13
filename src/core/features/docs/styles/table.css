@@ -1,0 +1,22 @@
+/* DOCS-001. Tables: an ink rule under the header and pencil rules between rows; identifiers in sand chips. The wrapper
+   scrolls only when a table cannot fit. */
+.penny-docs .docs-table { max-width: 100%; margin: 1.4em 0 1.6em; overflow-x: auto; }
+.penny-docs .docs-table table { width: 100%; border-collapse: collapse; font-size: 15.5px; line-height: 1.55; }
+.penny-docs .docs-table :is(th, td) { padding: 11px 16px 11px 0; text-align: left; vertical-align: top; }
+.penny-docs .docs-table td:last-child { min-width: 14em; }
+/* Identifiers in cells keep whole: the column grows to the longest one, and only a table wider than the page scrolls. */
+.penny-docs .docs-table code { overflow-wrap: normal; }
+.penny-docs .docs-table th { color: var(--penny-docs-muted); font-size: 13px; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 2px solid var(--penny-docs-ink); }
+.penny-docs .docs-table td { border-bottom: 1px solid var(--penny-docs-rule); }
+.penny-docs .docs-table tr:last-child td { border-bottom: 0; }
+.penny-docs .docs-table:focus-visible { outline: 3px solid var(--penny-docs-accent-text); outline-offset: 4px; border-radius: 6px; }
+.penny-docs .docs-table .docs-align-left { text-align: left; }
+.penny-docs .docs-table .docs-align-center { text-align: center; }
+.penny-docs .docs-table .docs-align-right { text-align: right; }
+
+@media (max-width: 640px) {
+  /* On a phone the last column gives up its minimum; identifiers still keep whole, and a table they make too wide
+     scrolls inside its region. */
+  .penny-docs .docs-table td:last-child { min-width: 0; }
+  .penny-docs .docs-table :is(th, td) { padding-right: 10px; }
+}

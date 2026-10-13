@@ -1,0 +1,17 @@
+/* DOCS-001. Callouts ([!NOTE], [!TIP], [!IMPORTANT], [!WARNING], [!CAUTION]) are torn sand notes: the sheet behind, the
+   copper star stamp in the margin, the label in the landing's handwriting and the note's own text in the page's sans,
+   so it reads as easily as the rest. The marks come from the build (build/decorations.ts) and are decorative. */
+.penny-docs .docs-callout { position: relative; isolation: isolate; max-width: 36em; margin: 1.6em 0 1.8em; padding: 22px 30px 24px 96px; font-size: 0.96em; line-height: 1.62; }
+.penny-docs .docs-callout-sheet { position: absolute; z-index: -1; inset: -4px -6px -6px -4px; width: calc(100% + 10px); height: calc(100% + 10px); overflow: visible; transform: rotate(-0.6deg); filter: drop-shadow(0 6px 6px var(--penny-docs-shadow)); }
+.penny-docs .docs-callout-sheet .docs-sheet { fill: var(--penny-docs-sand); filter: url(#pl-sand); }
+.penny-docs .docs-stamp { position: absolute; top: 18px; left: 26px; width: 50px; height: 50px; overflow: visible; transform: rotate(-8deg); }
+.penny-docs .docs-stamp-disc { fill: var(--penny-docs-accent); filter: url(#pl-copper-small); }
+.penny-docs .docs-stamp .pl-stamp-star { stroke-width: 1.7; }
+.penny-docs .docs-prose .docs-callout-label { margin: 0 0 4px; font-family: var(--penny-docs-hand); font-size: 1.25em; line-height: 1.3; letter-spacing: 0.01em; text-decoration: underline 1.5px; text-underline-offset: 5px; }
+.penny-docs .docs-callout > p:last-child, .penny-docs .docs-callout > :last-child { margin-bottom: 0; }
+
+@media (max-width: 639px) {
+  .penny-docs .docs-callout { padding: 72px 20px 22px 22px; }
+  .penny-docs .docs-stamp { top: 14px; left: 18px; width: 44px; height: 44px; }
+  .penny-docs .docs-prose .docs-callout-label { position: absolute; top: 22px; left: 76px; }
+}

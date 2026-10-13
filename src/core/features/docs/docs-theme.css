@@ -1,0 +1,23 @@
+/* DOCS-001. The docs palette and type, in one place. The six tokens are the docs' brand inputs, set from Penny's shared
+   brand (src/core/ui/brand/tokens.css, carried by the same root as .penny-brand) so the docs and the landing read as one
+   site; the rest derive from them or are the brand's own. The docs styles (./styles) read only these tokens for colour
+   and font. Body text is ink on paper (16:1); small accent text uses the landing's darkened copper (5.2:1). */
+.penny-docs {
+  --penny-docs-ink: var(--ink);
+  --penny-docs-paper: var(--paper);
+  --penny-docs-accent: var(--copper);
+  --penny-docs-muted: var(--muted);
+  --penny-docs-line: var(--line);
+  --penny-docs-font: var(--sans);
+
+  /* Derived, or the brand's own. */
+  --penny-docs-accent-text: var(--copper-text);
+  --penny-docs-sand: var(--sand);
+  --penny-docs-card: color-mix(in srgb, var(--penny-docs-paper) 50%, #fff);
+  --penny-docs-rule: color-mix(in srgb, var(--penny-docs-line) 72%, var(--penny-docs-paper));
+  --penny-docs-tint: color-mix(in srgb, var(--penny-docs-sand) 72%, var(--penny-docs-paper));
+  --penny-docs-shadow: rgb(92 62 32 / 0.2);
+  --penny-docs-grain: var(--grain);
+  --penny-docs-hand: var(--hand);
+  --penny-docs-mono: var(--mono);
+}

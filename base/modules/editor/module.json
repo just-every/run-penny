@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "id": "editor",
+  "kind": "optional-source",
+  "entry": "src/index.ts",
+  "reactEntry": "src/react.tsx",
+  "sourceProvenance": "provenance.json",
+  "copy": [
+    "src",
+    "examples/config-response.ts"
+  ],
+  "requires": [
+    "native-owner-session",
+    "same-origin-build",
+    "registered-application-origin",
+    "management-frame-ancestors-header"
+  ],
+  "status": "Optional source module with native consumer checks in Base verify; adopter integration and stage acceptance remain separate"
+}

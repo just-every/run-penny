@@ -1,0 +1,370 @@
+{
+  "version": "penny.v1",
+  "operators": [
+    {
+      "id": "00000000000000000000000001",
+      "email": "aisha@example.test",
+      "displayName": "Aisha Khan"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "00000000000000000000000002",
+      "slug": "northstar-health",
+      "name": "Northstar Health",
+      "internalOwnerId": "00000000000000000000000001",
+      "revenueCents": 7200000,
+      "renewalDate": null,
+      "health": "security review blocker"
+    },
+    {
+      "id": "00000000000000000000000003",
+      "slug": "caldera-finance",
+      "name": "Caldera Finance",
+      "internalOwnerId": "00000000000000000000000001",
+      "revenueCents": 4800000,
+      "renewalDate": null,
+      "health": "renewal at risk"
+    },
+    {
+      "id": "00000000000000000000000004",
+      "slug": "brightwell",
+      "name": "Brightwell",
+      "internalOwnerId": "00000000000000000000000001",
+      "revenueCents": 6600000,
+      "renewalDate": null,
+      "health": "identity readiness gate"
+    },
+    {
+      "id": "00000000000000000000000005",
+      "slug": "studio-north",
+      "name": "Studio North",
+      "internalOwnerId": "00000000000000000000000001",
+      "revenueCents": null,
+      "renewalDate": null,
+      "health": "client handoff friction"
+    }
+  ],
+  "requesters": [
+    {
+      "id": "00000000000000000000000006",
+      "displayName": "Priya S.",
+      "addressId": "00000000000000000000000009",
+      "email": "priya.s@example.test",
+      "accountId": "00000000000000000000000002"
+    },
+    {
+      "id": "00000000000000000000000007",
+      "displayName": "Marin T.",
+      "addressId": "0000000000000000000000000A",
+      "email": "marin.t@example.test",
+      "accountId": "00000000000000000000000003"
+    },
+    {
+      "id": "00000000000000000000000008",
+      "displayName": "Mateo R.",
+      "addressId": "0000000000000000000000000B",
+      "email": "mateo.r@example.test",
+      "accountId": "00000000000000000000000005"
+    }
+  ],
+  "boards": [
+    {
+      "id": "0000000000000000000000000C",
+      "slug": "enterprise-identity",
+      "name": "Enterprise identity",
+      "visibility": "public",
+      "position": 1
+    },
+    {
+      "id": "0000000000000000000000000D",
+      "slug": "collaboration",
+      "name": "Collaboration",
+      "visibility": "public",
+      "position": 2
+    }
+  ],
+  "tags": [
+    { "id": "0000000000000000000000000E", "name": "Identity" },
+    { "id": "0000000000000000000000000F", "name": "Enterprise" },
+    { "id": "0000000000000000000000000G", "name": "Collaboration" }
+  ],
+  "evidence": [
+    {
+      "id": "0000000000000000000000000H",
+      "versionId": "0000000000000000000000000J",
+      "sourceType": "sales_call",
+      "sourceLabel": null,
+      "accountId": "00000000000000000000000002",
+      "requesterId": "00000000000000000000000006",
+      "recordedByOperatorId": "00000000000000000000000001",
+      "observedAt": "2026-08-04T09:00:00.000Z",
+      "reviewState": "reviewed",
+      "reviewReason": "Linked to the enterprise identity decision.",
+      "wording": "We cannot complete the security review without automated provisioning and deprovisioning.",
+      "tagIds": ["0000000000000000000000000E", "0000000000000000000000000F"]
+    },
+    {
+      "id": "0000000000000000000000000K",
+      "versionId": "0000000000000000000000000M",
+      "sourceType": "support_conversation",
+      "sourceLabel": null,
+      "accountId": "00000000000000000000000003",
+      "requesterId": "00000000000000000000000007",
+      "recordedByOperatorId": "00000000000000000000000001",
+      "observedAt": "2026-08-13T09:00:00.000Z",
+      "reviewState": "reviewed",
+      "reviewReason": "Linked to the enterprise identity decision.",
+      "wording": "Manual CSV changes are creating an audit burden for every role change.",
+      "tagIds": ["0000000000000000000000000E", "0000000000000000000000000F"]
+    },
+    {
+      "id": "0000000000000000000000000N",
+      "versionId": "0000000000000000000000000P",
+      "sourceType": "portal_request",
+      "sourceLabel": null,
+      "accountId": "00000000000000000000000005",
+      "requesterId": "00000000000000000000000008",
+      "recordedByOperatorId": "00000000000000000000000001",
+      "observedAt": "2026-08-18T09:00:00.000Z",
+      "reviewState": "unreviewed",
+      "reviewReason": null,
+      "wording": "We have to screenshot comments for every client handoff.",
+      "tagIds": ["0000000000000000000000000G"]
+    }
+  ],
+  "requests": [
+    {
+      "id": "0000000000000000000000000Q",
+      "slug": "scim-provisioning",
+      "boardId": "0000000000000000000000000C",
+      "authorRequesterId": "00000000000000000000000006",
+      "title": "SCIM provisioning",
+      "description": "Automated provisioning and deprovisioning are required to complete enterprise security reviews.",
+      "proposedSolution": null,
+      "impactStatement": "Security review blocker.",
+      "moderationState": "approved",
+      "publicState": "planned",
+      "publicTitle": "SCIM provisioning",
+      "publicDescription": "Automated provisioning and deprovisioning for enterprise identity.",
+      "publishedAt": "2026-08-05T09:00:00.000Z",
+      "declinedReason": null,
+      "withdrawnAt": null,
+      "evidenceIds": ["0000000000000000000000000H", "0000000000000000000000000K"],
+      "tagIds": ["0000000000000000000000000E", "0000000000000000000000000F"],
+      "voterIds": ["00000000000000000000000006", "00000000000000000000000007"],
+      "followerIds": ["00000000000000000000000006", "00000000000000000000000007"],
+      "comments": [
+        {
+          "id": "0000000000000000000000000R",
+          "requesterId": null,
+          "operatorId": "00000000000000000000000001",
+          "body": "We are planning this work and will share an update when the roadmap item is approved.",
+          "moderationState": "approved",
+          "publishedAt": "2026-08-20T09:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "id": "0000000000000000000000000S",
+      "slug": "shared-external-threads",
+      "boardId": "0000000000000000000000000D",
+      "authorRequesterId": "00000000000000000000000008",
+      "title": "Shared external threads",
+      "description": "Agency teams need a safe way to share report discussion with clients.",
+      "proposedSolution": null,
+      "impactStatement": "Client handoff friction.",
+      "moderationState": "approved",
+      "publicState": "open",
+      "publicTitle": "Shared external threads",
+      "publicDescription": "A safer client handoff for shared report discussion.",
+      "publishedAt": "2026-08-19T09:00:00.000Z",
+      "declinedReason": null,
+      "withdrawnAt": null,
+      "evidenceIds": ["0000000000000000000000000N"],
+      "tagIds": ["0000000000000000000000000G"],
+      "voterIds": ["00000000000000000000000008"],
+      "followerIds": ["00000000000000000000000008"],
+      "comments": []
+    }
+  ],
+  "decisions": [
+    {
+      "id": "00000000000000000000000010",
+      "slug": "decision-scim-q4",
+      "title": "Unblock enterprise identity rollout",
+      "question": "Which Q4 investment most improves enterprise expansion without delaying collaboration improvements?",
+      "state": "committed",
+      "ownerOperatorId": "00000000000000000000000001",
+      "confidence": "high",
+      "reviewAt": "2026-10-17T00:00:00.000Z",
+      "selectedCandidateBetId": "00000000000000000000000013",
+      "rationale": "It clears three near-term commercial gates and establishes the required identity primitives.",
+      "bets": [
+        {
+          "id": "00000000000000000000000013",
+          "title": "SCIM provisioning",
+          "summary": "Automated provisioning and deprovisioning for enterprise identity.",
+          "urgency": "Three near-term commercial gates.",
+          "deliveryShape": "4–5 weeks · identity foundation reused by SSO audit work",
+          "successMeasure": "Enterprise administrators can provision and deprovision users through their identity provider.",
+          "assumptions": "The identity foundation can be reused by SSO audit work.",
+          "counterEvidence": "Two accounts can use the existing CSV provisioning workaround through January.",
+          "accountIds": [
+            "00000000000000000000000002",
+            "00000000000000000000000003",
+            "00000000000000000000000004"
+          ],
+          "evidenceLinks": [
+            { "evidenceId": "0000000000000000000000000H", "stance": "supporting" },
+            { "evidenceId": "0000000000000000000000000K", "stance": "supporting" }
+          ]
+        },
+        {
+          "id": "00000000000000000000000014",
+          "title": "Shared external threads",
+          "summary": "Permissioned reporting threads that customers can join directly.",
+          "urgency": "Strong agency demand without a blocked renewal.",
+          "deliveryShape": "3–4 weeks · improves weekly active sharing, needs permissions design",
+          "successMeasure": "Agency teams can share report discussion with client collaborators.",
+          "assumptions": "A permissions model can be tested with five agency accounts.",
+          "counterEvidence": "No blocked renewal; demand is strongest among agency accounts.",
+          "accountIds": ["00000000000000000000000005"],
+          "evidenceLinks": [
+            { "evidenceId": "0000000000000000000000000N", "stance": "supporting" }
+          ]
+        }
+      ],
+      "revision": {
+        "id": "00000000000000000000000015",
+        "revisionNumber": 1,
+        "selectedCandidateBetId": "00000000000000000000000013",
+        "rationale": "It clears three near-term commercial gates and establishes the required identity primitives.",
+        "confidence": "high",
+        "reviewAt": "2026-10-17T00:00:00.000Z",
+        "noViableAlternativeReason": null,
+        "committedByOperatorId": "00000000000000000000000001",
+        "snapshots": [
+          {
+            "id": "00000000000000000000000016",
+            "evidenceId": "0000000000000000000000000H",
+            "evidenceVersionId": "0000000000000000000000000J",
+            "candidateBetId": "00000000000000000000000013",
+            "stance": "supporting"
+          },
+          {
+            "id": "00000000000000000000000017",
+            "evidenceId": "0000000000000000000000000K",
+            "evidenceVersionId": "0000000000000000000000000M",
+            "candidateBetId": "00000000000000000000000013",
+            "stance": "supporting"
+          },
+          {
+            "id": "00000000000000000000000018",
+            "evidenceId": "0000000000000000000000000N",
+            "evidenceVersionId": "0000000000000000000000000P",
+            "candidateBetId": "00000000000000000000000014",
+            "stance": "supporting"
+          }
+        ]
+      }
+    },
+    {
+      "id": "00000000000000000000000019",
+      "slug": "decision-csv-export",
+      "title": "CSV export for audit logs",
+      "question": "How should Penny make audit evidence portable for enterprise teams?",
+      "state": "review_due",
+      "ownerOperatorId": "00000000000000000000000001",
+      "confidence": "medium",
+      "reviewAt": "2026-08-28T00:00:00.000Z",
+      "selectedCandidateBetId": null,
+      "rationale": null,
+      "bets": []
+    }
+  ],
+  "roadmapItems": [
+    {
+      "id": "0000000000000000000000001A",
+      "slug": "scim-provisioning",
+      "decisionId": "00000000000000000000000010",
+      "candidateBetId": "00000000000000000000000013",
+      "title": "SCIM provisioning",
+      "summary": "Automated provisioning and deprovisioning for enterprise identity.",
+      "ownerOperatorId": "00000000000000000000000001",
+      "status": "planned",
+      "targetWindow": "Q4 2026",
+      "deliveryNotes": "Identity foundation reused by SSO audit work.",
+      "confidence": "high",
+      "transition": {
+        "id": "0000000000000000000000001B",
+        "fromStatus": "exploring",
+        "toStatus": "planned",
+        "reason": "Created from the committed enterprise identity decision.",
+        "actorOperatorId": "00000000000000000000000001"
+      }
+    },
+    {
+      "id": "0000000000000000000000001C",
+      "slug": "shared-external-threads",
+      "decisionId": "00000000000000000000000010",
+      "candidateBetId": "00000000000000000000000014",
+      "title": "Shared external threads",
+      "summary": "Permissioned reporting threads that customers can join directly.",
+      "ownerOperatorId": "00000000000000000000000001",
+      "status": "exploring",
+      "targetWindow": null,
+      "deliveryNotes": "Test the permissions model with agency accounts before the next review.",
+      "confidence": "medium",
+      "transition": {
+        "id": "0000000000000000000000001D",
+        "fromStatus": null,
+        "toStatus": "exploring",
+        "reason": "Retained as the declined alternative for the next planning review.",
+        "actorOperatorId": "00000000000000000000000001"
+      }
+    }
+  ],
+  "roadmapPublications": [
+    {
+      "id": "0000000000000000000000001G",
+      "roadmapItemId": "0000000000000000000000001A",
+      "publicTitle": "SCIM provisioning",
+      "publicSummary": "Automated provisioning and deprovisioning for enterprise identity.",
+      "approvedByOperatorId": "00000000000000000000000001",
+      "approvedAt": "2026-08-20T09:00:00.000Z",
+      "withdrawnAt": null
+    }
+  ],
+  "roadmapRequestMappings": [
+    {
+      "roadmapItemId": "0000000000000000000000001A",
+      "requestId": "0000000000000000000000000Q",
+      "approvedAt": "2026-08-20T09:00:00.000Z",
+      "withdrawnAt": null
+    }
+  ],
+  "releases": [
+    {
+      "id": "0000000000000000000000001E",
+      "slug": "release-scim-provisioning",
+      "state": "draft",
+      "currentVersionId": "0000000000000000000000001F",
+      "authorOperatorId": "00000000000000000000000001",
+      "publishedAt": null,
+      "version": {
+        "id": "0000000000000000000000001F",
+        "versionNumber": 1,
+        "title": "SCIM provisioning",
+        "releaseType": "new",
+        "body": "Admins can now provision and deprovision Penny users from Okta and Microsoft Entra ID. Set it up in Settings → Identity. This release addresses the provisioning requests many enterprise teams raised during security reviews.",
+        "publicationDate": null,
+        "setupUrl": null,
+        "outcomePrompt": "You asked for this on 4 August. Did this solve the problem?",
+        "subjectTagIds": ["0000000000000000000000000E", "0000000000000000000000000F"],
+        "isPortalCurrent": false
+      },
+      "targetRoadmapItemIds": ["0000000000000000000000001A"]
+    }
+  ]
+}

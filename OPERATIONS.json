@@ -1,0 +1,727 @@
+{
+  "version": 2,
+  "project": "just-every/penny",
+  "runtime": {
+    "requirements": [
+      {
+        "name": "node",
+        "version": "22.20.0"
+      },
+      {
+        "name": "pnpm",
+        "version": "10.12.4"
+      }
+    ]
+  },
+  "requiredEnvironment": [],
+  "commands": {
+    "verify": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "verify"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Run the complete Penny verification target through the bounded shared queue."
+    },
+    "doctor": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "doctor"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Read-only tool and local configuration diagnostics; no provisioning."
+    },
+    "data-export": {
+      "argv": [
+        "pnpm",
+        "run",
+        "data:export"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/data-command.mjs",
+        "scripts/data/commands.mjs",
+        "scripts/data/options.mjs",
+        "scripts/data/transport.mjs",
+        "scripts/data/private-files.mjs",
+        "scripts/data/errors.mjs",
+        "src/core/features/data/schema-inventory.json"
+      ],
+      "effects": "Downloads the complete bounded product archive and latest erasure journal over authenticated HTTPS, or loopback HTTP; requires explicit origin and an owner-only session file. No provider call."
+    },
+    "data-import": {
+      "argv": [
+        "pnpm",
+        "run",
+        "data:import"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/data-command.mjs",
+        "scripts/data/commands.mjs",
+        "scripts/data/options.mjs",
+        "scripts/data/transport.mjs",
+        "scripts/data/private-files.mjs",
+        "scripts/data/errors.mjs",
+        "src/core/features/data/schema-inventory.json"
+      ],
+      "effects": "Restores an archive into an empty isolated local installation with its latest erasure journal; preserves destination authority and holds archived mail. Hosted import remains refused."
+    },
+    "data-journal": {
+      "argv": [
+        "pnpm",
+        "run",
+        "data:journal"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/data-command.mjs",
+        "scripts/data/commands.mjs",
+        "scripts/data/options.mjs",
+        "scripts/data/transport.mjs",
+        "scripts/data/private-files.mjs",
+        "scripts/data/errors.mjs",
+        "src/core/features/data/schema-inventory.json"
+      ],
+      "effects": "Downloads the bounded erasure journal using current native operator authority; no private session is copied into it."
+    },
+    "data-erase": {
+      "argv": [
+        "pnpm",
+        "run",
+        "data:erase"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/data-command.mjs",
+        "scripts/data/commands.mjs",
+        "scripts/data/options.mjs",
+        "scripts/data/transport.mjs",
+        "scripts/data/private-files.mjs",
+        "scripts/data/errors.mjs",
+        "src/core/features/data/schema-inventory.json"
+      ],
+      "effects": "Applies an explicitly reviewed local erasure plan and saves the latest journal; hosted erasure remains refused."
+    },
+    "artifact-prepare": {
+      "argv": [
+        "pnpm",
+        "run",
+        "artifact:prepare"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/deployment/setup.mjs",
+        "base/modules/deploy-kit/prepare.mjs",
+        "base/modules/deploy-kit/validation.mjs",
+        "base/modules/deploy-kit/migrations.mjs"
+      ],
+      "effects": "Packages an already-built committed source into an absent external artifact without provider credentials or writes."
+    },
+    "artifact-deploy": {
+      "argv": [
+        "pnpm",
+        "run",
+        "artifact:deploy"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/deployment/cli.mjs",
+        "scripts/deployment/plan.mjs",
+        "base/modules/deploy-kit/provider.mjs",
+        "base/modules/deploy-kit/deploy.mjs",
+        "base/modules/deploy-kit/health.mjs",
+        "base/modules/deploy-kit/artifact.mjs",
+        "base/modules/deploy-kit/validation.mjs"
+      ],
+      "effects": "The disposable artifact controller reconciles explicitly scoped resources, exact hash-ledger migrations, upload and health with its private receipt."
+    },
+    "artifact-health": {
+      "argv": [
+        "pnpm",
+        "run",
+        "artifact:health"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/deployment/cli.mjs",
+        "scripts/deployment/plan.mjs",
+        "base/modules/deploy-kit/provider.mjs",
+        "base/modules/deploy-kit/deploy.mjs",
+        "base/modules/deploy-kit/health.mjs",
+        "base/modules/deploy-kit/artifact.mjs",
+        "base/modules/deploy-kit/validation.mjs"
+      ],
+      "effects": "Reads disposable controller identity, resource drift and health against its private receipt; no resource writes."
+    },
+    "setup": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "setup"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Build, apply migrations, preserve private settings and owner, capture local sign-in and stop the temporary app. No deployment or sample import."
+    },
+    "deploy": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "deploy"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Use persistent owner-account deploy.json policy and environment-specific private credentials/state; production is the default, named installs use preview runtime mode, and dry run builds and validates locally only."
+    },
+    "deploy-health": {
+      "argv": [
+        "pnpm",
+        "run",
+        "deploy:health"
+      ],
+      "inputs": [
+        "package.json",
+        "deploy.json",
+        "scripts/installer/owner-cli.mjs",
+        "scripts/installer/owner-settings.mjs",
+        "base/modules/deploy-kit/owner-cli.mjs",
+        "base/modules/deploy-kit/owner.mjs"
+      ],
+      "effects": "Read the selected environment's persistent owner-account deployment identity and health; production is the default. No local setup, provisioning or secret rotation."
+    },
+    "feedback-import": {
+      "argv": [
+        "pnpm",
+        "run",
+        "feedback:import"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/feedback-command.mjs",
+        "scripts/feedback/import.mjs",
+        "scripts/data/private-files.mjs",
+        "scripts/data/transport.mjs",
+        "docs/MOVE-IN.md"
+      ],
+      "effects": "Prepares private saved feedback files, previews explicit mappings, applies bounded native D1 history, or reads/resumes/undoes an actor-bound saved job. Network actions require an explicit HTTPS or loopback origin and owner-only operator session file; no live source acquisition or provider effects."
+    },
+    "saved-feedback-import": {
+      "argv": [
+        "pnpm",
+        "run",
+        "feedback:import"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/feedback-command.mjs",
+        "scripts/data/transport.mjs",
+        "docs/MOVE-IN.md"
+      ],
+      "effects": "Prepares or explicitly previews/applies/resumes/undoes saved feedback through current native operator authority and an owner-only session file. Persists bounded journal/original custody; no live acquisition, mail, webhook or publication effect."
+    },
+    "importer-status": {
+      "argv": [
+        "pnpm",
+        "run",
+        "feedback:status"
+      ],
+      "inputs": [
+        "package.json",
+        "scripts/feedback/status.mjs",
+        "importers.json",
+        "docs/MOVE-IN.md"
+      ],
+      "effects": "Validates the seed-local documented-format entry and resolves its exact shipped guide bytes without a provider request or global registry mutation."
+    },
+    "dev": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "dev"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Serve source with HMR on the requested loopback URL; health and ordinary sign-in gate readiness. Shared queue, registry and owned cleanup."
+    },
+    "preview": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "preview"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Serve fixed built Worker through the shared managed runtime, reusing canonical local data and owner."
+    },
+    "build": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "build"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Build real Worker and assets under shared private-settings custody."
+    },
+    "reset": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "reset"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Confirmed contained removal of canonical local state and generated settings; refuses active operations; preserves source, dependencies, exports and deployment receipts."
+    },
+    "export": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "export"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Export supported local domain data and original files with a separate mandatory erasure journal; remote archive commands remain data:export."
+    },
+    "import": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "import"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Restore a verified local archive and its latest sibling erasure journal into an empty destination; independently establish owner afterward; never sends effects."
+    },
+    "release": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "release"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Maintained Base release producer; requires explicit authorized release inputs."
+    },
+    "outbox": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "outbox"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Show local development outbox URL; optional ordinary sign-in request. Never a hosted mail sink."
+    },
+    "describe": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "describe"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Dependency-free actual CLI capability description."
+    },
+    "check": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "check"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Dependency-free first-party contract and copied-source inspection."
+    },
+    "install": {
+      "argv": [
+        "node",
+        "scripts/rer.mjs",
+        "install"
+      ],
+      "inputs": [
+        "scripts/rer.mjs",
+        "scripts/installer/local.mjs",
+        "rer-setup.json"
+      ],
+      "effects": "Install the pinned frozen dependency lockfile without setup."
+    }
+  },
+  "loops": [
+    {
+      "id": "local-signin-outbox",
+      "type": "worker",
+      "required": false,
+      "enabled": true
+    },
+    {
+      "id": "requester-notification-drain",
+      "type": "worker",
+      "required": false,
+      "enabled": false
+    }
+  ],
+  "documentation": {
+    "document": "OPERATIONS.md"
+  },
+  "acceptance": {
+    "document": "ACCEPTANCE.md"
+  },
+  "environmentSources": {},
+  "profiles": {
+    "local": {
+      "requiredEnvironment": [],
+      "environmentSources": {},
+      "loops": []
+    },
+    "runtime-sendgrid": {
+      "requiredEnvironment": [
+        "MAIL_PROVIDER",
+        "MAIL_FROM",
+        "AUTH_SECRET",
+        "OPERATOR_EMAIL",
+        "APP_ORIGIN",
+        "PENNY_ENVIRONMENT"
+      ],
+      "environmentSources": {
+        "AUTH_SECRET": "Generated installation authority; see OPERATIONS.md",
+        "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
+        "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
+        "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
+        "SENDGRID_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md",
+        "APP_ORIGIN": "Expected HTTPS application origin; see OPERATIONS.md",
+        "PENNY_ENVIRONMENT": "Explicit hosted runtime mode; see OPERATIONS.md"
+      },
+      "loops": [
+        {
+          "id": "operator-signin-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "sendgrid"
+        },
+        {
+          "id": "requester-notification-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "sendgrid"
+        },
+        {
+          "id": "requester-notification-drain",
+          "type": "worker",
+          "required": true,
+          "enabled": true
+        }
+      ]
+    },
+    "owner-sendgrid": {
+      "requiredEnvironment": [
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_API_TOKEN",
+        "OPERATOR_EMAIL",
+        "MAIL_PROVIDER",
+        "MAIL_FROM"
+      ],
+      "environmentSources": {
+        "CLOUDFLARE_ACCOUNT_ID": "Cloudflare dashboard account ID; see OPERATIONS.md",
+        "CLOUDFLARE_API_TOKEN": "Account-scoped Cloudflare API token; see OPERATIONS.md",
+        "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
+        "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
+        "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
+        "SENDGRID_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md"
+      },
+      "loops": [
+        {
+          "id": "operator-signin-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "sendgrid"
+        },
+        {
+          "id": "requester-notification-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "sendgrid"
+        },
+        {
+          "id": "requester-notification-drain",
+          "type": "worker",
+          "required": true,
+          "enabled": true
+        }
+      ]
+    },
+    "runtime-resend": {
+      "requiredEnvironment": [
+        "MAIL_PROVIDER",
+        "MAIL_FROM",
+        "AUTH_SECRET",
+        "OPERATOR_EMAIL",
+        "APP_ORIGIN",
+        "PENNY_ENVIRONMENT"
+      ],
+      "environmentSources": {
+        "AUTH_SECRET": "Generated installation authority; see OPERATIONS.md",
+        "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
+        "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
+        "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
+        "RESEND_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md",
+        "APP_ORIGIN": "Expected HTTPS application origin; see OPERATIONS.md",
+        "PENNY_ENVIRONMENT": "Explicit hosted runtime mode; see OPERATIONS.md"
+      },
+      "loops": [
+        {
+          "id": "operator-signin-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "resend"
+        },
+        {
+          "id": "requester-notification-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "resend"
+        },
+        {
+          "id": "requester-notification-drain",
+          "type": "worker",
+          "required": true,
+          "enabled": true
+        }
+      ]
+    },
+    "owner-resend": {
+      "requiredEnvironment": [
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_API_TOKEN",
+        "OPERATOR_EMAIL",
+        "MAIL_PROVIDER",
+        "MAIL_FROM"
+      ],
+      "environmentSources": {
+        "CLOUDFLARE_ACCOUNT_ID": "Cloudflare dashboard account ID; see OPERATIONS.md",
+        "CLOUDFLARE_API_TOKEN": "Account-scoped Cloudflare API token; see OPERATIONS.md",
+        "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
+        "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
+        "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
+        "RESEND_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md"
+      },
+      "loops": [
+        {
+          "id": "operator-signin-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "resend"
+        },
+        {
+          "id": "requester-notification-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "resend"
+        },
+        {
+          "id": "requester-notification-drain",
+          "type": "worker",
+          "required": true,
+          "enabled": true
+        }
+      ]
+    },
+    "owner-later": {
+      "requiredEnvironment": [
+        "CLOUDFLARE_ACCOUNT_ID",
+        "CLOUDFLARE_API_TOKEN",
+        "OPERATOR_EMAIL",
+        "MAIL_PROVIDER"
+      ],
+      "environmentSources": {
+        "CLOUDFLARE_ACCOUNT_ID": "Cloudflare dashboard account ID; see OPERATIONS.md",
+        "CLOUDFLARE_API_TOKEN": "Account-scoped Cloudflare API token; see OPERATIONS.md",
+        "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
+        "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md"
+      },
+      "loops": [
+        {
+          "id": "requester-notification-drain",
+          "type": "worker",
+          "required": true,
+          "enabled": true
+        }
+      ]
+    },
+    "artifact-prepare": {
+      "requiredEnvironment": [
+        "RER_DEPLOY_ARTIFACT",
+        "RER_DEPLOY_RUN_ID",
+        "RER_DEPLOY_RUN_ATTEMPT"
+      ],
+      "environmentSources": {
+        "RER_DEPLOY_ARTIFACT": "External artifact file path; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_RUN_ATTEMPT": "Controller run attempt; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_RUN_ID": "Controller run identity; see the artifact guide linked in OPERATIONS.md"
+      },
+      "loops": []
+    },
+    "artifact-sendgrid": {
+      "requiredEnvironment": [
+        "CF_THROWAWAY_ACCOUNT_ID",
+        "CF_THROWAWAY_API_TOKEN",
+        "RER_DEPLOY_ARTIFACT",
+        "RER_DEPLOY_ARTIFACT_SHA256",
+        "RER_DEPLOY_SOURCE_SHA",
+        "RER_DEPLOY_RUN_ID",
+        "RER_DEPLOY_RUN_ATTEMPT",
+        "RER_DEPLOY_RECEIPT",
+        "MAIL_PROVIDER",
+        "MAIL_FROM",
+        "OPERATOR_EMAIL"
+      ],
+      "environmentSources": {
+        "CF_THROWAWAY_ACCOUNT_ID": "Disposable controller account ID; see the artifact guide linked in OPERATIONS.md",
+        "CF_THROWAWAY_API_TOKEN": "Disposable controller scoped token; see the artifact guide linked in OPERATIONS.md",
+        "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
+        "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
+        "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
+        "RER_DEPLOY_ARTIFACT": "External artifact file path; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_ARTIFACT_SHA256": "Reviewed artifact digest; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_RECEIPT": "Private controller receipt path; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_RUN_ATTEMPT": "Controller run attempt; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_RUN_ID": "Controller run identity; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_SOURCE_SHA": "Full committed source revision; see the artifact guide linked in OPERATIONS.md",
+        "SENDGRID_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md"
+      },
+      "loops": [
+        {
+          "id": "operator-signin-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "sendgrid"
+        },
+        {
+          "id": "requester-notification-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "sendgrid"
+        },
+        {
+          "id": "requester-notification-drain",
+          "type": "worker",
+          "required": true,
+          "enabled": true
+        }
+      ]
+    },
+    "artifact-resend": {
+      "requiredEnvironment": [
+        "CF_THROWAWAY_ACCOUNT_ID",
+        "CF_THROWAWAY_API_TOKEN",
+        "RER_DEPLOY_ARTIFACT",
+        "RER_DEPLOY_ARTIFACT_SHA256",
+        "RER_DEPLOY_SOURCE_SHA",
+        "RER_DEPLOY_RUN_ID",
+        "RER_DEPLOY_RUN_ATTEMPT",
+        "RER_DEPLOY_RECEIPT",
+        "MAIL_PROVIDER",
+        "MAIL_FROM",
+        "OPERATOR_EMAIL"
+      ],
+      "environmentSources": {
+        "CF_THROWAWAY_ACCOUNT_ID": "Disposable controller account ID; see the artifact guide linked in OPERATIONS.md",
+        "CF_THROWAWAY_API_TOKEN": "Disposable controller scoped token; see the artifact guide linked in OPERATIONS.md",
+        "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
+        "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
+        "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
+        "RER_DEPLOY_ARTIFACT": "External artifact file path; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_ARTIFACT_SHA256": "Reviewed artifact digest; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_RECEIPT": "Private controller receipt path; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_RUN_ATTEMPT": "Controller run attempt; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_RUN_ID": "Controller run identity; see the artifact guide linked in OPERATIONS.md",
+        "RER_DEPLOY_SOURCE_SHA": "Full committed source revision; see the artifact guide linked in OPERATIONS.md",
+        "RESEND_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md"
+      },
+      "loops": [
+        {
+          "id": "operator-signin-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "resend"
+        },
+        {
+          "id": "requester-notification-mail",
+          "type": "mail",
+          "required": true,
+          "enabled": true,
+          "provider": "resend"
+        },
+        {
+          "id": "requester-notification-drain",
+          "type": "worker",
+          "required": true,
+          "enabled": true
+        }
+      ]
+    }
+  },
+  "seedContract": {
+    "version": 1,
+    "profile": "first-party",
+    "adapter": "scripts/installer/local.mjs"
+  }
+}

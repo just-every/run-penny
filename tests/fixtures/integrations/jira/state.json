@@ -1,0 +1,1 @@
+{"webhookEvent":"jira:issue_updated","timestamp":1791549000000,"issue":{"id":"10042","key":"PEN-42","fields":{"project":{"id":"10000"},"updated":"2026-10-09T12:30:00.000+0000","status":{"name":"In Progress"}}}}

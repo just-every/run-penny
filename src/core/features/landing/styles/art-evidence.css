@@ -1,0 +1,15 @@
+/* The decision sheet and the clipped evidence beside it. */
+.penny-landing .pl-sheet .pl-paper { gap: calc(24 * var(--u)); padding: calc(28 * var(--u)) calc(30 * var(--u)) calc(26 * var(--u)); }
+.penny-landing .pl-option { display: flex; flex-direction: column; gap: calc(12 * var(--u)); }
+.penny-landing .pl-option-head { display: flex; align-items: center; gap: calc(11 * var(--u)); }
+.penny-landing .pl-option-mark { display: grid; flex: none; place-items: center; width: max(18px, calc(30 * var(--u))); aspect-ratio: 1; border: max(1px, calc(1.8 * var(--u))) solid var(--ink); border-radius: 50%; font-weight: 700; line-height: 1; }
+.penny-landing .pl-option .pl-lines { gap: calc(9 * var(--u)); }
+/* The ring's box is the chosen option's box shifted left by the ring's overshoot (in drawing units), so it clears the A mark on
+   the left and stops short of the clipped notes on the right. */
+.penny-landing .pl-option--chosen { position: relative; }
+.penny-landing .pl-option-ring { position: absolute; left: calc(-27.8 * var(--u)); top: calc(-18 * var(--u)); width: calc(100% - 2 * var(--u)); height: calc(100% + 48.4 * var(--u)); overflow: visible; pointer-events: none; }
+.penny-landing .pl-why { margin-top: auto; padding-top: calc(16 * var(--u)); border-top: max(1px, calc(1.5 * var(--u))) dashed #cbc2b2; }
+/* Each clipped label stays one line; on a narrow stage its paper widens to the text's readable minimum. */
+.penny-landing .pl-clip { min-width: max-content; }
+.penny-landing .pl-clip .pl-paper { flex-direction: row; align-items: center; gap: calc(10 * var(--u)); padding: 0 calc(16 * var(--u)) 0 calc(34 * var(--u)); white-space: nowrap; }
+.penny-landing .pl-clip-pin { position: absolute; left: calc(-4 * var(--u)); top: calc(-12 * var(--u)); color: #6c675f; transform: rotate(-24deg); }

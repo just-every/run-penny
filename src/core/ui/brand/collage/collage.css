@@ -1,0 +1,54 @@
+/* The shared collage kit's own marks: the zero-size holder of the paper filters, ink strokes, the stamp's star and
+   the copper hand stroke. Inside a collage drawing `--u` is one drawing unit in CSS pixels; elsewhere it is 1px, so a mark
+   drawn outside a stage keeps the same weight floor. Strokes keep a steady weight on screen (non-scaling) with a floor. */
+.penny-brand .pl-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.penny-brand .pl-ink { fill: none; stroke: var(--ink); stroke-width: max(1.4px, calc(2.5 * var(--u, 1px))); stroke-linecap: round; stroke-linejoin: round; }
+.penny-brand .pl-ink.pl-ink--halo { stroke: var(--paper); stroke-width: max(3.4px, calc(6 * var(--u, 1px))); }
+.penny-brand .pl-stamp-star { fill: #fbf1e4; stroke: #fbf1e4; stroke-linejoin: round; }
+.penny-brand .pl-stroke { display: block; overflow: visible; fill: var(--copper); }
+
+/* The collage stage, notes, plane and mountain, shared by the landing and the app (any root wearing .penny-collage). A
+   stage is a box of its drawing's aspect ratio; `--u` is one drawing unit in CSS pixels, so SVG layers (in the same units
+   through their viewBox) and paper notes (placed in --u) line up at every size. Text and marks inside notes scale with the
+   stage but never drop below 11px, so the drawings stay legible on a phone; a note's `w` × `h` is its least size, and on a
+   narrow stage the paper grows to hold that text instead of cutting it off. */
+.penny-collage .pl-drawing { position: relative; width: 100%; aspect-ratio: var(--vbw) / var(--vbh); container-type: inline-size; }
+.penny-collage .pl-drawing-art { position: absolute; inset: 0; --u: calc(100cqw / var(--vbw)); }
+.penny-collage .pl-layer { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+/* Paper notes: rotated, shadowed, grained and cut by hand. */
+.penny-collage .pl-note { position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); display: flex; flex-direction: column; width: calc(var(--w) * var(--u)); min-height: calc(var(--h) * var(--u)); transform: rotate(calc(var(--r) * 1deg)); filter: drop-shadow(0 calc(5 * var(--u)) calc(6 * var(--u)) rgb(92 62 32 / 0.17)) drop-shadow(0 1px 1px rgb(92 62 32 / 0.2)); }
+.penny-collage .pl-paper { display: flex; flex: 1; flex-direction: column; width: 100%; overflow: hidden; background: var(--grain) repeat, radial-gradient(120% 120% at 30% 20%, transparent 55%, rgb(140 110 70 / 0.08)), var(--note-bg); background-size: 140px, auto, auto; color: var(--note-ink, var(--ink)); }
+.penny-collage .pl-stack { position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); display: flex; flex-direction: column; align-items: flex-start; }
+.penny-collage .pl-stack > .pl-note { position: relative; }
+.penny-collage .pl-note--card { --note-bg: #f8f5ee; }
+.penny-collage .pl-note--cream { --note-bg: #f7efe1; }
+.penny-collage .pl-note--sand { --note-bg: #f0dbb8; }
+.penny-collage .pl-note--charcoal { --note-bg: #2f2d2a; --note-ink: #f4ead9; }
+.penny-collage .pl-cut-a { clip-path: polygon(0.4% 0.9%, 31% 0.1%, 63% 0.7%, 99.5% 0, 100% 34%, 99.4% 68%, 99.8% 99.4%, 67% 100%, 34% 99.2%, 0.2% 100%, 0.7% 66%, 0 31%); }
+.penny-collage .pl-cut-b { clip-path: polygon(0 2%, 18% 0.6%, 41% 2.2%, 66% 0, 88% 1.6%, 100% 0.4%, 99% 38%, 100% 72%, 98.8% 98%, 76% 100%, 52% 98.2%, 27% 100%, 1.2% 98.6%, 0.4% 64%, 1% 30%); }
+.penny-collage .pl-cut-c { clip-path: polygon(1% 0.4%, 24% 1.8%, 50% 0, 77% 1.4%, 99.2% 0.2%, 100% 30%, 98.8% 61%, 100% 98.4%, 74% 99.6%, 47% 98%, 22% 100%, 0 99%, 1.4% 70%, 0.2% 36%); }
+.penny-collage .pl-place { position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); transform: rotate(calc(var(--r) * 1deg)); }
+.penny-collage .pl-t { display: block; font-size: max(11px, calc(var(--fs) * var(--u))); line-height: 1.22; }
+.penny-collage .pl-t--hand { font-family: var(--hand); letter-spacing: 0.012em; line-height: 1.28; text-wrap: balance; }
+.penny-collage .pl-lines { display: flex; flex-direction: column; gap: calc(10 * var(--u)); width: 100%; }
+.penny-collage .pl-lines i { display: block; width: var(--lw); height: max(2px, calc(4.5 * var(--u))); border-radius: 99px; background: #beb8ad; transform: rotate(-0.4deg); }
+.penny-collage .pl-lines i:nth-child(2n) { background: #c8c2b7; transform: rotate(0.3deg); }
+
+/* A note's authored lines; a signed note's last one has a short inked sweep under its end. */
+.penny-collage .pl-written-line { display: block; }
+.penny-collage .pl-signed-end { position: relative; }
+.penny-collage .pl-signoff { position: absolute; right: 0; top: 98%; width: 58%; height: 0.42em; overflow: visible; }
+.penny-collage .pl-signoff .pl-ink { stroke-width: max(1.2px, calc(2.2 * var(--u))); }
+
+/* The paper plane and the pencilled mountain. */
+.penny-collage .pl-plane-wing, .penny-collage .pl-plane-keel { stroke: var(--ink); stroke-width: max(1.4px, calc(2.4 * var(--u))); stroke-linejoin: round; }
+.penny-collage .pl-plane-wing { fill: #fbf8f1; }
+.penny-collage .pl-plane-keel { fill: #e6dccb; }
+.penny-collage .pl-hatch { fill: none; stroke: #5d5248; stroke-width: 1.2; stroke-linecap: round; opacity: 0.45; }
+.penny-collage .pl-shade { fill: #4f453b; opacity: 0.85; }
+.penny-collage .pl-ridge { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.6; }
+.penny-collage .pl-trail { fill: none; stroke: #efe2cb; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
+.penny-collage .pl-flag { fill: #fbf7ef; stroke: var(--ink); stroke-width: max(1.2px, calc(2 * var(--u))); stroke-linejoin: round; }
+.penny-collage .pl-crumple { stroke: var(--ink); stroke-width: max(1.2px, calc(2 * var(--u))); stroke-linejoin: round; }
+.penny-collage .pl-crumple-fold { fill: none; stroke: #6f6658; stroke-width: max(0.8px, calc(1.2 * var(--u))); stroke-linecap: round; opacity: 0.75; }

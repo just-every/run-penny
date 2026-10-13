@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Local editor management fixture</title>
+<style>body{margin:0;background:transparent;color:#17243b;font:16px system-ui}main{margin:8px;padding:16px;background:white;border:1px solid #637088;border-radius:12px;box-sizing:border-box;width:min(350px,calc(100vw - 16px))}button,textarea{font:inherit;max-width:100%}textarea{display:block;width:100%;box-sizing:border-box;margin:8px 0}button{padding:10px}h1{font-size:20px}</style></head><body>
+<main><h1>Local management fixture</h1><p>This test service saves a local source edit.</p><button id="capture">Review public page</button><label for="replacement">Heading text</label><textarea id="replacement"></textarea><button id="apply" disabled>Apply live edit</button><button id="save" disabled>Save local source</button><p id="status" role="status">Waiting for native editor</p></main>
+<script>
+const query=new URL(location.href).searchParams,parentOrigin=query.get('parentOrigin'),installationId=query.get('installation');let sessionId,context,snapshot;
+const status=document.querySelector('#status');
+function send(type,payload={}){parent.postMessage({...payload,protocol:'rer-editor',version:1,installationId,type,...(sessionId?{sessionId}:{})},parentOrigin)}
+function regions(){send('interactive-regions',{viewport:{width:innerWidth,height:innerHeight},regions:[{x:8,y:8,width:Math.min(350,innerWidth-16),height:document.querySelector('main').getBoundingClientRect().height}]})}
+addEventListener('resize',regions);
+addEventListener('message',async e=>{
+ if(e.source!==parent||e.origin!==parentOrigin)return;const m=e.data;
+ if(m.protocol!=='rer-editor'||m.version!==1||m.installationId!==installationId)return;
+ if(m.type==='protocol-offer'){sessionId=m.sessionId;send('protocol-accept');return}
+ if(m.sessionId!==sessionId)return;
+ if(m.type==='protocol-connected'||m.type==='editor-visibility'){regions();status.textContent='Connected to native owner editor'}
+ if(m.type==='page-context'){context=m.context;document.querySelector('#apply').disabled=false;status.textContent='Public page reviewed'}
+ if(m.type==='live-edit-result'){status.textContent=m.status==='applied'?'Live edit applied':'Live edit conflict';document.querySelector('#save').disabled=m.status!=='applied'}
+ if(m.type==='submit-draft'&&snapshot)await save();
+});
+async function save(){
+ const compiled={revision:snapshot.revision,edits:snapshot.edits.map(({parentOrigin,...edit})=>edit)};
+ const result=await fetch('/source',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(compiled)});
+ status.textContent=result.ok?'Saved to local source':'Source save failed';regions();
+}
+document.querySelector('#save').onclick=save;
+document.querySelector('#capture').onclick=()=>{send('set-context-sharing',{enabled:true});send('capture-context',{requestId:'native-review'})};
+document.querySelector('#apply').onclick=()=>{
+ const {text:beforeText,...target}=context.elements.find(element=>element.tag==='h1');
+ snapshot={revision:1,edits:[{id:'native-heading',revision:1,parentOrigin,path:context.path,target:{...target,beforeText},change:{text:document.querySelector('#replacement').value}}]};
+ send('live-edits',{snapshot});
+};
+send('ready');
+</script></body></html>

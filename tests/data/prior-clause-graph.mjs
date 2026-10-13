@@ -1,0 +1,47 @@
+// A populated pre-clause schema fixture. No feature implementation or provider is replaced.
+export const priorStamp='2026-10-01T00:00:00.000Z'
+export const originalBytes=new Uint8Array([0,255,137,80,78,71,31,10])
+export async function priorClauseGraph(db,bucket,operatorId) {
+ const stamped=row=>({...row,created_at:priorStamp,updated_at:priorStamp})
+ const insert=async(table,row)=>{const keys=Object.keys(row);await db.prepare(`INSERT INTO ${table}(${keys.join(',')}) VALUES(${keys.map(()=>'?').join(',')})`).bind(...Object.values(row)).run()}
+ await insert('requesters',stamped({id:'prior-person',display_name:'Historical requester'}))
+ await insert('requester_addresses',stamped({id:'prior-address',requester_id:'prior-person',email:'prior-person@example.test',verified_at:priorStamp}))
+ await insert('native_requester_sessions',stamped({id:'prior-requester-session',requester_id:'prior-person',address_id:'prior-address',token_hash:'prior-requester-token-hash',expires_at:'2099-01-01T00:00:00.000Z',last_used_at:priorStamp}))
+ await insert('accounts',stamped({id:'prior-account',slug:'prior-account',name:'Historical account',internal_owner_id:operatorId,revenue_cents:123456,renewal_date:'2027-02-01',health:'healthy'}))
+ await insert('requester_account_links',{requester_id:'prior-person',account_id:'prior-account',created_at:priorStamp})
+ await insert('boards',stamped({id:'prior-board',name:'Historical board',slug:'prior-board',visibility:'public',position:0}))
+ await insert('tags',stamped({id:'prior-tag',name:'Historical improvement'}))
+ await insert('requests',stamped({id:'prior-request',slug:'prior-request',board_id:'prior-board',author_requester_id:'prior-person',title:'Historical request',description:'Original private request',moderation_state:'approved',public_state:'shipped',public_title:'Published request',public_description:'Published problem',published_at:priorStamp}))
+ await insert('request_follows',stamped({request_id:'prior-request',requester_id:'prior-person',permission_granted_at:priorStamp}))
+ await insert('requester_update_permissions',stamped({id:'prior-permission',requester_id:'prior-person',requester_address_id:'prior-address',request_id:'prior-request',source:'follow',granted_at:priorStamp}))
+ await insert('evidence_items',stamped({id:'prior-evidence',source_type:'interview',source_label:'Historical interview',named_speaker:'Historical requester',account_id:'prior-account',requester_id:'prior-person',recorded_by_operator_id:operatorId,observed_at:priorStamp,review_state:'reviewed',review_reason:'Reviewed before upgrade'}))
+ await insert('evidence_versions',stamped({id:'prior-evidence-version',evidence_id:'prior-evidence',version_number:1,wording:'Original evidence wording',edited_by_operator_id:operatorId}))
+ await insert('request_evidence_links',{request_id:'prior-request',evidence_id:'prior-evidence',stance:'supporting',created_at:priorStamp})
+ await insert('attachments',stamped({id:'prior-attachment',evidence_id:'prior-evidence',storage_key:'prior-original',original_filename:'Historical.bin',content_type:'application/octet-stream',byte_size:originalBytes.length,public_state:'operator_only'}))
+ await bucket.put('prior-original',originalBytes,{httpMetadata:{contentType:'application/octet-stream'}})
+ await insert('decisions',stamped({id:'prior-decision',slug:'prior-decision',title:'Historical commitment',question:'Which improvement?',state:'committed',owner_operator_id:operatorId,confidence:'high',review_at:'2099-01-01',selected_candidate_bet_id:'prior-selected',rationale:'Original commitment rationale'}))
+ for(const [id,title] of [['prior-selected','Selected approach'],['prior-declined','Declined approach']]){
+  await insert('candidate_bets',stamped({id,decision_id:'prior-decision',title,summary:title+' description',urgency:'High',delivery_shape:'Small release',success_measure:'Adoption'}))
+  await insert('candidate_bet_evidence_links',{candidate_bet_id:id,evidence_id:'prior-evidence',stance:'supporting',created_at:priorStamp})
+ }
+ await insert('roadmap_items',stamped({id:'prior-item',slug:'prior-item',decision_id:'prior-decision',candidate_bet_id:'prior-selected',title:'Historical roadmap item',summary:'Private summary',status:'shipped',owner_operator_id:operatorId}))
+ await insert('decision_revisions',stamped({id:'prior-revision',decision_id:'prior-decision',revision_number:1,selected_candidate_bet_id:'prior-selected',rationale:'Original commitment rationale',confidence:'high',review_at:'2099-01-01',committed_by_operator_id:operatorId,owner_operator_id:operatorId,roadmap_item_id:'prior-item'}))
+ await insert('decision_evidence_snapshots',stamped({id:'prior-evidence-snapshot',decision_revision_id:'prior-revision',evidence_id:'prior-evidence',evidence_version_id:'prior-evidence-version',candidate_bet_id:'prior-selected',stance:'supporting'}))
+ for(const [id,disposition] of [['prior-selected','selected'],['prior-declined','declined']])await insert('decision_bet_snapshots',stamped({id:id+'-snapshot',decision_revision_id:'prior-revision',candidate_bet_id:id,disposition,title:disposition+' at commitment',summary:'Historical comparison',urgency:'High',delivery_shape:'Small release',success_measure:'Adoption',affected_requester_count:1,affected_account_count:1,supporting_count:1,latest_support_at:priorStamp,contradicting_count:0}))
+ await insert('roadmap_publications',stamped({id:'prior-publication',roadmap_item_id:'prior-item',public_title:'Released improvement',public_summary:'Safe summary',public_slug:'prior-public-item',approved_by_operator_id:operatorId,approved_at:priorStamp,board_id:'prior-board'}))
+ await insert('roadmap_request_mappings',stamped({roadmap_item_id:'prior-item',request_id:'prior-request',approved_at:priorStamp}))
+ await insert('roadmap_evidence_links',stamped({roadmap_item_id:'prior-item',evidence_id:'prior-evidence'}))
+ await insert('releases',stamped({id:'prior-release',slug:'prior-release',state:'published',current_version_id:'prior-release-version',author_operator_id:operatorId,published_at:priorStamp}))
+ await insert('release_versions',stamped({id:'prior-release-version',release_id:'prior-release',version_number:1,title:'Original release title',release_type:'improved',body:'Original release body',publication_date:'2026-10-01',outcome_prompt:'Did this help?',subject_tags_json:'["prior-tag"]',is_portal_current:1,author_name:'Owner',tag_names_json:'["Historical improvement"]',publication_claim:'prior-claim'}))
+ await insert('release_targets',stamped({release_id:'prior-release',roadmap_item_id:'prior-item',decision_id:'prior-decision',approval_id:'prior-publication',approval_at:priorStamp,approval_updated_at:priorStamp,public_title:'Released improvement',public_summary:'Safe summary',public_slug:'prior-public-item'}))
+ await insert('release_draft_mappings',stamped({release_id:'prior-release',roadmap_item_id:'prior-item',request_id:'prior-request',approval_at:priorStamp,approval_updated_at:priorStamp}))
+ await insert('release_target_snapshots',stamped({version_id:'prior-release-version',roadmap_item_id:'prior-item',decision_id:'prior-decision',request_id:'prior-request'}))
+ await insert('release_recipient_snapshots',stamped({id:'prior-recipient',release_version_id:'prior-release-version',requester_id:'prior-person',requester_address_id:'prior-address',request_id:'prior-request',recipient_email:'prior-person@example.test',verification_epoch:0}))
+ await insert('release_recipient_contexts',stamped({snapshot_id:'prior-recipient',request_id:'prior-request',roadmap_item_id:'prior-item',title:'Published request',slug:'prior-request'}))
+ await db.prepare('UPDATE release_versions SET snapshot_sealed_at=? WHERE id=?').bind(priorStamp,'prior-release-version').run()
+ await insert('notification_outbox',stamped({id:'prior-delivery',event_type:'release_version',subject_id:'prior-release-version',event_version:1,requester_id:'prior-person',dedupe_key:'prior-release-delivery',payload_json:'{}',delivery_state:'delivered',available_at:priorStamp,address_id:'prior-address',release_snapshot_id:'prior-recipient',provider:'sendgrid',provider_message_id:'historical-provider-receipt',accepted_at:priorStamp,delivered_at:priorStamp,attempt_count:1}))
+ await insert('notification_outbox_attempts',stamped({id:'prior-delivery-attempt',outbox_id:'prior-delivery',provider:'sendgrid',state:'delivered',provider_message_id:'historical-provider-receipt',recipient_email:'prior-person@example.test',recipient_verification_epoch:0}))
+ await insert('data_tombstones',{epoch:1,table_name:'evidence_items',key_hash:'a'.repeat(64)})
+ await db.prepare('UPDATE data_state SET epoch=1').run()
+ return {insert,stamped}
+}

@@ -1,0 +1,7 @@
+/* The closing band: the promise once more, centred, with the paper plane coming in to land beside it. */
+.penny-landing .pl-closing { position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; max-width: 1440px; margin: 0 auto; padding: clamp(84px, 9vw, 150px) var(--gutter) clamp(76px, 8vw, 128px); text-align: center; }
+.penny-landing .pl-closing-title { max-width: 11em; font-size: clamp(40px, 5vw, 76px); }
+.penny-landing .pl-actions--center { justify-content: center; margin-top: clamp(40px, 3.4vw, 54px); }
+.penny-landing .pl-closing-art { position: absolute; inset: 0; z-index: -1; pointer-events: none; --u: 1px; }
+.penny-landing .pl-closing-left { position: absolute; top: 50%; left: max(0px, calc(var(--gutter) - 40px)); width: clamp(130px, 20vw, 300px); transform: translateY(-46%); }
+.penny-landing .pl-closing-right { position: absolute; top: 50%; right: max(0px, calc(var(--gutter) - 30px)); width: clamp(150px, 24vw, 360px); transform: translateY(-40%); }

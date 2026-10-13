@@ -1,0 +1,13 @@
+/* The locked card of private context and its note. */
+.penny-landing .pl-vault .pl-paper { flex-direction: row; gap: calc(22 * var(--u)); padding: calc(30 * var(--u)) calc(26 * var(--u)) calc(28 * var(--u)); }
+.penny-landing .pl-fields { display: flex; flex: 1; flex-direction: column; justify-content: space-between; min-width: 0; }
+.penny-landing .pl-field { display: flex; flex-direction: column; gap: calc(8 * var(--u)); color: #3d3f42; }
+.penny-landing .pl-field .pl-lines { gap: calc(6 * var(--u)); }
+.penny-landing .pl-field .pl-lines i { height: max(2px, calc(3 * var(--u))); }
+/* The card's small copper seal, centred just inside its lower-left corner so it overlaps both edges, clear of the fields. */
+.penny-landing .pl-vault-seal { position: absolute; left: calc(-12 * var(--u)); bottom: calc(-13 * var(--u)); width: max(18px, calc(40 * var(--u))); height: auto; overflow: visible; rotate: -12deg; }
+.penny-landing .pl-privacy-note .pl-paper { justify-content: center; padding: calc(14 * var(--u)) calc(20 * var(--u)); }
+/* On the narrowest drawings the fields keep their readable minimum and reach the note, so the note steps right to clear them. */
+@container (max-width: 340px) {
+  .penny-landing .pl-privacy-note { translate: calc(18 * var(--u)) calc(6 * var(--u)); }
+}

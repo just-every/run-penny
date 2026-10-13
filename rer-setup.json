@@ -1,0 +1,249 @@
+{
+  "schema": 1,
+  "title": "Set up Penny",
+  "groups": [
+    {
+      "id": "workspace",
+      "label": "Your workspace"
+    },
+    {
+      "id": "mail",
+      "label": "Hosted email",
+      "help": "Local sign-in uses the private development outbox. Hosted email requires your selected provider and verified sender; set up later keeps email sign-in unavailable."
+    },
+    {
+      "id": "authority",
+      "label": "Installation authority"
+    },
+    {
+      "id": "identity",
+      "label": "Optional identity provider",
+      "help": "An identity provider install adds sign-in through it; leave empty to keep email links."
+    },
+    {
+      "id": "connection",
+      "label": "Optional platform connection",
+      "help": "Use only installation identity and public verification settings supplied through trusted platform setup."
+    },
+    {
+      "id": "host",
+      "label": "Optional host sign-in",
+      "help": "The host server signs requester claims. Signing keys stay server-side; frame origins restrict the parent application."
+    }
+  ],
+  "fields": [
+    {
+      "name": "OPERATOR_EMAIL",
+      "label": "Owner email",
+      "kind": "email",
+      "required": true,
+      "prefill": "account-email",
+      "group": "workspace"
+    },
+    {
+      "name": "APP_ORIGIN",
+      "label": "Application address",
+      "kind": "url",
+      "runtimeEditable": false,
+      "group": "workspace",
+      "help": "Your hosting setup supplies its HTTPS origin; local setup keeps the saved loopback origin."
+    },
+    {
+      "name": "WORKSPACE_TIMEZONE",
+      "label": "Workspace timezone",
+      "kind": "timezone",
+      "default": "UTC",
+      "group": "workspace"
+    },
+    {
+      "name": "MAIL_PROVIDER",
+      "label": "Hosted mail provider",
+      "kind": "select",
+      "required": true,
+      "default": "later",
+      "group": "mail",
+      "options": [
+        {
+          "value": "later",
+          "label": "Set up later"
+        },
+        {
+          "value": "sendgrid",
+          "label": "SendGrid"
+        },
+        {
+          "value": "resend",
+          "label": "Resend"
+        }
+      ]
+    },
+    {
+      "name": "MAIL_FROM",
+      "label": "Verified sender email",
+      "kind": "email",
+      "group": "mail",
+      "presentations": [
+        {
+          "when": {
+            "field": "MAIL_PROVIDER",
+            "equals": "sendgrid"
+          },
+          "required": true
+        },
+        {
+          "when": {
+            "field": "MAIL_PROVIDER",
+            "equals": "resend"
+          },
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "SENDGRID_API_KEY",
+      "label": "SendGrid API key",
+      "kind": "secret",
+      "input": "entered",
+      "ownerVisible": true,
+      "group": "mail",
+      "when": {
+        "field": "MAIL_PROVIDER",
+        "equals": "sendgrid"
+      },
+      "required": true
+    },
+    {
+      "name": "RESEND_API_KEY",
+      "label": "Resend API key",
+      "kind": "secret",
+      "input": "entered",
+      "ownerVisible": true,
+      "group": "mail",
+      "when": {
+        "field": "MAIL_PROVIDER",
+        "equals": "resend"
+      },
+      "required": true
+    },
+    {
+      "name": "SENDGRID_EVENT_PUBLIC_KEY",
+      "label": "SendGrid event verification public key",
+      "kind": "text",
+      "group": "mail",
+      "when": {
+        "field": "MAIL_PROVIDER",
+        "equals": "sendgrid"
+      }
+    },
+    {
+      "name": "RESEND_WEBHOOK_SECRET",
+      "label": "Resend event signing secret",
+      "kind": "secret",
+      "input": "entered",
+      "ownerVisible": true,
+      "group": "mail",
+      "when": {
+        "field": "MAIL_PROVIDER",
+        "equals": "resend"
+      },
+      "required": false
+    },
+    {
+      "name": "AUTH_SECRET",
+      "label": "Native session secret",
+      "kind": "secret",
+      "input": "managed",
+      "ownerVisible": false,
+      "generate": "hex",
+      "required": true,
+      "group": "authority"
+    },
+    {
+      "name": "SETUP_TOKEN",
+      "label": "First-owner setup token",
+      "kind": "secret",
+      "input": "managed",
+      "ownerVisible": false,
+      "generate": "hex",
+      "required": true,
+      "group": "authority"
+    },
+    {
+      "name": "IDENTITY_PROVIDER",
+      "label": "Identity provider",
+      "kind": "url",
+      "required": false,
+      "default": "",
+      "help": "Optional Auth install. Leave empty to use email links.",
+      "group": "identity"
+    },
+    {
+      "name": "RER_OWNER_CLAIM_ISSUER",
+      "label": "Trusted owner-claim issuer",
+      "kind": "url",
+      "group": "connection",
+      "runtimeEditable": false
+    },
+    {
+      "name": "RER_OWNER_CLAIM_PUBLIC_KEYS",
+      "label": "Owner-claim verification public keys",
+      "kind": "text",
+      "group": "connection",
+      "runtimeEditable": false
+    },
+    {
+      "name": "RER_INSTALLATION_ID",
+      "label": "Installation identity",
+      "kind": "text",
+      "group": "connection",
+      "runtimeEditable": false
+    },
+    {
+      "name": "RER_MANAGEMENT_ORIGIN",
+      "label": "Editor management origin",
+      "kind": "url",
+      "group": "connection",
+      "runtimeEditable": false
+    },
+    {
+      "name": "PORTAL_IDENTITY_SECRET",
+      "label": "Host identity signing secret",
+      "kind": "secret",
+      "input": "entered",
+      "ownerVisible": true,
+      "group": "host",
+      "required": false
+    },
+    {
+      "name": "PORTAL_FRAME_ORIGINS",
+      "label": "Allowed host application origins (JSON array)",
+      "kind": "text",
+      "group": "host",
+      "runtimeEditable": false
+    }
+  ],
+  "runtime": {
+    "additionalFields": true
+  },
+  "steps": [
+    {
+      "type": "owner-claim",
+      "mode": "signed",
+      "emailField": "OPERATOR_EMAIL",
+      "tokenField": "SETUP_TOKEN",
+      "path": "/auth/owner-claim"
+    }
+  ],
+  "dependencies": [
+    {
+      "interface": "oidc-provider@1",
+      "optional": true,
+      "cardinality": 1,
+      "address": "IDENTITY_PROVIDER",
+      "paths": [
+        "/auth/oidc/auth/callback",
+        "/auth/oidc/auth/logout"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "hasNextPage": false,
+  "items": [
+    {
+      "id": "vote-0",
+      "created": "2024-07-08T09:10:11.000Z",
+      "post": {
+        "id": "https://feedback.example.test/p/post-0"
+      },
+      "voter": {
+        "id": "user-0",
+        "name": "Zoë Rivera",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-0@example.test",
+        "isAdmin": false
+      }
+    },
+    {
+      "id": "vote-1",
+      "created": "2024-07-08T09:10:11.000Z",
+      "post": {
+        "id": "https://feedback.example.test/p/post-1"
+      },
+      "voter": {
+        "id": "user-0",
+        "name": "Zoë Rivera",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-0@example.test",
+        "isAdmin": false
+      }
+    },
+    {
+      "id": "vote-2",
+      "created": "2024-07-08T09:10:11.000Z",
+      "post": {
+        "id": "https://feedback.example.test/p/post-2"
+      },
+      "voter": {
+        "id": "user-1",
+        "name": "Kai 测试",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-1@example.test",
+        "isAdmin": false
+      }
+    },
+    {
+      "id": "vote-3",
+      "created": "2024-07-08T09:10:11.000Z",
+      "post": {
+        "id": "https://feedback.example.test/p/post-1"
+      },
+      "voter": {
+        "id": "user-0",
+        "name": "Zoë Rivera",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-0@example.test",
+        "isAdmin": false
+      }
+    },
+    {
+      "id": "vote-4",
+      "created": "2024-07-08T09:10:11.000Z",
+      "post": {
+        "id": "https://feedback.example.test/p/post-3"
+      },
+      "voter": {
+        "id": "user-2",
+        "name": "Historical customer",
+        "created": "2024-07-08T09:10:11.000Z",
+        "email": "historical-2@example.test",
+        "isAdmin": false
+      }
+    }
+  ]
+}

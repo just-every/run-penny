@@ -1,0 +1,19 @@
+/* The roadmap note, the update letter and the follow-through note. */
+.penny-landing .pl-roadmap .pl-paper { gap: calc(22 * var(--u)); padding: calc(24 * var(--u)) calc(26 * var(--u)) calc(22 * var(--u)); }
+.penny-landing .pl-steps--lined::before { top: calc(14 * var(--u)); bottom: calc(44 * var(--u)); left: calc(18 * var(--u)); }
+.penny-landing .pl-steps--lined li { align-items: flex-start; }
+.penny-landing .pl-step-text { display: flex; flex: 1; flex-direction: column; gap: calc(10 * var(--u)); padding-top: calc(3 * var(--u)); }
+.penny-landing .pl-step-text .pl-lines { gap: calc(7 * var(--u)); }
+.penny-landing .pl-step-text .pl-lines i { height: max(2px, calc(3.5 * var(--u))); }
+.penny-landing .pl-update .pl-paper { gap: calc(13 * var(--u)); padding: calc(24 * var(--u)) calc(24 * var(--u)) calc(26 * var(--u)); }
+.penny-landing .pl-update .pl-row { margin-bottom: calc(6 * var(--u)); }
+.penny-landing .pl-update .pl-badge { width: max(24px, calc(50 * var(--u))); }
+.penny-landing .pl-button--wide .pl-glyph { width: max(12px, calc(var(--gs) * var(--u))); }
+.penny-landing .pl-button--wide { justify-content: center; margin-top: calc(10 * var(--u)); padding: calc(9 * var(--u)) calc(16 * var(--u)); }
+.penny-landing .pl-loop-note .pl-paper { justify-content: center; padding: calc(14 * var(--u)) calc(24 * var(--u)); white-space: nowrap; }
+/* Each of the note's lines stays whole; on a narrow stage the note widens to hold them at the readable minimum. */
+.penny-landing .pl-loop-note { min-width: max-content; }
+/* On a narrow drawing the letter's text keeps its readable minimum, so its pencil lines step aside to leave room. */
+@container (max-width: 560px) {
+  .penny-landing .pl-update .pl-lines { display: none; }
+}

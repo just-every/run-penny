@@ -1,0 +1,21 @@
+/* DOCS-001. Previous and next: two paper cards like the code cards (the paper turned, the text square), the next one on the
+   right; then the page's source on GitHub as an underlined text link. */
+.penny-docs .docs-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 36em; margin-top: clamp(56px, 6vw, 80px); }
+.penny-docs .docs-pager-card { position: relative; isolation: isolate; display: grid; align-content: center; gap: 4px; min-height: 84px; padding: 16px 22px; }
+.penny-docs .docs-pager-card::before { content: ""; position: absolute; z-index: -1; inset: 0; border: 1.5px solid var(--penny-docs-ink); border-radius: 5px 3px 6px 4px / 3px 6px 4px 5px; background: var(--penny-docs-grain) 0 0 / 150px repeat, var(--penny-docs-card); box-shadow: 0 10px 18px -14px var(--penny-docs-shadow); transform: rotate(-0.6deg); transition: transform 0.18s, background-color 0.18s; }
+.penny-docs .docs-pager-card--next::before { transform: rotate(0.5deg); }
+.penny-docs .docs-pager-card:hover::before { background: var(--penny-docs-grain) 0 0 / 150px repeat, var(--penny-docs-tint); transform: rotate(0deg); }
+.penny-docs .docs-pager-card--next { grid-column: 2; text-align: right; }
+.penny-docs .docs-pager-label { color: var(--penny-docs-accent-text); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.penny-docs .docs-pager-card--previous .docs-pager-label::before { content: "\2190\00a0" / ""; }
+.penny-docs .docs-pager-card--next .docs-pager-label::after { content: "\00a0\2192" / ""; }
+.penny-docs .docs-pager-title { font-size: 20px; font-weight: 750; letter-spacing: 0; line-height: 1.25; }
+.penny-docs .docs-source { max-width: 36em; margin: 30px 0 0; font-size: 16px; }
+.penny-docs .docs-source a { font-weight: 500; text-decoration: underline 1.5px var(--penny-docs-ink); text-underline-offset: 6px; transition: text-decoration-color 0.18s; }
+.penny-docs .docs-source a:hover { text-decoration-color: var(--penny-docs-accent); }
+.penny-docs .docs-source a::after { content: "\00a0\2197" / ""; font-size: 0.85em; }
+
+@media (max-width: 640px) {
+  .penny-docs .docs-pager { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .penny-docs .docs-pager-card--next { grid-column: auto; }
+}

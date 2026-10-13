@@ -1,0 +1,4 @@
+Post Title,Post Detail,Score (Total Votes),Comment Count,Date created,Post Status,Post URL,Tags,Post Author
+Readable labels,A supplied customer quote.,10,2,2024-07-08T09:10:11.000Z,open,https://feedback.example.test/p/post-0,Accessibility,Zoë Rivera
+Duplicate labels,The same problem on mobile.,10,2,2024-07-08T09:10:11.000Z,open,https://feedback.example.test/p/post-1,Accessibility,Kai 测试
+Older duplicate,Original older request.,10,2,2024-07-08T09:10:11.000Z,open,https://feedback.example.test/p/post-2,Accessibility,Historical customer

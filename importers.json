@@ -1,0 +1,38 @@
+{
+  "$schema": "./schema/importers.schema.json",
+  "schemaVersion": 1,
+  "importers": [
+    {
+      "incumbent": "Canny",
+      "product": "Penny",
+      "status": "documented format",
+      "evidence": {
+        "link": "https://github.com/just-every/run-penny/blob/main/docs/CANNY-MIGRATION.md",
+        "sha256": "94a81643602e48122269e2164a69f638429bdfa230b82e5bef6220b3d95fa93a",
+        "size": 15654,
+        "sourceRepository": "urn:git:commit:f28c55699b981fcbbe550506787374fc9aba76ce",
+        "sourceRevision": "f28c55699b981fcbbe550506787374fc9aba76ce",
+        "sourcePath": "docs/CANNY-MIGRATION.md",
+        "sourceSha256": "94a81643602e48122269e2164a69f638429bdfa230b82e5bef6220b3d95fa93a",
+        "validation": "synthetic-only",
+        "realExport": "not-supplied"
+      }
+    },
+    {
+      "incumbent": "UserVoice",
+      "product": "Penny",
+      "status": "documented format",
+      "evidence": {
+        "link": "https://github.com/just-every/run-penny/blob/main/docs/USERVOICE-MIGRATION.md",
+        "sha256": "22492f545ececd41f446bee6db96caa388042a86000fd4ccc103e9c268e49c75",
+        "size": 18658,
+        "sourceRepository": "urn:git:commit:07b7c8f95d914ae4762f6de1cf1f027695e75b59",
+        "sourceRevision": "07b7c8f95d914ae4762f6de1cf1f027695e75b59",
+        "sourcePath": "docs/USERVOICE-MIGRATION.md",
+        "sourceSha256": "22492f545ececd41f446bee6db96caa388042a86000fd4ccc103e9c268e49c75",
+        "validation": "synthetic-only",
+        "realExport": "not-supplied"
+      }
+    }
+  ]
+}

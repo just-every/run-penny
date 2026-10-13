@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* The app's colour and type tokens, for the portal, the operator app, sign-in and the 404. The brand colours read Penny's
+   brand palette (src/core/ui/brand/tokens.css, set on :root), so the app, the landing and the docs share one source; the
+   few app-only tones below are set here. Text pairs: ink on paper 16:1, muted on paper 5.4:1 and on sand 4.6:1, accent
+   (the brand's copper text) on paper 5.2:1 and white on accent 5.6:1, moss on paper 5.9:1. Copper itself (3.9:1 on
+   paper) is for marks, bars and focus rings only, never for small text. */
+@theme {
+  --font-sans: var(--sans);
+  --color-penny-ink: var(--ink);
+  --color-penny-soft: var(--soft);
+  --color-penny-muted: var(--muted);
+  --color-penny-paper: var(--paper);
+  --color-penny-line: var(--line);
+  --color-penny-copper: var(--copper);
+  /* The configured brand accent: src/branding.json, or the owner's portal branding (INT-007); Penny's is the copper text tone. */
+  --color-penny-accent: var(--penny-brand-accent);
+  --color-penny-sand: var(--sand);
+  /* A card: paper a shade lighter than the page, so it reads as a sheet without a heavy shadow. */
+  --color-penny-card: #fdfbf6;
+  /* Control borders and outlined chips: 3.5:1 on paper, so an empty input's edge is visible. */
+  --color-penny-line-strong: #8f8270;
+  --color-penny-accent-dark: #8c3a17;
+  /* Moss for done and published states, the one earthy tone the palette adds for status. */
+  --color-penny-moss: #4a6741;
+  --color-penny-danger: #a3352a;
+  /* Washes behind a state's mark: danger at about 15% on paper (the error disc; danger on it 5.2:1) and moss for done and
+     all-clear (moss on it 5.1:1). */
+  --color-penny-danger-wash: #f3dcd6;
+  --color-penny-moss-wash: #e3e8dc;
+  /* A card's lift: a hairline shadow and a soft drop, still paper. */
+  --shadow-penny-card: 0 1px 2px rgb(92 62 32 / 0.06), 0 8px 18px -12px rgb(92 62 32 / 0.22);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 20rem;
+    background: var(--color-penny-paper);
+  }
+
+  body {
+    min-width: 20rem;
+    min-height: 100svh;
+    margin: 0;
+    background: var(--color-penny-paper);
+    color: var(--color-penny-ink);
+    font-family: var(--font-sans);
+    overflow-wrap: anywhere;
+  }
+}
+
+/* App roots wear .penny-brand for the paper, grain, ink and font; app text keeps breaking long user-supplied words, where
+   the landing's prose does not. */
+.penny-brand.penny-app {
+  overflow-wrap: anywhere;
+}
+
+/* A select's dropdown caret, one rule for every select in the app. The browsers place their native arrow differently (and
+   hug the border), so the native arrow is dropped and a chevron is drawn at the field's own text inset (--field-inset, set
+   with the left padding by inputClass), vertically centred. It is two diagonal strokes in currentColor, so it takes the
+   field's text colour and dims with a disabled field. The right padding clears the caret (and keeps an auto-width select as
+   wide as the native control was) so option text never runs under it. This rule is outside the cascade layers so that it
+   beats the padding utilities; the native picker, keyboard use and accessible name are untouched. */
+select:not([multiple], [size]) {
+  --select-caret-width: 0.625rem;
+  --select-caret-gap: 0.625rem;
+  appearance: none;
+  padding-right: calc(var(--field-inset, 0.75rem) + var(--select-caret-width) + var(--select-caret-gap));
+  background-image:
+    linear-gradient(to top right, transparent calc(50% - 1.1px), currentColor calc(50% - 0.6px), currentColor calc(50% + 0.6px), transparent calc(50% + 1.1px)),
+    linear-gradient(to top left, transparent calc(50% - 1.1px), currentColor calc(50% - 0.6px), currentColor calc(50% + 0.6px), transparent calc(50% + 1.1px));
+  background-size: calc(var(--select-caret-width) / 2) calc(var(--select-caret-width) / 2);
+  background-position: right calc(var(--field-inset, 0.75rem) + var(--select-caret-width) / 2) top 50%, right var(--field-inset, 0.75rem) top 50%;
+  background-repeat: no-repeat;
+}
+
+/* Forced colours (Windows high contrast) drops background images, so the drawn chevron would vanish: the browser's own arrow,
+   which it draws in the system colours, takes over, and the right padding goes back to the field's inset because the native
+   arrow reserves its own room. */
+@media (forced-colors: active) {
+  select:not([multiple], [size]) {
+    appearance: auto;
+    padding-right: var(--field-inset, 0.75rem);
+  }
+}

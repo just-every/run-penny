@@ -1,0 +1,37 @@
+/* DOCS-001. The page frame: sidebar | article | contents, ruled apart by thin pencil lines. The sidebar shows from 861px and
+   the contents column from 1200px; below that both fold into the disclosures above the article. Tailwind's preflight resets
+   lists, headings and links globally; the running text (prose.css) puts them back. */
+.penny-docs {
+  --docs-side: clamp(220px, 18.4vw, 264px);
+  color: var(--penny-docs-ink);
+  font-family: var(--penny-docs-font);
+  font-size: 18px;
+  letter-spacing: 0.006em;
+  line-height: 1.5;
+}
+.penny-docs svg { display: block; }
+
+.penny-docs .docs-shell { max-width: 1536px; margin: 0 auto; padding: 0 var(--gutter) clamp(64px, 7vw, 112px); display: grid; grid-template-columns: minmax(0, 1fr); }
+.penny-docs .docs-main { min-width: 0; margin: 0; padding: clamp(8px, 1.4vw, 22px) 0 0; }
+.penny-docs .docs-main:focus { outline: none; }
+.penny-docs :is(.docs-sidebar, .docs-toc) { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; overscroll-behavior: contain; }
+
+@media (max-width: 860px) {
+  .penny-docs .docs-sidebar { display: none; }
+}
+@media (min-width: 861px) {
+  .penny-docs .docs-shell { grid-template-columns: var(--docs-side) minmax(0, 1fr); }
+  .penny-docs .docs-main { padding-left: clamp(32px, 3.2vw, 46px); border-left: 1px solid var(--penny-docs-rule); }
+  .penny-docs .docs-menu { display: none; }
+}
+@media (max-width: 1199px) {
+  .penny-docs .docs-toc { display: none; }
+}
+@media (min-width: 1200px) {
+  .penny-docs .docs-shell { grid-template-columns: var(--docs-side) minmax(0, 1fr) var(--docs-side); }
+  .penny-docs .docs-main { padding-right: clamp(28px, 2.8vw, 40px); border-right: 1px solid var(--penny-docs-rule); }
+  .penny-docs .docs-toc-compact { display: none; }
+}
+@media (max-width: 639px) {
+  .penny-docs { font-size: 17px; }
+}

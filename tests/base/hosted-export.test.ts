@@ -1,0 +1,263 @@
+import {applyD1Migrations,reset} from 'cloudflare:test'
+import {beforeEach,expect,inject,it,vi} from 'vitest'
+import {env} from 'cloudflare:workers'
+import {createPennyApi} from '../../src/core/app/api'
+import {canonical,exportArchive,DATA_LIMITS,ERASURE_LIMITS} from '../../src/core/features/data/archive'
+import {digest,opaqueToken} from '../../src/core/features/auth/native-tokens'
+import inventory from '../../src/core/features/data/schema-inventory.json'
+const origin='https://penny.test',app=createPennyApi()
+const bindings={...env,PENNY_ENVIRONMENT:'production',APP_ORIGIN:origin,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,SENDGRID_API_KEY:undefined}
+const call=(path:string,body?:unknown,headers:Record<string,string>={})=>app.fetch(new Request(origin+path,{method:body===undefined?'GET':'POST',headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.1',...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings)
+async function owner(){const r=await call('/auth/bootstrap',{token:bindings.SETUP_TOKEN,displayName:'Owner',returnTo:'/app'});expect(r.status).toBe(303);return {Cookie:r.headers.get('Set-Cookie')!.split(';')[0]}}
+beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
+it('[DATA-001 BASE-ACCESS-002] hosted data mutations and recovery require current native operator authority and the configured origin',async()=>{
+ const spy=vi.spyOn(globalThis,'fetch').mockImplementation(async()=>{throw new Error('Unexpected provider call')})
+ const requesterToken=opaqueToken(),stamp=new Date().toISOString()
+ await env.DB.batch([
+  env.DB.prepare("INSERT INTO requesters(id,display_name,created_at,updated_at) VALUES('hosted-person','Requester',?,?)").bind(stamp,stamp),
+  env.DB.prepare("INSERT INTO requester_addresses(id,requester_id,email,verified_at,created_at,updated_at) VALUES('hosted-address','hosted-person','hosted@example.test',?,?,?)").bind(stamp,stamp,stamp),
+  env.DB.prepare("INSERT INTO native_requester_sessions(id,requester_id,address_id,token_hash,expires_at,last_used_at,created_at,updated_at) VALUES('hosted-session','hosted-person','hosted-address',?,?,?,?,?)").bind(await digest(requesterToken),new Date(Date.now()+60000).toISOString(),stamp,stamp,stamp),
+ ])
+ expect((await call('/api/public/identity/session',undefined,{Authorization:'Bearer '+requesterToken})).status).toBe(200)
+ const mutations=['import','erasure/preview','erasure','operations/missing/resume','operations/missing/abort-restore','operations/missing/abort-export','operations/missing/abort-pending-erasure','operations/missing/recover-runner']
+ try{
+  for(const path of ['export','journal','overview','operations/missing']){
+   expect((await call('/api/operator/data/'+path)).status).toBe(401)
+   expect((await call('/api/operator/data/'+path,undefined,{Authorization:'Bearer '+requesterToken})).status).toBe(401)
+  }
+  for(const path of mutations){
+   expect((await call('/api/operator/data/'+path,{})).status).toBe(401)
+   expect((await call('/api/operator/data/'+path,{}, {Authorization:'Bearer '+requesterToken})).status).toBe(401)
+  }
+  const cookie=await owner()
+  for(const path of ['export','journal']){
+   const response=await call('/api/operator/data/'+path,undefined,cookie)
+   expect(response.status).toBe(200);expect(response.headers.get('Cache-Control')).toBe('private, no-store');expect(response.headers.get('Content-Disposition')).toContain('attachment;')
+  }
+  expect((await (await call('/api/operator/data/overview',undefined,cookie)).json() as {hosted:boolean}).hosted).toBe(true)
+  for(const path of mutations){
+   expect((await call('/api/operator/data/'+path,{}, {...cookie,Origin:'https://foreign.test'})).status).toBe(403)
+   expect((await call('/api/operator/data/'+path,{}, {...cookie,Origin:''})).status).toBe(403)
+  }
+  const alias=await app.fetch(new Request('https://alias.test/api/operator/data/import',{method:'POST',headers:{...cookie,Origin:'https://alias.test','Content-Type':'application/json'},body:'{}'}),bindings)
+  expect(alias.status).toBe(403)
+  for(const path of ['import','erasure/preview','erasure'])expect((await call('/api/operator/data/'+path,{},cookie)).status).toBe(400)
+  await env.DB.prepare('UPDATE oa_sessions SET expires_at=?').bind(Date.now()-1).run()
+  for(const path of mutations)expect((await call('/api/operator/data/'+path,{},cookie)).status).toBe(401)
+  for(const path of ['export','journal'])expect((await call('/api/operator/data/'+path,undefined,cookie)).status).toBe(401)
+  await env.DB.prepare('UPDATE oa_sessions SET expires_at=?,revoked_at=?').bind(Date.now()+60000,Date.now()).run()
+  for(const path of mutations)expect((await call('/api/operator/data/'+path,{},cookie)).status).toBe(401)
+  for(const path of ['export','journal'])expect((await call('/api/operator/data/'+path,undefined,cookie)).status).toBe(401)
+  expect(spy).not.toHaveBeenCalled()
+ }finally{spy.mockRestore()}
+})
+it('[DATA-001 DATA-003] hosted empty-target restore and file erasure preserve preview and latest-journal fences',async()=>{
+ const cookie=await owner(),empty=await (await call('/api/operator/data/export',undefined,cookie)).json() as Awaited<ReturnType<typeof exportArchive>>
+ expect((await call('/api/operator/data/import',empty,cookie)).status).toBe(200)
+ const stamp=new Date().toISOString(),requestId='hosted-request-root'
+ await env.DB.batch([
+  env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('hosted-board','hosted-board','Board','public',0,?,?)").bind(stamp,stamp),
+  env.DB.prepare("INSERT INTO requests(id,slug,board_id,title,description,moderation_state,public_state,created_at,updated_at) VALUES(?,?,'hosted-board','Unique request title','Unique private body','awaiting_review','open',?,?)").bind(requestId,requestId,stamp,stamp),
+  env.DB.prepare("INSERT INTO attachments(id,request_id,storage_key,original_filename,content_type,byte_size,public_state,created_at,updated_at) VALUES('hosted-file',?,'hosted-original','Unique.bin','application/octet-stream',4,'operator_only',?,?)").bind(requestId,stamp,stamp),
+ ])
+ await env.FILES.put('hosted-original',new Uint8Array([1,2,3,4]))
+ const archive=await (await call('/api/operator/data/export',undefined,cookie)).json() as Awaited<ReturnType<typeof exportArchive>>
+ const occupied=await call('/api/operator/data/import',archive,cookie)
+ expect(occupied.status).toBe(409);expect(await occupied.json()).toEqual({error:'restore_requires_empty_target'})
+ const root={table:'requests',id:requestId},preview=await (await call('/api/operator/data/erasure/preview',root,cookie)).json() as {planHash:string;fileCount:number}
+ expect(preview.fileCount).toBe(1)
+ expect((await call('/api/operator/data/erasure',root,cookie)).status).toBe(400)
+ await env.DB.prepare('UPDATE requests SET description=? WHERE id=?').bind('Updated private body',requestId).run()
+ const stale=await call('/api/operator/data/erasure',{...root,planHash:preview.planHash},cookie)
+ expect(stale.status).toBe(409);expect(await stale.json()).toEqual({error:'erasure_plan_changed'})
+ const latest=await (await call('/api/operator/data/erasure/preview',root,cookie)).json() as {planHash:string}
+ expect((await call('/api/operator/data/erasure',{...root,planHash:latest.planHash},cookie)).status).toBe(200)
+ expect(await env.FILES.head('hosted-original')).toBeNull()
+ expect(await env.DB.prepare('SELECT count(*) n FROM requests WHERE id=?').bind(requestId).first('n')).toBe(0)
+ const old=await call('/api/operator/data/import',archive,cookie)
+ expect(old.status).toBe(409);expect(await old.json()).toEqual({error:'erasure_journal_regression'})
+ const journal=await (await call('/api/operator/data/journal',undefined,cookie)).json()
+ const mismatched=await call('/api/operator/data/import',{archive:archive.archive,journal},cookie)
+ expect(mismatched.status).toBe(409);expect(await mismatched.json()).toEqual({error:'stale_archive'})
+})
+it('[DATA-001] hosted archive includes every classified product table and exact original R2 bytes without installation authority',async()=>{
+ const cookie=await owner(),stamp=new Date().toISOString(),bytes=new Uint8Array([0,255,31,80,68,70])
+ await env.DB.batch([
+  env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('b','b','Board','public',0,?,?)").bind(stamp,stamp),
+  env.DB.prepare("INSERT INTO requests(id,slug,board_id,title,description,moderation_state,public_state,created_at,updated_at) VALUES('r','r','b','Title','Description','awaiting_review','open',?,?)").bind(stamp,stamp),
+  env.DB.prepare("INSERT INTO attachments(id,request_id,storage_key,original_filename,content_type,byte_size,public_state,created_at,updated_at) VALUES('f','r','original','Original.bin','application/octet-stream',?,'operator_only',?,?)").bind(bytes.length,stamp,stamp),
+ ])
+ await env.FILES.put('original',bytes)
+ const response=await call('/api/operator/data/export',undefined,cookie),snapshot=await response.json() as Awaited<ReturnType<typeof exportArchive>>
+ expect(response.status).toBe(200)
+ expect(Object.keys(snapshot.archive.tables).sort()).toEqual(Object.entries(inventory).filter(([,value])=>value.classification==='product').map(([name])=>name).sort())
+ expect(Object.keys(snapshot.archive.tables)).toEqual(expect.arrayContaining(['decision_bet_snapshots','roadmap_update_versions','release_versions']))
+ expect(snapshot.archive.tables.requests).toHaveLength(1);expect(snapshot.archive.tables.attachments).toHaveLength(1)
+ expect(Uint8Array.from(atob(snapshot.archive.files[0].bytes),c=>c.charCodeAt(0))).toEqual(bytes)
+ expect(snapshot.archive.files[0].sha256).toMatch(/^[a-f0-9]{64}$/)
+ expect(JSON.stringify(snapshot)).not.toContain(cookie.Cookie.split('=')[1]);expect(JSON.stringify(snapshot)).not.toContain(bindings.AUTH_SECRET)
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+ await env.FILES.put('untracked','Untracked original')
+ expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
+ await env.FILES.delete('untracked');await env.FILES.delete('original')
+ expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
+})
+it('[DATA-001] unknown tables, columns and stale product schema refuse export without leaving the fence held',async()=>{
+ const cookie=await owner()
+ await env.DB.exec('CREATE TABLE unclassified_personal_data(id TEXT PRIMARY KEY,private_value TEXT)')
+ expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
+ await env.DB.exec('DROP TABLE unclassified_personal_data; ALTER TABLE requests ADD COLUMN unclassified_private TEXT')
+ expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+})
+it('[DATA-001] row overflow refuses instead of exporting a truncated success',async()=>{
+ const cookie=await owner(),stamp=new Date().toISOString()
+ await env.DB.batch(Array.from({length:DATA_LIMITS.rows+1},(_,i)=>env.DB.prepare('INSERT INTO tags(id,name,created_at,updated_at) VALUES(?,?,?,?)').bind('tag-'+i,'Tag '+i,stamp,stamp)))
+ expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(413)
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+})
+it('[DATA-001 BASE-DATA-003] journal overflow refuses both download and archive without truncating erasure custody',async()=>{
+ const cookie=await owner()
+ await env.DB.prepare("WITH RECURSIVE rows(n) AS (SELECT 0 UNION ALL SELECT n+1 FROM rows WHERE n<?) INSERT INTO data_tombstones(epoch,table_name,key_hash) SELECT 1,'requests',printf('%064x',n) FROM rows").bind(ERASURE_LIMITS.rows).run()
+ for(const path of ['journal','export'])expect((await call('/api/operator/data/'+path,undefined,cookie)).status).toBe(413)
+ expect(await env.DB.prepare('SELECT COUNT(*) n FROM data_tombstones').first('n')).toBe(ERASURE_LIMITS.rows+1)
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+})
+it('[DATA-001] held original-byte export fences writes and overlapping export until completion',async()=>{
+ const cookie=await owner()
+ let entered!:()=>void,release!:()=>void
+ const started=new Promise<void>(r=>{entered=r}),held=new Promise<void>(r=>{release=r})
+ const bucket=new Proxy(env.FILES,{get(target,key){if(key==='list')return async(...args:Parameters<R2Bucket['list']>)=>{entered();await held;return target.list(...args)};const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value}})
+ const exporting=exportArchive(env.DB,bucket);await started
+ try{
+  expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(409)
+  await expect(env.DB.prepare("INSERT INTO tags(id,name,created_at,updated_at) VALUES('held','Held','now','now')").run()).rejects.toThrow('maintenance')
+ }finally{release();await exporting}
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+})
+
+function barrier(){let release!:()=>void;const promise=new Promise<void>(resolve=>{release=resolve});return {promise,release}}
+function delayedBody(path:string,input:unknown,cookie:Record<string,string>){
+ const reading=barrier();let controller!:ReadableStreamDefaultController<Uint8Array>
+ const body=new ReadableStream<Uint8Array>({start(value){controller=value},pull(){reading.release()}},{highWaterMark:0})
+ const response=app.fetch(new Request(origin+path,{method:'POST',headers:{...cookie,Origin:origin,'Content-Type':'application/json'},body}),bindings)
+ return {reading:reading.promise,response,release:()=>{controller.enqueue(new TextEncoder().encode(JSON.stringify(input)));controller.close()}}
+}
+async function seedOriginal(){
+ const stamp=new Date().toISOString(),bytes=new Uint8Array([11,22,33,44])
+ await env.DB.batch([
+  env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('race-board','race-board','Board','public',0,?,?)").bind(stamp,stamp),
+  env.DB.prepare("INSERT INTO requests(id,slug,board_id,title,description,moderation_state,public_state,created_at,updated_at) VALUES('race-request','race-request','race-board','Private race title','Private race body','awaiting_review','open',?,?)").bind(stamp,stamp),
+  env.DB.prepare("INSERT INTO attachments(id,request_id,storage_key,original_filename,content_type,byte_size,public_state,created_at,updated_at) VALUES('race-file','race-request','race-original','Private.bin','application/octet-stream',4,'operator_only',?,?)").bind(stamp,stamp),
+ ])
+ await env.FILES.put('race-original',bytes)
+ return bytes
+}
+async function dataState(){return env.DB.prepare('SELECT origin,epoch,phase,lock_id FROM data_state').first()}
+async function operations(){return (await env.DB.prepare('SELECT * FROM data_operations ORDER BY id').all()).results}
+
+it.each(['import','erasure','recover-runner','abort-export','abort-pending-erasure'] as const)('[BASE-ACCESS-002 DATA-003] %s refuses authority lost while reading its request body',async action=>{
+ const cookie=await owner();let path='/api/operator/data/'+action,input:unknown
+ if(action==='import')input=await (await call('/api/operator/data/export',undefined,cookie)).json()
+ else if(action==='erasure'){
+  await seedOriginal()
+  const root={table:'requests',id:'race-request'},plan=await (await call('/api/operator/data/erasure/preview',root,cookie)).json() as {planHash:string}
+  input={...root,planHash:plan.planHash}
+ }else{
+  const kind=action==='abort-export'?'export':action==='abort-pending-erasure'?'erase':'restore',status=action==='recover-runner'?'running':'pending',stamp=new Date().toISOString()
+  await env.DB.batch([
+   env.DB.prepare('INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) VALUES(?,?,?,?,?,?)').bind('interrupted',kind,status,'{}',stamp,stamp),
+   env.DB.prepare("UPDATE data_state SET phase='locked',lock_id='interrupted' WHERE singleton=1"),
+  ])
+  path='/api/operator/data/operations/interrupted/'+action
+  input={confirmPriorRunnerStopped:true,...(action==='recover-runner'?{expectedStatus:'running'}:{})}
+ }
+ const beforeState=await dataState(),beforeOperations=await operations(),beforeRequests=(await env.DB.prepare('SELECT * FROM requests').all()).results
+ const held=delayedBody(path,input,cookie);await held.reading
+ try{
+  if(action==='recover-runner')await env.DB.prepare('UPDATE oa_operators SET version=version+1').run()
+  else expect((await call('/api/auth/sign-out',{},cookie)).status).toBe(204)
+ }finally{held.release()}
+ const response=await held.response
+ expect(response.status).toBe(401);expect(await response.json()).toEqual({error:'unauthenticated'})
+ expect(await dataState()).toEqual(beforeState);expect(await operations()).toEqual(beforeOperations)
+ expect((await env.DB.prepare('SELECT * FROM requests').all()).results).toEqual(beforeRequests)
+ if(action==='erasure')expect(await env.FILES.head('race-original')).not.toBeNull()
+})
+
+it('[BASE-ACCESS-002 DATA-001] revocation during R2 export withholds the archive and releases its maintenance lock',async()=>{
+ const cookie=await owner(),entered=barrier(),release=barrier()
+ const bucket=new Proxy(env.FILES,{get(target,key){if(key==='list')return async(...args:Parameters<R2Bucket['list']>)=>{entered.release();await release.promise;return target.list(...args)};const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value}})
+ const pending=app.fetch(new Request(origin+'/api/operator/data/export',{headers:cookie}),{...bindings,FILES:bucket})
+ await entered.promise
+ try{expect((await call('/api/auth/sign-out',{},cookie)).status).toBe(204)}finally{release.release()}
+ const response=await pending
+ expect(response.status).toBe(401);expect(await response.json()).toEqual({error:'unauthenticated'})
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+ expect((await operations()).map(row=>row.status)).toEqual(['aborted'])
+})
+
+it.each(['sign-out','operator-version'] as const)('[BASE-ACCESS-002 DATA-001] %s during a restore R2 write refuses the apply transaction and keeps destination authority',async change=>{
+ const cookie=await owner();await seedOriginal()
+ const bundle=await (await call('/api/operator/data/export',undefined,cookie)).json() as Awaited<ReturnType<typeof exportArchive>>
+ await env.DB.batch([env.DB.prepare('DELETE FROM attachments'),env.DB.prepare('DELETE FROM requests'),env.DB.prepare('DELETE FROM boards')])
+ await env.FILES.delete('race-original')
+ const before=await dataState(),entered=barrier(),release=barrier()
+ const bucket=new Proxy(env.FILES,{get(target,key){if(key==='put')return async(...args:Parameters<R2Bucket['put']>)=>{const value=await target.put(...args);entered.release();await release.promise;return value};const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value}})
+ const pending=app.fetch(new Request(origin+'/api/operator/data/import',{method:'POST',headers:{...cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(bundle)}),{...bindings,FILES:bucket})
+ await entered.promise
+ let authority:unknown
+ try{
+  expect(await env.FILES.head('race-original')).not.toBeNull()
+  if(change==='sign-out')expect((await call('/api/auth/sign-out',{},cookie)).status).toBe(204)
+  else await env.DB.prepare('UPDATE oa_operators SET version=version+1').run()
+  authority=(await env.DB.prepare('SELECT * FROM oa_operators').all()).results
+ }finally{release.release()}
+ const response=await pending
+ expect(response.status).toBe(401);expect(await response.json()).toEqual({error:'unauthenticated'})
+ expect(await env.DB.prepare('SELECT count(*) n FROM requests').first('n')).toBe(0)
+ expect(await env.DB.prepare('SELECT count(*) n FROM attachments').first('n')).toBe(0)
+ expect(await env.DB.prepare('SELECT count(*) n FROM data_apply_claims').first('n')).toBe(0)
+ expect(await env.FILES.head('race-original')).toBeNull()
+ expect(await dataState()).toEqual(before)
+ expect((await env.DB.prepare('SELECT * FROM oa_operators').all()).results).toEqual(authority)
+ expect((await operations()).filter(row=>row.kind==='restore').map(row=>row.status)).toEqual(['aborted'])
+})
+
+it('[BASE-ACCESS-002 DATA-003] revocation during erasure file cleanup retains a pending operation for current-authority recovery',async()=>{
+ const cookie=await owner();await seedOriginal()
+ const root={table:'requests',id:'race-request'},plan=await (await call('/api/operator/data/erasure/preview',root,cookie)).json() as {planHash:string}
+ const entered=barrier(),release=barrier()
+ const bucket=new Proxy(env.FILES,{get(target,key){if(key==='delete')return async(...args:Parameters<R2Bucket['delete']>)=>{await target.delete(...args);entered.release();await release.promise};const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value}})
+ const pending=app.fetch(new Request(origin+'/api/operator/data/erasure',{method:'POST',headers:{...cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({...root,planHash:plan.planHash})}),{...bindings,FILES:bucket})
+ await entered.promise
+ try{expect((await call('/api/auth/sign-out',{},cookie)).status).toBe(204)}finally{release.release()}
+ const response=await pending
+ expect(response.status).toBe(401);expect(await response.json()).toEqual({error:'unauthenticated'})
+ const saved=await operations();expect(saved).toHaveLength(1);expect(saved[0].status).toBe('pending_r2')
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'locked',lock_id:saved[0].id})
+ expect(await env.DB.prepare('SELECT count(*) n FROM requests').first('n')).toBe(0)
+ expect(await env.DB.prepare('SELECT count(*) n FROM data_tombstones').first('n')).toBeGreaterThan(0)
+ expect((await call('/api/operator/data/operations/'+saved[0].id+'/resume',{},cookie)).status).toBe(401)
+})
+
+it.each(['request','evidence'] as const)('[DATA-001] restore refuses a correctly hashed archive with an unfinished %s original reservation',async kind=>{
+ const cookie=await owner(),stamp=new Date().toISOString();await seedOriginal()
+ await env.DB.prepare("INSERT INTO evidence_items(id,source_type,observed_at,review_state,created_at,updated_at) VALUES('pending-evidence','free_text',?,'unreviewed',?,?)").bind(stamp,stamp,stamp).run()
+ const bundle=await (await call('/api/operator/data/export',undefined,cookie)).json() as Awaited<ReturnType<typeof exportArchive>>
+ const table=kind==='request'?'request_attachment_uploads':'evidence_attachment_uploads',parentColumn=kind==='request'?'request_id':'evidence_id',parentId=kind==='request'?'race-request':'pending-evidence'
+ await env.DB.prepare(`INSERT INTO ${table}(id,${parentColumn},storage_key,original_filename,content_type,byte_size,sha256,writing,created_at,updated_at) VALUES(?,?,'missing-original','Pending.bin','application/octet-stream',4,?,0,?,?)`).bind('pending-upload',parentId,await digest('file'),stamp,stamp).run()
+ bundle.archive.tables[table]=(await env.DB.prepare(`SELECT * FROM ${table}`).all()).results as typeof bundle.archive.tables[string]
+ const {sha256:previousHash,...body}=bundle.archive;void previousHash
+ bundle.archive.sha256=await digest(canonical(body))
+ expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(409)
+ await env.DB.batch([env.DB.prepare(`DELETE FROM ${table}`),env.DB.prepare('DELETE FROM attachments'),env.DB.prepare('DELETE FROM evidence_items'),env.DB.prepare('DELETE FROM requests'),env.DB.prepare('DELETE FROM boards')])
+ await env.FILES.delete('race-original')
+ const before=await dataState(),beforeOperations=await operations()
+ const response=await call('/api/operator/data/import',bundle,cookie)
+ expect(response.status).toBe(409);expect(await response.json()).toEqual({error:'unfinished_attachment_uploads'})
+ expect(await env.DB.prepare(`SELECT count(*) n FROM ${table}`).first('n')).toBe(0)
+ expect(await env.DB.prepare('SELECT count(*) n FROM attachments').first('n')).toBe(0)
+ expect((await env.FILES.list()).objects).toHaveLength(0)
+ expect(await dataState()).toEqual(before);expect(await operations()).toEqual(beforeOperations)
+})

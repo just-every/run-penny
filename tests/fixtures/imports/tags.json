@@ -1,0 +1,21 @@
+{
+  "tags": [
+    {
+      "id": "tag-0",
+      "name": "Accessibility",
+      "created": "2024-07-08T09:10:11.000Z",
+      "board": {
+        "id": "public-board"
+      }
+    },
+    {
+      "id": "tag-1",
+      "name": "Private renewal concern",
+      "created": "2024-07-08T09:10:11.000Z",
+      "board": {
+        "id": "internal-board"
+      }
+    }
+  ],
+  "hasMore": false
+}

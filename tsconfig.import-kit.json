@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./node_modules/.tmp/import-kit-types",
+    "tsBuildInfoFile": "./node_modules/.tmp/import-kit.tsbuildinfo",
+    "rootDir": "./base/modules/import-kit",
+    "target": "es2023",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "skipLibCheck": true,
+    "strict": true
+  },
+  "include": ["base/modules/import-kit/src/**/*.ts", "base/modules/import-kit/schema/*.json"]
+}

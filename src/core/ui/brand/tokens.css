@@ -1,0 +1,44 @@
+/* Penny's brand: the fixed light palette and type every Penny page shares (the landing, the docs, the portal, the operator
+   app, sign-in and the 404): warm grained paper, near-black ink, and copper with sand and charcoal as the collage's only
+   colours. The palette is set on :root so the app's Tailwind tokens (src/index.css) can read it; a page wears it by
+   mounting a .penny-brand root, which paints the paper, the grain, the ink and the type. The app's Tailwind base layer
+   styles <body> too; the unlayered rules here win while a branded page is mounted. */
+html:has(.penny-brand), body:has(.penny-brand) { background: #faf7ef; }
+body:has(.penny-brand) { min-width: 0; margin: 0; padding: 0; color: #20211f; overflow-wrap: normal; }
+
+:root {
+  --paper: #faf7ef;
+  --card: #f9f6ef;
+  --ink: #20211f;
+  --soft: #474a4e;
+  --muted: #66655f;
+  --line: #d6cbbb;
+  --copper: #c85d2f;
+  /* Copper dark enough for text on paper (5.2:1) and for white text on it (5.6:1). */
+  --copper-text: #ad4a1f;
+  --sand: #f1e2c8;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .45 0 0 0 0 .3 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E");
+  --gutter: clamp(20px, 4.45vw, 68px);
+  --sans: 'Inter Tight', 'Inter Tight Fallback', 'Helvetica Neue', Arial, sans-serif;
+  --hand: Kalam, 'Kalam Fallback', 'Bradley Hand', 'Segoe Print', cursive;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+.penny-brand {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  color-scheme: light;
+  font-family: var(--sans);
+  background: var(--grain) repeat, var(--paper);
+  overflow-x: clip;
+  overflow-wrap: normal;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+/* Element defaults sit in the base layer, so the app's Tailwind utilities on a link or a control still apply. */
+@layer base {
+  .penny-brand *, .penny-brand *::before, .penny-brand *::after { box-sizing: border-box; }
+  .penny-brand a { color: inherit; text-decoration: none; }
+  .penny-brand a:focus-visible, .penny-brand summary:focus-visible { outline: 3px solid var(--copper-text); outline-offset: 4px; border-radius: 6px; }
+}

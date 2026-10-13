@@ -1,0 +1,12 @@
+/* The parcel, its tag, and the terminal note on charcoal paper. */
+.penny-landing .pl-parcel-edge { fill: none; stroke: rgb(88 58 30 / 0.35); stroke-width: 1.2; stroke-linejoin: round; }
+.penny-landing .pl-string { fill: none; stroke: #8f4421; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.penny-landing .pl-string--thin { stroke-width: 1.8; }
+.penny-landing .pl-tag .pl-paper { align-items: center; justify-content: center; }
+.penny-landing .pl-terminal .pl-paper { gap: calc(12 * var(--u)); padding: calc(18 * var(--u)) calc(24 * var(--u)); }
+.penny-landing .pl-dots { display: flex; gap: calc(8 * var(--u)); margin-bottom: calc(6 * var(--u)); }
+.penny-landing .pl-dots i { width: max(6px, calc(11 * var(--u))); aspect-ratio: 1; border: 1px solid rgb(244 234 217 / 0.65); border-radius: 50%; }
+.penny-landing .pl-dots i:first-child { border-color: transparent; background: var(--copper); }
+.penny-landing .pl-command { display: flex; gap: calc(10 * var(--u)); white-space: nowrap; }
+.penny-landing .pl-prompt { color: #ee9a6c; }
+.penny-landing .pl-yours-note .pl-paper { justify-content: center; padding: calc(10 * var(--u)) calc(20 * var(--u)); }

@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "id": "just-every/penny",
+  "toolchain": {
+    "id": "runeditrun/edition-authoring",
+    "version": "1.1.0"
+  },
+  "parent": null,
+  "components": [
+    {
+      "id": "runeditrun/onboarding",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "scripts/base-onboarding"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "onboarding"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "scripts/base-onboarding",
+            "originPath": "onboarding"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/operator-auth",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/operator-auth"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/operator-auth"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/operator-auth",
+            "originPath": "modules/operator-auth"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/mail",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/mail"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/mail"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/mail",
+            "originPath": "modules/mail"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/deploy-kit",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/deploy-kit"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/deploy-kit"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/deploy-kit",
+            "originPath": "modules/deploy-kit"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/edition-authoring",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "scripts/edition-authoring"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "edition-authoring"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "scripts/edition-authoring",
+            "originPath": "edition-authoring"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/operations",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/operations"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "operations"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/operations",
+            "originPath": "operations"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/release-schema",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "scripts/schema"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "schema"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "scripts/schema",
+            "originPath": "schema"
+          }
+        ]
+      }
+    },
+    {
+      "id": "just-every/penny",
+      "role": "edition",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "src",
+          "public",
+          "scripts/data",
+          "scripts/data-command.mjs",
+          "scripts/feedback",
+          "scripts/feedback-command.mjs",
+          "scripts/deployment",
+          "scripts/operations-config.mjs",
+          "scripts/operations.mjs",
+          "scripts/penny-operations.mjs",
+          "scripts/project-operations.mjs",
+          "scripts/verify-base-source.mjs",
+          "migrations",
+          "wrangler.jsonc",
+          "base/PROVENANCE.json",
+          "scripts/installer",
+          "scripts/publication-custody.mjs",
+          "deploy.json",
+          "rer-setup.json",
+          "importers.json",
+          "schema",
+          "scripts/delivery/setup-build.mjs",
+          "scripts/delivery/base/packaging.json",
+          "scripts/build-delivery-artifact.mjs"
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/owner-claim",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/owner-claim"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/owner-claim"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/owner-claim",
+            "originPath": "modules/owner-claim"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/dependencies",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/dependencies"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/dependencies"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/dependencies",
+            "originPath": "modules/dependencies"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/editor",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/editor"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/editor"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/editor",
+            "originPath": "modules/editor"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/import-kit",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/import-kit"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/import-kit"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/import-kit",
+            "originPath": "modules/import-kit"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/integrations",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/integrations"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/integrations"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/integrations",
+            "originPath": "modules/integrations"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/egress-service",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/egress-service"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/egress-service"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/egress-service",
+            "originPath": "modules/egress-service"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/cli",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "scripts/base-cli"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "default-seed/scripts/base-cli"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "scripts/base-cli",
+            "originPath": "default-seed/scripts/base-cli"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/command-docs",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "SEED-COMMAND-CONTRACT.md",
+          "RUN-LOCALLY.md"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "export/SEED-COMMAND-CONTRACT.md",
+            "export/RUN-LOCALLY.md"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "SEED-COMMAND-CONTRACT.md",
+            "originPath": "export/SEED-COMMAND-CONTRACT.md"
+          },
+          {
+            "path": "RUN-LOCALLY.md",
+            "originPath": "export/RUN-LOCALLY.md"
+          }
+        ]
+      }
+    },
+    {
+      "id": "runeditrun/delivery-producer",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "scripts/delivery/base/artifact.mjs",
+          "scripts/delivery/base/bindings.mjs",
+          "scripts/delivery/base/capabilities.mjs",
+          "scripts/delivery/base/cli.mjs",
+          "scripts/delivery/base/declarations.mjs",
+          "scripts/delivery/base/export.mjs",
+          "scripts/delivery/base/generators/integration.mjs",
+          "scripts/delivery/base/generators/managed.mjs",
+          "scripts/delivery/base/generators/project.mjs",
+          "scripts/delivery/base/generators/validation.mjs",
+          "scripts/delivery/base/migrations.mjs",
+          "scripts/delivery/base/package.mjs",
+          "scripts/delivery/base/paths.mjs",
+          "scripts/delivery/base/payloads.mjs",
+          "scripts/delivery/base/schema/dependencies.mjs",
+          "scripts/delivery/base/schema/SETUP.schema.json",
+          "scripts/delivery/base/schema/json-schema.mjs",
+          "scripts/delivery/base/schema/setup-validation.mjs",
+          "scripts/delivery/base/setup-manifest.mjs",
+          "scripts/delivery/base/spec.mjs"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "paths": [
+            "modules/delivery-producer/artifact.mjs",
+            "modules/delivery-producer/bindings.mjs",
+            "modules/delivery-producer/capabilities.mjs",
+            "modules/delivery-producer/cli.mjs",
+            "modules/delivery-producer/declarations.mjs",
+            "modules/delivery-producer/export.mjs",
+            "modules/delivery-producer/generators/integration.mjs",
+            "modules/delivery-producer/generators/managed.mjs",
+            "modules/delivery-producer/generators/project.mjs",
+            "modules/delivery-producer/generators/validation.mjs",
+            "modules/delivery-producer/migrations.mjs",
+            "modules/delivery-producer/package.mjs",
+            "modules/delivery-producer/paths.mjs",
+            "modules/delivery-producer/payloads.mjs",
+            "schema/dependencies.mjs",
+            "schema/SETUP.schema.json",
+            "schema/json-schema.mjs",
+            "schema/setup-validation.mjs",
+            "modules/delivery-producer/setup-manifest.mjs",
+            "modules/delivery-producer/spec.mjs"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "scripts/delivery/base/artifact.mjs",
+            "originPath": "modules/delivery-producer/artifact.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/bindings.mjs",
+            "originPath": "modules/delivery-producer/bindings.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/capabilities.mjs",
+            "originPath": "modules/delivery-producer/capabilities.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/cli.mjs",
+            "originPath": "modules/delivery-producer/cli.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/declarations.mjs",
+            "originPath": "modules/delivery-producer/declarations.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/export.mjs",
+            "originPath": "modules/delivery-producer/export.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/generators/integration.mjs",
+            "originPath": "modules/delivery-producer/generators/integration.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/generators/managed.mjs",
+            "originPath": "modules/delivery-producer/generators/managed.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/generators/project.mjs",
+            "originPath": "modules/delivery-producer/generators/project.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/generators/validation.mjs",
+            "originPath": "modules/delivery-producer/generators/validation.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/migrations.mjs",
+            "originPath": "modules/delivery-producer/migrations.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/package.mjs",
+            "originPath": "modules/delivery-producer/package.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/paths.mjs",
+            "originPath": "modules/delivery-producer/paths.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/payloads.mjs",
+            "originPath": "modules/delivery-producer/payloads.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/schema/dependencies.mjs",
+            "originPath": "schema/dependencies.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/schema/SETUP.schema.json",
+            "originPath": "schema/SETUP.schema.json"
+          },
+          {
+            "path": "scripts/delivery/base/schema/json-schema.mjs",
+            "originPath": "schema/json-schema.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/schema/setup-validation.mjs",
+            "originPath": "schema/setup-validation.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/setup-manifest.mjs",
+            "originPath": "modules/delivery-producer/setup-manifest.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/spec.mjs",
+            "originPath": "modules/delivery-producer/spec.mjs"
+          }
+        ]
+      }
+    }
+  ],
+  "identityKind": "project"
+}

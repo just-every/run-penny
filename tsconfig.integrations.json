@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./node_modules/.tmp/integrations-types",
+    "tsBuildInfoFile": "./node_modules/.tmp/integrations.tsbuildinfo",
+    "rootDir": "./base/modules/integrations",
+    "target": "es2023",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "types": [
+      "node",
+      "@cloudflare/workers-types"
+    ],
+    "skipLibCheck": true,
+    "strict": true
+  },
+  "include": [
+    "base/modules/integrations/core/**/*.ts",
+    "base/modules/integrations/slack/**/*.ts",
+    "base/modules/integrations/egress/**/*.ts",
+    "base/modules/integrations/index.ts"
+  ]
+}

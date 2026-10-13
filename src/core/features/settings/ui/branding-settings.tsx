@@ -1,0 +1,11 @@
+import {useState} from 'react'
+import {useOperatorResource} from '@/core/app/ui/operator-resource'
+import {operatorMutation} from '../../requests/ui/operator-client'
+import {buttonClass,fieldClass} from '../../auth/client-mutations'
+import {fieldLabelClass,textLinkClass} from '@/core/ui/app/classes'
+import {SectionCard} from '@/core/ui/app/SectionCard'
+import {checkboxClass,checkRowClass} from '../../requests/ui/form-classes'
+export function BrandingSettings(){
+ const [resource,reload]=useOperatorResource<{description:string;accent:string;showLogo:boolean;owner:boolean}>('/api/operator/settings/branding'),[message,setMessage]=useState('')
+ return <SectionCard id="branding-heading" icon="palette" title="Portal branding" description="The installation owner can change the description and readable accent, and show or hide Penny’s mark.">{resource.kind==='ready'?resource.data.owner?<form aria-label="Portal branding" className="space-y-5" onSubmit={event=>{event.preventDefault();const values=new FormData(event.currentTarget);void operatorMutation('/api/operator/settings/branding',{description:values.get('description'),accent:values.get('accent'),showLogo:values.get('showLogo')==='on'},'PUT').then(()=>{setMessage('Portal branding saved.');reload()}).catch(()=>setMessage('Branding could not be saved. Use a readable accent and check owner access.'))}}><label className={fieldLabelClass}>Portal description<textarea name="description" required maxLength={300} defaultValue={resource.data.description} className={fieldClass}/></label><label className={fieldLabelClass}>Portal accent<input name="accent" required pattern="#[a-fA-F0-9]{6}" defaultValue={resource.data.accent} className={fieldClass}/></label><label className={checkRowClass}><input name="showLogo" type="checkbox" defaultChecked={resource.data.showLogo} className={checkboxClass}/>Show Penny logo</label><button className={buttonClass}>Save portal branding</button></form>:<p>Owner access is required to configure portal branding.</p>:resource.kind==='loading'?<p>Loading portal branding…</p>:<><p role="alert">Portal branding could not be loaded.</p><button className={`min-h-11 ${textLinkClass}`} onClick={reload}>Retry portal branding</button></>}{message?<p role="status" className="mt-4">{message}</p>:null}</SectionCard>
+}

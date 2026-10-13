@@ -1,0 +1,4 @@
+/* The app's own collage drawings (header vignettes, empty and error art), built from the shared kit in
+   src/core/ui/brand/collage. Their handwritten notes sit centred on the paper. */
+.penny-collage .pa-note .pl-paper { justify-content: center; padding: calc(14 * var(--u)) calc(16 * var(--u)); }
+.penny-collage .pa-note--tight .pl-paper { padding: calc(9 * var(--u)) calc(10 * var(--u)); }

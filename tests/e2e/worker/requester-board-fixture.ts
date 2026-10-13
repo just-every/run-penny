@@ -1,0 +1,40 @@
+import { env } from 'cloudflare:workers'
+import { createPennyApi } from '../../../src/core/app/api'
+import { createUlid } from '../../../src/core/shared/ulid'
+import { digest, opaqueToken } from '../../../src/core/features/auth/native-tokens'
+export {env,createUlid,opaqueToken,digest}
+export const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['reviewer@example.test'],workspaceTimezone:'UTC',publicOriginAllowlist:['http://penny.test']}})
+export const bindings={...env,APP_ORIGIN:'http://penny.test',PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox',PORTAL_IDENTITY_SECRET:'isolated-host-fixture-key'}
+export async function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST') {
+ return app.fetch(new Request(`http://penny.test${path}`,{method,headers:{...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},body:body===undefined?undefined:JSON.stringify(body)}),bindings)
+}
+export const auth=(token:string)=>({Authorization:`Bearer ${token}`})
+export async function fixture() {
+ const now=new Date().toISOString(),board=createUlid(),operator=createUlid(),cookie=opaqueToken()
+ await env.DB.batch([
+  env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES(?,?,?,'public',0,?,?)").bind(board,`board-${board.toLowerCase()}`,'Feedback board',now,now),
+  env.DB.prepare('INSERT INTO operators(id,email,display_name,created_at,updated_at) VALUES(?,?,?,?,?)').bind(operator,'reviewer@example.test','Reviewer',now,now),
+  env.DB.prepare('INSERT INTO operator_sessions(id,operator_id,token_hash,expires_at,last_used_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').bind(createUlid(),operator,await digest(cookie),new Date(Date.now()+86400000).toISOString(),now,now,now),
+ ])
+ return {board:`board-${board.toLowerCase()}`,operator,headers:{Cookie:`penny_operator_session=${cookie}`}}
+}
+export async function person() {
+ const email=`${createUlid().toLowerCase()}@example.test`
+ const issued=await call('/api/public/identity/email',{email,displayName:'Private requester'})
+ if(issued.status!==202)throw new Error(`Issue identity: ${issued.status}`)
+ const row=await env.DB.prepare("SELECT token FROM local_auth_outbox WHERE recipient=? AND purpose='requester'").bind(email).first<{token:string}>()
+ const verified=await call('/api/public/identity/email/verify',{token:row!.token})
+ if(verified.status!==200)throw new Error(`Verify identity: ${verified.status}`)
+ const {token}=await verified.json() as {token:string}
+ const record=await env.DB.prepare('SELECT requester_id AS id FROM requester_addresses WHERE email=?').bind(email).first<{id:string}>()
+ return {email,token,id:record!.id}
+}
+export async function submit(board:string,token:string,title='Private problem wording') {
+ const response=await call('/api/public/requests',{title,description:'Original observation, retained as evidence.',boardSlug:board,idempotencyKey:crypto.randomUUID()},auth(token))
+ if(response.status!==201)throw new Error(`Submit: ${response.status} ${await response.text()}`)
+ return await response.json() as {slug:string}
+}
+export async function publish(slug:string,board:string,headers:Record<string,string>,title='Published request') {
+ const response=await call(`/api/operator/moderation/${slug}`,{verdict:'approved',title,description:'Approved public wording.',boardSlug:board,displayName:'Public requester'},headers)
+ if(response.status!==200)throw new Error(`Approve: ${response.status} ${await response.text()}`)
+}

@@ -1,0 +1,2351 @@
+{
+  "accounts": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "slug",
+      "name",
+      "internal_owner_id",
+      "revenue_cents",
+      "renewal_date",
+      "health",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "attachments": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "evidence_id",
+      "storage_key",
+      "original_filename",
+      "content_type",
+      "byte_size",
+      "public_state",
+      "rejection_reason",
+      "created_at",
+      "updated_at",
+      "origin_request_id"
+    ]
+  },
+  "audit_entries": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "actor_type",
+      "actor_id",
+      "action",
+      "entity_type",
+      "entity_id",
+      "occurred_at",
+      "details_json",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "boards": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "slug",
+      "name",
+      "visibility",
+      "position",
+      "archived_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "candidate_bet_account_links": {
+    "classification": "product",
+    "columns": [
+      "candidate_bet_id",
+      "account_id",
+      "created_at"
+    ]
+  },
+  "candidate_bet_evidence_links": {
+    "classification": "product",
+    "columns": [
+      "candidate_bet_id",
+      "evidence_id",
+      "stance",
+      "created_at"
+    ]
+  },
+  "candidate_bets": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "decision_id",
+      "title",
+      "summary",
+      "urgency",
+      "delivery_shape",
+      "success_measure",
+      "assumptions",
+      "counter_evidence",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "custom_field_definitions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "entity_type",
+      "name",
+      "field_type",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "custom_field_values": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "definition_id",
+      "entity_id",
+      "value_json",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "data_apply_claims": {
+    "classification": "journal",
+    "columns": [
+      "operation_id"
+    ]
+  },
+  "data_operations": {
+    "classification": "journal",
+    "columns": [
+      "id",
+      "kind",
+      "status",
+      "payload_json",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "data_state": {
+    "classification": "journal",
+    "columns": [
+      "singleton",
+      "origin",
+      "epoch",
+      "phase",
+      "lock_id"
+    ]
+  },
+  "data_tombstones": {
+    "classification": "journal",
+    "columns": [
+      "epoch",
+      "table_name",
+      "key_hash"
+    ]
+  },
+  "decision_bet_snapshots": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "decision_revision_id",
+      "candidate_bet_id",
+      "disposition",
+      "title",
+      "summary",
+      "urgency",
+      "delivery_shape",
+      "success_measure",
+      "affected_requester_count",
+      "affected_account_count",
+      "supporting_count",
+      "latest_support_at",
+      "contradicting_count",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "decision_evidence_snapshots": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "decision_revision_id",
+      "evidence_id",
+      "evidence_version_id",
+      "candidate_bet_id",
+      "stance",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "decision_review_notifications": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "decision_id",
+      "owner_operator_id",
+      "review_generation",
+      "review_at",
+      "dismissed_at",
+      "state",
+      "claim_id",
+      "attempt_count",
+      "next_attempt_at",
+      "provider_message_id",
+      "failure_reason",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "decision_reviews": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "decision_id",
+      "operator_id",
+      "note",
+      "review_at",
+      "decision_revision_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "decision_revisions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "decision_id",
+      "revision_number",
+      "selected_candidate_bet_id",
+      "rationale",
+      "confidence",
+      "review_at",
+      "no_viable_alternative_reason",
+      "committed_by_operator_id",
+      "created_at",
+      "updated_at",
+      "owner_operator_id",
+      "roadmap_item_id"
+    ]
+  },
+  "decisions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "slug",
+      "title",
+      "question",
+      "state",
+      "owner_operator_id",
+      "confidence",
+      "review_at",
+      "selected_candidate_bet_id",
+      "rationale",
+      "created_at",
+      "updated_at",
+      "review_generation",
+      "review_completed_at"
+    ]
+  },
+  "evidence_attachment_uploads": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "evidence_id",
+      "storage_key",
+      "original_filename",
+      "content_type",
+      "byte_size",
+      "sha256",
+      "writing",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "evidence_items": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "source_type",
+      "source_label",
+      "account_id",
+      "requester_id",
+      "recorded_by_operator_id",
+      "observed_at",
+      "review_state",
+      "review_reason",
+      "created_at",
+      "updated_at",
+      "withdrawn_at",
+      "named_speaker",
+      "release_id"
+    ]
+  },
+  "evidence_tag_assignments": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "tag_id",
+      "created_at"
+    ]
+  },
+  "evidence_versions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "evidence_id",
+      "version_number",
+      "wording",
+      "edited_by_operator_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "feedback_import_bundles": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "fingerprint",
+      "receipt_json",
+      "originals_json",
+      "sealed",
+      "originals_state"
+    ]
+  },
+  "feedback_import_erasure_work": {
+    "classification": "installation",
+    "columns": [
+      "operation_id",
+      "ordinal",
+      "target_kind",
+      "target_id",
+      "namespace",
+      "row_keys_json",
+      "complete",
+      "source_cursor",
+      "source_complete"
+    ]
+  },
+  "feedback_import_native_revision": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "revision"
+    ]
+  },
+  "feedback_import_original_chunks": {
+    "classification": "product",
+    "columns": [
+      "bundle_id",
+      "artifact",
+      "ordinal",
+      "bytes"
+    ]
+  },
+  "feedback_import_receipt_notes": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "kind",
+      "source_id",
+      "reason"
+    ]
+  },
+  "feedback_import_records": {
+    "classification": "product",
+    "columns": [
+      "target_kind",
+      "target_id",
+      "namespace",
+      "source_id",
+      "artifact_hash",
+      "source_hash",
+      "revision",
+      "row_keys_json",
+      "attribution"
+    ]
+  },
+  "feedback_import_reversals": {
+    "classification": "installation",
+    "columns": [
+      "job_id",
+      "revision"
+    ]
+  },
+  "feedback_import_tombstones": {
+    "classification": "product",
+    "columns": [
+      "target_kind",
+      "target_id"
+    ]
+  },
+  "host_identity_accounts": {
+    "classification": "product",
+    "columns": [
+      "host_account_id",
+      "account_id",
+      "created_at"
+    ]
+  },
+  "host_identity_claims": {
+    "classification": "product",
+    "columns": [
+      "email_hash",
+      "requester_id",
+      "issued_at",
+      "claim_hash"
+    ]
+  },
+  "host_identity_tombstones": {
+    "classification": "product",
+    "columns": [
+      "email_hash"
+    ]
+  },
+  "ik_batches": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "action",
+      "position",
+      "end_position",
+      "fence"
+    ]
+  },
+  "ik_d1_assertions": {
+    "classification": "product",
+    "columns": [
+      "ok"
+    ]
+  },
+  "ik_d1_creation_plans": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "ordinal",
+      "body",
+      "released"
+    ]
+  },
+  "ik_d1_custody_revisions": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "revision",
+      "seal"
+    ]
+  },
+  "ik_d1_custody_states": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "revision"
+    ]
+  },
+  "ik_d1_entries": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "ordinal",
+      "source_identity",
+      "owner_job_id",
+      "effects_hash"
+    ]
+  },
+  "ik_d1_erased_sources": {
+    "classification": "product",
+    "columns": [
+      "destination",
+      "identity"
+    ]
+  },
+  "ik_d1_erased_targets": {
+    "classification": "product",
+    "columns": [
+      "destination",
+      "identity"
+    ]
+  },
+  "ik_d1_erasure_journal": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "destination",
+      "recorded_at",
+      "records_erased",
+      "jobs_retired",
+      "streams_retired",
+      "stores_json"
+    ]
+  },
+  "ik_d1_erasure_tally": {
+    "classification": "product",
+    "columns": [
+      "receipt_id",
+      "store",
+      "image"
+    ]
+  },
+  "ik_d1_history": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "job_id",
+      "ordinal",
+      "effect_ordinal",
+      "source_identity",
+      "destination",
+      "target_kind",
+      "target_id",
+      "reversed",
+      "record_json",
+      "successor_id"
+    ]
+  },
+  "ik_d1_indexed_jobs": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "fingerprint"
+    ]
+  },
+  "ik_d1_native_staging": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "generation",
+      "destination",
+      "namespace",
+      "mapping_version",
+      "principal_id",
+      "job_id",
+      "fingerprint",
+      "job_fence",
+      "action",
+      "values_count",
+      "chunks_count",
+      "identities",
+      "revision",
+      "registered_revision",
+      "sealed_revision"
+    ]
+  },
+  "ik_d1_native_staging_index": {
+    "classification": "product",
+    "columns": [
+      "stage_id",
+      "ordinal",
+      "source_identity",
+      "target_identity"
+    ]
+  },
+  "ik_d1_native_staging_values": {
+    "classification": "product",
+    "columns": [
+      "stage_id",
+      "value_ordinal",
+      "ordinal",
+      "body",
+      "body_hash",
+      "body_size",
+      "value_chunks"
+    ]
+  },
+  "ik_d1_original_chunks": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "kind",
+      "original_key",
+      "ordinal",
+      "bytes"
+    ],
+    "binaryColumns": [
+      "bytes"
+    ]
+  },
+  "ik_d1_plan_chunks": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "ordinal",
+      "body"
+    ]
+  },
+  "ik_d1_plan_index": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "ordinal",
+      "source_identity",
+      "target_identity"
+    ]
+  },
+  "ik_d1_preparation_receipts": {
+    "classification": "product",
+    "columns": [
+      "stage_id",
+      "generation",
+      "codec_id",
+      "header_hash",
+      "header_size",
+      "header_chunks"
+    ]
+  },
+  "ik_d1_publication_fences": {
+    "classification": "product",
+    "columns": [
+      "stream_id",
+      "job_id"
+    ]
+  },
+  "ik_d1_retirements": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "kind",
+      "destination",
+      "receipt_id",
+      "retired_at"
+    ]
+  },
+  "ik_d1_reversal_fences": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "action",
+      "fence",
+      "state_revision",
+      "erased_records",
+      "reused"
+    ]
+  },
+  "ik_d1_reversal_reports": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "effect_id",
+      "position",
+      "record_json"
+    ]
+  },
+  "ik_d1_staging": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "generation",
+      "destination",
+      "namespace",
+      "mapping_version",
+      "principal_id",
+      "fingerprint",
+      "operation_key",
+      "total",
+      "pages",
+      "layout_hash",
+      "reversal_policy",
+      "revision",
+      "registered_revision",
+      "sealed_revision"
+    ]
+  },
+  "ik_d1_staging_chunks": {
+    "classification": "product",
+    "columns": [
+      "stage_id",
+      "page_ordinal",
+      "ordinal",
+      "body",
+      "body_hash",
+      "body_size"
+    ]
+  },
+  "ik_d1_staging_headers": {
+    "classification": "product",
+    "columns": [
+      "stage_id",
+      "ordinal",
+      "body",
+      "body_hash",
+      "body_size"
+    ]
+  },
+  "ik_d1_staging_index": {
+    "classification": "product",
+    "columns": [
+      "stage_id",
+      "page_ordinal",
+      "ordinal",
+      "source_identity",
+      "target_identity"
+    ]
+  },
+  "ik_d1_staging_originals": {
+    "classification": "product",
+    "columns": [
+      "stage_id",
+      "original_key",
+      "name",
+      "sha256",
+      "size"
+    ]
+  },
+  "ik_d1_staging_pages": {
+    "classification": "product",
+    "columns": [
+      "stage_id",
+      "ordinal",
+      "job_id",
+      "total",
+      "fingerprint",
+      "plan_json",
+      "body_hash",
+      "body_size",
+      "chunks",
+      "identities",
+      "index_hash",
+      "policy_hash",
+      "inline_plan"
+    ]
+  },
+  "ik_d1_stream_origins": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "stream_id",
+      "ordinal",
+      "page_total",
+      "job_operation_key",
+      "parent_destination",
+      "parent_namespace",
+      "parent_mapping_version",
+      "parent_principal_id",
+      "parent_fingerprint",
+      "parent_operation_key",
+      "parent_total",
+      "parent_layout_hash"
+    ]
+  },
+  "ik_d1_stream_pages": {
+    "classification": "product",
+    "columns": [
+      "stream_id",
+      "ordinal",
+      "job_id",
+      "total",
+      "erased_records"
+    ]
+  },
+  "ik_d1_stream_revisions": {
+    "classification": "product",
+    "columns": [
+      "stream_id",
+      "destination",
+      "namespace",
+      "mapping_version",
+      "principal_id",
+      "fingerprint",
+      "operation_key",
+      "total",
+      "layout_hash",
+      "layout_revision",
+      "progress_revision"
+    ]
+  },
+  "ik_d1_streams": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "destination",
+      "namespace",
+      "mapping_version",
+      "principal_id",
+      "fingerprint",
+      "operation_key",
+      "total",
+      "layout_hash",
+      "state"
+    ]
+  },
+  "ik_jobs": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "destination",
+      "namespace",
+      "mapping_version",
+      "principal_id",
+      "fingerprint",
+      "operation_key",
+      "plan_json",
+      "state",
+      "checkpoint",
+      "total",
+      "fence",
+      "lease_token",
+      "lease_expires",
+      "error",
+      "reversal_policy",
+      "reversal_policy_hash",
+      "reversal_cursor",
+      "reversal_hash"
+    ]
+  },
+  "ik_original_sets": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "version"
+    ]
+  },
+  "ik_originals": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "kind",
+      "original_key",
+      "name",
+      "sha256",
+      "size",
+      "bytes"
+    ],
+    "binaryColumns": [
+      "bytes"
+    ]
+  },
+  "ik_provenance": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "job_id",
+      "ordinal",
+      "effect_ordinal",
+      "source_identity",
+      "destination",
+      "target_kind",
+      "target_id",
+      "reversed",
+      "record_json"
+    ]
+  },
+  "ik_sources": {
+    "classification": "product",
+    "columns": [
+      "identity",
+      "source_hash",
+      "mapping_version",
+      "effects_hash",
+      "job_id"
+    ]
+  },
+  "ik_stages": {
+    "classification": "product",
+    "columns": [
+      "job_id",
+      "fence",
+      "effect_id",
+      "sha256",
+      "bytes"
+    ],
+    "binaryColumns": [
+      "bytes"
+    ]
+  },
+  "ik_targets": {
+    "classification": "product",
+    "columns": [
+      "destination",
+      "kind",
+      "id",
+      "revision",
+      "value_json",
+      "attachment_json"
+    ]
+  },
+  "integration_attempts": {
+    "classification": "product",
+    "columns": [
+      "namespace",
+      "id",
+      "delivery_id",
+      "number",
+      "started_at",
+      "finished_at",
+      "outcome"
+    ]
+  },
+  "integration_deliveries": {
+    "classification": "product",
+    "columns": [
+      "namespace",
+      "id",
+      "fingerprint",
+      "destination_hash",
+      "envelope",
+      "state",
+      "attempts",
+      "created_at",
+      "next_at",
+      "claim",
+      "claim_until",
+      "max_attempts",
+      "retry_delays"
+    ]
+  },
+  "integration_replays": {
+    "classification": "product",
+    "columns": [
+      "namespace",
+      "id",
+      "fingerprint",
+      "envelope",
+      "received_at"
+    ]
+  },
+  "integration_resolutions": {
+    "classification": "product",
+    "columns": [
+      "namespace",
+      "id",
+      "delivery_id",
+      "at",
+      "outcome"
+    ]
+  },
+  "integration_token_events": {
+    "classification": "installation",
+    "columns": [
+      "namespace",
+      "id",
+      "token_id",
+      "at",
+      "action",
+      "feature"
+    ]
+  },
+  "integration_token_usage": {
+    "classification": "installation",
+    "columns": [
+      "namespace",
+      "id",
+      "token_id",
+      "at",
+      "required_scopes",
+      "allowed",
+      "request_id",
+      "resource"
+    ]
+  },
+  "integration_tokens": {
+    "classification": "installation",
+    "columns": [
+      "namespace",
+      "id",
+      "token_hash",
+      "name",
+      "scopes",
+      "created_at",
+      "expires_at",
+      "revoked_at"
+    ]
+  },
+  "local_auth_outbox": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "recipient",
+      "purpose",
+      "token",
+      "expires_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "mail_event_records": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "value_json",
+      "address_id",
+      "batch_id",
+      "outbox_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "native_magic_links": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "purpose",
+      "email",
+      "display_name",
+      "token_hash",
+      "expires_at",
+      "consumed_at",
+      "claim_id",
+      "created_at",
+      "updated_at",
+      "pending_token_hash",
+      "pending_email_hash"
+    ]
+  },
+  "native_moderation_events": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "actor_id",
+      "verdict",
+      "reason",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "native_rate_limits": {
+    "classification": "product",
+    "columns": [
+      "scope",
+      "subject_hash",
+      "count",
+      "expires_at"
+    ]
+  },
+  "native_requester_sessions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "requester_id",
+      "address_id",
+      "token_hash",
+      "expires_at",
+      "last_used_at",
+      "revoked_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "notification_attempts": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "batch_id",
+      "provider",
+      "state",
+      "provider_message_id",
+      "failure_reason",
+      "created_at",
+      "updated_at",
+      "recipient_email",
+      "event_message_id",
+      "recipient_verification_epoch"
+    ]
+  },
+  "notification_batches": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "requester_id",
+      "address_id",
+      "request_id",
+      "first_event_id",
+      "window_start",
+      "window_end",
+      "state",
+      "attempt_count",
+      "next_attempt_at",
+      "claim_id",
+      "provider",
+      "provider_message_id",
+      "failure_reason",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "notification_delivery_facts": {
+    "classification": "product",
+    "columns": [
+      "batch_id",
+      "state",
+      "accepted_at",
+      "delivered_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "notification_events": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "kind",
+      "subject_id",
+      "body",
+      "created_at",
+      "updated_at",
+      "roadmap_update_version_id"
+    ]
+  },
+  "notification_intents": {
+    "classification": "product",
+    "columns": [
+      "event_id",
+      "requester_id",
+      "address_id",
+      "batch_id",
+      "created_at",
+      "updated_at",
+      "coalescing_at",
+      "restoration_hold_at"
+    ]
+  },
+  "notification_link_epochs": {
+    "classification": "product",
+    "columns": [
+      "address_id",
+      "scope",
+      "epoch",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "notification_outbox": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "event_type",
+      "subject_id",
+      "event_version",
+      "requester_id",
+      "operator_id",
+      "dedupe_key",
+      "payload_json",
+      "delivery_state",
+      "attempt_count",
+      "available_at",
+      "failure_reason",
+      "created_at",
+      "updated_at",
+      "address_id",
+      "release_snapshot_id",
+      "claim_id",
+      "provider",
+      "provider_message_id",
+      "first_attempt_at",
+      "accepted_at",
+      "delivered_at"
+    ]
+  },
+  "notification_outbox_attempts": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "outbox_id",
+      "provider",
+      "state",
+      "provider_message_id",
+      "event_message_id",
+      "recipient_email",
+      "recipient_verification_epoch",
+      "failure_reason",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "oa_auth_audit": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "actor_id",
+      "action",
+      "value",
+      "created_at"
+    ]
+  },
+  "oa_auth_settings": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "idp_sign_in",
+      "generation",
+      "first_setup"
+    ]
+  },
+  "oa_bootstrap": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "claim_id",
+      "claimed_at"
+    ]
+  },
+  "oa_credentials": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "token_hash",
+      "operator_id",
+      "operator_version",
+      "kind",
+      "expires_at",
+      "revoked_at"
+    ]
+  },
+  "oa_dev_credentials": {
+    "classification": "installation",
+    "columns": [
+      "credential",
+      "id",
+      "created_at"
+    ]
+  },
+  "oa_domain_rules": {
+    "classification": "installation",
+    "columns": [
+      "domain",
+      "provider_id",
+      "created_by",
+      "created_at"
+    ]
+  },
+  "oa_external_identities": {
+    "classification": "installation",
+    "columns": [
+      "issuer",
+      "subject",
+      "operator_id"
+    ]
+  },
+  "oa_first_run": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "completed_by",
+      "completed_at"
+    ]
+  },
+  "oa_identity_provider_health": {
+    "classification": "installation",
+    "columns": [
+      "provider_id",
+      "failing_since",
+      "hard_failure_at",
+      "checked_at"
+    ]
+  },
+  "oa_identity_providers": {
+    "classification": "installation",
+    "columns": [
+      "provider_id",
+      "preset",
+      "status",
+      "issuer",
+      "client_id",
+      "jwks_uri",
+      "authorization_endpoint",
+      "token_endpoint",
+      "algorithms",
+      "token_auth_method",
+      "response_iss",
+      "interface_version",
+      "linked_at",
+      "pending_issuer",
+      "pending_client_id",
+      "pending_preset",
+      "pending_at",
+      "jwks",
+      "jwks_fetched_at"
+    ]
+  },
+  "oa_invitation_cancellations": {
+    "classification": "installation",
+    "columns": [
+      "operator_id",
+      "operator_version"
+    ]
+  },
+  "oa_limits": {
+    "classification": "installation",
+    "columns": [
+      "key",
+      "window",
+      "count"
+    ]
+  },
+  "oa_logout_events": {
+    "classification": "installation",
+    "columns": [
+      "issuer",
+      "jti",
+      "consumed_at"
+    ]
+  },
+  "oa_oidc_limits": {
+    "classification": "installation",
+    "columns": [
+      "bucket",
+      "count",
+      "expires_at"
+    ]
+  },
+  "oa_oidc_transactions": {
+    "classification": "installation",
+    "columns": [
+      "state_hash",
+      "binding_hash",
+      "config_hash",
+      "payload",
+      "expires_at"
+    ]
+  },
+  "oa_operators": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "email",
+      "display_name",
+      "role",
+      "status",
+      "version",
+      "created_at"
+    ]
+  },
+  "oa_provider_session_pins": {
+    "classification": "installation",
+    "columns": [
+      "session_id",
+      "provider_id",
+      "issuer",
+      "client_id",
+      "linked_at"
+    ]
+  },
+  "oa_provider_sessions": {
+    "classification": "installation",
+    "columns": [
+      "session_id",
+      "issuer",
+      "subject",
+      "sid",
+      "generation"
+    ]
+  },
+  "oa_sessions": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "token_hash",
+      "operator_id",
+      "operator_version",
+      "kind",
+      "source_token_id",
+      "created_at",
+      "expires_at",
+      "revoked_at"
+    ]
+  },
+  "oa_setup_links": {
+    "classification": "installation",
+    "columns": [
+      "interface",
+      "attempt_id",
+      "expires_at",
+      "owner_id",
+      "owner_version",
+      "session_id",
+      "completed"
+    ]
+  },
+  "oa_step_up_challenges": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "token_hash",
+      "session_id",
+      "operator_id",
+      "operator_version",
+      "action",
+      "return_to",
+      "created_at",
+      "expires_at",
+      "consumed_at"
+    ]
+  },
+  "oa_tokens": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "token_hash",
+      "kind",
+      "operator_id",
+      "operator_version",
+      "issuer_id",
+      "issuer_version",
+      "return_to",
+      "created_at",
+      "expires_at",
+      "consumed_at",
+      "revoked_at"
+    ]
+  },
+  "oc_idp_grants": {
+    "classification": "installation",
+    "columns": [
+      "issuer",
+      "client_id",
+      "jti",
+      "subject",
+      "sector_id"
+    ]
+  },
+  "oc_owner_claims": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "jti",
+      "installation_id",
+      "email",
+      "issued_at",
+      "expires_at",
+      "consumed_at",
+      "operator_id",
+      "session_id",
+      "completed"
+    ]
+  },
+  "operator_sessions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "operator_id",
+      "token_hash",
+      "expires_at",
+      "last_used_at",
+      "revoked_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "operators": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "email",
+      "display_name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_api_issuance": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "native_operator_id",
+      "operator_version",
+      "actor_id",
+      "dev"
+    ]
+  },
+  "penny_api_issuers": {
+    "classification": "installation",
+    "columns": [
+      "token_id",
+      "native_operator_id",
+      "operator_version",
+      "actor_id"
+    ]
+  },
+  "penny_effect_suppression": {
+    "classification": "installation",
+    "columns": [
+      "singleton"
+    ]
+  },
+  "penny_integration_credentials": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "endpoint",
+      "signing_key"
+    ]
+  },
+  "penny_integration_destinations": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "name",
+      "kind",
+      "events_json",
+      "native_operator_id",
+      "operator_version",
+      "actor_id",
+      "created_at",
+      "revoked_at"
+    ]
+  },
+  "penny_integration_events": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "event",
+      "request_id",
+      "comment_id",
+      "status_id",
+      "release_id",
+      "version_id",
+      "created_at",
+      "held"
+    ]
+  },
+  "penny_integration_guards": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "allowed"
+    ]
+  },
+  "penny_integration_receipts": {
+    "classification": "product",
+    "columns": [
+      "namespace",
+      "id",
+      "fingerprint",
+      "request_id",
+      "note_id",
+      "received_at"
+    ]
+  },
+  "penny_integration_targets": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "event_id",
+      "destination_id"
+    ]
+  },
+  "penny_portal_branding": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "description",
+      "accent",
+      "show_logo",
+      "updated_at"
+    ]
+  },
+  "penny_tracker_commands": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "decision_id",
+      "connection_id",
+      "native_operator_id",
+      "operator_version",
+      "operation_key",
+      "body_hash",
+      "body_json",
+      "link_id",
+      "created_at",
+      "held"
+    ]
+  },
+  "penny_tracker_connections": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "name",
+      "provider",
+      "project_identity",
+      "organization_identity",
+      "site_origin",
+      "issue_type",
+      "native_operator_id",
+      "operator_version",
+      "actor_id",
+      "created_at",
+      "revoked_at"
+    ]
+  },
+  "penny_tracker_links": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "decision_id",
+      "connection_id",
+      "provider",
+      "project_identity",
+      "external_id",
+      "issue_url",
+      "state",
+      "source_updated_at",
+      "state_fingerprint",
+      "created_at"
+    ]
+  },
+  "penny_tracker_receipts": {
+    "classification": "product",
+    "columns": [
+      "connection_id",
+      "delivery_id",
+      "fingerprint",
+      "link_id",
+      "source_updated_at",
+      "disposition",
+      "received_at"
+    ]
+  },
+  "penny_tracker_secrets": {
+    "classification": "installation",
+    "columns": [
+      "connection_id",
+      "api_token",
+      "api_email",
+      "signing_key"
+    ]
+  },
+  "release_draft_mappings": {
+    "classification": "product",
+    "columns": [
+      "release_id",
+      "roadmap_item_id",
+      "request_id",
+      "approval_at",
+      "approval_updated_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "release_outcomes": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "release_version_id",
+      "requester_id",
+      "roadmap_item_id",
+      "outcome",
+      "revision_number",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "release_recipient_contexts": {
+    "classification": "product",
+    "columns": [
+      "snapshot_id",
+      "request_id",
+      "roadmap_item_id",
+      "title",
+      "slug",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "release_recipient_snapshots": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "release_version_id",
+      "requester_id",
+      "requester_address_id",
+      "request_id",
+      "evidence_id",
+      "created_at",
+      "updated_at",
+      "recipient_email",
+      "verification_epoch"
+    ]
+  },
+  "release_target_snapshots": {
+    "classification": "product",
+    "columns": [
+      "version_id",
+      "roadmap_item_id",
+      "decision_id",
+      "request_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "release_targets": {
+    "classification": "product",
+    "columns": [
+      "release_id",
+      "roadmap_item_id",
+      "decision_id",
+      "created_at",
+      "updated_at",
+      "approval_id",
+      "approval_at",
+      "approval_updated_at",
+      "public_title",
+      "public_summary",
+      "public_slug"
+    ]
+  },
+  "release_versions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "release_id",
+      "version_number",
+      "title",
+      "release_type",
+      "body",
+      "publication_date",
+      "setup_url",
+      "outcome_prompt",
+      "subject_tags_json",
+      "is_portal_current",
+      "created_at",
+      "updated_at",
+      "publication_claim",
+      "author_name",
+      "tag_names_json",
+      "snapshot_sealed_at",
+      "original_publication_version_id",
+      "delivery_requested_at"
+    ]
+  },
+  "releases": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "slug",
+      "state",
+      "current_version_id",
+      "author_operator_id",
+      "published_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_attachment_uploads": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "storage_key",
+      "original_filename",
+      "content_type",
+      "byte_size",
+      "sha256",
+      "created_at",
+      "updated_at",
+      "writing"
+    ]
+  },
+  "request_comment_edits": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "comment_id",
+      "requester_id",
+      "body",
+      "moderation_state",
+      "rejection_reason",
+      "approved_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_comments": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "requester_id",
+      "operator_id",
+      "body",
+      "moderation_state",
+      "published_at",
+      "created_at",
+      "updated_at",
+      "rejection_reason",
+      "edited_at",
+      "public_author_display_name",
+      "public_author_kind",
+      "origin_request_id",
+      "historical_private",
+      "historical_parent_id"
+    ]
+  },
+  "request_content_submissions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "requester_id",
+      "title",
+      "description",
+      "proposed_solution",
+      "impact_statement",
+      "moderation_state",
+      "rejection_reason",
+      "approved_at",
+      "created_at",
+      "updated_at",
+      "is_initial"
+    ]
+  },
+  "request_evidence_contributions": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "evidence_id",
+      "created_at"
+    ]
+  },
+  "request_evidence_links": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "evidence_id",
+      "created_at",
+      "stance"
+    ]
+  },
+  "request_follow_contributions": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "permission_granted_at",
+      "muted_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_follows": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "permission_granted_at",
+      "muted_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_merge_attachment_transfers": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "attachment_id",
+      "created_at"
+    ]
+  },
+  "request_merge_comment_transfers": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "comment_id",
+      "created_at"
+    ]
+  },
+  "request_merge_evidence_transfers": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "evidence_id",
+      "target_was_linked",
+      "created_at"
+    ]
+  },
+  "request_merge_follow_transfers": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "requester_id",
+      "target_had_follow",
+      "source_permission_granted_at",
+      "source_muted_at",
+      "source_created_at",
+      "source_updated_at",
+      "created_at"
+    ]
+  },
+  "request_merge_vote_transfers": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "requester_id",
+      "target_had_vote",
+      "source_created_at",
+      "source_updated_at",
+      "created_at"
+    ]
+  },
+  "request_merges": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "source_request_id",
+      "target_request_id",
+      "actor_operator_id",
+      "merged_at",
+      "unmerged_at",
+      "unmerged_by_operator_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_moderation_appeals": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "subject_type",
+      "subject_id",
+      "request_id",
+      "requester_id",
+      "body",
+      "state",
+      "reviewed_by_operator_id",
+      "reviewed_at",
+      "created_at",
+      "updated_at",
+      "resolution",
+      "resolution_reason",
+      "resolution_id"
+    ]
+  },
+  "request_moderation_events": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "subject_type",
+      "subject_id",
+      "request_id",
+      "verdict",
+      "reason",
+      "actor_operator_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_notes": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "operator_id",
+      "body",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_notification_mutes": {
+    "classification": "product",
+    "columns": [
+      "requester_id",
+      "request_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_status_updates": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "request_id",
+      "public_status",
+      "previous_public_state",
+      "body",
+      "pinned",
+      "operator_id",
+      "published_at",
+      "created_at",
+      "updated_at",
+      "action_key",
+      "publication_version"
+    ]
+  },
+  "request_submission_keys": {
+    "classification": "product",
+    "columns": [
+      "key_hash",
+      "body_hash",
+      "request_id",
+      "evidence_id",
+      "expires_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_tag_assignments": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "tag_id",
+      "created_at"
+    ]
+  },
+  "request_vote_contributions": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_vote_supporter_types": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "supporter_type",
+      "created_at"
+    ]
+  },
+  "request_votes": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "requester_account_links": {
+    "classification": "product",
+    "columns": [
+      "requester_id",
+      "account_id",
+      "created_at"
+    ]
+  },
+  "requester_addresses": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "requester_id",
+      "email",
+      "verified_at",
+      "suppressed_at",
+      "created_at",
+      "updated_at",
+      "verification_epoch"
+    ]
+  },
+  "requester_identity_merges": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "source_requester_id",
+      "target_requester_id",
+      "actor_operator_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "requester_notification_preferences": {
+    "classification": "product",
+    "columns": [
+      "requester_id",
+      "muted_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "requester_pending_action_bindings": {
+    "classification": "product",
+    "columns": [
+      "pending_token_hash",
+      "verification_email_hash",
+      "expires_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "requester_pending_actions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "pending_token_hash",
+      "action_type",
+      "payload_json",
+      "expires_at",
+      "claimed_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "requester_update_permissions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "requester_id",
+      "requester_address_id",
+      "request_id",
+      "source",
+      "granted_at",
+      "revoked_at",
+      "created_at",
+      "updated_at",
+      "suppressed_at"
+    ]
+  },
+  "requester_write_guards": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "permitted"
+    ]
+  },
+  "requesters": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "display_name",
+      "blocked_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "requests": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "slug",
+      "board_id",
+      "author_requester_id",
+      "title",
+      "description",
+      "proposed_solution",
+      "impact_statement",
+      "moderation_state",
+      "public_state",
+      "public_title",
+      "public_description",
+      "published_at",
+      "declined_reason",
+      "withdrawn_at",
+      "created_at",
+      "updated_at",
+      "approved_author_name",
+      "merged_into_request_id",
+      "merged_at",
+      "public_author_display_name",
+      "author_operator_id"
+    ]
+  },
+  "rer_dependency_codes": {
+    "classification": "installation",
+    "columns": [
+      "digest",
+      "created_at"
+    ]
+  },
+  "rer_dependency_installation": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "sector_id"
+    ]
+  },
+  "rer_dependency_keys": {
+    "classification": "installation",
+    "columns": [
+      "interface",
+      "private_key"
+    ]
+  },
+  "rer_dependency_link": {
+    "classification": "installation",
+    "columns": [
+      "interface",
+      "issuer",
+      "client_id",
+      "metadata",
+      "needs_relink",
+      "linked_at"
+    ]
+  },
+  "rer_dependency_pending": {
+    "classification": "installation",
+    "columns": [
+      "interface",
+      "issuer",
+      "approved_by",
+      "expires_at",
+      "approved_session",
+      "approved_version",
+      "callbacks",
+      "attempt_id"
+    ]
+  },
+  "rer_mail_development_outbox": {
+    "classification": "installation",
+    "columns": [
+      "sequence",
+      "id",
+      "created_at",
+      "message"
+    ]
+  },
+  "roadmap_evidence_links": {
+    "classification": "product",
+    "columns": [
+      "roadmap_item_id",
+      "evidence_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "roadmap_items": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "slug",
+      "decision_id",
+      "candidate_bet_id",
+      "title",
+      "summary",
+      "owner_operator_id",
+      "status",
+      "target_window",
+      "delivery_notes",
+      "confidence",
+      "created_at",
+      "updated_at",
+      "account_impact",
+      "public_title_draft",
+      "public_summary_draft"
+    ]
+  },
+  "roadmap_mapping_history": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "roadmap_item_id",
+      "request_id",
+      "approved_at",
+      "withdrawn_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "roadmap_publications": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "roadmap_item_id",
+      "public_title",
+      "public_summary",
+      "approved_by_operator_id",
+      "approved_at",
+      "withdrawn_at",
+      "created_at",
+      "updated_at",
+      "public_slug",
+      "board_id"
+    ]
+  },
+  "roadmap_request_mappings": {
+    "classification": "product",
+    "columns": [
+      "roadmap_item_id",
+      "request_id",
+      "approved_at",
+      "withdrawn_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "roadmap_transitions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "roadmap_item_id",
+      "from_status",
+      "to_status",
+      "reason",
+      "actor_operator_id",
+      "created_at",
+      "updated_at",
+      "action_key"
+    ]
+  },
+  "roadmap_update_contexts": {
+    "classification": "product",
+    "columns": [
+      "version_id",
+      "requester_id",
+      "address_id",
+      "request_id",
+      "title",
+      "slug",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "roadmap_update_histories": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "version_id",
+      "request_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "roadmap_update_targets": {
+    "classification": "product",
+    "columns": [
+      "version_id",
+      "request_id",
+      "approval_at",
+      "approval_updated_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "roadmap_update_versions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "transition_id",
+      "roadmap_item_id",
+      "author_operator_id",
+      "version_number",
+      "public_status",
+      "title",
+      "problem",
+      "body",
+      "public_slug",
+      "approval_id",
+      "approval_at",
+      "approval_updated_at",
+      "published_at",
+      "publication_claim",
+      "created_at",
+      "updated_at",
+      "snapshot_sealed_at",
+      "discarded_at"
+    ]
+  },
+  "tags": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "feedback_import_reversal_scans": {
+    "classification": "installation",
+    "columns": [
+      "job_id",
+      "revision",
+      "intent",
+      "ordinal"
+    ]
+  }
+}

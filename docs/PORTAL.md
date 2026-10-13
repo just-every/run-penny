@@ -1,0 +1,91 @@
+# The public portal
+
+The portal is the customer-facing half of Penny. Visitors read your feedback board, see what you are working on and read your product updates. Verified customers can also ask for things, vote, comment and follow. Everything a customer sees has been approved by one of your operators.
+
+The portal has four places:
+
+| Page | Address | What it shows |
+|---|---|---|
+| Feedback board | `/portal/feedback` | Published requests, with search, board and status filters. |
+| Roadmap | `/portal/roadmap` | Items you have approved for the public, grouped by status. |
+| Updates | `/portal/updates` | Your published releases. |
+| Your feedback | `/portal/feedback/activity` | A requester's own requests, votes, follows and comments. |
+
+Reading is open to anyone. You do not need an account to browse.
+
+## Boards
+
+Every request belongs to exactly one board, such as "Product" or "Integrations". Operators create, rename, reorder and archive boards in **Feedback settings** in the operator app, and each board is either public or internal.
+
+- **Public boards** appear in the portal's board list. Visitors can browse one board at a time.
+- **Internal boards** never appear in any portal page, on the roadmap, in a release or in a requester email. Use one for requests you want to track privately.
+- **Archived boards** leave the navigation and stop taking new submissions. Requests already published on them stay reachable at their addresses.
+
+Visitors can search request titles and descriptions, filter by status and sort by recent activity or most votes.
+
+## Submitting a request
+
+A visitor chooses **Submit feedback**. Before anything else, Penny asks them to verify their email address.
+
+1. **Verify.** The visitor gives a display name and an email address. Penny emails a single-use link, which expires after 30 minutes. Once it is used, that browser stays verified for 30 days. The display name is what the public will see. The email address is never shown.
+2. **Write the request.** A title, a problem description and a board are required. A proposed solution, an impact statement and one attachment are optional. Attachments can be PNG, JPEG, GIF or PDF, up to 10 MB.
+3. **Send for review.** The request is saved and waits for an operator. It is not public.
+
+If email delivery is not configured on your deployment, new visitors cannot verify, so they cannot submit. Public reading keeps working.
+
+### Moderation comes first
+
+Nothing a visitor submits goes public on its own. An operator reviews each new request in **Moderation** and approves the public title, description, board and display name, or rejects it with a reason. Attachments are private until an operator approves each file separately. Rejecting a file does not reject the request.
+
+Each submission also becomes an evidence item for your team, with the visitor's original wording, whether or not it is ever published. See [The decision loop](/docs/decisions).
+
+The visitor can follow what happens on **Your feedback**. It shows their request as awaiting review, published or not published, and gives the reason when one is recorded. A visitor can edit or withdraw their own request, and can ask for another review of anything that was rejected. An edit to published text goes back through moderation, and the approved text stays public until the edit is approved.
+
+### Duplicate suggestions
+
+As the visitor types a title, Penny suggests similar published requests and names the words that matched. Each suggestion has **Vote** and **Follow** buttons. Choosing one applies the vote or follow and discards the draft, so no new request is created. Matching is plain word overlap. Penny never merges anything by itself, and suggestions only ever come from published requests.
+
+## Votes, following and email
+
+A verified visitor can vote on a request once and can remove the vote. A request can take votes until it is Shipped or Declined.
+
+Voting alone grants no permission to email anyone. Each vote and submission form has an **Email me updates** box, unticked by default. Following a request, or ticking that box, records the visitor's permission to be emailed about it. Release updates also accept a separate subscription from Updates; that permission is described below.
+
+Visitors can unfollow, mute a single request, or mute all requester email from **Your feedback**, and every email carries a one-click unsubscribe link. What they are sent, and when, is covered in [Email and notifications](/docs/email).
+
+## Comments
+
+Verified visitors can comment on a published request. A visitor's comment is held until an operator approves it, and the visitor sees it marked as awaiting review in the meantime. Operator replies are public when posted. Held and rejected comments never appear in the portal and never go out in email.
+
+## Statuses
+
+Every published request shows one of six statuses.
+
+| Status | What it means |
+|---|---|
+| **Open** | Published, and not yet on your roadmap. Every new published request starts here. |
+| **Under review** | You are looking into it. Set by an operator's status update, or by an approved roadmap item that is still Exploring. |
+| **Planned** | You have committed to it. |
+| **In progress** | Work has started. |
+| **Shipped** | It is done. New votes are closed. |
+| **Declined** | You have decided not to do it, and gave a public reason. New votes are closed, and existing votes and comments stay visible. |
+
+Planned, In progress and Shipped come from the roadmap item a request is mapped to, so a request only shows them after you approve that mapping. An operator can reverse a decline.
+
+## The roadmap and updates
+
+The public roadmap lists only items an operator has approved, grouped under Under review, Planned, In progress and Shipped. Each shows your customer-safe title and summary and links to its requests. It never shows accounts, dates, confidence, reasoning or evidence. A Dropped item leaves the public roadmap.
+
+The updates page lists your published releases, newest first. Until you publish one, it says there are no updates yet, and shows no placeholder.
+
+After verifying your email, you can subscribe to all releases from Updates. You can unsubscribe there or with the unsubscribe link in any notification. Unsubscribing withdraws that permission and leaves your requests, votes and follows in place.
+
+If you were included when a release was first published, its page lets you answer Adopted, Partly adopted or Not yet for each target. You can change your answer and can still answer after muting or unsubscribing. Your identity and individual answers are private to you and the operators. A corrected release shows its current wording without resetting your response.
+
+## Embedding
+
+Penny's server configuration has a list for the origins you allow to embed the portal, `publicOriginAllowlist` in `src/ext/config.server.ts`. Penny does not currently use that list to set framing rules on portal pages, so do not rely on it to control embedding. Treat embedding the portal in an iframe as not supported yet.
+
+## Customer-safe by design
+
+Only approved fields reach any portal page or the public API: a request's approved title and description, a display name, approved comments, and the customer-safe wording on roadmap items and releases. Requester email addresses, accounts, evidence, internal notes, internal boards and operator-only fields never appear there, including in fields the page does not display.

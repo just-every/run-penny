@@ -1,0 +1,40 @@
+/* Penny's public site chrome, shared by the landing (/) and the docs (/docs): the skip link, the header with the brand
+   lockup and navigation, the sign-in pill and the footer. On a tablet the header drops the source link; on a phone it keeps
+   the coin, the name and the sign-in pill, and the footer carries the rest. */
+.penny-brand .pl-skip { position: fixed; top: 10px; left: 10px; z-index: 100; padding: 10px 18px; border-radius: 999px; background: var(--ink); color: #fff9e8; transform: translateY(-200%); }
+.penny-brand .pl-skip:focus { transform: none; }
+
+.penny-brand .pl-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 1536px; margin: 0 auto; padding: clamp(18px, 2.2vw, 34px) var(--gutter); }
+.penny-brand .pl-brand { display: inline-flex; align-items: center; gap: clamp(10px, 1vw, 16px); border-radius: 999px; }
+.penny-brand .pl-coin { --coin-slot: clamp(40px, 3.45vw, 53px); flex: none; }
+.penny-brand .pl-brand-name { font-size: clamp(30px, 2.75vw, 42px); font-weight: 450; letter-spacing: -0.035em; line-height: 1; }
+.penny-brand .pl-nav { display: flex; align-items: center; gap: clamp(20px, 2.7vw, 42px); font-size: 17px; line-height: 1.5; }
+.penny-brand .pl-nav-link { position: relative; padding: 6px 0; border-radius: 4px; }
+.penny-brand .pl-nav-link:hover { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 6px; }
+/* The section the page belongs to: bold, with the copper hand stroke under it in place of the hover underline. */
+.penny-brand .pl-nav-link[aria-current] { font-weight: 650; }
+.penny-brand .pl-nav-link[aria-current]:hover { text-decoration: none; }
+.penny-brand .pl-nav-link .pl-stroke { position: absolute; left: -0.3em; bottom: -0.2em; width: calc(100% + 0.6em); height: 0.32em; }
+
+.penny-brand .pl-pill { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 26px; border-radius: 999px; background: var(--ink); color: #fff9e8; font-size: 17px; font-weight: 500; line-height: 1; white-space: nowrap; transition: background-color 0.18s; }
+.penny-brand .pl-pill:hover { background: #45443f; }
+.penny-brand .pl-pill:focus-visible { outline-offset: 3px; border-radius: 999px; }
+
+.penny-brand .pl-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 18px 56px; width: min(calc(100% - 2 * var(--gutter)), calc(1536px - 2 * var(--gutter))); margin: 0 auto; padding: 26px 0 34px; border-top: 1px solid var(--line); font-size: 18px; line-height: 1.5; }
+.penny-brand .pl-brand--footer .pl-coin { --coin-slot: clamp(40px, 3vw, 46px); }
+.penny-brand .pl-brand--footer .pl-brand-name { font-size: clamp(28px, 2.3vw, 35px); }
+.penny-brand .pl-footer-nav { display: flex; flex-wrap: wrap; gap: 8px 36px; font-size: 15px; }
+.penny-brand .pl-footer-nav a { padding: 4px 0; border-radius: 4px; }
+.penny-brand .pl-footer-nav a:hover, .penny-brand .pl-credit a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.penny-brand .pl-credit { margin: 0 0 0 auto; color: var(--muted); font-size: 14px; }
+.penny-brand .pl-credit a { color: var(--soft); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 4px; }
+
+@media (max-width: 899px) {
+  .penny-brand .pl-nav-link--source { display: none; }
+}
+@media (max-width: 639px) {
+  .penny-brand .pl-nav-link { display: none; }
+  .penny-brand .pl-pill { min-height: 44px; padding: 0 20px; font-size: 16px; }
+  .penny-brand .pl-footer { gap: 18px 28px; }
+  .penny-brand .pl-credit { margin-left: 0; }
+}

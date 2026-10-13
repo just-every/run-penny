@@ -1,0 +1,25 @@
+/* The public board drawn on paper, using the portal's own labels. */
+.penny-landing .pl-board .pl-paper { padding: calc(24 * var(--u)) calc(28 * var(--u)) calc(14 * var(--u)); }
+.penny-landing .pl-board-head { display: flex; align-items: center; gap: calc(12 * var(--u)); }
+.penny-landing .pl-board-head .pl-button { margin-left: auto; }
+.penny-landing .pl-tabs { display: flex; gap: calc(10 * var(--u)); margin-top: calc(18 * var(--u)); padding-bottom: calc(12 * var(--u)); border-bottom: 1px solid #e2dbcf; }
+.penny-landing .pl-tab { padding: calc(6 * var(--u)) calc(14 * var(--u)); border-radius: calc(7 * var(--u)); color: #57564f; }
+.penny-landing .pl-tab--on { background: #f0e1c6; color: var(--ink); font-weight: 600; }
+.penny-landing .pl-board-row { display: grid; grid-template-columns: minmax(calc(54 * var(--u)), auto) minmax(0, 1fr) auto minmax(calc(56 * var(--u)), auto); align-items: center; gap: calc(16 * var(--u)); padding: calc(13 * var(--u)) 0; border-bottom: 1px solid #e2dbcf; }
+.penny-landing .pl-board-row:last-child { border-bottom: 0; }
+.penny-landing .pl-vote { display: flex; flex-direction: column; align-items: center; gap: calc(4 * var(--u)); }
+.penny-landing .pl-board-text { display: flex; flex-direction: column; gap: calc(10 * var(--u)); min-width: 0; }
+.penny-landing .pl-board-text .pl-lines { gap: calc(7 * var(--u)); }
+.penny-landing .pl-board-text .pl-lines i { height: max(2px, calc(3.5 * var(--u))); }
+.penny-landing .pl-chip { display: inline-flex; align-items: center; gap: calc(7 * var(--u)); padding: calc(6 * var(--u)) calc(13 * var(--u)) calc(6 * var(--u)) calc(9 * var(--u)); border-radius: 999px; background: #efebe3; white-space: nowrap; }
+.penny-landing .pl-count { display: inline-flex; align-items: center; gap: calc(6 * var(--u)); color: #4b4a45; }
+.penny-landing .pl-board-quote .pl-paper, .penny-landing .pl-board-reply .pl-paper { justify-content: center; padding: calc(8 * var(--u)) calc(14 * var(--u)); }
+/* The reply stays one line; on a narrow stage its paper widens to the text's readable minimum. */
+.penny-landing .pl-board-reply { min-width: max-content; }
+.penny-landing .pl-board-reply .pl-paper { white-space: nowrap; }
+.penny-landing .pl-approved { display: inline-flex; align-items: center; gap: calc(5 * var(--u)); padding: calc(4 * var(--u)) calc(11 * var(--u)) calc(4 * var(--u)) calc(8 * var(--u)); border: max(1.5px, calc(2.4 * var(--u))) solid var(--copper-text); border-radius: calc(6 * var(--u)); background: #faf6ee; color: var(--copper-text); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.penny-landing .pl-approved .pl-glyph { color: var(--copper-text); }
+/* On a narrow drawing the stamp's text keeps its readable minimum and grows relative to the board, so it moves onto the open paper beside the comment. */
+@container (max-width: 520px) {
+  .penny-landing .pl-approved { translate: calc(-150 * var(--u)) calc(-16 * var(--u)); }
+}

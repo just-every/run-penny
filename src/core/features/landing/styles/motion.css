@@ -1,0 +1,23 @@
+/* Motion is optional and plays once: the hero's notes settle onto the page, the return loop draws itself and the paper
+   plane glides home. Nothing loops, nothing waits for a script, nothing is hidden, and under reduced motion every element
+   is simply in its final place. */
+@media (prefers-reduced-motion: no-preference) {
+  .penny-landing .pl-settle { animation: pl-settle 0.95s cubic-bezier(0.2, 0.75, 0.25, 1) both; animation-delay: calc(0.12s + var(--d, 0) * 0.16s); }
+  .penny-landing .pl-draw { stroke-dasharray: 1 1; animation: pl-draw 1.5s 0.7s cubic-bezier(0.45, 0, 0.25, 1) both; }
+  .penny-landing .pl-glide { transform-box: fill-box; transform-origin: 70% 30%; animation: pl-glide 1.2s 1.5s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+}
+@keyframes pl-settle {
+  from { transform: translate(calc(-8 * var(--u)), calc(20 * var(--u))) rotate(calc((var(--r) - 5) * 1deg)); }
+  to { transform: rotate(calc(var(--r) * 1deg)); }
+}
+@keyframes pl-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes pl-glide {
+  from { transform: translate(60px, 26px) rotate(9deg); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .penny-landing *, .penny-landing *::before, .penny-landing *::after { animation: none !important; transition: none !important; }
+}

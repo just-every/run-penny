@@ -1,0 +1,87 @@
+import type { Row } from './archive'
+import { NativeError } from '@/core/features/auth/native-tokens'
+
+// Penny-owned extension to the existing bounded graph. Declare the personal
+// history edges introduced/used by the clause work instead of relying on an
+// opaque-ID substring accidentally discovering those children.
+const edges = [
+ ['requester_identity_merges', 'source_requester_id', 'requesters'],
+ ['requester_identity_merges', 'target_requester_id', 'requesters'],
+ ['requester_addresses', 'requester_id', 'requesters'],
+ ['release_recipient_snapshots', 'requester_id', 'requesters'],
+ ['release_recipient_snapshots', 'requester_address_id', 'requester_addresses'],
+ ['evidence_items', 'account_id', 'accounts'],
+ ['evidence_items', 'requester_id', 'requesters'],
+ ['evidence_items', 'release_id', 'releases'],
+ ['evidence_versions', 'evidence_id', 'evidence_items'],
+ ['attachments', 'evidence_id', 'evidence_items'],
+ ['evidence_attachment_uploads', 'evidence_id', 'evidence_items'],
+ ['release_outcomes', 'requester_id', 'requesters'],
+ ['release_outcomes', 'release_version_id', 'release_versions'],
+ ['requester_update_permissions', 'requester_id', 'requesters'],
+ ['requester_update_permissions', 'requester_address_id', 'requester_addresses'],
+ ['decision_reviews', 'decision_id', 'decisions'],
+ ['decision_reviews', 'decision_revision_id', 'decision_revisions'],
+ ['decision_review_notifications', 'decision_id', 'decisions'],
+ ['release_versions', 'original_publication_version_id', 'release_versions'],
+] as const
+
+export function checkClauseErasureEdges(tables:{name:string;foreignKeys:{table:string;from:string;to:string}[]}[]):void {
+ // Operator attribution is retained under the existing operator hold. Every
+ // other FK on these newly introduced history tables must have a declared edge.
+ for(const table of tables.filter(table=>['requester_identity_merges','evidence_attachment_uploads','decision_reviews','decision_review_notifications'].includes(table.name))){
+  for(const key of table.foreignKeys)if(key.table!=='operators'&&!edges.some(([child,column,parent])=>child===table.name&&column===key.from&&parent===key.table&&key.to==='id'))throw new NativeError('undeclared_erasure_dependency',503)
+ }
+}
+
+export function expandClauseErasure(data:Record<string,Row[]>,selected:Record<string,Row[]>):boolean {
+ let changed=false
+ // Merging transfers current addresses but retains immutable history under the
+ // predecessor's identity. A survivor owns that incoming lineage, including
+ // every earlier merge, so its erasure must fence those roots as well. Walking
+ // only backwards keeps an attempt to erase a retired source from silently
+ // expanding into its active survivor; existing copy/authority holds still apply.
+ for(const merge of data.requester_identity_merges??[]){
+  if(!selected.requesters?.some(row=>row.id===merge.target_requester_id))continue
+  const source=data.requesters.find(row=>row.id===merge.source_requester_id)
+  if(source&&!selected.requesters.includes(source)){selected.requesters.push(source);changed=true}
+ }
+ for(const [child,column,parent] of edges){
+  const parents=new Set((selected[parent]??[]).map(row=>row.id))
+  for(const row of data[child]??[])if(row[column]!==null&&parents.has(row[column])&&!selected[child].includes(row)){
+   selected[child].push(row);changed=true
+  }
+ }
+ // Outcomes own an exact recipient and release-level target, not each personal
+ // request mapping. If either owning record really is erased, erase all answer
+ // revisions too; retaining an independent target or recipient leaves them intact.
+ for(const outcome of data.release_outcomes??[]){
+  const recipientErased=selected.release_recipient_snapshots.some(row=>row.release_version_id===outcome.release_version_id&&row.requester_id===outcome.requester_id)
+  const version=data.release_versions.find(row=>row.id===outcome.release_version_id)
+  const targetErased=selected.release_targets.some(row=>row.release_id===version?.release_id&&row.roadmap_item_id===outcome.roadmap_item_id)
+  if((recipientErased||targetErased)&&!selected.release_outcomes.includes(outcome)){selected.release_outcomes.push(outcome);changed=true}
+ }
+ return changed
+}
+
+export function erasureFiles(selected:Record<string,Row[]>):string[]{
+ return [...new Set(['attachments','request_attachment_uploads','evidence_attachment_uploads'].flatMap(table=>(selected[table]??[]).map(row=>String(row.storage_key))))].sort()
+}
+
+export function clauseDeletionOrder<T extends {name:string;foreignKeys:{table:string;on_delete?:string}[]}>(tables:T[]):T[]{
+ const ordered:T[]=[],visited=new Set<string>()
+ const witnesses=new Set(['ik_d1_custody_states','ik_d1_stream_origins'])
+ const visit=(table:T)=>{
+  if(visited.has(table.name))return
+  visited.add(table.name)
+  for(const child of tables)if(!witnesses.has(child.name)&&child.name!==table.name&&(
+   edges.some(([name,,parent])=>name===child.name&&parent===table.name)||
+   child.foreignKeys.some(key=>key.table===table.name&&key.on_delete==='CASCADE')
+  ))visit(child)
+  ordered.push(table)
+ }
+ // Base import custody requires these witnesses to outlive their owning job.
+ for(const table of tables.filter(table=>!witnesses.has(table.name)))visit(table)
+ for(const table of tables.filter(table=>witnesses.has(table.name)))visit(table)
+ return ordered
+}

@@ -1,0 +1,139 @@
+import assert from 'node:assert/strict'
+import {createHash, X509Certificate} from 'node:crypto'
+import {mkdtemp, rm} from 'node:fs/promises'
+import {tmpdir} from 'node:os'
+import {join} from 'node:path'
+import {tlsIdentity, workerRuntime} from '../data/tls-runtime.mjs'
+import {finishFirstRun} from './local-signin.mjs'
+
+/** Trust only this test certificate's public key; Node requests use its explicit CA. */
+export async function prepareHostedDataReview() {
+  const directory=await mkdtemp(join(tmpdir(),'penny-hosted-screen-'))
+  try {
+    const identity=await tlsIdentity(directory)
+    const publicKey=new X509Certificate(identity.cert).publicKey.export({type:'spki',format:'der'})
+    const pin=createHash('sha256').update(publicKey).digest('base64')
+    return {directory,identity,trustArgument:`--ignore-certificate-errors-spki-list=${pin}`,close:()=>rm(directory,{recursive:true,force:true})}
+  } catch(error) {await rm(directory,{recursive:true,force:true});throw error}
+}
+
+function expectedCommands(origin) {
+  const connection=`--origin '${origin}' --session-file private/session.json`
+  return {
+    restore:`pnpm run data:import -- private/archive.json --journal private/latest-source-journal.json ${connection}`,
+    preview:`pnpm run data:erase-preview -- requests 'ROOT_ID' private/plan.json ${connection}`,
+    erase:`pnpm run data:erase -- private/plan.json --journal-out private/latest-journal.json ${connection}`,
+    status:`pnpm run data:status -- 'OPERATION_ID' ${connection}`,
+  }
+}
+
+async function assertHostedPanel(page,overview,origin,cookie) {
+  assert.equal(overview.hosted,true,'[DATA-001 DATA-003] production overview selects the mounted hosted panel')
+  await page.getByRole('heading',{name:'Hosted workspace data',exact:true}).waitFor()
+  const commands=expectedCommands(origin)
+  assert.deepEqual(overview.commands,commands,'[DATA-003] API returns the exact guarded commands')
+  assert.deepEqual(await page.locator('main code').allTextContents(),Object.values(commands),'[DATA-003] mounted panel displays every exact command')
+  assert.equal(await page.locator('main form, main input, main select, main button').count(),0,'[DATA-003] hosted panel has no browser mutation controls')
+  const text=await page.locator('main').innerText()
+  assert.ok(!text.includes(cookie.split('=')[1]),'[BASE-SECRET-002] mounted hosted panel excludes native session material')
+  if(overview.operation) {
+    await page.getByText(`${overview.operation.kind} operation ${overview.operation.status}.`,{exact:false}).waitFor()
+    await page.getByText(overview.operation.id,{exact:true}).waitFor()
+  } else await page.getByText('No data operation is active.',{exact:false}).waitFor()
+}
+
+async function bounded(promise,milliseconds,message) {
+  let timer
+  try {return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(message)),milliseconds)})])}
+  finally {clearTimeout(timer)}
+}
+
+/** Hold only the real export's R2 list transport after its native reservation. */
+function exportReadHold() {
+  let entered,release
+  const reached=new Promise(resolve=>{entered=resolve}),released=new Promise(resolve=>{release=resolve})
+  return {
+    release,
+    async pause(){entered();await bounded(released,60000,'[DATA-001] export storage hold was not released')},
+    async wait(completion){await bounded(Promise.race([reached,completion.then(()=>assert.fail('[DATA-001] export completed before reaching original storage'))]),30000,'[DATA-001] export did not reach original storage')},
+  }
+}
+
+/** Observe the durable reservation while the real export waits at storage.
+ * The API and SSR document both read real state; no responses or rows are replayed. */
+async function observeActiveExport(runtime,cookie,hold) {
+  const completion=runtime.call('/api/operator/data/export',undefined,{Cookie:cookie})
+  // Attach rejection handling immediately while the concurrent guarded read observes its reservation.
+  completion.catch(()=>{})
+  try {
+    await hold.wait(completion)
+    const response=await runtime.call('/api/operator/data/overview',undefined,{Cookie:cookie})
+    assert.equal(response.status,200,'[DATA-001] active-operation observation remains natively authorized')
+    const overview=JSON.parse(response.text)
+    assert.ok(overview.operation,'[DATA-001] real export owns the native reservation')
+    assert.equal(overview.operation.kind,'export')
+    assert.equal(overview.operation.status,'pending')
+    return {overview,completion}
+  } catch(error) {hold.release();await completion.catch(()=>{});throw error}
+}
+
+export async function reviewHostedData({browser,hosted,width,capture}) {
+  const directory=join(hosted.directory,`state-${width}`)
+  let runtime,context,exportCompletion
+  const hold=exportReadHold()
+  const errors=[],external=[]
+  try {
+    runtime=await workerRuntime(directory,hosted.identity,'production',{assets:true,beforeExportList:hold.pause})
+    await runtime.migrate()
+    const cookie=await runtime.owner(),split=cookie.indexOf('='),{origin}=runtime
+    context=await browser.newContext({viewport:{width,height:width===390?844:900},timezoneId:'Australia/Brisbane'})
+    await context.addCookies([{name:cookie.slice(0,split),value:cookie.slice(split+1),url:origin,httpOnly:true,secure:true,sameSite:'Lax'}])
+    const page=await context.newPage()
+    page.on('pageerror',error=>errors.push(error.message))
+    page.on('console',message=>{if(message.type()==='error')errors.push(message.text())})
+    page.on('request',request=>{if(new URL(request.url()).origin!==origin)external.push(new URL(request.url()).origin)})
+    await page.goto(origin+'/app/data')
+    assert.equal(await finishFirstRun(page,async()=>{}),true,'[BASE-ACCESS-002] native owner finishes the real first-run form')
+    const idle=await runtime.call('/api/operator/data/overview',undefined,{Cookie:cookie})
+    assert.equal(idle.status,200,'[DATA-001] idle observation remains natively authorized')
+    const idleOverview=JSON.parse(idle.text)
+    assert.equal(idleOverview.operation,null)
+    const document=await page.goto(origin+'/app/data')
+    assert.equal(document.status(),200)
+    assert.equal(new URL(page.url()).pathname,'/app/data')
+    assert.match(await document.text(),/No data operation is active\./,'[DATA-001] the real SSR document contains idle state')
+    await assertHostedPanel(page,idleOverview,origin,cookie)
+    const details={scope:'source-only, local TLS emitted production-mode Worker',authority:'native bootstrap cookie and first-run form',tlsTrust:'test-certificate SPKI pin; explicit CA for Node',api:'/api/operator/data/overview',providerCalls:0}
+    await capture('DATA-001-hosted-idle',page,{...details,operation:null})
+
+    const active=await observeActiveExport(runtime,cookie,hold)
+    exportCompletion=active.completion
+    try {
+      const response=await page.goto(origin+'/app/data')
+      assert.equal(response.status(),200)
+      assert.equal(new URL(page.url()).pathname,'/app/data')
+      const document=await response.text()
+      assert.ok(document.includes(active.overview.operation.id),'[DATA-001] real SSR reads the reserved operation')
+      assert.match(document,/export operation pending\./,'[DATA-001] real SSR renders the pending export state')
+      await assertHostedPanel(page,active.overview,origin,cookie)
+      await capture('DATA-001-hosted-active-operation',page,{...details,operation:active.overview.operation,observation:'Real SSR and hydrated panel read the native pending export reservation while its original R2 list transport is held.'})
+      const held=await runtime.call('/api/operator/data/overview',undefined,{Cookie:cookie})
+      assert.equal(held.status,200)
+      assert.deepEqual(JSON.parse(held.text).operation,active.overview.operation,'[DATA-001] the real reservation remains pending throughout capture')
+    } finally {hold.release()}
+    const completed=await exportCompletion
+    assert.equal(completed.status,200,'[DATA-001] actual guarded export completes')
+    const status=await runtime.call('/api/operator/data/operations/'+active.overview.operation.id,undefined,{Cookie:cookie})
+    assert.equal(status.status,200)
+    assert.equal(JSON.parse(status.text).status,'complete','[DATA-001] captured operation has a real complete receipt')
+    const after=await runtime.call('/api/operator/data/overview',undefined,{Cookie:cookie})
+    assert.equal(after.status,200)
+    assert.equal(JSON.parse(after.text).operation,null,'[DATA-001] actual export releases its native lock')
+    assert.deepEqual(errors,[],'[BASE-UX-001] hosted captures have no unexpected console or page errors')
+    assert.deepEqual(external,[],'[BASE-SECRET-002] hosted captures make no external browser requests')
+    assert.equal(runtime.outboundCalls,0,'[DATA-001] hosted screen capture makes no provider request')
+  } finally {
+    hold.release()
+    try {await exportCompletion} finally {try{await context?.close()}finally{try{await runtime?.stop()}finally{await rm(directory,{recursive:true,force:true})}}}
+  }
+}

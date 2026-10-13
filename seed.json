@@ -1,0 +1,429 @@
+{
+  "id": "penny",
+  "name": "Penny",
+  "version": "0.0.0",
+  "maturity": "requester-board-notification-candidate",
+  "category": "feedback",
+  "spine": {
+    "id": "feedback",
+    "record": "request with attributed evidence"
+  },
+  "replaces": ["Canny", "UserVoice", "Productboard"],
+  "description": "A self-hosted customer-feedback decision system connecting attributed evidence, accountable product decisions, approved roadmaps, status updates and immutable releases for one B2B software business.",
+  "capabilities": [
+    {
+      "id": "owner-front-door",
+      "description": "Serve Penny's public product landing at `/`: the shipped capabilities only, links to the docs, the public board under /portal, the source and sign-in, a switchable footer credit, no operator data, no cookies and no third-party loads.",
+      "clauses": [
+        "HOME-002"
+      ]
+    },
+    {
+      "id": "public-published-reads",
+      "description": "Render D1-backed approved feedback, roadmap and release reads in Start SSR and public Hono DTOs, with visible search, status filters and published-only duplicate suggestions.",
+      "clauses": [
+        "REQ-001",
+        "REQ-016",
+        "ROAD-006",
+        "REL-010"
+      ]
+    },
+    {
+      "id": "requester-board-local",
+      "description": "Requester submission, votes, explicit follows, moderated comments and edits, withdrawal and activity with separate provider email verification through Base. Existing appeals and host-signed identity are retained. Status changes record notification intent; notification delivery is a separate gate.",
+      "clauses": [
+        "REQ-006",
+        "REQ-007",
+        "REQ-008",
+        "REQ-009",
+        "REQ-010",
+        "REQ-011",
+        "REQ-014",
+        "REQ-015",
+        "REQ-017",
+        "REQ-019",
+        "REQ-020",
+        "REQ-021",
+        "REQ-022",
+        "REQ-023",
+        "REQ-025",
+        "REQ-030",
+        "REQ-031"
+      ]
+    },
+    {
+      "id": "customer-safe-projection",
+      "description": "Serve public reads from explicit customer-safe projection DTOs without account, evidence, decision, or operator-only fields.",
+      "clauses": [
+        "DATA-002",
+        "EVID-006"
+      ]
+    },
+    {
+      "id": "operator-request-workspace",
+      "description": "Maintained Base operator sessions authorize moderation, comment/edit review, status updates, merge/unmerge, boards, private tags, typed custom fields and separately approved attachments. Private Hono and Start boundaries independently check Base admission.",
+      "clauses": [
+        "OPS-003"
+      ]
+    },
+    {
+      "id": "local-data-and-health",
+      "description": "Migrate and import the curated D1 sample idempotently through feature services, and report health only when D1, R2, and Queue bindings are reachable.",
+      "clauses": [
+        "BASE-OPS-001"
+      ]
+    },
+    {
+      "id": "bounded-local-data-ownership",
+      "description": "Authenticated current-schema product archive over hosted HTTPS or loopback HTTP, with original request/evidence attachment bytes and explicit installation-authority exclusions. Guarded empty-store restore and supported-root erasure have an authenticated hosted API/CLI source path; hosted verification is source-only, local TLS. Restored pending requester and decision-review mail is held. Limits, operator holds and latest-journal continuity gaps remain explicit; universal data clauses and live hosted acceptance remain open.",
+      "clauses": [
+        "BASE-DATA-001",
+        "BASE-DATA-003",
+        "DATA-001",
+        "DATA-003"
+      ]
+    },
+    {
+      "id": "requester-notification-dispatch",
+      "description": "Durable customer-safe public status/reply/approved-comment notifications, fixed first-event one-hour coalescing and 20:00\u201308:00 workspace quiet hours, drained by a minute Cron; selected provider acceptance, opt-outs and uncertain-send reconciliation are separately tested.",
+      "clauses": [
+        "NOTIFY-001",
+        "NOTIFY-002"
+      ]
+    },
+    {
+      "id": "saved-feedback-history",
+      "description": "Saved classic CSV/API-response history, Ideas aggregate CSV and ideas-with-voters CSV exports use explicit mappings, private move-in receipts and reversible native custody; evidence is synthetic-only, real-export acceptance remains open, and no replacement is claimed.",
+      "clauses": [
+        "IMP-001",
+        "IMP-002",
+        "IMP-003",
+        "IMP-004",
+        "IMP-005",
+        "IMP-006",
+        "IMP-007",
+        "IMP-008"
+      ]
+    },
+    {
+      "id": "first-party-docs",
+      "description": "Public operator documentation at /docs and /docs/<slug>: the repository Markdown that docs/site.json publishes, rendered to HTML at build time by a Vite plugin that fails the build on a broken internal link, under the product landing's header and footer; it reads no workspace record and an unknown page is a 404.",
+      "clauses": [
+        "DOCS-001"
+      ]
+    }
+  ],
+  "nonGoals": [
+    "Multiple workspaces, businesses, or tenants",
+    "Granular roles, permissions, and approval chains",
+    "A CRM, support inbox, survey, NPS, community chat, or general-purpose forum",
+    "Anonymous or unverified live voting",
+    "AI classification, summarisation, scoring, prioritisation, or automatic merging",
+    "A combined priority score or automatic ranking of requests, bets, or roadmap items",
+    "Automated CRM, support, review-site, or call ingestion",
+    "Imports from arbitrary feedback tools beyond the documented saved feedback CSV/API-response format",
+    "A script-tag feedback widget or in-app capture SDK beyond the embeddable portal in REQ-027",
+    "Bidirectional synchronisation with delivery trackers",
+    "Portfolio capacity planning, Gantt charts, sprint management, and public delivery estimates",
+    "Account-specific public roadmaps",
+    "Native mobile applications"
+  ],
+  "externals": [
+    {
+      "id": "transactional-email",
+      "required": true,
+      "why": "Selected Base SendGrid or Resend transport sends operator links, requester verification and customer-safe requester notifications. Provider acceptance is not inbox proof; neither provider supplies an enforced idempotent-send guarantee. Ambiguous sends are held for operator reconciliation; REL-006 remains an open wider guarantee.",
+      "data": [
+        "recipient email address",
+        "single-use sign-in or verification link, or customer-safe notification content",
+        "delivery key for bounce and retry correlation"
+      ],
+      "adapters": [
+        "mail.sender.v1"
+      ]
+    },
+    {
+      "id": "integration-egress",
+      "required": false,
+      "why": "Outbound webhook, Slack and tracker creation require an installation-owned enforcing RPC service binding. Current owner deployment does not provision that optional binding.",
+      "data": [
+        "selected approved public event fields",
+        "explicit tracker title and description",
+        "delivery identity"
+      ],
+      "adapters": [
+        "penny.egress.v1"
+      ]
+    },
+    {
+      "id": "public-webhooks",
+      "required": false,
+      "why": "An operator-selected HTTPS receiver can receive approved public events through the enforcing integration transport.",
+      "data": [
+        "approved public request, comment, status or release fields",
+        "business event identity"
+      ],
+      "adapters": [
+        "integrations.webhook.v1"
+      ]
+    },
+    {
+      "id": "slack",
+      "required": false,
+      "why": "An operator-selected Slack incoming webhook receives selected approved public events through the enforcing integration transport.",
+      "data": [
+        "approved public title and update wording"
+      ],
+      "adapters": [
+        "slack.incoming-webhook.v1"
+      ]
+    },
+    {
+      "id": "linear",
+      "required": false,
+      "why": "Operator-selected issue creation uses a configured Linear team and API token through the enforcing integration transport. Signed inbound issue state remains private delivery evidence; existing issue linking requires no API token.",
+      "data": [
+        "explicit operator-supplied issue title and description",
+        "configured team and organization identity",
+        "linked issue identity and state receipts"
+      ],
+      "adapters": [
+        "penny.linear.v1"
+      ]
+    },
+    {
+      "id": "jira-cloud",
+      "required": false,
+      "why": "Operator-selected Jira Cloud issue creation uses the configured site, project, issue type and API token through the enforcing integration transport. Signed inbound issue state remains private delivery evidence; existing issue linking requires no API token.",
+      "data": [
+        "explicit operator-supplied issue title and description",
+        "configured project and issue type",
+        "linked issue identity and state receipts"
+      ],
+      "adapters": [
+        "penny.jira.v1"
+      ]
+    }
+  ],
+  "env": [
+    {
+      "name": "APP_ORIGIN",
+      "required": true,
+      "secret": false,
+      "why": "Canonical HTTPS origin for operator and requester links."
+    },
+    {
+      "name": "AUTH_SECRET",
+      "required": true,
+      "secret": true,
+      "why": "At least 32 characters; Base HMAC-domains operator session, link and rate-limit tokens."
+    },
+    {
+      "name": "OPERATOR_EMAIL",
+      "required": true,
+      "secret": false,
+      "why": "Deployment owner email, added to the server-configured operator allowlist without removing existing operators."
+    },
+    {
+      "name": "SETUP_TOKEN",
+      "required": false,
+      "secret": true,
+      "why": "Independent secret of at least 32 characters, required once to bootstrap an empty Base operator store."
+    },
+    {
+      "name": "MAIL_PROVIDER",
+      "required": true,
+      "secret": false,
+      "why": "Select sendgrid or resend; the selected provider key is required."
+    },
+    {
+      "name": "MAIL_FROM",
+      "required": true,
+      "secret": false,
+      "why": "Sender verified with the selected mail provider."
+    },
+    {
+      "name": "SENDGRID_API_KEY",
+      "required": false,
+      "secret": true,
+      "why": "Required when MAIL_PROVIDER=sendgrid; another provider key cannot satisfy this selection."
+    },
+    {
+      "name": "PORTAL_IDENTITY_SECRET",
+      "required": false,
+      "secret": true,
+      "why": "Optional host-signed requester identity secret; verified-email identity remains available without it."
+    },
+    {
+      "name": "RESEND_API_KEY",
+      "required": false,
+      "secret": true,
+      "why": "Required when MAIL_PROVIDER=resend; another provider key cannot satisfy this selection."
+    },
+    {
+      "name": "SENDGRID_EVENT_PUBLIC_KEY",
+      "required": false,
+      "secret": false,
+      "why": "Required to accept SendGrid signed Event Webhook callbacks; canonical base64 P-256 public verification key."
+    },
+    {
+      "name": "RESEND_WEBHOOK_SECRET",
+      "required": false,
+      "secret": true,
+      "why": "Required to accept Resend signed Event Webhook callbacks; Svix whsec signing secret."
+    }
+  ],
+  "deploy": {
+    "healthPath": "/health",
+    "operatorPath": "/app",
+    "publicPaths": [
+      "/",
+      "/signin",
+      "/health",
+      "/assets/",
+      "/fonts/",
+      "/rer-theme.css",
+      "/brand/",
+      "/favicon.ico",
+      "/api/auth/session",
+      "/api/public/boards",
+      "/api/public/requests",
+      "/api/public/requests/",
+      "/api/public/roadmap",
+      "/api/public/roadmap/",
+      "/api/public/releases",
+      "/api/public/releases/",
+      "/portal",
+      "/portal/",
+      "/docs",
+      "/docs/",
+      "/_serverFn/",
+      "/api/auth/capabilities",
+      "/api/auth/magic-link",
+      "/api/auth/sign-out",
+      "/api/public/identity/email",
+      "/api/public/identity/email/verify",
+      "/api/public/identity/session",
+      "/auth/confirm",
+      "/auth/bootstrap",
+      "/auth/magic-link",
+      "/auth/signout",
+      "/auth/session",
+      "/api/public/notifications/unsubscribe",
+      "/api/public/requester/notifications",
+      "/api/public/mail/events",
+      "/auth/owner-claim"
+    ],
+    "notes": "Operator credentials use maintained Base operator-auth; requester email is sent through the selected Base SendGrid or Resend transport. GET /auth/confirm previews a link without consuming it; same-origin POST confirms it. Private Hono and Start functions authenticate independently. Production has no local outbox switch. 0009 revokes prior synthetic credentials. Test-only predecessor fixtures are separate from production Base tests. Setup packages clean production artifacts; deploy targets the rer-seedproof-penny workers.dev prefix via Base. Hosted/provider proof remains separate from local verification. Required requester mail and minute-Cron notification drain are declared in OPERATIONS.json. Provider credentials, verified sender, hosted Cron execution and inbox delivery need independent proof. The public feedback board's canonical address is /portal/feedback, and /portal redirects there (9 October 2026). /docs and everything under /docs/ are public build-time documentation pages (DOCS-001) that read no workspace record and set no cookie; an unknown docs page is a 404."
+  },
+  "customFields": [
+    "account",
+    "requester",
+    "evidence",
+    "request",
+    "decision",
+    "roadmapItem",
+    "release"
+  ],
+  "extensionPoints": {
+    "contributions": [
+      "app.page.v1",
+      "app.navigation.v1",
+      "app.settings-section.v1",
+      "job.consumer.v1",
+      "cron.task.v1"
+    ],
+    "policies": [
+      "operator.management.v1",
+      "request.moderation.v1",
+      "request.visibility.v1",
+      "request.vote-eligibility.v1",
+      "decision.commitment.v1",
+      "roadmap.publication.v1",
+      "release.recipient-eligibility.v1",
+      "requester.notification.v1"
+    ],
+    "events": [
+      "evidence.created.v1",
+      "evidence.linked.v1",
+      "request.created.v1",
+      "request.moderated.v1",
+      "request.published.v1",
+      "request.declined.v1",
+      "request.merged.v1",
+      "request.unmerged.v1",
+      "decision.committed.v1",
+      "decision.revised.v1",
+      "decision.review-due.v1",
+      "roadmap.status-changed.v1",
+      "roadmap.status-update-published.v1",
+      "release.published.v1",
+      "release.delivery-failed.v1",
+      "release.outcome-recorded.v1"
+    ],
+    "slots": [
+      "overview.after.v1",
+      "evidence.list.after.v1",
+      "evidence.detail.after.v1",
+      "account.detail.after.v1",
+      "request.detail.after.v1",
+      "decision.brief.after.v1",
+      "decision.alternatives.after.v1",
+      "roadmap.item.after.v1",
+      "release.detail.after.v1",
+      "portal.request.detail.after.v1"
+    ],
+    "adapters": [
+      "mail.sender.v1"
+    ]
+  },
+  "limits": {
+    "provenance": "All values are estimates for backend design and must be replaced by load-test results before the first release. Latency that defines a feature lives in its contract clause, not here.",
+    "status": "estimated-not-tested",
+    "operators": 20,
+    "boards": 100,
+    "tags": 500,
+    "accounts": 25000,
+    "requesters": 250000,
+    "evidenceItems": 1000000,
+    "publicRequests": 100000,
+    "votes": 2000000,
+    "comments": 1000000,
+    "decisions": 25000,
+    "roadmapItems": 25000,
+    "releases": 10000,
+    "recipientsPerRelease": 50000,
+    "publicReadRequestsPerMinutePerIp": 120,
+    "publicWriteRequestsPerMinutePerIp": 30,
+    "publicWritesPerMinutePerIdentity": 20,
+    "identityActionsPerMinutePerIp": 10,
+    "identityVerificationsPerHourPerEmail": 5,
+    "magicLinkRequestsPerHourPerEmail": 5,
+    "mailEventsPerMinutePerIp": 600,
+    "requestSubmissionsPerHourPerIdentity": 10,
+    "uploadBytesPerFile": 10485760,
+    "uploadBytesPerRequest": 26214400,
+    "uploadTypes": [
+      "image/png",
+      "image/jpeg",
+      "image/gif",
+      "application/pdf"
+    ]
+  },
+  "accessibility": {
+    "level": "WCAG 2.2 AA",
+    "status": "target-not-yet-verified"
+  },
+  "operatingCost": {
+    "status": "estimate-only",
+    "basis": "Workers Free is the default Cloudflare plan; Workers Paid starts at USD 5 per account-month. Requester notification drain runs every minute and sends directly through the selected provider; its current dispatcher does not consume Queue jobs. The JOBS binding remains required by health and the wider job contract. For the future release-delivery limit, a normal Queue message at or below 64 KB is at least three operations (write, read, delete): 3,334 successful deliveries consume at least 10,002 operations and exceed Workers Free's 10,000 Queue operations per account per UTC day. A maximum 50,000-recipient release needs at least 150,000 Queue operations before retries, dead-letter handling, or messages above 64 KB, so it genuinely requires Workers Paid. Workers Free D1 includes 5 million rows read/day, 100,000 rows written/day, and 5 GB total storage; reaching a Free D1 limit makes D1 return errors until the UTC reset or an upgrade. R2 Standard includes 10 GB-month storage, 1 million Class A and 10 million Class B operations/month; using R2 requires a billing-enabled Cloudflare account even while usage remains within those included allowances. The R2 free tier does not apply to Infrequent Access storage, which also has retrieval fees and a 30-day minimum storage duration. Cron Triggers are included; this port does not currently use Durable Objects. R2 and Workers do not charge Internet egress under the documented plans. Transactional email remains a separate provider and message-volume cost.",
+    "monthlyUsd": {
+      "cloudflare": "Workers Free by default; Workers Paid starts at 5, then Queue, D1, R2, and Worker usage above included allowances are usage-dependent",
+      "transactionalEmail": "provider and message-volume dependent"
+    },
+    "excluded": [
+      "domain registration",
+      "operator implementation time"
+    ]
+  }
+}

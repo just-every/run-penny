@@ -1,0 +1,17 @@
+/* DOCS-001. Below 861px the section navigation, and below 1200px the contents list, fold into disclosures above the
+   article: an ink-outlined paper pill that opens a grained paper card. */
+.penny-docs :is(.docs-menu, .docs-toc-compact) { margin-bottom: 22px; }
+.penny-docs :is(.docs-menu, .docs-toc-compact) summary { display: inline-flex; align-items: center; gap: 0.4em; min-height: 46px; max-width: 100%; padding: 0 22px; border: 1.5px solid var(--penny-docs-ink); border-radius: 999px; background: var(--penny-docs-grain) repeat, var(--penny-docs-card); font-size: 16px; font-weight: 600; cursor: pointer; list-style: none; transition: background-color 0.18s; }
+.penny-docs :is(.docs-menu, .docs-toc-compact) summary:hover { background: var(--penny-docs-grain) repeat, var(--penny-docs-tint); }
+.penny-docs :is(.docs-menu, .docs-toc-compact) summary::-webkit-details-marker { display: none; }
+.penny-docs :is(.docs-menu, .docs-toc-compact) summary::after { content: ""; flex: none; width: 7px; height: 7px; margin: -3px 0 0 6px; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+.penny-docs :is(.docs-menu details[open], .docs-toc-compact[open]) > summary::after { margin-top: 4px; transform: rotate(225deg); }
+.penny-docs .docs-menu-label { flex: none; white-space: nowrap; }
+.penny-docs .docs-menu-current { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--penny-docs-muted); font-weight: 450; }
+.penny-docs :is(.docs-menu-list, .docs-toc-compact[open] > ul) { margin: 12px 0 0; padding: 20px 24px 22px 30px; border: 1.5px solid var(--penny-docs-ink); border-radius: 4px 6px 5px 3px; background: var(--penny-docs-grain) repeat, var(--penny-docs-card); box-shadow: 0 10px 22px -12px var(--penny-docs-shadow); }
+.penny-docs .docs-toc-compact ul { margin: 0; padding: 0; list-style: none; }
+.penny-docs .docs-toc-compact li { padding: 4px 0; }
+.penny-docs .docs-toc-compact a { font-size: 16px; line-height: 1.4; }
+.penny-docs .docs-toc-compact a:hover { color: var(--penny-docs-accent-text); }
+.penny-docs .docs-toc-compact ul ul { margin: 2px 0; padding-left: 16px; border-left: 1px solid var(--penny-docs-rule); }
+.penny-docs .docs-toc-compact ul ul a { color: var(--penny-docs-muted); font-size: 15px; }

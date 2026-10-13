@@ -1,0 +1,30 @@
+/* DOCS-001. Code blocks are paper cards: grained paper inside a hand-drawn dark ink border, turned slightly on the page. Only
+   the card behind is turned; the monospace text stays square to the page, so it is crisp and selects cleanly. Each line
+   stays whole, as it must be typed: a line wider than the card scrolls sideways inside it (the pre is a labelled,
+   focusable region), never the page. The card and its padding sit on the wrapper, so the card stays put and scrolled
+   text is cut inside the padding, clear of the ink border. The page's first card carries an inked burst where there is
+   room for it beside the measure. Highlighting stays in the palette: copper keywords, kraft-brown strings, muted
+   comments. */
+.penny-docs .docs-code { position: relative; isolation: isolate; margin: 1.5em 0 1.6em; padding: 20px 26px 21px; }
+.penny-docs .docs-code::before { content: ""; position: absolute; z-index: -1; inset: 0; border: 2px solid var(--penny-docs-ink); border-radius: 4px 7px 3px 6px / 6px 3px 7px 4px; background: var(--penny-docs-grain) 0 0 / 150px repeat, var(--penny-docs-card); box-shadow: 0 12px 20px -14px var(--penny-docs-shadow), 0 1px 1px var(--penny-docs-shadow); transform: rotate(-0.8deg); }
+.penny-docs .docs-code:nth-of-type(even)::before { border-radius: 6px 3px 7px 4px / 4px 7px 3px 6px; transform: rotate(0.6deg); }
+.penny-docs .docs-code pre { margin: 0; padding: 0; overflow-x: auto; color: var(--penny-docs-ink); font-family: var(--penny-docs-mono); font-size: 15.5px; line-height: 1.7; letter-spacing: 0; white-space: pre; overflow-wrap: normal; tab-size: 2; }
+.penny-docs .docs-code pre:focus-visible { outline: 3px solid var(--penny-docs-accent-text); outline-offset: 10px; border-radius: 2px; }
+.penny-docs .docs-code pre code { display: block; width: max-content; min-width: 100%; padding: 0; border-radius: 0; background: none; font-size: inherit; white-space: inherit; }
+.penny-docs .docs-code-burst { position: absolute; top: -50px; right: -58px; width: 64px; height: 64px; overflow: visible; }
+.penny-docs .docs-code-burst .pl-ink { vector-effect: non-scaling-stroke; }
+
+.penny-docs .docs-code [class*="hljs-"] { color: inherit; background: none; font-style: normal; font-weight: inherit; }
+.penny-docs .docs-code :is(.hljs-keyword, .hljs-literal, .hljs-selector-tag, .hljs-section) { color: var(--penny-docs-accent-text); font-weight: 600; }
+.penny-docs .docs-code :is(.hljs-string, .hljs-regexp, .hljs-addition) { color: #6f4a25; }
+.penny-docs .docs-code :is(.hljs-number, .hljs-attr, .hljs-attribute, .hljs-name, .hljs-title, .hljs-property) { font-weight: 600; }
+.penny-docs .docs-code :is(.hljs-comment, .hljs-quote, .hljs-meta, .hljs-deletion) { color: var(--penny-docs-muted); font-style: italic; }
+
+@media (max-width: 1199px) {
+  .penny-docs .docs-code-burst { display: none; }
+}
+@media (max-width: 639px) {
+  .penny-docs .docs-code { padding: 16px 18px 17px; }
+  .penny-docs .docs-code pre { font-size: 14.5px; }
+  .penny-docs .docs-code::before { transform: rotate(-0.5deg); }
+}

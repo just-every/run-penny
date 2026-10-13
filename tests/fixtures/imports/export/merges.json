@@ -1,0 +1,16 @@
+{
+  "merges": [
+    {
+      "id": "merge-0",
+      "sourcePostId": "https://feedback.example.test/p/post-1",
+      "targetPostId": "https://feedback.example.test/p/post-0",
+      "created": "2024-07-08T09:10:11.000Z"
+    },
+    {
+      "id": "merge-1",
+      "sourcePostId": "https://feedback.example.test/p/post-2",
+      "targetPostId": "https://feedback.example.test/p/post-1",
+      "created": "2024-07-08T09:10:11.000Z"
+    }
+  ]
+}

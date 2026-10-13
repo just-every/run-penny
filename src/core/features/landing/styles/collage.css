@@ -1,0 +1,24 @@
+/* The landing's own collage marks. The stage, notes, plane and mountain are the shared kit's
+   (src/core/ui/brand/collage/collage.css, under .penny-collage). */
+
+.penny-landing .pl-strong { font-weight: 600; }
+.penny-landing .pl-row { display: flex; align-items: center; gap: calc(11 * var(--u)); }
+.penny-landing .pl-coin-dot { flex: none; --coin-slot: max(12px, calc(24 * var(--u))); }
+.penny-landing .pl-glyph { flex: none; width: max(9px, calc(var(--gs) * var(--u))); height: auto; color: var(--note-ink, var(--ink)); }
+/* Line glyphs beside handwriting and in badges keep a floor that holds at least a 1px stroke on a phone. */
+.penny-landing .pl-clip .pl-glyph, .penny-landing .pl-badge .pl-glyph { width: max(13px, calc(var(--gs) * var(--u))); }
+.penny-landing .pl-badge { display: grid; flex: none; align-self: flex-start; place-items: center; width: max(24px, calc(60 * var(--u))); aspect-ratio: 1; border-radius: 50%; background: #efd6ae; }
+.penny-landing .pl-button { display: inline-flex; align-items: center; gap: calc(6 * var(--u)); padding: calc(8 * var(--u)) calc(14 * var(--u)); border-radius: calc(7 * var(--u)); background: var(--copper-text); color: #fff8ec; font-weight: 600; white-space: nowrap; }
+.penny-landing .pl-button .pl-glyph { color: #fff8ec; }
+
+/* Status steps: a dot per stage on one thin pencil line. */
+.penny-landing .pl-steps { position: relative; display: flex; flex: 1; flex-direction: column; justify-content: space-between; }
+.penny-landing .pl-steps::before { content: ''; position: absolute; top: calc(16 * var(--u)); bottom: calc(26 * var(--u)); left: calc(18.5 * var(--u)); width: max(1px, calc(2 * var(--u))); background: #a9a397; }
+.penny-landing .pl-steps li { position: relative; display: flex; align-items: center; gap: calc(16 * var(--u)); }
+.penny-landing .pl-steps li > .pl-glyph { margin-inline: calc((38 - var(--gs)) / 2 * var(--u)); }
+
+/* Copper circles and old handwriting (ink and the stamp's star are the shared kit's, src/core/ui/brand). Strokes
+   keep a steady weight on screen (non-scaling) with a floor. */
+.penny-landing .pl-ink.pl-circle { stroke: var(--copper); stroke-width: max(2px, calc(3.6 * var(--u))); }
+.penny-landing .pl-script { fill: none; stroke: #6f5136; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; opacity: 0.5; }
+.penny-landing .pl-token-arrow { fill: #fbf1e4; }

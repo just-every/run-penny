@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "projectId": "just-every/penny",
+  "name": "Penny",
+  "sourceRepository": "https://github.com/just-every/run-penny",
+  "license": "MIT",
+  "deployment": {
+    "target": "cloudflare-workers",
+    "artifactFile": "penny-worker-artifact.json"
+  },
+  "operations": {
+    "setup": "node scripts/delivery/setup-build.mjs",
+    "build": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && node scripts/rer.mjs build",
+    "verify": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && node scripts/rer.mjs verify",
+    "artifact": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && node scripts/build-delivery-artifact.mjs",
+    "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API/provider/signing keys are excluded from portable archives; reconfigure them explicitly. Imported/restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled."
+  },
+  "verification": {
+    "sensitivePaths": [
+      "src/core/features/auth/**",
+      "src/core/features/integrations/**",
+      "src/core/features/data/**",
+      "src/core/features/imports/**",
+      "src/core/features/editor/**",
+      "migrations/core/**",
+      "src/server.ts",
+      "src/base/**",
+      "base/**",
+      "scripts/installer/**",
+      "scripts/base-onboarding/**",
+      "scripts/base-cli/**",
+      "scripts/rer.mjs",
+      "scripts/delivery/**",
+      "rer-setup.json",
+      ".github/workflows/rer-managed.yml"
+    ],
+    "migrationDirectories": [
+      "migrations/core"
+    ],
+    "guidanceFiles": [
+      "AGENTS.md",
+      "CONTRACT.md",
+      "OPERATIONS.md"
+    ],
+    "testPatterns": [
+      "tests/**/*.test.mjs",
+      "tests/**/*.test.ts",
+      "tests/browser/*.mjs"
+    ]
+  },
+  "setup": {
+    "path": "rer-setup.json",
+    "sha256": "784f8e753ed83df9c4534d6202ae2dbd6fe75d12c7692c78d2bfe5307b80c3b8"
+  }
+}
