@@ -7,10 +7,12 @@ import { trafficProxy } from './server-proxy.mjs';
 // All public serving, including setup's bounded runtime, uses this listener.
 // The adapter receives a separate loopback port and keeps the public origin
 // for application URLs, cookies and sign-in links.
-export async function runtimeFrontDoor({ host, port, activity }) {
+// In door mode (`door`) the listener is 127.0.0.1 on a port the OS assigns,
+// and only the machine's front door reaches it.
+export async function runtimeFrontDoor({ host, port, activity, door, devKey, origin }) {
  const runtimePort = await runtimeLoopbackPort(port);
  const observer = activity ?? { begin: () => () => {}, touch: () => {} };
- const proxy = await trafficProxy({ host, port, target: runtimePort, activity: observer });
+ const proxy = await trafficProxy({ host, port, target: runtimePort, activity: observer, door, devKey, origin });
  return { ...proxy, runtimePort };
 }
 

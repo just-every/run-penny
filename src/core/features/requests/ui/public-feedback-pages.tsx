@@ -1,3 +1,4 @@
+import { HydrationUnit } from '@/base/hydration/unit'
 import { RequesterActions } from './requester-actions'
 import { buttonClass, fieldClass, dataLabelClass, fieldLabelClass, ledeClass, primaryButtonClass, textLinkClass } from '@/core/features/portal/ui/portal-classes'
 import { Link, useLocation } from '@tanstack/react-router'
@@ -41,12 +42,12 @@ export function PublicFeedbackHomePage({ content }: { readonly content: PublicPo
   return (
     <PublicPortalLayout content={content}>
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
-        <section className="min-w-0" aria-labelledby="feedback-heading">
+        <HydrationUnit><section className="min-w-0" aria-labelledby="feedback-heading">
           <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-5">
             <header className="min-w-0"><PageTitle id="feedback-heading" eyebrow="Feedback">What should we improve?</PageTitle><p className={ledeClass}>Browse feedback that has been reviewed and published by {content.ownerName}.</p></header>
             <Link to="/portal/feedback/new" className={primaryButtonClass}><PortalIcon name="plus" />Submit feedback</Link>
           </div>
-          <form action="/portal/feedback" className="mt-8 flex flex-wrap items-end gap-3">
+          <form action="/" className="mt-8 flex flex-wrap items-end gap-3">
             <label className={`${fieldLabelClass} basis-full flex-1 min-[31rem]:basis-56`}>Search feedback<input name="q" defaultValue={query.q} maxLength={200} className={`${fieldClass} text-sm`} /></label>
             <label className={fieldLabelClass}>Status<select name="status" defaultValue={query.status ?? ''} className={`${fieldClass} text-sm`}><option value="">All statuses</option>{['open', 'under_review', 'planned', 'in_progress', 'shipped', 'declined'].map((status) => <option key={status} value={status}>{status.replaceAll('_', ' ')}</option>)}</select></label>
             {query.board ? <input type="hidden" name="board" value={query.board} /> : null}
@@ -54,8 +55,8 @@ export function PublicFeedbackHomePage({ content }: { readonly content: PublicPo
           </form>
           <div className="mt-7 flex flex-wrap items-center gap-2 border-y border-penny-line py-3" aria-label="Feedback order">
             <span className={`${dataLabelClass} mr-2`}>Order</span>
-            <Link to="/portal/feedback" search={{ ...query, sort: 'recent' }} className={`${orderLinkClass} ${query.sort !== 'votes' ? orderActiveClass : orderIdleClass}`}>Recent activity</Link>
-            <Link to="/portal/feedback" search={{ ...query, sort: 'votes' }} className={`${orderLinkClass} ${query.sort === 'votes' ? orderActiveClass : orderIdleClass}`}>Most votes</Link>
+            <Link to="/" search={{ ...query, sort: 'recent' }} className={`${orderLinkClass} ${query.sort !== 'votes' ? orderActiveClass : orderIdleClass}`}>Recent activity</Link>
+            <Link to="/" search={{ ...query, sort: 'votes' }} className={`${orderLinkClass} ${query.sort === 'votes' ? orderActiveClass : orderIdleClass}`}>Most votes</Link>
           </div>
           <div className="mt-5 space-y-3">
             {requests.kind === 'loading' ? <ResourceLoading label="Loading published feedback…" /> : null}
@@ -63,18 +64,18 @@ export function PublicFeedbackHomePage({ content }: { readonly content: PublicPo
             {requests.kind === 'ready' && requests.data.length === 0 ? <PublicEmpty title={query.q || query.status || query.board ? "No matching feedback" : "No published feedback yet"}>{query.q || query.status ? 'No published feedback matches these filters.' : query.board ? 'No published feedback matches this board.' : 'Feedback will appear here after review.'}</PublicEmpty> : null}
             {requests.kind === 'ready' ? requests.data.map((request) => <PublicRequestCardView key={request.slug} request={request} />) : null}
           </div>
-        </section>
-        <aside className="min-w-0 lg:pt-1" aria-labelledby="boards-heading">
+        </section></HydrationUnit>
+        <HydrationUnit><aside className="min-w-0 lg:pt-1" aria-labelledby="boards-heading">
           <PublicCard className="p-5">
             <h2 id="boards-heading" className={dataLabelClass}>Boards</h2>
             <div className="mt-3">
               {boards.kind === 'loading' ? <ResourceLoading label="Loading boards…" /> : null}
               {boards.kind === 'error' ? <ResourceFailure status={boards.status} onRetry={retryBoards} /> : null}
               {boards.kind === 'ready' && boards.data.length === 0 ? <p className="text-sm leading-6 text-penny-muted">No public boards are available.</p> : null}
-              {boards.kind === 'ready' ? <ul className="divide-y divide-penny-line">{boards.data.map((board) => <li key={board.slug}><Link to="/portal/feedback" search={{ ...query, board: board.slug }} className={`flex min-h-11 items-center justify-between gap-3 py-2 text-sm transition-colors hover:text-penny-accent focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-penny-accent ${query.board === board.slug ? 'font-bold text-penny-ink underline decoration-penny-copper decoration-2 underline-offset-4' : 'font-medium text-penny-ink'}`}><span>{board.name}</span><span className="text-xs tabular-nums text-penny-muted">{board.requestCount}</span></Link></li>)}</ul> : null}
+              {boards.kind === 'ready' ? <ul className="divide-y divide-penny-line">{boards.data.map((board) => <li key={board.slug}><Link to="/" search={{ ...query, board: board.slug }} className={`flex min-h-11 items-center justify-between gap-3 py-2 text-sm transition-colors hover:text-penny-accent focus-visible:outline-3 focus-visible:outline-offset-1 focus-visible:outline-penny-accent ${query.board === board.slug ? 'font-bold text-penny-ink underline decoration-penny-copper decoration-2 underline-offset-4' : 'font-medium text-penny-ink'}`}><span>{board.name}</span><span className="text-xs tabular-nums text-penny-muted">{board.requestCount}</span></Link></li>)}</ul> : null}
             </div>
           </PublicCard>
-        </aside>
+        </aside></HydrationUnit>
       </div>
     </PublicPortalLayout>
   )
@@ -85,15 +86,15 @@ export function PublicFeedbackDetailPage({ content, requestSlug }: { readonly co
 
   return (
     <PublicPortalLayout content={content}>
-      <section className="mx-auto max-w-3xl" aria-labelledby="feedback-detail-heading">
-        <PortalBackLink to="/portal/feedback">All feedback</PortalBackLink>
+      <HydrationUnit><section className="mx-auto max-w-3xl" aria-labelledby="feedback-detail-heading">
+        <PortalBackLink to="/">All feedback</PortalBackLink>
         <PageTitle id="feedback-detail-heading" className="mt-3">Feedback detail</PageTitle>
         <div className="mt-7">
           {request.kind === 'loading' ? <ResourceLoading label="Loading feedback…" /> : null}
           {request.kind === 'error' ? <ResourceFailure status={request.status} onRetry={retry} /> : null}
           {request.kind === 'ready' ? <FeedbackDetail request={request.data} onChange={retry} /> : null}
         </div>
-      </section>
+      </section></HydrationUnit>
     </PublicPortalLayout>
   )
 }
@@ -119,7 +120,7 @@ function FeedbackDetail({ request, onChange }: { readonly request: PublicRequest
           <p className="mt-2 break-words whitespace-pre-wrap leading-7 text-penny-ink">{update.body}</p>
         </PublicCard>
       ))}
-      <section className="mt-9" aria-labelledby="comments-heading">
+      <HydrationUnit><section className="mt-9" aria-labelledby="comments-heading">
         <h2 id="comments-heading" className="text-xl font-bold tracking-[-0.02em] text-penny-ink">Published comments</h2>
         <div className="mt-4 space-y-3">
           {request.comments.length === 0 ? <PublicEmpty title="No published comments">Comments appear here after review.</PublicEmpty> : null}
@@ -130,7 +131,7 @@ function FeedbackDetail({ request, onChange }: { readonly request: PublicRequest
             </PublicCard>
           ))}
         </div>
-      </section>
+      </section></HydrationUnit>
     </>
   )
 }

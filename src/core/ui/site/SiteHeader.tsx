@@ -1,3 +1,5 @@
+import { HydrationUnit } from '@/base/hydration/unit'
+import { useSiteVariant } from './SiteVariant'
 import { CoinMark } from '../brand/CoinMark'
 import { CopperStroke } from '../brand/collage/Stroke'
 import { site, siteLinks } from './site'
@@ -14,9 +16,10 @@ type SiteHeaderProps = {
 
 /** The header: the coin and the name, then Docs, the public board, the source and the sign-in pill. */
 export function SiteHeader({ home = '/', current }: SiteHeaderProps) {
+  const variant = useSiteVariant()
   const docsCurrent = current === 'docs'
   return (
-    <header className="pl-header">
+    <HydrationUnit><header className="pl-header">
       {home.startsWith('#')
         ? <a className="pl-brand" href={home}><CoinMark /><span className="pl-brand-name">{site.brand}</span></a>
         : <SiteLink className="pl-brand" href={home}><CoinMark /><span className="pl-brand-name">{site.brand}</span></SiteLink>}
@@ -25,10 +28,10 @@ export function SiteHeader({ home = '/', current }: SiteHeaderProps) {
           {nav.docs}
           {docsCurrent ? <CopperStroke /> : null}
         </SiteLink>
-        <SiteLink className="pl-nav-link" href={siteLinks.portal}>{nav.portal}</SiteLink>
+        {variant === 'instance' ? <SiteLink className="pl-nav-link" href={siteLinks.portal}>{nav.portal}</SiteLink> : null}
         <a className="pl-nav-link pl-nav-link--source" href={siteLinks.source}>{nav.source}</a>
-        <SiteLink className="pl-pill" href={siteLinks.signIn}>{nav.signIn}</SiteLink>
+        {variant === 'instance' ? <SiteLink className="pl-pill" href={siteLinks.signIn}>{nav.signIn}</SiteLink> : null}
       </nav>
-    </header>
+    </header></HydrationUnit>
   )
 }

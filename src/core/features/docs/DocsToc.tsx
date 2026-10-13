@@ -1,3 +1,4 @@
+import { HydrationUnit } from '@/base/hydration/unit'
 import { CopperStroke } from '@/core/ui/brand/collage/Stroke';
 import type { DocsTocEntry } from './types';
 import { useActiveHeading } from './useActiveHeading';
@@ -37,10 +38,10 @@ export function DocsToc({ toc }: { toc: DocsTocEntry[] }) {
   const list = groups(toc);
   const active = useActiveHeading(list.flatMap(group => [group.id, ...group.children.map(entry => entry.id)]));
   if (!list.length) return null;
-  return <nav className="docs-toc" aria-label="On this page">
+  return <HydrationUnit><nav className="docs-toc" aria-label="On this page">
     <p className="docs-toc-title">On this page</p>
     <TocList toc={toc} active={active} />
-  </nav>;
+  </nav></HydrationUnit>;
 }
 
 /** The same list above the page body below 1200px, folded away until asked for. */

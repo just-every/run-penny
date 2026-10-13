@@ -1,11 +1,15 @@
 import { runNotificationSchedule } from './core/features/notifications/scheduled'
 import start from '@tanstack/react-start/server-entry'
+import { createPennyRuntime } from './core/app/runtime'
 import { createPennyApp } from './core/app/worker'
 import { pennyRequest, requestContext } from './core/app/request-context.server'
 import { withLocalOrigin } from './core/app/local-origin'
 import { firstRunDocument } from './core/features/auth/first-run'
 import type { AppBindings } from './core/shared/bindings'
 import { staticAssetResponse } from './base/static-assets'
+import { setupStateResponse } from './base/setup-state'
+import { lobbyResponse } from './base/lobby'
+import { identity } from './identity'
 
 export default {
   scheduled: runNotificationSchedule,
@@ -23,6 +27,11 @@ export default {
       return new Response(null, { status: 302, headers: { location: '/brand/penny-mark.svg' } })
     }
     return pennyRequest.run({ bindings }, async () => {
+      const installation = { DB: bindings.DB, AUTH_ORIGIN: createPennyRuntime(bindings, requestContext().configuration).configuration.appOrigin ?? '' }
+      const state = await setupStateResponse(request, installation)
+      if (state) return state
+      const lobby = await lobbyResponse(request, installation, identity)
+      if (lobby) return lobby
       const setup = await firstRunDocument(request, bindings, requestContext().configuration)
       if (setup) return setup
       if (url.pathname.startsWith('/_serverFn/')) {

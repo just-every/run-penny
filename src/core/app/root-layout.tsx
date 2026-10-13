@@ -1,3 +1,5 @@
+import { introGuardScript, introCss } from '@/base/hydration/intro-guard'
+import { HydrationUnit } from '@/base/hydration/unit'
 import {PennyEditor,useEditorLeafReady} from '@/core/features/editor/client'
 import { HeadContent, Outlet, Scripts, useLoaderData, useLocation } from '@tanstack/react-router'
 import { BrandRoot } from '@/core/ui/app/BrandRoot'
@@ -11,7 +13,7 @@ import '@/core/ui/brand/styles'
 
 export function PennyRootLayout() {
   const authorized=useLoaderData({from:'__root__'})
-  return <html lang="en" style={{ '--penny-brand-accent': branding.accent } as CSSProperties}><head><HeadContent /></head><body><Outlet /><PennyEditor authorized={authorized} /><Scripts /></body></html>
+  return <html lang="en" style={{ '--penny-brand-accent': branding.accent } as CSSProperties}><head><script dangerouslySetInnerHTML={{ __html: introGuardScript }} /><style>{introCss}</style><HeadContent /></head><body><Outlet /><HydrationUnit><PennyEditor authorized={authorized} /></HydrationUnit><Scripts /></body></html>
 }
 
 export function PennyNotFound() {

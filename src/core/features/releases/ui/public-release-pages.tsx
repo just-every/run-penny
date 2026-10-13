@@ -1,3 +1,4 @@
+import { HydrationUnit } from '@/base/hydration/unit'
 import { ReleaseSubscription } from './release-subscription'
 import { ReleaseOutcomeForm } from './release-outcome-form'
 import { Link } from '@tanstack/react-router'
@@ -16,7 +17,7 @@ export function PublicUpdatesPage({ content }: { readonly content: PublicPortalC
 
   return (
     <PublicPortalLayout content={content}>
-      <section className="mx-auto max-w-3xl" aria-labelledby="updates-heading">
+      <HydrationUnit><section className="mx-auto max-w-3xl" aria-labelledby="updates-heading">
         <header className="min-w-0"><PageTitle id="updates-heading" eyebrow="Updates">Product updates</PageTitle><p className={ledeClass}>Published updates describe shipped customer-facing changes.</p></header>
         <ReleaseSubscription/><div className="mt-8 space-y-4">
           {releases.kind === 'loading' ? <ResourceLoading label="Loading published updates…" /> : null}
@@ -24,7 +25,7 @@ export function PublicUpdatesPage({ content }: { readonly content: PublicPortalC
           {releases.kind === 'ready' && releases.data.length === 0 ? <PublicEmpty title="There are no updates yet.">Published updates will appear here.</PublicEmpty> : null}
           {releases.kind === 'ready' ? releases.data.map((release) => <ReleaseListItem key={release.slug} release={release} />) : null}
         </div>
-      </section>
+      </section></HydrationUnit>
     </PublicPortalLayout>
   )
 }
@@ -34,7 +35,7 @@ export function PublicReleaseDetailPage({ content, releaseSlug }: { readonly con
 
   return (
     <PublicPortalLayout content={content}>
-      <section className="mx-auto max-w-3xl" aria-labelledby="release-detail-heading">
+      <HydrationUnit><section className="mx-auto max-w-3xl" aria-labelledby="release-detail-heading">
         <PortalBackLink to="/portal/updates">All updates</PortalBackLink>
         <PageTitle id="release-detail-heading" className="mt-3">Product update</PageTitle>
         <div className="mt-7">
@@ -42,7 +43,7 @@ export function PublicReleaseDetailPage({ content, releaseSlug }: { readonly con
           {release.kind === 'error' ? <ResourceFailure status={release.status} onRetry={retry} /> : null}
           {release.kind === 'ready' ? <ReleaseDetail release={release.data} /> : null}
         </div>
-      </section>
+      </section></HydrationUnit>
     </PublicPortalLayout>
   )
 }

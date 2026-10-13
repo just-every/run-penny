@@ -34,7 +34,7 @@ export function publicResources(href: string): Promise<Resources> {
   const url = new URL(href, 'https://document.invalid')
   const path = url.pathname.replace(/\/$/, '') || '/'
   if (path === '/signin') return signInResources()
-  if (path === '/portal/feedback') {
+  if (path === '/' || path === '/portal/feedback') {
     const query = new URLSearchParams()
     const q = url.searchParams.get('q')?.trim()
     const status = url.searchParams.get('status')

@@ -18,9 +18,6 @@ type PennyWorkerEnvironment = {
 
 type PennyWorkerContext = Context<PennyWorkerEnvironment>
 
-/** The public board's search, status, board and sort parameters, from when the board was served at `/`. */
-const oldBoardParameters = ['q', 'status', 'board', 'sort']
-
 export interface PennyAppOptions {
   runtimeConfiguration?: RuntimeConfigurationSource
   renderDocument?: (request: Request) => Promise<Response>
@@ -33,15 +30,9 @@ export function createPennyApp(options: PennyAppOptions = {}) {
     await next()
   })
 
-  // REQ-001: the board used to live at `/`, so a shared board link (`/?q=…`, `status`, `board` or `sort`) still reaches it
-  // with the same query. Plain `/` is the product landing (HOME-002).
-  app.get('/', async (context, next) => {
-    const url = new URL(context.req.url)
-    if (oldBoardParameters.some((name) => url.searchParams.has(name))) return context.redirect(`/portal/feedback${url.search}`, 302)
-    await next()
-  })
-  app.all('/portal', (context) => context.redirect('/portal/feedback', 302))
-  app.all('/portal/', (context) => context.redirect('/portal/feedback', 302))
+  app.get('/', renderDocument)
+  app.all('/portal', (context) => context.redirect('/' + new URL(context.req.url).search, 302))
+  app.all('/portal/', (context) => context.redirect('/' + new URL(context.req.url).search, 302))
   app.get('/portal/feedback', renderDocument)
   app.get('/portal/feedback/', renderDocument)
   app.get('/portal/feedback/activity', renderDocument)
@@ -97,7 +88,11 @@ async function serveOperatorWorkspace(context: PennyWorkerContext) {
 async function renderDocument(context: PennyWorkerContext) {
   const render = context.get('renderDocument')
   if (!render) throw new Error('Missing TanStack Start document handler.')
-  return editorDocumentHeaders(await render(context.req.raw),context.get('runtime'),new URL(context.req.url).pathname)
+  const response = editorDocumentHeaders(await render(context.req.raw),context.get('runtime'),new URL(context.req.url).pathname)
+  const headers = new Headers(response.headers)
+  const cache = headers.get('cache-control')
+  headers.set('cache-control', [cache, 'no-transform'].filter(Boolean).join(', '))
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers })
 }
 
 function fetchAsset(context: PennyWorkerContext) {

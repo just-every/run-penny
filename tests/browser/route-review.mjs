@@ -47,8 +47,6 @@ let browser
 let deliveryFixturesSeeded = false
 // DOCS-001: the published docs page (docs/site.json) the review opens for the /docs/$slug route.
 const docsSampleSlug = 'install'
-// HOME-002: the landing's own words, so the review recognises `/` as the landing without restating its copy.
-const { copy: landingCopy } = await import('../../src/core/features/landing/copy.ts')
 
 function safeUrl(value) {
   const url = new URL(value)
@@ -118,15 +116,12 @@ async function capture(page, route, requestedUrl, responseStatus, auth, width) {
   return visibleText
 }
 
-/** HOME-002: `/` is the product landing: its one page heading, and visible links to the docs, the public board and sign-in. */
+/** The installed root is the real public board, with search and operator admission. */
 async function assertLanding(page, route) {
-  const heading = page.getByRole('heading', { level: 1 })
-  assert.equal(await heading.count(), 1, `${route} has one page heading`)
-  const words = (text) => text.replace(/\s+/g, ' ').trim()
-  assert.equal(words(await heading.innerText()), words(landingCopy.hero.title), `${route} is headed by the landing's own heading`)
-  for (const href of ['/docs', '/portal', '/signin']) {
-    assert.ok(await page.locator(`a[href="${href}"]`).filter({ visible: true }).count() > 0, `${route} links to ${href}`)
-  }
+  assert.equal(await page.getByRole('heading', { level: 1 }).count(), 1, `${route} has one page heading`)
+  await page.locator('#feedback-heading').waitFor({state:'visible'})
+  await page.getByRole('textbox', {name:'Search feedback'}).waitFor({state:'visible'})
+  assert.ok(await page.locator('header a[href="/signin"]').filter({visible:true}).count() > 0)
 }
 
 async function visit(page, width, { route, path, auth, contains, finalPath, status = 200, expectPage }) {
@@ -236,8 +231,8 @@ async function checkPublicRoutes(page, width, requesterEmail) {
   checks.push({ route: 'requester-verify-invalid-api', requestedUrl: `${origin}/api/public/identity/email/verify`, finalUrl: `${origin}/api/public/identity/email/verify`, status: 401, auth: 'anonymous', contains: 'invalid_magic_link' })
 
   const aliases = [
-    { route: 'portal-alias', path: '/portal', finalPath: '/portal/feedback' },
-    { route: 'portal-trailing-slash', path: '/portal/', finalPath: '/portal/feedback' },
+    { route: 'portal-alias', path: '/portal', finalPath: '/' },
+    { route: 'portal-trailing-slash', path: '/portal/', finalPath: '/' },
     { route: 'feedback-alias', path: '/portal/feedback', finalPath: '/portal/feedback' },
     { route: 'feedback-trailing-slash', path: '/portal/feedback/', finalPath: '/portal/feedback' },
   ]
@@ -353,7 +348,7 @@ async function checkEmptyRoutes() {
     const source=await readFile(join('src/routes',file),'utf8'),declaration=source.match(/createFileRoute\(['"]([^'"]+)['"]\)/)[1]
     let path=declaration.replace(/\$[A-Za-z0-9_]+/g,'no-such-record')
     if(path.endsWith('/')&&path!=='/')path=path.slice(0,-1)
-    if(path==='/portal')path='/portal/feedback'
+    if(path==='/portal')path='/'
     const isMissing=declaration.includes('$'),isPublic=path.startsWith('/portal/')||path.startsWith('/docs/'),status=isMissing&&isPublic?404:200
     if(path==='/signin') {await visit(page,width,{route:'empty-signin-existing-session',path,status:200,contains:'You are already signed in.',auth:'operator-session'});continue}
     await visit(page,width,{route:'empty-'+file.replace('.tsx',''),path,status,auth:path.startsWith('/app')?'operator-session':'public'})
@@ -463,7 +458,7 @@ try {
   }
 
   const mountedRoutes = await assertMountedRouteCoverage()
-  const canonicalPath=path=>['/portal','/portal/feedback'].includes(path.replace(/\/$/,''))?'/portal/feedback':path==='/'?'/':path.replace(/\/$/,'')
+  const canonicalPath=path=>path.replace(/\/$/,'')==='/portal'?'/':path.replace(/\/$/,'')==='/portal/feedback'?'/portal/feedback':path==='/'?'/':path.replace(/\/$/,'')
   const stateCoverage=mountedRoutes.map(({sourcePath,file})=>({file,sourcePath,states:['empty','populated'].map(state=>{
     const expected=canonicalPath(state==='empty'?sourcePath.replace(/\$[A-Za-z0-9_]+/g,'no-such-record'):routeSamplePath(sourcePath))
     const widths=[1440,390].filter(width=>captures.some(c=>c.state===state&&c.viewport.width===width&&canonicalPath(new URL(c.requestedUrl).pathname)===expected))

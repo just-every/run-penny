@@ -1,3 +1,4 @@
+import { SiteVariantContext, type SiteVariant } from '@/core/ui/site/SiteVariant';
 import { CollageFilters } from '@/core/ui/brand/collage/Filters';
 import { SiteFooter } from '@/core/ui/site/SiteFooter';
 import { SiteHeader } from '@/core/ui/site/SiteHeader';
@@ -16,12 +17,12 @@ import { useCurrentDocs } from './useCurrentDocs';
  * DOCS-001. A documentation page in Penny's public site: the landing's header (Docs marked current) and footer around the
  * section navigation, the article and its contents list, on the same grained paper with the same collage kit.
  */
-export function DocsPage({ page, sections, repository, version }: DocsView) {
+export function DocsPage({ page, sections, repository, version, variant = 'instance' }: DocsView & { variant?: SiteVariant }) {
   useCurrentDocs(version);
   const order = sections.flatMap(section => section.pages.map(entry => ({ ...entry, section: section.title })));
   const index = order.findIndex(entry => entry.slug === page.slug);
   const current = order[index];
-  return <div className="penny-docs penny-brand" id="top">
+  return <SiteVariantContext.Provider value={variant}><div className="penny-docs penny-brand" id="top">
     <a className="pl-skip" href="#docs-content">Skip to the content</a>
     <CollageFilters />
     <SiteHeader current="docs" />
@@ -35,5 +36,5 @@ export function DocsPage({ page, sections, repository, version }: DocsView) {
       <DocsToc toc={page.toc} />
     </div>
     <SiteFooter />
-  </div>;
+  </div></SiteVariantContext.Provider>;
 }

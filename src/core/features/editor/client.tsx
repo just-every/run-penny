@@ -9,7 +9,7 @@ export function PennyEditor({authorized}:{authorized:boolean}) {
  const router=useRouter(),path=useLocation({select:location=>location.pathname}),[failure,setFailure]=useState(false)
  useEffect(()=>router.subscribe('onBeforeNavigate',()=>setLiveEditsReady(false)),[router])
  useEffect(()=>{
-  const editable=path==='/portal/feedback'||path==='/portal/roadmap'||path.startsWith('/portal/roadmap/')||path==='/portal/updates'||path.startsWith('/portal/updates/')||(path.startsWith('/portal/feedback/')&&path!=='/portal/feedback/activity')
+  const editable=path==='/'||path==='/portal/feedback'||path==='/portal/roadmap'||path.startsWith('/portal/roadmap/')||path==='/portal/updates'||path.startsWith('/portal/updates/')||(path.startsWith('/portal/feedback/')&&path!=='/portal/feedback/activity')
   if(!authorized||!editable)return
   const editor=createOwnerEditor();editor.setOwner(true)
   const refresh=()=>{void editor.refresh(configLoader('/api/editor/config',location.origin)).then(()=>setFailure(false)).catch(()=>{editor.revoke();setFailure(true)})}

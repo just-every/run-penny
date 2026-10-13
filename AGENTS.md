@@ -80,7 +80,7 @@ return genuine 404 responses, and hydration retains client navigation.
 
 First-run setup (`/setup`) is Base's first-run runtime, copied byte-exact to
 `src/base/setup.ts` with its `theme-frame.ts`, and Penny's own
-`src/base/font-head.ts`. Base's sign-in confirmation and `/setup` wear Penny's
+`src/core/ui/brand/font-head.ts`. Base's sign-in confirmation and `/setup` wear Penny's
 look through Base's theme hook: `public/rer-theme.css` (brand tokens, Inter Tight
 and `public/brand/penny-mark.svg`), declared in the operator-auth branding and
 passed to `firstRunResponse`. Its record is the installation-owned `oa_first_run` row,

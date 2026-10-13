@@ -1,3 +1,4 @@
+import { HydrationUnit } from '@/base/hydration/unit'
 import { useEffect, useState } from 'react'
 import branding from '@/branding.json'
 import { Link } from '@tanstack/react-router'
@@ -16,7 +17,7 @@ export function SignInShell() {
   const [admission] = usePublicResource<{ authenticated: boolean }>('/api/auth/session')
   const session = admission.kind === 'loading' ? 'checking' : admission.kind === 'ready' && admission.data.authenticated ? 'valid' : admission.kind === 'error' && admission.status === 401 ? 'none' : 'error'
   const [message, setMessage] = useState(''), [busy, setBusy] = useState(false), [requested, setRequested] = useState(false)
-  return <BrandRoot><main className="grid min-h-svh place-items-center overflow-x-clip px-4 py-12 sm:px-6"><div className="relative w-full max-w-lg"><SignInArtWide /><SignInArtTop /><section className={`${paperCardClass} relative z-10 w-full p-7 text-center sm:p-10 [&_.pl-stroke]:mx-auto`}>
+  return <BrandRoot><main className="grid min-h-svh place-items-center overflow-x-clip px-4 py-12 sm:px-6"><div className="relative w-full max-w-lg"><HydrationUnit><SignInArtWide /></HydrationUnit><HydrationUnit><SignInArtTop /></HydrationUnit><HydrationUnit><section className={`${paperCardClass} relative z-10 w-full p-7 text-center sm:p-10 [&_.pl-stroke]:mx-auto`}>
     <div className="mb-6 flex justify-center"><CoinMark className="[--coin-slot:3rem]" /></div>
     <p className={eyebrowClass}>Operator access</p>
     <PageTitle size="card" className="mt-3">Sign in to {branding.name}</PageTitle>
@@ -34,6 +35,6 @@ export function SignInShell() {
       }}><label className={fieldLabelClass}>Operator email<input className={fieldClass} name="email" type="email" autoComplete="email" required maxLength={254} disabled={busy||!hydrated} /></label><button className={`${buttonClass} w-full`} disabled={busy || !ready||!hydrated}>{busy ? 'Preparing link…' : ready ? 'Send sign-in link' : 'Sign-in unavailable'}</button></form>
       {message ? <p role="alert" className="mt-4 text-base leading-normal">{message}</p> : null}
     </>}
-    <p className="mt-5 text-base"><Link to="/portal/feedback" className={`inline-flex min-h-11 items-center font-normal ${textLinkClass}`}>Back to feedback</Link></p>
-  </section><SignInArtBottom /></div></main></BrandRoot>
+    <p className="mt-5 text-base"><Link to="/" className={`inline-flex min-h-11 items-center font-normal ${textLinkClass}`}>Back to feedback</Link></p>
+  </section></HydrationUnit><HydrationUnit><SignInArtBottom /></HydrationUnit></div></main></BrandRoot>
 }
