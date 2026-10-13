@@ -37,8 +37,8 @@ def context(history, commit, config):
             'trustBundles': trust}, invalid
 
 
-def text_rules(data, path, config, resolver, env_hashes):
-    rules, provenance = inspect(data, path, config, resolver)
+def text_rules(data, path, config, resolver, env_hashes, *, commit_message=False):
+    rules, provenance = inspect(data, path, config, resolver, commit_message=commit_message)
     path_rules, _ = inspect(path.encode('utf-8', 'surrogateescape'), '@path', config, resolver)
     rules.update(path_rules)
     if env_hashes and (environment_match(data, env_hashes) or environment_match(path.encode(), env_hashes)):

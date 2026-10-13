@@ -96,12 +96,12 @@ class History:
         records = self.run('log', '-z', '--format=%H%x00%B', *self.revisions).split(b'\0')
         for index in range(0, len(records) - 1, 2):
             if records[index]:
-                yield '@commit-message', records[index].decode().strip(), records[index + 1]
+                yield 'commit', records[index].decode().strip(), records[index + 1]
         for record in self.run('for-each-ref', '--format=%(objecttype) %(objectname)', 'refs/tags').splitlines():
             kind, oid = record.decode().split()
             if kind == 'tag':
                 raw = self.run('cat-file', 'tag', oid)
-                yield '@tag-message', oid, raw.partition(b'\n\n')[2]
+                yield 'tag', oid, raw.partition(b'\n\n')[2]
 
     def close(self):
         if self.reader:

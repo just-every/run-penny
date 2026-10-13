@@ -29,7 +29,7 @@ regexes = ['''\.(?:test|fixture|fake|example|dummy|placeholder|synthetic)[_-][a-
 
 # SHA-shaped credentials must not disappear because their random bytes contain
 # an English stopword (for example dead/feed) or fall below generic entropy.
-# Source/module identities still require the location-bound proof in Python.
+# Source/module identities still require exact structural JSON locations in Python.
 [[rules]]
 id = "hex-api-key"
 description = "Hexadecimal credential assignment"

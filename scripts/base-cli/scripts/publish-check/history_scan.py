@@ -128,7 +128,7 @@ def scan(repo, ref='HEAD', public_base=None, env_file=None, project=None, reposi
                         if identities[identity_scope].matches(path, hit):
                             continue
                     else:
-                        # Content-identity documents keep their own stricter proof.
+                        # Identity documents use their own exact structural locations.
                         held = working_regular(Path(history.repo), path) if mode == 'dir' else read_regular(path)
                         if held and checksums[identity_scope].matches(held[0], hit):
                             continue
@@ -146,9 +146,11 @@ def scan(repo, ref='HEAD', public_base=None, env_file=None, project=None, reposi
             scope = 'working-tree' if path in working_paths else 'pre-existing' if commit in history.public_commits else 'newly-public'
             lines.append((count, count + length, path, commit, scope))
             count += length
-        for path, commit, data in history.messages():
-            report['history']['tagMessages' if path == '@tag-message' else 'commitMessages'] += 1
-            rules, _ = text_rules(data, path, selected_context, resolver, hashes)
+        for message_type, commit, data in history.messages():
+            path = '@' + message_type + '-message'
+            report['history']['tagMessages' if message_type == 'tag' else 'commitMessages'] += 1
+            rules, _ = text_rules(data, path, selected_context, resolver, hashes,
+                                  commit_message=message_type == 'commit')
             scope = 'release-tree' if commit == history.commit else 'pre-existing' if commit in history.public_commits else 'newly-public'
             for rule in rules:
                 add(rule, path, commit, scope=scope)

@@ -8,32 +8,42 @@ blob reads to system Git (`rev-parse`, `rev-list`, `ls-tree`, `cat-file --batch`
 its report private until translating it into the value-free v3 envelope.
 Hexadecimal credential assignments also use a Gitleaks rule without generic
 entropy or English stopword filters. Both assignment rules go through the same
-location-bound Source/module identity proof; provider and environment findings
+location-bound Source/module identity classification; provider and environment findings
 remain independent.
 `tree_scan.py` applies the kept text and licence policy. `history_scan.py`
 assigns release, working-tree and historical scopes. The Node entry point bounds
 the whole operation and stops its private process group on timeout/cancellation.
 
+Git message records carry their kind explicitly. Only commit records enable the
+bounded public coauthor address rule described in the command guide; a file named
+`@commit-message` has no special status. `public_hygiene.py` matches complete raw
+`Co-Authored-By` lines in the final trailer paragraph case-insensitively and
+masks only the accepted address for email inspection, leaving names, other
+addresses and every other rule intact.
+
 Binary metadata decoding, Git protocol/object/ref modelling, frozen comparison,
 resumable inspection and their tests have been removed. Tests live in `tests.py`
 and `coverage_tests.py` and construct disposable repositories with actual Git.
 
-`content_identities.py` classifies only exact generic-api-key occurrences at
-proved Source key locations. It requires same-tree edition/lock selections,
-manifest and archive hashes, valid retained file records, and exact native match
-bytes. Retained archive bytes must hash to the maintained Source serializer's
-`hash(json(saved))` as well as the selected pin. `source_hashes.mjs` reuses that
-serializer. Duplicate JSON fields, non-JSON constants (including ignored fields),
-incorrect types, missing preimages, mismatched pins and unrecognized locations keep
-the native finding. Each selection's complete dependency closure must have valid
-archive and pin proofs before any location in that graph is allowed; unrelated
-coherent selections remain eligible. Normal origin repositories obey the maintained
-Source schema, including rejection of strings starting with `-`.
-Original/private keys and arbitrary copies of a known digest
-are not proofs. Provider and environment findings are unaffected. Native git/dir
-matches are held only in the private temporary report and memory for this proof;
-matched values are never added to the public report. This classification does not
-replace or relax the edition-authoring check.
+`content_identities.py` binds generic-api-key and hex-api-key occurrences to
+exact JSON value locations. `source_metadata.py` enumerates digest fields in the
+formats emitted by `edition-authoring/cli.mjs` and `sources.mjs`: lock manifest,
+toolchain, parent/baseline pins and file SHA-256 values; retained archive keys,
+content digests and dependency pins; and the source origins' revision or
+projection identities. These are format classifications independent of selected
+graphs, canonical serialization, archive preimages and authoring freshness.
+`source_shapes.py` first checks the documented local record types, immutable
+origin identity, source selections and file/pin records. A malformed archive or
+lock grants no identity roles; unknown extra fields never gain a role.
+`provenance_pins.py` keeps the existing module revision classification.
+
+`json_identity.py` rejects duplicate members and non-JSON constants and binds
+native findings to exact string byte spans. Only documented structural fields
+with the declared digest length qualify. An extra credential field, arbitrary
+nested field or copy of the digest on the same minified line remains a finding.
+Provider and known environment findings are independent. Native git/dir matches
+stay in the private temporary report and memory; values are never added to the
+public report. Authoring's integrity checks remain unchanged.
 
 `copy_identities.py` proves the maintained `base-copies.json` and portable
 `base/PROVENANCE.json` copy-inventory SHA-256 values

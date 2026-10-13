@@ -2370,7 +2370,7 @@
       "executable": false
     },
     "base/PROVENANCE.json": {
-      "sha256": "c262662719af50f237aaca3a551bcc90b157d0c445f481498663e4188a76bd6c",
+      "sha256": "fb526f82b0ad807df8129a107b3100a9a41f59cecd3e4613eebd63b1f50c87a2",
       "executable": false
     },
     "BASELINE.md": {
@@ -4506,7 +4506,7 @@
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/content_identities.py": {
-      "sha256": "c29796b3daf95b24b22fdfd545924e4192ea14b3653e70680bd816c60672eba3",
+      "sha256": "98b324620dd028465e86b4846bcee2d1f9ebd5621922cadc7ab73d520e269867",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/copy_identities.py": {
@@ -4530,7 +4530,7 @@
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/git_history.py": {
-      "sha256": "e030b91f4c2d5ad967cf52d51916321ad51a37f96ad4e024e5b48339f6f71805",
+      "sha256": "2ce104cd5a052d6e37189404157b6cd3c1ca37ead8a3f004c69e476f7fdfcb7d",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/github_refs.py": {
@@ -4542,11 +4542,11 @@
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/gitleaks.toml": {
-      "sha256": "1f07ccaadfd4ce6cd7056a44e5464b262cb908bd3124cd2f5b3eeeb0eac2081a",
+      "sha256": "7d0d20f51b904558f7c24b6f95c74339800c12db69957cebc4745f5b31cf4506",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/history_scan.py": {
-      "sha256": "335a9334bf16c96afddaea7a245163e68e44e4655de85ef1c94ad2f18dd49501",
+      "sha256": "e6149908b651866aaba6bf132c15f058f6a64c33f0323350861091c66f0f81d8",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/hit_location.py": {
@@ -4554,7 +4554,7 @@
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/hygiene_config.py": {
-      "sha256": "9beda373434b63499651a583b81d89aa5926126ebe02003145b3ad8d28f88920",
+      "sha256": "a8183399e0f011ce59b4db09dc7af63b5f40d476ebd917e3ccd9826f6b610c5a",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/hygiene_text.py": {
@@ -4598,7 +4598,7 @@
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/public_hygiene.py": {
-      "sha256": "ddae167e54e1deb0bcec88da03d793e83189a157c1cee9df1b42d53767001e92",
+      "sha256": "bad119762ac075ab6e9c0b8a91419115f5dd291ced2d0c2efd93061fe5f24373",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/publication_config.py": {
@@ -4606,11 +4606,11 @@
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/publication-config.json": {
-      "sha256": "d8563d28286e91bf0660e596dc6fb456188c08b1e47cc8c472732b522286a0d3",
+      "sha256": "d60bb6bb45a768493b5869cca3b5dd0f8d87d2ce28197407522ea224aa304dbb",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/README.md": {
-      "sha256": "6538febbfa0497943376734ef9131d8d18a1531879d9a82f3c526e960733ee41",
+      "sha256": "a70ab49e8b37b16652a68c055fab520e864e678d94c095eada44b32abe4d9e40",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/report.py": {
@@ -4629,12 +4629,16 @@
       "sha256": "fb6676f8eff7098da50ccf165366305fb08afc5e24c6b733425c4ad3cb8de28e",
       "executable": false
     },
-    "scripts/base-cli/scripts/publish-check/source_hashes.mjs": {
-      "sha256": "3b0f7090ada00c7570e6ddbd7096f69c15116261a6c823086c85ddec59df928e",
+    "scripts/base-cli/scripts/publish-check/source_metadata.py": {
+      "sha256": "c23dda5765984c5dd7afd7a2c01c421cd474faf7dee4e432db27215f022d2a87",
+      "executable": false
+    },
+    "scripts/base-cli/scripts/publish-check/source_shapes.py": {
+      "sha256": "d977177708aafb8039d0f0ba4a790244fa64ac945305e34e01ac8e87ea8aaa67",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/tree_scan.py": {
-      "sha256": "4c5cc73e89fc1cefb0eff65872abf535f0713c478721a8d180360659123a9991",
+      "sha256": "5ddfadbc73ab9257faafc72f1fbe421d4fd2795b2a2862cbab69baa26670c97e",
       "executable": false
     },
     "scripts/base-cli/scripts/publish-check/trust_bundle.py": {

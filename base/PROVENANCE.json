@@ -1110,17 +1110,6 @@
       }
     },
     {
-      "path": "scripts/base-cli/cli/README.md",
-      "originPath": "cli/README.md",
-      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
-      "files": {
-        "scripts/base-cli/cli/README.md": "8944fb5b1cef582daa2d4311fcdb96df67c3bbd3dbe097b425716dea15594e62"
-      },
-      "modes": {
-        "scripts/base-cli/cli/README.md": "100644"
-      }
-    },
-    {
       "path": "scripts/base-cli/cli/adapter.mjs",
       "originPath": "cli/adapter.mjs",
       "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
@@ -1657,6 +1646,17 @@
       },
       "modes": {
         "scripts/base-cli/cli/project.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/README.md",
+      "originPath": "cli/README.md",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/README.md": "8944fb5b1cef582daa2d4311fcdb96df67c3bbd3dbe097b425716dea15594e62"
+      },
+      "modes": {
+        "scripts/base-cli/cli/README.md": "100644"
       }
     },
     {
@@ -2649,26 +2649,26 @@
     {
       "path": "scripts/base-cli/scripts/publish-check",
       "originPath": "scripts/publish-check",
-      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "revision": "bba58af556643e906274cfbe8ac52da3576a105b",
       "files": {
         "scripts/base-cli/scripts/publish-check/checksum_maps.py": "7e844ce56f885bd1ff2e1f8cea821c73ee3775013580ea63c585948c14bdd77f",
         "scripts/base-cli/scripts/publish-check/cli.py": "988f950254beecce3584b192f28200f8827a377c410a6215248db2ff5ec575ea",
         "scripts/base-cli/scripts/publish-check/command_arguments.py": "33de13be68f16d1cff4232b17706717ea904004d5896288f32901cdb328e7834",
         "scripts/base-cli/scripts/publish-check/command_shell_quotes.py": "b94e325bfaf696efa2d10ac35c5c0dbe6dd834a81d64a07e41d4ef74ba9f1d6a",
         "scripts/base-cli/scripts/publish-check/command_source_quotes.py": "bdbac63186cbf1fc32d0dea316928fcba7b81b6298164fe81cb5ce278aed0732",
-        "scripts/base-cli/scripts/publish-check/content_identities.py": "c29796b3daf95b24b22fdfd545924e4192ea14b3653e70680bd816c60672eba3",
+        "scripts/base-cli/scripts/publish-check/content_identities.py": "98b324620dd028465e86b4846bcee2d1f9ebd5621922cadc7ab73d520e269867",
         "scripts/base-cli/scripts/publish-check/copy_identities.py": "9b2e620930bf9756939d0f013effb2eb3208dfcb8ad470d8face849359a40961",
         "scripts/base-cli/scripts/publish-check/der.py": "1debcbeec1caa149c979e06979c8f34885264e61e21f0cccf25728674ccfc3d8",
         "scripts/base-cli/scripts/publish-check/destination.py": "3020b0d197f3e757749eccdbb1db37abf168ed7622d79bab353138d56fed5b8d",
         "scripts/base-cli/scripts/publish-check/env_values.py": "a2cbbe311d8e43db4bf7cc530d314fa5f7154c99f5d33ea072c24de4353aa1a4",
         "scripts/base-cli/scripts/publish-check/font_licence.py": "95688834bd02187d508cd9d2da45fc8519cad3abcf24fe7d710ee3d4f82bce51",
-        "scripts/base-cli/scripts/publish-check/git_history.py": "e030b91f4c2d5ad967cf52d51916321ad51a37f96ad4e024e5b48339f6f71805",
+        "scripts/base-cli/scripts/publish-check/git_history.py": "2ce104cd5a052d6e37189404157b6cd3c1ca37ead8a3f004c69e476f7fdfcb7d",
         "scripts/base-cli/scripts/publish-check/github_refs.py": "4aac2eab5789f7a3bb190550b788903316775217699a5838582e9c1ff0adbb90",
         "scripts/base-cli/scripts/publish-check/gitleaks.py": "72281597b995796912339e18e0072e052566df0a30bd52fe1a68c91c9f59ecf5",
-        "scripts/base-cli/scripts/publish-check/gitleaks.toml": "1f07ccaadfd4ce6cd7056a44e5464b262cb908bd3124cd2f5b3eeeb0eac2081a",
-        "scripts/base-cli/scripts/publish-check/history_scan.py": "335a9334bf16c96afddaea7a245163e68e44e4655de85ef1c94ad2f18dd49501",
+        "scripts/base-cli/scripts/publish-check/gitleaks.toml": "7d0d20f51b904558f7c24b6f95c74339800c12db69957cebc4745f5b31cf4506",
+        "scripts/base-cli/scripts/publish-check/history_scan.py": "e6149908b651866aaba6bf132c15f058f6a64c33f0323350861091c66f0f81d8",
         "scripts/base-cli/scripts/publish-check/hit_location.py": "adcd3403de1f3a3abaf57518acb14273ae06ace5a17d5136192fadfc2d5f194d",
-        "scripts/base-cli/scripts/publish-check/hygiene_config.py": "9beda373434b63499651a583b81d89aa5926126ebe02003145b3ad8d28f88920",
+        "scripts/base-cli/scripts/publish-check/hygiene_config.py": "a8183399e0f011ce59b4db09dc7af63b5f40d476ebd917e3ccd9826f6b610c5a",
         "scripts/base-cli/scripts/publish-check/hygiene_text.py": "fc40e2bee209781daedeef87c570b56a04af8c044ed121905ef1c2f43bdf10f8",
         "scripts/base-cli/scripts/publish-check/identity-recipe.mjs": "3340971aebf0f97adaa1969f925f52bd3bb5629c08225fd216b4b06c715fb98c",
         "scripts/base-cli/scripts/publish-check/json_identity.py": "6da083788a0a5c67b1b7fbe7d17f8eb1e19c89e3c66f180f5f35d2b91bf4b9d3",
@@ -2679,16 +2679,17 @@
         "scripts/base-cli/scripts/publish-check/provenance_pins.py": "54a757808e4f7797a8b5b36c514123b76ec07c37d5ab3d2fcea3cc116c4a4abe",
         "scripts/base-cli/scripts/publish-check/provenance.py": "e53399a9ebd67945498d88f509a9f7b110127fb45144025cf46a21eb7f439205",
         "scripts/base-cli/scripts/publish-check/public_base.py": "534c76c74393677c095afc201e431831d8344cc322534ee4327b3fec50847c94",
-        "scripts/base-cli/scripts/publish-check/public_hygiene.py": "ddae167e54e1deb0bcec88da03d793e83189a157c1cee9df1b42d53767001e92",
+        "scripts/base-cli/scripts/publish-check/public_hygiene.py": "bad119762ac075ab6e9c0b8a91419115f5dd291ced2d0c2efd93061fe5f24373",
         "scripts/base-cli/scripts/publish-check/publication_config.py": "95f27857b529622706969fdd5d15da02f166adeba3d502884f28c0bac9bed732",
-        "scripts/base-cli/scripts/publish-check/publication-config.json": "d8563d28286e91bf0660e596dc6fb456188c08b1e47cc8c472732b522286a0d3",
-        "scripts/base-cli/scripts/publish-check/README.md": "6538febbfa0497943376734ef9131d8d18a1531879d9a82f3c526e960733ee41",
+        "scripts/base-cli/scripts/publish-check/publication-config.json": "d60bb6bb45a768493b5869cca3b5dd0f8d87d2ce28197407522ea224aa304dbb",
+        "scripts/base-cli/scripts/publish-check/README.md": "a70ab49e8b37b16652a68c055fab520e864e678d94c095eada44b32abe4d9e40",
         "scripts/base-cli/scripts/publish-check/report.py": "e0fe3ae6977862c38f3e5ce019ec8fd0e750e0c2333f7a42bc578048e337c3a4",
         "scripts/base-cli/scripts/publish-check/repository_commands.py": "757a216ca35ccb8267f756072e7de0e8a1524ce29ad1d3f49b65a08e119b6d03",
         "scripts/base-cli/scripts/publish-check/repository_intent.py": "cd51f0fed01eab9ac94d93f14eb2fc6ddd0d1a942a37b642611c483f9c04105d",
         "scripts/base-cli/scripts/publish-check/reviewed.py": "fb6676f8eff7098da50ccf165366305fb08afc5e24c6b733425c4ad3cb8de28e",
-        "scripts/base-cli/scripts/publish-check/source_hashes.mjs": "3b0f7090ada00c7570e6ddbd7096f69c15116261a6c823086c85ddec59df928e",
-        "scripts/base-cli/scripts/publish-check/tree_scan.py": "4c5cc73e89fc1cefb0eff65872abf535f0713c478721a8d180360659123a9991",
+        "scripts/base-cli/scripts/publish-check/source_metadata.py": "c23dda5765984c5dd7afd7a2c01c421cd474faf7dee4e432db27215f022d2a87",
+        "scripts/base-cli/scripts/publish-check/source_shapes.py": "d977177708aafb8039d0f0ba4a790244fa64ac945305e34e01ac8e87ea8aaa67",
+        "scripts/base-cli/scripts/publish-check/tree_scan.py": "5ddfadbc73ab9257faafc72f1fbe421d4fd2795b2a2862cbab69baa26670c97e",
         "scripts/base-cli/scripts/publish-check/trust_bundle.py": "5b13b2d51b89cbcfc8a6d9667b1af911f23ee6befbafd60afc9f5ebb7e24e871"
       },
       "modes": {
@@ -2728,7 +2729,8 @@
         "scripts/base-cli/scripts/publish-check/repository_commands.py": "100644",
         "scripts/base-cli/scripts/publish-check/repository_intent.py": "100644",
         "scripts/base-cli/scripts/publish-check/reviewed.py": "100644",
-        "scripts/base-cli/scripts/publish-check/source_hashes.mjs": "100644",
+        "scripts/base-cli/scripts/publish-check/source_metadata.py": "100644",
+        "scripts/base-cli/scripts/publish-check/source_shapes.py": "100644",
         "scripts/base-cli/scripts/publish-check/tree_scan.py": "100644",
         "scripts/base-cli/scripts/publish-check/trust_bundle.py": "100644"
       }
@@ -2736,7 +2738,7 @@
     {
       "path": "scripts/base-cli/scripts/publish-check.mjs",
       "originPath": "scripts/publish-check.mjs",
-      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "revision": "bba58af556643e906274cfbe8ac52da3576a105b",
       "files": {
         "scripts/base-cli/scripts/publish-check.mjs": "68e9fe13d03ac4d47d014eeca35123ad4beb16cac4374d1b0cb7437ba527a89b"
       },
