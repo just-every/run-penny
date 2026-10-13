@@ -2402,7 +2402,7 @@
       "executable": false
     },
     "DIVERGENCE.md": {
-      "sha256": "5fe15a975ceb40d5e952556f1da144c5a1475c78f0ca7fbb74d73620b8d97b35",
+      "sha256": "9546cd06c742476c5d0c5666a58d0c3c4ae0fd10191314921ae2c82beb548463",
       "executable": false
     },
     "docs/acceptance-history.md": {
@@ -2418,7 +2418,7 @@
       "executable": false
     },
     "docs/base-adoption.md": {
-      "sha256": "80e7f9ce450949add4ab436e113eed5de03b4d813a905f5823ed31f07cd0924d",
+      "sha256": "bb02601bb1771fe2337a88e4076ffa47574585bfd7476c2a50b3a59846bed0eb",
       "executable": false
     },
     "docs/CANNY-MIGRATION.md": {
@@ -3178,7 +3178,7 @@
       "executable": false
     },
     "scripts/base-cli/inventory.json": {
-      "sha256": "ee5be7f067dae5cbabe51723c23bee1a81b7edf8ab0d2ba53178a4922758e9ab",
+      "sha256": "abd7f10a51eb26ba6b7c5767b6080e7a1ccc0740cb44071ab6cdb0ca3a30e8e7",
       "executable": false
     },
     "scripts/base-cli/modules/ai/client.mjs": {

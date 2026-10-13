@@ -2,6 +2,14 @@
 
 Historical friction between Penny and shared seed-spec documents. The entries below record assumptions and suggestions made when each issue was reviewed; they are not a current ownership rule. Penny's current `AGENTS.md` permits deliberate edits to its contract, manifest, and baseline, with affected IDs, changed consequences, and verification. Shared requirements should be improved from their natural source when that benefits other seeds; a Penny-specific need can be recorded as deliberate local divergence. Suggestions below have not thereby been adopted.
 
+## Adopted: Base's current publication scanner
+
+Penny's CLI copy of Base's publication scanner was the `8981bc2` revision, which
+Base's current scan flags because one of its own comments shows a package patch
+filename shaped like an address. Penny carries Base's `bba58af` scanner copy
+verbatim instead (see [Base adoption](docs/base-adoption.md)); the rest of the
+CLI keeps its revision. No product behaviour changes.
+
 ## Adopted: pace hydration verification through public admission
 
 The Base hydration runner starts three fresh browser contexts at a time and

@@ -16,7 +16,7 @@ records every byte-exact copy, its origin path, revision, file hashes and modes;
 The root provenance revision is historical; each copy entry names its own origin.
 Historical receipts below do not describe the current inventory.
 
-The source retains 133 byte-exact copy groups (1,012 files), 16 Base components
+The source retains 133 byte-exact copy groups (1,013 files), 16 Base components
 and their selected comparison archives. Two CLI files are Penny adaptations,
 described below, and make no byte-equality claim. Refresh with Base's own commands, from a
 Base checkout at the chosen commit:
@@ -41,6 +41,17 @@ shipped bytes offline. An independent comparison with the private upstream
 requires an explicitly supplied authorized Base checkout; it is not a public
 fetch promise. See [source provenance](SOURCE-PROVENANCE.md) for the exact
 verification boundary and transformed delivery exports.
+
+## Publication scanner copy
+
+`scripts/base-cli/scripts/publish-check` and `publish-check.mjs` are exact copies
+of Base `bba58af556643e906274cfbe8ac52da3576a105b`, newer than the rest of the
+CLI (`8981bc2c4d9e61feca5787c83b4ed44056659dd9`). Base's current publication
+scan flags a comment in the older copy of its own hygiene module, which shows a
+package patch filename shaped like an address; Base rewrote that comment, so
+Penny carries Base's newer scanner. Base's test files stay uncopied as before.
+`base/PROVENANCE.json` records both groups at that revision and the CLI inventory
+hashes the copied bytes. A full CLI refresh replaces this with one revision.
 
 ## Hydration verification scheduling
 
