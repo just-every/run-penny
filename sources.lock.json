@@ -8373,7 +8373,7 @@
       "executable": false
     },
     "tests/e2e/worker/requester-provenance-upgrade.test.ts": {
-      "sha256": "3dda817d11dcae606f8c534562e0f72c3962a26a81e69b9b7eb354fa2cb9f1c2",
+      "sha256": "c011e75d2a4109f432f5c12d5fac67a63a63e20ffb4454afd3207090c7554ce1",
       "executable": false
     },
     "tests/e2e/worker/requester-repair-fixture.ts": {
@@ -8381,7 +8381,7 @@
       "executable": false
     },
     "tests/e2e/worker/review-heldout.test.ts": {
-      "sha256": "e7b97768b46523ca4d1b7160fcdca64d1f123a10566d7c015d2452a108181981",
+      "sha256": "b831d5291d4d0caa8fc4b2bed3e38fd40ce337851e5ad6242b13f1b173f56b4a",
       "executable": false
     },
     "tests/e2e/worker/start-migration.test.ts": {
@@ -8525,7 +8525,7 @@
       "executable": false
     },
     "tests/predecessor-native-authority.ts": {
-      "sha256": "9fcf99737e3086b1e285b08c7e3b79825420eac39154ec1464f51228dc1edd1e",
+      "sha256": "413fe9008949d3569282f7b857ae4b43f6f2069bf229931fcff0b6e9f2a91e9d",
       "executable": false
     },
     "tests/predecessor-plugin.ts": {

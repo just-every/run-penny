@@ -49,7 +49,9 @@ it('[DATA-002 REQ-009] populated 0005 chain upgrades preserving product cells an
  expect((await call('/api/auth/magic-link',{email:'reviewer@example.test'})).status).toBe(202)
  const link=(await db.prepare("SELECT token FROM local_auth_outbox WHERE recipient='reviewer@example.test'").first<{token:string}>())!
  const signedIn=await call('/api/auth/magic-link/consume?token='+link.token);expect(signedIn.status).toBe(302)
- const headers={Cookie:`${signedIn.headers.get('Set-Cookie')!.split(';')[0]}; ${await nativeOwnerCookie(bindings)}`,Origin:bindings.APP_ORIGIN}
+ // Migration 0009 retains this operator as the native owner, but revokes its
+ // predecessor credential. The two sign-ins still issue independent sessions.
+ const headers={Cookie:`${signedIn.headers.get('Set-Cookie')!.split(';')[0]}; ${await nativeOwnerCookie(bindings,'','reviewer@example.test')}`,Origin:bindings.APP_ORIGIN}
  for(const source of [a,b])expect((await call(`/api/operator/requests/${slug(source)}/unmerge`,{},headers)).status).toBe(200)
  expect((await db.prepare('SELECT request_id,requester_id FROM request_votes').all()).results).toEqual([{request_id:a,requester_id:who}])
  expect((await db.prepare('SELECT request_id,requester_id FROM request_follows').all()).results).toEqual([{request_id:a,requester_id:who}])

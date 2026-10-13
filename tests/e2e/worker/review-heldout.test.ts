@@ -1,7 +1,7 @@
 import { nativeAuthoritySettings, nativeOwnerCookie } from '../../predecessor-native-authority'
 import { applyD1Migrations } from 'cloudflare:test'
 import { env, exports } from 'cloudflare:workers'
-import { beforeAll,expect,inject,it } from 'vitest'
+import { beforeAll,beforeEach,expect,inject,it } from 'vitest'
 import { createPennyApi } from '../../../src/core/app/api'
 import { createDatabaseConnection } from '../../../src/core/platform/database'
 import { importPennySample } from '../../../src/core/features/sample-data/service'
@@ -12,10 +12,24 @@ const configuration={operatorAllowlist:['owner@penny.invalid'],workspaceTimezone
 const app=createPennyApi({runtimeConfiguration:configuration})
 const bindings={...env,...nativeAuthoritySettings,PENNY_ENVIRONMENT:'test',PENNY_AUTH_TRANSPORT:'local-outbox'}
 let nativeCookie=''
-let ip=1000
-async function call(path:string,body?:any,headers:Record<string,string>={},other:any={}){return app.fetch(new Request(nativeAuthoritySettings.APP_ORIGIN+path,{method:body===undefined?'GET':'POST',headers:{'CF-Connecting-IP':`review-${ip++}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),{...bindings,...other})}
+let clientNumber=0,clientIp=''
+// Each scenario is one client, with the same valid ingress address for its
+// direct API and emitted Worker requests. Admission state remains untouched.
+beforeEach(()=>{clientIp=`192.0.2.${++clientNumber}`})
+function clientRequest(path:string,init:RequestInit={}){
+ const headers=new Headers(init.headers)
+ headers.set('CF-Connecting-IP',clientIp)
+ return new Request(nativeAuthoritySettings.APP_ORIGIN+path,{...init,headers})
+}
+async function call(path:string,body?:any,headers:Record<string,string>={},other:any={}){return app.fetch(clientRequest(path,{method:body===undefined?'GET':'POST',headers:{...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),{...bindings,...other})}
 const email=()=>`${crypto.randomUUID()}@example.test`
-async function link(address:string,purpose='requester'){await call(purpose==='operator'?'/api/auth/magic-link':'/api/public/identity/email',purpose==='operator'?{email:address}:{email:address,displayName:'PRIVATE DISPLAY'});return (await env.DB.prepare('SELECT token FROM local_auth_outbox WHERE recipient=? AND purpose=? ORDER BY created_at DESC,id DESC LIMIT 1').bind(address,purpose).first<any>()).token}
+async function link(address:string,purpose='requester'){
+ const response=await call(purpose==='operator'?'/api/auth/magic-link':'/api/public/identity/email',purpose==='operator'?{email:address}:{email:address,displayName:'PRIVATE DISPLAY'})
+ expect(response.status,`${purpose} link request admission`).toBe(202)
+ const row=await env.DB.prepare('SELECT token FROM local_auth_outbox WHERE recipient=? AND purpose=? ORDER BY created_at DESC,id DESC LIMIT 1').bind(address,purpose).first<{token:string}>()
+ if(!row)throw new Error(`${purpose} link request was accepted without local delivery`)
+ return row.token
+}
 async function requester(address=email()){const token=await link(address);const response=await call('/api/public/identity/email/verify',{token});expect(response.status).toBe(200);return {email:address,...await response.json() as any}}
 // The predecessor admission cookie and independently bootstrapped Base authority
 // exercise their separate gates; no historical credential grants native authority.
@@ -81,10 +95,10 @@ it('link consume rolls back claim/outbox/session if a late storage write fails, 
 })
 
 it('F1 emitted SSR must exclude private title from hyperlinks and hydration payload',async()=>{
- const who=await requester(),held=await submit(who,input({title:'private-merger-maple-secret'})),cookie=await operator();expect((await call('/api/operator/moderation/'+held.slug,safe(),{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(200);const response=await exports.default.fetch(new Request('https://penny.test/'));const html=await response.text();console.log('F1-SSR',JSON.stringify({status:response.status,containsPrivateTitle:html.includes(held.body.title),containsSafeTitle:html.includes('Safe title')}));expect(response.status).toBe(200);expect(html).not.toContain(held.body.title)
+ const who=await requester(),held=await submit(who,input({title:'private-merger-maple-secret'})),cookie=await operator();expect((await call('/api/operator/moderation/'+held.slug,safe(),{Cookie:cookie,Origin:bindings.APP_ORIGIN})).status).toBe(200);const response=await exports.default.fetch(clientRequest('/'));const html=await response.text();console.log('F1-SSR',JSON.stringify({status:response.status,containsPrivateTitle:html.includes(held.body.title),containsSafeTitle:html.includes('Safe title')}));expect(response.status).toBe(200);expect(html).not.toContain(held.body.title)
 })
 it('emitted predecessor runtime signout denies subsequent private docs, API and generated function',async()=>{
- const magic=await link('owner@penny.invalid','operator');const response=await exports.default.fetch(new Request('https://penny.test/api/auth/magic-link/consume?token='+magic,{redirect:'manual'}));expect(response.status).toBe(302);const cookie=response.headers.get('Set-Cookie')!.split(';')[0];expect((await exports.default.fetch(new Request('https://penny.test/api/operator/moderation',{headers:{Cookie:cookie,Origin:bindings.APP_ORIGIN}}))).status).toBe(200);expect((await exports.default.fetch(new Request('https://penny.test/api/auth/sign-out',{method:'POST',headers:{Cookie:cookie,Origin:'https://penny.test'}}))).status).toBe(204);expect((await exports.default.fetch(new Request('https://penny.test/app/moderation',{redirect:'manual',headers:{Cookie:cookie,Accept:'text/html'}}))).status).toBe(302);expect((await exports.default.fetch(new Request('https://penny.test/api/operator/moderation',{headers:{Cookie:cookie,Origin:bindings.APP_ORIGIN}}))).status).toBe(401);const rpc=await exports.default.fetch(new Request('https://penny.test'+inject('generatedTransport').loadOperatorResources,{headers:{Cookie:cookie,Origin:'https://penny.test','x-tsr-serverFn':'true',Accept:'application/json'}}));expect(await rpc.json()).toMatchObject({isSerializedRedirect:true,to:'/signin'})
+ const magic=await link('owner@penny.invalid','operator');const response=await exports.default.fetch(clientRequest('/api/auth/magic-link/consume?token='+magic,{redirect:'manual'}));expect(response.status).toBe(302);const cookie=response.headers.get('Set-Cookie')!.split(';')[0];expect((await exports.default.fetch(clientRequest('/api/operator/moderation',{headers:{Cookie:cookie,Origin:bindings.APP_ORIGIN}}))).status).toBe(200);expect((await exports.default.fetch(clientRequest('/api/auth/sign-out',{method:'POST',headers:{Cookie:cookie,Origin:'https://penny.test'}}))).status).toBe(204);expect((await exports.default.fetch(clientRequest('/app/moderation',{redirect:'manual',headers:{Cookie:cookie,Accept:'text/html'}}))).status).toBe(302);expect((await exports.default.fetch(clientRequest('/api/operator/moderation',{headers:{Cookie:cookie,Origin:bindings.APP_ORIGIN}}))).status).toBe(401);const rpc=await exports.default.fetch(clientRequest(inject('generatedTransport').loadOperatorResources,{headers:{Cookie:cookie,Origin:'https://penny.test','x-tsr-serverFn':'true',Accept:'application/json'}}));expect(await rpc.json()).toMatchObject({isSerializedRedirect:true,to:'/signin'})
 })
 it('concurrent identical replay creates one complete graph for eight callers',async()=>{
  const who=await requester(),body=input(),before=await counts(),results=await Promise.all(Array.from({length:8},()=>call('/api/public/requests',body,bearer(who.token))));expect(results.every(r=>r.status===201)).toBe(true);const values=await Promise.all(results.map(r=>r.json()));expect(values.every(x=>JSON.stringify(x)===JSON.stringify(values[0]))).toBe(true);const after=await counts();for(const table of ['requests','evidence_items','evidence_versions','request_evidence_links','request_submission_keys','audit_entries'])expect(after[table]-before[table]).toBe(1)

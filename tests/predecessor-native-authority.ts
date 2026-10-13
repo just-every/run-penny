@@ -10,7 +10,9 @@ export const nativeAuthoritySettings = {
  OPERATOR_EMAIL: 'owner@penny.invalid',
 } as const
 
-export async function nativeOwnerCookie(bindings: AppBindings, currentCookie = ''): Promise<string> {
+// Populated upgrades name their retained native owner explicitly; the default
+// belongs to the separate fixture installation bootstrapped below.
+export async function nativeOwnerCookie(bindings: AppBindings, currentCookie = '', ownerEmail: string = nativeAuthoritySettings.OPERATOR_EMAIL): Promise<string> {
  let deliveredLink: URL | undefined
  const auth = createOperatorAuth({
   db: bindings.DB,
@@ -18,9 +20,9 @@ export async function nativeOwnerCookie(bindings: AppBindings, currentCookie = '
    origin: nativeAuthoritySettings.APP_ORIGIN,
    SESSION_SECRET: nativeAuthoritySettings.AUTH_SECRET,
    SETUP_TOKEN: nativeAuthoritySettings.SETUP_TOKEN,
-   OWNER_EMAIL: nativeAuthoritySettings.OPERATOR_EMAIL,
+   OWNER_EMAIL: ownerEmail,
    MAIL_FROM: 'native-fixture@example.test',
-   allowList: [nativeAuthoritySettings.OPERATOR_EMAIL],
+   allowList: [ownerEmail],
   },
   // Only the delivery edge is captured. Base creates and consumes the actual
   // one-use sign-in token against the retained installation's authority.
@@ -43,8 +45,9 @@ export async function nativeOwnerCookie(bindings: AppBindings, currentCookie = '
  if (!await bindings.DB.prepare('SELECT id FROM oa_operators LIMIT 1').first()) {
   response = await handle(request('/auth/bootstrap', { token: nativeAuthoritySettings.SETUP_TOKEN, displayName: 'Native fixture owner' }))
  } else {
-  const sent = await handle(request('/auth/magic-link', { email: nativeAuthoritySettings.OPERATOR_EMAIL }))
-  if (sent?.status !== 202 || !deliveredLink) throw new Error(`Native fixture sign-in mail failed: ${sent?.status}`)
+  const sent = await handle(request('/auth/magic-link', { email: ownerEmail }))
+  if (sent?.status !== 202) throw new Error(`Native fixture sign-in mail failed: ${sent?.status}`)
+  if (!deliveredLink) throw new Error('Native fixture sign-in was accepted without mail delivery')
   response = await handle(request('/auth/confirm', { token: deliveredLink.searchParams.get('token') }))
  }
  if (response?.status !== 303) throw new Error(`Native fixture sign-in failed: ${response?.status}`)
