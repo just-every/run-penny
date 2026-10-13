@@ -6,7 +6,7 @@ exports ([Move from UserVoice](USERVOICE-MIGRATION.md)).
 Support is **documented format, synthetic-only**. No real owner export has been supplied, and
 Penny makes no replacement claim. It never acquires a live API token or creates
 a trial account. Prepare saved files privately, review a preview, then apply it
-with a current native operator session.
+with a current native owner session.
 
 The format references are Canny's [export guide](https://help.canny.io/en/articles/3889198-exporting-feedback)
 and [API reference](https://developers.canny.io/api-reference). Classic CSV and
@@ -204,7 +204,7 @@ The receipt shows source/read/applied/skipped rows by kind, skip reasons,
 destination rows created by table, named omissions with counts, every unresolved
 relationship, identity treatment and job-created mail/notification counts. After
 undo it lists removed effects and conflicts/kept effects, with originals retained.
-It stays private and requires current native operator authority.
+It stays private and requires current native owner authority.
 
 The placeholders are safe receipt identifiers, never credentials. Each request
 applies a bounded batch. Continue the persisted job until it reports completed;
@@ -212,8 +212,18 @@ do not submit a fresh import to recover a killed request. Committed checkpoints
 survive Worker restart; an uncommitted D1 batch rolls back. A late SQL failure
 retains the prior checkpoint and names refusal. Repair the condition, then resume
 the same job or deliberately roll back its applied effects. Current authority is
-checked within every native/journal transaction. Only its creating active
-operator may execute that job.
+checked within every native/journal transaction. Saved-feedback preview, apply,
+history, originals, receipt and recovery require a current native owner.
+After export, reset, import and setup, the destination owner can read, undo or
+resume archived jobs, including unfinished forward work and reversal. Owner
+handoff works even while the historical creator row still exists. A demoted
+creator cannot retain access through their old job principal; revoked, expired
+or outdated sessions cannot execute it.
+
+New jobs bind to the installation's owner role. Legacy jobs retain their exact
+principal, fingerprint, source custody and historical attribution; authority is
+checked against the acting owner's current session and role, without rewriting
+archive metadata. Ordinary non-owner operators cannot manage these jobs.
 
 Identical source bytes, namespace and options replay without duplicate evidence
 or product rows. Changed content/options under the same external identities

@@ -154,6 +154,13 @@ pnpm run data:erase -- private/plan.json --journal-out private/latest-journal.js
 pnpm run data:resume-erasure -- <operation-id> --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
 ```
 
+A large preview may return HTTP 202 with a signed `continuation`. The app and
+`data:erase-preview` command follow it automatically until the complete HTTP 200
+preview is ready. Other HTTP clients send the same table and ID with that
+continuation. A changed record, import custody or session invalidates the scan;
+start a new preview in that case. The final review hash and copy holds retain
+the same meaning, and erasure still checks the complete plan before removal.
+
 For a genuinely interrupted runner, first stop it and quiesce its writers. Never
 use recovery against a live runner. The server requires explicit confirmation
 but cannot independently prove that a process has stopped:

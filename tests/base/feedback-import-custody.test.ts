@@ -203,7 +203,9 @@ it.each(['request','requester','evidence','streamed evidence','legacy evidence']
  }
  const nativeRows=async()=>(await env.DB.batch(['requests','request_notes','request_canonical_roots'].map(table=>env.DB.prepare('SELECT * FROM '+table+' ORDER BY 1')))).map(result=>result.results),nativeBefore=await nativeRows()
  const table=evidenceRoot?'evidence_items':kind==='request'?'requests':'requesters',id=stableFeedbackId(source.namespace,evidenceRoot?'evidence':kind==='request'?'posts':'users',kind==='requester'?'csv-author:idea-1':'idea-1')
- const previewResponse=await call('/api/operator/data/erasure/preview',{table,id},operator);expect(previewResponse.status,await previewResponse.clone().text()).toBe(200)
+ let previewResponse=await call('/api/operator/data/erasure/preview',{table,id},operator)
+ while(previewResponse.status===202){const {continuation}=await previewResponse.json() as {continuation:string};previewResponse=await call('/api/operator/data/erasure/preview',{table,id,continuation},operator)}
+ expect(previewResponse.status,await previewResponse.clone().text()).toBe(200)
  const plan=await previewResponse.json() as {planHash:string;blockedCopies:unknown[];counts:Record<string,number>};expect(plan.blockedCopies).toEqual([])
  if(evidenceRoot){expect(plan.counts.requests).toBeUndefined();expect(plan.counts.feedback_import_records).toBe(1)}
  const erased=await call('/api/operator/data/erasure',{table,id,planHash:plan.planHash},operator)

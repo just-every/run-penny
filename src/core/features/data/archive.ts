@@ -7,6 +7,7 @@ import {hostErasureStatements} from '../auth/host-custody'
 import {readErasureFrontier,checkErasureRead} from './erasure-read'
 import {admitFlatImportErasure} from '../imports/erasure-admission'
 import {importCopyHolds} from '../imports/erasure-scope'
+import type {CopyScanOptions} from '../imports/copy-scan'
 import { importErasureStatements } from '../imports/erasure'
 import {retainErasureWork,resumeImportErasure} from '../imports/erasure-work'
 import { validateFeedbackArchive } from '../imports/archive-custody'
@@ -228,7 +229,7 @@ function strings(value:Cell):string[]{
  if(typeof value!=='string')return []
  try{const parsed=JSON.parse(value) as unknown;const walk=(item:unknown):string[]=>typeof item==='string'?[item]:Array.isArray(item)?item.flatMap(walk):item!==null&&typeof item==='object'?Object.values(item).flatMap(walk):[];return [value,...walk(parsed)]}catch{return [value]}
 }
-export async function planErasure(db:D1Database,tableName:string,id:string):Promise<ErasurePlan>{
+export async function planErasure(db:D1Database,tableName:string,id:string,copyScan?:CopyScanOptions):Promise<ErasurePlan>{
  if(!roots.has(tableName))fail('unsupported_erasure_entity',400)
  const tables=await schema(db),data:Record<string,Row[]>=Object.fromEntries(tables.map(table=>[table.name,[]]))
  const found=await db.prepare(`SELECT * FROM ${ident(tableName)} WHERE id=?`).bind(id).first<Row>();if(found)data[tableName].push(found)
@@ -303,10 +304,11 @@ export async function planErasure(db:D1Database,tableName:string,id:string):Prom
  const blockedCopies:{table:string;key:string;columns:string[]}[]=[]
  for(const table of tables){if(['audit_entries','operators','operator_sessions'].includes(table.name))continue;for(const row of data[table.name]){if(marked(table,row))continue;const columns=Object.entries(row).filter(([column,value])=>!['id','created_at','updated_at','token_hash','token','slug','storage_key','subject_hash','key_hash','body_hash'].includes(column)&&strings(value).some(text=>[...literals].some(literal=>text.includes(literal)&&!independentPublicPhrase(table.name,row,column,literal)))).map(([column])=>column);if(columns.length)blockedCopies.push({table:table.name,key:rowKey(table,row),columns})}}
  for(const row of data.audit_entries)if(!audits.includes(row)&&strings(row.details_json).some(text=>[...ids,...literals].some(literal=>text.includes(literal))))blockedCopies.push({table:'audit_entries',key:rowKey(tables.find(table=>table.name==='audit_entries')!,row),columns:['details_json']})
- blockedCopies.push(...await importCopyHolds(db,selected.feedback_import_records,new Set([...literals,...ids])))
+ const current=(await state(db))!
+ const scope=copyScan?await hash({current,table:tableName,id,selected,audits,blockedCopies}):undefined
+ blockedCopies.push(...await importCopyHolds(db,selected.feedback_import_records,new Set([...literals,...ids]),copyScan?{...copyScan,scope}:undefined))
  const files=erasureFiles(selected)
  const counts=Object.fromEntries(tables.map(table=>[table.name,selected[table.name].length]).filter(([,count])=>count!==0));counts.audit_anonymized=audits.length
- const current=(await state(db))!
  const planHash=await hash({origin:current.origin,epoch:current.epoch,table:tableName,id,selected,audits,files,blockedCopies})
  return {table:tableName,id,planHash,counts,files,blockedCopies,selected,audit:audits,tables}
 }

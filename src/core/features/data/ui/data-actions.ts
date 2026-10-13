@@ -50,3 +50,9 @@ export const recordLabel = (table: string): string => ({
   native_requester_sessions: 'Requester sessions', native_rate_limits: 'Rate-limit entries', native_moderation_events: 'Moderation history',
   request_submission_keys: 'Submission reservations',
 }[table] ?? table.replaceAll('_', ' '))
+
+export async function previewErasure(table:string,id:string):Promise<Plan>{
+ let result=await mutate<Plan|{status:'pending';continuation:string}>('erasure/preview',{table,id})
+ while('status' in result&&result.status==='pending')result=await mutate<Plan|{status:'pending';continuation:string}>('erasure/preview',{table,id,continuation:result.continuation})
+ return result as Plan
+}

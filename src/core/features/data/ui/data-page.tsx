@@ -6,7 +6,7 @@ import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { dangerButtonClass, disclosureChevronClass, fieldLabelClass, fileInputClass, paperCardClass, secondaryButtonClass } from '@/core/ui/app/classes'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure, OperatorResourceLoading, OperatorResourceNotFound, OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
-import { DataActionError, downloadPrivate, entityLabels, mutate, recordLabel, type Overview, type Plan, type Receipt } from './data-actions'
+import { DataActionError, downloadPrivate, entityLabels, mutate, previewErasure, recordLabel, type Overview, type Plan, type Receipt } from './data-actions'
 const card = `${paperCardClass} p-5 sm:p-7`
 const secondary = secondaryButtonClass
 const heading = 'text-lg font-bold tracking-[-0.01em] text-penny-ink'
@@ -73,7 +73,7 @@ export function DataPage() {
           event.preventDefault(); void perform('Checking dependent records and original files…', async () => {
             const selected = overview.targets.find(item => `${item.table}:${item.id}` === target)
             if (!selected) throw new Error('Choose a record first.')
-            setPlan(await mutate<Plan>('erasure/preview', { table: selected.table, id: selected.id })); setStatus(null)
+            setPlan(await previewErasure(selected.table,selected.id)); setStatus(null)
           })
         }}><label className={fieldLabelClass}>Record<select className={fieldClass} required value={target} disabled={unavailable} onChange={event => { setTarget(event.target.value); setPlan(null) }}><option value="">Choose a record</option>{Object.entries(entityLabels).map(([table, label]) => <optgroup key={table} label={label}>{overview.targets.filter(item => item.table === table).map(item => <option key={item.id} value={`${table}:${item.id}`}>{item.label} · {item.id.slice(-8)}</option>)}</optgroup>)}</select></label><button className={secondary} disabled={unavailable}>Preview erasure</button></form>
         {plan ? <div className="mt-5 border-t border-penny-line pt-5"><h3 className="font-bold text-penny-ink">Confirm permanent erasure</h3><p className="mt-3 break-words text-base font-bold text-penny-ink">{overview.targets.find(item => item.table === plan.table && item.id === plan.id)?.label ?? "Selected record"}</p><p className="mt-2 break-all text-sm text-penny-muted">{entityLabels[plan.table]} · {plan.id}</p><dl className="mt-4 grid gap-x-8 gap-y-2 text-sm text-penny-ink sm:grid-cols-2">{Object.entries(plan.counts).map(([table, count]) => <div key={table} className="flex min-w-0 justify-between gap-3"><dt className="break-words">{recordLabel(table)}</dt><dd className="shrink-0 font-bold tabular-nums">{count}</dd></div>)}</dl><p className="mt-3 text-sm text-penny-ink">Original files to delete: {plan.fileCount}.</p>

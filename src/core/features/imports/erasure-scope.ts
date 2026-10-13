@@ -1,12 +1,14 @@
-import {jobPlans} from './receipt-read'
+import {copyPlan} from './copy-plan'
 import type {Row} from '../data/archive'
 import {NativeError} from '../auth/native-tokens'
 import {targetIdentity} from '../../../../base/modules/import-kit/src/d1/erasure-index'
 import {Buffer} from 'node:buffer'
+import {copySnapshot,scanCopyPages,type CopyScanOptions} from './copy-scan'
 /** Preserve the existing private-copy hold for excluded retained plan text.
  * Unrelated jobs return only keys; affected pages are inspected one at a time. */
-export async function importCopyHolds(db:D1Database,records:Row[],literals:Set<string>):Promise<{table:string;key:string;columns:string[]}[]> {
+export async function importCopyHolds(db:D1Database,records:Row[],literals:Set<string>,scan?:CopyScanOptions):Promise<{table:string;key:string;columns:string[]}[]> {
  if(!literals.size)return []
+ const snapshot=await copySnapshot(db)
  const targets=records.map(row=>targetIdentity('penny-feedback',String(row.target_kind),String(row.target_id))),jobs:string[]=[],identities=new Set<string>()
  for(let start=0;start<targets.length;start+=250){const result=await db.prepare('SELECT DISTINCT job_id,source_identity FROM ik_d1_plan_index WHERE target_identity IN (SELECT value FROM json_each(?))').bind(JSON.stringify(targets.slice(start,start+250))).all<{job_id:string;source_identity:string}>();jobs.push(...result.results.map(row=>row.job_id));for(const row of result.results)identities.add(row.source_identity)}
  const bundles=(await db.prepare('SELECT DISTINCT stream_id FROM ik_d1_stream_pages WHERE job_id IN (SELECT value FROM json_each(?))').bind(JSON.stringify(jobs)).all<{stream_id:string}>()).results.map(row=>row.stream_id)
@@ -38,10 +40,14 @@ export async function importCopyHolds(db:D1Database,records:Row[],literals:Set<s
  const compressed=(await db.prepare(`SELECT j.id FROM ik_jobs j LEFT JOIN ik_d1_plan_chunks c ON c.job_id=j.id AND c.ordinal=0 WHERE j.destination='penny-feedback' AND instr(substr(CASE WHEN json_extract(j.plan_json,'$.d1Plan')=1 THEN c.body ELSE j.plan_json END,1,200),'"d1Plan":')>0`).all<{id:string}>()).results.map(row=>row.id)
  // A selected page may also hold unrelated source rows. They are not erased
  // by the target protocol, so preserve the copy hold at entry granularity.
- for(const job of new Set([...jobs,...compressed]))for await(const {plan} of jobPlans(job,db,false))for(const entry of plan.entries){
+ blocked.push(...await scanCopyPages(db,[...new Set([...jobs,...compressed])],snapshot,[[...identities],values],async job=>{
+ const holds:{table:string;key:string;columns:string[]}[]=[]
+ for(const entry of (await copyPlan(db,job)).entries){
   if(identities.has(entry.identity))continue
   const body=JSON.stringify({sourceId:entry.source.sourceId,payload:entry.source.payload,effects:entry.effects,unmapped:entry.unmapped})
-  if(values.some(value=>body.includes(value)))blocked.push({table:'ik_jobs',key:job+':'+entry.identity,columns:['retained source entry']})
+  if(values.some(value=>body.includes(value)))holds.push({table:'ik_jobs',key:job+':'+entry.identity,columns:['retained source entry']})
  }
+ return holds
+ },scan))
  return blocked
 }

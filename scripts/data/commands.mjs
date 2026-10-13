@@ -32,7 +32,8 @@ export async function runDataCommand(argv) {
   return {journalPath:await privateWrite(p[0],journal,true),epoch:journal.epoch,sha256:journal.sha256}
  }
  if(command==='erase-preview') {
-  await privateDestination(p[2]);const plan=await request('erasure/preview',{table:p[0],id:p[1]})
+  await privateDestination(p[2]);let plan=await request('erasure/preview',{table:p[0],id:p[1]})
+  while(plan.status==='pending'&&typeof plan.continuation==='string')plan=await request('erasure/preview',{table:p[0],id:p[1],continuation:plan.continuation})
   return {planPath:await privateWrite(p[2],plan),counts:plan.counts,fileCount:plan.fileCount,blockedCopyCount:plan.blockedCopies?.length??0}
  }
  if(command==='erase'||command==='resume-erasure') {

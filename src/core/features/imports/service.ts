@@ -5,8 +5,8 @@ import {jobReceipt} from './receipt-read'
 import { applyD1ImportBatches,createD1ImportJob,readD1ImportJob,resumeD1Import,undoD1Import,rollbackD1Import,readD1ImportOriginals } from '../../../../base/modules/import-kit/src/d1/index.ts'
 import type { D1ImportContext } from '../../../../base/modules/import-kit/src/d1/index.ts'
 import type { PennyRuntime } from '@/core/app/runtime'
-import { operatorAuth,authenticateOperator } from '../auth/operator'
-import { importAuthority,restoredPrincipal } from './job-authority'
+import { authenticateOperator } from '../auth/operator'
+import { importAuthority,importAuthorityPredicate,IMPORT_OWNER_PRINCIPAL } from './job-authority'
 import { NativeError } from '../auth/native-tokens'
 import { feedbackTargets } from './native-targets'
 import { nativeDependencies } from './native-relations'
@@ -27,16 +27,15 @@ async function admitApply(job:{id:string;state:string},context:D1ImportContext):
  return forwardContext(context,job.id)
 }
 
-export async function importContext(runtime:PennyRuntime,request:Request,namespace:string,reversing=false,restoredPrincipal?:string):Promise<{context:D1ImportContext;actor:string}> {
- const session=await operatorAuth(runtime).getSession(request)
- if(!session)throw new NativeError('unauthenticated',401)
+export async function importContext(runtime:PennyRuntime,request:Request,namespace:string,reversing=false,jobPrincipal=IMPORT_OWNER_PRINCIPAL):Promise<{context:D1ImportContext;actor:string}> {
+ const session=await importAuthority(runtime,request)
  if(request.method!=='GET'&&request.headers.get('Origin')!==runtime.configuration.appOrigin)throw new NativeError('forbidden_origin',403)
  const actor=await authenticateOperator(runtime,request)
  if(!actor)throw new NativeError('unauthenticated',401)
  const db=runtime.database.binding
  const context:D1ImportContext={destination:'penny-feedback',namespace,mappingVersion:feedbackMappingVersion,batchSize:10,maxBatches:1,
   storage:{database:withoutLiveEffects(db),targets:feedbackTargets(namespace,await nativeDependencies(db),reversing)},
-  authorization:{principalId:restoredPrincipal??session.operatorId,predicate:()=>({sql:`EXISTS(SELECT 1 FROM oa_sessions s JOIN oa_operators o ON o.id=s.operator_id WHERE s.id=? AND s.operator_id=? AND s.revoked_at IS NULL AND s.expires_at>unixepoch('subsec')*1000 AND o.status='active'${restoredPrincipal?" AND o.role='owner' AND NOT EXISTS(SELECT 1 FROM oa_operators creator WHERE creator.id=?)":''} AND o.version=s.operator_version AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle'))`,params:[session.id,session.operatorId,...restoredPrincipal?[restoredPrincipal]:[]]})}}
+  authorization:{principalId:jobPrincipal,predicate:()=>importAuthorityPredicate(session)}}
  return {context:reserveReturn(requestContext(context),32),actor:actor.id}
 }
 export async function previewFeedback(runtime:PennyRuntime,request:Request,input:SavedFeedbackInput) {
@@ -72,14 +71,13 @@ export async function applyFeedback(runtime:PennyRuntime,request:Request,input:S
 }
 export async function feedbackJob(runtime:PennyRuntime,request:Request,id:string,action:'read'|'resume'|'undo'|'rollback'|'originals'|'receipt') {
  // Admission precedes job existence: unauthenticated requests cannot enumerate.
- if(!await operatorAuth(runtime).getSession(request))throw new NativeError('unauthenticated',401)
+ await importAuthority(runtime,request)
  const db=runtime.database.binding, row=await db.prepare('SELECT j.namespace,j.principal_id,COALESCE(s.state,j.state) state FROM ik_jobs j LEFT JOIN ik_d1_streams s ON s.id=j.id WHERE j.id=?').bind(id).first<{namespace:string;principal_id:string;state:string}>()
  if(!row)throw new NativeError('feedback_job_not_found',404)
  const scan=await db.prepare('SELECT revision,ordinal,intent FROM feedback_import_reversal_scans WHERE job_id=?').bind(id).first<{revision:number;ordinal:number;intent:'undo'|'rollback'}>()
  const execution=scan&&['resume','undo','rollback'].includes(action)?scan.intent:action
  const reversing=['undo','rollback'].includes(action)||(action==='resume'&&(Boolean(scan)||['undoing','rolling_back'].includes(row.state)))
- const admitted=await importContext(runtime,request,row.namespace,reversing,await restoredPrincipal(runtime,await importAuthority(runtime,request),row.principal_id));let context=admitted.context
- if(reversing&&row.principal_id!==context.authorization.principalId)throw new NativeError('feedback_import_actor_changed',403)
+ const admitted=await importContext(runtime,request,row.namespace,reversing,row.principal_id);let context=admitted.context
  const stream=await db.prepare('SELECT id FROM ik_d1_streams WHERE id=?').bind(id).first()
  if(stream){context.batchSize=100;if(['resume','undo','rollback'].includes(action))context=sealedContext(context,id)}
  if(reversing){

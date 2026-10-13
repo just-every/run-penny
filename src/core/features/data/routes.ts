@@ -7,6 +7,7 @@ import { parseInput } from '@/core/features/auth/native-routes'
 import { NativeError } from '@/core/features/auth/native-tokens'
 import { DATA_LIMITS,abortInterruptedExport,abortPendingErasure,abortRestore,dataOperation,eraseEntity,exportArchive,planErasure,readErasureJournal,recoverInterruptedRunner,resumeErasure,restoreArchive } from './archive'
 import { assertDataAuthority, type DataAuthority } from './authority'
+import {CopyScanPending} from '../imports/copy-scan'
 type Environment={Bindings:AppBindings;Variables:{runtime:PennyRuntime;dataAuthority?:DataAuthority}}
 function authority(c:Context<Environment>):DataAuthority{
  const session=c.get('dataAuthority')
@@ -45,9 +46,15 @@ export function registerDataRoutes(app:Hono<Environment>):void{
   return c.json(result,result.status==='complete'?200:202)
  })
  app.post('/api/operator/data/erasure/preview',async c=>{
-  const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160)}).strict())
-  const plan=await planErasure(c.env.DB,input.table,input.id)
-  return c.json({table:plan.table,id:plan.id,planHash:plan.planHash,counts:plan.counts,fileCount:plan.files.length,blockedCopies:plan.blockedCopies})
+  const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160),continuation:z.string().max(24*1024*1024).optional()}).strict(),DATA_LIMITS.archiveBytes)
+  const session=authority(c),secret=c.get('runtime').configuration.authSecret!
+  try{
+   const plan=await planErasure(c.env.DB,input.table,input.id,{secret,subject:session.operatorId+':'+session.id,continuation:input.continuation})
+   return c.json({table:plan.table,id:plan.id,planHash:plan.planHash,counts:plan.counts,fileCount:plan.files.length,blockedCopies:plan.blockedCopies})
+  }catch(error){
+   if(error instanceof CopyScanPending)return c.json({status:'pending',continuation:error.continuation},202)
+   throw error
+  }
  })
  app.post('/api/operator/data/erasure',async c=>{
   const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160),planHash:z.string().length(64)}).strict())
