@@ -419,7 +419,7 @@
     },
     "cli/hydration/check.mjs": {
       "source": "cli/hydration/check.mjs",
-      "sha256": "cf659e9fa16295789c36bf04557cc3d70f52e356dc22d3a9a55c7e636267791a"
+      "sha256": "1dab9ec80a970c84594ccc1d7a891113e7e277cf18d67e60000da8a904db1494"
     },
     "cli/hydration/probe.mjs": {
       "source": "cli/hydration/probe.mjs",
@@ -447,7 +447,7 @@
     },
     "cli/lifecycle.mjs": {
       "source": "cli/lifecycle.mjs",
-      "sha256": "c9c7e32b7cd4d9970d6cc09c63176cb4bb6f68518a9a42937494dc341bc25db7"
+      "sha256": "f94c19aeb117d163154acab6b50531520386c87ea005617cc9bacf508f4b42fd"
     },
     "cli/local.mjs": {
       "source": "cli/local.mjs",
@@ -2056,6 +2056,26 @@
     "scripts/publish-check/trust_bundle.py": {
       "source": "scripts/publish-check/trust_bundle.py",
       "sha256": "5b13b2d51b89cbcfc8a6d9667b1af911f23ee6befbafd60afc9f5ebb7e24e871"
+    }
+  },
+  "adaptations": {
+    "cli/hydration/check.mjs": {
+      "owner": "penny",
+      "origin": {
+        "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+        "path": "cli/hydration/check.mjs",
+        "sha256": "cf659e9fa16295789c36bf04557cc3d70f52e356dc22d3a9a55c7e636267791a"
+      },
+      "reason": "Serial hydration load scheduling preserves public admission and all recovery assertions."
+    },
+    "cli/lifecycle.mjs": {
+      "owner": "penny",
+      "origin": {
+        "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+        "path": "cli/lifecycle.mjs",
+        "sha256": "c9c7e32b7cd4d9970d6cc09c63176cb4bb6f68518a9a42937494dc341bc25db7"
+      },
+      "reason": "Serial hydration load scheduling preserves public admission and all recovery assertions."
     }
   }
 }

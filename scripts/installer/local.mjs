@@ -68,6 +68,9 @@ export const commandAdapter = createCommandAdapter(lifecycle, {
   preview: previewTarget,
   localPrerequisites: async ({ root, vars, email }) => vars.PENNY_ENVIRONMENT === 'local' && vars.MAIL_PROVIDER === 'development' && Boolean(vars.AUTH_SECRET) && await operatorPrerequisites(root, email),
   verify: ['pnpm', ['run', 'verify:app']], deploy: deployPenny,
+  // Each hydration load fetches fresh real assets. Let the public admission
+  // bucket's 60-second window expire before the next load, including the first.
+  hydrationLoadDelayMs: 61_000,
   // Local dev identity: the local-only Worker entry, the build output rer build
   // scans for the dev layer, and the kept end-to-end email-link test.
   devIdentity: { entry: 'src/server.dev.ts', output: ['dist'], emailLinkTest: 'tests/installer/readme.test.mjs' },

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "parent": null,
   "edition": "just-every/penny",
-  "manifest": "777d399f48684f8bd92e9df8f7da58aad6accbffb2816f671b4a56cacf90e3c9",
+  "manifest": "b7444357e2e245dd77ad20d56f03c3ca33b4708660a9889f7bdfbb9a784fe3ec",
   "toolchain": {
     "id": "runeditrun/edition-authoring",
     "version": "1.1.0",
@@ -402,22 +402,27 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
           "paths": [
-            "default-seed/scripts/base-cli"
+            "default-seed/scripts/base-cli",
+            "cli"
           ]
         },
         "mappings": [
           {
             "path": "scripts/base-cli",
             "originPath": "default-seed/scripts/base-cli"
+          },
+          {
+            "path": "scripts/base-cli/cli",
+            "originPath": "cli"
           }
         ]
       },
       "baseline": {
-        "key": "3f5868a5581a800fae1e745e9345af9f6078e00ec6a149f1568a58d9c1c3b3a1",
-        "digest": "842d99e8e6946824ebd69d3c272d61ff93fbf2c1f25f4690e091c302b557d281",
-        "sha256": "7acf23863793950fce1c1eae4ecad9e3a35366f4cef27f360c1b7a1476de5352"
+        "key": "362a7c40d7e832c227bb07af2a4cda30503c91c4b04164a1f2b3563427ef78da",
+        "digest": "b6e5007a7fbce0b5475bc693cd92230ae28ef04369924c19c37624d04eee07d6",
+        "sha256": "6d0870e4112ec2a578847c15924e43ba284553ae1d60074c0ac8e6951caa9674"
       }
     },
     {
@@ -2365,7 +2370,7 @@
       "executable": false
     },
     "base/PROVENANCE.json": {
-      "sha256": "3d966de09ed786427f00729d0eaeed0626ecf22e3caf77a4b62a01fce5270ffc",
+      "sha256": "c262662719af50f237aaca3a551bcc90b157d0c445f481498663e4188a76bd6c",
       "executable": false
     },
     "BASELINE.md": {
@@ -2373,7 +2378,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "7b0c63c737f50a29562848314eb09efe2da88f69b5ef1919a381158eaad2c5f9",
+      "sha256": "8bc1eb30bc313f8b7e716dac8d0a988da0f9b0dd306747087a8ffd568eae62e8",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2397,7 +2402,7 @@
       "executable": false
     },
     "DIVERGENCE.md": {
-      "sha256": "98c2f8b5c8deccb9a8d7227a4eddb451d2b061dc5a814b55b1b3a06a2427927a",
+      "sha256": "5fe15a975ceb40d5e952556f1da144c5a1475c78f0ca7fbb74d73620b8d97b35",
       "executable": false
     },
     "docs/acceptance-history.md": {
@@ -2413,7 +2418,7 @@
       "executable": false
     },
     "docs/base-adoption.md": {
-      "sha256": "a45e2f32ad20afd2be1a6ff35bfc8025610a32ccf313b09fd09bd2ae39a5a09d",
+      "sha256": "80e7f9ce450949add4ab436e113eed5de03b4d813a905f5823ed31f07cd0924d",
       "executable": false
     },
     "docs/CANNY-MIGRATION.md": {
@@ -2549,7 +2554,7 @@
       "executable": false
     },
     "edition.json": {
-      "sha256": "777d399f48684f8bd92e9df8f7da58aad6accbffb2816f671b4a56cacf90e3c9",
+      "sha256": "b7444357e2e245dd77ad20d56f03c3ca33b4708660a9889f7bdfbb9a784fe3ec",
       "executable": false
     },
     "examples/host-identity/embed.js": {
@@ -2989,7 +2994,7 @@
       "executable": false
     },
     "scripts/base-cli/cli/hydration/check.mjs": {
-      "sha256": "cf659e9fa16295789c36bf04557cc3d70f52e356dc22d3a9a55c7e636267791a",
+      "sha256": "1dab9ec80a970c84594ccc1d7a891113e7e277cf18d67e60000da8a904db1494",
       "executable": false
     },
     "scripts/base-cli/cli/hydration/probe.mjs": {
@@ -3017,7 +3022,7 @@
       "executable": false
     },
     "scripts/base-cli/cli/lifecycle.mjs": {
-      "sha256": "c9c7e32b7cd4d9970d6cc09c63176cb4bb6f68518a9a42937494dc341bc25db7",
+      "sha256": "f94c19aeb117d163154acab6b50531520386c87ea005617cc9bacf508f4b42fd",
       "executable": false
     },
     "scripts/base-cli/cli/local.mjs": {
@@ -3173,7 +3178,7 @@
       "executable": false
     },
     "scripts/base-cli/inventory.json": {
-      "sha256": "d7b5697c4a95cbfdb6c6fe557c9d81f35e268953a27c3c0bdb7b024196c72a64",
+      "sha256": "ee5be7f067dae5cbabe51723c23bee1a81b7edf8ab0d2ba53178a4922758e9ab",
       "executable": false
     },
     "scripts/base-cli/modules/ai/client.mjs": {
@@ -5141,7 +5146,7 @@
       "executable": false
     },
     "scripts/installer/local.mjs": {
-      "sha256": "3e183b175ec4c6e3f3512192878c288e070d74bdcf230018e3b62bc2214fe0de",
+      "sha256": "78a9470a8669dae39133226569a57bceec5c69b63f7b2159f9ad263077d7161a",
       "executable": false
     },
     "scripts/installer/manifest.mjs": {

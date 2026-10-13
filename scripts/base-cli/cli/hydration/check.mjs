@@ -8,6 +8,7 @@
 // uncounted, or a hydrated page's document lacks Cache-Control: no-transform.
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { setTimeout as delay } from 'node:timers/promises';
 import { RerError } from '../errors.mjs';
 import { hostedServer, launchChromium, originServer, pool, runLoad } from './browser.mjs';
 import { cloudflareRewrite, describeCase, planCases, selectPages } from './cases.mjs';
@@ -19,7 +20,9 @@ const CONTEXTS = 3;
 /** Checks the pages and returns the result; `report(lines)` receives its human
  * summary (pages, skips, redirects followed, what was not checked) before it
  * returns or fails on a page. With no page to load it fails naming why. */
-export async function checkHydration(root, { origin, pages: declared, declaration, report } = {}) {
+export async function checkHydration(root, { origin, pages: declared, declaration, report, loadDelayMs = 0, signal } = {}) {
+ if (!Number.isInteger(loadDelayMs) || loadDelayMs < 0 || loadDelayMs > 2147483647) throw new RerError('hydration_invalid_delay', 'hydrationLoadDelayMs must be an integer between 0 and 2147483647 milliseconds.', 2);
+ signal?.throwIfAborted();
  const started = Date.now();
  const server = origin ? originServer(origin) : await hostedServer(root, { declaration });
  let browser;
@@ -33,8 +36,16 @@ export async function checkHydration(root, { origin, pages: declared, declaratio
    throw new RerError('hydration_no_pages', `The hydration check loaded no page, so it checked nothing. Not checked: ${notChecked.join('; ')}. Make / answer a page as HTML (directly or through a redirect on the same origin), or name the seed's public pages with the commandAdapter option publicPages (SEED-COMMAND-CONTRACT.md, Hydration units).`, 1, { hydration: { pages: [], redirects: selection.redirects, notChecked: selection.refused, loads: 0 } });
   }
   browser = await launchChromium(root);
+  // Edition scheduling: let admission expire naturally before each whole load,
+  // including the first after discovery. Keep one server and all original cases.
+  const width = loadDelayMs ? 1 : CONTEXTS;
+  const load = async (path, item) => {
+   if (loadDelayMs) await delay(loadDelayMs, undefined, { signal });
+   signal?.throwIfAborted();
+   return runLoad(browser, server, path, item);
+  };
   const plain = { kind: 'plain', release: 'after' };
-  const baselines = await pool(selection.pages.map(page => () => runLoad(browser, server, page.path, plain)), CONTEXTS);
+  const baselines = await pool(selection.pages.map(page => () => load(page.path, plain)), width);
   const pages = selection.pages.map((page, index) => {
    const baseline = baselines[index], record = baseline.record;
    const hydrated = record?.settled === 'hydrated', scripts = applicationScripts(baseline, page.body, server.origin, page.path);
@@ -46,7 +57,7 @@ export async function checkHydration(root, { origin, pages: declared, declaratio
   for (const page of pages.filter(page => page.hydrated)) if (!/(^|[\s,])no-transform($|[\s,])/i.test(page.cacheControl ?? '')) failures.push(`${page.path} document: Cache-Control is "${page.cacheControl ?? 'absent'}" and lacks no-transform, so a proxy (Cloudflare's email address obfuscation) may rewrite the HTML React hydrates`);
   for (const page of pages) if (!page.hydrated && !page.skipped) failures.push(judgeUnhydrated(page));
   const work = pages.filter(page => page.hydrated).flatMap(page => planCases(page).map(item => ({ page, item })));
-  const loads = await pool(work.map(({ page, item }) => () => runLoad(browser, server, page.path, item)), CONTEXTS);
+  const loads = await pool(work.map(({ page, item }) => () => load(page.path, item)), width);
   work.forEach(({ page, item }, index) => { (page.loads ??= []).push({ item, load: loads[index] }); });
   for (const page of pages.filter(page => page.hydrated)) failures.push(...judgePage({ ...page, loads: page.loads ?? [] }));
   const result = {
@@ -67,7 +78,7 @@ export async function checkHydration(root, { origin, pages: declared, declaratio
   report?.(summary(result));
   if (failures.length) throw new RerError('hydration_units_failed', `Page sections did not hydrate as separate units:\n  ${failures.join('\n  ')}\nEvery page section and the root chrome sit in a HydrationUnit, intros carry data-intro under the root's intro guard, and the client entry passes createRecoverableErrorHandler (src/base/hydration/README.md; SEED-COMMAND-CONTRACT.md, Hydration units).`, 1, { failures, hydration: result });
   return result;
- } finally { await browser?.close(); await server.close(); }
+ } finally { try { await browser?.close(); } finally { await server.close(); } }
 }
 
 /** The human lines for a result: each page, then redirects and what was not checked. */
@@ -86,7 +97,7 @@ function summarize(item, load, page) {
 }
 
 async function declaredPages(root) {
- try { const { resolveProject } = await import('../project.mjs'); const project = await resolveProject(root); return { pages: project.adapter?.publicPages, declaration: project.adapter?.deployDeclaration ?? project.adapter?.deploy?.declaration }; }
+ try { const { resolveProject } = await import('../project.mjs'); const project = await resolveProject(root); return { pages: project.adapter?.publicPages, declaration: project.adapter?.deployDeclaration ?? project.adapter?.deploy?.declaration, loadDelayMs: project.adapter?.hydrationLoadDelayMs }; }
  catch { return {}; }
 }
 
@@ -95,7 +106,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
  const origin = flag('--origin'), pages = flag('--pages')?.split(',').filter(Boolean), details = args.includes('--details');
  const root = resolve(args.find(arg => !arg.startsWith('--')) ?? '.'), declared = await declaredPages(root);
  try {
-  const result = await checkHydration(root, { origin, pages: pages ?? declared.pages, declaration: declared.declaration });
+  const result = await checkHydration(root, { origin, pages: pages ?? declared.pages, declaration: declared.declaration, loadDelayMs: declared.loadDelayMs });
   console.log(JSON.stringify(details ? result : { ...result, pages: result.pages.map(({ cases, ...page }) => page) }, null, 1));
  } catch (error) {
   console.error(error.message);

@@ -2,6 +2,28 @@
 
 Historical friction between Penny and shared seed-spec documents. The entries below record assumptions and suggestions made when each issue was reviewed; they are not a current ownership rule. Penny's current `AGENTS.md` permits deliberate edits to its contract, manifest, and baseline, with affected IDs, changed consequences, and verification. Shared requirements should be improved from their natural source when that benefits other seeds; a Penny-specific need can be recorded as deliberate local divergence. Suggestions below have not thereby been adopted.
 
+## Adopted: pace hydration verification through public admission
+
+The Base hydration runner starts three fresh browser contexts at a time and
+immediately schedules further loads. Penny's mandatory public admission includes
+the real assets each context fetches, so the runner exhausted its single IP
+bucket and received HTTP 429 before completing its required recovery checks.
+
+Penny deliberately adapts only the CLI lifecycle and hydration orchestration to
+accept a cancellable delay before each complete load. Its adapter selects serial
+loads with a 61-second pause, including before the first baseline. The same
+runtime and admission bucket remain intact; the window expires naturally.
+Every original page, case, probe and verdict remains mandatory, and errors still
+fail without retries. No contract guarantee or product limit is superseded.
+
+These two files are edition-owned adaptations of Base's root CLI at immutable
+`8981bc2c4d9e61feca5787c83b4ed44056659dd9`, retained through `edition.json`
+comparison mappings. Their local inventory explicitly records the adaptation;
+`base/PROVENANCE.json` claims equality only for the 67 untouched CLI files.
+See [Base adoption](docs/base-adoption.md) for the API, focused check and source
+refresh procedure. Actual focused and full verification receipts remain separate
+from this implementation record. No external Base change is implied.
+
 ## 1. BASE-INPUT-003 forces a download disposition on images a public surface must render
 
 **Baseline text.** "Uploads are accepted only within the size and type limits in `seed.json`, stored in R2, served with their declared content type and a download disposition, and readable only by an authorised session or through a delivery channel the product contract names."

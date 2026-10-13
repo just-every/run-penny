@@ -1,22 +1,24 @@
 # Maintained Base adoption
 
-## Current inventory, 13 October 2026
+## Current inventory, 14 October 2026
 
-All active Base selections use the single revision
-`c8e64851a922679ffc8de81ad857e9d7090423f5`. The CLI, onboarding runtime,
-authoring tools, selected modules, schemas and command documentation share that
-origin. The retained runtime excludes Base test suites, fixture trees, and
+Base selections retain immutable comparison origins in `edition.json`; individual
+verbatim copies record their actual revisions in `base/PROVENANCE.json`. The CLI
+comparison now includes Base's root `cli` at
+`8981bc2c4d9e61feca5787c83b4ed44056659dd9`, matching the source adopted by Penny.
+Other selections retain their recorded origins. The retained runtime excludes Base test suites, fixture trees, and
 one-off proof harnesses. Base owns its shared suite; Penny retains tests of its
 product and adapters.
 
 `edition.json` selects the source paths and mappings. `base/PROVENANCE.json`
 records every byte-exact copy, its origin path, revision, file hashes and modes;
 `sources.lock.json` binds current tracked source and retained comparison archives.
-The root provenance revision describes the shared origin of its copy entries.
+The root provenance revision is historical; each copy entry names its own origin.
 Historical receipts below do not describe the current inventory.
 
-The source retains 50 byte-exact copy groups (983 files), 16 Base components
-and their selected comparison archives. Refresh with Base's own commands, from a
+The source retains 133 byte-exact copy groups (1,012 files), 16 Base components
+and their selected comparison archives. Two CLI files are Penny adaptations,
+described below, and make no byte-equality claim. Refresh with Base's own commands, from a
 Base checkout at the chosen commit:
 
 ```sh
@@ -27,6 +29,8 @@ node scripts/edition-authoring/cli.mjs refresh-base <commit> \
 
 The exporter rewrites `scripts/rer.mjs`; restore Penny's own entry point
 afterwards, because it applies Penny's placement policy before the shared CLI.
+Reapply and review the two documented CLI adaptations after exporting; do not
+record their changed bytes as verbatim Base source.
 Update the component revisions in `edition.json`, stage the result, and run
 `pnpm source:lock`.
 
@@ -37,6 +41,39 @@ shipped bytes offline. An independent comparison with the private upstream
 requires an explicitly supplied authorized Base checkout; it is not a public
 fetch promise. See [source provenance](SOURCE-PROVENANCE.md) for the exact
 verification boundary and transformed delivery exports.
+
+## Hydration verification scheduling
+
+Penny owns deliberate adaptations of `scripts/base-cli/cli/lifecycle.mjs` and
+`scripts/base-cli/cli/hydration/check.mjs`. Their comparison origin is Base's
+root `cli` at `8981bc2c4d9e61feca5787c83b4ed44056659dd9`; the more-specific
+`edition.json` mapping preserves that baseline. The other 67 CLI files retain
+their original byte hashes and modes as individual exact-copy records. The CLI
+inventory hashes all local files and explicitly records these two adaptations
+and their original hashes; its local integrity hashes do not claim upstream
+equality. This follows the source author's documented adaptation boundary.
+
+The command adapter's `hydrationLoadDelayMs` option defaults to zero. A positive
+integer selects serial loads and waits that many milliseconds before every
+load, including the first after page discovery. Penny declares 61,000 ms so
+the actual 60-second public admission window expires naturally between fresh
+asset loads. The same hosted Worker, database, IP identity and limiter remain
+in use. No failure is retried. The lifecycle signal cancels a pending wait.
+
+The exported `checkHydration` function accepts the corresponding `loadDelayMs`
+and `signal` options. Delay values must be integers from zero through
+2,147,483,647 ms. The standalone command reads the same adapter policy:
+
+```sh
+node scripts/base-cli/cli/hydration/check.mjs . --details
+```
+
+Run it against the current production build. Every baseline, discovered section,
+tamper case, script hold, recovery assertion, intro and reduced-motion check is
+retained. HTTP 429 and hydration errors still fail. Load counts depend on the
+successful page surveys. This focused check does not replace full `rer verify`;
+final exact-source CI remains required. The pacing adds roughly one minute per
+load. It changes no product limits, migrations, deployment or local settings.
 
 ## Product adapters and authority
 

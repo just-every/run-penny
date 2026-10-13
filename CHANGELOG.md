@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pace the final hydration verification through Penny's real public admission window: serial fresh page loads wait 61 seconds, including the first, while retaining every tamper and recovery assertion. Two CLI files are explicitly owned adaptations with immutable Base comparison origins; unchanged CLI files retain exact custody. Product limits and applied migrations are unchanged. Focused hydration and full exact-source CI receipts remain required.
+
 - Feedback settings manages native email invitations and immediate operator removal. Operators have equal product access; only the setup owner can remove themselves, with explicit transfer of installation controls to a verified active peer. Persisted membership replaces the old source allowlist gate.
 - Search finds private requests, evidence, decisions and rationales, roadmap items, releases, requester names/emails and accounts. Operator lists use bounded server pages, tags, filters and sort state in the URL; request queues compose moderation, board, status, tag, decision and account filters.
 - A chosen rejection notice now reaches a currently consented author through the configured mail transport or gated development outbox. Consent, suppression and quiet hours are checked before delivery; queued, accepted, failed, suppressed and unknown outcomes remain visible. Historical suppressed notices are not replayed.

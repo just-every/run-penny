@@ -1110,149 +1110,739 @@
       }
     },
     {
-      "path": "scripts/base-cli/cli",
-      "originPath": "cli",
+      "path": "scripts/base-cli/cli/README.md",
+      "originPath": "cli/README.md",
       "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
       "files": {
-        "scripts/base-cli/cli/adapter.mjs": "7634f25d6de9c387e7d69e9de890342e9d9fd1221576f571ee51b01b120758ac",
-        "scripts/base-cli/cli/ai-local.mjs": "fadf55c0c44be0d831ba20b45a83b04d995c38b859e14efae96f288d3be8111b",
-        "scripts/base-cli/cli/archive-path.mjs": "0b205346a94f14ca9a7d80b94d60402a078f536f0d73a85e4ee97f07dd7fb5f6",
-        "scripts/base-cli/cli/archive-vite.mjs": "539999f522cee2dfa311d32ec397388c510024970ecfaf9d67fb7146a4e62703",
-        "scripts/base-cli/cli/archive.mjs": "2ec5f162e824dfe3e43def0c8751dc5adaf933cc99010c3dafff32f118809811",
-        "scripts/base-cli/cli/auth-copy.mjs": "7583872f45a023cf5076e9f9f8a9408ce13b3b58e812e39856a38f90f70b2243",
-        "scripts/base-cli/cli/bounded.mjs": "5f7512fb79f15f154cdef29138cec3ebbf9525660030caffbc8a919df509696e",
-        "scripts/base-cli/cli/cache-doctor.mjs": "28d90e72bf971865543149dba83e7cff81f738af8e54208b848b8e08a36377f8",
-        "scripts/base-cli/cli/container-transfer.mjs": "11d21734456391e1c49d4b7dd792859cb86398f99616a84ec589f93819cd644e",
-        "scripts/base-cli/cli/container.mjs": "66a64baffcab780ae7356738840bec9c501d406eb75fe837614d866523f2c587",
-        "scripts/base-cli/cli/contract.mjs": "fb51188588468a14b0eb98d0062e728a92a3d7e94de5c410065cb0c65f4d7177",
-        "scripts/base-cli/cli/dependencies.mjs": "f63d0dfeb23984792fc53ca3cc6554eea7154415090b5a1e636a8d4ca14ee350",
-        "scripts/base-cli/cli/dependency-approval.mjs": "aae735341417293fb585ecd65785faab3ade1483f3e6f5a615d6ec866d7349c2",
-        "scripts/base-cli/cli/dependency-doctor.mjs": "8c91ac639cc2e97b51fe3c94ddc61c39f3e8416bb0d917d0d06cc42493266dcc",
-        "scripts/base-cli/cli/dependency-input.mjs": "b686a1c685ad3b842a1815de96424faaa6cf457eb0e4a97d4a71f5a9ea7060fd",
-        "scripts/base-cli/cli/deploy-config.mjs": "d9bddc99e9efdffa92ba7e213a07f3a70891fd288d0767e6ca071d59078d171d",
-        "scripts/base-cli/cli/deploy.mjs": "40620f180d91fe463105f233d0f173a67efee52d3cb81b2ca9128672dace66e9",
-        "scripts/base-cli/cli/dev-identity.mjs": "8c652b45bf9b3636df8573875bf619b0aefb180f268a21a2db71e79e0310023b",
-        "scripts/base-cli/cli/door-mode.mjs": "6d8f920cf229e5273379472525df6c0daab33c39c583d42d86c23c05c49af9a6",
-        "scripts/base-cli/cli/door.mjs": "20756e4c783c5d9c51461b1f8706af7a46c1ce8c0ca6ee6f8d813c51fb0e96ae",
-        "scripts/base-cli/cli/errors.mjs": "0a46ac7fb14fab31ed1fade66ae85fd7fd194a2bbc80f1f997ff83cec7f65e1e",
-        "scripts/base-cli/cli/export.mjs": "403159b88e7e6e49c3f16f3626d0ae876f663ba66845e918e4f734b339a2c21b",
-        "scripts/base-cli/cli/font-cache.mjs": "e540e9b5e48d9c27c0b54ca52d12c25273b917004111ebc389c25d08f67b5ada",
-        "scripts/base-cli/cli/hosted-output.mjs": "66407be6ce1d9a6d511a4e5c0947b1d84a0b971f94a2ff341b502da7ad2852c6",
-        "scripts/base-cli/cli/hydration/browser.mjs": "a0cae4fd8f24b0f6e517bca77faaa47418822ac17a002c2cca4ef6b9a34933fa",
-        "scripts/base-cli/cli/hydration/cases.mjs": "f0eb8341b832f2948bdf936afea2f7b8c77f18f237acb2cc94c147133985d27e",
-        "scripts/base-cli/cli/hydration/check.mjs": "cf659e9fa16295789c36bf04557cc3d70f52e356dc22d3a9a55c7e636267791a",
-        "scripts/base-cli/cli/hydration/probe.mjs": "be497252f3248420541f9b6e7711249d79246e938475f9b8e8b0cd9a46f0ca9f",
-        "scripts/base-cli/cli/hydration/scripts.mjs": "5f51d3db0f650f4081014afaca7df4015d50286fe7561d9748fc4a28eec6e65c",
-        "scripts/base-cli/cli/hydration/verdict.mjs": "89dfc6539935a29f30ec5b2f722d6fe46e06478f88be051daa11e1ea0b4f16bb",
-        "scripts/base-cli/cli/independent.mjs": "1a411c883a52bb257b191f44f509a2e13cc25306ad0a164d4ea0b99fa865420a",
-        "scripts/base-cli/cli/inspect.mjs": "5cfbf1ac4ae539fdd6437d12c14d09b8fa14a3ea7755912a4a7654e1df9201c7",
-        "scripts/base-cli/cli/jsonc.mjs": "1aa887996cc0108d805a837b4b2520c1989a68d99aa1e928fed8020f78a61830",
-        "scripts/base-cli/cli/lifecycle.mjs": "c9c7e32b7cd4d9970d6cc09c63176cb4bb6f68518a9a42937494dc341bc25db7",
-        "scripts/base-cli/cli/local.mjs": "17b0f480aafc3d914a8c6f00cf6a9d88df14b262a0c6864555984407f86a4e96",
-        "scripts/base-cli/cli/main.mjs": "340e249de028b70b8aad24208a0d4f0e4d96f6bccfdbe92921dc75c2f5a73a24",
-        "scripts/base-cli/cli/managed-server.mjs": "7cd0b449b557bd9d938f3d43ad317a816c93bfc74417daa8f7646bbe91d1d5ce",
-        "scripts/base-cli/cli/node-runtime-cache.mjs": "38cefca874c00203903b9c9c04da4751d59e58f3e4966b2d8b9ea782ac665bf8",
-        "scripts/base-cli/cli/node-runtime-discovery.mjs": "8c8294b195b637eb2036adab1ab34cf5857e122df8999b61b67384ba29fac70e",
-        "scripts/base-cli/cli/node-runtime-download.mjs": "474e9222cc714c007c8be7707b83c7703af8df37d4634fe89ac61e5ff713860e",
-        "scripts/base-cli/cli/node-runtime.mjs": "69608bfc074c8f55280d1cffc003528b3b8595f9664a3c60a2307b1b35d2bab3",
-        "scripts/base-cli/cli/output.mjs": "2c38addd2acd76d2c797c4edf55da6aa7c2e99de4cc2ec6c3a60330d707320bd",
-        "scripts/base-cli/cli/package-calls.mjs": "d08380eb9d6c6b872fda9b7fd60d3e28a58d4c58735c18923b2d7042fba84951",
-        "scripts/base-cli/cli/package-mode.mjs": "063d36978f6c9fa5fb305a14d132706f0fed20e8dc6e4b2aba719b9289cb5e4d",
-        "scripts/base-cli/cli/parse.mjs": "0551a2605eeec4540347ebd7690ebf34d89a1b137a890fb9c4168c2c6a6a138e",
-        "scripts/base-cli/cli/pnpm-runtime.mjs": "acd89682f4f098d778384ff2e6bf10c1c730bca0091d70dc9d9e622871c0ab35",
-        "scripts/base-cli/cli/port.mjs": "ee8f4d34dd2c40ae9b716f2838646b9898d95e8ab0c00fae2833b3069797ac5d",
-        "scripts/base-cli/cli/portability-worker.mjs": "f16de97a5e5e63c74b61ad6d61179969769af85323b0e0e1139069c83f418e50",
-        "scripts/base-cli/cli/portability.mjs": "f70e05fac35a38f26dfa96cae9cc9d5526649c82b23bdcfc46d13d1af8f0f75c",
-        "scripts/base-cli/cli/preview-cache.mjs": "af1d3ae4c6fd92aa4fd75cab83257506c5b8b9bd858ebb5c6db763de497f42a4",
-        "scripts/base-cli/cli/project.mjs": "1e59668e4b77b3a3af012980e32e8ac370b80f9b25da169214c817dccd65e4cf",
-        "scripts/base-cli/cli/README.md": "8944fb5b1cef582daa2d4311fcdb96df67c3bbd3dbe097b425716dea15594e62",
-        "scripts/base-cli/cli/release.mjs": "3f45fb4dad1eead46d13aaaf6321bfc5dadb0b7c2dac26bd72a32cc5ed78f6a9",
-        "scripts/base-cli/cli/runtime-front-door.mjs": "5e95f64f5c8b153f18aa4a28fcac9ad11e94d204b9aed408924b7e6ab68aeb82",
-        "scripts/base-cli/cli/scheduled.mjs": "816cf249036b4f6c45c78f17c9501e4e4de5e7b14fac038dd2081a57653dc67d",
-        "scripts/base-cli/cli/server-activity.mjs": "c018244e61ad7a064a9fa8b8363ef37f2b897161c4961d016fb518f2e551912c",
-        "scripts/base-cli/cli/server-proxy.mjs": "4f0f3a262f7cb88d562e58476d0d93d623b1abc3509e33058ff1f2a7c20190a4",
-        "scripts/base-cli/cli/server-registry.mjs": "f82bce24dd1a9a03b2aa4c28028e2cc0133da6a4dccda962d5304a5cce5b338f",
-        "scripts/base-cli/cli/server-resources.mjs": "740d46db44afbee4bea04d5d270ea2017e570bde17510c9351943a66996f758c",
-        "scripts/base-cli/cli/settings.mjs": "f2094c8b6a54d0a186a2ac0aca78f18e93f368ed15ceb9f5fb335b6766f20e47",
-        "scripts/base-cli/cli/setup-answers.mjs": "25ed3e8c329c696929631e3d26699bb626169d53e230d6fb90e9fd8467c84dc2",
-        "scripts/base-cli/cli/setup-input.mjs": "e84ec8d920283d5e77a45f72286c6d784c66baa8780237ac6e8dd13786375d45",
-        "scripts/base-cli/cli/shared.mjs": "38bdde3688e3206fb76b6c3f6d407e9c733231443f312648ce4e5fd898da26d3",
-        "scripts/base-cli/cli/site-check.mjs": "74410e11bd9e2b141b27f18a625c1c90192e92344e38760ae34c5f112a507c4d",
-        "scripts/base-cli/cli/site-preview.mjs": "cb63d279cea036b9db49b0af02fefa7bb2e1d215b93b83c5a2b5463034c2ce8c",
-        "scripts/base-cli/cli/site-render.mjs": "87f009ce40fc641545349cd8f2327e6ca50397ed7d353f36281daf26846984ba",
-        "scripts/base-cli/cli/site.mjs": "526e134a51878c8ff1063436ee93676615dedec5c35246d03c2aa7e1df2670a9",
-        "scripts/base-cli/cli/transfers.mjs": "c535dbf3229bcc9f767bb69707fcdb1975bec32828821c3a2bc1112f4f6f817e",
+        "scripts/base-cli/cli/README.md": "8944fb5b1cef582daa2d4311fcdb96df67c3bbd3dbe097b425716dea15594e62"
+      },
+      "modes": {
+        "scripts/base-cli/cli/README.md": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/adapter.mjs",
+      "originPath": "cli/adapter.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/adapter.mjs": "7634f25d6de9c387e7d69e9de890342e9d9fd1221576f571ee51b01b120758ac"
+      },
+      "modes": {
+        "scripts/base-cli/cli/adapter.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/ai-local.mjs",
+      "originPath": "cli/ai-local.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/ai-local.mjs": "fadf55c0c44be0d831ba20b45a83b04d995c38b859e14efae96f288d3be8111b"
+      },
+      "modes": {
+        "scripts/base-cli/cli/ai-local.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/archive-path.mjs",
+      "originPath": "cli/archive-path.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/archive-path.mjs": "0b205346a94f14ca9a7d80b94d60402a078f536f0d73a85e4ee97f07dd7fb5f6"
+      },
+      "modes": {
+        "scripts/base-cli/cli/archive-path.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/archive-vite.mjs",
+      "originPath": "cli/archive-vite.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/archive-vite.mjs": "539999f522cee2dfa311d32ec397388c510024970ecfaf9d67fb7146a4e62703"
+      },
+      "modes": {
+        "scripts/base-cli/cli/archive-vite.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/archive.mjs",
+      "originPath": "cli/archive.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/archive.mjs": "2ec5f162e824dfe3e43def0c8751dc5adaf933cc99010c3dafff32f118809811"
+      },
+      "modes": {
+        "scripts/base-cli/cli/archive.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/auth-copy.mjs",
+      "originPath": "cli/auth-copy.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/auth-copy.mjs": "7583872f45a023cf5076e9f9f8a9408ce13b3b58e812e39856a38f90f70b2243"
+      },
+      "modes": {
+        "scripts/base-cli/cli/auth-copy.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/bounded.mjs",
+      "originPath": "cli/bounded.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/bounded.mjs": "5f7512fb79f15f154cdef29138cec3ebbf9525660030caffbc8a919df509696e"
+      },
+      "modes": {
+        "scripts/base-cli/cli/bounded.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/cache-doctor.mjs",
+      "originPath": "cli/cache-doctor.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/cache-doctor.mjs": "28d90e72bf971865543149dba83e7cff81f738af8e54208b848b8e08a36377f8"
+      },
+      "modes": {
+        "scripts/base-cli/cli/cache-doctor.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/container-transfer.mjs",
+      "originPath": "cli/container-transfer.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/container-transfer.mjs": "11d21734456391e1c49d4b7dd792859cb86398f99616a84ec589f93819cd644e"
+      },
+      "modes": {
+        "scripts/base-cli/cli/container-transfer.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/container.mjs",
+      "originPath": "cli/container.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/container.mjs": "66a64baffcab780ae7356738840bec9c501d406eb75fe837614d866523f2c587"
+      },
+      "modes": {
+        "scripts/base-cli/cli/container.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/contract.mjs",
+      "originPath": "cli/contract.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/contract.mjs": "fb51188588468a14b0eb98d0062e728a92a3d7e94de5c410065cb0c65f4d7177"
+      },
+      "modes": {
+        "scripts/base-cli/cli/contract.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/dependencies.mjs",
+      "originPath": "cli/dependencies.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/dependencies.mjs": "f63d0dfeb23984792fc53ca3cc6554eea7154415090b5a1e636a8d4ca14ee350"
+      },
+      "modes": {
+        "scripts/base-cli/cli/dependencies.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/dependency-approval.mjs",
+      "originPath": "cli/dependency-approval.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/dependency-approval.mjs": "aae735341417293fb585ecd65785faab3ade1483f3e6f5a615d6ec866d7349c2"
+      },
+      "modes": {
+        "scripts/base-cli/cli/dependency-approval.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/dependency-doctor.mjs",
+      "originPath": "cli/dependency-doctor.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/dependency-doctor.mjs": "8c91ac639cc2e97b51fe3c94ddc61c39f3e8416bb0d917d0d06cc42493266dcc"
+      },
+      "modes": {
+        "scripts/base-cli/cli/dependency-doctor.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/dependency-input.mjs",
+      "originPath": "cli/dependency-input.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/dependency-input.mjs": "b686a1c685ad3b842a1815de96424faaa6cf457eb0e4a97d4a71f5a9ea7060fd"
+      },
+      "modes": {
+        "scripts/base-cli/cli/dependency-input.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/deploy-config.mjs",
+      "originPath": "cli/deploy-config.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/deploy-config.mjs": "d9bddc99e9efdffa92ba7e213a07f3a70891fd288d0767e6ca071d59078d171d"
+      },
+      "modes": {
+        "scripts/base-cli/cli/deploy-config.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/deploy.mjs",
+      "originPath": "cli/deploy.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/deploy.mjs": "40620f180d91fe463105f233d0f173a67efee52d3cb81b2ca9128672dace66e9"
+      },
+      "modes": {
+        "scripts/base-cli/cli/deploy.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/dev-identity.mjs",
+      "originPath": "cli/dev-identity.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/dev-identity.mjs": "8c652b45bf9b3636df8573875bf619b0aefb180f268a21a2db71e79e0310023b"
+      },
+      "modes": {
+        "scripts/base-cli/cli/dev-identity.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/door-mode.mjs",
+      "originPath": "cli/door-mode.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/door-mode.mjs": "6d8f920cf229e5273379472525df6c0daab33c39c583d42d86c23c05c49af9a6"
+      },
+      "modes": {
+        "scripts/base-cli/cli/door-mode.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/door.mjs",
+      "originPath": "cli/door.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/door.mjs": "20756e4c783c5d9c51461b1f8706af7a46c1ce8c0ca6ee6f8d813c51fb0e96ae"
+      },
+      "modes": {
+        "scripts/base-cli/cli/door.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/errors.mjs",
+      "originPath": "cli/errors.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/errors.mjs": "0a46ac7fb14fab31ed1fade66ae85fd7fd194a2bbc80f1f997ff83cec7f65e1e"
+      },
+      "modes": {
+        "scripts/base-cli/cli/errors.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/export.mjs",
+      "originPath": "cli/export.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/export.mjs": "403159b88e7e6e49c3f16f3626d0ae876f663ba66845e918e4f734b339a2c21b"
+      },
+      "modes": {
+        "scripts/base-cli/cli/export.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/font-cache.mjs",
+      "originPath": "cli/font-cache.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/font-cache.mjs": "e540e9b5e48d9c27c0b54ca52d12c25273b917004111ebc389c25d08f67b5ada"
+      },
+      "modes": {
+        "scripts/base-cli/cli/font-cache.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/hosted-output.mjs",
+      "originPath": "cli/hosted-output.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/hosted-output.mjs": "66407be6ce1d9a6d511a4e5c0947b1d84a0b971f94a2ff341b502da7ad2852c6"
+      },
+      "modes": {
+        "scripts/base-cli/cli/hosted-output.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/hydration/browser.mjs",
+      "originPath": "cli/hydration/browser.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/hydration/browser.mjs": "a0cae4fd8f24b0f6e517bca77faaa47418822ac17a002c2cca4ef6b9a34933fa"
+      },
+      "modes": {
+        "scripts/base-cli/cli/hydration/browser.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/hydration/cases.mjs",
+      "originPath": "cli/hydration/cases.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/hydration/cases.mjs": "f0eb8341b832f2948bdf936afea2f7b8c77f18f237acb2cc94c147133985d27e"
+      },
+      "modes": {
+        "scripts/base-cli/cli/hydration/cases.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/hydration/probe.mjs",
+      "originPath": "cli/hydration/probe.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/hydration/probe.mjs": "be497252f3248420541f9b6e7711249d79246e938475f9b8e8b0cd9a46f0ca9f"
+      },
+      "modes": {
+        "scripts/base-cli/cli/hydration/probe.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/hydration/scripts.mjs",
+      "originPath": "cli/hydration/scripts.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/hydration/scripts.mjs": "5f51d3db0f650f4081014afaca7df4015d50286fe7561d9748fc4a28eec6e65c"
+      },
+      "modes": {
+        "scripts/base-cli/cli/hydration/scripts.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/hydration/verdict.mjs",
+      "originPath": "cli/hydration/verdict.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/hydration/verdict.mjs": "89dfc6539935a29f30ec5b2f722d6fe46e06478f88be051daa11e1ea0b4f16bb"
+      },
+      "modes": {
+        "scripts/base-cli/cli/hydration/verdict.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/independent.mjs",
+      "originPath": "cli/independent.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/independent.mjs": "1a411c883a52bb257b191f44f509a2e13cc25306ad0a164d4ea0b99fa865420a"
+      },
+      "modes": {
+        "scripts/base-cli/cli/independent.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/inspect.mjs",
+      "originPath": "cli/inspect.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/inspect.mjs": "5cfbf1ac4ae539fdd6437d12c14d09b8fa14a3ea7755912a4a7654e1df9201c7"
+      },
+      "modes": {
+        "scripts/base-cli/cli/inspect.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/jsonc.mjs",
+      "originPath": "cli/jsonc.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/jsonc.mjs": "1aa887996cc0108d805a837b4b2520c1989a68d99aa1e928fed8020f78a61830"
+      },
+      "modes": {
+        "scripts/base-cli/cli/jsonc.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/local.mjs",
+      "originPath": "cli/local.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/local.mjs": "17b0f480aafc3d914a8c6f00cf6a9d88df14b262a0c6864555984407f86a4e96"
+      },
+      "modes": {
+        "scripts/base-cli/cli/local.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/main.mjs",
+      "originPath": "cli/main.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/main.mjs": "340e249de028b70b8aad24208a0d4f0e4d96f6bccfdbe92921dc75c2f5a73a24"
+      },
+      "modes": {
+        "scripts/base-cli/cli/main.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/managed-server.mjs",
+      "originPath": "cli/managed-server.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/managed-server.mjs": "7cd0b449b557bd9d938f3d43ad317a816c93bfc74417daa8f7646bbe91d1d5ce"
+      },
+      "modes": {
+        "scripts/base-cli/cli/managed-server.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/node-runtime-cache.mjs",
+      "originPath": "cli/node-runtime-cache.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/node-runtime-cache.mjs": "38cefca874c00203903b9c9c04da4751d59e58f3e4966b2d8b9ea782ac665bf8"
+      },
+      "modes": {
+        "scripts/base-cli/cli/node-runtime-cache.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/node-runtime-discovery.mjs",
+      "originPath": "cli/node-runtime-discovery.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/node-runtime-discovery.mjs": "8c8294b195b637eb2036adab1ab34cf5857e122df8999b61b67384ba29fac70e"
+      },
+      "modes": {
+        "scripts/base-cli/cli/node-runtime-discovery.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/node-runtime-download.mjs",
+      "originPath": "cli/node-runtime-download.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/node-runtime-download.mjs": "474e9222cc714c007c8be7707b83c7703af8df37d4634fe89ac61e5ff713860e"
+      },
+      "modes": {
+        "scripts/base-cli/cli/node-runtime-download.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/node-runtime.mjs",
+      "originPath": "cli/node-runtime.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/node-runtime.mjs": "69608bfc074c8f55280d1cffc003528b3b8595f9664a3c60a2307b1b35d2bab3"
+      },
+      "modes": {
+        "scripts/base-cli/cli/node-runtime.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/output.mjs",
+      "originPath": "cli/output.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/output.mjs": "2c38addd2acd76d2c797c4edf55da6aa7c2e99de4cc2ec6c3a60330d707320bd"
+      },
+      "modes": {
+        "scripts/base-cli/cli/output.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/package-calls.mjs",
+      "originPath": "cli/package-calls.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/package-calls.mjs": "d08380eb9d6c6b872fda9b7fd60d3e28a58d4c58735c18923b2d7042fba84951"
+      },
+      "modes": {
+        "scripts/base-cli/cli/package-calls.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/package-mode.mjs",
+      "originPath": "cli/package-mode.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/package-mode.mjs": "063d36978f6c9fa5fb305a14d132706f0fed20e8dc6e4b2aba719b9289cb5e4d"
+      },
+      "modes": {
+        "scripts/base-cli/cli/package-mode.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/parse.mjs",
+      "originPath": "cli/parse.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/parse.mjs": "0551a2605eeec4540347ebd7690ebf34d89a1b137a890fb9c4168c2c6a6a138e"
+      },
+      "modes": {
+        "scripts/base-cli/cli/parse.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/pnpm-runtime.mjs",
+      "originPath": "cli/pnpm-runtime.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/pnpm-runtime.mjs": "acd89682f4f098d778384ff2e6bf10c1c730bca0091d70dc9d9e622871c0ab35"
+      },
+      "modes": {
+        "scripts/base-cli/cli/pnpm-runtime.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/port.mjs",
+      "originPath": "cli/port.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/port.mjs": "ee8f4d34dd2c40ae9b716f2838646b9898d95e8ab0c00fae2833b3069797ac5d"
+      },
+      "modes": {
+        "scripts/base-cli/cli/port.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/portability-worker.mjs",
+      "originPath": "cli/portability-worker.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/portability-worker.mjs": "f16de97a5e5e63c74b61ad6d61179969769af85323b0e0e1139069c83f418e50"
+      },
+      "modes": {
+        "scripts/base-cli/cli/portability-worker.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/portability.mjs",
+      "originPath": "cli/portability.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/portability.mjs": "f70e05fac35a38f26dfa96cae9cc9d5526649c82b23bdcfc46d13d1af8f0f75c"
+      },
+      "modes": {
+        "scripts/base-cli/cli/portability.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/preview-cache.mjs",
+      "originPath": "cli/preview-cache.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/preview-cache.mjs": "af1d3ae4c6fd92aa4fd75cab83257506c5b8b9bd858ebb5c6db763de497f42a4"
+      },
+      "modes": {
+        "scripts/base-cli/cli/preview-cache.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/project.mjs",
+      "originPath": "cli/project.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/project.mjs": "1e59668e4b77b3a3af012980e32e8ac370b80f9b25da169214c817dccd65e4cf"
+      },
+      "modes": {
+        "scripts/base-cli/cli/project.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/release.mjs",
+      "originPath": "cli/release.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/release.mjs": "3f45fb4dad1eead46d13aaaf6321bfc5dadb0b7c2dac26bd72a32cc5ed78f6a9"
+      },
+      "modes": {
+        "scripts/base-cli/cli/release.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/runtime-front-door.mjs",
+      "originPath": "cli/runtime-front-door.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/runtime-front-door.mjs": "5e95f64f5c8b153f18aa4a28fcac9ad11e94d204b9aed408924b7e6ab68aeb82"
+      },
+      "modes": {
+        "scripts/base-cli/cli/runtime-front-door.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/scheduled.mjs",
+      "originPath": "cli/scheduled.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/scheduled.mjs": "816cf249036b4f6c45c78f17c9501e4e4de5e7b14fac038dd2081a57653dc67d"
+      },
+      "modes": {
+        "scripts/base-cli/cli/scheduled.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/server-activity.mjs",
+      "originPath": "cli/server-activity.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/server-activity.mjs": "c018244e61ad7a064a9fa8b8363ef37f2b897161c4961d016fb518f2e551912c"
+      },
+      "modes": {
+        "scripts/base-cli/cli/server-activity.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/server-proxy.mjs",
+      "originPath": "cli/server-proxy.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/server-proxy.mjs": "4f0f3a262f7cb88d562e58476d0d93d623b1abc3509e33058ff1f2a7c20190a4"
+      },
+      "modes": {
+        "scripts/base-cli/cli/server-proxy.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/server-registry.mjs",
+      "originPath": "cli/server-registry.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/server-registry.mjs": "f82bce24dd1a9a03b2aa4c28028e2cc0133da6a4dccda962d5304a5cce5b338f"
+      },
+      "modes": {
+        "scripts/base-cli/cli/server-registry.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/server-resources.mjs",
+      "originPath": "cli/server-resources.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/server-resources.mjs": "740d46db44afbee4bea04d5d270ea2017e570bde17510c9351943a66996f758c"
+      },
+      "modes": {
+        "scripts/base-cli/cli/server-resources.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/settings.mjs",
+      "originPath": "cli/settings.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/settings.mjs": "f2094c8b6a54d0a186a2ac0aca78f18e93f368ed15ceb9f5fb335b6766f20e47"
+      },
+      "modes": {
+        "scripts/base-cli/cli/settings.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/setup-answers.mjs",
+      "originPath": "cli/setup-answers.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/setup-answers.mjs": "25ed3e8c329c696929631e3d26699bb626169d53e230d6fb90e9fd8467c84dc2"
+      },
+      "modes": {
+        "scripts/base-cli/cli/setup-answers.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/setup-input.mjs",
+      "originPath": "cli/setup-input.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/setup-input.mjs": "e84ec8d920283d5e77a45f72286c6d784c66baa8780237ac6e8dd13786375d45"
+      },
+      "modes": {
+        "scripts/base-cli/cli/setup-input.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/shared.mjs",
+      "originPath": "cli/shared.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/shared.mjs": "38bdde3688e3206fb76b6c3f6d407e9c733231443f312648ce4e5fd898da26d3"
+      },
+      "modes": {
+        "scripts/base-cli/cli/shared.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/site-check.mjs",
+      "originPath": "cli/site-check.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/site-check.mjs": "74410e11bd9e2b141b27f18a625c1c90192e92344e38760ae34c5f112a507c4d"
+      },
+      "modes": {
+        "scripts/base-cli/cli/site-check.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/site-preview.mjs",
+      "originPath": "cli/site-preview.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/site-preview.mjs": "cb63d279cea036b9db49b0af02fefa7bb2e1d215b93b83c5a2b5463034c2ce8c"
+      },
+      "modes": {
+        "scripts/base-cli/cli/site-preview.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/site-render.mjs",
+      "originPath": "cli/site-render.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/site-render.mjs": "87f009ce40fc641545349cd8f2327e6ca50397ed7d353f36281daf26846984ba"
+      },
+      "modes": {
+        "scripts/base-cli/cli/site-render.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/site.mjs",
+      "originPath": "cli/site.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/site.mjs": "526e134a51878c8ff1063436ee93676615dedec5c35246d03c2aa7e1df2670a9"
+      },
+      "modes": {
+        "scripts/base-cli/cli/site.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/transfers.mjs",
+      "originPath": "cli/transfers.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
+        "scripts/base-cli/cli/transfers.mjs": "c535dbf3229bcc9f767bb69707fcdb1975bec32828821c3a2bc1112f4f6f817e"
+      },
+      "modes": {
+        "scripts/base-cli/cli/transfers.mjs": "100644"
+      }
+    },
+    {
+      "path": "scripts/base-cli/cli/version.mjs",
+      "originPath": "cli/version.mjs",
+      "revision": "8981bc2c4d9e61feca5787c83b4ed44056659dd9",
+      "files": {
         "scripts/base-cli/cli/version.mjs": "5fd7b71bc63ac40a34438dc19c12efcd5450c1e8551ed0636e6dc08ab4efcbe4"
       },
       "modes": {
-        "scripts/base-cli/cli/adapter.mjs": "100644",
-        "scripts/base-cli/cli/ai-local.mjs": "100644",
-        "scripts/base-cli/cli/archive-path.mjs": "100644",
-        "scripts/base-cli/cli/archive-vite.mjs": "100644",
-        "scripts/base-cli/cli/archive.mjs": "100644",
-        "scripts/base-cli/cli/auth-copy.mjs": "100644",
-        "scripts/base-cli/cli/bounded.mjs": "100644",
-        "scripts/base-cli/cli/cache-doctor.mjs": "100644",
-        "scripts/base-cli/cli/container-transfer.mjs": "100644",
-        "scripts/base-cli/cli/container.mjs": "100644",
-        "scripts/base-cli/cli/contract.mjs": "100644",
-        "scripts/base-cli/cli/dependencies.mjs": "100644",
-        "scripts/base-cli/cli/dependency-approval.mjs": "100644",
-        "scripts/base-cli/cli/dependency-doctor.mjs": "100644",
-        "scripts/base-cli/cli/dependency-input.mjs": "100644",
-        "scripts/base-cli/cli/deploy-config.mjs": "100644",
-        "scripts/base-cli/cli/deploy.mjs": "100644",
-        "scripts/base-cli/cli/dev-identity.mjs": "100644",
-        "scripts/base-cli/cli/door-mode.mjs": "100644",
-        "scripts/base-cli/cli/door.mjs": "100644",
-        "scripts/base-cli/cli/errors.mjs": "100644",
-        "scripts/base-cli/cli/export.mjs": "100644",
-        "scripts/base-cli/cli/font-cache.mjs": "100644",
-        "scripts/base-cli/cli/hosted-output.mjs": "100644",
-        "scripts/base-cli/cli/hydration/browser.mjs": "100644",
-        "scripts/base-cli/cli/hydration/cases.mjs": "100644",
-        "scripts/base-cli/cli/hydration/check.mjs": "100644",
-        "scripts/base-cli/cli/hydration/probe.mjs": "100644",
-        "scripts/base-cli/cli/hydration/scripts.mjs": "100644",
-        "scripts/base-cli/cli/hydration/verdict.mjs": "100644",
-        "scripts/base-cli/cli/independent.mjs": "100644",
-        "scripts/base-cli/cli/inspect.mjs": "100644",
-        "scripts/base-cli/cli/jsonc.mjs": "100644",
-        "scripts/base-cli/cli/lifecycle.mjs": "100644",
-        "scripts/base-cli/cli/local.mjs": "100644",
-        "scripts/base-cli/cli/main.mjs": "100644",
-        "scripts/base-cli/cli/managed-server.mjs": "100644",
-        "scripts/base-cli/cli/node-runtime-cache.mjs": "100644",
-        "scripts/base-cli/cli/node-runtime-discovery.mjs": "100644",
-        "scripts/base-cli/cli/node-runtime-download.mjs": "100644",
-        "scripts/base-cli/cli/node-runtime.mjs": "100644",
-        "scripts/base-cli/cli/output.mjs": "100644",
-        "scripts/base-cli/cli/package-calls.mjs": "100644",
-        "scripts/base-cli/cli/package-mode.mjs": "100644",
-        "scripts/base-cli/cli/parse.mjs": "100644",
-        "scripts/base-cli/cli/pnpm-runtime.mjs": "100644",
-        "scripts/base-cli/cli/port.mjs": "100644",
-        "scripts/base-cli/cli/portability-worker.mjs": "100644",
-        "scripts/base-cli/cli/portability.mjs": "100644",
-        "scripts/base-cli/cli/preview-cache.mjs": "100644",
-        "scripts/base-cli/cli/project.mjs": "100644",
-        "scripts/base-cli/cli/README.md": "100644",
-        "scripts/base-cli/cli/release.mjs": "100644",
-        "scripts/base-cli/cli/runtime-front-door.mjs": "100644",
-        "scripts/base-cli/cli/scheduled.mjs": "100644",
-        "scripts/base-cli/cli/server-activity.mjs": "100644",
-        "scripts/base-cli/cli/server-proxy.mjs": "100644",
-        "scripts/base-cli/cli/server-registry.mjs": "100644",
-        "scripts/base-cli/cli/server-resources.mjs": "100644",
-        "scripts/base-cli/cli/settings.mjs": "100644",
-        "scripts/base-cli/cli/setup-answers.mjs": "100644",
-        "scripts/base-cli/cli/setup-input.mjs": "100644",
-        "scripts/base-cli/cli/shared.mjs": "100644",
-        "scripts/base-cli/cli/site-check.mjs": "100644",
-        "scripts/base-cli/cli/site-preview.mjs": "100644",
-        "scripts/base-cli/cli/site-render.mjs": "100644",
-        "scripts/base-cli/cli/site.mjs": "100644",
-        "scripts/base-cli/cli/transfers.mjs": "100644",
         "scripts/base-cli/cli/version.mjs": "100644"
       }
     },
