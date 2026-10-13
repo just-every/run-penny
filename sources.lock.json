@@ -7986,7 +7986,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-notices.mjs": {
-      "sha256": "184b15a9779a8e37817b3c73228bdc6aaa97d2377828b252ff6d18ef2d5ad54c",
+      "sha256": "c7fb6d4e0bef69ebd758131f7e0ee9756d1dac37d6684aa09fd66093b0f38187",
       "executable": false
     },
     "tests/browser/operator-completeness-read.mjs": {
@@ -8006,7 +8006,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness.mjs": {
-      "sha256": "80dad07a82c8cfb317e53e6e205ca2a8a46b1167ec7afceac016f76e6541231f",
+      "sha256": "cabc3efc3294931d079f68dbc3ab35fc3b91cbf133f8468992d61825075919bf",
       "executable": false
     },
     "tests/browser/operator-navigation.mjs": {

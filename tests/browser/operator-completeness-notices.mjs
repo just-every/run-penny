@@ -1,9 +1,15 @@
 import assert from 'node:assert/strict'
 import {api,gate} from './operator-completeness-auth.mjs'
 import {proofId} from './operator-completeness-data.mjs'
+async function waitForReviewForm(card) {
+ // The SSR form precedes hydration; real board options arrive from the mounted resource.
+ // Wait before filling so a native pre-hydration submit cannot navigate without the mutation.
+ await card.getByLabel('Public board',{exact:true}).locator('option[value]:not([value=""])').first().waitFor({state:'attached'})
+}
 async function rejectRequest(page,origin,index,notify) {
  await page.goto(origin+`/app/moderation?item=${proofId(1,index)}`)
  const card=page.locator(`#request-proof-request-${String(index).padStart(2,'0')}`)
+ await waitForReviewForm(card)
  await card.getByLabel('Reason (required for rejection)',{exact:true}).fill(`Proof rejection reason ${index}`)
  await card.getByLabel('Email the author this rejection reason',{exact:true}).setChecked(notify)
  const verdict=page.waitForResponse(r=>new URL(r.url()).pathname.endsWith(`/proof-request-${String(index).padStart(2,'0')}/moderate`)||new URL(r.url()).pathname===`/api/operator/moderation/proof-request-${String(index).padStart(2,'0')}`)
@@ -15,6 +21,7 @@ export async function reviewRejectionNotices({page,runtime,capture}) {
  await rejectRequest(page,origin,0,true)
  await page.goto(origin+`/app/moderation?item=${proofId(1,1)}`)
  const card=page.locator('#request-proof-request-01')
+ await waitForReviewForm(card)
  await card.locator('summary').filter({hasText:'Discussion, status and request controls'}).click()
  const comment=card.locator('form').filter({has:page.getByText('Proof held comment',{exact:false})})
  await comment.getByLabel('Rejection reason',{exact:true}).fill('Proof comment rejection reason')

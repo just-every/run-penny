@@ -10,7 +10,8 @@ export async function reviewOperatorCompleteness(options) {
  await seedCompleteness(db)
  const peerState=await invitePeer({...options,origin})
  try {
-  const shared={...options,origin,db,peer:peerState.peer}
+  // Miniflare replaces its D1 stub on configure; each phase must use the current binding.
+  const shared={...options,origin,get db(){return runtime.db},peer:peerState.peer}
   await reviewPrivateSearch(shared)
   await reviewDurableLists(shared)
   await reviewCustomFields(shared)
