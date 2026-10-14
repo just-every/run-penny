@@ -5651,7 +5651,7 @@
       "executable": false
     },
     "tests/base/egress-delivery.test.ts": {
-      "sha256": "6ddc3795ab1ea179d940f5e61564e56ec32a58d7ec3ce191e12002822bb7744a",
+      "sha256": "c5b4f33be48e38c793094cac961995220722a95fa1a5a11ba8125ba03b948ef4",
       "executable": false
     },
     "tests/base/erasure-audit-text.test.ts": {
@@ -5907,7 +5907,7 @@
       "executable": false
     },
     "tests/base/status-publication-retry.test.ts": {
-      "sha256": "ac31b03fa7de54485aec6c600fd4904365dba93392694fd68737b2375abf8414",
+      "sha256": "92b21253d158132b6d51989bcd93f2ea5623b5568c06468707f752d1985b64ff",
       "executable": false
     },
     "tests/base/status-publication-upgrade.test.ts": {
@@ -5947,7 +5947,7 @@
       "executable": false
     },
     "tests/base/webhook-delivery.test.ts": {
-      "sha256": "5218783825a398ac66be7ae9a5a9a4b08a68f91b401f990adef486bc9809dab0",
+      "sha256": "6f46333d1859173e72af436d4003bb24bb1986d844a389763f0979ddc8ca95e1",
       "executable": false
     },
     "tests/browser/acceptance-audit.mjs": {

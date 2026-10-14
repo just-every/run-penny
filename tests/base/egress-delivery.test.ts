@@ -1,4 +1,4 @@
-import {applyD1Migrations,reset} from 'cloudflare:test'
+import {applyD1Migrations,reset,createScheduledController} from 'cloudflare:test'
 import {afterEach,beforeEach,expect,inject,it,vi} from 'vitest'
 import {env} from './support'
 import {graph} from './notification-regression-fixture'
@@ -26,7 +26,7 @@ function egress(answers:string[],reply:(url:string)=>Response){
 }
 async function deliverThroughCron(port:EnforcingEgress){
  const {runNotificationSchedule}=await import('@/core/features/notifications/scheduled')
- await runNotificationSchedule({} as ScheduledController,{...env,PENNY_EGRESS:port})
+ await runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),{...env,PENNY_EGRESS:port})
  const delivery=(await env.DB.prepare('SELECT id,state FROM integration_deliveries ORDER BY created_at DESC,id DESC LIMIT 1').first<{id:string;state:string}>())!
  const attempt=await env.DB.prepare('SELECT outcome FROM integration_attempts WHERE delivery_id=? ORDER BY number DESC LIMIT 1').bind(delivery.id).first<{outcome:string}>()
  return {state:delivery.state,outcome:JSON.parse(attempt!.outcome) as {kind:string;code:string;status?:number}}

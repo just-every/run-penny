@@ -2,7 +2,7 @@ import { applyD1Migrations, reset } from 'cloudflare:test'
 import { beforeEach, afterEach, expect, inject, it, vi } from 'vitest'
 import { call, env } from './support'
 import { drainNotifications } from '@/core/features/notifications/delivery'
-import { graph, provider, rows, runtime, start } from './notification-regression-fixture'
+import { graph, provider, rows, runtime } from './notification-regression-fixture'
 
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 afterEach(()=>{vi.restoreAllMocks();vi.useRealTimers()})
@@ -12,6 +12,8 @@ async function counts(expected:number){
  expect(await rows('notification_outbox')).toHaveLength(0)
 }
 it('[REQ-015 NOTIFY-001/005] concurrent and later keyed HTTP replay retains one version, event, intent and provider delivery',async()=>{
+ // Native session admission uses SQLite's real clock, so freeze relative to today.
+ const start=Date.now()
  vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(start)
  const g=await graph(),path=`/api/operator/requests/${g.requests[0].slug}/status-updates`
  const input={status:'under_review',body:'Published once',pinned:true,idempotencyKey:crypto.randomUUID()}

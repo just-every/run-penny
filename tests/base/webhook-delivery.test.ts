@@ -1,4 +1,4 @@
-import {applyD1Migrations,reset} from 'cloudflare:test'
+import {applyD1Migrations,reset,createScheduledController} from 'cloudflare:test'
 import {beforeEach,afterEach,expect,inject,it,vi} from 'vitest'
 import {env,origin} from './support'
 import {graph} from './notification-regression-fixture'
@@ -25,7 +25,7 @@ it('[INT-001 INT-002] commits approved events with native publication, disables 
   sent.push(wire);return {status:204,headers:{},body:''}
  }}
  const {runNotificationSchedule}=await import('@/core/features/notifications/scheduled')
- await runNotificationSchedule({} as ScheduledController,{...env,PENNY_EGRESS:port})
+ await runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),{...env,PENNY_EGRESS:port})
  await drainIntegrations(runtime(port))
  expect(sent).toHaveLength(1);expect(sent[0].body).toContain('Approved public update')
  expect(sent[0].body).not.toContain(g.recipient.email);expect(Object.keys(JSON.parse(sent[0].body)).sort()).toEqual(['body','event','id','requestId','slug','title'])
