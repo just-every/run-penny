@@ -5771,7 +5771,7 @@
       "executable": false
     },
     "tests/base/slack-delivery.test.ts": {
-      "sha256": "9341b5835537700a3b6522faffc399ecf977b0113dd7207f124e223369a9c7aa",
+      "sha256": "6e821534eadfab34f653f1efb0cbb76fe9284265aa14dc17d240bb173b75f8b6",
       "executable": false
     },
     "tests/base/status-publication-retry.test.ts": {

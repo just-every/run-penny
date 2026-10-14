@@ -28,5 +28,6 @@ it('[INT-003 DATA-001] cannot deliver private/blocked content and holds restored
  expect(await count('integration_deliveries')).toBe(0)
  const {exportArchive}=await import('@/core/features/data/archive'),exported=await exportArchive(env.DB,env.FILES)
  expect(exported.archive.tables.penny_integration_events.every(row=>row.held===1)).toBe(true)
- expect(exported.archive.tables).not.toHaveProperty('penny_integration_credentials');expect(exported.archive.tables).not.toHaveProperty('penny_integration_destinations')
+ expect(exported.archive.tables).not.toHaveProperty('penny_integration_credentials');// Destinations travel as revoked records; their endpoints and keys never do.
+ expect(exported.archive.tables.penny_integration_destinations.length).toBeGreaterThan(0);expect(exported.archive.tables.penny_integration_destinations.every(row=>row.revoked_at!==null)).toBe(true)
 })
