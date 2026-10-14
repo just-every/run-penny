@@ -30,6 +30,10 @@ export async function discardStage(stage: StageBinding, context: D1ImportContext
 export async function cancelD1ImportStaging(operationKey: string, input: D1ImportContext): Promise<void> {
   const context = requestContext(input); requireText(operationKey, 'operationKey');
   await authorize(context, 'create');
+  // A preparation made in steps: its control row and every generation it staged.
+  const steps = await context.storage.database.prepare('SELECT * FROM ik_d1_preparation_steps WHERE destination=? AND namespace=? AND principal_id=? AND operation_key=?').bind(context.destination, context.namespace, context.authorization.principalId, operationKey).first<any>();
+  if (steps) await stagingAtomic(context, [...exactRows('ik_d1_preparation_steps', Object.keys(steps), [steps]),
+    sql('DELETE FROM ik_d1_staging WHERE id IN (SELECT json_extract(value,\'$.id\') FROM json_each(?))', steps.stages), sql('DELETE FROM ik_d1_preparation_steps WHERE id=?', steps.id)]);
   const stage = await context.storage.database.prepare('SELECT * FROM ik_d1_staging WHERE destination=? AND namespace=? AND principal_id=? AND operation_key=?').bind(context.destination, context.namespace, context.authorization.principalId, operationKey).first();
   if (!stage) return;
   if (context.reviewedFingerprint !== undefined && context.reviewedFingerprint !== stage.fingerprint) throw new Error('REVIEW_FINGERPRINT_MISMATCH');

@@ -5,7 +5,6 @@ import {ExpectedState} from '../../../../base/modules/import-kit/src/d1/expected
 import {erasePlanRecords} from '../../../../base/modules/import-kit/src/d1/erased-plan'
 import {loadPlans,encodePlan,storedPlanSnapshot} from '../../../../base/modules/import-kit/src/d1/plans'
 import {originalVersions} from '../../../../base/modules/import-kit/src/d1/original-storage'
-import {canonicalJson} from '../../../../base/modules/import-kit/src/provenance/identity'
 import {targetIdentity} from '../../../../base/modules/import-kit/src/d1/erasure-index'
 import type {ImportPlan} from '../../../../base/modules/import-kit/src/types'
 import type {D1ImportContext} from '../../../../base/modules/import-kit/src/d1/types'
@@ -13,8 +12,9 @@ import type {ErasurePage} from '../../../../base/modules/import-kit/src/d1/erasu
 
 /** Read-only cost projection from Base's maintained transaction edits. This is
  * never a publication snapshot: current rows are reread on the owned resume.
- * Inline plan bodies and maximal revision scalars conservatively overestimate
- * the later manifest/header guards; exact future chunk guards are added too. */
+ * Plans carry their exact future stored encoding (a chunk manifest beside its
+ * chunks once a plan exceeds one chunk), so a large plan is never projected as
+ * one oversized value; maximal revision scalars overestimate header guards. */
 export async function projectedSourceSnapshot(id:string,kind:string,target:string,page:ErasurePage,context:D1ImportContext):Promise<InventorySnapshot>{
  const original=await readErasureSnapshot(page,context.storage.database,context.storage.targets.planCodec)
  if(!Object.hasOwn(original.plans.get(id)!.source,'options'))return original
@@ -27,17 +27,18 @@ export async function projectedSourceSnapshot(id:string,kind:string,target:strin
  const expected=new ExpectedState([seed,...fragment.before,...fragment.writes,...fragment.post]),snapshot=new InventorySnapshot()
  for(const table of original.tables.keys())snapshot.tables.set(table,[...expected.rows(table).values()])
  const jobs=original.tables.get('ik_jobs')!.map(raw=>({...raw,...expected.rows('ik_jobs').get(JSON.stringify([raw.id])),custody_revision:Number.MAX_SAFE_INTEGER,state_revision:Number.MAX_SAFE_INTEGER}))
- for(const raw of jobs){
-  const previous=original.plans.get(raw.id)!,next=affected.includes(raw.id)?erasePlanRecords(previous,identities,context.originalErasurePolicy):previous
-  raw.plan_json=canonicalJson(next)
- }
+ const chunks=jobs.flatMap(raw=>{
+  const previous=original.plans.get(raw.id)!,encoded=affected.includes(raw.id)?encodePlan(erasePlanRecords(previous,identities,context.originalErasurePolicy),raw.id):storedPlanSnapshot(previous,raw.id)
+  raw.plan_json=encoded.body;return encoded.chunks
+ })
  snapshot.tables.set('ik_jobs',jobs)
- // All projected bodies are inline JSON; loadPlans performs no database reads
- // and registers its normal exact plan snapshot without a simulated database.
- for(const [key,next]of await loadPlans(jobs,context.storage.database)){
+ // loadPlans registers its normal exact plan snapshot; its one chunk read is
+ // answered from the projected chunks above, never from the database.
+ const projected={prepare:()=>({bind:(ids:string)=>({all:async()=>({results:chunks.filter(row=>JSON.parse(ids).includes(row.job_id))})})})} as unknown as D1ImportContext['storage']['database']
+ for(const [key,next]of await loadPlans(jobs,projected)){
   snapshot.plans.set(key,next);originalVersions.set(next,originalVersions.get(original.plans.get(key)!)!)
  }
- snapshot.tables.set('ik_d1_plan_chunks',jobs.flatMap(raw=>affected.includes(raw.id)?encodePlan(snapshot.plans.get(raw.id)!,raw.id).chunks:storedPlanSnapshot(original.plans.get(raw.id)!,raw.id).chunks))
+ snapshot.tables.set('ik_d1_plan_chunks',chunks)
  snapshot.tables.set('ik_d1_creation_plans',[])
  snapshot.tables.set('ik_d1_reversal_reports',snapshot.tables.get('ik_d1_reversal_reports')!.map(row=>({...row,native_reversed:snapshot.tables.get('ik_provenance')!.find(p=>p.id===row.effect_id&&p.job_id===row.job_id)?.reversed??null})))
  return snapshot

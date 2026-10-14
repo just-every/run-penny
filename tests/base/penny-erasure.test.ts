@@ -173,3 +173,36 @@ it('[DATA-003] corrected sealed public wording remains independent, but private 
  await env.DB.prepare('UPDATE requesters SET display_name=(SELECT display_name FROM operators LIMIT 1) WHERE id=?').bind(g.requester).run()
  const held=await call('/api/operator/data/erasure/preview',target,g.operator);expect(held.status).toBe(409);expect(await held.json()).toEqual({error:'erasure_crosses_operator_hold'})
 })
+
+it('[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and name copies go while their attributed work and everyone else stay',async()=>{
+ const g=await graph(),email='former-operator@example.test'
+ expect((await call('/api/operator/settings/operators',{email},g.operator)).status).toBe(202)
+ const invite=(await localOutbox(runtime())!.list()).find(m=>m.message.to.includes(email))!
+ const token=new URL(invite.message.text!.match(/http:\/\/\S+/)![0]).searchParams.get('token')
+ const confirmed=await call('/auth/confirm',{token});expect(confirmed.status,await confirmed.clone().text()).toBe(303)
+ const teammate={Cookie:confirmed.headers.get('set-cookie')!.split(';')[0]}
+ await good(`/api/operator/requests/${g.request.slug}/notes`,{body:'Teammate private note'},teammate)
+ await good(`/api/operator/requests/${g.request.slug}/comments`,{body:'Teammate public reply'},teammate)
+ const former=(await env.DB.prepare('SELECT id,display_name FROM operators WHERE email=?').bind(email).first<{id:string;display_name:string}>())!
+ const native=(await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind(email).first<{id:string}>())!
+ const active=await call('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator);expect(active.status).toBe(409);expect(await active.json()).toEqual({error:'erasure_operator_active'})
+ expect((await call(`/api/operator/settings/operators/${native.id}`,{},g.operator,'DELETE')).status).toBe(200)
+ const saved=await good<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export',undefined,g.operator)
+ const owner=await env.DB.prepare('SELECT * FROM operators WHERE id<>?').bind(former.id).all(),notes=await rows('request_notes'),others=(await rows('request_comments')).filter(row=>row.operator_id!==former.id)
+ const preview=await good<Preview>('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)
+ expect(preview.blockedCopies).toEqual([]);expect(preview.counts).toMatchObject({operators:1,oa_operators:1,'request_comments:public_author_display_name':1})
+ expect((await good('/api/operator/data/erasure',{table:'operators',id:former.id,planHash:preview.planHash},g.operator)).status).toBe('complete')
+ // No table, product or installation, keeps the address or the name.
+ for(const {name} of (await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").all<{name:string}>()).results){
+  const dump=JSON.stringify(await rows(name));expect(dump,name).not.toContain(email);expect(dump,name).not.toContain(JSON.stringify(former.display_name))
+ }
+ expect(await env.DB.prepare('SELECT display_name FROM operators WHERE id=?').bind(former.id).first('display_name')).toBe('Erased operator')
+ expect(await rows('request_notes')).toEqual(notes)
+ expect((await rows('request_comments')).find(row=>row.operator_id===former.id)).toMatchObject({body:'Teammate public reply',public_author_display_name:'Erased operator'})
+ expect((await rows('request_comments')).filter(row=>row.operator_id!==former.id)).toEqual(others)
+ expect((await env.DB.prepare('SELECT * FROM operators WHERE id<>?').bind(former.id).all()).results).toEqual(owner.results)
+ expect((await call('/auth/session',undefined,g.operator)).status).toBe(200)
+ const journal=await readErasureJournal(env.DB)
+ const stale=await call('/api/operator/data/import',{archive:saved.archive,journal},g.operator);expect(stale.status).toBe(409);expect(await stale.json()).toEqual({error:'stale_archive'})
+ expect((await call('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)).status).toBe(409)
+})

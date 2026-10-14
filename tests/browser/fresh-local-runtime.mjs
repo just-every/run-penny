@@ -1,5 +1,6 @@
 import { fileURLToPath as __rerTestEntryPath } from 'node:url';
 const __rerTestEntry = __rerTestEntryPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'));
+const rer = command => __rerTestEntryArgs([__rerTestEntry, ...command]);
 const __rerTestEntryArgs = args => args[1] === 'dev' && !args.some(arg => ['--foreground', '--detach', '--stop', '--help'].includes(arg)) ? [...args, '--foreground'] : args;
 const __rerTestEntryPnpm = (program, args) => {
  const at = program === 'nice' ? args.indexOf('pnpm') : -1;
@@ -109,9 +110,9 @@ export async function freshLocalRuntime(viewport, output) {
     execFileSync('git', ['clone', '--quiet', '--no-local', '--', source, root], { stdio: 'pipe' })
     const readme = await readFile(join(root, 'README.md'), 'utf8')
     const literal = readmeCommands(readme, 'owner@penny.invalid')
-    await run(root, literal[0], env)
+    await run(root, rer(literal[0]), env)
     const port = await freshLocalPort()
-    const setupCommand = [...literal[1], '--port', String(port)]
+    const setupCommand = rer([...literal[1], '--port', String(port)])
     const setup = await run(root, setupCommand, env, { diagnosticId: `${viewport.width}-initial` })
     await mkdir(output, { recursive: true })
     await writeFile(join(output, `setup-${viewport.width}.log`), setup, { mode: 0o600 })
@@ -140,7 +141,7 @@ export async function freshLocalRuntime(viewport, output) {
     assert.equal(db.prepare('SELECT count(*) n FROM oa_operators').get().n, 1, '[G.1] setup provisions one Base operator')
     db.close()
     await writeFile(join(output, `empty-store-${viewport.width}.json`), JSON.stringify(counts, null, 2)+'\n')
-    const repeated = await run(root, literal[1], env, { diagnosticId: `${viewport.width}-repeat` })
+    const repeated = await run(root, rer(literal[1]), env, { diagnosticId: `${viewport.width}-repeat` })
     assert.match(repeated, /RER_SETUP_READY/, '[G.1] setup resumes the existing installation')
     assert.equal(repeated.match(/RER_SETUP_READY (http:\/\/(?:localhost|127\.0\.0\.1):\d+)/)?.[1], origin, '[G.1/G.4] repeat setup retains the selected origin without another port input')
     assert.ok((await readFile(join(root, '.dev.vars'), 'utf8')) === vars, '[G.1] repeat retains byte-identical private settings')
@@ -152,7 +153,7 @@ export async function freshLocalRuntime(viewport, output) {
     const startServer = async () => {
     // Register the generated admission key before the child can emit RER_OPEN.
     const secrets = [...vars.matchAll(/^(?:AUTH_SECRET|SESSION_SECRET|SETUP_TOKEN)=(.+)$/gm)].map(match => match[1]).concat(scope.token, await readDevKey(root))
-    server = spawn('nice', ['-n', '15', process.execPath, ...literal[2]], { cwd: root, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] })
+    server = spawn('nice', ['-n', '15', process.execPath, ...rer(literal[2])], { cwd: root, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] })
     const save = captureLocalServer(server, { output, secrets, label: `${env.PENNY_LOCAL_STATE ? 'restored' : 'initial'}-${viewport.width}` })
     saveDiagnostics=save
     await observeLocalServer(server, { origin, save, observe: async initial => {

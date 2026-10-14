@@ -43,12 +43,15 @@ export async function downloadPrivate(path: string, filename: string): Promise<v
   document.querySelector<HTMLBodyElement>('body')?.appendChild(link)
   try { link.click() } finally { link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000) }
 }
-export const entityLabels: Record<string, string> = { requesters: 'Requesters', requests: 'Feedback', evidence_items: 'Evidence', accounts: 'Accounts' }
+export const entityLabels: Record<string, string> = { requesters: 'Requesters', requests: 'Feedback', evidence_items: 'Evidence', accounts: 'Accounts', operators: 'Former operators' }
 export const recordLabel = (table: string): string => ({
   requests: 'Feedback', evidence_items: 'Evidence items', evidence_versions: 'Evidence history', request_evidence_links: 'Evidence links', requesters: 'Requesters', requester_addresses: 'Email addresses', attachments: 'Original attachments',
   audit_anonymized: 'Audit references to anonymize', native_magic_links: 'Sign-in links', local_auth_outbox: 'Prepared sign-in links',
   native_requester_sessions: 'Requester sessions', native_rate_limits: 'Rate-limit entries', native_moderation_events: 'Moderation history',
   request_submission_keys: 'Submission reservations',
+  operators: 'Operator identity', oa_operators: 'Sign-in identity', operator_sessions: 'Operator sessions', audit_entries: 'Audit details to clear', oa_external_identities: 'Identity-provider links',
+  'release_versions:author_name': 'Release author names', 'request_comments:public_author_display_name': 'Comment author names', 'requests:public_author_display_name': 'Feedback author names',
+  notification_attempts: 'Mail attempts', notification_outbox_attempts: 'Mail attempts',
 }[table] ?? table.replaceAll('_', ' '))
 
 export async function previewErasure(table:string,id:string):Promise<Plan>{

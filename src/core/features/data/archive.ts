@@ -33,14 +33,14 @@ export function canonical(value:unknown):string {
  if(value!==null&&typeof value==='object')return '{'+Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([key,item])=>JSON.stringify(key)+':'+canonical(item)).join(',')+'}'
  return JSON.stringify(value)
 }
-const hash=(value:unknown)=>digest(canonical(value))
+export const hash=(value:unknown)=>digest(canonical(value))
 function fail(code:string,status:400|409|413|503=409):never{throw new NativeError(code,status)}
 function foreignGroups(keys:ForeignKey[]):Map<number,ForeignKey[]>{const groups=new Map<number,ForeignKey[]>();for(const key of keys)groups.set(key.id,[...(groups.get(key.id)??[]),key]);return groups}
 const ident=(name:string)=>{if(!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name))fail('unsupported_schema');return '"'+name+'"'}
-const keyColumns=(table:Pick<Table,'columns'>)=>table.columns.some(column=>column.pk>0)?table.columns.filter(column=>column.pk>0).sort((a,b)=>a.pk-b.pk):table.columns
-const rowKey=(table:Pick<Table,'columns'>,row:Row)=>canonical(keyColumns(table).map(column=>row[column.name]))
+export const keyColumns=(table:Pick<Table,'columns'>)=>table.columns.some(column=>column.pk>0)?table.columns.filter(column=>column.pk>0).sort((a,b)=>a.pk-b.pk):table.columns
+export const rowKey=(table:Pick<Table,'columns'>,row:Row)=>canonical(keyColumns(table).map(column=>row[column.name]))
 const schemaHash=(tables:Table[])=>hash(tables.map(table=>({name:table.name,sql:table.sql})))
-const state=(db:D1Database)=>db.prepare('SELECT origin,epoch,phase,lock_id FROM data_state WHERE singleton=1').first<State>()
+export const state=(db:D1Database)=>db.prepare('SELECT origin,epoch,phase,lock_id FROM data_state WHERE singleton=1').first<State>()
 export type TableHeader={name:string;sql:string}
 export async function schemaHeaders(db:D1Database):Promise<TableHeader[]>{
  return (await db.prepare("SELECT name,sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' AND name NOT LIKE 'rer_portability_%' ORDER BY name").all<TableHeader>()).results
@@ -96,17 +96,17 @@ export async function readErasureJournal(db:D1Database):Promise<ErasureJournal>{
  if(tombstones.length>ERASURE_LIMITS.rows||new TextEncoder().encode(canonical(tombstones)).byteLength>ERASURE_LIMITS.recordBytes)fail('erasure_journal_limit',413)
  const body={version:1 as const,origin:current.origin,epoch:current.epoch,tombstones};return {...body,sha256:await hash(body)}
 }
-async function reserve(db:D1Database,kind:'export'|'restore'|'erase',payload:unknown,authority?:DataAuthority):Promise<string>{
+export async function reserve(db:D1Database,kind:'export'|'restore'|'erase',payload:unknown,authority?:DataAuthority):Promise<string>{
  const id=createUlid(),now=new Date().toISOString()
  let result:D1Result[]
  try {result=await dataBatch(db,[db.prepare("UPDATE data_state SET phase='locked',lock_id=? WHERE singleton=1 AND phase='idle' RETURNING 1").bind(id),db.prepare("INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) SELECT ?,?,'pending',?,?,? WHERE EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(id,kind,canonical(payload),now,now,id)],authority)}catch(error){if(String(error).includes('attachment_writer_active'))fail('attachment_writer_active');if(String(error).includes('notification_writer_active'))fail('notification_writer_active');throw error}
  if(result[0].results.length!==1)fail('data_busy');return id
 }
-async function finish(db:D1Database,id:string,status:'complete'|'aborted',authority?:DataAuthority):Promise<void>{
+export async function finish(db:D1Database,id:string,status:'complete'|'aborted',authority?:DataAuthority):Promise<void>{
  await dataBatch(db,[db.prepare("UPDATE data_operations SET status=?,payload_json='{}',updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(status,new Date().toISOString(),id,id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id),...(status==='complete'?[db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,?,?,'data.erasure_completed','data_operation',id,?,?,? FROM data_operations WHERE id=? AND kind='erase' AND status='complete' AND changes()>0`).bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',new Date().toISOString(),new Date().toISOString(),new Date().toISOString(),id)]:[])],authority)
 }
-const applyStart=(db:D1Database,id:string)=>[db.prepare("INSERT INTO data_apply_claims(operation_id) VALUES((SELECT lock_id FROM data_state WHERE singleton=1 AND lock_id=? AND phase='locked'))").bind(id),db.prepare("UPDATE data_state SET phase='applying' WHERE singleton=1 AND lock_id=?").bind(id),db.prepare('PRAGMA defer_foreign_keys=ON')]
-const audit=(db:D1Database,action:string,id:string,authority?:DataAuthority,details:string|null=null)=>{const now=new Date().toISOString();return db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,details_json,created_at,updated_at) VALUES(?,?,?,?,'data_operation',?,?,?,?,?)").bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',action,id,now,details,now,now)}
+export const applyStart=(db:D1Database,id:string)=>[db.prepare("INSERT INTO data_apply_claims(operation_id) VALUES((SELECT lock_id FROM data_state WHERE singleton=1 AND lock_id=? AND phase='locked'))").bind(id),db.prepare("UPDATE data_state SET phase='applying' WHERE singleton=1 AND lock_id=?").bind(id),db.prepare('PRAGMA defer_foreign_keys=ON')]
+export const audit=(db:D1Database,action:string,id:string,authority?:DataAuthority,details:string|null=null)=>{const now=new Date().toISOString();return db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,details_json,created_at,updated_at) VALUES(?,?,?,?,'data_operation',?,?,?,?,?)").bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',action,id,now,details,now,now)}
 export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:DataAuthority):Promise<{archive:Archive;journal:ErasureJournal}>{
  const id=await reserve(db,'export',{},authority)
  try {

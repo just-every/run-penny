@@ -596,6 +596,28 @@
       "header_chunks"
     ]
   },
+  "ik_d1_preparation_steps": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "destination",
+      "namespace",
+      "mapping_version",
+      "principal_id",
+      "operation_key",
+      "reversal_policy",
+      "codec_id",
+      "source_digest",
+      "total",
+      "records",
+      "stages",
+      "phase",
+      "hash_json",
+      "fingerprint",
+      "verified_revision",
+      "revision"
+    ]
+  },
   "ik_d1_publication_fences": {
     "classification": "product",
     "columns": [

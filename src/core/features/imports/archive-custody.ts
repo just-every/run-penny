@@ -19,7 +19,7 @@ const sorted=(rows:unknown[])=>rows.map(canonicalJson).sort()
 export function validateFeedbackArchive(data:Record<string,Row[]>):void {
  // Penny retains ordinary jobs and reviewed streams. Private preparations/publication fences
  // cannot be moved to another installation as executable pending work.
- for(const [name,rows] of Object.entries(data))if((name.startsWith('ik_d1_staging')||name.startsWith('ik_d1_native_staging')||['ik_d1_preparation_receipts','ik_d1_publication_fences'].includes(name))&&rows.length)refuse()
+ for(const [name,rows] of Object.entries(data))if((name.startsWith('ik_d1_staging')||name.startsWith('ik_d1_native_staging')||['ik_d1_preparation_receipts','ik_d1_preparation_steps','ik_d1_publication_fences'].includes(name))&&rows.length)refuse()
  try{validateStreamArchive(data)}catch{refuse()}
  const expectedCopies:unknown[]=[],expectedIndex:unknown[]=[],expectedOriginals:unknown[]=[],expectedOriginalChunks:unknown[]=[],expectedPlans:unknown[]=[]
  const streamPlans=new Map<string,{ordinal:number;plan:ImportPlan}[]>()
