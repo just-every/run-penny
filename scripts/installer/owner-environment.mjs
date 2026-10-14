@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { ownerWorkerName } from '../../base/modules/deploy-kit/owner.mjs'
+import { ownerWorkerName } from '@runeditrun/rer/modules/deploy-kit/owner'
 
 // Base declarations name bindings; the caller's environment names the install.
 // Penny's runtime accepts production or preview for hosted installations.

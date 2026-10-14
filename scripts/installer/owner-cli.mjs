@@ -1,11 +1,11 @@
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
-import { main as nativeOwner, report } from '../../base/modules/deploy-kit/owner-cli.mjs'
+import { main as nativeOwner, report } from '@runeditrun/rer/modules/deploy-kit/owner-cli'
 import { ownerSettings } from './owner-settings.mjs'
 import { ownerDeclaration } from './owner-environment.mjs'
 import { createRedaction, credentialValues } from '@runeditrun/rer/redaction'
-import { cloudflare } from '../../base/modules/deploy-kit/provider.mjs'
+import { cloudflare } from '@runeditrun/rer/modules/deploy-kit/provider'
 import { registerDeploymentCrons } from '../deployment/cron-registration.mjs'
 
 const redaction = createRedaction()

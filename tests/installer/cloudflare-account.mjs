@@ -11,11 +11,27 @@ export function ownerProvider() {
   }
   for (const key of ['secrets', 'schedules']) Object.defineProperty(state, key, { get: () => workerState('penny-production')[key] })
   const failures = []
+  const imports = new Map()
   const response = result => Response.json({ success: true, errors: [], result })
   const missing = () => Response.json({ success: false, errors: [{ message: 'missing' }] }, { status: 404 })
   const database = name => { const row = { uuid: randomUUID(), name, db: new DatabaseSync(':memory:') }; state.databases.push(row); return row }
   async function fetch(input, init = {}) {
     const url = new URL(input), method = init.method ?? 'GET'
+    if (url.hostname === `${accountId}.r2.cloudflarestorage.com`) {
+      const pending = imports.get(url.pathname.slice(1))
+      if (!pending || url.href !== pending.uploadURL || method !== 'PUT' || new Headers(init.headers).has('Authorization')) throw Error('invalid D1 import upload')
+      const path = url.pathname
+      state.calls.push({ method, path })
+      const failure = failures.findIndex(item => item.method === method && item.path.test(path))
+      const interrupted = failure === -1 ? null : failures.splice(failure, 1)[0]
+      if (interrupted && !interrupted.afterApply) return new Response(null, { status: 500 })
+      const bytes = Buffer.from(init.body)
+      if (new Headers(init.headers).get('Content-Length') !== String(bytes.length) || createHash('md5').update(bytes).digest('hex') !== pending.etag) throw Error('invalid D1 import bytes')
+      pending.bytes = bytes
+      state.writes.push({ method, path })
+      if (interrupted) throw new TypeError('test-only lost account response')
+      return new Response(null, { status: 200, headers: { etag: `"${pending.etag}"` } })
+    }
     if (url.hostname.endsWith('.fixture-account.workers.dev')) {
       if (init.headers?.Authorization) throw Error('credential on health request')
       const worker = state.workers.get(url.hostname.split('.')[0])
@@ -45,12 +61,45 @@ export function ownerProvider() {
     } else if (path.startsWith('/d1/database/')) {
       const row = state.databases.find(row => row.uuid === path.split('/')[3])
       if (!row) return missing()
-      if (!path.endsWith('/query')) return response({ uuid: row.uuid, name: row.name })
-      if (/^SELECT /i.test(body.sql)) return response([{ success: true, results: row.db.prepare(body.sql).all() }])
-      write()
-      row.db.exec('BEGIN')
-      try { row.db.exec(body.sql); row.db.exec('COMMIT'); result = response([{ success: true, results: [] }]) }
-      catch { row.db.exec('ROLLBACK'); return Response.json({ success: false, errors: [{ message: 'SQL rejected' }] }) }
+      if (path.endsWith('/import') && method === 'POST') {
+        if (body.action === 'init') {
+          if (!/^[a-f0-9]{32}$/.test(body.etag)) throw Error('invalid D1 import etag')
+          const filename = `${randomUUID()}.sql`
+          const uploadURL = `https://${accountId}.r2.cloudflarestorage.com/${filename}?signature=${randomUUID()}`
+          imports.set(filename, { database: row.uuid, etag: body.etag, uploadURL })
+          write(); result = response({ filename, upload_url: uploadURL })
+        } else if (body.action === 'ingest') {
+          const pending = imports.get(body.filename)
+          if (!pending?.bytes || pending.database !== row.uuid || pending.etag !== body.etag || pending.bookmark) throw Error('invalid D1 import ingest')
+          write()
+          row.db.exec('BEGIN')
+          try {
+            let sql = pending.bytes.toString('utf8'), queries = 0
+            // SQLite identifies statement boundaries, including trigger bodies.
+            while ((sql = sql.replace(/^(?:\s+|--[^\n]*(?:\n|$)|\/\*[\s\S]*?\*\/)+/, '')).length) {
+              const statement = row.db.prepare(sql), consumed = statement.sourceSQL.length
+              statement.run(); queries++; sql = sql.slice(consumed)
+            }
+            row.db.exec('COMMIT')
+            pending.bookmark = randomUUID()
+            pending.result = { num_queries: queries, final_bookmark: pending.bookmark }
+            result = response({ success: true, type: 'import', status: 'active', at_bookmark: pending.bookmark })
+          } catch {
+            row.db.exec('ROLLBACK')
+            return Response.json({ success: false, errors: [{ message: 'SQL rejected' }] })
+          }
+        } else if (body.action === 'poll') {
+          const pending = [...imports.values()].find(item => item.database === row.uuid && item.bookmark === body.current_bookmark)
+          if (!pending?.result) throw Error('invalid D1 import bookmark')
+          result = response({ success: true, type: 'import', status: 'complete', result: pending.result })
+        } else throw Error('unsupported D1 import action')
+      } else if (path.endsWith('/query')) {
+        if (/^SELECT /i.test(body.sql)) return response([{ success: true, results: row.db.prepare(body.sql).all() }])
+        write()
+        row.db.exec('BEGIN')
+        try { row.db.exec(body.sql); row.db.exec('COMMIT'); result = response([{ success: true, results: [] }]) }
+        catch { row.db.exec('ROLLBACK'); return Response.json({ success: false, errors: [{ message: 'SQL rejected' }] }) }
+      } else return response({ uuid: row.uuid, name: row.name })
     } else if (path === '/r2/buckets') {
       if (method === 'GET') return response({ buckets: state.buckets })
       const row = { name: body.name, jurisdiction: 'default', storage_class: 'Standard' }; state.buckets.push(row); write(); result = response(row)

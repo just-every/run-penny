@@ -1,8 +1,8 @@
 import { ownerConfiguration } from './owner-settings.mjs'
 import { ownerDeclaration } from './owner-environment.mjs'
 import { main as owner } from './owner-cli.mjs'
-import { ownerPlan, localOnlyBinding } from '../../base/modules/deploy-kit/owner.mjs'
-import { packageBuild } from '../../base/modules/deploy-kit/prepare.mjs'
+import { ownerPlan, localOnlyBinding } from '@runeditrun/rer/modules/deploy-kit/owner'
+import { packageBuild } from '@runeditrun/rer/modules/deploy-kit/prepare'
 import { refuse } from '@runeditrun/rer/errors'
 export async function deployPenny(context) {
   const { commandAdapter } = await import('./local.mjs')

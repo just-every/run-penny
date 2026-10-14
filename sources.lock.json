@@ -3107,7 +3107,7 @@
       "executable": false
     },
     "scripts/installer/deploy.mjs": {
-      "sha256": "228fac549e44be116c011079211c0b980d0d246491f96ca51b4183e628aac1f1",
+      "sha256": "715c48575b32298b69c79ddb7f5705212b5b7519074b42714b7ccd4764bf2e6f",
       "executable": false
     },
     "scripts/installer/local.mjs": {
@@ -3123,11 +3123,11 @@
       "executable": false
     },
     "scripts/installer/owner-cli.mjs": {
-      "sha256": "329f877c716325fa048fd0e75cec68d892a23993ce8da4e7dd9e5d1c978d748a",
+      "sha256": "bcba1442319839c0368024261b9a4183c3d7b0dfaf3e06073cf94bc16b88c03a",
       "executable": false
     },
     "scripts/installer/owner-environment.mjs": {
-      "sha256": "e6fb899c80b1094ef904d74ac0835b097e154aa01613c7cd1f427b48fa6058ac",
+      "sha256": "49d0d83223665e6fd5b2e279a39d9e1ad556e755dd960b94e18ead2fe17d72a1",
       "executable": false
     },
     "scripts/installer/owner-settings.mjs": {
@@ -6639,7 +6639,7 @@
       "executable": false
     },
     "tests/installer/cloudflare-account.mjs": {
-      "sha256": "cf75fd9d840c6e8a0a54014b11c68e1935ecee2ea9ca47a57449019884c97094",
+      "sha256": "46d960390fc24bad78f0e964415dca8bba816d730939ccd66f5c347c47843781",
       "executable": false
     },
     "tests/installer/dev-credentials.test.mjs": {
