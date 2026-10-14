@@ -1,5 +1,6 @@
 import {validateLearningArchive} from '../learning/archive'
 import {learningErasureStatements} from '../learning/privacy'
+import {GRANT_REVOCATION_CHECKPOINT} from '../learning/journal'
 import { z } from 'zod'
 import { portabilityErasureStatements } from '../../../../scripts/portability/cleanup.mjs'
 import { NativeError, digest } from '@/core/features/auth/native-tokens'
@@ -80,7 +81,7 @@ function limits(data:Record<string,Row[]>):void{
 }
 export const normalize=(name:string,row:Row):Row=>{
  if(name==='learning_sources')return {...row,state:'held',version:Number(row.version)+1}
- if(name==='learning_investigations')return {...row,state:'held',version:Number(row.version)+1,last_reason:'restored_grant_review_required'}
+ if(name==='learning_investigations')return {...row,state:row.state==='revoked'?'revoked':'held',version:Number(row.version)+1,last_reason:row.state==='revoked'?row.last_reason:'restored_grant_review_required'}
  if(name==='learning_runs'&&row.state==='running')return {...row,state:'uncertain',reason:'restored_run_reconciliation_required'}
  if(name==='operator_sessions'||name==='native_requester_sessions')return {...row,token_hash:`disabled-${row.id}`,revoked_at:row.revoked_at??'1970-01-01T00:00:00.000Z'}
  if(name==='native_magic_links')return {...row,token_hash:`disabled-${row.id}`,consumed_at:row.consumed_at??'1970-01-01T00:00:00.000Z'}
@@ -163,7 +164,7 @@ async function validated(db:D1Database,value:unknown,journalValue:unknown):Promi
   }
  }
  // Tombstones compare opaque primary-key hashes, never original private wording.
- for(const item of journal.tombstones){const table=tables.find(table=>table.name===item.table_name);if(!table)fail('unsupported_journal_schema');for(const row of archive.tables[table.name])if(await hash([journal.origin,table.name,rowKey(table,row)])===item.key_hash)fail('erased_archive_record')}
+ for(const item of journal.tombstones){if(item.table_name===GRANT_REVOCATION_CHECKPOINT)continue;const table=tables.find(table=>table.name===item.table_name);if(!table)fail('unsupported_journal_schema');for(const row of archive.tables[table.name])if(await hash([journal.origin,table.name,rowKey(table,row)])===item.key_hash)fail('erased_archive_record')}
  const files=new Map(archive.files.map(file=>[file.key,file]));if(files.size!==archive.files.length||files.size!==archive.tables.attachments.length)fail('invalid_archive_files',400)
  let total=0;const bytes:Uint8Array[]=[]
  for(const file of archive.files){

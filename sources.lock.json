@@ -3623,7 +3623,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "10be70f64b7680b9f65e11f920a90e8548e3bdaa8406595b56b543f65fbc0888",
+      "sha256": "a4e3975c72a9c0c65aeb8391cef6296f8089402e7dff110b561e88168bbecfcd",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -4451,7 +4451,7 @@
       "executable": false
     },
     "src/core/features/learning/controls.ts": {
-      "sha256": "7ced8ba6e03d82fbac1ee8536a301ab3d0f3c101770e0054270c555e7dc14020",
+      "sha256": "359f3e8e905e556b642974a927da251956cc345403a20ceeeb89bfd7696fa53f",
       "executable": false
     },
     "src/core/features/learning/erasure-fences.ts": {
@@ -4462,12 +4462,20 @@
       "sha256": "9b39b3bdeb69ca47bd9ca81a64b60766aaaa310a9fa21547e7e2cb09a00a31ce",
       "executable": false
     },
+    "src/core/features/learning/journal.ts": {
+      "sha256": "2e9492d53c058d08c043097c8a7fd371eaa23c725ba10966f0d8faa0db91538e",
+      "executable": false
+    },
     "src/core/features/learning/ports.ts": {
       "sha256": "e5e0bcb34557970e29cf664c5ea0149dd253bb0b2c791a04740d3b28cc5c79ed",
       "executable": false
     },
     "src/core/features/learning/privacy.ts": {
-      "sha256": "18479064883faf4d0f4db9703a5cb37cc67b5f9fb57da9ea3815363edc491c7c",
+      "sha256": "3833e2da38e0b4034547abee5cf563f5be7dc20880cbfdce91a0910fb1b531fe",
+      "executable": false
+    },
+    "src/core/features/learning/revoke.ts": {
+      "sha256": "0753850cc7d032703f8638839073e45db5ca7c623623542dcb958b51864801a4",
       "executable": false
     },
     "src/core/features/learning/routes.ts": {
@@ -4475,7 +4483,7 @@
       "executable": false
     },
     "src/core/features/learning/run.ts": {
-      "sha256": "be950f0017621518e4cde7d605ae30a9bfff9727f9c41f641b56d7eb9f7f356a",
+      "sha256": "7c3896ef07bfa9c2614248ae817dfc83a73397e00fcc03d0c226f97d691a0524",
       "executable": false
     },
     "src/core/features/learning/scheduled.ts": {
@@ -5715,7 +5723,7 @@
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
-      "sha256": "4cd2460d882aa9ee07cec8734ef218e12c166cbe0c730b30159a9a35b3042103",
+      "sha256": "88a44933f79d828c5cffc04566204ca77f631bbb218165a254000b96ec32c6d4",
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {

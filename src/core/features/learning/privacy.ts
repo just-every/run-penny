@@ -24,13 +24,13 @@ export async function learningErasureStatements(db:D1Database,selected:Record<st
  for(const row of observations)statements.push(db.prepare('INSERT OR IGNORE INTO learning_erased_events(source_id,event_hash) VALUES(?,?)').bind(row.source_id,await digest(String(row.event_key))))
  return statements
 }
-/** Purpose revocation or external-subject erasure removes copies and all derived
+/** Source disconnection or external-subject erasure removes copies and all derived
  * contributions, advances the archive journal and preserves only opaque fences. */
-export async function purge(db:D1Database,sourceId:string,personId?:string,investigationId?:string){
+export async function purge(db:D1Database,sourceId:string,personId?:string){
  const source=await db.prepare('SELECT provider,installation_id FROM learning_sources WHERE id=?').bind(sourceId).first<{provider:string;installation_id:string|null}>()
  if(!source)throw new NativeError('learning_not_found',404)
- const query=personId?`SELECT o.* FROM learning_observations o JOIN learning_sources s ON s.id=o.source_id WHERE s.provider=? AND s.installation_id IS ? AND (o.source_person_id=? OR EXISTS(SELECT 1 FROM learning_source_people p WHERE p.observation_id=o.id AND p.source_person_id=?) OR json_extract(CASE WHEN json_valid(o.wording) THEN o.wording ELSE '{}' END,'$.contact_id')=? OR EXISTS(SELECT 1 FROM json_each(CASE WHEN json_valid(o.wording) THEN o.wording ELSE '{}' END,'$.contacts') p WHERE json_extract(CASE WHEN p.type='object' THEN p.value ELSE '{}' END,'$.id')=?))`:`SELECT o.* FROM learning_observations o WHERE o.event_key IN(SELECT event_key FROM learning_observations WHERE source_id=? ${investigationId?'AND investigation_id=?':''})`
- const queryParameters=personId?[source.provider,source.installation_id,personId,personId,personId,personId]:[sourceId,...(investigationId?[investigationId]:[])]
+ const query=personId?`SELECT o.* FROM learning_observations o JOIN learning_sources s ON s.id=o.source_id WHERE s.provider=? AND s.installation_id IS ? AND (o.source_person_id=? OR EXISTS(SELECT 1 FROM learning_source_people p WHERE p.observation_id=o.id AND p.source_person_id=?) OR json_extract(CASE WHEN json_valid(o.wording) THEN o.wording ELSE '{}' END,'$.contact_id')=? OR EXISTS(SELECT 1 FROM json_each(CASE WHEN json_valid(o.wording) THEN o.wording ELSE '{}' END,'$.contacts') p WHERE json_extract(CASE WHEN p.type='object' THEN p.value ELSE '{}' END,'$.id')=?))`:`SELECT o.* FROM learning_observations o WHERE o.event_key IN(SELECT event_key FROM learning_observations WHERE source_id=?)`
+ const queryParameters=personId?[source.provider,source.installation_id,personId,personId,personId,personId]:[sourceId]
  const observations=(await db.prepare(query).bind(...queryParameters).all<Row>()).results
  if(observations.length>500)throw new NativeError('learning_erasure_limit',413)
  const targets=new Set<string>(personId?[`contacts/${personId}`]:[])
@@ -49,9 +49,8 @@ export async function purge(db:D1Database,sourceId:string,personId?:string,inves
  for(const connection of contaminated){const remaining=(JSON.parse(connection.resource_ids_json) as string[]).filter(target=>!targets.has(target));statements.push(db.prepare("UPDATE learning_sources SET resource_ids_json=?,state=CASE WHEN ?=0 AND provider='orbit' THEN 'disconnected' ELSE state END WHERE id=?").bind(JSON.stringify(remaining),remaining.length,connection.id))}
  statements.push(db.prepare('DELETE FROM learning_observations WHERE id IN(SELECT value FROM json_each(?))').bind(JSON.stringify(observations.map(row=>row.id))))
  if(!personId){
-  const condition=investigationId?'id=?':'source_id=?',key=investigationId??sourceId
-  statements.push(db.prepare(`UPDATE learning_investigations SET state='revoked',question='Revoked investigation',purpose='Revoked purpose',native_evidence_ids_json='[]',native_request_ids_json='[]',version=version+1,last_reason='source_revoked' WHERE ${condition}`).bind(key))
-  if(!investigationId)statements.push(db.prepare("UPDATE learning_sources SET state='disconnected',version=version+1,name='Revoked source',resource_ids_json='[]',use_basis='Revoked source use' WHERE id=?").bind(sourceId))
+  statements.push(db.prepare("UPDATE learning_investigations SET state='revoked',question='Revoked investigation',purpose='Revoked purpose',native_evidence_ids_json='[]',native_request_ids_json='[]',version=version+1,last_reason='source_revoked' WHERE source_id=?").bind(sourceId))
+  statements.push(db.prepare("UPDATE learning_sources SET state='disconnected',version=version+1,name='Revoked source',resource_ids_json='[]',use_basis='Revoked source use' WHERE id=?").bind(sourceId))
  }
  statements.push(db.prepare("UPDATE data_state SET epoch=? WHERE singleton=1 AND epoch=? AND phase='idle'").bind(epoch,state.epoch))
  // A concurrent acquisition or new grant must not escape the read closure.

@@ -28,6 +28,33 @@ it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged w
  await json(call(path+'/control',{action:'pause'},f.cookie));expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
  await json(call(path+`/sources/${f.source.id}/disconnect`,{},f.cookie));expect(await env.DB.prepare('SELECT count(*) n FROM learning_observations').first('n')).toBe(0);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0)
  const bundle=await exportArchive(env.DB,env.FILES);expect(JSON.stringify(bundle.archive)).not.toContain('Another supplied revision');expect(bundle.journal.epoch).toBeGreaterThan(0)
+
+ // Revoking one grant must not turn its shared native/source originals into
+ // erased evidence, or remove the independently accountable sibling history.
+ network.beforeModel=undefined
+ const evidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Independent grant scope',wording:'An independently reusable handoff observation.',observedAt:'2026-10-01T00:00:00Z'},f.cookie),201)
+ const source=await json<{id:string}>(call(path+'/sources',{name:'Shared grant scope',provider:'orbit',resourceIds:['signals/grant-revoke'],useBasis:'Authorized independent comparison',allOperatorsAuthorized:true},f.cookie),201)
+ const grant=async(sourceId?:string,nativeEvidenceIds:string[]=[])=>json<{id:string}>(call(path+'/investigations',{sourceId,nativeEvidenceIds,nativeRequestIds:[],purpose:'Independent grant purpose',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ const a=await grant(source.id,[evidence.id]),b=await grant(undefined,[evidence.id]),c=await grant(source.id),detail=(id:string)=>json(call(path+`/investigations/${id}`,undefined,f.cookie))
+ for(const i of [a,b,c]){
+  const target=path+`/investigations/${i.id}`,run=await json<{artifactId:string}>(call(target+'/run',{},f.cookie))
+  await json(call(target+'/commit',{interpretationId:run.artifactId,optionId:'assist',rationale:'Retain independent commitment history',confidence:'low',reviewAt:'2098-01-01T00:00:00Z'},f.cookie),201)
+  await json(call(target+'/correct',{interpretationId:run.artifactId,correction:'Retain this independent correction history.'},f.cookie));await json(call(target+'/run',{},f.cookie))
+ }
+ const readSource=()=>env.DB.prepare('SELECT * FROM learning_sources WHERE id=?').bind(source.id).first(),readFences=async()=>(await env.DB.prepare('SELECT source_id,event_hash FROM learning_erased_events UNION ALL SELECT source_id,person_hash FROM learning_erased_people ORDER BY 1,2').all()).results
+ const before={b:await detail(b.id),c:await detail(c.id),source:await readSource(),fences:await readFences()},old=await exportArchive(env.DB,env.FILES)
+ network.sourceText=canonical({id:'grant-revoke',subject:'An in-flight revision must never publish after revocation.',occurred_at:'2026-10-04T00:00:00Z'})
+ network.beforeModel=async()=>{await json(call(path+`/investigations/${a.id}/control`,{action:'revoke'},f.cookie))}
+ const inFlight=await call(path+`/investigations/${a.id}/run`,{},f.cookie);network.beforeModel=undefined
+ const revoked=await detail(a.id),preserved={b:await detail(b.id),c:await detail(c.id),source:await readSource(),fences:await readFences()}
+ const fresh=await grant(undefined,[evidence.id]),reuse=await call(path+`/investigations/${fresh.id}/run`,{},f.cookie),pauseRevoked=await call(path+`/investigations/${a.id}/control`,{action:'pause'},f.cookie)
+ expect({preserved,revokedState:(revoked.investigation as {state:string}).state,retained:['observations','artifacts','runs','commitments','corrections'].map(key=>(revoked[key] as unknown[]).length),inFlightPublished:inFlight.ok,nativeReusable:reuse.ok,pauseReopensGrant:pauseRevoked.ok}).toEqual({preserved:before,revokedState:'revoked',retained:[0,0,0,0,0],inFlightPublished:false,nativeReusable:true,pauseReopensGrant:false})
+ await json(call(path+`/investigations/${b.id}/run`,{},f.cookie));await json(call(path+`/investigations/${c.id}/run`,{},f.cookie))
+ const latest=await exportArchive(env.DB,env.FILES),{reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{restoreArchive}=await import('@/core/features/data/archive')
+ await reset();await applyD1Migrations(env.DB,inject('migrations'));await expect(restoreArchive(env.DB,env.FILES,old.archive,latest.journal)).rejects.toMatchObject({code:'stale_archive'})
+ expect((await restoreArchive(env.DB,env.FILES,latest.archive,latest.journal)).status).toBe('complete')
+ expect(await env.DB.prepare('SELECT state FROM learning_investigations WHERE id=?').bind(a.id).first('state')).toBe('revoked')
+ expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
 })
 it('[LEARN-004] contribution erasure removes every dependent version/snapshot, preserves unrelated native records and refuses replay and active restored grants',async()=>{
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}`

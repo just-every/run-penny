@@ -6,15 +6,18 @@ import {integrationOperator} from '../integrations/destinations'
 import {NativeError} from '../auth/native-tokens'
 import {context} from './authority'
 import {purge} from './privacy'
+import {revokeInvestigation} from './revoke'
 const root='/api/operator/learning'
 export function registerLearningControls(app:Hono<OperatorMutationEnvironment>){
  app.post(root+'/control',async c=>{const {db}=await integrationOperator(c.get('runtime'),c.req.raw);if(!await parseMutationBody(c,z.object({action:z.literal('pause')}).strict()))return c.json({error:'validation_failed'},400);await db.batch([db.prepare("UPDATE learning_investigations SET state='paused',version=version+1,last_reason='operator_paused_all' WHERE state='active'"),db.prepare("UPDATE learning_runs SET state='uncertain',reason='operator_paused_all' WHERE state='running'")]);return c.json({ok:true})})
  app.post(root+'/investigations/:id/control',async c=>{
   const {db,session,actor}=await integrationOperator(c.get('runtime'),c.req.raw),input=await parseMutationBody(c,z.object({action:z.enum(['pause','resume','revoke'])}).strict());if(!input)return c.json({error:'validation_failed'},400)
   const {i,s}=await context(db,c.req.param('id')!)
-  if(input.action==='revoke'){await purge(db,s.id,undefined,i.id);return c.json({ok:true})}
-  if(input.action==='resume'&&(s.state!=='active'||i.state==='revoked'||i.expires_at<=new Date().toISOString()||i.spent_micros+i.max_run_cost_micros>i.budget_micros))throw new NativeError('learning_resume_requires_new_grant',409)
-  await db.batch([db.prepare('UPDATE learning_investigations SET state=?,version=version+1,native_operator_id=?,operator_version=?,actor_id=?,last_reason=?,next_run_at=? WHERE id=?').bind(input.action==='pause'?'paused':'active',session.operatorId,session.operator.version,actor.id,'operator_'+input.action,new Date().toISOString(),i.id),db.prepare("UPDATE learning_runs SET state='uncertain',reason='operator_control' WHERE investigation_id=? AND state='running'").bind(i.id)])
+  if(input.action==='revoke'){await revokeInvestigation(db,i);return c.json({ok:true})}
+  if(i.state==='revoked'||i.state==='held')throw new NativeError('learning_control_requires_new_grant',409)
+  if(input.action==='resume'&&(s.state!=='active'||i.expires_at<=new Date().toISOString()||i.spent_micros+i.max_run_cost_micros>i.budget_micros))throw new NativeError('learning_resume_requires_new_grant',409)
+  const guard=crypto.randomUUID()
+  await db.batch([db.prepare('INSERT INTO penny_integration_guards(id,allowed) VALUES(?,EXISTS(SELECT 1 FROM learning_investigations WHERE id=? AND version=?))').bind(guard,i.id,i.version),db.prepare('UPDATE learning_investigations SET state=?,version=version+1,native_operator_id=?,operator_version=?,actor_id=?,last_reason=?,next_run_at=? WHERE id=?').bind(input.action==='pause'?'paused':'active',session.operatorId,session.operator.version,actor.id,'operator_'+input.action,new Date().toISOString(),i.id),db.prepare("UPDATE learning_runs SET state='uncertain',reason='operator_control' WHERE investigation_id=? AND state='running'").bind(i.id),db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(guard)])
   return c.json({ok:true})
  })
  app.post(root+'/sources/:id/disconnect',async c=>{const {db}=await integrationOperator(c.get('runtime'),c.req.raw);await purge(db,c.req.param('id')!);return c.json({ok:true})})

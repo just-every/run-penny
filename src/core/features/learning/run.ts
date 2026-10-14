@@ -8,14 +8,15 @@ import {acquire,retain} from './acquisition'
 import {interpret} from './ports'
 import {validateLearning} from './validation'
 import {canonical} from '../data/archive'
+import {learningRunJournalGuard} from './journal'
 
 /** The event key is supplied by the initiating HTTP event or scheduled window;
  * the durable claim is never retried after an ambiguous paid call. */
 export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:string,operatorDb?:D1Database){
  const native=runtime.database.binding,{i,s}=await context(operatorDb??native,id)
  await assertScope(native,i,s)
- const epoch=await native.prepare('SELECT epoch FROM data_state WHERE singleton=1').first<number>('epoch'),guard=scopeGuard(i,s)
- const db=guardedDatabase(operatorDb??native,{sql:`(${guard.sql}) AND EXISTS(SELECT 1 FROM data_state WHERE epoch=?)`,params:[...guard.params,epoch!]})
+ const state=(await native.prepare('SELECT origin,epoch FROM data_state WHERE singleton=1').first<{origin:string;epoch:number}>())!,guard=scopeGuard(i,s),journal=learningRunJournalGuard(state.origin,state.epoch)
+ const db=guardedDatabase(operatorDb??native,{sql:`(${guard.sql}) AND (${journal.sql})`,params:[...guard.params,...journal.params]})
  const prior=await db.prepare('SELECT id,state,reason FROM learning_runs WHERE investigation_id=? AND event_key=?').bind(id,eventKey).first()
  if(prior)return {replayed:true,run:prior}
  const runId=crypto.randomUUID(),claim=crypto.randomUUID(),now=new Date().toISOString()
@@ -43,7 +44,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   const known=await db.prepare("SELECT id FROM learning_artifacts WHERE investigation_id=? AND input_hash=? AND state='current'").bind(id,inputHash).first<{id:string}>()
   if(known){await finish(sourceCost,'unchanged');return {runId,unchanged:true,artifactId:known.id}}
   await assertScope(native,i,s)
-  // This db read also rechecks native session and erasure epoch immediately before paid work.
+  // This db read also rechecks native session and erasure journal before paid work.
   await db.prepare('SELECT 1').first()
   const generated=await interpret(runtime,{question:i.question,purpose:i.purpose,observations:observations.map(o=>({id:o.id,wording:o.wording,observedAt:o.observed_at,requesterId:o.requester_id,accountId:o.account_id})),corrections,budgetMicros:i.budget_micros-i.spent_micros},i.max_run_cost_micros-sourceCost,async()=>{await db.prepare('SELECT 1').first();paid=true})
   generated.costMicros+=sourceCost
