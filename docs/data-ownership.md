@@ -129,8 +129,11 @@ comment and request attribution take that label, their sign-in links, sessions,
 rate entries, identity-provider links, mail-event receipts and review-mail
 suppression are deleted, mail attempts lose the address, and audit details that
 hold their address, or that are by or about them and name them, are cleared.
-Another person's audit row that only repeats their display name blocks the
-erasure as an ambiguous copy instead of being changed. Their notes, decisions and other records stay. A current
+Another person's audit row that only repeats their display name is listed in the
+preview with its action and time; the owner decides each one in the erase request
+(`auditCopies`: `unrelated` keeps it unchanged, `clear` clears its details), and the
+erasure's audit entry records both lists. Erasure waits until every listed row has
+a decision; more than 20 such rows, or any other copy of the address, still block. Their notes, decisions and other records stay. A current
 operator is refused with `erasure_operator_active`: remove them in Settings
 first. Any other row holding their address is an ambiguous copy that blocks the
 erasure. An opaque redaction checkpoint advances the journal, so the latest

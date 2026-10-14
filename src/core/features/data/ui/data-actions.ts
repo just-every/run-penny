@@ -1,5 +1,8 @@
 export type Overview = { hosted:boolean;commands:{restore:string;preview:string;erase:string;status:string}; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string } | null; epoch: number }
-export type Plan = { table: string; id: string; planHash: string; counts: Record<string, number>; fileCount: number; blockedCopies: { table: string; key: string; columns: string[] }[] }
+export type BlockedCopy = { table: string; key: string; columns: string[]; action?: string; occurredAt?: string; resolvable?: true }
+export type AuditChoices = Record<string, 'unrelated' | 'clear'>
+export const auditCopyId = (copy: BlockedCopy) => (JSON.parse(copy.key) as string[])[0]
+export type Plan = { table: string; id: string; planHash: string; counts: Record<string, number>; fileCount: number; blockedCopies: BlockedCopy[] }
 export type Receipt = { operationId: string; status: string }
 const messages: Record<string, string> = {
   restore_requires_empty_target: 'This workspace already has records. Restore into an empty, migrated workspace.',

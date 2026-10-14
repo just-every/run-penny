@@ -207,10 +207,8 @@ it('[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and
  expect((await call('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)).status).toBe(409)
 })
 
-it('[DATA-003] another person\'s audit details that only repeat a removed operator\'s display name block their erasure and stay unchanged',async()=>{
+it('[DATA-003] another person\'s audit rows that only repeat a removed operator\'s display name are listed and resolved by the owner, who keeps or clears each',async()=>{
  const g=await graph(),email='sales@example.test'
- expect((await call('/api/operator/settings/custom-fields',{entityType:'account',name:'sales',fieldType:'text'},g.operator)).status).toBeLessThan(300)
- const ownerAudit=(await env.DB.prepare("SELECT * FROM audit_entries WHERE action='custom_field.definition_created'").first())!
  expect((await call('/api/operator/settings/operators',{email},g.operator)).status).toBe(202)
  const invite=(await localOutbox(runtime())!.list()).find(m=>m.message.to.includes(email))!
  const confirmed=await call('/auth/confirm',{token:new URL(invite.message.text!.match(/http:\/\/\S+/)![0]).searchParams.get('token')});expect(confirmed.status).toBe(303)
@@ -218,8 +216,22 @@ it('[DATA-003] another person\'s audit details that only repeat a removed operat
  const former=(await env.DB.prepare('SELECT id,display_name FROM operators WHERE email=?').bind(email).first<{id:string;display_name:string}>())!,native=(await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind(email).first<{id:string}>())!
  expect(former.display_name).toBe('sales')
  expect((await call(`/api/operator/settings/operators/${native.id}`,{},g.operator,'DELETE')).status).toBe(200)
- const preview=await good<Preview>('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)
- expect(preview.blockedCopies).toContainEqual({table:'audit_entries',key:JSON.stringify([ownerAudit.id]),columns:['details_json']})
- expect((await call('/api/operator/data/erasure',{table:'operators',id:former.id,planHash:preview.planHash},g.operator)).status).toBe(409)
- expect(await env.DB.prepare('SELECT * FROM audit_entries WHERE id=?').bind(ownerAudit.id).first()).toEqual(ownerAudit)
+ expect((await good<Preview>('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)).blockedCopies).toEqual([])
+ // After the removal, the owner names a field 'sales', then renames it: two of the owner's audit rows repeat the name.
+ const field=await good<{id:string}>('/api/operator/settings/custom-fields',{entityType:'request',name:'sales',fieldType:'text'},g.operator)
+ const one=await good<Preview>('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)
+ expect(one.blockedCopies).toMatchObject([{table:'audit_entries',action:'custom_field.definition_created',occurredAt:expect.any(String),resolvable:true}])
+ expect((await call('/api/operator/data/erasure',{table:'operators',id:former.id,planHash:one.planHash},g.operator)).status).toBe(409)
+ await good(`/api/operator/settings/custom-fields/${field.id}`,{name:'pipeline',fieldType:'text'},g.operator,'PATCH')
+ const preview=await good<Preview>('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator),copies=preview.blockedCopies as {key:string;action:string;resolvable?:true}[]
+ expect(copies.map(copy=>copy.action).sort()).toEqual(['custom_field.definition_created','custom_field.definition_updated']);expect(copies.every(copy=>copy.resolvable)).toBe(true)
+ const id=(action:string)=>JSON.parse(copies.find(copy=>copy.action===action)!.key)[0] as string,created=id('custom_field.definition_created'),updated=id('custom_field.definition_updated')
+ const kept=await env.DB.prepare('SELECT * FROM audit_entries WHERE id=?').bind(created).first()
+ // Every listed row needs exactly one decision; a partial answer still refuses.
+ expect((await call('/api/operator/data/erasure',{table:'operators',id:former.id,planHash:preview.planHash,auditCopies:[{id:created,resolution:'unrelated'}]},g.operator)).status).toBe(409)
+ expect((await good('/api/operator/data/erasure',{table:'operators',id:former.id,planHash:preview.planHash,auditCopies:[{id:created,resolution:'unrelated'},{id:updated,resolution:'clear'}]},g.operator)).status).toBe('complete')
+ expect(await env.DB.prepare('SELECT * FROM audit_entries WHERE id=?').bind(created).first()).toEqual(kept)
+ expect(await env.DB.prepare('SELECT details_json FROM audit_entries WHERE id=?').bind(updated).first('details_json')).toBeNull()
+ expect(JSON.parse((await env.DB.prepare("SELECT details_json FROM audit_entries WHERE action='data.erased' ORDER BY occurred_at DESC LIMIT 1").first<string>('details_json'))!)).toMatchObject({auditCopiesConfirmedUnrelated:[created],auditCopiesCleared:[updated]})
+ expect(await env.DB.prepare('SELECT display_name FROM operators WHERE id=?').bind(former.id).first('display_name')).toBe('Erased operator')
 })

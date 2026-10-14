@@ -2379,7 +2379,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "0240181a594b884e5ec2dff79b0478233f63ae644846981b207e764822cf8bce",
+      "sha256": "68a0f3fdd77931f451b1fd9bebeed82a7337b1353eae6ac52596ca8add3fdbb3",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2435,7 +2435,7 @@
       "executable": false
     },
     "docs/data-ownership.md": {
-      "sha256": "daf4cc03a448646aa46b72fd0e68751eae5daa35902c148ff582cbe61f75f05e",
+      "sha256": "118a7b358223dc948b80948385c8eae5e45c0b033964e049867a9405d19f0218",
       "executable": false
     },
     "docs/DATA.md": {
@@ -3635,23 +3635,27 @@
       "executable": false
     },
     "src/core/features/data/operator-erasure.ts": {
-      "sha256": "c0eb760991c4a703bed95b9981267e6e4dafbbe82d1ea9af8668ca6784f67f78",
+      "sha256": "74c516d8b9d474faeb3d21ea93a5e9d841fba8bbda4e414ba773c9738f9da43e",
       "executable": false
     },
     "src/core/features/data/routes.ts": {
-      "sha256": "bc8f0cfa54fc8e6f4311cfbb227ed756c8b1e4bdff74379c687925d0b55c26b9",
+      "sha256": "5680aabd067c3fe1c52190c38541f3abaeb3a27cfa84442446e75a36e40a60bc",
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
       "sha256": "5a2de42fad52c1cf26d11230b489a2ebcc1ee2422ed0468b25b178f31bd5644b",
       "executable": false
     },
+    "src/core/features/data/ui/audit-copy-choices.tsx": {
+      "sha256": "f29b7bcd9e9e49e335634427986ecabe74cf3077c8666fb7bfe5ddb67eb6b264",
+      "executable": false
+    },
     "src/core/features/data/ui/data-actions.ts": {
-      "sha256": "7ec3d818d0cf25a183127c98f1ba02275af3243252ceafac13a9e760ffe29ed2",
+      "sha256": "8120aba4bd1588c0333600da2ecd687a1a390dd3e6120be3cf947639d766f447",
       "executable": false
     },
     "src/core/features/data/ui/data-page.tsx": {
-      "sha256": "67f14981888fdf7bde40c4beeb9c42f777d4d0badaadbbdbd54c2744036a5d86",
+      "sha256": "d89005206df3cb9e888e24a75a525aba75ef7f912d1a4b1b171c5e32768e830e",
       "executable": false
     },
     "src/core/features/decisions/authority.ts": {
@@ -5683,7 +5687,7 @@
       "executable": false
     },
     "tests/base/penny-erasure.test.ts": {
-      "sha256": "4c53e9c920ad1dba9a3cbfcc14b6663b067f2d89fde6e113e7bedc059f210b16",
+      "sha256": "b7d7ce045bc6c30bbdca969a168736f35c16f379619c2300c3f0c245fa055e2b",
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {

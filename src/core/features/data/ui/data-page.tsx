@@ -5,8 +5,9 @@ import { buttonClass, fieldClass } from '@/core/features/auth/client-mutations'
 import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { dangerButtonClass, disclosureChevronClass, fieldLabelClass, fileInputClass, paperCardClass, secondaryButtonClass } from '@/core/ui/app/classes'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
+import { AuditCopyChoices } from './audit-copy-choices'
 import { OperatorResourceFailure, OperatorResourceLoading, OperatorResourceNotFound, OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
-import { DataActionError, downloadPrivate, entityLabels, mutate, previewErasure, recordLabel, type Overview, type Plan, type Receipt } from './data-actions'
+import { DataActionError, auditCopyId, downloadPrivate, entityLabels, mutate, previewErasure, recordLabel, type AuditChoices, type Overview, type Plan, type Receipt } from './data-actions'
 const card = `${paperCardClass} p-5 sm:p-7`
 const secondary = secondaryButtonClass
 const heading = 'text-lg font-bold tracking-[-0.01em] text-penny-ink'
@@ -16,7 +17,7 @@ type Status = { kind: 'working' | 'success' | 'error'; text: string } | null
 export function DataPage() {
   const [resource,retry] = useOperatorResource<Overview>('/api/operator/data/overview')
   const [status, setStatus] = useState<Status>(null), [busy, setBusy] = useState(false)
-  const [plan, setPlan] = useState<Plan | null>(null), [target, setTarget] = useState('')
+  const [plan, setPlan] = useState<Plan | null>(null), [target, setTarget] = useState(''), [auditChoices, setAuditChoices] = useState<AuditChoices>({})
   const [restored, setRestored] = useState(false), [journalNeeded, setJournalNeeded] = useState(false)
   const router = useRouter(), overview = resource.kind === 'ready' ? resource.data : null
   const operation = overview?.operation, pendingRestore = operation?.kind === 'restore' && operation.status === 'pending' ? operation.id : null
@@ -73,13 +74,13 @@ export function DataPage() {
           event.preventDefault(); void perform('Checking dependent records and original files…', async () => {
             const selected = overview.targets.find(item => `${item.table}:${item.id}` === target)
             if (!selected) throw new Error('Choose a record first.')
-            setPlan(await previewErasure(selected.table,selected.id)); setStatus(null)
+            setPlan(await previewErasure(selected.table,selected.id)); setAuditChoices({}); setStatus(null)
           })
         }}><label className={fieldLabelClass}>Record<select className={fieldClass} required value={target} disabled={unavailable} onChange={event => { setTarget(event.target.value); setPlan(null) }}><option value="">Choose a record</option>{Object.entries(entityLabels).map(([table, label]) => <optgroup key={table} label={label}>{overview.targets.filter(item => item.table === table).map(item => <option key={item.id} value={`${table}:${item.id}`}>{item.label} · {item.id.slice(-8)}</option>)}</optgroup>)}</select></label><button className={secondary} disabled={unavailable}>Preview erasure</button></form>
         {plan ? <div className="mt-5 border-t border-penny-line pt-5"><h3 className="font-bold text-penny-ink">Confirm permanent erasure</h3><p className="mt-3 break-words text-base font-bold text-penny-ink">{overview.targets.find(item => item.table === plan.table && item.id === plan.id)?.label ?? "Selected record"}</p><p className="mt-2 break-all text-sm text-penny-muted">{entityLabels[plan.table]} · {plan.id}</p><dl className="mt-4 grid gap-x-8 gap-y-2 text-sm text-penny-ink sm:grid-cols-2">{Object.entries(plan.counts).map(([table, count]) => <div key={table} className="flex min-w-0 justify-between gap-3"><dt className="break-words">{recordLabel(table)}</dt><dd className="shrink-0 font-bold tabular-nums">{count}</dd></div>)}</dl><p className="mt-3 text-sm text-penny-ink">Original files to delete: {plan.fileCount}.</p>
           {plan.table === 'requesters' && plan.counts.requests ? <p className="mt-3 text-sm leading-6 text-penny-ink">This person created {plan.counts.requests === 1 ? 'a request' : `${plan.counts.requests} requests`}. Erasing them also removes {plan.counts.requests === 1 ? 'it' : 'those requests'} and every vote and comment other people added to {plan.counts.requests === 1 ? 'it' : 'them'}.</p> : null}
-          {plan.blockedCopies.length ? <p role="alert" className="mt-4 text-sm leading-6 font-semibold text-penny-danger">Erasure blocked: {plan.blockedCopies.length} unrelated records contain copied wording. Review their provenance before proceeding.</p> : <><p className="mt-4 text-sm leading-6 text-penny-ink">This permanently removes the reviewed records and files. Retained audit references are anonymized.</p><button className={dangerButtonClass + ' mt-4'} disabled={unavailable} onClick={() => void perform('Erasing the reviewed records and original files…', async () => {
-            const result = await mutate<Receipt>('erasure', { table: plan.table, id: plan.id, planHash: plan.planHash }); setPlan(null); setTarget(''); setJournalNeeded(true)
+          {plan.blockedCopies.some(copy => !copy.resolvable) ? <p role="alert" className="mt-4 text-sm leading-6 font-semibold text-penny-danger">Erasure blocked: {plan.blockedCopies.filter(copy => !copy.resolvable).length} unrelated records contain copied wording. Review their provenance before proceeding.</p> : <><p className="mt-4 text-sm leading-6 text-penny-ink">This permanently removes the reviewed records and files. Retained audit references are anonymized.</p>{plan.blockedCopies.length ? <AuditCopyChoices copies={plan.blockedCopies} value={auditChoices} onChange={setAuditChoices} disabled={unavailable} /> : null}<button className={dangerButtonClass + ' mt-4'} disabled={unavailable || plan.blockedCopies.some(copy => !auditChoices[auditCopyId(copy)])} onClick={() => void perform('Erasing the reviewed records and original files…', async () => {
+            const result = await mutate<Receipt>('erasure', { table: plan.table, id: plan.id, planHash: plan.planHash, ...(plan.blockedCopies.length ? { auditCopies: plan.blockedCopies.map(copy => ({ id: auditCopyId(copy), resolution: auditChoices[auditCopyId(copy)] })) } : {}) }); setPlan(null); setTarget(''); setJournalNeeded(true)
             setStatus({ kind: 'success', text: result.status === 'complete' ? 'Erasure complete. Save the updated journal with your backups.' : 'Native records are erased; retained history cleanup remains. Resume it above to complete erasure.' }); await router.invalidate()
           })}>Permanently erase reviewed data</button></>}
         </div> : null}

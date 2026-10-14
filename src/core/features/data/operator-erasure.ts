@@ -32,7 +32,11 @@ const auditName = 'instr(details_json,?4)>0'
 const auditCleared = `((${ownAudit} AND (${auditName} OR instr(details_json,?3)>0)) OR instr(details_json,?3)>0)`
 const auditValues = (operator: Operator, native: Native) => [operator.id, native?.id ?? operator.id, operator.email, JSON.stringify(operator.display_name)]
 type Native = { id: string; version: number; status: string } | null
-export type OperatorErasurePlan = { table: 'operators'; id: string; planHash: string; counts: Record<string, number>; files: string[]; blockedCopies: { table: string; key: string; columns: string[] }[] }
+/** A blocked copy. A name-only audit row also carries its action and time and is
+ * `resolvable`: the owner may confirm it unrelated (kept) or clear its details. */
+export type BlockedCopy = { table: string; key: string; columns: string[]; action?: string; occurredAt?: string; resolvable?: true }
+export type AuditResolution = { id: string; resolution: 'unrelated' | 'clear' }
+export type OperatorErasurePlan = { table: 'operators'; id: string; planHash: string; counts: Record<string, number>; files: string[]; blockedCopies: BlockedCopy[] }
 
 async function subject(db: D1Database, id: string): Promise<{ operator: Operator; native: Native }> {
  const operator = await db.prepare('SELECT id,email,display_name FROM operators WHERE id=?').bind(id).first<Operator>()
@@ -63,10 +67,10 @@ async function counts(db: D1Database, { operator, native }: { operator: Operator
 
 // Free text, settings and custody elsewhere may hold the address. Penny does not
 // guess whether such a copy is the person's data or a business record.
-async function copies(db: D1Database, operator: Operator, native: Native): Promise<OperatorErasurePlan['blockedCopies']> {
- const blocked: OperatorErasurePlan['blockedCopies'] = []
- const audits = (await db.prepare(`SELECT id FROM audit_entries WHERE ${auditName} AND NOT ${auditCleared} LIMIT 21`).bind(...auditValues(operator, native)).all<{ id: string }>()).results
- for (const row of audits) blocked.push({ table: 'audit_entries', key: canonical([row.id]), columns: ['details_json'] })
+async function copies(db: D1Database, operator: Operator, native: Native): Promise<BlockedCopy[]> {
+ const blocked: BlockedCopy[] = []
+ const audits = (await db.prepare(`SELECT id,action,occurred_at FROM audit_entries WHERE ${auditName} AND NOT ${auditCleared} ORDER BY occurred_at,id LIMIT 21`).bind(...auditValues(operator, native)).all<{ id: string; action: string; occurred_at: string }>()).results
+ for (const row of audits) blocked.push({ table: 'audit_entries', key: canonical([row.id]), columns: ['details_json'], action: row.action, occurredAt: row.occurred_at, ...(audits.length <= 20 ? { resolvable: true as const } : {}) })
  for (const table of (await schema(db)).filter(table => !handled.has(table.name))) {
   const columns = table.columns.map(column => column.name), ident = (name: string) => '"' + name + '"'
   // Receipts of the operator's own mail events are deleted with them.
@@ -84,16 +88,25 @@ export async function planOperatorErasure(db: D1Database, id: string): Promise<O
  return { table: 'operators', id, planHash, ...planned }
 }
 
-export async function eraseOperator(db: D1Database, id: string, planHash: string, authority?: DataAuthority): Promise<{ operationId: string; status: string }> {
+// Every remaining copy must be a listed name-only audit row with exactly one
+// resolution; anything else still blocks.
+function resolved(plan: OperatorErasurePlan, resolutions: AuditResolution[]): boolean {
+ const listed = plan.blockedCopies.filter(copy => copy.resolvable).map(copy => JSON.parse(copy.key)[0] as string)
+ return plan.blockedCopies.every(copy => copy.resolvable) && resolutions.length === listed.length
+  && new Set(resolutions.map(item => item.id)).size === resolutions.length && resolutions.every(item => listed.includes(item.id))
+}
+
+export async function eraseOperator(db: D1Database, id: string, planHash: string, authority?: DataAuthority, resolutions: AuditResolution[] = []): Promise<{ operationId: string; status: string }> {
  const reviewed = await planOperatorErasure(db, id)
  if (reviewed.planHash !== planHash) fail('erasure_plan_changed')
- if (reviewed.blockedCopies.length) fail('erasure_ambiguous_copies')
+ if (!resolved(reviewed, resolutions)) fail('erasure_ambiguous_copies')
  await assertDataAuthority(db, authority)
  const operation = await reserve(db, 'erase', {}, authority)
  try {
   const found = await subject(db, id), { operator, native } = found
   const plan = await planOperatorErasure(db, id)
-  if (plan.planHash !== planHash || plan.blockedCopies.length) fail('erasure_plan_changed')
+  if (plan.planHash !== planHash || !resolved(plan, resolutions)) fail('erasure_plan_changed')
+  const cleared = resolutions.filter(item => item.resolution === 'clear').map(item => item.id), confirmed = resolutions.filter(item => item.resolution === 'unrelated').map(item => item.id)
   const current = (await state(db))!, epoch = current.epoch + 1, journal = await readErasureJournal(db)
   if (journal.tombstones.length + 1 > ERASURE_LIMITS.rows) fail('journal_limit', 413)
   const anonymous = createUlid().toLowerCase(), email = `operator-${anonymous}@erased.invalid`, now = new Date().toISOString(), epochMs = Date.now()
@@ -117,6 +130,8 @@ export async function eraseOperator(db: D1Database, id: string, planHash: string
    ...attributions.map(({ table, column, owner }) => db.prepare(`UPDATE ${table} SET ${column}=? WHERE ${owner} AND ${column}=?`).bind(LABEL, operator.id, operator.display_name)),
    ...attempts.map(table => db.prepare(`UPDATE ${table} SET recipient_email=? WHERE lower(recipient_email)=lower(?)`).bind(email, operator.email)),
    db.prepare(`UPDATE audit_entries SET details_json=NULL,updated_at=?5 WHERE ${auditCleared}`).bind(...auditValues(operator, native), now),
+   // The owner's choice for each listed name-only row: cleared, or confirmed unrelated and kept.
+   db.prepare('UPDATE audit_entries SET details_json=NULL,updated_at=? WHERE id IN (SELECT value FROM json_each(?))').bind(now, JSON.stringify(cleared)),
   ]
   if (native) statements.push(
    db.prepare('UPDATE oa_operators SET email=?,display_name=? WHERE id=?').bind(email, LABEL, native.id),
@@ -133,7 +148,7 @@ export async function eraseOperator(db: D1Database, id: string, planHash: string
   if (await db.prepare("SELECT 1 present FROM sqlite_master WHERE type='table' AND name='rer_mail_development_outbox'").first()) statements.push(db.prepare("DELETE FROM rer_mail_development_outbox WHERE instr(lower(message),lower(?))>0").bind(operator.email))
   statements.push(
    db.prepare('INSERT INTO data_tombstones(epoch,table_name,key_hash) VALUES(?,?,?)').bind(epoch, 'operators', checkpoint),
-   audit(db, 'data.erased', operation, authority, JSON.stringify({ phase: 'operator_redacted', targetType: 'operators', targetReference: await hash([current.origin, 'operators', operator.id]) })),
+   audit(db, 'data.erased', operation, authority, JSON.stringify({ phase: 'operator_redacted', targetType: 'operators', targetReference: await hash([current.origin, 'operators', operator.id]), auditCopiesCleared: cleared, auditCopiesConfirmedUnrelated: confirmed })),
    db.prepare('DELETE FROM ik_d1_assertions'),
    db.prepare("UPDATE data_state SET epoch=?,phase='locked' WHERE singleton=1 AND lock_id=?").bind(epoch, operation),
    db.prepare("UPDATE data_operations SET status='pending_r2',payload_json=?,updated_at=? WHERE id=?").bind(canonical({ keys: [] }), now, operation),

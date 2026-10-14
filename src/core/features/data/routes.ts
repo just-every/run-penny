@@ -61,8 +61,9 @@ export function registerDataRoutes(app:Hono<Environment>):void{
   }
  })
  app.post('/api/operator/data/erasure',async c=>{
-  const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160),planHash:z.string().length(64)}).strict())
-  const result=input.table==='operators'?await eraseOperator(c.env.DB,input.id,input.planHash,authority(c)):await eraseEntity(c.env.DB,c.env.FILES,input.table,input.id,input.planHash,authority(c))
+  const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160),planHash:z.string().length(64),auditCopies:z.array(z.object({id:z.string().min(1).max(160),resolution:z.enum(['unrelated','clear'])}).strict()).max(21).optional()}).strict())
+  if(input.auditCopies&&input.table!=='operators')throw new NativeError('validation_failed',400)
+  const result=input.table==='operators'?await eraseOperator(c.env.DB,input.id,input.planHash,authority(c),input.auditCopies):await eraseEntity(c.env.DB,c.env.FILES,input.table,input.id,input.planHash,authority(c))
   return c.json(result,result.status==='complete'?200:202)
  })
  app.get('/api/operator/data/operations/:id',async c=>{
