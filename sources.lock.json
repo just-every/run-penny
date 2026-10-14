@@ -6078,10 +6078,6 @@
       "sha256": "dd494210b78f2e41372706a67de665a9fa22a78e78ddc963940626a236a1af6a",
       "executable": false
     },
-    "tests/deployment/flagship-status.test.mjs": {
-      "sha256": "aa2fb0c6273a2ac126d04f173af756b711872a286a3415c287bd6bfa3e8bab1f",
-      "executable": false
-    },
     "tests/deployment/fresh-local-diagnostics.test.mjs": {
       "sha256": "fd345052b3f5ac0be230ba73e7715c6d37b3dd57491ff5c6daea36747023fb41",
       "executable": false
@@ -6156,10 +6152,6 @@
     },
     "tests/deployment/review-publication.test.mjs": {
       "sha256": "c45d0cd1f8bbcd1125ea8df5225399f735cffdb51397ba005faa59d7914f1b5d",
-      "executable": false
-    },
-    "tests/deployment/review-suppression-boundary.test.mjs": {
-      "sha256": "39070d2a912c9a2f00f5f8a297dad87f499379b4a779b5ca8e0654496f26a9d2",
       "executable": false
     },
     "tests/deployment/sqlite-provider.mjs": {
