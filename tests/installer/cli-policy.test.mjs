@@ -48,8 +48,8 @@ test('A fresh clone\'s first rer install gives no provider credential to depende
   const manifest = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'))
   manifest.scripts.postinstall = `node -e "require('fs').appendFileSync(process.env.PENNY_SEEN_LOG,(process.env.CLOUDFLARE_API_TOKEN||process.env.SENDGRID_API_KEY?'credential':'clean')+'\\n')"`
   await writeFile(join(root, 'package.json'), JSON.stringify(manifest, null, 2) + '\n')
-  // The copy is its own checkout: an enclosing run's local-state setting would be refused.
-  const inherited = Object.fromEntries(Object.entries(process.env).filter(([name]) => !name.startsWith('PENNY_')))
+  // The copy is its own checkout: an enclosing rer run's operation and local state belong to that run.
+  const inherited = Object.fromEntries(Object.entries(process.env).filter(([name]) => !/^(PENNY|RER)_/.test(name)))
   const result = spawnSync(process.execPath, [entry, 'install'], { cwd: root, encoding: 'utf8', env: { ...inherited, PENNY_SEEN_LOG: seen, CLOUDFLARE_API_TOKEN: 'test-only-provider-token', SENDGRID_API_KEY: 'test-only-mail-key' } })
   assert.equal(result.status, 0, result.stdout.slice(-2000) + result.stderr)
   const lines = (await readFile(seen, 'utf8')).trim().split('\n')
