@@ -13,7 +13,7 @@
 <p align="center">
   <a href="https://justevery.com/#vol-penny"><img src=".github/assets/media/preview.gif" width="800" alt="Penny: Export invoices to CSV is published, thirteen emails go out to everyone who asked, and Marco's page reads Shipped"></a>
 </p>
-<p align="center"><a href="https://justevery.com/#vol-penny"><b>Watch the full demo</b></a> · 45 seconds</p>
+<p align="center"><a href="https://justevery.com/#vol-penny"><b>Watch the full demo</b></a> · 54 seconds</p>
 
 <p align="center">
   <img src=".github/assets/media/flow.webp" width="800" alt="Marco's duplicate is matched to Export invoices to CSV, the release email is sent to 13 people, and his request reads Shipped with 13 votes">
