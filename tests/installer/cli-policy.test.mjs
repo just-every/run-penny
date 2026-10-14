@@ -46,11 +46,12 @@ test('A fresh clone\'s first rer install gives no provider credential to depende
   await cp(source, root, { recursive: true, filter: path => !generated.has(basename(path)) })
   // A build script stand-in: the checkout's own postinstall records what pnpm passes it.
   const manifest = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'))
-  manifest.scripts.postinstall = `node -e "require('fs').appendFileSync(process.env.PENNY_SEEN_LOG,(process.env.CLOUDFLARE_API_TOKEN||process.env.SENDGRID_API_KEY?'credential':'clean')+'\\n')"`
+  // pnpm runs this script in the checkout; its log path must survive install environment isolation.
+  manifest.scripts.postinstall = `node -e "require('fs').appendFileSync('../seen.log',(process.env.CLOUDFLARE_API_TOKEN||process.env.SENDGRID_API_KEY?'credential':'clean')+'\\n')"`
   await writeFile(join(root, 'package.json'), JSON.stringify(manifest, null, 2) + '\n')
   // The copy is its own checkout: an enclosing rer run's operation and local state belong to that run.
   const inherited = Object.fromEntries(Object.entries(process.env).filter(([name]) => !/^(PENNY|RER)_/.test(name)))
-  const result = spawnSync(process.execPath, [entry, 'install'], { cwd: root, encoding: 'utf8', env: { ...inherited, PENNY_SEEN_LOG: seen, CLOUDFLARE_API_TOKEN: 'test-only-provider-token', SENDGRID_API_KEY: 'test-only-mail-key' } })
+  const result = spawnSync(process.execPath, [entry, 'install'], { cwd: root, encoding: 'utf8', env: { ...inherited, CLOUDFLARE_API_TOKEN: 'test-only-provider-token', SENDGRID_API_KEY: 'test-only-mail-key' } })
   assert.equal(result.status, 0, result.stdout.slice(-2000) + result.stderr)
   const lines = (await readFile(seen, 'utf8')).trim().split('\n')
   assert.ok(lines.length >= 1)
