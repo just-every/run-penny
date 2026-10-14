@@ -23,7 +23,7 @@ class OperatorResourceError extends Error {
   }
 }
 
-export function useOperatorResource<T>(path: string): readonly [OperatorResourceState<T>, () => void] {
+export function useOperatorResource<T>(path: string): readonly [OperatorResourceState<T>, () => void, { readonly pending: boolean; readonly attempt: number }] {
   const matches = useMatches()
   const prefetched = matches.map((match) => (match.loaderData as Resources | undefined)?.[path]).find((resource) => resource !== undefined)
   const [attempt, setAttempt] = useState(0)
@@ -58,10 +58,11 @@ export function useOperatorResource<T>(path: string): readonly [OperatorResource
     return () => controller.abort()
   }, [key, path, attempt, prefetched])
 
-  if (attempt === 0 && prefetched) return [prefetched.status === 200 ? { kind: 'ready', data: prefetched.data as T } : prefetched.status === 404 ? { kind: 'not_found' } : prefetched.status === 401 ? { kind: 'session_expired' } : { kind: 'error', status: prefetched.status }, retry]
+  const request = { pending: !(attempt === 0 && prefetched) && (resource.key !== key || resource.state.kind === 'loading'), attempt }
+  if (attempt === 0 && prefetched) return [prefetched.status === 200 ? { kind: 'ready', data: prefetched.data as T } : prefetched.status === 404 ? { kind: 'not_found' } : prefetched.status === 401 ? { kind: 'session_expired' } : { kind: 'error', status: prefetched.status }, retry, request]
   // Keep forms mounted during refresh; auxiliary resources without a loader
   // snapshot fetch on first mount and still require server-side admission.
-  if(resource.key!==key && resource.key.split('\u0000')[0]===path && resource.state.kind==='ready')return [resource.state,retry]
-  if(resource.key!==key && prefetched?.status===200)return [{kind:'ready',data:prefetched.data as T},retry]
-  return [resource.key === key ? resource.state : { kind: 'loading' }, retry]
+  if(resource.key!==key && resource.key.split('\u0000')[0]===path && resource.state.kind==='ready')return [resource.state,retry,request]
+  if(resource.key!==key && prefetched?.status===200)return [{kind:'ready',data:prefetched.data as T},retry,request]
+  return [resource.key === key ? resource.state : { kind: 'loading' }, retry, request]
 }

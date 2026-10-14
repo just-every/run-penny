@@ -16,9 +16,12 @@ export function protocolFromForm(d:FormData):Protocol {
  return {cohort:String(d.get('cohort')),denominator:d.get('denominator')===''?null:Number(d.get('denominator')),baseline:String(d.get('baseline')),window:String(d.get('window')),measure:String(d.get('measure')),dataSource:String(d.get('dataSource')),comparison:String(d.get('comparison')),limits:String(d.get('limits')),stopRule:String(d.get('stopRule')),budgetMicros:Math.round(Number(d.get('protocolBudget'))*1e6)}
 }
 
-export interface CommitmentArtifact {id:string;investigationId:string;createdAt:string;kind:'commitment';sources:CitationView[];invalidated:boolean;invalidationReason:string|null;body:{selectedOption:Option;declinedOptions:Option[];protocol:Protocol;rationale:string;confidence:string;reviewAt:string;ownerOperatorId:string;interpretationVersion:number;observations:{id:string;wording:string;observed_at:string}[];status:string}}
+export interface CommitmentArtifact {ownerLabel:string;id:string;investigationId:string;createdAt:string;kind:'commitment';sources:CitationView[];invalidated:boolean;invalidationReason:string|null;body:{selectedOption:Option;declinedOptions:Option[];protocol:Protocol;rationale:string;confidence:string;reviewAt:string;ownerOperatorId:string;interpretationVersion:number;observations:{id:string;wording:string;observed_at:string}[];status:string}}
 
 export function learningReason(reason:string|null) {
  const descriptions:Record<string,string>={material_learning:'New permitted evidence changed the interpretation.',unchanged:'No material change since the previous check.',operator_correction:'Your correction is recorded. A new check will reassess the interpretation.',learning_model_unconfigured:'Interpretation is unconfigured. Original evidence is preserved; model work cannot proceed.',learning_source_content_missing:'The selected records have no readable source text. No interpretation was requested.',learning_source_unconfigured:'The selected source connection is unconfigured. Source work cannot proceed.',learning_call_budget_exceeded:'The next check exceeds its cost limit. It has stopped before model work.',learning_provider_revoked:'The source permission was revoked. Affected work has stopped.'}
  return reason?(descriptions[reason]??`The last check stopped: ${reason.replaceAll('_',' ')}.`):'No material learning recorded yet. Checks continue within the source and spend grant.'
 }
+
+const optionKinds:Record<string,string>={product:'Product change',process:'Process change',onboarding:'Onboarding',support:'Support', 'no-build':'No build required'}
+export const optionKind=(kind:string)=>optionKinds[kind]

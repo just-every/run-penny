@@ -3419,7 +3419,7 @@
       "executable": false
     },
     "src/core/app/ui/operator-resource.ts": {
-      "sha256": "9b69bd2b93553fca2056df285b31c59d62a0868ed2be4e4fc78ab183181d3ce6",
+      "sha256": "8f34dd3936abd26535eae01ac32ea591ba84a016507d4f6f9090a43645299eb8",
       "executable": false
     },
     "src/core/app/ui/operator-workspace-not-found.tsx": {
@@ -4511,7 +4511,7 @@
       "executable": false
     },
     "src/core/features/learning/service.ts": {
-      "sha256": "b304c5d1ce06b22e5e82e170889c4f75d2c229670a2c01902c65add780530a27",
+      "sha256": "181f81760fe9d96500706b438c8594efa1aa995691990636a05a1b3e3eb3864f",
       "executable": false
     },
     "src/core/features/learning/source-content.ts": {
@@ -4519,23 +4519,35 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-artifact.tsx": {
-      "sha256": "fecca35e4374135b51ddacda15b2bc6ff217e209faf0169259c252d1712eb802",
+      "sha256": "2bef65c656cf33b823d7e5dde9bf56cde7ce3106f2c424988c3db407cc8f75fc",
       "executable": false
     },
     "src/core/features/learning/ui/learning-capture.tsx": {
-      "sha256": "072cc65e7bb20dff04018a088e7ba72935f3000d24f12d5e5b8d2a154feb787b",
+      "sha256": "fee71df192612811e0dd846166aa2ebf990d06df57a173883cd919ced384e4b9",
       "executable": false
     },
     "src/core/features/learning/ui/learning-citation.tsx": {
-      "sha256": "00ae464af257fc472caad136112f933bdaac198703080afacec0db596d7adbb8",
+      "sha256": "7e5b366e0018864b216a54940b3954a5c2b7e80f9cb016023d46b1f3456bc11b",
+      "executable": false
+    },
+    "src/core/features/learning/ui/learning-date.tsx": {
+      "sha256": "f104413829637b8da1bc32c01249b290307e532fea3bb999f14232e6c0e340fc",
       "executable": false
     },
     "src/core/features/learning/ui/learning-detail.tsx": {
-      "sha256": "4db05fd4a7c3f42e90036e7f26b5c7b3fdce24abba78e8c06553a370c9645059",
+      "sha256": "6dc4b4463a5b44fe434f7c6fb4f84b50a71a99e3a4edcff1f25a612a6f21e159",
+      "executable": false
+    },
+    "src/core/features/learning/ui/learning-header.tsx": {
+      "sha256": "cab1123eadc052bdd6af2f118568807b893ef12042477242170e9723cf09eea3",
+      "executable": false
+    },
+    "src/core/features/learning/ui/learning-measurement.tsx": {
+      "sha256": "9c71d364ab714bccb832df2c88b56d3217085f16ce7e27c437e622b219b0be62",
       "executable": false
     },
     "src/core/features/learning/ui/learning-page.tsx": {
-      "sha256": "dabd8788374eea7d9d5aaaf22ef1314206f70fa09e116314d8c456c305f45c61",
+      "sha256": "d54d846dbe391a7439704b49aca09360dba5e076a6b0b24aed9367712bc100a9",
       "executable": false
     },
     "src/core/features/learning/ui/learning-protocol.tsx": {
@@ -4543,7 +4555,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-results.tsx": {
-      "sha256": "4936abcdac185058b8d87836199e942877eda8e92eb5e19a9d40fb08ecf6304f",
+      "sha256": "3b856d60f3722feb05d2c17fb1bc4f117a6f96e7b04c0cb8c759da1c341712c9",
       "executable": false
     },
     "src/core/features/learning/ui/learning-tabs.tsx": {
@@ -4551,11 +4563,11 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning.css": {
-      "sha256": "005ca3e1462513af82d1294336575276e4cbd86f68548325ed9e22c6d9c4a1f1",
+      "sha256": "c8ddc88e81f083d1faaa214d5a922a6b65b494611bb57f1ce8b9300dc831f3c3",
       "executable": false
     },
     "src/core/features/learning/ui/types.ts": {
-      "sha256": "49e547496f51b60048280b54a0b3982a69648fe77a7383be0053739e07e9e3c1",
+      "sha256": "e842dc31deacecbcd0e53ea60874e3f20da71d5ecd8533a175d4d37b9ac7168f",
       "executable": false
     },
     "src/core/features/learning/validation.ts": {
@@ -6051,7 +6063,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "728beeff80680f6c7ba48ee64bc400a653204e6b45e756eb07a2a9baa534cc8b",
+      "sha256": "fb8118e5418506b134fd1b3fbd83dc6ad367439a10f117c779c50d9c78a2a633",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {
