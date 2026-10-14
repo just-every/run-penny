@@ -4519,7 +4519,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-artifact.tsx": {
-      "sha256": "2bef65c656cf33b823d7e5dde9bf56cde7ce3106f2c424988c3db407cc8f75fc",
+      "sha256": "a7c2012b6bee408f8b63033627e8178bdeb2d3b735e4bb12e4613a7e7cc44ad4",
       "executable": false
     },
     "src/core/features/learning/ui/learning-capture.tsx": {
@@ -6063,11 +6063,11 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "fb8118e5418506b134fd1b3fbd83dc6ad367439a10f117c779c50d9c78a2a633",
+      "sha256": "61792a4e9392386bc8311603271eb557bbbefa9b64e2b1e118da9fd89f002fd4",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {
-      "sha256": "9fc4f475bc3aae41130e25c5265636ea88f8fe3f93aa971490c020e6a1049011",
+      "sha256": "5ad0ffe94e3edc4682e76bc1669fde6a725df036b72f0c6b83bfd33d8c5d0cee",
       "executable": false
     },
     "tests/browser/local-database.mjs": {
