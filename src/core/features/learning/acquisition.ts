@@ -5,6 +5,7 @@ import type {PennyRuntime} from '@/core/app/runtime'
 import type {Investigation,Source,Observation} from './schema'
 import {readOrbit,type SourceRecord} from './ports'
 import {assertScope} from './authority'
+import {contentIdentity,decodeOriginal,observationOriginal} from './source-content'
 export interface Captured extends SourceRecord {requesterId:string|null;accountId:string|null;evidenceId:string|null;requestId:string|null;nativeGuard?:{sql:string;params:(string|number|null)[]}}
 export async function acquire(runtime:PennyRuntime,db:D1Database,i:Investigation,s:Source):Promise<Captured[]>{
  const result:Captured[]=[]
@@ -26,16 +27,22 @@ export async function acquire(runtime:PennyRuntime,db:D1Database,i:Investigation
  if(!result.length)throw new NativeError('learning_evidence_required',409)
  return result
 }
-export async function retain(db:D1Database,i:Investigation,s:Source,records:Captured[]):Promise<Observation[]>{
+export async function retain(db:D1Database,i:Investigation,s:Source,records:Captured[],preferLegacy=true):Promise<Observation[]>{
  const observations:Observation[]=[]
  for(const record of records){
   const eventHash=await digest(record.eventKey),people=await Promise.all(record.people.map(id=>digest(`${s.provider}:${s.installation_id}:person:${id}`)))
   const erased=await db.prepare('SELECT 1 FROM learning_erased_events WHERE event_hash=? UNION ALL SELECT 1 FROM learning_erased_people WHERE person_hash IN(SELECT value FROM json_each(?)) LIMIT 1').bind(eventHash,JSON.stringify(people)).first()
   if(erased)throw new NativeError('learning_source_erased',409)
-  const contentHash=await digest(record.wording),now=new Date().toISOString(),id=crypto.randomUUID()
+  const contentHash=await contentIdentity(record.wording,record.original),now=new Date().toISOString(),id=crypto.randomUUID(),decoded=decodeOriginal(record.original)
+  const previous=(await db.prepare('SELECT * FROM learning_observations WHERE investigation_id=? AND event_key=?').bind(i.id,record.eventKey).all<Observation>()).results
+  const sameRevision=(o:Observation)=>{const old=observationOriginal(o);return !!decoded&&!!old&&old.envelope.revision===decoded.envelope.revision&&old.envelope.text===decoded.envelope.text}
+  // Keep an unchanged current legacy input quiet. Only a needed interpretation
+  // materializes its new representation; existing originals never change.
+  const existing=previous.find(o=>o.content_hash===contentHash)??(preferLegacy&&decoded?previous.find(o=>!observationOriginal(o)?.normalized&&sameRevision(o)):undefined)
+  const changed=previous.filter(o=>o.content_hash!==contentHash&&!sameRevision(o)).map(o=>o.id)
   const guards=record.nativeGuard?[db.prepare(`INSERT INTO penny_integration_guards(id,allowed) VALUES(?,(${record.nativeGuard.sql}))`).bind(id,...record.nativeGuard.params)]:[]
-  await db.batch([...guards,db.prepare("UPDATE learning_artifacts SET state='contested' WHERE id IN(SELECT c.artifact_id FROM learning_contributions c JOIN learning_observations o ON o.id=c.observation_id WHERE o.investigation_id=? AND o.event_key=? AND o.content_hash<>?)").bind(i.id,record.eventKey,contentHash),db.prepare(`INSERT OR IGNORE INTO learning_observations(id,investigation_id,source_id,event_key,content_hash,wording,original_json,observed_at,source_person_id,requester_id,account_id,evidence_id,request_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,i.id,s.id,record.eventKey,contentHash,record.wording,canonical(record.original),record.observedAt,record.people[0]??null,record.requesterId,record.accountId,record.evidenceId,record.requestId,now),...record.people.map(person=>db.prepare('INSERT OR IGNORE INTO learning_source_people(observation_id,source_person_id) SELECT id,? FROM learning_observations WHERE investigation_id=? AND event_key=? AND content_hash=?').bind(person,i.id,record.eventKey,contentHash)),...(record.nativeGuard?[db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(id)]:[])])
-  const saved=(await db.prepare('SELECT * FROM learning_observations WHERE investigation_id=? AND event_key=? AND content_hash=?').bind(i.id,record.eventKey,contentHash).first<Observation>())!
+  await db.batch([...guards,db.prepare("UPDATE learning_artifacts SET state='contested' WHERE id IN(SELECT c.artifact_id FROM learning_contributions c JOIN learning_observations o ON o.id=c.observation_id WHERE o.id IN(SELECT value FROM json_each(?)))").bind(JSON.stringify(changed)),...(!existing?[db.prepare(`INSERT OR IGNORE INTO learning_observations(id,investigation_id,source_id,event_key,content_hash,wording,original_json,observed_at,source_person_id,requester_id,account_id,evidence_id,request_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,i.id,s.id,record.eventKey,contentHash,record.wording,canonical(record.original),record.observedAt,record.people[0]??null,record.requesterId,record.accountId,record.evidenceId,record.requestId,now)]:[]),...record.people.map(person=>db.prepare('INSERT OR IGNORE INTO learning_source_people(observation_id,source_person_id) SELECT id,? FROM learning_observations WHERE investigation_id=? AND event_key=? AND content_hash=?').bind(person,i.id,record.eventKey,existing?.content_hash??contentHash)),...(record.nativeGuard?[db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(id)]:[])])
+  const saved=existing??(await db.prepare('SELECT * FROM learning_observations WHERE investigation_id=? AND event_key=? AND content_hash=?').bind(i.id,record.eventKey,contentHash).first<Observation>())!
   observations.push(saved)
  }
  return observations
