@@ -2818,6 +2818,10 @@
       "sha256": "825de07706b833a7a0ec75916af4887e08681c483a98ded1def3d778754d0047",
       "executable": false
     },
+    "migrations/core/0060_learning_maintenance.sql": {
+      "sha256": "fb26a1f4622a615e91f8678d0ee38c57598aba30729e420c49d6ab4b564f98cd",
+      "executable": false
+    },
     "OPERATIONS.json": {
       "sha256": "16aefb7cae0d7d5397ae804eb9bcc64d7d92bc885fc35ac242de4b377e7d0998",
       "executable": false
@@ -6011,7 +6015,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "d3032f11adcc46c272e09ea0a4c9d394c785f7a463886a392889e702ccd5f291",
+      "sha256": "e30467af99546db49c67eccd044f99b7370e4de690ea1673d75fde2c32bb8814",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {

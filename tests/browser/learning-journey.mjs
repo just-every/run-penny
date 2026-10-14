@@ -10,6 +10,8 @@ const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/learning-browser')
 const futureDate=days=>new Date(Date.now()+days*24*60*60*1000).toISOString().slice(0,16)
 assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
+// Use the pinned Playwright installation, matching the README browser journey.
+process.env.PENNY_BROWSER_EXECUTABLE ??= chromium.executablePath()
 const browser=await chromium.launch(browserOptions())
 try {
  for(const width of [1440,390]) {
