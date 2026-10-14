@@ -8,12 +8,12 @@
       "status": "documented format",
       "evidence": {
         "link": "https://github.com/just-every/run-penny/blob/main/docs/CANNY-MIGRATION.md",
-        "sha256": "94a81643602e48122269e2164a69f638429bdfa230b82e5bef6220b3d95fa93a",
-        "size": 15654,
-        "sourceRepository": "urn:git:commit:f28c55699b981fcbbe550506787374fc9aba76ce",
-        "sourceRevision": "f28c55699b981fcbbe550506787374fc9aba76ce",
+        "sha256": "888382081446b6591d5d599b5d445e8cce3d81623dd1139340a54bec6850759e",
+        "size": 15602,
+        "sourceRepository": "urn:git:commit:2530bf9c5d4188f5aeb91b7f21cc4efe49528b41",
+        "sourceRevision": "2530bf9c5d4188f5aeb91b7f21cc4efe49528b41",
         "sourcePath": "docs/CANNY-MIGRATION.md",
-        "sourceSha256": "94a81643602e48122269e2164a69f638429bdfa230b82e5bef6220b3d95fa93a",
+        "sourceSha256": "888382081446b6591d5d599b5d445e8cce3d81623dd1139340a54bec6850759e",
         "validation": "synthetic-only",
         "realExport": "not-supplied"
       }
@@ -26,8 +26,8 @@
         "link": "https://github.com/just-every/run-penny/blob/main/docs/USERVOICE-MIGRATION.md",
         "sha256": "22492f545ececd41f446bee6db96caa388042a86000fd4ccc103e9c268e49c75",
         "size": 18658,
-        "sourceRepository": "urn:git:commit:07b7c8f95d914ae4762f6de1cf1f027695e75b59",
-        "sourceRevision": "07b7c8f95d914ae4762f6de1cf1f027695e75b59",
+        "sourceRepository": "urn:git:commit:5e9dbd5b947e992a4c3bbb2fe875169a632bcb0b",
+        "sourceRevision": "5e9dbd5b947e992a4c3bbb2fe875169a632bcb0b",
         "sourcePath": "docs/USERVOICE-MIGRATION.md",
         "sourceSha256": "22492f545ececd41f446bee6db96caa388042a86000fd4ccc103e9c268e49c75",
         "validation": "synthetic-only",
