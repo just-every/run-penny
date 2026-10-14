@@ -3395,7 +3395,7 @@
       "executable": false
     },
     "src/core/app/ui/operator-app-shell.tsx": {
-      "sha256": "357850d9eab9d690a914c9a67e029a53a379db6693e740d0b837cafad8768d0d",
+      "sha256": "566f82f2da46dad7958d28ce5ac345ba89a809c2816ddbafe56c4eea24900b3f",
       "executable": false
     },
     "src/core/app/ui/operator-format.ts": {
@@ -5291,7 +5291,7 @@
       "executable": false
     },
     "src/core/ui/app/classes.ts": {
-      "sha256": "cafb9856d7a712abbe2b5bf45e548cfc7897db895ce0ae9da029f1b674699666",
+      "sha256": "dccfd876393b1d28a49427acd17a3b4d2a4b936f298fd3c0bbfe402c24a406f6",
       "executable": false
     },
     "src/core/ui/app/collage/collage.css": {
@@ -5491,7 +5491,7 @@
       "executable": false
     },
     "src/index.css": {
-      "sha256": "2475642c2bd7f3ed4646c0d21a28fccae23bc1bae4ffad9795296e7d182b7b86",
+      "sha256": "a7a151ade73b8144000bbd79ace5e43035efc09084ddf3916017f133d21ca385",
       "executable": false
     },
     "src/routes/__root.tsx": {
