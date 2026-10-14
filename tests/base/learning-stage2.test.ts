@@ -1,4 +1,4 @@
-import {expect,it} from 'vitest'
+import {expect,it,vi} from 'vitest'
 import {env} from 'cloudflare:workers'
 import {call,json,fixture,path,bindings,sent,network} from './learning-test-runtime'
 import {learningOutput} from './learning-fixture'
@@ -14,6 +14,16 @@ it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact s
 })
 it('[LEARN-002] refuses forged citations, absent model configuration and an in-flight authority revocation without a derived result',async()=>{
  const f=await fixture();network.badCitation=true;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0)
- network.badCitation=false;const noConfig=bindings();delete noConfig.PENNY_LEARNING;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie,noConfig)).status).toBe(503)
+ network.badCitation=false
+ const logged=vi.spyOn(console,'error').mockImplementation(()=>{})
+ try{
+  const cases=[...['GET','POST'].flatMap(method=>['PRIVATE MALFORMED PROVIDER secret-key',JSON.stringify({secret:'PRIVATE MALFORMED PROVIDER secret-key'})].map(body=>({method,body,reason:method==='GET'?'learning_source_payload_invalid':'learning_model_payload_invalid',throws:false}))),...['GET','POST'].map(method=>({method,body:'',reason:'learning_transport_failed',throws:true})),...['PRIVATE MODEL OUTPUT secret-key',JSON.stringify({question:{secret:'PRIVATE MODEL OUTPUT secret-key'}})].map(content=>({method:'POST',body:JSON.stringify({choices:[{message:{content},finish_reason:'stop'}],usage:{prompt_tokens:100,completion_tokens:500}}),reason:'learning_model_output_invalid',throws:false}))]
+  for(const fault of cases){
+   const custom=bindings(),edge=custom.PENNY_LEARNING_EGRESS!;custom.PENNY_LEARNING_EGRESS={async send(wire){if(wire.method!==fault.method)return edge.send(wire);if(fault.throws)throw new Error('PRIVATE TRANSPORT '+wire.headers.Authorization);return {status:200,headers:{},body:fault.body}}}
+   const response=await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie,custom);expect(response.status).toBe(409);expect(await response.json()).toEqual({error:fault.reason});expect(JSON.stringify(logged.mock.calls)).not.toContain('PRIVATE');expect(JSON.stringify(logged.mock.calls)).not.toContain('network-edge')
+   const runs=(await env.DB.prepare('SELECT * FROM learning_runs').all()).results;expect(JSON.stringify(runs)).not.toContain('PRIVATE');expect(JSON.stringify(runs)).not.toContain('network-edge');expect(runs.some(run=>run.reason===fault.reason&&run.state===(fault.method==='POST'?'uncertain':'refused'))).toBe(true)
+  }
+ }finally{logged.mockRestore()}
+ const noConfig=bindings();delete noConfig.PENNY_LEARNING;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie,noConfig)).status).toBe(503)
  network.beforeModel=async()=>{await env.DB.prepare('UPDATE oa_sessions SET revoked_at=?').bind(Date.now()).run()};expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(401);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0)
 })

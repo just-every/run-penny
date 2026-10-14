@@ -1,3 +1,4 @@
+import { validateLearningArchive } from '../../src/core/features/learning/archive'
 import { privateInput } from '../data/private-files.mjs'
 import type { ArchivePolicy } from '@runeditrun/rer/modules/portability'
 import { createHash } from 'node:crypto'
@@ -40,7 +41,7 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
       for (const name of expected) data[name] = (await read(name)).map(productRow)
       const records = product.flatMap(name => data[name])
       if (records.length > LOCAL_DATA_LIMITS.rows || Buffer.byteLength(canonical(records)) > LOCAL_DATA_LIMITS.recordBytes) refuse('archive_limit')
-      validateNativeIdentity(data); validateFeedbackArchive(data)
+      validateNativeIdentity(data); validateFeedbackArchive(data); await validateLearningArchive(data)
       if (data.request_attachment_uploads.length) refuse('unfinished_attachment_uploads')
       if (manifest.payloads.length || manifest.objects.length !== data.attachments.length || manifest.objects.some(object => object.bucket !== 'FILES' || !data.attachments.some(row => row.storage_key === object.key))) refuse('invalid_archive_files')
       let fileBytes = 0

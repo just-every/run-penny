@@ -36,8 +36,11 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   if(sourceCost>0)paid=true
   const records=await acquire(runtime,db,i,s),observations=await retain(db,i,s,records)
   const corrections=(await db.prepare('SELECT id,correction FROM learning_corrections WHERE investigation_id=? ORDER BY created_at,id').bind(id).all()).results
-  const inputHash=await digest(canonical({observations:observations.map(o=>[o.id,o.content_hash]),corrections}))
-  const known=await db.prepare('SELECT id FROM learning_artifacts WHERE investigation_id=? AND input_hash=?').bind(id,inputHash).first<{id:string}>()
+  // A repeated input after a correction is a new interpretation, never a revival
+  // of the invalidated immutable artifact or its committed snapshot.
+  const predecessor=await db.prepare("SELECT id FROM learning_artifacts WHERE investigation_id=? AND state<>'current' ORDER BY version DESC LIMIT 1").bind(id).first<string>('id')
+  const inputHash=await digest(canonical({observations:observations.map(o=>[o.id,o.content_hash]),corrections,predecessor}))
+  const known=await db.prepare("SELECT id FROM learning_artifacts WHERE investigation_id=? AND input_hash=? AND state='current'").bind(id,inputHash).first<{id:string}>()
   if(known){await finish(sourceCost,'unchanged');return {runId,unchanged:true,artifactId:known.id}}
   await assertScope(native,i,s)
   // This db read also rechecks native session and erasure epoch immediately before paid work.
@@ -64,7 +67,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
    const revoked=(await native.prepare("SELECT id FROM learning_sources WHERE provider='orbit' AND installation_id IS ? AND state='active'").bind(s.installation_id).all<{id:string}>()).results
    for(const source of revoked)await purge(native,source.id)
   }
-  throw error
+  throw error instanceof NativeError?error:new NativeError(reason,409)
  }
  async function finish(cost:number,reason:string){await db.batch([db.prepare("UPDATE learning_runs SET state='complete',actual_micros=?,reason=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(cost,reason,new Date().toISOString(),runId,claim),db.prepare('UPDATE learning_investigations SET spent_micros=spent_micros-?+?,last_reason=? WHERE id=?').bind(i.max_run_cost_micros,cost,reason,id)])}
 }

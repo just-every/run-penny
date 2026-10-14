@@ -1,3 +1,4 @@
+import {learningRedactions} from '../learning/erasure-scope'
 import {NativeError,digest} from '../auth/native-tokens'
 import {canonical,schema,checkSchemaHeaders,schemaPart,type TableHeader,type Row,type Cell,type Table} from './archive'
 import {readErasureFrontier,checkErasureRead,importCustody,type FrontierPage} from './erasure-read'
@@ -85,13 +86,14 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
   }
   const emails=new Set(selected.requester_addresses.map(row=>String(row.email)))
   const subjectHashes=new Set(await Promise.all([...ids,...emails].map(digest)))
+  const redacted=learningRedactions(data,selected)
   for(const table of tables){
    if(['operators','operator_sessions','audit_entries','feedback_import_tombstones','host_identity_tombstones','ik_d1_erased_sources','ik_d1_erased_targets'].includes(table.name))continue
    const groups=foreignGroups(table.foreignKeys)
    for(const row of data[table.name]){
     if(marked(table,row))continue
     const referenced=[...groups.values()].some(group=>selected[group[0].table]?.some(parent=>group.every(key=>row[key.from]!==null&&parent[key.to]===row[key.from])))
-    const copied=Object.entries(row).filter(([column])=>table.name!=='learning_investigations'||!['native_evidence_ids_json','native_request_ids_json'].includes(column)).flatMap(([,value])=>strings(value)).some(text=>[...ids].some(id=>text.includes(id)))
+    const copied=Object.entries(row).filter(([column])=>!redacted(table.name,row,column)&&(table.name!=='learning_investigations'||!['native_evidence_ids_json','native_request_ids_json'].includes(column))).flatMap(([,value])=>strings(value)).some(text=>[...ids].some(id=>text.includes(id)))
     const address=(table.name==='native_magic_links'&&emails.has(String(row.email)))||(table.name==='local_auth_outbox'&&emails.has(String(row.recipient)))
     const rate=table.name==='native_rate_limits'&&subjectHashes.has(String(row.subject_hash))
     if(referenced||copied||address||rate){selected[table.name].push(row);changed=true}
@@ -118,8 +120,8 @@ export function finishNativeScope(scope:NativeScope){
  const independentPublicPhrase=(table:string,row:Row,column:string,literal:string)=>approvedPhrases.has(literal)&&(
   (table==='release_versions'&&publishedVersions.has(row.id)&&['title','body'].includes(column))||
   (table==='roadmap_update_versions'&&row.published_at!==null&&['title','problem','body'].includes(column)))
- const blockedCopies:{table:string;key:string;columns:string[]}[]=[]
- for(const table of tables){if(['audit_entries','operators','operator_sessions'].includes(table.name))continue;for(const row of data[table.name]){if(marked(table,row))continue;const columns=Object.entries(row).filter(([column,value])=>!['id','created_at','updated_at','token_hash','token','slug','storage_key','subject_hash','key_hash','body_hash'].includes(column)&&strings(value).some(text=>[...literals].some(literal=>text.includes(literal)&&!independentPublicPhrase(table.name,row,column,literal)))).map(([column])=>column);if(columns.length)blockedCopies.push({table:table.name,key:rowKey(table,row),columns})}}
+ const blockedCopies:{table:string;key:string;columns:string[]}[]=[],redacted=learningRedactions(data,selected)
+ for(const table of tables){if(['audit_entries','operators','operator_sessions'].includes(table.name))continue;for(const row of data[table.name]){if(marked(table,row))continue;const columns=Object.entries(row).filter(([column,value])=>!redacted(table.name,row,column)&&!['id','created_at','updated_at','token_hash','token','slug','storage_key','subject_hash','key_hash','body_hash'].includes(column)&&strings(value).some(text=>[...literals].some(literal=>text.includes(literal)&&!independentPublicPhrase(table.name,row,column,literal)))).map(([column])=>column);if(columns.length)blockedCopies.push({table:table.name,key:rowKey(table,row),columns})}}
  for(const row of data.audit_entries)if(!audits.includes(row)&&strings(row.details_json).some(text=>[...ids,...literals].some(literal=>text.includes(literal))))blockedCopies.push({table:'audit_entries',key:rowKey(tables.find(table=>table.name==='audit_entries')!,row),columns:['details_json']})
  const files=erasureFiles(selected)
  const counts=Object.fromEntries(tables.map(table=>[table.name,selected[table.name].length]).filter(([,count])=>count!==0));counts.audit_anonymized=audits.length

@@ -1,15 +1,15 @@
 // Paid/source network edge only. All application routes, admission and storage
 // run from Penny's emitted production Worker without an application bypass.
-export const learningBindings={PENNY_LEARNING:JSON.stringify({orbit:{origin:'https://orbit.example.test',token:'synthetic-learning-source-token',installationId:'fixture-orbit',audiencePrincipalIds:['owner'],readCostMicros:0},model:{apiKey:'synthetic-learning-model-key',model:'fixture-model',inputMicrosPerToken:1,outputMicrosPerToken:2,maxOutputTokens:1000}})}
+export const learningBindings={PENNY_LEARNING:JSON.stringify({orbit:{origin:'https://orbit.example.com',token:'synthetic-learning-source-token',installationId:'fixture-orbit',audiencePrincipalIds:['owner'],readCostMicros:0},model:{apiKey:'synthetic-learning-model-key',model:'fixture-model',inputMicrosPerToken:1,outputMicrosPerToken:2,maxOutputTokens:1000}})}
 export const learningProvider={name:'learning-network',modules:true,compatibilityDate:'2026-08-31',script:`
 import { WorkerEntrypoint } from 'cloudflare:workers';
 export default class extends WorkerEntrypoint {
  async send(wire) {
-  if(wire.url.startsWith('https://orbit.example.test/api/delegation/v1/evidence?')) {
+  if(wire.url.startsWith('https://orbit.example.com/api/delegation/v1/evidence?')) {
    const target=new URL(wire.url).searchParams.get('target');
    const text=JSON.stringify({opportunity:{id:'close-friction',created_at:'2026-10-14T09:00:00.000Z',problem:'Private learning source: month-end export takes too long.'},contacts:[{id:'fixture-customer'}]});
    const revision=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text)))].map(b=>b.toString(16).padStart(2,'0')).join('');
-   return {status:200,headers:{},body:JSON.stringify({provider:'orbit',installationId:'fixture-orbit',accountId:'fixture-account',principalId:'owner',target,revision,observedAt:new Date().toISOString(),audience:{kind:'source-principals',principalIds:['owner']},title:'Original month-end evidence',text,canonicalUrl:'https://orbit.example.test/record'})};
+   return {status:200,headers:{},body:JSON.stringify({provider:'orbit',installationId:'fixture-orbit',accountId:'fixture-account',principalId:'owner',target,revision,observedAt:new Date().toISOString(),audience:{kind:'source-principals',principalIds:['owner']},title:'Original month-end evidence',text,canonicalUrl:'https://orbit.example.com/record'})};
   }
   if(wire.url!=='https://api.openai.com/v1/chat/completions')throw Error('Unexpected fixture network destination');
   const request=JSON.parse(wire.body),input=JSON.parse(request.messages[1].content),o=input.observations[0];

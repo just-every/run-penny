@@ -1,3 +1,5 @@
+import {guardedDatabase} from '../integrations/guarded-database'
+import {assertSourceTargets} from './erasure-fences'
 import {learningConfiguration} from './configuration'
 import type {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
@@ -7,12 +9,13 @@ import {sourceInput,investigationInput,commitInput,type Artifact} from './schema
 import {context,assertScope,scopedDatabase} from './authority'
 import {configuration} from './ports'
 export async function createSource(runtime:PennyRuntime,request:Request,input:z.infer<typeof sourceInput>){
- const {db}=await integrationOperator(runtime,request),id=crypto.randomUUID()
+ const {db:operatorDb}=await integrationOperator(runtime,request),db=await configurationDatabase(operatorDb),id=crypto.randomUUID()
+ await assertSourceTargets(db,input.provider,learningConfiguration(runtime).orbit?.installationId??null,input.resourceIds)
  await db.prepare("INSERT INTO learning_sources(id,name,provider,installation_id,resource_ids_json,use_basis,state,created_at) VALUES(?,?,?,?,?,?,'active',?)").bind(id,input.name,input.provider,learningConfiguration(runtime).orbit?.installationId??null,JSON.stringify([...new Set(input.resourceIds)]),input.useBasis,new Date().toISOString()).run()
  return {id}
 }
 export async function createInvestigation(runtime:PennyRuntime,request:Request,input:z.infer<typeof investigationInput>){
- const {db,session,actor}=await integrationOperator(runtime,request),id=crypto.randomUUID(),now=new Date().toISOString(),sourceId=input.sourceId??crypto.randomUUID()
+ const {db:operatorDb,session,actor}=await integrationOperator(runtime,request),db=await configurationDatabase(operatorDb),id=crypto.randomUUID(),now=new Date().toISOString(),sourceId=input.sourceId??crypto.randomUUID()
  if(input.expiresAt<=now||input.maxRunCostMicros>input.budgetMicros||(!input.sourceId&&!input.nativeEvidenceIds.length&&!input.nativeRequestIds.length))throw new NativeError('learning_scope_invalid',400)
  const statements:D1PreparedStatement[]=[]
  if(!input.sourceId)statements.push(db.prepare("INSERT INTO learning_sources(id,name,provider,installation_id,resource_ids_json,use_basis,state,created_at) VALUES(?,'Native feedback','native','native','[]',?,'active',?)").bind(sourceId,input.purpose,now))
@@ -42,4 +45,9 @@ export async function overview(runtime:PennyRuntime,request:Request){
  if(result.some(r=>r.results.length>100))throw new NativeError('learning_list_limit',413)
  const artifacts=result[2].results,needsYou=artifacts.filter(a=>!a.deferred).map(artifactDto)
  return {configuration:configuration(runtime),sources:result[0].results.map(r=>({id:r.id,name:r.name,provider:r.provider,resourceIds:JSON.parse(String(r.resource_ids_json)),useBasis:r.use_basis,state:r.state,createdAt:r.created_at})),investigations:result[1].results.map(investigationDto),results:result[3].results.map(r=>({id:r.id,investigationId:r.investigation_id,createdAt:r.created_at,body:JSON.parse(String(r.snapshot_json)),kind:'commitment',invalidated:!!r.invalidation_reason,invalidationReason:r.invalidation_reason})),learning:artifacts.filter(a=>a.deferred).map(artifactDto),needsYou}
+}
+
+async function configurationDatabase(db:D1Database){
+ const epoch=await db.prepare('SELECT epoch FROM data_state WHERE singleton=1').first<number>('epoch')
+ return guardedDatabase(db,{sql:"EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND epoch=? AND phase='idle')",params:[epoch!]})
 }

@@ -18,6 +18,12 @@ export function registerLearningControls(app:Hono<OperatorMutationEnvironment>){
   return c.json({ok:true})
  })
  app.post(root+'/sources/:id/disconnect',async c=>{const {db}=await integrationOperator(c.get('runtime'),c.req.raw);await purge(db,c.req.param('id')!);return c.json({ok:true})})
- app.post(root+'/sources/:id/erase-person',async c=>{const {db}=await integrationOperator(c.get('runtime'),c.req.raw),input=await parseMutationBody(c,z.object({sourcePersonId:z.string().min(1).max(200)}).strict());if(!input)return c.json({error:'validation_failed'},400);await purge(db,c.req.param('id')!,input.sourcePersonId);return c.json({ok:true})})
+ app.post(root+'/sources/:id/erase-person',async c=>{
+  const {db}=await integrationOperator(c.get('runtime'),c.req.raw),input=await parseMutationBody(c,z.object({sourcePersonId:z.string().min(1).max(200)}).strict());if(!input)return c.json({error:'validation_failed'},400)
+  const sourceId=c.req.param('id')!,source=await db.prepare('SELECT provider FROM learning_sources WHERE id=?').bind(sourceId).first<{provider:string}>()
+  if(!source)throw new NativeError('learning_not_found',404)
+  if(source.provider!=='orbit')throw new NativeError(source.provider==='native'?'learning_native_person_erasure_requires_data_flow':'learning_source_person_erasure_unsupported',409)
+  await purge(db,sourceId,input.sourcePersonId);return c.json({ok:true})
+ })
  app.post(root+'/investigations/:id/source',async c=>{const {db,session,actor}=await integrationOperator(c.get('runtime'),c.req.raw),input=await parseMutationBody(c,z.object({sourceId:z.string().min(1)}).strict());if(!input)return c.json({error:'validation_failed'},400);const {i,s}=await context(db,c.req.param('id')!);if(s.provider!=='native'||i.state==='revoked'||!await db.prepare("SELECT 1 FROM learning_sources WHERE id=? AND state='active'").bind(input.sourceId).first())throw new NativeError('learning_source_change_refused',409);await db.batch([db.prepare("UPDATE learning_investigations SET source_id=?,version=version+1,native_operator_id=?,operator_version=?,actor_id=?,last_reason='source_connected' WHERE id=?").bind(input.sourceId,session.operatorId,session.operator.version,actor.id,i.id),db.prepare("UPDATE learning_artifacts SET state='contested' WHERE investigation_id=?").bind(i.id)]);return c.json({ok:true})})
 }

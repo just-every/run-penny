@@ -1,14 +1,29 @@
+import {sourceEvent,sourcePerson} from './erasure-fences'
 import {canonical,type Row} from '../data/archive'
 import {digest,NativeError} from '../auth/native-tokens'
 import {validateLearning} from './validation'
 import {outputSchema,type Observation} from './schema'
 export async function validateLearningArchive(data:Record<string,Row[]>){
  const observations=data.learning_observations??[]
+ for(const source of data.learning_sources??[]){
+  let targets:string[]
+  try{targets=JSON.parse(String(source.resource_ids_json));if(!Array.isArray(targets)||targets.some(target=>typeof target!=='string'))throw new Error()}catch{throw new NativeError('learning_archive_source_invalid',400)}
+  for(const target of targets){
+   const eventHash=await digest(sourceEvent(String(source.provider),source.installation_id as string|null,target)),personHash=target.startsWith('contacts/')?await digest(sourcePerson(String(source.provider),source.installation_id as string|null,target.slice(9))):''
+   if(data.learning_erased_events?.some(row=>row.event_hash===eventHash)||data.learning_erased_people?.some(row=>row.person_hash===personHash))throw new NativeError('learning_archive_erased_source',400)
+  }
+ }
  for(const row of observations){
   if(await digest(String(row.wording))!==row.content_hash)throw new NativeError('learning_archive_original_invalid',400)
   const eventHash=await digest(String(row.event_key))
   if(data.learning_erased_events?.some(e=>e.event_hash===eventHash))throw new NativeError('learning_archive_erased_event',400)
-  for(const person of data.learning_source_people?.filter(p=>p.observation_id===row.id)??[]){const personHash=await digest(`${data.learning_sources.find(s=>s.id===row.source_id)?.provider}:${data.learning_sources.find(s=>s.id===row.source_id)?.installation_id}:person:${person.source_person_id}`);if(data.learning_erased_people?.some(e=>e.person_hash===personHash))throw new NativeError('learning_archive_erased_person',400)}
+  for(const person of [...(data.learning_source_people?.filter(p=>p.observation_id===row.id)??[]),...(row.source_person_id?[{source_person_id:row.source_person_id}]:[])]){const personHash=await digest(`${data.learning_sources.find(s=>s.id===row.source_id)?.provider}:${data.learning_sources.find(s=>s.id===row.source_id)?.installation_id}:person:${person.source_person_id}`);if(data.learning_erased_people?.some(e=>e.person_hash===personHash))throw new NativeError('learning_archive_erased_person',400)}
+ }
+ for(const run of data.learning_runs??[]){
+  let cursor:unknown
+  try{cursor=JSON.parse(String(run.cursor_json))}catch{throw new NativeError('learning_archive_cursor_invalid',400)}
+  if(Array.isArray(cursor))for(const item of cursor){if(!item||typeof item.eventKey!=='string'||typeof item.contentHash!=='string')throw new NativeError('learning_archive_cursor_invalid',400);const eventHash=await digest(item.eventKey);if(data.learning_erased_events?.some(row=>row.event_hash===eventHash))throw new NativeError('learning_archive_erased_event',400)}
+  else if(canonical(cursor)!=='{}')throw new NativeError('learning_archive_cursor_invalid',400)
  }
  for(const artifact of data.learning_artifacts??[]){
   const inputIds=new Set(data.learning_contributions.filter(c=>c.artifact_id===artifact.id).map(c=>c.observation_id)),inputs=observations.filter(o=>inputIds.has(o.id))

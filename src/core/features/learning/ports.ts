@@ -18,16 +18,16 @@ export async function readOrbit(runtime:PennyRuntime,target:string,installationI
  url.pathname='/api/delegation/v1/evidence';url.searchParams.set('target',target)
  const response=await send(runtime,{url:url.href,method:'GET',headers:{Authorization:`Bearer ${c.token}`,Accept:'application/json'},body:''})
  if(response.status!==200)throw new NativeError(response.status===401||response.status===403?'learning_provider_revoked':'learning_provider_unavailable',409)
- const data=evidence.parse(JSON.parse(response.body))
+ const data=payload(()=>evidence.parse(JSON.parse(response.body)),'learning_source_payload_invalid')
  if(data.target!==target||data.installationId!==c.installationId||c.audiencePrincipalIds.some(id=>!data.audience.principalIds.includes(id)))throw new NativeError('learning_source_audience_denied',409)
  // The provider revision hashes canonical original text. Verify before retaining it.
  if(await digest(data.text)!==data.revision)throw new NativeError('learning_source_revision_invalid',409)
- const raw=JSON.parse(data.text) as Record<string,unknown>
+ const raw=payload(()=>z.record(z.string(),z.unknown()).parse(JSON.parse(data.text)),'learning_source_payload_invalid')
  const people:string[]=[]
  if(target.startsWith('contacts/'))people.push(target.slice(9))
  if(Array.isArray(raw.contacts))for(const person of raw.contacts)if(person&&typeof person==='object'&&typeof person.id==='string')people.push(person.id)
  if(typeof raw.contact_id==='string')people.push(raw.contact_id)
- const event=target.startsWith('opportunities/')?raw.opportunity as Record<string,unknown>:raw
+ const event=target.startsWith('opportunities/')?payload(()=>z.record(z.string(),z.unknown()).parse(raw.opportunity),'learning_source_payload_invalid'):raw
  const observedAt=event.occurred_at??event.updated_at??event.created_at
  if(typeof observedAt!=='string'||!Number.isFinite(Date.parse(observedAt)))throw new NativeError('learning_source_time_missing',409)
  return {eventKey:`orbit:${c.installationId}:${target}`,wording:data.text,original:{...data,retrievedAt:data.observedAt},observedAt,people:[...new Set(people)]}
@@ -45,9 +45,12 @@ export async function interpret(runtime:PennyRuntime,input:unknown,ceiling:numbe
  await onSend()
  const response=await send(runtime,{url:'https://api.openai.com/v1/chat/completions',method:'POST',headers:{Authorization:`Bearer ${c.apiKey}`,'Content-Type':'application/json'},body:JSON.stringify({model:c.model,messages:[{role:'system',content:instructions},{role:'user',content:user}],max_completion_tokens:c.maxOutputTokens,response_format:{type:'json_schema',json_schema:{name:'cancellation_learning',strict:true,schema:z.toJSONSchema(outputSchema)}}})})
  if(response.status!==200)throw new NativeError('learning_model_failed',409)
- const result=z.object({choices:z.array(z.object({message:z.object({content:z.string().nullable(),refusal:z.string().nullable().optional()}),finish_reason:z.string()})).length(1),usage:z.object({prompt_tokens:z.number().int().nonnegative(),completion_tokens:z.number().int().nonnegative()})}).parse(JSON.parse(response.body))
+ const result=payload(()=>z.object({choices:z.array(z.object({message:z.object({content:z.string().nullable(),refusal:z.string().nullable().optional()}),finish_reason:z.string()})).length(1),usage:z.object({prompt_tokens:z.number().int().nonnegative(),completion_tokens:z.number().int().nonnegative()})}).parse(JSON.parse(response.body)),'learning_model_payload_invalid')
  if(result.choices[0].finish_reason!=='stop'||result.choices[0].message.refusal||!result.choices[0].message.content)throw new NativeError('learning_model_incomplete',409)
  const costMicros=Math.ceil(result.usage.prompt_tokens*c.inputMicrosPerToken+result.usage.completion_tokens*c.outputMicrosPerToken)
  if(costMicros>ceiling)throw new NativeError('learning_provider_cost_exceeded',409)
- return {output:outputSchema.parse(JSON.parse(result.choices[0].message.content)),costMicros}
+ return {output:payload(()=>outputSchema.parse(JSON.parse(result.choices[0].message.content!)),'learning_model_output_invalid'),costMicros}
 }
+
+/** Provider exception messages may contain source text, payloads or credentials. */
+function payload<T>(parse:()=>T,code:string):T{try{return parse()}catch{throw new NativeError(code,409)}}

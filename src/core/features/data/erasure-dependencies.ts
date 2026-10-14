@@ -1,3 +1,4 @@
+import {learningErasedScopes} from '../learning/erasure-scope'
 import type { Row } from './archive'
 import { NativeError } from '@/core/features/auth/native-tokens'
 
@@ -45,6 +46,8 @@ export function checkClauseErasureEdges(tables:{name:string;foreignKeys:{table:s
 
 export function expandClauseErasure(data:Record<string,Row[]>,selected:Record<string,Row[]>):boolean {
  let changed=false
+ const learningScopes=learningErasedScopes(data,selected)
+ for(const artifact of data.learning_artifacts??[])if(learningScopes.has(artifact.investigation_id)&&!selected.learning_artifacts.includes(artifact)){selected.learning_artifacts.push(artifact);changed=true}
  for(const contribution of selected.learning_contributions??[]){
   const artifact=data.learning_artifacts?.find(row=>row.id===contribution.artifact_id)
   if(artifact&&!selected.learning_artifacts.includes(artifact)){selected.learning_artifacts.push(artifact);changed=true}

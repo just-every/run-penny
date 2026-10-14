@@ -17,7 +17,8 @@ export async function send(runtime:PennyRuntime,wire:LearningWire){
  if(!port)throw new NativeError('learning_transport_unconfigured',503)
  validateDestination(wire.url)
  if(new TextEncoder().encode(wire.body).length>512*1024)throw new NativeError('learning_request_limit',413)
- const response=await port.send(wire)
- if(!Number.isInteger(response.status)||response.status<100||response.status>599||typeof response.body!=='string'||new TextEncoder().encode(response.body).length>512*1024)throw new NativeError('learning_response_limit',413)
+ let response:Awaited<ReturnType<LearningEgress['send']>>
+ try{response=await port.send(wire)}catch{throw new NativeError('learning_transport_failed',409)}
+ if(!response||!Number.isInteger(response.status)||response.status<100||response.status>599||typeof response.body!=='string'||new TextEncoder().encode(response.body).length>512*1024)throw new NativeError('learning_response_limit',413)
  return response
 }
