@@ -6451,7 +6451,7 @@
       "executable": false
     },
     "tests/installer/cli-policy.test.mjs": {
-      "sha256": "296cad03bfe90a798e956ce178aa675f3f4d550e1e24c4e70ffe0d046dc049a2",
+      "sha256": "7fcf4091c41d7a7d4073c4e9500ac41ca1319c8fe1a3b30b053c29d91f855cf5",
       "executable": false
     },
     "tests/installer/cloudflare-account.mjs": {
