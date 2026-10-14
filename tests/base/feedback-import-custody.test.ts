@@ -281,3 +281,23 @@ it('[IMP-003][IMP-005][DATA-001] validates a bounded stream archive and keeps it
  for(const table of Object.keys(saved.archive.tables).filter(name=>name.startsWith('ik_')||name.startsWith('feedback_import_')))expect(exported.archive.tables[table],table).toEqual(saved.archive.tables[table])
  const receipt=await call(importPath+'/jobs/'+job.id+'/receipt',undefined,restoredOperator);expect(receipt.status,await receipt.clone().text()).toBe(200);expect(await receipt.json()).toMatchObject({phase:'completed',effects:{mail:0,notifications:0}})
 },60000)
+
+it('[DATA-003][IMP-005] erases one person from a multi-megabyte legacy saved import and leaves everyone else in it unchanged',async()=>{
+ const {ideasFeedbackFixture,populateFeedback}=await import('./feedback-import-fixture'),{importContext}=await import('@/core/features/imports/service'),{runtime}=await import('./notification-regression-fixture'),{resumeD1Import}=await import('../../base/modules/import-kit/src/d1/index')
+ // A legacy job keeps its mapper input beside the normalized plan, so one
+ // megabyte of supplied profiles becomes a plan of several megabytes.
+ const operator=await owner(),created='2024-07-08T09:10:11.000Z',source=ideasFeedbackFixture('legacy-large-plan'),wording='Long historical profile wording. '.repeat(550)
+ source.files.push({name:'users.json',kind:'users',version:'v2',base64:Buffer.from(JSON.stringify({users:Array.from({length:60},(_,i)=>({id:'person-'+i,name:'Historical person '+i,created,profile:`Distinct-${i}-marker ${wording}`}))})).toString('base64')})
+ let job=await populateFeedback(source,operator,true)
+ const {context}=await importContext(runtime(),new Request(origin+importPath+'/apply',{method:'POST',headers:{Origin:origin,...operator}}),source.namespace);context.storage.database=env.DB
+ for(let i=0;i<50&&job.state!=='completed';i++)job=await resumeD1Import(job.id,context)
+ expect(job.state).toBe('completed');expect(await env.DB.prepare('SELECT SUM(length(body)) n FROM ik_d1_plan_chunks WHERE job_id=?').bind(job.id).first('n')).toBeGreaterThan(4*1024*1024)
+ const person=stableFeedbackId(source.namespace,'users','person-0'),others=async()=>(await env.DB.prepare('SELECT * FROM requesters WHERE id<>? ORDER BY id').bind(person).all()).results,before=await others()
+ const plan=await(await erasurePreview('requesters',person,operator)).json() as {planHash:string;blockedCopies:unknown[]};expect(plan.blockedCopies).toEqual([])
+ await finishErasure(await call('/api/operator/data/erasure',{table:'requesters',id:person,planHash:plan.planHash},operator),operator)
+ expect(await env.DB.prepare('SELECT COUNT(*) n FROM requesters WHERE id=?').bind(person).first('n')).toBe(0);expect(await others()).toEqual(before)
+ for(const {name} of (await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND (name LIKE 'ik_%' OR name LIKE 'feedback_import_%')").all<{name:string}>()).results){
+  const retained=JSON.stringify((await env.DB.prepare('SELECT * FROM '+name).all()).results);expect(retained,name).not.toContain('Distinct-0-marker')
+ }
+ expect((await call(importPath+'/jobs/'+job.id+'/receipt',undefined,operator)).status).toBe(200)
+},120000)
