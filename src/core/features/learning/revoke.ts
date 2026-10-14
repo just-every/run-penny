@@ -2,10 +2,11 @@ import {canonical,hash} from '../data/archive'
 import {portabilityErasureStatements} from '../../../../scripts/portability/cleanup.mjs'
 import type {Investigation} from './schema'
 import {GRANT_REVOCATION_CHECKPOINT} from './journal'
+import {learningAudit} from './audit'
 
 /** Withdraw one purpose grant without erasing reusable source evidence. The
  * journal checkpoint prevents an older export from restoring its deleted work. */
-export async function revokeInvestigation(db:D1Database,i:Investigation){
+export async function revokeInvestigation(db:D1Database,i:Investigation,actorId:string){
  const state=(await db.prepare('SELECT origin,epoch FROM data_state WHERE singleton=1').first<{origin:string;epoch:number}>())!,epoch=state.epoch+1,guard=crypto.randomUUID()
  // This marks the revoked grant version, not the retained investigation row.
  const marker=await hash([state.origin,GRANT_REVOCATION_CHECKPOINT,canonical([i.id,i.version])])
@@ -18,6 +19,7 @@ export async function revokeInvestigation(db:D1Database,i:Investigation){
   db.prepare('DELETE FROM learning_runs WHERE investigation_id=?').bind(i.id),
   db.prepare('INSERT INTO data_tombstones(epoch,table_name,key_hash) VALUES(?,?,?)').bind(epoch,GRANT_REVOCATION_CHECKPOINT,marker),
   db.prepare('UPDATE data_state SET epoch=? WHERE singleton=1').bind(epoch),
+  learningAudit(db,{operatorId:actorId},'learning_investigation',i.id,'learning.grant_revoked',{grantVersion:i.version+1}),
   db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(guard),
  ])
 }

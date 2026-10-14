@@ -126,11 +126,43 @@ it('[LEARN-005] source person erasure covers duplicate connections and fresh-gra
  const exported=await exportArchive(env.DB,env.FILES);expect(JSON.stringify(exported.archive)).not.toContain('private-contributor@example.com');expect(JSON.stringify(exported.archive)).not.toContain('Private source contributor');expect(JSON.stringify(exported.archive)).not.toContain('person-1')
  const {reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{restoreArchive}=await import('@/core/features/data/archive')
  await reset();await applyD1Migrations(env.DB,inject('migrations'));await expect(restoreArchive(env.DB,env.FILES,old.archive,exported.journal)).rejects.toMatchObject({code:'stale_archive'});expect((await restoreArchive(env.DB,env.FILES,exported.archive,exported.journal)).status).toBe('complete');expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
- const {runInvestigation}=await import('@/core/features/learning/run');await expect(runInvestigation(createPennyRuntime(bindings()),a.investigation.id,'restored')).rejects.toMatchObject({code:'learning_scope_changed'})
+ const {runInvestigation}=await import('@/core/features/learning/run');await expect(runInvestigation(createPennyRuntime(bindings()),a.investigation.id,'restored',{db:env.DB,actor:{system:'learning.scheduler'}})).rejects.toMatchObject({code:'learning_scope_changed'})
 })
 
 it('[LEARN-005] observed provider credential revocation purges all matching source installations; outage preserves evidence',async()=>{
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}/run`;await json(call(url,{},f.cookie))
  network.sourceStatus=503;expect((await call(url,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare("SELECT count(*) n FROM learning_artifacts WHERE state='current'").first('n')).toBe(1)
  network.sourceStatus=401;expect((await call(url,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0);expect(await env.DB.prepare('SELECT count(*) n FROM learning_observations').first('n')).toBe(0);expect(await env.DB.prepare('SELECT state FROM learning_sources WHERE id=?').bind(f.source.id).first('state')).toBe('disconnected')
+})
+
+it('[LEARN-003] learning actions retain the acting peer and roll back with their audit',async()=>{
+ const f=await fixture(),url=path+`/investigations/${f.investigation.id}`,email='learning-peer@example.test';let peer=''
+ mockMail()
+ try{await json(call('/api/operator/settings/operators',{email},f.cookie),202);const confirmed=await call('/auth/confirm',{token:new URL(messages.findLast(message=>message.to===email)!.url).searchParams.get('token')});expect(confirmed.status).toBe(303);peer=confirmed.headers.get('set-cookie')!.split(';')[0]}finally{vi.restoreAllMocks()}
+ await json(call(path,undefined,peer))
+ const peerId=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind(email).first('id'),creatorId=await env.DB.prepare("SELECT actor_id FROM learning_investigations WHERE id=?").bind(f.investigation.id).first('actor_id')
+ const audits=async()=>(await env.DB.prepare("SELECT * FROM audit_entries WHERE entity_type IN('learning_investigation','learning_source') ORDER BY id").all<Record<string,unknown>>()).results
+ const beforeRollback={detail:await json(call(url,undefined,peer)),audits:await audits()}
+ await env.DB.prepare("CREATE TRIGGER reject_learning_audit BEFORE INSERT ON audit_entries WHEN NEW.entity_type IN('learning_investigation','learning_source') BEGIN SELECT RAISE(ABORT,'isolated audit insertion failure'); END").run()
+ let failed:Response
+ try{failed=await call(url+'/control',{action:'pause'},peer)}finally{await env.DB.prepare('DROP TRIGGER reject_learning_audit').run()}
+ const afterRollback={detail:await json(call(url,undefined,peer)),audits:await audits()},checks:{action:string;attributed:boolean;entity:boolean}[]=[],retained:string[]=[]
+ async function act(target:string,body:unknown,expected:string[],entity='learning_investigation',status=200){const previous=new Set((await audits()).map(row=>row.id)),result=await json<Record<string,any>>(call(target,body,peer),status),rows=(await audits()).filter(row=>!previous.has(row.id));for(const action of expected){const matching=rows.filter(row=>row.action===action);checks.push({action,attributed:matching.length===1&&matching[0].actor_id===peerId&&matching[0].actor_type==='operator',entity:matching.length===1&&matching[0].entity_type===entity})}retained.push(...rows.map(row=>String(row.id)));return result}
+ const expected=['learning.paused','learning.resumed','learning.paused_all','learning.resumed','learning.grant_created','learning.source_attached','learning.run_requested','learning.run_completed','learning.committed','learning.corrected','learning.run_requested','learning.run_completed','learning.deferred','learning.grant_revoked','learning.source_created','learning.source_disconnected','learning.person_erased']
+ network.sourceText=canonical({id:'cancellation',subject:'Private audit evidence wording',contact_id:'audit-source-person',occurred_at:'2026-10-01T00:00:00Z'})
+ await drainLearning(createPennyRuntime(bindings()),Date.now()+1000)
+ await act(url+'/control',{action:'pause'},['learning.paused']);await act(url+'/control',{action:'resume'},['learning.resumed']);await act(path+'/control',{action:'pause'},['learning.paused_all']);await act(url+'/control',{action:'resume'},['learning.resumed'])
+ const b=await act(path+'/investigations',{nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Private grant purpose',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},['learning.grant_created'],'learning_investigation',201)
+ await act(path+`/investigations/${b.id}/source`,{sourceId:f.source.id},['learning.source_attached'])
+ const first=await act(url+'/run',{},['learning.run_requested','learning.run_completed'])
+ await act(url+'/commit',{interpretationId:first.artifactId,optionId:'assist',rationale:'Private commitment rationale',confidence:'low',reviewAt:'2098-01-01T00:00:00Z'},['learning.committed'],'learning_investigation',201)
+ await act(url+'/correct',{interpretationId:first.artifactId,correction:'Private audit correction wording'},['learning.corrected'])
+ const current=await act(url+'/run',{},['learning.run_requested','learning.run_completed']);await act(path+`/artifacts/${current.artifactId}/defer`,{},['learning.deferred'])
+ await act(path+`/investigations/${b.id}/control`,{action:'revoke'},['learning.grant_revoked'])
+ const source=await act(path+'/sources',{name:'Private additional source',provider:'orbit',resourceIds:['signals/audit-disconnect'],useBasis:'Private source use',allOperatorsAuthorized:true},['learning.source_created'],'learning_source',201)
+ await act(path+`/sources/${source.id}/disconnect`,{},['learning.source_disconnected'],'learning_source')
+ const beforeRefusal=await audits(),stale=await call(url+'/correct',{interpretationId:first.artifactId,correction:'Stale private correction'},peer),unauthorized=await call(url+'/control',{action:'pause'}),refusalsUnchanged=canonical(await audits())===canonical(beforeRefusal)
+ await act(path+`/sources/${f.source.id}/erase-person`,{sourcePersonId:'audit-source-person'},['learning.person_erased'],'learning_source')
+ const rows=await audits(),ids=new Set(rows.map(row=>row.id))
+ expect({checks,differentActors:peerId!==creatorId,rollbackFailed:!failed!.ok,rollback:afterRollback,historyRetained:retained.every(id=>ids.has(id)),safe:!/(Private audit|Private grant|Private commitment|Private additional|Private source|audit-source-person|network-edge)/.test(JSON.stringify(rows)),refusals:!stale.ok&&!unauthorized.ok&&refusalsUnchanged,scheduled:rows.some(row=>row.actor_type==='system'&&row.actor_id==='learning.scheduler'&&row.action==='learning.run_completed')}).toEqual({checks:expected.map(action=>({action,attributed:true,entity:true})),differentActors:true,rollbackFailed:true,rollback:beforeRollback,historyRetained:true,safe:true,refusals:true,scheduled:true})
 })

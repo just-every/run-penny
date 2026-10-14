@@ -9,14 +9,15 @@ import {interpret} from './ports'
 import {validateLearning} from './validation'
 import {canonical} from '../data/archive'
 import {learningRunJournalGuard} from './journal'
+import {learningAudit,systemLearningAudit,type LearningActor} from './audit'
 
 /** The event key is supplied by the initiating HTTP event or scheduled window;
  * the durable claim is never retried after an ambiguous paid call. */
-export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:string,operatorDb?:D1Database){
- const native=runtime.database.binding,{i,s}=await context(operatorDb??native,id)
+export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:string,execution:{db:D1Database;actor:LearningActor}){
+ const native=runtime.database.binding,{i,s}=await context(execution.db,id)
  await assertScope(native,i,s)
  const state=(await native.prepare('SELECT origin,epoch FROM data_state WHERE singleton=1').first<{origin:string;epoch:number}>())!,guard=scopeGuard(i,s),journal=learningRunJournalGuard(state.origin,state.epoch)
- const db=guardedDatabase(operatorDb??native,{sql:`(${guard.sql}) AND (${journal.sql})`,params:[...guard.params,...journal.params]})
+ const db=guardedDatabase(execution.db,{sql:`(${guard.sql}) AND (${journal.sql})`,params:[...guard.params,...journal.params]})
  const prior=await db.prepare('SELECT id,state,reason FROM learning_runs WHERE investigation_id=? AND event_key=?').bind(id,eventKey).first()
  if(prior)return {replayed:true,run:prior}
  const runId=crypto.randomUUID(),claim=crypto.randomUUID(),now=new Date().toISOString()
@@ -25,6 +26,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   db.prepare(`INSERT INTO penny_integration_guards(id,allowed) VALUES(?,EXISTS(SELECT 1 FROM learning_investigations WHERE id=? AND spent_micros+max_run_cost_micros<=budget_micros))`).bind(claim,id),
   db.prepare('UPDATE learning_investigations SET spent_micros=spent_micros+max_run_cost_micros,next_run_at=?,last_reason=NULL WHERE id=?').bind(new Date(Date.now()+i.interval_minutes*60000).toISOString(),id),
   db.prepare("INSERT INTO learning_runs(id,investigation_id,event_key,claim,grant_version,state,reserved_micros,created_at) VALUES(?,?,?,?,?,'running',?,?)").bind(runId,id,eventKey,claim,i.version,i.max_run_cost_micros,now),
+  learningAudit(db,execution.actor,'learning_investigation',id,'learning.run_requested',{runId,grantVersion:i.version}),
   db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(claim),
  ])
  }catch(error){if(String(error).includes('UNIQUE'))return {replayed:true,reason:'already_claimed'};throw error}
@@ -56,6 +58,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
    ...observations.map(o=>db.prepare('INSERT INTO learning_contributions(artifact_id,observation_id) VALUES(?,?)').bind(artifactId,o.id)),
    db.prepare("UPDATE learning_runs SET state='complete',actual_micros=?,reason='material_learning',cursor_json=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(generated.costMicros,JSON.stringify(observations.map(o=>({eventKey:o.event_key,contentHash:o.content_hash}))),new Date().toISOString(),runId,claim),
    db.prepare("UPDATE learning_investigations SET spent_micros=spent_micros-?+?,last_reason=? WHERE id=?").bind(i.max_run_cost_micros,generated.costMicros,'material_learning',id),
+   learningAudit(db,execution.actor,'learning_investigation',id,'learning.run_completed',{runId,interpretationId:artifactId,unchanged:false}),
    db.prepare('DELETE FROM penny_integration_guards'),
   ])
   return {runId,artifactId,unchanged:false}
@@ -63,12 +66,12 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   const reason=error instanceof NativeError?error.code:'learning_output_or_source_invalid'
   // Record uncertainty without retaining model/provider exception strings. A
   // revoke/erase may have removed the run, in which case this writes nothing.
-  await native.batch([native.prepare("UPDATE learning_runs SET state=?,reason=?,actual_micros=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(paid?'uncertain':'refused',reason,paid?null:0,new Date().toISOString(),runId,claim),native.prepare('UPDATE learning_investigations SET last_reason=?,spent_micros=spent_micros-? WHERE id=? AND version=?').bind(reason,paid?0:i.max_run_cost_micros,id,i.version)])
+  await native.batch([native.prepare("UPDATE learning_runs SET state=?,reason=?,actual_micros=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(paid?'uncertain':'refused',reason,paid?null:0,new Date().toISOString(),runId,claim),systemLearningAudit(native,'learning.run','learning_investigation',id,'learning.run_failed',{runId,reason},true),native.prepare('UPDATE learning_investigations SET last_reason=?,spent_micros=spent_micros-? WHERE id=? AND version=?').bind(reason,paid?0:i.max_run_cost_micros,id,i.version)])
   if(reason==='learning_provider_revoked'){
    const revoked=(await native.prepare("SELECT id FROM learning_sources WHERE provider='orbit' AND installation_id IS ? AND state='active'").bind(s.installation_id).all<{id:string}>()).results
-   for(const source of revoked)await purge(native,source.id)
+   for(const source of revoked)await purge(native,source.id,{actor:{system:'learning.provider_revocation'},action:'learning.provider_revoked'})
   }
   throw error instanceof NativeError?error:new NativeError(reason,409)
  }
- async function finish(cost:number,reason:string){await db.batch([db.prepare("UPDATE learning_runs SET state='complete',actual_micros=?,reason=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(cost,reason,new Date().toISOString(),runId,claim),db.prepare('UPDATE learning_investigations SET spent_micros=spent_micros-?+?,last_reason=? WHERE id=?').bind(i.max_run_cost_micros,cost,reason,id)])}
+ async function finish(cost:number,reason:string){await db.batch([db.prepare("UPDATE learning_runs SET state='complete',actual_micros=?,reason=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(cost,reason,new Date().toISOString(),runId,claim),db.prepare('UPDATE learning_investigations SET spent_micros=spent_micros-?+?,last_reason=? WHERE id=?').bind(i.max_run_cost_micros,cost,reason,id),learningAudit(db,execution.actor,'learning_investigation',id,'learning.run_completed',{runId,unchanged:true})])}
 }

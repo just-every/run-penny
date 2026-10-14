@@ -3,6 +3,7 @@ import type {Row} from '../data/archive'
 import {hash,canonical} from '../data/archive'
 import {portabilityErasureStatements} from '../../../../scripts/portability/cleanup.mjs'
 import {sourceEvent,sourcePerson} from './erasure-fences'
+import {learningAudit,type LearningActor} from './audit'
 
 /** Free text and downstream interpretations can quote a contribution without a
  * citation. Clear the affected scope, retaining independent original evidence. */
@@ -26,7 +27,7 @@ export async function learningErasureStatements(db:D1Database,selected:Record<st
 }
 /** Source disconnection or external-subject erasure removes copies and all derived
  * contributions, advances the archive journal and preserves only opaque fences. */
-export async function purge(db:D1Database,sourceId:string,personId?:string){
+export async function purge(db:D1Database,sourceId:string,{personId,actor,action}:{personId?:string;actor:LearningActor;action:'learning.source_disconnected'|'learning.person_erased'|'learning.provider_revoked'}){
  const source=await db.prepare('SELECT provider,installation_id FROM learning_sources WHERE id=?').bind(sourceId).first<{provider:string;installation_id:string|null}>()
  if(!source)throw new NativeError('learning_not_found',404)
  const query=personId?`SELECT o.* FROM learning_observations o JOIN learning_sources s ON s.id=o.source_id WHERE s.provider=? AND s.installation_id IS ? AND (o.source_person_id=? OR EXISTS(SELECT 1 FROM learning_source_people p WHERE p.observation_id=o.id AND p.source_person_id=?) OR json_extract(CASE WHEN json_valid(o.wording) THEN o.wording ELSE '{}' END,'$.contact_id')=? OR EXISTS(SELECT 1 FROM json_each(CASE WHEN json_valid(o.wording) THEN o.wording ELSE '{}' END,'$.contacts') p WHERE json_extract(CASE WHEN p.type='object' THEN p.value ELSE '{}' END,'$.id')=?))`:`SELECT o.* FROM learning_observations o WHERE o.event_key IN(SELECT event_key FROM learning_observations WHERE source_id=?)`
@@ -53,6 +54,7 @@ export async function purge(db:D1Database,sourceId:string,personId?:string){
   statements.push(db.prepare("UPDATE learning_sources SET state='disconnected',version=version+1,name='Revoked source',resource_ids_json='[]',use_basis='Revoked source use' WHERE id=?").bind(sourceId))
  }
  statements.push(db.prepare("UPDATE data_state SET epoch=? WHERE singleton=1 AND epoch=? AND phase='idle'").bind(epoch,state.epoch))
+ statements.push(learningAudit(db,actor,'learning_source',sourceId,action,{observationsRemoved:observations.length,investigationsAffected:scopes.length}))
  // A concurrent acquisition or new grant must not escape the read closure.
  // Refuse atomically if its canonical connection/scope/observation was not read.
  const guard=crypto.randomUUID();await db.batch([db.prepare(`INSERT INTO penny_integration_guards(id,allowed) VALUES(?,EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND epoch=? AND phase='idle') AND NOT EXISTS(SELECT 1 FROM learning_sources WHERE provider=? AND installation_id IS ? AND id NOT IN(SELECT value FROM json_each(?))) AND NOT EXISTS(SELECT 1 FROM learning_investigations WHERE source_id IN(SELECT value FROM json_each(?)) AND id NOT IN(SELECT value FROM json_each(?))) AND NOT EXISTS(SELECT 1 FROM (${query}) WHERE id NOT IN(SELECT value FROM json_each(?))))`).bind(guard,state.epoch,source.provider,source.installation_id,JSON.stringify(connections.map(row=>row.id)),JSON.stringify(contaminated.map(row=>row.id)),JSON.stringify(scopes.map(row=>row.id)),...queryParameters,JSON.stringify(observations.map(row=>row.id))),...statements,db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(guard)])
