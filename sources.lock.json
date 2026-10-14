@@ -4515,7 +4515,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning.css": {
-      "sha256": "3cf5625d33988fa21cd80c3812f434d70d4d85d08b30945f7c00405d0362fed6",
+      "sha256": "9db203bf169be7c54f536d5a53ddfe3c2807ff3c2bf3a9c43e93c7c0ac1fa69b",
       "executable": false
     },
     "src/core/features/learning/ui/types.ts": {
