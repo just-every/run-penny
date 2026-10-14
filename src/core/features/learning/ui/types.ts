@@ -11,12 +11,16 @@ export interface Observation {id:string;wording:string;original:unknown;presenta
 export interface Detail {investigation:Investigation;observations:Observation[];artifacts:Artifact[];commitments:unknown[];runs:{id:string;state:string;reason:string|null;actual_micros:number|null;reserved_micros:number;created_at:string;finished_at:string|null}[];corrections:{id:string;correction:string;created_at:string}[]}
 export const api='/api/operator/learning'
 export const money=(micros:number)=>new Intl.NumberFormat('en',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(micros/1e6)
+const stateLabels:Record<string,string>={active:'Active',paused:'Paused',revoked:'Revoked',held:'Held for new authority',disconnected:'Disconnected',current:'Current',contested:'Contested',succeeded:'Succeeded',failed:'Failed',running:'Running',uncertain:'Uncertain'}
+export const stateLabel=(state:string)=>stateLabels[state]??state.replaceAll('_',' ').replace(/\b\w/g,letter=>letter.toUpperCase())
+const confidenceLabels:Record<string,string>={low:'Low',medium:'Medium',high:'High'}
+export const confidenceLabel=(confidence:string)=>confidenceLabels[confidence]??confidence.replaceAll('_',' ').replace(/\b\w/g,letter=>letter.toUpperCase())
 
 export function protocolFromForm(d:FormData):Protocol {
  return {cohort:String(d.get('cohort')),denominator:d.get('denominator')===''?null:Number(d.get('denominator')),baseline:String(d.get('baseline')),window:String(d.get('window')),measure:String(d.get('measure')),dataSource:String(d.get('dataSource')),comparison:String(d.get('comparison')),limits:String(d.get('limits')),stopRule:String(d.get('stopRule')),budgetMicros:Math.round(Number(d.get('protocolBudget'))*1e6)}
 }
 
-export interface CommitmentArtifact {ownerLabel:string;id:string;investigationId:string;createdAt:string;kind:'commitment';sources:CitationView[];invalidated:boolean;invalidationReason:string|null;body:{selectedOption:Option;declinedOptions:Option[];protocol:Protocol;rationale:string;confidence:string;reviewAt:string;ownerOperatorId:string;interpretationVersion:number;observations:{id:string;wording:string;observed_at:string}[];status:string}}
+export interface CommitmentArtifact {ownerLabel:string;id:string;investigationId:string;createdAt:string;kind:'commitment';citations:CitationView[];contradictions:CitationView[];invalidated:boolean;invalidationReason:string|null;body:{selectedOption:Option;declinedOptions:Option[];protocol:Protocol;rationale:string;confidence:string;reviewAt:string;ownerOperatorId:string;interpretationVersion:number;observations:{id:string;wording:string;observed_at:string}[];status:string}}
 
 export function learningReason(reason:string|null) {
  const descriptions:Record<string,string>={material_learning:'New permitted evidence changed the interpretation.',unchanged:'No material change since the previous check.',operator_correction:'Your correction is recorded. A new check will reassess the interpretation.',learning_model_unconfigured:'Interpretation is unconfigured. Original evidence is preserved; model work cannot proceed.',learning_source_content_missing:'The selected records have no readable source text. No interpretation was requested.',learning_source_unconfigured:'The selected source connection is unconfigured. Source work cannot proceed.',learning_call_budget_exceeded:'The next check exceeds its cost limit. It has stopped before model work.',learning_provider_revoked:'The source permission was revoked. Affected work has stopped.'}

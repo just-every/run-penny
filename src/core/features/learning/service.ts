@@ -45,7 +45,7 @@ export const investigationDto=(row:Record<string,unknown>)=>({id:row.id,sourceId
 export function artifactDto(row:Record<string,unknown>,observations:Observation[]=[],configured?:ReturnType<typeof learningConfiguration>['orbit']){const body=JSON.parse(String(row.body_json));return {id:row.id,investigationId:row.investigation_id,version:row.version,kind:'interpretation',state:row.state,createdAt:row.created_at,body,presentation:artifactPresentation(body,observations,configured)}}
 function commitmentDto(row:Record<string,unknown>,configured?:ReturnType<typeof learningConfiguration>['orbit']){
  const body=JSON.parse(String(row.snapshot_json)),shown=artifactPresentation(body.interpretation,body.observations as Observation[],configured)
- return {id:row.id,investigationId:row.investigation_id,createdAt:row.created_at,body,ownerLabel:row.owner_label??'Former operator',sources:[...shown.citations,...shown.contradictions],kind:'commitment',invalidated:!!row.invalidation_reason,invalidationReason:row.invalidation_reason}
+ return {id:row.id,investigationId:row.investigation_id,createdAt:row.created_at,body,ownerLabel:row.owner_label??'Former operator',citations:shown.citations,contradictions:shown.contradictions,kind:'commitment',invalidated:!!row.invalidation_reason,invalidationReason:row.invalidation_reason}
 }
 export async function overview(runtime:PennyRuntime,request:Request){
  const {db}=await integrationOperator(runtime,request)

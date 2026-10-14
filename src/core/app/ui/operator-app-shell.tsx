@@ -26,6 +26,7 @@ const itemClass = 'relative flex min-h-12 items-center gap-3.5 rounded-lg px-3 t
 // that fill, where the copper text tone would fall under 4.5:1).
 const currentClass = 'bg-penny-copper/12 font-semibold text-penny-accent-dark before:absolute before:inset-y-2 before:left-0 before:w-[3px] before:rounded-full before:bg-penny-copper'
 const restClass = 'font-[450] text-penny-soft hover:bg-penny-ink/5 hover:text-penny-ink'
+const sidebarSurface = 'border-r border-penny-line bg-[color-mix(in_srgb,var(--color-penny-sand)_45%,var(--color-penny-paper))]'
 
 function activeDestination(pathname: string): string {
   if (pathname.startsWith('/app/decisions')) return '/app/decisions'
@@ -64,9 +65,10 @@ export function OperatorAppShell() {
   const [isMenuOpen, setMenuOpen] = useState(false)
 
   return (
-    <BrandRoot className="penny-workspace">
+    <BrandRoot className="penny-workspace relative">
       <a href="#operator-content" className="sr-only z-50 rounded-full bg-penny-ink px-4 py-3 text-sm font-semibold text-penny-paper focus:not-sr-only focus:absolute focus:left-4 focus:top-4">Skip to content</a>
-      <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto border-r border-penny-line bg-[color-mix(in_srgb,var(--color-penny-sand)_45%,var(--color-penny-paper))] px-3 py-5 lg:flex">
+      <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-60 ${sidebarSurface} lg:block`} />
+      <aside className={`fixed left-0 top-0 z-20 hidden h-svh w-60 flex-col overflow-y-auto overscroll-y-contain ${sidebarSurface} px-3 py-5 lg:flex`}>
         <div className="px-2"><Brand /></div>
         <p className="mt-10 px-3 text-[11px] font-semibold tracking-[0.12em] text-penny-muted uppercase">Operator workspace</p>
         <div className="mt-3"><NavigationLinks /></div>

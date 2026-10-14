@@ -109,7 +109,8 @@
 .penny-learning :is(.evidence-card, .option) h3 { font-size: 17px; }
 .penny-learning .badge { margin-left: auto; padding: 3px 8px; border-radius: 6px; background: #d4e3d3; color: #173c37; font-size: 10px; font-weight: 600; letter-spacing: .04em; }
 .penny-learning .badge.contestable { background: #f7e5d0; color: #803000; }
-.penny-learning ul { padding-left: 22px; margin: 8px 0; }
+.penny-learning ul { list-style: disc; padding-left: 22px; margin: 8px 0; }
+.penny-learning ol { list-style: decimal; padding-left: 22px; margin: 8px 0; }
 .penny-learning li + li { margin-top: 6px; }
 .penny-learning .interpretation h4 { margin: 22px 0 10px; }
 .penny-learning .learning-citation { margin: 16px 0; overflow-wrap: anywhere; }
@@ -139,7 +140,7 @@
 .penny-learning .measurement-summary h3 { margin-bottom: 12px; }
 .penny-learning .measurement-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .penny-learning .measurement-grid > * { min-width: 0; }
-.penny-learning .measurement-grid > * + * { border-left: 1px solid var(--learning-line); padding-left: 18px; }
+.penny-learning .measurement-grid > :not(:nth-child(3n+1)) { border-left: 1px solid var(--learning-line); padding-left: 18px; }
 .penny-learning .option-measures { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--learning-line); }
 .penny-learning .decision { padding: 24px; border: 1px solid var(--learning-line); border-radius: 10px; background: rgb(250 247 239 / 55%); }
 .penny-learning :is(.decision-kicker, .recommendation-heading) { color: var(--learning-copper); font-size: 12px; font-weight: 600; letter-spacing: .06em; }
@@ -150,6 +151,8 @@
 .penny-learning .uncertainty { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--learning-line); }
 .penny-learning .decision-actions { display: flex; gap: 12px; margin-top: 20px; }
 .penny-learning .decision-actions > * { flex: 1; min-width: 0; }
+.penny-learning .decision-actions button[data-variant="primary"] { border-color: var(--learning-copper); background: var(--learning-copper); color: #fff; }
+.penny-learning .decision-actions button[data-variant="primary"]:hover { background: #923b18; }
 .penny-learning details { margin-top: 14px; }
 .penny-learning summary { min-height: 44px; padding: 10px 0; cursor: pointer; font-weight: 600; }
 .penny-learning details[open] > summary { margin-bottom: 10px; }
@@ -175,8 +178,7 @@
   .penny-learning :is(.evidence-grid, .options-grid, .form-grid, .measurement-grid) { grid-template-columns: 1fr; }
   .penny-learning .panel { padding: 14px; }
   .penny-learning :is(.evidence-card, .option, .clarification, .measurement, .measurement-summary) { padding: 16px; }
-  .penny-learning .measurement-grid > * + * { border-left: 0; border-top: 1px solid var(--learning-line); padding: 14px 0 0; }
+  .penny-learning .measurement-grid > :not(:nth-child(3n+1)) { border-left: 0; border-top: 1px solid var(--learning-line); padding: 14px 0 0; }
   .penny-learning .decision { padding: 18px; }
   .penny-learning .decision h2 { font-size: 24px; }
-  .penny-learning .decision-actions { flex-direction: column; }
 }

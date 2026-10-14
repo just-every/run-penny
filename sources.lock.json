@@ -3391,11 +3391,11 @@
       "executable": false
     },
     "src/core/app/ui/loop-form.tsx": {
-      "sha256": "2013ca524a645dcbca629b5c51eecf1dc09844f8693f96f63af8fb29e628ee5a",
+      "sha256": "9446acfb39d8a9aeb5c0e82cb28668a12459f62e8add447fd8f79d46f13a16ce",
       "executable": false
     },
     "src/core/app/ui/operator-app-shell.tsx": {
-      "sha256": "566f82f2da46dad7958d28ce5ac345ba89a809c2816ddbafe56c4eea24900b3f",
+      "sha256": "a095b52b34b6eefec946c6382affcf7229ffcd086faf07a9c1bf2892013d994e",
       "executable": false
     },
     "src/core/app/ui/operator-format.ts": {
@@ -4511,7 +4511,7 @@
       "executable": false
     },
     "src/core/features/learning/service.ts": {
-      "sha256": "181f81760fe9d96500706b438c8594efa1aa995691990636a05a1b3e3eb3864f",
+      "sha256": "df91193cc425b9e3faa6253cfbc7240580fa761a7350dd57cb3cdb11441bf246",
       "executable": false
     },
     "src/core/features/learning/source-content.ts": {
@@ -4519,11 +4519,11 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-artifact.tsx": {
-      "sha256": "a7c2012b6bee408f8b63033627e8178bdeb2d3b735e4bb12e4613a7e7cc44ad4",
+      "sha256": "a825f3a142835a2f51137420a03f0cba6179537397217a0cae58a28e0102c03b",
       "executable": false
     },
     "src/core/features/learning/ui/learning-capture.tsx": {
-      "sha256": "fee71df192612811e0dd846166aa2ebf990d06df57a173883cd919ced384e4b9",
+      "sha256": "6da2a664112e81c911e016ca56878a64802f9b7bf3fd16faf4fa5039067516dd",
       "executable": false
     },
     "src/core/features/learning/ui/learning-citation.tsx": {
@@ -4535,7 +4535,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-detail.tsx": {
-      "sha256": "6dc4b4463a5b44fe434f7c6fb4f84b50a71a99e3a4edcff1f25a612a6f21e159",
+      "sha256": "d89ecc6179d5a32fc0f039a1c71cc18aa0d32b988f215ec2985e4dd7ae2d8ff4",
       "executable": false
     },
     "src/core/features/learning/ui/learning-header.tsx": {
@@ -4555,7 +4555,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-results.tsx": {
-      "sha256": "3b856d60f3722feb05d2c17fb1bc4f117a6f96e7b04c0cb8c759da1c341712c9",
+      "sha256": "fb58286edb2c132ab7b11660472cbb9dae0382462a35da25c4a67616c4b02c32",
       "executable": false
     },
     "src/core/features/learning/ui/learning-tabs.tsx": {
@@ -4563,11 +4563,11 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning.css": {
-      "sha256": "c8ddc88e81f083d1faaa214d5a922a6b65b494611bb57f1ce8b9300dc831f3c3",
+      "sha256": "6a98c361c50d3aaf1946fb38794dac1222a1b635549520583b35c6d2c9d78a17",
       "executable": false
     },
     "src/core/features/learning/ui/types.ts": {
-      "sha256": "e842dc31deacecbcd0e53ea60874e3f20da71d5ecd8533a175d4d37b9ac7168f",
+      "sha256": "8ce0f8afb9d65e5802bf048ff70a3c10f47a535611d5d50e9aaecd7d467130bf",
       "executable": false
     },
     "src/core/features/learning/validation.ts": {
@@ -6063,7 +6063,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "61792a4e9392386bc8311603271eb557bbbefa9b64e2b1e118da9fd89f002fd4",
+      "sha256": "18fd4de4f3697b496c071e5065086f70784d4333d5261a6eed278db4fd867d11",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {
