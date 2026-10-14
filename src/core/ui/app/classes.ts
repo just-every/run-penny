@@ -8,13 +8,14 @@ export const paperCardClass = 'min-w-0 rounded-xl border border-penny-line bg-pe
 /** A light inset inside a card, for one of several forms or records the card holds (never a second card in a card). */
 export const insetPanelClass = 'min-w-0 rounded-xl border border-penny-line bg-penny-paper/60'
 
-const buttonBase = 'inline-flex min-h-13 items-center justify-center gap-2 rounded-full px-8 py-2 text-lg font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-penny-accent'
+// The landing's larger pill on sign-in; inside the operator workspace (.penny-workspace) a button sits at the forms' scale.
+const buttonBase = 'inline-flex min-h-13 items-center justify-center gap-2 rounded-full px-8 py-2 text-lg font-semibold in-[.penny-workspace]:min-h-11 in-[.penny-workspace]:px-6 in-[.penny-workspace]:text-base transition-colors disabled:cursor-not-allowed disabled:opacity-55 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-penny-accent'
 
 /** The primary action: a black pill. */
 export const primaryButtonClass = `${buttonBase} bg-penny-ink text-penny-paper hover:bg-penny-soft`
 
-/** A secondary action: an outlined ink pill. */
-export const secondaryButtonClass = `${buttonBase} border-[1.5px] border-penny-ink text-penny-ink hover:bg-penny-ink/6`
+/** A secondary action: an outlined ink pill, a hairline inside the operator workspace. */
+export const secondaryButtonClass = `${buttonBase} border-[1.5px] in-[.penny-workspace]:border border-penny-ink text-penny-ink hover:bg-penny-ink/6`
 
 /** A text link inside content: ink, underlined, the underline turning copper on hover. */
 export const textLinkClass = 'font-semibold text-penny-ink underline decoration-penny-ink/40 underline-offset-4 transition-colors hover:decoration-penny-copper'

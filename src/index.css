@@ -59,6 +59,17 @@
   overflow-wrap: anywhere;
 }
 
+/* The operator workspace (OperatorAppShell's root) works on a plain sheet: no grain, a paper closer to white and cards a
+   shade whiter still, so long working screens read as a calm tool. The landing, docs, portal, sign-in and setup keep the
+   brand's grained paper. */
+html:has(.penny-brand.penny-workspace), body:has(.penny-brand.penny-workspace) { background: #faf8f4; }
+.penny-brand.penny-workspace {
+  --paper: #faf8f4;
+  --color-penny-paper: var(--paper);
+  --color-penny-card: #fffefb;
+  background: var(--paper);
+}
+
 /* A select's dropdown caret, one rule for every select in the app. The browsers place their native arrow differently (and
    hug the border), so the native arrow is dropped and a chevron is drawn at the field's own text inset (--field-inset, set
    with the left padding by inputClass), vertically centred. It is two diagonal strokes in currentColor, so it takes the

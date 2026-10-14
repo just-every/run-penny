@@ -64,7 +64,7 @@ export function OperatorAppShell() {
   const [isMenuOpen, setMenuOpen] = useState(false)
 
   return (
-    <BrandRoot>
+    <BrandRoot className="penny-workspace">
       <a href="#operator-content" className="sr-only z-50 rounded-full bg-penny-ink px-4 py-3 text-sm font-semibold text-penny-paper focus:not-sr-only focus:absolute focus:left-4 focus:top-4">Skip to content</a>
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-60 flex-col overflow-y-auto border-r border-penny-line bg-[color-mix(in_srgb,var(--color-penny-sand)_45%,var(--color-penny-paper))] px-3 py-5 lg:flex">
         <div className="px-2"><Brand /></div>
@@ -79,7 +79,7 @@ export function OperatorAppShell() {
           <div className="flex items-center gap-1">
             <SignOutButton className="inline-flex min-h-11 items-center rounded-full px-2 text-base text-penny-soft transition-colors hover:text-penny-ink sm:px-3" />
             <details className="relative" open={isMenuOpen} onToggle={(event) => setMenuOpen(event.currentTarget.open)}>
-              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border-[1.5px] border-penny-ink px-4 text-base font-medium text-penny-ink transition-colors hover:bg-penny-ink/6 [&::-webkit-details-marker]:hidden"><Icon name="menu" className="size-5" />Menu</summary>
+              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border border-penny-ink px-4 text-base font-medium text-penny-ink transition-colors hover:bg-penny-ink/6 [&::-webkit-details-marker]:hidden"><Icon name="menu" className="size-5" />Menu</summary>
               <div className="absolute right-0 top-[calc(100%+0.5rem)] w-60 rounded-xl border border-penny-line bg-penny-card p-2 shadow-[0_12px_32px_rgb(92_62_32_/_0.14)]"><NavigationLinks onNavigate={() => setMenuOpen(false)} /></div>
             </details>
           </div>
