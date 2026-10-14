@@ -9,7 +9,7 @@ import { CurrencyField } from './learning-protocol'
 export function LearningCapture({home,onSaved}:{home:LearningHome;onSaved:()=>void}) {
  const [evidence,reload]=useOperatorResource<{items:OperatorEvidenceCard[]}>('/api/operator/evidence')
  const saved=()=>{reload();onSaved()}
- return <section className="capture" aria-labelledby="capture-heading"><h2 id="capture-heading">Capture deliberately. Give Penny a narrow remit.</h2>
+ return <section className="capture" aria-labelledby="capture-heading"><h2 id="capture-heading" tabIndex={-1}>Capture deliberately. Give Penny a narrow remit.</h2>
  <p className="quiet">Use original customer feedback already recorded in Penny, or explicitly selected sales records. Sources stay private to your operators.</p>
  <details><summary>Record native feedback</summary><EvidenceRecorder onSaved={saved}/></details>
  <details><summary>Connect selected Orbit sales evidence</summary>

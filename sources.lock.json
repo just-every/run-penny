@@ -4519,7 +4519,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-capture.tsx": {
-      "sha256": "c6fb2db2e87248320c06f86ba665f2d89e695cf5525584f5f69ac215f8c8b403",
+      "sha256": "072cc65e7bb20dff04018a088e7ba72935f3000d24f12d5e5b8d2a154feb787b",
       "executable": false
     },
     "src/core/features/learning/ui/learning-citation.tsx": {
@@ -4531,7 +4531,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-page.tsx": {
-      "sha256": "4853f6f452c96ac00e8df4cc3fc30def810e8c437dc3a62ce2124e3304d12c6c",
+      "sha256": "dabd8788374eea7d9d5aaaf22ef1314206f70fa09e116314d8c456c305f45c61",
       "executable": false
     },
     "src/core/features/learning/ui/learning-protocol.tsx": {
@@ -4542,8 +4542,12 @@
       "sha256": "4936abcdac185058b8d87836199e942877eda8e92eb5e19a9d40fb08ecf6304f",
       "executable": false
     },
+    "src/core/features/learning/ui/learning-tabs.tsx": {
+      "sha256": "a84d7dd580011103004469d88b030b845c76fb96522057edbd08e4c5e4e4aa42",
+      "executable": false
+    },
     "src/core/features/learning/ui/learning.css": {
-      "sha256": "4f9565cb45d04a526432cf1d628e7a112ffb3d5be5b2859ead54646eb3b31e56",
+      "sha256": "005ca3e1462513af82d1294336575276e4cbd86f68548325ed9e22c6d9c4a1f1",
       "executable": false
     },
     "src/core/features/learning/ui/types.ts": {
@@ -5515,7 +5519,7 @@
       "executable": false
     },
     "src/routes/app.learning.tsx": {
-      "sha256": "f5d50462d26fea090bfbb6dc982d6ac3af5cdaa42613d3b006dd34ff333fbf0d",
+      "sha256": "5d84e4c2b7c165314523b1938f421556a5b5171cf153194308039eef7c3a076b",
       "executable": false
     },
     "src/routes/app.moderation.tsx": {
@@ -6043,7 +6047,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "fdafa054c541a2a9c8278c608099d3619b042308ab189598b1eb1ec388d77119",
+      "sha256": "11258bdaed682fc89f9dc01afda29044eac9e1099bf8a6ad62b46eb3cc363695",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {
