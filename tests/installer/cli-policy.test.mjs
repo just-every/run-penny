@@ -55,4 +55,7 @@ test('A fresh clone\'s first rer install gives no provider credential to depende
   const lines = (await readFile(seen, 'utf8')).trim().split('\n')
   assert.ok(lines.length >= 1)
   assert.deepEqual([...new Set(lines)], ['clean'])
+  // Commands that deploy (pnpm exec rer deploy, pnpm run deploy) keep their own credentials.
+  const exec = spawnSync('pnpm', ['exec', 'node', '-e', 'process.stdout.write(String(Boolean(process.env.CLOUDFLARE_API_TOKEN)))'], { cwd: root, encoding: 'utf8', env: { ...inherited, CLOUDFLARE_API_TOKEN: 'test-only-provider-token' } })
+  assert.equal(exec.stdout, 'true', exec.stderr)
 })

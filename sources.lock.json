@@ -591,7 +591,7 @@
       "executable": false
     },
     ".pnpmfile.cjs": {
-      "sha256": "bb95aa68f9f1236cdee32729d1834729d0eb77fe4c57b1410e14bef5a0826373",
+      "sha256": "4db0645475a67f3294f78a0b5e45c857de3ce0c42906fc6ddf9ccf63f2ffa8b3",
       "executable": false
     },
     "ACCEPTANCE.md": {
@@ -6451,7 +6451,7 @@
       "executable": false
     },
     "tests/installer/cli-policy.test.mjs": {
-      "sha256": "251d84770478bfccfc346208471168e5bf945559556626f4c5a2d8da246665d7",
+      "sha256": "f729ec883eb4b1c0cb155c6c8e1eda90aba456f0705b06a0184b6a6cc5eaaaf5",
       "executable": false
     },
     "tests/installer/cloudflare-account.mjs": {
