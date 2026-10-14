@@ -2835,11 +2835,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "4adfa8875fec792fffc3f51ae71b944b7f15d2c4325f42d493fffed734aaca6d",
+      "sha256": "c3a33db4b6719a371bfcd06234172e32e55e8670835619a98cf5db3efd69e64f",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "2ee0a867e7bff4e5c039d4f28f966dcdb72c5e73f27469e0a5674f882b9281ce",
+      "sha256": "e51c93edbb9c6619837552effc61e9c517a337a17b47d82a49c05031016b57e7",
       "executable": false
     },
     "public/brand/band.svg": {
@@ -2875,7 +2875,7 @@
       "executable": false
     },
     "README.md": {
-      "sha256": "2da0b89d11349a5cda19475570d0e73e2aa6458aa8cfa08c37af083ccd8a0ec6",
+      "sha256": "a3247873e1df8eeeef5acd91cc93764fb106f8ffab395b86b49b6d8194dfee9e",
       "executable": false
     },
     "RELEASE.json": {
@@ -3107,7 +3107,7 @@
       "executable": false
     },
     "scripts/installer/deploy.mjs": {
-      "sha256": "1bfcf0743970ff2b6c9349e4cb8453ac757acde5858ae90ba06aaa7829292197",
+      "sha256": "228fac549e44be116c011079211c0b980d0d246491f96ca51b4183e628aac1f1",
       "executable": false
     },
     "scripts/installer/local.mjs": {
@@ -4519,7 +4519,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-artifact.tsx": {
-      "sha256": "a825f3a142835a2f51137420a03f0cba6179537397217a0cae58a28e0102c03b",
+      "sha256": "d7a1aec3421245f03cd1a70487dc0c478134bbd58b4e2929b56663c481f7bc58",
       "executable": false
     },
     "src/core/features/learning/ui/learning-capture.tsx": {

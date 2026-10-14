@@ -25,5 +25,5 @@ export async function deployPenny(context) {
   const args = ['--environment', target.environment]
   const result = await owner(['deploy', ...args], env, { cwd: context.root, store: context.store })
   await owner(['health', ...args], env, { cwd: context.root, store: context.store })
-  return { deployed: true, origin: result.origin }
+  return { deployed: true, origin: result.origin, state: target.stateFile }
 }

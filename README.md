@@ -180,9 +180,12 @@ account supplies the workers.dev origin. The first run saves generated
 (0600), and a durable ledger under `.rer/deploy/`. Repeat deploy and health reuse
 saved settings and never rotate secrets. Conflicting identities, foreign
 resources, drift and uncertain creates are refused. The output names the origin
-and credential-file path, never values. After deploying, claim the first owner
-through the same-origin native bootstrap procedure in [operations](OPERATIONS.md),
-then use `/signin`; the owner's first sign-in ends at `/setup`.
+and credential-file path, never values. On a production deploy, `rer` automatically
+claims the first owner using the configured `OPERATOR_EMAIL` through the
+same-origin native bootstrap procedure, then removes the one-time `SETUP_TOKEN`
+from the Worker and records its retirement. An existing owner is kept. Use
+`/signin`; the owner's first sign-in ends at `/setup`. See
+[operations](OPERATIONS.md) for deployment recovery.
 
 Costs are estimates, not a measured Penny bill. Budget at least the account's
 [Workers Paid minimum of USD 5/month](https://developers.cloudflare.com/workers/platform/pricing/)
