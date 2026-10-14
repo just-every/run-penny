@@ -590,6 +590,10 @@
       "sha256": "be9a2f5d67242e94615577300e68f7b2904a2f59b8e7cb56b09d7af3bc0e016f",
       "executable": false
     },
+    ".pnpmfile.cjs": {
+      "sha256": "bb95aa68f9f1236cdee32729d1834729d0eb77fe4c57b1410e14bef5a0826373",
+      "executable": false
+    },
     "ACCEPTANCE.md": {
       "sha256": "59de8b20b5ff41e899824c518909015dbc6f0c30c35d926e2033da6d5316efc6",
       "executable": false
@@ -599,7 +603,7 @@
       "executable": false
     },
     "AGENTS.md": {
-      "sha256": "415949c261d7616b6bc87748a34fb7e8e4da3d61f75a5e6448ead2145ad7d8b6",
+      "sha256": "d655bd68a9cca9d1c55ba3618fed2c3d2ef0f573a232ebd1b6b4c9c4594f82e0",
       "executable": false
     },
     "base/modules/dependencies/approval.mjs": {
@@ -2375,7 +2379,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "a99ac196d66cc44f30b2507ad2ba68a420bd93aca52a632546b408577b133b3e",
+      "sha256": "0240181a594b884e5ec2dff79b0478233f63ae644846981b207e764822cf8bce",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2431,7 +2435,7 @@
       "executable": false
     },
     "docs/data-ownership.md": {
-      "sha256": "2dc9dd4bdf1c811ae6740674e95d27fbfc99b3295fdf5ba7db3752d59e70d892",
+      "sha256": "daf4cc03a448646aa46b72fd0e68751eae5daa35902c148ff582cbe61f75f05e",
       "executable": false
     },
     "docs/DATA.md": {
@@ -2815,7 +2819,7 @@
       "executable": false
     },
     "OPERATIONS.md": {
-      "sha256": "30daaa670c4a44fcd77c6974cbce2bc050cf0a8cdb4064f10ea7df9bbfd27fca",
+      "sha256": "2fd77d794b190a041940c9ce20089ae439fd745ebb80c7431736f5007bd4d1b0",
       "executable": false
     },
     "OWNER-STEPS.md": {
@@ -2863,7 +2867,7 @@
       "executable": false
     },
     "README.md": {
-      "sha256": "1d954bf245f65b83d5263c78f8545efbb45429116edebbc15d3ddb4a71c6d80a",
+      "sha256": "4b1f79ca1e0b9c643b4db5bcbf1e94237f4be4391561cc72ff8c4e27101a79a9",
       "executable": false
     },
     "RELEASE.json": {
@@ -3631,7 +3635,7 @@
       "executable": false
     },
     "src/core/features/data/operator-erasure.ts": {
-      "sha256": "f926dcfb456cceb529868c80e7576072c6571ed3dc2b6e72367228ff641edaec",
+      "sha256": "c0eb760991c4a703bed95b9981267e6e4dafbbe82d1ea9af8668ca6784f67f78",
       "executable": false
     },
     "src/core/features/data/routes.ts": {
@@ -4447,7 +4451,7 @@
       "executable": false
     },
     "src/core/features/notifications/event-correlation.ts": {
-      "sha256": "525335fe870cdaba79a353da7baf1a3a20f059727486b316e575383b9248803d",
+      "sha256": "13c5f736d3297aeb67a46ab64dd13ffa8e4b12af050cc3213d77964ec5061c2c",
       "executable": false
     },
     "src/core/features/notifications/event-intake.ts": {
@@ -5679,7 +5683,7 @@
       "executable": false
     },
     "tests/base/penny-erasure.test.ts": {
-      "sha256": "1ca65037fd8a53ab8b21a7fcb51ac2b57b2c8dbdcfd0f31581c39b2fb44903c2",
+      "sha256": "4c53e9c920ad1dba9a3cbfcc14b6663b067f2d89fde6e113e7bedc059f210b16",
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
@@ -5743,7 +5747,7 @@
       "executable": false
     },
     "tests/base/review-mail-events.test.ts": {
-      "sha256": "bf03d9a6b2d93bbf29520502ad860173ef160eee3702eadaac68d9a4797007b2",
+      "sha256": "4ad534f40ac72e3953e32d17d02d89ba7078fa3f54b3668998254ae62fe5fbcd",
       "executable": false
     },
     "tests/base/review-mail-fixture.ts": {
@@ -6447,7 +6451,7 @@
       "executable": false
     },
     "tests/installer/cli-policy.test.mjs": {
-      "sha256": "1427f6e738c734e889bacf96f0e2f755b345b40c08ae5ca93e378ab19eaab844",
+      "sha256": "296cad03bfe90a798e956ce178aa675f3f4d550e1e24c4e70ffe0d046dc049a2",
       "executable": false
     },
     "tests/installer/cloudflare-account.mjs": {

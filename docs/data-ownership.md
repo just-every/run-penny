@@ -127,8 +127,10 @@ attributed keeps one anonymous author: the product and Base operator rows keep
 only their IDs under the label "Erased operator", copies of their name in release,
 comment and request attribution take that label, their sign-in links, sessions,
 rate entries, identity-provider links, mail-event receipts and review-mail
-suppression are deleted, mail attempts lose the address and audit details naming
-them are cleared. Their notes, decisions and other records stay. A current
+suppression are deleted, mail attempts lose the address, and audit details that
+hold their address, or that are by or about them and name them, are cleared.
+Another person's audit row that only repeats their display name blocks the
+erasure as an ambiguous copy instead of being changed. Their notes, decisions and other records stay. A current
 operator is refused with `erasure_operator_active`: remove them in Settings
 first. Any other row holding their address is an ambiguous copy that blocks the
 erasure. An opaque redaction checkpoint advances the journal, so the latest

@@ -206,3 +206,20 @@ it('[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and
  const stale=await call('/api/operator/data/import',{archive:saved.archive,journal},g.operator);expect(stale.status).toBe(409);expect(await stale.json()).toEqual({error:'stale_archive'})
  expect((await call('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)).status).toBe(409)
 })
+
+it('[DATA-003] another person\'s audit details that only repeat a removed operator\'s display name block their erasure and stay unchanged',async()=>{
+ const g=await graph(),email='sales@example.test'
+ expect((await call('/api/operator/settings/custom-fields',{entityType:'account',name:'sales',fieldType:'text'},g.operator)).status).toBeLessThan(300)
+ const ownerAudit=(await env.DB.prepare("SELECT * FROM audit_entries WHERE action='custom_field.definition_created'").first())!
+ expect((await call('/api/operator/settings/operators',{email},g.operator)).status).toBe(202)
+ const invite=(await localOutbox(runtime())!.list()).find(m=>m.message.to.includes(email))!
+ const confirmed=await call('/auth/confirm',{token:new URL(invite.message.text!.match(/http:\/\/\S+/)![0]).searchParams.get('token')});expect(confirmed.status).toBe(303)
+ expect((await call('/api/auth/session',undefined,{Cookie:confirmed.headers.get('set-cookie')!.split(';')[0]})).status).toBe(200)
+ const former=(await env.DB.prepare('SELECT id,display_name FROM operators WHERE email=?').bind(email).first<{id:string;display_name:string}>())!,native=(await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind(email).first<{id:string}>())!
+ expect(former.display_name).toBe('sales')
+ expect((await call(`/api/operator/settings/operators/${native.id}`,{},g.operator,'DELETE')).status).toBe(200)
+ const preview=await good<Preview>('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)
+ expect(preview.blockedCopies).toContainEqual({table:'audit_entries',key:JSON.stringify([ownerAudit.id]),columns:['details_json']})
+ expect((await call('/api/operator/data/erasure',{table:'operators',id:former.id,planHash:preview.planHash},g.operator)).status).toBe(409)
+ expect(await env.DB.prepare('SELECT * FROM audit_entries WHERE id=?').bind(ownerAudit.id).first()).toEqual(ownerAudit)
+})

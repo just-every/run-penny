@@ -62,7 +62,9 @@ rer dev
 ```
 <!-- /penny-local-commands -->
 
-`install` is the frozen dependency install. `setup` needs an explicit owner on
+`install` is the frozen dependency install; every install of the checkout,
+including the first one a global `rer` runs, keeps provider credentials and
+application settings away from dependency build scripts (`.pnpmfile.cjs`). `setup` needs an explicit owner on
 the first run, builds, applies every migration, saves private settings (mode
 0600), claims the first owner with an empty workspace and stops its temporary app
 before returning. A repeat `setup` keeps the owner, the domain data, the saved

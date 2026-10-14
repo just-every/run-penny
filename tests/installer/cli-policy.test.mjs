@@ -39,3 +39,18 @@ test('Penny refuses an external state override without creating canonical data',
   assert.equal(await readFile(join(state, 'retained'), 'utf8'), 'owned data')
   await assert.rejects(readFile(join(root, '.dev.vars')), { code: 'ENOENT' })
 })
+
+test('A fresh clone\'s first rer install gives no provider credential to dependency build scripts', { timeout: 600000 }, async t => {
+  const area = await mkdtemp(join(tmpdir(), 'penny-fresh-install-')), root = join(area, 'checkout'), seen = join(area, 'seen.log')
+  t.after(() => rm(area, { recursive: true, force: true }))
+  await cp(source, root, { recursive: true, filter: path => !generated.has(basename(path)) })
+  // A build script stand-in: the checkout's own postinstall records what pnpm passes it.
+  const manifest = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'))
+  manifest.scripts.postinstall = `node -e "require('fs').appendFileSync(process.env.PENNY_SEEN_LOG,(process.env.CLOUDFLARE_API_TOKEN||process.env.SENDGRID_API_KEY?'credential':'clean')+'\\n')"`
+  await writeFile(join(root, 'package.json'), JSON.stringify(manifest, null, 2) + '\n')
+  const result = spawnSync(process.execPath, [entry, 'install'], { cwd: root, encoding: 'utf8', env: { ...process.env, PENNY_SEEN_LOG: seen, CLOUDFLARE_API_TOKEN: 'test-only-provider-token', SENDGRID_API_KEY: 'test-only-mail-key' } })
+  assert.equal(result.status, 0, result.stderr)
+  const lines = (await readFile(seen, 'utf8')).trim().split('\n')
+  assert.ok(lines.length >= 1)
+  assert.deepEqual([...new Set(lines)], ['clean'])
+})

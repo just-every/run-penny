@@ -64,10 +64,13 @@ export async function correlate(db:D1Database,event:MailEvent):Promise<MailOwner
   return {kind:'review',attemptId:null,batchId:null,outboxId:null,reviewId:String(reviewId),addressId:null,requesterId:null,operatorId:String(operatorId),
    messageKey:message??String(bound??sent??`review:${reviewId}`),suppress:event.hard,unsubscribe:false,witness:found}
  }
- if(!event.hard&&!event.unsubscribe)return null
- // An event naming another message is another sender's mail, unless Penny holds
- // an attempt to this address whose provider message it never learned.
- const unidentified=message?' AND a.provider_message_id IS NULL AND a.event_message_id IS NULL':''
+ // Another product's signed arguments mark another sender's mail.
+ if((!event.hard&&!event.unsubscribe)||(event.product!==null&&event.product!=='penny'))return null
+ // Only attempts that may have reached the provider count; a refused, deferred
+ // or never-called attempt sent nothing. An event naming another message is
+ // another sender's mail, unless Penny holds an attempt to this address that
+ // may have been sent but whose provider message it never learned.
+ const unidentified=message?" AND a.state IN('sending','unknown') AND a.provider_message_id IS NULL AND a.event_message_id IS NULL":" AND a.state IN('sending','accepted','delivered','unknown')"
  const requester=await first(db,`SELECT json_array(${requesterColumns}) AS raw FROM requester_addresses p WHERE p.email=?
   AND (EXISTS(SELECT 1 FROM notification_batches b JOIN notification_attempts a ON a.batch_id=b.id WHERE b.address_id=p.id AND a.provider=?${unidentified})
    OR EXISTS(SELECT 1 FROM notification_outbox b JOIN notification_outbox_attempts a ON a.outbox_id=b.id WHERE b.address_id=p.id AND a.provider=?${unidentified}))`,[event.recipient,event.provider,event.provider])
@@ -77,7 +80,7 @@ export async function correlate(db:D1Database,event:MailEvent):Promise<MailOwner
    messageKey:`address:${address[0]}`,suppress:requesterSuppression(event,address,null),unsubscribe:event.unsubscribe,witness:requester}
  }
  const operator=event.hard?await first(db,`SELECT json_array(o.id) AS raw FROM operators o WHERE lower(o.email)=lower(?)
-  AND EXISTS(SELECT 1 FROM decision_review_notifications n WHERE n.owner_operator_id=o.id AND n.attempt_count>0${message?' AND n.provider_message_id IS NULL':''})`,[event.recipient]):null
+  AND EXISTS(SELECT 1 FROM decision_review_notifications n WHERE n.owner_operator_id=o.id AND n.attempt_count>0${message?" AND n.state IN('sending','unknown') AND n.provider_message_id IS NULL":" AND n.state IN('sending','accepted','unknown')"})`,[event.recipient]):null
  if(operator){
   const [operatorId]=JSON.parse(operator.raw) as Raw
   return {kind:'operator',attemptId:null,batchId:null,outboxId:null,reviewId:null,addressId:null,requesterId:null,operatorId:String(operatorId),

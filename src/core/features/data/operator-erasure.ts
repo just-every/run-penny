@@ -24,6 +24,13 @@ const attempts = ['notification_attempts', 'notification_outbox_attempts'] as co
 const handled = new Set(['operators', 'operator_sessions', 'native_magic_links', 'local_auth_outbox', 'native_rate_limits', 'audit_entries', 'data_tombstones', 'data_operations', ...attempts])
 
 type Operator = { id: string; email: string; display_name: string }
+// Audit details the erasure clears: rows about or by the operator (their product
+// or Base operator id) that name them, and any row holding their address. A row
+// only repeating their display name is someone else's record and blocks instead.
+const ownAudit = '(actor_id IN (?1,?2) OR entity_id IN (?1,?2))'
+const auditName = 'instr(details_json,?4)>0'
+const auditCleared = `((${ownAudit} AND (${auditName} OR instr(details_json,?3)>0)) OR instr(details_json,?3)>0)`
+const auditValues = (operator: Operator, native: Native) => [operator.id, native?.id ?? operator.id, operator.email, JSON.stringify(operator.display_name)]
 type Native = { id: string; version: number; status: string } | null
 export type OperatorErasurePlan = { table: 'operators'; id: string; planHash: string; counts: Record<string, number>; files: string[]; blockedCopies: { table: string; key: string; columns: string[] }[] }
 
@@ -43,7 +50,7 @@ async function counts(db: D1Database, { operator, native }: { operator: Operator
   ['mail_event_records', db.prepare('SELECT count(*) n FROM mail_event_records WHERE operator_id=?').bind(operator.id)],
   ['native_magic_links', db.prepare('SELECT count(*) n FROM native_magic_links WHERE lower(email)=lower(?)').bind(operator.email)],
   ['local_auth_outbox', db.prepare('SELECT count(*) n FROM local_auth_outbox WHERE lower(recipient)=lower(?)').bind(operator.email)],
-  ['audit_entries', db.prepare('SELECT count(*) n FROM audit_entries WHERE instr(details_json,?)>0 OR instr(details_json,?)>0').bind(operator.email, JSON.stringify(operator.display_name))],
+  ['audit_entries', db.prepare(`SELECT count(*) n FROM audit_entries WHERE ${auditCleared}`).bind(...auditValues(operator, native))],
   ...attributions.map(({ table, column, owner }) => [`${table}:${column}`, db.prepare(`SELECT count(*) n FROM ${table} WHERE ${owner} AND ${column}=?`).bind(operator.id, operator.display_name)] as [string, D1PreparedStatement]),
   ...attempts.map(table => [table, db.prepare(`SELECT count(*) n FROM ${table} WHERE lower(recipient_email)=lower(?)`).bind(operator.email)] as [string, D1PreparedStatement]),
   ...(native ? [['oa_external_identities', db.prepare('SELECT count(*) n FROM oa_external_identities WHERE operator_id=?').bind(native.id)] as [string, D1PreparedStatement]] : []),
@@ -56,8 +63,10 @@ async function counts(db: D1Database, { operator, native }: { operator: Operator
 
 // Free text, settings and custody elsewhere may hold the address. Penny does not
 // guess whether such a copy is the person's data or a business record.
-async function copies(db: D1Database, operator: Operator): Promise<OperatorErasurePlan['blockedCopies']> {
+async function copies(db: D1Database, operator: Operator, native: Native): Promise<OperatorErasurePlan['blockedCopies']> {
  const blocked: OperatorErasurePlan['blockedCopies'] = []
+ const audits = (await db.prepare(`SELECT id FROM audit_entries WHERE ${auditName} AND NOT ${auditCleared} LIMIT 21`).bind(...auditValues(operator, native)).all<{ id: string }>()).results
+ for (const row of audits) blocked.push({ table: 'audit_entries', key: canonical([row.id]), columns: ['details_json'] })
  for (const table of (await schema(db)).filter(table => !handled.has(table.name))) {
   const columns = table.columns.map(column => column.name), ident = (name: string) => '"' + name + '"'
   // Receipts of the operator's own mail events are deleted with them.
@@ -70,7 +79,7 @@ async function copies(db: D1Database, operator: Operator): Promise<OperatorErasu
 
 export async function planOperatorErasure(db: D1Database, id: string): Promise<OperatorErasurePlan> {
  const found = await subject(db, id), current = (await state(db))!
- const planned = { counts: await counts(db, found), files: [] as string[], blockedCopies: await copies(db, found.operator) }
+ const planned = { counts: await counts(db, found), files: [] as string[], blockedCopies: await copies(db, found.operator, found.native) }
  const planHash = await hash({ origin: current.origin, epoch: current.epoch, table: 'operators', id, operator: found.operator, native: found.native, ...planned })
  return { table: 'operators', id, planHash, ...planned }
 }
@@ -107,7 +116,7 @@ export async function eraseOperator(db: D1Database, id: string, planHash: string
    db.prepare('DELETE FROM native_rate_limits WHERE subject_hash IN (SELECT value FROM json_each(?))').bind(JSON.stringify(subjectHashes)),
    ...attributions.map(({ table, column, owner }) => db.prepare(`UPDATE ${table} SET ${column}=? WHERE ${owner} AND ${column}=?`).bind(LABEL, operator.id, operator.display_name)),
    ...attempts.map(table => db.prepare(`UPDATE ${table} SET recipient_email=? WHERE lower(recipient_email)=lower(?)`).bind(email, operator.email)),
-   db.prepare('UPDATE audit_entries SET details_json=NULL,updated_at=? WHERE instr(details_json,?)>0 OR instr(details_json,?)>0').bind(now, operator.email, JSON.stringify(operator.display_name)),
+   db.prepare(`UPDATE audit_entries SET details_json=NULL,updated_at=?5 WHERE ${auditCleared}`).bind(...auditValues(operator, native), now),
   ]
   if (native) statements.push(
    db.prepare('UPDATE oa_operators SET email=?,display_name=? WHERE id=?').bind(email, LABEL, native.id),

@@ -110,7 +110,10 @@ separate tested artifact/disposable controller uses `artifact:prepare`,
 `artifact:deploy` and `artifact:health`. Do not claim a public preview or a
 deployment from command names, fixture composition, source integration or CI.
 Use only a deployment path actually described by OPERATIONS.json and authorized
-for the installation. Dependencies/build must not receive provider credentials.
+for the installation. Dependencies/build must not receive provider credentials:
+`.pnpmfile.cjs` removes credential and application settings from pnpm's
+environment for every install, including the first one a global `rer` runs on a
+fresh clone before Penny's adapter exists.
 
 `edition.json`, `base/PROVENANCE.json`, retained source snapshots and
 `sources.lock.json` record adopted source custody. Run `pnpm source:lock` only

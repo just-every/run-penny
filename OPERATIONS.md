@@ -237,9 +237,11 @@ and decision-review mail, including attempts sent before Penny kept recipient
 snapshots or correlation arguments. A hard bounce, complaint or unsubscribe that
 names no message at all (SendGrid's delayed, asynchronous bounces arrive without
 `sg_message_id`) belongs to the address when Penny has mailed it through that
-provider. An event naming another message is another sender's mail and changes
-nothing, unless Penny holds an attempt to that address whose message ID it never
-learned. A verification of the address after the event outranks it. SendGrid's
+provider (an attempt that may have reached it: sending, accepted, delivered or
+unknown; refused, deferred and never-called attempts sent nothing). An event
+naming another message, or carrying another product's `rer_product`, is another
+sender's mail and changes nothing, unless Penny holds an interrupted attempt to
+that address (sending or unknown) whose message ID it never learned. A verification of the address after the event outranks it. SendGrid's
 `type: bounce` is a hard bounce and `type: blocked` a soft one; Resend uses
 `bounce.type=Permanent`. See the [SendGrid event reference](https://www.twilio.com/docs/sendgrid/for-developers/tracking-events/event),
 [message ID definition](https://www.twilio.com/docs/sendgrid/glossary/message-id)

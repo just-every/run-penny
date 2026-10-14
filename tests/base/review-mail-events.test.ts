@@ -33,6 +33,16 @@ it('[REL-011 BASE-ACCESS-004] bad signatures, stale and tampered requests are re
  for(const change of [{email:'other@example.test'},{sg_message_id:'other-product-message',rer_delivery_id:'foreign',rer_product:'other',rer_penny_attempt:'foreign'}]){
   const before=await rows('mail_event_records');expect((await g.post([{...g.event,...change}])).status).toBe(200);expect(await rows('mail_event_records')).toEqual(before)
  }
+ // A refused send reached no provider: another product's unsubscribe or bounce for
+ // the same address naming its own message still changes nothing.
+ provider(429);await g.publish(0,'Refused by the provider',7200000);await drainNotifications(runtime(),()=>start+10800000)
+ expect((await rows('notification_attempts')).some(row=>row.state==='rate_limited'&&row.provider_message_id===null)).toBe(true)
+ const quiet=await rows('mail_event_records')
+ for(const event of [{event:'group_unsubscribe',sg_event_id:'other-unsubscribe'},{event:'bounce',type:'bounce',sg_event_id:'other-bounce'}]){
+  expect((await g.post([{...event,sg_message_id:'other-product-message.filterdrecv-9',rer_product:'other',email:g.recipient.email,timestamp:Math.floor(Date.now()/1000)}])).status).toBe(200)
+  expect((await g.post([{...event,sg_event_id:event.sg_event_id+'-unmarked',sg_message_id:'other-product-message.filterdrecv-9',email:g.recipient.email,timestamp:Math.floor(Date.now()/1000)}])).status).toBe(200)
+ }
+ expect(await rows('mail_event_records')).toEqual(quiet);expect(await rows('requester_notification_preferences')).toEqual([])
  // A second provider message for Penny's own attempt is a conflict, not a new fact.
  expect((await g.post([{...g.event,sg_message_id:'foreign'}])).status).toBe(400)
  expect((await g.post([g.event],Math.floor(Date.now()/1000)-301)).status).toBe(400)
