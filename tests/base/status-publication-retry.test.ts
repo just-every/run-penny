@@ -20,11 +20,15 @@ it('[REQ-015 NOTIFY-001/005] concurrent and later keyed HTTP replay retains one 
  const responses=await Promise.all([call(path,input,g.operator),call(path,input,g.operator)])
  expect(responses.map(response=>response.status)).toEqual([200,200]);await counts(1)
  expect((await call(path,input,g.operator)).status).toBe(200);await counts(1)
+ // Drain after the coalescing window at a UTC morning, regardless of CI's wall clock.
+ const morning=new Date(start)
+ morning.setUTCDate(morning.getUTCDate()+1);morning.setUTCHours(9,0,0,0)
+ const deliveryAt=morning.getTime()
  const sent=provider()
- await Promise.all([drainNotifications(runtime(),()=>start+3600000),drainNotifications(runtime(),()=>start+3600000)])
+ await Promise.all([drainNotifications(runtime(),()=>deliveryAt),drainNotifications(runtime(),()=>deliveryAt)])
  expect(sent).toHaveLength(1)
  expect((await call(path,input,g.operator)).status).toBe(200)
- await drainNotifications(runtime(),()=>start+7200000)
+ await drainNotifications(runtime(),()=>deliveryAt+3600000)
  expect(sent).toHaveLength(1);expect(await rows('notification_attempts')).toHaveLength(1)
  const frozen=await rows('request_status_updates')
  for(const change of [{body:'Different wording'},{status:'open'},{pinned:false}]){
