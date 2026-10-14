@@ -546,3 +546,7 @@ landing, and none of this is hosted proof.
   continuing the source journal while the older archive is refused;
   `tests/installer/portability.test.mjs` keeps the literal `rer
   export/reset/import/export` equivalence.
+
+## Scoped cancellation learning boundary
+
+`LEARN-001`–`LEARN-006` add the bounded private Stage 2–3 software path over native feedback and exact Orbit delegated evidence targets. `tests/base/learning-stage2.test.ts` exercises the native HTTP acquisition/interpretation/commitment path and refusal boundaries; `learning-stage3.test.ts` exercises the scheduled handler, quiet refresh, controls, native/source-person erasure, provider revocation and real archive restore; `learning-upgrade.test.ts` exercises populated previous-head upgrade and repeat. Network/model responses are fixtures only at the external port. Live source/model configuration, actual owner/customer usefulness, hosted scheduled execution, measured cost/attention and every Stage 4–5 outcome gate remain open. `FLAGSHIP-PLAN.md` and `docs/flagship-acceptance.md` retain that distinction.

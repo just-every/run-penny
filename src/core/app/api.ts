@@ -1,3 +1,4 @@
+import {registerLearningRoutes} from '@/core/features/learning/routes'
 import {registerOperatorManagementRoutes} from '@/core/features/auth/operator-management-routes'
 import {editorDocumentHeaders} from '@/core/features/editor/headers'
 import {registerFrameSettings} from '@/core/features/settings/frame-settings'
@@ -77,6 +78,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
     context.res = await editorDocumentHeaders(context.res, context.get('runtime'), context.req.path)
   })
 
+  registerLearningRoutes(app)
   registerIntegrationApi(app)
   registerBrandingRoutes(app)
   registerFrameSettings(app)
@@ -109,6 +111,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   app.onError((error, context) => {
     // Native host and origin denials can reach this boundary before a route's guards.
     if (error instanceof AuthError && error.status === 403) return context.json({ error: 'forbidden' }, 403)
+    if(context.req.path.startsWith('/api/operator/learning')&&error instanceof ZodError)return context.json({error:'learning_validation_failed'},400)
     if(context.req.path.startsWith('/api/v1/')||context.req.path.startsWith('/api/operator/integrations/')||context.req.path==='/api/operator/settings/branding'){
       if(error instanceof MutationError)return context.json({error:'integration_mutation_refused',message:error.message},error.status)
       if(error instanceof ZodError)return context.json({error:'validation_failed'},400)

@@ -1,3 +1,5 @@
+import {validateLearningArchive} from '../learning/archive'
+import {learningErasureStatements} from '../learning/privacy'
 import { z } from 'zod'
 import { portabilityErasureStatements } from '../../../../scripts/portability/cleanup.mjs'
 import { NativeError, digest } from '@/core/features/auth/native-tokens'
@@ -77,6 +79,9 @@ function limits(data:Record<string,Row[]>):void{
  if(Object.values(data).reduce((n,items)=>n+items.length,0)>DATA_LIMITS.rows||new TextEncoder().encode(canonical(data)).byteLength>DATA_LIMITS.recordBytes)fail('archive_limit',413)
 }
 export const normalize=(name:string,row:Row):Row=>{
+ if(name==='learning_sources')return {...row,state:'held',version:Number(row.version)+1}
+ if(name==='learning_investigations')return {...row,state:'held',version:Number(row.version)+1,last_reason:'restored_grant_review_required'}
+ if(name==='learning_runs'&&row.state==='running')return {...row,state:'uncertain',reason:'restored_run_reconciliation_required'}
  if(name==='operator_sessions'||name==='native_requester_sessions')return {...row,token_hash:`disabled-${row.id}`,revoked_at:row.revoked_at??'1970-01-01T00:00:00.000Z'}
  if(name==='native_magic_links')return {...row,token_hash:`disabled-${row.id}`,consumed_at:row.consumed_at??'1970-01-01T00:00:00.000Z'}
  if(name==='notification_outbox'&&row.delivery_state==='queued')return {...row,delivery_state:'unknown',failure_reason:'restored_delivery_review_required'}
@@ -113,8 +118,8 @@ export const audit=(db:D1Database,action:string,id:string,authority?:DataAuthori
 export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:DataAuthority):Promise<{archive:Archive;journal:ErasureJournal}>{
  const id=await reserve(db,'export',{},authority)
  try {
-  const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateFeedbackArchive(data)
-  if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateFeedbackArchive(data)}
+  const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateFeedbackArchive(data);await validateLearningArchive(data)
+  if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
   if(data.request_attachment_uploads?.length||data.evidence_attachment_uploads?.length)fail('unfinished_attachment_uploads')
   const journal=await readErasureJournal(db)
   const expectedKeys=new Set(data.attachments.map(row=>String(row.storage_key)));let cursor:string|undefined
@@ -148,7 +153,7 @@ async function validated(db:D1Database,value:unknown,journalValue:unknown):Promi
  if(current.origin===journal.origin&&current.epoch>journal.epoch)fail('stale_archive')
  const tables=await schema(db)
  if(await schemaHash(tables)!==archive.schemaHash||canonical(Object.keys(archive.tables).sort())!==canonical(tables.map(table=>table.name).sort()))fail('unsupported_archive_schema')
- limits(archive.tables);validateNativeIdentity(archive.tables);validateFeedbackArchive(archive.tables)
+ limits(archive.tables);validateNativeIdentity(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
  if(archive.tables.request_attachment_uploads.length||archive.tables.evidence_attachment_uploads.length)fail('unfinished_attachment_uploads')
  for(const table of tables){
   const keys=new Set<string>()
@@ -316,7 +321,7 @@ export async function eraseEntity(db:D1Database,bucket:R2Bucket,tableName:string
   const current=(await state(db))!,epoch=current.epoch+1,journal=await readErasureJournal(db)
   if(journal.tombstones.length+Object.values(plan.selected).reduce((n,rows)=>n+rows.length,0)>ERASURE_LIMITS.rows)fail('journal_limit',413)
   const statements=[...applyStart(db,id),...importAdmission.map(query=>db.prepare(query.sql).bind(...query.params??[])),db.prepare('DELETE FROM ik_d1_assertions'),...await portabilityErasureStatements(db)]
-  statements.push(...retainErasureWork(db,id,plan.selected.feedback_import_records),...importErasureStatements(db,plan.selected),...await hostErasureStatements(db,plan.selected))
+  statements.push(...retainErasureWork(db,id,plan.selected.feedback_import_records),...importErasureStatements(db,plan.selected),...await hostErasureStatements(db,plan.selected),...await learningErasureStatements(db,plan.selected))
   // Development mail contains credentials, is never portable, and loses captures
   // for each erased identity in the same transaction as the product graph.
   const hasLocalOutbox = await db.prepare("SELECT 1 present FROM sqlite_master WHERE type='table' AND name='rer_mail_development_outbox'").first()

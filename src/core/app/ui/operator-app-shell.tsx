@@ -9,6 +9,7 @@ import { Icon } from '@/core/ui/app/Icon'
 
 const navigation = [
   { to: '/app/overview', label: 'Overview', icon: 'overview' },
+  { to: '/app/learning', label: 'Learning', icon: 'evidence' },
   { to: '/app/feedback', label: 'Feedback', icon: 'feedback' },
   { to: '/app/moderation', label: 'Moderation', icon: 'moderation' },
   { to: '/app/decisions', label: 'Decisions', icon: 'decisions' },

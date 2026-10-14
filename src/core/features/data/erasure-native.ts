@@ -54,7 +54,7 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
    if(typeof row.id==='string')ids.add(row.id)
    // Removing a comparison copy does not turn its duplicated business dimensions
    // into new personal literals; root/evidence literals still fence personal copies.
-   for(const [column,value]of Object.entries(row))if(table.name!=='decision_bet_snapshots'&&!(table.name==='mail_event_records'&&column==='value_json')&&!(column==='title'&&['release_recipient_contexts','roadmap_update_contexts'].includes(table.name)&&typeof value==='string'&&approvedPhrases.has(value))&&['email','recipient','display_name','name','title','public_title','description','public_description','wording','body','proposed_solution','impact_statement','approved_author_name','source_label','named_speaker','review_reason','original_filename','rejection_reason','declined_reason','reason','rationale','question','summary','outcome_prompt','note','health','value_json'].includes(column)&&typeof value==='string'&&value.length>0)strings(value).forEach(text=>literals.add(text))
+   for(const [column,value]of Object.entries(row))if(!(table.name.startsWith('learning_')&&column==='reason')&&table.name!=='decision_bet_snapshots'&&!(table.name==='mail_event_records'&&column==='value_json')&&!(column==='title'&&['release_recipient_contexts','roadmap_update_contexts'].includes(table.name)&&typeof value==='string'&&approvedPhrases.has(value))&&['email','recipient','display_name','name','title','public_title','description','public_description','wording','body','proposed_solution','impact_statement','approved_author_name','source_label','named_speaker','review_reason','original_filename','rejection_reason','declined_reason','reason','rationale','question','summary','outcome_prompt','note','health','value_json'].includes(column)&&typeof value==='string'&&value.length>0)strings(value).forEach(text=>literals.add(text))
   }
   const readIds=new Set([...ids,...await Promise.all([...ids,...selected.requester_addresses.map(row=>String(row.email))].map(digest))])
   scope.round={offset:0,changed,readIds:[...readIds],releaseVersionCount:data.release_versions.length}
@@ -91,7 +91,7 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
    for(const row of data[table.name]){
     if(marked(table,row))continue
     const referenced=[...groups.values()].some(group=>selected[group[0].table]?.some(parent=>group.every(key=>row[key.from]!==null&&parent[key.to]===row[key.from])))
-    const copied=Object.values(row).flatMap(strings).some(text=>[...ids].some(id=>text.includes(id)))
+    const copied=Object.entries(row).filter(([column])=>table.name!=='learning_investigations'||!['native_evidence_ids_json','native_request_ids_json'].includes(column)).flatMap(([,value])=>strings(value)).some(text=>[...ids].some(id=>text.includes(id)))
     const address=(table.name==='native_magic_links'&&emails.has(String(row.email)))||(table.name==='local_auth_outbox'&&emails.has(String(row.recipient)))
     const rate=table.name==='native_rate_limits'&&subjectHashes.has(String(row.subject_hash))
     if(referenced||copied||address||rate){selected[table.name].push(row);changed=true}

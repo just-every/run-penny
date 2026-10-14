@@ -5,6 +5,15 @@ import { NativeError } from '@/core/features/auth/native-tokens'
 // history edges introduced/used by the clause work instead of relying on an
 // opaque-ID substring accidentally discovering those children.
 const edges = [
+ ['learning_observations','requester_id','requesters'],
+ ['learning_observations','account_id','accounts'],
+ ['learning_observations','evidence_id','evidence_items'],
+ ['learning_observations','request_id','requests'],
+ ['learning_contributions','observation_id','learning_observations'],
+ ['learning_contributions','artifact_id','learning_artifacts'],
+ ['learning_commitments','artifact_id','learning_artifacts'],
+ ['learning_corrections','artifact_id','learning_artifacts'],
+ ['learning_source_people','observation_id','learning_observations'],
  ['requester_identity_merges', 'source_requester_id', 'requesters'],
  ['requester_identity_merges', 'target_requester_id', 'requesters'],
  ['requester_addresses', 'requester_id', 'requesters'],
@@ -36,6 +45,10 @@ export function checkClauseErasureEdges(tables:{name:string;foreignKeys:{table:s
 
 export function expandClauseErasure(data:Record<string,Row[]>,selected:Record<string,Row[]>):boolean {
  let changed=false
+ for(const contribution of selected.learning_contributions??[]){
+  const artifact=data.learning_artifacts?.find(row=>row.id===contribution.artifact_id)
+  if(artifact&&!selected.learning_artifacts.includes(artifact)){selected.learning_artifacts.push(artifact);changed=true}
+ }
  // Merging transfers current addresses but retains immutable history under the
  // predecessor's identity. A survivor owns that incoming lineage, including
  // every earlier merge, so its erasure must fence those roots as well. Walking

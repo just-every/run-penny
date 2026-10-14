@@ -193,3 +193,7 @@ admission and any release after `v0.0.0`. The source is public at
 `just-every/run-penny` with tag `v0.0.0`, and every push to `main` redeploys the
 run-penny.com marketing site through the Run site workflow; no product
 installation has been deployed from this source.
+
+## Bounded cancellation learning source
+
+The Stage 2–3 software path lives in `src/core/features/learning`; migration 0059, native API admission, minute scheduled wiring and the existing data archive/erasure graph cover it. Read LEARN-001–006 and the OPERATIONS configuration section before enabling it. Source/model secrets stay deployment-only, the enforcing RPC is required, and unconfigured work visibly refuses. The connected source is exact-target Orbit sales evidence, not HappyToHelp; provider/contact/account identities are never inferred into Penny identities. Stage 2 local proof preceded Stage 3 implementation. Native source corrections contest derived work, operator corrections use a transactionally exclusive current-version transition, and person/source privacy purges every dependent artifact/snapshot with stable replay fences. Restored grants are held. No live provider or customer pilot occurred, and Stages 4–5 remain excluded.

@@ -59,7 +59,7 @@
     "test:browser:editor": "node tests/browser/editor-admission.mjs",
     "test:browser:integration-api": "node tests/browser/integration-api.mjs",
     "test:browser:integrations": "node tests/browser/integration-states.mjs",
-    "verify:app": "pnpm run check -- --profile first-party && pnpm run source:check && pnpm run verify:base-source && pnpm run feedback:status && pnpm run test:operations && pnpm run build && pnpm run test:deployment && pnpm run test:docs && pnpm run test:ui && pnpm run typecheck && pnpm run lint && pnpm run test:worker && pnpm run test:base && pnpm run test:installer && pnpm run test:mail-runtime && pnpm run test:data:commands && pnpm run test:browser:readme && pnpm run test:browser:dev-credentials",
+    "verify:app": "pnpm run check -- --profile first-party && pnpm run source:check && pnpm run verify:base-source && pnpm run feedback:status && pnpm run test:operations && pnpm run build && pnpm run test:deployment && pnpm run test:docs && pnpm run test:ui && pnpm run typecheck && pnpm run lint && pnpm run test:worker && pnpm run test:base && pnpm run test:installer && pnpm run test:mail-runtime && pnpm run test:data:commands && pnpm run test:browser:readme && pnpm run test:browser:dev-credentials && pnpm run test:browser:learning",
     "reset": "rer reset",
     "release": "rer release",
     "outbox": "rer outbox",
@@ -72,7 +72,8 @@
     "data:import": "node scripts/data-command.mjs import",
     "test:browser:readme": "node --test tests/installer/readme.test.mjs",
     "test:browser:dev-credentials": "node --test tests/installer/dev-credentials.test.mjs",
-    "test:docs": "node --test tests/docs/docs-site.test.mjs"
+    "test:docs": "node --test tests/docs/docs-site.test.mjs",
+    "test:browser:learning": "node tests/browser/learning-journey.mjs"
   },
   "dependencies": {
     "@tanstack/react-router": "1.170.33",

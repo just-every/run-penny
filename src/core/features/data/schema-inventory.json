@@ -2428,5 +2428,150 @@
       "started_at",
       "finished_at"
     ]
+  },
+  "learning_sources": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "provider",
+      "installation_id",
+      "resource_ids_json",
+      "use_basis",
+      "state",
+      "version",
+      "created_at"
+    ]
+  },
+  "learning_investigations": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "source_id",
+      "question",
+      "purpose",
+      "native_evidence_ids_json",
+      "native_request_ids_json",
+      "state",
+      "native_operator_id",
+      "operator_version",
+      "actor_id",
+      "expires_at",
+      "budget_micros",
+      "spent_micros",
+      "max_run_cost_micros",
+      "interval_minutes",
+      "next_run_at",
+      "last_reason",
+      "version",
+      "created_at"
+    ]
+  },
+  "learning_observations": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "source_id",
+      "event_key",
+      "content_hash",
+      "wording",
+      "original_json",
+      "observed_at",
+      "source_person_id",
+      "requester_id",
+      "account_id",
+      "evidence_id",
+      "request_id",
+      "created_at"
+    ]
+  },
+  "learning_artifacts": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "version",
+      "input_hash",
+      "body_json",
+      "state",
+      "deferred",
+      "created_at"
+    ]
+  },
+  "learning_contributions": {
+    "classification": "product",
+    "columns": [
+      "artifact_id",
+      "observation_id"
+    ]
+  },
+  "learning_corrections": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "artifact_id",
+      "correction",
+      "actor_id",
+      "created_at"
+    ]
+  },
+  "learning_commitments": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "artifact_id",
+      "snapshot_json",
+      "actor_id",
+      "created_at"
+    ]
+  },
+  "learning_runs": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "event_key",
+      "claim",
+      "grant_version",
+      "state",
+      "reserved_micros",
+      "actual_micros",
+      "reason",
+      "cursor_json",
+      "created_at",
+      "finished_at"
+    ]
+  },
+  "learning_erased_events": {
+    "classification": "product",
+    "columns": [
+      "source_id",
+      "event_hash"
+    ]
+  },
+  "learning_erased_people": {
+    "classification": "product",
+    "columns": [
+      "source_id",
+      "person_hash"
+    ]
+  },
+  "learning_source_people": {
+    "classification": "product",
+    "columns": [
+      "observation_id",
+      "source_person_id"
+    ]
+  },
+  "learning_invalidations": {
+    "classification": "product",
+    "columns": [
+      "commitment_id",
+      "reason",
+      "created_at"
+    ]
   }
 }
