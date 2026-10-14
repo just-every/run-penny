@@ -2835,11 +2835,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "44ac1cfc35a4b3d1de849dca2be44a11cf4e45d49a7380719b818e123bcacefe",
+      "sha256": "2da8a1f42058325864ddbd47c17ba5b514a0003ff7b63efb3df70dbe606b4857",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "74c660f724829b361dc58dbc8e793358aab99c2fe521f59da5b670a08fc1cc75",
+      "sha256": "2b15dada4a0b1943a47c933c3566aa335c6ce92f8c2ad099db2629d1bdd0be9b",
       "executable": false
     },
     "public/brand/band.svg": {

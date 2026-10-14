@@ -158,6 +158,9 @@
     "pnpm": "10.12.4"
   },
   "pnpm": {
+    "overrides": {
+      "sharp": "0.35.5"
+    },
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
       "esbuild",
