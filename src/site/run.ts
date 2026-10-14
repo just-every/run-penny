@@ -5,7 +5,7 @@ export const run: RunData = {
   repository: 'https://github.com/just-every/run-penny',
   clone: 'git clone https://github.com/just-every/run-penny.git',
   folder: 'run-penny',
-  requirements: 'Needs Node 22 or later and pnpm 10.12.4, on macOS, Linux or Windows with WSL2.',
+  requirements: 'Runs on macOS, Linux or Windows with WSL2. With rer available, it bootstraps the pinned Node 22.20.0 and pnpm 10.12.4 in its own cache; no pnpm preinstall is needed.',
   licence: 'MIT',
   docs: true,
   hosted: [],

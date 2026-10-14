@@ -45,9 +45,11 @@ delivery.
 
 ## Run it on your computer
 
-Use Node **22.20.0** and pnpm **10.12.4**. The dispatcher selects the pinned
-Node itself and Penny never changes global tools. The source
-distribution is:
+With `rer` available, clone Penny and run the commands below. `rer` bootstraps
+the checkout's pinned Node **22.20.0** and pnpm **10.12.4**, downloading missing
+tools into its own cache without changing global tools. You do not need to
+install pnpm first. Penny pins `@runeditrun/rer` **0.2.5** in its manifest and
+lockfile; the dispatcher uses that project version. The source distribution is:
 
 ```bash
 git clone https://github.com/just-every/run-penny.git

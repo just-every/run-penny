@@ -2835,11 +2835,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "44ac1cfc35a4b3d1de849dca2be44a11cf4e45d49a7380719b818e123bcacefe",
+      "sha256": "4adfa8875fec792fffc3f51ae71b944b7f15d2c4325f42d493fffed734aaca6d",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "74c660f724829b361dc58dbc8e793358aab99c2fe521f59da5b670a08fc1cc75",
+      "sha256": "2ee0a867e7bff4e5c039d4f28f966dcdb72c5e73f27469e0a5674f882b9281ce",
       "executable": false
     },
     "public/brand/band.svg": {
@@ -2875,7 +2875,7 @@
       "executable": false
     },
     "README.md": {
-      "sha256": "e1b783d3ef5fedc18c1007afaa943a3dbf5953e2e6852c47bd3074577eab1714",
+      "sha256": "2da0b89d11349a5cda19475570d0e73e2aa6458aa8cfa08c37af083ccd8a0ec6",
       "executable": false
     },
     "RELEASE.json": {
@@ -5663,7 +5663,7 @@
       "executable": false
     },
     "src/site/run.ts": {
-      "sha256": "f0a8789d9e2cf6b0abd2d15738fec1fb1c2f305b3d0c0edcfdfe7db44abcc29a",
+      "sha256": "46d80d49d981f9ca273dc78b2d1bca0cb9b7ea81c0d61d17b15f1ab4dbea6b5c",
       "executable": false
     },
     "src/visual-edits.json": {
