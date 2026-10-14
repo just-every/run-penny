@@ -270,12 +270,13 @@ private custody until erasure; mapping input is not retained as an extra copy.
 The demonstrated pages for the same source were at most 350,896 expanded bytes
 and completed selected-evidence erasure. The limits above remain refusal limits. They do not promise erasure for
 every older flat plan: a reproduced plan from a 2,296,922-byte CSV with 40 posts
-was 20,048,495 bytes, below the page limit, but immutable Base could not publish
-its erasure within 1,000 queries per invocation across three resumes. Upgraded
-Penny performs a read-only check before reserving erasure or deleting native
-records or files and returns HTTP 409 `feedback_legacy_erasure_upgrade_required`
-for this boundary. Already-pending oversized legacy erasures remain locked for
-future bounded Base support. Compatible legacy jobs and completed legacy copies
+was 20,048,495 bytes, below the page limit, and Base cannot publish its erasure
+within 1,000 queries per invocation. Base's packed custody rewrites (import kit
+`0cb6162`) now erase people in flat plans up to about 12.8 MB in one request;
+for larger ones Penny performs a read-only check before reserving erasure or
+deleting native records or files and returns HTTP 409
+`feedback_legacy_erasure_upgrade_required`. Already-pending oversized legacy
+erasures remain locked until Base can publish one job's custody across requests. Compatible legacy jobs and completed legacy copies
 are repaired under erasure/export/restore-checked custody, but not every legacy
 plan size is erasable.
 Large reversal first shows `preflighting`: resume the same job ID while Penny

@@ -168,7 +168,8 @@ frozen clean-clone setup, including both widths, privacy, 404, same-origin
 admission, axe/layout and owned-process teardown. A named passing receipt proves
 only its bounded claim. Keep local proof, provider fixtures, export-file proof,
 hosted Cron/inbox delivery, registry admission and public release separate.
-SendGrid REL-007 duplicate suppression and excluded REL-011 callbacks remain open.
+SendGrid REL-007 provider duplicate suppression remains open (Resend receives the
+delivery key as its idempotency key); ambiguous sends are never replayed.
 
 Record clause changes, migration/reconfiguration/recovery steps and Unreleased
 changes accurately. Keep the version consistent across package, seed and release metadata. Later

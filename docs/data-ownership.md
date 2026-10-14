@@ -112,14 +112,27 @@ cannot transfer admission; sign in again.
 
 ## Bounded erasure
 
-Roots supported: requesters, requests, evidence items, accounts. Operators are an
-explicit hold. Preview shows dependent row counts, file counts and ambiguous
+Roots supported: requesters, requests, evidence items, accounts and removed
+operators. Preview shows dependent row counts, file counts and ambiguous
 copies. Erasure checks the preview hash again, follows FK/opaque-ID provenance,
 removes linked evidence/history/custom fields, anonymises retained audit references
 and nested details, appends opaque PK tombstones, and removes original R2 files.
 The UI and CLI report complete only after file cleanup; faults keep a resumable
 operation. Auth links/outbox and requester sessions associated with selected
-identities are included. Any overlap with held operator identity blocks erasure.
+identities are included. Any overlap with a current operator's identity blocks
+erasure.
+
+A removed operator (`operators` root) is redacted in place so the work they
+attributed keeps one anonymous author: the product and Base operator rows keep
+only their IDs under the label "Erased operator", copies of their name in release,
+comment and request attribution take that label, their sign-in links, sessions,
+rate entries, identity-provider links, mail-event receipts and review-mail
+suppression are deleted, mail attempts lose the address and audit details naming
+them are cleared. Their notes, decisions and other records stay. A current
+operator is refused with `erasure_operator_active`: remove them in Settings
+first. Any other row holding their address is an ambiguous copy that blocks the
+erasure. An opaque redaction checkpoint advances the journal, so the latest
+journal refuses any older archive.
 
 The selected native graph is read in bounded SQL frontiers; unrelated import
 plans and original bodies are not loaded into JavaScript. Refusal limits are
@@ -139,13 +152,16 @@ their original custody bytes. A cleanup too large for one batch publishes
 through Base's bounded private staging; a resume clears any stage left by an
 interrupted attempt before starting again.
 
-Some large older flat plans exceed Base's single-invocation erasure or atomic
-metadata-redaction capacity. A read-only admission check refuses these with
-`feedback_legacy_erasure_upgrade_required` before reserving an operation or
-removing rows or files. They need Base support for resuming a single job's exact
-custody publication across requests; raising limits or dropping custody checks
-is not a supported recovery. Already pending old oversized erasures remain held
-for that upgrade. This limitation means full legacy erasure acceptance is open.
+Older Penny versions kept large saved imports as one flat plan with a copy of
+the supplied files. Base's import kit (from `0cb6162`) rewrites such a plan's
+custody in packed statements, so a person inside a plan of several megabytes is
+erased in one request; measured on local D1, flat plans up to about 12.8 MB
+complete. A plan too large for one request is still refused by a read-only
+admission check with `feedback_legacy_erasure_upgrade_required` before any
+operation, row or file changes; it needs Base support for publishing one job's
+exact custody across requests, and raising limits or dropping custody checks is
+not a supported recovery. Releases since `v0.0.0` stream large histories in
+bounded pages and never create such plans.
 
 Sensitive literal matches in unrelated rows block erasure instead of deleting
 unrelated business data. Known text/JSON copies, filenames and source labels are
@@ -225,8 +241,12 @@ bootstrapped Base authority, so source Base credentials and privileges never mov
 with an archive. A fresh destination must complete its own Base bootstrap before
 an operator can restore. Historical product attribution survives; existing
 operator email admission remains in the owner-controlled server configuration.
-This is not an installation-level identity backup and does not establish complete
-BASE-DATA-001/DATA-001 export. Migration 0009 separately imports predecessor
+This is not an installation-level identity backup: operator memberships, roles
+and sign-in history are authority, re-established by invitation at the
+destination, while every product record (including each operator's identity in
+`operators`) travels. A restored installation adopts the source's erasure origin,
+epoch and tombstones, so its next erasure continues the same journal and an
+archive older than that erasure is refused with the latest journal. Migration 0009 separately imports predecessor
 operator identities and revokes all preceding synthetic auth credentials.
 Authenticated read/recovery admission reuses existing product attribution without
 writing the maintenance-fenced `operators` table.
@@ -282,8 +302,12 @@ against a restored installation with a mail drain enabled.
 
 The inventory includes product integration events/targets, immutable delivery
 attempts/resolutions/replay receipts, tracker links/source-state/commands and safe
-portal branding. Native issuance/usage, installation destinations, provider keys
-and signing material are excluded. Export marks product events and tracker
+portal branding, plus the portal embedding settings and the integration
+destinations and tracker connections themselves. Destinations and connections
+arrive revoked: their endpoints, provider keys and signing material stay in
+installation tables, and their operator authority stays with the source, so a
+restored installation creates new ones. API keys and their issuance/usage history
+are credential custody and are excluded. Export marks product events and tracker
 commands held and queued/sending shared deliveries uncertain; no import, repeat,
 restore or undo initiates a provider effect. Original import files and provenance
 remain private, hash-bound and governed by the latest erasure journal. Graph

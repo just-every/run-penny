@@ -302,27 +302,23 @@ events, and set `SENDGRID_EVENT_PUBLIC_KEY` to its base64 P-256 public key. For
 Resend, select Resend as the mail provider and set `RESEND_WEBHOOK_SECRET` to its
 Svix signing secret. Without the selected verification key the intake returns
 503; provider setup and actual hosted callback delivery require separate proof.
-Only authenticated events correlated to a recorded Penny notification attempt
-and its exact recipient can suppress that address. Soft bounces do not suppress.
+Events from mail Penny did not send are acknowledged and change nothing. Hard
+bounces, complaints and provider suppressions of Penny's mail suppress the
+address, including attempts sent before Penny kept correlation data and
+SendGrid's delayed bounces that carry no `sg_message_id`
+([event shapes](https://www.twilio.com/docs/sendgrid/for-developers/tracking-events/event));
+soft bounces do not, and a provider unsubscribe stops all requester email. See
+OPERATIONS.md, "Mail events". Resend receives each delivery key as its idempotency
+key; SendGrid has no provider duplicate suppression (REL-007), and with either
+provider an ambiguous send stays unknown and is never retried automatically.
 
-REL-011 is not fully satisfied: delayed or asynchronous bounces without
-`sg_message_id` are rejected by the retained Base intake, although SendGrid
-[documents that shape](https://www.twilio.com/docs/sendgrid/for-developers/tracking-events/event).
-Historical accepted attempts without the recipient snapshot or
-attempt correlation also cannot authorize suppression.
-Penny suppression for these excluded events is not implemented;
-operators must review provider-side suppression separately. This limitation
-applies even when the callback has a valid signature. SendGrid also lacks
-provider duplicate suppression (REL-007); ambiguous sends remain unknown with
-no automatic retry.
-
-Still open are EVID-005 beyond choosing an existing account, EVID-007 duplicate
-suggestions, EVID-008 evidence attachments and EVID-010 wording versions beyond
-the preserved first version; DEC-006 revisions, DEC-007 review-due handling and
-NOTIFY-003, and DEC-008 outcome evidence; and REL-003 post-publication
-corrections, REL-008 outcome responses, REL-009 coverage and REL-012
-subscribe-all. Published wording is immutable; no public outcome prompt or
-outcome submission is offered. Version remains 0.0.0.
+EVID-005/007/008/010 (accounts and links, duplicate suggestions, original
+attachments, wording versions), DEC-006/007/008 with NOTIFY-003 (revisions,
+review-due handling and reminders, post-release evidence) and REL-003/008/009/012
+(corrections, outcome responses, coverage, subscribe-all) are implemented with
+local tests; ACCEPTANCE.md lists what each proof covers and what still needs
+hosted or live evidence. Published wording is immutable; corrections append a
+version. Version remains 0.0.0.
 
 ## How it is built
 

@@ -2,7 +2,8 @@
 
 ## Unmet first-release obligations
 
-Penny remains a 0.0.0 source candidate. A named passing test or exact-head receipt
+Penny 0.0.0 is public at `just-every/run-penny` (tag `v0.0.0`); later heads are
+unreleased source. A named passing test or exact-head receipt
 satisfies only its bounded claim. Uncovered, local-only and provider-limited
 requirements remain unmet; a table, build, listing or historical receipt cannot
 close them. CONTRACT.md and BASELINE.md retain their full authority.
@@ -28,38 +29,39 @@ grant (docs/INTEGRATIONS.md); the egress service is built and copied, and the
 owner-account declaration keeps the account `workers.dev` origin with no
 custom-domain field. Custom-domain or egress
 provisioning, Resend sender configuration, stage installation, live preview or
-production deployment, registry admission, public visibility flip, version tag
-and site pin are owner-only actions and are not evidenced here. Signed inbound
+production deployment, registry admission and any release after `v0.0.0` are
+owner-only actions and are not evidenced here. Signed inbound
 receipts, saved-file import and existing issue linking have their separate
 bounded tests. Global registry and live provider acceptance remain unmet. No
 replacement claim exists without a tested real owner export.
 
-First release still requires final-head hosted setup/health, real provider inbox
+A later release still requires final-head hosted setup/health, real provider inbox
 and Cron proof, applicable-prefix resource emptiness/teardown, public publication
 inspection, release/tag approval and any registry/site acceptance. Local TLS
 hosted-mode data proof is not a deployed-installation receipt. Hosted restore and
 erasure have a guarded authenticated API and CLI source path; the Data screen
 shows its state and commands without destructive buttons. This is source-only,
-local TLS. Real hosted restore/erasure and universal DATA-001/003 and
-BASE-DATA-001/003 remain open;
-archive limits, safe authority exclusions and journal continuity requirements
-are in docs/data-ownership.md.
+local TLS; real hosted restore/erasure remains open. Archive limits, the
+authority and credential exclusions and journal continuity are in
+docs/data-ownership.md.
 
-SendGrid does not satisfy REL-007 provider duplicate suppression. Its stable key
-is correlation only. Ambiguous/interrupted sends remain unknown and are never
-automatically retried; inspect provider records before deliberate reconciliation.
-REL-011 is not fully satisfied: delayed or asynchronous bounces without
-`sg_message_id` cannot pass the retained Base intake. Historical accepted attempts
-without the recipient snapshot or attempt correlation are not retroactively
-trusted. Penny suppression for these excluded events is not implemented;
-operators must review provider-side suppression separately. A valid callback
-signature alone does not remove either boundary.
+REL-007: Resend receives each delivery key as its `Idempotency-Key`; SendGrid has
+no provider duplicate suppression, so its key is correlation only and REL-007
+stays unmet for SendGrid. With either provider ambiguous or interrupted sends
+remain unknown and are never automatically retried; inspect provider records
+before deliberate reconciliation. REL-011 and NOTIFY-005: events are correlated
+for every kind of Penny mail (request updates, releases, rejection notices and
+decision-review mail), by Penny's signed arguments, by provider message ID
+(including historical attempts without recipient snapshots) or, for SendGrid's
+delayed bounces without `sg_message_id`, by an address Penny mailed through that
+provider (OPERATIONS.md, "Mail events"). Events from other mail on the account are
+acknowledged without effect. Hosted provider callbacks remain unproven.
 
 The dated feature-head source proofs below cover EVID-005/007/008/010,
 DEC-006/007/008 with NOTIFY-003, and REL-003/008/009/012. The integrated head
 requires its own affected checks and exact-head receipt.
-REL-007, REL-011 and the live obligations above remain open. Declared-capacity queue/search latency,
-general accessibility/load limits, universal portability and customer-outcome/
+SendGrid REL-007 and the live obligations above remain open. Declared-capacity
+queue/search latency, general accessibility/load limits and customer-outcome/
 economic acceptance remain required. Existing
 appeals/duplicate/account variants are not new gates for this bounded candidate.
 
@@ -515,3 +517,32 @@ refusal's heading list. Its per-phase times are in the release-review evidence k
 The importer remains **documented format, synthetic-only**; a real UserVoice
 export is **not supplied** and no replacement is claimed. The trial is
 [USERVOICE-TRIAL.md](docs/USERVOICE-TRIAL.md).
+
+## Package mode, complete erasure, mail events and archives (14 October 2026)
+
+Source only; exact-head CI and the run-site workflow are recorded with the
+landing, and none of this is hosted proof.
+
+- `rer` is the published `@runeditrun/rer` 0.2.2 in package mode. `rer check
+  --profile first-party` passes; first and repeat `rer setup`, `rer dev` and
+  `rer deploy --dry-run` behave as on the vendored head. Penny's placement
+  refusal runs from the seed adapter: `tests/installer/cli-policy.test.mjs`
+  drives the installed `rer` against a copy of the checkout.
+- DATA-003/BASE-DATA-003: removed operators are an erasure root
+  (`tests/base/penny-erasure.test.ts`); a person inside a multi-megabyte legacy
+  saved import is erased while everyone else in it stays
+  (`tests/base/feedback-import-custody.test.ts`). Measured on local D1, legacy
+  flat plans up to about 12.8 MB erase completely; a 15.9 MB plan is still
+  refused before any change with `feedback_legacy_erasure_upgrade_required`
+  until Base can publish one job's custody across requests. Releases since
+  `v0.0.0` stream large histories and never create such plans.
+- REL-011/NOTIFY-005: `tests/base/review-provider-boundary.test.ts` and
+  `tests/base/review-mail-events.test.ts` cover delayed id-less bounces,
+  historical attempts, rejection notices, decision-review delivery and
+  suppression, provider unsubscribe and mixed signed batches.
+- DATA-001/BASE-DATA-001: `tests/e2e/worker/data-ownership.test.ts` restores an
+  archive carrying embedding settings and a revoked integration destination into
+  a fresh installation, re-exports it unchanged, and shows the next erasure there
+  continuing the source journal while the older archive is refused;
+  `tests/installer/portability.test.mjs` keeps the literal `rer
+  export/reset/import/export` equivalence.

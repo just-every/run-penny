@@ -132,5 +132,5 @@ boundary after changing admission or editor policy.
 
 Earlier integration receipts belong to their named finished slices and do not
 accept this final candidate. Hosted Cron/inbox delivery, live project admission,
-platform signing-key transport, public publication, SendGrid REL-007 and excluded
-REL-011 callbacks remain separate open boundaries.
+platform signing-key transport, later public releases and SendGrid REL-007 remain
+separate open boundaries.

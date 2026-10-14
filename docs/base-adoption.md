@@ -114,8 +114,12 @@ referenced by ACCEPTANCE.md, not inferred from the historical evidence below.
 Notification intent retains consent, public-only projection, fixed first-event
 hourly coalescing and workspace quiet hours. Minute Cron drains requester and
 release commands. Ambiguous sends stay unknown; SendGrid correlation does not
-satisfy REL-007 duplicate suppression. REL-011 unmatched callbacks remain an
-explicit boundary. Local fixtures do not establish inbox delivery or hosted Cron.
+satisfy REL-007 duplicate suppression (Resend's idempotency key does). Signed
+provider events are verified with Base's `verifyWebhook` and kept in Base's
+durable event store, but Penny normalizes and correlates them itself: Base's
+intake refuses a whole batch for one event without `sg_message_id` or one event
+Penny did not send, which SendGrid batches routinely contain (OPERATIONS.md,
+"Mail events"). Local fixtures do not establish inbox delivery or hosted Cron.
 
 ## Base 479094f (13 October 2026)
 
@@ -130,6 +134,17 @@ and an archive made before an erasure is refused whole with the later journal. T
 serves built files through `staticAssetResponse` and answers `/health` with `deploymentHealth`;
 `deploy.json` declares the vars `rer verify`'s hosted check needs. Local session and dev-gate
 cookies carry the port (`operator_session_local_8787`, `rer_dev_gate_8787`).
+
+## Base 0cb6162 import kit and rer 0.2.2 (14 October 2026)
+
+The import kit is Base `0cb6162`: packed custody and provenance rewrites (from
+`1995f8f`) let a person in a multi-megabyte legacy flat plan be erased within one
+request, and resumable preparation steps add the `ik_d1_preparation_steps`
+control table, applied byte-exact as migration 0056 with Penny's maintenance
+admission in 0058. Migration 0057 adds decision-review delivery facts and
+operator mail suppression and lets event receipts belong to an operator or an
+address; 0058 also fences portal embedding settings, which archives now carry.
+Applied 0001–0055 stay byte-identical.
 
 ## Base c8e64851 (13 October 2026)
 

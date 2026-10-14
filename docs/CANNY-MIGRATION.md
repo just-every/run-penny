@@ -159,10 +159,9 @@ Classic CSV, Ideas CSV and saved API imports remain supported. New jobs divide t
 exceeds 512 KiB or 200 normalized records. Original files remain in their declared
 private custody until erasure; mapping input is not retained as an extra copy. A resumable pre-upgrade flat plan is not necessarily erasable: Penny
 checks the legacy boundary before reserving erasure or deleting native rows or
-files, and returns HTTP 409 `feedback_legacy_erasure_upgrade_required` when
-Base cannot publish that plan's erasure within its bounded invocation. An
-already-pending oversized legacy erasure remains locked for future bounded Base
-support. See [MOVE-IN](MOVE-IN.md#privacy-erasure-and-boundaries) for the tested
+files, and returns HTTP 409 `feedback_legacy_erasure_upgrade_required` only when
+Base cannot publish that plan's erasure within one request (flat plans up to
+about 12.8 MB now complete). See [MOVE-IN](MOVE-IN.md#privacy-erasure-and-boundaries) for the tested
 boundary and its refusal limits.
 
 Apply stops at a durable checkpoint; reopen the saved job and resume by job ID.

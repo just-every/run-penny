@@ -28,17 +28,19 @@ transport with all product migrations.
 
 ## Source and custody
 
-Every Base copy uses `1077a2e4fd6b1ead9ae312f1b72cc0ee21270665`: the shared CLI,
-onboarding, authoring tools, delivery producer and the selected native modules
-(operator auth, owner claim, mail, import kit, integrations, editor, deploy kit)
-and Base's first-run runtime (`src/base/setup.ts` and `theme-frame.ts`). Shared tests and fixtures stay
-in Base; Penny keeps its product and adapter checks. `scripts/rer.mjs` is Penny's
-own thin dispatcher: it applies state-placement policy before any mutating
-command, then calls the shared CLI. `edition.json`, the per-copy hashes and modes
-in `base/PROVENANCE.json`, the comparison archives and `sources.lock.json`
-identify the shipped source; public readers can verify the bytes offline. The
-public repository is `https://github.com/just-every/run-penny`, version 0.0.0
-([source provenance](docs/SOURCE-PROVENANCE.md), [releasing](RELEASE.md)).
+Penny runs the published `@runeditrun/rer` 0.2.2 in package mode: `package.json`
+pins it exactly and the checkout carries no vendored CLI or onboarding copy.
+Penny's state-placement refusal and credential-free install live in its seed
+adapter (`scripts/installer/placement.mjs`), which `rer` loads before any verb
+acts. The retained Base copies (native modules under `base/`, the delivery
+producer, schema, authoring tools and the first-run runtime `src/base/`) record
+their own revisions in `base/PROVENANCE.json`; the import kit is Base `0cb6162`.
+Shared tests and fixtures stay in Base; Penny keeps its product and adapter
+checks. `edition.json`, the per-copy hashes and modes, the comparison archives and
+`sources.lock.json` identify the shipped source; public readers can verify the
+bytes offline. The public repository is `https://github.com/just-every/run-penny`,
+version 0.0.0 ([source provenance](docs/SOURCE-PROVENANCE.md),
+[releasing](RELEASE.md), [Base adoption](docs/base-adoption.md)).
 
 The first release is a parentless export of the exact verified tree with the
 annotated tag `v0.0.0` on it.
@@ -62,9 +64,13 @@ transaction. Hosted restore and supported-root erasure now have guarded,
 authenticated API and CLI source paths; the Data screen presents state and exact
 commands without destructive buttons. Their current proof is source-only over
 local TLS, with native authority, same-origin mutation, maintenance, empty-target,
-latest-journal and preview-hash fences. Real hosted restore/erasure and universal
-DATA-001/003 and BASE-DATA-001/003 remain unmet; see docs/data-ownership.md for
-bounds, destination journal continuity and exclusions.
+latest-journal and preview-hash fences. Archives also carry portal embedding
+settings and integration destinations and tracker connections (restored revoked;
+their credentials never travel), and a restored installation continues the source
+erasure journal. Erasure covers requesters, requests, evidence, accounts and
+removed operators, including people inside multi-megabyte legacy saved imports up
+to one request's bound. Real hosted restore/erasure remains unproven; see
+docs/data-ownership.md for bounds and exclusions.
 
 Reviewed main's applied migrations 0001–0029 stay byte-identical. 0016 holds restored batched and
 unbatched notification history so it cannot send; never run an older mail drain
@@ -165,18 +171,25 @@ installation or deployment (docs/delivery-preparation.md).
 
 ## Open obligations and owner-only steps
 
-Unmet or partial: REL-007 (provider duplicate suppression), REL-011 (events
-without `sg_message_id`, uncorrelated historical attempts), universal portability,
-real hosted restore/erasure and customer-outcome/economic acceptance. The
+Unmet or partial: REL-007 provider duplicate suppression for SendGrid (Resend
+receives each delivery key as its idempotency key; Penny never replays an
+ambiguous send with either), erasure of legacy saved-import plans larger than one
+request can rewrite (refused until Base can publish one job's custody across
+requests), real hosted restore/erasure, declared-capacity latency and
+customer-outcome/economic acceptance. Provider mail events are correlated for
+every kind of Penny mail, including historical attempts and SendGrid's delayed
+bounces without `sg_message_id` (OPERATIONS.md, "Mail events"). The
 EVID-005/007/008/010, DEC-006/007/008 with NOTIFY-003 and REL-003/008/009/012
-source paths now have the bounded historical feature evidence in ACCEPTANCE.md;
+source paths have the bounded historical feature evidence in ACCEPTANCE.md;
 that evidence does not certify this integrated head or live provider effects.
 General tracker sync, passive ingestion, autonomous publication and wider
 requirements remain excluded or unmet as CONTRACT.md records. Hosted health,
 provider inbox and Cron delivery, applicable-prefix teardown, registry admission, platform signing-key
-transport and public-release inspection need their own receipts.
+transport and later release inspection need their own receipts.
 
 Owner-only and unperformed: custom-domain or egress provisioning, Resend sender
 configuration, stage installation, preview and production deployment, registry
-admission, the public visibility flip, the version tag and the site pin. No
-deploy, tag, public push, repository creation or visibility change has been made.
+admission and any release after `v0.0.0`. The source is public at
+`just-every/run-penny` with tag `v0.0.0`, and every push to `main` redeploys the
+run-penny.com marketing site through the Run site workflow; no product
+installation has been deployed from this source.

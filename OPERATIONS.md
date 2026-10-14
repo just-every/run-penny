@@ -185,8 +185,9 @@ permission, Cron execution, inbox delivery or a real hostname.
 
 `edition.json` is the selection and comparison authority.
 `base/PROVENANCE.json` records full copied-byte, executable-mode and pin custody.
-All retained Base copies use the reviewed `1077a2e4fd6b1ead9ae312f1b72cc0ee21270665`
-revision, and `pnpm verify:base-source` is a thin alias to the shared verifier.
+Each retained Base copy records its own revision there (the import kit is Base
+`0cb6162`), and `pnpm verify:base-source` is a thin alias to the shared verifier.
+The `rer` command itself is the pinned `@runeditrun/rer` package, not a copy.
 Stage intentional edits and removals, run `pnpm source:lock`, then
 `pnpm source:check` and the shared verify-base before committing the lock and
 `.edition/sources`. No copied bytes are patched locally; Penny's own
@@ -209,9 +210,13 @@ events, and set `SENDGRID_EVENT_PUBLIC_KEY` to its base64 P-256 public key. For
 Resend, select Resend as the mail provider and set `RESEND_WEBHOOK_SECRET` to its
 Svix signing secret. Without the selected verification key the intake returns
 503; provider setup and actual hosted callback delivery require separate proof.
-Only authenticated events correlated to a recorded Penny notification attempt
-and its exact recipient can suppress that address for hard bounces or complaints.
-Soft bounces do not suppress.
+A signed batch carries every message the provider account sent. Penny applies
+the events that belong to its own mail and acknowledges the rest without storing
+them; only a bad signature, a stale timestamp, a malformed body or a second
+provider message for one Penny attempt refuses the batch. Hard bounces,
+complaints and provider suppressions suppress the address; soft bounces mark one
+delivery failed and suppress nothing; a provider unsubscribe withdraws all
+requester email exactly as Penny's own global link does.
 
 The deployment CLI includes the selected event-verification binding when its
 matching environment value is present. Configure the provider webhook URL
@@ -221,23 +226,36 @@ is emitted in an operation receipt. Callback failures return a generic 400
 or 503 (missing configuration, maintenance or event-storage failure); retry a 503
 through the provider.
 
-SendGrid's signed `type: bounce` distinguishes a hard bounce from `type: blocked`.
-Its webhook message ID differs from the send API receipt; Penny emits a batch ID,
-`rer_product=penny` and a per-attempt correlation, and binds the first authenticated
-callback message ID to that attempt. See the [SendGrid event reference](https://www.twilio.com/docs/sendgrid/for-developers/tracking-events/event)
-and [message ID definition](https://www.twilio.com/docs/sendgrid/glossary/message-id).
-Resend uses the exact stored provider receipt and `bounce.type=Permanent`; see
-[Resend bounce details](https://resend.com/changelog/email-bounce-details).
+### Mail events
 
-REL-011 is not fully satisfied: delayed or asynchronous bounces without
-`sg_message_id` are rejected by the retained Base intake. Historical accepted
-attempts without the recipient snapshot or attempt correlation also cannot
-authorize suppression. Review provider-side suppression separately for these
-excluded events; the product does not implement suppression for them.
+An event belongs to Penny's mail when it carries Penny's signed SendGrid
+arguments (`rer_product=penny`, the attempt and the delivery ID), or when its
+provider message ID matches an attempt Penny recorded (SendGrid's
+`sg_message_id` begins with the send receipt's `X-Message-Id`; Resend's email ID
+is the receipt itself). That covers request updates, releases, rejection notices
+and decision-review mail, including attempts sent before Penny kept recipient
+snapshots or correlation arguments. A hard bounce, complaint or unsubscribe that
+names no message at all (SendGrid's delayed, asynchronous bounces arrive without
+`sg_message_id`) belongs to the address when Penny has mailed it through that
+provider. An event naming another message is another sender's mail and changes
+nothing, unless Penny holds an attempt to that address whose message ID it never
+learned. A verification of the address after the event outranks it. SendGrid's
+`type: bounce` is a hard bounce and `type: blocked` a soft one; Resend uses
+`bounce.type=Permanent`. See the [SendGrid event reference](https://www.twilio.com/docs/sendgrid/for-developers/tracking-events/event),
+[message ID definition](https://www.twilio.com/docs/sendgrid/glossary/message-id)
+and [Resend bounce details](https://resend.com/changelog/email-bounce-details).
 
-REL-007 remains unmet because SendGrid provides no provider duplicate suppression
-for these sends. Ambiguous attempts stay `unknown` with no automatic retry;
-reconcile the provider outcome before an operator chooses any further action.
+Decision-review mail to an operator shows delivered, suppressed or failed from
+these events. A hard bounce or complaint stops further review mail to that
+operator (the notification records `recipient_suppressed`) until they sign in
+again by email.
+
+REL-007 is met for Resend, which receives each delivery key as its
+`Idempotency-Key` and suppresses a duplicate within 24 hours; SendGrid offers no
+provider duplicate suppression, so its delivery key is correlation only. With
+either provider an ambiguous or interrupted attempt stays `unknown` and is never
+retried automatically; reconcile the provider outcome before an operator chooses
+any further action.
 
 ## Saved feedback history
 
