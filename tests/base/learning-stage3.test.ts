@@ -31,7 +31,7 @@ it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged w
 
  // Revoking one grant must not turn its shared native/source originals into
  // erased evidence, or remove the independently accountable sibling history.
- network.beforeModel=undefined
+ network.beforeModel=undefined;network.sourceText=null
  const evidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Independent grant scope',wording:'An independently reusable handoff observation.',observedAt:'2026-10-01T00:00:00Z'},f.cookie),201)
  const source=await json<{id:string}>(call(path+'/sources',{name:'Shared grant scope',provider:'orbit',resourceIds:['signals/grant-revoke'],useBasis:'Authorized independent comparison',allOperatorsAuthorized:true},f.cookie),201)
  const grant=async(sourceId?:string,nativeEvidenceIds:string[]=[])=>json<{id:string}>(call(path+'/investigations',{sourceId,nativeEvidenceIds,nativeRequestIds:[],purpose:'Independent grant purpose',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)

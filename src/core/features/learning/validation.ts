@@ -1,10 +1,11 @@
 import {NativeError} from '../auth/native-tokens'
 import {outputSchema,type Observation} from './schema'
+import {citationRanges} from './source-content'
 export function validateLearning(value:unknown,observations:Observation[],budget:number){
  const output=outputSchema.parse(value),ids=new Set(observations.map(o=>o.id)),cited=new Set<string>()
  for(const cite of [...output.citations,...output.contradictions]){
   const observation=observations.find(o=>o.id===cite.observationId)
-  if(!observation||cite.end<=cite.start||cite.end>observation.wording.length||cite.start>=observation.wording.length||observation.wording.slice(cite.start,cite.end)!==cite.quote)throw new NativeError('learning_citation_invalid',409)
+  if(!observation||cite.end<=cite.start||cite.end>observation.wording.length||cite.start>=observation.wording.length||observation.wording.slice(cite.start,cite.end)!==cite.quote||!citationRanges(observation).some(range=>cite.start>=range.start&&cite.end<=range.end))throw new NativeError('learning_citation_invalid',409)
   cited.add(cite.observationId)
  }
  if(new Set(output.options.map(o=>o.id)).size!==output.options.length||!output.options.some(o=>o.id===output.recommendation.optionId)||!output.options.some(o=>['no-build','support','process','onboarding'].includes(o.kind)))throw new NativeError('learning_comparison_invalid',409)

@@ -2,9 +2,12 @@ import {expect,it,vi} from 'vitest'
 import {env} from 'cloudflare:workers'
 import {call,json,fixture,path,bindings,sent,network} from './learning-test-runtime'
 import {learningOutput} from './learning-fixture'
+import {digest} from '@/core/features/auth/native-tokens'
 it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, compares no-build and commits an immutable accountable protocol',async()=>{
  const f=await fixture();const run=await json<{artifactId:string}>(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie))
  const detail=await json<{observations:Record<string,unknown>[];artifacts:{body:ReturnType<typeof learningOutput>;id:string}[]}>(call(path+`/investigations/${f.investigation.id}`,undefined,f.cookie));expect(detail.observations).toHaveLength(2);expect(detail.observations.every(o=>o.requester_id===null&&o.account_id===null)).toBe(true)
+ const orbit=detail.observations.find(o=>String(o.eventKey).startsWith('orbit:'))!,original=orbit.original as {envelope:{text:string;revision:string;canonicalUrl:string}},raw=JSON.parse(original.envelope.text),citation=detail.artifacts[0].body.citations.find(c=>c.observationId===orbit.id)!
+ expect({human:orbit.wording,rawPreserved:await digest(original.envelope.text)===original.envelope.revision,exactQuote:String(orbit.wording).slice(citation.start,citation.end),quote: citation.quote,provenance:orbit.presentation}).toMatchObject({human:`Signal subject: ${raw.subject}`,rawPreserved:true,exactQuote:raw.subject,quote:raw.subject,provenance:{sourceLabel:raw.subject,observedAt:raw.occurred_at,href:original.envelope.canonicalUrl,excerpts:[{quote:raw.subject}]}})
  const body=detail.artifacts[0].body;expect(body.clarification?.distinguishes).toHaveLength(2);expect(body.options.some(o=>o.kind==='no-build')).toBe(true)
  expect((await call(path+`/investigations/${f.investigation.id}/commit`,{interpretationId:run.artifactId,optionId:'assist',rationale:'Test the support explanation first',confidence:'low',reviewAt:'2098-01-01T00:00:00Z'},f.cookie)).status).toBe(201)
  const snapshot=await env.DB.prepare('SELECT snapshot_json FROM learning_commitments').first<string>('snapshot_json');expect(JSON.parse(snapshot!).selectedOption.supportingEvidenceCount).toBe(2);expect(JSON.parse(snapshot!).ownerOperatorId).toBeTruthy();expect(JSON.parse(snapshot!).protocol.denominator).toBe(10)

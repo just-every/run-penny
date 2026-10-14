@@ -7,6 +7,7 @@ import {context,scopeGuard,assertScope} from './authority'
 import {acquire,retain} from './acquisition'
 import {interpret} from './ports'
 import {validateLearning} from './validation'
+import {citationRanges,observationOriginal} from './source-content'
 import {canonical} from '../data/archive'
 import {learningRunJournalGuard} from './journal'
 import {learningAudit,systemLearningAudit,type LearningActor} from './audit'
@@ -37,18 +38,20 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   const sourceCost=s.provider==='orbit'?(config.orbit?.readCostMicros??0)*(JSON.parse(s.resource_ids_json) as string[]).length:0
   if(sourceCost>=i.max_run_cost_micros)throw new NativeError('learning_call_budget_exceeded',409)
   if(sourceCost>0)paid=true
-  const records=await acquire(runtime,db,i,s),observations=await retain(db,i,s,records)
+  const records=await acquire(runtime,db,i,s);let observations=await retain(db,i,s,records)
   const corrections=(await db.prepare('SELECT id,correction FROM learning_corrections WHERE investigation_id=? ORDER BY created_at,id').bind(id).all()).results
   // A repeated input after a correction is a new interpretation, never a revival
   // of the invalidated immutable artifact or its committed snapshot.
   const predecessor=await db.prepare("SELECT id FROM learning_artifacts WHERE investigation_id=? AND state<>'current' ORDER BY version DESC LIMIT 1").bind(id).first<string>('id')
-  const inputHash=await digest(canonical({observations:observations.map(o=>[o.id,o.content_hash]),corrections,predecessor}))
+  const hashInput=()=>digest(canonical({observations:observations.map(o=>[o.id,o.content_hash]),corrections,predecessor}));let inputHash=await hashInput()
   const known=await db.prepare("SELECT id FROM learning_artifacts WHERE investigation_id=? AND input_hash=? AND state='current'").bind(id,inputHash).first<{id:string}>()
   if(known){await finish(sourceCost,'unchanged');return {runId,unchanged:true,artifactId:known.id}}
+  if(observations.some(o=>observationOriginal(o)?.normalized===false)){observations=await retain(db,i,s,records,false);inputHash=await hashInput()}
+  if(!observations.some(o=>citationRanges(o).length))throw new NativeError('learning_source_content_missing',409)
   await assertScope(native,i,s)
   // This db read also rechecks native session and erasure journal before paid work.
   await db.prepare('SELECT 1').first()
-  const generated=await interpret(runtime,{question:i.question,purpose:i.purpose,observations:observations.map(o=>({id:o.id,wording:o.wording,observedAt:o.observed_at,requesterId:o.requester_id,accountId:o.account_id})),corrections,budgetMicros:i.budget_micros-i.spent_micros},i.max_run_cost_micros-sourceCost,async()=>{await db.prepare('SELECT 1').first();paid=true})
+  const generated=await interpret(runtime,{question:i.question,purpose:i.purpose,observations:observations.map(o=>({id:o.id,wording:o.wording,citableRanges:citationRanges(o),observedAt:o.observed_at,requesterId:o.requester_id,accountId:o.account_id})),corrections,budgetMicros:i.budget_micros-i.spent_micros},i.max_run_cost_micros-sourceCost,async()=>{await db.prepare('SELECT 1').first();paid=true})
   generated.costMicros+=sourceCost
   const body=validateLearning(generated.output,observations,i.budget_micros-i.spent_micros),artifactId=crypto.randomUUID()
   const guards=records.flatMap(record=>record.nativeGuard?[db.prepare(`INSERT INTO penny_integration_guards(id,allowed) VALUES(?,(${record.nativeGuard.sql}))`).bind(crypto.randomUUID(),...record.nativeGuard.params)]:[])

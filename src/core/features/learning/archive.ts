@@ -2,7 +2,8 @@ import {sourceEvent,sourcePerson} from './erasure-fences'
 import {canonical,type Row} from '../data/archive'
 import {digest,NativeError} from '../auth/native-tokens'
 import {validateLearning} from './validation'
-import {outputSchema,type Observation} from './schema'
+import {outputSchema,type Observation,type Source} from './schema'
+import {validateObservation} from './source-content'
 export async function validateLearningArchive(data:Record<string,Row[]>){
  const observations=data.learning_observations??[]
  for(const source of data.learning_sources??[]){
@@ -14,10 +15,11 @@ export async function validateLearningArchive(data:Record<string,Row[]>){
   }
  }
  for(const row of observations){
-  if(await digest(String(row.wording))!==row.content_hash)throw new NativeError('learning_archive_original_invalid',400)
+  let rawPeople:string[]
+  try{rawPeople=await validateObservation(row as unknown as Observation,data.learning_sources.find(s=>s.id===row.source_id) as unknown as Source)}catch{throw new NativeError('learning_archive_original_invalid',400)}
   const eventHash=await digest(String(row.event_key))
   if(data.learning_erased_events?.some(e=>e.event_hash===eventHash))throw new NativeError('learning_archive_erased_event',400)
-  for(const person of [...(data.learning_source_people?.filter(p=>p.observation_id===row.id)??[]),...(row.source_person_id?[{source_person_id:row.source_person_id}]:[])]){const personHash=await digest(`${data.learning_sources.find(s=>s.id===row.source_id)?.provider}:${data.learning_sources.find(s=>s.id===row.source_id)?.installation_id}:person:${person.source_person_id}`);if(data.learning_erased_people?.some(e=>e.person_hash===personHash))throw new NativeError('learning_archive_erased_person',400)}
+  for(const person of [...(data.learning_source_people?.filter(p=>p.observation_id===row.id)??[]),...(row.source_person_id?[{source_person_id:row.source_person_id}]:[]),...rawPeople.map(source_person_id=>({source_person_id}))]){const personHash=await digest(`${data.learning_sources.find(s=>s.id===row.source_id)?.provider}:${data.learning_sources.find(s=>s.id===row.source_id)?.installation_id}:person:${person.source_person_id}`);if(data.learning_erased_people?.some(e=>e.person_hash===personHash))throw new NativeError('learning_archive_erased_person',400)}
  }
  for(const run of data.learning_runs??[]){
   let cursor:unknown
@@ -36,7 +38,7 @@ export async function validateLearningArchive(data:Record<string,Row[]>){
  for(const commitment of data.learning_commitments??[]){
   const artifact=data.learning_artifacts.find(a=>a.id===commitment.artifact_id)
   if(!artifact)throw new NativeError('learning_archive_commitment_invalid',400)
-  const snapshot=JSON.parse(String(commitment.snapshot_json))
-  if(snapshot.interpretationId!==artifact.id||snapshot.interpretationVersion!==artifact.version||!Array.isArray(snapshot.observations)||snapshot.observations.some((o:Observation)=>!observations.some(row=>row.id===o.id&&row.wording===o.wording)))throw new NativeError('learning_archive_commitment_invalid',400)
+  const snapshot=JSON.parse(String(commitment.snapshot_json)),interpreted=JSON.parse(String(artifact.body_json))
+  if(snapshot.interpretationId!==artifact.id||snapshot.interpretationVersion!==artifact.version||canonical({...snapshot.interpretation,protocol:interpreted.protocol})!==canonical(interpreted)||canonical(snapshot.interpretation?.protocol)!==canonical(snapshot.protocol)||!Array.isArray(snapshot.observations)||snapshot.observations.some((o:Observation)=>!observations.some(row=>row.id===o.id&&canonical(row)===canonical(o))))throw new NativeError('learning_archive_commitment_invalid',400)
  }
 }

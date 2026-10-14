@@ -4,6 +4,7 @@ import {hash,canonical} from '../data/archive'
 import {portabilityErasureStatements} from '../../../../scripts/portability/cleanup.mjs'
 import {sourceEvent,sourcePerson} from './erasure-fences'
 import {learningAudit,type LearningActor} from './audit'
+import {rawSourceObjectSql} from './source-content'
 
 /** Free text and downstream interpretations can quote a contribution without a
  * citation. Clear the affected scope, retaining independent original evidence. */
@@ -30,8 +31,11 @@ export async function learningErasureStatements(db:D1Database,selected:Record<st
 export async function purge(db:D1Database,sourceId:string,{personId,actor,action}:{personId?:string;actor:LearningActor;action:'learning.source_disconnected'|'learning.person_erased'|'learning.provider_revoked'}){
  const source=await db.prepare('SELECT provider,installation_id FROM learning_sources WHERE id=?').bind(sourceId).first<{provider:string;installation_id:string|null}>()
  if(!source)throw new NativeError('learning_not_found',404)
- const query=personId?`SELECT o.* FROM learning_observations o JOIN learning_sources s ON s.id=o.source_id WHERE s.provider=? AND s.installation_id IS ? AND (o.source_person_id=? OR EXISTS(SELECT 1 FROM learning_source_people p WHERE p.observation_id=o.id AND p.source_person_id=?) OR json_extract(CASE WHEN json_valid(o.wording) THEN o.wording ELSE '{}' END,'$.contact_id')=? OR EXISTS(SELECT 1 FROM json_each(CASE WHEN json_valid(o.wording) THEN o.wording ELSE '{}' END,'$.contacts') p WHERE json_extract(CASE WHEN p.type='object' THEN p.value ELSE '{}' END,'$.id')=?))`:`SELECT o.* FROM learning_observations o WHERE o.event_key IN(SELECT event_key FROM learning_observations WHERE source_id=?)`
- const queryParameters=personId?[source.provider,source.installation_id,personId,personId,personId,personId]:[sourceId]
+ // A fenced canonical event cannot retain another revision (including one whose
+ // associated person changed). Expand the matching person closure before reads.
+ const personEvents=`SELECT o.event_key FROM learning_observations o JOIN learning_sources s ON s.id=o.source_id WHERE s.provider=? AND s.installation_id IS ? AND (o.source_person_id=? OR EXISTS(SELECT 1 FROM learning_source_people p WHERE p.observation_id=o.id AND p.source_person_id=?) OR json_extract(${rawSourceObjectSql},'$.contact_id')=? OR EXISTS(SELECT 1 FROM json_each(${rawSourceObjectSql},'$.contacts') p WHERE json_extract(CASE WHEN p.type='object' THEN p.value ELSE '{}' END,'$.id')=?) OR COALESCE(json_extract(o.original_json,'$.envelope.target'),json_extract(o.original_json,'$.target'))=?)`
+ const query=personId?`SELECT * FROM learning_observations WHERE event_key IN(${personEvents})`:`SELECT o.* FROM learning_observations o WHERE o.event_key IN(SELECT event_key FROM learning_observations WHERE source_id=?)`
+ const queryParameters=personId?[source.provider,source.installation_id,personId,personId,personId,personId,`contacts/${personId}`]:[sourceId]
  const observations=(await db.prepare(query).bind(...queryParameters).all<Row>()).results
  if(observations.length>500)throw new NativeError('learning_erasure_limit',413)
  const targets=new Set<string>(personId?[`contacts/${personId}`]:[])

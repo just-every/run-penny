@@ -4,6 +4,7 @@ import { OperatorResourceFailure,OperatorResourceLoading,OperatorResourceNotFoun
 import { LoopForm,Field } from '@/core/app/ui/loop-form'
 import type { Artifact,Detail,Investigation,Source } from './types'
 import { api,money,learningReason } from './types'
+import { LearningCitation } from './learning-citation'
 
 export function InvestigationControls({investigation,onSaved,sources}:{investigation:Investigation;onSaved:()=>void;sources:Source[]}) {
  const [inspect,setInspect]=useState(false)
@@ -19,7 +20,7 @@ export function SourceDrilldown({artifact}:{artifact:Artifact}) {
  if(state.kind==='session_expired')return <OperatorSessionExpired/>
  if(state.kind==='not_found')return <OperatorResourceNotFound title="Learning record unavailable">It may have been erased or disconnected.</OperatorResourceNotFound>
  if(state.kind==='error')return <OperatorResourceFailure title="Could not load originals." onRetry={retry} status={state.status}/>
- return <div>{state.data.observations.map(o=><article key={o.id} className="source-row"><h4>{o.sourceLabel??o.sourceType??'Original evidence'}</h4><p>{o.observedAt} · {o.id}</p><blockquote>{o.wording}</blockquote>{[...artifact.body.citations,...artifact.body.contradictions].filter(c=>c.observationId===o.id).map((c,i)=><p key={i}>Cited span {c.start}–{c.end}: <q>{c.quote}</q></p>)}</article>)}<p>Interpretation v{artifact.version}. {state.data.artifacts.length} preserved versions; {state.data.corrections.length} recorded corrections; {state.data.runs.length} checks.</p></div>
+ return <div>{state.data.observations.map(o=><article key={o.id} className="source-row"><LearningCitation source={o.presentation}/><details><summary>Exact immutable wording and provider original</summary><p>Observation {o.id}</p><h4>Citation offset basis</h4><pre>{o.wording}</pre><h4>Preserved original</h4><pre>{JSON.stringify(o.original,null,2)}</pre></details>{[...artifact.body.citations,...artifact.body.contradictions].filter(c=>c.observationId===o.id).map((c,i)=><p key={i}>Cited span {c.start}–{c.end}: <q>{c.quote}</q></p>)}</article>)}<p>Interpretation v{artifact.version}. {state.data.artifacts.length} preserved versions; {state.data.corrections.length} recorded corrections; {state.data.runs.length} checks.</p></div>
 }
 export function CorrectInterpretation({artifact,onSaved}:{artifact:Artifact;onSaved:()=>void}) {
  return <details><summary>Contest or correct interpretation</summary><LoopForm title="Correct interpretation" action={`${api}/investigations/${artifact.investigationId}/correct`} submit="Record correction" onSaved={onSaved} transform={d=>({interpretationId:artifact.id,correction:d.get('correction')})}><Field name="correction" label="Correction and its evidence" type="textarea" required/><p>Creates a durable contest, invalidates stale advice, and informs the next check. Original source wording is preserved.</p></LoopForm></details>
