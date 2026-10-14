@@ -3035,7 +3035,7 @@
       "executable": false
     },
     "scripts/deployment/cron-registration.mjs": {
-      "sha256": "2a52a84e146c569d3a82f31edaf162802f1a31f71149bae4495f5856d4c5c2e8",
+      "sha256": "b2e27f0a7fa50c7ab64b50089280e80d9a170a50dbd25d1e29cc5c1b62b8e6d8",
       "executable": false
     },
     "scripts/deployment/plan.mjs": {

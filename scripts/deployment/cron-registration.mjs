@@ -1,5 +1,5 @@
-import { checkCronOwnership } from '../../base/modules/deploy-kit/resources.mjs'
-import { assert } from '../../base/modules/deploy-kit/validation.mjs'
+import { checkCronOwnership } from '@runeditrun/rer/internal/modules/deploy-kit/resources.mjs'
+import { assert } from '@runeditrun/rer/internal/modules/deploy-kit/validation.mjs'
 
 // A changed Penny deployment explicitly registers its schedules after upload,
 // even when the provider already lists the same set. PUT replaces the whole set:
