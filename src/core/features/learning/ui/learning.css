@@ -178,7 +178,7 @@
   .penny-learning :is(.evidence-grid, .options-grid, .form-grid, .measurement-grid) { grid-template-columns: 1fr; }
   .penny-learning .panel { padding: 14px; }
   .penny-learning :is(.evidence-card, .option, .clarification, .measurement, .measurement-summary) { padding: 16px; }
-  .penny-learning .measurement-grid > :not(:nth-child(3n+1)) { border-left: 0; border-top: 1px solid var(--learning-line); padding: 14px 0 0; }
+  .penny-learning .measurement-grid > :not(:first-child) { border-left: 0; border-top: 1px solid var(--learning-line); padding: 14px 0 0; }
   .penny-learning .decision { padding: 18px; }
   .penny-learning .decision h2 { font-size: 24px; }
 }

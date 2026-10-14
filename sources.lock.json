@@ -4563,7 +4563,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning.css": {
-      "sha256": "6a98c361c50d3aaf1946fb38794dac1222a1b635549520583b35c6d2c9d78a17",
+      "sha256": "ea5b3555173582851af00054f7a7e09f8da847b7227b9c35252606c4a1f8aaf5",
       "executable": false
     },
     "src/core/features/learning/ui/types.ts": {
