@@ -40,6 +40,7 @@ async function subject(db: D1Database, id: string): Promise<{ operator: Operator
 async function counts(db: D1Database, { operator, native }: { operator: Operator; native: Native }): Promise<Record<string, number>> {
  const queries: [string, D1PreparedStatement][] = [
   ['operator_sessions', db.prepare('SELECT count(*) n FROM operator_sessions WHERE operator_id=?').bind(operator.id)],
+  ['mail_event_records', db.prepare('SELECT count(*) n FROM mail_event_records WHERE operator_id=?').bind(operator.id)],
   ['native_magic_links', db.prepare('SELECT count(*) n FROM native_magic_links WHERE lower(email)=lower(?)').bind(operator.email)],
   ['local_auth_outbox', db.prepare('SELECT count(*) n FROM local_auth_outbox WHERE lower(recipient)=lower(?)').bind(operator.email)],
   ['audit_entries', db.prepare('SELECT count(*) n FROM audit_entries WHERE instr(details_json,?)>0 OR instr(details_json,?)>0').bind(operator.email, JSON.stringify(operator.display_name))],
@@ -59,7 +60,9 @@ async function copies(db: D1Database, operator: Operator): Promise<OperatorErasu
  const blocked: OperatorErasurePlan['blockedCopies'] = []
  for (const table of (await schema(db)).filter(table => !handled.has(table.name))) {
   const columns = table.columns.map(column => column.name), ident = (name: string) => '"' + name + '"'
-  const rows = (await db.prepare(`SELECT * FROM ${ident(table.name)} WHERE ${columns.map(name => `instr(lower(CAST(${ident(name)} AS TEXT)),lower(?1))>0`).join(' OR ')} LIMIT 21`).bind(operator.email).all<Row>()).results
+  // Receipts of the operator's own mail events are deleted with them.
+  const own = table.name === 'mail_event_records' ? ' AND operator_id IS NOT ?2' : ''
+  const rows = (await db.prepare(`SELECT * FROM ${ident(table.name)} WHERE (${columns.map(name => `instr(lower(CAST(${ident(name)} AS TEXT)),lower(?1))>0`).join(' OR ')})${own} LIMIT 21`).bind(operator.email, ...(own ? [operator.id] : [])).all<Row>()).results
   for (const row of rows) blocked.push({ table: table.name, key: rowKey(table, row), columns: columns.filter(name => typeof row[name] === 'string' && String(row[name]).toLowerCase().includes(operator.email.toLowerCase())) })
  }
  return blocked
@@ -97,6 +100,8 @@ export async function eraseOperator(db: D1Database, id: string, planHash: string
    native ? guard("EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND version=? AND status='inactive')", native.id, native.version) : guard('NOT EXISTS(SELECT 1 FROM oa_operators WHERE lower(email)=lower(?))', operator.email),
    db.prepare('UPDATE operators SET email=?,display_name=?,updated_at=? WHERE id=?').bind(email, LABEL, now, operator.id),
    db.prepare('DELETE FROM operator_sessions WHERE operator_id=?').bind(operator.id),
+   db.prepare('DELETE FROM mail_event_records WHERE operator_id=?').bind(operator.id),
+   db.prepare('DELETE FROM operator_mail_suppressions WHERE operator_id=?').bind(operator.id),
    db.prepare('DELETE FROM native_magic_links WHERE lower(email)=lower(?)').bind(operator.email),
    db.prepare('DELETE FROM local_auth_outbox WHERE lower(recipient)=lower(?)').bind(operator.email),
    db.prepare('DELETE FROM native_rate_limits WHERE subject_hash IN (SELECT value FROM json_each(?))').bind(JSON.stringify(subjectHashes)),

@@ -2802,6 +2802,10 @@
       "sha256": "05e1d22169d841cccbcdd26fc76f6ca4a41c1ab562d230c83b4ce4a3d66f9310",
       "executable": false
     },
+    "migrations/core/0057_operator_mail_events.sql": {
+      "sha256": "6ccc7ee739119af9885d2347eaed34f4525963bccadf46427ddaf4b29dacc502",
+      "executable": false
+    },
     "OPERATIONS.json": {
       "sha256": "16aefb7cae0d7d5397ae804eb9bcc64d7d92bc885fc35ac242de4b377e7d0998",
       "executable": false
@@ -3623,7 +3627,7 @@
       "executable": false
     },
     "src/core/features/data/operator-erasure.ts": {
-      "sha256": "68ff257cfed2059e8c400a715bb4a043ad9773e0ccd39974f1326949900fa49b",
+      "sha256": "f926dcfb456cceb529868c80e7576072c6571ed3dc2b6e72367228ff641edaec",
       "executable": false
     },
     "src/core/features/data/routes.ts": {
@@ -3631,7 +3635,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "7962a23453f607e59dddfd4a618f0e232c8181e05ad9fdabec70336a76746c45",
+      "sha256": "0dce0e928408683bb9ed47f4a9ebcb2147c0c49cbca7a7dbda299aa51413b4a9",
       "executable": false
     },
     "src/core/features/data/ui/data-actions.ts": {
@@ -4423,7 +4427,7 @@
       "executable": false
     },
     "src/core/features/notifications/decision-reviews.ts": {
-      "sha256": "1fb7367b81968cc6fd68cdc81ada2ca81ed93fbc3c68deddd7748329bc02a9a3",
+      "sha256": "198cd2fc12cd91eb504034d5626d32630d44d83e891a88a05c4acb115c2c6e32",
       "executable": false
     },
     "src/core/features/notifications/delivery-admission.ts": {
@@ -4438,16 +4442,16 @@
       "sha256": "51a9a96f7f94db603aa9fbc431d3ba172abbfe506f30c4b2eca1d4d5bb5d3279",
       "executable": false
     },
-    "src/core/features/notifications/event-original.ts": {
-      "sha256": "37123f850b3eb5a94e200bd55ae3b9e51b5f6e967c7d04670596de473cf3a9d7",
+    "src/core/features/notifications/event-correlation.ts": {
+      "sha256": "525335fe870cdaba79a353da7baf1a3a20f059727486b316e575383b9248803d",
+      "executable": false
+    },
+    "src/core/features/notifications/event-intake.ts": {
+      "sha256": "9a94be2e99f60be8d09c7cfd871894589d225dd62e5e45af53dc783ea5cff871",
       "executable": false
     },
     "src/core/features/notifications/event-storage.ts": {
-      "sha256": "77eb64fe0b05644c19d7be30607aecd96be8b842e3a9bf33e1c046bde3c5155d",
-      "executable": false
-    },
-    "src/core/features/notifications/event-types.ts": {
-      "sha256": "af653b8a41ef7ce39583b727680205d85306b2095174ecea94996d9f0fab7045",
+      "sha256": "3c791c3638bd1f81962e4b70c2dc250c2ae61de94b8c699451ce58446ce92ba2",
       "executable": false
     },
     "src/core/features/notifications/link-epochs.ts": {
@@ -4455,7 +4459,7 @@
       "executable": false
     },
     "src/core/features/notifications/mail-events.ts": {
-      "sha256": "42c66054002b28ca5e959cfccaf24584138fe75ca129f1c57fdcf921a09b80d5",
+      "sha256": "0c766eee938c7d802c6d3e6ace4c8a85a9ed3a8bbe231cfaf4461fd325912174",
       "executable": false
     },
     "src/core/features/notifications/rejection-admission.ts": {
@@ -5707,7 +5711,7 @@
       "executable": false
     },
     "tests/base/release-delivery.test.ts": {
-      "sha256": "1a8e60658b931033f5561ec0de997ad97da398b788aa1772058534a72d7948fb",
+      "sha256": "ed0945110d8240c9f025426df6f73ce13c2ff6241ce8772bcd006d59352d92f6",
       "executable": false
     },
     "tests/base/release-fixture.ts": {
@@ -5735,7 +5739,7 @@
       "executable": false
     },
     "tests/base/review-mail-events.test.ts": {
-      "sha256": "09b4d2dbba2090cf928d2ab0c31e8092f028f49fd88eb197840ed0f1ac3a32a2",
+      "sha256": "bf03d9a6b2d93bbf29520502ad860173ef160eee3702eadaac68d9a4797007b2",
       "executable": false
     },
     "tests/base/review-mail-fixture.ts": {
@@ -5747,7 +5751,7 @@
       "executable": false
     },
     "tests/base/review-provider-boundary.test.ts": {
-      "sha256": "80ac6df3e863152539b0d1f2e832f6f423c7a7498c0f4737b851ebb45f5e8dbd",
+      "sha256": "a7581515cdc2a19285326c06c216ca042396c6d5a3927ce4995872648065518c",
       "executable": false
     },
     "tests/base/review-race-storage.ts": {

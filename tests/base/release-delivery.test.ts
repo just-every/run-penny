@@ -86,7 +86,8 @@ it('[REL-011/013 REL-007] genuine signed delivered callback during HTTP wins, du
  const stored=await rows('mail_event_records');expect(stored).toHaveLength(2)
  expect((await post([event])).status).toBe(200);expect(await rows('mail_event_records')).toEqual(stored)
  expect((await post([{...event,sg_message_id:'other'}])).status).toBe(400)
- expect((await post([{...event,email:'foreign@example.test'}])).status).toBe(400)
+ // Another recipient's event on the same account is acknowledged and stores nothing.
+ expect((await post([{...event,sg_event_id:'foreign-recipient',email:'foreign@example.test'}])).status).toBe(200);expect(await rows('mail_event_records')).toEqual(stored)
  expect((await post([{...event,event:'processed',sg_event_id:'late-accepted',timestamp:Number(event.timestamp)-1}])).status).toBe(200)
  expect(await releaseDeliveryCounts(env.DB,g.draft.versionId)).toMatchObject({delivered:1})
 })

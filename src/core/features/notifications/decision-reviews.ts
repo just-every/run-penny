@@ -37,18 +37,23 @@ async function sendReview(runtime:PennyRuntime,row:{id:string;attempts:number;cr
   db.prepare("INSERT INTO audit_entries(id,actor_type,action,entity_type,entity_id,details_json,occurred_at,created_at,updated_at) SELECT ?,'system','decision.review_notification','decision',decision_id,?,?,?,? FROM decision_review_notifications WHERE id=? AND claim_id=?").bind(createUlid(),JSON.stringify({state,reason}),now,now,now,row.id,claim),
  ])
  try{
-  const recipient=await db.prepare(`SELECT o.email,d.title,d.slug FROM decision_review_notifications n JOIN operators o ON o.id=n.owner_operator_id JOIN decisions d ON d.id=n.decision_id WHERE n.id=? AND n.claim_id=? AND EXISTS(SELECT 1 FROM oa_operators native WHERE native.email=o.email AND native.status='active')`).bind(row.id,claim).first<{email:string;title:string;slug:string}>()
+  // A hard bounce or complaint stops review mail until the owner signs in by email again.
+  const recipient=await db.prepare(`SELECT o.email,d.title,d.slug,EXISTS(SELECT 1 FROM operator_mail_suppressions s WHERE s.operator_id=o.id AND NOT EXISTS(SELECT 1 FROM oa_operators native JOIN oa_sessions session ON session.operator_id=native.id
+   WHERE native.email=o.email AND session.kind='native' AND session.created_at>(julianday(s.suppressed_at)-2440587.5)*86400000)) AS suppressed FROM decision_review_notifications n JOIN operators o ON o.id=n.owner_operator_id JOIN decisions d ON d.id=n.decision_id
+   WHERE n.id=? AND n.claim_id=? AND EXISTS(SELECT 1 FROM oa_operators native WHERE native.email=o.email AND native.status='active')`).bind(row.id,claim).first<{email:string;title:string;slug:string;suppressed:number}>()
   if(!recipient){await finish('failed','owner_no_longer_active');return}
+  if(recipient.suppressed){await finish('failed','recipient_suppressed');return}
   const mail=authMail(runtime)
   if(!mail){await finish('failed','mail_configuration_missing');return}
-  const result=await mail.send({deliveryId:row.id,from:runtime.configuration.mailFrom!,to:[recipient.email],subject:`Decision review due: ${recipient.title.replace(/\s+/g,' ')}`,text:`Your decision is due for review. Record a review note and a new review date, or revise the commitment.\n\n${recipient.title}\n${runtime.configuration.appOrigin}/app/decisions/${recipient.slug}`,headers:{'Auto-Submitted':'auto-generated'}})
+  const result=await mail.send({...(runtime.configuration.mailProvider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,from:runtime.configuration.mailFrom!,to:[recipient.email],subject:`Decision review due: ${recipient.title.replace(/\s+/g,' ')}`,text:`Your decision is due for review. Record a review note and a new review date, or revise the commitment.\n\n${recipient.title}\n${runtime.configuration.appOrigin}/app/decisions/${recipient.slug}`,headers:{'Auto-Submitted':'auto-generated'}})
   // Explicit local capture completes the send, without inventing a provider receipt.
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){await finish(clock()-Date.parse(row.createdAt)>=3600000?'failed':retryState(row.attempts),result.code??result.status);return}
   await finish('unknown',result.code??'provider_outcome_unknown')
  }catch(error){const code=safeValidationCode(error);await finish(code?'failed':'unknown',code??'attempt_outcome_unknown_review_required')}
 }
-export interface ReviewNotification {id:string;decisionId:string;title:string;decisionSlug:string;reviewAt:string;state:'queued'|'sending'|'accepted'|'failed'|'unknown'|'held';failureReason:string|null;createdAt:string}
+export interface ReviewNotification {id:string;decisionId:string;title:string;decisionSlug:string;reviewAt:string;state:'queued'|'sending'|'accepted'|'delivered'|'suppressed'|'failed'|'unknown'|'held';failureReason:string|null;createdAt:string}
 export async function reviewNotifications(db:D1Database,owner:string):Promise<ReviewNotification[]>{
- return (await db.prepare(`SELECT n.id,n.decision_id AS decisionId,d.title,d.slug AS decisionSlug,n.review_at AS reviewAt,n.state,n.failure_reason AS failureReason,n.created_at AS createdAt FROM decision_review_notifications n JOIN decisions d ON d.id=n.decision_id WHERE n.owner_operator_id=? AND n.dismissed_at IS NULL ORDER BY n.created_at DESC,n.id DESC`).bind(owner).all<ReviewNotification>()).results
+ return (await db.prepare(`SELECT n.id,n.decision_id AS decisionId,d.title,d.slug AS decisionSlug,n.review_at AS reviewAt,CASE WHEN n.state IN('accepted','unknown') AND f.state IN('delivered','suppressed','failed') THEN f.state ELSE n.state END AS state,n.failure_reason AS failureReason,n.created_at AS createdAt
+  FROM decision_review_notifications n JOIN decisions d ON d.id=n.decision_id LEFT JOIN decision_review_delivery_facts f ON f.notification_id=n.id WHERE n.owner_operator_id=? AND n.dismissed_at IS NULL ORDER BY n.created_at DESC,n.id DESC`).bind(owner).all<ReviewNotification>()).results
 }

@@ -26,13 +26,25 @@ it('[REL-011] signed complaint suppresses a correlated recipient',async()=>{
  const g=await fixture();expect((await g.post([{...g.event,event:'spamreport',sg_event_id:'complaint-1'}])).status).toBe(200)
  expect((await rows('requester_addresses'))[0].suppressed_at).toEqual(expect.any(String))
 })
-it('[REL-011 BASE-ACCESS-004] bad signatures, unrelated delivery/message/recipient, stale and tampered requests never mutate',async()=>{
+it('[REL-011 BASE-ACCESS-004] bad signatures, stale and tampered requests are refused; signed mail Penny did not send is acknowledged without effect',async()=>{
  const g=await fixture()
  expect((await g.post([{...g.event,event:'delivered',sg_event_id:'prime'}])).status).toBe(200)
- for(const change of [{rer_delivery_id:'foreign'},{sg_message_id:'foreign'},{email:'other@example.test'},{rer_product:'other'}])expect((await g.post([{...g.event,...change}])).status).toBe(400)
+ // Another product's message and an address Penny never mailed change nothing.
+ for(const change of [{email:'other@example.test'},{sg_message_id:'other-product-message',rer_delivery_id:'foreign',rer_product:'other',rer_penny_attempt:'foreign'}]){
+  const before=await rows('mail_event_records');expect((await g.post([{...g.event,...change}])).status).toBe(200);expect(await rows('mail_event_records')).toEqual(before)
+ }
+ // A second provider message for Penny's own attempt is a conflict, not a new fact.
+ expect((await g.post([{...g.event,sg_message_id:'foreign'}])).status).toBe(400)
  expect((await g.post([g.event],Math.floor(Date.now()/1000)-301)).status).toBe(400)
  const signed=await g.identity.request([g.event]);expect((await g.app.fetch(new Request(signed.url,{method:'POST',headers:signed.headers,body:(await signed.text())+' '}),{...env,SENDGRID_EVENT_PUBLIC_KEY:g.identity.key})).status).toBe(400)
  expect((await rows('requester_addresses'))[0].suppressed_at).toBeNull()
+})
+it('[REL-012 REL-011] a provider unsubscribe withdraws all requester email and keeps follows and votes',async()=>{
+ const g=await fixture(),follows=await rows('request_follows')
+ expect((await g.post([{...g.event,event:'unsubscribe',sg_event_id:'provider-unsubscribe'}])).status).toBe(200)
+ expect(await env.DB.prepare('SELECT muted_at FROM requester_notification_preferences').first('muted_at')).toEqual(expect.any(String))
+ expect((await rows('requester_addresses'))[0].suppressed_at).toBeNull();expect(await rows('request_follows')).toEqual(follows)
+ await g.publish(0,'After provider unsubscribe',7200000);await drainNotifications(runtime(),()=>start+10800000);expect(g.sent).toHaveLength(1)
 })
 it('[REL-011] verified soft bounce and delivered facts never suppress',async()=>{
  const g=await fixture()
@@ -59,11 +71,11 @@ it('[REL-011 BASE-OPS-003] a suppression failure rolls receipts and state back, 
  expect(await rows('mail_event_records')).toHaveLength(2)
  expect((await rows('requester_addresses'))[0].suppressed_at).toEqual(expect.any(String))
 })
-it('[REL-011 BASE-ACCESS-004] full signed batch fails authorization before any receipt or suppression',async()=>{
+it('[REL-011] a signed batch mixing Penny\'s bounce with other account mail applies Penny\'s event and stores nothing for the rest',async()=>{
  const g=await fixture()
- expect((await g.post([g.event,{...g.event,sg_event_id:'foreign-event',rer_penny_attempt:'unrelated-attempt'}])).status).toBe(400)
- expect(await rows('mail_event_records')).toHaveLength(0)
- expect((await rows('requester_addresses'))[0].suppressed_at).toBeNull()
+ expect((await g.post([g.event,{...g.event,sg_event_id:'foreign-event',sg_message_id:'foreign-message',email:'someone-else@example.test',rer_penny_attempt:'unrelated-attempt',rer_delivery_id:'unrelated'}])).status).toBe(200)
+ expect((await rows('requester_addresses'))[0].suppressed_at).toEqual(expect.any(String))
+ const records=await rows('mail_event_records');expect(records).toHaveLength(2);expect(JSON.stringify(records)).not.toContain('someone-else@example.test')
 })
 it('[REL-011 BASE-OPS-003] same event ID with changed signed subtype conflicts and cannot retroactively suppress',async()=>{
  const g=await fixture()
@@ -128,7 +140,7 @@ it('[REL-011 BASE-OPS-003] D1 validates read-only keys and absent keys before bu
  const {eventStorage}=await import('@/core/features/notifications/event-storage')
  const g=await fixture();expect((await g.post([g.event])).status).toBe(200)
  const records=await rows('mail_event_records'),receipt=records.find(r=>String(r.id).includes(':receipt:'))!,event=JSON.parse(String(receipt.value_json))
- const owner={event,addressId:g.recipient.addressId,batchId:String(receipt.batch_id),attemptId:g.event.rer_penny_attempt,suppress:false,witness:{sql:'SELECT value_json FROM mail_event_records WHERE id=?',values:[String(receipt.id)],raw:String(receipt.value_json)}}
+ const owner={event,kind:'batch' as const,outboxId:null,reviewId:null,requesterId:null,operatorId:null,messageKey:String(event.providerMessageId),unsubscribe:false,addressId:g.recipient.addressId,batchId:String(receipt.batch_id),attemptId:g.event.rer_penny_attempt,suppress:false,witness:{sql:'SELECT value_json FROM mail_event_records WHERE id=?',values:[String(receipt.id)],raw:String(receipt.value_json)}}
  const store=eventStorage(env.DB,[owner])
  let unlock!:()=>void,observed!:()=>void
  const gate=new Promise<void>(r=>{unlock=r}),ready=new Promise<void>(r=>{observed=r})
@@ -160,8 +172,11 @@ it('[REL-011] Resend Svix original bytes authorize only its stored message and r
  }
  const body={type:'email.bounced',created_at:new Date().toISOString(),data:{email_id:'resend-receipt',to:[g.recipient.email],bounce:{type:'Transient'}}}
  expect((await send('soft',body)).status).toBe(200);expect((await rows('requester_addresses'))[0].suppressed_at).toBeNull()
- expect((await send('wrong',{...body,data:{...body.data,email_id:'unrelated'}})).status).toBe(400)
- expect((await send('wrong-recipient',{...body,data:{...body.data,to:['other@example.test']}})).status).toBe(400)
+ // Another message or recipient on the same account is acknowledged and changes nothing.
+ const permanent={...body,data:{...body.data,bounce:{type:'Permanent'}}}
+ expect((await send('wrong',{...permanent,data:{...permanent.data,email_id:'unrelated'}})).status).toBe(200)
+ expect((await send('wrong-recipient',{...permanent,data:{...permanent.data,to:['other@example.test']}})).status).toBe(200)
+ expect((await rows('requester_addresses'))[0].suppressed_at).toBeNull()
  expect((await send('tamper',body,true)).status).toBe(400)
  expect((await send('hard',{...body,data:{...body.data,bounce:{type:'Permanent'}}})).status).toBe(200)
  expect((await rows('requester_addresses'))[0].suppressed_at).toEqual(expect.any(String))

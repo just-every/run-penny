@@ -201,6 +201,18 @@
       "updated_at"
     ]
   },
+  "decision_review_delivery_facts": {
+    "classification": "product",
+    "columns": [
+      "notification_id",
+      "state",
+      "event_message_id",
+      "accepted_at",
+      "delivered_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
   "decision_reviews": {
     "classification": "product",
     "columns": [
@@ -996,7 +1008,9 @@
       "batch_id",
       "outbox_id",
       "created_at",
-      "updated_at"
+      "updated_at",
+      "operator_id",
+      "review_id"
     ]
   },
   "native_magic_links": {
@@ -1448,6 +1462,15 @@
       "expires_at",
       "last_used_at",
       "revoked_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "operator_mail_suppressions": {
+    "classification": "product",
+    "columns": [
+      "operator_id",
+      "suppressed_at",
       "created_at",
       "updated_at"
     ]
