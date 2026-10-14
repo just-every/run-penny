@@ -14,6 +14,9 @@ async function counts(expected:number){
 it('[REQ-015 NOTIFY-001/005] concurrent and later keyed HTTP replay retains one version, event, intent and provider delivery',async()=>{
  // Native session admission uses SQLite's real clock, so freeze relative to today.
  const start=Date.now()
+ // Drain after the coalescing window, at daytime hours in UTC and Brisbane,
+ // without moving the HTTP/session clock away from SQLite's real clock.
+ const deliveryAt=new Date(start+86400000).setUTCHours(8,0,0,0)
  vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(start)
  const g=await graph(),path=`/api/operator/requests/${g.requests[0].slug}/status-updates`
  const input={status:'under_review',body:'Published once',pinned:true,idempotencyKey:crypto.randomUUID()}
@@ -21,10 +24,10 @@ it('[REQ-015 NOTIFY-001/005] concurrent and later keyed HTTP replay retains one 
  expect(responses.map(response=>response.status)).toEqual([200,200]);await counts(1)
  expect((await call(path,input,g.operator)).status).toBe(200);await counts(1)
  const sent=provider()
- await Promise.all([drainNotifications(runtime(),()=>start+3600000),drainNotifications(runtime(),()=>start+3600000)])
+ await Promise.all([drainNotifications(runtime(),()=>deliveryAt),drainNotifications(runtime(),()=>deliveryAt)])
  expect(sent).toHaveLength(1)
  expect((await call(path,input,g.operator)).status).toBe(200)
- await drainNotifications(runtime(),()=>start+7200000)
+ await drainNotifications(runtime(),()=>deliveryAt+3600000)
  expect(sent).toHaveLength(1);expect(await rows('notification_attempts')).toHaveLength(1)
  const frozen=await rows('request_status_updates')
  for(const change of [{body:'Different wording'},{status:'open'},{pinned:false}]){
