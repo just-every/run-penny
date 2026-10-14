@@ -42,12 +42,12 @@ outcome because mail delivery and requester verification are not implemented.
 
 ## Local development and verification
 
-The local migrations apply through `node scripts/rer.mjs setup` (or `import`), which
+The local migrations apply through `rer setup` (or `import`), which
 leave an empty store; no command loads the sample into a local installation. The
 Worker test pool imports `sample-data/penny.v1.json` through the same feature
 services and repositories as later product writes (`importPennySample`), so the
 real D1 read and trust-boundary suites run against it. It is not mounted by the
-production Worker and no GET route can seed data. `node scripts/rer.mjs verify`
+production Worker and no GET route can seed data. `rer verify`
 runs those suites.
 
 ## Deferred backend work

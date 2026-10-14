@@ -10,27 +10,16 @@ filename shaped like an address. Penny carries Base's `bba58af` scanner copy
 verbatim instead (see [Base adoption](docs/base-adoption.md)); the rest of the
 CLI keeps its revision. No product behaviour changes.
 
-## Adopted: pace hydration verification through public admission
+## Retired: pace hydration verification through public admission
 
-The Base hydration runner starts three fresh browser contexts at a time and
-immediately schedules further loads. Penny's mandatory public admission includes
-the real assets each context fetches, so the runner exhausted its single IP
-bucket and received HTTP 429 before completing its required recovery checks.
-
-Penny deliberately adapts only the CLI lifecycle and hydration orchestration to
-accept a cancellable delay before each complete load. Its adapter selects serial
-loads with a 61-second pause, including before the first baseline. The same
-runtime and admission bucket remain intact; the window expires naturally.
-Every original page, case, probe and verdict remains mandatory, and errors still
-fail without retries. No contract guarantee or product limit is superseded.
-
-These two files are edition-owned adaptations of Base's root CLI at immutable
-`8981bc2c4d9e61feca5787c83b4ed44056659dd9`, retained through `edition.json`
-comparison mappings. Their local inventory explicitly records the adaptation;
-`base/PROVENANCE.json` claims equality only for the 67 untouched CLI files.
-See [Base adoption](docs/base-adoption.md) for the API, focused check and source
-refresh procedure. Actual focused and full verification receipts remain separate
-from this implementation record. No external Base change is implied.
+Penny once adapted the vendored CLI's lifecycle and hydration orchestration to
+pause 61 seconds before each hydration load, because each fresh browser context's
+asset fetches counted against the single per-IP page-read bucket and the runner
+received HTTP 429. Page assets now have their own admission bucket
+(`publicAssetRequestsPerMinutePerIp` in `seed.json`), and Penny runs the published
+`@runeditrun/rer` package unmodified, so the adaptation is gone. Every page, case,
+probe and verdict of the shared hydration check still runs, and errors still fail
+without retries.
 
 ## 1. BASE-INPUT-003 forces a download disposition on images a public surface must render
 

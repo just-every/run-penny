@@ -1,9 +1,9 @@
 import { once } from 'node:events'
 import { chmod, mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { createRedaction as diagnosticRedaction } from '../../scripts/base-onboarding/redaction.mjs'
+import { createRedaction as diagnosticRedaction } from '@runeditrun/rer/redaction'
 const redact=(text,secrets=[])=>{const filter=diagnosticRedaction();filter.addSecrets(secrets);return filter.redact(String(text)).replaceAll('[REDACTED]','[redacted]')}
-import { createRedaction } from '../../scripts/base-onboarding/redaction.mjs'
+import { createRedaction } from '@runeditrun/rer/redaction'
 
 const maximumBytes = 65536
 const redactDevFragment = text => text.replace(/([?&#]rer-dev=)[A-Za-z0-9_-]+/gi, '$1[redacted]')

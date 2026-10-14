@@ -1,3 +1,6 @@
+import { fileURLToPath as __rerTestEntryPath } from 'node:url';
+const __rerTestEntry = __rerTestEntryPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'));
+const __rerTestEntryArgs = args => args[1] === 'dev' && !args.some(arg => ['--foreground', '--detach', '--stop', '--help'].includes(arg)) ? [...args, '--foreground'] : args;
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { mkdtemp, mkdir, cp, symlink, readFile, writeFile, rm, stat } from 'node:fs/promises'
@@ -31,7 +34,7 @@ test('[DATA-001 DATA-003] local CLI restores original files and held effects int
   }
   // The public export applies the local migrations, so an empty store exists before rows are written.
   await mkdir(join(root,'exports'))
-  await run(['scripts/rer.mjs','export','--output','exports/empty.rer'])
+  await run(__rerTestEntryArgs([__rerTestEntry,'export','--output','exports/empty.rer']))
   const open = (destination = root) => getPlatformProxy({configPath:join(destination,'wrangler.jsonc'),persist:{path:join(destination,'.wrangler/state/v3')},remoteBindings:false})
   const proxy = await open()
   try {
@@ -49,7 +52,7 @@ test('[DATA-001 DATA-003] local CLI restores original files and held effects int
   await writeFile(join(root,'.dev.vars'),'OPERATOR_EMAIL=source-owner@penny.invalid\nWORKSPACE_TIMEZONE=UTC\n',{mode:0o600})
   await mkdir(join(root,'.rer/deploy'),{recursive:true})
   await writeFile(join(root,'.rer/deploy/retained'),'deployment receipt')
-  await run(['scripts/rer.mjs','export','--output','exports/first.rer'])
+  await run(__rerTestEntryArgs([__rerTestEntry,'export','--output','exports/first.rer']))
   const first=(await readFile(join(root,'exports/first.rer'),'utf8')).trim().split('\n').map(JSON.parse)
   assert.equal(first[0].objects.length,2)
   const records=archiveRows(first)
@@ -95,7 +98,7 @@ test('[DATA-001 DATA-003] local CLI restores original files and held effects int
   await mkdir(join(fresh,'exports'),{mode:0o700})
   for (const filename of ['first.rer','first.rer.erasure-journal.json']) await cp(join(root,'exports',filename),join(fresh,'exports',filename))
   // Prepare independent destination authority through a test fixture; importing must preserve it.
-  await run(['scripts/rer.mjs','export','--output','exports/destination-empty.rer'],fresh)
+  await run(__rerTestEntryArgs([__rerTestEntry,'export','--output','exports/destination-empty.rer']),fresh)
   const destination=await open(fresh),authority={}
   try{
     const db=destination.env.DB
@@ -104,21 +107,21 @@ test('[DATA-001 DATA-003] local CLI restores original files and held effects int
     await db.prepare("INSERT INTO oa_sessions(id,token_hash,operator_id,operator_version,kind,created_at,expires_at) VALUES('destination-session','destination-token-hash','destination-owner',1,'native',2,9999999999999)").run()
     for(const table of ['oa_operators','oa_bootstrap','oa_sessions'])authority[table]=(await db.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()).results
   }finally{await destination.dispose()}
-  await run(['scripts/rer.mjs','import','--input','exports/first.rer','--yes'],fresh)
+  await run(__rerTestEntryArgs([__rerTestEntry,'import','--input','exports/first.rer','--yes']),fresh)
   await assertRestored(fresh,authority)
   await assert.rejects(stat(join(fresh,'.dev.vars')),{code:'ENOENT'},'restore does not manufacture installation settings')
-  await run(['scripts/rer.mjs','export','--output','exports/roundtrip.rer'],fresh)
+  await run(__rerTestEntryArgs([__rerTestEntry,'export','--output','exports/roundtrip.rer']),fresh)
   const freshArchive=(await readFile(join(fresh,'exports/roundtrip.rer'),'utf8')).trim().split('\n').map(JSON.parse)
   assert.deepEqual(tableCounts(freshArchive),tableCounts(first))
   assert.equal(first.at(-1).contentHash,freshArchive.at(-1).contentHash,'equivalent domain rows and original bytes survive export to a distinct fresh installation')
   assert.deepEqual(JSON.parse(await readFile(join(fresh,'exports/roundtrip.rer.erasure-journal.json'),'utf8')),journal,'the fresh installation exports the source erasure journal')
-  await assert.rejects(run(['scripts/rer.mjs','import','--input','exports/first.rer','--yes']))
-  await assert.rejects(run(['scripts/rer.mjs','reset','--non-interactive']))
-  await run(['scripts/rer.mjs','reset','--yes'])
+  await assert.rejects(run(__rerTestEntryArgs([__rerTestEntry,'import','--input','exports/first.rer','--yes'])))
+  await assert.rejects(run(__rerTestEntryArgs([__rerTestEntry,'reset','--non-interactive'])))
+  await run(__rerTestEntryArgs([__rerTestEntry,'reset','--yes']))
   assert.equal(await readFile(join(root,'.rer/deploy/retained'),'utf8'),'deployment receipt')
-  await run(['scripts/rer.mjs','import','--input','exports/first.rer','--yes'])
+  await run(__rerTestEntryArgs([__rerTestEntry,'import','--input','exports/first.rer','--yes']))
   await assertRestored(root)
-  await run(['scripts/rer.mjs','export','--output','exports/second.rer'])
+  await run(__rerTestEntryArgs([__rerTestEntry,'export','--output','exports/second.rer']))
   const second=(await readFile(join(root,'exports/second.rer'),'utf8')).trim().split('\n').map(JSON.parse)
   assert.deepEqual(tableCounts(second),tableCounts(first))
   assert.equal(first.at(-1).contentHash,second.at(-1).contentHash,'equivalent domain rows and original bytes survive the public command round trip')
@@ -133,10 +136,10 @@ if((await db.prepare("SELECT COUNT(*) n FROM sqlite_master WHERE type='table' AN
 } finally {await proxy.dispose()}`)
   await run(['node_modules/tsx/dist/cli.mjs','--tsconfig','tsconfig.app.json','erase-restored.ts'])
   // An archive made before that erasure is refused whole when the later archive is named with --journal.
-  await run(['scripts/rer.mjs','export','--output','exports/after-erasure.rer'])
-  await run(['scripts/rer.mjs','reset','--yes'])
-  await assert.rejects(run(['scripts/rer.mjs','import','--input','exports/first.rer','--journal','exports/after-erasure.rer','--yes']),/erasure_epoch/)
-  await run(['scripts/rer.mjs','import','--input','exports/after-erasure.rer','--journal','exports/after-erasure.rer','--yes'])
+  await run(__rerTestEntryArgs([__rerTestEntry,'export','--output','exports/after-erasure.rer']))
+  await run(__rerTestEntryArgs([__rerTestEntry,'reset','--yes']))
+  await assert.rejects(run(__rerTestEntryArgs([__rerTestEntry,'import','--input','exports/first.rer','--journal','exports/after-erasure.rer','--yes'])),/erasure_epoch/)
+  await run(__rerTestEntryArgs([__rerTestEntry,'import','--input','exports/after-erasure.rer','--journal','exports/after-erasure.rer','--yes']))
   const restored=await open()
   try { assert.equal(await restored.env.DB.prepare("SELECT COUNT(*) n FROM requests WHERE id='r'").first('n'),0,'the erased request stays erased') } finally { await restored.dispose() }
 })

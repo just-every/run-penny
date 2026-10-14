@@ -1,5 +1,5 @@
-import { invalidateTransfersStatements, redactionStatements } from '../base-cli/modules/portability/journal.mjs'
-import { toD1Sql } from '../base-cli/modules/erasure/fence.mjs'
+import { invalidateTransfersStatements, redactionStatements } from '@runeditrun/rer/modules/portability/journal'
+import { toD1Sql } from '@runeditrun/rer/modules/erasure/fence'
 export async function portabilityErasureStatements(db) {
   const installed = await db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='rer_portability_state'").first()
   return installed ? invalidateTransfersStatements(db) : []

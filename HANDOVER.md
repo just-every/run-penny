@@ -9,10 +9,10 @@ BASELINE.md and ACCEPTANCE.md retain the wider unmet obligations.
 
 ## Running and checking it
 
-README.md has the commands: `node scripts/rer.mjs install`, `setup`, `dev`, then
+README.md has the commands: `rer install`, `setup`, `dev`, then
 `verify`, `reset`, `export`/`import` and `deploy`. Setup claims the first owner,
 and the owner finishes first-run setup at `/setup` after the outbox sign-in. The
-unit of verification is `node scripts/rer.mjs verify` (the same run CI makes on
+unit of verification is `rer verify` (the same run CI makes on
 every push); it ends with the literal README journey in a fresh clone at 1440×900
 and 390×844. The other browser scripts (`test:browser`, `:routes`, `:no-mail`,
 `:operator-pages`, `:decision-loop`, `:feedback-import`, `:host-identity`,

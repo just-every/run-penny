@@ -20,15 +20,5 @@
     ".wrangler/**",
     ".tanstack/**",
     "base/**"
-  ],
-  "overrides": [
-    {
-      "files": [
-        "scripts/base-cli/cli/**/*.mjs"
-      ],
-      "rules": {
-        "react/rules-of-hooks": "off"
-      }
-    }
   ]
 }

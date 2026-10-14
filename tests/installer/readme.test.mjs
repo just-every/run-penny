@@ -1,3 +1,6 @@
+import { fileURLToPath as __rerTestEntryPath } from 'node:url';
+const __rerTestEntry = __rerTestEntryPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'));
+const __rerTestEntryArgs = args => args[1] === 'dev' && !args.some(arg => ['--foreground', '--detach', '--stop', '--help'].includes(arg)) ? [...args, '--foreground'] : args;
 import assert from 'node:assert/strict'
 import { readFile, mkdir, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
@@ -9,7 +12,7 @@ import { freshLocalRuntime } from '../browser/fresh-local-runtime.mjs'
 import { signIn, signInFromOutbox, finishFirstRun } from '../browser/local-signin.mjs'
 import { readmeCommands } from './readme-commands.mjs'
 import { openOperatorRoute } from '../browser/operator-navigation.mjs'
-import { createRedaction as diagnosticRedaction } from '../../scripts/base-onboarding/redaction.mjs'
+import { createRedaction as diagnosticRedaction } from '@runeditrun/rer/redaction'
 const redact=(text,secrets=[])=>{const filter=diagnosticRedaction();filter.addSecrets(secrets);return filter.redact(String(text)).replaceAll('[REDACTED]','[redacted]')}
 
 test('[BASE-OPS-002 BASE-ACCESS-002] README install/setup/dev and the outbox sign-in a fresh frozen clone, send the owner through first-run setup into the app at both widths', {timeout:900000}, async () => {
@@ -27,7 +30,7 @@ test('[BASE-OPS-002 BASE-ACCESS-002] README install/setup/dev and the outbox sig
       // Each width starts from its own fresh clone, so first-run setup is unfinished when the owner signs in.
       const runtime = await freshLocalRuntime(viewport, output)
       try {
-        const outboxCommand = ['scripts/rer.mjs', 'outbox', '--json', '--non-interactive']
+        const outboxCommand = __rerTestEntryArgs([__rerTestEntry, 'outbox', '--json', '--non-interactive'])
         // The second width signs in through a message the CLI requested for the saved owner; the first through the sign-in form.
         const requestedOutbox = index === 0 ? outboxCommand : [...outboxCommand, '--owner-email', 'owner@penny.invalid']
         const stdout = await runtime.runNode(requestedOutbox)

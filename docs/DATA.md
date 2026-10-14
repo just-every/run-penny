@@ -60,7 +60,7 @@ pnpm run data:import -- private/archive.json --journal private/latest-source-jou
 
 The journal is required, and it must be the latest one for that archive. Penny writes the files first, then applies the data in one step. If a step fails, it cleans up only what it created and keeps the maintenance lock until you resolve it. Writes elsewhere in the app are paused while an export or restore runs.
 
-To prepare an empty local copy, run `node scripts/rer.mjs setup --owner-email EMAIL`; it applies the schema without seeding anything, and `node scripts/rer.mjs import` applies the migrations itself before restoring. Local data lives only in `.wrangler/state`, so start the built Worker against that same store.
+To prepare an empty local copy, run `rer setup --owner-email EMAIL`; it applies the schema without seeding anything, and `rer import` applies the migrations itself before restoring. Local data lives only in `.wrangler/state`, so start the built Worker against that same store.
 
 If a restore is interrupted:
 

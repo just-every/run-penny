@@ -2,8 +2,8 @@ import { createReadStream } from 'node:fs'
 import { writeFile } from 'node:fs/promises'
 import { Readable } from 'node:stream'
 import { DatabaseSync } from 'node:sqlite'
-import { readArchive, makePart, canonicalJson, sha256 } from '../../scripts/base-cli/modules/portability/index.mjs'
-import { ContentVerifier } from '../../scripts/base-cli/modules/portability/format.mjs'
+import { readArchive, makePart, canonicalJson, sha256 } from '@runeditrun/rer/modules/portability'
+import { ContentVerifier } from '@runeditrun/rer/modules/portability/format'
 
 // Test-only: rewrite a real Penny archive so it also carries the named tables
 // with their rows from a local store, re-framed with valid checksums, as a

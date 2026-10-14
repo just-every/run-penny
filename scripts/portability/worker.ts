@@ -7,7 +7,7 @@ import { randomUUID } from 'node:crypto'
 import { Readable } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import { getPlatformProxy } from 'wrangler'
-import { createPortability, readArchive, type LaterJournal } from '../base-cli/modules/portability/index.mjs'
+import { createPortability, readArchive, type LaterJournal } from '@runeditrun/rer/modules/portability'
 import { readErasureJournal, schema } from '../../src/core/features/data/archive'
 import { policy, readJournal, laterJournalFence, LOCAL_DATA_LIMITS } from './policy'
 import { privateInput } from '../data/private-files.mjs'
@@ -67,7 +67,7 @@ try {
       temporary = path + '.' + randomUUID() + '.partial'
       await pipeline(Readable.fromWeb(await service.exports.download(id) as never), createWriteStream(temporary, { flags: 'wx', mode: 0o600 }))
       const rows: Record<string, Record<string, unknown>[]> = {}
-      let manifest: import('../base-cli/modules/portability/index.mjs').Manifest | undefined, bytes = 0
+      let manifest: import('@runeditrun/rer/modules/portability').Manifest | undefined, bytes = 0
       progress.stage = 'verify_export'
       for await (const record of readArchive(Readable.toWeb(createReadStream(temporary)) as ReadableStream<Uint8Array>)) {
         if (record.kind === 'manifest') { manifest = record; for (const table of record.tables) rows[table.name] = [] }

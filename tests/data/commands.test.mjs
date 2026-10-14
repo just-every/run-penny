@@ -1,3 +1,16 @@
+import { fileURLToPath as __rerTestEntryPath } from 'node:url';
+const __rerTestEntry = __rerTestEntryPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'));
+const __rerTestEntryArgs = args => args[1] === 'dev' && !args.some(arg => ['--foreground', '--detach', '--stop', '--help'].includes(arg)) ? [...args, '--foreground'] : args;
+const __rerTestEntryPnpm = (program, args) => {
+ const at = program === 'nice' ? args.indexOf('pnpm') : -1;
+ if (program === 'nice' && at < 0) return [program, args];
+ const command = at < 0 ? args : args.slice(at + 1), offset = command[0] === 'run' ? 1 : 0;
+ const aliases = {"dev":"dev","build":"build","preview":"preview","verify":"verify","export":"export","import":"import","setup":"setup","deploy":"deploy","reset":"reset","release":"release","outbox":"outbox","doctor":"doctor","describe":"describe","check":"check","deps":"install","rer":""}, alias = command[offset];
+ if (!Object.hasOwn(aliases, alias)) return [program, args];
+ const forwarded = command.slice(offset + 1); if (forwarded[0] === '--') forwarded.shift();
+ const launch = __rerTestEntryArgs([__rerTestEntry, ...(aliases[alias] ? [aliases[alias]] : []), ...forwarded]);
+ return at < 0 ? [process.execPath, launch] : [program, [...args.slice(0, at), process.execPath, ...launch]];
+};
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {spawn} from 'node:child_process'
@@ -8,7 +21,7 @@ import {join} from 'node:path'
 import {tlsIdentity,workerRuntime} from './tls-runtime.mjs'
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex')
 async function cli(identity,command,origin,session,args,expected=0,prefix=[]) {
- const child=spawn('pnpm',['run',command,'--',...prefix,'--origin',origin,'--session-file',session,...args],{env:{...process.env,NODE_EXTRA_CA_CERTS:identity.certificate},stdio:['ignore','pipe','pipe']})
+ const child=spawn(...__rerTestEntryPnpm('pnpm', ['run',command,'--',...prefix,'--origin',origin,'--session-file',session,...args]),{env:{...process.env,NODE_EXTRA_CA_CERTS:identity.certificate},stdio:['ignore','pipe','pipe']})
  const stdout=[],stderr=[];child.stdout.on('data',b=>stdout.push(b));child.stderr.on('data',b=>stderr.push(b))
  const code=await new Promise((r,j)=>{child.on('error',j);child.on('exit',r)})
  const out=Buffer.concat(stdout).toString(),err=Buffer.concat(stderr).toString()

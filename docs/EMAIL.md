@@ -26,7 +26,7 @@ A key for the other provider does not satisfy your choice. Set these as describe
 
 Locally you need none of this. Penny captures messages in a local outbox instead of sending them.
 
-`pnpm run operations -- check --profile owner-sendgrid` (or `owner-resend`) and `node scripts/rer.mjs check` read `OPERATIONS.json`, whose mail loop is declared as SendGrid by default. If you choose Resend, change that loop's `provider` to `resend` in `OPERATIONS.json` so the check and your `MAIL_PROVIDER` agree.
+`pnpm run operations -- check --profile owner-sendgrid` (or `owner-resend`) and `rer check` read `OPERATIONS.json`, whose mail loop is declared as SendGrid by default. If you choose Resend, change that loop's `provider` to `resend` in `OPERATIONS.json` so the check and your `MAIL_PROVIDER` agree.
 
 ## Delivery events and suppression
 

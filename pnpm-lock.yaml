@@ -42,6 +42,9 @@ importers:
       '@playwright/test':
         specifier: 1.63.0
         version: 1.63.0
+      '@runeditrun/rer':
+        specifier: 0.2.2
+        version: 0.2.2
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.2.2(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
@@ -1129,6 +1132,11 @@ packages:
 
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
+
+  '@runeditrun/rer@0.2.2':
+    resolution: {integrity: sha512-PP1PCu/8CaU3T6D/T+6hOLTkf06S+7fEaUim0yk+Rzek5I9M4YHuVH/JqnaDkRwKOMaecmhOY2gZpUkhcB5sXg==}
+    engines: {node: '>=22'}
+    hasBin: true
 
   '@sindresorhus/is@7.2.0':
     resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
@@ -3185,6 +3193,8 @@ snapshots:
     optional: true
 
   '@rolldown/pluginutils@1.0.1': {}
+
+  '@runeditrun/rer@0.2.2': {}
 
   '@sindresorhus/is@7.2.0': {}
 

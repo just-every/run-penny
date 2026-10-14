@@ -1,7 +1,7 @@
 import { mkdtemp, readlink } from 'node:fs/promises'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
-import { createProcessBaseline, createProcessScope as native, processScopeEnvironment as environment, scopedProcesses as inspect } from '../../scripts/base-onboarding/process-scope.mjs'
+import { createProcessBaseline, createProcessScope as native, processScopeEnvironment as environment, scopedProcesses as inspect } from '@runeditrun/rer/process-scope'
 export async function createProcessScope(prefix) { const scope = native(await createProcessBaseline()); return { root: await mkdtemp(prefix), token: scope.token, native: scope } }
 export const processScopeEnvironment = (scope, env) => environment(scope.native, env)
 export const scopedProcesses = (scope, table, timeout) => inspect(scope.native, table, timeout)

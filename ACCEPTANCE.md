@@ -338,7 +338,7 @@ modes verify against the reviewed checkout. Real CLI portability and the amended
 fresh-clone browser journey must pass on the final source; historical receipts
 above do not accept these changes. The amended browser journey now executes
 README install/setup/dev, repeats setup, then runs the actual
-`node scripts/rer.mjs outbox --json --non-interactive` command against managed dev
+`rer outbox --json --non-interactive` command against managed dev
 at both 1440/390 widths. It requires successful exit and uses the emitted
 `signInUrl` for native owner sign-in, including read-only GET confirmation,
 privacy, navigation, 404, accessibility and cleanup checks. This is prepared
@@ -391,9 +391,9 @@ emitted-Worker/D1/R2 proofs with synthetic sources.
 These rows were proved at feature head `3ef9f52425328c93c78a09cef5c13fce1faaff09`:
 GitHub `Verify Penny` run 38174390071 passed on that exact SHA, and the existing
 `tests/browser/feedback-import.mjs` journey passed there on a fresh clone through
-`node scripts/rer.mjs dev` at 1440×900 and 390×844 (42 captures, zero serious or
+`rer dev` at 1440×900 and 390×844 (42 captures, zero serious or
 critical axe findings, no overflow, no unexpected console error, failed request
-or external request). The m1 full `node scripts/rer.mjs verify` passed on
+or external request). The m1 full `rer verify` passed on
 `cd5f7ba0a579f5554a5ecb16b5c03b87e5f708f2`, which differs from that head only in
 one test runtime budget and the browser journey's expectations. The full-size
 3,000/20,000/6,000/4,000 histories, the final merged SHA and its exact-head
@@ -488,7 +488,7 @@ dated acceptance above remains historical evidence.
 
 Source head `4bb3c94f75653eae283130ef3ba0792ae2166b88`: GitHub `Verify Penny`
 run 38195978511 passed on that exact SHA, and the m1 full
-`node scripts/rer.mjs verify` passed there (1,017 s). These are local
+`rer verify` passed there (1,017 s). These are local
 emitted-Worker/D1/R2 proofs with synthetic sources built from UserVoice's
 documented export headings.
 
@@ -502,7 +502,7 @@ documented export headings.
 | DATA-001 | `feedback-import-upgrade.test.ts` populated-main case from migration `0038_`: applied and undone Canny receipts, saved work and opaque erasure fences survive append-only 0038 unchanged with old receipts readable. |
 
 The existing `tests/browser/feedback-import.mjs` journey passed on a fresh
-clone of that head through `node scripts/rer.mjs` at 1440×900 and 390×844 (62
+clone of that head through `rer` at 1440×900 and 390×844 (62
 captures, zero serious or critical axe findings, no overflow, no unexpected
 console error or external request), including the UserVoice preview, receipts,
 workbook refusal and the request's supporter list. The 3,000-idea,

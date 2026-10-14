@@ -18,7 +18,7 @@ does not provision it or a custom domain. Outbound actions remain visibly
 disabled until configured. Requirements and proposed journeys are not receipts.
 
 Follow README.md and OPERATIONS.json for actual command effects and required
-configuration. Run the app with `node scripts/rer.mjs install`, `setup`, `dev`:
+configuration. Run the app with `rer install`, `setup`, `dev`:
 setup starts empty, sign-in uses Base's development outbox, and the owner finishes
 first-run setup at `/setup`. Owner deploy/health use `deploy.json`,
 explicit account inputs and private durable owner files. The retained artifact

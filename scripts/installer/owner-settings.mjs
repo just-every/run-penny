@@ -1,9 +1,9 @@
 import { randomBytes } from 'node:crypto'
 import { join } from 'node:path'
-import { readSettings } from '../base-onboarding/adapter.mjs'
-import { privateDirectory, writePrivateFile } from '../base-onboarding/private-files.mjs'
-import { assertRegular, inspect } from '../base-onboarding/local/files.mjs'
-import { localOperation } from '../base-onboarding/local/operation.mjs'
+import { readSettings } from '@runeditrun/rer/local-installer'
+import { privateDirectory, writePrivateFile } from '@runeditrun/rer/private-files'
+import { assertRegular, inspect } from '@runeditrun/rer/local/files'
+import { localOperation } from '@runeditrun/rer/local/operation'
 import {model,manifest} from './manifest.mjs'
 import { ownerDeclaration } from './owner-environment.mjs'
 const fields=model.fields

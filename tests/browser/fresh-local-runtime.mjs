@@ -1,3 +1,16 @@
+import { fileURLToPath as __rerTestEntryPath } from 'node:url';
+const __rerTestEntry = __rerTestEntryPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'));
+const __rerTestEntryArgs = args => args[1] === 'dev' && !args.some(arg => ['--foreground', '--detach', '--stop', '--help'].includes(arg)) ? [...args, '--foreground'] : args;
+const __rerTestEntryPnpm = (program, args) => {
+ const at = program === 'nice' ? args.indexOf('pnpm') : -1;
+ if (program === 'nice' && at < 0) return [program, args];
+ const command = at < 0 ? args : args.slice(at + 1), offset = command[0] === 'run' ? 1 : 0;
+ const aliases = {"dev":"dev","build":"build","preview":"preview","verify":"verify","export":"export","import":"import","setup":"setup","deploy":"deploy","reset":"reset","release":"release","outbox":"outbox","doctor":"doctor","describe":"describe","check":"check","deps":"install","rer":""}, alias = command[offset];
+ if (!Object.hasOwn(aliases, alias)) return [program, args];
+ const forwarded = command.slice(offset + 1); if (forwarded[0] === '--') forwarded.shift();
+ const launch = __rerTestEntryArgs([__rerTestEntry, ...(aliases[alias] ? [aliases[alias]] : []), ...forwarded]);
+ return at < 0 ? [process.execPath, launch] : [program, [...args.slice(0, at), process.execPath, ...launch]];
+};
 import assert from 'node:assert/strict'
 import { execFileSync, spawn } from 'node:child_process'
 import { chmod, mkdir, open, readFile, rm, stat, writeFile } from 'node:fs/promises'
@@ -13,7 +26,7 @@ import { readmeCommands } from '../installer/readme-commands.mjs'
 import { localDatabaseFile } from './local-database.mjs'
 import { setupDiagnostics } from './fresh-setup-diagnostics.mjs'
 import { freshLocalPort } from './fresh-local-port.mjs'
-import { inheritedScopeTokens } from '../../scripts/base-onboarding/process-scope.mjs'
+import { inheritedScopeTokens } from '@runeditrun/rer/process-scope'
 import { readDevKey } from '../../base/modules/operator-auth/dev/sign-in-as.mjs'
 let diagnostics
 const ignoredEnvironment = /^(AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|WORKSPACE_TIMEZONE$|SESSION_SECRET$|SETUP_TOKEN$|OWNER_EMAIL$|OPERATOR_EMAIL$|APP_ORIGIN$|PENNY_)/
@@ -30,7 +43,7 @@ async function run(cwd, args, env, { stdoutOnly = false, diagnosticId = 'command
   const setup = args[1] === 'setup' ? await setupDiagnostics(cwd, args, env, diagnostics, diagnosticId).catch(() => undefined) : undefined
   console.log(`[G.6] node ${args[0]} ${args[1]} started`)
   return await new Promise((resolveCommand, reject) => {
-    const child = spawn('nice', ['-n', '15', executable, ...args], { cwd, env, stdio: ['ignore', 'pipe', 'pipe'] })
+    const child = spawn(...__rerTestEntryPnpm('nice', ['-n', '15', executable, ...args]), { cwd, env, stdio: ['ignore', 'pipe', 'pipe'] })
     let output = '', stdout = ''
     const observe = () => setup?.observe(output.slice(-512))
     child.stdout.on('data', bytes => { output += bytes; stdout += bytes; observe() }); child.stderr.on('data', bytes => { output += bytes; observe() })

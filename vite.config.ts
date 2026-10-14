@@ -6,7 +6,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, normalizePath } from 'vite'
 import { localHostAdmission } from './scripts/installer/vite-host.js'
 import { docsSite } from './src/core/features/docs/build/plugin.ts'
-import { archiveOutputGuard } from './scripts/base-onboarding/archive-output.mjs'
+import { archiveOutputGuard } from '@runeditrun/rer/archive-output'
 
 // Only `vite dev` loads the local-only entry and the checkout's dev key; a build
 // keeps src/server.ts and never sees either (rer build checks its output).
@@ -21,7 +21,7 @@ export default defineConfig(({ command, isPreview }) => ({
   // `vite dev` serves only what the app is built from: never rer's private
   // folders (the dev key, installer state), export archives, settings or local
   // data. The Cloudflare plugin also denies .dev.vars and .wrangler.
-  server: { fs: { strict: true, allow: ['src', 'public', 'base', 'scripts/portability', 'scripts/base-cli/modules/portability', 'scripts/base-cli/modules/erasure', 'seed.json', 'node_modules'].map(checkout),
+  server: { fs: { strict: true, allow: ['src', 'public', 'base', 'scripts/portability', 'node_modules/@runeditrun/rer/modules/portability', 'node_modules/@runeditrun/rer/modules/erasure', 'seed.json', 'node_modules'].map(checkout),
     deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/*.rer', ...['.rer', '.seed', 'private', 'exports'].map(folder => checkout(folder) + '/**')] } },
   plugins: [localHostAdmission(), cloudflare({ persistState: { path: '.wrangler/state' },
     ...(command === 'serve' && !isPreview ? { config: serve } : process.env.RER_DEV_ORIGIN ? { config: { vars: local('RER_DEV_ORIGIN') } } : {}),

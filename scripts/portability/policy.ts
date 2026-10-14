@@ -1,5 +1,5 @@
 import { privateInput } from '../data/private-files.mjs'
-import type { ArchivePolicy } from '../base-cli/modules/portability/index.mjs'
+import type { ArchivePolicy } from '@runeditrun/rer/modules/portability'
 import { createHash } from 'node:crypto'
 import inventory from '../../src/core/features/data/schema-inventory.json'
 import { normalize, validateNativeIdentity, canonical, DATA_LIMITS, type Row, type ErasureJournal } from '../../src/core/features/data/archive'

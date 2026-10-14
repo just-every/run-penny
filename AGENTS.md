@@ -2,15 +2,15 @@
 
 ## Run it locally
 
-Everything runs through one dispatcher, `node scripts/rer.mjs`, from the checkout
+Everything runs through one dispatcher, `rer`, from the checkout
 root. It selects the pinned Node (22.20.0; pnpm 10.12.4 comes from
 `packageManager`), never changes global tools, and every command accepts
 `--help`, `--json` and `--non-interactive`.
 
 ```bash
-node scripts/rer.mjs install
-node scripts/rer.mjs setup --owner-email you@example.com
-node scripts/rer.mjs dev
+rer install
+rer setup --owner-email you@example.com
+rer dev
 ```
 
 `install` is the frozen dependency install. `setup` builds, applies every
@@ -35,12 +35,12 @@ and never exported.
 Then, from the same root:
 
 ```bash
-node scripts/rer.mjs verify
-node scripts/rer.mjs reset --yes
-node scripts/rer.mjs export --output exports/penny.rer
-node scripts/rer.mjs import --input exports/penny.rer --yes
-node scripts/rer.mjs deploy --dry-run
-node scripts/rer.mjs describe
+rer verify
+rer reset --yes
+rer export --output exports/penny.rer
+rer import --input exports/penny.rer --yes
+rer deploy --dry-run
+rer describe
 ```
 
 `verify` is the full verification (stop dev first with `dev --stop`). `reset`

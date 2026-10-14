@@ -9,7 +9,7 @@ import { constants } from 'node:os'
 import { join } from 'node:path'
 import inventory from '../../src/core/features/data/schema-inventory.json'
 
-const SOURCES = ['scripts/base-cli/modules/portability', 'scripts/portability', 'src/core/features/data', 'src/core/features/imports', 'src/core/features/auth']
+const SOURCES = ['node_modules/@runeditrun/rer/modules/portability', 'scripts/portability', 'src/core/features/data', 'src/core/features/imports', 'src/core/features/auth']
 const UNDERSCORED = /\b[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+\b/g
 const PLATFORM = /^(?:ERR|SQLITE|D1)_[A-Z0-9_]+$/
 const STRUCTURE = Object.entries(inventory).flatMap(([table, { columns }]) => [table, ...columns.filter(column => column.includes('_'))])

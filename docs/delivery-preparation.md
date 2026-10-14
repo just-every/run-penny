@@ -18,7 +18,8 @@ this caller does not dispatch it, register a project or deploy an installation.
 `rer-project.json` setup installs local Node 22.20.0/pnpm 10.12.4 tooling, frozen
 dependencies and Chromium for verification. Its environment contains only
 process/path inputs; it neither creates an application owner nor provisions
-hosting. Build and verify dispatch the portable `scripts/rer.mjs` commands.
+hosting. Build and verify dispatch the pinned `@runeditrun/rer` package's `rer`
+commands.
 The artifact command packages the actual `dist/server/`, `dist/client/` and exact
 SQL selected by the build's Wrangler configuration. It requires a fresh output
 directory and never overwrites a previous candidate.
@@ -68,7 +69,7 @@ pnpm run test:browser:editor
 ```
 
 On 2026-10-10 the delivery-package check passed 1/1 against the actual built
-payload; the owner-claim/editor suites passed 6/6; `node scripts/rer.mjs
+payload; the owner-claim/editor suites passed 6/6; `rer
 check --profile first-party` exited 0; and Platform's unmodified integration inspector exited 0 after
 checking the committed 23-file bundle. The package check runs both producer
 commands on built bytes, compares repeated output, checks payload/migration
@@ -94,7 +95,7 @@ verification policy emitted in `rer-project.json`. Its security-sensitive paths
 cover native auth, integrations, data, saved imports and owner-editor
 implementation under `src/core/features/`, all `migrations/core/**` SQL,
 `src/server.ts`, `src/base/**`, `base/**`, installer/onboarding/CLI adapters,
-`scripts/rer.mjs`, `scripts/delivery/**`, `rer-setup.json` and the managed caller.
+`scripts/delivery/**`, `rer-setup.json` and the managed caller.
 Imports enforce provenance, current authority and erasure custody; editor code
 controls owner admission and configuration leases. SQL can change authority,
 revocation and custody fences, so it is sensitive as well as being listed under
@@ -112,7 +113,7 @@ pin. No stage/production deployment, live admission or runtime acceptance follow
 from this check; actual artifact packaging and the full verification remain
 separate required evidence.
 
-Run `node scripts/rer.mjs check --profile first-party` in Penny before packaging. This is the
+Run `rer check --profile first-party` in Penny before packaging. This is the
 credential-free structural check; a named hosted readiness profile still
 requires that profile's real inputs. It does not dispatch the managed workflow.
 

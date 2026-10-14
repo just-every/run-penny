@@ -13,9 +13,9 @@ This page takes you from the Penny source to a running copy: first on your own c
 From the project folder:
 
 ```bash
-node scripts/rer.mjs install
-node scripts/rer.mjs setup --owner-email you@example.com
-node scripts/rer.mjs dev
+rer install
+rer setup --owner-email you@example.com
+rer dev
 ```
 
 `install` installs the locked dependencies. `setup` creates private local credentials, applies the database migrations and creates the first owner, with an empty workspace and no sample records. The first run needs `--owner-email`. It checks a fresh sign-in message, then stops its temporary app before returning. `dev` keeps the app running in the foreground.
@@ -36,7 +36,7 @@ Local mode needs no email provider and `dev` signs you straight in.
 
 Until you finish setup, every operator page sends you back to it; afterwards the setup address opens the app. The badge in the corner switches to a dev teammate or signs you out. To try the emailed link instead, run `dev --login`: Penny captures every message it would send in a local outbox, and the `RER_OPEN` link it prints opens that outbox; select the newest message, choose **Open this link**, then press **Confirm**. Requester verification on the public portal uses the same outbox, so you can try the customer side too.
 
-To start over, stop the app and run `node scripts/rer.mjs reset --yes`. It lists what it removes, keeps your source and exports, and a new `setup` creates a fresh owner. To move your data, `node scripts/rer.mjs export --output exports/penny.rer` writes an archive and its erasure journal, and `node scripts/rer.mjs import --input exports/penny.rer --yes` restores them into an empty installation.
+To start over, stop the app and run `rer reset --yes`. It lists what it removes, keeps your source and exports, and a new `setup` creates a fresh owner. To move your data, `rer export --output exports/penny.rer` writes an archive and its erasure journal, and `rer import --input exports/penny.rer --yes` restores them into an empty installation.
 
 ## Make it yours
 
@@ -78,8 +78,8 @@ Optional: `WORKSPACE_TIMEZONE`, an IANA timezone such as Europe/London for reque
 Then:
 
 ```bash
-node scripts/rer.mjs deploy --dry-run
-node scripts/rer.mjs deploy
+rer deploy --dry-run
+rer deploy
 pnpm run deploy:health
 ```
 
@@ -112,10 +112,10 @@ Before you deploy, ask Penny which inputs are missing:
 pnpm run operations -- check --profile owner-sendgrid
 ```
 
-It exits with 1 while inputs are missing, which is expected before you have configured hosting. It checks names and formats only: it does not contact Cloudflare or your email provider, and it does not prove a credential is valid. Use `owner-resend` or `owner-later` for the other mail choices; see [Email and notifications](/docs/email). `node scripts/rer.mjs doctor` reports your local tools and saved settings.
+It exits with 1 while inputs are missing, which is expected before you have configured hosting. It checks names and formats only: it does not contact Cloudflare or your email provider, and it does not prove a credential is valid. Use `owner-resend` or `owner-later` for the other mail choices; see [Email and notifications](/docs/email). `rer doctor` reports your local tools and saved settings.
 
 ## If something goes wrong
 
 - **Sign-in says email delivery is unavailable.** The deployment has no complete mail configuration. Public reading still works. Add the provider, key and sender, then deploy again.
 - **A command says another store is present and exits 4.** You have a sibling `.penny-local-state-` folder or a `PENNY_LOCAL_STATE` setting. Penny will not read, move or delete it: back it up, move it into `.wrangler/state` yourself if it is the one you want, or remove it, then run the command again.
-- **`dev` or `setup` says the port is held.** Another program owns the saved local port. Stop it, or use `node scripts/rer.mjs dev --stop` if it is a Penny server you started.
+- **`dev` or `setup` says the port is held.** Another program owns the saved local port. Stop it, or use `rer dev --stop` if it is a Penny server you started.

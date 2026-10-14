@@ -601,7 +601,7 @@ try {
   }
   await writeFile(join(output, 'results.json'), JSON.stringify({
     runtimeMode,
-    scope: runtimeMode === 'rer-dev' ? 'fresh node scripts/rer.mjs dev runtime' : 'emitted modules in the existing Base browser runtime; local route probe only',
+    scope: runtimeMode === 'rer-dev' ? 'fresh rer dev runtime' : 'emitted modules in the existing Base browser runtime; local route probe only',
     clauses: ['IMP-001', 'IMP-002', 'IMP-003', 'IMP-004', 'IMP-007', 'IMP-008', 'BASE-ACCESS-002', 'BASE-UX-001'],
     checks,
     measuredEffects: observedEffects,

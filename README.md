@@ -56,9 +56,9 @@ cd run-penny
 
 <!-- penny-local-commands -->
 ```bash
-node scripts/rer.mjs install
-node scripts/rer.mjs setup --owner-email you@example.com
-node scripts/rer.mjs dev
+rer install
+rer setup --owner-email you@example.com
+rer dev
 ```
 <!-- /penny-local-commands -->
 
@@ -83,7 +83,7 @@ data) and signed out. `dev --as teammate` or `dev --as signed-out` starts as one
 of those instead, and `dev --login` turns dev sign-in off: open the outbox through
 the printed `RER_OPEN` link, choose the newest message, **Open this link**, then
 **Confirm**, exactly as an emailed link works. No email provider is needed and no
-email is sent. In another terminal, `node scripts/rer.mjs outbox` prints the
+email is sent. In another terminal, `rer outbox` prints the
 outbox link again, and `outbox --owner-email EMAIL` requests a fresh sign-in
 message for that owner. Without the key, the outbox, dev sign-in and anything
 made in a dev session answer 404 or are refused, even through a tunnel or proxy;
@@ -92,12 +92,12 @@ made in a dev session answer 404 or are refused, even through a tunnel or proxy;
 Verify, reset and move data from the same root:
 
 ```bash
-node scripts/rer.mjs verify
-node scripts/rer.mjs reset --yes
-node scripts/rer.mjs export --output exports/penny.rer
-node scripts/rer.mjs import --input exports/penny.rer --yes
-node scripts/rer.mjs deploy --dry-run
-node scripts/rer.mjs describe
+rer verify
+rer reset --yes
+rer export --output exports/penny.rer
+rer import --input exports/penny.rer --yes
+rer deploy --dry-run
+rer describe
 ```
 
 `verify` is the bounded full check; stop dev first with `dev --stop`. `reset`
@@ -163,8 +163,8 @@ Set `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `OPERATOR_EMAIL` and
 See [operations](OPERATIONS.md) for permissions and private file custody. Then:
 
 ```bash
-node scripts/rer.mjs deploy --dry-run
-node scripts/rer.mjs deploy
+rer deploy --dry-run
+rer deploy
 pnpm run deploy:health
 ```
 
@@ -264,7 +264,7 @@ All operator reads and writes require the same valid D1 session, and every write
 ## Verify and build
 
 ```bash
-node scripts/rer.mjs verify
+rer verify
 ```
 
 The gate runs the structural command check, source and Base custody checks,
@@ -279,9 +279,9 @@ empty-store decision loop through status and release publication; they do not
 establish hosted mail or Cron delivery. The read UI is exercised at all mounted
 routes and representative widths, recorded in [`visual/README.md`](visual/README.md).
 
-`node scripts/rer.mjs build` generates the Wrangler configuration, typechecks and
+`rer build` generates the Wrangler configuration, typechecks and
 builds the Worker and assets with private settings excluded and restored.
-`pnpm cf-typegen` generates binding types. `node scripts/rer.mjs check` and
+`pnpm cf-typegen` generates binding types. `rer check` and
 `doctor` inspect the command contract and the local tools without installed
 dependencies or provider accounts.
 

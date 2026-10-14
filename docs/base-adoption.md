@@ -2,89 +2,46 @@
 
 ## Current inventory, 14 October 2026
 
+Penny runs the shared `rer` command in **package mode**: `package.json` pins
+`@runeditrun/rer` 0.2.2 exactly as a devDependency (locked in `pnpm-lock.yaml`),
+package scripts and `OPERATIONS.json` run `rer VERB`, and the checkout carries no
+vendored `scripts/rer.mjs`, `scripts/base-cli` or `scripts/base-onboarding`.
+`pnpm install --frozen-lockfile` installs the command; `rer check --profile
+first-party` confirms the pin, its lockfile entry and the absence of a vendored
+copy. A later refresh is a version bump: `pnpm add -D -E @runeditrun/rer@X`,
+then `pnpm source:lock`.
+
 Base selections retain immutable comparison origins in `edition.json`; individual
-verbatim copies record their actual revisions in `base/PROVENANCE.json`. The CLI
-comparison now includes Base's root `cli` at
-`8981bc2c4d9e61feca5787c83b4ed44056659dd9`, matching the source adopted by Penny.
-Other selections retain their recorded origins. The retained runtime excludes Base test suites, fixture trees, and
-one-off proof harnesses. Base owns its shared suite; Penny retains tests of its
-product and adapters.
+verbatim copies record their actual revisions in `base/PROVENANCE.json` (46 copy
+groups, 501 files: the native modules under `base/`, the delivery producer,
+schema, authoring tools, first-run runtime and three Base documents).
+`sources.lock.json` binds current tracked source and retained comparison
+archives. The root provenance revision is historical; each copy entry names its
+own origin. Base owns its shared suite; Penny retains tests of its product and
+adapters. Run `pnpm source:check` and `pnpm verify:base-source` after any
+intentional source change staged with `pnpm source:lock`; the last command
+verifies the shipped bytes offline. An independent comparison with the private
+upstream requires an explicitly supplied authorized Base checkout. See
+[source provenance](SOURCE-PROVENANCE.md) for the exact verification boundary.
 
-`edition.json` selects the source paths and mappings. `base/PROVENANCE.json`
-records every byte-exact copy, its origin path, revision, file hashes and modes;
-`sources.lock.json` binds current tracked source and retained comparison archives.
-The root provenance revision is historical; each copy entry names its own origin.
-Historical receipts below do not describe the current inventory.
+## Penny's command policy in the seed adapter
 
-The source retains 133 byte-exact copy groups (1,013 files), 16 Base components
-and their selected comparison archives. Two CLI files are Penny adaptations,
-described below, and make no byte-equality claim. Refresh with Base's own commands, from a
-Base checkout at the chosen commit:
+The shared command loads Penny's adapter (`scripts/installer/local.mjs`, declared
+in `OPERATIONS.json`) before any verb acts. Its first import,
+`scripts/installer/placement.mjs`, applies Penny's product policy for the
+checkout the command runs in: every changing verb (setup, dev, build, reset,
+export, import, install, verify, deploy, preview, outbox) refuses with exit 4,
+before touching anything, when a sibling `.penny-local-state-<checkout>` folder
+exists or `PENNY_LOCAL_STATE` names a store other than `.wrangler/state`; and
+`rer install` runs the frozen install with Penny's command environment, without
+inherited credentials. Read-only `describe`, `check`, `doctor`, `release`,
+`--help` and `--stop` stay usable. `tests/installer/cli-policy.test.mjs` drives
+the installed `rer` against a copy of this checkout.
 
-```sh
-node "$BASE/scripts/export-cli.mjs" .
-node scripts/edition-authoring/cli.mjs refresh-base <commit> \
-  --record base/PROVENANCE.json --base "$BASE"
-```
-
-The exporter rewrites `scripts/rer.mjs`; restore Penny's own entry point
-afterwards, because it applies Penny's placement policy before the shared CLI.
-Reapply and review the two documented CLI adaptations after exporting; do not
-record their changed bytes as verbatim Base source.
-Update the component revisions in `edition.json`, stage the result, and run
-`pnpm source:lock`.
-
-Use the existing `record-base`, `verify-base` and `compare` commands for source
-work. Stage intentional changes before `pnpm source:lock`, then run
-`pnpm source:check` and `pnpm verify:base-source`. The last command verifies the
-shipped bytes offline. An independent comparison with the private upstream
-requires an explicitly supplied authorized Base checkout; it is not a public
-fetch promise. See [source provenance](SOURCE-PROVENANCE.md) for the exact
-verification boundary and transformed delivery exports.
-
-## Publication scanner copy
-
-`scripts/base-cli/scripts/publish-check` and `publish-check.mjs` are exact copies
-of Base `bba58af556643e906274cfbe8ac52da3576a105b`, newer than the rest of the
-CLI (`8981bc2c4d9e61feca5787c83b4ed44056659dd9`). Base's current publication
-scan flags a comment in the older copy of its own hygiene module, which shows a
-package patch filename shaped like an address; Base rewrote that comment, so
-Penny carries Base's newer scanner. Base's test files stay uncopied as before.
-`base/PROVENANCE.json` records both groups at that revision and the CLI inventory
-hashes the copied bytes. A full CLI refresh replaces this with one revision.
-
-## Hydration verification scheduling
-
-Penny owns deliberate adaptations of `scripts/base-cli/cli/lifecycle.mjs` and
-`scripts/base-cli/cli/hydration/check.mjs`. Their comparison origin is Base's
-root `cli` at `8981bc2c4d9e61feca5787c83b4ed44056659dd9`; the more-specific
-`edition.json` mapping preserves that baseline. The other 67 CLI files retain
-their original byte hashes and modes as individual exact-copy records. The CLI
-inventory hashes all local files and explicitly records these two adaptations
-and their original hashes; its local integrity hashes do not claim upstream
-equality. This follows the source author's documented adaptation boundary.
-
-The command adapter's `hydrationLoadDelayMs` option defaults to zero. A positive
-integer selects serial loads and waits that many milliseconds before every
-load, including the first after page discovery. Penny declares 61,000 ms so
-the actual 60-second public admission window expires naturally between fresh
-asset loads. The same hosted Worker, database, IP identity and limiter remain
-in use. No failure is retried. The lifecycle signal cancels a pending wait.
-
-The exported `checkHydration` function accepts the corresponding `loadDelayMs`
-and `signal` options. Delay values must be integers from zero through
-2,147,483,647 ms. The standalone command reads the same adapter policy:
-
-```sh
-node scripts/base-cli/cli/hydration/check.mjs . --details
-```
-
-Run it against the current production build. Every baseline, discovered section,
-tamper case, script hold, recovery assertion, intro and reduced-motion check is
-retained. HTTP 429 and hydration errors still fail. Load counts depend on the
-successful page surveys. This focused check does not replace full `rer verify`;
-final exact-source CI remains required. The pacing adds roughly one minute per
-load. It changes no product limits, migrations, deployment or local settings.
+The package's hydration check loads pages without Penny's former 61-second
+pacing adaptation: page assets now have their own public admission bucket
+(`publicAssetRequestsPerMinutePerIp`), so fresh asset loads no longer exhaust the
+page-read allowance. No product limit changed.
 
 ## Product adapters and authority
 

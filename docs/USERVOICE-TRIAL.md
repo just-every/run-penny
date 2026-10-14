@@ -53,9 +53,9 @@ what they mean, and never invent IDs or dates.
 Use a checkout with no valuable local records. From its root:
 
 ```sh
-node scripts/rer.mjs install
-node scripts/rer.mjs setup --owner-email YOUR_EMAIL
-node scripts/rer.mjs dev --login
+rer install
+rer setup --owner-email YOUR_EMAIL
+rer dev --login
 ```
 
 Keep dev in the foreground and run later commands in another terminal. Open its
@@ -143,7 +143,7 @@ Compare A, B and C again: each must come back once, with the same wording and
 supporters and no external effects. Then stop dev with Ctrl-C, or:
 
 ```sh
-node scripts/rer.mjs dev --stop
+rer dev --stop
 ```
 
 ## 5. Erase one named supporter, then export and restore

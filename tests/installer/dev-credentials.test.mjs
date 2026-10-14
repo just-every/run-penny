@@ -1,3 +1,6 @@
+import { fileURLToPath as __rerTestEntryPath } from 'node:url';
+const __rerTestEntry = __rerTestEntryPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'));
+const __rerTestEntryArgs = args => args[1] === 'dev' && !args.some(arg => ['--foreground', '--detach', '--stop', '--help'].includes(arg)) ? [...args, '--foreground'] : args;
 import assert from 'node:assert/strict'
 import { createReadStream } from 'node:fs'
 import { copyFile, mkdir } from 'node:fs/promises'
@@ -7,7 +10,7 @@ import { Readable } from 'node:stream'
 import test from 'node:test'
 import { DatabaseSync } from 'node:sqlite'
 import { readDevKey, signInAs } from '../../base/modules/operator-auth/dev/sign-in-as.mjs'
-import { readArchive } from '../../scripts/base-cli/modules/portability/index.mjs'
+import { readArchive } from '@runeditrun/rer/modules/portability'
 import { evidenceDirectory } from '../browser/acceptance-audit.mjs'
 import { freshLocalRuntime } from '../browser/fresh-local-runtime.mjs'
 import { localDatabaseFile } from '../browser/local-database.mjs'
@@ -76,7 +79,7 @@ test('[SC-05 API-001] an API key minted in a dev session works only behind the c
     // Export drops it: no API key or dev record leaves the installation.
     // rer takes archive paths inside the checkout.
     const archive = join(root, 'exports/penny.rer'), edited = join(root, 'exports/edited.rer')
-    await runtime.run(['scripts/rer.mjs', 'export', '--output', 'exports/penny.rer', '--non-interactive'])
+    await runtime.run(__rerTestEntryArgs([__rerTestEntry, 'export', '--output', 'exports/penny.rer', '--non-interactive']))
     const text = []
     for await (const record of readArchive(Readable.toWeb(createReadStream(archive)))) {
       if (record.kind === 'manifest') for (const name of ['integration_tokens', 'oa_dev_credentials', 'oa_sessions', 'penny_api_issuers']) assert.ok(!record.tables.some(table => table.name === name), `${name} is not exported`)
@@ -87,9 +90,9 @@ test('[SC-05 API-001] an API key minted in a dev session works only behind the c
     // An archive edited to carry the dev-minted key is refused, and nothing is restored from it.
     await archiveWithTables(archive, edited, database, ['integration_tokens', 'oa_dev_credentials'])
     await copyFile(archive + '.erasure-journal.json', edited + '.erasure-journal.json')
-    await runtime.run(['scripts/rer.mjs', 'reset', '--yes', '--non-interactive'])
-    await assert.rejects(runtime.run(['scripts/rer.mjs', 'import', '--input', 'exports/edited.rer', '--yes', '--non-interactive']), /failed \(\d+\)/, 'import refuses the archive holding a dev-minted key')
-    await runtime.run(['scripts/rer.mjs', 'import', '--input', 'exports/penny.rer', '--yes', '--non-interactive'])
+    await runtime.run(__rerTestEntryArgs([__rerTestEntry, 'reset', '--yes', '--non-interactive']))
+    await assert.rejects(runtime.run(__rerTestEntryArgs([__rerTestEntry, 'import', '--input', 'exports/edited.rer', '--yes', '--non-interactive'])), /failed \(\d+\)/, 'import refuses the archive holding a dev-minted key')
+    await runtime.run(__rerTestEntryArgs([__rerTestEntry, 'import', '--input', 'exports/penny.rer', '--yes', '--non-interactive']))
     const restored = new DatabaseSync(await localDatabaseFile(join(root, '.wrangler/state')), { readOnly: true })
     try {
       for (const table of ['integration_tokens', 'oa_dev_credentials']) assert.equal(restored.prepare(`SELECT COUNT(*) n FROM ${table}`).get().n, 0, `${table} stays empty after a restore`)

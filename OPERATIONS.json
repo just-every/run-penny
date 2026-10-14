@@ -17,12 +17,11 @@
   "commands": {
     "verify": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "verify"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -30,12 +29,11 @@
     },
     "doctor": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "doctor"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -166,12 +164,11 @@
     },
     "setup": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "setup"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -179,12 +176,11 @@
     },
     "deploy": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "deploy"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -252,12 +248,11 @@
     },
     "dev": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "dev"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -265,12 +260,11 @@
     },
     "preview": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "preview"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -278,12 +272,11 @@
     },
     "build": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "build"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -291,12 +284,11 @@
     },
     "reset": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "reset"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -304,12 +296,11 @@
     },
     "export": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "export"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -317,12 +308,11 @@
     },
     "import": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "import"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -330,12 +320,11 @@
     },
     "release": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "release"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -343,12 +332,11 @@
     },
     "outbox": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "outbox"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -356,12 +344,11 @@
     },
     "describe": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "describe"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -369,12 +356,11 @@
     },
     "check": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "check"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],
@@ -382,12 +368,11 @@
     },
     "install": {
       "argv": [
-        "node",
-        "scripts/rer.mjs",
+        "rer",
         "install"
       ],
       "inputs": [
-        "scripts/rer.mjs",
+        "package.json",
         "scripts/installer/local.mjs",
         "rer-setup.json"
       ],

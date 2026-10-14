@@ -110,8 +110,8 @@ exist.
 node --input-type=module <<'NODE'
 import { mkdtemp } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { inspectSource } from './scripts/base-cli/modules/release/source.mjs';
-import { cleanHistory } from './scripts/base-cli/modules/release/export.mjs';
+import { inspectSource } from '@runeditrun/rer/modules/release/source';
+import { cleanHistory } from '@runeditrun/rer/modules/release/export';
 
 const sourceRef = 'main';
 const source = inspectSource(process.cwd(), sourceRef);

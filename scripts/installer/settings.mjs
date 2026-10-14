@@ -1,10 +1,10 @@
 import { basename, dirname, join, resolve } from 'node:path'
 import { existsSync } from 'node:fs'
-import { readSettings, freePort } from '../base-onboarding/adapter.mjs'
-import { privateDirectory } from '../base-onboarding/private-files.mjs'
-import { buildEnvironment } from '../base-onboarding/local/environment.mjs'
-import { installationFailure } from '../base-onboarding/failures.mjs'
-import { recoverInterrupted } from '../base-onboarding/local/recovery.mjs'
+import { readSettings, freePort } from '@runeditrun/rer/local-installer'
+import { privateDirectory } from '@runeditrun/rer/private-files'
+import { buildEnvironment } from '@runeditrun/rer/local/environment'
+import { installationFailure } from '@runeditrun/rer/failures'
+import { recoverInterrupted } from '@runeditrun/rer/local/recovery'
 
 export const bindings = /^(SESSION_SECRET|SETUP_TOKEN|OWNER_EMAIL|OPERATOR_EMAIL|APP_ORIGIN|PENNY_ENVIRONMENT|WORKSPACE_TIMEZONE|AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|CLOUDFLARE_ACCOUNT_ID|CLOUDFLARE_API_TOKEN|CF_THROWAWAY_|RER_DEPLOY_)/
 export const settings = root => readSettings(root, { file: '.dev.vars' })

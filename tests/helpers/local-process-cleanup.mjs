@@ -1,1 +1,1 @@
-export { stopOwnedGroup } from '../../scripts/base-onboarding/process-cleanup.mjs'
+export { stopOwnedGroup } from '@runeditrun/rer/process-cleanup'

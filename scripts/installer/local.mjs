@@ -1,9 +1,12 @@
-import { commandAdapter as createCommandAdapter } from '../base-cli/cli/adapter.mjs'
-import { previewTarget } from '../base-onboarding/operator-installer.mjs'
-import { operatorPrerequisites } from '../base-onboarding/operator-prerequisites.mjs'
+// Penny's placement and install-environment policy runs before every other
+// module this adapter loads (see placement.mjs).
+import './placement.mjs'
+import { commandAdapter as createCommandAdapter } from '@runeditrun/rer/adapter'
+import { previewTarget } from '@runeditrun/rer/operator-installer'
+import { operatorPrerequisites } from '@runeditrun/rer/operator-prerequisites'
 import { deployPenny } from './deploy.mjs'
 import { pennyPortability } from '../portability/adapter.mjs'
-import { localInstaller, ownerAccountHosting } from '../base-onboarding/adapter.mjs'
+import { localInstaller, ownerAccountHosting } from '@runeditrun/rer/local-installer'
 import { prepareLocal, savedOrigin, commandEnvironment, runtimeEnvironment, localState } from './settings.mjs'
 import {manifest} from './manifest.mjs'
 import { features } from './ui/seed.mjs'
@@ -68,9 +71,6 @@ export const commandAdapter = createCommandAdapter(lifecycle, {
   preview: previewTarget,
   localPrerequisites: async ({ root, vars, email }) => vars.PENNY_ENVIRONMENT === 'local' && vars.MAIL_PROVIDER === 'development' && Boolean(vars.AUTH_SECRET) && await operatorPrerequisites(root, email),
   verify: ['pnpm', ['run', 'verify:app']], deploy: deployPenny,
-  // Each hydration load fetches fresh real assets. Let the public admission
-  // bucket's 60-second window expire before the next load, including the first.
-  hydrationLoadDelayMs: 61_000,
   // Local dev identity: the local-only Worker entry, the build output rer build
   // scans for the dev layer, and the kept end-to-end email-link test.
   devIdentity: { entry: 'src/server.dev.ts', output: ['dist'], emailLinkTest: 'tests/installer/readme.test.mjs' },

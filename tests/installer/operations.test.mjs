@@ -1,3 +1,6 @@
+import { fileURLToPath as __rerTestEntryPath } from 'node:url';
+const __rerTestEntry = __rerTestEntryPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'));
+const __rerTestEntryArgs = args => args[1] === 'dev' && !args.some(arg => ['--foreground', '--detach', '--stop', '--help'].includes(arg)) ? [...args, '--foreground'] : args;
 import assert from 'node:assert/strict'
 import { readFile, mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
@@ -64,7 +67,7 @@ test('[BASE-OPS-002] describe and structural checks work before dependencies or 
   await assert.rejects(readFile(join(clone, 'node_modules/.modules.yaml')), { code: 'ENOENT' })
   await assert.rejects(readFile(join(clone, '.dev.vars')), { code: 'ENOENT' })
   const cleanEnv = { PATH: process.env.PATH }
-  for (const args of [['scripts/rer.mjs','check','--profile','first-party'], ['scripts/rer.mjs','describe']]) {
+  for (const args of [__rerTestEntryArgs([__rerTestEntry,'check','--profile','first-party']), __rerTestEntryArgs([__rerTestEntry,'describe'])]) {
     const checked = spawnSync(process.execPath, args, {cwd:clone,env:cleanEnv,encoding:'utf8'})
     assert.equal(checked.status, 0, checked.stdout + checked.stderr)
   }

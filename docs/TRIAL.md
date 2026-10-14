@@ -38,9 +38,9 @@ this procedure. Aggregate counts cannot replace detailed votes/comments/insights
 Use a checkout with no valuable local records. From its root:
 
 ```sh
-node scripts/rer.mjs install
-node scripts/rer.mjs setup --owner-email YOUR_EMAIL
-node scripts/rer.mjs dev --login
+rer install
+rer setup --owner-email YOUR_EMAIL
+rer dev --login
 ```
 
 Keep dev in the foreground; run later commands in another terminal. Open its
@@ -143,7 +143,7 @@ with the same supplied wording and no external effects. On completion, stop the
 foreground dev process with Ctrl-C and confirm it has exited, or use:
 
 ```sh
-node scripts/rer.mjs dev --stop
+rer dev --stop
 ```
 
 ## Trial worksheet — private, one page

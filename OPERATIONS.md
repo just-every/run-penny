@@ -2,7 +2,7 @@
 
 `OPERATIONS.json` v2 describes the shipped commands and their input files, and
 opts Penny into the first-party seed command contract through
-`scripts/installer/local.mjs`. `node scripts/rer.mjs describe`, `check --profile
+`scripts/installer/local.mjs`. `rer describe`, `check --profile
 first-party` and `doctor` work without installed dependencies or configuration;
 Base's maintained inspector checks the declared files, environment sources and
 loops. The descriptor has no executable `configuration.module`. Local
@@ -27,17 +27,17 @@ need separate proof.
 
 | Command | Actual effect |
 | --- | --- |
-| `node scripts/rer.mjs install` | Frozen dependency install with the pinned pnpm and lockfile; no setup. |
-| `node scripts/rer.mjs setup --owner-email EMAIL` | Build, apply every migration, save private settings and claim the first native owner with an empty workspace, then stop the temporary app. Repeats preserve the owner, origin, exact private settings and data. |
-| `node scripts/rer.mjs dev` | Foreground Vite with assets and HMR on the saved loopback origin; prints `RER_READY` and the outbox sign-in line once health passes. |
-| `node scripts/rer.mjs preview` | Fixed production output on the same state; managed, with idle timeout and explicit `--stop`. |
-| `node scripts/rer.mjs build` | Production Worker and assets with private local settings excluded and restored. |
-| `node scripts/rer.mjs verify` | The full verification: structural check, source and Base custody, tests, type, lint, build and the literal README journey; no deployment. |
-| `node scripts/rer.mjs reset --yes` | Confirmed removal of the printed local inventory only; refuses while anything runs. |
-| `node scripts/rer.mjs export --output FILE`, `import --input FILE --yes` | Local archive of Penny's domain data and original files with a separate latest erasure journal, and its restore into an empty installation. |
-| `node scripts/rer.mjs deploy [--environment NAME] [--dry-run]` | Owner-account build, reconcile, migrate and health; a dry run builds and validates locally and makes no provider request. |
-| `node scripts/rer.mjs outbox [--owner-email EMAIL]` | The local outbox address; an explicit owner requests a fresh ordinary sign-in message. |
-| `node scripts/rer.mjs doctor`, `describe`, `check`, `release` | Local diagnostics, capability description, structural check and the maintained Base release producer, which needs explicit authorized inputs. |
+| `rer install` | Frozen dependency install with the pinned pnpm and lockfile; no setup. |
+| `rer setup --owner-email EMAIL` | Build, apply every migration, save private settings and claim the first native owner with an empty workspace, then stop the temporary app. Repeats preserve the owner, origin, exact private settings and data. |
+| `rer dev` | Foreground Vite with assets and HMR on the saved loopback origin; prints `RER_READY` and the outbox sign-in line once health passes. |
+| `rer preview` | Fixed production output on the same state; managed, with idle timeout and explicit `--stop`. |
+| `rer build` | Production Worker and assets with private local settings excluded and restored. |
+| `rer verify` | The full verification: structural check, source and Base custody, tests, type, lint, build and the literal README journey; no deployment. |
+| `rer reset --yes` | Confirmed removal of the printed local inventory only; refuses while anything runs. |
+| `rer export --output FILE`, `import --input FILE --yes` | Local archive of Penny's domain data and original files with a separate latest erasure journal, and its restore into an empty installation. |
+| `rer deploy [--environment NAME] [--dry-run]` | Owner-account build, reconcile, migrate and health; a dry run builds and validates locally and makes no provider request. |
+| `rer outbox [--owner-email EMAIL]` | The local outbox address; an explicit owner requests a fresh ordinary sign-in message. |
+| `rer doctor`, `describe`, `check`, `release` | Local diagnostics, capability description, structural check and the maintained Base release producer, which needs explicit authorized inputs. |
 | `pnpm run deploy:health` | Owner-account identity, configuration and health against the private saved state; accepts `--environment NAME`. |
 | `pnpm run artifact:prepare`, `artifact:deploy`, `artifact:health` | The separate disposable controller: credential-free packaging of built committed source, scoped resources with hash-ledger migrations and upload, and its health. |
 | `pnpm run data:export -- …`, `data:import -- …`, `data:journal -- …` and the erasure and recovery commands in [data ownership](docs/data-ownership.md) | Authenticated archive, journal and erasure operations against a running installation. |
@@ -45,7 +45,7 @@ need separate proof.
 | `pnpm source:lock`, `source:check`, `verify:base-source` | Capture and check the actual tracked bytes, modes, tool identity and Base comparison snapshots. |
 
 The package scripts `setup dev build verify reset deploy export import release
-outbox doctor describe check` are exactly `node scripts/rer.mjs VERB`;
+outbox doctor describe check` are exactly `rer VERB`;
 `deps` is `install` and `rer` is the bare dispatcher. Use `pnpm run VERB --
 FLAGS`.
 
@@ -147,9 +147,9 @@ uses real provider configuration when deployed; choosing a separate mail identit
 is the owner's responsibility.
 
 ```bash
-node scripts/rer.mjs deploy --environment production --dry-run
-node scripts/rer.mjs deploy --environment preview --dry-run
-node scripts/rer.mjs deploy --environment staging --dry-run
+rer deploy --environment production --dry-run
+rer deploy --environment preview --dry-run
+rer deploy --environment staging --dry-run
 pnpm run deploy:health -- --environment staging
 ```
 

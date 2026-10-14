@@ -45,8 +45,7 @@ entry. It is not production mail or proof that someone owns an email address:
 do not export the local database as customer identity data or provision the
 transport remotely.
 
-Start it with `node scripts/rer.mjs setup --owner-email EMAIL` and `node
-scripts/rer.mjs dev` (README.md), open the printed outbox and follow the newest
+Start it with `rer setup --owner-email EMAIL` and `rer dev` (README.md), open the printed outbox and follow the newest
 link in the same browser. For requester verification, request a link on the
 public board, open the emitted fragment link and choose Verify email. Continue
 to submit feedback, then moderate it using the operator session. Public

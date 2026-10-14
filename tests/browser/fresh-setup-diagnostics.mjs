@@ -3,9 +3,9 @@ import { chmod, mkdir, open, readFile, readdir, stat, writeFile } from 'node:fs/
 import { join } from 'node:path'
 import { promisify } from 'node:util'
 import { parseEnv } from 'node:util'
-import { readProcessIdentity } from '../../scripts/base-onboarding/process-table.mjs'
-import { inheritedScopeTokens } from '../../scripts/base-onboarding/process-scope.mjs'
-import { listeners } from '../../scripts/base-onboarding/process-diagnostics.mjs'
+import { readProcessIdentity } from '@runeditrun/rer/internal/onboarding/process-table.mjs'
+import { inheritedScopeTokens } from '@runeditrun/rer/process-scope'
+import { listeners } from '@runeditrun/rer/process-diagnostics'
 import { processDirectories } from '../helpers/local-process-scope.mjs'
 import { redactDiagnostics } from './fresh-local-server.mjs'
 
