@@ -4438,8 +4438,12 @@
       "sha256": "7372dcef7d2eb6f66cb6e57c43410923c6938cc9961fee51df44310e92cc21f4",
       "executable": false
     },
+    "src/core/features/learning/archive-dimensions.ts": {
+      "sha256": "f1b9d55211102ee98eec89a846c70124450a4e2eda38d1249fa7b621be326a7c",
+      "executable": false
+    },
     "src/core/features/learning/archive.ts": {
-      "sha256": "e4ba9db95af96145be4e8fa77904df04506afe3af1e6afc47270f660748a2b6d",
+      "sha256": "5a90e601108491177f52ff2d49c2eb6f8265ef8efdef71b2515f3e365c753b89",
       "executable": false
     },
     "src/core/features/learning/audit.ts": {
@@ -4515,7 +4519,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-artifact.tsx": {
-      "sha256": "99740b384fa8ef1ac9b4da929b6f036b84e5c1756393228c4952d5496d47e8d2",
+      "sha256": "fecca35e4374135b51ddacda15b2bc6ff217e209faf0169259c252d1712eb802",
       "executable": false
     },
     "src/core/features/learning/ui/learning-capture.tsx": {
@@ -4551,11 +4555,11 @@
       "executable": false
     },
     "src/core/features/learning/ui/types.ts": {
-      "sha256": "6c45aa16aecb8e339191d353f3a31ea59093d3c70387ed8ea3e8ac6273cc6670",
+      "sha256": "49e547496f51b60048280b54a0b3982a69648fe77a7383be0053739e07e9e3c1",
       "executable": false
     },
     "src/core/features/learning/validation.ts": {
-      "sha256": "a8938ecb0199f06dee92dd42acfceddbf471efbf81e1888a855403d1328322c8",
+      "sha256": "e618d5bb8f1eb2c6c7f6fc19dbfd61f4666cf5d0de90d73f3911856c321b8853",
       "executable": false
     },
     "src/core/features/notifications/attempt-policy.ts": {
@@ -5743,7 +5747,7 @@
       "executable": false
     },
     "tests/base/learning-stage2.test.ts": {
-      "sha256": "7c327f408799d7afb2c0361121a4e962e796d085a3c3e4888a3620005f616c7b",
+      "sha256": "fecf47c342c3f8a8eb20b109967926533c9d525909bc925e9c0c4c12f7847a0f",
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
@@ -6047,7 +6051,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "11258bdaed682fc89f9dc01afda29044eac9e1099bf8a6ad62b46eb3cc363695",
+      "sha256": "728beeff80680f6c7ba48ee64bc400a653204e6b45e756eb07a2a9baa534cc8b",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {

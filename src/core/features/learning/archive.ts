@@ -2,6 +2,7 @@ import {sourceEvent,sourcePerson} from './erasure-fences'
 import {canonical,type Row} from '../data/archive'
 import {digest,NativeError} from '../auth/native-tokens'
 import {validateLearning} from './validation'
+import {comparableDimensions} from './archive-dimensions'
 import {outputSchema,type Observation,type Source} from './schema'
 import {validateObservation} from './source-content'
 export async function validateLearningArchive(data:Record<string,Row[]>){
@@ -31,7 +32,8 @@ export async function validateLearningArchive(data:Record<string,Row[]>){
   const inputIds=new Set(data.learning_contributions.filter(c=>c.artifact_id===artifact.id).map(c=>c.observation_id)),inputs=observations.filter(o=>inputIds.has(o.id))
   try{
    const body=JSON.parse(String(artifact.body_json)),output=outputSchema.parse({...body,options:body.options.map((option:Record<string,unknown>)=>Object.fromEntries(Object.entries(option).filter(([key])=>!['affectedRequesters','affectedAccounts','unlinkedObservations','supportingEvidenceCount','latestObservedAt','contradictingEvidence'].includes(key))))})
-   if(canonical(validateLearning(output,inputs as unknown as Observation[],Number.MAX_SAFE_INTEGER))!==canonical(body))throw new Error('derived-dimensions')
+   const derived=validateLearning(output,inputs as unknown as Observation[],Number.MAX_SAFE_INTEGER)
+   if(canonical(derived)!==canonical(comparableDimensions(body,derived,inputs as unknown as Observation[])))throw new Error('derived-dimensions')
    if(inputs.some(o=>o.investigation_id!==artifact.investigation_id))throw new Error('cross-investigation')
   }catch{throw new NativeError('learning_archive_derived_invalid',400)}
  }

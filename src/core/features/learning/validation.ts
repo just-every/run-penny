@@ -14,7 +14,7 @@ export function validateLearning(value:unknown,observations:Observation[],budget
  const options=output.options.map(option=>{
   if(!option.supportingObservationIds.length||[...option.supportingObservationIds,...option.contradictingObservationIds].some(id=>!ids.has(id)||!cited.has(id)))throw new NativeError('learning_option_evidence_invalid',409)
   const support=observations.filter(o=>option.supportingObservationIds.includes(o.id))
-  return {...option,affectedRequesters:[...new Set(support.flatMap(o=>o.requester_id?[o.requester_id]:[]))],affectedAccounts:[...new Set(support.flatMap(o=>o.account_id?[o.account_id]:[]))],unlinkedObservations:support.filter(o=>!o.account_id).length,supportingEvidenceCount:support.length,latestObservedAt:support.map(o=>o.observed_at).sort((a,b)=>Date.parse(b)-Date.parse(a))[0]??null,contradictingEvidence:observations.filter(o=>option.contradictingObservationIds.includes(o.id)).map(o=>({id:o.id,observedAt:o.observed_at}))}
+  return {...option,affectedRequesters:[...new Set(support.flatMap(o=>o.requester_id?[o.requester_id]:[]))].sort(),affectedAccounts:[...new Set(support.flatMap(o=>o.account_id?[o.account_id]:[]))].sort(),unlinkedObservations:support.filter(o=>!o.account_id).length,supportingEvidenceCount:support.length,latestObservedAt:support.map(o=>o.observed_at).sort().sort((a,b)=>Date.parse(b)-Date.parse(a))[0]??null,contradictingEvidence:observations.filter(o=>option.contradictingObservationIds.includes(o.id)).map(o=>({id:o.id,observedAt:o.observed_at})).sort((a,b)=>a.id < b.id ? -1 : a.id > b.id ? 1 : 0)}
  })
  return {...output,options}
 }
