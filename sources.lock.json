@@ -2375,7 +2375,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "5318b1a1be3905e7d66cabbb29290907034a8665b13d25abe0fe79e1774ac3c9",
+      "sha256": "a99ac196d66cc44f30b2507ad2ba68a420bd93aca52a632546b408577b133b3e",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2399,7 +2399,7 @@
       "executable": false
     },
     "DIVERGENCE.md": {
-      "sha256": "c952891aa144dad09344ce299384f89ce1a78ed24b3a9f9676f39c6449d60f82",
+      "sha256": "7e6a1c5df3e803c9ffb5bc335e8ac78f15abaab7427c9fcfffd4f3d8ca09e277",
       "executable": false
     },
     "docs/acceptance-history.md": {
@@ -2415,7 +2415,7 @@
       "executable": false
     },
     "docs/base-adoption.md": {
-      "sha256": "d522593b52a8293bb8cfd46b3ba5b1df519146048441aea7213be099ac5edb24",
+      "sha256": "3ff1369986a8ca79d1626498ee2ecc0c3aa3a9337f98fbd53e539138ad96b574",
       "executable": false
     },
     "docs/CANNY-MIGRATION.md": {
@@ -3235,7 +3235,7 @@
       "executable": false
     },
     "seed.json": {
-      "sha256": "dc8f0496795ce38d9672457303d04baa33217c21be46ae04bb1f1176c9801371",
+      "sha256": "6e94ae422804bbea52b7c4b80b4e39ff24050ab3287c5c4b2b90f1fdcade7881",
       "executable": false
     },
     "src/base-mail.ts": {
@@ -3351,7 +3351,7 @@
       "executable": false
     },
     "src/core/app/public-rate.ts": {
-      "sha256": "b87134a17f9126a30a8a027e7d12398cf0febc1e0b463419cc4d86c1c72e7588",
+      "sha256": "0cfbbd48ba373c99fb2c8ab13f4588ce206c602605b96a99c4618edba34a5ebf",
       "executable": false
     },
     "src/core/app/request-context.server.ts": {
@@ -5579,7 +5579,7 @@
       "executable": false
     },
     "tests/base/host-identity.test.ts": {
-      "sha256": "d0032885919157c99d441ef23213543e49a29b71e33b330642777ff92241f3f5",
+      "sha256": "7fafaf70bd91987a79f948f85199d461c1411c6a850951027ff3912daa7a73ca",
       "executable": false
     },
     "tests/base/hosted-export.test.ts": {

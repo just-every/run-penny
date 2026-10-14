@@ -395,6 +395,7 @@
     "recipientsPerRelease": 50000,
     "publicReadRequestsPerMinutePerIp": 120,
     "publicAssetRequestsPerMinutePerIp": 1200,
+    "publicChromeRequestsPerMinutePerIp": 600,
     "publicWriteRequestsPerMinutePerIp": 30,
     "publicWritesPerMinutePerIdentity": 20,
     "identityActionsPerMinutePerIp": 10,

@@ -123,9 +123,9 @@ it('[REQ-027 BASE-PUBLIC-002] persisted canonical embedding policy applies on th
 })
 
 it('[BASE-ACCESS-003] Worker entry shares bounded fail-closed admission across documents, auth, public reads and generated functions, with page assets bounded separately',async()=>{
- const {exports}=await import('cloudflare:workers'),{publicRatePolicy:policy,publicWriteRatePolicy:writePolicy,publicAssetRatePolicy:assetPolicy}=await import('@/core/app/public-rate')
+ const {exports}=await import('cloudflare:workers'),{publicRatePolicy:policy,publicWriteRatePolicy:writePolicy,publicAssetRatePolicy:assetPolicy,publicChromeRatePolicy:chromePolicy}=await import('@/core/app/public-rate')
  const ip='198.51.100.91',headers={'CF-Connecting-IP':ip,Origin:origin},wire=inject('generatedTransport') as Record<string,string>
- const paths=['/','/portal','/portal/','/portal/feedback','/portal/feedback/','/portal/feedback/activity','/portal/feedback/new','/portal/verify','/portal/feedback/missing','/portal/roadmap','/portal/roadmap/missing','/portal/updates','/portal/updates/missing','/docs','/docs/missing','/signin','/health','/favicon.ico','/api/auth/session','/api/auth/capabilities','/auth/session','/auth/confirm','/api/public/boards','/api/public/requests','/api/public/requests/suggestions?q=feature','/api/public/requests/missing','/api/public/roadmap','/api/public/releases','/api/public/releases/missing','/api/public/releases/missing/outcomes','/api/public/identity/session','/api/public/identity/host/frames','/api/public/branding','/api/public/attachments/missing','/api/public/requester/activity','/api/public/requester/notifications','/api/public/updates/subscription','/api/public/notifications/unsubscribe',...Object.values(wire)]
+ const paths=['/','/portal','/portal/','/portal/feedback','/portal/feedback/','/portal/feedback/activity','/portal/feedback/new','/portal/verify','/portal/feedback/missing','/portal/roadmap','/portal/roadmap/missing','/portal/updates','/portal/updates/missing','/docs','/docs/missing','/signin','/health','/favicon.ico','/api/auth/session','/api/auth/capabilities','/auth/session','/auth/confirm','/api/public/boards','/api/public/requests','/api/public/requests/suggestions?q=feature','/api/public/requests/missing','/api/public/roadmap','/api/public/releases','/api/public/releases/missing','/api/public/releases/missing/outcomes','/api/public/identity/session','/api/public/attachments/missing','/api/public/requester/activity','/api/public/requester/notifications','/api/public/updates/subscription','/api/public/notifications/unsubscribe',...Object.values(wire)]
  const page=await call('/'),html=await page.text(),asset=html.match(/(?:src|href)="(\/assets\/[^"?]+)/)?.[1]
  expect(asset).toBeTruthy()
  for(let n=0;n<policy.allowance;n++){
@@ -141,6 +141,11 @@ it('[BASE-ACCESS-003] Worker entry shares bounded fail-closed admission across d
  for(const path of assets){const response=await exports.default.fetch(new Request(origin+path,{headers}));expect(response.status,path).toBe(200);await response.body?.cancel()}
  await env.DB.prepare('UPDATE penny_public_admission SET count=? WHERE scope=?').bind(assetPolicy.allowance,assetPolicy.scope).run()
  for(const path of assets){const response=await exports.default.fetch(new Request(origin+path,{headers}));expect(response.status,path).toBe(429);await response.body?.cancel()}
+ // Each document's branding and frame-policy fetches have their own per-client bucket too.
+ const chrome=['/api/public/branding','/api/public/identity/host/frames']
+ for(const path of chrome){const response=await exports.default.fetch(new Request(origin+path,{headers}));expect(response.status,path).toBe(200);await response.body?.cancel()}
+ await env.DB.prepare('UPDATE penny_public_admission SET count=? WHERE scope=?').bind(chromePolicy.allowance,chromePolicy.scope).run()
+ for(const path of chrome){const response=await exports.default.fetch(new Request(origin+path,{headers}));expect(response.status,path).toBe(429);await response.body?.cancel()}
  for(const path of [wire.loadOperatorResources]){
   const response=await exports.default.fetch(new Request(origin+path,{method:'POST',headers,body:'{}'}));expect(response.status).toBe(429);await response.body?.cancel()
  }

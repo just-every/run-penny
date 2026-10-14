@@ -16,7 +16,9 @@ Penny once adapted the vendored CLI's lifecycle and hydration orchestration to
 pause 61 seconds before each hydration load, because each fresh browser context's
 asset fetches counted against the single per-IP page-read bucket and the runner
 received HTTP 429. Page assets now have their own admission bucket
-(`publicAssetRequestsPerMinutePerIp` in `seed.json`), and Penny runs the published
+(`publicAssetRequestsPerMinutePerIp` in `seed.json`), and so do each document's
+branding and frame-policy fetches (`publicChromeRequestsPerMinutePerIp`), so one
+page view costs one page read. Penny runs the published
 `@runeditrun/rer` package unmodified, so the adaptation is gone. Every page, case,
 probe and verdict of the shared hydration check still runs, and errors still fail
 without retries.

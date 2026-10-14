@@ -40,8 +40,9 @@ the installed `rer` against a copy of this checkout.
 
 The package's hydration check loads pages without Penny's former 61-second
 pacing adaptation: page assets now have their own public admission bucket
-(`publicAssetRequestsPerMinutePerIp`), so fresh asset loads no longer exhaust the
-page-read allowance. No product limit changed.
+(`publicAssetRequestsPerMinutePerIp`) and each document's branding and frame-policy
+fetches have theirs (`publicChromeRequestsPerMinutePerIp`, 600 a minute), so a page
+view costs one page read and fresh loads no longer exhaust the 120-read allowance.
 
 ## Product adapters and authority
 
