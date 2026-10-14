@@ -73,7 +73,8 @@ it('[INT-006 BASE-ACCESS-002 DATA-001] fences removed authority, stale signed ev
  const pending={requestId:g.requests[0].id,connectionId:pendingConnection,title:'Explicit pending issue',description:'Explicit description',operationKey:'restored-create'}
  expect((await trackerRequest('/api/operator/integrations/trackers/create',pending,g.operator,'POST',port)).status).toBe(202)
  const {exportArchive}=await import('@/core/features/data/archive'),exported=await exportArchive(env.DB,env.FILES)
- expect(exported.archive.tables).toHaveProperty('penny_tracker_links');expect(exported.archive.tables).not.toHaveProperty('penny_tracker_secrets');expect(exported.archive.tables).not.toHaveProperty('penny_tracker_connections')
+ expect(exported.archive.tables).toHaveProperty('penny_tracker_links');expect(exported.archive.tables).not.toHaveProperty('penny_tracker_secrets');// Connections travel as revoked records; their secrets never do.
+ expect(exported.archive.tables.penny_tracker_connections.length).toBeGreaterThan(0);expect(exported.archive.tables.penny_tracker_connections.every(row=>row.revoked_at!==null)).toBe(true)
  expect(exported.archive.tables.penny_tracker_commands).toHaveLength(1);expect(exported.archive.tables.penny_tracker_commands[0].held).toBe(1)
  expect(exported.archive.tables.integration_deliveries[0].state).toBe('uncertain')
  changed=false;const createRace=observeD1(env.DB,{before:async sql=>{if(!changed&&sql.some(s=>s.includes('INSERT INTO penny_tracker_commands'))){changed=true;await env.DB.prepare('UPDATE penny_tracker_connections SET revoked_at=1 WHERE id=?').bind(pendingConnection).run()}}})

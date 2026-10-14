@@ -47,7 +47,8 @@ it('authenticates all data surfaces independently; no public archive/journal and
  for(const path of ['/api/operator/data/export','/api/operator/data/journal','/api/operator/data/operations/missing'])expect((await call(path,undefined,{})).status).toBe(401)
  for(const path of ['/api/operator/data/import','/api/operator/data/erasure','/api/operator/data/erasure/preview','/api/operator/data/operations/missing/resume','/api/operator/data/operations/missing/abort-restore','/api/operator/data/operations/missing/abort-export','/api/operator/data/operations/missing/abort-pending-erasure','/api/operator/data/operations/missing/recover-runner'])expect((await call(path,{},{})).status).toBe(401)
  expect((await call('/api/public/data/export',undefined,{})).status).toBe(404)
- expect((await call('/api/operator/data/erasure/preview',{table:'operators',id:'data-owner'})).status).toBe(400)
+ // A current operator holds authority and is never erasable; only a removed one is.
+ const current=await call('/api/operator/data/erasure/preview',{table:'operators',id:'data-owner'});expect(current.status).toBe(409);expect(await current.json()).toEqual({error:'erasure_operator_active'})
  expect((await call('/api/operator/data/import',{}, {Cookie:cookie,Origin:'https://foreign.test'})).status).toBe(403)
  // The historical cookie still admits its historical route, but cannot become
  // native data authority merely because both schemas are installed.
@@ -65,8 +66,14 @@ it('authenticates all data surfaces independently; no public archive/journal and
  expect((await call('/api/auth/session',undefined,historical)).status).toBe(200)
 })
 it('exports all current records and exact original R2 bytes, restores atomically, and disables credentials',async()=>{
+ // Settings and integration records travel; their credentials do not.
+ await env.DB.batch([env.DB.prepare("INSERT INTO penny_frame_settings(singleton,public_origin_allowlist,updated_at) VALUES(1,'[\"https://host.example\"]','2026-10-10')"),
+  env.DB.prepare("INSERT INTO penny_integration_destinations(id,name,kind,events_json,native_operator_id,operator_version,actor_id,created_at,revoked_at) VALUES('hook','Team hook','webhook','[]','source-native',1,'data-owner',1,NULL)"),
+  env.DB.prepare("INSERT INTO penny_integration_credentials(id,endpoint,signing_key) VALUES('hook','https://hooks.example/penny','synthetic-signing-key')")])
  const original=await file(),snapshot=await exportArchive(env.DB,env.FILES)
  expect(snapshot.archive.files).toHaveLength(1);expect(snapshot.archive.tables.requests.length).toBe(2)
+ expect(snapshot.archive.tables.penny_frame_settings).toHaveLength(1);expect(snapshot.archive.tables.penny_integration_destinations).toMatchObject([{id:'hook',revoked_at:0}])
+ expect(JSON.stringify(snapshot)).not.toContain('synthetic-signing-key')
  expect(snapshot.archive.tables.operator_sessions.find(row=>row.id==='data-owner-session')!.token_hash).not.toBe(await digest('data-owner-fixture'))
  await clearTarget();await owner()
  const nativeAuthority=(await env.DB.prepare('SELECT * FROM oa_operators ORDER BY id').all()).results
@@ -82,6 +89,16 @@ it('exports all current records and exact original R2 bytes, restores atomically
  restored.archive.tables.audit_entries=restored.archive.tables.audit_entries.filter(row=>row.action!=='data.restored')
  expect(restored.archive.tables).toEqual(snapshot.archive.tables);expect(restored.archive.files).toEqual(snapshot.archive.files)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ // The restored installation continues the source journal: its next erasure
+ // extends the same origin, and the source's older archive is then refused.
+ const roots=[...(await env.DB.prepare("SELECT 'evidence_items' AS root,id FROM evidence_items UNION ALL SELECT 'accounts',id FROM accounts ORDER BY 1,2").all<{root:'evidence_items'|'accounts';id:string}>()).results]
+ let erased=false
+ for(const {root,id} of roots){const plan=await planErasure(env.DB,root,id);if(plan.blockedCopies.length)continue;expect((await eraseEntity(env.DB,env.FILES,root,id,plan.planHash)).status).toBe('complete');erased=true;break}
+ expect(erased).toBe(true)
+ const continued=await readErasureJournal(env.DB)
+ expect(continued).toMatchObject({origin:snapshot.journal.origin,epoch:snapshot.journal.epoch+1})
+ for(const item of snapshot.journal.tombstones)expect(continued.tombstones).toContainEqual(item)
+ await clearTarget();await expect(restoreArchive(env.DB,env.FILES,snapshot.archive,continued)).rejects.toMatchObject({code:'stale_archive'})
 })
 it('fails before restore writes on hash corruption, missing bytes, bad references, unknown schema/version and journal mismatch',async()=>{
  await file();const snapshot=await exportArchive(env.DB,env.FILES);await clearTarget()

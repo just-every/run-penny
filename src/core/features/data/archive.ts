@@ -83,6 +83,9 @@ export const normalize=(name:string,row:Row):Row=>{
  if(name==='decision_review_notifications'&&['queued','sending','unknown'].includes(String(row.state)))return {...row,state:'held',claim_id:null,failure_reason:'restored_delivery_review_required'}
  if(name==='notification_batches'&&row.state==='queued')return {...row,failure_reason:'restored_delivery_review_required'}
  if(name==='integration_deliveries'&&['queued','sending'].includes(String(row.state)))return {...row,state:'uncertain',claim:null,claim_until:null}
+ // Destinations and tracker connections travel as records; their credentials
+ // and operator authority stay with the source, so a restored one is revoked.
+ if(name==='penny_integration_destinations'||name==='penny_tracker_connections')return {...row,revoked_at:row.revoked_at??0}
  if(name==='penny_integration_events')return {...row,held:1}
  if(name==='penny_tracker_commands')return {...row,held:1}
  if(name==='notification_intents')return {...row,restoration_hold_at:row.restoration_hold_at??'1970-01-01T00:00:00.000Z'}

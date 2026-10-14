@@ -1519,7 +1519,7 @@
     ]
   },
   "penny_integration_destinations": {
-    "classification": "installation",
+    "classification": "product",
     "columns": [
       "id",
       "name",
@@ -1600,7 +1600,7 @@
     ]
   },
   "penny_tracker_connections": {
-    "classification": "installation",
+    "classification": "product",
     "columns": [
       "id",
       "name",
@@ -2401,7 +2401,7 @@
     ]
   },
   "penny_frame_settings": {
-    "classification": "installation",
+    "classification": "product",
     "columns": [
       "singleton",
       "public_origin_allowlist",
