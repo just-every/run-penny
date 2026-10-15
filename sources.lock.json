@@ -606,7 +606,7 @@
       "executable": false
     },
     ".github/workflows/run-demo.yml": {
-      "sha256": "87b9b6a1cc6cabb2be6fb1e277d9bb0c3128f6904be71ac1d6d6c3f880148f60",
+      "sha256": "c4f1bbd3fe951c6be268aaac8c1070bd5482e2eb8da659a1be81297525bc86f3",
       "executable": false
     },
     ".github/workflows/run-site.yml": {
@@ -2634,7 +2634,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "6d7b0d60bee9696f7898093b155157425c62a78ed9f1674a3916d6412347121e",
+      "sha256": "f0f9de2c97e8ca22cf4309bd81868098081814d761bcf8b93d4b077ddc0e8642",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3303,6 +3303,10 @@
     },
     "scripts/delivery/setup-build.mjs": {
       "sha256": "df2f0aa7f0d2b307ab086067993934804a585a363b598c43211acd312fd3cd92",
+      "executable": false
+    },
+    "scripts/demo/configure-image.mjs": {
+      "sha256": "40691b8ad6726941d349c7a265f4e0dec7ea3414b0ba68b185f8eae9fb530dab",
       "executable": false
     },
     "scripts/demo/observe.mjs": {
@@ -6794,7 +6798,7 @@
       "executable": false
     },
     "wrangler.jsonc": {
-      "sha256": "802892860b3b5249df5c9a0eda5bd39d96c8b9c5545c8b20b08498ffe59fd434",
+      "sha256": "fe8904d86c7613c6ca4646458d4bd18a929f8745a91476cb12c6c236f0609f4f",
       "executable": false
     }
   }
