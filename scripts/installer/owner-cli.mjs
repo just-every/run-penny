@@ -39,11 +39,12 @@ export async function main(argv = process.argv.slice(2), env = process.env, { cw
       const api = cloudflare({ accountId: credentials.CLOUDFLARE_ACCOUNT_ID, token: credentials.CLOUDFLARE_API_TOKEN, fetch: checkedFetch })
       await registerDeploymentCrons(api, { worker: settings.worker, crons: target.declaration.crons ?? [] }, result.changed)
     }
-    return { ...result, credentialFile: settings.credentialFile }
+    // The deploy hook hands rer the setup token this run put on the Worker; it is never printed.
+    return { ...result, credentialFile: settings.credentialFile, ...(argv[0] === 'deploy' ? { setupToken: settings.values.SETUP_TOKEN } : {}) }
   }
   catch (error) { if (originMismatch) throw new Error('owner-origin-mismatch'); throw error }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  try { const result = await main(); console.log(redaction.redact(JSON.stringify(result))) }
+  try { const { setupToken, ...result } = await main(); console.log(redaction.redact(JSON.stringify(result))) }
   catch (error) { console.error(redaction.redact(JSON.stringify(error.inputs ? { ok: false, code: error.message, inputs: error.inputs } : report(error)))); process.exitCode = 1 }
 }

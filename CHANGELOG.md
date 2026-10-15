@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- A hosted `rer deploy` (default or `--environment NAME`) now claims Penny's owner: the deploy hook returns the setup token it put on the Worker (generated, or reused from that environment's saved settings) to rer as `setupToken`, so the claim no longer fails with `invalid_setup_token`. The token is never printed. Penny runs `@runeditrun/rer` 0.2.9; run `pnpm install --frozen-lockfile` after updating.
 - Native owners can export a running Penny installation through `rer export --target remote` or hosted Data → Export workspace. Both produce the maintained Base archive and matching Penny erasure journal for local restore, under existing maintenance, schema, original-file and current-session safeguards. Successful transfer and owner-confirmed recovery remove retained source snapshots; remote restore remains unavailable.
 
 - Added the bounded private cancellation learning path (migration 0059): native evidence plus explicitly selected Orbit delegated targets, exact source citations, versioned interpretations and internal briefs, comparable no-build options and immutable pre-action choices. Scheduled scoped refresh, budget admission, pause/revoke/disconnect, correction invalidation, contribution erasure and held restored grants share native authority. Source/model calls visibly refuse without installation configuration; no live customer pilot or Stage 4–5 outcome claim is made. Apply 0059 before starting this source, retain expanded schema on rollback, and review held source/grant records after restore.

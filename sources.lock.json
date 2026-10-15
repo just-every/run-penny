@@ -2379,7 +2379,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "7a7fc4ca21158fdcfa430ec5091669d105e9b508f66538bfd75470d781dff14c",
+      "sha256": "97ae9b2800219f8d2b9f9dde11c52e2de6442c391aab4057e7e6664b02ee2892",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2835,11 +2835,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "78584cc8718b18a17fc1659d9087777a18912c6188a134996a154950ec495f8b",
+      "sha256": "d9d326b4a8bb203f027a490909dba51106fc3431e98038eccd671feaf5a435b1",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "4f453375d15a2f84701ab928b55e0c1202a5563725442a7b018a0572908f4f4f",
+      "sha256": "54bf32122ea2d90f2d150177181c55d75a57b751c83c34e1c9c1d76b1acefcfa",
       "executable": false
     },
     "public/brand/band.svg": {
@@ -3107,7 +3107,7 @@
       "executable": false
     },
     "scripts/installer/deploy.mjs": {
-      "sha256": "715c48575b32298b69c79ddb7f5705212b5b7519074b42714b7ccd4764bf2e6f",
+      "sha256": "0497c4f6761805ecac40a6722bcf313392f63ade702b44da6751baadd04e43fa",
       "executable": false
     },
     "scripts/installer/local.mjs": {
@@ -3123,7 +3123,7 @@
       "executable": false
     },
     "scripts/installer/owner-cli.mjs": {
-      "sha256": "bcba1442319839c0368024261b9a4183c3d7b0dfaf3e06073cf94bc16b88c03a",
+      "sha256": "3cab3440cfb29ca30507e0304368ed5cc2417b61e0666e9b51ef18b882c23e71",
       "executable": false
     },
     "scripts/installer/owner-environment.mjs": {
