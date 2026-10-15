@@ -190,7 +190,7 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
           "paths": [
             "modules/owner-claim"
           ]

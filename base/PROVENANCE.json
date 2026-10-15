@@ -981,24 +981,24 @@
     {
       "path": "base/modules/owner-claim",
       "originPath": "modules/owner-claim",
-      "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+      "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
       "files": {
+        "base/modules/owner-claim/README.md": "ab3ead07f6a21347c4f084c48acbdd5d62ee9abc711982cc09ffb1c53f239459",
         "base/modules/owner-claim/idp.mjs": "edb09dfeb0b66849cd84b651099d46c6420d1dc3f270446ae96595d91754d3e6",
         "base/modules/owner-claim/index.d.mts": "33fc8d1b756cb2c0a4317ea4dbc29ae704dd137f76993278859d98ae5e9ad184",
         "base/modules/owner-claim/index.mjs": "71e4b0f9f967981146dd1daa5f6b14ab30f577adac4901c8e3d47bb8a5a76991",
         "base/modules/owner-claim/page.mjs": "1e03cd872c5bf95a2672e782153b71272f90f1cea7f10ee70f971fae0432e929",
-        "base/modules/owner-claim/README.md": "400d900fbe0981f9e6e27ff40b7913ebb140680bd045167cfb9ddb2a45a4c890",
         "base/modules/owner-claim/schema/idp.sql": "a870102648a2226b18a2fe8168d096389b698af88333d112fa8137e582fc2b33",
         "base/modules/owner-claim/schema/owner-claim.sql": "c3ffe653727bb4867b064dc2489df5013613f08f4b5998d2fe2b6a8485cdb815",
-        "base/modules/owner-claim/transaction.mjs": "ca36db33042d7778d518b407bd9b403dd4bac82d4b89d81beeb78ed47421cca2",
-        "base/modules/owner-claim/verify.mjs": "7378d81d2b453d7dea9cecb94f99ccbbbebc4455f02617146f844ed1151f7ad0"
+        "base/modules/owner-claim/transaction.mjs": "56f9cf605a5a4afae2be22012e84035e661fb38c07612ec7d4f8cdc39526aa54",
+        "base/modules/owner-claim/verify.mjs": "a1cc5094a30415c60f739b67ad2eda40750e8d963d199fad45bdd562f7d0248b"
       },
       "modes": {
+        "base/modules/owner-claim/README.md": "100644",
         "base/modules/owner-claim/idp.mjs": "100644",
         "base/modules/owner-claim/index.d.mts": "100644",
         "base/modules/owner-claim/index.mjs": "100644",
         "base/modules/owner-claim/page.mjs": "100644",
-        "base/modules/owner-claim/README.md": "100644",
         "base/modules/owner-claim/schema/idp.sql": "100644",
         "base/modules/owner-claim/schema/owner-claim.sql": "100644",
         "base/modules/owner-claim/transaction.mjs": "100644",

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "parent": null,
   "edition": "just-every/penny",
-  "manifest": "66448008da8416bf13c0fe324dc894fb133547784241959f34a36525c43cc2f6",
+  "manifest": "b4fa0f7583eb5436edc243436a9673756cf3268c8847b3adb1cb3c0c0890372a",
   "toolchain": {
     "id": "runeditrun/edition-authoring",
     "version": "1.1.0",
@@ -215,7 +215,7 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
           "paths": [
             "modules/owner-claim"
           ]
@@ -228,9 +228,9 @@
         ]
       },
       "baseline": {
-        "key": "038b2c1ce0527eb7949d00703ce8d5be506da6bcf7f8fdad8cddbda0982ca46c",
-        "digest": "d49d8d20e1463e040a1aa869d540d5665bc6272edb18f2ed813fe392f6fab45f",
-        "sha256": "5540f72b0ecdc4f7d0fa0f7e79cd28b0a294d25a32c52db51628322eb6ca3c41"
+        "key": "78e37774e8ca61abff6680776595816a2a8f9c447e9cce7d6e32b45534d51049",
+        "digest": "fa996037b3e26284b4af3f81b5c8c25e1221ee9bdb784675d9034dfc75617de2",
+        "sha256": "089e15bc9fd427a231ea1e355a2fffcf856b22d8e6da3a00d9ffa63ac94af672"
       }
     },
     {
@@ -2444,7 +2444,7 @@
       "executable": false
     },
     "base/modules/owner-claim/README.md": {
-      "sha256": "400d900fbe0981f9e6e27ff40b7913ebb140680bd045167cfb9ddb2a45a4c890",
+      "sha256": "ab3ead07f6a21347c4f084c48acbdd5d62ee9abc711982cc09ffb1c53f239459",
       "executable": false
     },
     "base/modules/owner-claim/schema/idp.sql": {
@@ -2456,11 +2456,11 @@
       "executable": false
     },
     "base/modules/owner-claim/transaction.mjs": {
-      "sha256": "ca36db33042d7778d518b407bd9b403dd4bac82d4b89d81beeb78ed47421cca2",
+      "sha256": "56f9cf605a5a4afae2be22012e84035e661fb38c07612ec7d4f8cdc39526aa54",
       "executable": false
     },
     "base/modules/owner-claim/verify.mjs": {
-      "sha256": "7378d81d2b453d7dea9cecb94f99ccbbbebc4455f02617146f844ed1151f7ad0",
+      "sha256": "a1cc5094a30415c60f739b67ad2eda40750e8d963d199fad45bdd562f7d0248b",
       "executable": false
     },
     "base/operations/operations.mjs": {
@@ -2476,7 +2476,7 @@
       "executable": false
     },
     "base/PROVENANCE.json": {
-      "sha256": "7b8c0e69aa67aa6d5f115b6bf9b370886d603fe795cd66024e7a0170b6ce4082",
+      "sha256": "dafaed233c1c8e46d94cc152f52f1c9e6e034e98940b1a5277a5d28f98a7725c",
       "executable": false
     },
     "BASELINE.md": {
@@ -2668,7 +2668,7 @@
       "executable": false
     },
     "edition.json": {
-      "sha256": "66448008da8416bf13c0fe324dc894fb133547784241959f34a36525c43cc2f6",
+      "sha256": "b4fa0f7583eb5436edc243436a9673756cf3268c8847b3adb1cb3c0c0890372a",
       "executable": false
     },
     "examples/host-identity/embed.js": {
