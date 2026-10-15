@@ -35,6 +35,7 @@ need separate proof.
 | `rer verify` | The full verification: structural check, source and Base custody, tests, type, lint, build and the literal README journey; no deployment. |
 | `rer reset --yes` | Confirmed removal of the printed local inventory only; refuses while anything runs. |
 | `rer export --output FILE`, `import --input FILE --yes` | Local archive of Penny's domain data and original files with a separate latest erasure journal, and its restore into an empty installation. |
+| `rer export --target remote --origin ORIGIN --session-file FILE --output FILE` | Authenticated native-owner download of the same archive and paired erasure journal from a running installation; restore remains local. See [data ownership](docs/data-ownership.md#maintained-archive-commands). |
 | `rer deploy [--environment NAME] [--dry-run]` | Owner-account build, reconcile, migrate and health; a dry run builds and validates locally and makes no provider request. |
 | `rer outbox [--owner-email EMAIL]` | The local outbox address; an explicit owner requests a fresh ordinary sign-in message. |
 | `rer doctor`, `describe`, `check`, `release` | Local diagnostics, capability description, structural check and the maintained Base release producer, which needs explicit authorized inputs. |

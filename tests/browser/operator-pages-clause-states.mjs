@@ -45,7 +45,8 @@ function networkFault({target,item,state,requests,errors,pending}){
 export async function reviewClauseStates({page,capture}){
  const origin=new URL(page.url()).origin
  const get=async path=>{const response=await page.request.get(origin+path);assert.equal(response.status(),200);return response.json()}
- const evidence=await get('/api/operator/evidence')
+ const evidencePage=await get('/api/operator/evidence')
+ const evidence=evidencePage.items
  const cases=[
   {name:'EVID-007-operator-suggestions',path:'/api/operator/requests/suggestions?title=onboarding',page:'/app/feedback',prepare:async target=>target.getByLabel('Find related requests',{exact:true}).fill('onboarding'),loading:'Finding similar requests…',failure:'Could not find similar requests.'},
   {name:'NOTIFY-003-notifications',path:'/api/operator/notifications',page:'/app/overview',open:'Review notifications',loading:'Loading review notifications…',failure:'Could not load review notifications.'},

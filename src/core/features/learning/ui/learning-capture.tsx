@@ -2,12 +2,13 @@ import { Field,LoopForm } from '@/core/app/ui/loop-form'
 import { EvidenceRecorder } from '@/core/features/evidence/ui/evidence-actions'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import type { OperatorEvidenceCard } from '@/core/shared/api/operator'
+import type { OperatorPage } from '@/core/features/workspace/list-query'
 import type { LearningHome } from './types'
 import { api,stateLabel } from './types'
 import { CurrencyField } from './learning-protocol'
 
 export function LearningCapture({home,onSaved}:{home:LearningHome;onSaved:()=>void}) {
- const [evidence,reload]=useOperatorResource<{items:OperatorEvidenceCard[]}>('/api/operator/evidence')
+ const [evidence,reload]=useOperatorResource<OperatorPage<OperatorEvidenceCard>>('/api/operator/evidence')
  const saved=()=>{reload();onSaved()}
  return <section className="capture" aria-labelledby="capture-heading"><h2 id="capture-heading" tabIndex={-1}>Capture deliberately. Give Penny a narrow remit.</h2>
  <p className="quiet">Use original customer feedback already recorded in Penny, or explicitly selected sales records. Sources stay private to your operators.</p>

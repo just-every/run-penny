@@ -1,4 +1,4 @@
-export type Overview = { hosted:boolean;commands:{restore:string;preview:string;erase:string;status:string}; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string } | null; epoch: number }
+export type Overview = { hosted:boolean;canExport?:boolean;commands:{restore:string;preview:string;erase:string;status:string}; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string } | null; epoch: number }
 export type BlockedCopy = { table: string; key: string; columns: string[]; action?: string; occurredAt?: string; resolvable?: true }
 export type AuditChoices = Record<string, 'unrelated' | 'clear'>
 export const auditCopyId = (copy: BlockedCopy) => (JSON.parse(copy.key) as string[])[0]

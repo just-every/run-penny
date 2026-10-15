@@ -1,18 +1,9 @@
 import { validateLearningArchive } from '../../src/core/features/learning/archive'
-import { privateInput } from '../data/private-files.mjs'
 import type { ArchivePolicy } from '@runeditrun/rer/modules/portability'
-import { createHash } from 'node:crypto'
 import inventory from '../../src/core/features/data/schema-inventory.json'
-import { normalize, validateNativeIdentity, canonical, DATA_LIMITS, type Row, type ErasureJournal } from '../../src/core/features/data/archive'
+import { normalize, validateNativeIdentity, canonical, hash as digest, DATA_LIMITS, type Row, type ErasureJournal } from '../../src/core/features/data/archive'
 import { validateFeedbackArchive } from '../../src/core/features/imports/archive-custody'
-const digest = (value: unknown) => createHash('sha256').update(canonical(value)).digest('hex')
 export const refuse = (reason: string): never => { throw new Error(reason) }
-export async function readJournal(path: string): Promise<ErasureJournal> {
-  const value = await privateInput(path) as ErasureJournal
-  const { sha256, ...body } = value
-  if (value.version !== 1 || !/^[a-f0-9]{32}$/.test(value.origin) || !Number.isSafeInteger(value.epoch) || value.epoch < 0 || !Array.isArray(value.tombstones) || value.tombstones.length > LOCAL_DATA_LIMITS.rows || digest(body) !== sha256) refuse('invalid_erasure_journal')
-  return value
-}
 /** `rer import --journal LATER_ARCHIVE`: the later archive's Penny journal must continue this
  * archive's, and an archive older than any erasure it records is refused whole. */
 export function laterJournalFence(journal: ErasureJournal, later: ErasureJournal): void {
@@ -40,9 +31,9 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
       const data: Record<string, Row[]> = {}
       for (const name of expected) data[name] = (await read(name)).map(productRow)
       const records = product.flatMap(name => data[name])
-      if (records.length > LOCAL_DATA_LIMITS.rows || Buffer.byteLength(canonical(records)) > LOCAL_DATA_LIMITS.recordBytes) refuse('archive_limit')
+      if (records.length > LOCAL_DATA_LIMITS.rows || new TextEncoder().encode(canonical(records)).byteLength > LOCAL_DATA_LIMITS.recordBytes) refuse('archive_limit')
       validateNativeIdentity(data); validateFeedbackArchive(data); await validateLearningArchive(data)
-      if (data.request_attachment_uploads.length) refuse('unfinished_attachment_uploads')
+      if (data.request_attachment_uploads.length || data.evidence_attachment_uploads.length) refuse('unfinished_attachment_uploads')
       if (manifest.payloads.length || manifest.objects.length !== data.attachments.length || manifest.objects.some(object => object.bucket !== 'FILES' || !data.attachments.some(row => row.storage_key === object.key))) refuse('invalid_archive_files')
       let fileBytes = 0
       for (const attachment of data.attachments) {
@@ -61,7 +52,7 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
         const table = manifest.tables.find(table => table.name === item.table_name)
         if (!table) refuse('unsupported_journal_schema')
         const columns = table!.columns.some(column => column.pk) ? table!.columns.filter(column => column.pk).sort((a,b) => a.pk-b.pk) : table!.columns
-        for (const row of data[item.table_name]) if (digest([journal.origin, item.table_name, canonical(columns.map(column => row[column.name]))]) === item.key_hash) refuse('erased_archive_record')
+        for (const row of data[item.table_name]) if (await digest([journal.origin, item.table_name, canonical(columns.map(column => row[column.name]))]) === item.key_hash) refuse('erased_archive_record')
       }
       for (const name of product) for (const row of data[name]) if (canonical(normalize(name, row)) !== canonical(row)) refuse('unsafe_restored_effect')
       return true

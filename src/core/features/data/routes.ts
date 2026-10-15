@@ -8,6 +8,7 @@ import { NativeError } from '@/core/features/auth/native-tokens'
 import { DATA_LIMITS,abortInterruptedExport,abortPendingErasure,abortRestore,dataOperation,eraseEntity,exportArchive,planErasure,readErasureJournal,recoverInterruptedRunner,resumeErasure,restoreArchive } from './archive'
 import { assertDataAuthority, type DataAuthority } from './authority'
 import { eraseOperator, planOperatorErasure } from './operator-erasure'
+import {registerPortabilityRoutes} from './portability'
 import {CopyScanPending} from '../imports/copy-scan'
 import {PREVIEW_TOKEN_BYTES} from '../imports/preview-token'
 type Environment={Bindings:AppBindings;Variables:{runtime:PennyRuntime;dataAuthority?:DataAuthority}}
@@ -17,6 +18,7 @@ function authority(c:Context<Environment>):DataAuthority{
  return session
 }
 export function registerDataRoutes(app:Hono<Environment>):void{
+ registerPortabilityRoutes(app)
  app.use('/api/operator/data/*',async(c,next)=>{
   c.header('Cache-Control','private, no-store')
   c.header('Pragma','no-cache')
@@ -42,7 +44,8 @@ export function registerDataRoutes(app:Hono<Environment>):void{
   const configuration=c.get('runtime').configuration,hosted=!['local','test'].includes(configuration.environment)
   const origin=configuration.appOrigin!.replaceAll("'", "'\"'\"'"),connection=`--origin '${origin}' --session-file private/session.json`
   const commands={restore:`pnpm run data:import -- private/archive.json --journal private/latest-source-journal.json ${connection}`,preview:`pnpm run data:erase-preview -- requests 'ROOT_ID' private/plan.json ${connection}`,erase:`pnpm run data:erase -- private/plan.json --journal-out private/latest-journal.json ${connection}`,status:`pnpm run data:status -- 'OPERATION_ID' ${connection}`}
-  return c.json({hosted,commands,targets:[...kinds.flatMap(([table],index)=>results[index].results.map(row=>({table,...row}))),...former.results.map(row=>({table:'operators',...row}))],operation:operation?{id:operation.id,kind:operation.kind,status:operation.status}:null,epoch:journal.epoch})
+  const currentSession=await operatorAuth(c.get('runtime')).getSession(c.req.raw)
+  return c.json({hosted,canExport:currentSession?.kind==='native'&&currentSession.operator.role==='owner',commands,targets:[...kinds.flatMap(([table],index)=>results[index].results.map(row=>({table,...row}))),...former.results.map(row=>({table:'operators',...row}))],operation:operation?{id:operation.id,kind:operation.kind,status:operation.status}:null,epoch:journal.epoch})
  })
  app.post('/api/operator/data/import',async c=>{
   const input=await parseInput(c.req.raw,z.object({archive:z.unknown(),journal:z.unknown(),resumeOperationId:z.string().optional()}).strict(),DATA_LIMITS.archiveBytes)

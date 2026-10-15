@@ -9,3 +9,20 @@ export async function portabilityErasureStatements(db) {
 export async function portabilityRedactionCheckpoint(db) {
   return (await redactionStatements(db)).map(toD1Sql)
 }
+
+/** Owner-confirmed recovery also removes the retained Base snapshot. */
+export async function abortPortabilitySnapshot(db, id) {
+  const { abortExport } = await import('@runeditrun/rer/internal/modules/portability/export.mjs')
+  return abortExport({ db }, id)
+}
+
+export async function portabilitySnapshotStatus(db, id) {
+  const { exportStatus } = await import('@runeditrun/rer/internal/modules/portability/export.mjs')
+  return exportStatus({ db }, id)
+}
+
+/** The actor was recorded in Penny's lock before Base could create a job. */
+export async function abortPortabilityActor(db, actor) {
+  const jobs = await db.prepare("SELECT id FROM rer_portability_jobs WHERE kind='export' AND actor=?").bind(actor).all()
+  for (const { id } of jobs.results) await abortPortabilitySnapshot(db, id)
+}

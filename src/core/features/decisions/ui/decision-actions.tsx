@@ -1,9 +1,8 @@
-import { useOperatorResource } from '@/core/app/ui/operator-resource'
-import type { OperatorDecisionBrief,OperatorEvidenceCard } from '@/core/shared/api/operator'
+import type { OperatorDecisionBrief } from '@/core/shared/api/operator'
 import { Field,LoopForm,nullableForm,useLoopOptions } from '@/core/app/ui/loop-form'
-import { fieldLabelClass } from '@/core/ui/app/classes'
 import { DisclosureRow, SmallDisclosureRow } from '@/core/ui/app/DisclosureRow'
 import { SectionCard } from '@/core/ui/app/SectionCard'
+import { BetEvidenceForm } from './decision-evidence-form'
 const confidence=[{id:'low',label:'Low'},{id:'medium',label:'Medium'},{id:'high',label:'High'}]
 export function DecisionCreate({onSaved}:{onSaved:()=>void}){
  const options=useLoopOptions()
@@ -20,16 +19,8 @@ export function DecisionActions({decision,onSaved}:{decision:OperatorDecisionBri
  </div>
 }
 export function BetActions({decisionId,bet,onSaved,editable}:{decisionId:string;bet:OperatorDecisionBrief['bets'][number];onSaved:()=>void;editable:boolean}){
- const [evidence]=useOperatorResource<readonly OperatorEvidenceCard[]>('/api/operator/evidence')
  return <SmallDisclosureRow icon="form" label="Manage this bet">{editable?<LoopForm title="Edit comparison dimensions" action={`/api/operator/decisions/${decisionId}/bets/${bet.id}`} method="PATCH" onSaved={onSaved} transform={nullableForm}><Field name="title" label="Bet title" value={bet.title} required/><Field name="summary" label="Approach" value={bet.summary} required type="textarea"/><Field name="urgency" label="Urgency" value={bet.urgency}/><Field name="deliveryShape" label="Delivery shape" value={bet.deliveryShape}/><Field name="successMeasure" label="Observable success measure" value={bet.successMeasure}/></LoopForm>:null}
- <BetEvidenceForm betId={bet.id} evidence={evidence.kind==='ready'?evidence.data:[]} onSaved={onSaved}/>
+ <BetEvidenceForm betId={bet.id} onSaved={onSaved}/>
  {bet.evidence.map(e=><LoopForm key={e.id} title={`Unlink ${e.sourceLabel??e.sourceType}`} action={`/api/operator/evidence/${e.id}/links`} method="DELETE" onSaved={onSaved} submit="Unlink evidence" transform={()=>({target:'bet',targetId:bet.id})}><p className="truncate text-sm text-penny-muted">{e.wording}</p></LoopForm>)}
  </SmallDisclosureRow>
 }
-function BetEvidenceForm({betId,evidence,onSaved}:{betId:string;evidence:readonly OperatorEvidenceCard[];onSaved:()=>void}){
- // A native selector keeps the evidence choice visible beside its stance.
- const [selected,setSelected]=useState('')
- return <LoopForm title="Link evidence" action={`/api/operator/evidence/${selected}/links`} method="PUT" onSaved={onSaved} transform={d=>({target:'bet',targetId:betId,stance:d.get('stance')})}><label className={fieldLabelClass}>Evidence<select required className={controlClass} value={selected} onChange={e=>setSelected(e.target.value)}><option value="">Choose evidence…</option>{evidence.map(e=><option key={e.id} value={e.id}>{e.wording.slice(0,100)}</option>)}</select></label><Field name="stance" label="Stance" value="supporting" choices={[{id:'supporting',label:'Supports'},{id:'contradicting',label:'Contradicts'}]}/></LoopForm>
-}
-import { useState } from 'react'
-import { controlClass } from '@/core/app/ui/loop-form'

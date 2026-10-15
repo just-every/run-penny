@@ -2,7 +2,7 @@ import {validateLearningArchive} from '../learning/archive'
 import {learningErasureStatements} from '../learning/privacy'
 import {GRANT_REVOCATION_CHECKPOINT} from '../learning/journal'
 import { z } from 'zod'
-import { portabilityErasureStatements } from '../../../../scripts/portability/cleanup.mjs'
+import { portabilityErasureStatements, abortPortabilityActor } from '../../../../scripts/portability/cleanup.mjs'
 import { NativeError, digest } from '@/core/features/auth/native-tokens'
 import { createUlid } from '@/core/shared/ulid'
 import inventory from './schema-inventory.json'
@@ -18,6 +18,7 @@ import {eraseArchivedSourceOptions,eraseExportedSourceOptions} from '../imports/
 import { clauseDeletionOrder } from './erasure-dependencies'
 import {startNativeScope,stepNativeScope,finishNativeScope,type NativeScope,type ErasureTable} from './erasure-native'
 import { assertDataAuthority, dataBatch, type DataAuthority } from './authority'
+import { claimPortabilityRunner, requirePortabilityOwner } from './portability-lock'
 export type Cell=string|number|null
 export type Row=Record<string,Cell>
 type ForeignKey={table:string;from:string;to:string;id:number;seq:number;on_delete:string}
@@ -357,6 +358,8 @@ async function releaseRunner(db:D1Database,id:string,from:string,to:string,autho
  await dataBatch(db,[db.prepare('UPDATE data_operations SET status=?,updated_at=? WHERE id=? AND status=? AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?) RETURNING 1').bind(to,new Date().toISOString(),id,from,id)],authority)
 }
 export async function recoverInterruptedRunner(db:D1Database,id:string,expectedStatus:'running'|'running_r2'|'running_import',authority?:DataAuthority):Promise<void>{
+ const operation=await dataOperation(db,id),payload=operation?.kind==='export'?JSON.parse(operation.payload_json) as {portabilityActor?:string}:null
+ if(payload?.portabilityActor)await requirePortabilityOwner(db,payload.portabilityActor,authority)
  // The authenticated local operator must first quiesce the prior runner. There
  // is deliberately no timed takeover: an old runner must never write late.
  const next=expectedStatus==='running'?'pending':expectedStatus==='running_import'?'pending_import':'pending_r2'
@@ -368,7 +371,12 @@ export async function abortInterruptedExport(db:D1Database,id:string,authority?:
  const operation=await dataOperation(db,id)
  if(!operation||operation.kind!=='export'||operation.status!=='pending'||(await state(db))?.lock_id!==id)fail('invalid_data_operation')
  // Called only after the authenticated operator confirms the prior runner stopped.
- await finish(db,id,'aborted',authority)
+ const payload=JSON.parse(operation.payload_json) as {portabilityActor?:string}
+ if(payload.portabilityActor){
+  await requirePortabilityOwner(db,payload.portabilityActor,authority)
+  const runner=await claimPortabilityRunner(db,id,authority)
+  try{await abortPortabilityActor(runner.db,payload.portabilityActor);await finish(runner.db,id,'aborted',authority)}finally{await runner.release()}
+ }else await finish(db,id,'aborted',authority)
 }
 
 export function validateNativeIdentity(data:Record<string,Row[]>):void{

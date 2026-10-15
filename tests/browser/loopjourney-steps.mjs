@@ -124,6 +124,7 @@ export async function createDecision(operator,origin,audit) {
     await add.getByLabel('Approach',{exact:true}).fill(title==='Onboarding progress dashboard'?'Show each onboarding step and blocker.':'Send a weekly summary of onboarding blockers.')
     await save(operator,add,'Add bet',`/api/operator/decisions/${brief.id}/bets`)
     await operator.getByRole('heading',{name:title,exact:true}).waitFor()
+    await operator.getByRole('heading',{name:question,exact:true}).waitFor()
   }
   for(const [index,title] of bets.entries()){
     const card=operator.locator('article,section,div').filter({has:operator.getByRole('heading',{name:title,exact:true})}).filter({has:operator.getByText('Manage this bet',{exact:true})}).last()

@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict'
 import {createHash, X509Certificate} from 'node:crypto'
-import {mkdtemp, rm} from 'node:fs/promises'
+import {mkdtemp, rm, readFile} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {tlsIdentity, workerRuntime} from '../data/tls-runtime.mjs'
+import {archiveJournal} from '../../scripts/portability/archive-journal.mjs'
 import {finishFirstRun} from './local-signin.mjs'
 
 /** Trust only this test certificate's public key; Node requests use its explicit CA. */
@@ -33,7 +34,10 @@ async function assertHostedPanel(page,overview,origin,cookie) {
   const commands=expectedCommands(origin)
   assert.deepEqual(overview.commands,commands,'[DATA-003] API returns the exact guarded commands')
   assert.deepEqual(await page.locator('main code').allTextContents(),Object.values(commands),'[DATA-003] mounted panel displays every exact command')
-  assert.equal(await page.locator('main form, main input, main select, main button').count(),0,'[DATA-003] hosted panel has no browser mutation controls')
+  assert.equal(await page.locator('main form, main input, main select').count(),0,'[DATA-003] hosted restore and erasure remain guarded commands')
+  const exportButton=page.getByRole('button',{name:'Export workspace',exact:true})
+  assert.equal(await exportButton.count(),overview.canExport?1:0,'[DATA-001] only a native owner sees workspace export')
+  if(overview.canExport)assert.equal(await exportButton.isDisabled(),Boolean(overview.operation),'[DATA-001] maintenance blocks starting another export')
   const text=await page.locator('main').innerText()
   assert.ok(!text.includes(cookie.split('=')[1]),'[BASE-SECRET-002] mounted hosted panel excludes native session material')
   if(overview.operation) {
@@ -105,6 +109,20 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     await assertHostedPanel(page,idleOverview,origin,cookie)
     const details={scope:'source-only, local TLS emitted production-mode Worker',authority:'native bootstrap cookie and first-run form',tlsTrust:'test-certificate SPKI pin; explicit CA for Node',api:'/api/operator/data/overview',providerCalls:0}
     await capture('DATA-001-hosted-idle',page,{...details,operation:null})
+
+    await page.getByRole('button',{name:'Export workspace',exact:true}).click()
+    const archiveLink=page.getByRole('link',{name:'Download archive',exact:true}),journalLink=page.getByRole('link',{name:'Download erasure journal',exact:true})
+    await archiveLink.waitFor({timeout:120000});await journalLink.waitFor()
+    const [archiveDownload]=await Promise.all([page.waitForEvent('download'),archiveLink.click()])
+    const [journalDownload]=await Promise.all([page.waitForEvent('download'),journalLink.click()])
+    const archiveBytes=await readFile(await archiveDownload.path()),journalBytes=await readFile(await journalDownload.path())
+    const verified=await archiveJournal(new Blob([archiveBytes]).stream())
+    assert.deepEqual(JSON.parse(journalBytes.toString('utf8')),verified.journal,'[DATA-001] browser downloads the journal of this exact verified Base archive')
+    assert.equal(verified.manifest.product,'just-every/penny')
+    const db=await runtime.db()
+    assert.equal(await db.prepare('SELECT lock_id FROM data_state').first('lock_id'),null,'[DATA-001] browser export releases source maintenance')
+    assert.equal((await db.prepare("SELECT name FROM sqlite_master WHERE name LIKE 'rer_portability_snap_%'").all()).results.length,0,'[DATA-001] browser export removes source snapshots')
+    await capture('DATA-001-hosted-downloads',page,{...details,format:verified.manifest.format,pairedJournal:true,sourceCleanup:true})
 
     const active=await observeActiveExport(runtime,cookie,hold)
     exportCompletion=active.completion

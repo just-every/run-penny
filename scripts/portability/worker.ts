@@ -9,7 +9,9 @@ import { pipeline } from 'node:stream/promises'
 import { getPlatformProxy } from 'wrangler'
 import { createPortability, readArchive, type LaterJournal } from '@runeditrun/rer/modules/portability'
 import { readErasureJournal, schema } from '../../src/core/features/data/archive'
-import { policy, readJournal, laterJournalFence, LOCAL_DATA_LIMITS } from './policy'
+import { policy, laterJournalFence, LOCAL_DATA_LIMITS } from './policy'
+import { readJournal } from './local-journal'
+import { verifyExport } from './verify'
 import { privateInput } from '../data/private-files.mjs'
 import { failureLine, type Progress } from './failure'
 // `later` is `rer import --journal LATER_ARCHIVE`: a later archive of this installation.
@@ -66,14 +68,8 @@ try {
       while ((await service.exports.advance(id, { maxParts: 16 })).phase === 'building') {}
       temporary = path + '.' + randomUUID() + '.partial'
       await pipeline(Readable.fromWeb(await service.exports.download(id) as never), createWriteStream(temporary, { flags: 'wx', mode: 0o600 }))
-      const rows: Record<string, Record<string, unknown>[]> = {}
-      let manifest: import('@runeditrun/rer/modules/portability').Manifest | undefined, bytes = 0
       progress.stage = 'verify_export'
-      for await (const record of readArchive(Readable.toWeb(createReadStream(temporary)) as ReadableStream<Uint8Array>)) {
-        if (record.kind === 'manifest') { manifest = record; for (const table of record.tables) rows[table.name] = [] }
-        if (record.kind === 'part') for (const item of record.items) if (item.kind === 'row') { bytes += Buffer.byteLength(JSON.stringify(item.row)); if (bytes > LOCAL_DATA_LIMITS.recordBytes) throw new Error('archive_limit'); rows[item.table].push(item.row) }
-      }
-      await policy(journal).validateStaged!({db, tables: Object.fromEntries(Object.keys(rows).map(name => [name, name])), read: async name => rows[name], manifest: manifest!})
+      await verifyExport(db, Readable.toWeb(createReadStream(temporary)) as ReadableStream<Uint8Array>, journal)
       await writeFile(journalPath, JSON.stringify(journal) + '\n', { flag: 'wx', mode: 0o600 })
       await link(temporary, path)
       await service.exports.abort(id)

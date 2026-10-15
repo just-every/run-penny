@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Native owners can export a running Penny installation through `rer export --target remote` or hosted Data → Export workspace. Both produce the maintained Base archive and matching Penny erasure journal for local restore, under existing maintenance, schema, original-file and current-session safeguards. Successful transfer and owner-confirmed recovery remove retained source snapshots; remote restore remains unavailable.
+
 - Added the bounded private cancellation learning path (migration 0059): native evidence plus explicitly selected Orbit delegated targets, exact source citations, versioned interpretations and internal briefs, comparable no-build options and immutable pre-action choices. Scheduled scoped refresh, budget admission, pause/revoke/disconnect, correction invalidation, contribution erasure and held restored grants share native authority. Source/model calls visibly refuse without installation configuration; no live customer pilot or Stage 4–5 outcome claim is made. Apply 0059 before starting this source, retain expanded schema on rollback, and review held source/grant records after restore.
 
 - Removing the installation owner keeps the successor's API keys, webhook, Slack and receiver destinations and tracker connections working (only the successor's sessions end), and a removed former owner can be invited back as an operator. Operator list and search pages read numbers such as 2024 or 1.0 as typed text, and an invalid filter or page gets a 400 page with a way back to the plain list instead of a server error. Page assets (/assets/, /fonts/, /brand/, /rer-theme.css) have their own per-client limit (`publicAssetRequestsPerMinutePerIp`, 1200 a minute) instead of counting against page reads.

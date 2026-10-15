@@ -321,7 +321,7 @@ personal copies refuse erasure instead of being silently retained or deleted.
 Restore preserves destination authority and requires provider reconfiguration
 and deliberate uncertainty reconciliation. New native work has its own identity.
 
-## Maintained local archive command candidate
+## Maintained archive commands
 
 `pnpm run export -- --output exports/penny.rer` and `pnpm run import -- --input
 exports/penny.rer --yes` use Base portability directly, with Penny's schema
@@ -333,9 +333,35 @@ store, `--journal exports/later.rer` names a later archive of the same installat
 an archive made before any erasure that archive's journals record is refused whole
 (`erasure_epoch`), and the later archive's own `.erasure-journal.json` must sit
 beside it. Native journal identity and tombstones restore atomically with domain
-rows. Install fresh owner authority after restore. No remote support is implied by
-these verbs. A failed transfer prints its stage, the error codes and, for a code an
+rows. Install fresh owner authority after restore. A failed transfer prints its stage, the error codes and, for a code an
 operator can act on, one fixed sentence saying why; never a name or a value.
+
+A running installation also supports the same Base archive through:
+
+```sh
+rer export --target remote --origin https://penny.example --session-file private/owner.cookie --output exports/hosted-penny.rer
+```
+
+The session path is relative to this checkout. The private session file must be
+an owner-owned regular file with mode 0600,
+containing one raw native owner cookie (`__Host-operator_session=…`; loopback
+uses its native local cookie). This differs from the JSON session input used by
+`data:export`. Never paste a cookie into a command line. The command checks
+current owner authority on every request, refuses redirects and creates both
+the archive and its `.erasure-journal.json` sidecar from the same verified
+snapshot. Keep both files together. `rer import --input exports/hosted-penny.rer
+--yes` restores them into an empty local installation; remote import is not
+exposed. No deployment/provider credentials are needed for export.
+
+Hosted **Data → Export workspace** prepares this same archive and matching
+journal, with separate download links visible to a signed-in native owner.
+Restore and erasure remain the existing guarded commands. Source snapshots are
+removed after successful transfer. If a session expires or cleanup fails, the
+workspace remains locked: preserve the private `.pending.transfer.json`
+checkpoint, stop the prior exporter, and use the current owner's existing
+`data:abort-export` recovery command for the active Data operation. Recovery
+removes the Base snapshot before releasing maintenance. There is no timed
+unlock of a possibly running exporter.
 
 The local command's refusal limits are 500,000 domain rows and 512 MiB record
 JSON, with the same 10 MiB individual-file and 20 MiB total-original-file limits.
