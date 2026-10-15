@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The local and hosted demo opens with a used workspace: 21 attributed feedback items from six accounts, seven evidence-backed decisions in several states, seven roadmap items, and three published releases with adoption responses. Dates follow the demo's start time; approvals and releases use Penny's domain code. Adopt rer 0.2.21 and its matching demo module.
+
 - Adopt rer 0.2.20: Penny Demo and Penny Dev identify themselves in the nav and title, with no bar or captured-mail inbox. Demo public reads run for real; mail, webhook, Slack, tracker and paid-model sends return success without contacting their providers. Local mail is silently suppressed.
 
 - Pin rer 0.2.19. The README starts Penny with the Run page's two commands (`git clone …` then `cd run-penny && rer dev`), says Node.js 22 or newer is required and how to get it, and documents `rer signin`, `rer deploy --remove --yes` and `npm run deploy:health` (npm ships with Node, so no pnpm is needed; the hosted Data page's guarded commands use `npm run` too). The workspace time zone is stated once: UTC unless `WORKSPACE_TIMEZONE` is set at deploy. OPERATIONS.md and the install guide say `rer deploy` claims the owner; a manual `/auth/bootstrap` is recovery only.
