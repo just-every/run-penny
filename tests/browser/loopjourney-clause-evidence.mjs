@@ -6,7 +6,7 @@ export async function clauseEvidence(operator,requester,origin,audit,requesterAu
  const account=form(operator,'New account')
  await account.getByLabel('Account name',{exact:true}).fill('Onboarding team')
  await account.getByLabel('Internal owner',{exact:true}).selectOption({label:'Owner'})
- await account.getByLabel('Revenue in cents (optional)',{exact:true}).fill('120000')
+ await account.getByLabel('Revenue in USD (optional)',{exact:true}).fill('1200')
  await account.getByLabel('Renewal date (optional)',{exact:true}).fill('2027-01-01')
  await account.getByLabel('Health (optional)',{exact:true}).fill('Needs onboarding visibility')
  const saved=await save(operator,account,'Create account','/api/operator/accounts')

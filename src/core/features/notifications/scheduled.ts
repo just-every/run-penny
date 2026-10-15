@@ -1,5 +1,5 @@
 import {drainLearning} from '../learning/scheduled'
-import { createPennyRuntime } from '@/core/app/runtime'
+import { createPennyRuntime, type PennyRuntime } from '@/core/app/runtime'
 import type { AppBindings } from '@/core/shared/bindings'
 import { drainDecisionReviews } from './decision-reviews'
 import { drainNotifications } from './delivery'
@@ -13,9 +13,14 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  const runtime=createPennyRuntime(bindings)
  await drainLearning(runtime,_controller.scheduledTime)
  await drainDecisionReviews(runtime)
+ await drainRequesterMail(runtime)
+ await drainIntegrations(runtime)
+ await drainTrackers(runtime)
+}
+
+/** Queue and Cron share this order: status digests precede release notes. */
+export async function drainRequesterMail(runtime:PennyRuntime):Promise<void>{
  await drainNotifications(runtime)
  await drainRejectionNotices(runtime)
  await drainReleaseDeliveries(runtime)
- await drainIntegrations(runtime)
- await drainTrackers(runtime)
 }

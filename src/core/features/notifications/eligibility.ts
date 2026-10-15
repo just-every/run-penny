@@ -13,6 +13,7 @@ export const eligibleRecipient = `a.requester_id=n.requester_id AND a.verified_a
 export const visibleEvent = `(e.kind='status' AND EXISTS(SELECT 1 FROM request_status_updates s WHERE s.id=e.subject_id AND s.request_id=e.request_id))
  OR (e.kind='comment' AND EXISTS(SELECT 1 FROM request_comments c LEFT JOIN requesters person ON person.id=c.requester_id
    WHERE c.id=e.subject_id AND c.request_id=e.request_id AND c.moderation_state='approved' AND c.published_at IS NOT NULL
+   AND c.requester_id IS NOT n.requester_id
    AND (c.requester_id IS NULL OR person.blocked_at IS NULL)))`
 
 export function quietHours(now: Date, timezone: string): boolean {

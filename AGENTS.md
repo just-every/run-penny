@@ -68,7 +68,7 @@ custody records truthful and preserve all repository history and existing tags.
 ## Runtime and trust boundaries
 
 One Cloudflare Worker serves Hono APIs and TanStack Start documents/server
-functions, with D1, original files in R2, a producer Queue and minute Cron.
+functions, with D1, original files in R2, a Queue mail consumer and minute Cron.
 Native Base operator authority admits every private document, API and generated
 function independently. Requester email verification and signed host identity
 are separate authority. Same-origin writes, session revocation, moderation and

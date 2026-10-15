@@ -45,7 +45,7 @@ delivery.
 
 ## Run it on your computer
 
-You need **Node.js 22 or newer**; the `rer` installer stops with
+First install **Node.js 22 or newer**, before installing `rer`; the `rer` installer stops with
 `node is required` without it. Check with `node --version`. If it is missing or
 older, install the current LTS from [nodejs.org](https://nodejs.org/en/download)
 (the macOS and Windows installers include `npm`), or use a version manager such
@@ -191,8 +191,8 @@ npm run deploy:health
 `-- --environment NAME` for a deployment made with `rer deploy --environment NAME`.
 
 Deploy builds before the provider credentials reach its deployment command. The
-owner-account kit uses `deploy.json` for D1 `DB`, R2 `FILES`, producer Queue
-`JOBS` and the minute Cron. Resource names start with `penny-production`; the
+owner-account kit uses `deploy.json` for D1 `DB`, R2 `FILES`, Queue
+`JOBS` with its mail consumer and the minute Cron. Resource names start with `penny-production`; the
 account supplies the workers.dev origin. The first run saves generated
 `AUTH_SECRET` and `SETUP_TOKEN` once in `.rer/deploy/production-secrets.json`
 (0600), and a durable ledger under `.rer/deploy/`. Repeat deploy and health reuse
@@ -268,7 +268,7 @@ every target still Shipped and the exact approved mapping set still valid.
 Publication freezes one version and the complete deduplicated address-bound
 audience before queueing. Public pages expose the approved wording only; mail
 includes only that recipient's currently eligible snapshotted request contexts.
-Release commands use the minute Cron independently of the request one-hour window
+Release commands wake the Queue at publication, independently of the request one-minute window
 and honor workspace quiet hours. [Acceptance](ACCEPTANCE.md) lists the browser
 checks and the parts of the contract that remain open.
 
@@ -325,14 +325,17 @@ time zone, which is **UTC** unless you choose another. To choose one, set
 `WORKSPACE_TIMEZONE` to an IANA name such as `Europe/London` in the environment of
 your first `rer deploy` and keep it for that workspace; invalid or empty values
 are refused. A local copy uses UTC. The hours, the
-one-hour coalescing window for a request's status updates and replies, and the
+one-minute coalescing window for a request's status updates and replies, and the
 minute Cron are fixed; conversion follows daylight-saving rules.
 
-Status updates and approved replies on a request are gathered for one hour from
+Status updates and approved replies on a request are gathered for one minute from
 the first one, then sent to each follower as one email. When a release note goes
 to a follower whose updates on the same request are still being gathered, Penny
 sends those updates first, in the same minute, so nobody hears "it's live" before
-"we're working on it".
+"we're working on it". Publication starts the Queue consumer immediately;
+Cron is the recovery backstop. Cloudflare can take up to about two hours to
+activate a newly deployed Cron schedule, but routine status and release mail
+does not wait for that first tick. Quiet hours and known provider retries still apply.
 
 Provider suppression uses `POST /api/public/mail/events`. Configure SendGrid's
 signed Event Webhook for this deployment URL, enable bounce and spam-report

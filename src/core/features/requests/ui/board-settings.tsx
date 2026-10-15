@@ -5,7 +5,8 @@ import { FrameSettings } from '../../settings/ui/frame-settings'
 import { OperatorSettings } from '../../auth/ui/operator-settings'
 import {ApiKeys} from '../../integrations/ui/api-keys'
 import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useSettingsAnchor } from './settings-anchor'
 import { usePublicResource } from '@/core/features/portal/ui/public-resource'
 import { CustomFieldSettings } from '@/core/features/settings/ui/custom-field-settings'
 import { operatorMutation } from './operator-client'
@@ -20,9 +21,11 @@ export function BoardSettings() {
   async function act(path: string, body: unknown, method = 'POST', form?: HTMLFormElement) {
     try { await operatorMutation(path, body, method); form?.reset(); setSuccess(true); setMessage('Saved.'); refresh() } catch (e) { setSuccess(false); setMessage(e instanceof Error ? e.message : 'Could not save.') }
   }
+  const section = useRef<HTMLElement>(null)
+  useSettingsAnchor(section)
   const ready = data.kind === 'ready' ? data.data : null
   return (
-    <section className="min-w-0">
+    <section ref={section} className="min-w-0">
       <OperatorPageHeader eyebrow="Customer feedback" title="Feedback settings" art={data.kind === 'error' ? null : { note: 'Better feedback builds better products.' }}>Requester submissions, edits and comments are reviewed before publication.</OperatorPageHeader>
       <div className="mt-6 space-y-6 sm:mt-8">
         <OperatorSettings />

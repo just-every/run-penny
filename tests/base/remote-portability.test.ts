@@ -203,10 +203,24 @@ it('names an interrupted export to guarded writers, offers its owner the job to 
  expect(refused.status).toBe(409)
  expect((await refused.json() as { error: string }).error).toBe('data_operation_in_progress')
  const overview = await (await call('/api/operator/data/overview', undefined, cookie)).json() as { ownExport: { jobId: string } | null; operation: { kind: string } | null }
- expect(overview).toMatchObject({ ownExport: { jobId: id }, operation: { kind: 'export' } })
+ expect(overview).toMatchObject({ ownExport: { jobId: id, phase: 'building', completed: 0 }, operation: { kind: 'export' } })
+ // A new request after partial progress (as on document reload) recovers the
+ // same job and its durable part cursor without a browser checkpoint.
+ const advanced = await call(`${base}/${id}/advance`, { expectedPart: 0, maxParts: 1 }, cookie)
+ expect(advanced.status).toBe(200)
+ const progress = await advanced.json() as { completed: number }
+ expect(progress.completed).toBeGreaterThan(0)
+ const reloaded = await (await call('/api/operator/data/overview', undefined, cookie)).json()
+ expect(reloaded).toMatchObject({ ownExport: { jobId: id, completed: progress.completed }, operation: { kind: 'export' } })
  await complete(id, cookie)
  const archive = await call(`${base}/${id}/download`, undefined, cookie)
- expect(archive.status).toBe(200); await archive.arrayBuffer()
+ expect(archive.status).toBe(200); const saved = await archive.arrayBuffer()
+ // Serving a verified download does not erase recovery state. The owner may
+ // reload before saving, then obtain the exact same completed snapshot.
+ const ready = await (await call('/api/operator/data/overview', undefined, cookie)).json()
+ expect(ready).toMatchObject({ ownExport: { jobId: id, phase: 'complete' }, operation: { kind: 'export' } })
+ const resumed = await call(`${base}/${id}/download`, undefined, cookie)
+ expect(resumed.status).toBe(200); expect(await resumed.arrayBuffer()).toEqual(saved)
  expect((await call(`${base}/${id}/abort`, {}, cookie)).status).toBe(200)
  const idle = await (await call('/api/operator/data/overview', undefined, cookie)).json() as { ownExport: unknown; operation: unknown }
  expect(idle).toMatchObject({ ownExport: null, operation: null })

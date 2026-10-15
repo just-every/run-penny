@@ -1,4 +1,5 @@
 import {registerLearningRoutes} from '@/core/features/learning/routes'
+import {publishesNotification,queueNotificationWork} from '@/core/features/notifications/queue'
 import {registerOperatorManagementRoutes} from '@/core/features/auth/operator-management-routes'
 import {editorDocumentHeaders} from '@/core/features/editor/headers'
 import {registerFrameSettings} from '@/core/features/settings/frame-settings'
@@ -78,6 +79,13 @@ export function createPennyApi(options: PennyAppOptions = {}) {
     if (!validPathParameters(context)) return context.json({ error: 'validation_failed' }, 400)
     if (context.req.path.startsWith('/api/auth/') || context.req.path.startsWith('/api/public/identity/')) context.header('Cache-Control', 'no-store')
     await next()
+    if (context.res.ok && publishesNotification(context.req.method, context.req.path)) {
+      try { await queueNotificationWork(context.get('runtime')) } catch (error) {
+        // Publication is already durable. Keep its successful response and make
+        // the failed Queue handoff visible; Cron remains the recovery path.
+        console.error('Penny mail kickoff failed', JSON.stringify(failureSummary(error)))
+      }
+    }
     context.res = await editorDocumentHeaders(context.res, context.get('runtime'), context.req.path)
   })
 

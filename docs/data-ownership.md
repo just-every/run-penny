@@ -34,8 +34,14 @@ Replace the example origin with the installation's exact HTTPS origin. Local
 HTTP is accepted only for localhost, 127.0.0.1 or ::1. Paths, query strings,
 fragments, URL credentials, foreign redirects and TLS downgrade are refused.
 The session file is a regular, owner-owned 0600 JSON file with exactly one
-`cookie` property containing the existing native operator cookie. Copy it
-privately from your authenticated browser; do not put the cookie in a command,
+`cookie` property containing the existing native operator cookie. To obtain it, sign in to this installation as the owner. Open browser developer
+tools, then Application (or Storage) → Cookies → the installation’s exact origin.
+Find `__Host-operator_session` (local HTTP uses `operator_session_local`). Create
+a private directory with mode 0700 and an empty session file with mode 0600
+before opening it in a local text editor. Save `{"cookie":"__Host-operator_session=PASTE_VALUE_HERE"}`,
+replacing only the placeholder with the cookie’s value. Do not use a requester
+cookie or a bare value. Delete the file when finished; signing out or session
+expiry invalidates it. Do not put the cookie in a command,
 URL, environment variable, screenshot or archive. Never commit the session file.
 Symlink/hard-link inputs, unsafe parents and permissive file modes are refused.
 The CLI reports canned error codes, counts, hashes and paths, never session values.
@@ -355,8 +361,10 @@ exposed. No deployment/provider credentials are needed for export.
 
 Hosted **Data → Export workspace** prepares this same archive and matching
 journal, with separate download links visible to a signed-in native owner.
-The browser drives the export, so closing its tab mid-way leaves the operation
-holding the workspace. The owner who started it then sees **Export in
+Snapshot preparation and verification can take about two minutes; larger workspaces
+may take longer. The screen names the current stage, shows saved archive parts and
+elapsed time, and the server retains completed parts across reloads. The browser
+drives the export, so closing its tab mid-way leaves the operation holding the workspace. The owner who started it then sees **Export in
 progress** on the Data page: **Resume export** finishes the same Base job,
 verifies it and offers both downloads; **Abort export** removes the partial
 snapshot and releases the workspace. Use them only when no other tab or device
@@ -365,11 +373,16 @@ never released its runner; both buttons first release it, which is the same
 owner confirmation `data:recover-runner --prior-runner-stopped` gives, and every
 later write of the cancelled step stays fenced by its runner token. No partial
 archive is offered: downloads appear only after the complete archive passes
-verification. While any data operation holds the workspace, guarded writes such
+verification. The completed snapshot also survives a reload: **Export ready to
+download** lets the owner resume the same files. Save both files, then choose
+**Finish export** to remove the snapshot and release the workspace. Data changes
+stay paused until Finish export or Abort export; a failed browser request does not
+discard the saved job. Browser download links themselves last only for that page
+visit. While any data operation holds the workspace, guarded writes such
 as **Publish release** answer 409 `data_operation_in_progress` naming the
 operation and the next step. Restore and erasure remain the existing guarded
-commands. Source snapshots are
-removed after successful transfer. If a session expires or cleanup fails, the
+commands. The remote CLI removes its source snapshots after successful transfer;
+the browser removes them on Finish export or Abort export. If a session expires or cleanup fails, the
 workspace remains locked: preserve `archive.transfer.json` inside the unique
 0700 `<output>.pending-*` staging directory (the error names the exact checkpoint
 path), stop the prior exporter, and use the current owner's existing

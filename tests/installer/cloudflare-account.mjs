@@ -109,7 +109,20 @@ export function ownerProvider() {
       if (method === 'GET') return list(state.queues)
       const row = { queue_id: randomUUID().replaceAll('-', ''), queue_name: body.queue_name, consumers: [] }; state.queues.push(row); write(); result = response(row)
     } else if (path.startsWith('/queues/')) {
-      const row = state.queues.find(row => row.queue_id === path.split('/')[2]); return row ? response(path.endsWith('/consumers') ? row.consumers : row) : missing()
+      const row = state.queues.find(row => row.queue_id === path.split('/')[2])
+      if (!row) return missing()
+      if (path.endsWith('/consumers')) {
+        if (method === 'GET') return response(row.consumers)
+        const consumer = { consumer_id: randomUUID().replaceAll('-', ''), ...body }
+        row.consumers.push(consumer); write(); return response(consumer)
+      }
+      if (path.includes('/consumers/')) {
+        const consumer = row.consumers.find(item => item.consumer_id === path.split('/').at(-1))
+        if (!consumer) return missing()
+        if (method === 'PUT') { Object.assign(consumer, body); write() }
+        return response(consumer)
+      }
+      return response(row)
     } else if (path === '/workers/subdomain') return response({ subdomain: 'fixture-account' })
     else if (path === '/workers/durable_objects/namespaces') return list([])
     else if (path === '/workers/assets/upload') { write(); return response({ jwt: 'penny-upload-complete' }) }

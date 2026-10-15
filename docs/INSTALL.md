@@ -4,7 +4,7 @@ This page takes you from the Penny source to a running copy: first on your own c
 
 ## What you need
 
-- **Node.js 22 or newer.** Check with `node --version`; if it is missing, install the LTS from [nodejs.org](https://nodejs.org/en/download) or run `nvm install 22`. `rer` then fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
+- **Install Node.js 22 or newer first, before `rer`.** Check with `node --version`; if it is missing, install the LTS from [nodejs.org](https://nodejs.org/en/download) or run `nvm install 22`. `rer` then fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
 - **`rer`**, installed once: `curl -fsSL https://runeditrun.com/install.sh | sh` (or `npm install -g @runeditrun/rer`).
 - **For Cloudflare only:** a Cloudflare account, an API token for it, and an email provider (SendGrid or Resend) with a verified sender address. Running locally needs none of these.
 
@@ -82,7 +82,7 @@ npm run deploy:health
 
 The dry run builds and validates locally and makes no request to Cloudflare. Deploy builds first, then creates or reuses the Worker, D1 database, R2 bucket and queue, applies the database migrations, uploads the build and checks it. Deploy health reads the deployed Worker's identity and `/health`, which confirms the database, file bucket and queue can be reached; it does not prove that mail is working. Running deploy again reuses the saved resources and secrets and rotates nothing. Use `pnpm run deploy` rather than bare `pnpm deploy`, which is a different built-in pnpm command.
 
-The deploy prints a notice after it registers the schedule: Cloudflare may take up to about two hours to start the first scheduled run on some accounts, because a new schedule only starts at the account's next provider refresh. Judge delivery by Penny's own rows, not by Cloudflare's scheduled-analytics (which can list a new Worker as `__unknown__`): after the first run, `notification_batches` holds one row per delivery the schedule handled, with its state and any failure reason.
+Status and release publications start the Queue mail consumer immediately; they do not wait for the first Cron tick. The minute Cron remains a recovery backstop. The deploy prints a notice after it registers that schedule: Cloudflare may take up to about two hours to start the first scheduled run on some accounts, because a new schedule only starts at the account's next provider refresh. Judge delivery by Penny's own rows, not by Cloudflare's scheduled-analytics (which can list a new Worker as `__unknown__`): `notification_batches` holds each gathered request delivery and its state and any failure reason, whether handled by Queue or Cron.
 
 The first deploy generates `AUTH_SECRET` and `SETUP_TOKEN` once and saves them in `.rer/deploy/production-secrets.json`, mode 0600, with a ledger of what it created under `.rer/deploy/`. Resource names begin with `penny-production`, and the address comes from your account's workers.dev subdomain.
 

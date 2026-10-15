@@ -116,8 +116,8 @@ Deploy also checks the expected account workers.dev origin before writes. Only
 dependency and build commands see the credential-stripped build environment;
 provider credentials reach the deployment command after those finish.
 
-`deploy.json` declares D1 `DB`, R2 `FILES`, producer Queue `JOBS` and the minute
-Cron (`* * * * *`), with no Queue consumer or Durable Object. The first scheduled run can
+`deploy.json` declares D1 `DB`, R2 `FILES`, Queue `JOBS` with its mail consumer and the minute
+Cron (`* * * * *`), with no Durable Object. Publication wakes the Queue mail consumer immediately; it does not wait for the first Cron tick. The Cron is the recovery backstop. The first scheduled run can
 take up to about two hours on some accounts, because a new schedule starts at the account's
 next provider refresh (the deploy prints this). Judge delivery from the handler's own D1 rows,
 `notification_batches`, not from Cloudflare's scheduled-analytics, which can name a new Worker
@@ -211,7 +211,7 @@ Requester email quiet hours are fixed at **20:00–08:00**, using the IANA
 UTC; the artifact controller keeps the product fallback Australia/Brisbane.
 `WORKSPACE_TIMEZONE` is an optional server-only IANA timezone supplied through the
 deployment environment. Deployment passes it to the Worker after validation;
-invalid or empty supplied values fail. The hours, the fixed one-hour coalescing
+invalid or empty supplied values fail. The hours, the fixed one-minute coalescing
 window and the minute Cron do not change; conversion uses `Intl.DateTimeFormat`,
 including daylight-saving rules.
 

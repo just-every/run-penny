@@ -47,7 +47,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
         </section>
       ) : null}
       {context.kind === 'ready' ? <RequestSupporters voters={context.data.voters} /> : null}
-      <details className="group mt-5 border-t border-penny-line pt-1">
+      <details open={held.length > 0} className="group mt-5 border-t border-penny-line pt-1">
         <summary className={disclosureSummaryClass}><span>Discussion, status and request controls</span>{held.length ? <span className="ml-2 rounded-full bg-penny-copper/15 px-2 py-0.5 text-xs font-bold text-penny-ink">{held.length} awaiting review</span> : null}</summary>
         <div className="max-w-3xl space-y-5">
           <p className="mt-3 text-sm font-semibold text-penny-ink empty:hidden" role="status">{message}</p>

@@ -10,7 +10,10 @@
     { "binding": "DB", "database_name": "feedback-penny-local", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations/core" }
   ],
   "r2_buckets": [{ "binding": "FILES", "bucket_name": "feedback-penny-local-files" }],
-  "queues": { "producers": [{ "binding": "JOBS", "queue": "feedback-penny-local-jobs" }] },
+  "queues": {
+    "producers": [{ "binding": "JOBS", "queue": "feedback-penny-local-jobs" }],
+    "consumers": [{ "queue": "feedback-penny-local-jobs", "max_batch_size": 1, "max_retries": 3 }]
+  },
   "assets": { "binding": "ASSETS", "run_worker_first": true },
   "triggers": { "crons": ["* * * * *"] },
   // Public hosted defaults; explicit local .dev.vars supplies the local mode.

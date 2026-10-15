@@ -1,6 +1,7 @@
-import { applyD1Migrations,reset,createScheduledController } from 'cloudflare:test'
+import { applyD1Migrations,reset,createScheduledController,createMessageBatch } from 'cloudflare:test'
 import { beforeEach,afterEach,vi,expect,inject,it } from 'vitest'
 import { exports } from 'cloudflare:workers'
+import { runNotificationQueue } from '@/core/features/notifications/queue'
 import { runNotificationSchedule } from '@/core/features/notifications/scheduled'
 import { call,env,owner,requester,mockMail } from './support'
 import { createPennyRuntime } from '@/core/app/runtime'
@@ -41,27 +42,29 @@ it('[NOTIFY-001/002 REQ-007] public event intent is atomic; fixed windows includ
  await g.status('No consent');expect((await env.DB.prepare('SELECT count(*) n FROM notification_intents').first<{n:number}>())!.n).toBe(0)
  await g.follow();await g.status('First public status')
  await prepareBatches(env.DB,time(1000))
- await g.status('Second public status',3599999)
- await g.status('Exact boundary separate',3600000)
- const held=await call(`/api/public/requests/${g.slug}/comments`,{body:'Held private comment'},g.person);expect(held.status).toBe(201)
+ await g.status('Second public status',59999)
+ await g.status('Exact boundary separate',60000)
+ const commenter=await requester('Another requester')
+ const held=await call(`/api/public/requests/${g.slug}/comments`,{body:'Held private comment'},commenter);expect(held.status).toBe(201)
  const id=(await held.json() as {id:string}).id
  await env.DB.prepare('UPDATE request_comments SET created_at=?,updated_at=? WHERE id=?').bind(time(100),time(100),id).run()
  expect((await env.DB.prepare("SELECT count(*) n FROM notification_events WHERE kind='comment'").first<{n:number}>())!.n).toBe(0)
  // SQL approval runs the same atomic publication trigger as the real moderated route.
  await env.DB.prepare("UPDATE request_comments SET body='Approved comment',moderation_state='approved',published_at=?,updated_at=? WHERE id=?").bind(time(200),time(200),id).run()
- const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
+ const sent=capture();await drainNotifications(runtime(),()=>start+59999);expect(sent).toHaveLength(0)
+ await drainNotifications(runtime(),()=>start+60000)
  expect(sent).toHaveLength(1)
  const body=JSON.stringify(sent[0].body)
  for(const text of ['First public status','Second public status','Approved comment'])expect(body).toContain(text)
  for(const text of ['Exact boundary separate','Held private comment','Private commercial evidence','Private original title'])expect(body).not.toContain(text)
  expect(await batches()).toMatchObject([{state:'accepted',provider_message_id:null},{state:'queued'}])
- await drainNotifications(runtime(),()=>start+7200000);expect(sent).toHaveLength(2)
- await drainNotifications(runtime(),()=>start+10800000);expect(sent).toHaveLength(2)
+ await drainNotifications(runtime(),()=>start+120000);expect(sent).toHaveLength(2)
+ await drainNotifications(runtime(),()=>start+180000);expect(sent).toHaveLength(2)
  await env.DB.exec("CREATE TRIGGER fail_intent BEFORE INSERT ON notification_intents BEGIN SELECT RAISE(ABORT,'injected atomic intent failure'); END;")
  await expect(g.status('Must roll back',10800000)).rejects.toThrow('injected atomic intent failure')
  expect(await env.DB.prepare("SELECT id FROM request_status_updates WHERE body='Must roll back'").first()).toBeNull()
 })
-it('[NOTIFY-001 REQ-007] real operator reply and approved requester comment routes capture exactly one intent each',async()=>{
+it('[NOTIFY-001 REQ-007] public reply routes retain intents while excluding the recipient’s own approved comment from mail',async()=>{
  const g=await setup();await g.follow()
  expect((await call(`/api/operator/requests/${g.slug}/comments`,{body:'Public operator reply'},g.operator)).status).toBe(201)
  const held=await call(`/api/public/requests/${g.slug}/comments`,{body:'Needs review'},g.person);const {id}=await held.json() as {id:string}
@@ -71,6 +74,14 @@ it('[NOTIFY-001 REQ-007] real operator reply and approved requester comment rout
  expect((await call(`/api/operator/comments/${id}/moderate`,{verdict:'approved',publicAuthorDisplayName:'Approved name'},g.operator)).status).toBe(409)
  expect((await call(`/api/operator/requests/${g.slug}/notes`,{body:'Internal secret'},g.operator)).status).toBe(201)
  expect((await env.DB.prepare('SELECT count(*) n FROM notification_intents').first<{n:number}>())!.n).toBe(2)
+ await env.DB.batch([
+  env.DB.prepare('UPDATE notification_events SET created_at=?').bind(time()),
+  env.DB.prepare('UPDATE notification_intents SET created_at=?,coalescing_at=NULL').bind(time()),
+ ])
+ const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
+ expect(sent).toHaveLength(1)
+ expect(JSON.stringify(sent[0].body)).toContain('Public operator reply')
+ expect(JSON.stringify(sent[0].body)).not.toContain('Approved requester reply')
 })
 it('[NOTIFY-002/005] overlapping drains claim once, persist ownership before HTTP, and nullable acceptance never replays',async()=>{
  const g=await setup();await g.follow();await g.status('Concurrency')
@@ -170,12 +181,19 @@ it('[NOTIFY-002] Base Resend and SendGrid selection require only chosen key and 
  expect(await batches()).toMatchObject([{state:'accepted',provider:'resend',provider_message_id:'resend-real-fixture-id'}])
  expect(authMail(runtime('missing'))).toBeUndefined()
 })
-it('[NOTIFY-002] real Worker scheduled export drains its persisted due batch',async()=>{
+it('[NOTIFY-002] Queue transport drains before Cron and duplicate wakeups never resend',async()=>{
  const g=await setup();await g.follow();await g.status('Cron path')
  // All day timezone configurations are tested above; force current clock into a
  // daylight hour for the compiled Worker, whose buyer timezone is Brisbane.
- const fixed=Date.parse('2026-10-08T00:00:00Z');vi.spyOn(Date,'now').mockReturnValue(fixed)
- const sent=capture();await runNotificationSchedule(createScheduledController({scheduledTime:fixed,cron:'* * * * *'}),env)
+ const fixed=start+60000,clock=vi.spyOn(Date,'now').mockReturnValue(start+30000)
+ const sent=capture()
+ await runNotificationQueue(createMessageBatch('feedback-penny-local-jobs',[{id:'early-wakeup',timestamp:start+30000,attempts:1,body:{kind:'notifications.drain'}}]),env)
+ expect(sent).toHaveLength(0)
+ clock.mockReturnValue(fixed)
+ await runNotificationQueue(createMessageBatch('feedback-penny-local-jobs',[{id:'first-wakeup',timestamp:fixed,attempts:1,body:{kind:'notifications.drain'}}]),env)
+ expect(sent).toHaveLength(1)
+ await runNotificationQueue(createMessageBatch('feedback-penny-local-jobs',[{id:'duplicate-wakeup',timestamp:fixed,attempts:1,body:{kind:'notifications.drain'}}]),env)
+ await runNotificationSchedule(createScheduledController({scheduledTime:fixed,cron:'* * * * *'}),env)
  expect(sent).toHaveLength(1);expect(await batches()).toMatchObject([{state:'accepted'}])
 })
 

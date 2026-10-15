@@ -5,6 +5,12 @@ const openWindow = "state='queued' AND attempt_count=0 AND claim_id IS NULL AND 
 
 /** First-event windows are persisted, half open, and never extended by later activity. */
 export async function prepareBatches(db: D1Database, now: string): Promise<void> {
+ // Adopt the shorter window for existing unclaimed work too. Claimed and
+ // restored batches keep their immutable membership and reconciliation state.
+ await db.prepare(`UPDATE notification_batches SET
+  window_end=strftime('%Y-%m-%dT%H:%M:%fZ',window_start,'+1 minute'),
+  next_attempt_at=MIN(next_attempt_at,strftime('%Y-%m-%dT%H:%M:%fZ',window_start,'+1 minute')),updated_at=?
+  WHERE ${openWindow} AND window_end>strftime('%Y-%m-%dT%H:%M:%fZ',window_start,'+1 minute')`).bind(now).run()
  for(let page=0;page<100;page++) {
   const first=await db.prepare(`SELECT i.event_id AS eventId,i.address_id AS addressId,e.request_id AS requestId
    FROM notification_intents i JOIN notification_events e ON e.id=i.event_id
@@ -23,8 +29,8 @@ export async function prepareBatches(db: D1Database, now: string): Promise<void>
     .bind(now,first.addressId,first.requestId,now,first.addressId,first.requestId,first.addressId,first.requestId),
    db.prepare(`INSERT INTO notification_batches(id,requester_id,address_id,request_id,first_event_id,window_start,window_end,state,next_attempt_at,created_at,updated_at)
     SELECT ?,i.requester_id,i.address_id,?,i.event_id,COALESCE(i.coalescing_at,i.created_at),
-     strftime('%Y-%m-%dT%H:%M:%fZ',COALESCE(i.coalescing_at,i.created_at),'+1 hour'),'queued',
-     strftime('%Y-%m-%dT%H:%M:%fZ',COALESCE(i.coalescing_at,i.created_at),'+1 hour'),?,?
+     strftime('%Y-%m-%dT%H:%M:%fZ',COALESCE(i.coalescing_at,i.created_at),'+1 minute'),'queued',
+     strftime('%Y-%m-%dT%H:%M:%fZ',COALESCE(i.coalescing_at,i.created_at),'+1 minute'),?,?
     FROM notification_intents i WHERE i.event_id=? AND i.address_id=? AND i.batch_id IS NULL AND i.restoration_hold_at IS NULL
     AND NOT EXISTS(SELECT 1 FROM notification_batches WHERE address_id=i.address_id AND request_id=? AND ${openWindow}
      AND window_start<=COALESCE(i.coalescing_at,i.created_at) AND window_end>COALESCE(i.coalescing_at,i.created_at))`)

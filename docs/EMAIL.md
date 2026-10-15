@@ -53,7 +53,7 @@ One gap remains: SendGrid bounces that arrive later without a message ID are rej
 
 Customers choose to hear from you. A requester becomes eligible for email by following a request, ticking **Email me updates** when they vote or submit, or subscribing to every release from Updates after verifying their address. Votes alone grant nothing, and an address an operator types in grants nothing.
 
-**Request updates are batched.** When something email-worthy happens on a request, Penny starts a one-hour window for that requester and request. Everything that happens inside the window goes out as one message, and later events never extend the window.
+**Request updates are batched.** When something email-worthy happens on a request, Penny starts a one-minute window for that requester and request. Everything that happens inside the window goes out as one message, and later events never extend the window.
 
 **Quiet hours apply.** Requester email is held from 20:00 until 08:00 in your workspace timezone, which is UTC unless you set `WORKSPACE_TIMEZONE` to an IANA timezone name (such as `Europe/London`) in the environment of your first `rer deploy`, and keep it for that workspace. A local copy uses UTC. The hours themselves are fixed, and daylight-saving changes are handled.
 
@@ -63,7 +63,7 @@ Every link in these emails is a full address on your deployment, so it opens fro
 
 **Penny checks again before every send.** Just before a message goes out, it confirms that the request is still public, the requester still has permission, they have not muted it and their address is not suppressed. Anything that no longer qualifies is dropped. Held comments, internal notes, internal boards and unpublished requests notify nobody. A roadmap move you have not published as a status update notifies nobody either.
 
-A one-minute schedule runs the sending. Anything missed on one tick is picked up on the next.
+Publishing queues the send immediately. A Queue consumer sends eligible mail, including the one-minute request batch, without waiting for a new Cloudflare Cron schedule to start. The minute Cron is the backstop for a failed Queue handoff. Approved comments are emailed to other eligible followers; their author does not receive their own comment as a public reply.
 
 ### Unsubscribing
 

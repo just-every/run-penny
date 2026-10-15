@@ -5,6 +5,7 @@ import { quietHours } from '../notifications/eligibility'
 import { retryAt,retryState,safeValidationCode,retryWindowMs } from '../notifications/attempt-policy'
 import { unsubscribeUrl } from '../notifications/unsubscribe'
 import { systemDeliveryAudit } from '../notifications/delivery-audit'
+import { priorRequestUpdatesSettled } from './delivery-order'
 interface Outbox {id:string;requesterId:string;addressId:string;attemptCount:number;firstAttemptAt:string|null}
 import { releaseContent,admitReleaseDelivery } from './delivery-admission'
 const releaseTypeLabel:Record<string,string>={new:'New',improved:'Improved',fixed:'Fixed'}
@@ -25,7 +26,9 @@ async function deliver(runtime:PennyRuntime,row:Outbox,clock:()=>number){
  const db=runtime.database.binding,now=new Date(clock()).toISOString(),claim=createUlid(),provider=runtime.configuration.mailProvider??'unconfigured'
  if(row.firstAttemptAt&&clock()-Date.parse(row.firstAttemptAt)>=retryWindowMs){await db.prepare("UPDATE notification_outbox SET delivery_state='failed',failure_reason='retry_window_exhausted',updated_at=? WHERE id=? AND delivery_state='queued' AND claim_id IS NULL").bind(now,row.id).run();return}
  const [owned]=await db.batch([
-  db.prepare(`UPDATE notification_outbox SET claim_id=?,attempt_count=attempt_count+1,provider=?,updated_at=? WHERE id=? AND delivery_state='queued' AND claim_id IS NULL AND available_at<=? AND attempt_count=? AND (SELECT phase FROM data_state WHERE singleton=1)='idle' RETURNING 1 AS affected`).bind(claim,provider,now,row.id,now,row.attemptCount),
+  db.prepare(`UPDATE notification_outbox SET claim_id=?,attempt_count=attempt_count+1,provider=?,updated_at=? WHERE id=? AND delivery_state='queued' AND claim_id IS NULL AND available_at<=? AND attempt_count=?
+   AND ${priorRequestUpdatesSettled('notification_outbox')}
+   AND (SELECT phase FROM data_state WHERE singleton=1)='idle' RETURNING 1 AS affected`).bind(claim,provider,now,row.id,now,row.attemptCount),
   db.prepare(`INSERT INTO notification_outbox_attempts(id,outbox_id,provider,state,created_at,updated_at) SELECT ?,id,?,'sending',?,? FROM notification_outbox WHERE id=? AND claim_id=?`).bind(claim,provider,now,now,row.id,claim),
  ])
  if(owned.results.length!==1)return

@@ -3,8 +3,8 @@ import { archiveJournal } from '../../../../../scripts/portability/archive-journ
 import { buttonClass } from '../../auth/client-mutations'
 import { paperCardClass, secondaryButtonClass } from '../../../ui/app/classes'
 import { DataActionError } from './data-actions'
-/** The owner's own export that still holds the data lock, from the overview. */
-export type InterruptedExport = { operationId: string; status: string; jobId: string | null }
+/** Durable progress comes from the owner's locked Base job, including ready downloads. */
+export type InterruptedExport = { operationId: string; status: string; jobId: string | null; phase: string | null; completed: number }
 const refusals: Record<string, string> = {
  data_runner_busy: 'This export step is still running. Wait a moment, then try again.',
  data_operation_changed: 'This export changed in another tab or device. Reload the page to see its current state.',
@@ -19,52 +19,63 @@ async function call(url: string, body?: unknown) {
 }
 const request = (path: string, body?: unknown) => call('/api/portability/exports' + path, body)
 const operationAction = (operationId: string, action: string, body: unknown) => call(`/api/operator/data/operations/${operationId}/${action}`, body)
-// Name the refusal the server gave; only a refused session is a session problem.
 const failure = (error: unknown) => error instanceof DataActionError && refusals[error.code]
- || (error instanceof Error && error.message === 'export_cleanup_unconfirmed' ? 'Export cleanup could not be confirmed. Reload this page, then abort the export.'
- : `The export stopped before it finished${error instanceof DataActionError ? ` (${error.code.replaceAll('_', ' ')})` : ''}. Reload this page: if it shows an export in progress, resume or abort it there; otherwise export again.`)
+ || `The export stopped before it finished${error instanceof DataActionError ? ` (${error.code.replaceAll('_', ' ')})` : ''}. Reload this page to resume or abort the saved export.`
 export function HostedExport({ disabled, interrupted, onSettled }: { disabled: boolean; interrupted: InterruptedExport | null; onSettled: () => void }) {
  const [busy, setBusy] = useState(false), [message, setMessage] = useState(''), [failed, setFailed] = useState(false)
- const [files, setFiles] = useState<{ archive: string; journal: string } | null>(null)
+ const [elapsed, setElapsed] = useState(0)
+ const [files, setFiles] = useState<{ archive: string; journal: string; jobId: string } | null>(null)
  useEffect(() => () => { if (files) { URL.revokeObjectURL(files.archive); URL.revokeObjectURL(files.journal) } }, [files])
+ useEffect(() => {
+  if (!busy) return
+  const started = Date.now(), timer = setInterval(() => setElapsed(Math.floor((Date.now() - started) / 1000)), 1000)
+  return () => clearInterval(timer)
+ }, [busy])
  async function act(progress: string, action: () => Promise<string>) {
-  setBusy(true); setFailed(false); setMessage(progress)
+  setBusy(true); setFailed(false); setElapsed(0); setMessage(progress)
   try { setMessage(await action()) } catch (error) { setFailed(true); setMessage(failure(error)) } finally { setBusy(false); onSettled() }
  }
- // An interrupted step's runner never released; the owner's button press is the
- // same stopped-runner confirmation the guarded recovery command requires.
+ // Only the owner's explicit confirmation recovers a stopped runner. Every old
+ // runner remains fenced even if it resumes after this guarded transition.
  async function releaseStoppedStep() {
   if (interrupted?.status === 'running') await operationAction(interrupted.operationId, 'recover-runner', { expectedStatus: 'running', confirmPriorRunnerStopped: true })
  }
  async function build(resumeId?: string) {
   setFiles(null)
-  // A failed fresh export is cleaned up here; a resumed one stays for the owner to resume or abort.
-  let id = resumeId, cleanup: string | undefined
-  try {
-   if (!id) cleanup = id = (await (await request('', {})).json() as { id: string }).id
-   let status = await (await request('/' + id)).json() as { phase: string; completed: number }
-   while (status.phase === 'building') status = await (await request('/' + id + '/advance', { expectedPart: status.completed, maxParts: 16 })).json() as typeof status
-   if (status.phase !== 'complete') throw new Error('The export did not complete.')
-   const archive = await (await request('/' + id + '/download')).blob()
-   const { journal } = await archiveJournal(archive.stream())
-   await request('/' + id + '/abort', {}); cleanup = undefined
-   setFiles({ archive: URL.createObjectURL(archive), journal: URL.createObjectURL(new Blob([JSON.stringify(journal) + '\n'], { type: 'application/json' })) })
-   return 'Your export is ready. Download both files and keep them together privately.'
-  } catch (error) {
-   if (cleanup) try { await request('/' + cleanup + '/abort', {}) } catch { throw new Error('export_cleanup_unconfirmed') }
-   throw error
+  const id = resumeId ?? (await (await request('', {})).json() as { id: string }).id
+  let status = await (await request('/' + id)).json() as { phase: string; completed: number }
+  while (status.phase === 'building') {
+   setMessage(`Preparing archive: ${status.completed} parts saved. Snapshotting and checking private records and original files can take about two minutes; larger workspaces may take longer.`)
+   status = await (await request('/' + id + '/advance', { expectedPart: status.completed, maxParts: 16 })).json() as typeof status
   }
+  if (status.phase !== 'complete') throw new Error('The export did not complete.')
+  setMessage(`All ${status.completed} archive parts prepared. Downloading and verifying the complete archive…`)
+  const archive = await (await request('/' + id + '/download')).blob()
+  setMessage('Checking the matching erasure journal…')
+  const { journal } = await archiveJournal(archive.stream())
+  // Retain the server job until the owner finishes. Blob URLs disappear on
+  // reload; the durable snapshot is how the owner recovers these same files.
+  setFiles({ jobId: id, archive: URL.createObjectURL(archive), journal: URL.createObjectURL(new Blob([JSON.stringify(journal) + '\n'], { type: 'application/json' })) })
+  return 'Your export is ready. Save both files privately, then choose Finish export to release the workspace.'
  }
- const prepare = () => act('Preparing your private workspace export…', () => build())
- const resume = () => act('Resuming your private workspace export…', async () => { await releaseStoppedStep(); return build(interrupted!.jobId!) })
+ const prepare = () => act('Taking a private workspace snapshot. This can take about two minutes; progress is saved if you reload.', () => build())
+ const resume = () => act('Resuming the saved workspace export…', async () => { await releaseStoppedStep(); return build(interrupted!.jobId!) })
+ const finish = () => act('Removing the saved snapshot and releasing the workspace…', async () => {
+  await request('/' + files!.jobId + '/abort', {}); setFiles(null)
+  return 'Export finished. The workspace is released. Keep the archive and erasure journal together privately.'
+ })
  const abort = () => act('Aborting the export and releasing the workspace…', async () => {
   await releaseStoppedStep(); await operationAction(interrupted!.operationId, 'abort-export', { confirmPriorRunnerStopped: true })
-  return 'Export aborted. Its partial snapshot is removed and the workspace is released.'
+  return 'Export aborted. Its saved snapshot is removed and the workspace is released.'
  })
  return <article className={paperCardClass + ' mt-6 p-5 sm:p-7'} aria-busy={busy}>
-  {interrupted ? <>
-   <h2 className="text-lg font-bold tracking-[-0.01em] text-penny-ink">Export in progress</h2>
-   <p className="mt-3 leading-7 text-penny-ink">Your export stopped before it finished, for example because its browser tab closed. Other data changes wait until it finishes or is aborted. {interrupted.jobId ? 'Resume it to download the files, or abort it to remove the partial snapshot and release the workspace.' : 'It stopped before its snapshot started, so it cannot be resumed: abort it to release the workspace, then export again.'}</p>
+  {files ? <>
+   <h2 className="text-lg font-bold tracking-[-0.01em] text-penny-ink">Export ready to save</h2>
+   <p className="mt-3 leading-7 text-penny-ink">Download both files, then finish the export. Data changes stay paused until you finish. Reloading keeps this saved export available.</p>
+   <div className="mt-4 flex flex-wrap gap-3"><a className={secondaryButtonClass} href={files.archive} download="penny.rer">Download archive</a><a className={secondaryButtonClass} href={files.journal} download="penny.rer.erasure-journal.json">Download erasure journal</a><button className={buttonClass} disabled={busy} onClick={() => void finish()}>Finish export</button></div>
+  </> : interrupted ? <>
+   <h2 className="text-lg font-bold tracking-[-0.01em] text-penny-ink">{interrupted.phase === 'complete' ? 'Export ready to download' : 'Export in progress'}</h2>
+   <p className="mt-3 leading-7 text-penny-ink">{interrupted.completed} archive parts saved. {interrupted.phase === 'complete' ? 'Your complete snapshot is saved. Resume to verify and download both files, then finish the export.' : 'Your saved export can continue after a reload or a closed tab.'} Other data changes wait until it finishes or is aborted. {interrupted.jobId ? 'Resume the same export, or abort it to remove the snapshot and release the workspace.' : 'It stopped before its snapshot started, so it cannot be resumed: abort it to release the workspace, then export again.'}</p>
    <p className="mt-3 text-sm leading-6 text-penny-muted">Use these only when no other tab or device is still preparing this export.</p>
    <div className="mt-4 flex flex-wrap gap-3">
     {interrupted.jobId ? <button className={buttonClass} disabled={busy} onClick={() => void resume()}>{busy ? 'Working…' : 'Resume export'}</button> : null}
@@ -72,10 +83,9 @@ export function HostedExport({ disabled, interrupted, onSettled }: { disabled: b
    </div>
   </> : <>
    <h2 className="text-lg font-bold tracking-[-0.01em] text-penny-ink">Export this workspace</h2>
-   <p className="mt-3 leading-7 text-penny-ink">Download your records, original files and matching erasure journal for restore into an empty local Penny installation.</p>
+   <p className="mt-3 leading-7 text-penny-ink">Download your records, original files and matching erasure journal for restore into an empty local Penny installation. Preparing and verifying the snapshot can take about two minutes; larger workspaces may take longer. Progress is saved if you reload. Data changes pause until you finish or abort the export.</p>
    <button className={buttonClass + ' mt-4'} disabled={disabled || busy} onClick={() => void prepare()}>{busy ? 'Preparing export…' : 'Export workspace'}</button>
   </>}
-  {message ? <p role={failed ? 'alert' : 'status'} className="mt-3 text-sm leading-6 text-penny-muted">{message}</p> : null}
-  {files ? <div className="mt-4 flex flex-wrap gap-3"><a className={secondaryButtonClass} href={files.archive} download="penny.rer">Download archive</a><a className={secondaryButtonClass} href={files.journal} download="penny.rer.erasure-journal.json">Download erasure journal</a></div> : null}
+  {message ? <p role={failed ? 'alert' : 'status'} className="mt-3 text-sm leading-6 text-penny-muted">{message}{busy ? ` Elapsed: ${Math.floor(elapsed / 60)}m ${elapsed % 60}s.` : ''}</p> : null}
  </article>
 }

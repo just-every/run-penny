@@ -20,12 +20,12 @@ export function registerPortabilityRoutes(app: Hono<Environment>) {
 }
 /** The signed-in owner's own hosted export that still holds the data lock, so
  * the Data page can resume or abort it through the same guarded routes. */
-export async function ownHostedExport(db: D1Database, operation: { kind: string; payload_json: string } | null, session: Session | null): Promise<{ jobId: string | null } | null> {
+export async function ownHostedExport(db: D1Database, operation: { kind: string; payload_json: string } | null, session: Session | null): Promise<{ jobId: string | null; phase: string | null; completed: number } | null> {
  if (operation?.kind !== 'export' || session?.kind !== 'native' || session.operator.role !== 'owner') return null
  const actor = (JSON.parse(operation.payload_json) as { portabilityActor?: string }).portabilityActor
  if (!actor?.startsWith(session.operatorId + ':')) return null
- const job = await db.prepare("SELECT id FROM rer_portability_jobs WHERE kind='export' AND actor=? AND phase<>'aborted'").bind(actor).first<{ id: string }>()
- return { jobId: job?.id ?? null }
+ const job = await db.prepare("SELECT id,phase,completed FROM rer_portability_jobs WHERE kind='export' AND actor=? AND phase<>'aborted'").bind(actor).first<{ id: string; phase: string; completed: number }>()
+ return { jobId: job?.id ?? null, phase: job?.phase ?? null, completed: job?.completed ?? 0 }
 }
 async function hostedExport(c: Context<Environment>): Promise<Response> {
  const request = c.req.raw, url = new URL(request.url), runtime = c.get('runtime'), origin = runtime.configuration.appOrigin

@@ -49,7 +49,7 @@ export async function reviewClauseStates({page,capture}){
  const evidence=evidencePage.items
  const cases=[
   {name:'EVID-007-operator-suggestions',path:'/api/operator/requests/suggestions?title=onboarding',page:'/app/feedback',prepare:async target=>target.getByLabel('Find related requests',{exact:true}).fill('onboarding'),loading:'Finding similar requests…',failure:'Could not find similar requests.'},
-  {name:'NOTIFY-003-notifications',path:'/api/operator/notifications',page:'/app/overview',open:'Review notifications',loading:'Loading review notifications…',failure:'Could not load review notifications.'},
+  {name:'NOTIFY-003-notifications',path:'/api/operator/notifications',page:'/app/overview',open:'Decision review reminders',loading:'Loading review notifications…',failure:'Could not load review notifications.'},
   ...evidence.slice(0,1).flatMap(item=>[
    {name:'EVID-010-wording-history',path:`/api/operator/evidence/${item.id}/versions`,page:'/app/feedback',open:'Wording history and private files',loading:'Loading wording history…',failure:'Could not load wording history.'},
    {name:'EVID-008-attachments',path:`/api/operator/evidence/${item.id}/attachments`,page:'/app/feedback',open:'Wording history and private files',loading:'Loading private attachments…',failure:'Could not load private attachments.'},

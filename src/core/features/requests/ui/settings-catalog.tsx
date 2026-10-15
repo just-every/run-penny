@@ -33,7 +33,7 @@ export function TagCard({ tag: t, tags, act }: { tag: Tag; tags: Tag[]; act: Set
 export function CreateTagCard({ act }: { act: SettingsAct }) {
   return (
     <div className={`${settingsPanelClass} border-dashed`}>
-      <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); void act('/api/operator/catalog/tags', { name: new FormData(e.currentTarget).get('name') }) }}>
+      <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); void act('/api/operator/catalog/tags', { name: new FormData(e.currentTarget).get('name') }, 'POST', e.currentTarget) }}>
         <label className={fieldLabelClass}>New tag<input name="name" required className={input} /></label>
         <button className={primaryButtonClass}>Create tag</button>
       </form>

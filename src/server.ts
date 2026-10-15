@@ -3,6 +3,7 @@ import {isDeclaredSessionlessPath} from './core/app/public-paths'
 import {admitPublicRequest} from './core/app/public-rate'
 import {editorDocumentHeaders} from './core/features/editor/headers'
 import { runNotificationSchedule } from './core/features/notifications/scheduled'
+import { runNotificationQueue } from './core/features/notifications/queue'
 import start from '@tanstack/react-start/server-entry'
 import { createPennyRuntime } from './core/app/runtime'
 import { createPennyApp } from './core/app/worker'
@@ -18,6 +19,12 @@ import { failureSummary } from './core/app/failure-log'
 import { seedDemo, withDemoBindings } from './demo'
 
 export default withDemo({
+  async queue(batch: MessageBatch<unknown>, bindings: AppBindings): Promise<void> {
+    try { await runNotificationQueue(batch, withDemoBindings(bindings)) } catch (error) {
+      console.error('Penny queued mail failed', JSON.stringify(failureSummary(error)))
+      throw new Error('notification_queue_failed')
+    }
+  },
   async scheduled(controller: ScheduledController, bindings: AppBindings): Promise<void> {
     try { await runNotificationSchedule(controller, withDemoBindings(bindings)) } catch (error) {
       // The failed invocation stays visible; its log and error carry no values.

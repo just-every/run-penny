@@ -1,13 +1,18 @@
 import { fileURLToPath } from 'node:url'
-import { readdir } from 'node:fs/promises'
+import { readFile, readdir, writeFile } from 'node:fs/promises'
 import { cloudflareTest, readD1Migrations } from '@cloudflare/vitest-plugin'
 import { defineConfig } from 'vitest/config'
 import { generatedTransport } from './tests/migration/generated-transport.ts'
 const migrations = await readD1Migrations(fileURLToPath(new URL('./migrations/core', import.meta.url)))
 const fullMigrationNames = (await readdir(new URL('./migrations/core', import.meta.url))).filter(name=>name.endsWith('.sql')).sort()
+// The same built Worker and bindings, with Queue delivery controlled explicitly
+// by cloudflare:test instead of racing fixtures' historical mail clocks.
+const workerConfig = JSON.parse(await readFile(new URL('./dist/server/wrangler.json', import.meta.url), 'utf8'))
+if (workerConfig.queues) workerConfig.queues.consumers = []
+await writeFile(new URL('./dist/server/wrangler.test.json', import.meta.url), JSON.stringify(workerConfig))
 export default defineConfig({
  resolve:{alias:{'@':fileURLToPath(new URL('./src',import.meta.url))}},
- plugins:[cloudflareTest({wrangler:{configPath:'./dist/server/wrangler.json'},miniflare:{bindings:{
+ plugins:[cloudflareTest({wrangler:{configPath:'./dist/server/wrangler.test.json'},miniflare:{bindings:{
   PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://penny.test',AUTH_SECRET:'synthetic-base-auth-secret-for-worker-tests',SETUP_TOKEN:'synthetic-base-setup-token-for-worker-tests',
   // Historical notification fixtures use Brisbane clocks; production setup retains UTC.
   WORKSPACE_TIMEZONE:'Australia/Brisbane',

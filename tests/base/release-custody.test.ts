@@ -15,7 +15,11 @@ beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrat
 afterEach(()=>vi.restoreAllMocks())
 async function populated(){
  const g=await releaseGraph(),transition=await g.transition('shipped');await publishRoadmapUpdate(env.DB,transition,time());await publishRelease(env.DB,g.draft.slug,time())
- provider();await drainReleaseDeliveries(runtime(),()=>start);await drainNotifications(runtime(),()=>start+3600000)
+ const sent=provider()
+ // Even a separately invoked release drain cannot overtake a pending status.
+ await drainReleaseDeliveries(runtime(),()=>start);expect(sent).toHaveLength(0)
+ await drainNotifications(runtime(),()=>start+3600000);expect(sent).toHaveLength(1)
+ await drainReleaseDeliveries(runtime(),()=>start+3600000);expect(sent).toHaveLength(2)
  const identity=await signingIdentity(),app=createPennyApp(),outbox=(await rows('notification_outbox')).find(r=>r.release_snapshot_id)!,batch=(await rows('notification_batches'))[0]
  for(const [id,attempt] of [[outbox.id,outbox.claim_id],[batch.id,batch.claim_id]]){
   const event={event:'delivered',sg_event_id:`custody-${id}`,sg_message_id:`message-${id}`,email:g.recipient.email,timestamp:Math.floor(Date.now()/1000),rer_delivery_id:id,rer_product:'penny',rer_penny_attempt:attempt}

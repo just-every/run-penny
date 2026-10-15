@@ -21,7 +21,7 @@ const navigation = [
   { to: '/app/data', label: 'Data', icon: 'data' },
 ] as const
 
-const itemClass = 'relative flex min-h-12 items-center gap-3.5 rounded-lg px-3 text-base transition-colors lg:text-[17px]'
+const itemClass = 'relative flex min-h-11 items-center gap-3.5 rounded-lg px-3 text-base transition-colors lg:text-[17px]'
 // The current item: a soft copper fill with a copper bar at its left edge, its label and icon in the dark accent (5.8:1 on
 // that fill, where the copper text tone would fall under 4.5:1).
 const currentClass = 'bg-penny-copper/12 font-semibold text-penny-accent-dark before:absolute before:inset-y-2 before:left-0 before:w-[3px] before:rounded-full before:bg-penny-copper'
@@ -44,7 +44,7 @@ function NavigationLinks({ onNavigate }: { readonly onNavigate?: () => void }) {
   const active = activeDestination(location.pathname)
 
   return (
-    <nav className="grid gap-2" aria-label="Operator workspace">
+    <nav className="grid gap-1" aria-label="Operator workspace">
       {navigation.map((item) => {
         const isActive = active === item.to
         return <Link key={item.to} to={item.to} onClick={onNavigate} className={`${itemClass} ${isActive ? currentClass : restClass}`} aria-current={isActive ? 'page' : undefined}><Icon name={item.icon} className="size-[22px] shrink-0" />{item.label}</Link>
@@ -71,9 +71,9 @@ export function OperatorAppShell() {
       <aside className={`fixed left-0 top-0 z-20 hidden h-svh w-60 flex-col overflow-y-auto overscroll-y-contain ${sidebarSurface} px-3 py-5 lg:flex`}>
         <div className="px-2"><Brand /></div>
         <p className="mt-10 px-3 text-[11px] font-semibold tracking-[0.12em] text-penny-muted uppercase">Operator workspace</p>
-        <div className="mt-3"><NavigationLinks /></div>
-        <div className="mt-4 border-t border-penny-line pt-3"><SignOutButton icon className={`${itemClass} ${restClass} w-full text-left`} /></div>
-        <p className="mt-auto px-3 pt-6 text-xs leading-5 text-penny-muted">Customer evidence, accountable decisions, and release outcomes.</p>
+        <div className="mt-3 shrink-0"><NavigationLinks /></div>
+        <div className="mt-4 shrink-0 border-t border-penny-line pt-3"><SignOutButton icon className={`${itemClass} ${restClass} w-full text-left`} /></div>
+        <p className="mt-auto shrink-0 px-3 pt-6 text-xs leading-5 text-penny-muted">Customer evidence, accountable decisions, and release outcomes.</p>
       </aside>
       <header className="sticky top-0 z-20 border-b border-penny-line bg-penny-paper/95 backdrop-blur lg:hidden">
         <div className="flex min-h-16 items-center justify-between gap-3 px-4 sm:px-6">

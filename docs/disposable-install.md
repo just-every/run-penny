@@ -58,8 +58,8 @@ The default Worker is `rer-seedproof-penny`; resources are
 is obtained from the authenticated account workers.dev subdomain, never from an
 arbitrary supplied URL. `APP_ORIGIN`, the explicitly selected `MAIL_PROVIDER`, and environment
 identity variables are controller-owned. Mail has no Cloudflare accountId option.
-The current profile provisions the producer Queue and a minute Cron trigger
-(`* * * * *`) for the required notification drain; it has no Queue consumer.
+The current profile provisions the Queue and its mail consumer, with a minute Cron trigger
+(`* * * * *`) as the delivery backstop.
 Use `pnpm run operations -- check --profile artifact-sendgrid` or `artifact-resend`
 for the selected controller inputs. Use `pnpm run operations -- doctor --profile
 runtime-sendgrid` or `runtime-resend` for hosted application input formats,

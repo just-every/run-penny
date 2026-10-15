@@ -12,7 +12,7 @@ export function pennyPlan(artifact, {origin,mailFrom,operatorEmail='operator@exa
  if (!mailFrom || /[\r\n]/.test(mailFrom) || !operatorEmail.includes('@')) throw new Error('MAIL_FROM-and-OPERATOR_EMAIL-required')
  return validatePlan({version:1,worker,compatibilityDate:'2026-08-31',compatibilityFlags:['nodejs_compat'],
   d1:[{binding:'DB',name:worker+'-db',migrations:artifact.migrations.map(({binding,...migration})=>{if(binding!=='DB')throw new Error('unexpected-migration-binding');return migration})}],
-  r2:[{binding:'FILES',name:worker+'-files'}],queues:[{binding:'JOBS',name:worker+'-jobs'}],durableObjects:[],crons:['* * * * *'],
+  r2:[{binding:'FILES',name:worker+'-files'}],queues:[{binding:'JOBS',name:worker+'-jobs',consumer:{batch_size:1,max_retries:3,max_concurrency:1}}],durableObjects:[],crons:['* * * * *'],
   secrets:[{binding:'AUTH_SECRET',environment:'AUTH_SECRET'},{binding:'SETUP_TOKEN',environment:'SETUP_TOKEN'},{binding:providerKey,environment:providerKey},...(eventVerification?[{binding:eventKey,environment:eventKey}]:[])],
   vars:{PENNY_ENVIRONMENT:'production',APP_ORIGIN:origin,OPERATOR_EMAIL:operatorEmail,MAIL_PROVIDER:mailProvider,MAIL_FROM:mailFrom,...(workspaceTimezone===undefined?{}:{WORKSPACE_TIMEZONE:workspaceTimezone})}})
 }

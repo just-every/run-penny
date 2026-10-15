@@ -38,7 +38,7 @@ export function PublicPortalLayout({ content, children }: { readonly content: Pu
             {appearance.showLogo ? <CoinMark className="shrink-0 [--coin-slot:2rem]" /> : null}
             <span data-rer-name className="break-words">{content.ownerName}</span>
           </Link>
-          <nav className="flex min-h-11 max-w-full flex-wrap items-center gap-x-4 gap-y-0 text-sm font-medium sm:gap-x-6 sm:text-[15px]" aria-label="Public portal">
+          <nav className="flex min-h-11 max-w-full flex-wrap items-center gap-x-3 gap-y-0 text-sm font-medium sm:gap-x-6 sm:text-[15px]" aria-label="Public portal">
             <PortalNavLink to="/" exact>Feedback</PortalNavLink>
             <PortalNavLink to="/portal/roadmap">Roadmap</PortalNavLink>
             <PortalNavLink to="/portal/feedback/activity">Your feedback</PortalNavLink>

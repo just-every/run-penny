@@ -35,7 +35,7 @@ export function BoardCard({ board: b, act }: { board: Board; act: SettingsAct })
 export function CreateBoardCard({ act }: { act: SettingsAct }) {
   const slug = useRef<HTMLInputElement>(null), typed = useRef(false)
   return (
-    <div id="create-board" className={`${settingsPanelClass} border-dashed`}>
+    <div id="create-board" className={`${settingsPanelClass} scroll-mt-24 border-dashed`}>
       <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); typed.current = false; const d = new FormData(e.currentTarget); void act('/api/operator/boards', { name: d.get('name'), slug: d.get('slug'), visibility: d.get('visibility') }, 'POST', e.currentTarget) }}>
         <h3 className="text-lg font-bold text-penny-ink">Create board</h3>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
