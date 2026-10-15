@@ -33,6 +33,7 @@ export function Hero() {
         <p className="pl-hero-alt"><AlternativeLine lead={hero.alternative.lead} names={hero.alternative.names} /></p>
         <div className="pl-actions">
           <SiteLink className="pl-pill pl-pill--large" href={site ? '/run' : links.install}>{site ? 'Run Penny' : hero.primary}</SiteLink>
+          {site && <a className="pl-pill pl-pill--large" href="https://demo.run-penny.com/">Try the demo</a>}
           <SiteLink className="pl-text-link" href={links.docs}>{hero.secondary}</SiteLink>
         </div>
       </div>
