@@ -1,4 +1,3 @@
-import { demoEffect } from '../../../../base/modules/demo/index.mjs'
 import { createMailSender, type NotificationMessage, type PennyMailSender } from '../../../base-mail'
 import type { PennyRuntime } from '@/core/app/runtime'
 
@@ -7,7 +6,7 @@ export function authMail(runtime: PennyRuntime): PennyMailSender | undefined {
   const { mailFrom, mailProvider, mailApiKey } = runtime.configuration
   if (mailFrom && suppressesMail(runtime)) {
     const sender = createMailSender({provider:'development',mode:'development'})
-    return runtime.configuration.demo ? {send: message => demoEffect(() => sender.send(message), () => ({provider:'development',status:'accepted' as const,providerMessageId:null}))} : sender
+    return runtime.configuration.demo ? {send: async message => (await import('../../../../base/modules/demo/index.mjs')).demoEffect(() => sender.send(message), () => ({provider:'development',status:'accepted' as const,providerMessageId:null}))} : sender
   }
   if (!mailFrom || (mailProvider !== 'sendgrid' && mailProvider !== 'resend') || !mailApiKey) return undefined
   return createMailSender({ provider: mailProvider, mode: 'production', apiKey: mailApiKey })

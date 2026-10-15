@@ -1,4 +1,3 @@
-import {demoEffect} from '../../../../base/modules/demo/index.mjs'
 import {demoIntegrationSuccess} from './demo-success'
 import type {TrustedTransport,WireRequest,WireResponse} from '../../../../base/modules/integrations/core/types.ts'
 import {validateDestination} from '../../../../base/modules/integrations/core/destination.ts'
@@ -16,7 +15,10 @@ export function integrationTransport(runtime:PennyRuntime):TrustedTransport {
  return {send:async wire=>{
   validateDestination(wire.url)
   if(new TextEncoder().encode(wire.body).length>1024*1024)throw new Error('integration_request_limit')
-  const response=await demoEffect(()=>port!.send(wire),()=>demoIntegrationSuccess(wire))
+  // Archive commands also load this module in Node; the demo entry is Worker-only.
+  const response=runtime.configuration.demo
+   ? await (await import('../../../../base/modules/demo/index.mjs')).demoEffect(()=>port!.send(wire),()=>demoIntegrationSuccess(wire))
+   : await port!.send(wire)
   if(!Number.isInteger(response.status)||response.status<100||response.status>599||typeof response.body!=='string'||new TextEncoder().encode(response.body).length>65536)throw new Error('integration_response_limit')
   return response
  }}
