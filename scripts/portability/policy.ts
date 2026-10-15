@@ -1,4 +1,5 @@
 import { validateLearningArchive } from '../../src/core/features/learning/archive'
+import { GRANT_REVOCATION_CHECKPOINT } from '../../src/core/features/learning/journal'
 import type { ArchivePolicy } from '@runeditrun/rer/modules/portability'
 import inventory from '../../src/core/features/data/schema-inventory.json'
 import { normalize, validateNativeIdentity, canonical, hash as digest, DATA_LIMITS, type Row, type ErasureJournal } from '../../src/core/features/data/archive'
@@ -49,6 +50,8 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
       const known = (await db.prepare('SELECT epoch,table_name,key_hash FROM data_tombstones').all<Row>()).results
       if ((current?.origin === journal.origin && current.epoch > journal.epoch) || known.some(item => !journal.tombstones.some(other => canonical(item) === canonical(other)))) refuse('erasure_journal_regression')
       for (const item of journal.tombstones) {
+        // Grant checkpoints fence older archives without declaring a deleted row.
+        if (item.table_name === GRANT_REVOCATION_CHECKPOINT) continue
         const table = manifest.tables.find(table => table.name === item.table_name)
         if (!table) refuse('unsupported_journal_schema')
         const columns = table!.columns.some(column => column.pk) ? table!.columns.filter(column => column.pk).sort((a,b) => a.pk-b.pk) : table!.columns

@@ -357,11 +357,16 @@ Hosted **Data → Export workspace** prepares this same archive and matching
 journal, with separate download links visible to a signed-in native owner.
 Restore and erasure remain the existing guarded commands. Source snapshots are
 removed after successful transfer. If a session expires or cleanup fails, the
-workspace remains locked: preserve the private `.pending.transfer.json`
-checkpoint, stop the prior exporter, and use the current owner's existing
+workspace remains locked: preserve `archive.transfer.json` inside the unique
+0700 `<output>.pending-*` staging directory (the error names the exact checkpoint
+path), stop the prior exporter, and use the current owner's existing
 `data:abort-export` recovery command for the active Data operation. Recovery
 removes the Base snapshot before releasing maintenance. There is no timed
-unlock of a possibly running exporter.
+unlock of a possibly running exporter. Archive and journal publication each
+refuse to overwrite existing files. If archive publication fails after the
+journal was published, the command reports that partial result and preserves
+the sidecar; inspect the existing files and choose a fresh output path for
+another export. Cleanup only removes files inside this run's private directory.
 
 The local command's refusal limits are 500,000 domain rows and 512 MiB record
 JSON, with the same 10 MiB individual-file and 20 MiB total-original-file limits.

@@ -4,7 +4,7 @@ import { beforeEach, expect, inject, it } from 'vitest'
 import { createPortability, readArchive, type Closing } from '@runeditrun/rer/modules/portability'
 import { createPennyApi } from '../../src/core/app/api'
 import { readErasureJournal } from '../../src/core/features/data/archive'
-import { policy } from '../../scripts/portability/policy'
+import { laterJournalFence, policy } from '../../scripts/portability/policy'
 import { archiveJournal } from '../../scripts/portability/archive-journal.mjs'
 const app = createPennyApi(), origin = 'https://penny.test'
 const bindings = { ...env, PENNY_ENVIRONMENT: 'production', APP_ORIGIN: origin, MAIL_PROVIDER: undefined, MAIL_FROM: undefined, SENDGRID_API_KEY: undefined }
@@ -15,7 +15,7 @@ beforeEach(async () => { await reset(); await applyD1Migrations(env.DB, inject('
 async function create(cookie: Record<string, string>) { const response = await call(base, {}, cookie); expect(response.status).toBe(201); return (await response.json() as { id: string }).id }
 async function complete(id: string, cookie: Record<string, string>) {
  let phase = 'building'
- while (phase === 'building') { const response = await call(`${base}/${id}/advance`, { maxParts: 100 }, cookie); expect(response.status).toBe(200); phase = (await response.json() as { phase: string }).phase }
+ while (phase === 'building') { const response = await call(`${base}/${id}/advance`, { maxParts: 100 }, cookie); expect(response.status, await response.clone().text()).toBe(200); phase = (await response.json() as { phase: string }).phase }
  expect(phase).toBe('complete')
 }
 it('exports the hosted Base archive and matching journal, restores the same originals locally, and removes source snapshots', async () => {
@@ -26,6 +26,19 @@ it('exports the hosted Base archive and matching journal, restores the same orig
   env.DB.prepare("INSERT INTO attachments(id,request_id,storage_key,original_filename,content_type,byte_size,public_state,created_at,updated_at) VALUES('remote-file','remote-request','remote-original','Original.bin','application/octet-stream',4,'operator_only',?,?)").bind(stamp, stamp),
  ])
  await env.FILES.put('remote-original', new Uint8Array([5, 4, 3, 2]), { httpMetadata: { contentType: 'application/octet-stream' }, customMetadata: { purpose: 'original' } })
+ const learning = '/api/operator/learning/investigations'
+ const grant = async () => {
+  const response = await call(learning, { nativeEvidenceIds: [], nativeRequestIds: ['remote-request'], purpose: 'Review the hosted feedback', expiresAt: '2099-01-01T00:00:00Z', budgetMicros: 1000000, maxRunCostMicros: 100000, intervalMinutes: 60 }, cookie)
+  expect(response.status).toBe(201)
+  return (await response.json() as { id: string }).id
+ }
+ const activeGrant = await grant(), revokedGrant = await grant(), priorJournal = await readErasureJournal(env.DB)
+ expect((await call(`${learning}/${revokedGrant}/control`, { action: 'revoke' }, cookie)).status).toBe(200)
+ const learningRows = async () => ({
+  sources: (await env.DB.prepare('SELECT * FROM learning_sources ORDER BY id').all()).results,
+  grants: (await env.DB.prepare('SELECT * FROM learning_investigations ORDER BY id').all()).results,
+ })
+ const originalLearning = await learningRows()
  const expected = await env.DB.prepare("SELECT * FROM requests WHERE id='remote-request'").first()
  const id = await create(cookie)
  await expect(env.DB.prepare("UPDATE requests SET title='racing write' WHERE id='remote-request'").run()).rejects.toThrow('data maintenance')
@@ -33,6 +46,10 @@ it('exports the hosted Base archive and matching journal, restores the same orig
  const response = await call(`${base}/${id}/download`, undefined, cookie)
  expect(response.status).toBe(200); expect(response.headers.get('Content-Disposition')).toContain('attachment')
  const bytes = await response.arrayBuffer(), blob = new Blob([bytes]), { journal, manifest } = await archiveJournal(blob.stream())
+ expect(journal).toEqual(await readErasureJournal(env.DB))
+ expect(journal.epoch).toBeGreaterThan(priorJournal.epoch)
+ expect(() => laterJournalFence(priorJournal, journal)).toThrow('erasure_epoch')
+ expect(() => laterJournalFence(journal, priorJournal)).toThrow('later_journal')
  expect(manifest.tables.some(table => table.name.startsWith('oa_'))).toBe(false)
  expect(manifest.objects).toHaveLength(1)
  expect((await call(`${base}/${id}/abort`, {}, cookie)).status).toBe(200)
@@ -52,6 +69,26 @@ it('exports the hosted Base archive and matching journal, restores the same orig
  const original = await env.FILES.get('remote-original')
  expect(new Uint8Array(await original!.arrayBuffer())).toEqual(new Uint8Array([5, 4, 3, 2])); expect(original!.customMetadata).toEqual({ purpose: 'original' })
  expect((await call('/api/operator/data/overview', undefined, destinationOwner)).status).toBe(200)
+ const restoredLearning = await learningRows()
+ expect(restoredLearning.sources).toEqual(originalLearning.sources.map(row => ({ ...row, state: 'held', version: Number(row.version) + 1 })))
+ expect(restoredLearning.grants).toEqual(originalLearning.grants.map(row => row.state === 'revoked' ? row : { ...row, state: 'held', version: Number(row.version) + 1, last_reason: 'restored_grant_review_required' }))
+ expect(await readErasureJournal(env.DB)).toEqual(journal)
+ for (const grantId of [activeGrant, revokedGrant]) {
+  expect((await call(`${learning}/${grantId}/run`, {}, destinationOwner)).status).toBe(409)
+  const resume = await call(`${learning}/${grantId}/control`, { action: 'resume' }, destinationOwner)
+  expect(resume.status).toBe(409)
+  expect(await resume.json()).toEqual({ error: 'learning_control_requires_new_grant' })
+ }
+ // Exporting restored held/revoked grants must preserve their semantic versions.
+ const repeatedId = await create(destinationOwner)
+ await complete(repeatedId, destinationOwner)
+ const repeated = await call(`${base}/${repeatedId}/download`, undefined, destinationOwner)
+ expect(repeated.status).toBe(200)
+ const repeatedLearning: Record<string, Record<string, unknown>[]> = { learning_sources: [], learning_investigations: [] }
+ for await (const record of readArchive(repeated.body!)) if (record.kind === 'part') for (const item of record.items) if (item.kind === 'row' && repeatedLearning[item.table]) repeatedLearning[item.table].push(item.row)
+ for (const rows of Object.values(repeatedLearning)) rows.sort((a, b) => String(a.id).localeCompare(String(b.id)))
+ expect(repeatedLearning).toEqual({ learning_sources: restoredLearning.sources, learning_investigations: restoredLearning.grants })
+ expect((await call(`${base}/${repeatedId}/abort`, {}, destinationOwner)).status).toBe(200)
 })
 it('requires a current native owner, exact origin and job ownership, and never mounts remote restore', async () => {
  expect((await call(base, {})).status).toBe(401)

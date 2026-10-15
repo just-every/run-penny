@@ -2435,7 +2435,7 @@
       "executable": false
     },
     "docs/data-ownership.md": {
-      "sha256": "e22d887f94697fd1c05a05821e9f84fa93d6056102abefad0df8a91aef719e1c",
+      "sha256": "54362d940df0e00bfebdd10ba73843fb99001004284c04ab73b6c170a52c55ee",
       "executable": false
     },
     "docs/DATA.md": {
@@ -3195,11 +3195,11 @@
       "executable": false
     },
     "scripts/portability/policy.ts": {
-      "sha256": "fb87354bd697105a769bd036da371b8cc32fef746bfc1356f00f3e7be0d26a30",
+      "sha256": "9bcb070dce3e6b90ad98ecf305fa59aaded9f3639cc097d02c12842fef0e84e2",
       "executable": false
     },
     "scripts/portability/remote-export.mjs": {
-      "sha256": "11731c7d16418595c561b7ae4d513b43d513d98b01116061223e8ea8b23ccc37",
+      "sha256": "a959fcab4002b6b5d585abc239f9581116c49aff9a822de6be97414ae4541bbf",
       "executable": false
     },
     "scripts/portability/verify.ts": {
@@ -3643,7 +3643,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "9ad33e6567f9bb9889ba24c3a996b6d8a4a33ff9c7dfb4f058f4601d65300e9d",
+      "sha256": "7e643d1dd893fc7d4e78e76d781374248b3d136d895a03cc26963d4a4adcbfa1",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -5943,7 +5943,7 @@
       "executable": false
     },
     "tests/base/remote-portability.test.ts": {
-      "sha256": "75c0d04164a79776ac5861eacc73d08c0ecafac74df48c667d44c5e46d9d48a9",
+      "sha256": "4980b1a6510e2511b9a907f19531a5f158cd269929289cc79ba4b1138af2b044",
       "executable": false
     },
     "tests/base/restoration-upgrade.test.ts": {

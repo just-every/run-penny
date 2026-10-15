@@ -81,8 +81,10 @@ function limits(data:Record<string,Row[]>):void{
  if(Object.values(data).reduce((n,items)=>n+items.length,0)>DATA_LIMITS.rows||new TextEncoder().encode(canonical(data)).byteLength>DATA_LIMITS.recordBytes)fail('archive_limit',413)
 }
 export const normalize=(name:string,row:Row):Row=>{
- if(name==='learning_sources')return {...row,state:'held',version:Number(row.version)+1}
- if(name==='learning_investigations')return {...row,state:row.state==='revoked'?'revoked':'held',version:Number(row.version)+1,last_reason:row.state==='revoked'?row.last_reason:'restored_grant_review_required'}
+ // Advance freshness only when imposing the restore hold, so normalized rows
+ // remain unchanged through export validation, restore and later exports.
+ if(name==='learning_sources')return row.state==='held'?row:{...row,state:'held',version:Number(row.version)+1}
+ if(name==='learning_investigations')return row.state==='revoked'||(row.state==='held'&&row.last_reason==='restored_grant_review_required')?row:{...row,state:'held',version:Number(row.version)+1,last_reason:'restored_grant_review_required'}
  if(name==='learning_runs'&&row.state==='running')return {...row,state:'uncertain',reason:'restored_run_reconciliation_required'}
  if(name==='operator_sessions'||name==='native_requester_sessions')return {...row,token_hash:`disabled-${row.id}`,revoked_at:row.revoked_at??'1970-01-01T00:00:00.000Z'}
  if(name==='native_magic_links')return {...row,token_hash:`disabled-${row.id}`,consumed_at:row.consumed_at??'1970-01-01T00:00:00.000Z'}
