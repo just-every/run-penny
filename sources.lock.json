@@ -3501,7 +3501,7 @@
       "executable": false
     },
     "src/core/app/ui/operator-app-shell.tsx": {
-      "sha256": "a095b52b34b6eefec946c6382affcf7229ffcd086faf07a9c1bf2892013d994e",
+      "sha256": "029b89c03a98883e7501db32fab2cae1ba783697a1bec523e11f7a6f9eba2e2a",
       "executable": false
     },
     "src/core/app/ui/operator-format.ts": {
@@ -3678,6 +3678,10 @@
     },
     "src/core/features/auth/owner-claim.ts": {
       "sha256": "bff77ddd94dcaedfe53841128bad3fa75c1f35a1967191c68e260ef05291c9ff",
+      "executable": false
+    },
+    "src/core/features/auth/requester-return.ts": {
+      "sha256": "6108011fe2cc71a578690e6a503416b6b8d3d2c1c54bfad01095c228727dc66d",
       "executable": false
     },
     "src/core/features/auth/requester.ts": {
