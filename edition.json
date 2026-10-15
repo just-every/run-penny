@@ -40,7 +40,7 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
+          "revision": "1afef2aa7d0549e629a4bb11d0eda8c07a99f769",
           "paths": [
             "modules/mail"
           ]
@@ -395,11 +395,12 @@
           "scripts/delivery/base/schema/json-schema.mjs",
           "scripts/delivery/base/schema/setup-validation.mjs",
           "scripts/delivery/base/setup-manifest.mjs",
+          "scripts/delivery/base/mail.mjs",
           "scripts/delivery/base/spec.mjs"
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "revision": "fce0f6d1aa5a540dce16d0f2ff16e2b09eb0ce48",
           "paths": [
             "modules/delivery-producer/artifact.mjs",
             "modules/delivery-producer/bindings.mjs",
@@ -420,7 +421,8 @@
             "schema/json-schema.mjs",
             "schema/setup-validation.mjs",
             "modules/delivery-producer/setup-manifest.mjs",
-            "modules/delivery-producer/spec.mjs"
+            "modules/delivery-producer/spec.mjs",
+            "modules/delivery-producer/mail.mjs"
           ]
         },
         "mappings": [
@@ -503,6 +505,10 @@
           {
             "path": "scripts/delivery/base/spec.mjs",
             "originPath": "modules/delivery-producer/spec.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/mail.mjs",
+            "originPath": "modules/delivery-producer/mail.mjs"
           }
         ]
       }

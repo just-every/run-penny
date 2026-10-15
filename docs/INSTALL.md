@@ -6,7 +6,7 @@ This page takes you from the Penny source to a running copy: first on your own c
 
 - **Install Node.js 22 or newer first, before `rer`.** Check with `node --version`; if it is missing, install the LTS from [nodejs.org](https://nodejs.org/en/download) or run `nvm install 22`. `rer` then fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
 - **`rer`**, installed once: `curl -fsSL https://runeditrun.com/install.sh | sh` (or `npm install -g @runeditrun/rer`).
-- **For Cloudflare only:** a Cloudflare account, an API token for it, and an email provider (SendGrid or Resend) with a verified sender address. Running locally needs none of these.
+- **For your own Cloudflare account:** a Cloudflare account and an API token for it. For email, choose SendGrid or Resend with a verified sender, or set it up later. Managed Penny gets email from RER without a provider account or key entry. Running locally needs none of these.
 
 ## Run it on your computer
 
@@ -53,11 +53,15 @@ export const publicLandingConfig = {
 
 ## Email
 
-Local mode needs no provider. A deployed copy does, because sign-in links, requester verification and notifications all go out by email. Choose SendGrid or Resend, verify a sender address and have the key ready before you deploy. [Email and notifications](/docs/email) covers both.
+Local mode needs no provider. Sign-in links, requester verification and notifications on a deployed copy need configured email.
+
+**Managed Penny gets email from RER.** You need no provider account, sender verification or API key entry. RER fills and hides `MAIL_PROVIDER=rer`, `MAIL_FROM`, `MAIL_RELAY_URL` and the installation's private `MAIL_API_KEY`. The relay adapter comes from pinned rer 0.2.22; RER issues the credential and keeps its upstream provider key out of Penny and its build.
+
+**Free and Assisted hosting keep SendGrid, Resend and set up later.** With your own provider, verify a sender address and supply the matching key. Choosing `later` leaves email actions unavailable and public reading available. [Email and notifications](/docs/email) covers the configuration and limits.
 
 ## Deploy to Cloudflare
 
-Penny's deployment flow is a workers.dev installation in your own Cloudflare account. It creates a Worker, a D1 database, an R2 bucket and a queue, and serves Penny at a `workers.dev` address. It does not deploy on a push, and it does not support a custom domain yet. Local checks cover the application itself. Mail delivery and the one-minute schedule on a live Cloudflare deployment are things to confirm yourself after you deploy.
+The commands below deploy a workers.dev installation in your own Cloudflare account. It creates a Worker, a D1 database, an R2 bucket and a queue, and serves Penny at a `workers.dev` address. It does not deploy on a push, and it does not support a custom domain yet. Local checks cover the application itself. Mail delivery and the one-minute schedule on a live Cloudflare deployment are things to confirm yourself after you deploy.
 
 Set these in the shell you deploy from, and keep them out of files and history:
 
@@ -113,6 +117,6 @@ It exits with 1 while inputs are missing, which is expected before you have conf
 
 ## If something goes wrong
 
-- **Sign-in says email delivery is unavailable.** The deployment has no complete mail configuration. Public reading still works. Add the provider, key and sender, then deploy again.
+- **Sign-in says email delivery is unavailable.** The deployment has no complete mail configuration. Public reading still works. On Free or Assisted hosting, add the provider, key and sender, then deploy again. On Managed hosting, check the RER installation’s mail and hosting state; RER supplies the credential.
 - **A command says another store is present and exits 4.** You have a sibling `.penny-local-state-` folder or a `PENNY_LOCAL_STATE` setting. Penny will not read, move or delete it: back it up, move it into `.wrangler/state` yourself if it is the one you want, or remove it, then run the command again.
 - **`dev` or `setup` says the port is held.** Another program owns the saved local port. Stop it, or use `rer dev --stop` if it is a Penny server you started.

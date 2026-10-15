@@ -28,6 +28,7 @@ export interface RuntimeConfiguration {
   readonly mailFrom?: string
   readonly mailProvider?: string
   readonly mailApiKey?: string
+  readonly mailRelayUrl?: string
 }
 
 export class ConfigurationError extends Error {
@@ -65,9 +66,10 @@ export function loadRuntimeConfiguration(
     if (env.AUTH_SECRET!.length < 32) throw new ConfigurationError('AUTH_SECRET must contain at least 32 characters.')
     if (!(demo && env.MAIL_PROVIDER === 'development') && ((env.MAIL_PROVIDER&&env.MAIL_PROVIDER!=='later') || env.MAIL_FROM)) {
     if (!env.MAIL_FROM?.trim()) throw new ConfigurationError('Missing required environment value: MAIL_FROM.')
-    if (env.MAIL_PROVIDER !== 'sendgrid' && env.MAIL_PROVIDER !== 'resend') throw new ConfigurationError('MAIL_PROVIDER must be sendgrid or resend.')
-    const providerKey = env.MAIL_PROVIDER === 'sendgrid' ? 'SENDGRID_API_KEY' : 'RESEND_API_KEY'
+    if (env.MAIL_PROVIDER !== 'sendgrid' && env.MAIL_PROVIDER !== 'resend' && env.MAIL_PROVIDER !== 'rer') throw new ConfigurationError('MAIL_PROVIDER must be rer, sendgrid or resend.')
+    const providerKey = env.MAIL_PROVIDER === 'rer' ? 'MAIL_API_KEY' : env.MAIL_PROVIDER === 'sendgrid' ? 'SENDGRID_API_KEY' : 'RESEND_API_KEY'
     if (!env[providerKey]?.trim()) throw new ConfigurationError(`Missing required environment value: ${providerKey}.`)
+    if (env.MAIL_PROVIDER === 'rer' && !env.MAIL_RELAY_URL?.trim()) throw new ConfigurationError('Missing required environment value: MAIL_RELAY_URL.')
     }
     if (new URL(env.APP_ORIGIN!).protocol !== 'https:') throw new ConfigurationError('APP_ORIGIN must use HTTPS.')
   }
@@ -83,7 +85,7 @@ export function loadRuntimeConfiguration(
     portalIdentitySecret: env.PORTAL_IDENTITY_SECRET,
     authSecret: env.AUTH_SECRET, setupToken: env.SETUP_TOKEN,
     ownerEmail: env.OPERATOR_EMAIL ?? parsed.data.operatorAllowlist[0],
-    mailFrom: env.MAIL_FROM, mailProvider: env.MAIL_PROVIDER==='later'?undefined:env.MAIL_PROVIDER, mailApiKey: env.MAIL_PROVIDER === 'resend' ? env.RESEND_API_KEY : env.MAIL_PROVIDER === 'sendgrid' ? env.SENDGRID_API_KEY : undefined,
+    mailFrom: env.MAIL_FROM, mailProvider: env.MAIL_PROVIDER==='later'?undefined:env.MAIL_PROVIDER, mailRelayUrl: env.MAIL_RELAY_URL, mailApiKey: env.MAIL_PROVIDER === 'rer' ? env.MAIL_API_KEY : env.MAIL_PROVIDER === 'resend' ? env.RESEND_API_KEY : env.MAIL_PROVIDER === 'sendgrid' ? env.SENDGRID_API_KEY : undefined,
   }
 }
 

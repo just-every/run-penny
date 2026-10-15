@@ -17,10 +17,11 @@ export function ownerInputs(env) {
   if (env.MAIL_PROVIDER === 'later' && env.MAIL_FROM?.trim()) throw new Error('incomplete-mail-provider')
   const timezone = env.WORKSPACE_TIMEZONE || 'UTC'
   if (!fields.WORKSPACE_TIMEZONE.valid(timezone)) throw new Error('invalid-workspace-timezone')
-  const credential = env.MAIL_PROVIDER === 'sendgrid' ? 'SENDGRID_API_KEY' : env.MAIL_PROVIDER === 'resend' ? 'RESEND_API_KEY' : undefined
+  const credential = env.MAIL_PROVIDER === 'rer' ? 'MAIL_API_KEY' : env.MAIL_PROVIDER === 'sendgrid' ? 'SENDGRID_API_KEY' : env.MAIL_PROVIDER === 'resend' ? 'RESEND_API_KEY' : undefined
   if (credential) {
-    const missing = [credential, 'MAIL_FROM'].filter(key => !env[key]?.trim())
+    const missing = [credential, 'MAIL_FROM', ...(env.MAIL_PROVIDER === 'rer' ? ['MAIL_RELAY_URL'] : [])].filter(key => !env[key]?.trim())
     if (missing.length) { const error = new Error('missing-owner-input'); error.inputs = missing; throw error }
+    if (env.MAIL_PROVIDER === 'rer' && !fields.MAIL_RELAY_URL.valid(env.MAIL_RELAY_URL)) throw new Error('incomplete-mail-provider')
     if (!fields.MAIL_FROM.valid(env.MAIL_FROM)) throw new Error('incomplete-mail-provider')
   }
   if ((env.MAIL_PROVIDER !== 'sendgrid' && env.SENDGRID_API_KEY) || (env.MAIL_PROVIDER !== 'resend' && env.RESEND_API_KEY)) throw new Error('conflicting-mail-provider')
@@ -28,7 +29,7 @@ export function ownerInputs(env) {
   if ((env.MAIL_PROVIDER !== 'sendgrid' && env.SENDGRID_EVENT_PUBLIC_KEY) || (env.MAIL_PROVIDER !== 'resend' && env.RESEND_WEBHOOK_SECRET)) throw new Error('conflicting-mail-provider')
   if (eventCredential && env[eventCredential] !== undefined && (!env[eventCredential].trim() || /[\r\n\0]/.test(env[eventCredential]))) throw new Error('invalid-mail-event-credential')
   if (env.PENNY_EXPECTED_ORIGIN && !fields.APP_ORIGIN.valid(env.PENNY_EXPECTED_ORIGIN)) throw new Error('invalid-expected-owner-origin')
-  return { email: env.OPERATOR_EMAIL.toLowerCase(), timezone, provider: env.MAIL_PROVIDER, from: env.MAIL_FROM, credential, eventCredential, expectedOrigin: env.PENNY_EXPECTED_ORIGIN }
+  return { email: env.OPERATOR_EMAIL.toLowerCase(), timezone, provider: env.MAIL_PROVIDER, from: env.MAIL_FROM, relayUrl: env.MAIL_RELAY_URL, credential, eventCredential, expectedOrigin: env.PENNY_EXPECTED_ORIGIN }
 }
 
 // Missing first-run inputs are refused without creating private storage. An
@@ -68,9 +69,9 @@ async function saveOwnerSettings(root, env, store, readOnly, environment) {
     if(saved.values[field.name]!==undefined&&saved.values[field.name]!==effective[field.name])throw new Error('saved-owner-configuration-conflict')
     return [field.name,effective[field.name]]
   }))
-  const values = { ...saved.values, ...generated,...optional, OPERATOR_EMAIL: input.email, WORKSPACE_TIMEZONE: input.timezone, MAIL_PROVIDER: input.provider, ...(input.credential ? { MAIL_FROM: input.from, [input.credential]: effective[input.credential] } : {}), ...(input.eventCredential && effective[input.eventCredential] ? { [input.eventCredential]: effective[input.eventCredential] } : {}) }
+  const values = { ...saved.values, ...generated,...optional, OPERATOR_EMAIL: input.email, WORKSPACE_TIMEZONE: input.timezone, MAIL_PROVIDER: input.provider, ...(input.credential ? { MAIL_FROM: input.from, ...(input.provider === 'rer' ? {MAIL_RELAY_URL:input.relayUrl} : {}), [input.credential]: effective[input.credential] } : {}), ...(input.eventCredential && effective[input.eventCredential] ? { [input.eventCredential]: effective[input.eventCredential] } : {}) }
   if (saved.text !== undefined) {
-    for (const key of ['MAIL_PROVIDER', 'WORKSPACE_TIMEZONE', 'MAIL_FROM', input.credential, input.eventCredential].filter(Boolean)) if (saved.values[key] !== undefined && values[key] !== saved.values[key]) throw new Error('saved-owner-configuration-conflict')
+    for (const key of ['MAIL_PROVIDER', 'WORKSPACE_TIMEZONE', 'MAIL_FROM', 'MAIL_RELAY_URL', input.credential, input.eventCredential].filter(Boolean)) if (saved.values[key] !== undefined && values[key] !== saved.values[key]) throw new Error('saved-owner-configuration-conflict')
   }
   store?.addSecrets([optionalFields.filter(field=>field.kind==='secret').map(field=>values[field.name]),Object.values(generated), input.credential && values[input.credential], input.eventCredential && values[input.eventCredential], env.CLOUDFLARE_API_TOKEN])
   if (readOnly && saved.text === undefined) throw new Error('missing-owner-credential-file')
@@ -78,7 +79,7 @@ async function saveOwnerSettings(root, env, store, readOnly, environment) {
     await privateDirectory(root, directory)
     await writePrivateFile(join(root, file), JSON.stringify(values, null, 2) + '\n')
   }
-  declaration.vars = { ...declaration.vars, OPERATOR_EMAIL: input.email, WORKSPACE_TIMEZONE: input.timezone, ...(input.credential ? { MAIL_PROVIDER: input.provider, MAIL_FROM: input.from } : {}) }
+  declaration.vars = { ...declaration.vars, OPERATOR_EMAIL: input.email, WORKSPACE_TIMEZONE: input.timezone, ...(input.credential ? { MAIL_PROVIDER: input.provider, MAIL_FROM: input.from, ...(input.provider === 'rer' ? {MAIL_RELAY_URL:input.relayUrl} : {}) } : {}) }
   for(const field of optionalFields)if(values[field.name]){if(field.kind==='secret')declaration.secrets.push({binding:field.name,environment:field.name});else declaration.vars[field.name]=values[field.name]}
   if (input.credential) declaration.secrets.push({ binding: input.credential, environment: input.credential })
   if (input.eventCredential && values[input.eventCredential]) declaration.secrets.push({ binding: input.eventCredential, environment: input.eventCredential })

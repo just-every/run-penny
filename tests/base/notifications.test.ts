@@ -5,6 +5,7 @@ import { runNotificationQueue } from '@/core/features/notifications/queue'
 import { runNotificationSchedule } from '@/core/features/notifications/scheduled'
 import { call,env,owner,requester,mockMail } from './support'
 import { createPennyRuntime } from '@/core/app/runtime'
+import { createPennyApi } from '@/core/app/api'
 import { drainNotifications } from '@/core/features/notifications/delivery'
 import { prepareBatches } from '@/core/features/notifications/batches'
 import { quietHours } from '@/core/features/notifications/eligibility'
@@ -168,7 +169,7 @@ it('[NOTIFY-002 REQ-025] signed no-login request/global unsubscribe resists tamp
  await env.DB.prepare("UPDATE requester_addresses SET email='changed@example.test' WHERE id=?").bind(g.addressId).run()
  expect((await post(all)).status).toBe(400)
 })
-it('[NOTIFY-002] Base Resend and SendGrid selection require only chosen key and produce actual provider-specific HTTP',async()=>{
+it('[NOTIFY-002] Base providers send through public identity and Queue paths with durable relay failures',async()=>{
  const config=(provider:string,values:Partial<AppBindings>)=>loadRuntimeConfiguration(source,{...env,PENNY_ENVIRONMENT:'production',MAIL_PROVIDER:provider,SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined,...values})
  expect(config('resend',{RESEND_API_KEY:'selected'}).mailApiKey).toBe('selected')
  expect(config('sendgrid',{SENDGRID_API_KEY:'selected'}).mailApiKey).toBe('selected')
@@ -180,6 +181,35 @@ it('[NOTIFY-002] Base Resend and SendGrid selection require only chosen key and 
  expect(sent[0].body).toMatchObject({to:[g.email],headers:{'List-Unsubscribe-Post':'List-Unsubscribe=One-Click'}})
  expect(await batches()).toMatchObject([{state:'accepted',provider:'resend',provider_message_id:'resend-real-fixture-id'}])
  expect(authMail(runtime('missing'))).toBeUndefined()
+ const relay='https://mail.rer.example/api/managed-mail/send',key='synthetic-managed-mail-credential'
+ const bindings={...env,PENNY_ENVIRONMENT:'production',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'rer',MAIL_RELAY_URL:relay,MAIL_API_KEY:key,SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined}
+ expect(()=>config('rer',{MAIL_RELAY_URL:relay})).toThrow('MAIL_API_KEY')
+ expect(config('sendgrid',{SENDGRID_API_KEY:'selected',MAIL_API_KEY:undefined}).mailApiKey).toBe('selected')
+ const requests:{to:string;subject:string;text:string;html?:string}[]=[],statuses=[202,401,429,202,302]
+ vi.mocked(fetch).mockImplementation(async(input,init)=>{
+  expect(String(input)).toBe(relay);expect(init?.method).toBe('POST');expect(init?.redirect).toBe('manual')
+  expect(init?.headers).toEqual({Authorization:`Bearer ${key}`,'Content-Type':'application/json'})
+  const body=JSON.parse(String(init?.body));requests.push(body)
+  expect(Object.keys(body).sort()).toEqual(body.html?['html','subject','text','to']:['subject','text','to']);expect(typeof body.to).toBe('string')
+  expect(body.subject.trim()).toBeTruthy();expect(body.text.trim()).toBeTruthy()
+  const status=statuses.shift()!;return new Response(JSON.stringify(status===202?{accepted:true}:{error:'private relay detail'}),{status,headers:status===429?{'Retry-After':'60'}:status===302?{Location:'https://must-not-follow.example/'}:{}})
+ })
+ const app=createPennyApi(),requestLink=()=>app.fetch(new Request('https://penny.test/api/auth/magic-link',{method:'POST',headers:{Origin:'https://penny.test','Content-Type':'application/json','CF-Connecting-IP':'192.0.2.64'},body:JSON.stringify({email:'owner@penny.invalid'})}),bindings)
+ expect((await requestLink()).status).toBe(202)
+ expect(requests[0].to).toBe('owner@penny.invalid');expect(requests[0].text).toContain('/auth/confirm?token=')
+ const denied=await requestLink();expect(denied.status).toBe(503);expect(await denied.json()).toEqual({error:'mail_unavailable'})
+ expect((await env.DB.prepare("SELECT outcome FROM penny_auth_mail_attempts WHERE transport='rer' ORDER BY started_at").all()).results.map(row=>row.outcome)).toEqual(['accepted','failed'])
+ await g.status('Managed request update',3600001)
+ const fixed=start+3660001,clock=vi.spyOn(Date,'now').mockReturnValue(fixed)
+ const wake=()=>runNotificationQueue(createMessageBatch('feedback-penny-local-jobs',[{id:crypto.randomUUID(),timestamp:Date.now(),attempts:1,body:{kind:'notifications.drain'}}]),bindings)
+ await wake()
+ expect(requests).toHaveLength(3);expect(requests[2].text).toContain('Managed request update');expect(requests[2].text).toContain('Unsubscribe from all requester email:')
+ expect(await batches()).toMatchObject([{state:'accepted'},{state:'queued',provider:'rer',next_attempt_at:new Date(fixed+60000).toISOString(),failure_reason:'provider_rate_limited'}])
+ await wake();expect(requests).toHaveLength(3)
+ clock.mockReturnValue(fixed+60000);await wake();expect(requests).toHaveLength(4)
+ expect(await batches()).toMatchObject([{state:'accepted'},{state:'accepted',provider:'rer'}])
+ const redirected=await requestLink();expect(redirected.status).toBe(503);expect(requests).toHaveLength(5)
+ expect(await env.DB.prepare("SELECT outcome FROM penny_auth_mail_attempts WHERE transport='rer' ORDER BY started_at DESC LIMIT 1").first()).toEqual({outcome:'unknown'})
 })
 it('[NOTIFY-002] Queue transport drains before Cron and duplicate wakeups never resend',async()=>{
  const g=await setup();await g.follow();await g.status('Cron path')

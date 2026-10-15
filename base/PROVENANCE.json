@@ -700,7 +700,7 @@
     {
       "path": "base/modules/mail",
       "originPath": "modules/mail",
-      "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
+      "revision": "1afef2aa7d0549e629a4bb11d0eda8c07a99f769",
       "files": {
         "base/modules/mail/.gitignore": "bac5cb305c3cbf6aa42e50e7f2c0f5331a71d70dac15f239b8ec6746afed0db5",
         "base/modules/mail/LICENSE": "2f5076ef027045b9e0e72df8aa61ca8551e54b1877d531656d6e7985b2c32324",
@@ -1314,6 +1314,17 @@
       }
     },
     {
+      "path": "scripts/delivery/base/mail.mjs",
+      "originPath": "modules/delivery-producer/mail.mjs",
+      "revision": "fce0f6d1aa5a540dce16d0f2ff16e2b09eb0ce48",
+      "files": {
+        "scripts/delivery/base/mail.mjs": "2323205c7cbc1aea81ec85509d597df2e486abfc9443981ceaee04950db913a4"
+      },
+      "modes": {
+        "scripts/delivery/base/mail.mjs": "100644"
+      }
+    },
+    {
       "path": "scripts/delivery/base/migrations.mjs",
       "originPath": "modules/delivery-producer/migrations.mjs",
       "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
@@ -1327,9 +1338,9 @@
     {
       "path": "scripts/delivery/base/package.mjs",
       "originPath": "modules/delivery-producer/package.mjs",
-      "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+      "revision": "fce0f6d1aa5a540dce16d0f2ff16e2b09eb0ce48",
       "files": {
-        "scripts/delivery/base/package.mjs": "8daa16d77dfd21ea918dd896b25bcf7e67627d7bf89933e5f5719fe9093e6ca8"
+        "scripts/delivery/base/package.mjs": "3fd9062e9486092b9436fba6a3c26aba5951be01d922327c31fa418c96070bdf"
       },
       "modes": {
         "scripts/delivery/base/package.mjs": "100644"
@@ -1402,11 +1413,22 @@
       }
     },
     {
+      "path": "scripts/delivery/base/setup-manifest.mjs",
+      "originPath": "modules/delivery-producer/setup-manifest.mjs",
+      "revision": "fce0f6d1aa5a540dce16d0f2ff16e2b09eb0ce48",
+      "files": {
+        "scripts/delivery/base/setup-manifest.mjs": "b2746ebde1a8b5e2da26766a289d7f88faa8b454c8baca6ca3a410cfd2d24f76"
+      },
+      "modes": {
+        "scripts/delivery/base/setup-manifest.mjs": "100644"
+      }
+    },
+    {
       "path": "scripts/delivery/base/spec.mjs",
       "originPath": "modules/delivery-producer/spec.mjs",
-      "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+      "revision": "fce0f6d1aa5a540dce16d0f2ff16e2b09eb0ce48",
       "files": {
-        "scripts/delivery/base/spec.mjs": "4526a4d0f3ec141b4afa8d848badb12a08e42d60e1b00bd1db9e63064483428b"
+        "scripts/delivery/base/spec.mjs": "6a11b2986a98936f60c8984e73add5ba491002f0609fb0b478874967caaffd92"
       },
       "modes": {
         "scripts/delivery/base/spec.mjs": "100644"

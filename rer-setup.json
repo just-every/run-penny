@@ -9,7 +9,7 @@
     {
       "id": "mail",
       "label": "Hosted email",
-      "help": "Local sign-in uses the private development outbox. Hosted email requires your selected provider and verified sender; set up later keeps email sign-in unavailable."
+      "help": "Managed email is provided by RER without a provider account. Free and Assisted hosting can use your selected provider and verified sender; set up later keeps email sign-in unavailable."
     },
     {
       "id": "authority",
@@ -63,6 +63,10 @@
           "label": "Set up later"
         },
         {
+          "value": "rer",
+          "label": "RER Managed mail"
+        },
+        {
           "value": "sendgrid",
           "label": "SendGrid"
         },
@@ -81,6 +85,13 @@
         {
           "when": {
             "field": "MAIL_PROVIDER",
+            "equals": "rer"
+          },
+          "required": true
+        },
+        {
+          "when": {
+            "field": "MAIL_PROVIDER",
             "equals": "sendgrid"
           },
           "required": true
@@ -89,6 +100,35 @@
           "when": {
             "field": "MAIL_PROVIDER",
             "equals": "resend"
+          },
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "MAIL_RELAY_URL",
+      "label": "Managed mail relay URL",
+      "kind": "url",
+      "group": "mail",
+      "required": true,
+      "when": {
+        "field": "MAIL_PROVIDER",
+        "equals": "rer"
+      }
+    },
+    {
+      "name": "MAIL_API_KEY",
+      "label": "Managed mail credential",
+      "kind": "secret",
+      "input": "entered",
+      "ownerVisible": true,
+      "group": "mail",
+      "required": false,
+      "presentations": [
+        {
+          "when": {
+            "field": "MAIL_PROVIDER",
+            "equals": "rer"
           },
           "required": true
         }

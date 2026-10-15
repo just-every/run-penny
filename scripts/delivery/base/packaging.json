@@ -71,6 +71,7 @@
         "OPERATOR_EMAIL",
         "MAIL_PROVIDER",
         "MAIL_FROM",
+        "MAIL_RELAY_URL",
         "SENDGRID_EVENT_PUBLIC_KEY",
         "RER_OWNER_CLAIM_ISSUER",
         "RER_OWNER_CLAIM_PUBLIC_KEYS",
@@ -85,6 +86,7 @@
         "SETUP_TOKEN"
       ],
       "optionalSecretNames": [
+        "MAIL_API_KEY",
         "SENDGRID_API_KEY",
         "RESEND_API_KEY",
         "RESEND_WEBHOOK_SECRET",
@@ -111,6 +113,11 @@
             }
           ]
         }
+      },
+      "mail": {
+        "providers": [
+          "rer"
+        ]
       }
     }
   }

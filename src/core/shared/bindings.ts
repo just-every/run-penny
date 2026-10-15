@@ -6,6 +6,8 @@ export interface AppBindings {
   OPERATOR_EMAIL?: string
   SETUP_TOKEN?: string
   MAIL_PROVIDER?: string
+  MAIL_API_KEY?: string
+  MAIL_RELAY_URL?: string
   SENDGRID_API_KEY?: string
   RESEND_API_KEY?: string
   SENDGRID_EVENT_PUBLIC_KEY?: string

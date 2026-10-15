@@ -3,6 +3,9 @@
 The default `pnpm run setup`, `pnpm run deploy` and `pnpm deploy:health` use
 Penny’s persistent owner account, described in [OPERATIONS.md](../OPERATIONS.md).
 The commands here preserve the separate disposable artifact/controller protocol.
+Managed Penny gets mail from RER without a provider account or key entry
+([email guide](EMAIL.md)); this controller keeps its own SendGrid/Resend inputs
+and does not issue Managed relay credentials.
 Current copied sources are listed in `edition.json` and `base/PROVENANCE.json`;
 deploy-kit is pinned at `5885264dd9d04b340a4d7218b31e5ad127d8484a`.
 

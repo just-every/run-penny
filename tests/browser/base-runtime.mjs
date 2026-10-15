@@ -7,7 +7,7 @@ const require=createRequire(import.meta.resolve('@cloudflare/vitest-plugin'))
 const {Miniflare,convertV4MiniflareOptions}=require('miniflare')
 const {readD1Migrations}=await import('@cloudflare/vitest-plugin')
 /** Execute the exact emitted production modules. External mail and an optional source/model RPC edge are test fixtures. */
-export async function startBrowserRuntime({bindings={},https=false,port,networkWorker}={}){
+export async function startBrowserRuntime({bindings={},https=false,port,networkWorker,mailService}={}){
  port??=await freshLocalPort()
  const origin=`${https?'https':'http'}://127.0.0.1:${port}`,outbox=[],state=await mkdtemp(join(tmpdir(),'penny-base-browser-'))
  const modules=[];for(const path of await readdir('dist/server',{recursive:true}))if(/\.(js|mjs)$/.test(path))modules.push({type:'ESModule',path:resolve('dist/server',path),contents:await readFile(join('dist/server',path),'utf8')})
@@ -18,12 +18,12 @@ export async function startBrowserRuntime({bindings={},https=false,port,networkW
   d1Databases:{DB:'browser-db'},r2Buckets:{FILES:'browser-files'},queueProducers:{JOBS:'browser-jobs'},
   assets:{directory:resolve('dist/client'),binding:'ASSETS',run_worker_first:true,routerConfig:{has_user_worker:true}},
   bindings:{PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,AUTH_SECRET:'synthetic-base-browser-auth-secret-12345',SETUP_TOKEN:'synthetic-base-browser-setup-token-12345',OPERATOR_EMAIL:'owner@penny.invalid',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',SENDGRID_API_KEY:'synthetic-browser-provider-key',...bindings},
-  outboundService:async request=>{
+  outboundService:mailService??(async request=>{
    if(request.url!=='https://api.sendgrid.com/v3/mail/send'||request.method!=='POST'||request.headers.get('Authorization')!=='Bearer synthetic-browser-provider-key')throw new Error('Unexpected provider request')
    const body=await request.json(),text=body.content.find(c=>c.type==='text/plain').value
    outbox.push({email:body.personalizations[0].to[0].email,url:text.match(/https?:\/\/[^\s]+/)[0]})
    return new Response(null,{status:202,headers:{'x-message-id':'synthetic-browser-message'}})
-  },
+  }),
  }
  const runtimeOptions=()=>{const opts=convertV4MiniflareOptions({...configuration,...(networkWorker?{serviceBindings:{PENNY_LEARNING_EGRESS:networkWorker.name}}:{})});if(networkWorker)opts.workers.push(...convertV4MiniflareOptions(networkWorker).workers);return opts}
  let options=runtimeOptions()

@@ -35,8 +35,9 @@ Penny is a self-hosted customer-feedback decision product for one B2B software
 business. Customers post and follow requests on a public board; operators record
 evidence, compare and commit bets, approve what is public and publish status
 updates and release notes. The requester board and the operator decision loop,
-with maintained Base operator authentication and selectable SendGrid or Resend
-mail, are implemented. The public source repository is
+with maintained Base operator authentication, RER-provided Managed mail and
+selectable SendGrid or Resend mail for Free and Assisted hosting, are implemented.
+The public source repository is
 [just-every/run-penny](https://github.com/just-every/run-penny) and the current version
 is 0.0.0, released as the annotated tag `v0.0.0` on the repository's first
 commit ([RELEASE.md](RELEASE.md)). Wider release obligations are in
@@ -167,7 +168,17 @@ configured again.
 
 ## Set up your hosting account
 
-You need a Cloudflare account with Workers, D1, R2 and Queues enabled, an explicit
+**Managed Penny includes email provided by RER.** You do not open a provider
+account, verify your own sender or enter an email API key. RER fills and hides
+`MAIL_PROVIDER=rer`, `MAIL_FROM`, `MAIL_RELAY_URL` and the installation's private
+`MAIL_API_KEY` during Managed configuration. Penny uses Base's relay adapter from
+the pinned rer 0.2.22. The key is issued by RER, never supplied by you, and the
+upstream provider key never reaches Penny or its build. See
+[email and notifications](docs/EMAIL.md) for limits and recovery.
+
+**Free and Assisted hosting keep their existing email choices:** SendGrid,
+Resend or set up later. For deployment in your own hosting account, you need a
+Cloudflare account with Workers, D1, R2 and Queues enabled, an explicit
 account ID and an account-scoped API token. For deployed sign-in and requester
 mail, choose SendGrid or Resend, verify a sender and supply that provider's key.
 Choose `MAIL_PROVIDER=later` for public reading without email sign-in or new
@@ -218,7 +229,8 @@ Costs are estimates, not a measured Penny bill. Budget at least the account's
 when choosing that plan, plus storage/operations and separately billed
 [SendGrid](https://www.twilio.com/en-us/products/email-api/pricing) or
 [Resend](https://resend.com/pricing) mail usage. A domain may add registrar costs.
-No subscription total, zero-cost installation or hosted service is promised.
+These estimates apply to your own hosting account; they are not a Managed plan
+quote. No subscription total or zero-cost installation is promised.
 
 ## Move saved feedback in
 

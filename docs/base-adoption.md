@@ -3,7 +3,7 @@
 ## Current inventory, 15 October 2026
 
 Penny runs the shared `rer` command in **package mode**: `package.json` pins
-`@runeditrun/rer` 0.2.18 exactly as a devDependency (locked in `pnpm-lock.yaml`;
+`@runeditrun/rer` 0.2.22 exactly as a devDependency (locked in `pnpm-lock.yaml`;
 a global `rer` dispatches to the project's pin),
 package scripts and `OPERATIONS.json` run `rer VERB`, and the checkout carries no
 vendored `scripts/rer.mjs`, `scripts/base-cli` or `scripts/base-onboarding`.
@@ -13,8 +13,8 @@ copy. A later refresh is a version bump: `pnpm add -D -E @runeditrun/rer@X`,
 then `pnpm source:lock`.
 
 Base selections retain immutable comparison origins in `edition.json`; individual
-verbatim copies record their actual revisions in `base/PROVENANCE.json` (53 copy
-groups, 518 files: the native modules under `base/`, the delivery producer,
+verbatim copies record their actual revisions in `base/PROVENANCE.json` (51 copy
+groups, 542 files: the native modules under `base/`, the delivery producer,
 schema, authoring tools, first-run runtime and three Base documents).
 `sources.lock.json` binds current tracked source and retained comparison
 archives. The root provenance revision is historical; each copy entry names its
@@ -136,6 +136,22 @@ and an archive made before an erasure is refused whole with the later journal. T
 serves built files through `staticAssetResponse` and answers `/health` with `deploymentHealth`;
 `deploy.json` declares the vars `rer verify`'s hosted check needs. Local session and dev-gate
 cookies carry the port (`operator_session_local_8787`, `rer_dev_gate_8787`).
+
+## Managed mail at rer 0.2.22 (16 October 2026)
+
+Penny selects the unchanged Base `rer` adapter from its pinned package copy
+(mail custody at `1afef2aa`). The delivery producer’s `fce0f6d1` mail declaration
+and setup validation generate the Managed relay contract. RER supplies and
+hides all four mail settings; direct SendGrid and Resend selection keeps its
+existing keys. Penny omits its automatic-mail and one-click unsubscribe headers
+for this transport, whose contract carries only recipient, subject and body;
+the existing unsubscribe links remain in the message text. Base requests
+`redirect: error`; Penny’s Workers fetch port uses `manual` and rejects every
+3xx response because Workers does not implement Fetch’s `error` mode. No
+redirect is followed. Identity mail still
+revokes unsuccessful links and records safe outcomes. Notification Queue/Cron
+keeps the bounded retry policy for known refusals/rate limits and holds
+ambiguous delivery for review.
 
 ## Base import kit at rer 0.2.20 (16 October 2026)
 

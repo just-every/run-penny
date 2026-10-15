@@ -9,26 +9,47 @@ Penny sends email so that people can sign in and so that the customers who asked
 - **Request updates.** An email to followers when you publish a status update on a request, decline it, publish a roadmap status update mapped to it, post a public reply or approve a requester's comment.
 - **Release emails.** One email to each eligible recipient when you publish a release.
 
-Messages come from the sender address you configure and are marked as automatically generated. Penny has no inbound mail route, so a reply to one of its emails creates nothing: no comment, no request, no evidence. Sign-in and verification both depend on email, so set it up before you deploy.
+Messages come from the sender address RER supplies for Managed hosting, or the verified sender you configure for your own provider, with automatic-mail headers when using SendGrid or Resend. Penny has no inbound mail route, so a reply to one of its emails creates nothing: no comment, no request, no evidence. Sign-in and verification both depend on email, so set it up before you deploy.
 
 ## Choose a provider
 
-Penny sends through **SendGrid** or **Resend**. You pick one, and the choice is explicit: Penny never falls back from one provider to the other.
+### Managed Penny
+
+**RER provides Managed Penny's email.** You need no email provider account, sender verification or API key entry. RER fills and hides these settings during Managed configuration:
+
+| Variable | Supplied by RER |
+|---|---|
+| `MAIL_PROVIDER` | `rer`. |
+| `MAIL_FROM` | RER's verified application sender. |
+| `MAIL_RELAY_URL` | RER's managed mail relay endpoint. |
+| `MAIL_API_KEY` | A private credential for this installation and environment, issued by RER. |
+
+Penny uses Base's relay adapter from pinned rer 0.2.22. It sends the recipient, subject and message body to RER over authenticated HTTPS. RER supplies the sender and forwards the message to its provider; the upstream provider key never reaches Penny or its build. Replies go to the owner's verified account email, but create no record in Penny.
+
+Production and preview share an allowance of 20 messages per minute, 200 per hour and 1,000 per day per installation. Valid attempts count even if the provider fails. RER checks paid Managed access and active hosting on every send. A rate limit, unavailable configuration or revoked credential remains a visible delivery failure under Penny's normal delivery policy; Penny does not switch providers.
+
+RER manages credential rotation and revocation. After rotation, build and publish again to bind the new credential; an ordinary configuration save preserves the existing credential and does not revive a revoked one. Disconnecting or ending hosting revokes access. Scheduled cancellation retains mail through the paid period. These source/configuration details do not establish a hosted installation or inbox delivery.
+
+### Free and Assisted hosting
+
+The choices remain **SendGrid**, **Resend** or **set up later**. With your own provider, you pick one explicitly: Penny never falls back from one provider to the other.
 
 | Variable | What it does |
 |---|---|
-| `MAIL_PROVIDER` | `sendgrid` or `resend`. |
-| `MAIL_FROM` | The sender address. It must be a sender you have verified with the provider. |
+| `MAIL_PROVIDER` | `sendgrid`, `resend` or `later` (email actions unavailable). |
+| `MAIL_FROM` | The sender address verified with your selected provider; not used with `later`. |
 | `SENDGRID_API_KEY` | Required when `MAIL_PROVIDER=sendgrid`. |
 | `RESEND_API_KEY` | Required when `MAIL_PROVIDER=resend`. |
 
 A key for the other provider does not satisfy your choice. Set these as described in [Install and deploy](/docs/install). If the provider, key or sender is missing, deployed sign-in and requester verification say that email delivery is unavailable. Visitors can still read your public pages.
 
-Locally you need none of this. Penny captures messages in a local outbox instead of sending them.
+Locally you need none of this. Penny silently suppresses mail instead of sending it.
 
-`pnpm run operations -- check --profile owner-sendgrid` (or `owner-resend`) and `rer check` read `OPERATIONS.json`, whose mail loop is declared as SendGrid by default. If you choose Resend, change that loop's `provider` to `resend` in `OPERATIONS.json` so the check and your `MAIL_PROVIDER` agree.
+`pnpm run operations -- check --profile owner-sendgrid` (or `owner-resend`, `owner-later`) checks the selected owner-account inputs offline. These profiles do not provision Managed mail or prove delivery.
 
 ## Delivery events and suppression
+
+The callback setup below applies to your own SendGrid or Resend account. Managed relay acceptance does not establish delivery-event forwarding to Penny. Do not configure a personal provider webhook for RER-provided mail.
 
 Providers can tell Penny when a message bounces or is marked as spam. Penny listens at:
 
@@ -79,11 +100,11 @@ A decision owner receives one email when a committed decision first becomes revi
 - **Once a provider accepts a message,** Penny never sends it again.
 - **An ambiguous result** is never retried automatically. If Penny cannot tell whether the provider accepted a message, for example after a network error or a timeout, it records the result as unknown and stops. SendGrid offers no protection against duplicates for these sends, so resending could email a customer twice.
 
-Open **Feedback settings** in the operator app and look under **Requester email delivery**. Messages with an unknown or failed result are listed there with their provider, attempt count and message ID. For an unknown result, check the provider's own activity log before you decide what to do. A release page shows delivery counts for that release.
+Open **Feedback settings** in the operator app and look under **Requester email delivery**. Messages with an unknown or failed result are listed there with their provider, attempt count and message ID. For an unknown result, check your provider’s activity log, or ask RER to reconcile a Managed relay send, before you decide what to do. A release page shows delivery counts for that release.
 
 ## Honest limits
 
 - **Provider acceptance is not inbox delivery.** "Accepted" means the provider took the message. Penny cannot see whether it reached an inbox.
 - **Local capture is not inbox proof.** The local outbox shows what Penny would send. It does not test a provider, your sender verification or your domain's reputation.
 - **There is no exactly-once guarantee.** Penny records each send durably and avoids repeats where it can, but it does not claim a message is delivered once and only once.
-- **Check your live deployment yourself.** Send a real verification link to an address you control, confirm your sender is verified, and watch the first notification arrive.
+- **Check your live deployment yourself.** Send a real verification link to an address you control and watch the first notification arrive. With your own provider, also confirm your sender is verified. Managed stage validation and inbox proof remain separate from this source change.

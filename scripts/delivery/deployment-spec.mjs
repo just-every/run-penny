@@ -11,7 +11,7 @@ const config = JSON.parse(await readFile(new URL('./base/packaging.json', import
 // Base reader that packages Penny's managed artifact. Run after rer build.
 const spec = await deploymentSpec(root, config.artifact.specInputs)
 const { project, workflow, setup } = packagingConfig(config)
-const selected = await loadSetupManifest(root, setup)
+const selected = await loadSetupManifest(root, setup, config.artifact.specInputs.mail)
 const descriptor = { ...project, setup: { path: selected.path, sha256: selected.sha256 } }
 const json = value => `${JSON.stringify(value, null, 2)}\n`
 const files = new Map([
