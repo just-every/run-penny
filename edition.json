@@ -174,7 +174,9 @@
           "schema",
           "scripts/delivery/setup-build.mjs",
           "scripts/delivery/base/packaging.json",
-          "scripts/build-delivery-artifact.mjs"
+          "scripts/build-delivery-artifact.mjs",
+          "scripts/delivery/deployment-spec.mjs",
+          "management"
         ]
       }
     },

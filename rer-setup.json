@@ -21,11 +21,6 @@
       "help": "An identity provider install adds sign-in through it; leave empty to keep email links."
     },
     {
-      "id": "connection",
-      "label": "Optional platform connection",
-      "help": "Use only installation identity and public verification settings supplied through trusted platform setup."
-    },
-    {
       "id": "host",
       "label": "Optional host sign-in",
       "help": "The host server signs requester claims. Signing keys stay server-side; frame origins restrict the parent application."
@@ -176,34 +171,6 @@
       "default": "",
       "help": "Optional Auth install. Leave empty to use email links.",
       "group": "identity"
-    },
-    {
-      "name": "RER_OWNER_CLAIM_ISSUER",
-      "label": "Trusted owner-claim issuer",
-      "kind": "url",
-      "group": "connection",
-      "runtimeEditable": false
-    },
-    {
-      "name": "RER_OWNER_CLAIM_PUBLIC_KEYS",
-      "label": "Owner-claim verification public keys",
-      "kind": "text",
-      "group": "connection",
-      "runtimeEditable": false
-    },
-    {
-      "name": "RER_INSTALLATION_ID",
-      "label": "Installation identity",
-      "kind": "text",
-      "group": "connection",
-      "runtimeEditable": false
-    },
-    {
-      "name": "RER_MANAGEMENT_ORIGIN",
-      "label": "Editor management origin",
-      "kind": "url",
-      "group": "connection",
-      "runtimeEditable": false
     },
     {
       "name": "PORTAL_IDENTITY_SECRET",

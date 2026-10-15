@@ -7,7 +7,7 @@ import { localOperation } from '@runeditrun/rer/local/operation'
 import {model,manifest} from './manifest.mjs'
 import { ownerDeclaration } from './owner-environment.mjs'
 const fields=model.fields
-const optionalFields=manifest.fields.filter(field=>['connection','host','identity'].includes(field.group))
+const optionalFields=manifest.fields.filter(field=>['host','identity'].includes(field.group))
 
 export function ownerInputs(env) {
   const missing = ['CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_API_TOKEN', 'OPERATOR_EMAIL', 'MAIL_PROVIDER'].filter(key => !env[key]?.trim())

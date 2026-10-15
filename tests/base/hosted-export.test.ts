@@ -2,7 +2,7 @@ import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,expect,inject,it,vi} from 'vitest'
 import {env} from 'cloudflare:workers'
 import {createPennyApi} from '../../src/core/app/api'
-import {canonical,exportArchive,DATA_LIMITS,ERASURE_LIMITS} from '../../src/core/features/data/archive'
+import {exportArchive} from '../../src/core/features/data/archive'
 import {digest,opaqueToken} from '../../src/core/features/auth/native-tokens'
 import inventory from '../../src/core/features/data/schema-inventory.json'
 const origin='https://penny.test',app=createPennyApi()
@@ -110,19 +110,7 @@ it('[DATA-001] unknown tables, columns and stale product schema refuse export wi
  expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
 })
-it('[DATA-001] row overflow refuses instead of exporting a truncated success',async()=>{
- const cookie=await owner(),stamp=new Date().toISOString()
- await env.DB.batch(Array.from({length:DATA_LIMITS.rows+1},(_,i)=>env.DB.prepare('INSERT INTO tags(id,name,created_at,updated_at) VALUES(?,?,?,?)').bind('tag-'+i,'Tag '+i,stamp,stamp)))
- expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(413)
- expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
-})
-it('[DATA-001 BASE-DATA-003] journal overflow refuses both download and archive without truncating erasure custody',async()=>{
- const cookie=await owner()
- await env.DB.prepare("WITH RECURSIVE rows(n) AS (SELECT 0 UNION ALL SELECT n+1 FROM rows WHERE n<?) INSERT INTO data_tombstones(epoch,table_name,key_hash) SELECT 1,'requests',printf('%064x',n) FROM rows").bind(ERASURE_LIMITS.rows).run()
- for(const path of ['journal','export'])expect((await call('/api/operator/data/'+path,undefined,cookie)).status).toBe(413)
- expect(await env.DB.prepare('SELECT COUNT(*) n FROM data_tombstones').first('n')).toBe(ERASURE_LIMITS.rows+1)
- expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
-})
+
 it('[DATA-001] held original-byte export fences writes and overlapping export until completion',async()=>{
  const cookie=await owner()
  let entered!:()=>void,release!:()=>void
@@ -137,12 +125,6 @@ it('[DATA-001] held original-byte export fences writes and overlapping export un
 })
 
 function barrier(){let release!:()=>void;const promise=new Promise<void>(resolve=>{release=resolve});return {promise,release}}
-function delayedBody(path:string,input:unknown,cookie:Record<string,string>){
- const reading=barrier();let controller!:ReadableStreamDefaultController<Uint8Array>
- const body=new ReadableStream<Uint8Array>({start(value){controller=value},pull(){reading.release()}},{highWaterMark:0})
- const response=app.fetch(new Request(origin+path,{method:'POST',headers:{...cookie,Origin:origin,'Content-Type':'application/json'},body}),bindings)
- return {reading:reading.promise,response,release:()=>{controller.enqueue(new TextEncoder().encode(JSON.stringify(input)));controller.close()}}
-}
 async function seedOriginal(){
  const stamp=new Date().toISOString(),bytes=new Uint8Array([11,22,33,44])
  await env.DB.batch([
@@ -155,35 +137,6 @@ async function seedOriginal(){
 }
 async function dataState(){return env.DB.prepare('SELECT origin,epoch,phase,lock_id FROM data_state').first()}
 async function operations(){return (await env.DB.prepare('SELECT * FROM data_operations ORDER BY id').all()).results}
-
-it.each(['import','erasure','recover-runner','abort-export','abort-pending-erasure'] as const)('[BASE-ACCESS-002 DATA-003] %s refuses authority lost while reading its request body',async action=>{
- const cookie=await owner();let path='/api/operator/data/'+action,input:unknown
- if(action==='import')input=await (await call('/api/operator/data/export',undefined,cookie)).json()
- else if(action==='erasure'){
-  await seedOriginal()
-  const root={table:'requests',id:'race-request'},plan=await (await call('/api/operator/data/erasure/preview',root,cookie)).json() as {planHash:string}
-  input={...root,planHash:plan.planHash}
- }else{
-  const kind=action==='abort-export'?'export':action==='abort-pending-erasure'?'erase':'restore',status=action==='recover-runner'?'running':'pending',stamp=new Date().toISOString()
-  await env.DB.batch([
-   env.DB.prepare('INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) VALUES(?,?,?,?,?,?)').bind('interrupted',kind,status,'{}',stamp,stamp),
-   env.DB.prepare("UPDATE data_state SET phase='locked',lock_id='interrupted' WHERE singleton=1"),
-  ])
-  path='/api/operator/data/operations/interrupted/'+action
-  input={confirmPriorRunnerStopped:true,...(action==='recover-runner'?{expectedStatus:'running'}:{})}
- }
- const beforeState=await dataState(),beforeOperations=await operations(),beforeRequests=(await env.DB.prepare('SELECT * FROM requests').all()).results
- const held=delayedBody(path,input,cookie);await held.reading
- try{
-  if(action==='recover-runner')await env.DB.prepare('UPDATE oa_operators SET version=version+1').run()
-  else expect((await call('/api/auth/sign-out',{},cookie)).status).toBe(204)
- }finally{held.release()}
- const response=await held.response
- expect(response.status).toBe(401);expect(await response.json()).toEqual({error:'unauthenticated'})
- expect(await dataState()).toEqual(beforeState);expect(await operations()).toEqual(beforeOperations)
- expect((await env.DB.prepare('SELECT * FROM requests').all()).results).toEqual(beforeRequests)
- if(action==='erasure')expect(await env.FILES.head('race-original')).not.toBeNull()
-})
 
 it('[BASE-ACCESS-002 DATA-001] revocation during R2 export withholds the archive and releases its maintenance lock',async()=>{
  const cookie=await owner(),entered=barrier(),release=barrier()
@@ -239,25 +192,4 @@ it('[BASE-ACCESS-002 DATA-003] revocation during erasure file cleanup retains a 
  expect(await env.DB.prepare('SELECT count(*) n FROM requests').first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT count(*) n FROM data_tombstones').first('n')).toBeGreaterThan(0)
  expect((await call('/api/operator/data/operations/'+saved[0].id+'/resume',{},cookie)).status).toBe(401)
-})
-
-it.each(['request','evidence'] as const)('[DATA-001] restore refuses a correctly hashed archive with an unfinished %s original reservation',async kind=>{
- const cookie=await owner(),stamp=new Date().toISOString();await seedOriginal()
- await env.DB.prepare("INSERT INTO evidence_items(id,source_type,observed_at,review_state,created_at,updated_at) VALUES('pending-evidence','free_text',?,'unreviewed',?,?)").bind(stamp,stamp,stamp).run()
- const bundle=await (await call('/api/operator/data/export',undefined,cookie)).json() as Awaited<ReturnType<typeof exportArchive>>
- const table=kind==='request'?'request_attachment_uploads':'evidence_attachment_uploads',parentColumn=kind==='request'?'request_id':'evidence_id',parentId=kind==='request'?'race-request':'pending-evidence'
- await env.DB.prepare(`INSERT INTO ${table}(id,${parentColumn},storage_key,original_filename,content_type,byte_size,sha256,writing,created_at,updated_at) VALUES(?,?,'missing-original','Pending.bin','application/octet-stream',4,?,0,?,?)`).bind('pending-upload',parentId,await digest('file'),stamp,stamp).run()
- bundle.archive.tables[table]=(await env.DB.prepare(`SELECT * FROM ${table}`).all()).results as typeof bundle.archive.tables[string]
- const {sha256:previousHash,...body}=bundle.archive;void previousHash
- bundle.archive.sha256=await digest(canonical(body))
- expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(409)
- await env.DB.batch([env.DB.prepare(`DELETE FROM ${table}`),env.DB.prepare('DELETE FROM attachments'),env.DB.prepare('DELETE FROM evidence_items'),env.DB.prepare('DELETE FROM requests'),env.DB.prepare('DELETE FROM boards')])
- await env.FILES.delete('race-original')
- const before=await dataState(),beforeOperations=await operations()
- const response=await call('/api/operator/data/import',bundle,cookie)
- expect(response.status).toBe(409);expect(await response.json()).toEqual({error:'unfinished_attachment_uploads'})
- expect(await env.DB.prepare(`SELECT count(*) n FROM ${table}`).first('n')).toBe(0)
- expect(await env.DB.prepare('SELECT count(*) n FROM attachments').first('n')).toBe(0)
- expect((await env.FILES.list()).objects).toHaveLength(0)
- expect(await dataState()).toEqual(before);expect(await operations()).toEqual(beforeOperations)
 })

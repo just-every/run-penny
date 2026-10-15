@@ -29,7 +29,9 @@
       "scripts/installer/**",
       "scripts/delivery/**",
       "rer-setup.json",
-      ".github/workflows/rer-managed.yml"
+      ".github/workflows/rer-managed.yml",
+      "scripts/delivery/deployment-spec.mjs",
+      "management/integration/deployment-spec.json"
     ],
     "migrationDirectories": [
       "migrations/core"
@@ -47,6 +49,6 @@
   },
   "setup": {
     "path": "rer-setup.json",
-    "sha256": "fd650fa4b0b6a61bb49afb781d39d95bba2fa4c7b654c2b188a84a9731e6b8c6"
+    "sha256": "8b54d3a7c91be82bb2a27dffefe3c160a5395e292d5820fb4851a1052b9520b1"
   }
 }

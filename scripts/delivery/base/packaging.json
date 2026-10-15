@@ -31,7 +31,9 @@
         "scripts/installer/**",
         "scripts/delivery/**",
         "rer-setup.json",
-        ".github/workflows/rer-managed.yml"
+        ".github/workflows/rer-managed.yml",
+        "scripts/delivery/deployment-spec.mjs",
+        "management/integration/deployment-spec.json"
       ],
       "migrationDirectories": [
         "migrations/core"
@@ -111,7 +113,6 @@
         },
         "page": {
           "path": "/",
-          "originVariable": "APP_ORIGIN",
           "readiness": [
             {
               "path": "/",

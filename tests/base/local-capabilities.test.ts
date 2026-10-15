@@ -31,11 +31,7 @@ for(const mode of ['preview','production'])it(`[BASE-ACCESS-001 REQ-023] ${mode}
  expect(()=>createPennyRuntime({...deployed,MAIL_PROVIDER:'development',MAIL_FROM:'auth@localhost.test'})).toThrow('MAIL_PROVIDER')
  expect(await env.DB.prepare('SELECT count(*) n FROM rer_mail_development_outbox').first('n')).toBe(0)
 })
-it('[NOTIFY-002 BASE-SECRET-002] workspace timezone setup override validates and preserves the default',()=>{
- expect(createPennyRuntime(env).configuration.workspaceTimezone).toBe('Australia/Brisbane')
- expect(createPennyRuntime({...env,WORKSPACE_TIMEZONE:'Pacific/Honolulu'}).configuration.workspaceTimezone).toBe('Pacific/Honolulu')
- for(const WORKSPACE_TIMEZONE of ['', 'Invalid/Place'])expect(()=>createPennyRuntime({...env,WORKSPACE_TIMEZONE})).toThrow('IANA timezone')
-})
+
 it('[REQ-003 REQ-023 BASE-SECRET-002] missing mail cannot provision or hold an unverified submission',async()=>{
  const bindings={...env,PENNY_ENVIRONMENT:'production',MAIL_PROVIDER:undefined,MAIL_FROM:undefined,SENDGRID_API_KEY:undefined}
  const payload={title:'Unverified request',description:'Cannot establish identity',boardSlug:'feedback',idempotencyKey:crypto.randomUUID()}

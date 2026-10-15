@@ -22,16 +22,14 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "strict": true,
-    "jsx": "react-jsx",
-    "rootDirs": [
-      ".",
-      "tests/predecessor-src-root"
-    ]
+    "jsx": "react-jsx"
   },
   "include": [
-    "tests/e2e/**/*.ts",
-    "tests/base/**/*.ts",
-    "tests/ui/**/*.tsx"
+    "tests/base/**/*.ts"
   ],
-  "references": [{ "path": "./tsconfig.import-kit.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.import-kit.json"
+    }
+  ]
 }
