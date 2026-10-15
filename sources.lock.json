@@ -2445,7 +2445,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "ecd1e6bea1b447b385ac12c561f10f6442fa99c5ececafe2866b07f96fff4b36",
+      "sha256": "a3b8a3514ee70f03a74f4cb829645b821aacc26011deefba386b0ecde5716ed6",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2913,11 +2913,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "b65bcd4716a4f14b31dd9c858bdc964375e44b423958e73ce72a6fcc79b108c7",
+      "sha256": "159ec0175fa325219bfcb11326ee9ec4b830812acf456549c7578c90977a3bf5",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "4ed14164ef504cb242d0f6bdbf775b884cbe108512560db90fe703182ec4aad5",
+      "sha256": "4c25075fd4715767deaa1ca515983d0cdfafebcf992fa0e124a3dbe542f21f6c",
       "executable": false
     },
     "public/brand/band.svg": {
