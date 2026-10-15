@@ -2445,7 +2445,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "dfc25aaab286cf2f7d4ef934b3678b415a4590b948ca63553da12a45a1b45914",
+      "sha256": "efd2b1330503f515f9cf0f134b77608e6f79d319a85d053e62d41005add060d7",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2913,11 +2913,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "159ec0175fa325219bfcb11326ee9ec4b830812acf456549c7578c90977a3bf5",
+      "sha256": "b7bd423dd6940dfb373bf35ce5e980539675759cb94dcb3ffa8e2619f84546e6",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "4c25075fd4715767deaa1ca515983d0cdfafebcf992fa0e124a3dbe542f21f6c",
+      "sha256": "d6e7e02fb0cbe5a32902fe8ae95cbd10ae00dfcd29ed5296903958195dd76efe",
       "executable": false
     },
     "public/brand/band.svg": {
@@ -3749,7 +3749,7 @@
       "executable": false
     },
     "src/core/features/data/operation-in-progress.ts": {
-      "sha256": "81597066424037146ead08d1fbb3879a3150b1e39b02bc3e2559d73e64a04098",
+      "sha256": "9d8da8569b0dc2899fd3b9e79f548879468767ddc0044f602e53254b55d6a3d4",
       "executable": false
     },
     "src/core/features/data/operator-erasure.ts": {
