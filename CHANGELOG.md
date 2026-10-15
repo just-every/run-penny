@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin rer 0.2.18 and refresh the copied demo runtime from its matching Base tag. Hosted demo images carry pre-migrated state and bounded starts; declare the container instance type explicitly.
+
 - Pin rer 0.2.17 in package mode so local dev startup uses its corrected bind check. Data-operation conflicts name guarded CLI recovery commands and the active operation ID; paused restores and erasures name their resume commands instead of promising hosted Data-page buttons.
 - The run-penny.com homepage has a **Try the demo** button beside **Run Penny**, linking to the hosted demo at https://demo.run-penny.com/.
 - Publish `management/integration/deployment-spec.json` from the built Worker through Base's spec reader. `pnpm deployment-spec:write` regenerates it, the setup digest and managed workflow; Verify checks for drift after building. Managed Configure reads Penny's setup directly from its source revision, prefills the owner email and assigns `APP_ORIGIN`. Managed declares the single application origin that serves both the public board and owner path; it does not provision a second page hostname. The hosted form omits broker-owned connection fields; optional mail secrets stay optional. The existing native bootstrap and deploy hook keep the first-owner claim and deployed setup token. Rer is pinned to npm 0.2.16 in package mode.

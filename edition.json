@@ -213,7 +213,7 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "3935139a2ffe78a30f2c5de5aa8ae9a52613d348",
+          "revision": "e8296d97481b62ec6805d780021ed7cb528b7a07",
           "paths": [
             "modules/demo",
             "modules/operator-auth/csp.mjs"

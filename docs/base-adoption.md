@@ -3,7 +3,7 @@
 ## Current inventory, 15 October 2026
 
 Penny runs the shared `rer` command in **package mode**: `package.json` pins
-`@runeditrun/rer` 0.2.13 exactly as a devDependency (locked in `pnpm-lock.yaml`;
+`@runeditrun/rer` 0.2.18 exactly as a devDependency (locked in `pnpm-lock.yaml`;
 a global `rer` dispatches to the project's pin),
 package scripts and `OPERATIONS.json` run `rer VERB`, and the checkout carries no
 vendored `scripts/rer.mjs`, `scripts/base-cli` or `scripts/base-onboarding`.
