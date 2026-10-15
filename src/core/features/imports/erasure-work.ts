@@ -2,14 +2,18 @@ import {withErasureDatabase} from './erasure-database'
 import {NativeError} from '../auth/native-tokens'
 import type { Row } from '../data/archive'
 import type { DataAuthority } from '../data/authority'
-import { retireD1ImportCustody,type D1ImportContext,type D1Sql } from '../../../../base/modules/import-kit/src/d1/index'
+import { retireD1ImportCustodyStep,type D1ImportContext,type D1Sql } from '../../../../base/modules/import-kit/src/d1/index'
 import { portabilityRedactionCheckpoint } from '../../../../scripts/portability/cleanup.mjs'
 import { feedbackMappingVersion } from './mapping'
 import { erasureTargets } from './erasure-targets'
 import { targetIdentity } from '../../../../base/modules/import-kit/src/d1/erasure-index'
 import {eraseLegacySourceOptions} from './erasure-source'
-import {eraseStagedTarget,stagedTarget} from './erasure-staged-target'
 import {atomic,guard,sql} from '../../../../base/modules/import-kit/src/d1/database'
+
+/** One stable Base operation key per erasure step: a work item's retirement, or
+ * one legacy job's source rewrite within it. Every resume reuses it, so Base's
+ * journal continues the same stage and a lost acknowledgement returns its receipt. */
+export const erasureStepKey=(operation:string,ordinal:number,job?:string)=>['penny-import-erasure',operation,ordinal,...job===undefined?[]:['source',job]].join(':')
 
 export function retainErasureWork(db:D1Database,operation:string,records:Row[]):D1PreparedStatement[]{
  const statements:D1PreparedStatement[]=[]
@@ -32,19 +36,18 @@ export async function resumeImportErasure(db:D1Database,operation:string,authori
   if(await db.prepare('SELECT 1 present FROM feedback_import_erasure_work WHERE operation_id=? LIMIT 1').bind(operation).first())throw new NativeError('feedback_erasure_work_changed: Saved import erasure work changed outside its guarded steps. The installation stays locked; nothing more was removed.',409)
   return true
  }
- const context=await erasureWorkContext(db,operation,work,authority)
+ const context=await erasureWorkContext(db,operation,work,authority),checkpoint=work.complete?[]:await portabilityRedactionCheckpoint(db)
  return withErasureDatabase(context,operation,authority,'running_import',async bounded=>{
  if(!work.complete){
-  // Base's retirement is one D1 batch: it tombstones this record in every job (other people's
-  // records keep undo and resume), journals the receipt, and carries portability's redaction
-  // checkpoint so an archive older than the erasure is refused whole.
+  // Base's bounded retirement tombstones this record in every job (other people's records
+  // keep undo and resume). Its final publication journals the receipt, completes this work
+  // item and carries portability's redaction checkpoint, so an archive older than the
+  // erasure is refused whole. Until then its journaled stage continues on each resume.
   const complete=[{sql:'UPDATE feedback_import_erasure_work SET complete=1 WHERE operation_id=? AND ordinal=? AND complete=0',params:[operation,work.ordinal]}]
-  // A job too large for one bounded batch is erased in staged steps; the work
-  // item completes in the publication, so an unfinished step simply repeats.
-  if(await stagedTarget(bounded.storage.database,work.target_kind,work.target_id)){await eraseStagedTarget(work.target_kind,work.target_id,async()=>[...complete,...await portabilityRedactionCheckpoint(db)],bounded);return false}
-  await retireD1ImportCustody({target:{kind:work.target_kind,id:work.target_id}},complete,{...bounded,maxBatchBytes:undefined},await portabilityRedactionCheckpoint(db));return false}
+  await retireD1ImportCustodyStep({target:{kind:work.target_kind,id:work.target_id}},complete,bounded,checkpoint,{operationKey:erasureStepKey(operation,work.ordinal)})
+  return false}
  const next=await bounded.storage.database.prepare('SELECT DISTINCT job_id FROM ik_d1_plan_index WHERE target_identity=? AND job_id>? ORDER BY job_id LIMIT 1').bind(targetIdentity(context.destination,work.target_kind,work.target_id),work.source_cursor).first<{job_id:string}>()
- if(next){await eraseLegacySourceOptions(next.job_id,bounded,[{sql:'UPDATE feedback_import_erasure_work SET source_cursor=? WHERE operation_id=? AND ordinal=? AND source_cursor=? AND complete=1',params:[next.job_id,operation,work.ordinal,work.source_cursor]}]);return false}
+ if(next){await eraseLegacySourceOptions(next.job_id,bounded,[{sql:'UPDATE feedback_import_erasure_work SET source_cursor=? WHERE operation_id=? AND ordinal=? AND source_cursor=? AND complete=1',params:[next.job_id,operation,work.ordinal,work.source_cursor]}],{operationKey:erasureStepKey(operation,work.ordinal,next.job_id)});return false}
  const others=await bounded.storage.database.prepare('SELECT 1 present FROM feedback_import_erasure_work WHERE operation_id=? AND ordinal<>? AND (complete=0 OR source_complete=0) LIMIT 1').bind(operation,work.ordinal).first()
  const before=context.storage.targets.stagingPublication!(operation,context.destination,[]).final.map(guard),native=context.nativeErasureGuards.map(guard),update=sql('UPDATE feedback_import_erasure_work SET source_complete=1 WHERE operation_id=? AND ordinal=? AND complete=1 AND source_cursor=?',operation,work.ordinal,work.source_cursor)
  const final=others?native:[...native,guard(sql('NOT EXISTS(SELECT 1 FROM feedback_import_erasure_work WHERE operation_id=?)',operation))]

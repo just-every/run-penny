@@ -76,7 +76,7 @@ export async function publishD1ImportPreparation(id:string,input:D1ImportContext
   // every other private value. Existing final publication owns exact cleanup.
   await stagingAtomic(context,[guard(bindingPredicate(stage)),guard(stageClear(stage)),
     ...steps?[...exactRows('ik_d1_preparation_steps',Object.keys(steps),[steps]),sql('DELETE FROM ik_d1_preparation_steps WHERE id=?',id)]:[],
-    ...stagePublication(stage,revision)],publicationReturnQueries(context,stage),[sql('DELETE FROM ik_d1_publication_fences WHERE stream_id=?',id)],[...publishedStagePredicates(stage,pages),sql('NOT EXISTS(SELECT 1 FROM ik_d1_preparation_receipts WHERE stage_id=?) AND NOT EXISTS(SELECT 1 FROM ik_d1_staging_headers WHERE stage_id=?)',id,id)]);
+    ...stagePublication(stage,revision),...steps?[sql('INSERT INTO ik_d1_stream_sources(stream_id,destination,source_digest) VALUES(?,?,?)',id,stage.destination,steps.source_digest)]:[]],publicationReturnQueries(context,stage),[sql('DELETE FROM ik_d1_publication_fences WHERE stream_id=?',id)],[...publishedStagePredicates(stage,pages),sql('NOT EXISTS(SELECT 1 FROM ik_d1_preparation_receipts WHERE stage_id=?) AND NOT EXISTS(SELECT 1 FROM ik_d1_staging_headers WHERE stage_id=?)',id,id)]);
   return await publishedStream(context,id,stage.operation_key,stage.fingerprint);
   } catch(error) {
     await discardStage(stage,context);

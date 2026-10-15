@@ -18,8 +18,10 @@ const sorted=(rows:unknown[])=>rows.map(canonicalJson).sort()
  * original layout; no fabricated import principal or session is admitted. */
 export function validateFeedbackArchive(data:Record<string,Row[]>):void {
  // Penny retains ordinary jobs and reviewed streams. Private preparations/publication fences
- // cannot be moved to another installation as executable pending work.
+ // cannot be moved to another installation as executable pending work; completed erasure
+ // progress is portable custody beside its journal receipt.
  for(const [name,rows] of Object.entries(data))if((name.startsWith('ik_d1_staging')||name.startsWith('ik_d1_native_staging')||['ik_d1_preparation_receipts','ik_d1_preparation_steps','ik_d1_publication_fences'].includes(name))&&rows.length)refuse()
+ if((data.ik_d1_erasure_progress??[]).some(row=>row.phase!=='complete'))refuse()
  try{validateStreamArchive(data)}catch{refuse()}
  const expectedCopies:unknown[]=[],expectedIndex:unknown[]=[],expectedOriginals:unknown[]=[],expectedOriginalChunks:unknown[]=[],expectedPlans:unknown[]=[]
  const streamPlans=new Map<string,{ordinal:number;plan:ImportPlan}[]>()

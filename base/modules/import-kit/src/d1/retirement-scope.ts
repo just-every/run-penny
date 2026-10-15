@@ -1,5 +1,6 @@
 import type { D1Database, D1Sql } from './types.ts';
 import { guard, sql } from './database.ts';
+import { stepGenerations } from './staging-lifecycle.ts';
 
 const among = 'IN (SELECT value FROM json_each(?))';
 // Every header cell a product can fill from what a person typed or uploaded.
@@ -31,10 +32,11 @@ export async function retirementScope(db: D1Database, destination: string, value
     for (const id of await read(`SELECT stream_id AS id FROM ik_d1_stream_origins WHERE parent_destination=? AND ${matching(['parent_namespace', 'parent_operation_key', 'job_operation_key'])}`, destination, exact, exact, exact)) streams.add(id);
     for (const id of await read(`SELECT stream_id AS id FROM ik_d1_stream_revisions WHERE destination=? AND ${matching(['namespace', 'operation_key'])}`, destination, exact, exact)) anchors.add(id);
     for (const id of await read(`SELECT id FROM ik_d1_staging WHERE destination=? AND ${matching(['namespace', 'operation_key'])} UNION SELECT stage_id FROM ik_d1_staging_originals WHERE name ${among} AND stage_id IN (SELECT id FROM ik_d1_staging WHERE destination=?)`, destination, exact, exact, exact, destination)) stages.add(id);
-    // A preparation in steps goes whole: its control row and every generation it staged.
-    for (const row of (await db.prepare(`SELECT id,stages FROM ik_d1_preparation_steps WHERE destination=? AND ${matching(['namespace', 'operation_key'])}`).bind(destination, exact, exact).all<{ id: string; stages: string }>()).results) {
+    // A preparation in steps goes whole: its control row and every generation under its internal keys.
+    for (const row of (await db.prepare(`SELECT id,destination,principal_id FROM ik_d1_preparation_steps WHERE destination=? AND ${matching(['namespace', 'operation_key'])}`).bind(destination, exact, exact).all<{ id: string; destination: string; principal_id: string }>()).results) {
       preparations.add(row.id);
-      for (const stage of JSON.parse(row.stages)) stages.add(stage.id);
+      const generations = stepGenerations('SELECT id FROM ik_d1_staging', row);
+      for (const id of await read(generations.sql, ...generations.params!)) stages.add(id);
     }
   }
   for (let size = -1; size !== jobs.size + streams.size;) {

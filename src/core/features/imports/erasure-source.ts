@@ -14,7 +14,7 @@ import {streamBoundary} from '../../../../base/modules/import-kit/src/d1/stream-
 import {exactRows,selectedCounts} from '../../../../base/modules/import-kit/src/d1/sets'
 import {ExpectedState,changed,deleteRows} from '../../../../base/modules/import-kit/src/d1/expected-state'
 import {atomic,guard,sql} from '../../../../base/modules/import-kit/src/d1/database'
-import type {D1ImportContext,D1Sql,ImportPlan} from '../../../../base/modules/import-kit/src/d1/index'
+import type {D1ErasureStepOptions,D1ImportContext,D1Sql,ImportPlan} from '../../../../base/modules/import-kit/src/d1/index'
 import type {ErasureFragment} from '../../../../base/modules/import-kit/src/d1/erasure-fragments'
 import {publishSourceErasure} from './erasure-source-publication'
 import type {InventorySnapshot} from '../../../../base/modules/import-kit/src/d1/inventory-snapshot'
@@ -22,8 +22,10 @@ import type {InventorySnapshot} from '../../../../base/modules/import-kit/src/d1
 /** Old Penny passed mapper-only options to Base. Remove them only after Base
  * has authenticated and erased the record/artifact custody. The replacement
  * retains every source decision, original withdrawal and replay fence. Returns
- * false while a staged rewrite still needs another request. */
-export async function eraseLegacySourceOptions(id:string,context:D1ImportContext,progress:D1Sql[]=[],admissionOnly=false,projected?:InventorySnapshot):Promise<boolean>{
+ * false while a staged rewrite still needs another request under the same
+ * operation key. */
+export async function eraseLegacySourceOptions(id:string,context:D1ImportContext,progress:D1Sql[],options:D1ErasureStepOptions,projected?:InventorySnapshot):Promise<boolean>{
+ const admissionOnly=options.admissionOnly===true
  if(projected&&!admissionOnly)throw new Error('FEEDBACK_ERASURE_PROJECTION_READ_ONLY')
  const pages=await measureErasurePages([id],context.storage.database)
  const initial=projected??await readErasureSnapshot(pages[0],context.storage.database,context.storage.targets.planCodec)
@@ -36,7 +38,8 @@ export async function eraseLegacySourceOptions(id:string,context:D1ImportContext
   if(!admissionOnly){const native=context.storage.targets.stagingPublication!(id,context.destination,[]).final.map(guard),unchanged=[guard(pages[0].fence),...streamBoundary(id,'erase')];await atomic(context,'erase',[...native,...unchanged,...progress,...unchanged,...native,{sql:'SELECT 1',finalChecks:[...native,...unchanged]}])}
   return true
  }
- const fragments=async function*():AsyncGenerator<ErasureFragment>{
+ // Base's runner supplies the bounded context every staged step reads through.
+ const fragments=(context:D1ImportContext)=>async function*():AsyncGenerator<ErasureFragment>{
   const snapshot=projected??await readErasureSnapshot(pages[0],context.storage.database,context.storage.targets.planCodec)
   const raw=snapshot.rows('ik_jobs','id',[id])[0],plan=snapshot.plans.get(id)!
   const job=decode(raw),reversal=await loadReversalState(raw,plan,context,false,snapshot);attachReversal(job,reversal)
@@ -69,5 +72,5 @@ export async function eraseLegacySourceOptions(id:string,context:D1ImportContext
   releaseInventory(context)
   yield {before,writes,post,plans:[...snapshot.plans.values()],jobs:snapshot.tables.get('ik_jobs')!,erased:0}
  }
- return publishSourceErasure(context,id,fragments,admissionOnly)
+ return publishSourceErasure(context,id,progress,fragments,options)
 }

@@ -197,7 +197,7 @@ permission, Cron execution, inbox delivery or a real hostname.
 `edition.json` is the selection and comparison authority.
 `base/PROVENANCE.json` records full copied-byte, executable-mode and pin custody.
 Each retained Base copy records its own revision there (the import kit is Base
-`0cb6162`), and `pnpm verify:base-source` is a thin alias to the shared verifier.
+`38aa7ef`, rer 0.2.20), and `pnpm verify:base-source` is a thin alias to the shared verifier.
 The `rer` command itself is the pinned `@runeditrun/rer` package, not a copy.
 Stage intentional edits and removals, run `pnpm source:lock`, then
 `pnpm source:check` and the shared verify-base before committing the lock and

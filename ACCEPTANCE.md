@@ -531,12 +531,14 @@ landing, and none of this is hosted proof.
 - DATA-003/BASE-DATA-003: removed operators are an erasure root
   (`tests/base/penny-erasure.test.ts`); a person inside a multi-megabyte legacy
   saved import is erased while everyone else in it stays
-  (`tests/base/feedback-import-custody.test.ts`). A record in a retained flat
-  plan over 512 KiB is erased through Base's staged erasure form whose private
-  stage continues across resume requests; on local D1 a profile-heavy 19.9 MB
-  and a CSV-heavy 20.1 MB legacy plan both complete, others unchanged, with
-  peers' undo and archive restore intact (the test proves both a cross-request
-  stage and a restored-then-undone staged plan). A step that cannot fit one
+  (`tests/base/feedback-import-custody.test.ts`). Each record is retired by
+  Base's journaled bounded step (`retireD1ImportCustodyStep`, legacy source
+  rewrites through `stageD1ImportErasure`) under one operation key; its private
+  stage continues across resume requests from the committed journal offset. The
+  test erases a person from a 20 MB legacy plan across requests, kills one request
+  after its staged batch commits, and proves the same generation resumes, one
+  receipt and one restore checkpoint per retirement, no copy in any table or
+  stored file, others unchanged and peers' undo intact. A step that cannot fit one
   request is still refused before any change with
   `feedback_legacy_erasure_upgrade_required`. Releases since `v0.0.0` stream
   large histories and never create such plans.

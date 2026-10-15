@@ -9,6 +9,7 @@ import { stageStreamPages } from './stream-stage.ts';
 import { preparationHeader } from './preparation-header.ts';
 import { stagingAtomic, type StageBinding } from './staging-transport.ts';
 import { discardStage } from './staging-lifecycle.ts';
+import { exactRows } from './sets.ts';
 import { policy } from './undo-state.ts';
 import { hashStep } from './preparation-step-hash.ts';
 import { combineStep } from './preparation-step-combine.ts';
@@ -36,9 +37,12 @@ export async function prepareD1ImportSteps(source: SourceBundle, mapping: Import
   const context = requestContext(input); await authorize(context, 'create');
   const operation = context.operationKey; requireText(operation, 'operationKey');
   const db = context.storage.database;
-  const published = await db.prepare('SELECT id FROM ik_d1_streams WHERE destination=? AND principal_id=? AND operation_key=?').bind(context.destination, context.authorization.principalId, operation).first<{ id: string }>();
-  if (published) return { id: published.id, state: 'published', records: source.records.length, total: source.records.length };
   const digest = sourceDigest(source);
+  const published = await db.prepare('SELECT s.id,d.source_digest FROM ik_d1_streams s LEFT JOIN ik_d1_stream_sources d ON d.stream_id=s.id WHERE s.destination=? AND s.principal_id=? AND s.operation_key=?').bind(context.destination, context.authorization.principalId, operation).first<{ id: string; source_digest: string | null }>();
+  // Only the upload these steps published replays; a different one (or an
+  // import published in one request, which kept no digest) is refused.
+  if (published && published.source_digest !== digest) throw new Error('OPERATION_KEY_CONFLICT');
+  if (published) return { id: published.id, state: 'published', records: source.records.length, total: source.records.length };
   let row = await control(context, operation!);
   if (!row) {
     await stagingAtomic(context, [
@@ -75,6 +79,13 @@ async function collectStep(source: SourceBundle, mapping: ImportMapping, context
   // Each step's generation has an internal operation key and a fingerprint no
   // review produced, so it can never be published on its own.
   const step = `${row.id}:${stages.length}`, stepContext = { ...context, operationKey: step };
+  // A request that died after sealing this step's generation, before recording
+  // it, left it unrecorded under the step's key: discard it (fenced by the
+  // control row this step read) and stage the slice again.
+  if (await context.storage.database.prepare('SELECT 1 FROM ik_d1_staging WHERE destination=? AND principal_id=? AND operation_key=?').bind(context.destination, context.authorization.principalId, step).first()) {
+    await stagingAtomic(context, [...exactRows('ik_d1_preparation_steps', Object.keys(row), [row]),
+      sql('DELETE FROM ik_d1_staging WHERE destination=? AND principal_id=? AND operation_key=?', context.destination, context.authorization.principalId, step)]);
+  }
   const header = preparationHeader(stream.header, stepContext);
   let stage: StageBinding | undefined;
   try {

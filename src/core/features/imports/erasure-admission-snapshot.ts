@@ -32,9 +32,12 @@ export async function projectedSourceSnapshot(id:string,kind:string,target:strin
   raw.plan_json=encoded.body;return encoded.chunks
  })
  snapshot.tables.set('ik_jobs',jobs)
- // loadPlans registers its normal exact plan snapshot; its one chunk read is
- // answered from the projected chunks above, never from the database.
- const projected={prepare:()=>({bind:(ids:string)=>({all:async()=>({results:chunks.filter(row=>JSON.parse(ids).includes(row.job_id))})})})} as unknown as D1ImportContext['storage']['database']
+ // loadPlans registers its normal exact plan snapshot; its paged chunk reads
+ // are answered from the projected chunks above, never from the database.
+ const projected={prepare:(query:string)=>({bind:(ids:string)=>({all:async()=>{
+  const rows=chunks.filter(row=>JSON.parse(ids).includes(row.job_id)).sort((a,b)=>String(a.job_id).localeCompare(String(b.job_id))||a.ordinal-b.ordinal),page=/LIMIT (\d+) OFFSET (\d+)/.exec(query)
+  return {results:page?rows.slice(Number(page[2]),Number(page[2])+Number(page[1])):rows}
+ }})})} as unknown as D1ImportContext['storage']['database']
  for(const [key,next]of await loadPlans(jobs,projected)){
   snapshot.plans.set(key,next);originalVersions.set(next,originalVersions.get(original.plans.get(key)!)!)
  }

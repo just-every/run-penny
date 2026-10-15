@@ -55,8 +55,8 @@ export async function eraseExportedSourceOptions(db:D1Database,operation:string,
  const context:D1ImportContext={destination:'penny-feedback',namespace:'privacy-export',mappingVersion:feedbackMappingVersion,maxBatchBytes:1024*1024,storage:{database:db,targets:{read:async()=>undefined,matches:()=>guards[0],stagingRead:async()=>({row:undefined,guards}),stagingPublication:()=>({protect:[],seal:[],release:[],final:guards}),write:()=>{throw new Error('FEEDBACK_ARCHIVE_WRITE_REFUSED')},remove:()=>{throw new Error('FEEDBACK_ARCHIVE_WRITE_REFUSED')},list:async()=>[],matchesCount:count=>({sql:'?=0',params:[count]})}},authorization:{principalId:authority?.operatorId??'local-data-maintenance',predicate:()=>({sql:`EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND lock_id=? AND phase='applying')${authority?" AND EXISTS(SELECT 1 FROM oa_sessions s JOIN oa_operators o ON o.id=s.operator_id WHERE s.id=? AND s.operator_id=? AND s.revoked_at IS NULL AND s.expires_at>unixepoch('subsec')*1000 AND o.status='active' AND o.version=s.operator_version AND o.version=?)":''}`,params:[operation,...(authority?[authority.id,authority.operatorId,authority.operator.version]:[])]})}}
  await withErasureDatabase(context,operation,authority,'pending',async bounded=>{
  for(const job of jobs){
-  // A large rewrite continues on the next export; nothing is exported meanwhile.
-  if(!await eraseLegacySourceOptions(String(job.id),{...bounded,namespace:String(job.namespace)}))throw new NativeError('feedback_export_repair_continuing: An older saved import is still being cleaned before export. Run the export again to continue; nothing was exported.',503)
+  // A large rewrite continues on the next export under the same key; nothing is exported meanwhile.
+  if(!await eraseLegacySourceOptions(String(job.id),{...bounded,namespace:String(job.namespace)},[],{operationKey:'penny-export-repair:source:'+String(job.id)}))throw new NativeError('feedback_export_repair_continuing: An older saved import is still being cleaned before export. Run the export again to continue; nothing was exported.',503)
   changed=true
  }
  })

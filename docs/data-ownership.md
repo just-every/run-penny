@@ -158,15 +158,15 @@ through Base's bounded private staging; a resume clears any stage left by an
 interrupted attempt before starting again.
 
 Older Penny versions kept large saved imports as one flat plan with a copy of
-the supplied files. Base's import kit (from `0cb6162`) rewrites such a plan's
-custody in packed statements, so a person inside a plan of several megabytes is
-erased in one request; measured on local D1, flat plans up to about 12.8 MB
-complete. A plan too large for one request is still refused by a read-only
-admission check with `feedback_legacy_erasure_upgrade_required` before any
-operation, row or file changes; it needs Base support for publishing one job's
-exact custody across requests, and raising limits or dropping custody checks is
-not a supported recovery. Releases since `v0.0.0` stream large histories in
-bounded pages and never create such plans.
+the supplied files. Base's import kit (rer 0.2.20) erases a person from such a
+plan in journaled bounded steps: its private stage continues across resume
+requests from a durable progress journal, so a plan near the 24 MiB limit
+completes, and only the final publication changes custody, once. A step that
+cannot fit one request is refused by a read-only admission check with
+`feedback_legacy_erasure_upgrade_required` before any operation, row or file
+changes; raising limits or dropping custody checks is not a supported recovery.
+Releases since `v0.0.0` stream large histories in bounded pages and never create
+such plans.
 
 Sensitive literal matches in unrelated rows block erasure instead of deleting
 unrelated business data. Known text/JSON copies, filenames and source labels are

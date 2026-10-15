@@ -157,9 +157,9 @@ review the latest separate erasure journal. Resume existing jobs by their saved
 ID and plan; do not re-preview retained legacy files or rewrite applied SQL.
 Classic CSV, Ideas CSV and saved API imports remain supported. New jobs divide the saved plan into bounded stream pages when it
 exceeds 512 KiB or 200 normalized records. Original files remain in their declared
-private custody until erasure; mapping input is not retained as an extra copy. A pre-upgrade flat plan over 512 KiB
-is erased in bounded steps: its private erasure stage continues across resume
-requests until it publishes. Penny compiles every step before reserving erasure
+private custody until erasure; mapping input is not retained as an extra copy. A pre-upgrade flat plan
+is erased in Base's journaled bounded steps: its private erasure stage continues
+across resume requests until it publishes once. Penny compiles every step before reserving erasure
 or deleting native rows or files, and returns HTTP 409
 `feedback_legacy_erasure_upgrade_required` only for a step that cannot fit one
 request (legacy plans near the 24 MiB plan limit complete). See [MOVE-IN](MOVE-IN.md#privacy-erasure-and-boundaries) for the tested

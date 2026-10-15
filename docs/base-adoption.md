@@ -137,6 +137,18 @@ serves built files through `staticAssetResponse` and answers `/health` with `dep
 `deploy.json` declares the vars `rer verify`'s hosted check needs. Local session and dev-gate
 cookies carry the port (`operator_session_local_8787`, `rer_dev_gate_8787`).
 
+## Base import kit at rer 0.2.20 (16 October 2026)
+
+The import kit and the shared D1 transport it now imports are Base `38aa7ef`
+(rer 0.2.20, containing `386da5d`). Penny's saved-import erasure runs on the kit's
+journaled bounded steps: `retireD1ImportCustodyStep` retires each work item and
+`stageD1ImportErasure` carries the legacy `source.options` rewrite, one stable
+operation key per step. Penny's own staging runner (`erasure-stage.ts`,
+`erasure-stage-rows.ts`, `erasure-staged-target.ts`) is deleted. Migration 0061
+applies `d1ErasureProgressSchema` byte-exact with Penny's maintenance admission;
+archives carry completed progress beside the erasure journal and refuse an
+unfinished one. Applied 0001–0060 stay byte-identical.
+
 ## Base 0cb6162 import kit and rer 0.2.2 (14 October 2026)
 
 The import kit is Base `0cb6162`: packed custody and provenance rewrites (from

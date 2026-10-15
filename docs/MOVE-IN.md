@@ -270,11 +270,11 @@ private custody until erasure; mapping input is not retained as an extra copy.
 The demonstrated pages for the same source were at most 350,896 expanded bytes
 and completed selected-evidence erasure. The limits above remain refusal limits. An older flat plan
 can be far larger than one request: a plan from a 2,296,922-byte CSV with 40
-posts is about 20 MB. A record in a retained flat plan over 512 KiB is erased
-through Base's staged erasure form; its private stage (post-erasure values only)
-continues across resume requests, with every batch under Base's baseline and
-stage guards, and publishes the tombstones, journal receipt and restore
-checkpoint together. On local D1 a CSV-heavy 20.1 MB and a profile-heavy 19.9 MB
+posts is about 20 MB. Each record is erased by Base's journaled bounded
+retirement; its private stage (post-erasure values only) continues across resume
+requests from Base's progress journal, with every batch under Base's baseline and
+stage guards and Penny's 1 MiB batch policy, and publishes the tombstones,
+journal receipt and restore checkpoint together, once. On local D1 a CSV-heavy 20.1 MB and a profile-heavy 19.9 MB
 legacy plan both erase completely while everyone else keeps undo, resume and
 restore. Before reserving erasure or deleting native records or files, Penny
 compiles each step as it will run, in its own request budget; a step that

@@ -168,3 +168,57 @@ it('[IMP-003][IMP-005][DATA-001] validates a bounded stream archive and keeps it
  for(const table of Object.keys(saved.archive.tables).filter(name=>name.startsWith('ik_')||name.startsWith('feedback_import_')))expect(exported.archive.tables[table],table).toEqual(saved.archive.tables[table])
  const receipt=await call(importPath+'/jobs/'+job.id+'/receipt',undefined,restoredOperator);expect(receipt.status,await receipt.clone().text()).toBe(200);expect(await receipt.json()).toMatchObject({phase:'completed',effects:{mail:0,notifications:0}})
 },60000)
+
+it('[DATA-003][IMP-005] erases one person from a legacy saved import too large for one request, across requests and a killed one, applying nothing twice',async()=>{
+ const {ideasFeedbackFixture,populateFeedback}=await import('./feedback-import-fixture')
+ // A legacy job keeps its mapper input beside the normalized plan: a profiles
+ // file near the per-file limit becomes a plan of about twenty megabytes.
+ const operator=await owner(),created='2024-07-08T09:10:11.000Z',source=ideasFeedbackFixture('legacy-large-plan'),wording='Long historical profile wording. '.repeat(2075)
+ source.files.push({name:'users.json',kind:'users',version:'v2',base64:Buffer.from(JSON.stringify({users:Array.from({length:60},(_,i)=>({id:'person-'+i,name:'Historical person '+i,created,profile:`Distinct-${i}-marker ${wording}`}))})).toString('base64')})
+ source.files.push({name:'votes.json',kind:'votes',version:'v2',base64:Buffer.from(JSON.stringify({items:Array.from({length:4},(_,i)=>({id:'vote-'+i,post:'idea-1',voter:'person-0',created}))})).toString('base64')})
+ const job=await populateFeedback(source,operator)
+ expect(await env.DB.prepare('SELECT SUM(length(body)) n FROM ik_d1_plan_chunks WHERE job_id=?').bind(job.id).first('n')).toBeGreaterThan(16*1024*1024)
+ const person=stableFeedbackId(source.namespace,'users','person-0'),others=async()=>(await env.DB.prepare('SELECT * FROM requesters WHERE id<>? ORDER BY id').bind(person).all()).results,before=await others()
+ const receipts=async()=>(await env.DB.prepare('SELECT id FROM ik_d1_erasure_journal ORDER BY id').all<{id:string}>()).results.map(row=>row.id),earlier=await receipts()
+ const epoch=()=>env.DB.prepare('SELECT epoch FROM rer_portability_state WHERE id=1').first<number>('epoch'),firstEpoch=await epoch()
+ const plan=await(await erasurePreview('requesters',person,operator)).json() as {planHash:string;blockedCopies:unknown[]};expect(plan.blockedCopies).toEqual([])
+ const erased=await call('/api/operator/data/erasure',{table:'requesters',id:person,planHash:plan.planHash},operator);expect(erased.status,await erased.clone().text()).toBe(202)
+ let result=await erased.json() as {operationId:string;status:string},requests=1,carried=0,killed=false
+ const resume=()=>call('/api/operator/data/operations/'+result.operationId+'/resume',{},operator)
+ for(;requests<100&&result.status!=='complete';requests++){
+  expect(result.status).toBe('pending_import')
+  if(!killed&&await env.DB.prepare("SELECT COUNT(*) n FROM ik_d1_erasure_progress WHERE phase='values' AND value_rows>0").first('n')){
+   // Kill one request after its staged batch commits, before it hears back.
+   const progress=await env.DB.prepare('SELECT id,generation,value_rows FROM ik_d1_erasure_progress').all()
+   const db=observeD1(env.DB,{after:async sql=>{if(!killed&&sql.some(statement=>statement.includes('ik_d1_native_staging_values'))&&sql.some(statement=>statement.startsWith('INSERT'))){killed=true;throw new Error('connection lost after commit')}}})
+   const lost=await createPennyApi().fetch(new Request(origin+'/api/operator/data/operations/'+result.operationId+'/resume',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json',...operator},body:'{}'}),{...env,DB:db})
+   expect(killed).toBe(true);expect(lost.status).toBeGreaterThanOrEqual(500)
+   // The next request resumes the same generation from the committed offset.
+   const after=(await env.DB.prepare('SELECT id,generation,value_rows FROM ik_d1_erasure_progress').all()).results as typeof progress.results
+   expect(after.map(row=>[row.id,row.generation])).toEqual(progress.results.map(row=>[row.id,row.generation]))
+   expect(Number(after[0].value_rows)).toBeGreaterThan(Number(progress.results[0].value_rows))
+  }
+  const next=await resume();expect([200,202],await next.clone().text()).toContain(next.status);result=await next.json() as typeof result
+  if(await env.DB.prepare("SELECT COUNT(*) n FROM ik_d1_native_staging WHERE action='erase'").first('n'))carried++
+ }
+ expect(result.status).toBe('complete');expect(killed).toBe(true);expect(carried).toBeGreaterThan(1)
+ // Each journaled retirement published once: its own receipt, and one restore checkpoint each.
+ const progress=(await env.DB.prepare('SELECT id,phase FROM ik_d1_erasure_progress ORDER BY id').all<{id:string;phase:string}>()).results
+ expect(progress.length).toBeGreaterThan(0);expect(progress.every(row=>row.phase==='complete')).toBe(true)
+ const added=(await receipts()).filter(id=>!earlier.includes(id));expect(added.length).toBeGreaterThan(0)
+ for(const id of added)expect(progress.map(row=>row.id)).toContain(id)
+ expect(Number(await epoch())-Number(firstEpoch)).toBe(added.length)
+ expect(await env.DB.prepare('SELECT COUNT(*) n FROM ik_d1_native_staging').first('n')).toBe(0)
+ expect(await env.DB.prepare('SELECT COUNT(*) n FROM requesters WHERE id=?').bind(person).first('n')).toBe(0);expect(await others()).toEqual(before)
+ // No copy of the person's values remains in any table or stored file.
+ for(const {name} of (await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").all<{name:string}>()).results){
+  const retained=JSON.stringify((await env.DB.prepare(`SELECT * FROM "${name}"`).all()).results);expect(retained,name).not.toContain('Distinct-0-marker');expect(retained,name).not.toContain('"Historical person 0"')
+ }
+ for(const object of (await env.FILES.list()).objects)expect(await (await env.FILES.get(object.key))!.text(),object.key).not.toContain('Distinct-0-marker')
+ expect((await call(importPath+'/jobs/'+job.id+'/receipt',undefined,operator)).status).toBe(200)
+ // Everyone else's history still undoes, and the erased person is not recreated.
+ let undo=await call(importPath+'/jobs/'+job.id+'/undo',{},operator)
+ for(let step=0;step<50&&undo.status===200&&(await undo.clone().json() as {state:string}).state!=='undone';step++)undo=await call(importPath+'/jobs/'+job.id+'/undo',{},operator)
+ expect(undo.status,await undo.clone().text()).toBe(200);expect(await undo.json()).toMatchObject({state:'undone'})
+ expect(await env.DB.prepare('SELECT COUNT(*) n FROM requesters').first('n')).toBe(0)
+},300000)

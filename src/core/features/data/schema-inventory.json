@@ -494,6 +494,22 @@
       "stores_json"
     ]
   },
+  "ik_d1_erasure_progress": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "destination",
+      "request_hash",
+      "generation",
+      "phase",
+      "index_rows",
+      "value_rows",
+      "revision",
+      "records_erased",
+      "field_matches_json",
+      "created_at"
+    ]
+  },
   "ik_d1_erasure_tally": {
     "classification": "product",
     "columns": [
