@@ -11,7 +11,7 @@ import { DataField } from '@/core/ui/app/DataField'
 
 export function AccountDetailPage({ accountSlug }: { readonly accountSlug: string }) {
   const [account, retry] = useOperatorResource<OperatorAccountDetail>(`/api/operator/accounts/${encodeURIComponent(accountSlug)}`)
-  return <>{account.kind === 'loading' ? <OperatorResourceLoading label="Loading account context…" /> : null}{account.kind === 'session_expired' ? <OperatorSessionExpired /> : null}{account.kind === 'not_found' ? <AccountNotFound /> : null}{account.kind === 'error' ? <OperatorResourceFailure title="We could not load this account." status={account.status} onRetry={retry} /> : null}{account.kind === 'ready' ? <AccountContent account={account.data} onSaved={retry} /> : null}</>
+  return <>{account.kind === 'loading' ? <OperatorResourceLoading label="Loading account context…" /> : null}{account.kind === 'session_expired' ? <OperatorSessionExpired /> : null}{account.kind === 'not_found' ? <AccountNotFound /> : null}{account.kind === 'error' ? <OperatorResourceFailure title="We could not load this account." status={account.status} message={account.message} onRetry={retry} /> : null}{account.kind === 'ready' ? <AccountContent account={account.data} onSaved={retry} /> : null}</>
 }
 
 function AccountNotFound() {

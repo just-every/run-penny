@@ -129,7 +129,7 @@ export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
     if (jobs.kind === 'loading') return <OperatorResourceLoading label="Loading saved imports…"/>
     if (jobs.kind === 'session_expired') return <OperatorSessionExpired/>
     if (jobs.kind === 'not_found') return <OperatorResourceNotFound title="Saved imports unavailable">This saved import list is unavailable.</OperatorResourceNotFound>
-    if (jobs.kind === 'error') return <OperatorResourceFailure title="Saved imports could not be loaded." status={jobs.status} onRetry={reloadJobs}/>
+    if (jobs.kind === 'error') return <OperatorResourceFailure title="Saved imports could not be loaded." status={jobs.status} message={jobs.message} onRetry={reloadJobs}/>
     if (!jobs.data.length) return <p className="mt-5 text-sm leading-6 text-penny-muted">No saved imports yet.</p>
     return <details className="mt-5">
       <summary className="cursor-pointer py-2 font-bold">Your saved imports</summary>

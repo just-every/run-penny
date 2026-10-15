@@ -1,4 +1,5 @@
 import {NativeError} from '../auth/native-tokens'
+import {dataOperationInProgress} from '../data/operation-in-progress'
 export interface AuthorityGuard {sql:string;params:(string|number|null)[]}
 
 /** The same D1 transaction checks current authority before every service batch.
@@ -15,7 +16,7 @@ export function guardedDatabase(db:D1Database,guard:AuthorityGuard,extra:()=>D1P
    ])
    return result.slice(1+prefix.length,-1)
   }catch(error){
-   if(error instanceof Error&&error.message.includes('penny_integration_authority'))throw new NativeError('integration_authority_changed',401)
+   if(error instanceof Error&&error.message.includes('penny_integration_authority'))throw await dataOperationInProgress(db)??new NativeError('integration_authority_changed',401)
    throw error
   }
  }

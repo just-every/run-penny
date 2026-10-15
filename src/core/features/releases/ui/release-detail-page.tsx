@@ -22,7 +22,7 @@ const panelTitle = 'text-base font-bold text-penny-ink'
 
 export function ReleaseDetailPage({ releaseSlug }: { readonly releaseSlug: string }) {
   const [release, retry] = useOperatorResource<OperatorReleaseDetail>(`/api/operator/releases/${encodeURIComponent(releaseSlug)}`)
-  return <>{release.kind === 'loading' ? <OperatorResourceLoading label="Loading release detail…" /> : null}{release.kind === 'session_expired' ? <OperatorSessionExpired /> : null}{release.kind === 'not_found' ? <ReleaseNotFound /> : null}{release.kind === 'error' ? <OperatorResourceFailure title="We could not load this release." status={release.status} onRetry={retry} /> : null}{release.kind === 'ready' ? <ReleaseContent release={release.data} refresh={retry} /> : null}</>
+  return <>{release.kind === 'loading' ? <OperatorResourceLoading label="Loading release detail…" /> : null}{release.kind === 'session_expired' ? <OperatorSessionExpired /> : null}{release.kind === 'not_found' ? <ReleaseNotFound /> : null}{release.kind === 'error' ? <OperatorResourceFailure title="We could not load this release." status={release.status} message={release.message} onRetry={retry} /> : null}{release.kind === 'ready' ? <ReleaseContent release={release.data} refresh={retry} /> : null}</>
 }
 
 function ReleaseNotFound() {

@@ -10,13 +10,13 @@ export function OperatorResourceLoading({ label }: { readonly label: string }) {
   return <OperatorCard className="p-6" role="status" aria-live="polite"><span className="inline-flex items-center gap-3 text-sm font-medium text-penny-muted"><span className="size-3 animate-pulse rounded-full bg-penny-copper/45" aria-hidden="true" />{label}</span></OperatorCard>
 }
 
-export function OperatorResourceFailure({ title, onRetry, status }: { readonly title: string; readonly onRetry: () => void; readonly status?: number }) {
+export function OperatorResourceFailure({ title, onRetry, status, message }: { readonly title: string; readonly onRetry: () => void; readonly status?: number; readonly message?: string }) {
   return (
     <OperatorCard className="flex items-start gap-4 p-5 sm:gap-8 sm:p-10" role="alert">
       <IconDisc name="warning" size="error" />
       <div className="min-w-0 pt-1 sm:pt-3">
         <h2 className="text-2xl leading-[1.15] font-extrabold tracking-[-0.01em] text-penny-ink sm:text-[28px]">{title}</h2>
-        <p className="mt-1.5 text-base text-penny-muted sm:mt-2 sm:text-lg">{status ? `Penny returned ${status}.` : 'Check your connection and try again.'}</p>
+        <p className="mt-1.5 text-base text-penny-muted sm:mt-2 sm:text-lg">{message ?? (status ? `Penny returned ${status}.` : 'Check your connection and try again.')}</p>
         <button type="button" onClick={onRetry} className={`${secondaryButtonClass} mt-4 sm:mt-6`}>Try again</button>
       </div>
       <ErrorArt className="ml-auto hidden w-[min(400px,40%)] self-center lg:block" />

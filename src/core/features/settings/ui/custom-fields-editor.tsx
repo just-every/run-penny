@@ -70,7 +70,7 @@ export function CustomFieldsEditor({ entityType, entityId }: { readonly entityTy
     {fields.kind === 'loading' ? <p className="text-sm text-penny-muted">Loading custom fields…</p> : null}
     {fields.kind === 'session_expired' ? <p role="alert" className="text-sm font-semibold text-penny-danger">Your operator session has expired. Sign in again to edit custom fields.</p> : null}
     {fields.kind === 'not_found' ? <p role="alert" className="text-sm font-semibold text-penny-danger">This record is no longer available for custom field editing.</p> : null}
-    {fields.kind === 'error' ? <div className="space-y-2"><p role="alert" className="text-sm font-semibold text-penny-danger">Custom field values could not be loaded.</p><button type="button" className={secondaryButtonClass} onClick={reload}>Retry custom fields</button></div> : null}
+    {fields.kind === 'error' ? <div className="space-y-2"><p role="alert" className="text-sm font-semibold text-penny-danger">{fields.message ?? 'Custom field values could not be loaded.'}</p><button type="button" className={secondaryButtonClass} onClick={reload}>Retry custom fields</button></div> : null}
     {fields.kind === 'ready' && fields.data.length === 0 ? <p className="text-sm text-penny-muted">No custom fields are defined for this record.</p> : null}
     {fields.kind === 'ready' ? <div className="space-y-3">{fields.data.map(field => {
       const current = Object.hasOwn(values, field.id) ? values[field.id] : field.value

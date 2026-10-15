@@ -1,9 +1,11 @@
 # Maintained Base adoption
 
-## Current inventory, 14 October 2026
+## Current inventory, 15 October 2026
 
 Penny runs the shared `rer` command in **package mode**: `package.json` pins
-`@runeditrun/rer` 0.2.2 exactly as a devDependency (locked in `pnpm-lock.yaml`),
+`@runeditrun/rer` 0.2.9 exactly as a devDependency (locked in `pnpm-lock.yaml`;
+the current published release is 0.2.12, and a global `rer` dispatches to the
+project's pin),
 package scripts and `OPERATIONS.json` run `rer VERB`, and the checkout carries no
 vendored `scripts/rer.mjs`, `scripts/base-cli` or `scripts/base-onboarding`.
 `pnpm install --frozen-lockfile` installs the command; `rer check --profile

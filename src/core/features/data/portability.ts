@@ -2,6 +2,7 @@ import type { Context, Hono } from 'hono'
 import { createPortability, createPortabilityHandler, excludedTable } from '@runeditrun/rer/modules/portability'
 import { abortPortabilitySnapshot, abortPortabilityActor, portabilitySnapshotStatus } from '../../../../scripts/portability/cleanup.mjs'
 import type { PennyRuntime } from '../../app/runtime'
+import type { Session } from '../../../../base/modules/operator-auth/index.mjs'
 import type { AppBindings } from '../../shared/bindings'
 import { operatorAuth } from '../auth/operator'
 import { NativeError } from '../auth/native-tokens'
@@ -16,6 +17,15 @@ const reply = (error: string, status: number) => Response.json({ error }, { stat
 /** Base's export protocol, under Penny's existing durable maintenance fence. */
 export function registerPortabilityRoutes(app: Hono<Environment>) {
  app.all('/api/portability/*', hostedExport)
+}
+/** The signed-in owner's own hosted export that still holds the data lock, so
+ * the Data page can resume or abort it through the same guarded routes. */
+export async function ownHostedExport(db: D1Database, operation: { kind: string; payload_json: string } | null, session: Session | null): Promise<{ jobId: string | null } | null> {
+ if (operation?.kind !== 'export' || session?.kind !== 'native' || session.operator.role !== 'owner') return null
+ const actor = (JSON.parse(operation.payload_json) as { portabilityActor?: string }).portabilityActor
+ if (!actor?.startsWith(session.operatorId + ':')) return null
+ const job = await db.prepare("SELECT id FROM rer_portability_jobs WHERE kind='export' AND actor=? AND phase<>'aborted'").bind(actor).first<{ id: string }>()
+ return { jobId: job?.id ?? null }
 }
 async function hostedExport(c: Context<Environment>): Promise<Response> {
  const request = c.req.raw, url = new URL(request.url), runtime = c.get('runtime'), origin = runtime.configuration.appOrigin

@@ -20,7 +20,7 @@ export function SourceDrilldown({artifact}:{artifact:Artifact}) {
  if(state.kind==='loading')return <OperatorResourceLoading label="Loading original sources…"/>
  if(state.kind==='session_expired')return <OperatorSessionExpired/>
  if(state.kind==='not_found')return <OperatorResourceNotFound title="Learning record unavailable">It may have been erased or disconnected.</OperatorResourceNotFound>
- if(state.kind==='error')return <OperatorResourceFailure title="Could not load originals." onRetry={retry} status={state.status}/>
+ if(state.kind==='error')return <OperatorResourceFailure title="Could not load originals." onRetry={retry} status={state.status} message={state.message}/>
  return <div>{state.data.observations.map(o=><article key={o.id} className="source-row"><LearningCitation source={o.presentation}/><details><summary>Exact immutable wording and provider original</summary><p>Observation {o.id}</p><h4>Citation offset basis</h4><pre>{o.wording}</pre><h4>Preserved original</h4><pre>{JSON.stringify(o.original,null,2)}</pre></details>{[...artifact.body.citations,...artifact.body.contradictions].filter(c=>c.observationId===o.id).map((c,i)=><p key={i}>Cited span {c.start}–{c.end}: <q>{c.quote}</q></p>)}</article>)}<p>Interpretation v{artifact.version}. {state.data.artifacts.length} preserved versions; {state.data.corrections.length} recorded corrections; {state.data.runs.length} checks.</p></div>
 }
 export function CorrectInterpretation({artifact,onSaved,id}:{artifact:Artifact;onSaved:()=>void;id?:string}) {
@@ -32,6 +32,6 @@ function InvestigationHistory({id}:{id:string}) {
  if(state.kind==='loading')return <OperatorResourceLoading label="Loading investigation history…"/>
  if(state.kind==='session_expired')return <OperatorSessionExpired/>
  if(state.kind==='not_found')return <OperatorResourceNotFound title="History unavailable">This investigation may have been erased.</OperatorResourceNotFound>
- if(state.kind==='error')return <OperatorResourceFailure title="Could not load history." onRetry={retry} status={state.status}/>
+ if(state.kind==='error')return <OperatorResourceFailure title="Could not load history." onRetry={retry} status={state.status} message={state.message}/>
  return <div><h3>Preserved interpretations</h3>{state.data.artifacts.map(a=><article key={a.id} className="source-row"><h4>Version {a.version} · {stateLabel(a.state)}</h4><p><LearningDate value={a.createdAt}/></p><p>{a.body.interpretation}</p><p>Next check: {a.body.nextCheck}</p><ul>{a.body.uncertainty.map((u,i)=><li key={i}>{u}</li>)}</ul><CorrectInterpretation artifact={a} onSaved={retry}/></article>)}<h3>Operator corrections</h3>{state.data.corrections.length?state.data.corrections.map(c=><article key={c.id} className="source-row"><p><LearningDate value={c.created_at}/></p><blockquote>{c.correction}</blockquote></article>):<p>No corrections recorded.</p>}<h3>Checks and actual costs</h3>{state.data.runs.length?state.data.runs.map(r=><article key={r.id} className="source-row"><p>{stateLabel(r.state)} · <LearningDate value={r.finished_at??r.created_at}/></p><p>{learningReason(r.reason)}</p><p>{r.actual_micros===null?`Actual cost is unresolved; ${money(r.reserved_micros)} reserved.`:`Actual cost: ${money(r.actual_micros)}.`}</p></article>):<p>No checks have run.</p>}</div>
 }

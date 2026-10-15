@@ -8,7 +8,9 @@ export function opaqueToken(): string {
 export class NativeError extends Error {
   readonly code: string
   readonly status: 400 | 401 | 403 | 404 | 409 | 413 | 422 | 429 | 503
-  constructor(code: string, status: 400 | 401 | 403 | 404 | 409 | 413 | 422 | 429 | 503) { super(code); this.code=code; this.status=status }
+  /** Operator-facing cause and next step, sent beside the code. */
+  readonly hint?: string
+  constructor(code: string, status: 400 | 401 | 403 | 404 | 409 | 413 | 422 | 429 | 503, hint?: string) { super(code); this.code=code; this.status=status; this.hint=hint }
 }
 export async function takeRateLimit(db: D1Database, scope: string, subject: string, limit: number, windowMs: number): Promise<void> {
   const now = new Date().toISOString()

@@ -29,7 +29,7 @@ export function StatusDrafts() {
   {message ? <p role="status" className="mt-3 text-sm font-semibold text-penny-ink">{message}</p> : null}
   {resource.kind === 'loading' ? <OperatorResourceLoading label="Loading status updates…"/> : null}
   {resource.kind === 'session_expired' ? <OperatorSessionExpired/> : null}
-  {resource.kind === 'error' ? <OperatorResourceFailure title="We could not load status updates." status={resource.status} onRetry={refresh}/> : null}
+  {resource.kind === 'error' ? <OperatorResourceFailure title="We could not load status updates." status={resource.status} message={resource.message} onRetry={refresh}/> : null}
   {resource.kind === 'ready' && !drafts.length ? <p className="mt-3 text-sm text-penny-muted">No status updates awaiting publication.</p> : null}
   {drafts.map(draft => <article key={draft.id} className={`${paperCardClass} mt-4 p-5`}>
    <h3 className="font-bold text-penny-ink">{draft.title}</h3><p className="mt-3 whitespace-pre-wrap leading-7 text-penny-ink">{draft.body}</p>

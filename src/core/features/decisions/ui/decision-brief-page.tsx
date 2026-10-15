@@ -20,7 +20,7 @@ const nextStepClass = 'rounded-lg border border-penny-line bg-penny-paper px-4 p
 
 export function DecisionBriefPage({ decisionSlug }: { readonly decisionSlug: string }) {
   const [decision, retry] = useOperatorResource<OperatorDecisionBrief>(`/api/operator/decisions/${encodeURIComponent(decisionSlug)}`)
-  return <>{decision.kind === 'loading' ? <OperatorResourceLoading label="Loading decision brief…" /> : null}{decision.kind === 'session_expired' ? <OperatorSessionExpired /> : null}{decision.kind === 'not_found' ? <DecisionNotFound /> : null}{decision.kind === 'error' ? <OperatorResourceFailure title="We could not load this decision brief." status={decision.status} onRetry={retry} /> : null}{decision.kind === 'ready' ? <DecisionContent decision={decision.data} onSaved={retry} /> : null}</>
+  return <>{decision.kind === 'loading' ? <OperatorResourceLoading label="Loading decision brief…" /> : null}{decision.kind === 'session_expired' ? <OperatorSessionExpired /> : null}{decision.kind === 'not_found' ? <DecisionNotFound /> : null}{decision.kind === 'error' ? <OperatorResourceFailure title="We could not load this decision brief." status={decision.status} message={decision.message} onRetry={retry} /> : null}{decision.kind === 'ready' ? <DecisionContent decision={decision.data} onSaved={retry} /> : null}</>
 }
 
 function DecisionNotFound() {

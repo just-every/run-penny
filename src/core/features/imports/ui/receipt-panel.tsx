@@ -103,6 +103,6 @@ export function JobReceiptPanel({ jobId }: { jobId: string }) {
   if (resource.kind === 'loading') return <OperatorResourceLoading label="Loading move-in receipt…"/>
   if (resource.kind === 'session_expired') return <OperatorSessionExpired/>
   if (resource.kind === 'not_found') return <OperatorResourceNotFound title="Move-in receipt unavailable">This saved import no longer has a readable receipt.</OperatorResourceNotFound>
-  if (resource.kind === 'error') return <OperatorResourceFailure title="Move-in receipt could not be loaded." status={resource.status} onRetry={retry}/>
+  if (resource.kind === 'error') return <OperatorResourceFailure title="Move-in receipt could not be loaded." status={resource.status} message={resource.message} onRetry={retry}/>
   return <div className="rounded-lg border border-penny-line p-4 sm:p-5"><ReceiptContent receipt={resource.data} title="Move-in receipt"/><button type="button" className={`${secondaryButtonClass} mt-4`} onClick={retry}>Refresh receipt</button></div>
 }

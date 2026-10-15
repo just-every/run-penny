@@ -35,7 +35,7 @@ export function LearningPage() {
  if(state.kind==='loading')return <OperatorResourceLoading label="Loading learning workspace…"/>
  if(state.kind==='session_expired')return <OperatorSessionExpired/>
  if(state.kind==='not_found')return <OperatorResourceNotFound title="Learning workspace unavailable">This installation does not have a learning workspace.</OperatorResourceNotFound>
- if(state.kind==='error')return <OperatorResourceFailure title={refreshAttempt===null?"Could not load learning.":"Could not refresh learning."} onRetry={refresh} status={state.status}/>
+ if(state.kind==='error')return <OperatorResourceFailure title={refreshAttempt===null?"Could not load learning.":"Could not refresh learning."} onRetry={refresh} status={state.status} message={state.message}/>
  if(!home)return null
  const source=home.sources.find(s=>s.id===investigation?.sourceId)
  const correct=()=>{if(investigation&&artifact){setTarget({investigationId:investigation.id,id:`learning-correction-${artifact.id}`,kind:'correct'});selectTab('learning')}}

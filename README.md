@@ -45,11 +45,12 @@ delivery.
 
 ## Run it on your computer
 
-With `rer` available, clone Penny and run the commands below. `rer` bootstraps
-the checkout's pinned Node **22.20.0** and pnpm **10.12.4**, downloading missing
-tools into its own cache without changing global tools. You do not need to
-install pnpm first. Penny pins `@runeditrun/rer` **0.2.5** in its manifest and
-lockfile; the dispatcher uses that project version. The source distribution is:
+With `rer` available (the current release is **0.2.12**), clone Penny and run
+the commands below. `rer` bootstraps the checkout's pinned Node **22.20.0** and
+pnpm **10.12.4**, downloading missing tools into its own cache without changing
+global tools. You do not need to install pnpm first. Penny pins an exact
+`@runeditrun/rer` version in `package.json` and its lockfile, and the global
+`rer` runs that project version. The source distribution is:
 
 ```bash
 git clone https://github.com/just-every/run-penny.git

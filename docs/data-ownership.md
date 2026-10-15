@@ -355,7 +355,20 @@ exposed. No deployment/provider credentials are needed for export.
 
 Hosted **Data → Export workspace** prepares this same archive and matching
 journal, with separate download links visible to a signed-in native owner.
-Restore and erasure remain the existing guarded commands. Source snapshots are
+The browser drives the export, so closing its tab mid-way leaves the operation
+holding the workspace. The owner who started it then sees **Export in
+progress** on the Data page: **Resume export** finishes the same Base job,
+verifies it and offers both downloads; **Abort export** removes the partial
+snapshot and releases the workspace. Use them only when no other tab or device
+is still preparing that export. A step whose Worker was cancelled mid-request
+never released its runner; both buttons first release it, which is the same
+owner confirmation `data:recover-runner --prior-runner-stopped` gives, and every
+later write of the cancelled step stays fenced by its runner token. No partial
+archive is offered: downloads appear only after the complete archive passes
+verification. While any data operation holds the workspace, guarded writes such
+as **Publish release** answer 409 `data_operation_in_progress` naming the
+operation and the next step. Restore and erasure remain the existing guarded
+commands. Source snapshots are
 removed after successful transfer. If a session expires or cleanup fails, the
 workspace remains locked: preserve `archive.transfer.json` inside the unique
 0700 `<output>.pending-*` staging directory (the error names the exact checkpoint

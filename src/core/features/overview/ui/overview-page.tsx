@@ -20,7 +20,7 @@ export function OverviewPage() {
         {overview.kind === 'loading' ? <OperatorResourceLoading label="Loading your operator overview…" /> : null}
         {overview.kind === 'session_expired' ? <OperatorSessionExpired /> : null}
         {overview.kind === 'not_found' ? <OperatorResourceNotFound title="Operator overview unavailable">The workspace overview could not be found.</OperatorResourceNotFound> : null}
-        {overview.kind === 'error' ? <OperatorResourceFailure title="We could not load the operator overview." status={overview.status} onRetry={retry} /> : null}
+        {overview.kind === 'error' ? <OperatorResourceFailure title="We could not load the operator overview." status={overview.status} message={overview.message} onRetry={retry} /> : null}
         {overview.kind === 'ready' ? <OverviewContent overview={overview.data} /> : null}
       </div>
     </>

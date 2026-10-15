@@ -181,3 +181,36 @@ it('serializes abort with advancement and fences an old runner after owner-confi
  expect(await env.DB.prepare('SELECT lock_id FROM data_state').first('lock_id')).toBeNull()
  expect((await env.DB.prepare("SELECT name FROM sqlite_master WHERE name LIKE 'rer_portability_snap_%'").all()).results).toHaveLength(0)
 })
+it('names an interrupted export to guarded writers, offers its owner the job to resume or abort, then releases publication', async () => {
+ const cookie = await owner(), stamp = new Date().toISOString()
+ expect((await call('/api/operator/releases/options', undefined, cookie)).status).toBe(200)
+ const author = await env.DB.prepare('SELECT id FROM operators').first<string>('id')
+ await env.DB.batch([
+  env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('csv-board','csv-board','Billing','public',0,?,?)").bind(stamp, stamp),
+  env.DB.prepare("INSERT INTO requests(id,slug,board_id,title,description,moderation_state,public_state,published_at,created_at,updated_at) VALUES('csv-request','csv-request','csv-board','CSV export','Export invoices','approved','shipped',?,?,?)").bind(stamp, stamp, stamp),
+  env.DB.prepare("INSERT INTO tags(id,name,created_at,updated_at) VALUES('csv-tag','Billing',?,?)").bind(stamp, stamp),
+  env.DB.prepare("INSERT INTO decisions(id,slug,title,question,state,rationale,created_at,updated_at) VALUES('csv-decision','csv-decision','CSV','Ship CSV?','committed','Most asked',?,?)").bind(stamp, stamp),
+  env.DB.prepare("INSERT INTO roadmap_items(id,slug,decision_id,title,summary,status,delivery_notes,created_at,updated_at) VALUES('csv-item','csv-item','csv-decision','CSV','Invoices','shipped','Done',?,?)").bind(stamp, stamp),
+  env.DB.prepare("INSERT INTO roadmap_publications(id,roadmap_item_id,public_title,public_summary,public_slug,approved_by_operator_id,approved_at,created_at,updated_at) VALUES('csv-approval','csv-item','CSV export','Invoices as CSV','csv-export',?,?,?,?)").bind(author, stamp, stamp, stamp),
+  env.DB.prepare("INSERT INTO roadmap_request_mappings(roadmap_item_id,request_id,approved_at,created_at,updated_at) VALUES('csv-item','csv-request',?,?,?)").bind(stamp, stamp, stamp),
+ ])
+ const draft = await call('/api/operator/releases', { title: 'CSV export is live', body: 'Export invoices to CSV.', releaseType: 'new', tagIds: ['csv-tag'], publicationDate: '2026-10-15', setupUrl: '', targetIds: ['csv-item'], authorOperatorId: author }, cookie)
+ expect(draft.status, await draft.clone().text()).toBe(201)
+ const publish = `/api/operator/releases/${await env.DB.prepare('SELECT slug FROM releases').first('slug')}/publish`
+ // The browser that created the export closed before advancing it.
+ const id = await create(cookie)
+ const refused = await call(publish, {}, cookie)
+ expect(refused.status).toBe(409)
+ expect((await refused.json() as { error: string }).error).toBe('data_operation_in_progress')
+ const overview = await (await call('/api/operator/data/overview', undefined, cookie)).json() as { ownExport: { jobId: string } | null; operation: { kind: string } | null }
+ expect(overview).toMatchObject({ ownExport: { jobId: id }, operation: { kind: 'export' } })
+ await complete(id, cookie)
+ const archive = await call(`${base}/${id}/download`, undefined, cookie)
+ expect(archive.status).toBe(200); await archive.arrayBuffer()
+ expect((await call(`${base}/${id}/abort`, {}, cookie)).status).toBe(200)
+ const idle = await (await call('/api/operator/data/overview', undefined, cookie)).json() as { ownExport: unknown; operation: unknown }
+ expect(idle).toMatchObject({ ownExport: null, operation: null })
+ const published = await call(publish, {}, cookie)
+ expect(published.status, await published.clone().text()).toBe(200)
+ expect(await env.DB.prepare('SELECT state FROM releases').first('state')).toBe('published')
+})

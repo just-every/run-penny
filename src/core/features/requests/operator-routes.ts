@@ -225,6 +225,7 @@ async function operatorMutation(context: Context<OperatorMutationEnvironment>, a
     context.set('runtime',{...runtime,database:{binding:db}})
     return await action(operator)
   } catch (error) {
+    if (error instanceof NativeError && error.hint) return context.json({ error: error.code, message: error.hint }, error.status)
     if (error instanceof RequestLifecycleError || error instanceof NativeError) return context.json({ error: error.code }, error.status)
     return mutationFailure(context, error)
   }

@@ -118,6 +118,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
     }
     if(context.req.path.startsWith('/api/operator/feedback-import/')&&!(error instanceof NativeError))return context.json({error:'feedback_import_refused',reason:/^[A-Z][A-Z0-9_]+$/.test(error.message)?error.message:'SOURCE_OR_STORAGE_FAILURE'},409)
     if(context.req.path===unsubscribeEndpoint)return preferenceFailure(error)
+    if (error instanceof NativeError && error.hint) return context.json({ error: error.code, message: error.hint }, error.status)
     if (error instanceof NativeError || error instanceof RequesterIdentityError || error instanceof RequestLifecycleError) return context.json({ error: error.code }, error.status)
     if(context.req.path.startsWith('/api/integrations/')||context.req.path.startsWith('/api/operator/integrations/'))return context.json({error:'integration_operation_failed'},503)
     console.error('Penny request failed', error)

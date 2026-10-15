@@ -220,7 +220,7 @@ it.each(['request','requester','evidence','streamed evidence','legacy evidence']
   const admitted=await session.json()
   expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'locked',lock_id:pending.operationId})
   const held=await call('/api/operator/requests/feedback-'+requestId.toLowerCase()+'/notes',{body:'Must wait for privacy cleanup'},operator)
-  expect(held.status,await held.clone().text()).toBe(401);expect(await held.json()).toEqual({error:'integration_authority_changed'})
+  expect(held.status,await held.clone().text()).toBe(409);expect((await held.json() as {error:string}).error).toBe('data_operation_in_progress')
   const stillAdmitted=await call('/auth/session',undefined,operator)
   expect(stillAdmitted.status).toBe(200);expect(await stillAdmitted.json()).toEqual(admitted)
   expect(await authorityRows()).toEqual(authorityBefore);expect(await nativeRows()).toEqual(nativeBefore)
