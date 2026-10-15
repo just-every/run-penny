@@ -15,7 +15,7 @@ git clone https://github.com/just-every/run-penny.git
 cd run-penny && rer dev
 ```
 
-`rer dev` installs the locked dependencies, sets up a local owner (`owner@run-penny.test`) with an empty workspace and no sample records, and starts Penny on the first free port from 8787. In a terminal it stays in the foreground; from a script it returns once Penny is ready and keeps it running until `rer dev --stop`. To be the owner under your own address, run `rer setup --owner-email you@example.com` once before the first `rer dev`.
+`rer dev` installs the locked dependencies, sets up a default local owner (a `.test` address that never receives mail) with an empty workspace and no sample records, and starts Penny on the first free port from 8787. In a terminal it stays in the foreground; from a script it returns once Penny is ready and keeps it running until `rer dev --stop`. To be the owner under your own address, run `rer setup --owner-email you@example.com` once before the first `rer dev`.
 
 A few things to know about setup:
 
@@ -53,11 +53,11 @@ export const publicLandingConfig = {
 
 ## Email
 
-Local mode needs no provider. Sign-in links, requester verification and notifications on a deployed copy need configured email.
+Local mode needs no provider and sends no email at all: there is no outbox and no printed link. To try the customer side locally, add a test customer from **Feedback settings → Test customers (Penny Dev)**; see [Email and notifications](/docs/email). Sign-in links, requester verification and notifications on a deployed copy need configured email.
 
 **Managed Penny gets email from RER.** You need no provider account, sender verification or API key entry. RER fills and hides `MAIL_PROVIDER=rer`, `MAIL_FROM`, `MAIL_RELAY_URL` and the installation's private `MAIL_API_KEY`. The relay adapter comes from pinned rer 0.2.22; RER issues the credential and keeps its upstream provider key out of Penny and its build.
 
-**Free and Assisted hosting keep SendGrid, Resend and set up later.** With your own provider, verify a sender address and supply the matching key. Choosing `later` leaves email actions unavailable and public reading available. [Email and notifications](/docs/email) covers the configuration and limits.
+**Free and Assisted hosting keep SendGrid, Resend and set up later.** With your own provider, verify a sender address and supply its API key as `MAIL_API_KEY`. Choosing `later` leaves email actions unavailable and public reading available. [Email and notifications](/docs/email) covers the configuration and limits.
 
 ## Deploy to Cloudflare
 
@@ -70,9 +70,9 @@ Set these in the shell you deploy from, and keep them out of files and history:
 | `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID. |
 | `CLOUDFLARE_API_TOKEN` | An API token for that account with Workers Scripts, D1, R2 Storage and Queues edit permissions. |
 | `OPERATOR_EMAIL` | Your operator address. |
-| `MAIL_PROVIDER` | `sendgrid`, `resend` or `later` (public reading without email sign-in). |
-| `MAIL_FROM` | A sender address verified with that provider; not used with `later`. |
-| `SENDGRID_API_KEY` or `RESEND_API_KEY` | The key for the provider you chose. |
+| `MAIL_PROVIDER` | `sendgrid` or `resend`. `rer deploy` refuses a deployment without sign-in email. |
+| `MAIL_FROM` | A sender address verified with that provider. |
+| `MAIL_API_KEY` | That provider's API key. |
 
 Optional: `WORKSPACE_TIMEZONE`, an IANA timezone such as Europe/London for requester quiet hours (default UTC). Set it before you deploy and keep it for that workspace.
 
@@ -95,7 +95,7 @@ The first deploy generates `AUTH_SECRET` and `SETUP_TOKEN` once and saves them i
 
 ### Sign in to the deployed copy
 
-The first `rer deploy` claims the owner for you: it uses the one-time `SETUP_TOKEN`, then removes it and prints "Claimed the hosted owner". Open `/signin`, request a link for your `OPERATOR_EMAIL`, open the message and press **Confirm**; the first sign-in ends at **Finish setup**. If mail is not working yet, `rer signin` prints a single-use sign-in link for the owner to your terminal (it expires within 15 minutes and is recorded in the owner's audit log).
+The first `rer deploy` claims the owner for you: it uses the one-time `SETUP_TOKEN`, then removes it and prints "Claimed the hosted owner". Open `/signin`, request a link for your `OPERATOR_EMAIL`, open the message and press **Confirm**; the first sign-in ends at **Finish setup**. If the email does not arrive, check your provider's activity log and sender verification, fix `MAIL_FROM` or `MAIL_API_KEY`, and run `rer deploy` again.
 
 Only if a deploy stopped after the Worker went live but before that claim do you claim by hand: POST `{"token": "<SETUP_TOKEN>", "displayName": "Your name", "returnTo": "/setup"}` to `/auth/bootstrap` with `Content-Type: application/json` and an `Origin` header equal to the deployment's exact origin, reading the token from `.rer/deploy/production-secrets.json`. Keep the token and the returned cookie out of shell history, logs and screenshots.
 

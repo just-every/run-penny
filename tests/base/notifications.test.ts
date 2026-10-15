@@ -16,7 +16,7 @@ import { authMail } from '@/core/features/auth/mail'
 import type { AppBindings } from '@/core/shared/bindings'
 const start=Date.parse('2026-10-07T09:00:00.000Z'),time=(offset=0)=>new Date(start+offset).toISOString()
 const source={operatorAllowlist:['owner@penny.invalid'],workspaceTimezone:'UTC',publicOriginAllowlist:['https://penny.test']}
-const runtime=(provider='sendgrid')=>createPennyRuntime({...env,WORKSPACE_TIMEZONE:source.workspaceTimezone,MAIL_PROVIDER:provider,...(provider==='resend'?{SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:'synthetic-resend-key'}:{})},source)
+const runtime=(provider='sendgrid')=>createPennyRuntime({...env,WORKSPACE_TIMEZONE:source.workspaceTimezone,MAIL_PROVIDER:provider,...(provider==='resend'?{MAIL_API_KEY:'synthetic-resend-key'}:{})},source)
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
 async function setup(){
@@ -170,11 +170,9 @@ it('[NOTIFY-002 REQ-025] signed no-login request/global unsubscribe resists tamp
  expect((await post(all)).status).toBe(400)
 })
 it('[NOTIFY-002] Base providers send through public identity and Queue paths with durable relay failures',async()=>{
- const config=(provider:string,values:Partial<AppBindings>)=>loadRuntimeConfiguration(source,{...env,PENNY_ENVIRONMENT:'production',MAIL_PROVIDER:provider,SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined,...values})
- expect(config('resend',{RESEND_API_KEY:'selected'}).mailApiKey).toBe('selected')
- expect(config('sendgrid',{SENDGRID_API_KEY:'selected'}).mailApiKey).toBe('selected')
- expect(()=>config('resend',{SENDGRID_API_KEY:'wrong'})).toThrow('RESEND_API_KEY')
- expect(()=>config('sendgrid',{RESEND_API_KEY:'wrong'})).toThrow('SENDGRID_API_KEY')
+ const config=(provider:string,values:Partial<AppBindings>)=>loadRuntimeConfiguration(source,{...env,PENNY_ENVIRONMENT:'production',MAIL_PROVIDER:provider,MAIL_API_KEY:undefined,...values})
+ expect(config('resend',{MAIL_API_KEY:'selected'}).mailApiKey).toBe('selected')
+ expect(()=>config('sendgrid',{})).toThrow('MAIL_API_KEY')
  const g=await setup();await g.follow();await g.status('Resend notification')
  const sent=capture(200);await drainNotifications(runtime('resend'),()=>start+3600000)
  expect(sent).toHaveLength(1);expect(sent[0].url).toBe('https://api.resend.com/emails')
@@ -182,9 +180,8 @@ it('[NOTIFY-002] Base providers send through public identity and Queue paths wit
  expect(await batches()).toMatchObject([{state:'accepted',provider:'resend',provider_message_id:'resend-real-fixture-id'}])
  expect(authMail(runtime('missing'))).toBeUndefined()
  const relay='https://mail.rer.example/api/managed-mail/send',key='synthetic-managed-mail-credential'
- const bindings={...env,PENNY_ENVIRONMENT:'production',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'rer',MAIL_RELAY_URL:relay,MAIL_API_KEY:key,SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined}
+ const bindings={...env,PENNY_ENVIRONMENT:'production',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'rer',MAIL_RELAY_URL:relay,MAIL_API_KEY:key}
  expect(()=>config('rer',{MAIL_RELAY_URL:relay})).toThrow('MAIL_API_KEY')
- expect(config('sendgrid',{SENDGRID_API_KEY:'selected',MAIL_API_KEY:undefined}).mailApiKey).toBe('selected')
  const requests:{to:string;subject:string;text:string;html?:string}[]=[],statuses=[202,401,429,202,302]
  vi.mocked(fetch).mockImplementation(async(input,init)=>{
   expect(String(input)).toBe(relay);expect(init?.method).toBe('POST');expect(init?.redirect).toBe('manual')

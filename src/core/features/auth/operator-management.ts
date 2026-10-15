@@ -59,14 +59,17 @@ export async function inviteOperator(runtime:PennyRuntime, request:Request, inpu
   // used for identity and delivery to satisfy that independent constraint.
   return auth.invite(request,{email:input.email,displayName:input.email.split('@')[0].slice(0,120),role:'member',returnTo:'/app'})
 }
-export async function removeOperator(runtime:PennyRuntime, session:Session, targetId:string) {
+export async function removeOperator(runtime:PennyRuntime, session:Session, targetId:string, successorId?:string) {
   const db=runtime.database.binding
   const target=await db.prepare(`SELECT o.id,o.version,o.status,o.role,EXISTS(SELECT 1 FROM oa_bootstrap b WHERE b.claim_id=o.id) AS initialOwner FROM oa_operators o WHERE o.id=?`).bind(targetId).first<{id:string;version:number;status:string;role:string;initialOwner:number}>()
   if(!target)throw new NativeError('operator_not_found',404)
   if(target.initialOwner && target.id!==session.operatorId)throw new NativeError('initial_owner_self_removal_only',403)
+  // Ownership moves only by the owner's own handover to a successor they name.
+  if(target.role==='owner' && target.id!==session.operatorId)throw new NativeError('installation_owner_handover_only',403)
   if(target.status==='inactive')throw new NativeError('operator_already_removed',409)
-  const successor=target.role==='owner' ? await db.prepare(`SELECT id,version FROM oa_operators WHERE id!=? AND status='active'
-    AND EXISTS(SELECT 1 FROM oa_sessions s WHERE s.operator_id=oa_operators.id AND s.kind IN ('native','oidc','password')) ORDER BY created_at,id LIMIT 1`).bind(targetId).first<{id:string;version:number}>():null
+  if(target.role!=='owner' && successorId)throw new NativeError('validation_failed',400)
+  const successor=target.role==='owner' && successorId ? await db.prepare(`SELECT id,version FROM oa_operators WHERE id=? AND id!=? AND status='active'
+    AND EXISTS(SELECT 1 FROM oa_sessions s WHERE s.operator_id=oa_operators.id AND s.kind IN ('native','oidc','password'))`).bind(successorId,targetId).first<{id:string;version:number}>():null
   if(target.role==='owner' && !successor)throw new NativeError('another_verified_operator_required',409)
   const guard=managementGuard(session)
   guard.sql+=' AND EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND version=? AND status=?) AND NOT EXISTS(SELECT 1 FROM oa_bootstrap WHERE claim_id=? AND claim_id!=?)'

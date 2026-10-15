@@ -7,7 +7,7 @@ const endpoint='/api/operator/settings/operators'
 const button='min-h-11 rounded-lg border border-penny-accent/50 px-4 py-2 text-sm font-semibold text-penny-accent hover:bg-penny-accent/5 disabled:opacity-50'
 export function OperatorSettings() {
   const [resource,refresh]=usePublicResource<{operators:ManagedOperator[]}>(endpoint)
-  const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState(false),[removing,setRemoving]=useState<string|null>(null)
+  const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState(false),[removing,setRemoving]=useState<string|null>(null),[successorId,setSuccessorId]=useState('')
   const operators=resource.kind==='ready'?resource.data.operators:[]
   async function invite(event:FormEvent<HTMLFormElement>) {
     event.preventDefault();const form=event.currentTarget
@@ -18,7 +18,7 @@ export function OperatorSettings() {
   }
   async function remove(operator:ManagedOperator) {
     setBusy(true);setMessage('');setError(false)
-    try {await operatorMutation(`${endpoint}/${operator.id}`,{},'DELETE');if(operator.self){window.location.assign('/signin');return}setMessage(operator.status==='invited'?'Invitation cancelled.':'Operator removed. Their sessions, links and API keys no longer work.');setRemoving(null);refresh()}
+    try {await operatorMutation(`${endpoint}/${operator.id}`,operator.installationOwner?{successorId}:{},'DELETE');if(operator.self){window.location.assign('/signin');return}setMessage(operator.status==='invited'?'Invitation cancelled.':'Operator removed. Their sessions, links and API keys no longer work.');setRemoving(null);refresh()}
     catch(e){setError(true);setMessage(e instanceof Error?e.message:'Could not remove operator.')}
     finally{setBusy(false)}
   }
@@ -39,27 +39,27 @@ export function OperatorSettings() {
     {resource.kind==='error'?<div role="alert" className="text-sm text-penny-danger">Could not load operators. <button onClick={refresh} className={button}>Try again</button></div>:null}
     {resource.kind==='ready'?<ul aria-label="Workspace operators" className="divide-y divide-penny-line overflow-hidden rounded-xl border border-penny-line bg-penny-card">
       {operators.filter(o=>o.status!=='inactive').map(operator=>{
-        const successor=operators.find(o=>o.id!==operator.id&&o.status==='active'&&o.canSucceed)
-        const allowed=(!operator.initialOwner||operator.self)&&(!operator.installationOwner||Boolean(successor))
+        const successors=operators.filter(o=>o.id!==operator.id&&o.status==='active'&&o.canSucceed)
+        const allowed=(!operator.initialOwner||operator.self)&&(!operator.installationOwner||(operator.self&&successors.length>0))
         return <li key={operator.id} className="p-4 sm:px-6 sm:py-5">
           <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-center gap-x-3 gap-y-2 sm:flex sm:flex-wrap sm:gap-5">
             <span aria-hidden="true" className="flex size-11 shrink-0 items-center justify-center rounded-full bg-penny-paper text-sm font-semibold text-penny-muted">{operator.displayName.slice(0,2).toUpperCase()}</span>
             <div className="min-w-0 flex-1"><p className="break-words font-semibold">{operator.displayName}</p><p className="break-all text-sm text-penny-muted">{operator.email}</p></div>
             <div className="col-span-2 flex flex-wrap gap-2 text-xs sm:col-auto">
               {operator.self?<span className="rounded-full bg-penny-accent px-2.5 py-1 font-semibold text-white">You</span>:null}
-              {operator.initialOwner?<span className="rounded-full bg-penny-paper px-2.5 py-1">Setup owner</span>:null}
+              {operator.installationOwner?<span className="rounded-full bg-penny-paper px-2.5 py-1">Installation owner</span>:null}
               {operator.status==='invited'?<span className="rounded-full bg-penny-paper px-2.5 py-1">Pending invitation</span>:null}
             </div>
-            <button type="button" className={`${button} col-span-2 justify-self-end sm:ml-auto`} disabled={busy||!allowed} aria-label={`${operator.status==='invited'?'Cancel invitation for':'Remove'} ${operator.email}`} onClick={()=>setRemoving(operator.id)}>{operator.status==='invited'?'Cancel invitation':'Remove'}</button>
+            <button type="button" className={`${button} col-span-2 justify-self-end sm:ml-auto`} disabled={busy||!allowed} aria-label={`${operator.status==='invited'?'Cancel invitation for':'Remove'} ${operator.email}`} onClick={()=>{setRemoving(operator.id);setSuccessorId('')}}>{operator.status==='invited'?'Cancel invitation':'Remove'}</button>
           </div>
           {removing===operator.id?<div className="mt-4 rounded-lg border border-penny-accent/30 p-4" role="group" aria-label={`Confirm removal of ${operator.email}`}>
             <p className="text-sm">{operator.self?'Remove yourself from this workspace?':'Remove this operator?'} Existing sessions, links and API keys will stop working immediately.</p>
-            {operator.installationOwner&&successor?<p className="mt-2 break-words text-sm">{successor.email} will receive installation controls for branding and the editor and must sign in again. All operators retain equal product access.</p>:null}
-            <div className="mt-3 flex flex-wrap gap-3"><button className={button} disabled={busy} onClick={()=>void remove(operator)}>Confirm removal</button><button className={button} disabled={busy} onClick={()=>setRemoving(null)}>Keep operator</button></div>
+            {operator.installationOwner?<label className="mt-3 block text-sm font-medium">Hand ownership to<select value={successorId} onChange={event=>setSuccessorId(event.target.value)} className="mt-1.5 block min-h-11 w-full rounded-lg border border-penny-line bg-transparent px-3 text-base"><option value="" disabled>Choose the next installation owner</option>{successors.map(o=><option key={o.id} value={o.id}>{o.email}</option>)}</select><span className="mt-1.5 block font-normal text-penny-muted">They receive installation controls for branding and the editor and must sign in again. All operators retain equal product access.</span></label>:null}
+            <div className="mt-3 flex flex-wrap gap-3"><button className={button} disabled={busy||(operator.installationOwner&&!successorId)} onClick={()=>void remove(operator)}>Confirm removal</button><button className={button} disabled={busy} onClick={()=>setRemoving(null)}>Keep operator</button></div>
           </div>:null}
         </li>
       })}
     </ul>:null}
-    <p className="text-sm text-penny-muted">The setup owner can only remove themselves, while another verified operator remains. Branding and editor installation controls stay with the installation owner.</p>
+    <p className="text-sm text-penny-muted">Only the installation owner can leave as owner, by naming another verified operator to take over. Nobody else can remove the owner or take ownership. Branding and editor installation controls stay with the installation owner.</p>
   </section>
 }

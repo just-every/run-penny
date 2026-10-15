@@ -41,7 +41,7 @@ export async function prepareLocal(context) {
   context.store.addSecrets(Object.entries(context.input).filter(([name])=>/SECRET|TOKEN|API_KEY/.test(name)).map(([,value])=>value))
   // Local settings always use the explicit silent development mail transport. Hosted choices
   // stay in the captured approved input for the optional owner-account hook.
-  context.input={...context.input,OPERATOR_EMAIL:email,APP_ORIGIN:undefined,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined,SENDGRID_EVENT_PUBLIC_KEY:undefined,RESEND_WEBHOOK_SECRET:undefined}
+  context.input={...context.input,OPERATOR_EMAIL:email,APP_ORIGIN:undefined,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,MAIL_API_KEY:undefined,MAIL_RELAY_URL:undefined,SENDGRID_EVENT_PUBLIC_KEY:undefined,RESEND_WEBHOOK_SECRET:undefined}
   context.stateDirectory = localState(context.root)
   await privateDirectory(context.root, ['.wrangler', 'state'])
 

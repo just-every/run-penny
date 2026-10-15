@@ -9,6 +9,8 @@ import {requireRequesterIdentity,existingVerifiedHostIdentity} from './requester
 import {mailReady} from './mail'
 import {verifyHostClaims} from './host-claims'
 import {hostFrameOrigins} from './host-frames'
+import {addTestCustomer,testCustomersAvailable} from './test-customer'
+import {currentOperator} from './routes'
 type Environment={Bindings:AppBindings;Variables:{runtime:PennyRuntime}}
 const email=z.string().trim().toLowerCase().email().max(254)
 const token=z.string().regex(/^[A-Za-z0-9_-]{43}$/)
@@ -23,7 +25,14 @@ export function registerNativeAuthRoutes(app:Hono<Environment>):void {
     const person=await requireRequesterIdentity(runtime,c.req.raw,existing)
     return c.json({displayName:person.displayName,expiresAt:Date.parse(claims.issuedAt)+24*60*60*1000})
   })
-  app.get('/api/auth/capabilities',c=>c.json({transport:mailTransport(c.get('runtime'))}))
+  app.get('/api/auth/capabilities',c=>c.json({transport:mailTransport(c.get('runtime')),testCustomers:testCustomersAvailable(c.get('runtime'))}))
+  app.post('/api/operator/dev/test-customer',async c=>{
+    const runtime=c.get('runtime')
+    if(!testCustomersAvailable(runtime))return c.json({error:'not_found'},404)
+    if(!await currentOperator(c))throw new NativeError('unauthenticated',401)
+    const input=await parseInput(c.req.raw,z.object({email,displayName:z.string().trim().min(1).max(160)}).strict())
+    return c.json(await addTestCustomer(runtime,input.email,input.displayName),201)
+  })
   app.post('/api/public/identity/email',async c=>{
     const input=await parseInput(c.req.raw,z.object({email,displayName:z.string().trim().min(1).max(160),pendingToken:token.optional()}).strict())
     await issueNativeLink(c.get('runtime'),'requester',input.email,input.displayName,clientIp(c.req.raw),input.pendingToken)

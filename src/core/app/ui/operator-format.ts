@@ -6,14 +6,16 @@ export function formatOperatorDate(value: string | null): string {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
 
-  return new Intl.DateTimeFormat('en-AU', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' }).format(date)
+  // Entered in the browser's local time; shown in UTC with its zone, so the day never silently shifts.
+  return `${new Intl.DateTimeFormat('en-AU', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date)} UTC`
 }
 
 export function formatObservedAt(value: string): string {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
 
-  return new Intl.DateTimeFormat('en-AU', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' }).format(date)
+  // Entered in the browser's local time; shown in UTC with its zone, so the day never silently shifts.
+  return `${new Intl.DateTimeFormat('en-AU', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date)} UTC`
 }
 
 export function formatRevenue(value: number | null): string {

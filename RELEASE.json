@@ -1,6 +1,6 @@
 {
-  "version": "0.0.0",
-  "date": "2026-10-11",
+  "version": "0.1.0",
+  "date": "2026-10-16",
   "contractChanges": {
     "NOTIFY-001": {
       "change": "changed",
@@ -13,9 +13,9 @@
     },
     "NOTIFY-002": {
       "change": "changed",
-      "summary": "Define the fixed first-event coalescing window and durable minute-Cron quiet-hours drain.",
+      "summary": "Define the fixed first-event one-minute coalescing window, Queue wakeups at publication and the minute-Cron backstop.",
       "was": "One-click unsubscribe and request/all-email mute are checked before send; default quiet hours are 20:00–08:00 workspace time and updates within one hour are coalesced.",
-      "now": "The first pending event opens a fixed one-hour requester/request coalescing window; later events never extend it. A minute Cron drain sends eligible windows after the boundary and 20:00–08:00 workspace quiet hours, rechecking visibility and preferences immediately before sending. An optional validated WORKSPACE_TIMEZONE deployment input selects the IANA workspace timezone before setup; the existing Australia/Brisbane default and fixed windows remain unchanged. Published release versions use independent recipient commands outside request coalescing, due immediately during permitted hours or at next 08:00, with minute Cron dispatch.",
+      "now": "The first pending event opens a fixed one-minute requester/request coalescing window; later events never extend it. Publication wakes a Queue consumer that sends eligible windows after the boundary and outside 20:00–08:00 workspace quiet hours, rechecking visibility and preferences immediately before sending; the minute Cron is the backstop for a failed Queue handoff. An optional validated WORKSPACE_TIMEZONE deployment input selects the IANA workspace timezone before setup. Published release versions use independent recipient commands outside request coalescing and wait for earlier request updates to settle.",
       "migrationIds": [
         "0010_request_notifications.sql",
         "0014_release_delivery.sql"
@@ -25,19 +25,19 @@
       "change": "changed",
       "summary": "Retain ambiguous SendGrid outcomes as unknown without automatic retry.",
       "was": "Unknown sends retried under a provider idempotency key.",
-      "now": "SendGrid lacks provider duplicate suppression; ambiguous/interrupted sends remain unknown and are never automatically retried. REL-007 provider-idempotency remains unsatisfied; local claims and delivery correlation are not an exactly-once provider guarantee."
+      "now": "SendGrid lacks provider duplicate suppression; ambiguous/interrupted sends remain unknown and are never automatically retried. REL-007 provider-idempotency remains unsatisfied; local claims and delivery correlation are not an exactly-once provider guarantee. Status, reply, approved-comment and release publications enqueue a wakeup on the JOBS Queue; the consumer drains due notification windows and release recipient commands with bounded retry for known refusals and rate limits, and holds ambiguous sends as unknown. Hosted installs must declare the JOBS queue consumer (deploy.json, wrangler.jsonc); the minute Cron remains the recovery path."
     },
     "BASE-SECRET-002": {
       "change": "changed",
       "summary": "Allow deployed public reading and already verified requester actions before mail is configured.",
       "was": "Mail provider and sender are required deployment inputs.",
-      "now": "Both mail provider and sender may be absent together. New emailed sign-in and verification explain that delivery is unavailable. Existing verified native sessions and valid host assertions for a stored verified address may submit; an already delivered verification link can complete once and replay its bound pending actions. First-time host provisioning and anonymous holds retain the transport admission boundary. Partial or invalid mail configuration still fails."
+      "now": "Both mail provider and sender may be absent together. New emailed sign-in and verification explain that delivery is unavailable. Existing verified native sessions and valid host assertions for a stored verified address may submit; an already delivered verification link can complete once and replay its bound pending actions. First-time host provisioning and anonymous holds retain the transport admission boundary. Partial or invalid mail configuration still fails. MAIL_PROVIDER, MAIL_FROM, MAIL_API_KEY and MAIL_RELAY_URL are deploy.json secrets read from the deploy environment; rer deploy accepts sendgrid, resend or rer and refuses a deployment without sign-in email. Local copies send no email; operators add verified test customers in Penny Dev instead of reading an outbox."
     },
     "DATA-001": {
       "change": "changed",
       "summary": "Enable authenticated hosted product archive and erasure-journal downloads with explicit custody bounds.",
       "was": "Archive downloads were limited to local/test installations.",
-      "now": "Current native operators may download the bounded classified product archive and latest erasure journal over authenticated HTTPS. Original R2 bytes retain hashes; unknown schema, missing files and overflow refuse completion. Guarded restore and erasure now use current native authority, same-origin mutation, maintenance, empty-target, latest-known-journal and preview-hash fences in hosted mode as well as local/test. Hosted proof is source-only, local TLS; a real installation and universal data acceptance remain owner/live and open.",
+      "now": "Current native operators may download the bounded classified product archive and latest erasure journal over authenticated HTTPS. Original R2 bytes retain hashes; unknown schema, missing files and overflow refuse completion. Guarded restore and erasure now use current native authority, same-origin mutation, maintenance, empty-target, latest-known-journal and preview-hash fences in hosted mode as well as local/test. Hosted proof is source-only, local TLS; a real installation and universal data acceptance remain owner/live and open. Hosted Data → Export keeps partial and completed snapshots across reloads, offers resume and releases the snapshot with Finish export.",
       "migrationIds": [
         "0016_restored_notification_hold.sql"
       ]
@@ -280,10 +280,20 @@
     },
     "DATA-003": {
       "change": "changed",
-      "summary": "Erasure includes new history dependencies and original files, inserts per-row tombstones before deletion and retains anonymised audit references; journal fences refuse resurrection. Hosted proof remains source-only, local TLS.",
-      "now": "Erasure includes new history dependencies and original files, inserts per-row tombstones before deletion and retains anonymised audit references; journal fences refuse resurrection. Hosted proof remains source-only, local TLS.",
+      "summary": "Saved-import erasure runs on Base's journaled bounded steps and continues itself while the Data page is open.",
+      "now": "Each import-kit erasure step resumes from a durable progress journal under one stable operation key; the local Data page keeps stepping until the erasure completes, showing progress, and the preview states how many imports' saved original files will be withdrawn for everyone in them.",
       "migrationIds": [
-        "0030_penny_evidence.sql"
+        "0056_import_preparation_steps.sql",
+        "0061_import_erasure_progress.sql"
+      ]
+    },
+    "OPS-002": {
+      "change": "changed",
+      "summary": "Operators manage peers by invitation and removal; ownership moves only by the owner's own handover.",
+      "was": "The setup owner could remove themselves, and the earliest verified active operator became installation owner; any operator could remove a later owner.",
+      "now": "Any operator can invite an email and remove a non-owner peer. Nobody can remove the installation owner or make themselves owner: only the owner can leave as owner, naming a verified active successor explicitly. Removal revokes sessions, links and API keys and is audited.",
+      "migrationIds": [
+        "0051_operator_management.sql"
       ]
     }
   },
@@ -372,8 +382,48 @@
     {
       "id": "0033_decision_review_completion.sql",
       "buyerSteps": "Apply after 0032. Adds a nullable completion marker without changing existing commitments or schedules. A note plus revision retaining the date completes that schedule; a changed date clears completion and schedules another reminder. Retain this column through export, restore and erasure, and preserve expanded schema on rollback."
+    },
+    {
+      "id": "0050_erasure_preview_revision.sql",
+      "buyerSteps": "Apply after retained 0001–0049. Adds an installation-only monotonic preview revision so undo preflight notes no longer invalidate saved-import erasure previews. No portable or product rows change."
+    },
+    {
+      "id": "0051_operator_management.sql",
+      "buyerSteps": "Apply after 0050. Records operator invitation custody in the audit log from the token transaction, without tokens, addresses or message bodies. Existing operators, sessions and history are unchanged."
+    },
+    {
+      "id": "0054_frame_settings.sql",
+      "buyerSteps": "Apply after 0051; 0052 and 0053 are intentionally absent from Penny's inventory (the numbers were never shipped), so the ledger jumps from 0051 to 0054. Adds the installation-owned portal embedding settings and minimal mail-effect history. Re-enter embedding origins in Feedback settings → Portal embedding if you used publicOriginAllowlist."
+    },
+    {
+      "id": "0055_auth_admission_custody.sql",
+      "buyerSteps": "Apply after 0054. Adds the public request admission table used by public rate limiting, available during export/restore maintenance. Rows are short-lived subject hashes, not identity or feedback data."
+    },
+    {
+      "id": "0056_import_preparation_steps.sql",
+      "buyerSteps": "Apply after 0055. Adds Base import-kit control rows for preparations made across requests; erasure, cancellation and header retirement read them. Existing imports are unchanged."
+    },
+    {
+      "id": "0057_operator_mail_events.sql",
+      "buyerSteps": "Apply after 0056. Adds provider delivery facts for decision-review mail beside the notification, and stops review mail to an operator address after a hard bounce or complaint."
+    },
+    {
+      "id": "0058_portable_settings_records.sql",
+      "buyerSteps": "Apply after 0057. Makes embedding settings durable portable records fenced by data maintenance like integration destinations; their credentials stay installation-only."
+    },
+    {
+      "id": "0059_scoped_learning.sql",
+      "buyerSteps": "Apply after 0058. Adds the bounded private cancellation-learning tables. Learning stays unconfigured, and refuses work, until PENNY_LEARNING and its enforcing egress binding are configured."
+    },
+    {
+      "id": "0060_learning_maintenance.sql",
+      "buyerSteps": "Apply after 0059. Puts learning history and replay fences under the product maintenance protocol; restore and erasure writes require the applying lock's claim."
+    },
+    {
+      "id": "0061_import_erasure_progress.sql",
+      "buyerSteps": "Apply after 0060. Adds the import-kit erasure progress journal so one saved-import erasure step continues across requests. Rows hold opaque ids, digests and counts only. Finish or resume any paused erasure after upgrading."
     }
   ],
-  "breaking": false,
-  "agentUpdateInstructions": "First declared 0.0.0 source release, not a universal product acceptance claim. Preserve all owner customizations, exact applied migration history, Base authority and private/public projection boundaries. Apply additive notification migration after retained 0001–0009; never replay changed history. Select SendGrid or Resend with its matching key and verified MAIL_FROM; align OPERATIONS.json mail-loop provider with MAIL_PROVIDER. Require minute Cron and inspect uncertain provider attempts before retrying. Stop old workers for the 0009 credential transition and reissue credentials. The bounded local archive excludes Base authority and is not a full backup. Re-lock only intentional integrated source using the shipped actual authoring tool; provider delivery, hosted Cron and whole-product release acceptance need independent evidence. Apply 0011 without altering existing migration history. Signed Base event intake suppresses only verified, correlated hard bounces and complaints; configure provider callbacks and verify hosted delivery separately. SendGrid lacks provider duplicate suppression (REL-007); never automatically retry unknown sends. Apply 0012 after 0011 for Base invitation cancellation custody and local development capture. Use node scripts/rer.mjs setup for the first empty local workspace; local data lives only in .wrangler/state. Optional WORKSPACE_TIMEZONE must be chosen before deployment; never shift an active notification window to hurry mail. Apply migration 0017 in order, retain full native and import journal/original custody on rollback, and use the saved-file migration guide. Fixture-only status does not authorize a replacement or public registry claim. Apply owner-claim and signed host custody migrations in order. Native owner claim cannot take over an installed owner; trusted platform keys and audience remain explicit installation configuration. Host servers add app audience, use fresh assertions after key rotation, and preserve non-authorizing history and erasure fences. See docs/HOST-IDENTITY.md. `/` is now the product landing (HOME-002) and the public feedback board's canonical address is /portal/feedback (/portal redirects there): carry any owner customisation of the old `/` portal home to /portal/feedback, point owner links and bookmarks there, and set showPoweredByCredit in src/ext/config.ts to keep or drop the landing credit. /docs and /docs/ are new declared public paths serving build-time documentation from docs/site.json; keep every Markdown file published or listed as GitHub-only, and keep owner-edited docs pages when updating. Apply Penny clause migrations 0030–0033 in numbered order after the retained reviewed-main 0001–0029 inventory. Erasure outranks version preservation. Follow OWNER-STEPS.md only with owner authorization for real hosted actions; all current hosted restore and erasure evidence is source-only, local TLS. REL-007 and REL-011 remain open."
+  "breaking": true,
+  "agentUpdateInstructions": "First declared 0.0.0 source release, not a universal product acceptance claim. Preserve all owner customizations, exact applied migration history, Base authority and private/public projection boundaries. Apply additive notification migration after retained 0001–0009; never replay changed history. Select SendGrid or Resend with its matching key and verified MAIL_FROM; align OPERATIONS.json mail-loop provider with MAIL_PROVIDER. Require minute Cron and inspect uncertain provider attempts before retrying. Stop old workers for the 0009 credential transition and reissue credentials. The bounded local archive excludes Base authority and is not a full backup. Re-lock only intentional integrated source using the shipped actual authoring tool; provider delivery, hosted Cron and whole-product release acceptance need independent evidence. Apply 0011 without altering existing migration history. Signed Base event intake suppresses only verified, correlated hard bounces and complaints; configure provider callbacks and verify hosted delivery separately. SendGrid lacks provider duplicate suppression (REL-007); never automatically retry unknown sends. Apply 0012 after 0011 for Base invitation cancellation custody and local development capture. Use node scripts/rer.mjs setup for the first empty local workspace; local data lives only in .wrangler/state. Optional WORKSPACE_TIMEZONE must be chosen before deployment; never shift an active notification window to hurry mail. Apply migration 0017 in order, retain full native and import journal/original custody on rollback, and use the saved-file migration guide. Fixture-only status does not authorize a replacement or public registry claim. Apply owner-claim and signed host custody migrations in order. Native owner claim cannot take over an installed owner; trusted platform keys and audience remain explicit installation configuration. Host servers add app audience, use fresh assertions after key rotation, and preserve non-authorizing history and erasure fences. See docs/HOST-IDENTITY.md. `/` is now the product landing (HOME-002) and the public feedback board's canonical address is /portal/feedback (/portal redirects there): carry any owner customisation of the old `/` portal home to /portal/feedback, point owner links and bookmarks there, and set showPoweredByCredit in src/ext/config.ts to keep or drop the landing credit. /docs and /docs/ are new declared public paths serving build-time documentation from docs/site.json; keep every Markdown file published or listed as GitHub-only, and keep owner-edited docs pages when updating. Apply Penny clause migrations 0030–0033 in numbered order after the retained reviewed-main 0001–0029 inventory. Erasure outranks version preservation. Follow OWNER-STEPS.md only with owner authorization for real hosted actions; all current hosted restore and erasure evidence is source-only, local TLS. REL-007 and REL-011 remain open. Upgrading from 0.0.0 to 0.1.0: install rer (curl -fsSL https://runeditrun.com/install.sh | sh), run rer install, then rer setup (with the same --owner-email if you set one): it applies migrations 0050–0061 and keeps the owner and every record; rer dev refuses to start until setup has run. The node scripts/rer.mjs commands, dev --login and the local mail outbox are gone: local copies send no email, and operators add verified test customers under Feedback settings → Test customers (Penny Dev). Hosted installs: rename SENDGRID_API_KEY or RESEND_API_KEY to MAIL_API_KEY (environment and .rer/deploy/*-secrets.json), keep MAIL_PROVIDER and MAIL_FROM in the deploy environment, and run rer deploy, which now also declares the JOBS Queue consumer; rer deploy refuses MAIL_PROVIDER=later. Ownership moves only by the owner naming a successor when leaving."
 }

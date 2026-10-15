@@ -109,9 +109,11 @@ Owner-account hosting requires `CLOUDFLARE_ACCOUNT_ID` and
 `CLOUDFLARE_API_TOKEN` explicitly; ambient Wrangler login is not used. Give the
 account-scoped token Workers Scripts edit, D1 edit, R2 Storage edit and Queues edit
 permissions for the chosen account. Supply the first `OPERATOR_EMAIL` and explicit
-`MAIL_PROVIDER` (`later`, `sendgrid` or `resend`). SendGrid requires a verified
-`MAIL_FROM` and `SENDGRID_API_KEY`; Resend requires `MAIL_FROM` and
-`RESEND_API_KEY`. Optional `WORKSPACE_TIMEZONE` is an IANA name and defaults to UTC.
+`MAIL_PROVIDER` (`sendgrid` or `resend` for `rer deploy`, which refuses a
+deployment without sign-in email; the Assisted installer also accepts `later`).
+Both providers need a verified `MAIL_FROM` and the provider's key as
+`MAIL_API_KEY`. `deploy.json` declares these mail inputs as secrets, so rer's
+sign-in preflight reads them before building. Optional `WORKSPACE_TIMEZONE` is an IANA name and defaults to UTC.
 Deploy also checks the expected account workers.dev origin before writes. Only
 dependency and build commands see the credential-stripped build environment;
 provider credentials reach the deployment command after those finish.
@@ -167,8 +169,8 @@ The first `rer deploy` claims the owner itself: after a healthy deploy it submit
 the one-time setup token to `/auth/bootstrap`, then removes the token from the
 Worker and prints "Claimed the hosted owner". Then sign in at `/signin` with
 `OPERATOR_EMAIL` and confirm the delivered link; the first sign-in ends at the
-first-run setup. Without working mail, `rer signin --environment NAME` prints a
-single-use sign-in link for the recorded owner, valid for 15 minutes. A manual
+first-run setup. If that email does not arrive, fix the provider settings and
+deploy again. A manual
 `/auth/bootstrap` POST is recovery only, for a deploy that stopped after the
 Worker went live but before the claim: read the setup token privately from the
 environment's credential file and post it same-origin with `displayName` and

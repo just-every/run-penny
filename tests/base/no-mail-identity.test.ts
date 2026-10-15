@@ -6,7 +6,7 @@ import { base64urlEncode, sign } from '@/core/features/auth/tokens'
 import { opaqueToken } from '@/core/features/auth/native-tokens'
 const app=createPennyApi(), origin='https://penny.test'
 const full=()=>({...env,PENNY_ENVIRONMENT:'production',PORTAL_IDENTITY_SECRET:'synthetic-host-identity-secret'})
-const noMail=()=>({...full(),MAIL_PROVIDER:undefined,MAIL_FROM:undefined,SENDGRID_API_KEY:undefined})
+const noMail=()=>({...full(),MAIL_PROVIDER:undefined,MAIL_FROM:undefined,MAIL_API_KEY:undefined})
 function call(path:string,body:unknown,headers:Record<string,string>={},bindings=full()) {
  return app.fetch(new Request(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json','CF-Connecting-IP':'192.0.2.29',...headers},body:JSON.stringify(body)}),bindings)
 }

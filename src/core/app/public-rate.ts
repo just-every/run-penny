@@ -17,14 +17,27 @@ export const publicChromeRatePolicy={...publicRatePolicy,scope:'public_entry_chr
 const mailEventRatePolicy={...publicRatePolicy,scope:'public_entry_mail',allowance:manifest.limits.mailEventsPerMinutePerIp} as const
 const admitted=new WeakSet<Request>()
 
+// Subjects beyond maxClients share one bucket instead of being refused, so a
+// full table slows new visitors rather than locking them out for the minute.
+const overflowSubject='overflow',overflowFactor=100
+
 function clientAddress(request:Request):string {
  // Cloudflare overwrites this header at the ingress. Never trust X-Forwarded-For.
  const value=request.headers.get('CF-Connecting-IP')??''
  if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(value)&&value.split('.').every(part=>Number(part)<=255))return value.split('.').map(Number).join('.')
  if(value.includes(':')&&!/[\s%\[\]]/.test(value)){
-  try{return new URL('http://['+value+']/').hostname}catch{/* Missing/invalid ingress identity shares a fail-closed bucket. */}
+  try{return ipv6Subject(new URL('http://['+value+']/').hostname.slice(1,-1))}catch{/* Missing/invalid ingress identity shares a fail-closed bucket. */}
  }
  return 'unattributed'
+}
+
+/** One IPv6 subscriber usually holds a whole /64, so it is one subject. */
+function ipv6Subject(address:string):string {
+ const [head,tail='']=address.split('::'),left=head?head.split(':'):[],right=tail?tail.split(':'):[]
+ const groups=[...left,...Array(8-left.length-right.length).fill('0'),...right].map(group=>parseInt(group,16))
+ // URL serializes IPv4-mapped addresses as ::ffff:hhhh:hhhh; they are IPv4 clients.
+ if(groups.slice(0,5).every(group=>group===0)&&groups[5]===0xffff)return [groups[6]>>8,groups[6]&255,groups[7]>>8,groups[7]&255].join('.')
+ return groups.slice(0,4).map(group=>group.toString(16)).join(':')+'::/64'
 }
 
 /** Entry admission precedes all asset lookup, document rendering and handlers,
@@ -38,19 +51,25 @@ export async function admitPublicRequest(request:Request,bindings:AppBindings):P
  const policy=read?isPublicAssetPath(path)?publicAssetRatePolicy:publicChromePaths.has(path)?publicChromeRatePolicy:publicRatePolicy:path==='/api/public/mail/events'?mailEventRatePolicy:publicWriteRatePolicy
  const {scope,allowance,windowMs,maxClients}=policy,now=new Date().toISOString()
  try{
-  const db=bindings.DB,subject=await digest(clientAddress(request))
+  const db=bindings.DB,subject=await digest(clientAddress(request)),overflow=await digest(overflowSubject),expires=new Date(Date.now()+windowMs).toISOString()
+  const charge=`ON CONFLICT(scope,subject_hash) DO UPDATE SET
+       count=CASE WHEN expires_at<=? THEN 1 ELSE min(count+1,?) END,
+       expires_at=CASE WHEN expires_at<=? THEN excluded.expires_at ELSE expires_at END
+     RETURNING count,expires_at`
   const results=await db.batch([
    db.prepare('DELETE FROM penny_public_admission WHERE scope=? AND subject_hash IN (SELECT subject_hash FROM penny_public_admission WHERE scope=? AND expires_at<=? LIMIT 128)').bind(scope,scope,now),
    db.prepare(`INSERT INTO penny_public_admission(scope,subject_hash,count,expires_at)
      SELECT ?,?,1,? WHERE EXISTS(SELECT 1 FROM penny_public_admission WHERE scope=? AND subject_hash=?)
        OR (SELECT count(*) FROM (SELECT 1 FROM penny_public_admission WHERE scope=? LIMIT ?))<?
-     ON CONFLICT(scope,subject_hash) DO UPDATE SET
-       count=CASE WHEN expires_at<=? THEN 1 ELSE min(count+1,?) END,
-       expires_at=CASE WHEN expires_at<=? THEN excluded.expires_at ELSE expires_at END
-     RETURNING count,expires_at`).bind(scope,subject,new Date(Date.now()+windowMs).toISOString(),scope,subject,scope,maxClients,maxClients,now,allowance+1,now),
+     ${charge}`).bind(scope,subject,expires,scope,subject,scope,maxClients,maxClients,now,allowance+1,now),
+   db.prepare(`INSERT INTO penny_public_admission(scope,subject_hash,count,expires_at)
+     SELECT ?,?,1,? WHERE NOT EXISTS(SELECT 1 FROM penny_public_admission WHERE scope=? AND subject_hash=?)
+     ${charge}`).bind(scope,overflow,expires,scope,subject,now,allowance*overflowFactor+1,now),
   ])
-  const row=results[1]?.results[0] as {count:number;expires_at:string}|undefined
-  if(!row||row.count>allowance)return Response.json({error:'rate_limited'},{status:429,headers:{'Cache-Control':'no-store','Retry-After':String(row?Math.max(1,Math.ceil((Date.parse(row.expires_at)-Date.now())/1000)):Math.ceil(windowMs/1000))}})
+  const own=results[1]?.results[0] as {count:number;expires_at:string}|undefined
+  const shared=results[2]?.results[0] as {count:number;expires_at:string}|undefined
+  const row=own??shared,limit=own?allowance:allowance*overflowFactor
+  if(!row||row.count>limit)return Response.json({error:'rate_limited'},{status:429,headers:{'Cache-Control':'no-store','Retry-After':String(row?Math.max(1,Math.ceil((Date.parse(row.expires_at)-Date.now())/1000)):Math.ceil(windowMs/1000))}})
   admitted.add(request)
   return null
  }catch{

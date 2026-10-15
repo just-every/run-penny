@@ -5,7 +5,7 @@ import { createHash, randomBytes } from 'node:crypto'
 import { startBrowserRuntime } from './base-runtime.mjs'
 import { createAudit, evidenceDirectory, viewports } from './acceptance-audit.mjs'
 const output=evidenceDirectory('no-mail')
-const runtime=await startBrowserRuntime({https:true,bindings:{PENNY_ENVIRONMENT:'production',MAIL_PROVIDER:'',MAIL_FROM:'',SENDGRID_API_KEY:''}})
+const runtime=await startBrowserRuntime({https:true,bindings:{PENNY_ENVIRONMENT:'production',MAIL_PROVIDER:'',MAIL_FROM:'',MAIL_API_KEY:''}})
 let browser
 try {
  browser=await chromium.launch(browserOptions())

@@ -7,7 +7,7 @@ import { readErasureJournal } from '../../src/core/features/data/archive'
 import { laterJournalFence, policy } from '../../scripts/portability/policy'
 import { archiveJournal } from '../../scripts/portability/archive-journal.mjs'
 const app = createPennyApi(), origin = 'https://penny.test'
-const bindings = { ...env, PENNY_ENVIRONMENT: 'production', APP_ORIGIN: origin, MAIL_PROVIDER: undefined, MAIL_FROM: undefined, SENDGRID_API_KEY: undefined }
+const bindings = { ...env, PENNY_ENVIRONMENT: 'production', APP_ORIGIN: origin, MAIL_PROVIDER: undefined, MAIL_FROM: undefined, MAIL_API_KEY: undefined }
 const call = (path: string, body?: unknown, headers: Record<string, string> = {}, currentBindings = bindings) => app.fetch(new Request(origin + path, { method: body === undefined ? 'GET' : 'POST', headers: { Origin: origin, 'CF-Connecting-IP': '192.0.2.1', ...headers, ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }), currentBindings)
 async function owner() { const response = await call('/auth/bootstrap', { token: bindings.SETUP_TOKEN, displayName: 'Owner', returnTo: '/app' }); expect(response.status).toBe(303); return { Cookie: response.headers.get('Set-Cookie')!.split(';')[0] } }
 const base = '/api/portability/exports'

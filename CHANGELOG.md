@@ -1,6 +1,22 @@
 # Changelog
 
-## Unreleased
+## 0.1.0 — 2026-10-16
+
+### Upgrade from 0.0.0
+
+Your data and owner are kept. Install `rer` (`curl -fsSL https://runeditrun.com/install.sh | sh`), then from the checkout run `rer install` and `rer setup` (with the same `--owner-email` if you gave one): setup applies migrations 0050–0061 and keeps the owner and every record. `rer dev` refuses to start until setup has run. The `node scripts/rer.mjs` commands, `dev --login` and the local mail outbox are gone. A hosted copy renames `SENDGRID_API_KEY` or `RESEND_API_KEY` to `MAIL_API_KEY` (in the deploy environment and `.rer/deploy/*-secrets.json`) and runs `rer deploy` again, which also binds the JOBS Queue mail consumer.
+
+### Changes
+
+- `rer deploy` works from the README's inputs: `deploy.json` declares `MAIL_PROVIDER`, `MAIL_FROM`, `MAIL_API_KEY` and `MAIL_RELAY_URL` as secrets, so rer's sign-in preflight reads them, and every provider (SendGrid, Resend, Managed RER) uses one `MAIL_API_KEY` credential. `rer deploy` refuses a deployment without sign-in email. Verify runs a keyless `rer deploy --dry-run` with the README inputs.
+- Penny Dev sends no email, so customers can be tried locally another way: an operator adds a test customer under **Feedback settings → Test customers (Penny Dev)**, and the public board opens signed in as them. The Submit feedback page says so instead of promising a verification email; local delivery counts read "not emailed (local)".
+- A request created from evidence waits in Moderation and is published by the normal **Approve and publish**, so it can carry status updates and map to the roadmap and releases.
+- Ownership moves only by the owner's own handover to a successor they name; no operator can remove the owner or make themselves owner.
+- Public rate limiting keys IPv6 clients by /64, and visitors beyond the per-minute subject table share one overflow bucket instead of being refused.
+- Saved-import erasure keeps stepping while the Data page is open, with progress, and the preview says how many imports' saved original files are withdrawn.
+- Evidence times are shown in UTC with the zone named. README corrections: the journal is `penny.rer.erasure-journal.json`, and hosted restore and erasure run through the authenticated data commands.
+- `rer dev` starts again on rer 0.2.22, which migrates on every dev start: Penny's migrate step now finds the local state folder itself instead of relying on setup.
+- Verify runs as parallel shards; the fresh-clone README journey runs on release tags and nightly.
 
 - Managed Penny uses RER-provided mail through Base’s relay adapter from pinned rer 0.2.22, with no provider account or key entry. RER fills and hides `MAIL_PROVIDER=rer`, `MAIL_FROM`, `MAIL_RELAY_URL` and the installation’s private `MAIL_API_KEY`; the upstream provider key never reaches Penny or its build. A Workers fetch port enforces Base’s no-redirect policy using manual mode and rejecting every 3xx response. Free and Assisted SendGrid, Resend and set-up-later choices remain. This records source/configuration support, not hosted stage validation, inbox proof or a release/tag.
 
@@ -17,7 +33,7 @@
 - The local Data page loads again: the Worker's dev module allow-list now serves `scripts/portability/archive-journal.mjs`, which the page imports.
 - Tags are private everywhere: release pages, the public release API and release emails no longer show a release's tags (EVID-009). The release form calls them private tags.
 - Approving a requester comment offers the requester's verified display name, and a refusal (such as an empty name) is shown next to that comment's form. Held items come first in a request's controls, with an "awaiting review" count, and Overview counts comments awaiting review.
-- Status-update emails link each request with the install's full address. A queued release email closes the same follower's open one-hour window on that request, so the gathered updates are sent first in the same Cron run.
+- Status-update emails link each request with the install's full address. A queued release email closes the same follower's open coalescing window (one hour at the time; one minute since 0.1.0) on that request, so the gathered updates are sent first in the same Cron run.
 - Hosted export: the row limit is counted once at creation in one round trip, and the archive is verified once, from the downloaded bytes, cutting each step's database round trips. A failed export names the server's refusal instead of blaming the owner session, and an interrupted export that never started its snapshot offers only Abort, as the page now says.
 - Smaller fixes: a new board's URL name follows its name; Overview's "Create a board" link lands on the form; a draft release card says "Publication date", not "Published"; the decision brief shows the question once and its next-step hint matches the evidence already recorded; verifying from a request page offers the way back to that request; a request page says whether email updates are on; the public roadmap's React key warning is gone.
 
@@ -172,5 +188,5 @@ The version stays 0.0.0 until the owner decides to publish. The first declared r
 ## 0.0.0
 
 - Requester board with verified submission, voting, following, moderated first posts, comments and edits.
-- Requester email notifications with consent, mutes, suppression, one-hour coalescing and quiet hours.
+- Requester email notifications with consent, mutes, suppression, one-hour coalescing (one minute since 0.1.0) and quiet hours.
 - Operator sign-in through emailed links, and selectable SendGrid or Resend mail.

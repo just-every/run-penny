@@ -3,6 +3,7 @@ import {TrackerSettings} from '../../integrations/ui/tracker-settings'
 import {BrandingSettings} from '../../settings/ui/branding-settings'
 import { FrameSettings } from '../../settings/ui/frame-settings'
 import { OperatorSettings } from '../../auth/ui/operator-settings'
+import { TestCustomers } from '../../auth/ui/test-customers'
 import {ApiKeys} from '../../integrations/ui/api-keys'
 import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { useRef, useState } from 'react'
@@ -29,6 +30,7 @@ export function BoardSettings() {
       <OperatorPageHeader eyebrow="Customer feedback" title="Feedback settings" art={data.kind === 'error' ? null : { note: 'Better feedback builds better products.' }}>Requester submissions, edits and comments are reviewed before publication.</OperatorPageHeader>
       <div className="mt-6 space-y-6 sm:mt-8">
         <OperatorSettings />
+        <TestCustomers />
         <DeliveryReview />
         <ApiKeys />
         <IntegrationDestinations />

@@ -17,7 +17,7 @@ export async function startBrowserRuntime({bindings={},https=false,port,networkW
   compatibilityDate:'2026-08-31',compatibilityFlags:['nodejs_compat'],
   d1Databases:{DB:'browser-db'},r2Buckets:{FILES:'browser-files'},queueProducers:{JOBS:'browser-jobs'},
   assets:{directory:resolve('dist/client'),binding:'ASSETS',run_worker_first:true,routerConfig:{has_user_worker:true}},
-  bindings:{PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,AUTH_SECRET:'synthetic-base-browser-auth-secret-12345',SETUP_TOKEN:'synthetic-base-browser-setup-token-12345',OPERATOR_EMAIL:'owner@penny.invalid',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',SENDGRID_API_KEY:'synthetic-browser-provider-key',...bindings},
+  bindings:{PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,AUTH_SECRET:'synthetic-base-browser-auth-secret-12345',SETUP_TOKEN:'synthetic-base-browser-setup-token-12345',OPERATOR_EMAIL:'owner@penny.invalid',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',MAIL_API_KEY:'synthetic-browser-provider-key',...bindings},
   outboundService:mailService??(async request=>{
    if(request.url!=='https://api.sendgrid.com/v3/mail/send'||request.method!=='POST'||request.headers.get('Authorization')!=='Bearer synthetic-browser-provider-key')throw new Error('Unexpected provider request')
    const body=await request.json(),text=body.content.find(c=>c.type==='text/plain').value

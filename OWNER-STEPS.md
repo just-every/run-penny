@@ -49,12 +49,11 @@ Use a checkout with no valuable local records. From its root:
 ```sh
 rer install
 rer setup --owner-email YOUR_EMAIL
-rer dev --login
+rer dev
 ```
 
 Keep dev in the foreground and run later commands in another terminal. Open its
-`RER_OPEN` outbox link, open the newest sign-in message and press **Confirm**,
-then **Finish setup**. No hosted mail provider or UserVoice account is contacted.
+`RER_OPEN` link, which signs you in as the owner, then press **Finish setup**. No hosted mail provider or UserVoice account is contacted.
 
 Create an owner-only `private` directory (0700). Save `ideas.csv`, `voters.csv`,
 a `source.json` manifest and `operator-session.json` there with mode 0600,

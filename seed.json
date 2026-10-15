@@ -1,7 +1,7 @@
 {
   "id": "penny",
   "name": "Penny",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "maturity": "requester-board-notification-candidate",
   "category": "feedback",
   "spine": {
@@ -274,7 +274,7 @@
       "name": "MAIL_PROVIDER",
       "required": true,
       "secret": false,
-      "why": "Select sendgrid or resend; the selected provider key is required."
+      "why": "Select sendgrid, resend or rer (Managed), or later for public reading without email; MAIL_API_KEY is required for every provider."
     },
     {
       "name": "MAIL_FROM",
@@ -283,22 +283,16 @@
       "why": "Sender verified with the selected mail provider."
     },
     {
-      "name": "SENDGRID_API_KEY",
+      "name": "MAIL_API_KEY",
       "required": false,
       "secret": true,
-      "why": "Required when MAIL_PROVIDER=sendgrid; another provider key cannot satisfy this selection."
+      "why": "API key for the selected MAIL_PROVIDER (SendGrid, Resend, or the RER-issued Managed relay credential); required unless MAIL_PROVIDER=later."
     },
     {
       "name": "PORTAL_IDENTITY_SECRET",
       "required": false,
       "secret": true,
       "why": "Optional host-signed requester identity secret; verified-email identity remains available without it."
-    },
-    {
-      "name": "RESEND_API_KEY",
-      "required": false,
-      "secret": true,
-      "why": "Required when MAIL_PROVIDER=resend; another provider key cannot satisfy this selection."
     },
     {
       "name": "SENDGRID_EVENT_PUBLIC_KEY",

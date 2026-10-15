@@ -45,7 +45,7 @@ it('[BASE-ACCESS-001/002] expired links and expired sessions deny access; member
 })
 it('[BASE-ACCESS-001 REQ-023] missing mail config fails closed for both identity paths, no local production transport',async()=>{
  const app=createPennyApi();for(const path of ['/api/auth/magic-link','/api/public/identity/email']){
-  const response=await app.fetch(new Request(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(path.includes('public')?{email:'test@example.test',displayName:'Test'}:{email:'owner@penny.invalid'})}),{...env,SENDGRID_API_KEY:undefined,PENNY_AUTH_TRANSPORT:'local-outbox'})
+  const response=await app.fetch(new Request(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(path.includes('public')?{email:'test@example.test',displayName:'Test'}:{email:'owner@penny.invalid'})}),{...env,MAIL_API_KEY:undefined,PENNY_AUTH_TRANSPORT:'local-outbox'})
   expect(response.status).toBe(503)
  }
  expect(messages).toHaveLength(0)
@@ -139,7 +139,7 @@ it('[OPS-002] initial owner self-removal requires a verified successor and survi
  expect(issued.status).toBe(201);const key=await issued.json() as {token:string}
  await call('/api/auth/magic-link',{email:'owner@penny.invalid'})
  const held=new URL(messages.findLast(m=>m.to==='owner@penny.invalid')!.url).searchParams.get('token')!
- expect((await call(`${management}/${initial.id}`,{},first,'DELETE')).status).toBe(200)
+ expect((await call(`${management}/${initial.id}`,{successorId:peer.id},first,'DELETE')).status).toBe(200)
  expect((await call(management,undefined,first)).status).toBe(401)
  expect((await call('/auth/confirm',{token:held})).status).toBe(400)
  expect((await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Reclaim'})).status).toBe(409)
@@ -156,6 +156,21 @@ it('[OPS-002] initial owner self-removal requires a verified successor and survi
  expect((await call('/api/v1/requests',undefined,{Authorization:`Bearer ${key.token}`})).status).toBe(200)
  // The former owner can be invited back as an equal operator.
  expect((await invited(successor,'owner@penny.invalid')).id).toBe(initial.id)
+})
+it('[OPS-002] ownership moves only by the owner handing over to a successor they name',async()=>{
+ const first=await owner(),earlier=await invited(first,'earlier@example.test'),named=await invited(first,'named@example.test')
+ const initial=named.operators.find(o=>o.email==='owner@penny.invalid')!
+ expect((await call(`${management}/${initial.id}`,{successorId:earlier.id},earlier.cookie,'DELETE')).status).toBe(403)
+ expect((await call(`${management}/${initial.id}`,{successorId:named.id},first,'DELETE')).status).toBe(200)
+ const role=(id:string)=>env.DB.prepare('SELECT role FROM oa_operators WHERE id=?').bind(id).first<string>('role')
+ expect(await role(named.id)).toBe('owner');expect(await role(earlier.id)).toBe('member')
+ await call('/api/auth/magic-link',{email:'earlier@example.test'})
+ const member={Cookie:(await call('/auth/confirm',{token:new URL(messages.findLast(m=>m.to==='earlier@example.test')!.url).searchParams.get('token')!})).headers.get('Set-Cookie')!.split(';')[0]}
+ // A member can neither depose the current owner nor name themselves as successor.
+ expect((await call(`${management}/${named.id}`,{},member,'DELETE')).status).toBe(403)
+ expect((await call(`${management}/${named.id}`,{successorId:earlier.id},member,'DELETE')).status).toBe(403)
+ expect(await role(named.id)).toBe('owner');expect(await role(earlier.id)).toBe('member')
+ expect((await call(management,undefined,member)).status).toBe(200)
 })
 it('[OPS-002 BASE-OPS-005] management refuses maintenance and audit failure without leaving membership changes',async()=>{
  const first=await owner(),peer=await invited(first,'retained@example.test')

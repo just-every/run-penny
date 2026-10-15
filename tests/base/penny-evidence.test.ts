@@ -13,7 +13,7 @@ import type { EvidenceVersion,EvidenceAttachments,RequestSuggestion } from '@/co
 import type { OperatorAccountDetail,OperatorDecisionBrief } from '@/core/shared/api/operator'
 const app=createPennyApi(),origin='https://127.0.0.1:8787'
 const devKey='synthetic-evidence-checkout-key-for-local-outbox-tests'
-const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@localhost.test',SENDGRID_API_KEY:'synthetic-provider-test-key',WORKSPACE_TIMEZONE:'UTC'})
+const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key',WORKSPACE_TIMEZONE:'UTC'})
 let ip=0
 function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST'){
  return app.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'127.0.0.1:8787',Origin:origin,'CF-Connecting-IP':`192.0.2.${++ip}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings())

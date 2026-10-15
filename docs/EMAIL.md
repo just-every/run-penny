@@ -36,14 +36,17 @@ The choices remain **SendGrid**, **Resend** or **set up later**. With your own p
 
 | Variable | What it does |
 |---|---|
-| `MAIL_PROVIDER` | `sendgrid`, `resend` or `later` (email actions unavailable). |
+| `MAIL_PROVIDER` | `sendgrid`, `resend` or `later` (email actions unavailable). `rer deploy` refuses `later`, because the owner could not sign in. |
 | `MAIL_FROM` | The sender address verified with your selected provider; not used with `later`. |
-| `SENDGRID_API_KEY` | Required when `MAIL_PROVIDER=sendgrid`. |
-| `RESEND_API_KEY` | Required when `MAIL_PROVIDER=resend`. |
+| `MAIL_API_KEY` | Your SendGrid or Resend API key; required unless `MAIL_PROVIDER=later`. |
 
-A key for the other provider does not satisfy your choice. Set these as described in [Install and deploy](/docs/install). If the provider, key or sender is missing, deployed sign-in and requester verification say that email delivery is unavailable. Visitors can still read your public pages.
+Penny sends only through the provider you name, so the key must belong to that provider. `MAIL_API_KEY` is the same name RER uses for Managed mail; older `SENDGRID_API_KEY` and `RESEND_API_KEY` settings are refused, so rename them when you upgrade. Set these as described in [Install and deploy](/docs/install). If the provider, key or sender is missing, deployed sign-in and requester verification say that email delivery is unavailable. Visitors can still read your public pages.
 
-Locally you need none of this. Penny silently suppresses mail instead of sending it.
+### On your computer
+
+Locally you need none of this. Penny Dev sends no email at all: there is no outbox, no captured message and no printed link. A customer therefore cannot verify an address locally, and the public **Submit feedback** page says so.
+
+To do the customer jobs locally (submit, vote, follow and comment), sign in as an operator, open **Feedback settings → Test customers (Penny Dev)**, enter a display name and email, and press **Add and open the board as them**. Penny records that address as verified and opens the public board in the same browser, signed in as that customer; your operator session stays signed in, so you can approve their feedback, map it to the roadmap and publish a release from the operator app. Deployed copies never show this section: there, customers verify by email. Delivery counts in Penny Dev read “not emailed (local)”, because nobody receives the messages.
 
 `pnpm run operations -- check --profile owner-sendgrid` (or `owner-resend`, `owner-later`) checks the selected owner-account inputs offline. These profiles do not provision Managed mail or prove delivery.
 
@@ -88,11 +91,11 @@ Publishing queues the send immediately. A Queue consumer sends eligible mail, in
 
 ### Unsubscribing
 
-Every requester email carries a link to unsubscribe from all requester email, and request updates also carry a link to mute just that request. The links work without signing in. Opening the link shows a confirmation, so mail scanners cannot unsubscribe anyone by accident. Hosted HTTPS messages support one-click unsubscribe in mail apps; local HTTP outbox messages retain the confirmation link in their text. Any notification's global unsubscribe link also withdraws the address's all-release subscription; “Mute this request” retains that subscription. Requesters can change preferences on **Your feedback** and their release subscription on Updates. Muting and unsubscribing remove no votes, requests, follows or portal access.
+Every requester email carries a link to unsubscribe from all requester email, and request updates also carry a link to mute just that request. The links work without signing in. Opening the link shows a confirmation, so mail scanners cannot unsubscribe anyone by accident. Hosted HTTPS messages support one-click unsubscribe in mail apps. Any notification's global unsubscribe link also withdraws the address's all-release subscription; “Mute this request” retains that subscription. Requesters can change preferences on **Your feedback** and their release subscription on Updates. Muting and unsubscribing remove no votes, requests, follows or portal access.
 
 ## Decision review reminders
 
-A decision owner receives one email when a committed decision first becomes review due, plus an in-app notification that stays until dismissed. Operator review email has no requester quiet hours. Another reminder requires a new review schedule; two Cron passes do not create two reminders. Complete a review with a note and a new date or a decision revision. Local outbox capture proves the message path; live Cron execution and inbox delivery still need the owner's installation proof.
+A decision owner receives one email when a committed decision first becomes review due, plus an in-app notification that stays until dismissed. Operator review email has no requester quiet hours. Another reminder requires a new review schedule; two Cron passes do not create two reminders. Complete a review with a note and a new date or a decision revision. A local copy records the reminder without emailing it; live Cron execution and inbox delivery still need the owner's installation proof.
 
 ## When something goes wrong
 
@@ -105,6 +108,6 @@ Open **Feedback settings** in the operator app and look under **Requester email 
 ## Honest limits
 
 - **Provider acceptance is not inbox delivery.** "Accepted" means the provider took the message. Penny cannot see whether it reached an inbox.
-- **Local capture is not inbox proof.** The local outbox shows what Penny would send. It does not test a provider, your sender verification or your domain's reputation.
+- **Local copies send nothing.** Penny Dev records what it would send but emails nobody. It does not test a provider, your sender verification or your domain's reputation.
 - **There is no exactly-once guarantee.** Penny records each send durably and avoids repeats where it can, but it does not claim a message is delivered once and only once.
 - **Check your live deployment yourself.** Send a real verification link to an address you control and watch the first notification arrive. With your own provider, also confirm your sender is verified. Managed stage validation and inbox proof remain separate from this source change.

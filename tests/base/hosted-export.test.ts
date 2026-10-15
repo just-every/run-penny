@@ -6,7 +6,7 @@ import {exportArchive} from '../../src/core/features/data/archive'
 import {digest,opaqueToken} from '../../src/core/features/auth/native-tokens'
 import inventory from '../../src/core/features/data/schema-inventory.json'
 const origin='https://penny.test',app=createPennyApi()
-const bindings={...env,PENNY_ENVIRONMENT:'production',APP_ORIGIN:origin,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,SENDGRID_API_KEY:undefined}
+const bindings={...env,PENNY_ENVIRONMENT:'production',APP_ORIGIN:origin,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,MAIL_API_KEY:undefined}
 const call=(path:string,body?:unknown,headers:Record<string,string>={})=>app.fetch(new Request(origin+path,{method:body===undefined?'GET':'POST',headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.1',...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings)
 async function owner(){const r=await call('/auth/bootstrap',{token:bindings.SETUP_TOKEN,displayName:'Owner',returnTo:'/app'});expect(r.status).toBe(303);return {Cookie:r.headers.get('Set-Cookie')!.split(';')[0]}}
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})

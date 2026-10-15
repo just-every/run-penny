@@ -39,8 +39,8 @@ with maintained Base operator authentication, RER-provided Managed mail and
 selectable SendGrid or Resend mail for Free and Assisted hosting, are implemented.
 The public source repository is
 [just-every/run-penny](https://github.com/just-every/run-penny) and the current version
-is 0.0.0, released as the annotated tag `v0.0.0` on the repository's first
-commit ([RELEASE.md](RELEASE.md)). Wider release obligations are in
+is 0.1.0, released as the annotated tag `v0.1.0` ([RELEASE.md](RELEASE.md);
+upgrading from 0.0.0 is [below](#upgrade-from-000)). Wider release obligations are in
 [ACCEPTANCE.md](ACCEPTANCE.md), and local checks do not establish hosted mail
 delivery.
 
@@ -71,7 +71,7 @@ cd run-penny && rer dev
 <!-- /penny-local-commands -->
 
 `rer dev` installs the locked dependencies, sets up a local owner
-(`owner@run-penny.test`) with an empty workspace, starts Penny and prints a link
+(the email you gave `rer setup`, or a default `.test` address) with an empty workspace, starts Penny and prints a link
 that opens it signed in. Penny pins `@runeditrun/rer` in `package.json` and its
 lockfile, and the global `rer` always runs that pinned copy. The first start
 takes a few minutes.
@@ -124,7 +124,7 @@ rer describe
 prints its contained inventory, refuses active operations, removes only local
 data, owner, generated settings and installer state, and keeps exports, source
 and deployment receipts. `export` produces a private archive and
-`penny.jsonl.erasure-journal.json` beside it. `import` restores both into an
+`penny.rer.erasure-journal.json` beside it. `import` restores both into an
 empty installation (run `setup` afterwards for a fresh owner). An archive
 generated before an erasure is refused as stale, even with the latest journal:
 generate a new archive and journal together. Unknown or pending effects stay
@@ -166,6 +166,26 @@ Tracker state is private delivery evidence and never publishes a Penny status
 automatically. Restored commands stay held and provider secrets must be
 configured again.
 
+## Upgrade from 0.0.0
+
+Your data and owner are kept. From your existing checkout:
+
+```bash
+git pull
+curl -fsSL https://runeditrun.com/install.sh | sh   # rer, if you do not have it
+rer install
+rer setup        # add --owner-email YOU if you gave one before
+rer dev
+```
+
+`rer setup` applies migrations 0050–0061 and keeps the owner and every record;
+`rer dev` refuses to start until it has run. The old `node scripts/rer.mjs`
+commands, `dev --login` and the local mail outbox are gone: Penny Dev sends no
+email (see [Email](docs/EMAIL.md) for trying the customer side locally). A hosted
+copy renames `SENDGRID_API_KEY` or `RESEND_API_KEY` to `MAIL_API_KEY` in its deploy
+environment and `.rer/deploy/*-secrets.json`, then runs `rer deploy` again.
+RELEASE.json lists each migration's steps.
+
 ## Set up your hosting account
 
 **Managed Penny includes email provided by RER.** You do not open a provider
@@ -179,16 +199,24 @@ upstream provider key never reaches Penny or its build. See
 **Free and Assisted hosting keep their existing email choices:** SendGrid,
 Resend or set up later. For deployment in your own hosting account, you need a
 Cloudflare account with Workers, D1, R2 and Queues enabled, an explicit
-account ID and an account-scoped API token. For deployed sign-in and requester
-mail, choose SendGrid or Resend, verify a sender and supply that provider's key.
-Choose `MAIL_PROVIDER=later` for public reading without email sign-in or new
-requester verification; existing verified requester sessions keep their
-permitted actions. Provider setup is your responsibility, and local tests do not
-prove inboxes or hosted Cron delivery.
+account ID and an account-scoped API token. Sign-in and requester mail need
+SendGrid or Resend: verify a sender with your provider and have its API key
+ready. `rer deploy` refuses a deployment without sign-in email. (The Assisted
+installer can also start with `MAIL_PROVIDER=later`, for public reading without
+email sign-in or new requester verification.) Provider setup is your
+responsibility, and local tests do not prove inboxes or hosted Cron delivery.
 
-Set `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `OPERATOR_EMAIL` and
-`MAIL_PROVIDER` in your command environment. SendGrid additionally needs
-`MAIL_FROM` and `SENDGRID_API_KEY`; Resend needs `MAIL_FROM` and `RESEND_API_KEY`.
+Set these in your command environment:
+
+| Variable | Value |
+|---|---|
+| `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID. |
+| `CLOUDFLARE_API_TOKEN` | An account-scoped API token (Workers Scripts, D1, R2 Storage and Queues edit). |
+| `OPERATOR_EMAIL` | The owner's email address. |
+| `MAIL_PROVIDER` | `sendgrid` or `resend`. |
+| `MAIL_FROM` | A sender address verified with that provider. |
+| `MAIL_API_KEY` | That provider's API key. |
+
 `WORKSPACE_TIMEZONE` is optional (see [quiet hours](#mail-quiet-hours-and-suppression)).
 See [operations](OPERATIONS.md) for permissions and private file custody. Then:
 
@@ -214,9 +242,9 @@ claims the first owner using the configured `OPERATOR_EMAIL` through the
 same-origin native bootstrap procedure, then removes the one-time `SETUP_TOKEN`
 from the Worker and records its retirement. An existing owner is kept. You do
 not bootstrap the owner yourself. Sign in at `/signin` with `OPERATOR_EMAIL`; the
-owner's first sign-in ends at `/setup`. Without working mail, `rer signin` (add
-`--environment NAME` if you used one) prints a single-use, 15-minute sign-in link
-for the recorded owner to this terminal, using the same Cloudflare credentials.
+owner's first sign-in ends at `/setup`. If the sign-in email does not arrive,
+check the provider's activity log and sender verification, fix `MAIL_FROM` or
+`MAIL_API_KEY`, and run `rer deploy` again.
 
 To take a deployment down, `rer deploy --remove --yes` (with the same
 `--environment NAME`, if any) deletes the Worker, D1 database, R2 bucket and Queue
@@ -259,7 +287,9 @@ Restore targets an empty isolated local installation and needs the latest erasur
 journal. It preserves the destination's native owner, holds restored delivery
 work and never replays historical mail. Base sessions, authority and signing or
 provider credentials are excluded; this is a product archive, not a portable
-identity backup. Hosted restore and erasure remain disabled.
+identity backup. On a hosted copy, restore and erasure run through these same
+authenticated commands (`data:import`, `data:erase-preview`, `data:erase`,
+`data:resume-erasure`); the hosted Data page shows the exact commands.
 [Data ownership](docs/data-ownership.md) describes bounds, resume and recovery.
 
 ## The decision loop

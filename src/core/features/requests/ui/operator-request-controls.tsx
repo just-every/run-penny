@@ -1,4 +1,4 @@
-import { DeliveryCounts } from '@/core/features/releases/ui/delivery-counts'
+import { DeliveryCounts, useMailSuppressed } from '@/core/features/releases/ui/delivery-counts'
 import type { DeliveryCounts as Counts } from '@/core/features/releases/counts'
 import { StatusUpdateForm } from './status-update-form'
 import { AttachmentRecovery } from './attachment-recovery'
@@ -16,10 +16,10 @@ import { usePublicResource } from '@/core/features/portal/ui/public-resource'
 import type { RequestActions } from '../operator-availability'
 import { useRouter } from '@tanstack/react-router'
 
-function followerSummary(counts: Counts): string {
+function followerSummary(counts: Counts, mailSuppressed: boolean): string {
   const parts: string[] = []
   if (counts.queued > 0) parts.push(`${counts.queued} follower${counts.queued === 1 ? '' : 's'} will be notified`)
-  if (counts.sent + counts.delivered > 0) parts.push(`${counts.sent + counts.delivered} sent`)
+  if (counts.sent + counts.delivered > 0) parts.push(`${counts.sent + counts.delivered} ${mailSuppressed ? 'recorded, not emailed (local)' : 'sent'}`)
   if (counts.suppressed > 0) parts.push(`${counts.suppressed} suppressed`)
   if (counts.failed > 0) parts.push(`${counts.failed} failed`)
   if (counts.unknown > 0) parts.push(`${counts.unknown} need review`)
@@ -31,6 +31,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
   const [context, refresh] = usePublicResource<Context>(`/api/operator/requests/${slug}/context`), [message, setMessage] = useState(''), router = useRouter()
   async function act(path: string, body: unknown, method = 'POST', inline = false) { try { await operatorMutation(path, body, method); setMessage('Saved.'); refresh(); await router.invalidate(); return null } catch (e) { const text = e instanceof Error ? e.message : 'Action failed.'; if (!inline) setMessage(text); return text } }
   const held = context.kind === 'ready' ? heldItems(context.data) : []
+  const mailSuppressed = useMailSuppressed()
   return (
     <>
       {context.kind === 'ready' ? (
@@ -40,7 +41,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
           {context.data.statusVersions.map((version) => (
             <article key={version.id} className="mt-4 rounded-lg border border-penny-line bg-penny-paper p-4">
               <h4 className="font-bold text-penny-ink">{version.title} · {version.publicStatus.replaceAll('_', ' ')}</h4>
-              <p className="mt-1 text-sm font-semibold text-penny-muted">{followerSummary(version.counts)}</p>
+              <p className="mt-1 text-sm font-semibold text-penny-muted">{followerSummary(version.counts, mailSuppressed)}</p>
               <DeliveryCounts counts={version.counts} />
             </article>
           ))}

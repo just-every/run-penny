@@ -9,10 +9,16 @@
   "durableObjects": [],
   "secrets": [
     { "binding": "AUTH_SECRET", "environment": "AUTH_SECRET" },
-    { "binding": "SETUP_TOKEN", "environment": "SETUP_TOKEN" }
+    { "binding": "SETUP_TOKEN", "environment": "SETUP_TOKEN" },
+    { "binding": "MAIL_PROVIDER", "environment": "MAIL_PROVIDER", "verifyStandIn": "sendgrid" },
+    { "binding": "MAIL_FROM", "environment": "MAIL_FROM", "verifyStandIn": "penny@example.com" },
+    { "binding": "MAIL_API_KEY", "environment": "MAIL_API_KEY" },
+    { "binding": "MAIL_RELAY_URL", "environment": "MAIL_RELAY_URL" },
+    { "binding": "SENDGRID_EVENT_PUBLIC_KEY", "environment": "SENDGRID_EVENT_PUBLIC_KEY" },
+    { "binding": "RESEND_WEBHOOK_SECRET", "environment": "RESEND_WEBHOOK_SECRET" }
   ],
   "crons": ["* * * * *"],
-  "vars": { "WORKSPACE_TIMEZONE": "UTC", "OPERATOR_EMAIL": "owner@penny.invalid", "MAIL_PROVIDER": "later" },
+  "vars": { "WORKSPACE_TIMEZONE": "UTC", "OPERATOR_EMAIL": "owner@penny.invalid" },
   "originVar": "APP_ORIGIN",
   "platforms": ["workers", "container"],
   "container": { "engine": "workerd" }

@@ -1,9 +1,7 @@
 /** Pure local input validation. No imports from the product, network calls or provider writes. */
 export function validateConfiguration(env) {
  if (!['sendgrid', 'resend'].includes(env.MAIL_PROVIDER)) throw new Error('MAIL_PROVIDER-required')
- const key = env.MAIL_PROVIDER === 'sendgrid' ? 'SENDGRID_API_KEY' : 'RESEND_API_KEY'
- if (!env[key]?.trim()) throw new Error(`missing-${key}`)
- if ((env.MAIL_PROVIDER !== 'sendgrid' && env.SENDGRID_API_KEY) || (env.MAIL_PROVIDER !== 'resend' && env.RESEND_API_KEY)) throw new Error('conflicting-mail-provider')
+ if (!env.MAIL_API_KEY?.trim()) throw new Error('missing-MAIL_API_KEY')
  if (!env.MAIL_FROM?.trim() || /[\r\n]/.test(env.MAIL_FROM)) throw new Error('MAIL_FROM-required')
  if (typeof env.AUTH_SECRET !== 'string' || env.AUTH_SECRET.length < 32) throw new Error('AUTH_SECRET-required')
  if (!env.OPERATOR_EMAIL?.includes('@')) throw new Error('OPERATOR_EMAIL-required')

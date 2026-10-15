@@ -8,8 +8,6 @@ export interface AppBindings {
   MAIL_PROVIDER?: string
   MAIL_API_KEY?: string
   MAIL_RELAY_URL?: string
-  SENDGRID_API_KEY?: string
-  RESEND_API_KEY?: string
   SENDGRID_EVENT_PUBLIC_KEY?: string
   RESEND_WEBHOOK_SECRET?: string
   RER_DEPLOY_SOURCE?: string

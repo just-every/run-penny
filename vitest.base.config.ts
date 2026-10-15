@@ -16,7 +16,7 @@ export default defineConfig({
   PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://penny.test',AUTH_SECRET:'synthetic-base-auth-secret-for-worker-tests',SETUP_TOKEN:'synthetic-base-setup-token-for-worker-tests',
   // Historical notification fixtures use Brisbane clocks; production setup retains UTC.
   WORKSPACE_TIMEZONE:'Australia/Brisbane',
-  OPERATOR_EMAIL:'owner@penny.invalid',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',SENDGRID_API_KEY:'synthetic-provider-test-key',
+  OPERATOR_EMAIL:'owner@penny.invalid',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',MAIL_API_KEY:'synthetic-provider-test-key',
  }}})],
  test:{
   // Limit native Worker/D1 memory bursts on the shared build host; in-test races remain concurrent.

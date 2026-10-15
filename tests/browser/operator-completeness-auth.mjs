@@ -4,7 +4,7 @@ import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
 export const localProofKey='synthetic-browser-local-gate-proof-1234567890'
 const offset=((12-new Date().getUTCHours()+12)%24)-12
 const businessTimezone=offset===0?'Etc/GMT':`Etc/GMT${offset>0?'-':'+'}${Math.abs(offset)}`
-export const localProofBindings={WORKSPACE_TIMEZONE:businessTimezone,PENNY_ENVIRONMENT:'test',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',SENDGRID_API_KEY:'synthetic-provider-test-key',RER_DEV_KEY:localProofKey}
+export const localProofBindings={WORKSPACE_TIMEZONE:businessTimezone,PENNY_ENVIRONMENT:'test',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',MAIL_API_KEY:'synthetic-provider-test-key',RER_DEV_KEY:localProofKey}
 export async function api(page,path,body,method=body===undefined?'GET':'POST') {
  const response=await page.context().request.fetch(new URL(path,page.url()).href,{method,...(body===undefined?{}:{data:body,headers:{Origin:new URL(page.url()).origin}})})
  return response
@@ -95,6 +95,7 @@ export async function removeInitialOwner({page,origin,successor,capture,db}) {
  const owner=members.find(row=>row.initialOwner)
  await page.goto(origin+'/app/settings')
  await page.getByRole('button',{name:`Remove ${owner.email}`,exact:true}).click()
+ await page.getByLabel('Hand ownership to').selectOption({index:1})
  await page.getByRole('button',{name:'Confirm removal',exact:true}).click()
  await page.waitForURL(url=>url.pathname==='/signin')
  await capture('OPS-002-initial-owner-self-removed',page)

@@ -4,7 +4,7 @@ import { createPennyRuntime } from '@/core/app/runtime'
 import type { AppBindings } from '@/core/shared/bindings'
 export const rejectionTime=new Date(Date.now()+86400000).setUTCHours(9,0,0,0)
 export const rejectionRuntime=(overrides:Partial<AppBindings>={})=>createPennyRuntime({...env,WORKSPACE_TIMEZONE:'UTC',...overrides})
-export const localRejectionBindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',MAIL_PROVIDER:'sendgrid',WORKSPACE_TIMEZONE:'UTC',SENDGRID_API_KEY:'synthetic-provider-test-key'})
+export const localRejectionBindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',MAIL_PROVIDER:'sendgrid',WORKSPACE_TIMEZONE:'UTC',MAIL_API_KEY:'synthetic-provider-test-key'})
 export async function rejectionFixture({consent=true,comment=false,operator:existingOperator}:{consent?:boolean;comment?:boolean;operator?:{Cookie:string}}={}){
  const operator=existingOperator??await owner(),person=await requester(),board=`reject-${crypto.randomUUID()}`
  expect((await call('/api/operator/boards',{name:'Review',slug:board,visibility:'public'},operator)).status).toBe(201)

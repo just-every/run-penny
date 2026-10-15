@@ -9,7 +9,7 @@ import { authMail } from '@/core/features/auth/mail'
 import { exportArchive, planErasure, eraseEntity } from '@/core/features/data/archive'
 const origin='https://127.0.0.1:8787'
 const devKey='synthetic-checkout-dev-key-for-worker-tests-0123456789'
-const bindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined,RER_DEV_KEY:devKey})
+const bindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_API_KEY:'synthetic-provider-test-key',RER_DEV_KEY:devKey})
 const runtime=()=>createPennyRuntime(bindings())
 const app=createPennyApi()
 function call(path:string,body?:unknown,headers:Record<string,string>={},mode=bindings(),method=body===undefined?'GET':'POST') {

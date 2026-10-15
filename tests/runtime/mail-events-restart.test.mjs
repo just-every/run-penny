@@ -24,7 +24,7 @@ test('[REL-011 BASE-OPS-003] genuine persisted D1 runtime restart retains atomic
  modules.sort((a,b)=>a.path.endsWith('/index.js')?-1:b.path.endsWith('/index.js')?1:0)
  const options=convertV4MiniflareOptions({modules,modulesRoot:resolve('dist/server'),cf:false,compatibilityDate:'2026-08-31',compatibilityFlags:['nodejs_compat'],
   resourcePersistencePath:state,d1Databases:{DB:'mail-restart'},r2Buckets:{FILES:'files'},queueProducers:{JOBS:'jobs'},
-  bindings:{PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://penny.test',AUTH_SECRET:'synthetic-restart-auth-secret-long-enough',MAIL_PROVIDER:'sendgrid',SENDGRID_API_KEY:'synthetic-send-key',MAIL_FROM:'penny@example.test',SENDGRID_EVENT_PUBLIC_KEY:identity.publicKey}})
+  bindings:{PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://penny.test',AUTH_SECRET:'synthetic-restart-auth-secret-long-enough',MAIL_PROVIDER:'sendgrid',MAIL_API_KEY:'synthetic-send-key',MAIL_FROM:'penny@example.test',SENDGRID_EVENT_PUBLIC_KEY:identity.publicKey}})
  let mf
  try {
   mf=new Miniflare(options);await mf.ready;let db=await mf.getD1Database('DB')

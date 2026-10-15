@@ -118,7 +118,7 @@
     },
     {
       "name": "MAIL_API_KEY",
-      "label": "Managed mail credential",
+      "label": "Mail API key",
       "kind": "secret",
       "input": "entered",
       "ownerVisible": true,
@@ -131,34 +131,22 @@
             "equals": "rer"
           },
           "required": true
+        },
+        {
+          "when": {
+            "field": "MAIL_PROVIDER",
+            "equals": "sendgrid"
+          },
+          "required": true
+        },
+        {
+          "when": {
+            "field": "MAIL_PROVIDER",
+            "equals": "resend"
+          },
+          "required": true
         }
       ]
-    },
-    {
-      "name": "SENDGRID_API_KEY",
-      "label": "SendGrid API key",
-      "kind": "secret",
-      "input": "entered",
-      "ownerVisible": true,
-      "group": "mail",
-      "when": {
-        "field": "MAIL_PROVIDER",
-        "equals": "sendgrid"
-      },
-      "required": true
-    },
-    {
-      "name": "RESEND_API_KEY",
-      "label": "Resend API key",
-      "kind": "secret",
-      "input": "entered",
-      "ownerVisible": true,
-      "group": "mail",
-      "when": {
-        "field": "MAIL_PROVIDER",
-        "equals": "resend"
-      },
-      "required": true
     },
     {
       "name": "SENDGRID_EVENT_PUBLIC_KEY",

@@ -21,7 +21,7 @@ export function registerOperatorManagementRoutes(app:Hono<OperatorMutationEnviro
     const runtime=c.get('runtime'),{session}=await managementActor(runtime,c.req.raw)
     const id=z.string().uuid().safeParse(c.req.param('id'))
     if(!id.success)return c.json({error:'validation_failed'},400)
-    await parseInput(c.req.raw,z.object({}).strict())
-    return c.json(await removeOperator(runtime,session,id.data))
+    const input=await parseInput(c.req.raw,z.object({successorId:z.string().uuid().optional()}).strict())
+    return c.json(await removeOperator(runtime,session,id.data,input.successorId))
   })
 }

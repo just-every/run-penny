@@ -10,7 +10,7 @@ import type { ReviewNotification } from '@/core/features/notifications/decision-
 import type { DecisionHistory,DecisionPostRelease } from '@/core/features/decisions/history'
 const origin='https://127.0.0.1:8787'
 const devKey='synthetic-decisions-checkout-key-for-local-outbox-tests'
-const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,WORKSPACE_TIMEZONE:'Australia/Brisbane',MAIL_PROVIDER:'sendgrid',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined})
+const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,WORKSPACE_TIMEZONE:'Australia/Brisbane',MAIL_PROVIDER:'sendgrid',MAIL_API_KEY:'synthetic-provider-test-key'})
 const runtime=()=>createPennyRuntime(bindings())
 const app=createPennyApi()
 function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST'){

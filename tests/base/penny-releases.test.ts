@@ -36,7 +36,7 @@ it('[REL-003] correction preserves original context and operator history; portal
  const g=await votedReleaseGraph()
  await json(await call('/api/public/updates/subscription',{subscribed:true},g.person,'PATCH'))
  vi.mocked(fetch).mockClear()
- const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined}
+ const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key'}
  const nextDay=new Date();nextDay.setUTCDate(nextDay.getUTCDate()+1);nextDay.setUTCHours(9,0,0,0)
  vi.spyOn(Date,'now').mockReturnValue(nextDay.getTime())
  const cron=()=>runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
@@ -116,7 +116,7 @@ it('[EVID-009 REL-001] a private tag on a published release stays out of the pub
  const tag=await json<{id:string}>(await call('/api/operator/catalog/tags',{name:secret},g.operator),201)
  await json(await call(`/api/operator/releases/${g.draft.slug}`,{...g.input,tagIds:[tag.id]},g.operator,'PATCH'))
  await json(await call('/api/public/updates/subscription',{subscribed:true},g.person,'PATCH'))
- const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined}
+ const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key'}
  const nextDay=new Date();nextDay.setUTCDate(nextDay.getUTCDate()+1);nextDay.setUTCHours(9,0,0,0)
  vi.spyOn(Date,'now').mockReturnValue(nextDay.getTime())
  await json(await publish(g))

@@ -36,7 +36,7 @@ export async function createOperatorRequest(database: DatabaseConnection, input:
   for (const evidenceId of input.evidenceIds) if (!await db.prepare('SELECT id FROM evidence_items WHERE id = ?').bind(evidenceId).first()) throw new MutationError(404, 'Evidence not found.')
   const id = createUlid(); const slug = createRequestSlug(input.title, id); const now = new Date().toISOString()
   await db.batch([
-    db.prepare(`INSERT INTO requests (id,slug,board_id,author_requester_id,author_operator_id,title,description,moderation_state,public_state,created_at,updated_at) VALUES (?,?,?,NULL,?,?,?,'approved','unpublished',?,?)`).bind(id,slug,board.id,operatorId,input.title,input.description,now,now),
+    db.prepare(`INSERT INTO requests (id,slug,board_id,author_requester_id,author_operator_id,title,description,moderation_state,public_state,created_at,updated_at) VALUES (?,?,?,NULL,?,?,?,'awaiting_review','unpublished',?,?)`).bind(id,slug,board.id,operatorId,input.title,input.description,now,now),
     ...input.evidenceIds.flatMap(evidenceId => ['request_evidence_links','request_evidence_contributions'].map(table=>db.prepare(`INSERT INTO ${table} (request_id,evidence_id,created_at) VALUES (?,?,?)`).bind(id,evidenceId,now))),
     db.prepare(`INSERT INTO audit_entries (id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES (?,'operator',?,'request.created','request',?,?,?,?)`).bind(createUlid(),operatorId,id,now,now,now),
   ])

@@ -402,7 +402,7 @@
         "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
         "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
         "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
-        "SENDGRID_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md",
+        "MAIL_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md",
         "APP_ORIGIN": "Expected HTTPS application origin; see OPERATIONS.md",
         "PENNY_ENVIRONMENT": "Explicit hosted runtime mode; see OPERATIONS.md"
       },
@@ -443,7 +443,7 @@
         "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
         "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
         "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
-        "SENDGRID_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md"
+        "MAIL_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md"
       },
       "loops": [
         {
@@ -482,7 +482,7 @@
         "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
         "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
         "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
-        "RESEND_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md",
+        "MAIL_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md",
         "APP_ORIGIN": "Expected HTTPS application origin; see OPERATIONS.md",
         "PENNY_ENVIRONMENT": "Explicit hosted runtime mode; see OPERATIONS.md"
       },
@@ -523,7 +523,7 @@
         "MAIL_FROM": "Verified provider sender; see OPERATIONS.md",
         "MAIL_PROVIDER": "Select the explicit mail mode in OPERATIONS.md",
         "OPERATOR_EMAIL": "First owner mailbox; see OPERATIONS.md",
-        "RESEND_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md"
+        "MAIL_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md"
       },
       "loops": [
         {
@@ -609,7 +609,7 @@
         "RER_DEPLOY_RUN_ATTEMPT": "Controller run attempt; see the artifact guide linked in OPERATIONS.md",
         "RER_DEPLOY_RUN_ID": "Controller run identity; see the artifact guide linked in OPERATIONS.md",
         "RER_DEPLOY_SOURCE_SHA": "Full committed source revision; see the artifact guide linked in OPERATIONS.md",
-        "SENDGRID_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md"
+        "MAIL_API_KEY": "SendGrid API Keys dashboard; see OPERATIONS.md"
       },
       "loops": [
         {
@@ -660,7 +660,7 @@
         "RER_DEPLOY_RUN_ATTEMPT": "Controller run attempt; see the artifact guide linked in OPERATIONS.md",
         "RER_DEPLOY_RUN_ID": "Controller run identity; see the artifact guide linked in OPERATIONS.md",
         "RER_DEPLOY_SOURCE_SHA": "Full committed source revision; see the artifact guide linked in OPERATIONS.md",
-        "RESEND_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md"
+        "MAIL_API_KEY": "Resend API Keys dashboard; see OPERATIONS.md"
       },
       "loops": [
         {

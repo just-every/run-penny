@@ -17,14 +17,16 @@ export function ownerInputs(env) {
   if (env.MAIL_PROVIDER === 'later' && env.MAIL_FROM?.trim()) throw new Error('incomplete-mail-provider')
   const timezone = env.WORKSPACE_TIMEZONE || 'UTC'
   if (!fields.WORKSPACE_TIMEZONE.valid(timezone)) throw new Error('invalid-workspace-timezone')
-  const credential = env.MAIL_PROVIDER === 'rer' ? 'MAIL_API_KEY' : env.MAIL_PROVIDER === 'sendgrid' ? 'SENDGRID_API_KEY' : env.MAIL_PROVIDER === 'resend' ? 'RESEND_API_KEY' : undefined
+  // One credential name for every provider: Base's mail facade and rer's sign-in preflight read MAIL_API_KEY.
+  if (env.SENDGRID_API_KEY || env.RESEND_API_KEY) throw new Error('renamed-mail-credential')
+  const credential = env.MAIL_PROVIDER === 'later' ? undefined : 'MAIL_API_KEY'
   if (credential) {
     const missing = [credential, 'MAIL_FROM', ...(env.MAIL_PROVIDER === 'rer' ? ['MAIL_RELAY_URL'] : [])].filter(key => !env[key]?.trim())
     if (missing.length) { const error = new Error('missing-owner-input'); error.inputs = missing; throw error }
     if (env.MAIL_PROVIDER === 'rer' && !fields.MAIL_RELAY_URL.valid(env.MAIL_RELAY_URL)) throw new Error('incomplete-mail-provider')
     if (!fields.MAIL_FROM.valid(env.MAIL_FROM)) throw new Error('incomplete-mail-provider')
   }
-  if ((env.MAIL_PROVIDER !== 'sendgrid' && env.SENDGRID_API_KEY) || (env.MAIL_PROVIDER !== 'resend' && env.RESEND_API_KEY)) throw new Error('conflicting-mail-provider')
+  if (!credential && env.MAIL_API_KEY) throw new Error('conflicting-mail-provider')
   const eventCredential = env.MAIL_PROVIDER === 'sendgrid' ? 'SENDGRID_EVENT_PUBLIC_KEY' : env.MAIL_PROVIDER === 'resend' ? 'RESEND_WEBHOOK_SECRET' : undefined
   if ((env.MAIL_PROVIDER !== 'sendgrid' && env.SENDGRID_EVENT_PUBLIC_KEY) || (env.MAIL_PROVIDER !== 'resend' && env.RESEND_WEBHOOK_SECRET)) throw new Error('conflicting-mail-provider')
   if (eventCredential && env[eventCredential] !== undefined && (!env[eventCredential].trim() || /[\r\n\0]/.test(env[eventCredential]))) throw new Error('invalid-mail-event-credential')
@@ -79,10 +81,11 @@ async function saveOwnerSettings(root, env, store, readOnly, environment) {
     await privateDirectory(root, directory)
     await writePrivateFile(join(root, file), JSON.stringify(values, null, 2) + '\n')
   }
-  declaration.vars = { ...declaration.vars, OPERATOR_EMAIL: input.email, WORKSPACE_TIMEZONE: input.timezone, ...(input.credential ? { MAIL_PROVIDER: input.provider, MAIL_FROM: input.from, ...(input.provider === 'rer' ? {MAIL_RELAY_URL:input.relayUrl} : {}) } : {}) }
+  declaration.vars = { ...declaration.vars, OPERATOR_EMAIL: input.email, WORKSPACE_TIMEZONE: input.timezone }
+  // deploy.json declares every mail input rer's sign-in preflight reads; this
+  // installation binds only the ones its selected provider supplies.
+  declaration.secrets = declaration.secrets.filter(item => values[item.environment] !== undefined)
   for(const field of optionalFields)if(values[field.name]){if(field.kind==='secret')declaration.secrets.push({binding:field.name,environment:field.name});else declaration.vars[field.name]=values[field.name]}
-  if (input.credential) declaration.secrets.push({ binding: input.credential, environment: input.credential })
-  if (input.eventCredential && values[input.eventCredential]) declaration.secrets.push({ binding: input.eventCredential, environment: input.eventCredential })
   if (!readOnly) await writePrivateFile(join(root, declarationFile), JSON.stringify(declaration, null, 2) + '\n')
   return { declaration, declarationFile, stateFile, environment, worker, credentialFile: file, values, input }
 }

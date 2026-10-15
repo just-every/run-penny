@@ -9,7 +9,7 @@ import { canonical,eraseEntity,planErasure,readErasureJournal,type Archive,type 
 import { digest } from '@/core/features/auth/native-tokens'
 
 const origin='https://127.0.0.1:8787',app=createPennyApi()
-const bindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined})
+const bindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_API_KEY:'synthetic-provider-test-key'})
 const runtime=()=>createPennyRuntime(bindings())
 let ip=0
 function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST'){

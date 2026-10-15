@@ -1,9 +1,22 @@
 # Penny acceptance
 
+## First release: what a person can do
+
+1. Install with `rer`, run `rer setup` and `rer dev`, and land signed in as the owner at **Finish setup**.
+2. Create a public board and invite operators, who share equal product access.
+3. As a customer, verify an email (hosted) or be added as a test customer (Penny Dev), then submit, vote, follow and comment.
+4. Review submissions and comments in Moderation and approve customer-safe wording for publication.
+5. Record private evidence, tag it, link it to requests and accounts, or create a request from it.
+6. Compare and commit decision bets, approve roadmap wording and map requests to roadmap items.
+7. Publish status updates and releases; followers get Queue-driven email outside quiet hours.
+8. Export, restore and erase data, including saved Canny/UserVoice imports, with an erasure journal.
+9. Deploy to your own Cloudflare account with `rer deploy`, sign in by email, and remove it with `rer deploy --remove --yes`.
+10. Not needed for the first release: custom domains, outbound webhooks/Slack without an egress service, general tracker sync, automatic publication.
+
 ## Unmet first-release obligations
 
-Penny 0.0.0 is public at `just-every/run-penny` (tag `v0.0.0`); later heads are
-unreleased source. A named passing test or exact-head receipt
+Penny 0.1.0 is public at `just-every/run-penny` (tag `v0.1.0`; first release
+`v0.0.0`); later heads are unreleased source. A named passing test or exact-head receipt
 satisfies only its bounded claim. Uncovered, local-only and provider-limited
 requirements remain unmet; a table, build, listing or historical receipt cannot
 close them. CONTRACT.md and BASELINE.md retain their full authority.
@@ -100,8 +113,9 @@ older approved versions stay readable to operators and correction delivery
 requires its own explicit command.
 
 Notifications retain consent, mute, suppression, current eligibility and public
-content checks, fixed first-event one-hour windows and 20:00–08:00 workspace quiet
-hours. Release deliveries use separate immediate commands and minute Cron.
+content checks, fixed first-event one-minute windows and 20:00–08:00 workspace quiet
+hours, sent by a Queue consumer woken at publication with the minute Cron as
+backstop. Release deliveries use separate immediate commands.
 Claims/attempts, address-bound generations, provider event correlation and
 uncertainty survive restarts. Known pre-acceptance retries are bounded; unknown
 sends are not retried. Restored intent is held, new native intent cannot join a

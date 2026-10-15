@@ -24,7 +24,7 @@ Two small files hold the settings most owners change first.
 | `workspaceTimezone` | The timezone for requester quiet hours. The default is Australia/Brisbane. A `WORKSPACE_TIMEZONE` value set at deploy overrides it. |
 | `publicOriginAllowlist` | Initial exact parent origins for public portal embedding; defaults to empty. **Feedback settings → Portal embedding** saves the installation’s current list. |
 
-The `OPERATOR_EMAIL` owner is created during setup. In **Feedback settings → Operators**, any operator can invite an email address and remove peers. The invitee confirms the email link to join with equal product access. Removal immediately revokes sessions, pending links and API keys. Only the setup owner can remove themselves; the confirmation names the verified active peer who will receive installation controls. Removing the last usable owner is refused. Development invitations arrive in the gated local outbox.
+The `OPERATOR_EMAIL` owner is created during setup. In **Feedback settings → Operators**, any operator can invite an email address and remove peers. The invitee confirms the email link to join with equal product access. Removal immediately revokes sessions, pending links and API keys. Nobody can remove the installation owner or make themselves owner: ownership moves only when the owner leaves and names, in the confirmation, the verified active operator who takes over installation controls. Removing the last usable owner is refused. Penny Dev sends no email, so a local invitation reaches nobody; use `rer dev --as teammate` to work as a second operator locally, and **Test customers (Penny Dev)** to act as a customer.
 
 ## Things you change inside the app
 

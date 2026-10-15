@@ -57,7 +57,9 @@ export function registerDataRoutes(app:Hono<Environment>):void{
   const session=authority(c),secret=c.get('runtime').configuration.authSecret!
   try{
    const plan=input.table==='operators'?await planOperatorErasure(c.env.DB,input.id):await planErasure(c.env.DB,input.table,input.id,{secret,subject:session.operatorId+':'+session.id,continuation:input.continuation})
-   return c.json({table:plan.table,id:plan.id,planHash:plan.planHash,counts:plan.counts,fileCount:plan.files.length,blockedCopies:plan.blockedCopies})
+   // The import kit withdraws each touched import's whole saved original, for everyone in it.
+   const imports=new Set((('selected' in plan?plan.selected.feedback_import_records:undefined)??[]).map(row=>row.namespace)).size
+   return c.json({table:plan.table,id:plan.id,planHash:plan.planHash,counts:plan.counts,fileCount:plan.files.length,importCount:imports,blockedCopies:plan.blockedCopies})
   }catch(error){
    if(error instanceof CopyScanPending)return c.json({status:'pending',continuation:error.continuation},202)
    throw error

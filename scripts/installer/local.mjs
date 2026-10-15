@@ -29,7 +29,8 @@ const definitions = {
   },
   migrate: async context => {
     // `rer demo` migrates and claims the saved owner in its own throwaway folder (.rer/demo/START), never .wrangler/state.
-    if (context.demo) context.stateDirectory = context.demo.state
+    // Every `rer dev` start also migrates; only setup's prepare step chose the folder before.
+    context.stateDirectory = context.demo ? context.demo.state : context.stateDirectory ?? localState(context.root)
     const env = { ...commandEnvironment(), PENNY_LOCAL_STATE: context.stateDirectory, CI: '1' }
     await applyMigrations(context)
     // Read native authority; only /auth/bootstrap may create it. A populated
@@ -55,7 +56,7 @@ const definitions = {
     if (!context.input.prefix?.startsWith(`${project}-`)) throw context.fail('deploy')
     const target = await ownerDeclaration(context.root, context.input.prefix.slice(project.length + 1))
     return ownerAccountHosting({ cli:'scripts/installer/owner-cli.mjs',declaration:'deploy.json',environment:target.environment,state:target.stateFile,secrets:context=>{
-    return {...Object.fromEntries(manifest.fields.filter(field=>field.group==='host'&&context.hostingInput[field.name]!==undefined).map(field=>[field.name,context.hostingInput[field.name]])),OPERATOR_EMAIL:context.vars.OPERATOR_EMAIL,PENNY_EXPECTED_ORIGIN:context.input.appOrigin,WORKSPACE_TIMEZONE:context.vars.WORKSPACE_TIMEZONE,MAIL_PROVIDER:context.hostingInput.MAIL_PROVIDER||'later',...(context.hostingInput.MAIL_PROVIDER==='rer'?{MAIL_FROM:context.hostingInput.MAIL_FROM,MAIL_RELAY_URL:context.hostingInput.MAIL_RELAY_URL,MAIL_API_KEY:context.hostingInput.MAIL_API_KEY}:context.hostingInput.MAIL_PROVIDER==='sendgrid'?{MAIL_FROM:context.hostingInput.MAIL_FROM,SENDGRID_API_KEY:context.hostingInput.SENDGRID_API_KEY,SENDGRID_EVENT_PUBLIC_KEY:context.hostingInput.SENDGRID_EVENT_PUBLIC_KEY}:context.hostingInput.MAIL_PROVIDER==='resend'?{MAIL_FROM:context.hostingInput.MAIL_FROM,RESEND_API_KEY:context.hostingInput.RESEND_API_KEY,RESEND_WEBHOOK_SECRET:context.hostingInput.RESEND_WEBHOOK_SECRET}:{})}
+    return {...Object.fromEntries(manifest.fields.filter(field=>field.group==='host'&&context.hostingInput[field.name]!==undefined).map(field=>[field.name,context.hostingInput[field.name]])),OPERATOR_EMAIL:context.vars.OPERATOR_EMAIL,PENNY_EXPECTED_ORIGIN:context.input.appOrigin,WORKSPACE_TIMEZONE:context.vars.WORKSPACE_TIMEZONE,MAIL_PROVIDER:context.hostingInput.MAIL_PROVIDER||'later',...(context.hostingInput.MAIL_PROVIDER==='rer'?{MAIL_FROM:context.hostingInput.MAIL_FROM,MAIL_RELAY_URL:context.hostingInput.MAIL_RELAY_URL,MAIL_API_KEY:context.hostingInput.MAIL_API_KEY}:context.hostingInput.MAIL_PROVIDER==='sendgrid'?{MAIL_FROM:context.hostingInput.MAIL_FROM,MAIL_API_KEY:context.hostingInput.MAIL_API_KEY,SENDGRID_EVENT_PUBLIC_KEY:context.hostingInput.SENDGRID_EVENT_PUBLIC_KEY}:context.hostingInput.MAIL_PROVIDER==='resend'?{MAIL_FROM:context.hostingInput.MAIL_FROM,MAIL_API_KEY:context.hostingInput.MAIL_API_KEY,RESEND_WEBHOOK_SECRET:context.hostingInput.RESEND_WEBHOOK_SECRET}:{})}
     }})(context)
   },
   guard: context => { context.signal?.throwIfAborted(); localState(context.root) },

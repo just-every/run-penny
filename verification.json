@@ -1,0 +1,68 @@
+{
+  "push": [
+    {
+      "name": "static",
+      "browser": true,
+      "hosted": true,
+      "commands": [
+        "pnpm run check -- --profile first-party",
+        "pnpm run source:check",
+        "pnpm run verify:base-source",
+        "pnpm run feedback:status",
+        "pnpm run build",
+        "pnpm run deployment-spec:check",
+        "pnpm run typecheck",
+        "pnpm run lint",
+        "pnpm run test:mail-runtime",
+        "pnpm run test:data:commands",
+        "env CLOUDFLARE_ACCOUNT_ID=00000000000000000000000000000000 CLOUDFLARE_API_TOKEN=readme-dry-run OPERATOR_EMAIL=owner@example.com MAIL_PROVIDER=sendgrid MAIL_FROM=penny@example.com MAIL_API_KEY=readme-dry-run pnpm exec rer deploy --dry-run"
+      ]
+    },
+    {
+      "name": "base-1",
+      "browser": false,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "pnpm exec vitest run --config vitest.base.config.ts --shard=1/2"
+      ]
+    },
+    {
+      "name": "base-2",
+      "browser": false,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "pnpm exec vitest run --config vitest.base.config.ts --shard=2/2"
+      ]
+    },
+    {
+      "name": "installer",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run test:installer"
+      ]
+    },
+    {
+      "name": "browser",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "pnpm run test:browser:dev-credentials",
+        "pnpm run test:browser:learning"
+      ]
+    }
+  ],
+  "nightly": [
+    {
+      "name": "readme",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run test:browser:readme"
+      ]
+    }
+  ]
+}

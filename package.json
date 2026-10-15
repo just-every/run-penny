@@ -1,7 +1,7 @@
 {
   "name": "penny",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -53,7 +53,7 @@
     "test:browser:editor": "node tests/browser/editor-admission.mjs",
     "test:browser:integration-api": "node tests/browser/integration-api.mjs",
     "test:browser:integrations": "node tests/browser/integration-states.mjs",
-    "verify:app": "pnpm run check -- --profile first-party && pnpm run source:check && pnpm run verify:base-source && pnpm run feedback:status && pnpm run build && pnpm run deployment-spec:check && pnpm run typecheck && pnpm run lint && pnpm run test:base && pnpm run test:installer && pnpm run test:mail-runtime && pnpm run test:data:commands && pnpm run test:browser:readme && pnpm run test:browser:dev-credentials && pnpm run test:browser:learning",
+    "verify:app": "node scripts/verify-app.mjs",
     "reset": "rer reset",
     "release": "rer release",
     "doctor": "rer doctor",
@@ -143,7 +143,8 @@
     "importers.json",
     "schema",
     "examples",
-    "management"
+    "management",
+    "verification.json"
   ],
   "engines": {
     "node": "22.20.0",

@@ -43,7 +43,7 @@ Deploy/health consume the following environment from that trusted controller:
 * `MAIL_PROVIDER` (`sendgrid` or `resend`) and `MAIL_FROM` (sender verified with
   that provider) for both commands. First deployment needs `AUTH_SECRET` and
   `SETUP_TOKEN` (independent random secrets, at least 32 characters), plus the
-  matching `SENDGRID_API_KEY` or `RESEND_API_KEY`. Deploy preserves existing opaque
+  provider's key as `MAIL_API_KEY`. Deploy preserves existing opaque
   secrets by binding name and only requires a value for a missing binding; health
   checks binding presence without requiring secret values.
 * `OPERATOR_EMAIL` defaults to `operator@example.com`.
