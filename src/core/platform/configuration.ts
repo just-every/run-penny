@@ -18,7 +18,7 @@ export interface RuntimeConfiguration {
   readonly workspaceTimezone: string
   readonly publicOriginAllowlist: ReadonlySet<string>
   readonly environment: 'local' | 'test' | 'preview' | 'production'
-  /** RER_DEMO=1 (`rer demo` or a hosted demo; `rer deploy` refuses it): mail is captured in the development outbox, never sent. */
+  /** RER_DEMO=1 (`rer demo` or a hosted demo; `rer deploy` refuses it): mail is silently suppressed. */
   readonly demo: boolean
   readonly appOrigin?: string
   readonly portalIdentitySecret?: string

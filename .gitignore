@@ -35,3 +35,6 @@ rer-package/
 
 # Private operator files (session cookie, archives, erasure journals)
 /private/
+
+# Throwaway demo data
+.rer/demo/

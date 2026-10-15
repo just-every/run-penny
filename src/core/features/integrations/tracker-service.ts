@@ -1,3 +1,4 @@
+import {integrationAvailable} from './transport'
 import {z} from 'zod'
 import {sha256} from '../../../../base/modules/integrations/core/crypto.ts'
 import type {PennyRuntime} from '@/core/app/runtime'
@@ -43,7 +44,7 @@ export async function createTracker(runtime:PennyRuntime,request:Request,input:z
  const guard=sessionGuard(session)
  guard.sql+=` AND EXISTS(SELECT 1 FROM penny_tracker_connections c JOIN oa_operators o ON o.id=c.native_operator_id WHERE c.id=? AND c.revoked_at IS NULL AND o.status='active' AND o.version=c.operator_version)`;guard.params.push(connection.id)
  const db=guardedDatabase(runtime.database.binding,guard)
- if(!connection.api_token||!runtime.bindings.PENNY_EGRESS)throw new NativeError('tracker_creation_unconfigured',503)
+ if(!connection.api_token||!integrationAvailable(runtime))throw new NativeError('tracker_creation_unconfigured',503)
  await subjectExists(db,input)
  const body=createBody(connection,input.title,input.description),hash=await sha256(JSON.stringify([input.requestId??null,input.decisionId??null,input.connectionId,body]))
  const prior=await db.prepare('SELECT * FROM penny_tracker_commands WHERE operation_key=?').bind(input.operationKey).first<TrackerCommand>()

@@ -4,14 +4,10 @@ import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
 export const localProofKey='synthetic-browser-local-gate-proof-1234567890'
 const offset=((12-new Date().getUTCHours()+12)%24)-12
 const businessTimezone=offset===0?'Etc/GMT':`Etc/GMT${offset>0?'-':'+'}${Math.abs(offset)}`
-export const localProofBindings={WORKSPACE_TIMEZONE:businessTimezone,PENNY_ENVIRONMENT:'local',MAIL_PROVIDER:'development',MAIL_FROM:'penny@example.test',SENDGRID_API_KEY:'',RER_DEV_KEY:localProofKey}
+export const localProofBindings={WORKSPACE_TIMEZONE:businessTimezone,PENNY_ENVIRONMENT:'test',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',SENDGRID_API_KEY:'synthetic-provider-test-key',RER_DEV_KEY:localProofKey}
 export async function api(page,path,body,method=body===undefined?'GET':'POST') {
  const response=await page.context().request.fetch(new URL(path,page.url()).href,{method,...(body===undefined?{}:{data:body,headers:{Origin:new URL(page.url()).origin}})})
  return response
-}
-export async function gate(page,origin) {
- await page.goto(`${origin}/__dev/key#rer-dev=${localProofKey}&next=%2F__dev%2Foutbox`)
- await page.getByRole('heading',{name:'Development outbox',exact:true}).waitFor()
 }
 export async function invitePeer({page,browser,origin,width,capture,runtime,email='proof-peer@example.test'}) {
  await page.goto(origin+'/app/settings')
@@ -26,11 +22,9 @@ export async function invitePeer({page,browser,origin,width,capture,runtime,emai
   await pacePublicContext(peerContext,runtime,email==='proof-peer@example.test'?'198.51.100.20':'198.51.100.21')
   const peer=await peerContext.newPage()
   assert.equal((await peerContext.request.get(origin+'/__dev/outbox')).status(),404,'[OPS-001] anonymous outbox denied')
-  await gate(peer,origin)
-  await peer.getByRole('link',{name:'Read message',exact:true}).first().click()
-  const confirmation=await peer.getByRole('link',{name:'Open this link',exact:true}).getAttribute('href')
-  assert.ok(confirmation,'[OPS-001] invitation has real confirmation link')
-  await peer.getByRole('link',{name:'Open this link',exact:true}).click()
+  const confirmation=runtime.outbox.findLast(message=>message.email===email)?.url
+  assert.ok(confirmation,'[OPS-001] provider receives real invitation link')
+  await peer.goto(confirmation)
   await peer.getByRole('button',{name:'Confirm',exact:true}).waitFor()
   assert.equal((await peerContext.request.get(origin+'/api/auth/session')).status(),401,'GET preview does not consume link or create session')
   await peer.reload()
@@ -66,9 +60,8 @@ export async function invitePeer({page,browser,origin,width,capture,runtime,emai
   }
   // Hold a second unconsumed native magic link, alongside the active cookie.
   assert.equal((await api(peer,'/api/auth/magic-link',{email,returnTo:'/app'})).status(),202)
-  await gate(peer,origin)
-  await peer.getByRole('link',{name:'Read message',exact:true}).first().click()
-  const staleLink=await peer.getByRole('link',{name:'Open this link',exact:true}).getAttribute('href')
+  const staleLink=runtime.outbox.findLast(message=>message.email===email)?.url
+  assert.ok(staleLink)
   return {peer,peerContext,invitee,staleLink,confirmation,generatedPath,close:()=>peerContext.close()}
  }catch(error){await peerContext.close();throw error}
 }

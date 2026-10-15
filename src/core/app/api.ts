@@ -31,7 +31,6 @@ import { AuthError } from '../../../base/modules/operator-auth/index.mjs'
 import { registerDataRoutes } from '@/core/features/data/routes'
 import { registerNativeRequestRoutes } from '@/core/features/requests/native-routes'
 import { registerNativeAuthRoutes } from '@/core/features/auth/native-routes'
-import { registerLocalOutbox } from '@/core/features/auth/local-outbox'
 import { registerOwnerClaimRoutes } from '@/core/features/auth/owner-claim'
 import { registerOperatorAuthRoutes } from '@/core/features/auth/operator'
 import { registerDependencyRoutes } from '@/core/features/auth/dependencies'
@@ -89,7 +88,6 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerDeliveryRoutes(app)
   registerTrackerRoutes(app)
   registerEditorRoutes(app)
-  registerLocalOutbox(app)
   registerEvidenceRoutes(app)
   registerFeedbackImportRoutes(app)
   registerDecisionRoutes(app)

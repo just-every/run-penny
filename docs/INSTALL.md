@@ -31,7 +31,7 @@ Local mode needs no email provider and `dev` signs you straight in.
 2. You land on **Finish setup**, the first-run page. Review the owner, tick the confirmation and press **Finish setup**.
 3. You arrive on the empty operator Overview, ready for your first board or evidence item.
 
-Until you finish setup, every operator page sends you back to it; afterwards the setup address opens the app. The badge in the corner switches to a dev teammate or signs you out. To try the emailed link instead, run `dev --login`: Penny captures every message it would send in a local outbox, and the `RER_OPEN` link it prints opens that outbox; select the newest message, choose **Open this link**, then press **Confirm**. Requester verification on the public portal uses the same outbox, so you can try the customer side too.
+Until you finish setup, every operator page sends you back to it; afterwards the setup address opens the app. The nav and title read **Penny Dev**. Mail is silently suppressed. Use `rer dev --as teammate` or `--as signed-out` to choose another dev identity, and `rer demo` to explore an isolated sample workspace as **Penny Demo**.
 
 To start over, stop the app and run `rer reset --yes`. It lists what it removes, keeps your source and exports, and a new `setup` creates a fresh owner. To move your data, `rer export --output exports/penny.rer` writes an archive and its erasure journal, and `rer import --input exports/penny.rer --yes` restores them into an empty installation.
 

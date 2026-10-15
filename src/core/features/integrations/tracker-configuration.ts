@@ -1,3 +1,4 @@
+import {integrationAvailable} from './transport'
 import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
 import {NativeError} from '../auth/native-tokens'
@@ -24,7 +25,7 @@ export async function createTrackerConnection(runtime:PennyRuntime,request:Reque
   db.prepare('INSERT INTO penny_tracker_connections(id,name,provider,project_identity,organization_identity,site_origin,issue_type,native_operator_id,operator_version,actor_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)').bind(id,input.name,input.provider,input.projectIdentity,input.organizationIdentity,input.siteOrigin,input.issueType,session.operatorId,session.operator.version,actor.id,Date.now()),
   db.prepare('INSERT INTO penny_tracker_secrets(connection_id,api_token,api_email,signing_key) VALUES(?,?,?,?)').bind(id,input.apiToken,input.apiEmail,input.signingKey),
  ])
- return {id,path:'/api/integrations/trackers/'+id,creation:input.apiToken&&runtime.bindings.PENNY_EGRESS?'configured':'configuration-disabled'}
+ return {id,path:'/api/integrations/trackers/'+id,creation:input.apiToken&&integrationAvailable(runtime)?'configured':'configuration-disabled'}
 }
 export async function trackerConnection(runtime:PennyRuntime,id:string) {
  const row=await runtime.database.binding.prepare(`SELECT c.*,s.api_token,s.api_email,s.signing_key FROM penny_tracker_connections c JOIN penny_tracker_secrets s ON s.connection_id=c.id JOIN oa_operators o ON o.id=c.native_operator_id WHERE c.id=? AND c.revoked_at IS NULL AND o.status='active' AND o.version=c.operator_version`).bind(id).first<TrackerConnection>()

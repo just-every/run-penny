@@ -1,6 +1,8 @@
+import {providerMessages} from './provider-messages'
+import {mockMail} from './support'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
-import { beforeEach,expect,inject,it } from 'vitest'
+import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { createPennyApi } from '@/core/app/api'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { drainNotifications } from '@/core/features/notifications/delivery'
@@ -9,15 +11,16 @@ import { call as builtCall } from './support'
 import type { Archive,ErasureJournal } from '@/core/features/data/archive'
 import type { EvidenceVersion,EvidenceAttachments,RequestSuggestion } from '@/core/features/evidence/types'
 import type { OperatorAccountDetail,OperatorDecisionBrief } from '@/core/shared/api/operator'
-const app=createPennyApi(),origin='http://127.0.0.1:8787'
+const app=createPennyApi(),origin='https://127.0.0.1:8787'
 const devKey='synthetic-evidence-checkout-key-for-local-outbox-tests'
-const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'local',APP_ORIGIN:origin,MAIL_PROVIDER:'development',MAIL_FROM:'penny@localhost.test',SENDGRID_API_KEY:undefined,WORKSPACE_TIMEZONE:'UTC'})
+const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@localhost.test',SENDGRID_API_KEY:'synthetic-provider-test-key',WORKSPACE_TIMEZONE:'UTC'})
 let ip=0
 function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST'){
  return app.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'127.0.0.1:8787',Origin:origin,'CF-Connecting-IP':`192.0.2.${++ip}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings())
 }
 async function json<T>(response:Response|Promise<Response>,status=200):Promise<T>{const r=await response;expect(r.status,await r.clone().text()).toBe(status);return r.json() as Promise<T>}
-beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
+beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
+afterEach(()=>vi.restoreAllMocks())
 async function fixture(){
  const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303)
  const operator={Cookie:boot.headers.get('set-cookie')!.split(';')[0]},actor=(await env.DB.prepare('SELECT id FROM operators').first<{id:string}>())?.id
@@ -36,10 +39,8 @@ async function fixture(){
 }
 async function person(){
  await json(call('/api/public/identity/email',{email:'requester@example.test',displayName:'Requester'}),202)
- const list=await call('/__dev/outbox',undefined,{'x-rer-dev-key':devKey});expect(list.status).toBe(200)
- const html=await list.text(),message=html.match(/\?message=([^"&]+)/)![1]
- const detail=await (await call('/__dev/outbox?message='+message,undefined,{'x-rer-dev-key':devKey})).text()
- const token=detail.match(/#token=([A-Za-z0-9_-]{43})/)![1]
+ const message=(await providerMessages().list())[0].message
+ const token=new URL(message.text.match(/https?:\/\/\S+/)![0]).hash.slice(7)
  const result=await json<{token:string}>(call('/api/public/identity/email/verify',{token}))
  return {Authorization:`Bearer ${result.token}`}
 }
@@ -176,15 +177,13 @@ it('[EVID-006] commercial fields and source attribution are absent from public A
  expect(await env.DB.prepare("SELECT count(*) n FROM notification_batches WHERE state='accepted'").first('n')).toBe(1)
  const deliveries=await env.DB.prepare("SELECT n.id,n.delivery_state AS state FROM notification_outbox n JOIN release_versions v ON v.id=n.subject_id WHERE n.event_type='release_version' AND v.release_id=?").bind(release.id).all<{id:string;state:string}>()
  expect(deliveries.results).toHaveLength(1);expect(deliveries.results[0].state).toBe('accepted')
- const messages=await env.DB.prepare('SELECT id,message FROM rer_mail_development_outbox').all<{id:string;message:string}>()
- expect(messages.results.length).toBeGreaterThan(1)
- for(const path of ['/__dev/outbox','/__dev/outbox?message='+messages.results[0].id]){
-  expect((await call(path)).status).toBe(404)
-  expect((await call(path,undefined,{'x-rer-dev-key':'wrong-'+devKey})).status).toBe(404)
- }
- const releaseMessages=messages.results.map(row=>JSON.parse(row.message) as {deliveryId:string;to:string[];subject:string;text:string}).filter(message=>message.deliveryId===deliveries.results[0].id)
+ const messages=await providerMessages().list()
+ expect(messages.length).toBeGreaterThan(1)
+ expect((await call('/__dev/outbox',undefined,{'x-rer-dev-key':devKey})).status).toBe(404)
+ const releaseMessages=messages.map(row=>row.message).filter(message=>message.deliveryId===deliveries.results[0].id)
  expect(releaseMessages).toHaveLength(1)
  expect(releaseMessages[0]).toMatchObject({to:['requester@example.test'],subject:releaseCopy.title})
  for(const approved of [releaseCopy.title,releaseCopy.body,`Export project reports: ${origin}/portal/feedback/${g.request.slug}`,`${origin}/portal/updates/${release.slug}`])expect(releaseMessages[0].text).toContain(approved)
- for(const message of messages.results){for(const marker of markers)expect(message.message).not.toContain(marker);const page=await call('/__dev/outbox?message='+message.id,undefined,{'x-rer-dev-key':devKey});expect(page.status).toBe(200);const body=await page.text();for(const marker of markers)expect(body).not.toContain(marker)}
+ for(const message of messages)for(const marker of markers)expect(JSON.stringify(message.message)).not.toContain(marker)
+
 })

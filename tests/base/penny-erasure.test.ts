@@ -1,14 +1,15 @@
+import {mockMail} from './support'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
-import { beforeEach,expect,inject,it } from 'vitest'
+import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { createPennyApi } from '@/core/app/api'
 import { createPennyRuntime } from '@/core/app/runtime'
-import { localOutbox } from '@/core/features/auth/local-outbox'
+import { providerMessages } from './provider-messages'
 import { canonical,eraseEntity,planErasure,readErasureJournal,type Archive,type ErasureJournal } from '@/core/features/data/archive'
 import { digest } from '@/core/features/auth/native-tokens'
 
-const origin='http://127.0.0.1:8787',app=createPennyApi()
-const bindings=()=>({...env,PENNY_ENVIRONMENT:'local',APP_ORIGIN:origin,MAIL_PROVIDER:'development',SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined})
+const origin='https://127.0.0.1:8787',app=createPennyApi()
+const bindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined})
 const runtime=()=>createPennyRuntime(bindings())
 let ip=0
 function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST'){
@@ -19,15 +20,16 @@ async function good<T=Record<string,string>>(path:string,body:unknown,headers:Re
 }
 const rows=async(table:string)=>(await env.DB.prepare(`SELECT * FROM ${table}`).all<Record<string,string|number|null>>()).results
 const counts=async(tables:string[])=>Object.fromEntries(await Promise.all(tables.map(async table=>[table,await env.DB.prepare(`SELECT count(*) n FROM ${table}`).first('n') as number])))
-beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
+beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
+afterEach(()=>vi.restoreAllMocks())
 
 async function graph(){
  const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303)
  const operator={Cookie:boot.headers.get('set-cookie')!.split(';')[0]}
  const email='erasure-canary@example.test',displayName='Erasure private identity'
  await good('/api/public/identity/email',{email,displayName},{})
- const message=(await localOutbox(runtime())!.list()).find(m=>m.message.to.includes(email))!
- const token=new URL(message.message.text!.match(/http:\/\/\S+/)![0]).hash.slice(7)
+ const message=(await providerMessages(runtime())!.list()).find(m=>m.message.to.includes(email))!
+ const token=new URL(message.message.text!.match(/https?:\/\/\S+/)![0]).hash.slice(7)
  const identity=await good('/api/public/identity/email/verify',{token},{})
  const person={Authorization:`Bearer ${identity.token}`},requester=(await env.DB.prepare('SELECT requester_id FROM requester_addresses WHERE email=?').bind(email).first<{requester_id:string}>())!.requester_id
  await good('/api/operator/boards',{name:'Feedback',slug:'feedback',visibility:'public'},operator)
@@ -127,7 +129,6 @@ for(const root of ['requesters','evidence_items','accounts'] as const)it(`[DATA-
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
  if(root==='requesters'){
   expect((await call('/api/public/identity/session',undefined,g.person)).status).toBe(401)
-  expect(await localOutbox(runtime())!.list()).toHaveLength(0)
   expect(await rows('release_outcomes')).toHaveLength(0)
   expect((await call(`/api/public/releases/${g.release.slug}/outcomes`,{targetId:'absent',outcome:'adopted'},g.person,'PUT')).status).toBe(401)
  }
@@ -177,8 +178,8 @@ it('[DATA-003] corrected sealed public wording remains independent, but private 
 it('[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and name copies go while their attributed work and everyone else stay',async()=>{
  const g=await graph(),email='former-operator@example.test'
  expect((await call('/api/operator/settings/operators',{email},g.operator)).status).toBe(202)
- const invite=(await localOutbox(runtime())!.list()).find(m=>m.message.to.includes(email))!
- const token=new URL(invite.message.text!.match(/http:\/\/\S+/)![0]).searchParams.get('token')
+ const invite=(await providerMessages(runtime())!.list()).find(m=>m.message.to.includes(email))!
+ const token=new URL(invite.message.text!.match(/https?:\/\/\S+/)![0]).searchParams.get('token')
  const confirmed=await call('/auth/confirm',{token});expect(confirmed.status,await confirmed.clone().text()).toBe(303)
  const teammate={Cookie:confirmed.headers.get('set-cookie')!.split(';')[0]}
  await good(`/api/operator/requests/${g.request.slug}/notes`,{body:'Teammate private note'},teammate)
@@ -210,8 +211,8 @@ it('[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and
 it('[DATA-003] another person\'s audit rows that only repeat a removed operator\'s display name are listed and resolved by the owner, who keeps or clears each',async()=>{
  const g=await graph(),email='sales@example.test'
  expect((await call('/api/operator/settings/operators',{email},g.operator)).status).toBe(202)
- const invite=(await localOutbox(runtime())!.list()).find(m=>m.message.to.includes(email))!
- const confirmed=await call('/auth/confirm',{token:new URL(invite.message.text!.match(/http:\/\/\S+/)![0]).searchParams.get('token')});expect(confirmed.status).toBe(303)
+ const invite=(await providerMessages(runtime())!.list()).find(m=>m.message.to.includes(email))!
+ const confirmed=await call('/auth/confirm',{token:new URL(invite.message.text!.match(/https?:\/\/\S+/)![0]).searchParams.get('token')});expect(confirmed.status).toBe(303)
  expect((await call('/api/auth/session',undefined,{Cookie:confirmed.headers.get('set-cookie')!.split(';')[0]})).status).toBe(200)
  const former=(await env.DB.prepare('SELECT id,display_name FROM operators WHERE email=?').bind(email).first<{id:string;display_name:string}>())!,native=(await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind(email).first<{id:string}>())!
  expect(former.display_name).toBe('sales')

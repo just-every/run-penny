@@ -36,7 +36,7 @@ export function PublicPortalLayout({ content, children }: { readonly content: Pu
         <div className="mx-auto flex min-h-18 max-w-[1240px] flex-wrap items-center justify-between gap-x-6 gap-y-1 px-4 pt-3 sm:px-6 lg:px-8">
           <Link to="/" className="inline-flex min-w-0 min-h-11 items-center gap-2.5 text-lg font-semibold tracking-[-0.025em] text-penny-ink" aria-label={`${content.ownerName} feedback portal`}>
             {appearance.showLogo ? <CoinMark className="shrink-0 [--coin-slot:2rem]" /> : null}
-            <span className="break-words">{content.ownerName}</span>
+            <span data-rer-name className="break-words">{content.ownerName}</span>
           </Link>
           <nav className="flex min-h-11 max-w-full flex-wrap items-center gap-x-4 gap-y-0 text-sm font-medium sm:gap-x-6 sm:text-[15px]" aria-label="Public portal">
             <PortalNavLink to="/" exact>Feedback</PortalNavLink>

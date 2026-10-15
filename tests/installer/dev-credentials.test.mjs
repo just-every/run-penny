@@ -1,9 +1,11 @@
+import {parseEnv} from 'node:util'
+import {hashToken} from '../../base/modules/operator-auth/crypto.mjs'
 import { fileURLToPath as __rerTestEntryPath } from 'node:url';
 const __rerTestEntry = __rerTestEntryPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'));
 const __rerTestEntryArgs = args => args[1] === 'dev' && !args.some(arg => ['--foreground', '--detach', '--stop', '--help'].includes(arg)) ? [...args, '--foreground'] : args;
 import assert from 'node:assert/strict'
 import { createReadStream } from 'node:fs'
-import { copyFile, mkdir } from 'node:fs/promises'
+import { copyFile, mkdir, readFile } from 'node:fs/promises'
 import { createServer, request as forward } from 'node:http'
 import { join, resolve } from 'node:path'
 import { Readable } from 'node:stream'
@@ -49,13 +51,11 @@ test('[SC-05 API-001] an API key minted in a dev session works only behind the c
     assert.equal((await fetch(origin + '/auth/session', { headers: { Cookie: `${session.name}=${session.value}` } })).status, 401, 'the dev session alone is refused')
     const devKey = await mint(dev.header, 'Dev-session key')
 
-    // An ordinary session from the emailed link, read from the key-gated outbox.
-    assert.equal((await fetch(origin + '/api/auth/magic-link', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: 'owner@penny.invalid' }) })).status, 202)
-    const list = await (await fetch(origin + '/__dev/outbox', { headers: { 'x-rer-dev-key': key } })).text()
-    const detail = await (await fetch(origin + list.match(/href="(\/__dev\/outbox\?message=[^"]+)"/)[1].replaceAll('&amp;', '&'), { headers: { 'x-rer-dev-key': key } })).text()
-    const link = new URL(detail.match(/class="open" href="([^"]+)"/)[1].replaceAll('&amp;', '&'))
-    const confirmed = await fetch(origin + '/auth/confirm', { method: 'POST', redirect: 'manual', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ token: link.searchParams.get('token') }) })
-    assert.equal(confirmed.status, 303)
+    // The local owner's CLI proof issues an ordinary session without email.
+    const settings=parseEnv(await readFile(join(root,'.dev.vars'),'utf8'))
+    const proof=await hashToken(settings.AUTH_SECRET,'local-cli','sign-in')
+    const confirmed=await fetch(origin+'/auth/local/cli-session',{method:'POST',redirect:'manual',headers:{Origin:origin,'Content-Type':'application/json','x-rer-local-cli':proof},body:JSON.stringify({returnTo:'/app'})})
+    assert.equal(confirmed.status,303)
     const ordinary = cookies(confirmed), ordinaryKey = await mint(ordinary, 'Ordinary key')
 
     // The dev-minted key answers only with the key: header, gate cookie, or through the proxy carrying either.

@@ -19,7 +19,7 @@ disabled until configured. Requirements and proposed journeys are not receipts.
 
 Follow README.md and OPERATIONS.json for actual command effects and required
 configuration. Run the app with `rer install`, `setup`, `dev`:
-setup starts empty, sign-in uses Base's development outbox, and the owner finishes
+setup starts empty, sign-in is one click and mail is silently suppressed; the owner finishes
 first-run setup at `/setup`. Owner deploy/health use `deploy.json`,
 explicit account inputs and private durable owner files. The retained artifact
 controller uses the separate artifact commands. Native fixture composition does

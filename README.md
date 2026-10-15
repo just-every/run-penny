@@ -102,14 +102,11 @@ Until you do, every `/app` page sends the owner back to `/setup`; afterwards
 sign in to this local copy. A badge at the corner switches between the owner, a
 dev teammate (`teammate@dev.localhost`, a real operator that exists only in local
 data) and signed out. `dev --as teammate` or `dev --as signed-out` starts as one
-of those instead, and `dev --login` turns dev sign-in off: open the outbox through
-the printed `RER_OPEN` link, choose the newest message, **Open this link**, then
-**Confirm**, exactly as an emailed link works. No email provider is needed and no
-email is sent. In another terminal, `rer outbox` prints the
-outbox link again, and `outbox --owner-email EMAIL` requests a fresh sign-in
-message for that owner. Without the key, the outbox, dev sign-in and anything
-made in a dev session answer 404 or are refused, even through a tunnel or proxy;
-`reset --yes` makes a new key and the old one stops working.
+of those instead. The nav and title read **Penny Dev**. Sign-in is one click;
+mail is silently suppressed and no provider is needed. Without the key, dev
+sign-in and anything made in a dev session answer 404 or are refused, even
+through a tunnel or proxy; `reset --yes` makes a new key and the old one stops
+working.
 
 Verify, reset and move data from the same root:
 
@@ -309,7 +306,7 @@ session/SSR/privacy tests, the native Base suites, the data and installer
 suites, and the Worker/Vite production build, and ends with the literal README
 journey in a fresh clone. The browser scripts `pnpm test:browser`,
 `pnpm test:browser:routes`, `pnpm test:browser:no-mail`,
-`pnpm test:browser:operator-pages` and `pnpm test:browser:decision-loop` exercise
+`pnpm test:browser:operator-pages` exercise
 local Worker and interface behavior at 1440×900 and 390×844, including the
 empty-store decision loop through status and release publication; they do not
 establish hosted mail or Cron delivery. The read UI is exercised at all mounted

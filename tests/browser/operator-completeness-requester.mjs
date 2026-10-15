@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict'
 import {proofId} from './operator-completeness-data.mjs'
-import {gate} from './operator-completeness-auth.mjs'
 import {generatedOperatorTransport,generatedHeaders} from './operator-completeness-transport.mjs'
 import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
 export async function reviewRequesterPrivacy({browser,origin,width,capture,runtime}) {
@@ -14,9 +13,9 @@ export async function reviewRequesterPrivacy({browser,origin,width,capture,runti
   const requested=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/public/identity/email'&&r.request().method()==='POST')
   await page.getByRole('button',{name:'Send verification link',exact:true}).click()
   assert.equal((await requested).status(),202)
-  await gate(page,origin)
-  await page.getByRole('link',{name:'Read message',exact:true}).first().click()
-  await page.getByRole('link',{name:'Open this link',exact:true}).click()
+  const verification=runtime.outbox.findLast(message=>message.email==='privacy-proof-requester@example.test')?.url
+  assert.ok(verification)
+  await page.goto(verification)
   await pacePublicPhase(page)
   await page.getByRole('button',{name:'Verify email',exact:true}).click()
   await page.getByText('Email verified.',{exact:true}).waitFor()

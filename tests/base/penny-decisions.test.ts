@@ -1,15 +1,16 @@
+import {mockMail} from './support'
 import { applyD1Migrations,reset,createScheduledController } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { createPennyApi } from '@/core/app/api'
 import { createPennyRuntime } from '@/core/app/runtime'
-import { localOutbox } from '@/core/features/auth/local-outbox'
+import { providerMessages } from './provider-messages'
 import { runNotificationSchedule } from '@/core/features/notifications/scheduled'
 import type { ReviewNotification } from '@/core/features/notifications/decision-reviews'
 import type { DecisionHistory,DecisionPostRelease } from '@/core/features/decisions/history'
-const origin='http://127.0.0.1:8787'
+const origin='https://127.0.0.1:8787'
 const devKey='synthetic-decisions-checkout-key-for-local-outbox-tests'
-const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'local',APP_ORIGIN:origin,WORKSPACE_TIMEZONE:'Australia/Brisbane',MAIL_PROVIDER:'development',SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined})
+const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,WORKSPACE_TIMEZONE:'Australia/Brisbane',MAIL_PROVIDER:'sendgrid',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined})
 const runtime=()=>createPennyRuntime(bindings())
 const app=createPennyApi()
 function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST'){
@@ -36,7 +37,7 @@ async function cron(at:string){
  await runNotificationSchedule(createScheduledController({scheduledTime,cron:'* * * * *'}),bindings())
 }
 const notices=async(g:Awaited<ReturnType<typeof graph>>)=>(await (await call('/api/operator/notifications',undefined,g.cookie)).json() as {reviews:ReviewNotification[]}).reviews
-beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
+beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
 it('[DEC-006] revisions preserve commitment evidence and declined dimensions while atomically replacing approved roadmap bets',async()=>{
  const g=await graph(),prior=(await history(g)).revisions[0]
@@ -65,7 +66,7 @@ it('[DEC-007] calendar dates expire after the workspace day, explicit timestamps
  }
  await cron('2026-10-10T13:59:59Z')
  expect((await rows('decisions'))[0].state).toBe('committed')
- expect(await localOutbox(runtime())!.list()).toHaveLength(0);expect(await notices(g)).toHaveLength(0)
+ expect(await providerMessages(runtime())!.list()).toHaveLength(0);expect(await notices(g)).toHaveLength(0)
  await cron('2026-10-10T14:00:00Z')
  expect((await rows('decisions'))[0]).toMatchObject({state:'review_due',selected_candidate_bet_id:g.first.id})
  expect(await rows('roadmap_items')).toEqual(roadmap);expect(await history(g)).toEqual(snapshot)
@@ -74,21 +75,21 @@ it('[DEC-007] calendar dates expire after the workspace day, explicit timestamps
  await good(`/api/operator/decisions/${g.decision.id}/reviews`,{note:'Still the right choice',reviewAt},g.cookie)
  await cron('2026-10-10T15:59:59Z')
  expect((await rows('decisions'))[0].state).toBe('committed')
- expect(await localOutbox(runtime())!.list()).toHaveLength(1);expect(await notices(g)).toHaveLength(1)
+ expect(await providerMessages(runtime())!.list()).toHaveLength(1);expect(await notices(g)).toHaveLength(1)
  await cron('2026-10-10T16:00:01Z')
  const due=(await rows('decisions'))[0]
- expect(due.state).toBe('review_due');expect(await localOutbox(runtime())!.list()).toHaveLength(2);expect(await notices(g)).toHaveLength(2)
+ expect(due.state).toBe('review_due');expect(await providerMessages(runtime())!.list()).toHaveLength(2);expect(await notices(g)).toHaveLength(2)
  await good(`/api/operator/decisions/${g.decision.id}/reviews`,{note:'New evidence changes the rationale',revision:{...g.fields,rationale:'Reviewed rationale',reviewAt,expectedRevision:1}},g.cookie)
  await cron('2026-10-10T16:01:00Z');await cron('2026-10-10T16:02:00Z')
  expect((await rows('decisions'))[0]).toMatchObject({state:'committed',review_at:due.review_at,review_generation:due.review_generation})
- expect(await localOutbox(runtime())!.list()).toHaveLength(2);expect(await notices(g)).toHaveLength(2)
+ expect(await providerMessages(runtime())!.list()).toHaveLength(2);expect(await notices(g)).toHaveLength(2)
  expect((await history(g)).reviews).toHaveLength(2);expect((await history(g)).revisions).toHaveLength(2)
  await good(`/api/operator/decisions/${g.decision.id}/revisions`,{...g.fields,rationale:'Schedule the next check',reviewAt:'2026-10-10T17:00:00Z',expectedRevision:2},g.cookie)
  await cron('2026-10-10T16:59:59Z')
- expect((await rows('decisions'))[0].state).toBe('committed');expect(await localOutbox(runtime())!.list()).toHaveLength(2)
+ expect((await rows('decisions'))[0].state).toBe('committed');expect(await providerMessages(runtime())!.list()).toHaveLength(2)
  await cron('2026-10-10T17:00:01Z');await cron('2026-10-10T17:01:00Z')
  expect((await rows('decisions'))[0].state).toBe('review_due')
- expect(await localOutbox(runtime())!.list()).toHaveLength(3);expect(await notices(g)).toHaveLength(3)
+ expect(await providerMessages(runtime())!.list()).toHaveLength(3);expect(await notices(g)).toHaveLength(3)
  expect(await rows('roadmap_items')).toEqual(roadmap)
 })
 it('[NOTIFY-003] completing a review before Cron holds that schedule; changed dates notify once without quiet hours and stay in app until dismissed',async()=>{
@@ -99,37 +100,37 @@ it('[NOTIFY-003] completing a review before Cron holds that schedule; changed da
  const completed=(await rows('decisions'))[0]
  expect(completed).toMatchObject({state:'committed',review_at:original.review_at,review_generation:original.review_generation})
  expect(completed.review_completed_at).not.toBeNull()
- expect(await localOutbox(runtime())!.list()).toHaveLength(0);expect(await notices(g)).toHaveLength(0)
+ expect(await providerMessages(runtime())!.list()).toHaveLength(0);expect(await notices(g)).toHaveLength(0)
  await good(`/api/operator/decisions/${g.decision.id}/revisions`,{...g.fields,rationale:'Clarify the same decision without another schedule',expectedRevision:2},g.cookie)
  await cron('2026-10-11T14:00:00Z')
  expect((await rows('decisions'))[0].review_completed_at).toBe(completed.review_completed_at)
- expect(await localOutbox(runtime())!.list()).toHaveLength(0);expect(await notices(g)).toHaveLength(0)
+ expect(await providerMessages(runtime())!.list()).toHaveLength(0);expect(await notices(g)).toHaveLength(0)
  await good(`/api/operator/decisions/${g.decision.id}/reviews`,{note:'Schedule another review',reviewAt:'2026-10-11'},g.cookie)
  expect((await rows('decisions'))[0].review_completed_at).toBeNull()
  // Brisbane midnight remains within requester quiet hours.
  await Promise.all([cron('2026-10-11T14:00:00Z'),cron('2026-10-11T14:00:00Z')])
  await cron('2026-10-11T14:01:00Z')
- const mails=await localOutbox(runtime())!.list();expect(mails).toHaveLength(1);expect(mails[0].message.to).toEqual(['owner@penny.invalid'])
+ const mails=await providerMessages(runtime())!.list();expect(mails).toHaveLength(1);expect(mails[0].message.to).toEqual(['owner@penny.invalid'])
  for(const path of ['/__dev/outbox','/__dev/outbox?message='+mails[0].id]){
   expect((await call(path)).status).toBe(404)
   expect((await call(path,undefined,{'x-rer-dev-key':'wrong-'+devKey})).status).toBe(404)
-  expect((await call(path,undefined,{'x-rer-dev-key':devKey})).status).toBe(200)
+  expect((await call(path,undefined,{'x-rer-dev-key':devKey})).status).toBe(404)
  }
  const reminders=await notices(g)
  expect(reminders).toHaveLength(1);expect(reminders[0].state).toBe('accepted')
- expect(await rows('decision_review_notifications')).toEqual([expect.objectContaining({id:mails[0].message.deliveryId,state:'accepted',attempt_count:1,provider_message_id:null,failure_reason:null})])
+ expect(await rows('decision_review_notifications')).toEqual([expect.objectContaining({id:mails[0].message.deliveryId,state:'accepted',attempt_count:1,provider_message_id:expect.any(String),failure_reason:null})])
  await good(`/api/operator/decisions/${g.decision.id}/reviews`,{note:'Keep going',reviewAt:'2026-10-12'},g.cookie)
  expect(await notices(g)).toHaveLength(1)
  await good(`/api/operator/notifications/${reminders[0].id}/dismiss`,{},g.cookie)
  expect(await notices(g)).toHaveLength(0)
  await cron('2026-10-12T14:00:00Z');await cron('2026-10-12T14:01:00Z')
- expect(await localOutbox(runtime())!.list()).toHaveLength(2);expect(await notices(g)).toHaveLength(1)
+ expect(await providerMessages(runtime())!.list()).toHaveLength(2);expect(await notices(g)).toHaveLength(1)
 })
 it('[DEC-008] requester outcome revisions and release-linked evidence appear immediately through original publication links without changing commitment snapshots',async()=>{
  const g=await graph(),snapshot=await history(g)
  await good('/api/public/identity/email',{email:'outcome@example.test',displayName:'Reader'}, {})
- const message=(await localOutbox(runtime())!.list())[0]
- const token=new URL(message.message.text!.match(/http:\/\/\S+/)![0]).hash.slice(7)
+ const message=(await providerMessages(runtime())!.list())[0]
+ const token=new URL(message.message.text!.match(/https?:\/\/\S+/)![0]).hash.slice(7)
  const identity=await good('/api/public/identity/email/verify',{token},{})
  const person={Authorization:`Bearer ${identity.token}`}
  await good('/api/operator/boards',{name:'Feedback',slug:'feedback',visibility:'public'},g.cookie)

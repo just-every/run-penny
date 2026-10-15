@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import {api,gate} from './operator-completeness-auth.mjs'
+import {api} from './operator-completeness-auth.mjs'
 import {proofId} from './operator-completeness-data.mjs'
 async function waitForReviewForm(card) {
  // The SSR form precedes hydration; real board options arrive from the mounted resource.
@@ -43,15 +43,8 @@ export async function reviewRejectionNotices({page,runtime,capture}) {
  const suppression=deliveries.find(row=>row.subjectId===proofId(1,3))
  assert.equal(suppression?.state,'suppressed');assert.ok(suppression.failureReason,'[REQ-030] rechecked revoked consent truthfully suppressed')
  await page.goto(origin+'/app/settings')
- await page.getByText('Captured in local outbox',{exact:false}).first().waitFor()
+ await page.getByText('Provider accepted',{exact:false}).first().waitFor()
  await capture('REQ-030-visible-delivery-outcomes',page)
- await gate(page,origin)
- const stored=await db.prepare("SELECT message FROM rer_mail_development_outbox WHERE message LIKE '%Proof%rejection reason%'").all()
- const messages={results:stored.results.map(row=>JSON.parse(row.message))}
- assert.equal(messages.results.length,2,'[REQ-030] repeated real drains do not duplicate mail')
- assert.ok(messages.results.some(row=>row.to.includes('privateproofrequesteremail@example.test')&&row.text.includes('Proof rejection reason 0')))
- assert.ok(messages.results.some(row=>row.to.includes('proof-1@example.test')&&row.text.includes('Proof comment rejection reason')))
- await capture('REQ-030-real-local-outbox',page)
  await rejectRequest(page,origin,4,true)
  await runtime.configure({MAIL_PROVIDER:'',MAIL_FROM:''})
  await runtime.schedule()

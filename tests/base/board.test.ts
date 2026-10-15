@@ -111,11 +111,11 @@ it('[BASE-OPS-005] publication and real scheduled mail retain feature outcomes; 
  expect(rows.map(row=>row.action).sort()).toEqual(['release.corrected','release.delivery_requested','release.published','roadmap.update_published'])
  expect(rows.every(row=>row.actor_id===g.actor&&row.entity_id&&Number.isFinite(Date.parse(row.occurred_at)))).toBe(true)
  const {runNotificationSchedule}=await import('@/core/features/notifications/scheduled'),{createScheduledController}=await import('cloudflare:test')
- const {localOutbox}=await import('@/core/features/auth/local-outbox'),{createPennyRuntime}=await import('@/core/app/runtime')
- const bindings={...env,PENNY_ENVIRONMENT:'local',APP_ORIGIN:'http://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'development',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:undefined}
+ const {providerMessages}=await import('./provider-messages'),{createPennyRuntime}=await import('@/core/app/runtime')
+ const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:'synthetic-provider-test-key'}
  const next=new Date();next.setUTCDate(next.getUTCDate()+1);next.setUTCHours(9,0,0,0);vi.spyOn(Date,'now').mockReturnValue(next.getTime())
  await runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
- expect((await localOutbox(createPennyRuntime(bindings))!.list()).length).toBeGreaterThan(0)
+ expect((await providerMessages(createPennyRuntime(bindings))!.list()).length).toBeGreaterThan(0)
  const receipts=await env.DB.prepare("SELECT actor_id,action,entity_id,occurred_at FROM audit_entries WHERE action LIKE 'release_mail.attempt.%' OR action LIKE 'request_mail.attempt.%'").all<{actor_id:string;action:string;entity_id:string;occurred_at:string}>()
  expect(receipts.results.some(row=>row.action.endsWith('.accepted'))).toBe(true)
  expect(receipts.results.every(row=>row.actor_id&&row.entity_id&&Number.isFinite(Date.parse(row.occurred_at)))).toBe(true)

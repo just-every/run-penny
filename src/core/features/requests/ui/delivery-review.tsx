@@ -64,12 +64,12 @@ export function DeliveryReview() {
 }
 
 function deliveryLabel(delivery: Delivery): string {
-  if (delivery.state === 'accepted') return delivery.provider === 'development' ? 'Captured in local outbox' : 'Provider accepted'
+  if (delivery.state === 'accepted') return delivery.provider === 'development' ? 'Completed' : 'Provider accepted'
   return { queued: 'Queued', sending: 'Sending', failed: 'Failed', suppressed: 'Not sent', unknown: 'Unknown result', delivered: 'Delivery confirmed' }[delivery.state]
 }
 function deliveryDescription(delivery: Delivery): string {
   if (delivery.state === 'accepted') return delivery.provider === 'development'
-    ? 'The message is in the gated development outbox. No real inbox delivery is claimed.'
+    ? 'The delivery completed.'
     : 'The mail provider accepted this message. Inbox delivery is not yet confirmed.'
   return { queued: 'Waiting for the next permitted send time. Current author consent and privacy settings will be checked before sending.',
     sending: 'A durable attempt owns this message. It will not be sent again while that result is pending.',

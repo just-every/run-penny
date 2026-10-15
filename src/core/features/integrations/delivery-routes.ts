@@ -1,3 +1,4 @@
+import {integrationAvailable} from './transport'
 import {revokeConfiguration} from './revocation'
 import type {Hono} from 'hono'
 import type {OperatorMutationEnvironment} from '@/core/app/operator-mutations'
@@ -14,7 +15,7 @@ export function registerDeliveryRoutes(app:Hono<OperatorMutationEnvironment>) {
   const {results:destinations}=await db.prepare('SELECT id,name,kind,events_json,created_at,revoked_at FROM penny_integration_destinations ORDER BY created_at,id').all()
   const {results:deliveries}=await db.prepare('SELECT id,state,attempts,next_at FROM integration_deliveries WHERE namespace=? ORDER BY created_at DESC LIMIT 100').bind(deliveryNamespace).all()
   const {results:attempts}=await db.prepare('SELECT delivery_id,number,started_at,finished_at,outcome FROM integration_attempts WHERE namespace=? ORDER BY started_at DESC LIMIT 100').bind(deliveryNamespace).all()
-  return c.json({destinations,deliveries,attempts,transport:runtime.bindings.PENNY_EGRESS?'configured':'configuration-disabled'})
+  return c.json({destinations,deliveries,attempts,transport:integrationAvailable(runtime)?'configured':'configuration-disabled'})
  })
  app.post('/api/operator/integrations/destinations',async c=>c.json(await createDestination(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,destinationInput)),201))
  app.delete('/api/operator/integrations/destinations/:id',async c=>{await revokeConfiguration(c.get('runtime'),c.req.raw,c.req.param('id'),'destination');return c.json({revoked:true})})

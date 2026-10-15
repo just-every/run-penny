@@ -330,18 +330,6 @@
       ],
       "effects": "Maintained Base release producer; requires explicit authorized release inputs."
     },
-    "outbox": {
-      "argv": [
-        "rer",
-        "outbox"
-      ],
-      "inputs": [
-        "package.json",
-        "scripts/installer/local.mjs",
-        "rer-setup.json"
-      ],
-      "effects": "Show local development outbox URL; optional ordinary sign-in request. Never a hosted mail sink."
-    },
     "describe": {
       "argv": [
         "rer",
@@ -380,12 +368,6 @@
     }
   },
   "loops": [
-    {
-      "id": "local-signin-outbox",
-      "type": "worker",
-      "required": false,
-      "enabled": true
-    },
     {
       "id": "requester-notification-drain",
       "type": "worker",

@@ -4,7 +4,6 @@ import { beforeEach, expect, inject, it } from 'vitest'
 import { createPennyApi } from '@/core/app/api'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { authMail } from '@/core/features/auth/mail'
-import { localOutbox } from '@/core/features/auth/local-outbox'
 import { digest, opaqueToken } from '@/core/features/auth/native-tokens'
 const app=createPennyApi()
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
@@ -26,7 +25,7 @@ for(const mode of ['preview','production'])it(`[BASE-ACCESS-001 REQ-023] ${mode}
  const deployed={...env,PENNY_ENVIRONMENT:mode,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,SENDGRID_API_KEY:undefined}
  const rt=createPennyRuntime(deployed)
  const forced={...rt,configuration:{...rt.configuration,mailProvider:'development'}}
- expect(localOutbox(forced)).toBeUndefined();expect(authMail(forced)).toBeUndefined()
+ expect(authMail(forced)).toBeUndefined()
  for(const path of ['/__dev/outbox','/__dev/outbox?message=anything']) expect((await app.fetch(new Request('https://penny.test'+path),deployed)).status).toBe(404)
  expect(()=>createPennyRuntime({...deployed,MAIL_PROVIDER:'development',MAIL_FROM:'auth@localhost.test'})).toThrow('MAIL_PROVIDER')
  expect(await env.DB.prepare('SELECT count(*) n FROM rer_mail_development_outbox').first('n')).toBe(0)

@@ -9,7 +9,7 @@ export function mockMail(){
  vi.spyOn(globalThis,'fetch').mockImplementation(async (input,init)=>{
   if (String(input)!=='https://api.sendgrid.com/v3/mail/send' || init?.method!=='POST') throw new Error('Unexpected outbound request')
   const body=JSON.parse(String(init.body));const text=body.content.find((c:{type:string})=>c.type==='text/plain').value
-  messages.push({to:body.personalizations[0].to[0].email,url:text.match(/https:\/\/[^\s]+/)[0]})
+  messages.push({to:body.personalizations[0].to[0].email,url:text.match(/https?:\/\/[^\s]+/)[0]})
   return new Response(null,{status:202,headers:{'x-message-id':'test-provider-message'}})
  })
 }

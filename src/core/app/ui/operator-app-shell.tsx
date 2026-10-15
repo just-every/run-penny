@@ -68,7 +68,7 @@ export function OperatorAppShell() {
     <BrandRoot className="penny-workspace relative">
       <a href="#operator-content" className="sr-only z-50 rounded-full bg-penny-ink px-4 py-3 text-sm font-semibold text-penny-paper focus:not-sr-only focus:absolute focus:left-4 focus:top-4">Skip to content</a>
       <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-60 ${sidebarSurface} lg:block`} />
-      <aside className={`fixed left-0 top-0 z-20 hidden h-svh w-60 flex-col [body:has(>#rer-dev-badge)_&]:top-11 [body:has(>#rer-dev-badge)_&]:h-[calc(100svh-2.75rem)] overflow-y-auto overscroll-y-contain ${sidebarSurface} px-3 py-5 lg:flex`}>
+      <aside className={`fixed left-0 top-0 z-20 hidden h-svh w-60 flex-col overflow-y-auto overscroll-y-contain ${sidebarSurface} px-3 py-5 lg:flex`}>
         <div className="px-2"><Brand /></div>
         <p className="mt-10 px-3 text-[11px] font-semibold tracking-[0.12em] text-penny-muted uppercase">Operator workspace</p>
         <div className="mt-3"><NavigationLinks /></div>
@@ -78,7 +78,7 @@ export function OperatorAppShell() {
       <header className="sticky top-0 z-20 border-b border-penny-line bg-penny-paper/95 backdrop-blur lg:hidden">
         <div className="flex min-h-16 items-center justify-between gap-3 px-4 sm:px-6">
           <Brand small />
-          <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-1 whitespace-nowrap">
             <SignOutButton className="inline-flex min-h-11 items-center rounded-full px-2 text-base text-penny-soft transition-colors hover:text-penny-ink sm:px-3" />
             <details className="relative" open={isMenuOpen} onToggle={(event) => setMenuOpen(event.currentTarget.open)}>
               <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border border-penny-ink px-4 text-base font-medium text-penny-ink transition-colors hover:bg-penny-ink/6 [&::-webkit-details-marker]:hidden"><Icon name="menu" className="size-5" />Menu</summary>

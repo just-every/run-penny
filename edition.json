@@ -17,7 +17,7 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
           "paths": [
             "modules/operator-auth"
           ]
@@ -40,7 +40,7 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
           "paths": [
             "modules/mail"
           ]
@@ -213,20 +213,15 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "e8296d97481b62ec6805d780021ed7cb528b7a07",
+          "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
           "paths": [
-            "modules/demo",
-            "modules/operator-auth/csp.mjs"
+            "modules/demo"
           ]
         },
         "mappings": [
           {
             "path": "base/modules/demo",
             "originPath": "modules/demo"
-          },
-          {
-            "path": "base/modules/demo/csp.mjs",
-            "originPath": "modules/operator-auth/csp.mjs"
           }
         ]
       }
@@ -357,7 +352,7 @@
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
-          "revision": "c8e64851a922679ffc8de81ad857e9d7090423f5",
+          "revision": "38aa7efdb3cceec585d2344ed54dd559295b9059",
           "paths": [
             "export/SEED-COMMAND-CONTRACT.md",
             "export/RUN-LOCALLY.md"

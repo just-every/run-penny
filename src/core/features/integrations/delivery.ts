@@ -6,7 +6,7 @@ import {createSlackNotifier} from '../../../../base/modules/integrations/slack/n
 import {createSlackIncomingWebhookProtocol} from '../../../../base/modules/integrations/slack/protocol.ts'
 import type {PennyRuntime} from '@/core/app/runtime'
 import {destination,keyBytes,type Destination,integrationEvents} from './destinations'
-import {integrationTransport} from './transport'
+import {integrationTransport,integrationAvailable} from './transport'
 import {projectEvent,type ProductEvent} from './event-projection'
 import {guardedDatabase} from './guarded-database'
 import {NativeError} from '../auth/native-tokens'
@@ -35,7 +35,7 @@ export function eventServices(runtime:PennyRuntime,now:()=>number=Date.now) {
  return {repository,webhook,slack,slackSend}
 }
 export async function drainIntegrations(runtime:PennyRuntime,now:()=>number=Date.now) {
- if(!runtime.bindings.PENNY_EGRESS)return {state:'configuration-disabled',queued:0}
+ if(!integrationAvailable(runtime))return {state:'configuration-disabled',queued:0}
  const {repository,webhook,slack,slackSend}=eventServices(runtime,now),db=runtime.database.binding
  const {results:destinations}=await db.prepare("SELECT * FROM penny_integration_destinations WHERE kind IN('webhook','slack') AND revoked_at IS NULL ORDER BY id LIMIT 100").all<Destination>()
  const {results:events}=await db.prepare(`SELECT e.* FROM penny_integration_events e WHERE e.held=0 AND EXISTS(SELECT 1 FROM penny_integration_destinations d WHERE d.kind IN('webhook','slack') AND d.revoked_at IS NULL AND EXISTS(SELECT 1 FROM penny_integration_targets t WHERE t.event_id=e.id AND t.destination_id=d.id) AND NOT EXISTS(SELECT 1 FROM integration_deliveries i WHERE i.namespace='penny-events' AND i.id=e.id||':'||d.id)) ORDER BY e.created_at,e.id LIMIT 1000`).all<ProductEvent>()

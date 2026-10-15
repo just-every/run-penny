@@ -4,7 +4,7 @@ import {IntegrationsRepository} from '../../../../base/modules/integrations/core
 import {DeliveryService} from '../../../../base/modules/integrations/core/delivery.ts'
 import {trackerConnection} from './tracker-configuration'
 import {trackerProtocol,knownIssue} from './tracker-protocol'
-import {integrationTransport} from './transport'
+import {integrationTransport,integrationAvailable} from './transport'
 import {guardedDatabase,type AuthorityGuard} from './guarded-database'
 import {NativeError} from '../auth/native-tokens'
 export const trackerNamespace='penny-trackers'
@@ -34,7 +34,7 @@ export function trackerDelivery(runtime:PennyRuntime,now:()=>number=Date.now) {
  }}})
 }
 export async function drainTrackers(runtime:PennyRuntime,now:()=>number=Date.now) {
- if(!runtime.bindings.PENNY_EGRESS)return {state:'configuration-disabled'}
+ if(!integrationAvailable(runtime))return {state:'configuration-disabled'}
  const delivery=trackerDelivery(runtime,now)
  const {results}=await runtime.database.binding.prepare("SELECT c.* FROM penny_tracker_commands c WHERE NOT EXISTS(SELECT 1 FROM integration_deliveries d WHERE d.namespace=? AND d.id=c.id) ORDER BY c.created_at,c.id LIMIT 100").bind(trackerNamespace).all<TrackerCommand>()
  for(const command of results){

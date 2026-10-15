@@ -14,8 +14,9 @@ Base builds the mechanism once (`foundation/runtime/identity.ts`, `lobby.ts`,
 `setup-state.ts`, `run-site.ts`; `rer build --site`, `RER_SITE`,
 `rer deploy --site`). `default-seed` and the foundation template adopt both; read
 them as the worked example. The contract is in `SEED-COMMAND-CONTRACT.md`
-(Installed homepage and run site) and the deploy target in
-`scripts/base-cli/modules/deploy-kit/README.md` (Run site).
+(Installed homepage and run site). Vendored seeds can read the deploy target in
+`scripts/base-cli/modules/deploy-kit/README.md`; package mode exposes the deploy
+integration as `@runeditrun/rer/deploy`.
 
 ## Rules for every seed
 
@@ -30,8 +31,8 @@ them as the worked example. The contract is in `SEED-COMMAND-CONTRACT.md`
   `lobbyResponse(request, env, identity, claimed)` from `src/base/` before the
   document renderer and before any guard that 404s unknown public paths, after
   `staticAssetResponse`. `env` is `{ DB, AUTH_ORIGIN }` (your D1 binding and
-  canonical origin), and `claimed` reads your own first-run record (see
-  [Claimed: your first-run record](#claimed-your-first-run-record)). Its look
+  canonical origin), and `claimed` reads your durable owner claim (see
+  [Claimed: the owner claim](#claimed-the-owner-claim)). Its look
   comes from the files your identity names: the `public/rer-theme.css`
   `--rer-*` tokens, the `fonts` stylesheet, the mark and a new
   `public/brand/band.svg`. A seed without `public/rer-theme.css` adds one
@@ -44,15 +45,14 @@ them as the worked example. The contract is in `SEED-COMMAND-CONTRACT.md`
   palette, the way the Lobby authority images show it. The run site's homepage
   and Run page may use it too.
 - **Check at 1440x900 and 390x844**: the Lobby in both states and the run site's
-  `/` and `/run`, beside the 12ui authority images
-  (`rer-consolidation/evidence/homepage-variants/minimal/12ui/round3-lobby-*`,
-  `run-page/picks/a-*`), with no horizontal scroll and the primary action above
-  the fold.
-- **Refresh from Base** with Base's own tools: `node scripts/export-cli.mjs
-  <seed>` from a Base checkout refreshes `scripts/base-cli/` and
-  `scripts/base-onboarding/`; copy `foundation/runtime/` to `src/base/` (the
-  exporters do this unchanged). A seed on the published package pins the rer
-  version that contains this change instead.
+  `/` and `/run`, beside the approved 12ui authority images for the Lobby and the
+  Run page, with no horizontal scroll and the primary action above the fold.
+- **Refresh shared behavior.** Vendored mode uses `node scripts/export-cli.mjs
+  <seed>` from a Base checkout to refresh `scripts/base-cli/` and
+  `scripts/base-onboarding/`. In package mode, pin a release with
+  `pnpm add -D -E @runeditrun/rer@VERSION`. In either mode, copy
+  `foundation/runtime/` to `src/base/` from the Base commit you adopt; the
+  exporter copies it unchanged.
 
 ## Edition identity
 
@@ -68,54 +68,51 @@ Add one `EditionIdentity` value next to the seed's config (most seeds:
 | `signInPath` | the seed's sign-in route | `/signin` (HappyToHelp `/login`, Uptime `/login`, Spool `/sign-in`) |
 | `runSite` | `https://` + the domain in `deploy-site.json` | `https://run-cradle.com` |
 | `installedHome` | `lobby`, or `page` for the seeds below | `lobby` |
+| `manualSetupTokenClaim` | `true` only when a person must claim the owner with the setup token | `false` or omitted when RER claims the owner automatically |
 | `theme`, `mark`, `band` | served paths | `/rer-theme.css`, `/brand/mark.svg`, `/brand/band.svg` |
 | `fonts` | the served stylesheet with your `@font-face` rules; omit it when `theme` declares them | `/fonts/fonts.css` |
 
-The Lobby's line is `purpose` with the installation's name; before the claim it
-reads "This <Seed> is waiting for its owner." and the hint "You’ll need the setup
-token from your install." A signed-in owner sees the same Lobby (it never
-varies by session) and uses Sign in or goes to the app.
+The Lobby says the owner is set up and offers Sign in; before the claim it
+reads "This <Seed> is waiting for its owner." It shows "You’ll need the setup
+token from your install." only when `manualSetupTokenClaim` is true. Leave it
+false or omit it when RER claims the owner automatically; the token is handled
+by RER and the visitor does not need it. A signed-in owner sees the same Lobby
+(it never varies by session) and uses Sign in or goes to the app.
 
 A deployment name read from D1 at request time (Cradle's workspace name) is
 installation data: the Lobby may read it on the server, the run site never does.
 
-## Claimed: your first-run record
+## Claimed: the owner claim
 
-The installation is claimed once the owner has confirmed first-run setup at
-`/setup`. Base records that in `oa_first_run`, and both shared responses read it
-by default. Most seeds keep their own record, so they pass a claim read, the same
-one to both responses:
+The installation is claimed as soon as its first owner exists and the setup
+token can no longer create another owner. Base records that in `oa_bootstrap`,
+and both shared responses read it by default. The owner may still need to sign
+in and complete a first-run form at `/setup`; that does not keep the Lobby in
+its unclaimed state.
+
+A seed with native authentication passes a read of its own durable owner
+record, the same one to both responses. For example, an installation using the
+completed owner-claim ledger can use:
 
 ```ts
 import { lobbyResponse } from './base/lobby'
 import { claimedWhen, setupStateResponse } from './base/setup-state'
-const claimed = claimedWhen('SELECT 1 FROM uptime_first_run WHERE id = 1')
+const claimed = claimedWhen('SELECT 1 FROM oc_owner_claims WHERE singleton = 1 AND completed = 1')
 // in fetch, before the public-path guard:
-const env2 = { DB: env.DB, AUTH_ORIGIN: env.UPTIME_ORIGIN }
+const env2 = { DB: env.DB, AUTH_ORIGIN: env.AUTH_ORIGIN }
 const state = await setupStateResponse(request, env2, claimed); if (state) return state
 const lobby = await lobbyResponse(request, env2, identity, claimed); if (lobby) return lobby
 ```
 
 `claimedWhen(sql)` is claimed when the query returns a row; for anything else
-pass your own `(db) => Promise<boolean>`. The record each seed's migrations kept on
-13 October 2026 (confirm it is the one your `/setup` writes on confirmation):
+pass your own `(db) => Promise<boolean>`. Existing native adopters must update
+callbacks that read first-run completion (such as `first_run_completed_at` or
+`onboarding_completed_at`) to read their owner claim instead. Copying the shared
+renderer alone cannot change a seed's supplied query.
 
-| Seed | First-run record | Claim read |
-| --- | --- | --- |
-| Penny, Oncall | Base's `oa_first_run` | none (the default) |
-| Uptime | `uptime_first_run` (`migrations/0017_first_run.sql`) | `SELECT 1 FROM uptime_first_run WHERE id = 1` |
-| Cradle | `cradle_first_run`, `completed_at` null until confirmed (`migrations/updates/9018_first_run.sql`) | `SELECT 1 FROM cradle_first_run WHERE singleton = 1 AND completed_at IS NOT NULL` |
-| Orbit | `first_run_setup` (`migrations/core/0022_first_run_setup.sql`) | `SELECT 1 FROM first_run_setup WHERE id = 'workspace'` |
-| Slate, Pencil | `workspaces.first_run_completed_at` | `SELECT 1 FROM workspaces WHERE first_run_completed_at IS NOT NULL LIMIT 1` |
-| Vector | `workspace_installation.setup_completed_at` | `SELECT 1 FROM workspace_installation WHERE setup_completed_at IS NOT NULL LIMIT 1` |
-| Dial | `operator_setup_identity.onboarding_completed_at` | `SELECT 1 FROM operator_setup_identity WHERE onboarding_completed_at IS NOT NULL LIMIT 1` |
-| Lamp | `setup_readiness` step `first-run` | `SELECT 1 FROM setup_readiness WHERE step = 'first-run'` |
-| HappyToHelp | `owner_setup` (`migrations/0097_owner_setup.sql`) | `SELECT 1 FROM owner_setup WHERE singleton = 1` |
-| Mango | no first-run table; the owner claim ledger `oc_owner_claims` | `SELECT 1 FROM oc_owner_claims WHERE singleton = 1 AND completed = 1`, after checking `/setup` sets `completed` |
-| Nook, Spool | find the record your `/setup` writes | a `claimedWhen` over it, or none if it is `oa_first_run` |
-
-Prove it on a fresh local store: `/setup/state` answers `unclaimed` after
-`rer setup`, and `claimed` once you confirm at `/setup` through `RER_OPEN`. A 503
+Prove it on a fresh store: `/setup/state` answers `unclaimed` before the owner
+claim, then `claimed` immediately after `rer setup` or `rer deploy` claims the
+owner, before any first-run form is confirmed. A 503
 `setup_unavailable` means the read failed: the table or column it names does not
 exist in your schema.
 
@@ -162,7 +159,7 @@ Run page string and command in one `RunData` value (`src/site/run.ts` or
 The Run page then reads, exactly: "Run <Seed> on your computer."; "100% free and
 open source. Two steps, and <Seed> opens in your browser."; step 1 **Install rer**,
 "The Run Edit Run command. Once per computer.", `curl -fsSL
-https://runeditrun.com/install.sh | sh`, "or `npm install -g @runeditrun/rer`";
+https://runeditrun.com/install.sh | sh` followed by `export PATH="$HOME/.local/bin:$PATH"` for the current shell, "or `npm install -g @runeditrun/rer`";
 step 2 **Get <Seed> and start it**, the clone line and `cd <folder> && rer dev`,
 "`rer dev` installs everything, makes you the owner and prints a link that opens
 <Seed> signed in."; then the requirements line and "Source: <repository> · MIT
@@ -233,11 +230,11 @@ Spool on their `brand/2026-10-11` or `style/2026-10-11` branches (and the
    everyone else. The Lobby itself never varies by session.
 3. Add `band.svg`, the identity value, the Run data, `deploy-site.json` and the
    adapter `site` option.
-4. Docs on the run site: Slate, Vector (brand), Penny, Mango, Dial, Orbit
+4. Docs on the run site: Slate, Cradle, Vector (brand), Penny, Mango, Dial, Orbit
    (brand), Nook, Uptime and Oncall (brand) render their `docs/site.json`
-   pages; Spool renders its `docsResponse` markup. **Cradle and Lamp need docs
-   source first**: Cradle has 25 Markdown files and no `site.json` or renderer;
-   Lamp links its GitHub README. Until then set `docs: false`.
+   pages; Cradle's docs are declared in `docs/site.json`. Spool renders its
+   `docsResponse` markup. **Lamp needs docs source first**: it links its GitHub
+   README. Until then set `docs: false` for Lamp.
 5. `rer dev` prints `RER_SITE`; `rer build --site`; `rer deploy --site --dry-run`.
 
 ## Public-page seeds: the product page stays at the installed `/`
@@ -249,6 +246,13 @@ Spool on their `brand/2026-10-11` or `style/2026-10-11` branches (and the
 | Penny | the public board (`/portal`, moved to `/`) | `installedHome: 'page'`; Sign in (`/signin`) in the portal header |
 | HappyToHelp | the Help Center (`/help`, moved to `/`) | `installedHome: 'page'`; Sign in (`/login`) in the Help Center header. Never touch `app.happytohelp.com`, the legacy production service |
 
+For Lamp's app-host root and Pencil's root when no public form is selected,
+pass `{ ...identity, installedHome: 'lobby' }` to `lobbyResponse` on that branch.
+Their product-page identity keeps `installedHome: 'page'`: the public
+`lobbyResponse` returns `null` for that identity, even at `/`, so passing it
+unchanged cannot render the Lobby. Keep the page-host or selected-form branch
+first, then call the shared Lobby with the branch-specific identity.
+
 They still mount `setupStateResponse`, add `band.svg`, and publish the
 marketing run site exactly as the marketing seeds do. Dial's booking pages and
 Mango's `/subscribe` stay on their own paths; those seeds use the Lobby.
@@ -256,8 +260,8 @@ Mango's `/subscribe` stay on their own paths; those seeds use the Lobby.
 ## Done when
 
 - The installed `/` shows the Lobby (or the product page with Sign in) and
-  `GET /setup/state` answers `unclaimed`, then `claimed` after the owner
-  confirms at `/setup`.
+  `GET /setup/state` answers `unclaimed`, then `claimed` immediately after the
+  owner claim, before first-run confirmation at `/setup`.
 - `rer dev` prints `RER_SITE`, whose `/`, `/run` and docs answer; the approved
   page there differs from the owner-approved one only in its primary action.
 - `rer build --site` and `rer deploy --site --dry-run` pass.

@@ -1,3 +1,4 @@
+import {integrationAvailable} from './transport'
 import {revokeConfiguration} from './revocation'
 import type {Hono} from 'hono'
 import type {OperatorMutationEnvironment} from '@/core/app/operator-mutations'
@@ -13,7 +14,7 @@ export function registerTrackerRoutes(app:Hono<OperatorMutationEnvironment>) {
   const {results:connections}=await db.prepare('SELECT id,name,provider,project_identity,site_origin,created_at,revoked_at FROM penny_tracker_connections ORDER BY created_at,id').all()
   const {results:links}=await db.prepare('SELECT * FROM penny_tracker_links ORDER BY created_at DESC LIMIT 100').all()
   const {results:commands}=await db.prepare('SELECT c.id,c.request_id,c.decision_id,c.connection_id,c.link_id,c.held,d.state,d.attempts FROM penny_tracker_commands c LEFT JOIN integration_deliveries d ON d.namespace=? AND d.id=c.id ORDER BY c.created_at DESC LIMIT 100').bind(trackerNamespace).all()
-  return c.json({connections,links,commands,transport:c.get('runtime').bindings.PENNY_EGRESS?'configured':'configuration-disabled'})
+  return c.json({connections,links,commands,transport:integrationAvailable(c.get('runtime'))?'configured':'configuration-disabled'})
  })
  app.get('/api/operator/integrations/trackers/request/:id',async c=>{
   const {db}=await integrationOperator(c.get('runtime'),c.req.raw)

@@ -1,3 +1,5 @@
+import {demoEffect} from '../../../../base/modules/demo/index.mjs'
+import {demoLearningSuccess} from './demo-success'
 import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
 import {NativeError} from '../auth/native-tokens'
@@ -18,7 +20,7 @@ export async function send(runtime:PennyRuntime,wire:LearningWire){
  validateDestination(wire.url)
  if(new TextEncoder().encode(wire.body).length>512*1024)throw new NativeError('learning_request_limit',413)
  let response:Awaited<ReturnType<LearningEgress['send']>>
- try{response=await port.send(wire)}catch{throw new NativeError('learning_transport_failed',409)}
+ try{response=await (wire.method==='GET'?port.send(wire):demoEffect(()=>port.send(wire),()=>demoLearningSuccess(wire)))}catch{throw new NativeError('learning_transport_failed',409)}
  if(!response||!Number.isInteger(response.status)||response.status<100||response.status>599||typeof response.body!=='string'||new TextEncoder().encode(response.body).length>512*1024)throw new NativeError('learning_response_limit',413)
  return response
 }

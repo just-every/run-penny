@@ -29,7 +29,7 @@ need separate proof.
 | --- | --- |
 | `rer install` | Frozen dependency install with the pinned pnpm and lockfile; no setup. |
 | `rer setup --owner-email EMAIL` | Build, apply every migration, save private settings and claim the first native owner with an empty workspace, then stop the temporary app. Repeats preserve the owner, origin, exact private settings and data. |
-| `rer dev` | Foreground Vite with assets and HMR on the saved loopback origin; prints `RER_READY` and the outbox sign-in line once health passes. |
+| `rer dev` | Foreground Vite with assets and HMR on the saved loopback origin; prints `RER_READY` and one-click `RER_OPEN` sign-in once health passes. |
 | `rer preview` | Fixed production output on the same state; managed, with idle timeout and explicit `--stop`. |
 | `rer build` | Production Worker and assets with private local settings excluded and restored. |
 | `rer verify` | The full verification: structural check, source and Base custody, tests, type, lint, build and the literal README journey; no deployment. |
@@ -37,7 +37,6 @@ need separate proof.
 | `rer export --output FILE`, `import --input FILE --yes` | Local archive of Penny's domain data and original files with a separate latest erasure journal, and its restore into an empty installation. |
 | `rer export --target remote --origin ORIGIN --session-file FILE --output FILE` | Authenticated native-owner download of the same archive and paired erasure journal from a running installation; restore remains local. See [data ownership](docs/data-ownership.md#maintained-archive-commands). |
 | `rer deploy [--environment NAME] [--dry-run]` | Owner-account build, reconcile, migrate and health; a dry run builds and validates locally and makes no provider request. |
-| `rer outbox [--owner-email EMAIL]` | The local outbox address; an explicit owner requests a fresh ordinary sign-in message. |
 | `rer doctor`, `describe`, `check`, `release` | Local diagnostics, capability description, structural check and the maintained Base release producer, which needs explicit authorized inputs. |
 | `npm run deploy:health` | Owner-account identity, configuration and health against the private saved state; accepts `--environment NAME`. |
 | `pnpm run artifact:prepare`, `artifact:deploy`, `artifact:health` | The separate disposable controller: credential-free packaging of built committed source, scoped resources with hash-ledger migrations and upload, and its health. |
@@ -46,7 +45,7 @@ need separate proof.
 | `pnpm source:lock`, `source:check`, `verify:base-source` | Capture and check the actual tracked bytes, modes, tool identity and Base comparison snapshots. |
 
 The package scripts `setup dev build verify reset deploy export import release
-outbox doctor describe check` are exactly `rer VERB`;
+doctor describe check` are exactly `rer VERB`;
 `deps` is `install` and `rer` is the bare dispatcher. Use `pnpm run VERB --
 FLAGS`.
 
@@ -55,9 +54,8 @@ FLAGS`.
 Terminal setup uses `http://127.0.0.1:8787`; an initial `--port` changes it.
 `dev` prints `RER_OPEN`, which carries the checkout's dev key
 (`.rer/local/dev-key.env`) in its fragment and signs the browser in as the owner
-(`--as teammate|signed-out` for another identity, `--login` for the outbox
-sign-in). The outbox at `/__dev/outbox`, dev sign-in and dev sessions answer only
-behind that key; `reset --yes` removes it and the next `setup` makes a new one.
+(`--as teammate|signed-out` for another identity). Dev sign-in and dev sessions
+answer only behind that key; `reset --yes` removes it and the next `setup` makes a new one.
 API keys minted in a dev session are recorded as dev-minted (migration 0029),
 work only behind the key and never travel in an archive. The owner lands on
 `/setup`, the first-run setup, until it is finished; afterwards `/setup` opens the

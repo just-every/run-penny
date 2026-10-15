@@ -5,7 +5,7 @@ import { releaseGraph } from './release-fixture'
 import { graph,rows,runtime,time } from './notification-regression-fixture'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { createPennyApi } from '@/core/app/api'
-import { localOutbox } from '@/core/features/auth/local-outbox'
+import { providerMessages } from './provider-messages'
 import { runNotificationSchedule } from '@/core/features/notifications/scheduled'
 import { releaseContent } from '@/core/features/releases/delivery-admission'
 import { unsubscribeUrl } from '@/core/features/notifications/unsubscribe'
@@ -36,11 +36,11 @@ it('[REL-003] correction preserves original context and operator history; portal
  const g=await votedReleaseGraph()
  await json(await call('/api/public/updates/subscription',{subscribed:true},g.person,'PATCH'))
  vi.mocked(fetch).mockClear()
- const bindings={...env,PENNY_ENVIRONMENT:'local',APP_ORIGIN:'http://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'development',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined}
+ const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined}
  const nextDay=new Date();nextDay.setUTCDate(nextDay.getUTCDate()+1);nextDay.setUTCHours(9,0,0,0)
  vi.spyOn(Date,'now').mockReturnValue(nextDay.getTime())
  const cron=()=>runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
- const capture=localOutbox(createPennyRuntime(bindings))!
+ const capture=providerMessages(createPennyRuntime(bindings))!
  await json(await publish(g))
  await cron()
  const original=(await capture.list())[0]
@@ -83,15 +83,15 @@ it('[REL-003] correction preserves original context and operator history; portal
   expect.objectContaining({id:original.message.deliveryId,subject_id:g.draft.versionId,event_version:1}),
   expect.objectContaining({id:correctedMessage.message.deliveryId,subject_id:corrected.versionId,event_version:2}),
  ]))
- for(const delivery of deliveries)expect(delivery).toMatchObject({delivery_state:'accepted',attempt_count:1,provider_message_id:null,failure_reason:null})
+ for(const delivery of deliveries)expect(delivery).toMatchObject({delivery_state:'accepted',attempt_count:1,provider_message_id:expect.any(String),failure_reason:null})
  const attempts=await rows('notification_outbox_attempts');expect(attempts).toHaveLength(2)
- for(const attempt of attempts)expect(attempt).toMatchObject({state:'accepted',provider_message_id:null,failure_reason:null})
+ for(const attempt of attempts)expect(attempt).toMatchObject({state:'accepted',provider_message_id:expect.any(String),failure_reason:null})
  await json(await publish(g));await json(await call(path,{},g.operator))
  await Promise.all([cron(),cron()]);await cron()
  expect(await capture.list()).toEqual(captured)
  expect(await rows('notification_outbox')).toEqual(deliveries)
  expect(await rows('notification_outbox_attempts')).toEqual(attempts)
- expect(fetch).not.toHaveBeenCalled()
+ expect(fetch).toHaveBeenCalledTimes(2)
  expect(await rows('release_recipient_snapshots')).toEqual(snapshots);expect(await rows('release_recipient_contexts')).toEqual(contexts);expect(await rows('release_target_snapshots')).toEqual(targets)
  for(const path of [`/api/operator/releases/${g.draft.slug}/versions`,`/api/operator/releases/${g.draft.slug}/outcomes`])expect((await call(path,undefined,g.person)).status).toBe(401)
  expect((await call(path,{}, {...g.operator,Origin:'https://foreign.test'})).status).toBe(403)
@@ -109,19 +109,19 @@ it('[REL-003] correction preserves original context and operator history; portal
  expect(await Promise.all(['requests','request_votes','request_follows'].map(rows))).toEqual(retained)
  expect((await call('/api/public/requester/activity',undefined,g.person)).status).toBe(200)
  expect(await capture.list()).toEqual(captured)
- expect(fetch).not.toHaveBeenCalled()
+ expect(fetch).toHaveBeenCalledTimes(2)
 })
 it('[EVID-009 REL-001] a private tag on a published release stays out of the public updates pages and the customer email',async()=>{
  const g=await votedReleaseGraph(),secret='Confidential billing tag'
  const tag=await json<{id:string}>(await call('/api/operator/catalog/tags',{name:secret},g.operator),201)
  await json(await call(`/api/operator/releases/${g.draft.slug}`,{...g.input,tagIds:[tag.id]},g.operator,'PATCH'))
  await json(await call('/api/public/updates/subscription',{subscribed:true},g.person,'PATCH'))
- const bindings={...env,PENNY_ENVIRONMENT:'local',APP_ORIGIN:'http://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'development',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined}
+ const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:'synthetic-provider-test-key',RESEND_API_KEY:undefined}
  const nextDay=new Date();nextDay.setUTCDate(nextDay.getUTCDate()+1);nextDay.setUTCHours(9,0,0,0)
  vi.spyOn(Date,'now').mockReturnValue(nextDay.getTime())
  await json(await publish(g))
  await runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
- const mail=(await localOutbox(createPennyRuntime(bindings))!.list())[0].message
+ const mail=(await providerMessages(createPennyRuntime(bindings))!.list())[0].message
  const page=await (await call(`/portal/updates/${g.draft.slug}`)).text()
  expect(mail.text).toContain(g.input.body);expect(page).toContain(g.input.body)
  for(const surface of [mail.text,mail.html??'',page,await (await call('/portal/updates')).text(),await (await call('/api/public/releases')).text(),await (await call(`/api/public/releases/${g.draft.slug}`)).text()])expect(surface).not.toContain(secret)

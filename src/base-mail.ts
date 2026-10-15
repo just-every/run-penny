@@ -9,4 +9,4 @@ export interface NotificationMessage {
 export interface PennyMailSender extends MailSender {
   send(message: NotificationMessage): Promise<{provider:string;status:'accepted'|'rejected'|'rate_limited'|'uncertain'|'development';providerMessageId:string|null;code?:string}>
 }
-export const createMailSender = sender as (config: {provider: 'sendgrid'|'resend'; mode: 'production'; apiKey: string} | {provider:'development';mode:'development'}, dependencies?: { fetch?: typeof fetch; outbox?: {put(message: unknown): Promise<void>} }) => PennyMailSender
+export const createMailSender = sender as (config: {provider: 'sendgrid'|'resend'; mode: 'production'; apiKey: string} | {provider:'development';mode:'development'}, dependencies?: { fetch?: typeof fetch }) => PennyMailSender

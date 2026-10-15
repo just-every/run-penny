@@ -1,3 +1,4 @@
+import {integrationAvailable} from './transport'
 import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
 import {operatorAuth,authenticateOperator} from '../auth/operator'
@@ -29,7 +30,7 @@ export async function createDestination(runtime:PennyRuntime,request:Request,inp
   db.prepare('INSERT INTO penny_integration_destinations(id,name,kind,events_json,native_operator_id,operator_version,actor_id,created_at) VALUES(?,?,?,?,?,?,?,?)').bind(id,input.name,input.kind,JSON.stringify([...new Set(input.events)]),session.operatorId,session.operator.version,actor.id,Date.now()),
   db.prepare('INSERT INTO penny_integration_credentials(id,endpoint,signing_key) VALUES(?,?,?)').bind(id,endpoint,key),
  ])
- return {id,...(key?{signingKey:key}:{}),transport:runtime.bindings.PENNY_EGRESS?'configured':'configuration-disabled',...(input.kind==='receiver'?{path:'/api/integrations/webhooks/'+id}:{})}
+ return {id,...(key?{signingKey:key}:{}),transport:integrationAvailable(runtime)?'configured':'configuration-disabled',...(input.kind==='receiver'?{path:'/api/integrations/webhooks/'+id}:{})}
 }
 export async function destination(runtime:PennyRuntime,id:string,kind?:Destination['kind']) {
  const row=await runtime.database.binding.prepare(`SELECT d.*,c.endpoint,c.signing_key FROM penny_integration_destinations d JOIN penny_integration_credentials c ON c.id=d.id JOIN oa_operators o ON o.id=d.native_operator_id WHERE d.id=? AND d.revoked_at IS NULL AND o.status='active' AND o.version=d.operator_version`).bind(id).first<Destination&{endpoint:string;signing_key:string|null}>()

@@ -19,18 +19,15 @@ exits with no server running; the first run needs the owner email, `--port`
 (default 8787) belongs to that first run, and a repeat run keeps the owner, the
 data, the saved origin and the exact private settings. `dev` stays in the
 foreground and opens signed in: it prints `RER_READY`, `RER_SIGNED_IN EMAIL` and
-`RER_OPEN http://127.0.0.1:8787/#rer-dev=KEY&as=owner`. `RER_OPEN` carries the
+`RER_OPEN http://127.0.0.1:8787/__dev/key#rer-dev=KEY&as=owner`. `RER_OPEN` carries the
 checkout's dev key (`.rer/local/dev-key.env`, 0600) in its fragment; opening it
 trades the key for a local gate cookie and signs the browser in as the owner,
-who lands on `/setup`, the first-run setup. Until its **Finish setup** is
-pressed, every `/app` page sends the owner back to `/setup`; afterwards `/setup`
-opens the app. `--as teammate` (the dev persona `teammate@dev.localhost`) or
-`--as signed-out` starts as another identity, and the dev badge switches between
-them; `--login` turns dev identity off and prints `RER_SIGN_IN` plus a
-`RER_OPEN` link to the key-gated outbox, where the newest message's link and
-**Confirm** sign in exactly as mail does. Without the key the outbox, dev sign-in
-and dev sessions answer 404, and an API key minted in a dev session is refused
-and never exported.
+who lands on `/setup`, the first-run setup. Until **Finish setup** is pressed,
+every `/app` page sends the owner back there. The nav and title read Penny Dev;
+`rer demo` uses isolated sample data and reads Penny Demo. There is no bar or
+outbox. Mail is suppressed silently, and sign-in is one click. `--as teammate`
+or `--as signed-out` selects another dev persona. Without the key, dev sign-in
+and dev credentials are refused, and dev credentials are never exported.
 
 Then, from the same root:
 
@@ -87,13 +84,10 @@ passed to `firstRunResponse`. Its record is the installation-owned `oa_first_run
 excluded from portable archives. Penny's self-hosted fonts live in `public/fonts`
 and are linked once from the root document; Base's default font does not apply.
 
-The local Base development outbox is restricted to explicit loopback local or
-development mode, and to a demo (`RER_DEMO=1`, which `rer deploy` refuses), which
-captures every message and sends nothing (DEMO.md). GET confirmation does not consume a sign-in link. Production
-never accepts a local outbox or invented signer/provider. Mail providers are
-selected explicitly with their real fields. Both provider and sender may be
-absent in the documented unconfigured-mail mode; partial configuration fails.
-No placeholder credentials, mock application paths or silent transport fallback.
+Local development and demos suppress mail silently (DEMO.md). Public internet
+reads run for real in demos; effects reaching people or third-party accounts
+return mocked success only under RER_DEMO. Production never uses demo mocks or
+a local mail transport. Provider configuration remains explicit.
 
 ## Commands, deployment and source custody
 
