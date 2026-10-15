@@ -10,7 +10,7 @@ const app = JSON.parse(readFileSync('deploy.json', 'utf8'))
 const plan = demoPlan({ project: app.project, environment: 'demo-test', compatibilityDate: app.compatibilityDate, originVar: app.originVar, declaration, turnstileSiteKey: '1x00000000000000000000AA' })
 const url = `https://api.cloudflare.com/client/v4/accounts/${account}/workers/scripts/${plan.worker}/tails`
 const headers = { authorization: `Bearer ${process.env.CLOUDFLARE_API_TOKEN}`, 'content-type': 'application/json' }
-const response = await fetch(url, { method: 'POST', headers, body: '{}' })
+const response = await fetch(url, { method: 'POST', headers, body: '{}', signal: AbortSignal.timeout(30000) })
 const created = await response.json()
 if (!response.ok || !created.success) throw Error(`Tail creation failed (${response.status})`)
 mkdirSync('.rer/demo-observation', { recursive: true })
@@ -39,6 +39,8 @@ try {
   record({ finishedAt: new Date().toISOString() })
 } finally {
   socket.close()
-  const removed = await fetch(url + '/' + created.result.id, { method: 'DELETE', headers })
+  const removed = await fetch(url + '/' + created.result.id, { method: 'DELETE', headers, signal: AbortSignal.timeout(30000) })
   if (!removed.ok) throw Error(`Tail removal failed (${removed.status})`)
 }
+// Native WebSocket/fetch pools can retain the runner after the tail is deleted.
+process.exit(0)

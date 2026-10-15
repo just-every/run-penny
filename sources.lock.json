@@ -3310,7 +3310,7 @@
       "executable": false
     },
     "scripts/demo/observe.mjs": {
-      "sha256": "97dded8de99611f3ac513a9a6f5f69e48a00a4599fcfad47910cbca5f5545742",
+      "sha256": "53b3e05143c171a8bd027b625eff4a622525c9fa86014b5c931b914ecc1d4b02",
       "executable": false
     },
     "scripts/deployment/cli.mjs": {
