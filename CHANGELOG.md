@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Pin rer 0.2.19. The README starts Penny with the Run page's two commands (`git clone …` then `cd run-penny && rer dev`), says Node.js 22 or newer is required and how to get it, and documents `rer signin`, `rer deploy --remove --yes` and `npm run deploy:health` (npm ships with Node, so no pnpm is needed; the hosted Data page's guarded commands use `npm run` too). The workspace time zone is stated once: UTC unless `WORKSPACE_TIMEZONE` is set at deploy. OPERATIONS.md and the install guide say `rer deploy` claims the owner; a manual `/auth/bootstrap` is recovery only.
+- The local Data page loads again: the Worker's dev module allow-list now serves `scripts/portability/archive-journal.mjs`, which the page imports.
+- Tags are private everywhere: release pages, the public release API and release emails no longer show a release's tags (EVID-009). The release form calls them private tags.
+- Approving a requester comment offers the requester's verified display name, and a refusal (such as an empty name) is shown next to that comment's form. Held items come first in a request's controls, with an "awaiting review" count, and Overview counts comments awaiting review.
+- Status-update emails link each request with the install's full address. A queued release email closes the same follower's open one-hour window on that request, so the gathered updates are sent first in the same Cron run.
+- Hosted export: the row limit is counted once at creation in one round trip, and the archive is verified once, from the downloaded bytes, cutting each step's database round trips. A failed export names the server's refusal instead of blaming the owner session, and an interrupted export that never started its snapshot offers only Abort, as the page now says.
+- Smaller fixes: a new board's URL name follows its name; Overview's "Create a board" link lands on the form; a draft release card says "Publication date", not "Published"; the decision brief shows the question once and its next-step hint matches the evidence already recorded; verifying from a request page offers the way back to that request; a request page says whether email updates are on; the public roadmap's React key warning is gone.
+
 - Pin rer 0.2.18 and refresh the copied demo runtime from its matching Base tag. Hosted demo images carry pre-migrated state and bounded starts; declare the container instance type explicitly.
 
 - Pin rer 0.2.17 in package mode so local dev startup uses its corrected bind check. Data-operation conflicts name guarded CLI recovery commands and the active operation ID; paused restores and erasures name their resume commands instead of promising hosted Data-page buttons.

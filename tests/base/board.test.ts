@@ -23,7 +23,12 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  const comment=await call(`/api/public/requests/${a}/comments`,{body:'Held comment'},g.person);expect(comment.status).toBe(201)
  const {id}=await comment.json() as {id:string}
  expect(await (await call(`/api/public/requests/${a}`)).json()).toMatchObject({voteCount:1,comments:[]})
+ // The review form offers the requester's verified name; an approval without any name is refused with its reason.
+ const held=await (await call(`/api/operator/requests/${a}/context`,undefined,g.operator)).json() as {comments:{id:string;requester_display_name:string}[]}
+ expect(held.comments.find(c=>c.id===id)?.requester_display_name).toBe('Private display')
+ const unnamed=await call(`/api/operator/comments/${id}/moderate`,{verdict:'approved'},g.operator);expect(unnamed.status).toBe(400);expect(await unnamed.json()).toMatchObject({error:'public_author_name_required'})
  expect((await call(`/api/operator/comments/${id}/moderate`,{verdict:'approved',publicAuthorDisplayName:'Approved person'},g.operator)).status).toBe(200)
+ expect(await (await call(`/api/public/requests/${a}`)).json()).toMatchObject({comments:[{body:'Held comment',author:{displayName:'Approved person'}}]})
  expect((await call(`/api/operator/requests/${a}/status-updates`,{status:'under_review',body:'Reviewing this request.',pinned:true},g.operator)).status).toBe(200)
  expect((await call(`/api/operator/requests/${a}/merge`,{targetSlug:b},g.operator)).status).toBe(200)
  expect((await call(`/api/public/requests/${a}`)).status).toBe(301)

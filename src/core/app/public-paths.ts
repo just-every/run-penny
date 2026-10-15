@@ -39,7 +39,10 @@ export function isLocalViteModulePath(pathname: string): boolean {
   // DOCS-001: the docs plugin's virtual modules, which a docs page imports again on client-side navigation.
   const docsModule = /^\/@id\/__x00__virtual:penny-docs(?:\/page\/[a-z0-9-]+)?$/.test(pathname)
 
-  return (editorBrowserModule || browserSerializationModule || startClientModule || startClientEntry || docsModule || pathname === '/@id/virtual:tanstack-start-dev-client-entry'
+  // The Data page derives the erasure journal from a hosted export in the browser.
+  const archiveJournalModule = pathname === '/scripts/portability/archive-journal.mjs'
+
+  return (editorBrowserModule || browserSerializationModule || startClientModule || startClientEntry || docsModule || archiveJournalModule || pathname === '/@id/virtual:tanstack-start-dev-client-entry'
     || pathname === '/@tanstack-start/styles.css'
     || pathname === '/@vite/client'
     || pathname.startsWith('/@vite/')

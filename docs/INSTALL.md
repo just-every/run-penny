@@ -4,26 +4,23 @@ This page takes you from the Penny source to a running copy: first on your own c
 
 ## What you need
 
-- **Node 22.20.0 and pnpm 10.12.4.** The commands below select the pinned Node themselves and never change your global tools.
-- **The Penny source** in a folder on your computer.
+- **Node.js 22 or newer.** Check with `node --version`; if it is missing, install the LTS from [nodejs.org](https://nodejs.org/en/download) or run `nvm install 22`. `rer` then fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
+- **`rer`**, installed once: `curl -fsSL https://runeditrun.com/install.sh | sh` (or `npm install -g @runeditrun/rer`).
 - **For Cloudflare only:** a Cloudflare account, an API token for it, and an email provider (SendGrid or Resend) with a verified sender address. Running locally needs none of these.
 
 ## Run it on your computer
 
-From the project folder:
-
 ```bash
-rer install
-rer setup --owner-email you@example.com
-rer dev
+git clone https://github.com/just-every/run-penny.git
+cd run-penny && rer dev
 ```
 
-`install` installs the locked dependencies. `setup` creates private local credentials, applies the database migrations and creates the first owner, with an empty workspace and no sample records. The first run needs `--owner-email`. It checks a fresh sign-in message, then stops its temporary app before returning. `dev` keeps the app running in the foreground.
+`rer dev` installs the locked dependencies, sets up a local owner (`owner@run-penny.test`) with an empty workspace and no sample records, and starts Penny on the first free port from 8787. In a terminal it stays in the foreground; from a script it returns once Penny is ready and keeps it running until `rer dev --stop`. To be the owner under your own address, run `rer setup --owner-email you@example.com` once before the first `rer dev`.
 
 A few things to know about setup:
 
 - It writes `.dev.vars` with fresh secrets and never prints them. Running setup again keeps the owner, your data, the saved address and those private settings exactly as they are.
-- To use a different port, add `--port 8788` to the first setup command and use the URLs it prints. The default is 8787.
+- To choose the port, add `--port 8788` to `rer dev` (or to the first `rer setup`) and use the URLs it prints.
 - Your local data lives in `.wrangler/state` inside your project folder. A second copy kept in a sibling `.penny-local-state-` folder is refused before anything changes; Penny never moves or deletes it.
 
 ### Sign in locally
@@ -52,7 +49,7 @@ export const publicLandingConfig = {
 } as const
 ```
 
-`ownerName` is also the browser tab title. In `src/ext/config.server.ts`, which never reaches the browser, you can change the workspace timezone (default Australia/Brisbane), the operator allow-list and the origins you permit. See [Make it yours](/docs/customise) for more, including the one extra step that checking your changes needs.
+`ownerName` is also the browser tab title. In `src/ext/config.server.ts`, which never reaches the browser, you can change the fallback workspace timezone (setup and deploy save UTC unless you set `WORKSPACE_TIMEZONE`), the operator allow-list and the origins you permit. See [Make it yours](/docs/customise) for more, including the one extra step that checking your changes needs.
 
 ## Email
 
@@ -80,7 +77,7 @@ Then:
 ```bash
 rer deploy --dry-run
 rer deploy
-pnpm run deploy:health
+npm run deploy:health
 ```
 
 The dry run builds and validates locally and makes no request to Cloudflare. Deploy builds first, then creates or reuses the Worker, D1 database, R2 bucket and queue, applies the database migrations, uploads the build and checks it. Deploy health reads the deployed Worker's identity and `/health`, which confirms the database, file bucket and queue can be reached; it does not prove that mail is working. Running deploy again reuses the saved resources and secrets and rotates nothing. Use `pnpm run deploy` rather than bare `pnpm deploy`, which is a different built-in pnpm command.
@@ -92,15 +89,15 @@ The first deploy generates `AUTH_SECRET` and `SETUP_TOKEN` once and saves them i
 > [!WARNING]
 > Deploy changes the Cloudflare account that the token belongs to. Check which account that is first. Do not run remote Wrangler migrations yourself before deploying: Penny keeps its own record of applied migrations and will refuse a history it cannot trust.
 
-### Create the first operator session
+### Sign in to the deployed copy
 
-After the first deploy, submit your `SETUP_TOKEN` once to `/auth/bootstrap`. Penny's own screens have no form for this step, so send a JSON POST from your terminal. The property that carries the token is named `token`:
+The first `rer deploy` claims the owner for you: it uses the one-time `SETUP_TOKEN`, then removes it and prints "Claimed the hosted owner". Open `/signin`, request a link for your `OPERATOR_EMAIL`, open the message and press **Confirm**; the first sign-in ends at **Finish setup**. If mail is not working yet, `rer signin` prints a single-use sign-in link for the owner to your terminal (it expires within 15 minutes and is recorded in the owner's audit log).
 
-```json
-{"token": "<SETUP_TOKEN>", "displayName": "Your name", "returnTo": "/setup"}
-```
+Only if a deploy stopped after the Worker went live but before that claim do you claim by hand: POST `{"token": "<SETUP_TOKEN>", "displayName": "Your name", "returnTo": "/setup"}` to `/auth/bootstrap` with `Content-Type: application/json` and an `Origin` header equal to the deployment's exact origin, reading the token from `.rer/deploy/production-secrets.json`. Keep the token and the returned cookie out of shell history, logs and screenshots.
 
-Read the token from `.rer/deploy/production-secrets.json`. Send it with a `Content-Type: application/json` header and an `Origin` header equal to your deployment's exact origin, such as `https://your-worker.your-subdomain.workers.dev`. Penny refuses a POST without a matching `Origin`. Keep the cookie it returns private. This creates the one owner, using your `OPERATOR_EMAIL`. Open `/setup` with that session and finish first-run setup, then use `/signin` for later visits: request a link for your `OPERATOR_EMAIL`, open the message you receive and press **Confirm**. Keep the token out of shell history, logs and screenshots.
+### Remove a deployment
+
+`rer deploy --remove --yes` deletes the Worker, D1 database, R2 bucket and queue that the deploy record says `rer` created, reads back that each is gone and touches nothing else. Add `--environment NAME` if you deployed with one. Export your data first (see [Your data](/docs/data)); removal deletes it.
 
 Your public portal stays empty until you create a public board and approve requester content. Deployment never loads sample data.
 

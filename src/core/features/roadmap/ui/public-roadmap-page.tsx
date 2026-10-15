@@ -33,7 +33,7 @@ function RoadmapBoard({ items }: { readonly items: readonly PublicRoadmapItem[] 
     <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {roadmapStatuses.map((status) => {
         const statusItems = items.filter((item) => item.status === status)
-        return <HydrationUnit><section key={status} className="min-w-0" aria-label={`Roadmap status ${status.replace('_', ' ')}`}>
+        return <HydrationUnit key={status}><section className="min-w-0" aria-label={`Roadmap status ${status.replace('_', ' ')}`}>
           <div className="mb-3 flex items-center gap-2"><PublicStatus status={status} /><span className="text-xs font-semibold tabular-nums text-penny-muted">{statusItems.length}</span></div>
           <div className="space-y-3">
             {statusItems.length === 0 ? <div className="rounded-xl border border-dashed border-penny-line-strong/60 px-4 py-5 text-sm leading-6 text-penny-muted">No items in this status.</div> : null}

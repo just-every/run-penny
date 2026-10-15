@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Chip } from '@/core/ui/app/Chip'
 import { fieldLabelClass, primaryButtonClass, textLinkClass } from '@/core/ui/app/classes'
 import { fieldClass } from '@/core/features/auth/client-mutations'
@@ -8,6 +9,8 @@ export interface Board { slug: string; name: string; visibility: string; positio
 export type SettingsAct = (path: string, body: unknown, method?: string, form?: HTMLFormElement) => Promise<void>
 
 const input = fieldClass
+// The URL name follows the board name until the owner types one of their own.
+const urlName = (name: string) => name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60)
 
 export function BoardCard({ board: b, act }: { board: Board; act: SettingsAct }) {
   return (
@@ -30,13 +33,14 @@ export function BoardCard({ board: b, act }: { board: Board; act: SettingsAct })
 }
 
 export function CreateBoardCard({ act }: { act: SettingsAct }) {
+  const slug = useRef<HTMLInputElement>(null), typed = useRef(false)
   return (
-    <div className={`${settingsPanelClass} border-dashed`}>
-      <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); const d = new FormData(e.currentTarget); void act('/api/operator/boards', { name: d.get('name'), slug: d.get('slug'), visibility: d.get('visibility') }, 'POST', e.currentTarget) }}>
+    <div id="create-board" className={`${settingsPanelClass} border-dashed`}>
+      <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); typed.current = false; const d = new FormData(e.currentTarget); void act('/api/operator/boards', { name: d.get('name'), slug: d.get('slug'), visibility: d.get('visibility') }, 'POST', e.currentTarget) }}>
         <h3 className="text-lg font-bold text-penny-ink">Create board</h3>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <label className={fieldLabelClass}>Name<input name="name" required className={input} /></label>
-          <label className={fieldLabelClass}>URL name<input name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" className={input} /></label>
+          <label className={fieldLabelClass}>Name<input name="name" required className={input} onChange={(e) => { if (!typed.current && slug.current) slug.current.value = urlName(e.target.value) }} /></label>
+          <label className={fieldLabelClass}>URL name<input ref={slug} name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" className={input} onChange={(e) => { typed.current = e.target.value !== '' }} /></label>
         </div>
         <select aria-label="New board visibility" name="visibility" className={fieldClass}><option value="public">Public</option><option value="internal">Internal</option></select>
         <button className={primaryButtonClass}>Create board</button>

@@ -21,10 +21,10 @@ export async function prepareHostedDataReview() {
 function expectedCommands(origin) {
   const connection=`--origin '${origin}' --session-file private/session.json`
   return {
-    restore:`pnpm run data:import -- private/archive.json --journal private/latest-source-journal.json ${connection}`,
-    preview:`pnpm run data:erase-preview -- requests 'ROOT_ID' private/plan.json ${connection}`,
-    erase:`pnpm run data:erase -- private/plan.json --journal-out private/latest-journal.json ${connection}`,
-    status:`pnpm run data:status -- 'OPERATION_ID' ${connection}`,
+    restore:`npm run data:import -- private/archive.json --journal private/latest-source-journal.json ${connection}`,
+    preview:`npm run data:erase-preview -- requests 'ROOT_ID' private/plan.json ${connection}`,
+    erase:`npm run data:erase -- private/plan.json --journal-out private/latest-journal.json ${connection}`,
+    status:`npm run data:status -- 'OPERATION_ID' ${connection}`,
   }
 }
 

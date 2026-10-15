@@ -45,39 +45,56 @@ delivery.
 
 ## Run it on your computer
 
-With `rer` available (the current release is **0.2.12**), clone Penny and run
-the commands below. `rer` bootstraps the checkout's pinned Node **22.20.0** and
-pnpm **10.12.4**, downloading missing tools into its own cache without changing
-global tools. You do not need to install pnpm first. Penny pins an exact
-`@runeditrun/rer` version in `package.json` and its lockfile, and the global
-`rer` runs that project version. The source distribution is:
+You need **Node.js 22 or newer**; the `rer` installer stops with
+`node is required` without it. Check with `node --version`. If it is missing or
+older, install the current LTS from [nodejs.org](https://nodejs.org/en/download)
+(the macOS and Windows installers include `npm`), or use a version manager such
+as `nvm install 22`. Nothing else is needed: `rer` downloads the exact Node
+(22.20.0) and pnpm (10.12.4) this checkout pins into its own cache and never
+changes your global tools, so you do not install pnpm.
+
+Then the two steps from [run-penny.com/run](https://run-penny.com/run). Install
+`rer`, the Run Edit Run command, once per computer:
 
 ```bash
-git clone https://github.com/just-every/run-penny.git
-cd run-penny
+curl -fsSL https://runeditrun.com/install.sh | sh
 ```
+
+(or `npm install -g @runeditrun/rer`). Get Penny and start it:
 
 <!-- penny-local-commands -->
 ```bash
-rer install
-rer setup --owner-email you@example.com
-rer dev
+git clone https://github.com/just-every/run-penny.git
+cd run-penny && rer dev
 ```
 <!-- /penny-local-commands -->
 
-`install` is the frozen dependency install; every install of the checkout,
-including the first one a global `rer` runs, keeps provider credentials and
-application settings away from dependency build scripts (`.pnpmfile.cjs`). `setup` needs an explicit owner on
-the first run, builds, applies every migration, saves private settings (mode
-0600), claims the first owner with an empty workspace and stops its temporary app
-before returning. A repeat `setup` keeps the owner, the domain data, the saved
-origin and the exact private settings. The default address is
-`http://127.0.0.1:8787`; `--port 8788` on the first setup selects another
-loopback port.
+`rer dev` installs the locked dependencies, sets up a local owner
+(`owner@run-penny.test`) with an empty workspace, starts Penny and prints a link
+that opens it signed in. Penny pins `@runeditrun/rer` in `package.json` and its
+lockfile, and the global `rer` always runs that pinned copy. The first start
+takes a few minutes.
 
-`dev` stays in the foreground and opens Penny already signed in: it prints
-`RER_READY`, `RER_SIGNED_IN` with the owner's email, and `RER_OPEN`, a link with
-this checkout's private dev key in its `#` fragment. Open `RER_OPEN` in your
+To be the owner under your own email address instead, run setup once before the
+first `rer dev`:
+
+<!-- penny-owner-commands -->
+```bash
+rer setup --owner-email you@example.com
+rer dev
+```
+<!-- /penny-owner-commands -->
+
+`setup` builds, applies every migration, saves private settings (mode 0600),
+claims the owner and exits; a repeat keeps the owner, the data, the saved origin
+and the private settings. Its `--port` (first run only) picks the address.
+
+`rer dev` serves Penny on the first free port from 8787 and prints `RER_READY`,
+`RER_SIGNED_IN` with the owner's email, and `RER_OPEN`, a link with this
+checkout's private dev key in its `#` fragment. In a terminal it stays in the
+foreground (Ctrl-C stops it); started from a script or an agent it returns once
+Penny is ready and keeps running in the background until `rer dev --stop`. Open
+`RER_OPEN` in your
 browser; it trades the key for a local cookie and lands on `/setup`, the owner's
 first-run setup: review the owner and press **Finish setup** to open the app.
 Until you do, every `/app` page sends the owner back to `/setup`; afterwards
@@ -164,14 +181,17 @@ prove inboxes or hosted Cron delivery.
 Set `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_API_TOKEN`, `OPERATOR_EMAIL` and
 `MAIL_PROVIDER` in your command environment. SendGrid additionally needs
 `MAIL_FROM` and `SENDGRID_API_KEY`; Resend needs `MAIL_FROM` and `RESEND_API_KEY`.
-`WORKSPACE_TIMEZONE` is optional and must be an IANA name; it defaults to UTC.
+`WORKSPACE_TIMEZONE` is optional (see [quiet hours](#mail-quiet-hours-and-suppression)).
 See [operations](OPERATIONS.md) for permissions and private file custody. Then:
 
 ```bash
 rer deploy --dry-run
 rer deploy
-pnpm run deploy:health
+npm run deploy:health
 ```
+
+`npm` comes with Node, so the health check needs no pnpm; add
+`-- --environment NAME` for a deployment made with `rer deploy --environment NAME`.
 
 Deploy builds before the provider credentials reach its deployment command. The
 owner-account kit uses `deploy.json` for D1 `DB`, R2 `FILES`, producer Queue
@@ -184,9 +204,17 @@ resources, drift and uncertain creates are refused. The output names the origin
 and credential-file path, never values. On a production deploy, `rer` automatically
 claims the first owner using the configured `OPERATOR_EMAIL` through the
 same-origin native bootstrap procedure, then removes the one-time `SETUP_TOKEN`
-from the Worker and records its retirement. An existing owner is kept. Use
-`/signin`; the owner's first sign-in ends at `/setup`. See
-[operations](OPERATIONS.md) for deployment recovery.
+from the Worker and records its retirement. An existing owner is kept. You do
+not bootstrap the owner yourself. Sign in at `/signin` with `OPERATOR_EMAIL`; the
+owner's first sign-in ends at `/setup`. Without working mail, `rer signin` (add
+`--environment NAME` if you used one) prints a single-use, 15-minute sign-in link
+for the recorded owner to this terminal, using the same Cloudflare credentials.
+
+To take a deployment down, `rer deploy --remove --yes` (with the same
+`--environment NAME`, if any) deletes the Worker, D1 database, R2 bucket and Queue
+that its deploy record says `rer` created, reads back that each is gone and
+touches nothing else. Export your data first ([Move your product archive](#move-your-product-archive)):
+removal deletes it. See [operations](OPERATIONS.md) for deployment recovery.
 
 Costs are estimates, not a measured Penny bill. Budget at least the account's
 [Workers Paid minimum of USD 5/month](https://developers.cloudflare.com/workers/platform/pricing/)
@@ -214,8 +242,8 @@ file separate from the private archive; never put a cookie in command arguments
 or a URL.
 
 ```bash
-pnpm run data:export -- --origin https://your-penny-origin --session-file ./private-session.json ./private-archive.json
-pnpm run data:import -- --origin http://127.0.0.1:8787 --session-file ./destination-session.json ./private-archive.json --journal ./private-archive.json.erasure-journal.json
+npm run data:export -- --origin https://your-penny-origin --session-file ./private-session.json ./private-archive.json
+npm run data:import -- --origin http://127.0.0.1:8787 --session-file ./destination-session.json ./private-archive.json --journal ./private-archive.json.erasure-journal.json
 ```
 
 Restore targets an empty isolated local installation and needs the latest erasure
@@ -233,7 +261,7 @@ An operator works from the first evidence to a published changelog without leavi
 2. **Decide.** Create a decision with a question and an owner, add candidate bets, link evidence to each, and compare them on the same dimensions. Commit one bet with a rationale, owner, confidence and review date. Committing creates an internal Planned roadmap item and nothing public.
 3. **Publish deliberately.** Approve the item's customer-safe title and summary and each request mapping. Approval alone puts the item on the public roadmap and shows the status on the mapped requests; withdrawing it removes them.
 4. **Move and tell followers.** Move the item between Exploring, Planned, In progress, Shipped and Dropped with a reason. Each move of an approved item prepares a status update, available on Roadmap and Releases; publishing it adds it to every mapped request and queues one email per eligible follower. If approval or mappings change, the old draft is marked stale and can be deliberately discarded. The next roadmap move prepares a new draft from the current approval.
-5. **Release.** Draft a release from Shipped items with a title, type, tags and body, then publish it. It appears on the public updates page and queues one delivery per eligible recipient; ambiguous provider outcomes remain unknown without automatic retry.
+5. **Release.** Draft a release from Shipped items with a title, type, private tags and body, then publish it. Tags stay inside the app: the public updates page and the release email never show them. It appears on the public updates page and queues one delivery per eligible recipient; ambiguous provider outcomes remain unknown without automatic retry.
 
 Approved roadmap transitions prepare private customer-safe status drafts in the
 same transaction. Explicit grouped publication writes every approved request
@@ -251,7 +279,7 @@ checks and the parts of the contract that remain open.
 
 | Client route | Screen | API |
 | --- | --- | --- |
-| `/` | product landing: what Penny does, with links to the docs, the public board, the source and sign-in; an old board link to `/` with `q`, `status`, `board` or `sort` redirects to `/portal/feedback` with the same query | none |
+| `/` | the public feedback board, with the same search, status, board and sort filters as `/portal/feedback` (Penny's product page is [run-penny.com](https://run-penny.com)) | `GET /api/public/boards`, `GET /api/public/requests` |
 | `/portal/feedback` | published feedback and board browse (`/portal` redirects here) | `GET /api/public/boards`, `GET /api/public/requests` |
 | `/portal/feedback/:slug` | published request, approved comments and the approved status | `GET /api/public/requests/:slug` |
 | `/portal/roadmap` and `/:slug` | approved customer-safe roadmap | `GET /api/public/roadmap`, `GET /api/public/roadmap/:slug` |
@@ -295,14 +323,19 @@ dependencies or provider accounts.
 
 ## Mail, quiet hours and suppression
 
-Requester email quiet hours are fixed at **20:00–08:00**, using the IANA
-`workspaceTimezone` in `src/ext/config.server.ts`. The shipped default is
-Australia/Brisbane. Set the optional deployment environment input
-`WORKSPACE_TIMEZONE` to a valid IANA timezone before deployment to select another
-region, and retain it for that workspace; invalid or empty supplied values are
-refused. The hours themselves, the one-hour first-event coalescing window and the
-minute Cron are fixed; conversion uses `Intl.DateTimeFormat`, including
-daylight-saving rules.
+Requester email is held during quiet hours, **20:00–08:00** in the workspace
+time zone, which is **UTC** unless you choose another. To choose one, set
+`WORKSPACE_TIMEZONE` to an IANA name such as `Europe/London` in the environment of
+your first `rer deploy` and keep it for that workspace; invalid or empty values
+are refused. A local copy uses UTC. The hours, the
+one-hour coalescing window for a request's status updates and replies, and the
+minute Cron are fixed; conversion follows daylight-saving rules.
+
+Status updates and approved replies on a request are gathered for one hour from
+the first one, then sent to each follower as one email. When a release note goes
+to a follower whose updates on the same request are still being gathered, Penny
+sends those updates first, in the same minute, so nobody hears "it's live" before
+"we're working on it".
 
 Provider suppression uses `POST /api/public/mail/events`. Configure SendGrid's
 signed Event Webhook for this deployment URL, enable bounce and spam-report

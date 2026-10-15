@@ -39,9 +39,9 @@ need separate proof.
 | `rer deploy [--environment NAME] [--dry-run]` | Owner-account build, reconcile, migrate and health; a dry run builds and validates locally and makes no provider request. |
 | `rer outbox [--owner-email EMAIL]` | The local outbox address; an explicit owner requests a fresh ordinary sign-in message. |
 | `rer doctor`, `describe`, `check`, `release` | Local diagnostics, capability description, structural check and the maintained Base release producer, which needs explicit authorized inputs. |
-| `pnpm run deploy:health` | Owner-account identity, configuration and health against the private saved state; accepts `--environment NAME`. |
+| `npm run deploy:health` | Owner-account identity, configuration and health against the private saved state; accepts `--environment NAME`. |
 | `pnpm run artifact:prepare`, `artifact:deploy`, `artifact:health` | The separate disposable controller: credential-free packaging of built committed source, scoped resources with hash-ledger migrations and upload, and its health. |
-| `pnpm run data:export -- …`, `data:import -- …`, `data:journal -- …` and the erasure and recovery commands in [data ownership](docs/data-ownership.md) | Authenticated archive, journal and erasure operations against a running installation. |
+| `npm run data:export -- …`, `data:import -- …`, `data:journal -- …` and the erasure and recovery commands in [data ownership](docs/data-ownership.md) | Authenticated archive, journal and erasure operations against a running installation. |
 | `pnpm run feedback:import -- …`, `pnpm feedback:status` | Saved feedback history (below) and the documented-format entry check. |
 | `pnpm source:lock`, `source:check`, `verify:base-source` | Capture and check the actual tracked bytes, modes, tool identity and Base comparison snapshots. |
 
@@ -151,7 +151,7 @@ is the owner's responsibility.
 rer deploy --environment production --dry-run
 rer deploy --environment preview --dry-run
 rer deploy --environment staging --dry-run
-pnpm run deploy:health -- --environment staging
+npm run deploy:health -- --environment staging
 ```
 
 Dry runs build and validate the actual declaration and artifact locally, print
@@ -165,11 +165,23 @@ freshly supplied account credentials; no later run rotates authority. Collisions
 changed identity, resource drift and uncertain creates refuse; reconcile provider
 state before deliberately continuing.
 
-After the first deployment, read the setup token privately from the owner file and
-submit it in a same-origin JSON POST to `/auth/bootstrap` with `displayName` and
-`returnTo: "/setup"`. Keep its response cookie private, then use `/signin` and
-confirm the delivered link; the first sign-in ends at the first-run setup. Never
-put the token in argv, URLs, source, logs or receipts. The `later` mode leaves
+The first `rer deploy` claims the owner itself: after a healthy deploy it submits
+the one-time setup token to `/auth/bootstrap`, then removes the token from the
+Worker and prints "Claimed the hosted owner". Then sign in at `/signin` with
+`OPERATOR_EMAIL` and confirm the delivered link; the first sign-in ends at the
+first-run setup. Without working mail, `rer signin --environment NAME` prints a
+single-use sign-in link for the recorded owner, valid for 15 minutes. A manual
+`/auth/bootstrap` POST is recovery only, for a deploy that stopped after the
+Worker went live but before the claim: read the setup token privately from the
+environment's credential file and post it same-origin with `displayName` and
+`returnTo: "/setup"`. Never put the token in argv, URLs, source, logs or receipts.
+
+`rer deploy --environment NAME --remove --yes` takes a deployment down: it deletes
+the Worker, D1 database, R2 bucket and Queue that environment's deploy record says
+`rer` created, reads back that each is gone and touches nothing else. Export the
+data first; removal deletes it.
+
+The `later` mode leaves
 deployed email actions unavailable and public reading available. It does not
 silently substitute development capture. Reconfiguration must preserve the native
 owner and generated secrets; provider and timezone drift is refused until an

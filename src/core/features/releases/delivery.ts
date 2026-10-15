@@ -7,6 +7,7 @@ import { unsubscribeUrl } from '../notifications/unsubscribe'
 import { systemDeliveryAudit } from '../notifications/delivery-audit'
 interface Outbox {id:string;requesterId:string;addressId:string;attemptCount:number;firstAttemptAt:string|null}
 import { releaseContent,admitReleaseDelivery } from './delivery-admission'
+const releaseTypeLabel:Record<string,string>={new:'New',improved:'Improved',fixed:'Fixed'}
 /** Same Cron and Base sender as request notifications; release versions have independent claims. */
 export async function drainReleaseDeliveries(runtime:PennyRuntime,clock=Date.now){
  const db=runtime.database.binding,now=new Date(clock()).toISOString()
@@ -50,7 +51,7 @@ async function deliver(runtime:PennyRuntime,row:Outbox,clock:()=>number){
   const admission=await admitReleaseDelivery(db,row.id,claim,initial[0].email),contexts=admission.contexts,release=contexts[0]
   if(!admission.owned||!release){await finish('suppressed','eligibility_changed');return}
   const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,from:runtime.configuration.mailFrom!,to:[release.email],subject:release.title.replace(/\s+/g,' '),
-   text:`${release.title}\n${release.releaseType} · ${release.publicationDate}\n${release.tags}\n\n${release.body}\n${release.setupUrl??''}\n\nYour requests:\n${contexts.filter(c=>c.requestSlug).map(c=>`${c.requestTitle}: ${runtime.configuration.appOrigin}/portal/feedback/${c.requestSlug}`).join('\n')}\n\nRead update: ${runtime.configuration.appOrigin}/portal/updates/${release.slug}\nUnsubscribe from all requester email: ${globalLink}`,
+   text:`${release.title}\n${releaseTypeLabel[release.releaseType]} · ${release.publicationDate}\n\n${release.body}\n${release.setupUrl?`${release.setupUrl}\n`:''}\nYour requests:\n${contexts.filter(c=>c.requestSlug).map(c=>`${c.requestTitle}: ${runtime.configuration.appOrigin}/portal/feedback/${c.requestSlug}`).join('\n')}\n\nRead update: ${runtime.configuration.appOrigin}/portal/updates/${release.slug}\nUnsubscribe from all requester email: ${globalLink}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){await finish(retryState(row.attemptCount),result.code??result.status,null,result.status);return}

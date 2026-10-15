@@ -111,6 +111,21 @@ it('[REL-003] correction preserves original context and operator history; portal
  expect(await capture.list()).toEqual(captured)
  expect(fetch).not.toHaveBeenCalled()
 })
+it('[EVID-009 REL-001] a private tag on a published release stays out of the public updates pages and the customer email',async()=>{
+ const g=await votedReleaseGraph(),secret='Confidential billing tag'
+ const tag=await json<{id:string}>(await call('/api/operator/catalog/tags',{name:secret},g.operator),201)
+ await json(await call(`/api/operator/releases/${g.draft.slug}`,{...g.input,tagIds:[tag.id]},g.operator,'PATCH'))
+ await json(await call('/api/public/updates/subscription',{subscribed:true},g.person,'PATCH'))
+ const bindings={...env,PENNY_ENVIRONMENT:'local',APP_ORIGIN:'http://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'development',MAIL_FROM:'auth@localhost.test',SENDGRID_API_KEY:undefined,RESEND_API_KEY:undefined}
+ const nextDay=new Date();nextDay.setUTCDate(nextDay.getUTCDate()+1);nextDay.setUTCHours(9,0,0,0)
+ vi.spyOn(Date,'now').mockReturnValue(nextDay.getTime())
+ await json(await publish(g))
+ await runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
+ const mail=(await localOutbox(createPennyRuntime(bindings))!.list())[0].message
+ const page=await (await call(`/portal/updates/${g.draft.slug}`)).text()
+ expect(mail.text).toContain(g.input.body);expect(page).toContain(g.input.body)
+ for(const surface of [mail.text,mail.html??'',page,await (await call('/portal/updates')).text(),await (await call('/api/public/releases')).text(),await (await call(`/api/public/releases/${g.draft.slug}`)).text()])expect(surface).not.toContain(secret)
+})
 it('[REL-012] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows',async()=>{
  const g=await votedReleaseGraph(),subscriber=await requester('Subscriber only'),endpoint='/api/public/updates/subscription'
  expect((await call(endpoint,{subscribed:true},{},'PATCH')).status).toBe(401)

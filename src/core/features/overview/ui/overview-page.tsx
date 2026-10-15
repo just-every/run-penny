@@ -44,13 +44,14 @@ function OverviewContent({ overview }: { readonly overview: WorkspaceOverviewDto
 function AttentionSection({ overview }: { readonly overview: WorkspaceOverviewDto }) {
   const ready = overview.counts.readyDecisions
   const reviewDue = overview.counts.reviewDueDecisions
-  const total = overview.counts.moderation + overview.counts.evidence + ready + reviewDue + overview.counts.updates + overview.counts.shipped
+  const total = overview.counts.moderation + overview.counts.comments + overview.counts.evidence + ready + reviewDue + overview.counts.updates + overview.counts.shipped
 
   return (
     <section aria-labelledby="overview-attention">
       <SectionHeading id="overview-attention" title="Needs you">Take the next action on feedback, decisions and delivery.</SectionHeading>
       <ul className="mt-4 grid min-w-0 list-none gap-4 p-0">
         {overview.counts.moderation > 0 ? <AttentionLink to="/app/moderation" icon="moderation" count={overview.counts.moderation} singular="request awaiting moderation" plural="requests awaiting moderation" /> : null}
+        {overview.counts.comments > 0 ? <AttentionLink to="/app/moderation" icon="moderation" count={overview.counts.comments} singular="comment awaiting review" plural="comments awaiting review" /> : null}
         {overview.counts.evidence > 0 ? <AttentionLink to="/app/feedback" icon="evidence" count={overview.counts.evidence} singular="unreviewed evidence item" plural="unreviewed evidence items" /> : null}
         {ready > 0 ? <AttentionLink to="/app/decisions" icon="decisions" count={ready} singular="ready decision" plural="ready decisions" /> : null}
         {reviewDue > 0 ? <AttentionLink to="/app/decisions" icon="decisions" count={reviewDue} singular="decision due for review" plural="decisions due for review" /> : null}
@@ -60,7 +61,7 @@ function AttentionSection({ overview }: { readonly overview: WorkspaceOverviewDt
       {total === 0 ? (
         <OperatorCard className="mt-4 p-5 sm:p-6">
           <h3 className="text-lg font-bold text-penny-ink">Nothing needs your attention.</h3>
-          <p className="mt-2 text-base">{overview.boardCount === 0 ? <Link to="/app/settings" className={accentLinkClass}>Create a board to collect feedback.</Link> : <Link to="/app/feedback" className={accentLinkClass}>Record evidence to inform your next decision.</Link>}</p>
+          <p className="mt-2 text-base">{overview.boardCount === 0 ? <Link to="/app/settings" hash="create-board" className={accentLinkClass}>Create a board to collect feedback.</Link> : <Link to="/app/feedback" className={accentLinkClass}>Record evidence to inform your next decision.</Link>}</p>
         </OperatorCard>
       ) : null}
     </section>

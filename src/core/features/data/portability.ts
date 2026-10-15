@@ -1,5 +1,5 @@
 import type { Context, Hono } from 'hono'
-import { createPortability, createPortabilityHandler, excludedTable } from '@runeditrun/rer/modules/portability'
+import { createPortabilityHandler, excludedTable } from '@runeditrun/rer/modules/portability'
 import { abortPortabilitySnapshot, abortPortabilityActor, portabilitySnapshotStatus } from '../../../../scripts/portability/cleanup.mjs'
 import type { PennyRuntime } from '../../app/runtime'
 import type { Session } from '../../../../base/modules/operator-auth/index.mjs'
@@ -39,7 +39,7 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
  const job = jobId ? await db.prepare("SELECT actor,phase FROM rer_portability_jobs WHERE id=? AND kind='export'").bind(jobId).first<{actor:string;phase:string}>() : null
  if (jobId && (!job || !job.actor.startsWith(session.operatorId + ':'))) return reply('job_not_found', 404)
  let operationId: string | undefined, actor = job?.actor ?? session.operatorId + ':' + crypto.randomUUID()
- let runner: Awaited<ReturnType<typeof claimPortabilityRunner>> | undefined, streaming = false
+ let runner: Awaited<ReturnType<typeof claimPortabilityRunner>> | undefined
  try {
   if (jobId) {
    const operation = await db.prepare("SELECT id FROM data_operations WHERE kind='export' AND json_extract(payload_json,'$.portabilityActor')=?").bind(actor).first<{ id: string }>()
@@ -62,11 +62,11 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
   }
   const headers = (await schemaHeaders(db)).filter(table => !excludedTable(table.name))
   checkSchemaHeaders(headers)
-  const tables = await schemaPart(db, headers)
-  let count = 0
-  for (const table of tables) {
-   count += (await db.prepare(`SELECT count(*) n FROM "${table.name}"`).first<number>('n'))!
-   if (count > LOCAL_DATA_LIMITS.rows) throw new NativeError('archive_limit', 413)
+  // The data lock holds every row still from creation to abort, so the row limit is checked once, in one round trip.
+  if (creating) {
+   const tables = await schemaPart(db, headers)
+   const counts = await db.batch(tables.map(table => db.prepare(`SELECT count(*) n FROM "${table.name}"`)))
+   if (counts.reduce((sum, result) => sum + (result.results[0] as { n: number }).n, 0) > LOCAL_DATA_LIMITS.rows) throw new NativeError('archive_limit', 413)
   }
   const journal = await readErasureJournal(db), productPolicy = policy(journal)
   // The live lock is installation custody. The archived state is an idle target.
@@ -84,23 +84,16 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
   }
   // Base validates transport integrity; Penny also validates normalized product
   // records, originals, schema, held effects and the matching erasure journal.
-  if (jobId && (action === 'download' || action === 'advance' && (await response.clone().json() as { phase: string }).phase === 'complete')) {
-   const service = await createPortability(options)
-   await verifyExport(guarded, await service.exports.download(jobId), journal)
+  // Every archive leaves through download, so the bytes sent are the bytes verified.
+  if (jobId && action === 'download') {
+   const bytes = new Uint8Array(await response.arrayBuffer())
+   await verifyExport(guarded, new Blob([bytes]).stream(), journal)
+   await assertDataAuthority(guarded, session)
+   const headers = new Headers(response.headers)
+   headers.set('Content-Disposition', 'attachment; filename="penny.rer"')
+   return new Response(bytes, { status: response.status, headers })
   }
   await assertDataAuthority(guarded, session)
-  if (action === 'download' && response.body) {
-   response.headers.set('Content-Disposition', 'attachment; filename="penny.rer"')
-   const reader = response.body.getReader(), release = runner.release
-   streaming = true
-   return new Response(new ReadableStream<Uint8Array>({
-    async pull(controller) {
-     try { const item = await reader.read(); if (item.done) { await release(); controller.close() } else controller.enqueue(item.value) }
-     catch (error) { await release(); controller.error(error) }
-    },
-    async cancel() { try { await reader.cancel() } finally { await release() } },
-   }), { status: response.status, headers: response.headers })
-  }
   return response
  } catch (error) {
   if (creating && runner && operationId) {
@@ -109,6 +102,6 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
   }
   return reply(error instanceof NativeError ? error.code : 'portability_export_refused', error instanceof NativeError ? error.status : 409)
  } finally {
-  if (runner && !streaming) await runner.release()
+  if (runner) await runner.release()
  }
 }

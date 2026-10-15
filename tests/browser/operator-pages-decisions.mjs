@@ -5,8 +5,8 @@ export async function reviewDecisionPages({page,db,goto,capture,width}) {
   for(const state of ['ready','review_due']) {
     await db.prepare('UPDATE decisions SET state=? WHERE id=?').bind(state,'attention-decision').run()
     await goto('/app/decisions/attention-decision')
-    await page.getByRole('link',{name:'record evidence in the Evidence inbox',exact:true}).waitFor()
-    assert.equal(await page.getByRole('link',{name:'record evidence in the Evidence inbox',exact:true}).getAttribute('href'),'/app/feedback')
+    await page.getByRole('link',{name:/in the Evidence inbox$/}).waitFor()
+    assert.equal(await page.getByRole('link',{name:/in the Evidence inbox$/}).getAttribute('href'),'/app/feedback')
     await capture(`${state}-without-evidence`)
   }
   await db.prepare("UPDATE decisions SET state='ready' WHERE id='attention-decision'").run()

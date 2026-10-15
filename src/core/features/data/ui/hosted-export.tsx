@@ -10,15 +10,19 @@ const refusals: Record<string, string> = {
  data_operation_changed: 'This export changed in another tab or device. Reload the page to see its current state.',
  native_owner_session_required: 'Your owner session has ended. Sign in again, then resume or abort the export.',
  unauthenticated: 'Your owner session has ended. Sign in again, then resume or abort the export.',
+ archive_limit: 'This workspace holds more records than one export archive can carry.',
 }
 async function call(url: string, body?: unknown) {
  const response = await fetch(url, { method: body === undefined ? 'GET' : 'POST', redirect: 'error', credentials: 'same-origin', ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) })
- if (!response.ok) throw new DataActionError(((await response.json().catch(() => ({}))) as { error?: string }).error ?? 'export_refused', response.status)
+ if (!response.ok) throw new DataActionError(((await response.json().catch(() => ({}))) as { error?: string }).error ?? `http_${response.status}`, response.status)
  return response
 }
 const request = (path: string, body?: unknown) => call('/api/portability/exports' + path, body)
 const operationAction = (operationId: string, action: string, body: unknown) => call(`/api/operator/data/operations/${operationId}/${action}`, body)
-const failure = (error: unknown) => error instanceof DataActionError && refusals[error.code] || (error instanceof Error && error.message === 'export_cleanup_unconfirmed' ? 'Export cleanup could not be confirmed. Reload this page, then abort the export.' : 'Export could not complete. Check your owner session, then try again.')
+// Name the refusal the server gave; only a refused session is a session problem.
+const failure = (error: unknown) => error instanceof DataActionError && refusals[error.code]
+ || (error instanceof Error && error.message === 'export_cleanup_unconfirmed' ? 'Export cleanup could not be confirmed. Reload this page, then abort the export.'
+ : `The export stopped before it finished${error instanceof DataActionError ? ` (${error.code.replaceAll('_', ' ')})` : ''}. Reload this page: if it shows an export in progress, resume or abort it there; otherwise export again.`)
 export function HostedExport({ disabled, interrupted, onSettled }: { disabled: boolean; interrupted: InterruptedExport | null; onSettled: () => void }) {
  const [busy, setBusy] = useState(false), [message, setMessage] = useState(''), [failed, setFailed] = useState(false)
  const [files, setFiles] = useState<{ archive: string; journal: string } | null>(null)
@@ -60,7 +64,7 @@ export function HostedExport({ disabled, interrupted, onSettled }: { disabled: b
  return <article className={paperCardClass + ' mt-6 p-5 sm:p-7'} aria-busy={busy}>
   {interrupted ? <>
    <h2 className="text-lg font-bold tracking-[-0.01em] text-penny-ink">Export in progress</h2>
-   <p className="mt-3 leading-7 text-penny-ink">Your export stopped before it finished, for example because its browser tab closed. Other data changes wait until it finishes or is aborted. Resume it to download the files, or abort it to remove the partial snapshot and release the workspace.</p>
+   <p className="mt-3 leading-7 text-penny-ink">Your export stopped before it finished, for example because its browser tab closed. Other data changes wait until it finishes or is aborted. {interrupted.jobId ? 'Resume it to download the files, or abort it to remove the partial snapshot and release the workspace.' : 'It stopped before its snapshot started, so it cannot be resumed: abort it to release the workspace, then export again.'}</p>
    <p className="mt-3 text-sm leading-6 text-penny-muted">Use these only when no other tab or device is still preparing this export.</p>
    <div className="mt-4 flex flex-wrap gap-3">
     {interrupted.jobId ? <button className={buttonClass} disabled={busy} onClick={() => void resume()}>{busy ? 'Working…' : 'Resume export'}</button> : null}

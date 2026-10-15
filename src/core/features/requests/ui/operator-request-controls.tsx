@@ -29,7 +29,8 @@ interface Context extends HeldContext { actions: RequestActions; statusVersions:
 
 export function OperatorRequestControls({ slug }: { slug: string }) {
   const [context, refresh] = usePublicResource<Context>(`/api/operator/requests/${slug}/context`), [message, setMessage] = useState(''), router = useRouter()
-  async function act(path: string, body: unknown, method = 'POST') { try { await operatorMutation(path, body, method); setMessage('Saved.'); refresh(); await router.invalidate() } catch (e) { setMessage(e instanceof Error ? e.message : 'Action failed.') } }
+  async function act(path: string, body: unknown, method = 'POST', inline = false) { try { await operatorMutation(path, body, method); setMessage('Saved.'); refresh(); await router.invalidate(); return null } catch (e) { const text = e instanceof Error ? e.message : 'Action failed.'; if (!inline) setMessage(text); return text } }
+  const held = context.kind === 'ready' ? heldItems(context.data) : []
   return (
     <>
       {context.kind === 'ready' ? (
@@ -47,9 +48,10 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
       ) : null}
       {context.kind === 'ready' ? <RequestSupporters voters={context.data.voters} /> : null}
       <details className="group mt-5 border-t border-penny-line pt-1">
-        <summary className={disclosureSummaryClass}>Discussion, status and request controls</summary>
+        <summary className={disclosureSummaryClass}><span>Discussion, status and request controls</span>{held.length ? <span className="ml-2 rounded-full bg-penny-copper/15 px-2 py-0.5 text-xs font-bold text-penny-ink">{held.length} awaiting review</span> : null}</summary>
         <div className="max-w-3xl space-y-5">
           <p className="mt-3 text-sm font-semibold text-penny-ink empty:hidden" role="status">{message}</p>
+          {context.kind === 'ready' ? held.map(({ item, path, label }) => <HeldItemForm key={item.id} item={item} path={path} label={label} act={act} canReview={context.data.actions.moderation} />) : null}
           {context.kind === 'ready' ? <TrackerLinks requestId={context.data.requestId} /> : null}
           {context.kind === 'ready' && context.data.actions.publish ? <StatusUpdateForm key={slug} slug={slug} onSaved={refresh} onMessage={setMessage} onReverse={context.data.actions.reverseDecline ? () => void act(`/api/operator/requests/${slug}/decline/reverse`, {}) : undefined} /> : null}
           {context.kind === 'ready' && !context.data.actions.publish && context.data.actions.reverseDecline ? <button type="button" className={quietButtonClass} onClick={() => void act(`/api/operator/requests/${slug}/decline/reverse`, {})}>Reverse decline</button> : null}
@@ -61,7 +63,6 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
             <RequestMetadata requestId={context.data.requestId} />
             {context.data.uploads.map((u) => <AttachmentRecovery key={u.id} upload={u} onRecovered={refresh} />)}
             {context.data.appeals.map((a) => <AppealReview key={a.id} appeal={a} act={act} canReview={context.data.actions.moderation} />)}
-            {heldItems(context.data).map(({ item, path, label }) => <HeldItemForm key={item.id} item={item} path={path} label={label} act={act} canReview={context.data.actions.moderation} />)}
           </> : context.kind === 'error' ? <p role="alert" className="text-sm font-semibold text-penny-danger">Could not load moderation details.</p> : <p className="text-sm text-penny-muted">Loading details…</p>}
         </div>
       </details>

@@ -11,7 +11,7 @@ import { PAGE_SIZE, type ListQuery } from './list-query'
 import type { WorkspaceOverviewDto } from './overview-dto'
 export async function overviewRead(database:DatabaseConnection, query:ListQuery):Promise<WorkspaceOverviewDto> {
  const decisionPredicate=listPredicate('decisions',query)
- const [decisions,evidence,roadmap,releases,shipped,moderation,boards,decisionStates]=await Promise.all([
+ const [decisions,evidence,roadmap,releases,shipped,moderation,boards,heldComments,decisionStates]=await Promise.all([
  listIds(database,'decisions',query,"x.state IN ('ready','review_due')"),
  listIds(database,'evidence',query,"x.review_state='unreviewed'"),
  listIds(database,'roadmap',query,"x.status IN ('planned','in_progress')"),
@@ -19,6 +19,8 @@ export async function overviewRead(database:DatabaseConnection, query:ListQuery)
  listIds(database,'roadmap',query,"x.status='shipped' AND NOT EXISTS(SELECT 1 FROM release_targets t JOIN releases r ON r.id=t.release_id WHERE t.roadmap_item_id=x.id AND r.state='published' AND r.published_at IS NOT NULL)"),
  listIds(database,'requests',query,`x.moderation_state='awaiting_review' AND ${currentModerationRequest('x')}`),
  database.binding.prepare('SELECT COUNT(*) AS count FROM boards WHERE archived_at IS NULL').first<{count:number}>(),
+ // Requester comments wait in Moderation's request controls; count them here so they are not missed.
+ database.binding.prepare(`SELECT COUNT(*) AS count FROM request_comments c JOIN requests x ON x.id=c.request_id WHERE c.moderation_state='awaiting_review' AND ${currentModerationRequest('x')}`).first<{count:number}>(),
  database.binding.prepare(`SELECT SUM(CASE WHEN x.state='ready' THEN 1 ELSE 0 END) AS ready, SUM(CASE WHEN x.state='review_due' THEN 1 ELSE 0 END) AS reviewDue FROM decisions x${decisionPredicate.sql}`).bind(...decisionPredicate.values).first<{ready:number|null;reviewDue:number|null}>(),
  ])
  const updatePredicate=listPredicate('roadmap',{tag:query.tag,item:query.item}),updateWhere=updatePredicate.sql.replaceAll('x.id','i.id'),updateValues=[...updatePredicate.values]
@@ -31,5 +33,5 @@ export async function overviewRead(database:DatabaseConnection, query:ListQuery)
  database.binding.prepare(`SELECT COUNT(*) AS total ${updateFrom}`).bind(...updateValues).first<{total:number}>(),
  ])
  const order=<T extends {id:string}>(rows:readonly T[],ids:readonly string[])=>ids.flatMap(id=>{const row=rows.find(row=>row.id===id);return row?[row]:[]})
- return {boardCount:Number(boards?.count??0),decisions:order(decisionRows,decisions.ids),unreviewedEvidence:order(evidenceRows,evidence.ids),roadmap:order(roadmapRows,roadmap.ids),recentReleases:order(releaseRows,releases.ids),shippedWithoutRelease:order(shippedRows,shipped.ids),awaitingModeration:order(moderationRows.results,moderation.ids),unpublishedStatusUpdates:updates.results,pagination:{page:query.page??1,pageSize:PAGE_SIZE,total:Math.max(decisions.total,evidence.total,roadmap.total,releases.total,shipped.total,moderation.total,Number(updateCount?.total??0))},counts:{decisions:decisions.total,readyDecisions:Number(decisionStates?.ready??0),reviewDueDecisions:Number(decisionStates?.reviewDue??0),evidence:evidence.total,roadmap:roadmap.total,releases:releases.total,shipped:shipped.total,moderation:moderation.total,updates:Number(updateCount?.total??0)}}
+ return {boardCount:Number(boards?.count??0),decisions:order(decisionRows,decisions.ids),unreviewedEvidence:order(evidenceRows,evidence.ids),roadmap:order(roadmapRows,roadmap.ids),recentReleases:order(releaseRows,releases.ids),shippedWithoutRelease:order(shippedRows,shipped.ids),awaitingModeration:order(moderationRows.results,moderation.ids),unpublishedStatusUpdates:updates.results,pagination:{page:query.page??1,pageSize:PAGE_SIZE,total:Math.max(decisions.total,evidence.total,roadmap.total,releases.total,shipped.total,moderation.total,Number(updateCount?.total??0))},counts:{decisions:decisions.total,readyDecisions:Number(decisionStates?.ready??0),reviewDueDecisions:Number(decisionStates?.reviewDue??0),evidence:evidence.total,roadmap:roadmap.total,releases:releases.total,shipped:shipped.total,moderation:moderation.total,comments:Number(heldComments?.count??0),updates:Number(updateCount?.total??0)}}
 }

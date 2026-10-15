@@ -203,6 +203,8 @@ Existing guarantees remain in force during any future expansion: `OPS-001` keeps
 
 **Release scheduling clarification (REL-006, NOTIFY-002):** each published release version creates its own durable recipient commands, outside the request status/comment one-hour coalescing window. Release commands are due immediately during 08:00 inclusive to 20:00 exclusive in the workspace timezone; quiet-hour commands become eligible at the next 08:00. The minute Cron drains eligible commands within 60 seconds of permitted time, subject to actual platform scheduling. Quiet deferral consumes no retry attempt. Known pre-acceptance rejections use an initial attempt plus at most five retries at 1, 2, 4, 8 and 16 minutes, bounded by one hour from the first attempted send. Accepted or ambiguous SendGrid outcomes never automatically resend. Correlation keys do not provide SendGrid duplicate suppression.
 
+**Release ordering clarification (NOTIFY-002, REL-006):** a queued release command for an address closes that address's still-open coalescing window for a request in the release's recipient context at the next drain, which sends the gathered update before the release command in the same Cron run. The window only ever ends earlier, never later, and the update's content is unchanged.
+
 ## Optional installation ownership and visual editing
 
 - **OWN-001 — Signed first owner.** A trusted configured issuer, public signing

@@ -68,7 +68,7 @@ export function OperatorAppShell() {
     <BrandRoot className="penny-workspace relative">
       <a href="#operator-content" className="sr-only z-50 rounded-full bg-penny-ink px-4 py-3 text-sm font-semibold text-penny-paper focus:not-sr-only focus:absolute focus:left-4 focus:top-4">Skip to content</a>
       <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-60 ${sidebarSurface} lg:block`} />
-      <aside className={`fixed left-0 top-0 z-20 hidden h-svh w-60 flex-col overflow-y-auto overscroll-y-contain ${sidebarSurface} px-3 py-5 lg:flex`}>
+      <aside className={`fixed left-0 top-0 z-20 hidden h-svh w-60 flex-col [body:has(>#rer-dev-badge)_&]:top-11 [body:has(>#rer-dev-badge)_&]:h-[calc(100svh-2.75rem)] overflow-y-auto overscroll-y-contain ${sidebarSurface} px-3 py-5 lg:flex`}>
         <div className="px-2"><Brand /></div>
         <p className="mt-10 px-3 text-[11px] font-semibold tracking-[0.12em] text-penny-muted uppercase">Operator workspace</p>
         <div className="mt-3"><NavigationLinks /></div>

@@ -33,8 +33,8 @@ If you are over a limit, the export stops with an error and never hands you a tr
 The Data screen in the operator app, at `/app/data`, has a **Download backup** button that saves the archive and its journal as one private file. The same thing is available from your terminal. Use the script form of the command: bare `pnpm import` is pnpm's own lockfile command and does not restore Penny data.
 
 ```bash
-pnpm run data:export -- private/archive.json --origin https://your-address --session-file private/session.json
-pnpm run data:journal -- private/latest-journal.json --origin https://your-address --session-file private/session.json
+npm run data:export -- private/archive.json --origin https://your-address --session-file private/session.json
+npm run data:journal -- private/latest-journal.json --origin https://your-address --session-file private/session.json
 ```
 
 - `--origin` is your deployment's exact HTTPS origin. Local HTTP is accepted only for `localhost`, `127.0.0.1` or `::1`. Paths, query strings, credentials in the URL and redirects to another host are refused.
@@ -55,7 +55,7 @@ Restoring never overwrites anything. It needs a separate, empty copy of Penny: a
 For an authenticated running installation, the command is:
 
 ```bash
-pnpm run data:import -- private/archive.json --journal private/latest-source-journal.json --origin https://your-empty-destination --session-file private/destination-session.json
+npm run data:import -- private/archive.json --journal private/latest-source-journal.json --origin https://your-empty-destination --session-file private/destination-session.json
 ```
 
 The journal is required, and it must be the latest one for that archive. Penny writes the files first, then applies the data in one step. If a step fails, it cleans up only what it created and keeps the maintenance lock until you resolve it. Writes elsewhere in the app are paused while an export or restore runs.
@@ -65,12 +65,12 @@ To prepare an empty local copy, run `rer setup --owner-email EMAIL`; it applies 
 If a restore is interrupted:
 
 ```bash
-pnpm run data:status -- <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
-pnpm run data:import -- private/archive.json --journal private/latest-source-journal.json --resume <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
-pnpm run data:abort-restore -- <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
+npm run data:status -- <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
+npm run data:import -- private/archive.json --journal private/latest-source-journal.json --resume <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
+npm run data:abort-restore -- <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
 ```
 
-An old runner that genuinely stopped can be released with `pnpm run data:recover-runner`, but only after you have stopped it and its writers yourself. Never use it against a live runner.
+An old runner that genuinely stopped can be released with `npm run data:recover-runner`, but only after you have stopped it and its writers yourself. Never use it against a live runner.
 
 Do not use raw database imports. They skip the journal and the other safeguards.
 
@@ -79,11 +79,11 @@ Do not use raw database imports. They skip the journal and the other safeguards.
 You can erase a requester, a request, an evidence item or an account. Erasing an operator is not supported, and an erasure that would touch an operator stops.
 
 ```bash
-pnpm run data:erase-preview -- requesters <id> private/plan.json --origin http://localhost:15300 --session-file private/session.json
-pnpm run data:erase -- private/plan.json --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
+npm run data:erase-preview -- requesters <id> private/plan.json --origin http://localhost:15300 --session-file private/session.json
+npm run data:erase -- private/plan.json --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
 ```
 
-Preview shows how many rows and files would go, and any copies Penny cannot attribute. Erase checks the preview again, removes dependent histories and personal records, anonymises surviving audit references, deletes original files and records journal tombstones. It reports complete only after the files are gone. Save the updated journal. If it is interrupted, `pnpm run data:resume-erasure` carries on. The local Data screen has this flow. In hosted mode, a native owner can use **Export workspace** and download the Base archive and its matching erasure journal. Keep both files together for `rer import` into an empty local installation. If the export tab closes mid-way, the Data page shows **Export in progress** with **Resume export** and **Abort export** for the owner who started it. The screen also shows operation state and exact CLI commands; restore and erasure have no destructive screen button.
+Preview shows how many rows and files would go, and any copies Penny cannot attribute. Erase checks the preview again, removes dependent histories and personal records, anonymises surviving audit references, deletes original files and records journal tombstones. It reports complete only after the files are gone. Save the updated journal. If it is interrupted, `npm run data:resume-erasure` carries on. The local Data screen has this flow. In hosted mode, a native owner can use **Export workspace** and download the Base archive and its matching erasure journal. Keep both files together for `rer import` into an empty local installation. If the export tab closes mid-way, the Data page shows **Export in progress** with **Resume export** and **Abort export** for the owner who started it. The screen also shows operation state and exact CLI commands; restore and erasure have no destructive screen button.
 
 Penny will not guess. If wording that matches the person appears in records that are not theirs, erasure stops until you resolve it, rather than deleting unrelated business data. It checks exact copies, including names, filenames and source labels, not paraphrases. Wording you explicitly approved for the public, such as a published request title, can remain in a published release or status update.
 

@@ -86,7 +86,7 @@ When items have shipped, open **Releases** and create a release draft:
 - a customer-safe **title** and **body**;
 - a **type**: New, Improved or Fixed;
 - a publication date, an author and an optional setup or usage link;
-- at least one **subject tag**, created beforehand in **Feedback settings**;
+- at least one **private tag**, created beforehand in **Feedback settings** (tags are for your own filtering; customers never see them);
 - one or more **targets**, which are roadmap items that you have approved.
 
 A release can be published only when it has a title, a body and a target, and every target is Shipped. Publishing puts it on `/portal/updates` and queues one email for each eligible recipient. The release page shows delivery counts as they are processed.

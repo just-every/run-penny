@@ -26,8 +26,8 @@ Use the script form of pnpm commands. Bare `pnpm import` is pnpm's lockfile
 conversion command and does not restore Penny data.
 
 ```
-pnpm run data:export -- private/archive.json --origin https://penny.example --session-file private/session.json
-pnpm run data:journal -- private/latest-journal.json --origin https://penny.example --session-file private/session.json
+npm run data:export -- private/archive.json --origin https://penny.example --session-file private/session.json
+npm run data:journal -- private/latest-journal.json --origin https://penny.example --session-file private/session.json
 ```
 
 Replace the example origin with the installation's exact HTTPS origin. Local
@@ -84,11 +84,11 @@ The local `import` dispatcher and authenticated `data:import` remain distinct
 archive formats.
 
 ```
-pnpm run data:import -- private/archive.json --journal private/latest-source-journal.json --origin http://localhost:15300 --session-file private/destination-session.json
+npm run data:import -- private/archive.json --journal private/latest-source-journal.json --origin http://localhost:15300 --session-file private/destination-session.json
 # Interrupted cleanup / restore:
-pnpm run data:status -- <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
-pnpm run data:import -- private/archive.json --journal private/latest-source-journal.json --resume <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
-pnpm run data:abort-restore -- <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
+npm run data:status -- <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
+npm run data:import -- private/archive.json --journal private/latest-source-journal.json --resume <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
+npm run data:abort-restore -- <operation-id> --origin http://localhost:15300 --session-file private/destination-session.json
 ```
 
 A mandatory separately supplied *latest* source journal must match the archive.
@@ -176,9 +176,9 @@ before erasing. Universal per-entity erasure and timed production cleanup are
 unverified and BASE-DATA-003 remains open.
 
 ```
-pnpm run data:erase-preview -- <table> <id> private/plan.json --origin http://localhost:15300 --session-file private/session.json
-pnpm run data:erase -- private/plan.json --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
-pnpm run data:resume-erasure -- <operation-id> --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
+npm run data:erase-preview -- <table> <id> private/plan.json --origin http://localhost:15300 --session-file private/session.json
+npm run data:erase -- private/plan.json --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
+npm run data:resume-erasure -- <operation-id> --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
 ```
 
 A large preview may return HTTP 202 with an encrypted `continuation`. The app and
@@ -198,11 +198,11 @@ use recovery against a live runner. The server requires explicit confirmation
 but cannot independently prove that a process has stopped:
 
 ```
-pnpm run data:recover-runner -- <id> --expected-status running --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
+npm run data:recover-runner -- <id> --expected-status running --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
 # Then resume the same restore. For interrupted file cleanup use running_r2;
 # for interrupted retained-import erasure cleanup use running_import.
-pnpm run data:abort-export -- <id> --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
-pnpm run data:abort-pending-erasure -- <id> --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
+npm run data:abort-export -- <id> --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
+npm run data:abort-pending-erasure -- <id> --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
 ```
 
 Only unapplied pending erasure can be aborted. Once native D1 erasure committed,
@@ -388,7 +388,7 @@ is a hosted capacity claim. Saved import pages and exact source chunks travel
 with the job, receipt metadata and opaque fences.
 
 The previous authenticated archive format remains available as `pnpm run
-data:export -- FILE --origin ORIGIN --session-file FILE` and `pnpm run data:import
+data:export -- FILE --origin ORIGIN --session-file FILE` and `npm run data:import
 -- FILE --journal FILE --origin ORIGIN --session-file FILE`. These are distinct
 formats. Existing journal and erasure commands are unchanged. Migration 0025
 adds Base portability bookkeeping only; applied migrations remain byte-identical.

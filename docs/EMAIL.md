@@ -55,9 +55,11 @@ Customers choose to hear from you. A requester becomes eligible for email by fol
 
 **Request updates are batched.** When something email-worthy happens on a request, Penny starts a one-hour window for that requester and request. Everything that happens inside the window goes out as one message, and later events never extend the window.
 
-**Quiet hours apply.** Requester email is held from 20:00 until 08:00 in your workspace timezone. The default is Australia/Brisbane. To choose another, set `WORKSPACE_TIMEZONE` to an IANA timezone name before you deploy, and keep it for that workspace. Locally, change `workspaceTimezone` in `src/ext/config.server.ts`. The hours themselves are fixed, and daylight-saving changes are handled.
+**Quiet hours apply.** Requester email is held from 20:00 until 08:00 in your workspace timezone, which is UTC unless you set `WORKSPACE_TIMEZONE` to an IANA timezone name (such as `Europe/London`) in the environment of your first `rer deploy`, and keep it for that workspace. A local copy uses UTC. The hours themselves are fixed, and daylight-saving changes are handled.
 
-**Release emails** have their own schedule. They are not batched. They go out straight away between 08:00 and 20:00, and ones published in quiet hours wait until 08:00.
+**Release emails** have their own schedule. They are not batched. They go out straight away between 08:00 and 20:00, and ones published in quiet hours wait until 08:00. If a follower's request updates are still being batched when a release email goes to them, the batch is sent first, in the same minute, so the release never arrives before the news that led to it.
+
+Every link in these emails is a full address on your deployment, so it opens from any mail client. Private tags never appear in them.
 
 **Penny checks again before every send.** Just before a message goes out, it confirms that the request is still public, the requester still has permission, they have not muted it and their address is not suppressed. Anything that no longer qualifies is dropped. Held comments, internal notes, internal boards and unpublished requests notify nobody. A roadmap move you have not published as a status update notifies nobody either.
 

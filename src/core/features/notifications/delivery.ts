@@ -5,7 +5,7 @@ import { quietHours } from './eligibility'
 import { admitDelivery } from './delivery-admission'
 import { prepareBatches } from './batches'
 import { unsubscribeUrl } from './unsubscribe'
-import { notificationContent } from './content'
+import { notificationContent, type NotificationEvent } from './content'
 import { retryState, retryAt as nextRetryAt, safeValidationCode } from './attempt-policy'
 import { settleRestoredBatch } from './restored-batches'
 import { systemDeliveryAudit } from './delivery-audit'
@@ -24,6 +24,12 @@ export async function drainNotifications(runtime:PennyRuntime, clock=Date.now):P
  ])
  await prepareBatches(db,now)
  if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone))return
+ // A queued release note to the same address about the same request closes its open
+ // window now, so this drain sends the status digest before the release drain that follows.
+ await db.prepare(`UPDATE notification_batches SET window_end=?,next_attempt_at=?,updated_at=?
+  WHERE state='queued' AND attempt_count=0 AND claim_id IS NULL AND failure_reason IS NULL AND next_attempt_at>?
+  AND EXISTS(SELECT 1 FROM notification_outbox n JOIN release_recipient_contexts c ON c.snapshot_id=n.release_snapshot_id
+   WHERE n.delivery_state='queued' AND n.address_id=notification_batches.address_id AND c.request_id=notification_batches.request_id)`).bind(now,now,now,now).run()
  const rows=await db.prepare(`SELECT id,requester_id AS requesterId,address_id AS addressId,request_id AS requestId,attempt_count AS attemptCount,failure_reason AS failureReason,
  (SELECT MIN(created_at) FROM notification_attempts a WHERE a.batch_id=notification_batches.id
   AND NOT (a.state='suppressed' AND a.failure_reason IS 'quiet_hours')) AS firstAttemptAt
@@ -71,11 +77,11 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   // HTTP starts only for a successful admission; there is no later storage await.
   const admission=await admitDelivery(db,batch.id,claim,recipient.email),admitted=admission.recipient
   if(!admitted||admitted.requestId!==recipient.requestId){await finish('suppressed','eligibility_changed');return}
-  const events=JSON.parse(admitted.events) as {kind:string;body:string}[]
+  const events=JSON.parse(admitted.events) as NotificationEvent[],origin=runtime.configuration.appOrigin
   if(!events.length){await finish('suppressed','no_public_events');return}
   if(!admission.owned){await finish('suppressed','eligibility_changed');return}
   const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:batch.id,from:runtime.configuration.mailFrom!,to:[recipient.email],subject:`Updates: ${admitted.title.replace(/\s+/g,' ')}`,
-   text:`${admitted.title}\n\n${events.map(e=>`${e.kind==='status'?'Status update':'Public reply'}\n${e.body}`).join('\n\n')}\n\nView feedback: ${runtime.configuration.appOrigin}/portal/feedback/${admitted.slug}\n\nMute this request: ${requestLink}\nUnsubscribe from all requester email: ${globalLink}`,
+   text:`${admitted.title}\n\n${events.map(e=>`${e.kind==='status'?'Status update':'Public reply'}\n${e.body}${e.requests?.length?`\n\nYour requests:\n${e.requests.map(r=>`${r.title}: ${origin}/portal/feedback/${r.slug}`).join('\n')}`:''}`).join('\n\n')}\n\nView feedback: ${origin}/portal/feedback/${admitted.slug}\n\nMute this request: ${requestLink}\nUnsubscribe from all requester email: ${globalLink}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){

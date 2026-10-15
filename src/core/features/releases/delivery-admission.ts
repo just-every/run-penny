@@ -1,8 +1,7 @@
 import { activeSubscription } from './subscription'
 import { eligibleRecipient } from '../notifications/eligibility'
-export interface ReleaseMailContext {email:string;requestTitle:string|null;requestSlug:string|null;title:string;releaseType:string;body:string;publicationDate:string;setupUrl:string|null;slug:string;tags:string}
-export const releaseContentSql=`SELECT DISTINCT a.email,CASE WHEN ${eligibleRecipient} THEN c.title END AS requestTitle,CASE WHEN ${eligibleRecipient} THEN c.slug END AS requestSlug,v.title,v.release_type AS releaseType,v.body,v.publication_date AS publicationDate,v.setup_url AS setupUrl,release.slug,
- (SELECT group_concat(value,', ') FROM json_each(v.tag_names_json)) AS tags
+export interface ReleaseMailContext {email:string;requestTitle:string|null;requestSlug:string|null;title:string;releaseType:string;body:string;publicationDate:string;setupUrl:string|null;slug:string}
+export const releaseContentSql=`SELECT DISTINCT a.email,CASE WHEN ${eligibleRecipient} THEN c.title END AS requestTitle,CASE WHEN ${eligibleRecipient} THEN c.slug END AS requestSlug,v.title,v.release_type AS releaseType,v.body,v.publication_date AS publicationDate,v.setup_url AS setupUrl,release.slug
  FROM notification_outbox n JOIN release_recipient_snapshots s ON s.id=n.release_snapshot_id
  LEFT JOIN release_recipient_contexts c ON c.snapshot_id=s.id JOIN release_versions v ON v.id=n.subject_id AND COALESCE(v.original_publication_version_id,v.id)=s.release_version_id
  JOIN releases release ON release.id=v.release_id JOIN requester_addresses a ON a.id=n.address_id

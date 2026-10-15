@@ -34,7 +34,7 @@ You do not need code for these. They live in the operator app, under **Feedback 
 - **Portal embedding:** save exact allowed parent origins.
 - **Private custom fields:** create and edit definitions for accounts, requesters, evidence, requests, decisions, roadmap items and releases; edit typed values on their operator views.
 - **Boards:** create, rename, reorder, archive, and set each one public or internal.
-- **Tags:** create, rename, merge and delete private tags. You need at least one subject tag before you can save a release.
+- **Tags:** create, rename, merge and delete private tags. A release needs at least one of these tags; like every tag, it stays inside the app and never appears on the public updates page or in emails.
 - **Custom fields:** add private fields to requests, of type text, number, boolean or date. They are never shown to the public.
 
 ## Things you change in code

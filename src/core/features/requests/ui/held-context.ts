@@ -1,4 +1,4 @@
-export interface ModeratedItem { id: string; body?: string; title?: string; description?: string; moderation_state?: string; public_state?: string; original_filename?: string }
+export interface ModeratedItem { id: string; body?: string; title?: string; description?: string; moderation_state?: string; public_state?: string; original_filename?: string; public_author_display_name?: string | null; requester_display_name?: string | null }
 export interface Appeal { id: string; body: string; state: string; resolution_reason?: string; resolution?: string }
 export interface HeldContext { comments: ModeratedItem[]; edits: ModeratedItem[]; commentEdits: ModeratedItem[]; attachments: ModeratedItem[]; appeals: Appeal[] }
 

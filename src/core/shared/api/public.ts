@@ -49,7 +49,6 @@ export interface PublicRoadmapItem {
 
 export interface PublicRelease {
   readonly authorName: string
-  readonly tagNames: readonly string[]
   readonly slug: string
   readonly title: string
   readonly releaseType: 'new' | 'improved' | 'fixed'

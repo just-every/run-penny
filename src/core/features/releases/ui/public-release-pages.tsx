@@ -64,7 +64,7 @@ function ReleaseDetail({ release }: { readonly release: PublicRelease }) {
     <PublicCard className="p-5 sm:p-7">
       <div className="flex flex-wrap items-center gap-3"><ReleaseType type={release.releaseType} /><time className="text-sm font-medium text-penny-muted" dateTime={release.publicationDate}>{formatPublicDate(release.publicationDate)}</time></div>
       <h2 className="mt-4 text-2xl font-extrabold tracking-[-0.02em] text-penny-ink">{release.title}</h2>
-      <p className="mt-3 text-sm text-penny-muted">{release.authorName} · {release.tagNames.join(', ')} · Current version {release.versionNumber}</p>
+      <p className="mt-3 text-sm text-penny-muted">{release.authorName}{release.versionNumber > 1 ? ` · Corrected (version ${release.versionNumber})` : null}</p>
       <p className="mt-5 whitespace-pre-wrap text-base leading-7 text-penny-ink">{release.body}</p>
       {release.setupUrl ? <a href={release.setupUrl} className={`${secondaryButtonClass} mt-7`}>Learn more <PortalIcon name="external" /></a> : null}
       <ReleaseOutcomeForm slug={release.slug}/>

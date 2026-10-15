@@ -33,7 +33,7 @@ function DecisionContent({ decision, onSaved }: { readonly decision: OperatorDec
   return (
     <>
       <OperatorDetailBack to="/app/decisions">All decisions</OperatorDetailBack>
-      <OperatorPageHeader eyebrow="Decision brief" title={decision.title} art={{ note: 'Good decisions compound.' }}><span>{decision.question}</span></OperatorPageHeader>
+      <OperatorPageHeader eyebrow="Decision brief" title={decision.title} art={{ note: 'Good decisions compound.' }}>{decision.question.trim() !== decision.title.trim() ? <span>{decision.question}</span> : null}</OperatorPageHeader>
       <div className="mt-6 space-y-10 sm:mt-8">
         <section className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)]">
           <OperatorCard className="p-5 sm:p-6">
@@ -61,7 +61,7 @@ function DecisionContent({ decision, onSaved }: { readonly decision: OperatorDec
           </div>
         </section>
         {decision.bets.length === 0 && editable ? <p className={nextStepClass}>Next: add a candidate bet using Add candidate bet below.</p> : null}
-        {decision.evidenceCount === 0 ? <p className={nextStepClass}>Next: <Link to="/app/feedback" className={textLinkClass}>record evidence in the Evidence inbox</Link>{decision.bets.length > 0 ? ', then link it using Manage this bet.' : '. Add a candidate bet in a draft brief to compare it.'}</p> : null}
+        {decision.evidenceCount === 0 ? <p className={nextStepClass}>{decision.bets.length > 0 ? <>Next: link evidence to each bet using Manage this bet. To capture more, <Link to="/app/feedback" className={textLinkClass}>record it in the Evidence inbox</Link>.</> : <>Next: <Link to="/app/feedback" className={textLinkClass}>record evidence in the Evidence inbox</Link>. Add a candidate bet in a draft brief to compare it.</>}</p> : null}
         <DecisionActions decision={decision} onSaved={onSaved} /><DecisionReview decision={decision} onSaved={onSaved}/>{!editable?<DecisionPostRelease id={decision.id}/>:null}
         <CustomFieldsEditor entityType="decision" entityId={decision.id} />
         <TrackerActions card decisionId={decision.id} reload={onSaved} />
