@@ -6,7 +6,7 @@ export async function priorClauseGraph(db,bucket,operatorId) {
  const insert=async(table,row)=>{const keys=Object.keys(row);await db.prepare(`INSERT INTO ${table}(${keys.join(',')}) VALUES(${keys.map(()=>'?').join(',')})`).bind(...Object.values(row)).run()}
  await insert('requesters',stamped({id:'prior-person',display_name:'Historical requester'}))
  await insert('requester_addresses',stamped({id:'prior-address',requester_id:'prior-person',email:'prior-person@example.test',verified_at:priorStamp}))
- await insert('native_requester_sessions',stamped({id:'prior-requester-session',requester_id:'prior-person',address_id:'prior-address',token_hash:'prior-requester-token-hash',expires_at:'2099-01-01T00:00:00.000Z',last_used_at:priorStamp}))
+ await insert('native_requester_sessions',stamped({id:'prior-requester-session',requester_id:'prior-person',address_id:'prior-address',token_hash:'synthetic-prior-requester-token-hash',expires_at:'2099-01-01T00:00:00.000Z',last_used_at:priorStamp}))
  await insert('accounts',stamped({id:'prior-account',slug:'prior-account',name:'Historical account',internal_owner_id:operatorId,revenue_cents:123456,renewal_date:'2027-02-01',health:'healthy'}))
  await insert('requester_account_links',{requester_id:'prior-person',account_id:'prior-account',created_at:priorStamp})
  await insert('boards',stamped({id:'prior-board',name:'Historical board',slug:'prior-board',visibility:'public',position:0}))

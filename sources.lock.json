@@ -2534,7 +2534,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "6eafe767ab6edf61c467128714e72d0a60d536a5a1b589b74572b3e1974b8d25",
+      "sha256": "b49e61b51bae91094cb715c322a38f48443913a425c2c8c87b5387e7307aab2c",
       "executable": false
     },
     "CLAUDE.md": {
@@ -6402,7 +6402,7 @@
       "executable": false
     },
     "tests/data/prior-clause-graph.mjs": {
-      "sha256": "33f3c5467c2c0a8ce742b2cf088b2a0c781d5462c8678b5f516215ca90d884f1",
+      "sha256": "da162d7292384a86ef49f20de25c0e34606e48a626edececcb7b4d22dc1bb65f",
       "executable": false
     },
     "tests/data/redirect-boundaries.test.mjs": {
