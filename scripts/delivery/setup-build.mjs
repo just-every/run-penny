@@ -17,4 +17,3 @@ run('npm', ['install', '--prefix', join(root, '.rer-tools'), '--no-save', '--pac
   '--no-audit', '--no-fund', 'node@22.20.0', 'pnpm@10.12.4'])
 env.PATH = join(root, '.rer-tools/node_modules/.bin') + ':' + env.PATH
 run('pnpm', ['install', '--frozen-lockfile'])
-run('pnpm', ['exec', 'playwright', 'install', '--with-deps', 'chromium'])

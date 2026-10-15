@@ -12,7 +12,7 @@
     "operations": {
       "setup": "node scripts/delivery/setup-build.mjs",
       "build": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && pnpm exec rer build",
-      "verify": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && pnpm exec rer verify",
+      "verify": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && pnpm exec rer check --profile first-party && pnpm run source:check && pnpm run verify:base-source && pnpm run deployment-spec:check",
       "artifact": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && node scripts/build-delivery-artifact.mjs",
       "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API/provider/signing keys are excluded from portable archives; reconfigure them explicitly. Imported/restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled."
     },
