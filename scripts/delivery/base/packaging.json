@@ -110,20 +110,6 @@
               ]
             }
           ]
-        },
-        "page": {
-          "path": "/",
-          "readiness": [
-            {
-              "path": "/",
-              "statuses": [
-                200
-              ],
-              "pendingSetupStatuses": [
-                503
-              ]
-            }
-          ]
         }
       }
     }

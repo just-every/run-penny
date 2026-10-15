@@ -2445,7 +2445,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "886459adb267ec220416b10f6dec2ff4eb6615f30139ee4890b5606e2caa38be",
+      "sha256": "ecd1e6bea1b447b385ac12c561f10f6442fa99c5ececafe2866b07f96fff4b36",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2665,7 +2665,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "ab9f316710d0a930d778a0607eca144f635b4c5b9e0de35e8b5185686138fe17",
+      "sha256": "35fd666122b374db0d3ff55367679c7ea315ca5ee374167868dce3aa9b53e593",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -3065,7 +3065,7 @@
       "executable": false
     },
     "scripts/delivery/base/packaging.json": {
-      "sha256": "b54a21ba772c28ea5424bca5ac6025e222c91a5dcca0d794451e34cddaa56223",
+      "sha256": "1a7a8fcf2a61202aeb50a036e66b2761598776b28216d8f01372454be4397172",
       "executable": false
     },
     "scripts/delivery/base/paths.mjs": {
