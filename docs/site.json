@@ -22,6 +22,7 @@
     { "source": "AGENTS.md", "reason": "Contributor and coding-agent rules for building Penny as a seed" },
     { "source": "BASELINE.md", "reason": "Shared security, privacy and operations requirement clauses, for maintainers" },
     { "source": "CHANGELOG.md", "reason": "Release history for maintainers, naming internal requirement records and migrations" },
+    { "source": "DEMO.md", "reason": "How rer demo and the hosted demo run Penny without sending anything, for maintainers" },
     { "source": "CLAUDE.md", "reason": "A one-line pointer to AGENTS.md for coding agents" },
     { "source": "CONTRACT.md", "reason": "Product requirement clauses, for maintainers and reviewers" },
     { "source": "DIVERGENCE.md", "reason": "Historical record of friction with shared seed documents, for maintainers" },
