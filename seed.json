@@ -144,7 +144,7 @@
     {
       "id": "transactional-email",
       "required": true,
-      "why": "Selected Base SendGrid or Resend transport sends operator links, requester verification and customer-safe requester notifications. Provider acceptance is not inbox proof; neither provider supplies an enforced idempotent-send guarantee. Ambiguous sends are held for operator reconciliation; REL-006 remains an open wider guarantee.",
+      "why": "Selected Base SendGrid or Resend transport sends operator links, requester verification and customer-safe requester notifications. Provider acceptance is not inbox proof. Resend receives each delivery key as its Idempotency-Key and suppresses a duplicate within 24 hours; SendGrid's delivery key is correlation only, so REL-007 provider suppression is unsatisfied for SendGrid. Ambiguous sends are held for operator reconciliation and never replayed.",
       "data": [
         "recipient email address",
         "single-use sign-in or verification link, or customer-safe notification content",
@@ -215,6 +215,34 @@
       "adapters": [
         "penny.jira.v1"
       ]
+    },
+    {
+      "id": "orbit-learning-source",
+      "required": false,
+      "requiredWhen": "PENNY_LEARNING declares an orbit section",
+      "why": "Scoped cancellation learning reads only the exact evidence targets an operator selected, from the pinned Orbit installation's rer-delegation/1 crm.evidence.read grant, through the installation-owned enforcing RPC service binding PENNY_LEARNING_EGRESS. The evidence lives in that other installation; there is no discovery, CRM enumeration or provider write, and an absent binding or section refuses work.",
+      "data": [
+        "exact selected evidence target identifier",
+        "delegated bearer token for the pinned installation"
+      ],
+      "adapters": [
+        "penny.learning-egress.v1"
+      ]
+    },
+    {
+      "id": "learning-model",
+      "required": false,
+      "requiredWhen": "PENNY_LEARNING declares a model section",
+      "why": "The configured OpenAI Chat Completions model prepares the cited evidence comparison, clarification and internal brief that no owned primitive can produce, through the same enforcing RPC service binding. Each call reserves its budget first and is never retried; an absent binding or section refuses work.",
+      "data": [
+        "selected native or Orbit evidence wording, its citable ranges and observed time",
+        "opaque native requester and account identifiers linked to that evidence",
+        "investigation question, purpose, operator corrections and remaining budget",
+        "configured model name, API key and output bound"
+      ],
+      "adapters": [
+        "penny.learning-egress.v1"
+      ]
     }
   ],
   "env": [
@@ -283,6 +311,12 @@
       "required": false,
       "secret": true,
       "why": "Required to accept Resend signed Event Webhook callbacks; Svix whsec signing secret."
+    },
+    {
+      "name": "PENNY_LEARNING",
+      "required": false,
+      "secret": true,
+      "why": "Optional JSON for scoped cancellation learning: an orbit section (HTTPS origin, delegated token, pinned installation, audience principals, read cost) and a model section (model, API key, token prices, output bound). It is used only with the PENNY_LEARNING_EGRESS enforcing RPC service binding; without both, Learning reports unconfigured and refuses work."
     }
   ],
   "deploy": {

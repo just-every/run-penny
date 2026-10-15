@@ -4,6 +4,7 @@ import { createUlid } from '@/core/shared/ulid'
 import { quietHours } from '../notifications/eligibility'
 import { retryAt,retryState,safeValidationCode,retryWindowMs } from '../notifications/attempt-policy'
 import { unsubscribeUrl } from '../notifications/unsubscribe'
+import { systemDeliveryAudit } from '../notifications/delivery-audit'
 interface Outbox {id:string;requesterId:string;addressId:string;attemptCount:number;firstAttemptAt:string|null}
 import { releaseContent,admitReleaseDelivery } from './delivery-admission'
 /** Same Cron and Base sender as request notifications; release versions have independent claims. */
@@ -33,6 +34,7 @@ async function deliver(runtime:PennyRuntime,row:Outbox,clock:()=>number){
    db.prepare('UPDATE notification_outbox_attempts SET provider_message_id=COALESCE(provider_message_id,?) WHERE id=?').bind(receipt,claim),
    db.prepare('UPDATE notification_outbox SET provider_message_id=COALESCE(provider_message_id,?) WHERE id=? AND claim_id=?').bind(receipt,row.id,claim),
    db.prepare("UPDATE notification_outbox_attempts SET state=?,failure_reason=?,provider_message_id=?,updated_at=? WHERE id=? AND state='sending'").bind(attemptState,reason,receipt,at,claim),
+   systemDeliveryAudit(db,'releases.delivery','release.delivery_attempted','notification_outbox',row.id,{state:attemptState,reason}),
    db.prepare(`UPDATE notification_outbox SET delivery_state=?,failure_reason=?,provider_message_id=COALESCE(provider_message_id,?),available_at=?,updated_at=?,claim_id=CASE WHEN ?='queued' THEN NULL ELSE claim_id END,
     attempt_count=attempt_count-?,first_attempt_at=CASE WHEN ?=1 THEN first_attempt_at ELSE COALESCE(first_attempt_at,?) END,accepted_at=CASE WHEN ?='accepted' THEN COALESCE(accepted_at,?) ELSE accepted_at END
     WHERE id=? AND claim_id=? AND delivery_state='queued'`).bind(state,reason,receipt,state==='queued'?retryAt(clock(),row.attemptCount):at,at,state,deferred?1:0,deferred?1:0,now,state,at,row.id,claim),

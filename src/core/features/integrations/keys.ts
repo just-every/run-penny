@@ -8,6 +8,7 @@ import {operatorAuth,authenticateOperator} from '../auth/operator'
 import {NativeError} from '../auth/native-tokens'
 import {devAdmitted} from '../auth/dev-admission'
 import {guardedDatabase,type AuthorityGuard} from './guarded-database'
+import {createUlid} from '@/core/shared/ulid'
 
 export const apiScopes=['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write'] as const
 const namespace='penny-api'
@@ -27,7 +28,13 @@ export async function managedKeys(runtime:PennyRuntime,request:Request,issuing=f
  const sql=new D1SqlDatabase(connection)
  const guarded={batch:async(input:Parameters<typeof sql.batch>[0])=>{
   if(!issuing)return sql.batch(input)
-  const result=await sql.batch([...input,{sql:'DELETE FROM penny_api_issuance WHERE singleton=1'}]);return result.slice(0,-1)
+  // Base's issuing batch inserts the token first; its audit row is written only
+  // when that guarded insert produced the token, attributed to the issuing operator.
+  // A dev-session key never leaves the checkout, so no audit row names it.
+  const token=input.find(statement=>statement.sql.startsWith('INSERT INTO integration_tokens'))?.params?.[1]
+  if(typeof token!=='string')throw new Error('PENNY_KEY_ISSUANCE_UNRECOGNIZED')
+  const now=new Date().toISOString(),audit={sql:"INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,'operator',i.actor_id,'integration.key_issued','integration_key',t.id,?,?,? FROM integration_tokens t JOIN penny_api_issuance i ON i.singleton=1 WHERE i.dev=0 AND t.namespace=? AND t.id=?",params:[createUlid(),now,now,now,namespace,token]}
+  const result=await sql.batch([...input,audit,{sql:'DELETE FROM penny_api_issuance WHERE singleton=1'}]);return result.slice(0,-2)
  }}
  return new TokenService(new IntegrationsRepository(guarded,namespace),{
   grant:async()=>({scopes:apiScopes,commitGuard:{sql:`SELECT 1 WHERE ${guard.sql}`,params:guard.params}}),

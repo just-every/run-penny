@@ -61,11 +61,13 @@ it('[API-002 BASE-ACCESS-002] fences issuance and business writes against native
  const issued=await key(operator,['requests:write']),stamp=new Date().toISOString()
  await env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('board','feedback','Feedback','public',0,?,?)").bind(stamp,stamp).run()
  changed=false
+ const audited=await env.DB.prepare('SELECT count(*) n FROM audit_entries').first('n')
  const businessDb=observeD1(env.DB,{before:async sql=>{if(!changed&&sql.some(s=>s.includes('INSERT INTO requests'))){changed=true;await env.DB.prepare('UPDATE integration_tokens SET revoked_at=1').run()}}})
  const result=await request('/api/v1/requests',{title:'New request',description:'Original body',boardSlug:'feedback'},issued.headers,'POST',businessDb)
  expect(result.status).toBe(401);expect(changed).toBe(true)
  expect(await env.DB.prepare('SELECT count(*) n FROM requests').first('n')).toBe(0)
- expect(await env.DB.prepare('SELECT count(*) n FROM audit_entries').first('n')).toBe(0)
+ expect(await env.DB.prepare('SELECT count(*) n FROM audit_entries').first('n')).toBe(audited)
+ expect(await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='integration.key_issued'").first('n')).toBe(1)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_guards').first('n')).toBe(0)
 })
 it('[API-003 REQ-010 REL-001] composes native public reads, comments, status publication and validation without widening approval or consent',async()=>{

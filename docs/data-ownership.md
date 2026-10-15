@@ -271,7 +271,7 @@ Successful native email re-verification clears both markers atomically and advan
 an address verification generation; late facts from an earlier send generation
 cannot suppress it again. Replayed Base receipts never reapply suppression.
 
-Development capture uses `rer_mail_development_outbox` for recipient addresses and sign-in message bodies. It is local-only, limited by Base to 100 messages and seven days, excluded entirely from product archives and restore input, and deleted for a requester's recipient address during requester erasure. It must never transfer or resurrect sign-in credentials. `oa_invitation_cancellations` is Base admission history and stays in the non-portable Base authority store with all other `oa_*` tables.
+Development capture uses `rer_mail_development_outbox` for recipient addresses and sign-in message bodies. It is local-only (production never stores it), limited by Base to 100 messages and seven days as expiring credential state (BASELINE.md, BASE-DATA-002 scope), excluded entirely from product archives and restore input, and every capture containing an erased requester's or operator's address, as a recipient or in a body, is deleted in the erasure transaction. It must never transfer or resurrect sign-in credentials. `oa_invitation_cancellations` is Base admission history and stays in the non-portable Base authority store with all other `oa_*` tables.
 
 ## Decision-loop records
 

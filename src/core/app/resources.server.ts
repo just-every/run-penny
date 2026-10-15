@@ -5,6 +5,7 @@ import { requestContext } from './request-context.server'
 import { createPennyRuntime } from './runtime'
 import { hasOperatorSession } from '@/core/features/auth/operator'
 import { operatorNeedsFirstRun } from '@/core/features/auth/first-run'
+import { failureSummary } from './failure-log'
 
 export type Json = null | boolean | string | number | Json[] | { [key: string]: Json }
 export type Resources = Record<string, { status: number; data: Json }>
@@ -64,7 +65,7 @@ export async function operatorResources(href: string): Promise<Resources> {
     // Client-side navigation reaches an app route without a document request, so setup is checked here as well.
     setup = operator && await operatorNeedsFirstRun(incoming, runtime)
   } catch (error) {
-    console.error('Penny session validation failed', error)
+    console.error('Penny session validation failed', JSON.stringify(failureSummary(error)))
     throw new Error('Penny could not validate the operator session.')
   }
   if (!operator) throw redirect({ to: '/signin' })

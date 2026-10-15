@@ -78,7 +78,15 @@ export function registerCustomFieldValueRoutes(app: Hono<OperatorMutationEnviron
         valueWrite,
       ])
     } else {
-      results = await db.batch([valueWrite])
+      // Replacing a different stored value destroys it, so the replacement is audited.
+      results = await db.batch([
+        db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,details_json,occurred_at,created_at,updated_at)
+          SELECT ?,'operator',?,'custom_field.value_replaced',?, ?,json_object('definitionId',?),?,?,?
+          WHERE EXISTS(SELECT 1 FROM custom_field_values WHERE definition_id=? AND entity_id=? AND value_json<>'null' AND value_json<>?)
+            AND ${eligibility}`)
+          .bind(createUlid(), operator.id, customFieldEntityTypeAliases(entityType)[0], entityId, context.req.param('definitionId'), now, now, now, context.req.param('definitionId'), entityId, JSON.stringify(input.value), ...eligibilityParams),
+        valueWrite,
+      ])
     }
     if (results.at(-1)!.results.length !== 1) return context.json({ error: 'field_or_entity_changed' }, 409)
     return context.json({ ok: true, entityType, entityId, definitionId: context.req.param('definitionId'), value: input.value })

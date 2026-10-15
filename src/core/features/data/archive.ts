@@ -329,7 +329,8 @@ export async function eraseEntity(db:D1Database,bucket:R2Bucket,tableName:string
   // Development mail contains credentials, is never portable, and loses captures
   // for each erased identity in the same transaction as the product graph.
   const hasLocalOutbox = await db.prepare("SELECT 1 present FROM sqlite_master WHERE type='table' AND name='rer_mail_development_outbox'").first()
-  for (const address of hasLocalOutbox ? plan.selected.requester_addresses ?? [] : []) statements.push(db.prepare(`DELETE FROM rer_mail_development_outbox WHERE EXISTS (SELECT 1 FROM json_each(json_extract(message,'$.to')) WHERE value=?) OR EXISTS (SELECT 1 FROM json_each(json_extract(message,'$.cc')) WHERE value=?) OR EXISTS (SELECT 1 FROM json_each(json_extract(message,'$.bcc')) WHERE value=?)`).bind(address.email,address.email,address.email))
+  // A capture is removed when the address appears anywhere in it, as a recipient or in a body.
+  for (const address of hasLocalOutbox ? plan.selected.requester_addresses ?? [] : []) statements.push(db.prepare('DELETE FROM rer_mail_development_outbox WHERE instr(lower(message),lower(?))>0').bind(address.email))
   // These Base witnesses can only disappear after their owning job. Other
   // foreign keys remain deferred within the complete erasure transaction.
   const deletionOrder=clauseDeletionOrder(plan.tables)
@@ -344,7 +345,8 @@ export async function eraseEntity(db:D1Database,bucket:R2Bucket,tableName:string
    statements.push(db.prepare(`DELETE FROM ${ident(table.name)} WHERE EXISTS(SELECT 1 FROM json_each(?) selected WHERE ${columns.map((column,index)=>`${ident(table.name)}.${ident(column.name)} IS json_extract(selected.value,'$[${index}]')`).join(' AND ')})`).bind(JSON.stringify(keys)))
   }
   const anonymousReference=`erased:${crypto.randomUUID()}`
-  for(const row of plan.audit)statements.push(db.prepare("UPDATE audit_entries SET entity_id=?,actor_id=NULL,details_json=NULL,updated_at=? WHERE id=?").bind(anonymousReference,new Date().toISOString(),row.id))
+  // A system row's actor is the feature that acted (BASE-OPS-005), never a person; it stays.
+  for(const row of plan.audit)statements.push(db.prepare("UPDATE audit_entries SET entity_id=?,actor_id=CASE WHEN actor_type='system' THEN actor_id END,details_json=NULL,updated_at=? WHERE id=?").bind(anonymousReference,new Date().toISOString(),row.id))
   statements.push(audit(db,'data.erased',id,authority,JSON.stringify({phase:'native_rows_erased',targetType:tableName,targetReference:await hash([current.origin,tableName,entityId])})),db.prepare('UPDATE data_state SET epoch=?,phase=\'locked\' WHERE singleton=1 AND lock_id=?').bind(epoch,id),db.prepare("UPDATE data_operations SET status=?,payload_json=?,updated_at=? WHERE id=?").bind(plan.selected.feedback_import_records.length?'pending_import':'pending_r2',canonical({keys:plan.files}),new Date().toISOString(),id))
   await dataBatch(db,statements,authority)
  }catch(error){const operation=await dataOperation(db,id);if(['pending_r2','pending_import'].includes(operation?.status??''))return resumeErasure(db,bucket,id,authority);await finish(db,id,'aborted');throw error}

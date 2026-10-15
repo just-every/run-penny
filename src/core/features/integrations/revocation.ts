@@ -8,6 +8,8 @@ import {managedKeys} from './keys'
  * the adopted module. The injected prefix belongs to the same native batch. */
 export async function revokeKey(runtime:PennyRuntime,request:Request,id:string){
  const {db,actor}=await integrationOperator(runtime,request),now=new Date().toISOString()
+ // Base reports an unknown key as a plain error; answer it as the 404 it is.
+ if(!await db.prepare("SELECT 1 present FROM integration_tokens WHERE namespace='penny-api' AND id=?").bind(id).first())throw new NativeError('not_found',404)
  // TokenService already commits its event and revocation in one batch. Interpose
  // an actor receipt only on that batch, not its earlier authority read.
  const binding=new Proxy(db,{get(target,key){

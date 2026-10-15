@@ -268,17 +268,21 @@ New jobs divide the saved plan into bounded stream pages when it exceeds
 512 KiB or 200 normalized records. Original files remain in their declared
 private custody until erasure; mapping input is not retained as an extra copy.
 The demonstrated pages for the same source were at most 350,896 expanded bytes
-and completed selected-evidence erasure. The limits above remain refusal limits. They do not promise erasure for
-every older flat plan: a reproduced plan from a 2,296,922-byte CSV with 40 posts
-was 20,048,495 bytes, below the page limit, and Base cannot publish its erasure
-within 1,000 queries per invocation. Base's packed custody rewrites (import kit
-`0cb6162`) now erase people in flat plans up to about 12.8 MB in one request;
-for larger ones Penny performs a read-only check before reserving erasure or
-deleting native records or files and returns HTTP 409
-`feedback_legacy_erasure_upgrade_required`. Already-pending oversized legacy
-erasures remain locked until Base can publish one job's custody across requests. Compatible legacy jobs and completed legacy copies
-are repaired under erasure/export/restore-checked custody, but not every legacy
-plan size is erasable.
+and completed selected-evidence erasure. The limits above remain refusal limits. An older flat plan
+can be far larger than one request: a plan from a 2,296,922-byte CSV with 40
+posts is about 20 MB. A record in a retained flat plan over 512 KiB is erased
+through Base's staged erasure form; its private stage (post-erasure values only)
+continues across resume requests, with every batch under Base's baseline and
+stage guards, and publishes the tombstones, journal receipt and restore
+checkpoint together. On local D1 a CSV-heavy 20.1 MB and a profile-heavy 19.9 MB
+legacy plan both erase completely while everyone else keeps undo, resume and
+restore. Before reserving erasure or deleting native records or files, Penny
+compiles each step as it will run, in its own request budget; a step that
+cannot fit one request is refused with HTTP 409
+`feedback_legacy_erasure_upgrade_required` and nothing removed. Compatible
+legacy jobs and completed legacy copies are repaired under
+erasure/export/restore-checked custody; a large repair during export continues
+on the next export (`feedback_export_repair_continuing`).
 Large reversal first shows `preflighting`: resume the same job ID while Penny
 checks every owned value and relationship. This persisted scan deletes nothing.
 Only a complete scan under an unchanged native revision can begin reversal.

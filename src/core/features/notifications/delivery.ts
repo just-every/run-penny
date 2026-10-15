@@ -8,6 +8,7 @@ import { unsubscribeUrl } from './unsubscribe'
 import { notificationContent } from './content'
 import { retryState, retryAt as nextRetryAt, safeValidationCode } from './attempt-policy'
 import { settleRestoredBatch } from './restored-batches'
+import { systemDeliveryAudit } from './delivery-audit'
 interface Batch {id:string;attemptCount:number;requesterId:string;addressId:string;requestId:string;firstAttemptAt:string|null;failureReason:string|null}
 
 /** Run by the Worker Cron. A durable claim owns each outbound attempt. */
@@ -50,6 +51,8 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   await db.batch([
    db.prepare('UPDATE notification_attempts SET state=?,provider_message_id=?,failure_reason=?,updated_at=? WHERE id=? AND state=\'sending\'')
     .bind(attemptState,receipt,reason,new Date(clock()).toISOString(),claim),
+   // BASE-OPS-005: the automated send outlives the batch an erasure removes, with an anonymised reference.
+   systemDeliveryAudit(db,'notifications.requester','notification.delivery_attempted','notification_batch',batch.id,{state:attemptState,reason}),
    db.prepare(`UPDATE notification_batches SET state=?,provider_message_id=?,failure_reason=?,next_attempt_at=?,updated_at=?,attempt_count=attempt_count-?
     WHERE id=? AND claim_id=? AND state='sending'`).bind(state,receipt,reason,retryAt,new Date(clock()).toISOString(),deferred?1:0,batch.id,claim),
   ])

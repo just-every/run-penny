@@ -8,6 +8,7 @@ import { feedbackMappingVersion } from './mapping'
 import { erasureTargets } from './erasure-targets'
 import { targetIdentity } from '../../../../base/modules/import-kit/src/d1/erasure-index'
 import {eraseLegacySourceOptions} from './erasure-source'
+import {eraseStagedTarget,stagedTarget} from './erasure-staged-target'
 import {atomic,guard,sql} from '../../../../base/modules/import-kit/src/d1/database'
 
 export function retainErasureWork(db:D1Database,operation:string,records:Row[]):D1PreparedStatement[]{
@@ -37,7 +38,11 @@ export async function resumeImportErasure(db:D1Database,operation:string,authori
   // Base's retirement is one D1 batch: it tombstones this record in every job (other people's
   // records keep undo and resume), journals the receipt, and carries portability's redaction
   // checkpoint so an archive older than the erasure is refused whole.
-  await retireD1ImportCustody({target:{kind:work.target_kind,id:work.target_id}},[{sql:'UPDATE feedback_import_erasure_work SET complete=1 WHERE operation_id=? AND ordinal=? AND complete=0',params:[operation,work.ordinal]}],{...bounded,maxBatchBytes:undefined},await portabilityRedactionCheckpoint(db));return false}
+  const complete=[{sql:'UPDATE feedback_import_erasure_work SET complete=1 WHERE operation_id=? AND ordinal=? AND complete=0',params:[operation,work.ordinal]}]
+  // A job too large for one bounded batch is erased in staged steps; the work
+  // item completes in the publication, so an unfinished step simply repeats.
+  if(await stagedTarget(bounded.storage.database,work.target_kind,work.target_id)){await eraseStagedTarget(work.target_kind,work.target_id,async()=>[...complete,...await portabilityRedactionCheckpoint(db)],bounded);return false}
+  await retireD1ImportCustody({target:{kind:work.target_kind,id:work.target_id}},complete,{...bounded,maxBatchBytes:undefined},await portabilityRedactionCheckpoint(db));return false}
  const next=await bounded.storage.database.prepare('SELECT DISTINCT job_id FROM ik_d1_plan_index WHERE target_identity=? AND job_id>? ORDER BY job_id LIMIT 1').bind(targetIdentity(context.destination,work.target_kind,work.target_id),work.source_cursor).first<{job_id:string}>()
  if(next){await eraseLegacySourceOptions(next.job_id,bounded,[{sql:'UPDATE feedback_import_erasure_work SET source_cursor=? WHERE operation_id=? AND ordinal=? AND source_cursor=? AND complete=1',params:[next.job_id,operation,work.ordinal,work.source_cursor]}]);return false}
  const others=await bounded.storage.database.prepare('SELECT 1 present FROM feedback_import_erasure_work WHERE operation_id=? AND ordinal<>? AND (complete=0 OR source_complete=0) LIMIT 1').bind(operation,work.ordinal).first()

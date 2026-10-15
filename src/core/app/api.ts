@@ -3,6 +3,9 @@ import {registerOperatorManagementRoutes} from '@/core/features/auth/operator-ma
 import {editorDocumentHeaders} from '@/core/features/editor/headers'
 import {registerFrameSettings} from '@/core/features/settings/frame-settings'
 import {admitPublicRequest} from './public-rate'
+import {validPathParameters} from './path-parameters'
+import {failureSummary} from './failure-log'
+import {matchedRoutes} from 'hono/route'
 import {MutationError} from './operator-mutations'
 import {ZodError} from 'zod'
 import {registerIntegrationApi} from '@/core/features/integrations/api-routes'
@@ -73,6 +76,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
         return unsubscribePost ? preferenceForbidden() : context.json({ error: 'forbidden_origin' }, 403)
       }
     }
+    if (!validPathParameters(context)) return context.json({ error: 'validation_failed' }, 400)
     if (context.req.path.startsWith('/api/auth/') || context.req.path.startsWith('/api/public/identity/')) context.header('Cache-Control', 'no-store')
     await next()
     context.res = await editorDocumentHeaders(context.res, context.get('runtime'), context.req.path)
@@ -121,7 +125,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
     if (error instanceof NativeError && error.hint) return context.json({ error: error.code, message: error.hint }, error.status)
     if (error instanceof NativeError || error instanceof RequesterIdentityError || error instanceof RequestLifecycleError) return context.json({ error: error.code }, error.status)
     if(context.req.path.startsWith('/api/integrations/')||context.req.path.startsWith('/api/operator/integrations/'))return context.json({error:'integration_operation_failed'},503)
-    console.error('Penny request failed', error)
+    console.error('Penny request failed', JSON.stringify({ method: context.req.method, route: matchedRoutes(context).findLast(route => route.method !== 'ALL' && !route.path.endsWith('*'))?.path ?? 'unmatched', ...failureSummary(error) }))
 
     return context.json(
       {
