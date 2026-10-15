@@ -30,6 +30,8 @@ export function withDemoBindings(bindings: AppBindings): AppBindings {
   if (bindings.RER_DEMO !== '1') return bindings
   return {
     ...bindings,
+    MAIL_PROVIDER: 'development',
+    MAIL_FROM: `Penny demo <${bindings.OWNER_EMAIL ?? bindings.OPERATOR_EMAIL ?? 'aisha@example.test'}>`,
     OPERATOR_EMAIL: bindings.OWNER_EMAIL ?? bindings.OPERATOR_EMAIL,
     AUTH_SECRET: bindings.AUTH_SECRET ?? bindings.SESSION_SECRET,
   }
