@@ -234,7 +234,7 @@ export async function restoreArchive(db:D1Database,bucket:R2Bucket,value:unknown
   if(operation?.status==='complete')return {operationId:id,status:'complete'}
   // Compensation may release this runner's lock and staged originals after
   // authority is lost, but never applies the archive or authorizes new work.
-  try{if(ownsR2)await bucket.delete(payload.keys);await finish(db,id,'aborted')}catch{await releaseRunner(db,id,'running','pending');if(error instanceof NativeError&&error.status===401)throw error;return {operationId:id,status:'pending'}}
+  try{if(ownsR2)await deleteFiles(bucket,payload.keys);await finish(db,id,'aborted')}catch{await releaseRunner(db,id,'running','pending');if(error instanceof NativeError&&error.status===401)throw error;return {operationId:id,status:'pending'}}
   throw error
  }
 }
@@ -242,7 +242,7 @@ export async function abortRestore(db:D1Database,bucket:R2Bucket,id:string,autho
  const operation=await dataOperation(db,id)
  if(!operation||operation.kind!=='restore'||operation.status!=='pending'||(await state(db))?.lock_id!==id)fail('invalid_data_operation')
  await claimRunner(db,id,'pending','running',authority)
- try{const payload=JSON.parse(operation.payload_json) as {keys:string[];r2Owned?:boolean};if(payload.r2Owned===true){await assertDataAuthority(db,authority);await bucket.delete(payload.keys)}await finish(db,id,'aborted',authority)}catch(error){await releaseRunner(db,id,'running','pending');throw error}
+ try{const payload=JSON.parse(operation.payload_json) as {keys:string[];r2Owned?:boolean};if(payload.r2Owned===true){await assertDataAuthority(db,authority);await deleteFiles(bucket,payload.keys)}await finish(db,id,'aborted',authority)}catch(error){await releaseRunner(db,id,'running','pending');throw error}
 }
 const roots=new Set(['requesters','requests','evidence_items','accounts'])
 type ErasurePlan={table:string;id:string;planHash:string;counts:Record<string,number>;files:string[];blockedCopies:{table:string;key:string;columns:string[]}[];selected:Record<string,Row[]>;audit:Row[];tables:ErasureTable[]}
@@ -290,6 +290,10 @@ export async function planErasure(db:D1Database,tableName:string,id:string,copyS
  const planHash=await hash({origin:current.origin,epoch:current.epoch,table:tableName,id,selected:plan.selected,audits:plan.audit,files:plan.files,blockedCopies:plan.blockedCopies})
  return {...plan,planHash}
 }
+/** R2 deletes 1 to 1,000 keys per call: an operation without files deletes none. */
+async function deleteFiles(bucket:R2Bucket,keys:string[]):Promise<void>{
+ for(let start=0;start<keys.length;start+=1000)await bucket.delete(keys.slice(start,start+1000))
+}
 export async function resumeErasure(db:D1Database,bucket:R2Bucket,id:string,authority?:DataAuthority):Promise<{operationId:string;status:string}>{
  let operation=await dataOperation(db,id)
  if(!operation||operation.kind!=='erase')fail('invalid_data_operation',400)
@@ -303,7 +307,7 @@ export async function resumeErasure(db:D1Database,bucket:R2Bucket,id:string,auth
  const payload=JSON.parse(operation.payload_json) as {keys:string[]}
  await claimRunner(db,id,'pending_r2','running_r2',authority)
  try{
-  await assertDataAuthority(db,authority);await bucket.delete(payload.keys)
+  await assertDataAuthority(db,authority);await deleteFiles(bucket,payload.keys)
   await finish(db,id,'complete',authority);return {operationId:id,status:'complete'}
  }catch(error){
   await releaseRunner(db,id,'running_r2','pending_r2')
