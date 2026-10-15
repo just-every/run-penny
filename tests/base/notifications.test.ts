@@ -182,12 +182,12 @@ it('[NOTIFY-002] Base providers send through public identity and Queue paths wit
  const relay='https://mail.rer.example/api/managed-mail/send',key='synthetic-managed-mail-credential'
  const bindings={...env,PENNY_ENVIRONMENT:'production',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'rer',MAIL_RELAY_URL:relay,MAIL_API_KEY:key}
  expect(()=>config('rer',{MAIL_RELAY_URL:relay})).toThrow('MAIL_API_KEY')
- const requests:{to:string;subject:string;text:string;html?:string}[]=[],statuses=[202,401,429,202,302]
+ const requests:{to:string;subject:string;text:string;html?:string;listUnsubscribe?:string;listUnsubscribePost?:boolean}[]=[],statuses=[202,401,429,202,302]
  vi.mocked(fetch).mockImplementation(async(input,init)=>{
   expect(String(input)).toBe(relay);expect(init?.method).toBe('POST');expect(init?.redirect).toBe('manual')
   expect(init?.headers).toEqual({Authorization:`Bearer ${key}`,'Content-Type':'application/json'})
   const body=JSON.parse(String(init?.body));requests.push(body)
-  expect(Object.keys(body).sort()).toEqual(body.html?['html','subject','text','to']:['subject','text','to']);expect(typeof body.to).toBe('string')
+  expect(body).toEqual({to:expect.any(String),subject:expect.any(String),text:expect.any(String),...(body.html?{html:expect.any(String)}:{}),...(body.listUnsubscribe?{listUnsubscribe:expect.any(String),listUnsubscribePost:true}:{})})
   expect(body.subject.trim()).toBeTruthy();expect(body.text.trim()).toBeTruthy()
   const status=statuses.shift()!;return new Response(JSON.stringify(status===202?{accepted:true}:{error:'private relay detail'}),{status,headers:status===429?{'Retry-After':'60'}:status===302?{Location:'https://must-not-follow.example/'}:{}})
  })
@@ -201,12 +201,14 @@ it('[NOTIFY-002] Base providers send through public identity and Queue paths wit
  const wake=()=>runNotificationQueue(createMessageBatch('feedback-penny-local-jobs',[{id:crypto.randomUUID(),timestamp:Date.now(),attempts:1,body:{kind:'notifications.drain'}}]),bindings)
  await wake()
  expect(requests).toHaveLength(3);expect(requests[2].text).toContain('Managed request update');expect(requests[2].text).toContain('Unsubscribe from all requester email:')
+ expect(requests[2]).toMatchObject({to:g.email,listUnsubscribe:`<${await unsubscribeUrl(createPennyRuntime(bindings,source),g,'all')}>`,listUnsubscribePost:true})
  expect(await batches()).toMatchObject([{state:'accepted'},{state:'queued',provider:'rer',next_attempt_at:new Date(fixed+60000).toISOString(),failure_reason:'provider_rate_limited'}])
  await wake();expect(requests).toHaveLength(3)
  clock.mockReturnValue(fixed+60000);await wake();expect(requests).toHaveLength(4)
+ expect(requests[3]).toEqual(requests[2])
  expect(await batches()).toMatchObject([{state:'accepted'},{state:'accepted',provider:'rer'}])
  const redirected=await requestLink();expect(redirected.status).toBe(503);expect(requests).toHaveLength(5)
- expect(await env.DB.prepare("SELECT outcome FROM penny_auth_mail_attempts WHERE transport='rer' ORDER BY started_at DESC LIMIT 1").first()).toEqual({outcome:'unknown'})
+ expect(await env.DB.prepare("SELECT outcome FROM penny_auth_mail_attempts WHERE transport='rer' ORDER BY started_at DESC LIMIT 1").first()).toEqual({outcome:'failed'})
 })
 it('[NOTIFY-002] Queue transport drains before Cron and duplicate wakeups never resend',async()=>{
  const g=await setup();await g.follow();await g.status('Cron path')

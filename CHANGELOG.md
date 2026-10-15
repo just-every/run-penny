@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Mark credential fixtures and examples explicitly synthetic so hosted source checks accept them.
+- Pin rer 0.2.23 and adopt its unchanged Base mail adapter. Managed sign-in, invitations and requester notifications send directly from Workers, refuse relay redirects, and carry one-click unsubscribe fields without local transport or header workarounds. Rate-limited notifications retain their queued retry policy, and sign-in delivery problems are shown in plain language.
+- RER’s Open app link prefills the operator email from a complete `login_hint`, using Base’s email normalization. It never submits the form automatically, and a bare sign-in page stays empty.
 
 ## 0.1.0 — 2026-10-16
 

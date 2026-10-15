@@ -1,7 +1,8 @@
 import { HydrationUnit } from '@/base/hydration/unit'
 import { useEffect, useState } from 'react'
 import branding from '@/branding.json'
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
+import { normalizeEmail } from '../../../../../base/modules/operator-auth/index.mjs'
 import { usePublicResource } from '@/core/features/portal/ui/public-resource'
 import { BrandRoot } from '@/core/ui/app/BrandRoot'
 import { eyebrowClass, fieldLabelClass, paperCardClass, textLinkClass } from '@/core/ui/app/classes'
@@ -10,6 +11,9 @@ import { PageTitle } from '@/core/ui/app/PageTitle'
 import { CoinMark } from '@/core/ui/brand/CoinMark'
 import { buttonClass, fieldClass, postJson } from '../client-mutations'
 export function SignInShell() {
+  const search = useLocation({ select: location => location.searchStr })
+  let emailHint = ''
+  try { emailHint = normalizeEmail(new URLSearchParams(search).get('login_hint')) } catch { /* Base ignores incomplete hints. */ }
   const [hydrated,setHydrated]=useState(false)
   useEffect(()=>setHydrated(true),[])
   const [capabilities] = usePublicResource<{ transport: string }>('/api/auth/capabilities')
@@ -32,7 +36,7 @@ export function SignInShell() {
         try { await postJson('/api/auth/magic-link', { email: data.get('email'), returnTo: new URLSearchParams(window.location.search).get('returnTo') ?? undefined }); setRequested(true) }
         catch (error) { setMessage(error instanceof Error ? error.message : 'Sign-in failed.') }
         finally { setBusy(false) }
-      }}><label className={fieldLabelClass}>Operator email<input className={fieldClass} name="email" type="email" autoComplete="email" required maxLength={254} disabled={busy||!hydrated} /></label><button className={`${buttonClass} w-full`} disabled={busy || !ready||!hydrated}>{busy ? 'Preparing link…' : ready ? 'Send sign-in link' : 'Sign-in unavailable'}</button></form>
+      }}><label className={fieldLabelClass}>Operator email<input key={emailHint} defaultValue={emailHint} className={fieldClass} name="email" type="email" autoComplete="email" required maxLength={254} disabled={busy||!hydrated} /></label><button className={`${buttonClass} w-full`} disabled={busy || !ready||!hydrated}>{busy ? 'Preparing link…' : ready ? 'Send sign-in link' : 'Sign-in unavailable'}</button></form>
       {message ? <p role="alert" className="mt-4 text-base leading-normal">{message}</p> : null}
     </>}
     <p className="mt-5 text-base"><Link to="/" className={`inline-flex min-h-11 items-center font-normal ${textLinkClass}`}>Back to feedback</Link></p>

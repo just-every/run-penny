@@ -3,7 +3,7 @@
 ## Current inventory, 15 October 2026
 
 Penny runs the shared `rer` command in **package mode**: `package.json` pins
-`@runeditrun/rer` 0.2.22 exactly as a devDependency (locked in `pnpm-lock.yaml`;
+`@runeditrun/rer` 0.2.23 exactly as a devDependency (locked in `pnpm-lock.yaml`;
 a global `rer` dispatches to the project's pin),
 package scripts and `OPERATIONS.json` run `rer VERB`, and the checkout carries no
 vendored `scripts/rer.mjs`, `scripts/base-cli` or `scripts/base-onboarding`.
@@ -137,21 +137,12 @@ serves built files through `staticAssetResponse` and answers `/health` with `dep
 `deploy.json` declares the vars `rer verify`'s hosted check needs. Local session and dev-gate
 cookies carry the port (`operator_session_local_8787`, `rer_dev_gate_8787`).
 
-## Managed mail at rer 0.2.22 (16 October 2026)
+## Managed mail at rer 0.2.23 (16 October 2026)
 
-Penny selects the unchanged Base `rer` adapter from its pinned package copy
-(mail custody at `1afef2aa`). The delivery producer’s `fce0f6d1` mail declaration
-and setup validation generate the Managed relay contract. RER supplies and
-hides all four mail settings; direct SendGrid and Resend selection keeps its
-existing keys. Penny omits its automatic-mail and one-click unsubscribe headers
-for this transport, whose contract carries only recipient, subject and body;
-the existing unsubscribe links remain in the message text. Base requests
-`redirect: error`; Penny’s Workers fetch port uses `manual` and rejects every
-3xx response because Workers does not implement Fetch’s `error` mode. No
-redirect is followed. Identity mail still
-revokes unsuccessful links and records safe outcomes. Notification Queue/Cron
-keeps the bounded retry policy for known refusals/rate limits and holds
-ambiguous delivery for review.
+The mail copy is recorded byte-exact at Base `b4b372b032b2ddd7fbf47efa1bf17e1d5235be98` with the supported `record-base` and source-lock flow. Base owns `redirect: manual`, refuses a relay 3xx as `provider_redirected`, accepts Auto-Submitted for the relay to stamp, and maps unsubscribe headers to relay fields. Penny’s former fetch wrapper and header stripping are removed. Local mail suppression remains; hosted requester mail includes one-click unsubscribe. Existing mail tests exercise the emitted Worker in workerd with only relay responses supplied at the network edge.
+
+Penny’s existing sign-in form uses Base’s exported `normalizeEmail` for `login_hint`, with the shared complete-email-only rule. It prefills without submission, preserves returnTo and leaves missing or invalid hints empty.
+
 
 ## Base import kit at rer 0.2.20 (16 October 2026)
 
