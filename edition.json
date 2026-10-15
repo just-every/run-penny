@@ -202,6 +202,34 @@
       }
     },
     {
+      "id": "runeditrun/demo",
+      "role": "module",
+      "source": {
+        "kind": "local",
+        "paths": [
+          "base/modules/demo"
+        ],
+        "origin": {
+          "repository": "https://github.com/runeditrun/base.git",
+          "revision": "3935139a2ffe78a30f2c5de5aa8ae9a52613d348",
+          "paths": [
+            "modules/demo",
+            "modules/operator-auth/csp.mjs"
+          ]
+        },
+        "mappings": [
+          {
+            "path": "base/modules/demo",
+            "originPath": "modules/demo"
+          },
+          {
+            "path": "base/modules/demo/csp.mjs",
+            "originPath": "modules/operator-auth/csp.mjs"
+          }
+        ]
+      }
+    },
+    {
       "id": "runeditrun/dependencies",
       "role": "module",
       "source": {

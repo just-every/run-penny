@@ -28,6 +28,8 @@ const definitions = {
     await buildSource((command, args) => context.run('Building your application', command, args, { env: commandEnvironment(), step: 'build' }))
   },
   migrate: async context => {
+    // `rer demo` migrates and claims the saved owner in its own throwaway folder (.rer/demo/START), never .wrangler/state.
+    if (context.demo) context.stateDirectory = context.demo.state
     const env = { ...commandEnvironment(), PENNY_LOCAL_STATE: context.stateDirectory, CI: '1' }
     await applyMigrations(context)
     // Read native authority; only /auth/bootstrap may create it. A populated
@@ -66,10 +68,11 @@ export const commandAdapter = createCommandAdapter(lifecycle, {
   setup: { manifestFile: 'rer-setup.json' }, browserModule: 'scripts/installer/ui/seed.mjs',
   input: { names: { email: 'OPERATOR_EMAIL', name: 'displayName' }, defaults: async () => ({ target: 'local', MAIL_PROVIDER: 'later', WORKSPACE_TIMEZONE: 'UTC' }) },
   // Penny's own environment (no inherited secrets), plus this run's origin, the
-  // checkout's dev key and the Local Explorer off.
-  dev: context => ['pnpm', ['exec', 'vite', 'dev', '--host', '127.0.0.1', '--port', String(context.runtimePort ?? new URL(context.origin).port), '--strictPort'], { env: { ...runtimeEnvironment(context.root), RER_DEV_ORIGIN: context.origin, X_LOCAL_EXPLORER: 'false', ...(context.devKey ? { RER_DEV_KEY: context.devKey, RER_DEV_IDENTITY: context.devLogin ? 'off' : 'on' } : {}) } }],
+  // checkout's dev key and the Local Explorer off; a demo adds its switches and state folder.
+  dev: context => ['pnpm', ['exec', 'vite', 'dev', '--host', '127.0.0.1', '--port', String(context.runtimePort ?? new URL(context.origin).port), '--strictPort'], { env: { ...runtimeEnvironment(context.root), RER_DEV_ORIGIN: context.origin, X_LOCAL_EXPLORER: 'false', ...(context.devKey ? { RER_DEV_KEY: context.devKey, RER_DEV_IDENTITY: context.devLogin ? 'off' : 'on' } : {}), ...(context.demo ? { RER_DEMO: '1', RER_DEMO_EXPIRES: context.demo.ends, RER_STATE_DIR: context.demo.state } : {}) } }],
   preview: previewTarget,
-  localPrerequisites: async ({ root, vars, email }) => vars.PENNY_ENVIRONMENT === 'local' && vars.MAIL_PROVIDER === 'development' && Boolean(vars.AUTH_SECRET) && await operatorPrerequisites(root, email),
+  // A demo never opens the checkout's database (even a read rewrites SQLite's -shm index); it migrates its own.
+  localPrerequisites: async ({ root, vars, email, demo }) => vars.PENNY_ENVIRONMENT === 'local' && vars.MAIL_PROVIDER === 'development' && Boolean(vars.AUTH_SECRET) && (demo || await operatorPrerequisites(root, email)),
   verify: ['pnpm', ['run', 'verify:app']], deploy: deployPenny,
   // Local dev identity: the local-only Worker entry, the build output rer build
   // scans for the dev layer, and the kept end-to-end email-link test.

@@ -1,3 +1,4 @@
+import { withDemo } from '../base/modules/demo/index.mjs'
 import {isDeclaredSessionlessPath} from './core/app/public-paths'
 import {admitPublicRequest} from './core/app/public-rate'
 import {editorDocumentHeaders} from './core/features/editor/headers'
@@ -14,10 +15,11 @@ import { setupStateResponse } from './base/setup-state'
 import { lobbyResponse } from './base/lobby'
 import { identity } from './identity'
 import { failureSummary } from './core/app/failure-log'
+import { seedDemo, withDemoBindings } from './demo'
 
-export default {
+export default withDemo({
   async scheduled(controller: ScheduledController, bindings: AppBindings): Promise<void> {
-    try { await runNotificationSchedule(controller, bindings) } catch (error) {
+    try { await runNotificationSchedule(controller, withDemoBindings(bindings)) } catch (error) {
       // The failed invocation stays visible; its log and error carry no values.
       console.error('Penny scheduled work failed', JSON.stringify(failureSummary(error)))
       throw new Error('scheduled_work_failed')
@@ -29,10 +31,10 @@ export default {
       return Response.json({ error: 'service_unavailable', message: 'Penny could not complete the requested operation.' }, { status: 503 })
     }
   },
-} satisfies ExportedHandler<AppBindings>
+} satisfies ExportedHandler<AppBindings>, { seed: seedDemo })
 
 async function respond(request: Request, bindings: AppBindings, execution: ExecutionContext): Promise<Response> {
-  bindings = withLocalOrigin(bindings)
+  bindings = withLocalOrigin(withDemoBindings(bindings))
   const url = new URL(request.url)
   const configured = bindings.APP_ORIGIN
   if (configured && url.origin !== new URL(configured).origin) return new Response('Not found', { status: 404 })

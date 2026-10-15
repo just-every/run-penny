@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "domain": "run-penny.com",
+  "name": "Penny",
+  "settings": {
+    "MAIL_PROVIDER": "development",
+    "MAIL_FROM": "Penny demo <demo@demo.invalid>"
+  }
+}

@@ -27,7 +27,7 @@ export async function issueNativeLink(runtime: PennyRuntime, purpose: 'requester
     const url = new URL('/portal/verify', runtime.configuration.appOrigin)
     url.hash = new URLSearchParams({token}).toString()
     const sent = await auditedIdentityMail(runtime,'requester_verification')!.send({ deliveryId: id, from: runtime.configuration.mailFrom!, to: [email], subject: 'Verify your Penny email', text: `Verify your email to continue. This single-use link expires in 30 minutes.\n\n${url.href}`, headers: { 'Auto-Submitted': 'auto-generated' } })
-    if (sent.status !== 'accepted' && !(sent.status === 'development' && runtime.configuration.environment === 'local')) throw new Error('mail_not_accepted')
+    if (sent.status !== 'accepted' && !(sent.status === 'development' && (runtime.configuration.environment === 'local' || runtime.configuration.demo))) throw new Error('mail_not_accepted')
   } catch {
     // An unusable send is not a consumption. Its independent audit survives
     // removal of the credential, including an ambiguous provider effect.

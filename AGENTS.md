@@ -88,7 +88,8 @@ excluded from portable archives. Penny's self-hosted fonts live in `public/fonts
 and are linked once from the root document; Base's default font does not apply.
 
 The local Base development outbox is restricted to explicit loopback local or
-development mode. GET confirmation does not consume a sign-in link. Production
+development mode, and to a demo (`RER_DEMO=1`, which `rer deploy` refuses), which
+captures every message and sends nothing (DEMO.md). GET confirmation does not consume a sign-in link. Production
 never accepts a local outbox or invented signer/provider. Mail providers are
 selected explicitly with their real fields. Both provider and sender may be
 absent in the documented unconfigured-mail mode; partial configuration fails.

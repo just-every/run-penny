@@ -3,9 +3,8 @@
 ## Current inventory, 15 October 2026
 
 Penny runs the shared `rer` command in **package mode**: `package.json` pins
-`@runeditrun/rer` 0.2.9 exactly as a devDependency (locked in `pnpm-lock.yaml`;
-the current published release is 0.2.12, and a global `rer` dispatches to the
-project's pin),
+`@runeditrun/rer` 0.2.13 exactly as a devDependency (locked in `pnpm-lock.yaml`;
+a global `rer` dispatches to the project's pin),
 package scripts and `OPERATIONS.json` run `rer VERB`, and the checkout carries no
 vendored `scripts/rer.mjs`, `scripts/base-cli` or `scripts/base-onboarding`.
 `pnpm install --frozen-lockfile` installs the command; `rer check --profile
@@ -14,8 +13,8 @@ copy. A later refresh is a version bump: `pnpm add -D -E @runeditrun/rer@X`,
 then `pnpm source:lock`.
 
 Base selections retain immutable comparison origins in `edition.json`; individual
-verbatim copies record their actual revisions in `base/PROVENANCE.json` (46 copy
-groups, 501 files: the native modules under `base/`, the delivery producer,
+verbatim copies record their actual revisions in `base/PROVENANCE.json` (53 copy
+groups, 518 files: the native modules under `base/`, the delivery producer,
 schema, authoring tools, first-run runtime and three Base documents).
 `sources.lock.json` binds current tracked source and retained comparison
 archives. The root provenance revision is historical; each copy entry names its

@@ -13,5 +13,7 @@
   ],
   "crons": ["* * * * *"],
   "vars": { "WORKSPACE_TIMEZONE": "UTC", "OPERATOR_EMAIL": "owner@penny.invalid", "MAIL_PROVIDER": "later" },
-  "originVar": "APP_ORIGIN"
+  "originVar": "APP_ORIGIN",
+  "platforms": ["workers", "container"],
+  "container": { "engine": "workerd" }
 }

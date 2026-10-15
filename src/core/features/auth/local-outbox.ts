@@ -4,12 +4,13 @@ import type { Hono } from 'hono'
 import type { PennyRuntime } from '@/core/app/runtime'
 import type { AppBindings } from '@/core/shared/bindings'
 
-/** Explicit local configuration only: a missing remote provider never enables capture. */
+/** Explicit local configuration only: a missing remote provider never enables capture.
+ * A demo (local or hosted) captures on any origin: it can send nothing. */
 export function localOutbox(runtime: PennyRuntime) {
-  const {environment, mailProvider, appOrigin} = runtime.configuration
-  if (environment !== 'local' || mailProvider !== 'development' || !appOrigin) return undefined
+  const {environment, mailProvider, appOrigin, demo} = runtime.configuration
+  if (mailProvider !== 'development' || !appOrigin) return undefined
   const url = new URL(appOrigin)
-  if (url.protocol !== 'http:' || !['localhost','127.0.0.1','[::1]'].includes(url.hostname)) return undefined
+  if (!demo && (environment !== 'local' || url.protocol !== 'http:' || !['localhost','127.0.0.1','[::1]'].includes(url.hostname))) return undefined
   return createD1DevelopmentOutbox({db:runtime.database.binding})
 }
 // The outbox and the key exchange answer only a local runtime holding the

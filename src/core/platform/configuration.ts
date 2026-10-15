@@ -18,6 +18,8 @@ export interface RuntimeConfiguration {
   readonly workspaceTimezone: string
   readonly publicOriginAllowlist: ReadonlySet<string>
   readonly environment: 'local' | 'test' | 'preview' | 'production'
+  /** RER_DEMO=1 (`rer demo` or a hosted demo; `rer deploy` refuses it): mail is captured in the development outbox, never sent. */
+  readonly demo: boolean
   readonly appOrigin?: string
   readonly portalIdentitySecret?: string
   readonly authSecret?: string
@@ -47,7 +49,7 @@ export function loadRuntimeConfiguration(
 
   const workspaceTimezone = env.WORKSPACE_TIMEZONE === undefined ? parsed.data.workspaceTimezone : env.WORKSPACE_TIMEZONE.trim()
   validateTimezone(workspaceTimezone)
-  const environment = env.PENNY_ENVIRONMENT ?? 'local'
+  const environment = env.PENNY_ENVIRONMENT ?? 'local', demo = env.RER_DEMO === '1'
 
   if (environment !== 'local' && environment !== 'test' && environment !== 'preview' && environment !== 'production') {
     throw new ConfigurationError(`PENNY_ENVIRONMENT must be local, test, preview, or production; received ${environment}.`)
@@ -61,7 +63,7 @@ export function loadRuntimeConfiguration(
     const missing = required.filter(name => !env[name]?.trim())
     if (missing.length) throw new ConfigurationError(`Missing required environment values: ${missing.join(', ')}.`)
     if (env.AUTH_SECRET!.length < 32) throw new ConfigurationError('AUTH_SECRET must contain at least 32 characters.')
-    if ((env.MAIL_PROVIDER&&env.MAIL_PROVIDER!=='later') || env.MAIL_FROM) {
+    if (!(demo && env.MAIL_PROVIDER === 'development') && ((env.MAIL_PROVIDER&&env.MAIL_PROVIDER!=='later') || env.MAIL_FROM)) {
     if (!env.MAIL_FROM?.trim()) throw new ConfigurationError('Missing required environment value: MAIL_FROM.')
     if (env.MAIL_PROVIDER !== 'sendgrid' && env.MAIL_PROVIDER !== 'resend') throw new ConfigurationError('MAIL_PROVIDER must be sendgrid or resend.')
     const providerKey = env.MAIL_PROVIDER === 'sendgrid' ? 'SENDGRID_API_KEY' : 'RESEND_API_KEY'
@@ -76,6 +78,7 @@ export function loadRuntimeConfiguration(
     workspaceTimezone,
     publicOriginAllowlist,
     environment,
+    demo,
     appOrigin,
     portalIdentitySecret: env.PORTAL_IDENTITY_SECRET,
     authSecret: env.AUTH_SECRET, setupToken: env.SETUP_TOKEN,
