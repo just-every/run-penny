@@ -85,7 +85,7 @@ export async function uploadWorker(api, {plan,artifact,bindings,secrets,migratio
   if (artifact.assets.length) { metadata.assets = {jwt:await uploadAssets(api,plan.worker,artifact.assets),config:{run_worker_first:RUN_WORKER_FIRST}}; }
   data.set('metadata',new Blob([JSON.stringify(metadata)],{type:'application/json'}));
   for (const file of artifact.modules) data.set(file.path,new Blob([Buffer.from(file.base64,'base64')],{type:moduleType(file.path)}),file.path);
-  await api.request(`/workers/scripts/${plan.worker}?bindings_inherit=strict`,{method:'PUT',body:data});
+  return api.request(`/workers/scripts/${plan.worker}?bindings_inherit=strict`,{method:'PUT',body:data});
 }
 /** The workers.dev origin, enabling it when allowed. With `workersDev: false` the route is kept
  * off (a Worker reached only through service bindings) and there is no origin. */

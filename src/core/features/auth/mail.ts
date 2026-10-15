@@ -5,8 +5,7 @@ import type { PennyRuntime } from '@/core/app/runtime'
 export function authMail(runtime: PennyRuntime): PennyMailSender | undefined {
   const { mailFrom, mailProvider, mailApiKey, mailRelayUrl } = runtime.configuration
   if (mailFrom && suppressesMail(runtime)) {
-    const sender = createMailSender({provider:'development',mode:'development'})
-    return runtime.configuration.demo ? {send: async message => (await import('../../../../base/modules/demo/index.mjs')).demoEffect(() => sender.send(message), () => ({provider:'development',status:'accepted' as const,providerMessageId:null}))} : sender
+    return createMailSender({provider:'development',mode:'development'})
   }
   if (mailFrom && mailProvider === 'rer' && mailApiKey && mailRelayUrl) {
     return createMailSender({provider:'rer',mode:'production',apiKey:mailApiKey,relayUrl:mailRelayUrl})

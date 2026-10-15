@@ -15,6 +15,9 @@ adapter; it does not return the operations manifest itself or test environment
 values.
 
 `check` validates declared command input files and required enabled loops.
+It also validates surface and setup declarations in the standard delivery
+packaging policies and committed integration spec, including unique
+`originVariable` values across surfaces.
 The first-party profile also enforces the manifest's `seedContract` marker,
 adapter hooks and flags, command targets, package aliases, tool pins, complete
 portable source inventory and copied source hashes. An explicit

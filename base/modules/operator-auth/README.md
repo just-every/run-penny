@@ -425,6 +425,11 @@ owner invitation cancellation, and owner activation or deactivation. Unchanged
 roles/statuses and non-owner status changes retain their usual authorization.
 The existing version fences and last-active-owner protection still apply after
 the proof succeeds.
+With the `RER_DEMO=1` demo guard active, the configured owner's authenticated
+session supplies this proof inside its own visitor container because mail is
+mocked. Authentication still checks the container's own session secret and
+store; another visitor's session is refused. Ordinary hosted instances keep
+requiring the real proof described above.
 Creating a server-declared owner dev persona also requires the signed-in owner's
 fresh local proof in addition to the checkout key. Its creation repeats the actor
 session/version fence in the database write.
@@ -565,6 +570,10 @@ conformance files and tests from that same revision; `rer check` names any copie
 file that differs from the pinned revision (`SC-05.auth-copy.*`); the runtime imports neighboring helpers within the module. Keep imports
 server-only, reconcile the seed's route integration, and run that seed's real auth
 and browser checks.
+
+The sign-in page fills in its email field from `?login_hint=<email>` (a complete
+address; anything else is ignored; never submitted for the visitor), so a link
+from the platform's Open app or a seed's own page can pass the claimed owner.
 
 Wire `config.branding` with the seed's `productName`, `accentColor` and
 `signInPath`; the defaults are `your workspace`, `#334155` and `/signin`. Keep

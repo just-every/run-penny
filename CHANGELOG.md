@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin rer 0.2.24 and refresh the vendored Base modules together from its release tag. Hosted demos use Aisha’s sample-workspace identity on basic instances; Base handles silent invitation and sign-in success without a Penny mail wrapper. The test-host workflow can capture 15 minutes of admission diagnostics before timing fresh starts.
+
 - Mark credential fixtures and examples explicitly synthetic so hosted source checks accept them.
 - Pin rer 0.2.23 and adopt its unchanged Base mail adapter. Managed sign-in, invitations and requester notifications send directly from Workers, refuse relay redirects, and carry one-click unsubscribe fields without local transport or header workarounds. Rate-limited notifications retain their queued retry policy, and sign-in delivery problems are shown in plain language.
 - RER’s Open app link prefills the operator email from a complete `login_hint`, using Base’s email normalization. It never submits the form automatically, and a bare sign-in page stays empty.

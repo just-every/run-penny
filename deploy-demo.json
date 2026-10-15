@@ -4,7 +4,8 @@
   "name": "Penny",
   "settings": {
     "MAIL_PROVIDER": "development",
-    "MAIL_FROM": "Penny demo <demo@demo.invalid>"
+    "MAIL_FROM": "Penny demo <aisha@example.test>"
   },
-  "instanceType": "basic"
+  "instanceType": "basic",
+  "ownerEmail": "aisha@example.test"
 }
