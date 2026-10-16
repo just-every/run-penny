@@ -3106,11 +3106,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "c2d4d75e3b491945fc2ac713eb5ea57f733b60fb3daecd66cf235bb7cc914a11",
+      "sha256": "58039abfd663e8b321e51987f37cbc904c4978248e0a558d7bafbc50629b4b22",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "de852f5032e09733b57af871eecdaefa563f3a01e2b8f0a086e1967aa8953883",
+      "sha256": "841f704ac3ea63582a39fef722601bdd906503c855bceb9270ee3b73b7fb3cc8",
       "executable": false
     },
     "public/brand/band.svg": {
