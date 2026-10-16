@@ -1,8 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 — 2026-10-16
 
-- Pin rer 0.2.25 and publish Penny’s browser sign-in declaration through the deployment generator, so RER can open `/signin` with the claimed owner’s email prefilled.
+Update from 0.1.0 with `rer install` and `rer setup`. The owner, records, private settings and applied migration history are kept; this patch adds no product migrations.
+
+- Pin rer 0.2.27 so setup after a portable restore can use the launch lock when macOS process inspection times out. The vendored Base modules retain their recorded 0.2.24 custody.
+- Adopt rer 0.2.25 and publish Penny’s browser sign-in declaration through the deployment generator, so RER can open `/signin` with the claimed owner’s email prefilled.
 
 - Pin rer 0.2.24 and refresh the vendored Base modules together from its release tag. Hosted demos use Aisha’s sample-workspace identity on basic instances; Base handles silent invitation and sign-in success without a Penny mail wrapper. Demo-only mail bindings are set at runtime; the demo workflow removes empty public mail placeholders before image packaging while retaining them for Managed Worker artifacts. The test-host workflow can capture 15 minutes of admission diagnostics before timing fresh starts.
 
