@@ -8,6 +8,8 @@ import {createTrackerConnection,trackerConnectionInput} from './tracker-configur
 import {createTracker,linkTracker,trackerCreateInput,trackerLinkInput} from './tracker-service'
 import {receiveTracker} from './tracker-receiver'
 import {trackerNamespace} from './tracker-delivery'
+import {linearTeams} from './tracker-linear'
+import {z} from 'zod'
 export function registerTrackerRoutes(app:Hono<OperatorMutationEnvironment>) {
  app.get('/api/operator/integrations/trackers',async c=>{
   const {db}=await integrationOperator(c.get('runtime'),c.req.raw)
@@ -21,6 +23,8 @@ export function registerTrackerRoutes(app:Hono<OperatorMutationEnvironment>) {
   const {results:links}=await db.prepare('SELECT id,provider,issue_url,state,source_updated_at FROM penny_tracker_links WHERE request_id=? ORDER BY created_at,id').bind(c.req.param('id')).all()
   return c.json({links})
  })
+ // Setup asks only for the personal API key; Penny lists the teams by name.
+ app.post('/api/operator/integrations/trackers/linear/teams',async c=>{await integrationOperator(c.get('runtime'),c.req.raw);const input=await parseInput(c.req.raw,z.object({apiKey:z.string().trim().min(1).max(4096).regex(/^[^\r\n\0]+$/)}).strict());return c.json(await linearTeams(input.apiKey))})
  app.post('/api/operator/integrations/trackers/connections',async c=>c.json(await createTrackerConnection(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,trackerConnectionInput)),201))
  app.delete('/api/operator/integrations/trackers/connections/:id',async c=>{await revokeConfiguration(c.get('runtime'),c.req.raw,c.req.param('id'),'tracker');return c.json({revoked:true})})
  app.post('/api/operator/integrations/trackers/links',async c=>c.json(await linkTracker(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,trackerLinkInput)),201))

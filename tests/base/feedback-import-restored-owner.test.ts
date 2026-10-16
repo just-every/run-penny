@@ -3,8 +3,9 @@ import { beforeEach,expect,inject,it } from 'vitest'
 import { call,env,owner,origin } from './support'
 import { preview,complete,importPath } from './feedback-import-fixture'
 import { pagedUservoiceFixture,uservoiceFixture } from './uservoice-fixture'
-import { exportArchive,restoreArchive } from '@/core/features/data/archive'
-import { importContext } from '@/core/features/imports/service'
+import { exportArchive } from '@/core/features/data/archive'
+import { restoreArchive } from '@/core/features/data/operations'
+import { importContext,requestPrincipal } from '@/core/features/imports/service'
 import { runtime } from './notification-regression-fixture'
 import { readSavedFeedback } from '@/core/features/imports/source'
 import { feedbackMapping } from '@/core/features/imports/mapping'
@@ -19,7 +20,7 @@ const listed=async(operator:Record<string,string>)=>{
 // Populate the former operator-bound plan through the real mapper and Base
 // engine. Its immutable principal and fingerprint remain untouched thereafter.
 async function legacyJob(namespace:string,operator:Record<string,string>,principal:string,partial=false){
- const input=uservoiceFixture(namespace),{context,actor}=await importContext(runtime(),new Request(origin+importPath+'/apply',{method:'POST',headers:{Origin:origin,...operator}}),namespace)
+ const input=uservoiceFixture(namespace),{context,actor}=await importContext(runtime(),await requestPrincipal(runtime(),new Request(origin+importPath+'/apply',{method:'POST',headers:{Origin:origin,...operator}})),namespace)
  context.authorization={...context.authorization,principalId:principal}
  const source=await readSavedFeedback(input),plan=await planD1Import(source,feedbackMapping(source,actor),context)
  context.reviewedFingerprint=plan.fingerprint
@@ -84,7 +85,7 @@ it('[IMP-003][OWN-001] export, reset, import, setup: current owner reads, undoes
  // through that historical principal, even with a freshly current session.
  const current=(await env.DB.prepare("SELECT id FROM oa_operators WHERE role='owner'").first<{id:string}>())!.id
  const own=await legacyJob('own-before-demotion',operator,current,true)
- const admitted=await importContext(runtime(),new Request(origin+importPath+'/jobs/'+own.id+'/resume',{method:'POST',headers:{Origin:origin,...operator}}),'own-before-demotion',false,current)
+ const admitted=await importContext(runtime(),await requestPrincipal(runtime(),new Request(origin+importPath+'/jobs/'+own.id+'/resume',{method:'POST',headers:{Origin:origin,...operator}})),'own-before-demotion',false,current)
  await env.DB.prepare("UPDATE oa_operators SET role='owner' WHERE id=?").bind(creator).run()
  await env.DB.prepare("UPDATE oa_operators SET role='member' WHERE id=?").bind(current).run()
  await env.DB.prepare('UPDATE oa_sessions SET operator_version=(SELECT version FROM oa_operators WHERE id=operator_id)').run()
@@ -105,7 +106,7 @@ it('[IMP-003][OWN-001] export, reset, import, setup: current owner reads, undoes
  // must reject the stale admission without progressing the persisted job.
  await env.DB.prepare("UPDATE oa_operators SET role='owner' WHERE id=?").bind(current).run()
  await env.DB.prepare('UPDATE oa_sessions SET operator_version=(SELECT version FROM oa_operators WHERE id=operator_id)').run()
- const revoked=await importContext(runtime(),new Request(origin+importPath+'/jobs/'+own.id+'/resume',{method:'POST',headers:{Origin:origin,...operator}}),'own-before-demotion',false,current)
+ const revoked=await importContext(runtime(),await requestPrincipal(runtime(),new Request(origin+importPath+'/jobs/'+own.id+'/resume',{method:'POST',headers:{Origin:origin,...operator}})),'own-before-demotion',false,current)
  await env.DB.prepare('UPDATE oa_sessions SET revoked_at=1 WHERE operator_id=?').bind(current).run()
  await expect(resumeD1Import(own.id,revoked.context)).rejects.toThrow(/IMPORT_ATOMIC_GUARD/)
  expect((await call(importPath+'/jobs/'+own.id+'/resume',{},operator)).status).toBe(401)

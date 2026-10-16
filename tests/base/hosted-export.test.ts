@@ -156,7 +156,8 @@ it.each(['sign-out','operator-version'] as const)('[BASE-ACCESS-002 DATA-001] %s
  await env.DB.batch([env.DB.prepare('DELETE FROM attachments'),env.DB.prepare('DELETE FROM requests'),env.DB.prepare('DELETE FROM boards')])
  await env.FILES.delete('race-original')
  const before=await dataState(),entered=barrier(),release=barrier()
- const bucket=new Proxy(env.FILES,{get(target,key){if(key==='put')return async(...args:Parameters<R2Bucket['put']>)=>{const value=await target.put(...args);entered.release();await release.promise;return value};const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value}})
+ // Pause at the original file's write; the staged backup is written before it.
+ const bucket=new Proxy(env.FILES,{get(target,key){if(key==='put')return async(...args:Parameters<R2Bucket['put']>)=>{const value=await target.put(...args);if(args[0]==='race-original'){entered.release();await release.promise}return value};const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value}})
  const pending=app.fetch(new Request(origin+'/api/operator/data/import',{method:'POST',headers:{...cookie,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(bundle)}),{...bindings,FILES:bucket})
  await entered.promise
  let authority:unknown

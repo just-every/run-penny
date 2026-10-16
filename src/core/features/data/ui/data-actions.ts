@@ -1,4 +1,6 @@
-export type Overview = { hosted:boolean;canExport?:boolean;ownExport?:{jobId:string|null;phase:string|null;completed:number}|null; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string } | null; epoch: number }
+/** The server runner's progress for the operation holding the workspace (data/runner/status.ts). */
+export type Progress = { stage: 'records' | 'imports' | 'files' | 'restore'; state: 'working' | 'retrying' | 'waiting' | 'stopped'; steps: number; reason: string | null; canCancel: boolean; needsBackup: boolean }
+export type Overview = { hosted:boolean;canExport?:boolean;ownExport?:{jobId:string|null;phase:string|null;completed:number}|null; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string; progress: Progress | null } | null; recent: { id: string; kind: string; result: 'complete' | 'aborted'; reason: string | null; finishedAt: number } | null }
 export type BlockedCopy = { table: string; key: string; columns: string[]; action?: string; occurredAt?: string; resolvable?: true }
 export type AuditChoices = Record<string, 'unrelated' | 'clear'>
 export const auditCopyId = (copy: BlockedCopy) => (JSON.parse(copy.key) as string[])[0]
@@ -18,7 +20,21 @@ const messages: Record<string, string> = {
   erasure_ambiguous_copies: 'Other records repeat this wording, so Penny cannot tell whether it came from this person. Preview erasure again to see which records, reword them, then erase.',
   erasure_crosses_operator_hold: 'This action includes a protected operator identity.',
   unauthenticated: 'Your session has ended. Sign in again to continue.',
+  restore_backup_needed: 'Choose the same backup file again below to resume this restore.',
+  restore_upload_incomplete: 'The backup upload did not finish, so nothing was restored. Choose the backup again.',
+  erasure_not_started: 'The erasure stopped before it began, so nothing was removed. Preview it again.',
+  data_runner_superseded: 'Penny already continued this on the server. Reload the page to see where it is.',
+  invalid_data_operation: 'This operation has already finished. Reload the page.',
 }
+/** Why a step stopped or was refused, in plain words, for the progress and outcome cards. */
+export const reasonText = (code: string | null): string => code === null ? '' : ({
+  files_unavailable: 'Penny could not reach file storage.',
+  operator_authority_changed: 'The person who started it no longer has access, or their role changed. Resume it to continue as yourself.',
+  stopped_before_upgrade: 'It stopped before this version of Penny could finish it on its own.',
+  import_failed: 'The import stopped on a record it could not apply.',
+  step_failed: 'A step did not finish.',
+  data_runner_superseded: 'Another step took over.',
+} as Record<string, string>)[code] ?? messages[code] ?? 'A step did not finish.'
 export class DataActionError extends Error {
   readonly code: string
   readonly status: number
@@ -46,17 +62,8 @@ export async function downloadPrivate(path: string, filename: string): Promise<v
   document.querySelector<HTMLBodyElement>('body')?.appendChild(link)
   try { link.click() } finally { link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000) }
 }
+export { recordWords } from './record-words'
 export const entityLabels: Record<string, string> = { requesters: 'Requesters', requests: 'Feedback', evidence_items: 'Evidence', accounts: 'Accounts', operators: 'Former operators' }
-export const recordLabel = (table: string): string => ({
-  requests: 'Feedback', evidence_items: 'Evidence items', evidence_versions: 'Evidence history', request_evidence_links: 'Evidence links', requesters: 'Requesters', requester_addresses: 'Email addresses', attachments: 'Original attachments',
-  audit_anonymized: 'Audit references to anonymize', native_magic_links: 'Sign-in links', local_auth_outbox: 'Prepared sign-in links',
-  native_requester_sessions: 'Requester sessions', native_rate_limits: 'Rate-limit entries', native_moderation_events: 'Moderation history',
-  request_submission_keys: 'Submission reservations',
-  operators: 'Operator identity', oa_operators: 'Sign-in identity', operator_sessions: 'Operator sessions', audit_entries: 'Audit details to clear', oa_external_identities: 'Identity-provider links',
-  'release_versions:author_name': 'Release author names', 'request_comments:public_author_display_name': 'Comment author names', 'requests:public_author_display_name': 'Feedback author names',
-  notification_attempts: 'Mail attempts', notification_outbox_attempts: 'Mail attempts',
-}[table] ?? table.replaceAll('_', ' '))
-
 export async function previewErasure(table:string,id:string):Promise<Plan>{
  let result=await mutate<Plan|{status:'pending';continuation:string}>('erasure/preview',{table,id})
  while('status' in result&&result.status==='pending')result=await mutate<Plan|{status:'pending';continuation:string}>('erasure/preview',{table,id,continuation:result.continuation})

@@ -2,16 +2,9 @@ import { NativeError } from '../auth/native-tokens'
 
 type HeldOperation = { id: string | null; kind: string | null; status: string | null }
 function next(operation: HeldOperation): string {
- const label = operation.kind === 'export' ? 'A workspace export' : operation.kind === 'restore' ? 'A workspace restore' : operation.kind === 'erase' ? 'A data erasure' : 'A data operation'
- let action = operation.id
-  ? `Inspect operation ${operation.id} with npm run data:status; follow the guarded recovery steps if its runner stopped.`
-  : 'Check the active operation on the Data page, then follow the guarded recovery steps.'
- if (operation.id && operation.kind === 'restore' && operation.status === 'pending') {
-  action = `Resume with npm run data:import using --resume ${operation.id}, the same archive and latest source journal; or cancel with npm run data:abort-restore using ${operation.id}.`
- } else if (operation.id && operation.kind === 'erase' && ['pending_r2', 'pending_import'].includes(operation.status ?? '')) {
-  action = `Resume with npm run data:resume-erasure using operation ${operation.id} and --journal-out.`
- }
- return `${label} is in progress. ${action} See docs/data-ownership.md for origin, owner-only session file and recovery requirements, then try again.`
+ if (operation.kind === 'export') return 'A workspace export is in progress. Finish or abort it on the Data page, then try again.'
+ const label = operation.kind === 'restore' ? 'A workspace restore' : operation.kind === 'erase' ? 'A data erasure' : 'A data operation'
+ return `${label} is in progress. Penny finishes it on the server; the Data page shows its progress. Try again once it is done.`
 }
 
 /** A transaction guard also requires idle data custody. When a data operation

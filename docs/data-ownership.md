@@ -1,27 +1,53 @@
 # Product archive and guarded recovery
 
 Native operators can download the complete bounded product archive and separate
-erasure journal over authenticated HTTPS. Hosted restore, erasure preview, erasure,
-resume, abort and runner recovery use the same maintenance and custody fences as
-local operations. Every hosted mutation requires a current native operator
-session, an explicit Origin matching the configured APP_ORIGIN, and a request
-URL at that exact origin. Requester tokens never grant operator authority.
-Authority is checked again at the write transaction and file transitions; a
-revoked or expired session cannot finish a restore or recovery admitted earlier.
-Safe cleanup may remove that operation's staged files and release its lock after
-authority is lost, but cannot apply the archive or authorize another operation.
-The private Data screen and every API route independently require native operator
-authority. Downloads use private/no-store headers. Hosted proof is **source-only,
-local TLS**, using the emitted production-mode Worker with real local D1/R2 and
-no mail provider. Real hosted acceptance remains an owner/live action, not
-universal DATA-001/BASE-DATA-001/003 acceptance. The Data screen, local and
-hosted alike, does every step in the browser with your signed-in session: download
-a backup (one file holding the archive and its journal), restore one into an empty
-workspace (add a newer journal only if records were erased after that backup),
-erase a person, request, evidence item or account chosen by name after reviewing
-everything it removes, and move saved Canny or UserVoice feedback in. No session
-file or command is needed there. The commands below are the same operations for
-scripts and agents; they need an owner-only session file.
+erasure journal over authenticated HTTPS. Restore, erasure preview, erasure,
+resume and cancel use the same maintenance and custody fences locally and
+hosted. Every mutation requires a current native operator session, an explicit
+Origin matching the configured APP_ORIGIN, and a request URL at that exact
+origin. Requester tokens never grant operator authority. The private Data screen
+and every API route independently require native operator authority. Downloads
+use private/no-store headers.
+
+The Data screen, local and hosted alike, does every step in the browser with your
+signed-in session: download a backup (one file holding the archive and its
+journal), restore one into an empty workspace, erase a person, request, evidence
+item or account chosen by name after reviewing everything it removes, and move
+saved Canny or UserVoice feedback in. No session file, copied cookie or command
+is needed there, including when something stops. The `data:*` commands below are
+the same operations for scripts and agents; they need an owner-only session file.
+
+## Confirmed work finishes on the server
+
+Once you confirm an erasure, a restore or a saved-feedback import, Penny finishes
+it on the server; the tab can close at any point. The request that confirms it
+runs the first steps, and Penny's runner does the rest: a Queue message wakes it
+right away, the minute Cron checks for anything left, and opening the Data page
+wakes it too. Coming back to the Data page shows what it is doing now (removing
+the records, removing them from saved imports, deleting original files, or
+restoring) or how it ended.
+
+Each step runs under one claim with a 90-second lease. A step that stops
+mid-way, for example when its Worker is cut off, keeps its claim until the lease
+passes; the next runner then takes the claim over and returns the step to where
+it can safely resume. Every write a step makes first checks its own claim in the
+same transaction, so a stopped runner that wakes up late changes nothing, and no
+step is applied twice. Erasure steps are single transactions or journaled Base
+steps, file deletion is idempotent, and a restore applies its records in one
+transaction.
+
+The server continues the work as the operator who confirmed it, for as long as
+that operator stays active at the same role and version; signing out or closing
+the tab does not stop it. If that operator is removed or their role changes, or
+a step fails three times in a row, the work stops and the Data page says so in
+plain words with **Resume** (and **Cancel** while nothing has changed yet: an
+erasure before any record is removed, or a restore before its records are
+applied). Resuming continues it as the operator who pressed it. An erasure that
+already removed the records can only be finished, never cancelled. A restore
+keeps the uploaded backup on the server (its own file in R2, never treated as
+an original file) until it ends; if that upload never finished, the restore ends
+with nothing restored and the page asks for the backup again.
+
 For a separate reversible saved-Canny trial, see [TRIAL.md](TRIAL.md).
 
 ## Archive and restoration
@@ -37,7 +63,7 @@ npm run data:journal -- private/latest-journal.json --origin https://penny.examp
 Replace the example origin with the installation's exact HTTPS origin. Local
 HTTP is accepted only for localhost, 127.0.0.1 or ::1. Paths, query strings,
 fragments, URL credentials, foreign redirects and TLS downgrade are refused.
-The session file is a regular, owner-owned 0600 JSON file with exactly one
+Only these commands need a session file; the Data page never does. The session file is a regular, owner-owned 0600 JSON file with exactly one
 `cookie` property containing the existing native operator cookie. To obtain it, sign in to this installation as the owner. Open browser developer
 tools, then Application (or Storage) → Cookies → the installation’s exact origin.
 Find `__Host-operator_session` (local HTTP uses `operator_session_local`). Create
@@ -203,21 +229,21 @@ erasure still checks the complete plan before removal. Migration 0050 tracks
 Penny's import metadata changes in an installation-only counter; it preserves
 portable product rows and their archive schema.
 
-For a genuinely interrupted runner, first stop it and quiesce its writers. Never
-use recovery against a live runner. The server requires explicit confirmation
-but cannot independently prove that a process has stopped:
+A stopped step is taken over automatically once its lease passes (see
+*Confirmed work finishes on the server*); the Data page's Resume does the same on
+request. For scripts, `data:resume-erasure` and `data:import --resume` resume an
+operation and `data:abort-pending-erasure` / `data:abort-restore` cancel one that
+has not changed anything yet. `data:recover-runner` remains for a hosted export,
+whose download is driven by the owner's browser:
 
 ```
 npm run data:recover-runner -- <id> --expected-status running --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
-# Then resume the same restore. For interrupted file cleanup use running_r2;
-# for interrupted retained-import erasure cleanup use running_import.
 npm run data:abort-export -- <id> --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
 npm run data:abort-pending-erasure -- <id> --prior-runner-stopped --origin http://localhost:15300 --session-file private/session.json
 ```
 
-Only unapplied pending erasure can be aborted. Once native D1 erasure committed,
-finish the retained-import cleanup and R2 cleanup using the same operation ID.
-No automatic lease takeover or time-based deletion is implemented.
+Only an unapplied erasure can be cancelled. Once its records are removed, the
+saved-import and file cleanup always run to completion.
 
 Migration 0004 adds fences and repairs native slugs using durable submission
 audit provenance even after submission-key expiry. Existing 0001–0003 remain

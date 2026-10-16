@@ -96,12 +96,18 @@ function resolved(plan: OperatorErasurePlan, resolutions: AuditResolution[]): bo
   && new Set(resolutions.map(item => item.id)).size === resolutions.length && resolutions.every(item => listed.includes(item.id))
 }
 
-export async function eraseOperator(db: D1Database, id: string, planHash: string, authority?: DataAuthority, resolutions: AuditResolution[] = []): Promise<{ operationId: string; status: string }> {
+export type OperatorErasurePayload = { table: 'operators'; id: string; planHash: string; resolutions: AuditResolution[] }
+/** Checks the reviewed plan and the owner's choice for each listed copy, then
+ * takes the data lock; the redaction itself runs as a server step. */
+export async function startOperatorErasure(db: D1Database, id: string, planHash: string, authority?: DataAuthority, resolutions: AuditResolution[] = []): Promise<string> {
  const reviewed = await planOperatorErasure(db, id)
  if (reviewed.planHash !== planHash) fail('erasure_plan_changed')
  if (!resolved(reviewed, resolutions)) fail('erasure_ambiguous_copies')
  await assertDataAuthority(db, authority)
- const operation = await reserve(db, 'erase', {}, authority)
+ return reserve(db, 'erase', { table: 'operators', id, planHash, resolutions } satisfies OperatorErasurePayload, authority)
+}
+/** The redaction's one transaction, inside the lock; file cleanup follows. */
+export async function applyOperatorErasure(db: D1Database, operation: string, { id, planHash, resolutions }: OperatorErasurePayload, authority?: DataAuthority): Promise<void> {
  try {
   const found = await subject(db, id), { operator, native } = found
   const plan = await planOperatorErasure(db, id)
@@ -155,11 +161,11 @@ export async function eraseOperator(db: D1Database, id: string, planHash: string
   )
   try { await dataBatch(db, statements, authority) }
   catch (error) { if (String(error).includes('IMPORT_ATOMIC_GUARD')) fail('erasure_plan_changed'); throw error }
-  await finish(db, operation, 'complete', authority)
-  return { operationId: operation, status: 'complete' }
  } catch (error) {
   const pending = await db.prepare('SELECT status FROM data_operations WHERE id=?').bind(operation).first<string>('status')
-  if (pending !== 'pending_r2') await finish(db, operation, 'aborted')
+  if (pending === 'pending_r2') return
+  // A superseded runner leaves the operation to the runner that took it over.
+  if (!(error instanceof NativeError && error.code === 'data_runner_superseded')) await finish(db, operation, 'aborted')
   throw error
  }
 }

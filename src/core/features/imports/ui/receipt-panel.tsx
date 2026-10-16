@@ -4,6 +4,7 @@ import { OperatorResourceFailure, OperatorResourceLoading, OperatorResourceNotFo
 import { secondaryButtonClass } from '@/core/ui/app/classes'
 import type { UserVoiceReceipt } from '../uservoice-receipt'
 import { UserVoiceReceiptSection } from './uservoice-receipt'
+import { byPlainName } from '../../data/ui/record-words'
 
 export interface ImportReceipt {
   phase: string
@@ -20,6 +21,12 @@ export interface ImportReceipt {
 }
 
 const pageSize = 20
+/** Where the import stands, in plain words. */
+const phaseWords: Record<string, string> = {
+  preview: 'This is a preview. Nothing is saved until you apply it.', applying: 'Importing. Penny continues on the server.', completed: 'Imported. These records are in Penny.',
+  preflighting: 'Checking every imported record before undo.', undoing: 'Undoing. Penny continues on the server.', rolling_back: 'Rolling back. Penny continues on the server.',
+  undone: 'Undone. The imported records are removed.', rolled_back: 'Rolled back. What this import applied is removed.',
+}
 
 function ReceiptPages<T>({ items, label, render }: { items: readonly T[]; label: string; render: (item: T, index: number) => ReactNode }) {
   const [page, setPage] = useState(0)
@@ -49,9 +56,11 @@ function CountCell({ children }: { children: ReactNode }) {
 }
 
 export function ReceiptContent({ receipt, title }: { receipt: ImportReceipt; title: string }) {
+  // Counted by what a person would call them; bookkeeping is summed into one line.
+  const destinations = byPlainName(receipt.destinations.map(({ table, ...counts }) => ({ table, counts }))).map(({ name, counts }) => ({ table: name, ...counts }))
   return <section className="space-y-5" aria-label={title}>
     <h3 className="font-bold text-penny-ink">{title}</h3>
-    <p className="text-sm leading-6 text-penny-muted">Receipt phase: {receipt.phase}.</p>
+    <p className="text-sm leading-6 text-penny-muted">{phaseWords[receipt.phase] ?? 'In progress.'}</p>
 
     <div className="space-y-2">
       <h4 className="font-bold text-penny-ink">Source rows</h4>
@@ -77,12 +86,12 @@ export function ReceiptContent({ receipt, title }: { receipt: ImportReceipt; tit
     </div> : null}
 
     <div className="space-y-2">
-      <h4 className="font-bold text-penny-ink">Destination rows by table</h4>
-      <div className="hidden sm:block"><ReceiptTable label="Destination row counts by table">
-        <thead><tr className="border-b border-penny-line bg-penny-card text-penny-muted"><th className="w-[28%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Table</th><th className="w-[18%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Planned</th><th className="w-[18%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Created</th><th className="w-[18%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Removed</th><th className="w-[18%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Kept</th></tr></thead>
-        <tbody>{receipt.destinations.map(destination => <tr key={destination.table} className="border-b border-penny-line last:border-0"><th className="break-words px-2 py-2 align-top font-medium sm:px-3" scope="row">{destination.table}</th><CountCell>{destination.planned}</CountCell><CountCell>{destination.created}</CountCell><CountCell>{destination.removed}</CountCell><CountCell>{destination.retained}</CountCell></tr>)}</tbody>
+      <h4 className="font-bold text-penny-ink">What Penny creates</h4>
+      <div className="hidden sm:block"><ReceiptTable label="Records Penny creates">
+        <thead><tr className="border-b border-penny-line bg-penny-card text-penny-muted"><th className="w-[28%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Records</th><th className="w-[18%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Planned</th><th className="w-[18%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Created</th><th className="w-[18%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Removed</th><th className="w-[18%] break-words px-2 py-2 font-medium sm:px-3" scope="col">Kept</th></tr></thead>
+        <tbody>{destinations.map(destination => <tr key={destination.table} className="border-b border-penny-line last:border-0"><th className="break-words px-2 py-2 align-top font-medium sm:px-3" scope="row">{destination.table}</th><CountCell>{destination.planned}</CountCell><CountCell>{destination.created}</CountCell><CountCell>{destination.removed}</CountCell><CountCell>{destination.retained}</CountCell></tr>)}</tbody>
       </ReceiptTable></div>
-      <ul className="space-y-2 sm:hidden">{receipt.destinations.map(destination => <li key={destination.table} className="rounded-lg border border-penny-line p-3"><h5 className="break-words font-bold">{destination.table}</h5><dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 text-sm"><div className="flex justify-between gap-2"><dt>Planned</dt><dd className="tabular-nums">{destination.planned}</dd></div><div className="flex justify-between gap-2"><dt>Created</dt><dd className="tabular-nums">{destination.created}</dd></div><div className="flex justify-between gap-2"><dt>Removed</dt><dd className="tabular-nums">{destination.removed}</dd></div><div className="flex justify-between gap-2"><dt>Kept</dt><dd className="tabular-nums">{destination.retained}</dd></div></dl></li>)}</ul>
+      <ul className="space-y-2 sm:hidden">{destinations.map(destination => <li key={destination.table} className="rounded-lg border border-penny-line p-3"><h5 className="break-words font-bold">{destination.table}</h5><dl className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 text-sm"><div className="flex justify-between gap-2"><dt>Planned</dt><dd className="tabular-nums">{destination.planned}</dd></div><div className="flex justify-between gap-2"><dt>Created</dt><dd className="tabular-nums">{destination.created}</dd></div><div className="flex justify-between gap-2"><dt>Removed</dt><dd className="tabular-nums">{destination.removed}</dd></div><div className="flex justify-between gap-2"><dt>Kept</dt><dd className="tabular-nums">{destination.retained}</dd></div></dl></li>)}</ul>
     </div>
 
     {receipt.omissions.length ? <div className="space-y-2"><h4 className="font-bold text-penny-ink">Omissions ({receipt.omissions.length})</h4><ReceiptPages items={receipt.omissions} label="omissions" render={item => <><span className="font-medium">{item.kind} · {item.field} · {item.count}</span><span className="text-penny-muted"> — {item.reason}</span></>}/></div> : null}
@@ -91,7 +100,7 @@ export function ReceiptContent({ receipt, title }: { receipt: ImportReceipt; tit
 
     <div className="space-y-2"><h4 className="font-bold text-penny-ink">Historical identity</h4><ul className="space-y-2 text-sm leading-6">{receipt.identities.map(identity => <li key={identity.kind}><span className="font-medium">{identity.kind}:</span> {identity.treatment}</li>)}</ul><p className="text-sm leading-6 text-penny-muted">Missing author details stay unknown. No requester or initial submission is invented from an aggregate row.</p></div>
 
-    <div className="space-y-2"><h4 className="font-bold text-penny-ink">External effects</h4><dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm"><div className="flex justify-between gap-2"><dt>Mail outbox rows</dt><dd className="tabular-nums">{receipt.effects.mail}</dd></div><div className="flex justify-between gap-2"><dt>Notification rows</dt><dd className="tabular-nums">{receipt.effects.notifications}</dd></div></dl></div>
+    <div className="space-y-2"><h4 className="font-bold text-penny-ink">External effects</h4><dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm"><div className="flex justify-between gap-2"><dt>Emails queued</dt><dd className="tabular-nums">{receipt.effects.mail}</dd></div><div className="flex justify-between gap-2"><dt>Notifications created</dt><dd className="tabular-nums">{receipt.effects.notifications}</dd></div></dl></div>
 
     {receipt.conflicts.length ? <div className="space-y-2" role="status"><h4 className="font-bold text-penny-ink">Kept because native work depends on it ({receipt.conflicts.length})</h4><ReceiptPages items={receipt.conflicts} label="conflicts" render={conflict => <><span className="font-medium">{conflict.kind} · {conflict.sourceId}</span><span className="text-penny-muted"> — {conflict.reason}</span></>}/></div> : null}
     <p className="text-sm leading-6 text-penny-muted">{receipt.originalsRetained ? 'The private source originals are retained.' : 'The private source originals are no longer retained.'}</p>

@@ -30,10 +30,12 @@ async function assertHostedPanel(page,overview,cookie) {
   if(overview.canExport)assert.equal(await exportButton.isDisabled(),Boolean(overview.operation),'[DATA-001] maintenance blocks starting another export')
   const text=await page.locator('main').innerText()
   assert.ok(!text.includes(cookie.split('=')[1]),'[BASE-SECRET-002] mounted hosted panel excludes native session material')
+  // Progress is described in plain words, never by stored state names or operation IDs.
+  assert.doesNotMatch(text,/\b(?:pending_import|running_import|pending_r2|running_r2)\b|operation (?:pending|running)/,'[DATA-003] data state is described in plain words')
   if(overview.operation) {
-    await page.getByText(`${overview.operation.kind} operation ${overview.operation.status}.`,{exact:false}).waitFor()
-    await page.getByText(overview.operation.id,{exact:true}).waitFor()
-  } else await page.getByText('No data operation is active.',{exact:false}).waitFor()
+    await page.getByRole('heading',{name:'Backup in progress',exact:true}).waitFor()
+    assert.ok(!text.includes(overview.operation.id),'[DATA-001] the operation is described, not identified by its ID')
+  } else assert.equal(await page.getByRole('heading',{name:/in progress|^Erasing|^Restoring/}).count(),0,'[DATA-001] an idle workspace shows no operation in progress')
 }
 
 async function bounded(promise,milliseconds,message) {
@@ -95,7 +97,7 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     const document=await page.goto(origin+'/app/data')
     assert.equal(document.status(),200)
     assert.equal(new URL(page.url()).pathname,'/app/data')
-    assert.match(await document.text(),/No data operation is active\./,'[DATA-001] the real SSR document contains idle state')
+    assert.doesNotMatch(await document.text(),/Backup in progress|Erasing personal data|Restoring a backup</,'[DATA-001] the real SSR document contains idle state')
     await assertHostedPanel(page,idleOverview,cookie)
     const details={scope:'source-only, local TLS emitted production-mode Worker',authority:'native bootstrap cookie and first-run form',tlsTrust:'test-certificate SPKI pin; explicit CA for Node',api:'/api/operator/data/overview',providerCalls:0}
     await capture('DATA-001-hosted-idle',page,{...details,operation:null})
@@ -132,8 +134,7 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
       assert.equal(response.status(),200)
       assert.equal(new URL(page.url()).pathname,'/app/data')
       const document=await response.text()
-      assert.ok(document.includes(active.overview.operation.id),'[DATA-001] real SSR reads the reserved operation')
-      assert.match(document,/export operation pending\./,'[DATA-001] real SSR renders the pending export state')
+      assert.match(document,/Backup in progress/,'[DATA-001] real SSR renders the reserved export in plain words')
       await assertHostedPanel(page,active.overview,cookie)
       await capture('DATA-001-hosted-active-operation',page,{...details,operation:active.overview.operation,observation:'Real SSR and hydrated panel read the native pending export reservation while its original R2 list transport is held.'})
       const held=await runtime.call('/api/operator/data/overview',undefined,{Cookie:cookie})

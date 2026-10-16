@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { buttonClass } from '../../auth/client-mutations'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure, OperatorResourceLoading, OperatorResourceNotFound, OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
@@ -18,7 +18,14 @@ interface Preview {
   receipt: ImportReceipt
 }
 
-interface Job { id: string; state: string; checkpoint: number; total: number }
+interface Job { id: string; state: string; checkpoint: number; total: number; progress?: { state: string; reason: string | null } | null }
+const settled = ['completed', 'undone', 'rolled_back']
+/** A saved import's state in the page's words; never the stored state name. */
+const stateWords: Record<string, string> = {
+  pending: 'Importing', preparing: 'Importing', applying: 'Importing', originals_incomplete: 'Saving the original files', preflighting: 'Checking before undo',
+  completed: 'Imported', undoing: 'Undoing', undone: 'Undone', rolling_back: 'Rolling back', rolled_back: 'Rolled back', failed: 'Stopped',
+}
+const jobWords = (job: Job) => `${stateWords[job.state] ?? 'In progress'} · ${job.checkpoint} of ${job.total} source records`
 const mebibyte = 1024 * 1024
 const sourceFileLimit = 4 * mebibyte
 const sourceBundleLimit = 24 * mebibyte
@@ -73,7 +80,7 @@ async function readJob(id: string): Promise<Job> {
   if (value.id !== id || typeof value.state !== 'string' || typeof value.checkpoint !== 'number' || !Number.isFinite(value.checkpoint) || typeof value.total !== 'number' || !Number.isFinite(value.total)) {
     throw new Error('The saved import status could not be refreshed.')
   }
-  return { id, state: value.state, checkpoint: value.checkpoint, total: value.total }
+  return { id, state: value.state, checkpoint: value.checkpoint, total: value.total, progress: value.progress ?? null }
 }
 
 export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
@@ -116,7 +123,7 @@ export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
     }
   }
 
-  const receiveJob = (next: Job) => {
+  const receiveJob = useCallback((next: Job) => {
     setJob(next)
     setMessage(next.state === 'completed'
       ? 'Import complete. Historical people have no sign-in or email permissions.'
@@ -124,8 +131,17 @@ export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
         ? 'Imported effects removed. Source originals remain private unless erased.'
         : next.state === 'rolled_back'
           ? 'Applied import effects rolled back.'
-          : 'Import paused with a saved checkpoint. Continue this saved job when ready.')
-  }
+          : next.progress?.state === 'stopped' || next.state === 'failed'
+            ? 'This import has stopped. Resume it, or roll back what it applied.'
+            : 'Penny is continuing this import on the server. You can close this page; it finishes on its own.')
+  }, [])
+  // The server carries an unsettled import; the page only reads its progress.
+  const following = job && !settled.includes(job.state) && job.progress?.state !== 'stopped' ? job.id : null
+  useEffect(() => {
+    if (!following) return
+    const timer = setInterval(() => { void readJob(following).then(next => { receiveJob(next); if (settled.includes(next.state)) reloadJobs() }).catch(() => undefined) }, 3000)
+    return () => clearInterval(timer)
+  }, [following, receiveJob, reloadJobs])
 
   const showJobs = () => {
     if (jobs.kind === 'loading') return <OperatorResourceLoading label="Loading saved imports…"/>
@@ -138,7 +154,7 @@ export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
       <ul className="space-y-3">
         {jobs.data.map(item => <li key={item.id}>
           <button type="button" className="min-h-11 break-all text-left text-sm underline" disabled={busy} onClick={() => setJob(item)}>
-            {item.state} · {item.checkpoint}/{item.total} · {item.id}
+            {jobWords(item)} · <span className="text-penny-muted">{item.id}</span>
           </button>
         </li>)}
       </ul>
@@ -202,8 +218,7 @@ export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
     {job ? <div className="mt-5 space-y-3">
       <div className="space-y-2">
         <h3 className="font-bold text-penny-ink">Saved import</h3>
-        <p className="break-all text-sm">{job.id}</p>
-        <p className="text-sm">{job.state} · {job.checkpoint} of {job.total} source records</p>
+        <p className="text-sm">{jobWords(job)}</p>
         <div className="flex flex-wrap gap-3">
           {!['completed', 'undone', 'rolled_back'].includes(job.state) ? <button className={buttonClass} disabled={busy || disabled} onClick={() => void perform(async () => receiveJob(await action<Job>('jobs/' + encodeURIComponent(job.id) + '/resume', {})))}>Resume saved import</button> : null}
           {['completed', 'undoing'].includes(job.state) ? <button className={buttonClass} disabled={busy || disabled} onClick={() => void perform(async () => receiveJob(await action<Job>('jobs/' + encodeURIComponent(job.id) + '/undo', {})), job.id)}>Undo unchanged imported effects</button> : null}

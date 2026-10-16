@@ -5,8 +5,11 @@ import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { createPennyApi } from '@/core/app/api'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { providerMessages } from './provider-messages'
-import { canonical,eraseEntity,planErasure,readErasureJournal,type Archive,type ErasureJournal } from '@/core/features/data/archive'
+import { canonical,planErasure,readErasureJournal,type Archive,type ErasureJournal } from '@/core/features/data/archive'
+import { eraseEntity } from '@/core/features/data/operations'
 import { digest } from '@/core/features/auth/native-tokens'
+import { LEASE_MS } from '@/core/features/data/runner/claims'
+import { barrier } from './review-race-storage'
 
 const origin='https://127.0.0.1:8787',app=createPennyApi()
 const bindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_API_KEY:'synthetic-provider-test-key'})
@@ -235,4 +238,34 @@ it('[DATA-003] another person\'s audit rows that only repeat a removed operator\
  expect(await env.DB.prepare('SELECT details_json FROM audit_entries WHERE id=?').bind(updated).first('details_json')).toBeNull()
  expect(JSON.parse((await env.DB.prepare("SELECT details_json FROM audit_entries WHERE action='data.erased' ORDER BY occurred_at DESC LIMIT 1").first<string>('details_json'))!)).toMatchObject({auditCopiesConfirmedUnrelated:[created],auditCopiesCleared:[updated]})
  expect(await env.DB.prepare('SELECT display_name FROM operators WHERE id=?').bind(former.id).first('display_name')).toBe('Erased operator')
+})
+
+it('[DATA-003 BASE-DATA-003] a confirmed erasure whose tab closes mid-step finishes on the server once, and the stopped request cannot apply anything again',async()=>{
+ const g=await graph(),target={table:'requesters',id:g.requester}
+ const preview=await good<Preview>('/api/operator/data/erasure/preview',target,g.operator)
+ // The request stops inside its file-deletion step, as when the tab closes and the Worker is cut off.
+ const entered=barrier(),release=barrier()
+ const stuck=new Proxy(env.FILES,{get(bucket,key){if(key==='delete')return async(...args:Parameters<R2Bucket['delete']>)=>{entered.release();await release.promise;return bucket.delete(...args)};const value=Reflect.get(bucket,key);return typeof value==='function'?value.bind(bucket):value}})
+ const closed=app.fetch(new Request(origin+'/api/operator/data/erasure',{method:'POST',headers:{Host:'127.0.0.1:8787',Origin:origin,'Content-Type':'application/json',...g.operator},body:JSON.stringify({...target,planHash:preview.planHash})}),{...bindings(),FILES:stuck})
+ await entered.promise
+ const [operation]=await rows('data_operations');expect(operation.status).toBe('running_r2')
+ expect(await env.DB.prepare('SELECT id FROM requesters WHERE id=?').bind(g.requester).first()).toBeNull()
+ // Coming back while the step's claim is live shows progress, not a state name.
+ const during=await good<{operation:{progress:{state:string;stage:string}}}>('/api/operator/data/overview',undefined,g.operator)
+ expect(during.operation.progress).toMatchObject({state:'working',stage:'files'})
+ // The minute Cron leaves a live claim alone, and takes the work over once its lease has passed.
+ const {runNotificationSchedule}=await import('@/core/features/notifications/scheduled'),{createScheduledController}=await import('cloudflare:test')
+ const cron=()=>runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings())
+ await cron();expect((await rows('data_operations'))[0].status).toBe('running_r2')
+ const now=Date.now();vi.spyOn(Date,'now').mockReturnValue(now+LEASE_MS+1000)
+ await cron()
+ const finished=async()=>({operation:(await rows('data_operations')).map(row=>row.status),state:await env.DB.prepare('SELECT phase,lock_id FROM data_state').first(),files:(await env.FILES.list()).objects.length,erased:(await rows('audit_entries')).filter(row=>String(row.action).startsWith('data.eras')).map(row=>row.action).sort(),journal:await readErasureJournal(env.DB)})
+ const complete=await finished()
+ expect(complete).toMatchObject({operation:['complete'],state:{phase:'idle',lock_id:null},files:0,erased:['data.erased','data.erasure_completed']})
+ // The stopped request resumes late: every write it tries is refused, so nothing applies twice.
+ release.release()
+ const late=await closed;expect(late.status).toBe(409);expect(await late.json()).toEqual({error:'data_runner_superseded'})
+ await cron();expect(await finished()).toEqual(complete)
+ const after=await good<{operation:unknown;recent:{kind:string;result:string}}>('/api/operator/data/overview',undefined,g.operator)
+ expect(after).toMatchObject({operation:null,recent:{kind:'erase',result:'complete'}})
 })

@@ -3,7 +3,8 @@ import {mockMail,messages,call as publicCall} from './support'
 import {env} from 'cloudflare:workers'
 import {createPennyRuntime} from '@/core/app/runtime'
 import {drainLearning} from '@/core/features/learning/scheduled'
-import {exportArchive,planErasure,eraseEntity,normalize} from '@/core/features/data/archive'
+import { exportArchive,planErasure,normalize } from '@/core/features/data/archive'
+import { eraseEntity } from '@/core/features/data/operations'
 import {canonical} from '@/core/features/data/archive'
 import {call,json,fixture,path,bindings,sent,network} from './learning-test-runtime'
 it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke',async()=>{
@@ -50,7 +51,7 @@ it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged w
  const fresh=await grant(undefined,[evidence.id]),reuse=await call(path+`/investigations/${fresh.id}/run`,{},f.cookie),pauseRevoked=await call(path+`/investigations/${a.id}/control`,{action:'pause'},f.cookie)
  expect({preserved,revokedState:(revoked.investigation as {state:string}).state,retained:['observations','artifacts','runs','commitments','corrections'].map(key=>(revoked[key] as unknown[]).length),inFlightPublished:inFlight.ok,nativeReusable:reuse.ok,pauseReopensGrant:pauseRevoked.ok}).toEqual({preserved:before,revokedState:'revoked',retained:[0,0,0,0,0],inFlightPublished:false,nativeReusable:true,pauseReopensGrant:false})
  await json(call(path+`/investigations/${b.id}/run`,{},f.cookie));await json(call(path+`/investigations/${c.id}/run`,{},f.cookie))
- const latest=await exportArchive(env.DB,env.FILES),{reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{restoreArchive}=await import('@/core/features/data/archive')
+ const latest=await exportArchive(env.DB,env.FILES),{reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{restoreArchive}=await import('@/core/features/data/operations')
  await reset();await applyD1Migrations(env.DB,inject('migrations'));await expect(restoreArchive(env.DB,env.FILES,old.archive,latest.journal)).rejects.toMatchObject({code:'stale_archive'})
  expect((await restoreArchive(env.DB,env.FILES,latest.archive,latest.journal)).status).toBe('complete')
  expect(await env.DB.prepare('SELECT state FROM learning_investigations WHERE id=?').bind(a.id).first('state')).toBe('revoked')
@@ -124,7 +125,7 @@ it('[LEARN-005] source person erasure covers duplicate connections and fresh-gra
  for(const item of [a,b,pending]){const detail=await json(call(path+`/investigations/${item.investigation.id}`,undefined,f.cookie));expect(JSON.stringify(detail)).not.toContain('Private source contributor');expect(JSON.stringify(detail)).not.toContain('contacts/person-1')}
  expect(JSON.stringify(await json(call(path,undefined,f.cookie)))).not.toContain('person-1')
  const exported=await exportArchive(env.DB,env.FILES);expect(JSON.stringify(exported.archive)).not.toContain('private-contributor@example.com');expect(JSON.stringify(exported.archive)).not.toContain('Private source contributor');expect(JSON.stringify(exported.archive)).not.toContain('person-1')
- const {reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{restoreArchive}=await import('@/core/features/data/archive')
+ const {reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{restoreArchive}=await import('@/core/features/data/operations')
  await reset();await applyD1Migrations(env.DB,inject('migrations'));await expect(restoreArchive(env.DB,env.FILES,old.archive,exported.journal)).rejects.toMatchObject({code:'stale_archive'});expect((await restoreArchive(env.DB,env.FILES,exported.archive,exported.journal)).status).toBe('complete');expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
  const {runInvestigation}=await import('@/core/features/learning/run');await expect(runInvestigation(createPennyRuntime(bindings()),a.investigation.id,'restored',{db:env.DB,actor:{system:'learning.scheduler'}})).rejects.toMatchObject({code:'learning_scope_changed'})
 })

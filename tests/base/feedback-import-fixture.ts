@@ -61,8 +61,8 @@ export async function applyPreviousFeedback(input:SavedFeedbackInput,operator:Re
  return populateLegacyFeedback(input,operator)
 }
 export async function populateFeedback(input:SavedFeedbackInput,operator:Record<string,string>,partial=false) {
- const {importContext}=await import('@/core/features/imports/service')
- const {context,actor}=await importContext(runtime(),new Request(origin+importPath+'/apply',{method:'POST',headers:{Origin:origin,...operator}}),input.namespace)
+ const {importContext,requestPrincipal}=await import('@/core/features/imports/service')
+ const {context,actor}=await importContext(runtime(),await requestPrincipal(runtime(),new Request(origin+importPath+'/apply',{method:'POST',headers:{Origin:origin,...operator}})),input.namespace)
  context.storage.database=env.DB
  const {readSavedFeedback}=await import('@/core/features/imports/source'),{feedbackMapping}=await import('@/core/features/imports/mapping')
  const {planD1Import,createD1ImportJob,applyD1ImportBatches,resumeD1Import}=await import('../../base/modules/import-kit/src/d1/index.ts')

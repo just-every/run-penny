@@ -1,7 +1,7 @@
 import {withErasureDatabase} from './erasure-database'
 import {NativeError} from '../auth/native-tokens'
 import type { Row } from '../data/archive'
-import type { DataAuthority } from '../data/authority'
+import { authorityCondition,type DataAuthority } from '../data/authority'
 import { retireD1ImportCustodyStep,type D1ImportContext,type D1Sql } from '../../../../base/modules/import-kit/src/d1/index'
 import { portabilityRedactionCheckpoint } from '../../../../scripts/portability/cleanup.mjs'
 import { feedbackMappingVersion } from './mapping'
@@ -57,6 +57,6 @@ export async function resumeImportErasure(db:D1Database,operation:string,authori
 }
 
 export async function erasureWorkContext(db:D1Database,operation:string,work:{ordinal:number;target_kind:string;target_id:string;namespace:string;row_keys_json:string},authority?:DataAuthority):Promise<D1ImportContext&{nativeErasureGuards:D1Sql[]}>{
- const targets=await erasureTargets(db,operation,work),context:D1ImportContext={destination:'penny-feedback',namespace:work.namespace,mappingVersion:feedbackMappingVersion,maxBatchBytes:1024*1024,originalErasurePolicy:'withdraw-all-job-artifacts',storage:{database:db,targets},authorization:{principalId:authority?.operatorId??'local-data-maintenance',predicate:()=>({sql:`EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND lock_id=? AND phase='applying')${authority?" AND EXISTS(SELECT 1 FROM oa_sessions s JOIN oa_operators o ON o.id=s.operator_id WHERE s.id=? AND s.operator_id=? AND s.revoked_at IS NULL AND s.expires_at>unixepoch('subsec')*1000 AND o.status='active' AND o.version=s.operator_version AND o.version=?)":''}`,params:[operation,...(authority?[authority.id,authority.operatorId,authority.operator.version]:[])]})}}
+ const targets=await erasureTargets(db,operation,work),context:D1ImportContext={destination:'penny-feedback',namespace:work.namespace,mappingVersion:feedbackMappingVersion,maxBatchBytes:1024*1024,originalErasurePolicy:'withdraw-all-job-artifacts',storage:{database:db,targets},authorization:{principalId:authority?.operatorId??'local-data-maintenance',predicate:()=>{const current=authority?authorityCondition(authority):null;return {sql:`EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND lock_id=? AND phase='applying')${current?' AND '+current.sql:''}`,params:[operation,...(current?.params??[])]}}}}
  return {...context,nativeErasureGuards:targets.nativeErasureGuards}
 }

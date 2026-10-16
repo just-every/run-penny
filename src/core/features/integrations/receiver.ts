@@ -5,12 +5,13 @@ import {destination,keyBytes} from './destinations'
 import {guardedDatabase} from './guarded-database'
 import {NativeError} from '../auth/native-tokens'
 import {boundedRawBody} from './raw-body'
+import {RECEIVER_EVENT,RECEIVER_TENANT} from './receiver-protocol'
 const note=z.object({requestId:z.string().min(1).max(128),note:z.string().trim().min(1).max(20000)}).strict()
 export async function receiveWebhook(runtime:PennyRuntime,request:Request,id:string) {
  const target=await destination(runtime,id,'receiver'),raw=await boundedRawBody(request)
  let verified
- try{verified=await verifyWebhook({body:raw,headers:request.headers,key:keyBytes(target.signing_key!),tenant:'penny-inbound',destinationId:id})}catch{throw new NativeError('integration_signature_refused',401)}
- if(verified.envelope.event!=='request.note')throw new NativeError('integration_event_refused',422)
+ try{verified=await verifyWebhook({body:raw,headers:request.headers,key:keyBytes(target.signing_key!),tenant:RECEIVER_TENANT,destinationId:id})}catch{throw new NativeError('integration_signature_refused',401)}
+ if(verified.envelope.event!==RECEIVER_EVENT)throw new NativeError('integration_event_refused',422)
  let input:z.infer<typeof note>
  try{input=note.parse(JSON.parse(verified.envelope.body))}catch{throw new NativeError('validation_failed',400)}
  const namespace='penny-inbound:'+id,db=runtime.database.binding

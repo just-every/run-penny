@@ -130,6 +130,32 @@
       "updated_at"
     ]
   },
+  "data_runner_claims": {
+    "classification": "installation",
+    "columns": [
+      "work_id",
+      "kind",
+      "operator_id",
+      "operator_version",
+      "actor_id",
+      "runner",
+      "lease_until",
+      "steps",
+      "failures",
+      "last_error",
+      "stopped_at",
+      "finished_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "data_runner_fences": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "held"
+    ]
+  },
   "data_state": {
     "classification": "journal",
     "columns": [

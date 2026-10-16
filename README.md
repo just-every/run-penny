@@ -92,10 +92,9 @@ browser; it trades the key for a local cookie and lands on `/setup`, the owner's
 first-run setup: review the owner and press **Finish setup** to open the app.
 Until you do, every `/app` page sends the owner back to `/setup`; afterwards
 `/setup` opens the app. Keep `RER_OPEN` to yourself: anyone holding the key can
-sign in to this local copy. A badge at the corner switches between the owner, a
-dev teammate (`teammate@dev.localhost`, a real operator that exists only in local
-data) and signed out. `dev --as teammate` or `dev --as signed-out` starts as one
-of those instead. The nav and title read **Penny Dev**. Sign-in is one click;
+sign in to this local copy. To act as a dev teammate (`teammate@dev.localhost`,
+a real operator that exists only in local data) or signed out, stop dev and start
+it again with `rer dev --as teammate` or `rer dev --as signed-out`. The nav and title read **Penny Dev**. Sign-in is one click;
 mail is silently suppressed and no provider is needed. Without the key, dev
 sign-in and anything made in a dev session answer 404 or are refused, even
 through a tunnel or proxy; `reset --yes` makes a new key and the old one stops
@@ -112,7 +111,9 @@ rer deploy --dry-run
 rer describe
 ```
 
-`verify` is the bounded full check; stop dev first with `dev --stop`. `reset`
+Stop dev first with `rer dev --stop`: `verify`, `reset`, `export`, `import` and
+`deploy` (even `--dry-run`) refuse while dev owns the local state, and say so.
+`verify` is the bounded full check. `reset`
 prints its contained inventory, refuses active operations, removes only local
 data, owner, generated settings and installer state, and keeps exports, source
 and deployment receipts. `export` produces a private archive and
@@ -279,9 +280,12 @@ Restore targets an empty isolated local installation and needs the latest erasur
 journal. It preserves the destination's native owner, holds restored delivery
 work and never replays historical mail. Base sessions, authority and signing or
 provider credentials are excluded; this is a product archive, not a portable
-identity backup. On a hosted copy, restore and erasure run through these same
-authenticated commands (`data:import`, `data:erase-preview`, `data:erase`,
-`data:resume-erasure`); the hosted Data page shows the exact commands.
+identity backup. These commands are for scripts and agents. On a local or hosted
+copy the Data page does all of it in the browser: once you confirm an erasure,
+a restore or a saved-feedback import, Penny finishes it on the server, so the
+tab can close. Coming back shows its progress or how it ended, and anything that
+stopped has a plain **Resume** (and **Cancel** while nothing has changed yet)
+button there. No session file, copied cookie or command is needed.
 [Data ownership](docs/data-ownership.md) describes bounds, resume and recovery.
 
 ## The decision loop

@@ -4,6 +4,8 @@ import {admitPublicRequest} from './core/app/public-rate'
 import {editorDocumentHeaders} from './core/features/editor/headers'
 import { runNotificationSchedule } from './core/features/notifications/scheduled'
 import { runNotificationQueue } from './core/features/notifications/queue'
+import { runDataQueue } from './core/features/data/runner/advance'
+import { isDataWork } from './core/features/data/runner/queue'
 import start from '@tanstack/react-start/server-entry'
 import { createPennyRuntime } from './core/app/runtime'
 import { createPennyApp } from './core/app/worker'
@@ -21,6 +23,8 @@ import { seedDemo, withDemoBindings } from './demo'
 
 export default withDemo({
   async queue(batch: MessageBatch<unknown>, bindings: AppBindings): Promise<void> {
+    // Confirmed erasures, restores and saved imports continue here, off the tab.
+    if (batch.messages.every(message => isDataWork(message.body))) return runDataQueue(batch, withDemoBindings(bindings))
     try { await runNotificationQueue(batch, withDemoBindings(bindings)) } catch (error) {
       console.error('Penny queued mail failed', JSON.stringify(failureSummary(error)))
       throw new Error('notification_queue_failed')

@@ -27,23 +27,30 @@ async function admitApply(job:{id:string;state:string},context:D1ImportContext):
  return forwardContext(context,job.id)
 }
 
-export async function importContext(runtime:PennyRuntime,request:Request,namespace:string,reversing=false,jobPrincipal=IMPORT_OWNER_PRINCIPAL):Promise<{context:D1ImportContext;actor:string}> {
+/** Who an import step acts for. A request carries the owner's session; a step
+ * the server continues carries that owner's standing and its claim's fenced
+ * database (data/runner). Base checks `predicate` inside every batch. */
+export type ImportPrincipal={predicate:()=>{sql:string;params:unknown[]};actorId:string;operatorId:string;database:D1Database;session?:{id:string;operatorId:string;operator:{version:number;role:string}}}
+export async function requestPrincipal(runtime:PennyRuntime,request:Request):Promise<ImportPrincipal> {
  const session=await importAuthority(runtime,request)
  if(request.method!=='GET'&&request.headers.get('Origin')!==runtime.configuration.appOrigin)throw new NativeError('forbidden_origin',403)
  const actor=await authenticateOperator(runtime,request)
  if(!actor)throw new NativeError('unauthenticated',401)
+ return {predicate:()=>importAuthorityPredicate(session),actorId:actor.id,operatorId:session.operatorId,database:runtime.database.binding,session}
+}
+export async function importContext(runtime:PennyRuntime,principal:ImportPrincipal,namespace:string,reversing=false,jobPrincipal=IMPORT_OWNER_PRINCIPAL):Promise<{context:D1ImportContext;actor:string}> {
  const db=runtime.database.binding
  const context:D1ImportContext={destination:'penny-feedback',namespace,mappingVersion:feedbackMappingVersion,batchSize:10,maxBatches:1,
-  storage:{database:withoutLiveEffects(db),targets:feedbackTargets(namespace,await nativeDependencies(db),reversing,actor.id)},
-  authorization:{principalId:jobPrincipal,predicate:()=>importAuthorityPredicate(session)}}
- return {context:reserveReturn(requestContext(context),32),actor:actor.id}
+  storage:{database:withoutLiveEffects(principal.database),targets:feedbackTargets(namespace,await nativeDependencies(db),reversing,principal.actorId)},
+  authorization:{principalId:jobPrincipal,predicate:principal.predicate}}
+ return {context:reserveReturn(requestContext(context),32),actor:principal.actorId}
 }
-export async function previewFeedback(runtime:PennyRuntime,request:Request,input:SavedFeedbackInput) {
- const {context,actor}=await importContext(runtime,request,input.namespace)
+export async function previewFeedback(runtime:PennyRuntime,principal:ImportPrincipal,input:SavedFeedbackInput) {
+ const {context,actor}=await importContext(runtime,principal,input.namespace)
  return prepareFeedback(input,context,actor)
 }
-export async function applyFeedback(runtime:PennyRuntime,request:Request,input:SavedFeedbackInput,fingerprint:string) {
- const {context,actor}=await importContext(runtime,request,input.namespace)
+export async function applyFeedback(runtime:PennyRuntime,principal:ImportPrincipal,input:SavedFeedbackInput,fingerprint:string) {
+ const {context,actor}=await importContext(runtime,principal,input.namespace)
  const prepared=await prepareFeedback(input,context,actor)
  if(prepared.counts.rejected||prepared.receipt.unresolved.length||prepared.diagnostics.some(d=>d.severity==='error'))throw new NativeError('feedback_mapping_rejected',422)
  if(prepared.fingerprint!==fingerprint)throw new NativeError('feedback_review_changed',409)
@@ -69,15 +76,15 @@ export async function applyFeedback(runtime:PennyRuntime,request:Request,input:S
  const job=await createD1ImportJob(prepared.ordinary!,context)
  return await applyD1ImportBatches(job.id,await admitApply(job,context))
 }
-export async function feedbackJob(runtime:PennyRuntime,request:Request,id:string,action:'read'|'resume'|'undo'|'rollback'|'originals'|'receipt') {
- // Admission precedes job existence: unauthenticated requests cannot enumerate.
- await importAuthority(runtime,request)
+export type FeedbackJobAction='read'|'resume'|'undo'|'rollback'|'originals'|'receipt'
+/** Admission (requestPrincipal) precedes job existence: unauthenticated requests cannot enumerate. */
+export async function feedbackJob(runtime:PennyRuntime,principal:ImportPrincipal,id:string,action:FeedbackJobAction) {
  const db=runtime.database.binding, row=await db.prepare('SELECT j.namespace,j.principal_id,COALESCE(s.state,j.state) state FROM ik_jobs j LEFT JOIN ik_d1_streams s ON s.id=j.id WHERE j.id=?').bind(id).first<{namespace:string;principal_id:string;state:string}>()
  if(!row)throw new NativeError('feedback_job_not_found',404)
  const scan=await db.prepare('SELECT revision,ordinal,intent FROM feedback_import_reversal_scans WHERE job_id=?').bind(id).first<{revision:number;ordinal:number;intent:'undo'|'rollback'}>()
  const execution=scan&&['resume','undo','rollback'].includes(action)?scan.intent:action
  const reversing=['undo','rollback'].includes(action)||(action==='resume'&&(Boolean(scan)||['undoing','rolling_back'].includes(row.state)))
- const admitted=await importContext(runtime,request,row.namespace,reversing,row.principal_id);let context=admitted.context
+ const admitted=await importContext(runtime,principal,row.namespace,reversing,row.principal_id);let context=admitted.context
  const stream=await db.prepare('SELECT id FROM ik_d1_streams WHERE id=?').bind(id).first()
  if(stream){context.batchSize=100;if(['resume','undo','rollback'].includes(action))context=sealedContext(context,id)}
  if(reversing){

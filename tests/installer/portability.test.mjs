@@ -127,7 +127,8 @@ test('[DATA-001 DATA-003] local CLI restores original files and held effects int
   assert.equal(first.at(-1).contentHash,second.at(-1).contentHash,'equivalent domain rows and original bytes survive the public command round trip')
   console.log(JSON.stringify({scope:'literal rer export/reset/import/export',populatedClauseTables:expectedCounts,originalFiles:2,completeTableCountsEqual:true,contentHashEqual:true,restoredReviewMail:'held',restoredCorrectionDelivery:'unknown',sourceAuthorityExcluded:true,destinationAuthorityPreserved:true,erasureJournalEqual:true}))
   await writeFile(join(root,'erase-restored.ts'), `import {getPlatformProxy} from 'wrangler';
-import {planErasure,eraseEntity} from './src/core/features/data/archive';
+import { planErasure } from './src/core/features/data/archive'
+import { eraseEntity } from './src/core/features/data/operations';
 const proxy=await getPlatformProxy({configPath:'wrangler.jsonc',persist:{path:'.wrangler/state/v3'},remoteBindings:false});
 try {const db=proxy.env.DB as D1Database,bucket=proxy.env.FILES as R2Bucket;
 const plan=await planErasure(db,'requests','r');await eraseEntity(db,bucket,'requests','r',plan.planHash);

@@ -19,6 +19,8 @@ import { clauseDeletionOrder } from './erasure-dependencies'
 import {startNativeScope,stepNativeScope,finishNativeScope,type NativeScope,type ErasureTable} from './erasure-native'
 import { assertDataAuthority, dataBatch, type DataAuthority } from './authority'
 import { claimPortabilityRunner, requirePortabilityOwner } from './portability-lock'
+import { registerWork } from './runner/claims'
+import type { D1Sql } from '../../../../base/modules/import-kit/src/d1/types'
 export type Cell=string|number|null
 export type Row=Record<string,Cell>
 type ForeignKey={table:string;from:string;to:string;id:number;seq:number;on_delete:string}
@@ -110,12 +112,14 @@ export async function readErasureJournal(db:D1Database):Promise<ErasureJournal>{
 }
 export async function reserve(db:D1Database,kind:'export'|'restore'|'erase',payload:unknown,authority?:DataAuthority):Promise<string>{
  const id=createUlid(),now=new Date().toISOString()
+ // A confirmed erasure or restore is server work from here (runner/advance.ts).
+ const work=kind==='export'?[]:[registerWork(db,id,'operation',authority,undefined,{sql:'EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)',params:[id]})]
  let result:D1Result[]
- try {result=await dataBatch(db,[db.prepare("UPDATE data_state SET phase='locked',lock_id=? WHERE singleton=1 AND phase='idle' RETURNING 1").bind(id),db.prepare("INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) SELECT ?,?,'pending',?,?,? WHERE EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(id,kind,canonical(payload),now,now,id)],authority)}catch(error){if(String(error).includes('attachment_writer_active'))fail('attachment_writer_active');if(String(error).includes('notification_writer_active'))fail('notification_writer_active');throw error}
+ try {result=await dataBatch(db,[db.prepare("UPDATE data_state SET phase='locked',lock_id=? WHERE singleton=1 AND phase='idle' RETURNING 1").bind(id),db.prepare("INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) SELECT ?,?,'pending',?,?,? WHERE EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(id,kind,canonical(payload),now,now,id),...work],authority)}catch(error){if(String(error).includes('attachment_writer_active'))fail('attachment_writer_active');if(String(error).includes('notification_writer_active'))fail('notification_writer_active');throw error}
  if(result[0].results.length!==1)fail('data_busy');return id
 }
 export async function finish(db:D1Database,id:string,status:'complete'|'aborted',authority?:DataAuthority):Promise<void>{
- await dataBatch(db,[db.prepare("UPDATE data_operations SET status=?,payload_json='{}',updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(status,new Date().toISOString(),id,id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id),...(status==='complete'?[db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,?,?,'data.erasure_completed','data_operation',id,?,?,? FROM data_operations WHERE id=? AND kind='erase' AND status='complete' AND changes()>0`).bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',new Date().toISOString(),new Date().toISOString(),new Date().toISOString(),id)]:[])],authority)
+ await dataBatch(db,[db.prepare("UPDATE data_operations SET status=?,payload_json='{}',updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(status,new Date().toISOString(),id,id),db.prepare('UPDATE data_runner_claims SET finished_at=COALESCE(finished_at,?),updated_at=? WHERE work_id=? AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)').bind(Date.now(),Date.now(),id,id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id),...(status==='complete'?[db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,?,?,'data.erasure_completed','data_operation',id,?,?,? FROM data_operations WHERE id=? AND kind='erase' AND status='complete' AND changes()>0`).bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',new Date().toISOString(),new Date().toISOString(),new Date().toISOString(),id)]:[])],authority)
 }
 export const applyStart=(db:D1Database,id:string)=>[db.prepare("INSERT INTO data_apply_claims(operation_id) VALUES((SELECT lock_id FROM data_state WHERE singleton=1 AND lock_id=? AND phase='locked'))").bind(id),db.prepare("UPDATE data_state SET phase='applying' WHERE singleton=1 AND lock_id=?").bind(id),db.prepare('PRAGMA defer_foreign_keys=ON')]
 export const audit=(db:D1Database,action:string,id:string,authority?:DataAuthority,details:string|null=null)=>{const now=new Date().toISOString();return db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,details_json,created_at,updated_at) VALUES(?,?,?,?,'data_operation',?,?,?,?,?)").bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',action,id,now,details,now,now)}
@@ -192,24 +196,49 @@ function validateReferences(tables:Table[],data:Record<string,Row[]>):void{
 }
 type Operation={id:string;kind:'export'|'restore'|'erase';status:string;payload_json:string}
 export async function dataOperation(db:D1Database,id:string):Promise<Operation|null>{return db.prepare('SELECT id,kind,status,payload_json FROM data_operations WHERE id=?').bind(id).first<Operation>()}
-export async function restoreArchive(db:D1Database,bucket:R2Bucket,value:unknown,journalValue:unknown,resumeId?:string,authority?:DataAuthority):Promise<{operationId:string;status:string}>{
+/** The validated backup waits here while its restore runs on the server, so a
+ * closed tab or a stopped step can continue. Restore, export and the empty-store
+ * check never treat it as an original file; it is deleted when the restore ends. */
+export const restoreStagingKey=(id:string)=>`penny-data-staging/restore-${id}.json`
+const isStaging=(key:string)=>key.startsWith('penny-data-staging/')
+type RestorePayload={archiveHash:string;journalHash:string;keys:string[];r2Owned?:boolean}
+/** Checks the backup, takes the data lock and stages the backup for the server.
+ * Resuming an existing restore with the same backup re-stages it if needed. */
+export async function startRestore(db:D1Database,bucket:R2Bucket,value:unknown,journalValue:unknown,resumeId?:string,authority?:DataAuthority):Promise<string>{
  const existing=resumeId?await dataOperation(db,resumeId):null
  if(resumeId&&(!existing||existing.kind!=='restore'))fail('invalid_data_operation',400)
- if(existing?.status==='complete')return {operationId:existing.id,status:'complete'}
+ if(existing?.status==='complete')return existing.id
  if(existing?.status==='aborted')fail('data_operation_aborted')
- const input=await validated(db,value,journalValue),{archive,journal,tables,bytes}=input
+ const {archive,journal,tables}=await validated(db,value,journalValue)
  validateReferences(tables,archive.tables)
  const payload={archiveHash:archive.sha256,journalHash:journal.sha256,keys:archive.files.map(file=>file.key)}
- const saved=existing?JSON.parse(existing.payload_json) as typeof payload&{r2Owned?:boolean}:null
- if(saved){const {r2Owned:ignored,...identity}=saved;void ignored;if(canonical(identity)!==canonical(payload)||(await state(db))?.lock_id!==existing!.id)fail('data_operation_mismatch')}
- const id=existing?.id??await reserve(db,'restore',payload,authority)
+ if(existing){
+  const {r2Owned:ignored,...identity}=JSON.parse(existing.payload_json) as RestorePayload;void ignored
+  if(canonical(identity)!==canonical(payload)||(await state(db))?.lock_id!==existing.id)fail('data_operation_mismatch')
+  if(!await bucket.head(restoreStagingKey(existing.id)))await bucket.put(restoreStagingKey(existing.id),JSON.stringify({archive,journal}))
+  await dataBatch(db,[registerWork(db,existing.id,'operation',authority)],authority)
+  return existing.id
+ }
+ const id=await reserve(db,'restore',payload,authority)
+ try{await bucket.put(restoreStagingKey(id),JSON.stringify({archive,journal}))}catch(error){await finish(db,id,'aborted');throw error}
+ return id
+}
+/** One restore step: the staged backup's files and records, applied once. */
+export async function applyRestore(db:D1Database,bucket:R2Bucket,id:string,authority?:DataAuthority):Promise<{operationId:string;status:string}>{
+ const staged=await bucket.get(restoreStagingKey(id))
+ // The upload stopped before the backup was saved: nothing was restored.
+ if(!staged){await finish(db,id,'aborted');fail('restore_upload_incomplete')}
+ const {archive:value,journal:journalValue}=JSON.parse(await staged.text()) as {archive:unknown;journal:unknown}
+ const input=await validated(db,value,journalValue),{archive,journal,tables,bytes}=input
+ const payload:RestorePayload={archiveHash:archive.sha256,journalHash:journal.sha256,keys:archive.files.map(file=>file.key)}
+ const saved=JSON.parse((await dataOperation(db,id))!.payload_json) as RestorePayload
  await claimRunner(db,id,'pending','running',authority)
- let ownsR2=saved?.r2Owned===true
+ let ownsR2=saved.r2Owned===true
  try{
   const occupied=await db.batch(tables.map(table=>db.prepare(`SELECT 1 AS occupied FROM ${ident(table.name)} LIMIT 1`)))
   if(tables.some((table,index)=>!bootstrapTables.has(table.name)&&occupied[index].results.length))fail('restore_requires_empty_target')
   if(!ownsR2){
-   if((await bucket.list({limit:1})).objects.length)fail('restore_requires_empty_bucket')
+   if((await bucket.list({limit:2})).objects.some(object=>!isStaging(object.key)))fail('restore_requires_empty_bucket')
    const [ownership]=await dataBatch(db,[db.prepare("UPDATE data_operations SET payload_json=?,updated_at=? WHERE id=? AND status='running' AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?) RETURNING 1").bind(canonical({...payload,r2Owned:true}),new Date().toISOString(),id,id)],authority)
    if(ownership.results.length!==1)fail('data_operation_changed')
    ownsR2=true
@@ -225,16 +254,19 @@ export async function restoreArchive(db:D1Database,bucket:R2Bucket,value:unknown
   statements.push(...importCustody.after)
   // Never delete a destination erasure journal. Validation requires a superset.
   for(const item of journal.tombstones)statements.push(db.prepare('INSERT OR IGNORE INTO data_tombstones(epoch,table_name,key_hash) VALUES(?,?,?)').bind(item.epoch,item.table_name,item.key_hash))
-  statements.push(db.prepare('UPDATE data_state SET origin=?,epoch=? WHERE singleton=1 AND lock_id=?').bind(journal.origin,journal.epoch,id),audit(db,'data.restored',id,authority),db.prepare("UPDATE data_operations SET status='complete',payload_json='{}',updated_at=? WHERE id=?").bind(new Date().toISOString(),id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id))
+  statements.push(db.prepare('UPDATE data_state SET origin=?,epoch=? WHERE singleton=1 AND lock_id=?').bind(journal.origin,journal.epoch,id),audit(db,'data.restored',id,authority),db.prepare("UPDATE data_operations SET status='complete',payload_json='{}',updated_at=? WHERE id=?").bind(new Date().toISOString(),id),db.prepare('UPDATE data_runner_claims SET finished_at=COALESCE(finished_at,?),updated_at=? WHERE work_id=?').bind(Date.now(),Date.now(),id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id))
   await dataBatch(db,statements,authority)
+  await bucket.delete(restoreStagingKey(id)).catch(()=>undefined)
   return {operationId:id,status:'complete'}
  }catch(error){
   // A response fault after commit must not delete successfully restored files.
   const operation=await dataOperation(db,id)
   if(operation?.status==='complete')return {operationId:id,status:'complete'}
+  // A superseded runner leaves everything to the runner that took over.
+  if(error instanceof NativeError&&error.code==='data_runner_superseded')throw error
   // Compensation may release this runner's lock and staged originals after
   // authority is lost, but never applies the archive or authorizes new work.
-  try{if(ownsR2)await deleteFiles(bucket,payload.keys);await finish(db,id,'aborted')}catch{await releaseRunner(db,id,'running','pending');if(error instanceof NativeError&&error.status===401)throw error;return {operationId:id,status:'pending'}}
+  try{if(ownsR2)await deleteFiles(bucket,payload.keys);await bucket.delete(restoreStagingKey(id));await finish(db,id,'aborted')}catch{await releaseRunner(db,id,'running','pending');if(error instanceof NativeError&&error.status===401)throw error;return {operationId:id,status:'pending'}}
   throw error
  }
 }
@@ -242,7 +274,7 @@ export async function abortRestore(db:D1Database,bucket:R2Bucket,id:string,autho
  const operation=await dataOperation(db,id)
  if(!operation||operation.kind!=='restore'||operation.status!=='pending'||(await state(db))?.lock_id!==id)fail('invalid_data_operation')
  await claimRunner(db,id,'pending','running',authority)
- try{const payload=JSON.parse(operation.payload_json) as {keys:string[];r2Owned?:boolean};if(payload.r2Owned===true){await assertDataAuthority(db,authority);await deleteFiles(bucket,payload.keys)}await finish(db,id,'aborted',authority)}catch(error){await releaseRunner(db,id,'running','pending');throw error}
+ try{const payload=JSON.parse(operation.payload_json) as {keys:string[];r2Owned?:boolean};if(payload.r2Owned===true){await assertDataAuthority(db,authority);await deleteFiles(bucket,payload.keys)}await bucket.delete(restoreStagingKey(id));await finish(db,id,'aborted',authority)}catch(error){await releaseRunner(db,id,'running','pending');throw error}
 }
 const roots=new Set(['requesters','requests','evidence_items','accounts'])
 type ErasurePlan={table:string;id:string;planHash:string;counts:Record<string,number>;files:string[];blockedCopies:{table:string;key:string;columns:string[]}[];selected:Record<string,Row[]>;audit:Row[];tables:ErasureTable[]}
@@ -315,13 +347,22 @@ export async function resumeErasure(db:D1Database,bucket:R2Bucket,id:string,auth
   return {operationId:id,status:'pending_r2'}
  }
 }
-export async function eraseEntity(db:D1Database,bucket:R2Bucket,tableName:string,entityId:string,planHash:string,authority?:DataAuthority):Promise<{operationId:string;status:string}>{
+type ErasurePayload={table:string;id:string;planHash:string;admission:D1Sql[]}
+/** Checks the reviewed plan and admits every saved-import step, then takes the
+ * data lock. From here the erasure is server work that runs to completion. */
+export async function startErasure(db:D1Database,tableName:string,entityId:string,planHash:string,authority?:DataAuthority):Promise<string>{
  const reviewed=await planErasure(db,tableName,entityId)
  if(reviewed.planHash!==planHash)fail('erasure_plan_changed')
  if(reviewed.blockedCopies.length)fail('erasure_ambiguous_copies')
  await assertDataAuthority(db,authority)
- const importAdmission=await admitFlatImportErasure(db,reviewed.selected.feedback_import_records,authority)
- const id=await reserve(db,'erase',{},authority)
+ const admission=await admitFlatImportErasure(db,reviewed.selected.feedback_import_records,authority)
+ return reserve(db,'erase',{table:tableName,id:entityId,planHash,admission} satisfies ErasurePayload,authority)
+}
+/** The erasure's one transaction over the product graph, inside the lock. */
+export async function applyErasure(db:D1Database,id:string,payload:Partial<ErasurePayload>,authority?:DataAuthority):Promise<void>{
+ const {table:tableName,id:entityId,planHash,admission:importAdmission}=payload
+ // Started by an earlier version that kept no plan: nothing was erased yet.
+ if(!tableName||!entityId||!planHash||!importAdmission){await finish(db,id,'aborted');fail('erasure_not_started')}
  try{
   const plan=await planErasure(db,tableName,entityId)
   if(plan.planHash!==planHash)fail('erasure_plan_changed')
@@ -353,10 +394,15 @@ export async function eraseEntity(db:D1Database,bucket:R2Bucket,tableName:string
   for(const row of plan.audit)statements.push(db.prepare("UPDATE audit_entries SET entity_id=?,actor_id=CASE WHEN actor_type='system' THEN actor_id END,details_json=NULL,updated_at=? WHERE id=?").bind(anonymousReference,new Date().toISOString(),row.id))
   statements.push(audit(db,'data.erased',id,authority,JSON.stringify({phase:'native_rows_erased',targetType:tableName,targetReference:await hash([current.origin,tableName,entityId])})),db.prepare('UPDATE data_state SET epoch=?,phase=\'locked\' WHERE singleton=1 AND lock_id=?').bind(epoch,id),db.prepare("UPDATE data_operations SET status=?,payload_json=?,updated_at=? WHERE id=?").bind(plan.selected.feedback_import_records.length?'pending_import':'pending_r2',canonical({keys:plan.files}),new Date().toISOString(),id))
   await dataBatch(db,statements,authority)
- }catch(error){const operation=await dataOperation(db,id);if(['pending_r2','pending_import'].includes(operation?.status??''))return resumeErasure(db,bucket,id,authority);await finish(db,id,'aborted');throw error}
- const pending=await dataOperation(db,id);if(pending?.status==='pending_import')return {operationId:id,status:'pending_import'}
- return resumeErasure(db,bucket,id,authority)
+ }catch(error){
+  const operation=await dataOperation(db,id)
+  if(['pending_r2','pending_import'].includes(operation?.status??''))return
+  // A superseded runner leaves the operation to the runner that took it over.
+  if(!(error instanceof NativeError&&error.code==='data_runner_superseded'))await finish(db,id,'aborted')
+  throw error
+ }
 }
+
 
 async function claimRunner(db:D1Database,id:string,from:string,to:string,authority?:DataAuthority):Promise<void>{
  const [result]=await dataBatch(db,[db.prepare('UPDATE data_operations SET status=?,updated_at=? WHERE id=? AND status=? AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?) RETURNING 1').bind(to,new Date().toISOString(),id,from,id)],authority)
@@ -395,6 +441,7 @@ export function validateNativeIdentity(data:Record<string,Row[]>):void{
 export async function abortPendingErasure(db:D1Database,id:string,authority?:DataAuthority):Promise<void>{
  const result=await dataBatch(db,[
   db.prepare("UPDATE data_operations SET status='aborted',payload_json='{}',updated_at=? WHERE id=? AND kind='erase' AND status='pending' AND NOT EXISTS(SELECT 1 FROM data_apply_claims WHERE operation_id=?) AND EXISTS(SELECT 1 FROM data_state WHERE lock_id=?) RETURNING 1").bind(new Date().toISOString(),id,id,id),
+  db.prepare("UPDATE data_runner_claims SET finished_at=COALESCE(finished_at,?),updated_at=? WHERE work_id=? AND EXISTS(SELECT 1 FROM data_operations WHERE id=? AND status='aborted')").bind(Date.now(),Date.now(),id,id),
   db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=? AND EXISTS(SELECT 1 FROM data_operations WHERE id=? AND status='aborted')").bind(id,id),
  ],authority)
  if(result[0].results.length!==1)fail('data_operation_changed')
