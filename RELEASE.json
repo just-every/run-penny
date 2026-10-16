@@ -2,7 +2,7 @@
   "version": "0.1.1",
   "previousVersion": "0.1.0",
   "date": "2026-10-16",
-  "publicReleaseNotes": "Maintenance release: Managed relay delivery, normalized sign-in hints, explicitly synthetic credential fixtures, the browser owner sign-in declaration, the rer 0.2.24 vendored Base refresh, and rer 0.2.27 for setup after local restore. No new product migrations. Product screenshot (1440 pixels): [Penny workspace](https://raw.githubusercontent.com/just-every/run-penny/v0.1.1/public/releases/penny-0.1.1-1440.png), committed at public/releases/penny-0.1.1-1440.png. Hosted mail delivery, hosted Cron, real Canny/UserVoice exports and whole-product acceptance remain separately unproven; see HANDOVER.md and ACCEPTANCE.md.",
+  "publicReleaseNotes": "Maintenance release: Managed relay delivery, normalized sign-in hints, explicitly synthetic credential fixtures, the browser owner sign-in declaration, the rer 0.2.24 vendored Base refresh, and rer 0.2.27 for setup after local restore. No new product migrations. Product screenshot (1440 pixels): [Penny workspace](https://raw.githubusercontent.com/just-every/run-penny/v0.1.1/public/brand/releases/penny-0.1.1-1440.png), committed at public/brand/releases/penny-0.1.1-1440.png. Hosted mail delivery, hosted Cron, real Canny/UserVoice exports and whole-product acceptance remain separately unproven; see HANDOVER.md and ACCEPTANCE.md.",
   "contractChanges": {},
   "extensionPointChanges": [],
   "migrations": [],

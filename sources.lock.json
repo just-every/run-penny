@@ -3121,6 +3121,10 @@
       "sha256": "423590ef08eb1e009ec382c5db8a34d35df9bf71bd60c4bcb10ef1ca06a1da7d",
       "executable": false
     },
+    "public/brand/releases/penny-0.1.1-1440.png": {
+      "sha256": "92ec815d34a252b8dbf7e50494e29f49de43d7dd2e5d884e2f6a0cca2a6a8d10",
+      "executable": false
+    },
     "public/fonts/fonts.css": {
       "sha256": "5290fea96c337f5f64610ddc5a5d97c605cbcd1e4474af6c1c106b3b756eaf1a",
       "executable": false
@@ -3141,10 +3145,6 @@
       "sha256": "b2028be7f17101212ece61b1204058e720514dadfec4d271c54503619a51fcf3",
       "executable": false
     },
-    "public/releases/penny-0.1.1-1440.png": {
-      "sha256": "92ec815d34a252b8dbf7e50494e29f49de43d7dd2e5d884e2f6a0cca2a6a8d10",
-      "executable": false
-    },
     "public/rer-theme.css": {
       "sha256": "0a8dfb89db62a3d790211481f9fa40590e9374aaf2a16dc371c573d26ecec554",
       "executable": false
@@ -3154,7 +3154,7 @@
       "executable": false
     },
     "RELEASE.json": {
-      "sha256": "a0c7d0d299d1dd69c2ef884827e3bdcfd62072afd3eda3b250c0fef17bb7858f",
+      "sha256": "ccd6472f154ff6817167252c98f579af6d52dbaa1f9c7a6f7f81d20ceba59e35",
       "executable": false
     },
     "RELEASE.md": {
