@@ -6502,7 +6502,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "fc76cab0e37cad00286468aeb92e7911231c84854227b7e526a41b0499386e12",
+      "sha256": "6e8d1bf5da7fa7a35cb8eae06da6eefa18f55ad914b6e841054f1863e1403cd6",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {
