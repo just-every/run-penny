@@ -2634,7 +2634,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "03f4848d32a0b45bc28221113f4634689eb1a7c4dcae7919a9b9802c23f420e5",
+      "sha256": "e3fe5eed6f1cd207f26aa295723cc23a87d52519a4e3e853fafadcefad004342",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3449,6 +3449,10 @@
       "sha256": "8d31633dcdfc08ccfd26ae5db34fd89b12886b92cd668f5184044f94f2c302b1",
       "executable": false
     },
+    "scripts/operator-preloads.ts": {
+      "sha256": "a1bb2b432ac246e5d6e16dbb03dafe0cbaf39b2786958574ac3be9906d507e04",
+      "executable": false
+    },
     "scripts/penny-operations.mjs": {
       "sha256": "e2f27b5fa53b941923f389b4cf75047f48b482f77157253b658d68e2ed218a27",
       "executable": false
@@ -3677,8 +3681,16 @@
       "sha256": "06cb6d9a589049a6802a1b36db9b90341c6dcf73a70fd716758a746aa7677c0b",
       "executable": false
     },
+    "src/core/app/operator-preload-module.d.ts": {
+      "sha256": "39671c677a20dbf4ce53ff3707b4a007618e0756d29d79f4f122f530346d8387",
+      "executable": false
+    },
+    "src/core/app/operator-preloads.ts": {
+      "sha256": "cde4f221978f6fd4face03b40cafe1e0f74af3f683544a163ff84800a1b53f4a",
+      "executable": false
+    },
     "src/core/app/operator-snapshot.server.ts": {
-      "sha256": "de9fdcf728b9d184eff590e8b8ccd48b96ea214ecc20371f0885148529705dd1",
+      "sha256": "8517ccce96e49ce43e289259f4c1c937a956f9d912fcd40221f10f81eca148e1",
       "executable": false
     },
     "src/core/app/path-parameters.ts": {
@@ -3698,7 +3710,7 @@
       "executable": false
     },
     "src/core/app/resources.server.ts": {
-      "sha256": "edce8592b45c45527f0628f8473bdd711ed7d46832a709ca3c073f2551444d43",
+      "sha256": "31d22d90e3c124df8cf11d512d75d44fe68f7e3181d014726764603d056c1b1e",
       "executable": false
     },
     "src/core/app/root-layout.tsx": {
@@ -6086,7 +6098,7 @@
       "executable": false
     },
     "src/server.ts": {
-      "sha256": "8194252294cd2b2b829d7ff59e91a971b7ca2b3719ee0f9d41d352ea7bf2289c",
+      "sha256": "be4d0c419f0931c58e19ed8b37a144492e1b3f39b80df14c4c9f76169c27071f",
       "executable": false
     },
     "src/site/pages.tsx": {
@@ -6826,7 +6838,7 @@
       "executable": false
     },
     "vite.config.ts": {
-      "sha256": "ab62d8533f89ffd2b32d26d819302be62486bc6bf35f27678f70198fb6fed81c",
+      "sha256": "ee069f27731793b75d6154a57b41d5c9cbf24e15eb4f95fe949e08240f181b58",
       "executable": false
     },
     "vite.site.config.ts": {

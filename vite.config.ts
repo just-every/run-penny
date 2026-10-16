@@ -8,6 +8,7 @@ import { localHostAdmission } from './scripts/installer/vite-host.js'
 import { docsSite } from './src/core/features/docs/build/plugin.ts'
 import { archiveOutputGuard } from '@runeditrun/rer/archive-output'
 import { demoSockets } from './base/modules/demo/vite.mjs'
+import { operatorPreloads } from './scripts/operator-preloads.ts'
 
 // Only `vite dev` loads the local-only entry and the checkout's dev key; a build
 // keeps src/server.ts and never sees either (rer build checks its output).
@@ -28,7 +29,7 @@ export default defineConfig(({ command, isPreview }) => ({
     ...(command === 'serve' && !isPreview ? { config: serve } : process.env.RER_DEV_ORIGIN ? { config: { vars: local('RER_DEV_ORIGIN') } } : {}),
     inspectorPort: false, viteEnvironment: { name: 'ssr' } }),
     // /docs: the repository's Markdown rendered when Vite loads it (DOCS-001), never in the Worker or the browser.
-    docsSite(),
+    docsSite(), operatorPreloads(),
     tanstackStart({ router: { entry: './core/app/router.tsx' }, prerender: { enabled: false } }), react(), tailwindcss(),
     // A build whose output holds an installation archive is refused.
     archiveOutputGuard()],

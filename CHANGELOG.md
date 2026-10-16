@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Load signed-in pages with fresh, complete server snapshots. Batch visible evidence, roadmap and moderation details, share form options, and reuse document admission reads within each request while retaining transaction-time authority checks.
+- Load signed-in pages with fresh, complete server snapshots. Batch visible evidence, roadmap and moderation details, share form options, and reuse document admission reads within each request while retaining transaction-time authority checks. Preload private routes' complete module graphs before hydration.
 
 ## 0.1.1 — 2026-10-16
 

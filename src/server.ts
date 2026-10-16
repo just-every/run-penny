@@ -8,6 +8,7 @@ import start from '@tanstack/react-start/server-entry'
 import { createPennyRuntime } from './core/app/runtime'
 import { createPennyApp } from './core/app/worker'
 import { pennyRequest, requestContext } from './core/app/request-context.server'
+import { preloadOperatorModules } from './core/app/operator-preloads'
 import { withLocalOrigin } from './core/app/local-origin'
 import { firstRunDocument } from './core/features/auth/first-run'
 import type { AppBindings } from './core/shared/bindings'
@@ -69,6 +70,6 @@ async function respond(request: Request, bindings: AppBindings, execution: Execu
       if (origin && origin !== url.origin) return new Response('Forbidden', { status: 403 })
       return start.fetch(request)
     }
-    return createPennyApp({ renderDocument: async (document) => start.fetch(document) }).fetch(request, bindings, execution)
+    return createPennyApp({ renderDocument: async (document) => preloadOperatorModules(await start.fetch(document),new URL(document.url).pathname) }).fetch(request, bindings, execution)
   })
 }

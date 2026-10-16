@@ -77,7 +77,7 @@ export async function operatorResources(href: string): Promise<Resources> {
   const route = routes[path]
   if (path === '/app/settings') return operatorSnapshot(operatorUrl,'/api/operator/catalog/settings',read)
   if (path === '/app/data') return operatorSnapshot(operatorUrl,'/api/operator/data/overview',read)
-  if (route) return operatorSnapshot(operatorUrl,`/api/operator/${route}${operatorUrl.search}`,read)
+  if (route) return operatorSnapshot(operatorUrl,`/api/operator/${route}${route==='learning'?'':operatorUrl.search}`,read)
   const match = /^\/app\/(decisions|releases|customers)\/([a-z0-9-]+)$/.exec(path)
   return operatorSnapshot(operatorUrl,match ? `/api/operator/${match[1] === 'customers' ? 'accounts' : match[1]}/${match[2]}` : undefined,read)
 }

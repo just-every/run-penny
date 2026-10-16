@@ -23,10 +23,11 @@ export async function operatorSnapshot(url:URL, primary:string|undefined, read:R
   if(path==='/app/roadmap')paths.push('/api/operator/evidence?q=&page=1')
   if(path==='/app/moderation')paths.push('/api/public/boards','/api/auth/capabilities','/api/operator/catalog/settings','/api/operator/integrations/trackers')
   if(path.startsWith('/app/decisions/'))paths.push('/api/operator/integrations/trackers')
-  if(path==='/app/releases'){
+  if(path==='/app/releases')paths.push('/api/operator/releases/options')
+  if(path==='/app/releases'||path==='/app/roadmap'){
     const query=new URLSearchParams({status:'pending'})
     for(const key of ['q','tag','sort','page']){const value=url.searchParams.get(`updates${key[0].toUpperCase()}${key.slice(1)}`);if(value)query.set(key,value)}
-    paths.push('/api/operator/releases/options',`/api/operator/roadmap-updates?${query}`)
+    paths.push(`/api/operator/roadmap-updates?${query}`)
   }
   if(path==='/app/settings')paths.push('/api/operator/settings/operators','/api/operator/settings/custom-fields','/api/operator/settings/branding','/api/operator/settings/frames','/api/operator/integrations/keys','/api/operator/integrations/destinations','/api/operator/integrations/trackers','/api/auth/capabilities')
   const resources=await read([...new Set(paths)])
