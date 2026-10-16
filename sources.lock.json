@@ -2738,7 +2738,7 @@
       "executable": false
     },
     "docs/INSTALL.md": {
-      "sha256": "f5bb680aabfd373ad71b319039f472f0ea5f794710cb6dace5dbeddeaacc1537",
+      "sha256": "396580637f77049748223825da439bf0a8770bb1facab047cff04cca808088d5",
       "executable": false
     },
     "docs/INTEGRATIONS.md": {
@@ -3150,7 +3150,7 @@
       "executable": false
     },
     "README.md": {
-      "sha256": "e246e63e402d623014b4ce5d3128acfe12eb40750a756012cfe73bddd1c78737",
+      "sha256": "22edb741d2562d0ba925bdb9d74b3e2fdad469d5e6d0595e6c56ef9c06a2e3fe",
       "executable": false
     },
     "RELEASE.json": {
@@ -6106,7 +6106,7 @@
       "executable": false
     },
     "src/site/run.ts": {
-      "sha256": "46d80d49d981f9ca273dc78b2d1bca0cb9b7ea81c0d61d17b15f1ab4dbea6b5c",
+      "sha256": "dc228113ba149a33bdd0610ef3b771fb3ae0020e7600af447975385e446cf085",
       "executable": false
     },
     "src/visual-edits.json": {
@@ -6670,7 +6670,7 @@
       "executable": false
     },
     "tests/installer/readme-commands.mjs": {
-      "sha256": "ebdf3c5424c59e81c3c8c46ecc7b02e4d5905c63d34350d5add92d135fd5baaa",
+      "sha256": "9314a462a20c47e20b1b5f2b4987dd83af2fee6ebc55cf0ce74f36cd1b0175e4",
       "executable": false
     },
     "tests/installer/readme.test.mjs": {

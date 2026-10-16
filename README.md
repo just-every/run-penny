@@ -54,19 +54,13 @@ as `nvm install 22`. Nothing else is needed: `rer` downloads the exact Node
 (22.20.0) and pnpm (10.12.4) this checkout pins into its own cache and never
 changes your global tools, so you do not install pnpm.
 
-Then the two steps from [run-penny.com/run](https://run-penny.com/run). Install
-`rer`, the Run Edit Run command, once per computer:
-
-```bash
-curl -fsSL https://runeditrun.com/install.sh | sh
-```
-
-(or `npm install -g @runeditrun/rer`). Get Penny and start it:
+Then the one line from [run-penny.com/run](https://run-penny.com/run). It installs
+`rer`, the Run Edit Run command, clones Penny and starts it; to start it again later, run
+`cd run-penny && rer dev`:
 
 <!-- penny-local-commands -->
 ```bash
-git clone https://github.com/just-every/run-penny.git
-cd run-penny && rer dev
+npx -y @runeditrun/rer dev just-every/run-penny
 ```
 <!-- /penny-local-commands -->
 

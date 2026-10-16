@@ -5,15 +5,16 @@ This page takes you from the Penny source to a running copy: first on your own c
 ## What you need
 
 - **Install Node.js 22 or newer first, before `rer`.** Check with `node --version`; if it is missing, install the LTS from [nodejs.org](https://nodejs.org/en/download) or run `nvm install 22`. `rer` then fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
-- **`rer`**, installed once: `curl -fsSL https://runeditrun.com/install.sh | sh` (or `npm install -g @runeditrun/rer`).
+- **`rer`**, installed for you by the one line below.
 - **For your own Cloudflare account:** a Cloudflare account and an API token for it. For email, choose SendGrid or Resend with a verified sender, or set it up later. Managed Penny gets email from RER without a provider account or key entry. Running locally needs none of these.
 
 ## Run it on your computer
 
 ```bash
-git clone https://github.com/just-every/run-penny.git
-cd run-penny && rer dev
+npx -y @runeditrun/rer dev just-every/run-penny
 ```
+
+To start it again later, run `cd run-penny && rer dev`.
 
 `rer dev` installs the locked dependencies, sets up a default local owner (a `.test` address that never receives mail) with an empty workspace and no sample records, and starts Penny on the first free port from 8787. In a terminal it stays in the foreground; from a script it returns once Penny is ready and keeps it running until `rer dev --stop`. To be the owner under your own address, run `rer setup --owner-email you@example.com` once before the first `rer dev`.
 
