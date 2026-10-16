@@ -6,6 +6,14 @@ This is Penny's target contract: the product we are building towards, not a desc
 
 Local running is `rer install`, `setup`, `dev`, then `verify`, `reset`, `export`/`import` and `deploy`, as README.md and OPERATIONS.md describe. Setup claims the first owner, and the owner completes first-run setup at `/setup` (OPS-005).
 
+## Product target
+
+| | |
+| --- | --- |
+| Category | Product feedback management and public roadmaps |
+| Incumbents a buyer switches from | Canny, Productboard, Aha! Ideas, UserVoice, Featurebase, Productlane, Enterpret |
+| First buyer | A US product team (head of product, product managers, product operations) at a B2B SaaS business, installing Penny on its own Cloudflare account |
+
 ## Scope
 
 **The product.** Penny is an owned replacement for Canny, Productboard, Aha! Ideas and UserVoice: feedback captured from every channel where customers speak, deduplicated into requests weighted by customer value, accountable prioritization, a public roadmap and changelog, and closing the loop with every requester. It is installed by one US B2B software business on its own Cloudflare account. A buyer of any of the four incumbents can bring its history (MIG), connect the same support, sales, chat, CRM, analytics and delivery systems (CAP, SEG, MEAS, DELIV) and run the same job without losing a request, a vote, a voter, a comment or a promise. Featurebase, Productlane and Enterpret set the newer bar for in-app capture, a combined feedback inbox and AI taxonomy (WIDGET, CAP-001, AI); the Push further clauses go past them.
@@ -598,256 +606,260 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 ## Status
 
-Judged against the code and tests of `just-every/run-penny` at commit `02374e4` (16 October 2026); the buyer-review rounds add clauses without code changes, so every status still holds at that commit. `done` cites the test through a public door; `partial` cites the file or test that shows what ships.
+Judged from the code and tests at commit `02374e4552e429e26a81bd6f0973aa691759b2b9` (16 October 2026).
 
-| Clause | Status | Evidence |
-| --- | --- | --- |
-| HOME-001 | done | `tests/browser/route-review.mjs` |
-| HOME-002 | partial | `src/site/pages.tsx` |
-| DOCS-001 | done | `tests/browser/route-review.mjs`; `docs/site.json` |
-| OPS-001 | partial | `tests/base/auth.test.ts:83` |
-| OPS-002 | done | `tests/base/auth.test.ts:83`; `tests/base/auth.test.ts:132`; `tests/base/auth.test.ts:160` |
-| OPS-003 | done | `tests/browser/operator-pages.mjs` |
-| OPS-005 | partial | `tests/base/first-run.test.ts:10` |
-| OPS-004 | partial | `tests/browser/operator-completeness-requester.mjs` |
-| ROLE-001 | missing | — |
-| ROLE-002 | partial | `src/core/features/auth/dependencies.ts` |
-| ROLE-003 | missing | — |
-| ROLE-004 | partial | `tests/base/board.test.ts:58` |
-| OPS-006 | missing | — |
-| OPS-007 | partial | `src/core/features/requests/operator-context.ts`; `src/core/features/accounts/read-context.ts` |
-| OPS-008 | partial | `src/core/platform/configuration.ts`; `tests/base/notifications.test.ts:122` |
-| EVID-001 | done | `tests/base/board.test.ts:14`; `tests/browser/loopjourney-steps.mjs` |
-| EVID-002 | done | `tests/browser/operator-pages-decisions.mjs` |
-| EVID-003 | done | `tests/browser/operator-pages.mjs` |
-| EVID-004 | done | `tests/browser/loopjourney-steps.mjs` |
-| EVID-005 | done | `tests/base/penny-evidence.test.ts:50` |
-| EVID-006 | done | `tests/base/penny-evidence.test.ts:146` |
-| EVID-007 | done | `tests/base/penny-evidence.test.ts:101` |
-| EVID-008 | done | `tests/base/penny-evidence.test.ts:121` |
-| EVID-009 | done | `tests/base/board.test.ts:41` |
-| EVID-010 | done | `tests/base/penny-evidence.test.ts:89` |
-| CAP-001 | partial | `src/core/features/evidence/repository.ts`; `tests/browser/operator-pages.mjs` |
-| CAP-002 | partial | `src/core/features/evidence/write-service.ts`; `tests/browser/operator-pages-decisions.mjs` |
-| CAP-003 | missing | — |
-| CAP-004 | missing | — |
-| CAP-005 | missing | — |
-| CAP-006 | missing | — |
-| CAP-007 | missing | — |
-| CAP-008 | missing | — |
-| CAP-009 | missing | — |
-| CAP-010 | missing | — |
-| CAP-011 | missing | — |
-| CAP-012 | missing | — |
-| CAP-013 | missing | — |
-| CAP-014 | partial | `tests/base/feedback-import-uservoice.test.ts` |
-| CAP-015 | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` |
-| CAP-016 | partial | `tests/browser/integration-states.mjs` |
-| CAP-017 | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` |
-| CAP-018 | missing | — |
-| CAP-019 | missing | — |
-| CAP-020 | missing | — |
-| CAP-021 | missing | — |
-| CAP-022 | missing | — |
-| WIDGET-001 | partial | `src/core/features/settings/frame-settings.ts`; `tests/browser/operator-completeness-security.mjs` |
-| WIDGET-002 | partial | `src/core/features/auth/host-identity.ts`; `tests/base/host-identity.test.ts` |
-| WIDGET-003 | missing | — |
-| WIDGET-004 | missing | — |
-| WIDGET-005 | missing | — |
-| WIDGET-006 | missing | — |
-| WIDGET-007 | missing | — |
-| WIDGET-008 | missing | — |
-| AI-001 | partial | `src/core/features/requests/suggestions.ts`; `tests/base/penny-evidence.test.ts:101` |
-| AI-002 | missing | — |
-| AI-003 | partial | `src/core/features/requests/merge-repository.ts`; `tests/base/board.test.ts:14` |
-| AI-004 | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` |
-| AI-005 | missing | — |
-| AI-006 | missing | — |
-| AI-007 | missing | — |
-| AI-008 | missing | — |
-| AI-009 | missing | — |
-| AI-010 | partial | `src/core/features/learning/run.ts`; `tests/base/learning-upgrade.test.ts` |
-| AI-011 | missing | — |
-| SEG-001 | missing | — |
-| SEG-002 | missing | — |
-| SEG-003 | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` |
-| SEG-004 | missing | — |
-| SEG-005 | missing | — |
-| SEG-006 | missing | — |
-| SEG-007 | partial | `src/core/features/requests/operator-context.ts`; `src/core/features/accounts/read-context.ts`; `tests/base/penny-evidence.test.ts:50` |
-| REQ-001 | done | `tests/browser/loopjourney-steps.mjs` |
-| REQ-002 | done | `tests/base/no-mail-identity.test.ts` |
-| REQ-003 | done | `tests/base/board.test.ts:14` |
-| REQ-004 | done | `tests/base/penny-evidence.test.ts:101` |
-| REQ-005 | done | `tests/base/board.test.ts:14` |
-| REQ-006 | done | `tests/base/board.test.ts:14` |
-| REQ-007 | done | `tests/base/notifications.test.ts:40` |
-| REQ-008 | done | `tests/base/board.test.ts:14` |
-| REQ-009 | done | `tests/base/board.test.ts:14`; `tests/base/notifications.test.ts:244` |
-| REQ-010 | done | `tests/base/board.test.ts:14` |
-| REQ-011 | done | `tests/base/board.test.ts:41` |
-| REQ-012 | partial | `tests/browser/requester-board.mjs` |
-| REQ-013 | done | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` |
-| REQ-014 | done | `tests/base/host-identity.test.ts` |
-| REQ-015 | done | `tests/base/board.test.ts:14` |
-| REQ-016 | partial | `src/core/features/requests/status-publication.ts`; `tests/base/decision-loop-roadmap.test.ts` |
-| REQ-017 | partial | `src/core/features/requests/status-publication.ts` |
-| REQ-018 | done | `tests/base/board.test.ts:41` |
-| REQ-019 | done | `tests/base/board.test.ts:41` |
-| REQ-020 | done | `tests/browser/requester-repair.mjs` |
-| REQ-021 | partial | `tests/browser/requester-repair.mjs:86` |
-| REQ-022 | partial | `src/core/features/auth/native-service.ts`; `src/core/features/requests/operator-routes.ts` |
-| REQ-023 | done | `tests/base/auth.test.ts:46`; `tests/browser/no-mail-journey.mjs` |
-| REQ-024 | done | `tests/base/notifications.test.ts:229` |
-| REQ-025 | done | `tests/base/notifications.test.ts:152` |
-| REQ-026 | partial | `src/core/features/requests/operator-context.ts` |
-| REQ-027 | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts:58` |
-| REQ-028 | partial | `tests/browser/operator-completeness-read.mjs` |
-| REQ-029 | done | `tests/browser/operator-pages-decisions.mjs` |
-| REQ-030 | done | `tests/base/notifications.test.ts:279` |
-| REQ-031 | done | `tests/base/host-identity.test.ts` |
-| REQ-032 | done | `tests/base/penny-evidence.test.ts:146` |
-| REQ-033 | missing | — |
-| REQ-034 | missing | — |
-| REQ-035 | missing | — |
-| REQ-036 | partial | `src/core/features/requests/operator-routes.ts`; `tests/browser/requester-repair.mjs` |
-| REQ-037 | missing | — |
-| REQ-038 | missing | — |
-| REQ-039 | missing | — |
-| REQ-040 | missing | — |
-| TRIAGE-001 | missing | — |
-| TRIAGE-002 | partial | `src/core/features/overview`; `tests/browser/operator-pages.mjs` |
-| TRIAGE-003 | missing | — |
-| TRIAGE-004 | missing | — |
-| TRIAGE-005 | missing | — |
-| TRIAGE-006 | partial | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts`; `tests/base/notifications.test.ts:87` |
-| PRIO-001 | missing | — |
-| PRIO-002 | partial | `src/core/features/settings/custom-fields.ts`; `tests/browser/operator-completeness-fields.mjs` |
-| PRIO-003 | missing | — |
-| PRIO-004 | missing | — |
-| PRIO-005 | missing | — |
-| PRIO-006 | missing | — |
-| DEC-001 | done | `tests/base/decision-loop-commit.test.ts` |
-| DEC-002 | done | `tests/base/decision-loop-dimensions.test.ts` |
-| DEC-003 | done | `tests/base/decision-loop-dimensions.test.ts` |
-| DEC-004 | done | `tests/base/decision-loop-commit.test.ts` |
-| DEC-005 | done | `tests/base/decision-loop-roadmap.test.ts` |
-| DEC-006 | done | `tests/base/penny-decisions.test.ts` |
-| DEC-007 | done | `tests/base/penny-decisions.test.ts` |
-| DEC-008 | done | `tests/base/penny-releases.test.ts`; `tests/base/penny-decisions.test.ts` |
-| ROAD-001 | done | `tests/base/decision-loop-roadmap.test.ts` |
-| ROAD-002 | done | `tests/browser/operator-pages-decisions.mjs` |
-| ROAD-003 | done | `tests/base/decision-loop-roadmap.test.ts` |
-| ROAD-004 | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/loopjourney-roadmap.mjs` |
-| ROAD-005 | done | `tests/base/decision-loop-roadmap.test.ts` |
-| ROAD-006 | done | `tests/browser/loopjourney-roadmap.mjs` |
-| ROAD-007 | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` |
-| ROAD-008 | done | `tests/browser/operator-pages-status.mjs` |
-| ROAD-009 | missing | — |
-| ROAD-010 | missing | — |
-| ROAD-011 | partial | `src/core/features/releases/drafts.ts`; `tests/browser/loopjourney-release.mjs` |
-| ROAD-012 | missing | — |
-| ROAD-013 | missing | — |
-| ROAD-014 | missing | — |
-| REL-001 | done | `tests/browser/loopjourney-release.mjs` |
-| REL-002 | done | `tests/browser/loopjourney-release.mjs` |
-| REL-003 | done | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |
-| REL-004 | done | `tests/base/release-custody.test.ts` |
-| REL-005 | done | `tests/browser/loopjourney-release.mjs` |
-| REL-006 | done | `tests/base/notifications.test.ts:133`; `tests/base/release-custody.test.ts` |
-| REL-007 | partial | `tests/base/release-custody.test.ts` |
-| REL-008 | done | `tests/base/penny-releases.test.ts` |
-| REL-009 | done | `tests/base/penny-releases.test.ts` |
-| REL-010 | done | `tests/browser/route-review.mjs` |
-| REL-011 | done | `tests/runtime/mail-events-restart.test.mjs` |
-| REL-012 | done | `tests/base/penny-releases.test.ts` |
-| REL-013 | done | `tests/base/release-custody.test.ts` |
-| REL-014 | missing | — |
-| REL-015 | partial | `src/core/features/releases/drafts.ts`; `src/core/features/releases/public-read-repository.ts` |
-| REL-016 | partial | `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts` |
-| REL-017 | missing | — |
-| REL-018 | missing | — |
-| DELIV-001 | missing | — |
-| DELIV-002 | partial | `src/core/features/integrations/tracker-service.ts`; `src/core/features/integrations/tracker-receiver.ts`; `tests/browser/integration-states.mjs` |
-| DELIV-003 | partial | `src/core/features/integrations/tracker-service.ts`; `tests/browser/integration-states.mjs` |
-| DELIV-004 | missing | — |
-| DELIV-005 | missing | — |
-| DELIV-006 | missing | — |
-| DELIV-007 | missing | — |
-| DELIV-008 | partial | `tests/browser/integration-states.mjs` |
-| DELIV-009 | missing | — |
-| DELIV-010 | missing | — |
-| NOTIFY-001 | done | `tests/base/notifications.test.ts:40`; `tests/base/notifications.test.ts:68` |
-| NOTIFY-002 | done | `tests/base/notifications.test.ts:122`; `tests/base/notifications.test.ts:213` |
-| NOTIFY-003 | done | `tests/base/penny-decisions.test.ts` |
-| NOTIFY-004 | partial | `src/core/features/notifications/delivery.ts` |
-| NOTIFY-005 | done | `tests/base/notifications.test.ts:87`; `tests/base/notifications.test.ts:269` |
-| NOTIFY-006 | partial | `src/core/features/integrations/destinations.ts`; `tests/base/egress-delivery.test.ts:35`; `tests/base/penny-decisions.test.ts` |
-| NOTIFY-007 | missing | — |
-| NOTIFY-008 | missing | — |
-| NOTIFY-009 | missing | — |
-| NOTIFY-010 | missing | — |
-| NOTIFY-011 | missing | — |
-| NOTIFY-012 | missing | — |
-| NOTIFY-013 | partial | `src/core/platform/configuration.ts`; `src/core/features/notifications/delivery.ts` |
-| MEAS-001 | missing | — |
-| MEAS-002 | missing | — |
-| MEAS-003 | missing | — |
-| MEAS-004 | partial | `src/core/features/releases/outcomes.ts`; `src/core/features/requests/operator-context.ts` |
-| MEAS-005 | partial | `src/core/features/releases/outcomes.ts`; `tests/base/penny-releases.test.ts` |
-| MEAS-006 | missing | — |
-| DATA-001 | done | `tests/base/hosted-export.test.ts:83`; `tests/installer/portability.test.mjs` |
-| DATA-002 | done | `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts` |
-| DATA-003 | done | `tests/base/penny-erasure.test.ts:137`; `tests/base/penny-erasure.test.ts:178` |
-| DATA-004 | done | `tests/browser/operator-completeness-fields.mjs` |
-| DATA-005 | partial | `src/core/features/data/archive.ts`; `tests/base/hosted-export.test.ts:83` |
-| DATA-006 | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts:19` |
-| DATA-007 | missing | — |
-| LEARN-001 | done | `tests/base/learning-stage2.test.ts` |
-| LEARN-002 | done | `tests/base/learning-stage2.test.ts` |
-| LEARN-003 | done | `tests/base/learning-stage3.test.ts` |
-| LEARN-004 | done | `tests/base/learning-stage3.test.ts` |
-| LEARN-005 | done | `tests/base/learning-stage3.test.ts` |
-| LEARN-006 | done | `tests/base/learning-upgrade.test.ts` |
-| IMP-001 | done | `tests/base/feedback-import.test.ts:35` |
-| IMP-002 | done | `tests/base/feedback-import.test.ts` |
-| IMP-003 | done | `tests/base/feedback-import-custody.test.ts` |
-| IMP-004 | done | `tests/base/feedback-import-custody.test.ts` |
-| IMP-005 | done | `tests/base/feedback-import-custody.test.ts` |
-| IMP-006 | done | `tests/base/feedback-import.test.ts` |
-| IMP-007 | done | `tests/base/feedback-import.test.ts`; `tests/base/feedback-import-uservoice.test.ts` |
-| IMP-008 | done | `tests/base/feedback-import-uservoice.test.ts` |
-| MIG-001 | partial | `src/core/features/imports/bundle.ts`; `tests/base/feedback-import.test.ts:35` |
-| MIG-002 | missing | — |
-| MIG-003 | missing | — |
-| MIG-004 | partial | `tests/base/feedback-import-uservoice.test.ts` |
-| MIG-005 | missing | — |
-| MIG-006 | partial | `src/core/features/imports/service.ts`; `tests/base/feedback-import.test.ts:71` |
-| MIG-007 | missing | — |
-| OWN-001 | done | `tests/base/owner-claim.test.ts` |
-| EDIT-001 | done | `tests/base/editor-admission.test.ts` |
-| API-001 | done | `tests/base/integration-api.test.ts:19` |
-| API-002 | done | `tests/base/integration-api.test.ts:36`; `tests/base/integration-api.test.ts:54` |
-| API-003 | done | `tests/base/integration-api.test.ts:73` |
-| INT-001 | done | `tests/browser/integration-states.mjs` |
-| INT-002 | done | `tests/base/egress-delivery.test.ts:35` |
-| INT-003 | done | `tests/browser/integration-states.mjs` |
-| INT-004 | done | `tests/browser/integration-states.mjs` |
-| INT-005 | done | `tests/browser/integration-states.mjs` |
-| INT-006 | done | `tests/browser/integration-states.mjs` |
-| INT-007 | partial | `src/core/features/settings/branding.ts`; `tests/browser/integration-states.mjs` |
-| MOB-001 | done | `tests/browser/acceptance-audit.mjs:7`; `tests/browser/operator-pages.mjs`; `tests/browser/requester-board.mjs` |
-| MOB-002 | missing | — |
-| MOB-003 | missing | — |
-| A11Y-001 | partial | `tests/browser/acceptance-audit.mjs` |
-| AGENT-001 | partial | `src/core/features/learning/schema.ts`; `tests/base/learning-stage2.test.ts` |
-| AGENT-002 | partial | `src/core/features/learning/run.ts`; `tests/base/learning-stage2.test.ts` |
-| AGENT-003 | partial | `src/core/features/learning/schema.ts`; `tests/base/learning-stage2.test.ts` |
-| AGENT-004 | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` |
-| AGENT-005 | partial | `src/core/features/decisions/reviews.ts`; `tests/base/penny-decisions.test.ts`; `tests/base/learning-stage3.test.ts` |
-| AGENT-006 | partial | `src/core/features/roadmap/update-drafts.ts`; `tests/browser/operator-pages-status.mjs` |
-| AGENT-007 | missing | — |
-| AGENT-008 | partial | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts` |
-| AGENT-009 | partial | `src/core/features/learning/audit.ts`; `tests/base/learning-stage3.test.ts` |
+| Clauses | Done | Partial | Missing | Total |
+| --- | ---: | ---: | ---: | ---: |
+| Published | 100 | 14 | 0 | 114 |
+| Target and push further | 1 | 46 | 86 | 133 |
+| All | 101 | 60 | 86 | 247 |
 
-**Counts:** 101 done, 60 partial, 86 missing (247 clauses).
+| Clause | Title | Kind | Status | Evidence | Gap |
+| --- | --- | --- | --- | --- | --- |
+| `HOME-001` | Public feedback portal | published | done | `tests/browser/route-review.mjs` |  |
+| `HOME-002` | Public product landing | published | partial | `src/site/pages.tsx` | The run site's built landing page at both widths with no cross-origin request, cookie or workspace read; no test reads the built site yet. |
+| `DOCS-001` | Public documentation | published | done | `tests/browser/route-review.mjs`; `docs/site.json` |  |
+| `OPS-001` | Roles | published | partial | `tests/base/auth.test.ts` (line 83) | one operator per role attempts every guarded action through its route and UI; a Viewer is refused every write with 403; a Contributor captures evidence, records a proxy vote and comments internally but is refused moderation, publication, commitment, settings and commercial fields; a Product manager is refused settings, integrations and roles; an Admin is refused handover, export and erasure; each refusal changes nothing; a role change applies on the next request. |
+| `OPS-002` | Management | published | done | `tests/base/auth.test.ts` (line 83); `tests/base/auth.test.ts` (line 132); `tests/base/auth.test.ts` (line 160) |  |
+| `OPS-003` | Overview | published | done | `tests/browser/operator-pages.mjs` |  |
+| `OPS-005` | First-run setup | published | partial | `tests/base/first-run.test.ts` (line 10) | setup cannot finish until the owner has chosen the workspace timezone (OPS-008) and entered the company name (INT-007) and the postal address (NOTIFY-013). |
+| `OPS-008` | Workspace timezone and requester quiet hours | target | partial | `src/core/platform/configuration.ts`; `tests/base/notifications.test.ts` (line 122) | Setup refuses Finish without a timezone; setup under an `America/New_York` browser timezone stores it; with default quiet hours a 21:00 Eastern status update sends at 08:00 Eastern and a 14:00 Eastern one sends within the coalescing window; with quiet hours off a 23:00 Eastern update sends within the coalescing window; changing the timezone moves the next quiet period; the one-time confirmation prompt appears for an older installation. |
+| `OPS-004` | Global search | published | partial | `tests/browser/operator-completeness-requester.mjs` | Search across the named fields works; the 500 ms first page at declared capacity is not load-tested. |
+| `ROLE-001` | Custom roles and restricted commercial fields | target | missing |  | A base test signs in under a role without commercial permission and reads requests, accounts, prioritisation views, CSV exports and Ask Penny answers through their routes: no revenue, opportunity or health value appears; granting the permission reveals them on the next request; each role change is in the audit log (ROLE-004). |
+| `ROLE-002` | Operator single sign-on | target | partial | `src/core/features/auth/dependencies.ts` | A browser journey against SAML and OIDC test identity providers at the network edge: a first sign-in creates a Contributor, a group claim maps another user to Admin, an enforced domain refuses an email link, and an IdP-side deactivation ends access at the next session check. |
+| `ROLE-003` | SCIM provisioning | target | missing |  | Okta and Entra SCIM request fixtures through the public endpoint create, patch and deactivate a user; the deactivated user's session and API key are refused on their next request, as `auth.test.ts` asserts for removal. |
+| `ROLE-004` | Audit log | target | partial | `tests/base/board.test.ts` (line 58) | Perform each listed action (including REQ-038's edit, removal, restore and permanent delete and INT-007 and NOTIFY-013 changes), then read and export the log through the UI and API; erase an operator and see their entries anonymised while the events remain. |
+| `OPS-006` | Saved views and filters | target | missing |  | A browser test saves a filtered, sorted view, then a second operator opens the shared view and gets the same result set; a private view is not listed for them. |
+| `OPS-007` | Person view | target | partial | `src/core/features/requests/operator-context.ts`; `src/core/features/accounts/read-context.ts` | A fixture requester with two posts, three votes, a comment, captured Zendesk evidence and an account: the profile lists each with a link to its record; a role without commercial permission sees no ARR or MRR; the profile path answers 404 to a portal visitor and appears in no public payload. |
+| `EVID-001` | Capture | published | done | `tests/base/board.test.ts` (line 14); `tests/browser/loopjourney-steps.mjs` |  |
+| `EVID-002` | Provenance | published | done | `tests/browser/operator-pages-decisions.mjs` |  |
+| `EVID-003` | Review lifecycle | published | done | `tests/browser/operator-pages.mjs` |  |
+| `EVID-004` | Non-destructive linking | published | done | `tests/browser/loopjourney-steps.mjs` |  |
+| `EVID-005` | Account context | published | done | `tests/base/penny-evidence.test.ts` (line 50) |  |
+| `EVID-006` | Private commercial data | published | done | `tests/base/penny-evidence.test.ts` (line 146) |  |
+| `EVID-007` | Duplicate suggestions | published | done | `tests/base/penny-evidence.test.ts` (line 101) |  |
+| `EVID-008` | Evidence attachments | published | done | `tests/base/penny-evidence.test.ts` (line 121) |  |
+| `EVID-009` | Tags | published | done | `tests/base/board.test.ts` (line 41) |  |
+| `EVID-010` | Versions | published | done | `tests/base/penny-evidence.test.ts` (line 89) |  |
+| `CAP-001` | Feedback inbox | target | partial | `src/core/features/evidence/repository.ts`; `tests/browser/operator-pages.mjs` | A browser journey at 1440 and 390 pixels: items from three connector fixtures arrive, are triaged by keyboard (link, create, dismiss with reason, snooze), each linked request shows the item with its source link, and the overview counts match the inbox. |
+| `CAP-002` | Source provenance and link-back | target | partial | `src/core/features/evidence/write-service.ts`; `tests/browser/operator-pages-decisions.mjs` | A connector fixture test captures a record, edits it at the source and deletes it at the source: Penny shows changed and removed states, purges the excerpt at the window, and the deep link opens the original record. |
+| `CAP-003` | Zendesk | target | missing |  | Zendesk OAuth, API and webhook fixtures at the network edge: install, link, create and proxy-vote from the sidebar; tag-triggered capture creates one item per ticket however often the webhook replays; the status appears in the sidebar; uninstalling revokes and deletes the tokens. |
+| `CAP-004` | Intercom | target | missing |  | Intercom API and webhook fixtures run CAP-003's journey and show company attributes arriving as private segment attributes. |
+| `CAP-005` | HappyToHelp | target | missing |  | A journey against a running HappyToHelp test installation links a ticket, captures one by tag and receives the drafted status reply on that ticket. |
+| `CAP-006` | Help Scout | target | missing |  | Help Scout API fixtures: link, create, tag capture and mapping, each once per conversation. |
+| `CAP-007` | Gong | target | missing |  | Gong API fixtures: filtered calls are ingested, proposals carry exact transcript spans and timestamps, accounts map through Gong's CRM association, and the fixture records no request for an out-of-filter call. |
+| `CAP-008` | Call recorders, recordings and transcripts | target | missing |  | Fathom, Zoom, Google Meet, Fireflies, Grain and tl;dv fixtures each ingest one filtered call with timestamped spans and ignore an out-of-filter call; a VTT upload produces a searchable transcript whose highlight becomes evidence with a timestamp link; an audio upload shows progress, reserved and metered cost, and a visible failure when the provider fails. |
+| `CAP-009` | Email capture | target | missing |  | Inbound-mail fixtures: forwarded Gmail and Outlook messages each create one item attributed to the original sender; a replayed message ID, an unaligned sender and a reply to a Penny notification create nothing. |
+| `CAP-010` | Slack and Nook | target | missing |  | Signed Slack Events and Interactivity fixtures: the shortcut and the reaction each capture a message once, a bad signature is refused, and a Slack Connect channel maps to its account; the same capture runs against a Nook test installation. |
+| `CAP-011` | Microsoft Teams | target | missing |  | Bot Framework fixtures with token validation capture a message once and refuse an unsigned request. |
+| `CAP-012` | Browser extension | target | missing |  | A Playwright extension journey on a fixture page creates an inbox item with the URL, excerpt and screenshot attachment; a signed-out extension is refused. |
+| `CAP-013` | CRM record panels | target | missing |  | HubSpot and Salesforce fixtures render the panel for a record's company, capture feedback tied to an opportunity amount and attribute a proxy vote to the right customer. |
+| `CAP-014` | Proxy votes | target | partial | `tests/base/feedback-import-uservoice.test.ts` | A base test records proxy votes from the inbox and from a Zendesk sidebar fixture: each counts once, collapses with the customer's own later vote, creates no permission record, and appears in the CSV export with its recorder. |
+| `CAP-015` | Automation platforms | target | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` | A Zapier CLI test against a running installation fires each trigger once per event and runs each action within its key's scopes; an out-of-scope action is refused. |
+| `CAP-016` | Connector health | target | partial | `tests/browser/integration-states.mjs` | A clock-advanced fixture with an expired token and a rate limit shows the connector failing with its reason once an hour passes without a successful sync (or after the owner's shorter setting), notifies the owner once, and after reconnect resumes from its cursor without duplicate items. |
+| `CAP-017` | Capture scope, minimisation and consent | target | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` | Connector fixtures assert that no request is made for out-of-scope records, that redaction precedes the write, and that captured people hold no permission record (NOTIFY-009 sends create none either). |
+| `CAP-018` | Submission forms and polls | target | missing |  | A conditional question renders and validates on the portal and the widget at both widths; poll answers aggregate per request and by segment and stay operator-only. |
+| `CAP-019` | Freshdesk | target | missing |  | Freshdesk API and webhook fixtures run CAP-003's journey: install, link, create and proxy-vote from the sidebar; tag-triggered capture creates one item per ticket however often the webhook replays; company fields arrive as private attributes; a shipped request drafts one reply on the linked ticket; uninstalling revokes and deletes the API key. |
+| `CAP-020` | Review sites and app stores | target | missing |  | Recorded fixtures from G2, Capterra, TrustRadius, Trustpilot, Product Hunt, the App Store and Google Play produce one inbox item per review however often the feed is re-read, each with its rating, date and a deep link that opens that review; an edited fixture review shows changed; |
+| `CAP-021` | Discord | target | missing |  | Signed interaction and gateway fixtures: the command and the reaction each capture a message once with its jump link, a bad signature is refused, and a message in an unselected channel is never read. |
+| `CAP-022` | Survey responses | target | missing |  | Typeform, SurveyMonkey, Google Forms and Pencil fixtures produce one inbox item per response with its link and mapped attributes; a replayed webhook creates nothing; a bad Typeform signature is refused; an unmapped question's answer is absent from D1 and the archive. |
+| `WIDGET-001` | In-app feedback widget | target | partial | `src/core/features/settings/frame-settings.ts`; `tests/browser/operator-completeness-security.mjs` | A browser test on a fixture host page at both widths: an identified user submits, votes and follows, and on an auto-publish board sees their post listed at once; the page URL appears only in private evidence; the documented CSP directives suffice; no third-party cookie is set. |
+| `WIDGET-002` | SSO identify | target | partial | `src/core/features/auth/host-identity.ts`; `tests/base/host-identity.test.ts` | Host-identity tests extended to JWT and to the widget origin: a valid token identifies the user and links the account with private attributes; expired, future-dated and forged tokens are refused and change nothing. |
+| `WIDGET-003` | Changelog widget and announcements | target | missing |  | A browser test: the unread count falls after viewing; a segment-targeted announcement shows only to matching identified users; an unpublished release never appears. |
+| `WIDGET-004` | Mobile SDKs | target | missing |  | SDK sample apps run XCTest and Espresso UI tests against a test installation: identified submit, vote and changelog read, and a queued offline submission sent once on reconnect. |
+| `WIDGET-005` | Moment capture | target | missing |  | A fixture host triggers two moments; their answers arrive as evidence tagged with the moment; the widget sends nothing to Penny until a call is made. |
+| `WIDGET-006` | Portal domain and audiences | target | missing |  | A browser test: a segment member sees the restricted board while a non-member and a signed-out visitor get 404 and no count; on an SSO-required portal, a signed-out request to a request page, the board, the public API, the feed and an attachment returns no request content (WIDGET-008's redirect or the sign-in page for documents, 401 for the rest); a custom hostname configured through the deployment path serves the portal over TLS (an owner-run receipt). |
+| `WIDGET-007` | Localized portal and widget | target | missing |  | A browser test renders the portal and widget in Spanish once through Accept-Language and once through an identify locale, with no English interface string left; a catalogue missing a key fails the build; a status email to a requester identified with `es` arrives in Spanish. |
+| `WIDGET-008` | SSO sign-in redirect and in-app links | target | missing |  | At both widths against a fixture host: a signed-out visitor to `/portal/feedback/<request>` on an SSO-required portal is redirected to the login URL, returns with a valid token and lands on that request identified, with no cookie and no token left in the address bar; a vote chosen before sign-in is applied once after return; an expired token, a forged token, a reused state, a tampered return path and a return path on another origin are each refused and change nothing; with SSO required and no token the request page response carries no request content; with Open requests in my product on, a status email's request link follows the owner's pattern and the fixture host's widget opens that request; the unsubscribe link works signed out. |
+| `AI-001` | Semantic duplicate detection | target | partial | `src/core/features/requests/suggestions.ts`; `tests/base/penny-evidence.test.ts` (line 101) | `eval:ai --set duplicates-v1` meets the AI-001 bars below (precision ≥ 0.90, recall ≥ 0.85, top-five ≥ 0.90, paraphrase recall ≥ lexical + 0.15); requester suggestions contain only published requests; with the model disabled, lexical suggestions still return within EVID-007's limit. |
+| `AI-002` | Auto-link suggestions | target | missing |  | `eval:ai --set links-v1` meets the AI-002 bars below; an inbox journey accepts and rejects suggestions; an auto-link rule on one fixture source links only above its threshold, marks and can undo each link, and changes no public payload. |
+| `AI-003` | Duplicate sweep and merge proposals | target | partial | `src/core/features/requests/merge-repository.ts`; `tests/base/board.test.ts` (line 14) | `eval:ai --set merges-v1` meets the AI-003 bars below, including at most 0.5% wrongful automatic merges and none across boards; a sweep lists proposals; accepting one collapses votes as REQ-008 requires; the auto-merge rule logs each merge and REQ-009 restores it. |
+| `AI-004` | Request extraction from conversations | target | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` | `eval:ai --set extraction-v1` meets the AI-004 bars below; fixture conversations yield proposals whose spans match their source byte for byte; auto-creation produces unpublished requests only; re-running the same conversation creates nothing new. |
+| `AI-005` | Themes and adaptive taxonomy | target | missing |  | `eval:ai --set themes-v1` meets the AI-005 bars below; a fixture corpus gets an initial taxonomy; new feedback is classified in the next run; an operator split reclassifies with history; themes filter the inbox and the request queue. |
+| `AI-006` | Summaries and reply drafts | target | missing |  | Every citation in a fixture summary resolves to a stored record; a draft containing a private account name is flagged; nothing is sent without the operator's action. |
+| `AI-007` | Spam and abuse flags | target | missing |  | `eval:ai --set spam-v1` meets the AI-007 bars below; a fixture spam batch is flagged with reasons and stays in moderation (held on an auto-publish board); a false positive is approved normally. |
+| `AI-008` | Sensitive-data redaction | target | missing |  | `eval:ai --set redaction-v1` meets the AI-008 bars below; a fixture ticket containing an SSN and a card number is stored redacted in D1, search and the archive; a new rule applies to new captures and, on request, re-applies to stored ones. |
+| `AI-009` | Ask Penny | target | missing |  | A question over a fixture corpus returns an answer whose every citation resolves; a role without commercial permission receives no revenue figures; a Slack answer posts only where the asker chose. |
+| `AI-010` | Model configuration and cost | target | partial | `src/core/features/learning/run.ts`; `tests/base/learning-upgrade.test.ts` | Exhausting a fixture budget refuses new AI runs with a visible reason while lexical suggestions, manual capture and triage keep working; the cost report matches metered fixture usage. |
+| `AI-011` | Measured AI quality | target | missing |  | Each named set under `tests/fixtures/ai/` exists with its documented size and label mix; |
+| `SEG-001` | HubSpot | target | missing |  | HubSpot API fixtures map companies, contacts and deals; a webhook update changes segment membership within 5 minutes and a property changed without a webhook arrives at the next 6-hour (or owner-set) refresh; nothing is written to HubSpot by default. |
+| `SEG-002` | Salesforce | target | missing |  | Salesforce REST fixtures with sandbox OAuth: mapping, opportunity-linked evidence summing open amounts in USD, and closed-lost opportunities excluded from revenue at stake. |
+| `SEG-003` | Orbit | target | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` | A journey against an Orbit test installation shows Orbit account attributes as Penny segment attributes and Orbit deals in revenue at stake. |
+| `SEG-004` | Billing revenue | target | missing |  | Stripe API fixtures compute MRR from subscriptions with discounts and several items, flag churned customers and convert a non-USD subscription with its recorded rate. |
+| `SEG-005` | Product and success attributes | target | missing |  | Signed Segment webhook fixtures set traits that move an account into a segment; a Buoy health change does the same. |
+| `SEG-006` | Dynamic segments | target | missing |  | A base test changes an attribute and sees the account enter and leave a segment within 5 minutes; request, inbox and report filters agree on membership; no segment name or attribute appears in any public payload (DATA-002). |
+| `SEG-007` | Customer-value demand | target | partial | `src/core/features/requests/operator-context.ts`; `src/core/features/accounts/read-context.ts`; `tests/base/penny-evidence.test.ts` (line 50) | A fixture with several voters from one account counts that account's ARR once; opportunity and churn figures reconcile with fixture CRM data; none of them appears publicly. |
+| `REQ-001` | Public portal | published | done | `tests/browser/loopjourney-steps.mjs` |  |
+| `REQ-002` | Requester identity | published | done | `tests/base/no-mail-identity.test.ts` |  |
+| `REQ-003` | Submission | published | done | `tests/base/board.test.ts` (line 14) |  |
+| `REQ-004` | Duplicate prevention | published | done | `tests/base/penny-evidence.test.ts` (line 101) |  |
+| `REQ-005` | Publication | published | done | `tests/base/board.test.ts` (line 14) |  |
+| `REQ-006` | Voting | published | done | `tests/base/board.test.ts` (line 14) |  |
+| `REQ-007` | Discussion | published | done | `tests/base/notifications.test.ts` (line 40) |  |
+| `REQ-008` | Merge | published | done | `tests/base/board.test.ts` (line 14) |  |
+| `REQ-009` | Unmerge | published | done | `tests/base/board.test.ts` (line 14); `tests/base/notifications.test.ts` (line 244) |  |
+| `REQ-010` | Follow and consent | published | done | `tests/base/board.test.ts` (line 14) |  |
+| `REQ-011` | Portal attachments | published | done | `tests/base/board.test.ts` (line 41) |  |
+| `REQ-012` | Portal search and browse | published | partial | `tests/browser/requester-board.mjs` | the category filter (REQ-034), the newest and trending sorts with trending computed from a fixture's last-14-day votes and comments, and the 500 ms first page at declared capacity. |
+| `REQ-013` | Submission idempotency | published | done | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` |  |
+| `REQ-014` | Identity failure | published | done | `tests/base/host-identity.test.ts` |  |
+| `REQ-015` | Status updates | published | done | `tests/base/board.test.ts` (line 14) |  |
+| `REQ-016` | Public status | published | partial | `src/core/features/requests/status-publication.ts`; `tests/base/decision-loop-roadmap.test.ts` | a base test of the latest-change rule: unmapped Open, then Planned after a direct set; approving a mapping to an In progress item gives In progress; a later direct Planned wins until the item moves to Shipped; withdrawing the mapping returns the last direct status; |
+| `REQ-017` | Decline | published | partial | `src/core/features/requests/status-publication.ts` | A decline without a reason is refused in code; a journey proving vote/comment refusal and reversal is required. |
+| `REQ-018` | Boards | published | done | `tests/base/board.test.ts` (line 41) |  |
+| `REQ-019` | Internal boards | published | done | `tests/base/board.test.ts` (line 41) |  |
+| `REQ-020` | Requester's own content | published | done | `tests/browser/requester-repair.mjs` |  |
+| `REQ-021` | Requester withdrawal | published | partial | `tests/browser/requester-repair.mjs` (line 86) | Withdrawing a pending request removes it from moderation (tested); the 410 public URL and vote exclusion need a test. |
+| `REQ-022` | Blocking a requester | published | partial | `src/core/features/auth/native-service.ts`; `src/core/features/requests/operator-routes.ts` | Blocked identities are refused at sign-in in code; a journey for hide, refuse with 403, uncount and unblock is required. |
+| `REQ-023` | Email verification | published | done | `tests/base/auth.test.ts` (line 46); `tests/browser/no-mail-journey.mjs` |  |
+| `REQ-024` | Requester identity merge | published | done | `tests/base/notifications.test.ts` (line 229) |  |
+| `REQ-025` | Requester activity | published | done | `tests/base/notifications.test.ts` (line 152) |  |
+| `REQ-026` | Demand attribution | published | partial | `src/core/features/requests/operator-context.ts` | Voters, verified addresses and per-account totals shown privately; a named test of the three separate figures is required. |
+| `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` (line 58) |  |
+| `REQ-028` | Request queue | published | partial | `tests/browser/operator-completeness-read.mjs` | Queue filters and sorts work; the 500 ms first page at declared capacity is not load-tested. |
+| `REQ-029` | Operator-authored request | published | done | `tests/browser/operator-pages-decisions.mjs` |  |
+| `REQ-030` | Moderation verdicts | published | done | `tests/base/notifications.test.ts` (line 279) |  |
+| `REQ-031` | Host identity claims | published | done | `tests/base/host-identity.test.ts` |  |
+| `REQ-032` | Internal notes | published | done | `tests/base/penny-evidence.test.ts` (line 146) |  |
+| `REQ-033` | Auto-publish for identified requesters | target | missing |  | With auto-publish on, a verified requester's post and comment are public on submission and a widget-identified user's post is listed at once; an AI-007-flagged post and a hold-rule match are held with their reason; a PDF post is held while an image post publishes with its image; a takedown (REQ-038's removal) removes the post from every public read within 5 seconds and its URL answers 404; with the model unavailable, posts publish marked not screened, or are held when the board chooses hold; with the setting off, REQ-003's holding applies unchanged. |
+| `REQ-034` | Public categories | target | missing |  | A requester picks a category on submit at both widths, and a board with categories required refuses a submission without one; the board's category filter returns only matching published requests; category counts exclude an unpublished and a held request; a merge keeps the canonical's category; a Canny API fixture's categories and subcategories arrive as categories, with no tag or public payload changed. |
+| `REQ-035` | Vote importance | target | missing |  | A voter picks Must have and later changes it to Important, and the operator breakdown follows; the public request payload carries no importance value; a proxy vote records its importance; a Canny fixture vote with each `votePriority` value lands with the matching importance and the receipt counts each. |
+| `REQ-036` | Set a request's status | target | partial | `src/core/features/requests/operator-routes.ts`; `tests/browser/requester-repair.mjs` | Setting Planned with no comment on a published request without a roadmap item shows Planned in every public payload within 5 seconds and emails each vote-subscribed voter and follower once; it appears in the status roadmap's Planned column with its ETA; an internal status mapped to In progress shows In progress publicly and its name only to operators; the template prefills and the edited comment is published; saving the same status again sends nothing; |
+| `REQ-037` | Comment replies and images | target | missing |  | At both widths: a requester's reply to an operator comment is held, then shown under its parent once approved; an operator's reply is public at once and notifies followers once; a comment image on a holding board stays hidden until approved and on an auto-publish board publishes with the comment; a reply to a rejected comment is refused; a Canny fixture reply lands under its parent with its image. |
+| `REQ-038` | Operator editing and removal of public content | target | missing |  | On a holding board and an auto-publish board: a retitled published request shows the new title in the request page, board list, search and API within 5 seconds while the old title appears only in the operator history; an edited operator comment shows the new wording marked Edited and keeps the old for operators; a removed published request answers 404 and leaves the vote total, category counts, search and the status roadmap column within 5 seconds, and restoring it brings each back; a removed requester comment leaves the portal and its author's activity view shows the reason; removing a status update leaves the status unchanged; no action sends mail except one author notice when ticked; a Contributor is refused each action with 403; each action has one audit entry. |
+| `REQ-039` | Social sign-in for requesters | target | missing |  | Against Google and GitHub OAuth fixtures: a signed-out visitor votes, chooses Continue with Google and returns to the request with the vote applied and no cookie set; a GitHub account with no verified email is sent to the emailed link; a forged or replayed OAuth state is refused and changes nothing; with both providers off neither button appears. |
+| `REQ-040` | Board participation and display settings | target | missing |  | On an operators-only board the submit form is absent and a widget or API submission answers 403 while voting and commenting work; hidden vote totals leave the board, request page and public API; the public voter list shows display names only and the vote control states it; an anonymised board shows Anonymous on every public read while the operator page shows the requester; a Canny fixture board with posting off and votes hidden lands with both settings. |
+| `TRIAGE-001` | Request owner | target | missing |  | A captured item takes its board's default owner; reassignment moves it between queues; a queue lists only the operator's own items. |
+| `TRIAGE-002` | Aging and reminders | target | partial | `src/core/features/overview`; `tests/browser/operator-pages.mjs` | A clock-advanced test sends one reminder per age step, returns a snoozed item on its date, flags a request left in Planned for 28 days as stale with one reminder and clears the flag when its status changes, and the overview's aging and stale counts link to their records. |
+| `TRIAGE-003` | Automation rules | target | missing |  | A rule dry-runs against a fixture inbox, then applies once per item with one audit entry each; a hold rule keeps a matching auto-publish submission in moderation with the rule as its reason; the rule editor offers no publication, vote, customer-notification or commitment action. |
+| `TRIAGE-004` | Mentions and internal discussion | target | missing |  | A mention notifies its operator once; the note and its replies never appear in a public payload. |
+| `TRIAGE-005` | Bulk actions | target | missing |  | Tagging and assigning 200 fixture items writes one audited batch; undo restores every item; a bulk removal (REQ-038) records one reason per batch. |
+| `TRIAGE-006` | Accountable background work | target | partial | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts`; `tests/base/notifications.test.ts` (line 87) | For each worker type, a kill-and-restart test resumes without duplicates and shows the failure state until resolved. |
+| `PRIO-001` | Product hierarchy | target | missing |  | A base test rolls three requests from two accounts up to one feature, counting each account once; moving the feature to another component keeps every link. |
+| `PRIO-002` | Configurable statuses and fields | target | partial | `src/core/features/settings/custom-fields.ts`; `tests/browser/operator-completeness-fields.mjs` | A custom status mapped to Under review shows Under review in every public payload and the custom name only to operators, and its own name publicly once the owner chooses so; setting an internal status on a request (REQ-036) sets its mapped public status; changing a status's mapping moves every request holding it and notifies nobody; a Canny fixture's custom status names arrive as internal statuses mapped as chosen in the preview. |
+| `PRIO-003` | Prioritisation views and formulas | target | missing |  | A RICE view sorts fixture features with every component visible; changing a weight re-sorts; the decision brief and every public payload show no score. |
+| `PRIO-004` | Scorecards | target | missing |  | Two operators' inputs are both visible on a card; the weighted rank is computed; changing the criteria keeps earlier scores readable. |
+| `PRIO-005` | Effort from delivery | target | missing |  | A Linear, a ClickUp and an Asana fixture estimate each appear as effort on the linked feature with their source; a manual override is marked as such. |
+| `PRIO-006` | Objectives | target | missing |  | Features linked to an objective appear grouped under it on a roadmap view and filter a prioritisation view; a key result reads its value from an Amplitude fixture; a Productboard fixture's objectives land with their feature links. |
+| `DEC-001` | States and queue | published | done | `tests/base/decision-loop-commit.test.ts` |  |
+| `DEC-002` | Brief | published | done | `tests/base/decision-loop-dimensions.test.ts` |  |
+| `DEC-003` | Comparable bets | published | done | `tests/base/decision-loop-dimensions.test.ts` |  |
+| `DEC-004` | Commitment | published | done | `tests/base/decision-loop-commit.test.ts` |  |
+| `DEC-005` | Commitment effects | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
+| `DEC-006` | Revision | published | done | `tests/base/penny-decisions.test.ts` |  |
+| `DEC-007` | Review due | published | done | `tests/base/penny-decisions.test.ts` |  |
+| `DEC-008` | Outcome evidence | published | done | `tests/base/penny-releases.test.ts`; `tests/base/penny-decisions.test.ts` |  |
+| `ROAD-001` | Internal states | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
+| `ROAD-002` | Internal record | published | done | `tests/browser/operator-pages-decisions.mjs` |  |
+| `ROAD-003` | Public projection | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
+| `ROAD-004` | Approval is publication | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/loopjourney-roadmap.mjs` |  |
+| `ROAD-005` | Commitment mapping | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
+| `ROAD-006` | Public roadmap | published | done | `tests/browser/loopjourney-roadmap.mjs` |  |
+| `ROAD-007` | Status update draft | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` |  |
+| `ROAD-008` | Status update publication | published | done | `tests/browser/operator-pages-status.mjs` |  |
+| `ROAD-009` | Roadmap views | target | missing |  | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. |
+| `ROAD-010` | Several and audience roadmaps | target | missing |  | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. |
+| `ROAD-011` | Release planning and dependencies | target | partial | `src/core/features/releases/drafts.ts`; `tests/browser/loopjourney-release.mjs` | A slipped dependency flags each dependent item and its ETA; the release plan lists its items with their states. |
+| `ROAD-012` | Public ETA | target | missing |  | The ETA appears only after approval; changing it drafts an update; an internal target date is absent from every public payload. |
+| `ROAD-013` | Roadmap sharing and export | target | missing |  | An export contains only fields the exporter's role may see; the shared link refuses a signed-out visitor. |
+| `ROAD-014` | Status roadmap | target | missing |  | At both widths: a request set to Planned appears in the Planned column within 5 seconds with its ETA and moves to Shipped when set; an Open, an unpublished and an internal-board request never appear and no column count includes them; a hidden column and a Shipped limit apply; a mapped request appears once; switching the source to approved items shows ROAD-006's projection unchanged. |
+| `REL-001` | Draft and targets | published | done | `tests/browser/loopjourney-release.mjs` |  |
+| `REL-002` | Publication | published | done | `tests/browser/loopjourney-release.mjs` |  |
+| `REL-003` | Published wording | published | done | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |  |
+| `REL-004` | Recipient eligibility and snapshot | published | done | `tests/base/release-custody.test.ts` |  |
+| `REL-005` | Customer-safe delivery | published | done | `tests/browser/loopjourney-release.mjs` |  |
+| `REL-006` | Acceptance and retry | published | done | `tests/base/notifications.test.ts` (line 133); `tests/base/release-custody.test.ts` |  |
+| `REL-007` | Idempotent delivery and provider events | published | partial | `tests/base/release-custody.test.ts` | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression. |
+| `REL-008` | Outcome response | published | done | `tests/base/penny-releases.test.ts` |  |
+| `REL-009` | Outcome coverage | published | done | `tests/base/penny-releases.test.ts` |  |
+| `REL-010` | Empty feed | published | done | `tests/browser/route-review.mjs` |  |
+| `REL-011` | Bounces and complaints | published | done | `tests/runtime/mail-events-restart.test.mjs` |  |
+| `REL-012` | Update subscription | published | done | `tests/base/penny-releases.test.ts` |  |
+| `REL-013` | Delivery states | published | done | `tests/base/release-custody.test.ts` |  |
+| `REL-014` | Scheduled publication | target | missing |  | A clock-advanced test publishes a scheduled release once at its time; a release whose target is no longer Shipped stays draft and notifies its author. |
+| `REL-015` | Rich changelog | target | partial | `src/core/features/releases/drafts.ts`; `src/core/features/releases/public-read-repository.ts` | An inline image renders from an approved attachment; the label filter returns only matching releases; raw HTML in a body is not rendered. |
+| `REL-016` | Changelog distribution | target | partial | `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts` | The feeds validate and list only published versions; a segment send reaches exactly the intersection of consent and segment. |
+| `REL-017` | Release notes from delivered work | target | missing |  | A Linear fixture completion drafts a release containing only approved wording and marked items. |
+| `REL-018` | Announcements and request targets | target | missing |  | An entry with no target publishes, appears on the changelog page, both feeds and the widget, and emails each updates subscriber once and nobody else; with Notify subscribers unticked it emails nobody; it shows no outcome prompt; a release whose roadmap target is Planned is still refused; a release with an Open request target is refused unless Mark linked requests Shipped is ticked, which makes the request Shipped and adds its subscribed voters to the snapshot once each. |
+| `DELIV-001` | Vector | target | missing |  | A journey against a Vector test installation creates an issue, maps its state change to the roadmap item and shows Penny's demand inside Vector. |
+| `DELIV-002` | Linear | target | partial | `src/core/features/integrations/tracker-service.ts`; `src/core/features/integrations/tracker-receiver.ts`; `tests/browser/integration-states.mjs` | Linear fixtures: create, link, state mapping, and the attachment updated when votes change. |
+| `DELIV-003` | Jira Cloud | target | partial | `src/core/features/integrations/tracker-service.ts`; `tests/browser/integration-states.mjs` | Jira fixtures: create, link, status-category mapping, and panel content restricted for a role without commercial permission. |
+| `DELIV-004` | GitHub | target | missing |  | Signed GitHub webhook fixtures: an issue closed by a merged pull request proposes Shipped; a bad signature is refused. |
+| `DELIV-005` | Azure DevOps Services | target | missing |  | Azure DevOps fixtures create a work item and map its state change. |
+| `DELIV-006` | Status mapping and close the loop | target | missing |  | A Linear fixture Done moves the item to Shipped, the public status to Shipped and creates a draft; with auto-update on, each follower and NOTIFY-008 voter gets one notification and a replayed webhook sends nothing more; the same mapping runs for ClickUp and Asana fixtures (DELIV-009, DELIV-010). |
+| `DELIV-007` | Demand in the tracker | target | missing |  | A new vote updates the tracker attachment once; with commercial permission off, no revenue band is sent. |
+| `DELIV-008` | Sync health and reconciliation | target | partial | `tests/browser/integration-states.mjs` | A drift fixture is shown and resolved by resync; an ambiguous create is reconciled to the known issue without a duplicate. |
+| `DELIV-009` | ClickUp | target | missing |  | ClickUp API and webhook fixtures create a task from a request, link an existing one and map a status change to Shipped with its ROAD-001 transition and follower draft; the task's demand field updates once when a vote arrives; a bad signature is refused and a replayed webhook changes nothing. |
+| `DELIV-010` | Asana | target | missing |  | Asana API and webhook fixtures complete the X-Hook-Secret handshake, create and link a task and map its completion to Shipped with its follower draft; the task's demand field updates once when a vote arrives; a bad signature is refused and a replayed event changes nothing. |
+| `NOTIFY-001` | Requester updates | published | done | `tests/base/notifications.test.ts` (line 40); `tests/base/notifications.test.ts` (line 68) |  |
+| `NOTIFY-002` | Preferences, timing, and unsubscribe | published | done | `tests/base/notifications.test.ts` (line 122); `tests/base/notifications.test.ts` (line 213) |  |
+| `NOTIFY-003` | Decision review | published | done | `tests/base/penny-decisions.test.ts` |  |
+| `NOTIFY-004` | No mail loops | published | partial | `src/core/features/notifications/delivery.ts` | No-reply sending and no inbound route ship; a test that a notification reply creates nothing, and CAP-009's separate capture route, are required. |
+| `NOTIFY-005` | Notification failure | published | done | `tests/base/notifications.test.ts` (line 87); `tests/base/notifications.test.ts` (line 269) |  |
+| `NOTIFY-006` | Operator notifications and digests | target | partial | `src/core/features/integrations/destinations.ts`; `tests/base/egress-delivery.test.ts` (line 35); `tests/base/penny-decisions.test.ts` | A preference-matrix test delivers each event once on each chosen channel and nowhere else; a digest coalesces a day's events into one message. |
+| `NOTIFY-007` | Close the loop through the original channel | target | missing |  | Zendesk and Freshdesk fixtures: a shipped request drafts one reply per linked ticket; nothing is sent until an agent sends it. |
+| `NOTIFY-008` | Vote subscriptions | target | missing |  | With the setting on, the vote control states the subscription and a vote creates one permission record with origin vote; a published status update emails that voter once; the unsubscribe link withdraws the permission and the next update sends nothing; removing a vote withdraws its permission while a voter who also followed keeps theirs; with the setting off a vote creates no record; a proxy vote creates no record; the setting is refused until a postal address is recorded (NOTIFY-013). |
+| `NOTIFY-009` | Notify captured contacts | target | missing |  | With "Also email people linked through captured evidence" ticked, a captured contact linked through Zendesk evidence gets one email, a contact who is also a follower gets one in total, and a suppressed or previously unsubscribed contact gets none; unticked, no captured contact is emailed; neither creates a permission record; the audit entry records the choice and the count. |
+| `NOTIFY-010` | Weekly requester digest | target | missing |  | A clock-advanced test sends one digest per opted-in requester per week containing only their requests' public changes, sends nothing for an empty week, and the unsubscribe link stops the next digest. |
+| `NOTIFY-011` | The author's vote and subscription | target | missing |  | On a vote-subscription board: the submit form states the subscription; an author who never ticks Email me updates receives one email for the first public operator reply and one for a status update, with a permission record of origin `submission`; the published request's vote total includes the author's vote once; unsubscribe stops the next update; withdrawing the request withdraws the permission; with the setting off the author receives nothing without ticking and their vote still counts. |
+| `NOTIFY-012` | Merge notice | target | missing |  | Merging a duplicate with two followers and a vote-subscribed voter, one of whom already follows the canonical request, sends two messages naming and linking it; with the notice unticked it sends none; unmerging sends nothing. |
+| `NOTIFY-013` | Sender identity and postal address | target | partial | `src/core/platform/configuration.ts`; `src/core/features/notifications/delivery.ts` | Setup refuses Finish without a postal address; a follower's status email has the configured sender name, from address and postal address footer; a from address the provider fixture rejects is refused before saving; with a reply-to set, a reply reaches it and creates no record; with no postal address, turning on vote subscriptions, choosing MIG-007 carry-over and ticking NOTIFY-009 are refused with the reason while a follower's status email still sends. |
+| `MEAS-001` | Amplitude | target | missing |  | Amplitude API fixtures return a feature's event counts over a window and a cohort that becomes a segment. |
+| `MEAS-002` | Mixpanel | target | missing |  | Mixpanel API fixtures match MEAS-001's journey. |
+| `MEAS-003` | PostHog, Segment and Vane | target | missing |  | PostHog, Vane and Segment fixtures produce the same feature usage counts for a linked roadmap item. |
+| `MEAS-004` | Insight reports | target | partial | `src/core/features/releases/outcomes.ts`; `src/core/features/requests/operator-context.ts` | Report totals reconcile with record counts on fixture data; response and resolution times on a fixture with a public comment, a status update, a snooze and a decline equal the hand-computed median and 90th percentile; a scheduled report sends once per period. |
+| `MEAS-005` | Release adoption | target | partial | `src/core/features/releases/outcomes.ts`; `tests/base/penny-releases.test.ts` | Fixture usage yields adoption with its denominator and baseline; removing the usage data reports unknown. |
+| `MEAS-006` | Loop health | target | missing |  | Each figure matches a count over fixture records and links to them. |
+| `DATA-001` | Export contents | published | done | `tests/base/hosted-export.test.ts` (line 83); `tests/installer/portability.test.mjs` |  |
+| `DATA-002` | Public/private boundary | published | done | `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts` |  |
+| `DATA-003` | Erasure outranks history | published | done | `tests/base/penny-erasure.test.ts` (line 137); `tests/base/penny-erasure.test.ts` (line 178) |  |
+| `DATA-004` | Custom fields | published | done | `tests/browser/operator-completeness-fields.mjs` |  |
+| `DATA-005` | CSV exports | target | partial | `src/core/features/data/archive.ts`; `tests/base/hosted-export.test.ts` (line 83) | A CSV export of fixture data reconciles its vote totals with its individual voter rows and with record counts. |
+| `DATA-006` | Complete API and webhooks | target | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` (line 19) | OpenAPI contract tests exercise every resource through the public API; each webhook's signature verifies and replays are rejected. |
+| `DATA-007` | MCP server | target | missing |  | An MCP conformance client lists the tools and runs search and capture; a call outside the key's scope is refused. |
+| `LEARN-001` | Permitted originals | published | done | `tests/base/learning-stage2.test.ts` |  |
+| `LEARN-002` | Contestable learning | published | done | `tests/base/learning-stage2.test.ts` |  |
+| `LEARN-003` | Accountable pre-action choice | published | done | `tests/base/learning-stage3.test.ts` |  |
+| `LEARN-004` | Bounded recurring work | published | done | `tests/base/learning-stage3.test.ts` |  |
+| `LEARN-005` | Privacy closure | published | done | `tests/base/learning-stage3.test.ts` |  |
+| `LEARN-006` | Configuration and proof boundary | published | done | `tests/base/learning-upgrade.test.ts` |  |
+| `IMP-001` | Saved records | published | done | `tests/base/feedback-import.test.ts` (line 35) |  |
+| `IMP-002` | Review and mapping | published | done | `tests/base/feedback-import.test.ts` |  |
+| `IMP-003` | Durable custody | published | done | `tests/base/feedback-import-custody.test.ts` |  |
+| `IMP-004` | Safe reversal | published | done | `tests/base/feedback-import-custody.test.ts` |  |
+| `IMP-005` | Privacy precedence | published | done | `tests/base/feedback-import-custody.test.ts` |  |
+| `IMP-006` | Ideas aggregates | published | done | `tests/base/feedback-import.test.ts` |  |
+| `IMP-007` | Move-in receipt | published | done | `tests/base/feedback-import.test.ts`; `tests/base/feedback-import-uservoice.test.ts` |  |
+| `IMP-008` | UserVoice saved source | published | done | `tests/base/feedback-import-uservoice.test.ts` |  |
+| `MIG-001` | Canny | target | partial | `src/core/features/imports/bundle.ts`; `tests/base/feedback-import.test.ts` (line 35) | A recorded Canny API fixture containing every listed kind migrates each into its destination: categories as categories (REQ-034), insights and Autopilot captures as evidence with source link and company (CAP-002), custom post fields as request fields (DATA-004), `votePriority` as importance (REQ-035), custom statuses as mapped internal statuses (PRIO-002), user and company fields as segment attributes (SEG-006), subscribers as MIG-007 records only with carry-over; a post in `planned` and one in `complete` read Planned and Shipped after the owner approves the preview and appear in those columns of the rebuilt status roadmap (REQ-036, ROAD-014); a changelog with an unlinked and a linked entry lands both as published with original dates and labels, the linked one targeting its request (REL-018); a reply lands under its comment (REQ-037); the IMP-007 receipt counts each kind and names every omitted field; a second run adds only the delta; the migration queues zero deliveries, sends no mail and creates no notification. |
+| `MIG-002` | Productboard | target | missing |  | Productboard API and CSV fixtures rebuild the hierarchy, keep every note-to-feature link, land objectives with their feature links (PRIO-006) and importance on each vote (REQ-035), and name each omitted field in the receipt. |
+| `MIG-003` | Aha! Ideas | target | missing |  | An Aha! API fixture migrates with proxy votes marked proxy and portal visibility mapped to boards. |
+| `MIG-004` | UserVoice | target | partial | `tests/base/feedback-import-uservoice.test.ts` | A UserVoice API fixture produces the same requests and supporters as IMP-008 for overlapping data and adds the comments and notes. |
+| `MIG-005` | Featurebase | target | missing |  | A Featurebase fixture migrates with counts reconciling to its receipt. |
+| `MIG-006` | Cutover kit | target | partial | `src/core/features/imports/service.ts`; `tests/base/feedback-import.test.ts` (line 71) | The dry-run receipt equals the apply receipt; each imported post URL answers 301 to its request; the owner chooses carry-over (MIG-007) or re-consent, and a re-consent invitation creates a permission record only on the customer's click; imported boards get vote-subscription, auto-publish and participation settings (REQ-040) matching the source; the cutover checklist names each unset branding (INT-007), SSO login (WIDGET-008) and sender (NOTIFY-013) item. |
+| `MIG-007` | Subscription carry-over | target | missing |  | A Canny fixture voter subscribed to a post, migrated with carry-over, gets the next status email on the mapped request without re-consent and the email names the move; a changelog subscriber gets the next release; an unsubscribed source row is skipped with its reason; the receipt counts carried-over and skipped subscriptions; without carry-over the same voter gets nothing until they accept the re-consent invitation; undo removes the carried records. |
+| `OWN-001` | Signed first owner | published | done | `tests/base/owner-claim.test.ts` |  |
+| `EDIT-001` | Owner editor | published | done | `tests/base/editor-admission.test.ts` |  |
+| `API-001` | Scoped keys | published | done | `tests/base/integration-api.test.ts` (line 19) |  |
+| `API-002` | Current custody | published | done | `tests/base/integration-api.test.ts` (line 36); `tests/base/integration-api.test.ts` (line 54) |  |
+| `API-003` | Native publication | published | done | `tests/base/integration-api.test.ts` (line 73) |  |
+| `INT-001` | Explicit integration effects | published | done | `tests/browser/integration-states.mjs` |  |
+| `INT-002` | Enforcing transport | published | done | `tests/base/egress-delivery.test.ts` (line 35) |  |
+| `INT-003` | Durable uncertainty | published | done | `tests/browser/integration-states.mjs` |  |
+| `INT-004` | Signed inbound notes | published | done | `tests/browser/integration-states.mjs` |  |
+| `INT-005` | Deliberate tracker issues | published | done | `tests/browser/integration-states.mjs` |  |
+| `INT-006` | Private tracker receipts | published | done | `tests/browser/integration-states.mjs` |  |
+| `INT-007` | Owner portal branding | published | partial | `src/core/features/settings/branding.ts`; `tests/browser/integration-states.mjs` | At 1440 and 390 pixels: the owner uploads a PNG logo and an ICO favicon and sets the name Acme and dark theme; the portal header shows the logo and Acme in dark theme; the document icon link is the uploaded favicon on the same origin; the widget panel and changelog page show the logo; a follower's status email carries Acme and the logo; a PDF, an oversize PNG and an SVG with a script are refused; |
+| `MOB-001` | Phone-width web | target | done | `tests/browser/acceptance-audit.mjs` (line 7); `tests/browser/operator-pages.mjs`; `tests/browser/requester-board.mjs` |  |
+| `MOB-002` | Installable app and push | target | missing |  | A PWA install check passes; a push fixture delivers once; an offline capture syncs once on reconnect. |
+| `MOB-003` | Native operator apps | target | missing |  | XCTest and Espresso UI tests against a test installation triage an item, and a share-sheet capture creates exactly one inbox item. |
+| `A11Y-001` | Accessibility | target | partial | `tests/browser/acceptance-audit.mjs` | Axe reports no serious or critical violation on every journey page at both widths; keyboard-only journeys submit, vote and triage; a recorded screen-reader review precedes the VPAT. |
+| `AGENT-001` | Competing explanations | push-further | partial | `src/core/features/learning/schema.ts`; `tests/base/learning-stage2.test.ts` | A fixture problem with planted disconfirming evidence: both explanations cite real spans, the planted counter-evidence is surfaced, and rejecting an explanation keeps its evidence and history. |
+| `AGENT-002` | Disconfirming evidence search | push-further | partial | `src/core/features/learning/run.ts`; `tests/base/learning-stage2.test.ts` | With contradicting fixture tickets, proposals attach with spans; accepting links them as contradicting (EVID-004); crossing the threshold raises one review suggestion. |
+| `AGENT-003` | Next learning action | push-further | partial | `src/core/features/learning/schema.ts`; `tests/base/learning-stage2.test.ts` | The proposal lists only consenting contacts; approval sends exactly the approved messages; poll answers return as evidence linked to the explanation. |
+| `AGENT-004` | Quiet and lost segments | push-further | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` | A fixture where loud small-business voters differ from silent Enterprise renewals: the report names the gap with cited records and no contact happens without approval. |
+| `AGENT-005` | Bet review after release | push-further | partial | `src/core/features/decisions/reviews.ts`; `tests/base/penny-decisions.test.ts`; `tests/base/learning-stage3.test.ts` | Three fixture outcomes (adopted, shipped but unused, negative follow-up) produce keep, change and reverse recommendations citing their data; missing usage produces unknown. |
+| `AGENT-006` | Promise keeper | push-further | partial | `src/core/features/roadmap/update-drafts.ts`; `tests/browser/operator-pages-status.mjs` | A fixture slipped issue with a public ETA yields one draft and one owner reminder; dismissal records its reason; nothing is published. |
+| `AGENT-007` | Sales and renewal brief | push-further | missing |  | A fixture opportunity's brief cites that account's requests and uses only approved public wording in its suggested customer language. |
+| `AGENT-008` | Weekly product brief | push-further | partial | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts` | A scheduled run over a fixture week produces one brief per subscriber with resolvable citations; an unchanged week produces none and no model call. |
+| `AGENT-009` | Agent controls | push-further | partial | `src/core/features/learning/audit.ts`; `tests/base/learning-stage3.test.ts` | For each agent, revoking mid-run stops further reads and model calls, erasure removes its derived work, and the audit log shows each action. |
