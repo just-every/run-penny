@@ -61,6 +61,6 @@ export function receiptAccumulator(phase='preview',committed=new Map<string,{own
 }
 function aggregateRecord(record:SourceRecord,result:Map<string,FeedbackReceipt['aggregates'][number]>):void {
  const payload=asObject(record.payload)
- const cells=payload._format==='ideas-csv'||payload._format==='uservoice-ideas-csv'?asObject(payload._format==='ideas-csv'?payload._idea:payload._uservoice).aggregates as {field:string;category:string;value:number|string}[]:payload._format==='classic-csv'?['Score (Total Votes)','Comment Count','Company Count','Associated MRR'].filter(field=>field in payload).map(field=>({field,category:field==='Associated MRR'?'revenue':'count',value:Number(payload[field])})):[]
+ const cells=payload._format==='ideas-csv'||payload._format==='uservoice-ideas-csv'?asObject(payload._format==='ideas-csv'?payload._idea:payload._uservoice).aggregates as {field:string;category:string;value:number|string}[]:payload._format==='classic-csv'?['Score (Total Votes)','Comment Count','Company Count','Associated MRR'].filter(field=>field in payload&&payload[field]!=='').map(field=>({field,category:field==='Associated MRR'?'revenue':'count',value:Number(payload[field])})):[]
  for(const cell of cells){const key=JSON.stringify([cell.field,cell.category]),prior=result.get(key)??{field:cell.field,category:cell.category,total:cell.category==='company'?null:0,rows:0};prior.rows++;if(prior.total!==null)prior.total+=Number(cell.value);result.set(key,prior)}
 }

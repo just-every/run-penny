@@ -1,4 +1,4 @@
-export type Overview = { hosted:boolean;canExport?:boolean;ownExport?:{jobId:string|null;phase:string|null;completed:number}|null;commands:{restore:string;preview:string;erase:string;status:string}; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string } | null; epoch: number }
+export type Overview = { hosted:boolean;canExport?:boolean;ownExport?:{jobId:string|null;phase:string|null;completed:number}|null; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string } | null; epoch: number }
 export type BlockedCopy = { table: string; key: string; columns: string[]; action?: string; occurredAt?: string; resolvable?: true }
 export type AuditChoices = Record<string, 'unrelated' | 'clear'>
 export const auditCopyId = (copy: BlockedCopy) => (JSON.parse(copy.key) as string[])[0]
@@ -15,7 +15,7 @@ const messages: Record<string, string> = {
   data_operation_mismatch: 'Resume with the same backup and journal used to start this restore.',
   data_runner_busy: 'This operation is already running. Wait for it to finish.',
   erasure_plan_changed: 'The records changed. Preview erasure again.',
-  erasure_ambiguous_copies: 'Unrelated copies need provenance review before erasure.',
+  erasure_ambiguous_copies: 'Other records repeat this wording, so Penny cannot tell whether it came from this person. Preview erasure again to see which records, reword them, then erase.',
   erasure_crosses_operator_hold: 'This action includes a protected operator identity.',
   unauthenticated: 'Your session has ended. Sign in again to continue.',
 }

@@ -2,16 +2,18 @@ import { useLocation } from '@tanstack/react-router'
 import { ListControls } from '@/core/features/workspace/ui/list-controls'
 import type { OperatorPage } from '@/core/features/workspace/list-query'
 import type { StatusDraft } from '@/core/features/workspace/update-list'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure, OperatorResourceLoading, OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
 import { paperCardClass, primaryButtonClass, secondaryButtonClass } from '@/core/ui/app/classes'
 import { operatorMutation } from '@/core/features/requests/ui/operator-client'
 
-export function StatusDrafts() {
+/** `generation` counts roadmap saves: each one may prepare a draft, so the list refetches rather than reusing the page's loader snapshot. */
+export function StatusDrafts({ generation = 0 }: { generation?: number }) {
  const params=new URLSearchParams(useLocation().searchStr),query=new URLSearchParams({status:'pending'});for(const key of ['q','tag','sort','page']){const value=params.get(`updates${key[0].toUpperCase()}${key.slice(1)}`);if(value)query.set(key,value)}
  const [resource, refresh] = useOperatorResource<OperatorPage<StatusDraft>>(`/api/operator/roadmap-updates?${query}`)
  const [message, setMessage] = useState(''), [busy, setBusy] = useState<string | null>(null)
+ useEffect(() => { if (generation > 0) refresh() }, [generation, refresh])
  const drafts = resource.kind === 'ready' ? resource.data.items : []
  async function act(draft: StatusDraft) {
   setBusy(draft.id)

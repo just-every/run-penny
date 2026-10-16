@@ -203,6 +203,7 @@ async function runJourney(runtime, viewport) {
     await authenticate(runtime, context, page)
 
     async function upload(source) {
+      await panel().getByLabel('What did you export?').selectOption('bundle')
       await panel().getByLabel('Prepared saved feedback bundle').setInputFiles({
         name: 'prepared.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(source)),
       })

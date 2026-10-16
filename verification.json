@@ -54,6 +54,14 @@
         "pnpm run test:browser:dev-credentials",
         "pnpm run test:browser:learning"
       ]
+    },
+    {
+      "name": "dev-flows",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run test:browser:dev-flows"
+      ]
     }
   ],
   "nightly": [

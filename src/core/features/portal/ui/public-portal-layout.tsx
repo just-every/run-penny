@@ -3,6 +3,7 @@ import {HostIdentityBridge} from '@/core/features/auth/ui/host-identity-bridge'
 import type { CSSProperties, ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
 import {usePublicResource} from './public-resource'
+import {PortalSignedIn} from './portal-signed-in'
 import branding from '@/branding.json'
 import { BrandRoot } from '@/core/ui/app/BrandRoot'
 import { CoinMark } from '@/core/ui/brand/CoinMark'
@@ -43,7 +44,7 @@ export function PublicPortalLayout({ content, children }: { readonly content: Pu
             <PortalNavLink to="/portal/roadmap">Roadmap</PortalNavLink>
             <PortalNavLink to="/portal/feedback/activity">Your feedback</PortalNavLink>
             <PortalNavLink to="/portal/updates">Updates</PortalNavLink>
-            <Link to="/signin" className={navLinkClass}>Sign in</Link>
+            <PortalSignedIn className={navLinkClass} />
           </nav>
         </div>
       </header></HydrationUnit>

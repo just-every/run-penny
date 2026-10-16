@@ -1,6 +1,7 @@
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { EvidenceHistory } from './evidence-history'
 import { EvidenceActions } from './evidence-actions'
+import { TagEditor, evidenceTagApi } from '@/core/features/catalog/ui/tag-editor'
 import type { OperatorEvidenceCard } from '@/core/shared/api/operator'
 import { formatObservedAt, sourceLabel } from '@/core/app/ui/operator-format'
 import { OperatorCard } from '@/core/app/ui/operator-primitives'
@@ -22,7 +23,7 @@ export function EvidenceCard({ evidence, onSaved }: { readonly evidence: Operato
       </dl>
       {evidence.requester ? <dl className="mt-4"><DataField label="Requester" valueClassName="flex flex-wrap items-center gap-x-2 gap-y-1"><span>{evidence.requester.displayName}</span>{evidence.requester.email ? <span className="break-all text-penny-muted">{evidence.requester.email}</span> : null}</DataField></dl> : null}
       {evidence.namedSpeaker ? <p className="mt-3 text-base text-penny-ink">Named speaker: {evidence.namedSpeaker}</p> : null}
-      {evidence.tags.length > 0 ? <ul className="mt-4 flex list-none flex-wrap gap-2 p-0" aria-label="Evidence tags">{evidence.tags.map((tag) => <li key={tag}><Chip tone="sand">{tag}</Chip></li>)}</ul> : null}
+      {onSaved ? <div className="mt-4"><TagEditor label="Evidence tags" tagNames={evidence.tags} onChanged={onSaved} {...evidenceTagApi(evidence.id)} /></div> : evidence.tags.length > 0 ? <ul className="mt-4 flex list-none flex-wrap gap-2 p-0" aria-label="Evidence tags">{evidence.tags.map((tag) => <li key={tag}><Chip tone="sand">{tag}</Chip></li>)}</ul> : null}
       {evidence.reviewReason ? <p className="mt-4 flex gap-2 border-t border-penny-line pt-4 text-base leading-normal text-penny-muted"><Icon name="check" className="mt-1 size-4 shrink-0 text-penny-moss" />{evidence.reviewReason}</p> : null}
       <CustomFieldsEditor entityType="evidence" entityId={evidence.id} />
       {onSaved ? <><EvidenceActions evidence={evidence} onSaved={onSaved} /><EvidenceHistory id={evidence.id} onSaved={onSaved} /></> : null}

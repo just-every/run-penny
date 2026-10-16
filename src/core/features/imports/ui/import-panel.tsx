@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { buttonClass, fieldClass } from '../../auth/client-mutations'
+import { useCallback, useState } from 'react'
+import { buttonClass } from '../../auth/client-mutations'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure, OperatorResourceLoading, OperatorResourceNotFound, OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
 import type { SavedFeedbackInput } from '../types'
-import { fieldLabelClass, paperCardClass } from '@/core/ui/app/classes'
+import { paperCardClass } from '@/core/ui/app/classes'
+import { SourceBuilder } from './source-builder'
 import { JobReceiptPanel, ReceiptContent, type ImportReceipt } from './receipt-panel'
 
 interface Preview {
@@ -83,6 +84,7 @@ export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [actionExpired, setActionExpired] = useState(false)
+  const receiveSource = useCallback((next: SavedFeedbackInput | null) => { setSource(next); setPreview(null) }, [])
   const [jobs, reloadJobs] = useOperatorResource<Job[]>('/api/operator/feedback-import/jobs')
 
   const perform = async (work: () => Promise<void>, refreshJobAfterConflictId?: string) => {
@@ -145,7 +147,7 @@ export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
 
   return <article className={`${paperCardClass} min-w-0 p-5 sm:p-7`} aria-busy={busy}>
     <h2 className="text-lg font-bold text-penny-ink">Move saved feedback in</h2>
-    <p className="mt-3 leading-7 text-penny-ink">Review saved boards, ideas and individual history before applying. Imported requests and comments await native moderation. Internal and private comments stay private.</p>
+    <p className="mt-3 leading-7 text-penny-ink">Choose the CSV file Canny or UserVoice gave you; Penny reads it here and shows a preview before anything is saved. Imported requests and comments await native moderation. Internal and private comments stay private.</p>
     <p className="mt-2 text-sm leading-6 text-penny-muted">The full source is checked before anything is written. The preview names aggregates, omissions and unresolved references.</p>
 
     <form className="mt-4 space-y-4" onSubmit={event => {
@@ -155,22 +157,8 @@ export function ImportPanel({ disabled = false }: { disabled?: boolean }) {
         setJob(null)
       })
     }}>
-      <label className={fieldLabelClass}>Prepared saved feedback bundle
-        <input className={fieldClass} type="file" accept="application/json,.json" required disabled={busy || disabled} onChange={event => {
-          const file = event.currentTarget.files?.[0]
-          setPreview(null)
-          setJob(null)
-          setSource(null)
-          if (file) void perform(async () => {
-            if (file.size > preparedBundleLimit) throw new Error(`${requestLimitDescription} ${sourceLimitDescription}`)
-            let value: SavedFeedbackInput
-            try { value = JSON.parse(await file.text()) as SavedFeedbackInput }
-            catch { throw new Error('The saved bundle is not valid JSON.') }
-            setSource(value)
-          })
-        }}/>
-      </label>
-      <p className="text-sm leading-6 text-penny-muted">{sourceLimitDescription} Base64 makes the prepared JSON larger; {requestLimitDescription}</p>
+      <SourceBuilder disabled={busy || disabled} onSource={receiveSource}/>
+      <p className="text-sm leading-6 text-penny-muted">{sourceLimitDescription}</p>
       <button className={buttonClass} disabled={busy || disabled || !source}>Preview saved feedback</button>
     </form>
 

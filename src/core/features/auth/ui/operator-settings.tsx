@@ -2,17 +2,19 @@ import { useState, type FormEvent } from 'react'
 import { usePublicResource } from '@/core/features/portal/ui/public-resource'
 import { operatorMutation } from '@/core/features/requests/ui/operator-client'
 import type { ManagedOperator } from '../operator-management'
+import { useMailSuppressed } from '@/core/features/releases/ui/delivery-counts'
 
 const endpoint='/api/operator/settings/operators'
 const button='min-h-11 rounded-lg border border-penny-accent/50 px-4 py-2 text-sm font-semibold text-penny-accent hover:bg-penny-accent/5 disabled:opacity-50'
 export function OperatorSettings() {
   const [resource,refresh]=usePublicResource<{operators:ManagedOperator[]}>(endpoint)
   const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState(false),[removing,setRemoving]=useState<string|null>(null),[successorId,setSuccessorId]=useState('')
+  const mailSuppressed=useMailSuppressed()
   const operators=resource.kind==='ready'?resource.data.operators:[]
   async function invite(event:FormEvent<HTMLFormElement>) {
     event.preventDefault();const form=event.currentTarget
     setBusy(true);setMessage('');setError(false)
-    try {await operatorMutation(endpoint,{email:new FormData(form).get('email')});form.reset();setMessage('Invitation accepted by the configured mail transport. Ask the operator to open their email and confirm sign-in.');refresh()}
+    try {await operatorMutation(endpoint,{email:new FormData(form).get('email')});form.reset();setMessage(mailSuppressed?'Invitation recorded. Penny Dev sends no email, so no message was sent; on a deployed copy the operator gets a sign-in email.':'Invitation sent. Ask the operator to open their email and confirm sign-in.');refresh()}
     catch(e){setError(true);setMessage(e instanceof Error?e.message:'Could not invite operator.')}
     finally{setBusy(false)}
   }

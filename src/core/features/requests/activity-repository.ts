@@ -16,6 +16,7 @@ export async function readRequesterActivity(connection: DatabaseConnection, iden
     `).bind(identity.requesterId).all<{ id: string; slug: string; title: string; description: string; proposedSolution: string | null; impactStatement: string | null; moderationState: string; publicState: string; withdrawnAt: string | null; rejectionReason: string | null }>(),
     connection.binding.prepare(`
       SELECT DISTINCT CASE WHEN ${publicRequestPredicate} THEN r.slug ELSE original.slug END AS slug,
+        CASE WHEN ${publicRequestPredicate} THEN r.public_title END AS title,
         CASE WHEN ${publicRequestPredicate} THEN 1 ELSE 0 END AS available
       FROM request_vote_contributions contribution JOIN requests original ON original.id=contribution.request_id
       JOIN request_canonical_roots root ON root.origin_id=original.id
@@ -23,9 +24,10 @@ export async function readRequesterActivity(connection: DatabaseConnection, iden
       LEFT JOIN requesters author ON author.id=r.author_requester_id
       JOIN request_votes rv ON rv.request_id=r.id AND rv.requester_id=contribution.requester_id
       WHERE contribution.requester_id=? AND original.withdrawn_at IS NULL ORDER BY slug ASC
-    `).bind(identity.requesterId).all<{ slug: string; available: number }>(),
+    `).bind(identity.requesterId).all<{ slug: string; title: string | null; available: number }>(),
     connection.binding.prepare(`
       SELECT DISTINCT CASE WHEN ${publicRequestPredicate} THEN r.slug ELSE original.slug END AS slug,
+        CASE WHEN ${publicRequestPredicate} THEN r.public_title END AS title,
         COALESCE(rf.muted_at,(SELECT m.created_at FROM request_notification_mutes m JOIN request_canonical_roots mute_root ON mute_root.origin_id=m.request_id WHERE m.requester_id=rf.requester_id AND mute_root.canonical_id=r.id)) AS mutedAt,CASE WHEN ${publicRequestPredicate} THEN 1 ELSE 0 END AS available
       FROM request_follow_contributions c JOIN requests original ON original.id=c.request_id
       JOIN request_canonical_roots root ON root.origin_id=c.request_id
@@ -33,7 +35,7 @@ export async function readRequesterActivity(connection: DatabaseConnection, iden
       LEFT JOIN requesters author ON author.id=r.author_requester_id
       JOIN request_follows rf ON rf.request_id=root.canonical_id AND rf.requester_id=c.requester_id
       WHERE c.requester_id=? ORDER BY slug ASC
-    `).bind(identity.requesterId).all<{ slug: string; mutedAt: string | null;available:number }>(),
+    `).bind(identity.requesterId).all<{ slug: string; title: string | null; mutedAt: string | null;available:number }>(),
     connection.binding.prepare(`
       SELECT c.id, CASE WHEN ${publicRequestPredicate} THEN r.id ELSE original.id END AS requestId,
         CASE WHEN ${publicRequestPredicate} THEN r.slug ELSE original.slug END AS slug,

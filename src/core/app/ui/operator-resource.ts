@@ -1,6 +1,6 @@
 import { useMatches } from '@tanstack/react-router'
 import type { Resources } from '@/core/app/resources.server'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { resourceRequest } from './resource-request'
 
 export type OperatorResourceState<T> =
@@ -9,6 +9,8 @@ export type OperatorResourceState<T> =
   | { readonly kind: 'not_found' }
   | { readonly kind: 'session_expired' }
   | { readonly kind: 'error'; readonly status?: number; readonly message?: string }
+
+const loading = { kind: 'loading' } as const
 
 interface KeyedOperatorResourceState<T> {
   readonly key: string
@@ -61,13 +63,23 @@ export function useOperatorResource<T>(path: string): readonly [OperatorResource
     return () => controller.abort()
   }, [key, path, attempt, prefetched])
 
+  // Each render must return the same state object until the data changes:
+  // consumers key effects on it, and a fresh object per render loops them.
+  const snapshot = useMemo<OperatorResourceState<T> | null>(() => prefetched ? snapshotState<T>(prefetched) : null, [prefetched])
   const request = { pending: !(attempt === 0 && prefetched) && (resource.key !== key || resource.state.kind === 'loading'), attempt }
-  if (attempt === 0 && prefetched) return [prefetched.status === 200 ? { kind: 'ready', data: prefetched.data as T } : prefetched.status === 404 ? { kind: 'not_found' } : prefetched.status === 401 ? { kind: 'session_expired' } : { kind: 'error', status: prefetched.status, message: hintOf(prefetched.data) }, retry, request]
+  if (attempt === 0 && snapshot) return [snapshot, retry, request]
   // Keep forms mounted during refresh; auxiliary resources without a loader
   // snapshot fetch on first mount and still require server-side admission.
   if(resource.key!==key && resource.key.split('\u0000')[0]===path && resource.state.kind==='ready')return [resource.state,retry,request]
-  if(resource.key!==key && prefetched?.status===200)return [{kind:'ready',data:prefetched.data as T},retry,request]
-  return [resource.key === key ? resource.state : { kind: 'loading' }, retry, request]
+  if(resource.key!==key && snapshot?.kind==='ready')return [snapshot,retry,request]
+  return [resource.key === key ? resource.state : loading, retry, request]
+}
+
+function snapshotState<T>(prefetched: { status: number; data: unknown }): OperatorResourceState<T> {
+  if (prefetched.status === 200) return { kind: 'ready', data: prefetched.data as T }
+  if (prefetched.status === 404) return { kind: 'not_found' }
+  if (prefetched.status === 401) return { kind: 'session_expired' }
+  return { kind: 'error', status: prefetched.status, message: hintOf(prefetched.data) }
 }
 
 /** A refusal may name its cause and next step (for example an active data operation). */

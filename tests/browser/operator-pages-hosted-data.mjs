@@ -18,23 +18,13 @@ export async function prepareHostedDataReview() {
   } catch(error) {await rm(directory,{recursive:true,force:true});throw error}
 }
 
-function expectedCommands(origin) {
-  const connection=`--origin '${origin}' --session-file private/session.json`
-  return {
-    restore:`npm run data:import -- private/archive.json --journal private/latest-source-journal.json ${connection}`,
-    preview:`npm run data:erase-preview -- requests 'ROOT_ID' private/plan.json ${connection}`,
-    erase:`npm run data:erase -- private/plan.json --journal-out private/latest-journal.json ${connection}`,
-    status:`npm run data:status -- 'OPERATION_ID' ${connection}`,
-  }
-}
-
-async function assertHostedPanel(page,overview,origin,cookie) {
+async function assertHostedPanel(page,overview,cookie) {
   assert.equal(overview.hosted,true,'[DATA-001 DATA-003] production overview selects the mounted hosted panel')
   await page.getByRole('heading',{name:'Hosted workspace data',exact:true}).waitFor()
-  const commands=expectedCommands(origin)
-  assert.deepEqual(overview.commands,commands,'[DATA-003] API returns the exact guarded commands')
-  assert.deepEqual(await page.locator('main h3 + code').allTextContents(),Object.values(commands),'[DATA-003] mounted panel displays every exact command')
-  assert.equal(await page.locator('main form, main input, main select').count(),0,'[DATA-003] hosted restore and erasure remain guarded commands')
+  // Hosted restore, erasure and import run in the app with the browser session: no session file or command.
+  for(const name of ['Restore a backup','Erase personal data'])await page.getByText(name,{exact:true}).waitFor()
+  await page.getByRole('heading',{name:'Move saved feedback in',exact:true}).waitFor()
+  assert.doesNotMatch(await page.locator('main').innerText(),/session file|__Host-operator_session|npm run/,'[DATA-003] hosted data needs no copied session or command')
   const exportButton=page.getByRole('button',{name:'Export workspace',exact:true})
   assert.equal(await exportButton.count(),overview.canExport?1:0,'[DATA-001] only a native owner sees workspace export')
   if(overview.canExport)assert.equal(await exportButton.isDisabled(),Boolean(overview.operation),'[DATA-001] maintenance blocks starting another export')
@@ -106,7 +96,7 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     assert.equal(document.status(),200)
     assert.equal(new URL(page.url()).pathname,'/app/data')
     assert.match(await document.text(),/No data operation is active\./,'[DATA-001] the real SSR document contains idle state')
-    await assertHostedPanel(page,idleOverview,origin,cookie)
+    await assertHostedPanel(page,idleOverview,cookie)
     const details={scope:'source-only, local TLS emitted production-mode Worker',authority:'native bootstrap cookie and first-run form',tlsTrust:'test-certificate SPKI pin; explicit CA for Node',api:'/api/operator/data/overview',providerCalls:0}
     await capture('DATA-001-hosted-idle',page,{...details,operation:null})
 
@@ -144,7 +134,7 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
       const document=await response.text()
       assert.ok(document.includes(active.overview.operation.id),'[DATA-001] real SSR reads the reserved operation')
       assert.match(document,/export operation pending\./,'[DATA-001] real SSR renders the pending export state')
-      await assertHostedPanel(page,active.overview,origin,cookie)
+      await assertHostedPanel(page,active.overview,cookie)
       await capture('DATA-001-hosted-active-operation',page,{...details,operation:active.overview.operation,observation:'Real SSR and hydrated panel read the native pending export reservation while its original R2 list transport is held.'})
       const held=await runtime.call('/api/operator/data/overview',undefined,{Cookie:cookie})
       assert.equal(held.status,200)

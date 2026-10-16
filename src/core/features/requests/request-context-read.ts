@@ -43,7 +43,7 @@ export async function requestContexts(database: DatabaseConnection, slugs: strin
       requestId: request.id, actions: requestActions(request),
       statusVersions: [], deliveryCounts: emptyCounts(),
       voters: [], accounts: [], notes: [], comments: [], edits: [], attachments: [],
-      commentEdits: [], appeals: [], uploads: [], votesByAccount: [],
+      commentEdits: [], appeals: [], uploads: [], votesByAccount: [], tags: [],
     })
   }
   rowQueries.forEach(([name], index) => {

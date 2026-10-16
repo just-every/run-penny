@@ -25,6 +25,8 @@ export function requestContextRowsSql(requestIdsSql: string) {
       WHERE comments.request_id IN (${requestIdsSql}) ORDER BY edits.created_at,edits.id`,
     appeals: `SELECT request_id AS contextRequestId,* FROM request_moderation_appeals WHERE request_id IN (${requestIdsSql}) ORDER BY created_at,id`,
     uploads: `SELECT request_id AS contextRequestId,id,original_filename,writing FROM request_attachment_uploads WHERE request_id IN (${requestIdsSql}) ORDER BY created_at`,
+    tags: `SELECT ta.request_id AS contextRequestId,t.id,t.name FROM request_tag_assignments ta JOIN tags t ON t.id=ta.tag_id
+      WHERE ta.request_id IN (${requestIdsSql}) ORDER BY t.name`,
     votesByAccount: `SELECT v.request_id AS contextRequestId,a.id AS accountId,a.slug,a.name,count(DISTINCT v.requester_id) AS voteCount
       FROM request_votes v JOIN requesters r ON r.id=v.requester_id AND r.blocked_at IS NULL
       JOIN requester_account_links l ON l.requester_id=r.id JOIN accounts a ON a.id=l.account_id

@@ -10,6 +10,7 @@ import { AppealReview, HeldItemForm } from './held-items'
 import { heldItems, type HeldContext } from './held-context'
 import { quietButtonClass, subformClass } from './form-classes'
 import { useState } from 'react'
+import { Chip } from '@/core/ui/app/Chip'
 import { disclosureSummaryClass, fieldLabelClass, primaryButtonClass } from '@/core/ui/app/classes'
 import { fieldClass } from '@/core/features/auth/client-mutations'
 import { usePublicResource } from '@/core/features/portal/ui/public-resource'
@@ -25,7 +26,7 @@ function followerSummary(counts: Counts, mailSuppressed: boolean): string {
   if (counts.unknown > 0) parts.push(`${counts.unknown} need review`)
   return parts.length > 0 ? parts.join(', ') : 'No followers to notify.'
 }
-interface Context extends HeldContext { actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[] }
+interface Context extends HeldContext { actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; tags: { id: string; name: string }[] }
 
 export function OperatorRequestControls({ slug }: { slug: string }) {
   const [context, refresh] = usePublicResource<Context>(`/api/operator/requests/${slug}/context`), [message, setMessage] = useState(''), router = useRouter()
@@ -47,6 +48,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
           ))}
         </section>
       ) : null}
+      {context.kind === 'ready' && context.data.tags.length > 0 ? <ul className="mt-4 flex list-none flex-wrap gap-2 p-0" aria-label="Private tags">{context.data.tags.map(tag => <li key={tag.id}><Chip tone="sand">{tag.name}</Chip></li>)}</ul> : null}
       {context.kind === 'ready' ? <RequestSupporters voters={context.data.voters} /> : null}
       <details open={held.length > 0} className="group mt-5 border-t border-penny-line pt-1">
         <summary className={disclosureSummaryClass}><span>Discussion, status and request controls</span>{held.length ? <span className="ml-2 rounded-full bg-penny-copper/15 px-2 py-0.5 text-xs font-bold text-penny-ink">{held.length} awaiting review</span> : null}</summary>
@@ -61,7 +63,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
           {context.kind === 'ready' && context.data.actions.unmerge ? <button type="button" className={quietButtonClass} onClick={() => void act(`/api/operator/requests/${slug}/unmerge`, {})}>Unmerge</button> : null}
           {context.kind === 'ready' ? <form className={`${subformClass} space-y-3`} onSubmit={(e) => { e.preventDefault(); void act(`/api/operator/requests/${slug}/board`, { boardSlug: new FormData(e.currentTarget).get('board') }, 'PATCH') }}><label className={fieldLabelClass}>Move to board<input name="board" required className={fieldClass} /></label><button className={primaryButtonClass}>Move request</button></form> : null}
           {context.kind === 'ready' ? <>
-            <RequestMetadata requestId={context.data.requestId} />
+            <RequestMetadata requestId={context.data.requestId} tags={context.data.tags} onChanged={refresh} />
             {context.data.uploads.map((u) => <AttachmentRecovery key={u.id} upload={u} onRecovered={refresh} />)}
             {context.data.appeals.map((a) => <AppealReview key={a.id} appeal={a} act={act} canReview={context.data.actions.moderation} />)}
           </> : context.kind === 'error' ? <p role="alert" className="text-sm font-semibold text-penny-danger">Could not load moderation details.</p> : <p className="text-sm text-penny-muted">Loading details…</p>}

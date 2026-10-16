@@ -7,6 +7,7 @@ import {guardedDatabase} from './guarded-database'
 import {sessionGuard} from './keys'
 import {validateDestination} from '../../../../base/modules/integrations/core/destination.ts'
 import {integrationEvents} from './event-policy'
+import {outboundRelayRequired} from './relay'
 export {integrationEvents}
 export const destinationInput=z.object({name:z.string().trim().min(1).max(100),kind:z.enum(['webhook','slack','receiver']),endpoint:z.string().max(4096),events:z.array(z.enum(integrationEvents)).max(4)}).strict()
 export interface Destination {id:string;name:string;kind:'webhook'|'slack'|'receiver';events_json:string;native_operator_id:string;operator_version:number;actor_id:string;created_at:number;revoked_at:number|null}
@@ -20,6 +21,7 @@ export async function createDestination(runtime:PennyRuntime,request:Request,inp
  const {db,session,actor}=await integrationOperator(runtime,request)
  let endpoint=''
  if(input.kind!=='receiver'){
+  if(!integrationAvailable(runtime))throw new NativeError('integration_relay_required',409,outboundRelayRequired)
   try{endpoint=validateDestination(input.endpoint).href}catch{throw new NativeError('integration_destination_refused',422)}
   const url=new URL(endpoint)
   if(input.kind==='slack'&&(url.hostname!=='hooks.slack.com'||url.search||!/^\/services\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+$/.test(url.pathname)))throw new NativeError('integration_destination_refused',422)

@@ -1,0 +1,4 @@
+Post Title,Post Detail,Score (Total Votes),Comment Count,Date created,Image URLs,Post Status,Post URL,Tags,Post Author,Category,Owner,Associated MRR
+Export invoices to PDF,"We send invoices to accountants, and they need PDFs.",12,3,2025-03-04T10:15:00.000Z,,open,https://feedback.example.test/feature-requests/p/export-invoices-to-pdf,"billing, export",Historical customer,,Sam,1200
+Dark mode,Our team works late.,40,8,2025-01-20T08:00:00.000Z,,planned,https://feedback.example.test/feature-requests/p/dark-mode,,Second customer,,,
+Bulk archive,Archive many projects at once.,5,0,2024-11-02T16:30:00.000Z,,complete,https://feedback.example.test/feature-requests/p/bulk-archive,billing,Third customer,,,
