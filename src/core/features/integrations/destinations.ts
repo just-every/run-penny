@@ -1,7 +1,7 @@
 import {integrationAvailable} from './transport'
 import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
-import {operatorAuth,authenticateOperator} from '../auth/operator'
+import {operatorAuth,operatorSession,authenticateOperator} from '../auth/operator'
 import {NativeError} from '../auth/native-tokens'
 import {guardedDatabase} from './guarded-database'
 import {sessionGuard} from './keys'
@@ -12,7 +12,7 @@ export const destinationInput=z.object({name:z.string().trim().min(1).max(100),k
 export interface Destination {id:string;name:string;kind:'webhook'|'slack'|'receiver';events_json:string;native_operator_id:string;operator_version:number;actor_id:string;created_at:number;revoked_at:number|null}
 export async function integrationOperator(runtime:PennyRuntime,request:Request) {
  if(request.method!=='GET'&&request.headers.get('Origin')!==runtime.configuration.appOrigin)throw new NativeError('forbidden_origin',403)
- const session=await operatorAuth(runtime).getSession(request),actor=await authenticateOperator(runtime,request)
+ const session=await (request.method==='GET'?operatorSession(runtime,request):operatorAuth(runtime).getSession(request)),actor=await authenticateOperator(runtime,request)
  if(!session||!actor)throw new NativeError('unauthenticated',401)
  return {session,actor,db:guardedDatabase(runtime.database.binding,sessionGuard(session))}
 }

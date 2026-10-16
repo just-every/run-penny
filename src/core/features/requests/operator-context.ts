@@ -1,32 +1,15 @@
-import { requestDeliveryCounts,requestVersionDeliveryCounts } from '../releases/counts'
 import type { DatabaseConnection } from '@/core/platform/database'
 import { MutationError } from '@/core/app/operator-mutations'
 import { createUlid } from '@/core/shared/ulid'
 import { createRequestSlug } from './lifecycle-ids'
-import { requestAvailability } from './operator-availability'
-
-// A UserVoice proxy vote stays visibly proxy; a supporter with any unmarked
-// origin vote is shown unmarked. Native and Canny votes have no source type.
-const supporterOrigins = (type: string) => `EXISTS(SELECT 1 FROM request_vote_supporter_types t JOIN request_canonical_roots root ON root.origin_id = t.request_id WHERE root.canonical_id = v.request_id AND t.requester_id = v.requester_id AND t.supporter_type = '${type}')`
-const supporterType = `CASE WHEN ${supporterOrigins('unmarked')} THEN 'unmarked' WHEN ${supporterOrigins('proxy')} THEN 'proxy' END`
+import { requestContexts } from './request-context-read'
+export { requestContexts, type RequestContext } from './request-context-read'
 
 export async function requestContext(database: DatabaseConnection, slug: string) {
-  const db = database.binding
-  const request = await requestAvailability(database, slug)
-  if (!request) throw new MutationError(404, 'Request not found.')
-  const [voters, accounts, notes, comments, edits, attachments, commentEdits, appeals, uploads] = await Promise.all([
-    db.prepare(`SELECT r.id, r.display_name AS displayName, v.created_at AS votedAt, ${supporterType} AS supporterType, a.email, account.id AS accountId,account.slug AS accountSlug,account.name AS accountName FROM request_votes v JOIN requesters r ON r.id = v.requester_id AND r.blocked_at IS NULL LEFT JOIN requester_addresses a ON a.requester_id = r.id AND a.verified_at IS NOT NULL LEFT JOIN requester_account_links ral ON ral.requester_id=r.id LEFT JOIN accounts account ON account.id=ral.account_id WHERE v.request_id = ? ORDER BY r.id, a.id,account.id`).bind(request.id).all(),
-    db.prepare(`SELECT DISTINCT a.id, a.slug, a.name FROM accounts a WHERE EXISTS (SELECT 1 FROM evidence_items e JOIN request_evidence_links l ON l.evidence_id=e.id WHERE e.account_id=a.id AND l.request_id=?) OR EXISTS (SELECT 1 FROM requester_account_links l JOIN request_votes v ON v.requester_id=l.requester_id WHERE l.account_id=a.id AND v.request_id=?) ORDER BY a.name`).bind(request.id, request.id).all(),
-    db.prepare('SELECT * FROM request_notes WHERE request_id = ? ORDER BY created_at, id').bind(request.id).all(),
-    db.prepare('SELECT comment.*, requester.display_name AS requester_display_name FROM request_comments comment LEFT JOIN requesters requester ON requester.id = comment.requester_id WHERE comment.request_id = ? ORDER BY comment.created_at, comment.id').bind(request.id).all(),
-    db.prepare('SELECT * FROM request_content_submissions WHERE is_initial=0 AND request_id = ? ORDER BY created_at, id').bind(request.id).all(),
-    db.prepare("SELECT * FROM attachments WHERE request_id = ? ORDER BY created_at, id").bind(request.id).all(),
-    db.prepare('SELECT edits.* FROM request_comment_edits edits JOIN request_comments comments ON comments.id = edits.comment_id WHERE comments.request_id = ? ORDER BY edits.created_at, edits.id').bind(request.id).all(),
-    db.prepare('SELECT * FROM request_moderation_appeals WHERE request_id = ? ORDER BY created_at, id').bind(request.id).all(),
-    db.prepare('SELECT id,original_filename,writing FROM request_attachment_uploads WHERE request_id=? ORDER BY created_at').bind(request.id).all(),
-  ])
-  const votesByAccount=await db.prepare('SELECT a.id AS accountId,a.slug,a.name,count(DISTINCT v.requester_id) AS voteCount FROM request_votes v JOIN requesters r ON r.id=v.requester_id AND r.blocked_at IS NULL JOIN requester_account_links l ON l.requester_id=r.id JOIN accounts a ON a.id=l.account_id WHERE v.request_id=? GROUP BY a.id ORDER BY a.name').bind(request.id).all()
-  return { actions:request.actions, statusVersions:await requestVersionDeliveryCounts(db,request.id), deliveryCounts:await requestDeliveryCounts(db,request.id), votesByAccount:votesByAccount.results,requestId: request.id, voters: voters.results, accounts: accounts.results, notes: notes.results, comments: comments.results, edits: edits.results, attachments: attachments.results, commentEdits: commentEdits.results, appeals: appeals.results, uploads:uploads.results }
+  const contexts = await requestContexts(database, [slug])
+  const context = Object.hasOwn(contexts, slug) ? contexts[slug] : undefined
+  if (!context) throw new MutationError(404, 'Request not found.')
+  return context
 }
 
 export async function createOperatorRequest(database: DatabaseConnection, input: { title: string; description: string; boardSlug: string; evidenceIds: string[] }, operatorId: string) {

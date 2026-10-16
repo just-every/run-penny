@@ -7,6 +7,7 @@ import { auditedIdentityMail } from './mail-audit'
 import { createUlid } from '@/core/shared/ulid'
 import { NativeError } from './native-tokens'
 import branding from '@/branding.json'
+import { operatorDocumentReads } from '@/core/app/request-context.server'
 
 export interface AuthenticatedOperator { readonly id: string; readonly email: string; readonly displayName: string }
 type Environment = { Bindings: AppBindings; Variables: { runtime: PennyRuntime } }
@@ -34,11 +35,20 @@ export function operatorAuth(runtime: PennyRuntime): OperatorAuth {
 }
 export async function hasOperatorSession(runtime: PennyRuntime, request: Request): Promise<boolean> {
   if (!request.headers.get('Cookie')) return false
-  return Boolean(await operatorAuth(runtime).getSession(request))
+  return Boolean(await operatorSession(runtime, request))
 }
+
+/** Reuse admission only while rendering this incoming app document. APIs and
+ * generated functions entered over HTTP always validate their own session. */
+export function operatorSession(runtime: PennyRuntime, request: Request) {
+  const reads = operatorDocumentReads(request, runtime.bindings)
+  const read = () => operatorAuth(runtime).getSession(request)
+  return reads ? reads.session ??= read() : read()
+}
+
 export async function authenticateOperator(runtime: PennyRuntime, request: Request): Promise<AuthenticatedOperator | null> {
   if (!request.headers.get('Cookie')) return null
-  const session = await operatorAuth(runtime).getSession(request)
+  const session = await operatorSession(runtime, request)
   if (!session) return null
   const { email, displayName } = session.operator
   // Product actor foreign keys keep their existing IDs and historical rows.

@@ -1,6 +1,7 @@
 import { useMatches } from '@tanstack/react-router'
 import type { Resources } from '@/core/app/resources.server'
 import { useCallback, useEffect, useState } from 'react'
+import { resourceRequest } from '@/core/app/ui/resource-request'
 
 export type PublicResourceState<T> =
   | { readonly kind: 'loading' }
@@ -33,7 +34,7 @@ export function usePublicResource<T>(path: string): readonly [PublicResourceStat
   useEffect(() => {
     if (attempt === 0 && prefetched) return
     const controller = new AbortController()
-    void fetch(path, { signal: controller.signal, headers: { Accept: 'application/json' } })
+    void resourceRequest(path, controller.signal)
       .then(async (response) => {
         if (!response.ok) throw new PublicResourceError(response.status)
         return await response.json() as T

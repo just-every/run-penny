@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Load signed-in pages with fresh, complete server snapshots. Batch visible evidence, roadmap and moderation details, share form options, and reuse document admission reads within each request while retaining transaction-time authority checks.
+
 ## 0.1.1 — 2026-10-16
 
 Update from 0.1.0 with `rer install` and `rer setup`. The owner, records, private settings and applied migration history are kept; this patch adds no product migrations.

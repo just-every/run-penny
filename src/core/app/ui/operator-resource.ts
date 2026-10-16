@@ -1,6 +1,7 @@
 import { useMatches } from '@tanstack/react-router'
 import type { Resources } from '@/core/app/resources.server'
 import { useCallback, useEffect, useState } from 'react'
+import { resourceRequest } from './resource-request'
 
 export type OperatorResourceState<T> =
   | { readonly kind: 'loading' }
@@ -36,7 +37,7 @@ export function useOperatorResource<T>(path: string): readonly [OperatorResource
   useEffect(() => {
     if (attempt === 0 && prefetched) return
     const controller = new AbortController()
-    void fetch(path, { signal: controller.signal, headers: { Accept: 'application/json' } })
+    void resourceRequest(path, controller.signal)
       .then(async (response) => {
         if (!response.ok) throw new OperatorResourceError(response.status, await failureHint(response))
         return await response.json() as T

@@ -55,7 +55,8 @@ async function respond(request: Request, bindings: AppBindings, execution: Execu
   if (url.pathname === '/favicon.ico' && ['GET', 'HEAD'].includes(request.method)) {
     return new Response(null, { status: 302, headers: { location: '/brand/penny-mark.svg' } })
   }
-  return pennyRequest.run({ bindings }, async () => {
+  const operatorDocument = request.method === 'GET' && bindings.RER_DEMO !== '1' && (url.pathname === '/app' || url.pathname.startsWith('/app/')) ? { request } : undefined
+  return pennyRequest.run({ bindings, operatorDocument }, async () => {
     const installation = { DB: bindings.DB, AUTH_ORIGIN: createPennyRuntime(bindings, requestContext().configuration).configuration.appOrigin ?? '' }
     const state = await setupStateResponse(request, installation)
     if (state) return editorDocumentHeaders(state, createPennyRuntime(bindings, requestContext().configuration), url.pathname)
