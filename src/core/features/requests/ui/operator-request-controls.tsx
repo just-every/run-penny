@@ -5,6 +5,7 @@ import { AttachmentRecovery } from './attachment-recovery'
 import { operatorMutation } from './operator-client'
 import { RequestMetadata } from './request-metadata'
 import { RequestSupporters, type RequestVoter } from './request-supporters'
+import { InternalNotes, type InternalNote } from './internal-notes'
 import {TrackerLinks} from '../../integrations/ui/tracker-links'
 import { AppealReview, HeldItemForm } from './held-items'
 import { heldItems, type HeldContext } from './held-context'
@@ -26,7 +27,7 @@ function followerSummary(counts: Counts, mailSuppressed: boolean): string {
   if (counts.unknown > 0) parts.push(`${counts.unknown} need review`)
   return parts.length > 0 ? parts.join(', ') : 'No followers to notify.'
 }
-interface Context extends HeldContext { actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; tags: { id: string; name: string }[] }
+interface Context extends HeldContext { actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; notes: InternalNote[]; tags: { id: string; name: string }[] }
 
 export function OperatorRequestControls({ slug }: { slug: string }) {
   const [context, refresh] = usePublicResource<Context>(`/api/operator/requests/${slug}/context`), [message, setMessage] = useState(''), router = useRouter()
@@ -50,6 +51,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
       ) : null}
       {context.kind === 'ready' && context.data.tags.length > 0 ? <ul className="mt-4 flex list-none flex-wrap gap-2 p-0" aria-label="Private tags">{context.data.tags.map(tag => <li key={tag.id}><Chip tone="sand">{tag.name}</Chip></li>)}</ul> : null}
       {context.kind === 'ready' ? <RequestSupporters voters={context.data.voters} /> : null}
+      {context.kind === 'ready' ? <InternalNotes slug={slug} notes={context.data.notes} onSaved={refresh} /> : null}
       <details open={held.length > 0} className="group mt-5 border-t border-penny-line pt-1">
         <summary className={disclosureSummaryClass}><span>Discussion, status and request controls</span>{held.length ? <span className="ml-2 rounded-full bg-penny-copper/15 px-2 py-0.5 text-xs font-bold text-penny-ink">{held.length} awaiting review</span> : null}</summary>
         <div className="max-w-3xl space-y-5">

@@ -1,10 +1,14 @@
 /** The server runner's progress for the operation holding the workspace (data/runner/status.ts). */
 export type Progress = { stage: 'records' | 'imports' | 'files' | 'restore'; state: 'working' | 'retrying' | 'waiting' | 'stopped'; steps: number; reason: string | null; canCancel: boolean; needsBackup: boolean }
 export type Overview = { hosted:boolean;canExport?:boolean;ownExport?:{jobId:string|null;phase:string|null;completed:number}|null; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string; progress: Progress | null } | null; recent: { id: string; kind: string; result: 'complete' | 'aborted'; reason: string | null; finishedAt: number } | null }
-export type BlockedCopy = { table: string; key: string; columns: string[]; action?: string; occurredAt?: string; resolvable?: true }
+export type BlockedCopy = { table: string; key: string; columns: string[]; action?: string; occurredAt?: string; resolvable?: true; values?: Record<string, { current: string; redacted: string }>; label?: string | null; href?: string | null }
 export type AuditChoices = Record<string, 'unrelated' | 'clear'>
+export type CopyChoice = { resolution: 'redact' | 'rename'; values?: Record<string, string> }
+export type CopyChoices = Record<string, CopyChoice>
 export const auditCopyId = (copy: BlockedCopy) => (JSON.parse(copy.key) as string[])[0]
-export type Plan = { table: string; id: string; planHash: string; counts: Record<string, number>; fileCount: number; importCount: number; blockedCopies: BlockedCopy[] }
+export const copyId = (copy: BlockedCopy) => copy.table + ':' + copy.key
+export const choicesComplete = (copies: BlockedCopy[], choices: CopyChoices) => copies.every(copy => { const choice = choices[copyId(copy)]; return !!choice && (choice.resolution === 'redact' || copy.columns.every(name => choice.values?.[name]?.trim())) })
+export type Plan = { table: string; id: string; planHash: string; counts: Record<string, number>; kept?: Record<string, number>; fileCount: number; importCount: number; blockedCopies: BlockedCopy[] }
 export type Receipt = { operationId: string; status: string }
 const messages: Record<string, string> = {
   restore_requires_empty_target: 'This workspace already has records. Restore into an empty, migrated workspace.',
@@ -18,6 +22,7 @@ const messages: Record<string, string> = {
   data_runner_busy: 'This operation is already running. Wait for it to finish.',
   erasure_plan_changed: 'The records changed. Preview erasure again.',
   erasure_ambiguous_copies: 'Other records repeat this wording, so Penny cannot tell whether it came from this person. Preview erasure again to see which records, reword them, then erase.',
+  erasure_rename_repeats: 'A new name still repeats this person’s words. Choose different wording.',
   erasure_crosses_operator_hold: 'This action includes a protected operator identity.',
   unauthenticated: 'Your session has ended. Sign in again to continue.',
   restore_backup_needed: 'Choose the same backup file again below to resume this restore.',

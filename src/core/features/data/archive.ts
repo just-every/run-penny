@@ -16,6 +16,7 @@ import { validateFeedbackArchive } from '../imports/archive-custody'
 import { feedbackRestoreCustody } from '../imports/archive-restore'
 import {eraseArchivedSourceOptions,eraseExportedSourceOptions} from '../imports/archive-source-erasure'
 import { clauseDeletionOrder } from './erasure-dependencies'
+import { checkCopyResolutions, redactionStatements, type BlockedCopy, type CopyResolution, type Redaction } from './erasure-redaction'
 import {startNativeScope,stepNativeScope,finishNativeScope,type NativeScope,type ErasureTable} from './erasure-native'
 import { assertDataAuthority, dataBatch, type DataAuthority } from './authority'
 import { claimPortabilityRunner, requirePortabilityOwner } from './portability-lock'
@@ -277,14 +278,14 @@ export async function abortRestore(db:D1Database,bucket:R2Bucket,id:string,autho
  try{const payload=JSON.parse(operation.payload_json) as {keys:string[];r2Owned?:boolean};if(payload.r2Owned===true){await assertDataAuthority(db,authority);await deleteFiles(bucket,payload.keys)}await bucket.delete(restoreStagingKey(id));await finish(db,id,'aborted',authority)}catch(error){await releaseRunner(db,id,'running','pending');throw error}
 }
 const roots=new Set(['requesters','requests','evidence_items','accounts'])
-type ErasurePlan={table:string;id:string;planHash:string;counts:Record<string,number>;files:string[];blockedCopies:{table:string;key:string;columns:string[]}[];selected:Record<string,Row[]>;audit:Row[];tables:ErasureTable[]}
-type ErasureReview=Omit<ErasurePlan,'tables'>
+type ErasurePlan={table:string;id:string;planHash:string;counts:Record<string,number>;files:string[];blockedCopies:BlockedCopy[];redactions:Redaction[];selected:Record<string,Row[]>;audit:Row[];tables:ErasureTable[];rows:Map<string,Row>;literals:string[]}
+type ErasureReview=Omit<ErasurePlan,'tables'|'rows'|'literals'>
 type CachedErasure={phase:'native';scope:NativeScope}|{phase:'prepare'|'copy';current:State;plan:Omit<ErasureReview,'planHash'>;literals?:string[]}
 const emptyCopy=()=>({jobs:[],identities:[],values:[],holds:[]})
 async function advancePreview(db:D1Database,saved:CopyCheckpoint<CachedErasure>,context:{secret:string;subject:string;table:string;id:string}):Promise<ErasureReview>{
  if(saved.native.phase==='native'){
   if(await stepNativeScope(db,saved.native.scope,true))return deferCopyScan(db,saved,context)
-  const {plan,literals}=finishNativeScope(saved.native.scope),{tables:definitions,...cached}=plan;void definitions
+  const {plan,literals}=finishNativeScope(saved.native.scope),{tables:definitions,rows,...cached}=plan;void definitions;void rows
   saved.native={phase:'prepare',current:(await state(db))!,plan:cached,literals}
   return deferCopyScan(db,saved,context)
  }
@@ -295,7 +296,7 @@ async function advancePreview(db:D1Database,saved:CopyCheckpoint<CachedErasure>,
  }
  const holds=await scanCopyPages(db,saved,job=>readCopyPage(db,saved.copy,job),context)
  const {current,plan}=saved.native,blockedCopies=[...plan.blockedCopies,...holds]
- const planHash=await hash({origin:current.origin,epoch:current.epoch,table:plan.table,id:plan.id,selected:plan.selected,audits:plan.audit,files:plan.files,blockedCopies})
+ const planHash=await hash({origin:current.origin,epoch:current.epoch,table:plan.table,id:plan.id,selected:plan.selected,audits:plan.audit,files:plan.files,blockedCopies,redactions:plan.redactions})
  if(await copySnapshot(db)!==saved.snapshot)fail('erasure_plan_changed')
  return {...plan,blockedCopies,planHash}
 }
@@ -314,13 +315,13 @@ export async function planErasure(db:D1Database,tableName:string,id:string,copyS
  while(await stepNativeScope(db,scope)){ /* The destructive path independently closes the complete graph. */ }
  const {plan,literals}=finishNativeScope(scope),current=(await state(db))!
  if(copyScan){
-  const copy=await prepareCopyScope(db,plan.selected.feedback_import_records,new Set(literals)),{tables:definitions,...cached}=plan;void definitions
+  const copy=await prepareCopyScope(db,plan.selected.feedback_import_records,new Set(literals)),{tables:definitions,rows,...cached}=plan;void definitions;void rows
   const saved:CopyCheckpoint<CachedErasure>={version:1,snapshot:snapshot!,native:{phase:'copy',current,plan:cached},copy,next:0,expires:Date.now()+60*60*1000}
   return advancePreview(db,saved,context!)
  }
  plan.blockedCopies.push(...await importCopyHolds(db,plan.selected.feedback_import_records,new Set(literals)))
- const planHash=await hash({origin:current.origin,epoch:current.epoch,table:tableName,id,selected:plan.selected,audits:plan.audit,files:plan.files,blockedCopies:plan.blockedCopies})
- return {...plan,planHash}
+ const planHash=await hash({origin:current.origin,epoch:current.epoch,table:tableName,id,selected:plan.selected,audits:plan.audit,files:plan.files,blockedCopies:plan.blockedCopies,redactions:plan.redactions})
+ return {...plan,planHash,literals}
 }
 /** R2 deletes 1 to 1,000 keys per call: an operation without files deletes none. */
 async function deleteFiles(bucket:R2Bucket,keys:string[]):Promise<void>{
@@ -347,29 +348,29 @@ export async function resumeErasure(db:D1Database,bucket:R2Bucket,id:string,auth
   return {operationId:id,status:'pending_r2'}
  }
 }
-type ErasurePayload={table:string;id:string;planHash:string;admission:D1Sql[]}
+type ErasurePayload={table:string;id:string;planHash:string;admission:D1Sql[];resolutions?:CopyResolution[]}
 /** Checks the reviewed plan and admits every saved-import step, then takes the
  * data lock. From here the erasure is server work that runs to completion. */
-export async function startErasure(db:D1Database,tableName:string,entityId:string,planHash:string,authority?:DataAuthority):Promise<string>{
+export async function startErasure(db:D1Database,tableName:string,entityId:string,planHash:string,authority?:DataAuthority,resolutions:CopyResolution[]=[]):Promise<string>{
  const reviewed=await planErasure(db,tableName,entityId)
  if(reviewed.planHash!==planHash)fail('erasure_plan_changed')
- if(reviewed.blockedCopies.length)fail('erasure_ambiguous_copies')
+ checkCopyResolutions(reviewed.blockedCopies,resolutions,reviewed.literals)
  await assertDataAuthority(db,authority)
  const admission=await admitFlatImportErasure(db,reviewed.selected.feedback_import_records,authority)
- return reserve(db,'erase',{table:tableName,id:entityId,planHash,admission} satisfies ErasurePayload,authority)
+ return reserve(db,'erase',{table:tableName,id:entityId,planHash,admission,resolutions} satisfies ErasurePayload,authority)
 }
 /** The erasure's one transaction over the product graph, inside the lock. */
 export async function applyErasure(db:D1Database,id:string,payload:Partial<ErasurePayload>,authority?:DataAuthority):Promise<void>{
- const {table:tableName,id:entityId,planHash,admission:importAdmission}=payload
+ const {table:tableName,id:entityId,planHash,admission:importAdmission,resolutions=[]}=payload
  // Started by an earlier version that kept no plan: nothing was erased yet.
  if(!tableName||!entityId||!planHash||!importAdmission){await finish(db,id,'aborted');fail('erasure_not_started')}
  try{
   const plan=await planErasure(db,tableName,entityId)
   if(plan.planHash!==planHash)fail('erasure_plan_changed')
-  if(plan.blockedCopies.length)fail('erasure_ambiguous_copies')
+  checkCopyResolutions(plan.blockedCopies,resolutions,plan.literals)
   const current=(await state(db))!,epoch=current.epoch+1,journal=await readErasureJournal(db)
   if(journal.tombstones.length+Object.values(plan.selected).reduce((n,rows)=>n+rows.length,0)>ERASURE_LIMITS.rows)fail('journal_limit',413)
-  const statements=[...applyStart(db,id),...importAdmission.map(query=>db.prepare(query.sql).bind(...query.params??[])),db.prepare('DELETE FROM ik_d1_assertions'),...await portabilityErasureStatements(db)]
+  const statements=[...applyStart(db,id),...importAdmission.map(query=>db.prepare(query.sql).bind(...query.params??[])),db.prepare('DELETE FROM ik_d1_assertions'),...await portabilityErasureStatements(db),...redactionStatements(db,plan.tables,plan,resolutions,plan.literals)]
   statements.push(...retainErasureWork(db,id,plan.selected.feedback_import_records),...importErasureStatements(db,plan.selected),...await hostErasureStatements(db,plan.selected),...await learningErasureStatements(db,plan.selected))
   // Development mail contains credentials, is never portable, and loses captures
   // for each erased identity in the same transaction as the product graph.
@@ -392,7 +393,7 @@ export async function applyErasure(db:D1Database,id:string,payload:Partial<Erasu
   const anonymousReference=`erased:${crypto.randomUUID()}`
   // A system row's actor is the feature that acted (BASE-OPS-005), never a person; it stays.
   for(const row of plan.audit)statements.push(db.prepare("UPDATE audit_entries SET entity_id=?,actor_id=CASE WHEN actor_type='system' THEN actor_id END,details_json=NULL,updated_at=? WHERE id=?").bind(anonymousReference,new Date().toISOString(),row.id))
-  statements.push(audit(db,'data.erased',id,authority,JSON.stringify({phase:'native_rows_erased',targetType:tableName,targetReference:await hash([current.origin,tableName,entityId])})),db.prepare('UPDATE data_state SET epoch=?,phase=\'locked\' WHERE singleton=1 AND lock_id=?').bind(epoch,id),db.prepare("UPDATE data_operations SET status=?,payload_json=?,updated_at=? WHERE id=?").bind(plan.selected.feedback_import_records.length?'pending_import':'pending_r2',canonical({keys:plan.files}),new Date().toISOString(),id))
+  statements.push(audit(db,'data.erased',id,authority,JSON.stringify({phase:'native_rows_erased',targetType:tableName,targetReference:await hash([current.origin,tableName,entityId]),recordsKeptWithoutWords:plan.redactions.length,copiesRedacted:resolutions.filter(item=>item.resolution==='redact').length,copiesRenamed:resolutions.filter(item=>item.resolution==='rename').length})),db.prepare('UPDATE data_state SET epoch=?,phase=\'locked\' WHERE singleton=1 AND lock_id=?').bind(epoch,id),db.prepare("UPDATE data_operations SET status=?,payload_json=?,updated_at=? WHERE id=?").bind(plan.selected.feedback_import_records.length?'pending_import':'pending_r2',canonical({keys:plan.files}),new Date().toISOString(),id))
   await dataBatch(db,statements,authority)
  }catch(error){
   const operation=await dataOperation(db,id)

@@ -15,7 +15,10 @@ export function requestContextRowsSql(requestIdsSql: string) {
       EXISTS(SELECT 1 FROM evidence_items e JOIN request_evidence_links l ON l.evidence_id=e.id WHERE e.account_id=a.id AND l.request_id=requested.id)
       OR EXISTS(SELECT 1 FROM requester_account_links l JOIN request_votes v ON v.requester_id=l.requester_id WHERE l.account_id=a.id AND v.request_id=requested.id)
       WHERE requested.id IN (${requestIdsSql}) ORDER BY a.name`,
-    notes: `SELECT request_id AS contextRequestId,* FROM request_notes WHERE request_id IN (${requestIdsSql}) ORDER BY created_at,id`,
+    notes: `SELECT n.request_id AS contextRequestId,n.*,o.display_name AS operator_display_name,d.name AS receiver_name FROM request_notes n
+      LEFT JOIN operators o ON o.id=n.operator_id LEFT JOIN penny_integration_receipts r ON r.note_id=n.id
+      LEFT JOIN penny_integration_destinations d ON r.namespace='penny-inbound:'||d.id
+      WHERE n.request_id IN (${requestIdsSql}) ORDER BY n.created_at,n.id`,
     comments: `SELECT comment.request_id AS contextRequestId,comment.*,requester.display_name AS requester_display_name
       FROM request_comments comment LEFT JOIN requesters requester ON requester.id=comment.requester_id
       WHERE comment.request_id IN (${requestIdsSql}) ORDER BY comment.created_at,comment.id`,

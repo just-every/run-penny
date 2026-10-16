@@ -206,7 +206,7 @@ it('[REL-008 REL-009 DEC-008 DATA-003] original snapshot members retain revision
  expect(await rows('release_recipient_snapshots')).toEqual(snapshots);expect(await rows('release_recipient_contexts')).toEqual(contexts);expect(await rows('release_target_snapshots')).toEqual(targets)
  await json(await call(endpoint,{targetId:'second-item',outcome:'adopted'},subscriber,'PUT'))
  await json(await put('not_yet',follower))
- const subscriberAnswers=(await rows('release_outcomes')).filter(row=>row.requester_id===subscriberSnapshot.requester_id)
+ const subscriberAnswers=(await rows('release_outcomes')).filter(row=>row.requester_id===subscriberSnapshot.requester_id),followerAnswers=(await rows('release_outcomes')).filter(row=>row.requester_id===followerId)
  const report=await json<ReleaseOutcomeReport>(await call(`/api/operator/releases/${g.draft.slug}/outcomes`,undefined,g.operator))
  expect(report.whole).toMatchObject({adopted:1,partlyAdopted:1,notYet:1,responses:3,snapshotRecipients:3,coverage:1})
  expect(report.responses).toEqual(expect.arrayContaining([expect.objectContaining({requesterId:g.recipient.requesterId,snapshotId:authorSnapshot.id,revisionNumber:2,contexts:expect.arrayContaining([expect.objectContaining({requestId:g.requests[0].id,roadmapId:'release-item',decisionId:'release-decision'})])})]))
@@ -215,8 +215,9 @@ it('[REL-008 REL-009 DEC-008 DATA-003] original snapshot members retain revision
  for(const privateValue of [g.recipient.requesterId,g.recipient.email,'partly_adopted'])expect(publicText).not.toContain(privateValue)
  const saved=await json<{archive:Archive;journal:ErasureJournal}>(await call('/api/operator/data/export',undefined,g.operator))
  const root={table:'requesters',id:lastId}
- const preview=await json<{planHash:string;counts:Record<string,number>;blockedCopies:unknown[]}>(await call('/api/operator/data/erasure/preview',root,g.operator))
- expect(preview.blockedCopies).toEqual([]);expect(preview.counts).toMatchObject({requesters:3,requester_identity_merges:2,release_outcomes:3,release_recipient_snapshots:2})
+ const preview=await json<{planHash:string;counts:Record<string,number>;kept:Record<string,number>;blockedCopies:unknown[]}>(await call('/api/operator/data/erasure/preview',root,g.operator))
+ // The follower is another person: their snapshot and answer on the erased author's request stay.
+ expect(preview.blockedCopies).toEqual([]);expect(preview.counts).toMatchObject({requesters:3,requester_identity_merges:2,release_outcomes:2,release_recipient_snapshots:1});expect(preview.kept).toEqual({requests:2})
  expect(await json(await call('/api/operator/data/erasure',{...root,planHash:preview.planHash},g.operator))).toMatchObject({status:'complete'})
  for(const session of [g.person,survivor,last]){
   expect((await call('/api/public/identity/session',undefined,session)).status).toBe(401)
@@ -225,27 +226,35 @@ it('[REL-008 REL-009 DEC-008 DATA-003] original snapshot members retain revision
  }
  expect((await put('adopted',outsider)).status).toBe(404)
  expect((await call('/api/public/identity/session',undefined,follower)).status).toBe(200)
- expect((await call(endpoint,undefined,follower)).status).toBe(404)
- expect((await put('adopted',follower)).status).toBe(404)
+ expect(await json<RequesterReleaseOutcomes>(await call(endpoint,undefined,follower))).toMatchObject({targets:[{targetId:'release-item',outcome:'not_yet',revisionNumber:1},{targetId:'second-item',outcome:null,revisionNumber:null}]})
  expect((await rows('requesters')).some(row=>[g.recipient.requesterId,survivorId,lastId].includes(String(row.id)))).toBe(false)
- for(const table of ['requests','request_evidence_links','release_target_snapshots','release_recipient_contexts'])expect(await rows(table)).toEqual([])
- expect(await rows('release_recipient_snapshots')).toEqual([subscriberSnapshot])
- expect(await rows('release_outcomes')).toEqual(subscriberAnswers)
+ // Their requests stay for the follower, without an author or the author's words:
+ // each is named by its approved public wording.
+ expect((await rows('requests')).map(row=>[row.id,row.author_requester_id,row.title])).toEqual(g.requests.map((row,index)=>[row.id,null,`Public request ${index}`]))
+ expect(await rows('request_evidence_links')).toEqual([])
+ expect(await rows('release_target_snapshots')).toEqual(targets)
+ expect(await rows('release_recipient_contexts')).toEqual(contexts.filter(row=>row.snapshot_id===followerSnapshot.id))
+ expect(await rows('release_recipient_snapshots')).toEqual(snapshots.filter(row=>[subscriberSnapshot.id,followerSnapshot.id].includes(row.id)))
+ expect(await rows('release_outcomes')).toEqual([...subscriberAnswers,...followerAnswers])
  expect(await rows('release_targets')).toEqual(sealedTargets)
  const survivingTimeline=(await postRelease()).timeline
- expect(survivingTimeline).toHaveLength(2)
+ expect(survivingTimeline).toHaveLength(3)
  expect(survivingTimeline).toEqual(expect.arrayContaining([
   expect.objectContaining({kind:'outcome',id:subscriberAnswers[0].id,requesterId:subscriberSnapshot.requester_id,roadmapItemId:'second-item',outcome:'adopted',revisionNumber:1,requests:[],evidenceId:null}),
+  expect.objectContaining({kind:'outcome',id:followerAnswers[0].id,requesterId:followerId,roadmapItemId:'release-item',outcome:'not_yet',revisionNumber:1,requests:[{requestId:g.requests[0].id,requestSlug:g.requests[0].slug}],evidenceId:null}),
   expect.objectContaining({kind:'evidence',evidenceId:linkedEvidence.id,releaseId:g.draft.id,wording:'Independent post-release observation'}),
  ]))
  expect(await history()).toEqual(commitment)
  const surviving=await json<ReleaseOutcomeReport>(await call(`/api/operator/releases/${g.draft.slug}/outcomes`,undefined,g.operator))
- expect(surviving.whole).toEqual({adopted:1,partlyAdopted:0,notYet:0,responses:1,snapshotRecipients:1,coverage:1})
+ expect(surviving.whole).toEqual({adopted:1,partlyAdopted:0,notYet:1,responses:2,snapshotRecipients:2,coverage:1})
  expect(surviving.targets).toEqual([
-  expect.objectContaining({targetId:'release-item',adopted:0,partlyAdopted:0,notYet:0,responses:0,snapshotRecipients:1,coverage:0}),
-  expect.objectContaining({targetId:'second-item',adopted:1,partlyAdopted:0,notYet:0,responses:1,snapshotRecipients:1,coverage:1}),
+  expect.objectContaining({targetId:'release-item',adopted:0,partlyAdopted:0,notYet:1,responses:1,snapshotRecipients:2,coverage:0.5}),
+  expect.objectContaining({targetId:'second-item',adopted:1,partlyAdopted:0,notYet:0,responses:1,snapshotRecipients:2,coverage:0.5}),
  ])
- expect(surviving.responses).toEqual([expect.objectContaining({requesterId:subscriberSnapshot.requester_id,snapshotId:subscriberSnapshot.id,outcome:'adopted',revisionNumber:1,contexts:[{requestId:null,requestSlug:null,evidenceId:null,roadmapId:'second-item',roadmapSlug:'second-item',decisionId:'release-decision',decisionSlug:'private-decision-slug'}]})])
+ expect(surviving.responses).toEqual([
+  expect.objectContaining({requesterId:subscriberSnapshot.requester_id,snapshotId:subscriberSnapshot.id,outcome:'adopted',revisionNumber:1,contexts:[{requestId:null,requestSlug:null,evidenceId:null,roadmapId:'second-item',roadmapSlug:'second-item',decisionId:'release-decision',decisionSlug:'private-decision-slug'}]}),
+  expect.objectContaining({requesterId:followerId,snapshotId:followerSnapshot.id,outcome:'not_yet',revisionNumber:1,contexts:[{requestId:g.requests[0].id,requestSlug:g.requests[0].slug,evidenceId:null,roadmapId:'release-item',roadmapSlug:'private-item-slug',decisionId:'release-decision',decisionSlug:'private-decision-slug'}]}),
+ ])
  expect(await json<RequesterReleaseOutcomes>(await call(endpoint,undefined,subscriber))).toMatchObject({targets:[
   {targetId:'release-item',title:'Approved improvement',outcome:null,revisionNumber:null},
   {targetId:'second-item',title:'Second improvement',outcome:'adopted',revisionNumber:1},
@@ -253,39 +262,39 @@ it('[REL-008 REL-009 DEC-008 DATA-003] original snapshot members retain revision
  await json(await call(endpoint,{targetId:'release-item',outcome:'adopted'},subscriber,'PUT'))
  for(let repeat=0;repeat<2;repeat++)await json(await call(endpoint,{targetId:'second-item',outcome:'not_yet'},subscriber,'PUT'))
  const current=await json<ReleaseOutcomeReport>(await call(`/api/operator/releases/${g.draft.slug}/outcomes`,undefined,g.operator))
- expect(current.whole).toEqual({adopted:1,partlyAdopted:0,notYet:1,responses:2,snapshotRecipients:1,coverage:2})
+ expect(current.whole).toEqual({adopted:1,partlyAdopted:0,notYet:2,responses:3,snapshotRecipients:2,coverage:1.5})
  expect(current.targets).toEqual([
-  expect.objectContaining({targetId:'release-item',adopted:1,notYet:0,responses:1,snapshotRecipients:1,coverage:1}),
-  expect.objectContaining({targetId:'second-item',adopted:0,notYet:1,responses:1,snapshotRecipients:1,coverage:1}),
+  expect.objectContaining({targetId:'release-item',adopted:1,notYet:1,responses:2,snapshotRecipients:2,coverage:1}),
+  expect.objectContaining({targetId:'second-item',adopted:0,notYet:1,responses:1,snapshotRecipients:2,coverage:0.5}),
  ])
  expect(current.responses.find(row=>row.targetId==='second-item')).toMatchObject({outcome:'not_yet',revisionNumber:2})
- const retainedAnswers=await rows('release_outcomes');expect(retainedAnswers).toHaveLength(3)
+ const retainedAnswers=await rows('release_outcomes');expect(retainedAnswers).toHaveLength(4)
  const revisedTimeline=(await postRelease()).timeline
- expect(revisedTimeline).toHaveLength(4)
- expect(revisedTimeline.filter(entry=>entry.kind==='outcome')).toEqual(expect.arrayContaining(retainedAnswers.map(answer=>expect.objectContaining({id:answer.id,requesterId:subscriberSnapshot.requester_id,roadmapItemId:answer.roadmap_item_id,outcome:answer.outcome,revisionNumber:answer.revision_number,requests:[],evidenceId:null}))))
+ expect(revisedTimeline).toHaveLength(5)
+ expect(revisedTimeline.filter(entry=>entry.kind==='outcome')).toEqual(expect.arrayContaining(retainedAnswers.map(answer=>expect.objectContaining({id:answer.id,requesterId:answer.requester_id,roadmapItemId:answer.roadmap_item_id,outcome:answer.outcome,revisionNumber:answer.revision_number,requests:answer.requester_id===followerId?[{requestId:g.requests[0].id,requestSlug:g.requests[0].slug}]:[],evidenceId:null}))))
  expect(revisedTimeline.filter(entry=>entry.kind==='evidence')).toEqual(survivingTimeline.filter(entry=>entry.kind==='evidence'))
  expect(await history()).toEqual(commitment)
- expect(await rows('release_recipient_contexts')).toEqual([])
+ expect(await rows('release_recipient_contexts')).toEqual(contexts.filter(row=>row.snapshot_id===followerSnapshot.id))
  expect(await json(await call('/api/operator/data/import',saved,g.operator),409)).toEqual({error:'erasure_journal_regression'})
  const journal=await json<ErasureJournal>(await call('/api/operator/data/journal',undefined,g.operator))
  for(const [table,keys] of [
   ['requesters',[g.recipient.requesterId,survivorId,lastId].map(id=>[id])],
-  ['requests',g.requests.map(row=>[row.id])],
-  ['release_target_snapshots',targets.map(row=>[row.version_id,row.roadmap_item_id,row.request_id])],
-  ['release_recipient_snapshots',[[authorSnapshot.id],[followerSnapshot.id]]],
-  ['release_outcomes',saved.archive.tables.release_outcomes.filter(row=>row.requester_id!==subscriberSnapshot.requester_id).map(row=>[row.id])],
+  ['release_recipient_snapshots',[[authorSnapshot.id]]],
+  ['release_outcomes',saved.archive.tables.release_outcomes.filter(row=>![subscriberSnapshot.requester_id,followerId].includes(row.requester_id)).map(row=>[row.id])],
  ] as const)for(const key of keys)expect(journal.tombstones).toContainEqual({epoch:journal.epoch,table_name:table,key_hash:await digest(canonical([journal.origin,table,canonical(key)]))})
  expect(await json(await call('/api/operator/data/import',{archive:saved.archive,journal},g.operator),409)).toEqual({error:'stale_archive'})
  const replay=structuredClone(saved.archive);replay.epoch=journal.epoch;replay.journalHash=journal.sha256
  const {sha256:ignored,...body}=replay;void ignored;replay.sha256=await digest(canonical(body))
  expect(await json(await call('/api/operator/data/import',{archive:replay,journal},g.operator),409)).toEqual({error:'erased_archive_record'})
  expect(await rows('release_outcomes')).toEqual(retainedAnswers)
- expect(await rows('release_target_snapshots')).toEqual([])
+ expect(await rows('release_target_snapshots')).toEqual(targets)
  expect(await rows('release_targets')).toEqual(sealedTargets)
- const remainingRoot={table:'requesters',id:String(subscriberSnapshot.requester_id)}
- const remainingPlan=await json<{planHash:string;blockedCopies:unknown[]}>(await call('/api/operator/data/erasure/preview',remainingRoot,g.operator))
- expect(remainingPlan.blockedCopies).toEqual([])
- expect(await json(await call('/api/operator/data/erasure',{...remainingRoot,planHash:remainingPlan.planHash},g.operator))).toMatchObject({status:'complete'})
+ for(const id of [String(subscriberSnapshot.requester_id),followerId]){
+  const remainingRoot={table:'requesters',id}
+  const remainingPlan=await json<{planHash:string;blockedCopies:unknown[]}>(await call('/api/operator/data/erasure/preview',remainingRoot,g.operator))
+  expect(remainingPlan.blockedCopies).toEqual([])
+  expect(await json(await call('/api/operator/data/erasure',{...remainingRoot,planHash:remainingPlan.planHash},g.operator))).toMatchObject({status:'complete'})
+ }
  expect(await rows('release_outcomes')).toEqual([])
  const empty=await json<ReleaseOutcomeReport>(await call(`/api/operator/releases/${g.draft.slug}/outcomes`,undefined,g.operator))
  expect(empty.whole).toEqual({adopted:0,partlyAdopted:0,notYet:0,responses:0,snapshotRecipients:0,coverage:0})

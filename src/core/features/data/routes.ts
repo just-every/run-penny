@@ -8,6 +8,7 @@ import { NativeError } from '@/core/features/auth/native-tokens'
 import { DATA_LIMITS,abortInterruptedExport,abortPendingErasure,abortRestore,dataOperation,exportArchive,planErasure,readErasureJournal,recoverInterruptedRunner,restoreStagingKey,startErasure,startRestore } from './archive'
 import { assertDataAuthority, type DataAuthority } from './authority'
 import { planOperatorErasure, startOperatorErasure } from './operator-erasure'
+import { describeCopies } from './erasure-copy-places'
 import { runOperation } from './operations'
 import { registerWork } from './runner/claims'
 import { advanceDataWork } from './runner/advance'
@@ -74,16 +75,19 @@ export function registerDataRoutes(app:Hono<Environment>):void{
    const plan=input.table==='operators'?await planOperatorErasure(c.env.DB,input.id):await planErasure(c.env.DB,input.table,input.id,{secret,subject:session.operatorId+':'+session.id,continuation:input.continuation})
    // The import kit withdraws each touched import's whole saved original, for everyone in it.
    const imports=new Set((('selected' in plan?plan.selected.feedback_import_records:undefined)??[]).map(row=>row.namespace)).size
-   return c.json({table:plan.table,id:plan.id,planHash:plan.planHash,counts:plan.counts,fileCount:plan.files.length,importCount:imports,blockedCopies:plan.blockedCopies})
+   // Records that stay without the person's words, by kind.
+   const kept:Record<string,number>={};for(const row of 'redactions' in plan?plan.redactions:[])kept[row.table]=(kept[row.table]??0)+1
+   return c.json({table:plan.table,id:plan.id,planHash:plan.planHash,counts:plan.counts,kept,fileCount:plan.files.length,importCount:imports,blockedCopies:await describeCopies(c.env.DB,plan.blockedCopies)})
   }catch(error){
    if(error instanceof CopyScanPending)return c.json({status:'pending',continuation:error.continuation},202)
    throw error
   }
  })
  app.post('/api/operator/data/erasure',async c=>{
-  const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160),planHash:z.string().length(64),auditCopies:z.array(z.object({id:z.string().min(1).max(160),resolution:z.enum(['unrelated','clear'])}).strict()).max(21).optional()}).strict())
-  if(input.auditCopies&&input.table!=='operators')throw new NativeError('validation_failed',400)
-  const result=await confirmed(c,async()=>runHere(c,input.table==='operators'?await startOperatorErasure(c.env.DB,input.id,input.planHash,authority(c),input.auditCopies):await startErasure(c.env.DB,input.table,input.id,input.planHash,authority(c))))
+  const input=await parseInput(c.req.raw,z.object({table:z.string(),id:z.string().min(1).max(160),planHash:z.string().length(64),auditCopies:z.array(z.object({id:z.string().min(1).max(160),resolution:z.enum(['unrelated','clear'])}).strict()).max(21).optional(),
+   copies:z.array(z.object({table:z.string().max(80),key:z.string().max(400),resolution:z.enum(['redact','rename']),values:z.record(z.string().max(80),z.string().max(4000)).optional()}).strict()).max(200).optional()}).strict())
+  if(input.auditCopies&&input.table!=='operators'||input.copies&&input.table==='operators')throw new NativeError('validation_failed',400)
+  const result=await confirmed(c,async()=>runHere(c,input.table==='operators'?await startOperatorErasure(c.env.DB,input.id,input.planHash,authority(c),input.auditCopies):await startErasure(c.env.DB,input.table,input.id,input.planHash,authority(c),input.copies)))
   return c.json(result,result.status==='complete'?200:202)
  })
  app.get('/api/operator/data/operations/:id',async c=>{

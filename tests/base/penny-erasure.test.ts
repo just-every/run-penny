@@ -26,15 +26,18 @@ const counts=async(tables:string[])=>Object.fromEntries(await Promise.all(tables
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
 
-async function graph(){
- const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303)
- const operator={Cookie:boot.headers.get('set-cookie')!.split(';')[0]}
- const email='erasure-canary@example.test',displayName='Erasure private identity'
+async function verified(email:string,displayName:string){
  await good('/api/public/identity/email',{email,displayName},{})
  const message=(await providerMessages(runtime())!.list()).find(m=>m.message.to.includes(email))!
  const token=new URL(message.message.text!.match(/https?:\/\/\S+/)![0]).hash.slice(7)
  const identity=await good('/api/public/identity/email/verify',{token},{})
- const person={Authorization:`Bearer ${identity.token}`},requester=(await env.DB.prepare('SELECT requester_id FROM requester_addresses WHERE email=?').bind(email).first<{requester_id:string}>())!.requester_id
+ return {person:{Authorization:`Bearer ${identity.token}`},requester:(await env.DB.prepare('SELECT requester_id FROM requester_addresses WHERE email=?').bind(email).first<{requester_id:string}>())!.requester_id}
+}
+async function graph({betTitle='Better workflow'}={}){
+ const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303)
+ const operator={Cookie:boot.headers.get('set-cookie')!.split(';')[0]}
+ const email='erasure-canary@example.test',displayName='Erasure private identity'
+ const {person,requester}=await verified(email,displayName)
  await good('/api/operator/boards',{name:'Feedback',slug:'feedback',visibility:'public'},operator)
  const request=await good('/api/public/requests',{title:'A public improvement',description:'A public description',boardSlug:'feedback',emailUpdates:true,idempotencyKey:crypto.randomUUID()},person)
  await good(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title:'A public improvement',description:'A public description',boardSlug:'feedback',displayName:'Reader'},operator)
@@ -44,7 +47,7 @@ async function graph(){
  const evidence=await good('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Evidence source canary',wording:'Evidence quotation canary',observedAt:'2026-10-10T00:00:00Z',accountId:account.id,requestLinks:[{id:requestId,stance:'supporting'}]},operator)
  await good(`/api/operator/evidence/${evidence.id}/wording`,{wording:'Revised evidence quotation canary',expectedVersionId:evidence.versionId},operator,'PATCH')
  const decision=await good('/api/operator/decisions',{question:'Which direction?',ownerOperatorId:actor},operator)
- const bet=await good(`/api/operator/decisions/${decision.id}/bets`,{title:'Better workflow',summary:'Reduce effort'},operator)
+ const bet=await good(`/api/operator/decisions/${decision.id}/bets`,{title:betTitle,summary:'Reduce effort'},operator)
  await good(`/api/operator/evidence/${evidence.id}/links`,{target:'bet',targetId:bet.id},operator,'PUT')
  const fields={selectedCandidateBetId:bet.id,rationale:'Commitment reason',ownerOperatorId:actor,confidence:'medium',reviewAt:'2026-11-01',noViableAlternativeReason:'Only viable approach'}
  const commitment=await good(`/api/operator/decisions/${decision.id}/commit`,fields,operator)
@@ -81,13 +84,8 @@ async function pendingFile(g:Awaited<ReturnType<typeof graph>>,writing=0){
 }
 
 type Preview={planHash:string;counts:Record<string,number>;fileCount:number;blockedCopies:unknown[]}
-for(const root of ['requesters','evidence_items','accounts'] as const)it(`[DATA-003 BASE-DATA-003] ${root} erasure fences every history child and original file against revision and stale restore`,async()=>{
- const g=await graph(),id=root==='requesters'?g.requester:root==='accounts'?g.account.id:g.evidence.id
- if(root==='requesters'){
-  const destination=await good('/api/operator/requests',{title:'Independent destination',description:'Independent context',boardSlug:'feedback',evidenceIds:[]},g.operator)
-  await good(`/api/operator/requests/${g.request.slug}/merge`,{targetSlug:destination.slug},g.operator)
-  expect(await rows('request_merges')).toHaveLength(1)
- }
+for(const root of ['evidence_items','accounts'] as const)it(`[DATA-003 BASE-DATA-003] ${root} erasure fences every history child and original file against revision and stale restore`,async()=>{
+ const g=await graph(),id=root==='accounts'?g.account.id:g.evidence.id
  const saved=await good<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export',undefined,g.operator)
  const publishedVersions=(await rows('release_versions')).filter(row=>[g.release.versionId,g.corrected.versionId].includes(String(row.id)))
  expect(new Uint8Array(await (await env.FILES.get(g.storageKey))!.arrayBuffer())).toEqual(g.original)
@@ -96,8 +94,7 @@ for(const root of ['requesters','evidence_items','accounts'] as const)it(`[DATA-
  expect(new Uint8Array(await (await env.FILES.get(pending.key))!.arrayBuffer())).toEqual(pending.bytes)
  const preview=await good<Preview>('/api/operator/data/erasure/preview',{table:root,id},g.operator)
  expect(preview.blockedCopies).toEqual([]);expect(preview.fileCount).toBe(2)
- expect(preview.counts).toMatchObject({evidence_versions:root==='requesters'?3:2,attachments:1,evidence_attachment_uploads:1,decision_evidence_snapshots:1,decision_bet_snapshots:1})
- if(root==='requesters')expect(preview.counts).toMatchObject({release_outcomes:2,requester_update_permissions:2,native_requester_sessions:1,notification_outbox:2,release_recipient_snapshots:1})
+ expect(preview.counts).toMatchObject({evidence_versions:2,attachments:1,evidence_attachment_uploads:1,decision_evidence_snapshots:1,decision_bet_snapshots:1})
  if(root==='accounts')expect(preview.counts.accounts).toBe(1)
  const tables=Object.keys(preview.counts).filter(table=>table!=='audit_anonymized'),before=await counts(tables),filesBefore=(await env.FILES.list()).objects.length
  const plan=await planErasure(env.DB,root,id)
@@ -130,11 +127,43 @@ for(const root of ['requesters','evidence_items','accounts'] as const)it(`[DATA-
   const remaining=await rows(table);for(const row of plan.selected[table])expect(remaining.some(other=>other.id===row.id)).toBe(false)
  }
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
- if(root==='requesters'){
-  expect((await call('/api/public/identity/session',undefined,g.person)).status).toBe(401)
-  expect(await rows('release_outcomes')).toHaveLength(0)
-  expect((await call(`/api/public/releases/${g.release.slug}/outcomes`,{targetId:'absent',outcome:'adopted'},g.person,'PUT')).status).toBe(401)
+})
+
+// Erasing a person removes their own records, never anyone else's: evidence an
+// operator recorded from another customer stays even when it is linked only to
+// the erased person's request, and so does the decision it supports.
+it('[DATA-003 BASE-DATA-003] erasing a requester keeps evidence someone else gave on their request, the decision\'s evidence count and other people\'s comments',async()=>{
+ const g=await graph(),other=await verified('other-customer@example.test','Other customer')
+ await good(`/api/public/requests/${g.request.slug}/comments`,{body:'We need this for our auditors too'},other.person)
+ const destination=await good('/api/operator/requests',{title:'Independent destination',description:'Independent context',boardSlug:'feedback',evidenceIds:[]},g.operator)
+ await good(`/api/operator/requests/${g.request.slug}/merge`,{targetSlug:destination.slug},g.operator)
+ const saved=await good<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export',undefined,g.operator)
+ const decisions=async()=>(await good<{items:{id:string;evidenceCount:number}[]}>('/api/operator/decisions',undefined,g.operator)).items.find(item=>item.id===g.decision.id)!.evidenceCount
+ const kept=async()=>({evidence:(await rows('evidence_items')).filter(row=>row.id===g.evidence.id),versions:(await rows('evidence_versions')).filter(row=>row.evidence_id===g.evidence.id),attachments:await rows('attachments'),links:(await rows('request_evidence_links')).filter(row=>row.evidence_id===g.evidence.id),bets:await rows('candidate_bet_evidence_links'),snapshots:await rows('decision_evidence_snapshots'),comparisons:await rows('decision_bet_snapshots'),comments:(await rows('request_comments')).filter(row=>row.requester_id===other.requester),merges:await rows('request_merges')})
+ const before=await kept();expect(before.evidence).toHaveLength(1);expect(before.links).toHaveLength(1);expect(await decisions()).toBe(1)
+ const preview=await good<Omit<Preview,'blockedCopies'>&{kept:Record<string,number>;blockedCopies:{table:string;key:string;columns:string[];resolvable?:true;href:string}[]}>('/api/operator/data/erasure/preview',{table:'requesters',id:g.requester},g.operator)
+ expect(preview.counts).toMatchObject({requesters:1,evidence_items:1,evidence_versions:1,release_outcomes:2,requester_update_permissions:2,native_requester_sessions:1,notification_outbox:2,release_recipient_snapshots:1})
+ for(const table of ['attachments','decision_evidence_snapshots','decision_bet_snapshots','candidate_bet_evidence_links','request_comments','request_merges'])expect(preview.counts[table],table).toBeUndefined()
+ expect(preview.fileCount).toBe(0);expect(preview.kept).toMatchObject({requests:1})
+ // Their request's approved public wording repeats their words: the owner decides it.
+ expect(preview.blockedCopies).toEqual([expect.objectContaining({table:'requests',columns:['public_title','public_description'],resolvable:true,href:`/app/moderation#request-${g.request.slug}`})])
+ const copies=[{table:'requests',key:preview.blockedCopies[0].key,resolution:'rename',values:{public_title:'Team workflow request',public_description:'Customers asked for a faster team workflow.'}}]
+ expect((await good('/api/operator/data/erasure',{table:'requesters',id:g.requester,planHash:preview.planHash,copies},g.operator)).status).toBe('complete')
+ expect(await kept()).toEqual(before)
+ expect(await decisions()).toBe(1)
+ expect(new Uint8Array(await (await env.FILES.get(g.storageKey))!.arrayBuffer())).toEqual(g.original)
+ expect((await rows('requests')).find(row=>row.id===g.requestId)).toMatchObject({author_requester_id:null,public_title:'Team workflow request',public_description:'Customers asked for a faster team workflow.',approved_author_name:null,public_author_display_name:null})
+ for(const {name} of (await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").all<{name:string}>()).results){
+  // Sealed published release wording keeps its own publication custody.
+  const dump=JSON.stringify(await rows(name));for(const text of [g.email,g.displayName,...(name==='release_versions'?[]:['A public description'])])expect(dump,name).not.toContain(text)
  }
+ for(const table of Object.keys(preview.counts).filter(table=>table!=='audit_anonymized'))expect((await rows('data_tombstones')).filter(row=>row.table_name===table),table).toHaveLength(preview.counts[table])
+ expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ expect((await call('/api/public/identity/session',undefined,g.person)).status).toBe(401)
+ expect(await rows('release_outcomes')).toHaveLength(0)
+ expect((await call(`/api/public/releases/${g.release.slug}/outcomes`,{targetId:'absent',outcome:'adopted'},g.person,'PUT')).status).toBe(401)
+ const stale=await call('/api/operator/data/import',saved,g.operator);expect(stale.status).toBe(409);expect(await stale.json()).toEqual({error:'erasure_journal_regression'})
+ const latest=await call('/api/operator/data/import',{archive:saved.archive,journal:await readErasureJournal(env.DB)},g.operator);expect(latest.status).toBe(409);expect(await latest.json()).toEqual({error:'stale_archive'})
 })
 
 it('[DATA-003 BASE-DATA-003] active evidence writers fence erasure; interrupted original-file removal holds maintenance until authenticated resume',async()=>{
@@ -160,22 +189,50 @@ it('[DATA-003 BASE-DATA-003] active evidence writers fence erasure; interrupted 
  expect(await readErasureJournal(env.DB)).toEqual(journal)
 })
 
-it('[DATA-003] corrected sealed public wording remains independent, but private review copies and operator identity still block erasure',async()=>{
- const g=await graph(),target={table:'requesters',id:g.requester}
+it('[DATA-003] repeated words are listed with links and redacted or renamed from the preview; sealed public wording stays independent and operator identity still blocks',async()=>{
+ // The README story: the committed bet is named after the request it answers.
+ const g=await graph({betTitle:'A public improvement'}),target={table:'requesters',id:g.requester}
  const approved=(await rows('requests')).find(row=>row.id===g.requestId)!
  const versions=(await rows('release_versions')).filter(row=>[g.release.versionId,g.corrected.versionId].includes(String(row.id)))
  expect(versions).toHaveLength(2)
  for(const version of versions)expect(version).toMatchObject({title:approved.public_title,body:approved.public_description,snapshot_sealed_at:expect.any(String)})
- expect((await good<Preview>('/api/operator/data/erasure/preview',target,g.operator)).blockedCopies).toEqual([])
+ type Listed={table:string;key:string;columns:string[];resolvable?:true;href:string|null;label:string|null;values:Record<string,{current:string;redacted:string}>}
+ const preview=async()=>good<Omit<Preview,'blockedCopies'>&{blockedCopies:Listed[]}>('/api/operator/data/erasure/preview',target,g.operator)
+ const item=(await rows('roadmap_items'))[0],decision=(await rows('decisions')).find(row=>row.id===g.decision.id)!
+ const first=await preview()
+ expect(first.blockedCopies.map(copy=>[copy.table,copy.columns,copy.resolvable,copy.href]).sort()).toEqual([
+  ['candidate_bets',['title'],true,`/app/decisions/${decision.slug}`],
+  ['requests',['public_title','public_description'],true,`/app/moderation#request-${g.request.slug}`],
+  ['roadmap_items',['title'],true,`/app/roadmap#roadmap-item-${item.id}`],
+ ])
+ expect(first.blockedCopies.find(copy=>copy.table==='candidate_bets')!.values).toEqual({title:{current:'A public improvement',redacted:'[erased]'}})
  // Public approval does not exempt the same phrase copied into a private note.
  for(const [copy,reviewAt] of [[approved.public_title,'2026-12-01'],[g.email,'2027-01-01']])await good(`/api/operator/decisions/${g.decision.id}/reviews`,{note:`Private unattributed copy ${copy}`,reviewAt},g.operator)
- const blocked=await good<Preview>('/api/operator/data/erasure/preview',target,g.operator)
- expect(blocked.blockedCopies).toHaveLength(2)
- expect(blocked.blockedCopies).toEqual(expect.arrayContaining((await rows('decision_reviews')).map(row=>({table:'decision_reviews',key:canonical([row.id]),columns:['note']}))))
+ const blocked=await preview()
+ expect(blocked.blockedCopies).toHaveLength(5)
+ expect(blocked.blockedCopies).toEqual(expect.arrayContaining((await rows('decision_reviews')).map(row=>expect.objectContaining({table:'decision_reviews',key:canonical([row.id]),columns:['note'],resolvable:true,href:`/app/decisions/${decision.slug}`}))))
  const refused=await call('/api/operator/data/erasure',{...target,planHash:blocked.planHash},g.operator)
  expect(refused.status).toBe(409);expect(await refused.json()).toEqual({error:'erasure_ambiguous_copies'})
+ const choose=(rename:Record<string,Record<string,string>>)=>blocked.blockedCopies.map(copy=>rename[copy.table]?{table:copy.table,key:copy.key,resolution:'rename',values:rename[copy.table]}:{table:copy.table,key:copy.key,resolution:'redact'})
+ const repeating=await call('/api/operator/data/erasure',{...target,planHash:blocked.planHash,copies:choose({candidate_bets:{title:'Still A public improvement'}})},g.operator)
+ expect(repeating.status).toBe(409);expect(await repeating.json()).toEqual({error:'erasure_rename_repeats'})
+ const name=(await rows('requesters')).find(row=>row.id===g.requester)!.display_name
  await env.DB.prepare('UPDATE requesters SET display_name=(SELECT display_name FROM operators LIMIT 1) WHERE id=?').bind(g.requester).run()
  const held=await call('/api/operator/data/erasure/preview',target,g.operator);expect(held.status).toBe(409);expect(await held.json()).toEqual({error:'erasure_crosses_operator_hold'})
+ await env.DB.prepare('UPDATE requesters SET display_name=? WHERE id=?').bind(name,g.requester).run()
+ expect((await preview()).planHash).toBe(blocked.planHash)
+ const done=await good('/api/operator/data/erasure',{...target,planHash:blocked.planHash,copies:choose({candidate_bets:{title:'Invoice workflow'},requests:{public_title:'Team workflow request',public_description:'Customers asked for a faster team workflow.'}})},g.operator)
+ expect(done.status).toBe('complete')
+ expect((await rows('candidate_bets')).find(row=>row.id===g.bet.id)!.title).toBe('Invoice workflow')
+ // The committed decision's copy of the bet follows its new name.
+ expect((await rows('decision_bet_snapshots')).map(row=>row.title)).toEqual(['Invoice workflow'])
+ expect((await rows('roadmap_items'))[0].title).toBe('[erased]')
+ expect((await rows('decision_reviews')).map(row=>row.note).sort()).toEqual(['Private unattributed copy [erased]','Private unattributed copy [erased]'])
+ expect((await rows('requests')).find(row=>row.id===g.requestId)).toMatchObject({author_requester_id:null,public_title:'Team workflow request'})
+ expect((await rows('release_versions')).filter(row=>versions.some(version=>version.id===row.id))).toEqual(versions)
+ for(const {name:table} of (await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").all<{name:string}>()).results){
+  const dump=JSON.stringify(await rows(table));for(const text of [g.email,g.displayName,...(['release_versions','roadmap_update_versions'].includes(table)?[]:[String(approved.public_title)])])expect(dump,table).not.toContain(text)
+ }
 })
 
 it('[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and name copies go while their attributed work and everyone else stay',async()=>{
@@ -241,7 +298,8 @@ it('[DATA-003] another person\'s audit rows that only repeat a removed operator\
 })
 
 it('[DATA-003 BASE-DATA-003] a confirmed erasure whose tab closes mid-step finishes on the server once, and the stopped request cannot apply anything again',async()=>{
- const g=await graph(),target={table:'requesters',id:g.requester}
+ // Evidence with an original file: the erasure has a file-deletion step to stop in.
+ const g=await graph(),target={table:'evidence_items',id:g.evidence.id}
  const preview=await good<Preview>('/api/operator/data/erasure/preview',target,g.operator)
  // The request stops inside its file-deletion step, as when the tab closes and the Worker is cut off.
  const entered=barrier(),release=barrier()
@@ -249,7 +307,7 @@ it('[DATA-003 BASE-DATA-003] a confirmed erasure whose tab closes mid-step finis
  const closed=app.fetch(new Request(origin+'/api/operator/data/erasure',{method:'POST',headers:{Host:'127.0.0.1:8787',Origin:origin,'Content-Type':'application/json',...g.operator},body:JSON.stringify({...target,planHash:preview.planHash})}),{...bindings(),FILES:stuck})
  await entered.promise
  const [operation]=await rows('data_operations');expect(operation.status).toBe('running_r2')
- expect(await env.DB.prepare('SELECT id FROM requesters WHERE id=?').bind(g.requester).first()).toBeNull()
+ expect(await env.DB.prepare('SELECT id FROM evidence_items WHERE id=?').bind(g.evidence.id).first()).toBeNull()
  // Coming back while the step's claim is live shows progress, not a state name.
  const during=await good<{operation:{progress:{state:string;stage:string}}}>('/api/operator/data/overview',undefined,g.operator)
  expect(during.operation.progress).toMatchObject({state:'working',stage:'files'})

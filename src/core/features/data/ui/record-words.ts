@@ -35,3 +35,12 @@ export function byPlainName<T extends Record<string, number>>(rows: { table: str
   }
   return [...merged].map(([name, counts]) => ({ name, counts })).sort((a, b) => Number(a.name === OTHER_RECORDS) - Number(b.name === OTHER_RECORDS))
 }
+
+// Where wording can be repeated, in the words an operator sees in the app.
+export const places: Record<string, string> = {
+  requests: 'A feedback request', request_comments: 'A comment', request_content_submissions: 'A submitted edit',
+  evidence_items: 'An evidence item', evidence_versions: 'An evidence item’s wording', roadmap_items: 'A roadmap item',
+  roadmap_publications: 'A roadmap item’s approved public wording', roadmap_transitions: 'A roadmap move reason',
+  request_status_updates: 'A status update', release_versions: 'A release', decisions: 'A decision', decision_reviews: 'A decision review note', decision_revisions: 'A decision commitment', request_notes: 'An internal note', releases: 'A release',
+  candidate_bets: 'A decision bet', accounts: 'An account', audit_entries: 'The audit history', requesters: 'A person’s record',
+}

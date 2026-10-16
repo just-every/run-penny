@@ -75,7 +75,7 @@ export function DataPage() {
         if (receipt.status === 'complete') setRestored(true)
         else { setStarted(receipt.operationId); setStatus({ kind: 'success', text: 'Penny is restoring this backup on the server. You can close this page; it finishes on its own.', scope: 'restore' }); retry() }
       }}/>
-      <ErasureCard overview={overview} actions={actions} unavailable={unavailable} onErasing={async receipt => settled(receipt, 'Erased. The record, its history and original files are gone. Save the updated erasure journal with your backups.')}/>
+      <ErasureCard overview={overview} actions={actions} unavailable={unavailable} onErasing={async receipt => settled(receipt, 'Erased. The record, its history and original files are gone; records other people share stay without its words. Save the updated erasure journal with your backups.')}/>
     </div> : null}
   </section>
 }

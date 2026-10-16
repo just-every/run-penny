@@ -3,14 +3,16 @@ import {NativeError,digest} from '../auth/native-tokens'
 import {canonical,schema,checkSchemaHeaders,schemaPart,type TableHeader,type Row,type Cell,type Table} from './archive'
 import {readErasureFrontier,checkErasureRead,importCustody,type FrontierPage} from './erasure-read'
 import {checkClauseErasureEdges,expandClauseErasure,erasureFiles} from './erasure-dependencies'
+import {keptRequestWords,keptAuthor,keptRedaction,planRedactions,rowsKey} from './erasure-redaction'
 
 function fail(code:string,status:400|409|413=409):never{throw new NativeError(code,status)}
 const ident=(name:string)=>'"'+name+'"'
 const rowKey=(table:ErasureTable,row:Row)=>canonical((table.columns.some(c=>c.pk>0)?table.columns.filter(c=>c.pk>0).sort((a,b)=>a.pk-b.pk):table.columns).map(c=>row[c.name]))
 const foreignGroups=(keys:Table['foreignKeys'])=>{const groups=new Map<number,Table['foreignKeys']>();for(const key of keys)groups.set(key.id,[...(groups.get(key.id)??[]),key]);return groups}
 export type ErasureTable=Pick<Table,'name'|'columns'|'foreignKeys'>
-export type NativeScope={table:string;id:string;tables:ErasureTable[];data:Record<string,Row[]>;selected:Record<string,number[]>;literals:string[];ids:string[];approvedPhrases:string[];prepared:boolean;schema?:{name:string}[];round?:{offset:number;changed:boolean;readIds:string[];releaseVersionCount:number;row?:{after:string;matches:number}}}
-const selectedRows=(scope:NativeScope):Record<string,Row[]>=>Object.fromEntries(Object.entries(scope.selected).map(([table,indices])=>[table,indices.map(index=>scope.data[table][index])]))
+export type NativeScope={table:string;id:string;tables:ErasureTable[];data:Record<string,Row[]>;selected:Record<string,number[]>;kept:Record<string,number[]>;literals:string[];ids:string[];approvedPhrases:string[];prepared:boolean;schema?:{name:string}[];round?:{offset:number;changed:boolean;readIds:string[];releaseVersionCount:number;row?:{after:string;matches:number}}}
+const selectedRows=(scope:NativeScope,from:'selected'|'kept'='selected'):Record<string,Row[]>=>Object.fromEntries(Object.entries(scope[from]).map(([table,indices])=>[table,indices.map(index=>scope.data[table][index])]))
+const indices=(tables:ErasureTable[],data:Record<string,Row[]>,rows:Record<string,Row[]>)=>Object.fromEntries(tables.map(table=>[table.name,(rows[table.name]??[]).map(row=>data[table.name].indexOf(row))]))
 function strings(value:Cell):string[]{
  if(typeof value!=='string')return []
  try{const parsed=JSON.parse(value) as unknown;const walk=(item:unknown):string[]=>typeof item==='string'?[item]:Array.isArray(item)?item.flatMap(walk):item!==null&&typeof item==='object'?Object.values(item).flatMap(walk):[];return [value,...walk(parsed)]}catch{return [value]}
@@ -22,7 +24,7 @@ export async function startNativeScope(db:D1Database,tableName:string,id:string,
  data[tableName]=[root]
  if(!headers)checkClauseErasureEdges(tables)
  const selected:Record<string,number[]>=Object.fromEntries(tables.map(table=>[table.name,[]]));selected[tableName]=[0]
- return {table:tableName,id,tables,data,selected,literals:[],ids:[],approvedPhrases:[],prepared:false,...(headers?{schema:headers.map(({name})=>({name}))}:{})}
+ return {table:tableName,id,tables,data,selected,kept:{},literals:[],ids:[],approvedPhrases:[],prepared:false,...(headers?{schema:headers.map(({name})=>({name}))}:{})}
 }
 
 async function preparePhrases(db:D1Database,scope:NativeScope):Promise<void>{
@@ -46,7 +48,7 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
   return true
  }
  if(!scope.prepared){await preparePhrases(db,scope);return true}
- const {tables,data}=scope,selected=selectedRows(scope),literals=new Set(scope.literals),ids=new Set(scope.ids),approvedPhrases=new Set(scope.approvedPhrases)
+ const {tables,data}=scope,selected=selectedRows(scope),kept=selectedRows(scope,'kept'),literals=new Set(scope.literals),ids=new Set(scope.ids),approvedPhrases=new Set(scope.approvedPhrases)
  const marked=(table:ErasureTable,row:Row)=>selected[table.name].some(other=>rowKey(table,other)===rowKey(table,row))
  let changed=scope.round?.changed??false
  if(!scope.round){
@@ -57,6 +59,8 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
    // into new personal literals; root/evidence literals still fence personal copies.
    for(const [column,value]of Object.entries(row))if(!(table.name.startsWith('learning_')&&column==='reason')&&table.name!=='decision_bet_snapshots'&&!(table.name==='mail_event_records'&&column==='value_json')&&!(column==='title'&&['release_recipient_contexts','roadmap_update_contexts'].includes(table.name)&&typeof value==='string'&&approvedPhrases.has(value))&&['email','recipient','display_name','name','title','public_title','description','public_description','wording','body','proposed_solution','impact_statement','approved_author_name','source_label','named_speaker','review_reason','original_filename','rejection_reason','declined_reason','reason','rationale','question','summary','outcome_prompt','note','health','value_json'].includes(column)&&typeof value==='string'&&value.length>0)strings(value).forEach(text=>literals.add(text))
   }
+  // A kept request's own words are this person's words wherever Penny repeats them.
+  for(const row of kept.requests??[])keptRequestWords(row).forEach(text=>literals.add(text))
   const readIds=new Set([...ids,...await Promise.all([...ids,...selected.requester_addresses.map(row=>String(row.email))].map(digest))])
   scope.round={offset:0,changed,readIds:[...readIds],releaseVersionCount:data.release_versions.length}
  }
@@ -70,14 +74,18 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
  if(incremental&&scope.round.offset<tables.filter(table=>!importCustody(table.name)).length)return true
  delete scope.round
   const evidenceLinks=[...data.request_evidence_links,...(data.request_evidence_contributions??[])]
-  // Erasing a request also erases its original evidence, including shared copies.
+  // A request and the evidence it was submitted or imported as are one person's
+  // words: erasing either erases both. Evidence anyone else gave, linked to the
+  // request, is theirs and stays.
+  const imported=(request:Row,evidence:Row)=>(data.feedback_import_records??[]).some(record=>{const keys=String(record.row_keys_json);return keys.includes(JSON.stringify(request.id))&&keys.includes(JSON.stringify(evidence.id))})
+  const submitted=(request:Row|undefined,evidence:Row|undefined)=>!!request&&!!evidence&&(evidence.source_type==='portal_request'&&evidence.requester_id!==null&&evidence.requester_id===request.author_requester_id||imported(request,evidence))
   for(const link of evidenceLinks)if(selected.requests.some(row=>row.id===link.request_id)){
-   const evidence=data.evidence_items.find(row=>row.id===link.evidence_id)!,definition=tables.find(table=>table.name==='evidence_items')!
-   if(evidence&&!marked(definition,evidence)){selected.evidence_items.push(evidence);changed=true}
+   const evidence=data.evidence_items.find(row=>row.id===link.evidence_id),definition=tables.find(table=>table.name==='evidence_items')!
+   if(evidence&&submitted(data.requests.find(row=>row.id===link.request_id),evidence)&&!marked(definition,evidence)){selected.evidence_items.push(evidence);changed=true}
   }
-  for(const link of evidenceLinks)if(selected.evidence_items.some(row=>row.id===link.evidence_id&&row.source_type==='portal_request')){
-   const request=data.requests.find(row=>row.id===link.request_id)!,definition=tables.find(table=>table.name==='requests')!
-   if(request&&!marked(definition,request)){selected.requests.push(request);changed=true}
+  for(const link of evidenceLinks)if(selected.evidence_items.some(row=>row.id===link.evidence_id)){
+   const request=data.requests.find(row=>row.id===link.request_id),definition=tables.find(table=>table.name==='requests')!
+   if(request&&submitted(request,data.evidence_items.find(row=>row.id===link.evidence_id))&&!keptAuthor(request,selected)&&!marked(definition,request)){selected.requests.push(request);changed=true}
   }
   // Comparison snapshots inherit the evidence snapshot's erasure provenance.
   for(const snapshot of selected.decision_evidence_snapshots??[])for(const comparison of data.decision_bet_snapshots??[]){
@@ -92,19 +100,27 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
    const groups=foreignGroups(table.foreignKeys)
    for(const row of data[table.name]){
     if(marked(table,row))continue
-    const referenced=[...groups.values()].some(group=>selected[group[0].table]?.some(parent=>group.every(key=>row[key.from]!==null&&parent[key.to]===row[key.from])))
+    const references=(group:Table['foreignKeys'])=>selected[group[0].table]?.some(parent=>group.every(key=>row[key.from]!==null&&parent[key.to]===row[key.from]))
+    // A request this person wrote stays for everyone who voted, commented or gave
+    // evidence on it; only its author and their words go (erasure-redaction.ts).
+    if(table.name==='requests'&&keptAuthor(row,selected)&&![...groups.values()].some(group=>group[0].from!=='author_requester_id'&&references(group))){
+     if(!kept.requests?.includes(row)){(kept.requests??=[]).push(row);changed=true}
+     continue
+    }
+    const referenced=[...groups.values()].some(references)
     const copied=Object.entries(row).filter(([column])=>!redacted(table.name,row,column)&&(table.name!=='learning_investigations'||!['native_evidence_ids_json','native_request_ids_json'].includes(column))).flatMap(([,value])=>strings(value)).some(text=>[...ids].some(id=>text.includes(id)))
     const address=(table.name==='native_magic_links'&&emails.has(String(row.email)))||(table.name==='local_auth_outbox'&&emails.has(String(row.recipient)))
     const rate=table.name==='native_rate_limits'&&subjectHashes.has(String(row.subject_hash))
     if(referenced||copied||address||rate){selected[table.name].push(row);changed=true}
    }
   }
+ scope.kept=indices(tables,data,kept)
  scope.selected=Object.fromEntries(tables.map(table=>[table.name,selected[table.name].map(row=>data[table.name].indexOf(row))]))
  scope.literals=[...literals];scope.ids=[...ids]
  return changed
 }
 export function finishNativeScope(scope:NativeScope){
- const {tables,data,table:tableName,id}=scope,selected=selectedRows(scope),literals=new Set(scope.literals),ids=new Set(scope.ids),approvedPhrases=new Set(scope.approvedPhrases)
+ const {tables,data,table:tableName,id}=scope,selected=selectedRows(scope),kept=selectedRows(scope,'kept'),literals=new Set(scope.literals),ids=new Set(scope.ids),approvedPhrases=new Set(scope.approvedPhrases)
  const marked=(table:ErasureTable,row:Row)=>selected[table.name].some(other=>rowKey(table,other)===rowKey(table,row))
 
  if(data.operators.some(row=>[row.email,row.display_name].flatMap(strings).some(text=>[...literals].some(literal=>text===literal))))fail('erasure_crosses_operator_hold')
@@ -120,11 +136,14 @@ export function finishNativeScope(scope:NativeScope){
  const independentPublicPhrase=(table:string,row:Row,column:string,literal:string)=>approvedPhrases.has(literal)&&(
   (table==='release_versions'&&publishedVersions.has(row.id)&&['title','body'].includes(column))||
   (table==='roadmap_update_versions'&&row.published_at!==null&&['title','problem','body'].includes(column)))
- const blockedCopies:{table:string;key:string;columns:string[]}[]=[],redacted=learningRedactions(data,selected)
- for(const table of tables){if(['audit_entries','operators','operator_sessions'].includes(table.name))continue;for(const row of data[table.name]){if(marked(table,row))continue;const columns=Object.entries(row).filter(([column,value])=>!redacted(table.name,row,column)&&!['id','created_at','updated_at','token_hash','token','slug','storage_key','subject_hash','key_hash','body_hash'].includes(column)&&strings(value).some(text=>[...literals].some(literal=>text.includes(literal)&&!independentPublicPhrase(table.name,row,column,literal)))).map(([column])=>column);if(columns.length)blockedCopies.push({table:table.name,key:rowKey(table,row),columns})}}
+ const copies:{table:string;key:string;columns:string[]}[]=[],redacted=learningRedactions(data,selected)
+ const keptRow=(table:ErasureTable,row:Row)=>(kept[table.name]??[]).includes(row)
+ for(const table of tables){if(['audit_entries','operators','operator_sessions'].includes(table.name))continue;for(const row of data[table.name]){if(marked(table,row))continue;const columns=Object.entries(row).filter(([column,value])=>!redacted(table.name,row,column)&&!(keptRow(table,row)&&column in keptRedaction)&&!['id','created_at','updated_at','token_hash','token','slug','storage_key','subject_hash','key_hash','body_hash'].includes(column)&&strings(value).some(text=>[...literals].some(literal=>text.includes(literal)&&!independentPublicPhrase(table.name,row,column,literal)))).map(([column])=>column);if(columns.length)copies.push({table:table.name,key:rowKey(table,row),columns})}}
+ const rows=new Map(tables.flatMap(table=>data[table.name].filter(row=>!marked(table,row)).map(row=>[rowsKey(table.name,rowKey(table,row)),row] as const)))
+ const {blockedCopies,redactions}=planRedactions(copies,tables.flatMap(table=>(kept[table.name]??[]).map(row=>({table:table.name,key:rowKey(table,row)}))),rows,[...literals])
  for(const row of data.audit_entries)if(!audits.includes(row)&&strings(row.details_json).some(text=>[...ids,...literals].some(literal=>text.includes(literal))))blockedCopies.push({table:'audit_entries',key:rowKey(tables.find(table=>table.name==='audit_entries')!,row),columns:['details_json']})
  const files=erasureFiles(selected)
  const counts=Object.fromEntries(tables.map(table=>[table.name,selected[table.name].length]).filter(([,count])=>count!==0));counts.audit_anonymized=audits.length
- const plan={table:tableName,id,counts,files,blockedCopies,selected,audit:audits,tables}
+ const plan={table:tableName,id,counts,files,blockedCopies,redactions,selected,audit:audits,tables,rows}
  return {plan,literals:[...literals,...ids]}
 }

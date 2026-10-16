@@ -9,6 +9,7 @@ import {createTracker,linkTracker,trackerCreateInput,trackerLinkInput} from './t
 import {receiveTracker} from './tracker-receiver'
 import {trackerNamespace} from './tracker-delivery'
 import {linearTeams} from './tracker-linear'
+import {jiraProjects} from './tracker-jira'
 import {z} from 'zod'
 export function registerTrackerRoutes(app:Hono<OperatorMutationEnvironment>) {
  app.get('/api/operator/integrations/trackers',async c=>{
@@ -25,6 +26,8 @@ export function registerTrackerRoutes(app:Hono<OperatorMutationEnvironment>) {
  })
  // Setup asks only for the personal API key; Penny lists the teams by name.
  app.post('/api/operator/integrations/trackers/linear/teams',async c=>{await integrationOperator(c.get('runtime'),c.req.raw);const input=await parseInput(c.req.raw,z.object({apiKey:z.string().trim().min(1).max(4096).regex(/^[^\r\n\0]+$/)}).strict());return c.json(await linearTeams(input.apiKey))})
+ // Jira setup asks for the site, email and API token; Penny lists projects and issue types by name.
+ app.post('/api/operator/integrations/trackers/jira/projects',async c=>{await integrationOperator(c.get('runtime'),c.req.raw);const line=z.string().trim().min(1).max(4096).regex(/^[^\r\n\0]+$/);const input=await parseInput(c.req.raw,z.object({site:z.string().max(300),email:z.email().max(254),apiToken:line}).strict());return c.json({projects:await jiraProjects(input.site,input.email,input.apiToken)})})
  app.post('/api/operator/integrations/trackers/connections',async c=>c.json(await createTrackerConnection(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,trackerConnectionInput)),201))
  app.delete('/api/operator/integrations/trackers/connections/:id',async c=>{await revokeConfiguration(c.get('runtime'),c.req.raw,c.req.param('id'),'tracker');return c.json({revoked:true})})
  app.post('/api/operator/integrations/trackers/links',async c=>c.json(await linkTracker(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,trackerLinkInput)),201))

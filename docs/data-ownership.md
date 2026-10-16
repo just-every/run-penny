@@ -151,8 +151,34 @@ cannot transfer admission; sign in again.
 Roots supported: requesters, requests, evidence items, accounts and removed
 operators. Preview shows dependent row counts, file counts and ambiguous
 copies. Erasure checks the preview hash again, follows FK/opaque-ID provenance,
-removes linked evidence/history/custom fields, anonymises retained audit references
+removes the root's own evidence/history/custom fields, anonymises retained audit references
 and nested details, appends opaque PK tombstones, and removes original R2 files.
+
+Erasure removes one person's data, never anyone else's:
+
+- A request and the evidence it was submitted or imported as are the same
+  person's words, so erasing one erases both. Evidence anyone else gave (a
+  sales call, an interview, another customer's words) that is only linked to the
+  request stays, with its links to bets, accounts and decisions, so a decision
+  keeps its evidence.
+- A requester's own requests stay for everyone who voted, commented, followed or
+  gave evidence on them. Each keeps its votes, comments, followers, roadmap
+  mapping and release recipients, and loses its author and the author's wording
+  (title "Request from an erased person"). The person's own votes, comments,
+  follows, addresses, sessions, mail and release answers are deleted.
+- Penny's records that repeat the person's words are listed in the preview by
+  name, with a link to where they are edited: a bet, a roadmap item, a request's
+  approved public wording, a note or another person's comment. For each one the
+  owner chooses `redact` (the repeated words become `[erased]` in place) or
+  `rename` (new wording, which may not repeat the person's words). Penny's copies
+  of that wording (a committed decision's bet copy, release targets, delivery
+  contexts and events) follow the choice for the record they copy, or lose the
+  repeated words. The erase request carries the choices as `copies`
+  (`{table,key,resolution,values?}` for each listed record); `data:erase` reads
+  them from a private JSON file given with `--copies`.
+- Release notes and status updates that were already published keep the wording
+  they were published with. Audit rows, saved-import copies and copies of the
+  person's address still block the erasure.
 The UI and CLI report complete only after file cleanup; faults keep a resumable
 operation. Auth links/outbox and requester sessions associated with selected
 identities are included. Any overlap with a current operator's identity blocks
@@ -213,7 +239,7 @@ unverified and BASE-DATA-003 remains open.
 
 ```
 npm run data:erase-preview -- <table> <id> private/plan.json --origin http://localhost:15300 --session-file private/session.json
-npm run data:erase -- private/plan.json --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
+npm run data:erase -- private/plan.json --journal-out private/latest-journal.json --copies private/choices.json --origin http://localhost:15300 --session-file private/session.json
 npm run data:resume-erasure -- <operation-id> --journal-out private/latest-journal.json --origin http://localhost:15300 --session-file private/session.json
 ```
 

@@ -17,8 +17,8 @@ CONTRACT.md is the target contract. [Target contract acceptance](#target-contrac
 
 ## Unmet first-release obligations
 
-Penny 0.1.0 is public at `just-every/run-penny` (tag `v0.1.0`; first release
-`v0.0.0`); later heads are unreleased source. A named passing test or exact-head receipt
+Penny 0.1.1 is public at `just-every/run-penny` (tag `v0.1.1`; earlier releases
+`v0.1.0` and `v0.0.0`); later heads are unreleased source. A named passing test or exact-head receipt
 satisfies only its bounded claim. Uncovered, local-only and provider-limited
 requirements remain unmet; a table, build, listing or historical receipt cannot
 close them. CONTRACT.md and BASELINE.md retain their full authority.
@@ -54,9 +54,9 @@ A later release still requires final-head hosted setup/health, real provider inb
 and Cron proof, applicable-prefix resource emptiness/teardown, public publication
 inspection, release/tag approval and any registry/site acceptance. Local TLS
 hosted-mode data proof is not a deployed-installation receipt. Hosted restore and
-erasure have a guarded authenticated API and CLI source path; the Data screen
-shows its state and commands without destructive buttons. This is source-only,
-local TLS; real hosted restore/erasure remains open. Archive limits, the
+erasure run from the Data page with the browser session and finish on the server;
+hosted erasure has run on real deployments (stranger journey 8 and sd-penny-r19).
+Hosted restore into a real deployment remains unproven. Archive limits, the
 authority and credential exclusions and journal continuity are in
 docs/data-ownership.md.
 

@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {fieldLabelClass,secondaryButtonClass,textLinkClass} from '@/core/ui/app/classes'
+import {fieldLabelClass,secondaryButtonClass} from '@/core/ui/app/classes'
 import {fieldClass} from '../../auth/client-mutations'
 import {operatorMutation} from '../../requests/ui/operator-client'
 import {Help} from './tracker-help'
@@ -16,7 +16,7 @@ export function LinearTeamPicker({relay,onReady}:{relay:boolean;onReady:(ready:b
    .catch(failure=>setError(failure instanceof Error?failure.message:'Penny could not list your Linear teams.')).finally(()=>setBusy(false))
  }
  return <>
-  <Help id="linear-key-help">Make a personal API key at <a className={textLinkClass} href="https://linear.app/settings/account/security" target="_blank" rel="noopener noreferrer">Linear → Settings → Security &amp; access</a>, paste it here and list your teams. {relay?'Penny keeps the key to create issues from Penny.':'Penny uses it only to list your teams and does not keep it.'}</Help>
+  <Help id="linear-key-help">Paste the key from step 1, then list your teams. {relay?'Penny keeps the key to create issues from Penny.':'Penny uses it only to list your teams and does not keep it.'}</Help>
   <label className={fieldLabelClass}>Linear personal API key<input type="password" data-rer-private="" value={key} onChange={event=>{setKey(event.target.value);setWorkspace(null);onReady(false)}} maxLength={4096} className={fieldClass} aria-describedby="linear-key-help"/></label>
   <button type="button" className={secondaryButtonClass} disabled={busy||!key.trim()} onClick={list}>{busy?'Asking Linear…':'List my teams'}</button>
   {workspace&&workspace.teams.length?<>

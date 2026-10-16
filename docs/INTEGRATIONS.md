@@ -64,6 +64,8 @@ JSON before verifying it. Requests are bounded to 32 KiB and a five-minute
 signature timestamp window. Original bytes verify before parsing.
 
 The receiver appends an internal note attributed to its issuing product operator.
+Operators read it on its request in Moderation, under Internal notes, with the
+receiver's name and the time it arrived; Send a test links straight there.
 Its replay fingerprint, note and processed receipt commit in one D1 transaction
 under current native issuer/connection authority. An identical retry is a no-op;
 a changed payload under the same identity conflicts. No receiver can publish

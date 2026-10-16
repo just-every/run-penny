@@ -88,7 +88,10 @@ it('[DATA-003 NOTIFY-001] erasure removes recipient, event, attempt and preferen
  for (const name of notificationTables) expect(plan.counts[name]).toBeGreaterThan(0)
  const erased = await call('/api/operator/data/erasure', { table: 'requesters', id: graph.recipient.requesterId, planHash: plan.planHash }, graph.operator)
  expect(erased.status, await erased.clone().text()).toBe(200)
- for (const rows of Object.values(await notificationRows())) expect(rows).toEqual([])
+ // Their request stays for others, so its operator status event stays; everything sent to or written by them goes.
+ const left = await notificationRows()
+ expect((left.notification_events as Record<string, unknown>[]).map(row => [row.kind, row.body])).toEqual([['status', 'Public status wording 0']])
+ for (const name of notificationTables.filter(name => name !== 'notification_events')) expect(left[name], name).toEqual([])
  const journal = await readErasureJournal(env.DB)
  for (const name of notificationTables) expect(journal.tombstones.some(row => row.table_name === name)).toBe(true)
  await expect(restoreArchive(env.DB, env.FILES, snapshot.archive, snapshot.journal)).rejects.toMatchObject({ code: 'erasure_journal_regression' })

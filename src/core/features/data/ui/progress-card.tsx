@@ -41,7 +41,7 @@ export function ProgressCard({ operation, actions, onResume, onCancel }: { opera
 export function OutcomeCard({ recent, onSaveJournal, busy }: { recent: NonNullable<Overview['recent']>; onSaveJournal: () => void; busy: boolean }) {
   const when = new Date(recent.finishedAt).toLocaleString(), erase = recent.kind === 'erase'
   const text = recent.result === 'complete'
-    ? erase ? `Erasure finished ${when}. The record, its history and original files are gone. Save the updated erasure journal with your backups.` : `Restore finished ${when}. Records and original files are restored. Earlier sign-in links from the backup are disabled.`
+    ? erase ? `Erasure finished ${when}. The record, its history and original files are gone; records other people share stay without its words. Save the updated erasure journal with your backups.` : `Restore finished ${when}. Records and original files are restored. Earlier sign-in links from the backup are disabled.`
     : recent.reason ? `${erase ? 'The erasure' : 'The restore'} did not run (${when}): ${reasonText(recent.reason)} Nothing was ${erase ? 'removed' : 'restored'}.` : `${erase ? 'The erasure' : 'The restore'} was cancelled ${when}. Nothing was ${erase ? 'removed' : 'restored'}.`
   return <article className={card}>
     <h2 className={heading}>{erase ? 'Last erasure' : 'Last restore'}</h2>

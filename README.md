@@ -38,9 +38,9 @@ updates and release notes. The requester board and the operator decision loop,
 with maintained Base operator authentication, RER-provided Managed mail and
 selectable SendGrid or Resend mail for Free and Assisted hosting, are implemented.
 The public source repository is
-[just-every/run-penny](https://github.com/just-every/run-penny) and the current version
-is 0.1.0, released as the annotated tag `v0.1.0` ([RELEASE.md](RELEASE.md);
-upgrading from 0.0.0 is [below](#upgrade-from-000)). Wider release obligations are in
+[just-every/run-penny](https://github.com/just-every/run-penny). The latest release
+is 0.1.1, the annotated tag `v0.1.1` ([RELEASE.md](RELEASE.md); upgrading from 0.0.0 is
+[below](#upgrade-from-000)); `main` carries the newest source, which can be ahead of it. Wider release obligations are in
 [ACCEPTANCE.md](ACCEPTANCE.md), and local checks do not establish hosted mail
 delivery.
 
@@ -48,7 +48,8 @@ delivery.
 
 You install nothing first. The installer on [run-penny.com/run](https://run-penny.com/run)
 (`curl -fsSL https://runeditrun.com/install.sh | sh`) brings its own Node when you have
-none, and `rer dev just-every/run-penny` then gets Penny and starts it. `rer` downloads the
+none, and `rer dev just-every/run-penny` then clones Penny's `main` branch (the newest
+source, which can be ahead of the latest release) and starts it. `rer` downloads the
 exact Node (22.20.0) and pnpm (10.12.4) this checkout pins into its own cache and never
 changes your global tools, so you do not install pnpm.
 
@@ -65,7 +66,7 @@ npx -y @runeditrun/rer dev just-every/run-penny
 `rer dev` installs the locked dependencies, sets up a local owner
 (the email you gave `rer setup`, or a default `.test` address) with an empty workspace, starts Penny and prints a link
 that opens it signed in. Penny pins `@runeditrun/rer` in `package.json` and its
-lockfile, and the global `rer` always runs that pinned copy. The first start
+lockfile (currently 0.2.27), and the global `rer` always runs that pinned copy. The first start
 takes a few minutes.
 
 To be the owner under your own email address instead, run setup once before the
@@ -123,12 +124,12 @@ generated before an erasure is refused as stale, even with the latest journal:
 generate a new archive and journal together. Unknown or pending effects stay
 held, and source operator authority, first-run state, outbox and provider
 credentials never transfer. `describe` lists every command, flag and effect.
-`pnpm run VERB -- FLAGS` is the same dispatcher; use `pnpm run deploy` and
+With Node and pnpm on your PATH, `pnpm run VERB -- FLAGS` is the same dispatcher; use `pnpm run deploy` and
 `pnpm run import`, because bare `pnpm deploy` and `pnpm import` are pnpm's own
 commands.
 
-`pnpm run preview` serves the fixed production output on the same state, and
-`pnpm run preview -- --stop` stops it; a compatible repeated start reuses the
+`rer preview` serves the fixed production output on the same state, and
+`rer preview --stop` stops it; a compatible repeated start reuses the
 managed instance, conflicting modes refuse, and idle shutdown defaults to 30
 minutes. See [RUN-LOCALLY.md](RUN-LOCALLY.md) for the shared queue and process
 policy. Local data lives only in `.wrangler/state`; a sibling
@@ -185,7 +186,7 @@ RELEASE.json lists each migration's steps.
 account, verify your own sender or enter an email API key. RER fills and hides
 `MAIL_PROVIDER=rer`, `MAIL_FROM`, `MAIL_RELAY_URL` and the installation's private
 `MAIL_API_KEY` during Managed configuration. Penny uses Base's relay adapter from
-the pinned rer 0.2.22. The key is issued by RER, never supplied by you, and the
+its pinned rer (0.2.27, in `package.json`). The key is issued by RER, never supplied by you, and the
 upstream provider key never reaches Penny or its build. See
 [email and notifications](docs/EMAIL.md) for limits and recovery.
 
@@ -216,11 +217,12 @@ See [operations](OPERATIONS.md) for permissions and private file custody. Then:
 ```bash
 rer deploy --dry-run
 rer deploy
-npm run deploy:health
+rer queue health -- npm run deploy:health
 ```
 
-`npm` comes with Node, so the health check needs no pnpm; add
-`-- --environment NAME` for a deployment made with `rer deploy --environment NAME`.
+`rer queue` runs the health check with rer's own Node, so it works with only `rer`
+installed. For a deployment made with `rer deploy --environment NAME`, add the same
+name: `rer queue health -- npm run deploy:health -- --environment NAME`.
 
 Deploy builds before the provider credentials reach its deployment command. The
 owner-account kit uses `deploy.json` for D1 `DB`, R2 `FILES`, Queue
@@ -260,7 +262,7 @@ API-response files, review counts/omissions, then apply, resume or undo the save
 import on Workspace data through its persisted journal. Historical contributors
 gain no sign-in or email permission; posts/comments await native moderation.
 The importer is fixture verified; no real owner export or replacement is
-claimed, and `pnpm feedback:status` validates the shipped documented-format
+claimed, and `rer queue status -- npm run feedback:status` validates the shipped documented-format
 entry and its guide bytes. [CANNY-MIGRATION](docs/CANNY-MIGRATION.md) lists the
 supported kinds and limits.
 
@@ -272,8 +274,8 @@ file separate from the private archive; never put a cookie in command arguments
 or a URL.
 
 ```bash
-npm run data:export -- --origin https://your-penny-origin --session-file ./private-session.json ./private-archive.json
-npm run data:import -- --origin http://127.0.0.1:8787 --session-file ./destination-session.json ./private-archive.json --journal ./private-archive.json.erasure-journal.json
+rer queue data -- npm run data:export -- --origin https://your-penny-origin --session-file ./private-session.json ./private-archive.json
+rer queue data -- npm run data:import -- --origin http://127.0.0.1:8787 --session-file ./destination-session.json ./private-archive.json --journal ./private-archive.json.erasure-journal.json
 ```
 
 Restore targets an empty isolated local installation and needs the latest erasure
@@ -342,7 +344,7 @@ The gate runs the structural command check, source and Base custody checks,
 TypeScript and lint, the Worker trust-boundary, read-route and Start
 session/SSR/privacy tests, the native Base suites, the data and installer
 suites, and the Worker/Vite production build, and ends with the literal README
-journey in a fresh clone. The browser scripts `pnpm test:browser`,
+journey in a fresh clone. The browser scripts (they need Node and pnpm on your PATH) `pnpm test:browser`,
 `pnpm test:browser:routes`, `pnpm test:browser:no-mail`,
 `pnpm test:browser:operator-pages` exercise
 local Worker and interface behavior at 1440×900 and 390×844, including the
@@ -352,7 +354,7 @@ routes and representative widths, recorded in [`visual/README.md`](visual/README
 
 `rer build` generates the Wrangler configuration, typechecks and
 builds the Worker and assets with private settings excluded and restored.
-`pnpm cf-typegen` generates binding types. `rer check` and
+`pnpm cf-typegen` (Node and pnpm on your PATH) generates binding types. `rer check` and
 `doctor` inspect the command contract and the local tools without installed
 dependencies or provider accounts.
 
@@ -397,7 +399,7 @@ review-due handling and reminders, post-release evidence) and REL-003/008/009/01
 (corrections, outcome responses, coverage, subscribe-all) are implemented with
 local tests; ACCEPTANCE.md lists what each proof covers and what still needs
 hosted or live evidence. Published wording is immutable; corrections append a
-version. Version remains 0.0.0.
+version.
 
 ## How it is built
 

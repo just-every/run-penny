@@ -1,8 +1,12 @@
 # Tracker links and receipts
 
-In Feedback settings, configure a Linear team and organization ID or a Jira
-Cloud site origin, numeric project ID and issue type ID. Enter the webhook
-signing secret privately. An API token is optional for linking an existing issue;
+In Feedback settings, connect Linear with a personal API key (Penny lists your
+teams by name) or Jira Cloud with your site address (such as
+`https://your-team.atlassian.net`), the email you sign in with and an API token
+(Penny lists your projects and their issue types by name). The page shows the
+webhook URL to paste into the tracker before you save; a copy of Penny running on
+your computer (`127.0.0.1`) says Linear and Jira cannot reach it, so use the hosted
+copy's URL. Enter the webhook signing secret privately. An API token is optional for linking an existing issue;
 Jira creation also needs the token owner's email. These secrets remain in the
 installation, cannot be read back, and must be re-entered after data restore.
 

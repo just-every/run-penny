@@ -36,13 +36,14 @@ function Copy({ text, label }: { text: string; label: string }) {
 /** Everything another tool needs to post a signed internal note, and a test. */
 export function ReceiverGuide({ id, name, origin }: { id: string; name: string; origin: string }) {
   const options = useLoopOptions(), requests = options.kind === 'ready' ? options.data.requests : []
-  const [chosen, setChosen] = useState(''), [result, setResult] = useState<{ ok: boolean; text: string } | null>(null), [busy, setBusy] = useState(false)
+  const [chosen, setChosen] = useState(''), [result, setResult] = useState<{ ok: boolean; text: string; slug?: string } | null>(null), [busy, setBusy] = useState(false)
   const url = `${origin}/api/integrations/webhooks/${id}`, requestId = chosen || requests[0]?.id || '<request id>'
   const test = async () => {
     setBusy(true); setResult(null)
     try {
       const outcome = await operatorMutation(`/api/operator/integrations/destinations/${id}/test`, { requestId }) as { processed?: boolean }
-      setResult({ ok: true, text: outcome.processed ? `Test note received. It is on “${requests.find(item => item.id === requestId)?.label ?? 'the request'}” as an internal note.` : 'Penny already had this test note; nothing was added twice.' })
+      const target = requests.find(item => item.id === requestId)
+      setResult({ ok: true, slug: target?.slug, text: outcome.processed ? `Test note received. It is on “${target?.label ?? 'the request'}” under Internal notes.` : 'Penny already had this test note; nothing was added twice.' })
     } catch (error) {
       const code = error instanceof Error ? error.message : ''
       setResult({ ok: false, text: outcomes[code] ?? (/\s/.test(code) && code.length > 30 ? code : 'The test note was refused. Check the receiver is still active and try again.') })
@@ -61,10 +62,10 @@ export function ReceiverGuide({ id, name, origin }: { id: string; name: string; 
     </ul></div>
     <div><p className="font-semibold">Signature</p><p>HMAC-SHA256, hex-encoded, keyed with the signing key’s bytes (the key is 64 hex characters), over this JSON array written without spaces: <code className="break-all">["integrations.webhook.v1","{RECEIVER_TENANT}","{id}","{RECEIVER_EVENT}",webhook-id,webhook-timestamp,body]</code>, where the last three are the header values and the exact body text.</p></div>
     <div><p className="font-semibold">Example</p><pre className={`${insetPanelClass} max-h-72 overflow-auto p-3 text-xs whitespace-pre-wrap break-all`}>{example(url, id, requestId)}</pre><Copy text={example(url, id, requestId)} label="Copy example"/></div>
-    <div className="space-y-2"><p className="font-semibold">Send a test</p><p>Penny signs a sample note with this receiver’s key and posts it to the receiver, exactly as your tool would. The note appears on the request you choose.</p>
+    <div className="space-y-2"><p className="font-semibold">Send a test</p><p>Penny signs a sample note with this receiver’s key and posts it to the receiver, exactly as your tool would. The note appears on the request you choose.</p><p>Every note this receiver accepts is shown on its request in <a className={textLinkClass} href="/app/moderation">Moderation</a>, under Internal notes, with the receiver’s name and the time it arrived. Notes are never public.</p>
       <label className={fieldLabelClass}>Request for the test note<select className={fieldClass} value={requestId} onChange={event => setChosen(event.target.value)} disabled={!requests.length}>{requests.length ? requests.map(item => <option key={item.id} value={item.id}>{item.label}</option>) : <option>Create a feedback request first</option>}</select></label>
       <button type="button" className={secondaryButtonClass} disabled={busy || !requests.length} onClick={() => void test()}>{busy ? 'Sending…' : 'Send a test note'}</button>
-      {result ? <p role={result.ok ? 'status' : 'alert'} className={result.ok ? '' : 'text-penny-danger'}>{result.text}</p> : null}
+      {result ? <p role={result.ok ? 'status' : 'alert'} className={result.ok ? '' : 'text-penny-danger'}>{result.text}{result.slug ? <> <a className={textLinkClass} href={`/app/moderation#request-${result.slug}`}>Open it in Moderation</a></> : null}</p> : null}
     </div>
   </div></details>
 }

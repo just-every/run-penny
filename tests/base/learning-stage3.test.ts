@@ -103,7 +103,8 @@ it('[LEARN-004] contribution erasure removes every dependent version/snapshot, p
  expect(nativePlan.blockedCopies).toEqual([]);expect(nativePlan.counts.learning_observations).toBe(1)
  expect((await json<{status:string}>(call('/api/operator/data/erasure',{...target,planHash:nativePlan.planHash},f.cookie))).status).toBe('complete')
  expect(await env.DB.prepare('SELECT id FROM requesters WHERE id=?').bind(requesterId).first()).toBeNull()
- expect(await env.DB.prepare('SELECT id FROM requests WHERE id=?').bind(requestId).first()).toBeNull()
+ // The request stays for everyone else, without its author or their words.
+ expect(await env.DB.prepare('SELECT author_requester_id,title FROM requests WHERE id=?').bind(requestId).first()).toEqual({author_requester_id:null,title:'Request from an erased person'})
  expect(await env.DB.prepare('SELECT id FROM learning_observations WHERE requester_id=?').bind(requesterId).first()).toBeNull()
  expect((await call(nativeUrl+'/run',{},f.cookie)).status).toBe(409)
  const original=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Independent note',wording:'Independent native original retained after disconnect.',observedAt:'2026-10-01T00:00:00Z'},f.cookie),201),disconnect=await createNative([original.id])

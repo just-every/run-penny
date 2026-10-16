@@ -5,7 +5,7 @@ import {refuse} from './errors.mjs'
 const definitions={
  export:{count:1,options:[]},import:{count:1,options:['--journal','--resume'],required:['--journal']},
  journal:{count:1,options:[]},'erase-preview':{count:3,options:[]},
- erase:{count:1,options:['--journal-out'],required:['--journal-out']},status:{count:1,options:[]},
+ erase:{count:1,options:['--journal-out','--copies'],required:['--journal-out']},status:{count:1,options:[]},
  'resume-erasure':{count:1,options:['--journal-out'],required:['--journal-out']},'abort-restore':{count:1,options:[]},
  'recover-runner':{count:1,options:['--prior-runner-stopped','--expected-status'],required:['--prior-runner-stopped','--expected-status']},
  'abort-export':{count:1,options:['--prior-runner-stopped'],required:['--prior-runner-stopped']},
@@ -40,8 +40,11 @@ export async function runDataCommand(argv) {
   await privateDestination(v['--journal-out'],true)
   let result
   if(command==='erase') {
-   const plan=await privateInput(p[0]);if(plan.blockedCopies?.length)refuse('ambiguous_erasure_copies')
-   result=await request('erasure',{table:plan.table,id:plan.id,planHash:plan.planHash})
+   // Records that repeat the person's words need the owner's choice for each one:
+   // a private JSON list of {table,key,resolution:'redact'|'rename',values?}.
+   const plan=await privateInput(p[0]),copies=v['--copies']?await privateInput(v['--copies']):undefined
+   if(plan.blockedCopies?.some(copy=>!copy.resolvable)||plan.blockedCopies?.length&&!Array.isArray(copies))refuse('ambiguous_erasure_copies')
+   result=await request('erasure',{table:plan.table,id:plan.id,planHash:plan.planHash,...(plan.blockedCopies?.length?{copies}:{})})
   } else result=await request(operation()+'/resume',{})
   const journal=await request('journal')
   return {...result,journalPath:await privateWrite(v['--journal-out'],journal,true),epoch:journal.epoch}
