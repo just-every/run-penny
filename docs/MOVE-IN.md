@@ -18,6 +18,23 @@ Do not save request bodies, API credentials, cookies or signing material with
 response files. Credential-bearing source data is refused, including fields a
 mapping would omit.
 
+## From the Data page
+
+On **Data → Move saved feedback in**, choose what you exported and the file:
+
+- **Canny post export (CSV)**: Settings → Boards → Export Data, or the download
+  button on a filtered Feedback page.
+- **Canny Ideas view export (CSV)**: right-click a view in the Ideas dashboard →
+  Export view. Pick the column for each part of an idea; other columns stay in
+  the private original, or count as totals if you mark them.
+- **UserVoice ideas export (CSV)**, optionally with the Idea & Voters export from
+  the same view. Say whether the view was filtered.
+
+Penny reads the file in your browser and asks only what it cannot read: the board
+to put the ideas on, how each status maps to Penny's, and for Canny which Penny
+tags each Tags cell means. Preview, then apply. Nothing is written before you
+apply. The command-line steps below remain for saved Canny API files and scripts.
+
 ## Files and explicit mapping
 
 Create an owner-only directory containing the files and a `source.json` manifest.
@@ -185,7 +202,7 @@ job. Read it from the private saved preview:
 pnpm run feedback:import -- receipt --preview ./private/preview.json
 ```
 
-On `/app/data`, select `prepared.json` to inspect the
+On `/app/data`, choose **A bundle prepared with the command line** and select `prepared.json` to inspect the
 same preview. Applying requires the exact fingerprint from that preview:
 
 ```sh

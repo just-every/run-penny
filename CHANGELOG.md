@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Setup pages work from the page alone. Webhook and Slack connections, creating tracker issues and Learning's Orbit and model connections say in one line that they need RER's outbound relay (available on Managed hosting); webhook and Slack are disabled and the server refuses them instead of saving settings it cannot send. Tracker connections show their webhook URL before saving and link to where each Linear and Jira ID and secret comes from.
+- Data → Move saved feedback in reads Canny post exports, Canny Ideas view exports and UserVoice exports directly and builds the import on the page; blank Canny total cells no longer refuse a file. Hosted copies back up, restore, erase and import from the Data page with the browser session, with no session file or command. Records to erase are chosen by name (evidence by its words); a refused erasure names the records that repeat its wording and what to do. A backup restores from its one file.
+- Moderation no longer re-renders in a loop: resource hooks return one state object per snapshot. A roadmap move shows its status update draft without a reload. Evidence can be tagged and untagged, requests show their tags, “Your feedback” lists request titles, and the portal header shows the verified customer. Penny Dev's invite message says no email was sent.
 - Load signed-in pages with fresh, complete server snapshots. Batch visible evidence, roadmap and moderation details, share form options, and reuse document admission reads within each request while retaining transaction-time authority checks. Preload private routes' complete module graphs before hydration.
 
 ## 0.1.1 — 2026-10-16

@@ -14,10 +14,14 @@ The private Data screen and every API route independently require native operato
 authority. Downloads use private/no-store headers. Hosted proof is **source-only,
 local TLS**, using the emitted production-mode Worker with real local D1/R2 and
 no mail provider. Real hosted acceptance remains an owner/live action, not
-universal DATA-001/BASE-DATA-001/003 acceptance. The hosted Data screen shows
-state and exact CLI command templates; restore and erasure are API/CLI only,
-with no destructive screen button. The guarded commands below describe the
-owner's hosted acceptance procedure; none of those live commands ran in this proof.
+universal DATA-001/BASE-DATA-001/003 acceptance. The Data screen, local and
+hosted alike, does every step in the browser with your signed-in session: download
+a backup (one file holding the archive and its journal), restore one into an empty
+workspace (add a newer journal only if records were erased after that backup),
+erase a person, request, evidence item or account chosen by name after reviewing
+everything it removes, and move saved Canny or UserVoice feedback in. No session
+file or command is needed there. The commands below are the same operations for
+scripts and agents; they need an owner-only session file.
 For a separate reversible saved-Canny trial, see [TRIAL.md](TRIAL.md).
 
 ## Archive and restoration

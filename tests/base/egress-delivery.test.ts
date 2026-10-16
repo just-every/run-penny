@@ -34,10 +34,15 @@ async function deliverThroughCron(port:EnforcingEgress){
 
 it('[INT-002] sends through the egress service binding and refuses private and redirect destinations without following them',async()=>{
  const g=await graph()
+ // Without the relay nothing outbound is saved: the page says why instead of "saved".
+ const target={name:'Public target',kind:'webhook',endpoint:'https://events.example.com/penny',events:['status.published']}
+ const unrelayed=await request('/api/operator/integrations/destinations',target,g.operator)
+ expect(unrelayed.status).toBe(409);expect(await count('penny_integration_destinations')).toBe(0)
  // A private address is refused when the destination is saved, before any send.
- const literal=await request('/api/operator/integrations/destinations',{name:'Private target',kind:'webhook',endpoint:'https://10.0.0.5/penny',events:['status.published']},g.operator)
+ const relay=egress([],()=>new Response(null,{status:204})).port
+ const literal=await request('/api/operator/integrations/destinations',{...target,endpoint:'https://10.0.0.5/penny'},g.operator,'POST',env.DB,relay)
  expect(literal.status).toBe(422);expect(await count('penny_integration_destinations')).toBe(0)
- await connection(g.operator);await g.publish(0,'Approved public update')
+ await connection(g.operator,'webhook',['status.published'],relay);await g.publish(0,'Approved public update')
  // A public name that resolves to a private address: refused at resolution, never dialled.
  const privateAnswer=egress(['93.184.216.34','10.0.0.5'],()=>new Response(null,{status:204}))
  const refused=await deliverThroughCron(privateAnswer.port)
