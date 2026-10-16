@@ -1,11 +1,26 @@
 {
-  "version": "0.1.1",
-  "previousVersion": "0.1.0",
-  "date": "2026-10-16",
-  "publicReleaseNotes": "Maintenance release: Managed relay delivery, normalized sign-in hints, explicitly synthetic credential fixtures, the browser owner sign-in declaration, the rer 0.2.24 vendored Base refresh, and rer 0.2.27 for setup after local restore. No new product migrations. Product screenshot (1440 pixels): [Penny workspace](https://raw.githubusercontent.com/just-every/run-penny/v0.1.1/public/brand/releases/penny-0.1.1-1440.png), committed at public/brand/releases/penny-0.1.1-1440.png. Hosted mail delivery, hosted Cron, real Canny/UserVoice exports and whole-product acceptance remain separately unproven; see HANDOVER.md and ACCEPTANCE.md.",
-  "contractChanges": {},
+  "version": "0.1.2",
+  "previousVersion": "0.1.1",
+  "date": "2026-10-17",
+  "publicReleaseNotes": "Security release. On Penny 0.1.1 and every earlier version, erasing a requester also deleted other people's records hung on that requester's requests: evidence an operator recorded from someone else (such as a sales call) with its versions, original files, bet links and the committed decision's evidence copies; the requests themselves with other customers' votes, comments and follows and their roadmap and release links; and followers' release snapshots and answers. 0.1.2 erases only the person's own data and keeps their requests for everyone else without their name or words. Upgrade now. Upgrading does not bring back records an earlier erasure deleted: they can be recovered only from a backup made before that erasure, restored into a new, empty 0.1.2 installation (Penny refuses it on the installation that ran the erasure), after which the person is erased again. Also: confirmed erasures, restores and imports finish on the server (migration 0062), records that repeat an erased person's words are listed and redacted or renamed from the erasure preview, and rer 0.2.37. Hosted mail delivery, hosted Cron, real Canny/UserVoice exports and whole-product acceptance remain separately unproven; see HANDOVER.md and ACCEPTANCE.md.",
+  "contractChanges": {
+    "DATA-003": {
+      "change": "changed",
+      "summary": "Erasing a requester removes only that person's own records; other people's and the business's records on their requests stay.",
+      "was": "Erasing a requester also erased every request they wrote and every evidence item linked to those requests, with other people's votes, comments, follows, release snapshots and answers, bet links and decision evidence copies.",
+      "now": "A request and the evidence it was submitted or imported as are erased together. Evidence anyone else gave stays with its links. A requester's own requests stay for everyone who voted, commented, followed or gave evidence, without their author or wording; records that repeat the person's words are listed in the preview and redacted or renamed in the erasure transaction. Confirmed erasures finish on the server.",
+      "migrationIds": [
+        "0062_data_runner_claims.sql"
+      ]
+    }
+  },
   "extensionPointChanges": [],
-  "migrations": [],
+  "migrations": [
+    {
+      "id": "0062_data_runner_claims.sql",
+      "buyerSteps": "Apply after immutable 0001–0061 with rer setup (local) or rer deploy (hosted). Adds the installation-only data_runner_claims and data_runner_fences tables, which let a confirmed erasure, restore or saved-feedback import run to completion on the server one leased step at a time. No product rows change and the tables are not part of portable archives. An erasure or restore left stopped by an earlier version shows Resume (and Cancel while nothing changed yet) on the Data page."
+    }
+  ],
   "breaking": false,
-  "agentUpdateInstructions": "Update from 0.1.0 with rer install and rer setup, preserving the owner, private settings, product records and existing migration history. This release adds no product migrations. Use the exact rer 0.2.27 pin; vendored Base modules retain their recorded 0.2.24 custody. Penny declares browser owner sign-in at /signin with email hint support; the claimed owner email is a hint only. Managed RER mail uses the assigned relay and existing MAIL_API_KEY; direct SendGrid and Resend settings remain explicit. Never replay ambiguous mail. login_hint only prefills a complete email and grants no authority. Local development uses the private RER_OPEN owner entry and silently suppresses mail; it has no captured-mail inbox or outbox page. Portable archives exclude native operator authority and provider secrets and disable historical requester sessions. Restore into an empty installation with the matching latest source erasure journal, then establish fresh native authority. Preserve separately approved public wording, snapshots, erasure custody and owner customizations. Live-provider, Cron and full-product acceptance limitations remain as stated in HANDOVER.md and ACCEPTANCE.md."
+  "agentUpdateInstructions": "Security update: install 0.1.2 now. Update from 0.1.1 with git pull, rer install and rer setup (hosted: rer deploy), preserving the owner, private settings, product records and existing migration history; migration 0062 adds installation-only data runner tables. On 0.1.1 and earlier, erasing a requester also deleted other people's records on that requester's requests (linked evidence with its files, bet links and decision evidence copies; the requests with other customers' votes, comments and follows; followers' release snapshots and answers). Upgrading does not restore them. If the owner erased a requester before upgrading, tell them: the records can be recovered only from a backup made before that erasure, restored into a new, empty 0.1.2 installation (Penny refuses an older backup on the installation that ran the erasure); then erase the person again on 0.1.2. Use the exact rer 0.2.37 pin; vendored Base modules retain their recorded custody. Local development uses the private RER_OPEN owner entry and silently suppresses mail; it has no captured-mail inbox or outbox page. Portable archives exclude native operator authority and provider secrets and disable historical requester sessions. Restore into an empty installation with the matching latest source erasure journal, then establish fresh native authority. Preserve separately approved public wording, snapshots, erasure custody and owner customizations. Live-provider, Cron and full-product acceptance limitations remain as stated in HANDOVER.md and ACCEPTANCE.md."
 }

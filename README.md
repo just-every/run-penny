@@ -39,8 +39,11 @@ with maintained Base operator authentication, RER-provided Managed mail and
 selectable SendGrid or Resend mail for Free and Assisted hosting, are implemented.
 The public source repository is
 [just-every/run-penny](https://github.com/just-every/run-penny). The latest release
-is 0.1.1, the annotated tag `v0.1.1` ([RELEASE.md](RELEASE.md); upgrading from 0.0.0 is
-[below](#upgrade-from-000)); `main` carries the newest source, which can be ahead of it. Wider release obligations are in
+is 0.1.2, the annotated tag `v0.1.2` ([RELEASE.md](RELEASE.md); upgrading from 0.0.0 is
+[below](#upgrade-from-000)); `main` carries the newest source, which can be ahead of it.
+**0.1.2 is a security fix: on 0.1.1 and earlier, erasing a person also deleted other
+people's records on their requests. Upgrade now;** [CHANGELOG.md](CHANGELOG.md) says what
+was lost and how to recover it. Wider release obligations are in
 [ACCEPTANCE.md](ACCEPTANCE.md), and local checks do not establish hosted mail
 delivery.
 
@@ -66,7 +69,7 @@ npx -y @runeditrun/rer dev just-every/run-penny
 `rer dev` installs the locked dependencies, sets up a local owner
 (the email you gave `rer setup`, or a default `.test` address) with an empty workspace, starts Penny and prints a link
 that opens it signed in. Penny pins `@runeditrun/rer` in `package.json` and its
-lockfile (currently 0.2.27), and the global `rer` always runs that pinned copy. The first start
+lockfile (currently 0.2.37), and the global `rer` always runs that pinned copy. The first start
 takes a few minutes.
 
 To be the owner under your own email address instead, run setup once before the
@@ -185,8 +188,8 @@ RELEASE.json lists each migration's steps.
 **Managed Penny includes email provided by RER.** You do not open a provider
 account, verify your own sender or enter an email API key. RER fills and hides
 `MAIL_PROVIDER=rer`, `MAIL_FROM`, `MAIL_RELAY_URL` and the installation's private
-`MAIL_API_KEY` during Managed configuration. Penny uses Base's relay adapter from
-its pinned rer (0.2.27, in `package.json`). The key is issued by RER, never supplied by you, and the
+`MAIL_API_KEY` during Managed configuration. Penny uses Base's relay adapter,
+vendored in `base/modules/mail`. The key is issued by RER, never supplied by you, and the
 upstream provider key never reaches Penny or its build. See
 [email and notifications](docs/EMAIL.md) for limits and recovery.
 

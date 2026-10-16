@@ -33,7 +33,7 @@ async function verified(email:string,displayName:string){
  const identity=await good('/api/public/identity/email/verify',{token},{})
  return {person:{Authorization:`Bearer ${identity.token}`},requester:(await env.DB.prepare('SELECT requester_id FROM requester_addresses WHERE email=?').bind(email).first<{requester_id:string}>())!.requester_id}
 }
-async function graph({betTitle='Better workflow'}={}){
+async function graph({betTitle='Better workflow',onRequest}:{betTitle?:string;onRequest?:(slug:string)=>Promise<void>}={}){
  const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303)
  const operator={Cookie:boot.headers.get('set-cookie')!.split(';')[0]}
  const email='erasure-canary@example.test',displayName='Erasure private identity'
@@ -41,6 +41,7 @@ async function graph({betTitle='Better workflow'}={}){
  await good('/api/operator/boards',{name:'Feedback',slug:'feedback',visibility:'public'},operator)
  const request=await good('/api/public/requests',{title:'A public improvement',description:'A public description',boardSlug:'feedback',emailUpdates:true,idempotencyKey:crypto.randomUUID()},person)
  await good(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title:'A public improvement',description:'A public description',boardSlug:'feedback',displayName:'Reader'},operator)
+ await onRequest?.(request.slug)
  const requestId=(await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(request.slug).first<{id:string}>())!.id
  const actor=(await env.DB.prepare('SELECT id FROM operators').first<{id:string}>())!.id
  const account=await good('/api/operator/accounts',{name:'Commercial account canary',internalOwnerId:actor,revenueCents:7812321,renewalDate:'2027-02-10',health:'Account renewal canary'},operator)
@@ -132,15 +133,22 @@ for(const root of ['evidence_items','accounts'] as const)it(`[DATA-003 BASE-DATA
 // Erasing a person removes their own records, never anyone else's: evidence an
 // operator recorded from another customer stays even when it is linked only to
 // the erased person's request, and so does the decision it supports.
-it('[DATA-003 BASE-DATA-003] erasing a requester keeps evidence someone else gave on their request, the decision\'s evidence count and other people\'s comments',async()=>{
- const g=await graph(),other=await verified('other-customer@example.test','Other customer')
- await good(`/api/public/requests/${g.request.slug}/comments`,{body:'We need this for our auditors too'},other.person)
+it('[DATA-003 BASE-DATA-003] erasing a requester keeps evidence someone else gave on their request, the decision\'s evidence count and other people\'s votes, follows, comments and release answers',async()=>{
+ // Another customer votes, follows and comments before the release, so it reaches them as a follower.
+ let other!:Awaited<ReturnType<typeof verified>>
+ const g=await graph({onRequest:async slug=>{
+  other=await verified('other-customer@example.test','Other customer')
+  await good(`/api/public/requests/${slug}/comments`,{body:'We need this for our auditors too'},other.person)
+  for(const action of ['vote','follow'])expect((await call(`/api/public/requests/${slug}/${action}`,{},other.person)).status).toBe(204)
+  await good('/api/public/updates/subscription',{subscribed:true},other.person,'PATCH')
+ }})
+ await good(`/api/public/releases/${g.release.slug}/outcomes`,{targetId:(await rows('roadmap_items'))[0].id,outcome:'adopted'},other.person,'PUT')
  const destination=await good('/api/operator/requests',{title:'Independent destination',description:'Independent context',boardSlug:'feedback',evidenceIds:[]},g.operator)
  await good(`/api/operator/requests/${g.request.slug}/merge`,{targetSlug:destination.slug},g.operator)
  const saved=await good<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export',undefined,g.operator)
  const decisions=async()=>(await good<{items:{id:string;evidenceCount:number}[]}>('/api/operator/decisions',undefined,g.operator)).items.find(item=>item.id===g.decision.id)!.evidenceCount
- const kept=async()=>({evidence:(await rows('evidence_items')).filter(row=>row.id===g.evidence.id),versions:(await rows('evidence_versions')).filter(row=>row.evidence_id===g.evidence.id),attachments:await rows('attachments'),links:(await rows('request_evidence_links')).filter(row=>row.evidence_id===g.evidence.id),bets:await rows('candidate_bet_evidence_links'),snapshots:await rows('decision_evidence_snapshots'),comparisons:await rows('decision_bet_snapshots'),comments:(await rows('request_comments')).filter(row=>row.requester_id===other.requester),merges:await rows('request_merges')})
- const before=await kept();expect(before.evidence).toHaveLength(1);expect(before.links).toHaveLength(1);expect(await decisions()).toBe(1)
+ const kept=async()=>({evidence:(await rows('evidence_items')).filter(row=>row.id===g.evidence.id),versions:(await rows('evidence_versions')).filter(row=>row.evidence_id===g.evidence.id),attachments:await rows('attachments'),links:(await rows('request_evidence_links')).filter(row=>row.evidence_id===g.evidence.id),bets:await rows('candidate_bet_evidence_links'),snapshots:await rows('decision_evidence_snapshots'),comparisons:await rows('decision_bet_snapshots'),...Object.fromEntries(await Promise.all(['request_comments','request_votes','request_follows','release_recipient_snapshots','release_outcomes'].map(async table=>[table,(await rows(table)).filter(row=>row.requester_id===other.requester)]))),merges:await rows('request_merges')})
+ const before=await kept();expect(before.evidence).toHaveLength(1);expect(before.links).toHaveLength(1);for(const table of ['request_comments','request_votes','request_follows','release_recipient_snapshots','release_outcomes'])expect(before[table],table).toHaveLength(1);expect(await decisions()).toBe(1)
  const preview=await good<Omit<Preview,'blockedCopies'>&{kept:Record<string,number>;blockedCopies:{table:string;key:string;columns:string[];resolvable?:true;href:string}[]}>('/api/operator/data/erasure/preview',{table:'requesters',id:g.requester},g.operator)
  expect(preview.counts).toMatchObject({requesters:1,evidence_items:1,evidence_versions:1,release_outcomes:2,requester_update_permissions:2,native_requester_sessions:1,notification_outbox:2,release_recipient_snapshots:1})
  for(const table of ['attachments','decision_evidence_snapshots','decision_bet_snapshots','candidate_bet_evidence_links','request_comments','request_merges'])expect(preview.counts[table],table).toBeUndefined()
@@ -160,7 +168,7 @@ it('[DATA-003 BASE-DATA-003] erasing a requester keeps evidence someone else gav
  for(const table of Object.keys(preview.counts).filter(table=>table!=='audit_anonymized'))expect((await rows('data_tombstones')).filter(row=>row.table_name===table),table).toHaveLength(preview.counts[table])
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
  expect((await call('/api/public/identity/session',undefined,g.person)).status).toBe(401)
- expect(await rows('release_outcomes')).toHaveLength(0)
+ expect((await rows('release_outcomes')).filter(row=>row.requester_id===g.requester)).toHaveLength(0)
  expect((await call(`/api/public/releases/${g.release.slug}/outcomes`,{targetId:'absent',outcome:'adopted'},g.person,'PUT')).status).toBe(401)
  const stale=await call('/api/operator/data/import',saved,g.operator);expect(stale.status).toBe(409);expect(await stale.json()).toEqual({error:'erasure_journal_regression'})
  const latest=await call('/api/operator/data/import',{archive:saved.archive,journal:await readErasureJournal(env.DB)},g.operator);expect(latest.status).toBe(409);expect(await latest.json()).toEqual({error:'stale_archive'})
