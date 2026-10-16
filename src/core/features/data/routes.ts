@@ -36,7 +36,8 @@ export function registerDataRoutes(app:Hono<Environment>):void{
  app.get('/api/operator/data/export',async c=>{const result=await exportArchive(c.env.DB,c.env.FILES,authority(c));c.header('Content-Disposition','attachment; filename="penny-data-bundle.json"');return c.json(result)})
  app.get('/api/operator/data/journal',async c=>{const result=await readErasureJournal(c.env.DB);c.header('Content-Disposition','attachment; filename="penny-erasure-journal.json"');return c.json(result)})
  app.get('/api/operator/data/overview',async c=>{
-  const kinds=[['requesters','display_name'],['requests','title'],['evidence_items','source_type'],['accounts','name']] as const
+  // Each record is chosen by what an operator recognises: a name, a title or the evidence's own words.
+  const kinds=[['requesters','display_name'],['requests','title'],['evidence_items',"COALESCE((SELECT substr(v.wording,1,80) FROM evidence_versions v WHERE v.evidence_id=evidence_items.id ORDER BY v.version_number DESC LIMIT 1),source_type)"],['accounts','name']] as const
   const results=await c.env.DB.batch<{id:string;label:string}>(kinds.map(([table,column])=>c.env.DB.prepare(`SELECT id,${column} AS label FROM ${table} ORDER BY created_at DESC LIMIT 100`)))
   // Removed operators who are not yet erased; current operators hold authority.
   const former=await c.env.DB.prepare("SELECT p.id,p.display_name AS label FROM operators p WHERE p.email NOT LIKE '%@erased.invalid' AND NOT EXISTS(SELECT 1 FROM oa_operators o WHERE lower(o.email)=lower(p.email) AND o.status<>'inactive') ORDER BY p.created_at DESC LIMIT 100").all<{id:string;label:string}>()
