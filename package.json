@@ -79,7 +79,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "1.54.5",
+    "@cloudflare/vite-plugin": "1.64.0",
     "@cloudflare/vitest-plugin": "^1.1.2",
     "@cloudflare/workers-types": "^5.20260828.1",
     "@playwright/test": "1.63.0",
@@ -100,7 +100,7 @@
     "typescript": "~6.0.2",
     "vite": "8.2.2",
     "vitest": "^4.1.11",
-    "wrangler": "4.129.1"
+    "wrangler": "4.151.0"
   },
   "packageManager": "pnpm@10.12.4",
   "files": [
