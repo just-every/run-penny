@@ -4,6 +4,7 @@
 
 Update from 0.1.0 with `rer install` and `rer setup`. The owner, records, private settings and applied migration history are kept; this patch adds no product migrations.
 
+- Canonicalize the data-command tests' temporary parent on macOS so their private-file and TLS checks reach the intended boundary; symlink, hard-link, permission and redirect refusal assertions are unchanged.
 - Pin rer 0.2.27 so setup after a portable restore can use the launch lock when macOS process inspection times out. The vendored Base modules retain their recorded 0.2.24 custody.
 - Adopt rer 0.2.25 and publish Penny’s browser sign-in declaration through the deployment generator, so RER can open `/signin` with the claimed owner’s email prefilled.
 

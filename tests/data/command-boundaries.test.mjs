@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import {mkdtemp,rm,writeFile,chmod,symlink,link,stat} from 'node:fs/promises'
+import {mkdtemp,rm,writeFile,chmod,symlink,link,stat,realpath} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {dataOrigin,dataOptions} from '../../scripts/data/options.mjs'
@@ -14,7 +14,7 @@ test('[DATA-001 BASE-SECRET-002] explicit origin and session-file options reject
  for(const argv of [[],['export','archive','--cookie',cookie],['export','archive','--origin','https://penny.example'],['export','archive','--origin','https://penny.example','--origin','https://other.example','--session-file','session']])assert.throws(()=>dataOptions(argv))
 })
 test('[DATA-001 BASE-SECRET-002] owner-only regular session/archive files refuse mode, symlink, hard-link and parent hazards',async()=>{
- const dir=await mkdtemp(join(tmpdir(),'penny-data-boundaries-'))
+ const dir=await mkdtemp(join(await realpath(tmpdir()),'penny-data-boundaries-'))
  try{
   const session=join(dir,'session.json');await json(session,{cookie});assert.ok(await privateSession(session))
   await chmod(session,0o644);await assert.rejects(privateSession(session));await chmod(session,0o600)
@@ -29,7 +29,7 @@ test('[DATA-001 BASE-SECRET-002] owner-only regular session/archive files refuse
  }finally{await rm(dir,{recursive:true,force:true})}
 })
 test('[DATA-001 BASE-SECRET-002] transport sets exact write Origin, refuses redirects/oversized/non-JSON responses and never exposes session errors',async()=>{
- const dir=await mkdtemp(join(tmpdir(),'penny-data-transport-')),original=globalThis.fetch
+ const dir=await mkdtemp(join(await realpath(tmpdir()),'penny-data-transport-')),original=globalThis.fetch
  try{
   const session=join(dir,'session.json');await json(session,{cookie});const request=await dataTransport('https://penny.example',session)
   let calls=0

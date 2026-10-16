@@ -3,14 +3,14 @@ import assert from 'node:assert/strict'
 import {createServer as httpsServer} from 'node:https'
 import {createServer as httpServer} from 'node:http'
 import {spawn} from 'node:child_process'
-import {mkdtemp,writeFile,rm,stat} from 'node:fs/promises'
+import {mkdtemp,writeFile,rm,stat,realpath} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {tlsIdentity} from './tls-runtime.mjs'
 const listen=server=>new Promise((r,j)=>server.once('error',j).listen(0,'127.0.0.1',()=>r('127.0.0.1:'+server.address().port)))
 const close=server=>new Promise(r=>server.close(r))
 test('[DATA-001 BASE-SECRET-002] actual TLS rejects untrusted certificates and foreign or downgrade redirects without forwarding owner sessions',async()=>{
- const dir=await mkdtemp(join(tmpdir(),'penny-data-redirect-'));const servers=[]
+ const dir=await mkdtemp(join(await realpath(tmpdir()),'penny-data-redirect-'));const servers=[]
  try{
   const identity=await tlsIdentity(dir);let sourceCalls=0,foreignCalls=0,location
   const foreign=httpsServer(identity,(_request,response)=>{foreignCalls++;response.end('{}')});servers.push(foreign)

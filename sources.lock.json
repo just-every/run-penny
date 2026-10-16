@@ -2634,7 +2634,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "a78e0d3e8cbd3f0283c3e4ac43ea25c6edc0d6d79efea1562e4233a984f865ce",
+      "sha256": "8f136995ff17fe5ae672fe9b22dbf56e6bc07ddf59586f1a6547fff8a1a5962a",
       "executable": false
     },
     "CLAUDE.md": {
@@ -6498,7 +6498,7 @@
       "executable": false
     },
     "tests/data/command-boundaries.test.mjs": {
-      "sha256": "ff127bad054eb08d72703ebd7aaff9d4397ba20998b5b2db1482097c15a99484",
+      "sha256": "6c152249c897adf872c09fbe166c04c2e062ee13492a538ef43e817ac5350c66",
       "executable": false
     },
     "tests/data/commands.test.mjs": {
@@ -6518,7 +6518,7 @@
       "executable": false
     },
     "tests/data/redirect-boundaries.test.mjs": {
-      "sha256": "56d307b3f4083e53172d5f831cde298245e332f0a57c49c24ad318dafc2f86fb",
+      "sha256": "7ea63ab0b5dba7b9945fbbf7aa751df7e321a8c7074f03c037459fdeadb8506e",
       "executable": false
     },
     "tests/data/tls-runtime.mjs": {
