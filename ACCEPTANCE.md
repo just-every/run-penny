@@ -1,5 +1,7 @@
 # Penny acceptance
 
+CONTRACT.md is the target contract. [Target contract acceptance](#target-contract-acceptance-16-october-2026) at the end lists every clause's acceptance evidence and current status; the sections before it record the first release's bounded receipts.
+
 ## First release: what a person can do
 
 1. Install with `rer`, run `rer setup` and `rer dev`, and land signed in as the owner at **Finish setup**.
@@ -570,3 +572,230 @@ landing, and none of this is hosted proof.
 ## Scoped cancellation learning boundary
 
 `LEARN-001`–`LEARN-006` add the bounded private Stage 2–3 software path over native feedback and exact Orbit delegated evidence targets. `tests/base/learning-stage2.test.ts` exercises the native HTTP acquisition/interpretation/commitment path and refusal boundaries; `learning-stage3.test.ts` exercises the scheduled handler, quiet refresh, controls, native/source-person erasure, provider revocation and real archive restore; `learning-upgrade.test.ts` exercises populated previous-head upgrade and repeat. Network/model responses are fixtures only at the external port. Live source/model configuration, actual owner/customer usefulness, hosted scheduled execution, measured cost/attention and every Stage 4–5 outcome gate remain open. `FLAGSHIP-PLAN.md` and `docs/flagship-acceptance.md` retain that distinction.
+
+## Target contract acceptance (16 October 2026)
+
+CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence is listed here with its status at commit `02374e4`, so a build round can work towards it. `done` names the passing test through a public door; `partial` and `missing` name the journey or test that would close the clause. Provider fixtures stand only at the paid or network edge, and a replacement claim for any incumbent still requires a tested real owner export. This section adds requirements; it does not reopen the bounded receipts above.
+
+**Counts:** 103 done, 54 partial, 61 missing.
+
+| Clause | Status | Acceptance evidence | Current proof |
+| --- | --- | --- | --- |
+| HOME-001 | done | The installed board answers at `/` and `/portal/feedback` with the configured description and no operator data (route review, both widths). | `tests/browser/route-review.mjs` |
+| HOME-002 | partial | The run site's built landing page at both widths with no cross-origin request, cookie or workspace read; no test reads the built site yet. | `src/site/pages.tsx` |
+| DOCS-001 | done | Docs routes render from the manifest; an unlisted Markdown file or broken link fails the build. | `tests/browser/route-review.mjs`; `docs/site.json` |
+| OPS-001 | partial | Equal operators ship; the role journey (Owner, Admin, Product manager, Contributor, Viewer refusals with 403 through routes and UI) is required. | `tests/base/auth.test.ts:83` |
+| OPS-002 | done | Invite, remove and owner handover with revocation and audit. | `tests/base/auth.test.ts:83`; `tests/base/auth.test.ts:132`; `tests/base/auth.test.ts:160` |
+| OPS-003 | done | Overview figures link to their records; empty sections name the creating action. | `tests/browser/operator-pages.mjs` |
+| OPS-005 | done | Unfinished owner is sent to `/setup` from every app document and reaches the app after finishing. | `tests/base/first-run.test.ts:10` |
+| OPS-004 | partial | Search across the named fields works; the 500 ms first page at declared capacity is not load-tested. | `tests/browser/operator-completeness-requester.mjs` |
+| ROLE-001 | missing | A base test signs in under a role without commercial permission and reads requests, accounts, prioritisation views, CSV exports and Ask Penny answers through their routes: no revenue, opportunity or health value appears; granting the permission reveals them on the next request; each role change is in the audit log (ROLE-004). | — |
+| ROLE-002 | partial | A browser journey against SAML and OIDC test identity providers at the network edge: a first sign-in creates a Contributor, a group claim maps another user to Admin, an enforced domain refuses an email link, and an IdP-side deactivation ends access at the next session check. | `src/core/features/auth/dependencies.ts` |
+| ROLE-003 | missing | Okta and Entra SCIM request fixtures through the public endpoint create, patch and deactivate a user; the deactivated user's session and API key are refused on their next request, as `auth.test.ts` asserts for removal. | — |
+| ROLE-004 | partial | Perform each listed action, then read and export the log through the UI and API; erase an operator and see their entries anonymised while the events remain. | `tests/base/board.test.ts:58` |
+| OPS-006 | missing | A browser test saves a filtered, sorted view, then a second operator opens the shared view and gets the same result set; a private view is not listed for them. | — |
+| EVID-001 | done | A portal submission creates one evidence item; an operator records evidence with each source kind. | `tests/base/board.test.ts:14`; `tests/browser/loopjourney-steps.mjs` |
+| EVID-002 | done | Provenance fields stored as supplied, identity never inferred. | `tests/browser/operator-pages-decisions.mjs` |
+| EVID-003 | done | Link, create, mark reviewed with reason and return to unreviewed. | `tests/browser/operator-pages.mjs` |
+| EVID-004 | done | Linking, merging and committing never alter evidence. | `tests/browser/loopjourney-steps.mjs` |
+| EVID-005 | done | Account context with transaction-linked requests and decisions in observed-time order. | `tests/base/penny-evidence.test.ts:50` |
+| EVID-006 | done | No commercial field, source attribution or note in public APIs, documents, metadata, sitemap or requester mail. | `tests/base/penny-evidence.test.ts:146` |
+| EVID-007 | done | Deterministic published-only lexical suggestions within 500 ms; actions create no draft. | `tests/base/penny-evidence.test.ts:101` |
+| EVID-008 | done | Evidence attachment bytes stay operator-only. | `tests/base/penny-evidence.test.ts:121` |
+| EVID-009 | done | Private tags survive merge and are exported. | `tests/base/board.test.ts:41` |
+| EVID-010 | done | Edits append immutable versions; stale edits refused. | `tests/base/penny-evidence.test.ts:89` |
+| CAP-001 | partial | A browser journey at 1440 and 390 pixels: items from three connector fixtures arrive, are triaged by keyboard (link, create, dismiss with reason, snooze), each linked request shows the item with its source link, and the overview counts match the inbox. | `src/core/features/evidence/repository.ts`; `tests/browser/operator-pages.mjs` |
+| CAP-002 | partial | A connector fixture test captures a record, edits it at the source and deletes it at the source: Penny shows changed and removed states, purges the excerpt at the window, and the deep link opens the original record. | `src/core/features/evidence/write-service.ts`; `tests/browser/operator-pages-decisions.mjs` |
+| CAP-003 | missing | Zendesk OAuth, API and webhook fixtures at the network edge: install, link, create and proxy-vote from the sidebar; tag-triggered capture creates one item per ticket however often the webhook replays; the status appears in the sidebar; uninstalling revokes and deletes the tokens. | — |
+| CAP-004 | missing | Intercom API and webhook fixtures run CAP-003's journey and show company attributes arriving as private segment attributes. | — |
+| CAP-005 | missing | A journey against a running HappyToHelp test installation links a ticket, captures one by tag and receives the drafted status reply on that ticket. | — |
+| CAP-006 | missing | Help Scout API fixtures: link, create, tag capture and mapping, each once per conversation. | — |
+| CAP-007 | missing | Gong API fixtures: filtered calls are ingested, proposals carry exact transcript spans and timestamps, accounts map through Gong's CRM association, and the fixture records no request for an out-of-filter call. | — |
+| CAP-008 | missing | A Fathom fixture ingests a call; a VTT upload produces a searchable transcript whose highlight becomes evidence with a timestamp link; an audio upload shows progress, reserved and metered cost, and a visible failure when the provider fails. | — |
+| CAP-009 | missing | Inbound-mail fixtures: forwarded Gmail and Outlook messages each create one item attributed to the original sender; a replayed message ID, an unaligned sender and a reply to a Penny notification create nothing. | — |
+| CAP-010 | missing | Signed Slack Events and Interactivity fixtures: the shortcut and the reaction each capture a message once, a bad signature is refused, and a Slack Connect channel maps to its account; the same capture runs against a Nook test installation. | — |
+| CAP-011 | missing | Bot Framework fixtures with token validation capture a message once and refuse an unsigned request. | — |
+| CAP-012 | missing | A Playwright extension journey on a fixture page creates an inbox item with the URL, excerpt and screenshot attachment; a signed-out extension is refused. | — |
+| CAP-013 | missing | HubSpot and Salesforce fixtures render the panel for a record's company, capture feedback tied to an opportunity amount and attribute a proxy vote to the right customer. | — |
+| CAP-014 | partial | A base test records proxy votes from the inbox and from a Zendesk sidebar fixture: each counts once, collapses with the customer's own later vote, creates no permission record, and appears in the CSV export with its recorder. | `tests/base/feedback-import-uservoice.test.ts` |
+| CAP-015 | partial | A Zapier CLI test against a running installation fires each trigger once per event and runs each action within its key's scopes; an out-of-scope action is refused. | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` |
+| CAP-016 | partial | A fixture with an expired token and a rate limit shows the connector failing with its reason, notifies the owner once, and after reconnect resumes from its cursor without duplicate items. | `tests/browser/integration-states.mjs` |
+| CAP-017 | partial | Connector fixtures assert that no request is made for out-of-scope records, that redaction precedes the write, and that captured people hold no permission record. | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` |
+| CAP-018 | missing | A conditional question renders and validates on the portal and the widget at both widths; poll answers aggregate per request and by segment and stay operator-only. | — |
+| WIDGET-001 | partial | A browser test on a fixture host page at both widths: an identified user submits, votes and follows; the page URL appears only in private evidence; the documented CSP directives suffice; no third-party cookie is set. | `src/core/features/settings/frame-settings.ts`; `tests/browser/operator-completeness-security.mjs` |
+| WIDGET-002 | partial | Host-identity tests extended to JWT and to the widget origin: a valid token identifies the user and links the account with private attributes; expired, future-dated and forged tokens are refused and change nothing. | `src/core/features/auth/host-identity.ts`; `tests/base/host-identity.test.ts` |
+| WIDGET-003 | missing | A browser test: the unread count falls after viewing; a segment-targeted announcement shows only to matching identified users; an unpublished release never appears. | — |
+| WIDGET-004 | missing | SDK sample apps run XCTest and Espresso UI tests against a test installation: identified submit, vote and changelog read, and a queued offline submission sent once on reconnect. | — |
+| WIDGET-005 | missing | A fixture host triggers two moments; their answers arrive as evidence tagged with the moment; the widget sends nothing to Penny until a call is made. | — |
+| WIDGET-006 | missing | A browser test: a segment member sees the restricted board while a non-member and a signed-out visitor get 404 and no count; a custom hostname configured through the deployment path serves the portal over TLS (an owner-run receipt). | — |
+| AI-001 | partial | A labelled set of at least 200 duplicate and non-duplicate pairs drawn from fixture data reaches the precision and recall recorded in ACCEPTANCE.md; requester suggestions contain only published requests; with the model disabled, lexical suggestions still return within EVID-007's limit. | `src/core/features/requests/suggestions.ts`; `tests/base/penny-evidence.test.ts:101` |
+| AI-002 | missing | An inbox journey accepts and rejects suggestions; an auto-link rule on one fixture source links only above its threshold, marks and can undo each link, and changes no public payload. | — |
+| AI-003 | partial | A sweep over a fixture backlog lists proposals; accepting one collapses votes as REQ-008 requires; the auto-merge rule logs each merge and REQ-009 restores it. | `src/core/features/requests/merge-repository.ts`; `tests/base/board.test.ts:14` |
+| AI-004 | partial | Fixture conversations yield proposals whose spans match their source byte for byte; auto-creation produces unpublished requests only; re-running the same conversation creates nothing new. | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` |
+| AI-005 | missing | A fixture corpus gets an initial taxonomy; new feedback is classified in the next run; an operator split reclassifies with history; themes filter the inbox and the request queue. | — |
+| AI-006 | missing | Every citation in a fixture summary resolves to a stored record; a draft containing a private account name is flagged; nothing is sent without the operator's action. | — |
+| AI-007 | missing | A fixture spam batch is flagged with reasons and stays in moderation; a false positive is approved normally. | — |
+| AI-008 | missing | A fixture ticket containing an SSN and a card number is stored redacted in D1, search and the archive; a new rule applies to new captures and, on request, re-applies to stored ones. | — |
+| AI-009 | missing | A question over a fixture corpus returns an answer whose every citation resolves; a role without commercial permission receives no revenue figures; a Slack answer posts only where the asker chose. | — |
+| AI-010 | partial | Exhausting a fixture budget refuses new AI runs with a visible reason while lexical suggestions, manual capture and triage keep working; the cost report matches metered fixture usage. | `src/core/features/learning/run.ts`; `tests/base/learning-upgrade.test.ts` |
+| SEG-001 | missing | HubSpot API fixtures map companies, contacts and deals; a webhook update changes segment membership within the refresh window; nothing is written to HubSpot by default. | — |
+| SEG-002 | missing | Salesforce REST fixtures with sandbox OAuth: mapping, opportunity-linked evidence summing open amounts in USD, and closed-lost opportunities excluded from revenue at stake. | — |
+| SEG-003 | partial | A journey against an Orbit test installation shows Orbit account attributes as Penny segment attributes and Orbit deals in revenue at stake. | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` |
+| SEG-004 | missing | Stripe API fixtures compute MRR from subscriptions with discounts and several items, flag churned customers and convert a non-USD subscription with its recorded rate. | — |
+| SEG-005 | missing | Signed Segment webhook fixtures set traits that move an account into a segment; a Buoy health change does the same. | — |
+| SEG-006 | missing | A base test changes an attribute and sees the account enter and leave a segment within the refresh; request, inbox and report filters agree on membership; no segment name or attribute appears in any public payload (DATA-002). | — |
+| SEG-007 | partial | A fixture with several voters from one account counts that account's ARR once; opportunity and churn figures reconcile with fixture CRM data; none of them appears publicly. | `src/core/features/requests/operator-context.ts`; `src/core/features/accounts/read-context.ts`; `tests/base/penny-evidence.test.ts:50` |
+| REQ-001 | done | Visitors read published requests, discussion, roadmap and releases without signing in. | `tests/browser/loopjourney-steps.mjs` |
+| REQ-002 | done | Identity-required actions need verified email or host identity; email never shown. | `tests/base/no-mail-identity.test.ts` |
+| REQ-003 | done | Submission creates one unreviewed evidence item and one held request. | `tests/base/board.test.ts:14` |
+| REQ-004 | done | Choosing a suggestion votes or follows and creates no draft. | `tests/base/penny-evidence.test.ts:101` |
+| REQ-005 | done | Publication carries only approved fields. | `tests/base/board.test.ts:14` |
+| REQ-006 | done | One vote per identity; vote eligibility by public status. | `tests/base/board.test.ts:14` |
+| REQ-007 | done | Requester comments are held until approved. | `tests/base/notifications.test.ts:40` |
+| REQ-008 | done | Merge moves links, comments and followers, collapses votes and redirects. | `tests/base/board.test.ts:14` |
+| REQ-009 | done | Unmerge restores the duplicate and keeps later canonical additions. | `tests/base/board.test.ts:14`; `tests/base/notifications.test.ts:244` |
+| REQ-010 | done | Follow and the unticked control are the only consent paths. | `tests/base/board.test.ts:14` |
+| REQ-011 | done | Attachments are private until separately approved. | `tests/base/board.test.ts:41` |
+| REQ-012 | partial | Search, board, status and sort browse the published set; the 500 ms first page at declared capacity is not load-tested. | `tests/browser/requester-board.mjs` |
+| REQ-013 | done | A repeated idempotency key returns the original result; a changed body returns 409. | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` |
+| REQ-014 | done | Expired, future or forged host identity is refused and changes nothing. | `tests/base/host-identity.test.ts` |
+| REQ-015 | done | Status updates render distinctly, pin and notify followers. | `tests/base/board.test.ts:14` |
+| REQ-016 | partial | Mapped requests take the projected roadmap status (tested); a public status test covering Declined and unmapped Open is required. | `src/core/features/requests/status-publication.ts`; `tests/base/decision-loop-roadmap.test.ts` |
+| REQ-017 | partial | A decline without a reason is refused in code; a journey proving vote/comment refusal and reversal is required. | `src/core/features/requests/status-publication.ts` |
+| REQ-018 | done | Board create, rename, archive and move keep votes, comments and links. | `tests/base/board.test.ts:41` |
+| REQ-019 | done | Internal boards withdraw requests from every public read. | `tests/base/board.test.ts:41` |
+| REQ-020 | done | Edits to public text re-enter moderation while the approved text stays. | `tests/browser/requester-repair.mjs` |
+| REQ-021 | partial | Withdrawing a pending request removes it from moderation (tested); the 410 public URL and vote exclusion need a test. | `tests/browser/requester-repair.mjs:86` |
+| REQ-022 | partial | Blocked identities are refused at sign-in in code; a journey for hide, refuse with 403, uncount and unblock is required. | `src/core/features/auth/native-service.ts`; `src/core/features/requests/operator-routes.ts` |
+| REQ-023 | done | Single-use 30-minute link and held pre-verification action. | `tests/base/auth.test.ts:46`; `tests/browser/no-mail-journey.mjs` |
+| REQ-024 | done | Identity merge keeps both addresses, collapses votes and keeps mutes. | `tests/base/notifications.test.ts:229` |
+| REQ-025 | done | Requester activity with unfollow, mute and subscription changes. | `tests/base/notifications.test.ts:152` |
+| REQ-026 | partial | Voters, verified addresses and per-account totals shown privately; a named test of the three separate figures is required. | `src/core/features/requests/operator-context.ts` |
+| REQ-027 | done | Framing allowed only from allow-listed origins. | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts:58` |
+| REQ-028 | partial | Queue filters and sorts work; the 500 ms first page at declared capacity is not load-tested. | `tests/browser/operator-completeness-read.mjs` |
+| REQ-029 | done | A request created from evidence skips moderation and publishes only through REQ-005. | `tests/browser/operator-pages-decisions.mjs` |
+| REQ-030 | done | Approve, edit-then-approve and reject with optional private notice. | `tests/base/notifications.test.ts:279` |
+| REQ-031 | done | Host claims verify the address and link the account; commercial fields stay private. | `tests/base/host-identity.test.ts` |
+| REQ-032 | done | Internal notes never appear in public payloads or mail. | `tests/base/penny-evidence.test.ts:146` |
+| TRIAGE-001 | missing | A captured item takes its board's default owner; reassignment moves it between queues; a queue lists only the operator's own items. | — |
+| TRIAGE-002 | partial | A clock-advanced test sends one reminder per age step, returns a snoozed item on its date, and the overview's aging counts link to their records. | `src/core/features/overview`; `tests/browser/operator-pages.mjs` |
+| TRIAGE-003 | missing | A rule dry-runs against a fixture inbox, then applies once per item with one audit entry each; the rule editor offers no publication, vote, customer-notification or commitment action. | — |
+| TRIAGE-004 | missing | A mention notifies its operator once; the note and its replies never appear in a public payload. | — |
+| TRIAGE-005 | missing | Tagging and assigning 200 fixture items writes one audited batch; undo restores every item. | — |
+| TRIAGE-006 | partial | For each worker type, a kill-and-restart test resumes without duplicates and shows the failure state until resolved. | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts`; `tests/base/notifications.test.ts:87` |
+| PRIO-001 | missing | A base test rolls three requests from two accounts up to one feature, counting each account once; moving the feature to another component keeps every link. | — |
+| PRIO-002 | partial | A custom status mapped to Under review shows Under review in every public payload and the custom name only to operators. | `src/core/features/settings/custom-fields.ts`; `tests/browser/operator-completeness-fields.mjs` |
+| PRIO-003 | missing | A RICE view sorts fixture features with every component visible; changing a weight re-sorts; the decision brief and every public payload show no score. | — |
+| PRIO-004 | missing | Two operators' inputs are both visible on a card; the weighted rank is computed; changing the criteria keeps earlier scores readable. | — |
+| PRIO-005 | missing | A Linear fixture estimate appears as effort on the linked feature; a manual override is marked as such. | — |
+| DEC-001 | done | Draft, ready, committed and review-due states in one queue. | `tests/base/decision-loop-commit.test.ts` |
+| DEC-002 | done | Brief holds question, owner, evidence, bets, confidence, review date and eligible requesters. | `tests/base/decision-loop-dimensions.test.ts` |
+| DEC-003 | done | Every bet shows the same dimensions and no combined score. | `tests/base/decision-loop-dimensions.test.ts` |
+| DEC-004 | done | Commitment requires rationale, owner, confidence and date and snapshots evidence. | `tests/base/decision-loop-commit.test.ts` |
+| DEC-005 | done | Commitment creates the internal Planned item and writes no public field. | `tests/base/decision-loop-roadmap.test.ts` |
+| DEC-006 | done | Revisions keep the original snapshot and withdraw superseded approvals. | `tests/base/penny-decisions.test.ts` |
+| DEC-007 | done | Review due within an hour of the date; owner notified once. | `tests/base/penny-decisions.test.ts` |
+| DEC-008 | done | Post-release evidence and outcomes appear without changing the snapshot. | `tests/base/penny-releases.test.ts`; `tests/base/penny-decisions.test.ts` |
+| ROAD-001 | done | Transitions record actor, time and reason. | `tests/base/decision-loop-roadmap.test.ts` |
+| ROAD-002 | done | Internal roadmap record fields. | `tests/browser/operator-pages-decisions.mjs` |
+| ROAD-003 | done | Public projection follows internal status and exposes only approved fields. | `tests/base/decision-loop-roadmap.test.ts` |
+| ROAD-004 | done | Approval alone publishes; withdrawal answers 404. | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/loopjourney-roadmap.mjs` |
+| ROAD-005 | done | Commitment never grants approval. | `tests/base/decision-loop-roadmap.test.ts` |
+| ROAD-006 | done | Public roadmap groups approved items only. | `tests/browser/loopjourney-roadmap.mjs` |
+| ROAD-007 | done | Approved moves and declines prepare customer-safe drafts. | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` |
+| ROAD-008 | done | Publishing a draft queues one notification per version per eligible follower. | `tests/browser/operator-pages-status.mjs` |
+| ROAD-009 | missing | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. | — |
+| ROAD-010 | missing | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. | — |
+| ROAD-011 | partial | A slipped dependency flags each dependent item and its ETA; the release plan lists its items with their states. | `src/core/features/releases/drafts.ts`; `tests/browser/loopjourney-release.mjs` |
+| ROAD-012 | missing | The ETA appears only after approval; changing it drafts an update; an internal target date is absent from every public payload. | — |
+| ROAD-013 | missing | An export contains only fields the exporter's role may see; the shared link refuses a signed-out visitor. | — |
+| REL-001 | done | Release drafts with targets and fields. | `tests/browser/loopjourney-release.mjs` |
+| REL-002 | done | Publication requires Shipped targets and records the snapshot first. | `tests/browser/loopjourney-release.mjs` |
+| REL-003 | done | Corrections version wording and need explicit delivery. | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |
+| REL-004 | done | Eligible identities appear once in a fixed snapshot. | `tests/base/release-custody.test.ts` |
+| REL-005 | done | Release mail and pages carry only published fields and the recipient's own context. | `tests/browser/loopjourney-release.mjs` |
+| REL-006 | done | Bounded retry before acceptance; ambiguous outcomes held. | `tests/base/notifications.test.ts:133`; `tests/base/release-custody.test.ts` |
+| REL-007 | partial | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression. | `tests/base/release-custody.test.ts` |
+| REL-008 | done | Snapshot recipients answer per target; changes append revisions. | `tests/base/penny-releases.test.ts` |
+| REL-009 | done | Coverage over original recipients with private links. | `tests/base/penny-releases.test.ts` |
+| REL-010 | done | Empty feed shows no placeholder entry. | `tests/browser/route-review.mjs` |
+| REL-011 | done | Hard bounce and complaint suppress; soft bounce fails one delivery. | `tests/runtime/mail-events-restart.test.mjs` |
+| REL-012 | done | Subscribe and unsubscribe keep votes and follows. | `tests/base/penny-releases.test.ts` |
+| REL-013 | done | Delivery states never move backward or double count. | `tests/base/release-custody.test.ts` |
+| REL-014 | missing | A clock-advanced test publishes a scheduled release once at its time; a release whose target is no longer Shipped stays draft and notifies its author. | — |
+| REL-015 | partial | An inline image renders from an approved attachment; the label filter returns only matching releases; raw HTML in a body is not rendered. | `src/core/features/releases/drafts.ts`; `src/core/features/releases/public-read-repository.ts` |
+| REL-016 | partial | The feeds validate and list only published versions; a segment send reaches exactly the intersection of consent and segment. | `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts` |
+| REL-017 | missing | A Linear fixture completion drafts a release containing only approved wording and marked items. | — |
+| DELIV-001 | missing | A journey against a Vector test installation creates an issue, maps its state change to the roadmap item and shows Penny's demand inside Vector. | — |
+| DELIV-002 | partial | Linear fixtures: create, link, state mapping, and the attachment updated when votes change. | `src/core/features/integrations/tracker-service.ts`; `src/core/features/integrations/tracker-receiver.ts`; `tests/browser/integration-states.mjs` |
+| DELIV-003 | partial | Jira fixtures: create, link, status-category mapping, and panel content restricted for a role without commercial permission. | `src/core/features/integrations/tracker-service.ts`; `tests/browser/integration-states.mjs` |
+| DELIV-004 | missing | Signed GitHub webhook fixtures: an issue closed by a merged pull request proposes Shipped; a bad signature is refused. | — |
+| DELIV-005 | missing | Azure DevOps fixtures create a work item and map its state change. | — |
+| DELIV-006 | missing | A Linear fixture Done moves the item to Shipped, the public status to Shipped and creates a draft; with auto-update on, each follower gets one notification and a replayed webhook sends nothing more. | — |
+| DELIV-007 | missing | A new vote updates the tracker attachment once; with commercial permission off, no revenue band is sent. | — |
+| DELIV-008 | partial | A drift fixture is shown and resolved by resync; an ambiguous create is reconciled to the known issue without a duplicate. | `tests/browser/integration-states.mjs` |
+| NOTIFY-001 | done | Followers notified for the named public events only. | `tests/base/notifications.test.ts:40`; `tests/base/notifications.test.ts:68` |
+| NOTIFY-002 | done | Quiet hours, coalescing, Queue wakeup and unsubscribe. | `tests/base/notifications.test.ts:122`; `tests/base/notifications.test.ts:213` |
+| NOTIFY-003 | done | One owner email and in-app notice per review-due schedule. | `tests/base/penny-decisions.test.ts` |
+| NOTIFY-004 | partial | No-reply sending and no inbound route ship; a test that a notification reply creates nothing, and CAP-009's separate capture route, are required. | `src/core/features/notifications/delivery.ts` |
+| NOTIFY-005 | done | Durable keys, bounded retries and failure states for requester and operator mail. | `tests/base/notifications.test.ts:87`; `tests/base/notifications.test.ts:269` |
+| NOTIFY-006 | partial | A preference-matrix test delivers each event once on each chosen channel and nowhere else; a digest coalesces a day's events into one message. | `src/core/features/integrations/destinations.ts`; `tests/base/egress-delivery.test.ts:35`; `tests/base/penny-decisions.test.ts` |
+| NOTIFY-007 | missing | A Zendesk fixture: a shipped request drafts one reply per linked ticket; nothing is sent until an agent sends it. | — |
+| MEAS-001 | missing | Amplitude API fixtures return a feature's event counts over a window and a cohort that becomes a segment. | — |
+| MEAS-002 | missing | Mixpanel API fixtures match MEAS-001's journey. | — |
+| MEAS-003 | missing | PostHog, Vane and Segment fixtures produce the same feature usage counts for a linked roadmap item. | — |
+| MEAS-004 | partial | Report totals reconcile with record counts on fixture data; a scheduled report sends once per period. | `src/core/features/releases/outcomes.ts`; `src/core/features/requests/operator-context.ts` |
+| MEAS-005 | partial | Fixture usage yields adoption with its denominator and baseline; removing the usage data reports unknown. | `src/core/features/releases/outcomes.ts`; `tests/base/penny-releases.test.ts` |
+| MEAS-006 | missing | Each figure matches a count over fixture records and links to them. | — |
+| DATA-001 | done | Archive contains every classified record and original bytes. | `tests/base/hosted-export.test.ts:83`; `tests/installer/portability.test.mjs` |
+| DATA-002 | done | No operator-only field name or value in public payloads. | `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts` |
+| DATA-003 | done | Erasure outranks history and unmerge. | `tests/base/penny-erasure.test.ts:137`; `tests/base/penny-erasure.test.ts:178` |
+| DATA-004 | done | Custom fields are operator-only and editable where shown. | `tests/browser/operator-completeness-fields.mjs` |
+| DATA-005 | partial | A CSV export of fixture data reconciles its vote totals with its individual voter rows and with record counts. | `src/core/features/data/archive.ts`; `tests/base/hosted-export.test.ts:83` |
+| DATA-006 | partial | OpenAPI contract tests exercise every resource through the public API; each webhook's signature verifies and replays are rejected. | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts:19` |
+| DATA-007 | missing | An MCP conformance client lists the tools and runs search and capture; a call outside the key's scope is refused. | — |
+| LEARN-001 | done | Selected native and Orbit originals with purpose and authorization. | `tests/base/learning-stage2.test.ts` |
+| LEARN-002 | done | Contestable comparison with validated spans and a no-build option. | `tests/base/learning-stage2.test.ts` |
+| LEARN-003 | done | Accountable choice with a complete measurement protocol. | `tests/base/learning-stage3.test.ts` |
+| LEARN-004 | done | Bounded recurring work with claims, cursors, budgets and controls. | `tests/base/learning-stage3.test.ts` |
+| LEARN-005 | done | Erasure and revocation close derived work. | `tests/base/learning-stage3.test.ts` |
+| LEARN-006 | done | Absent source, model or transport refuses visibly; cost reserved and reported. | `tests/base/learning-upgrade.test.ts` |
+| IMP-001 | done | Saved Canny boards, posts, votes, comments and merges preview and apply with non-authorizing history. | `tests/base/feedback-import.test.ts:35` |
+| IMP-002 | done | Reviewed mapping refuses unknown headings and unresolved references by name. | `tests/base/feedback-import.test.ts` |
+| IMP-003 | done | Atomic, resumable, idempotent application. | `tests/base/feedback-import-custody.test.ts` |
+| IMP-004 | done | Undo removes only owned effects and conflicts on later work. | `tests/base/feedback-import-custody.test.ts` |
+| IMP-005 | done | Erasure purges originals and fences replay. | `tests/base/feedback-import-custody.test.ts` |
+| IMP-006 | done | Canny Ideas aggregates never manufacture individuals. | `tests/base/feedback-import.test.ts` |
+| IMP-007 | done | Receipts with counts, omissions and zero job-created mail. | `tests/base/feedback-import.test.ts`; `tests/base/feedback-import-uservoice.test.ts` |
+| IMP-008 | done | UserVoice ideas and supporters with proxy marks and scope warnings. | `tests/base/feedback-import-uservoice.test.ts` |
+| MIG-001 | partial | A recorded Canny API fixture migrates with per-kind counts matching its receipt; a second run adds only the delta; no mail or notification is created. | `src/core/features/imports/bundle.ts`; `tests/base/feedback-import.test.ts:35` |
+| MIG-002 | missing | Productboard API and CSV fixtures rebuild the hierarchy, keep every note-to-feature link and name each omitted field in the receipt. | — |
+| MIG-003 | missing | An Aha! API fixture migrates with proxy votes marked proxy and portal visibility mapped to boards. | — |
+| MIG-004 | partial | A UserVoice API fixture produces the same requests and supporters as IMP-008 for overlapping data and adds the comments and notes. | `tests/base/feedback-import-uservoice.test.ts` |
+| MIG-005 | missing | A Featurebase fixture migrates with counts reconciling to its receipt. | — |
+| MIG-006 | partial | The dry-run receipt equals the apply receipt; each imported post URL answers 301 to its request; a re-consent invitation creates a permission record only on the customer's click. | `src/core/features/imports/service.ts`; `tests/base/feedback-import.test.ts:71` |
+| OWN-001 | done | Signed first-owner claim with expiry, replay and second-claim refusal. | `tests/base/owner-claim.test.ts` |
+| EDIT-001 | done | Owner editor lease after native owner admission. | `tests/base/editor-admission.test.ts` |
+| API-001 | done | Reveal-once hashed keys with route-selected scopes. | `tests/base/integration-api.test.ts:19` |
+| API-002 | done | Revocation and expiry fence each request and transaction. | `tests/base/integration-api.test.ts:36`; `tests/base/integration-api.test.ts:54` |
+| API-003 | done | API writes reuse native validation, moderation and approval. | `tests/base/integration-api.test.ts:73` |
+| INT-001 | done | Selected public events and immutable destinations; restored history sends nothing. | `tests/browser/integration-states.mjs` |
+| INT-002 | done | Dispatch only through the enforcing egress transport. | `tests/base/egress-delivery.test.ts:35` |
+| INT-003 | done | Attempt identity, finite retry and explicit reconciliation survive restart. | `tests/browser/integration-states.mjs` |
+| INT-004 | done | Signed inbound notes verify bytes before parsing. | `tests/browser/integration-states.mjs` |
+| INT-005 | done | Deliberate Linear or Jira create and link with held uncertain outcomes. | `tests/browser/integration-states.mjs` |
+| INT-006 | done | Authenticated tracker receipts in source order never regress. | `tests/browser/integration-states.mjs` |
+| INT-007 | done | Owner portal accent, description and mark. | `tests/browser/integration-states.mjs` |
+| MOB-001 | done | The browser journeys run at 1440 and 390 pixels with axe and layout checks (`tests/browser/acceptance-audit.mjs` viewports), and each new surface is added to them. | `tests/browser/acceptance-audit.mjs:7`; `tests/browser/operator-pages.mjs`; `tests/browser/requester-board.mjs` |
+| MOB-002 | missing | A PWA install check passes; a push fixture delivers once; an offline capture syncs once on reconnect. | — |
+| MOB-003 | missing | XCTest and Espresso UI tests against a test installation triage an item, and a share-sheet capture creates exactly one inbox item. | — |
+| A11Y-001 | partial | Axe reports no serious or critical violation on every journey page at both widths; keyboard-only journeys submit, vote and triage; a recorded screen-reader review precedes the VPAT. | `tests/browser/acceptance-audit.mjs` |
+| AGENT-001 | partial | A fixture problem with planted disconfirming evidence: both explanations cite real spans, the planted counter-evidence is surfaced, and rejecting an explanation keeps its evidence and history. | `src/core/features/learning/schema.ts`; `tests/base/learning-stage2.test.ts` |
+| AGENT-002 | partial | With contradicting fixture tickets, proposals attach with spans; accepting links them as contradicting (EVID-004); crossing the threshold raises one review suggestion. | `src/core/features/learning/run.ts`; `tests/base/learning-stage2.test.ts` |
+| AGENT-003 | partial | The proposal lists only consenting contacts; approval sends exactly the approved messages; poll answers return as evidence linked to the explanation. | `src/core/features/learning/schema.ts`; `tests/base/learning-stage2.test.ts` |
+| AGENT-004 | partial | A fixture where loud small-business voters differ from silent Enterprise renewals: the report names the gap with cited records and no contact happens without approval. | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` |
+| AGENT-005 | partial | Three fixture outcomes (adopted, shipped but unused, negative follow-up) produce keep, change and reverse recommendations citing their data; missing usage produces unknown. | `src/core/features/decisions/reviews.ts`; `tests/base/penny-decisions.test.ts`; `tests/base/learning-stage3.test.ts` |
+| AGENT-006 | partial | A fixture slipped issue with a public ETA yields one draft and one owner reminder; dismissal records its reason; nothing is published. | `src/core/features/roadmap/update-drafts.ts`; `tests/browser/operator-pages-status.mjs` |
+| AGENT-007 | missing | A fixture opportunity's brief cites that account's requests and uses only approved public wording in its suggested customer language. | — |
+| AGENT-008 | partial | A scheduled run over a fixture week produces one brief per subscriber with resolvable citations; an unchanged week produces none and no model call. | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts` |
+| AGENT-009 | partial | For each agent, revoking mid-run stops further reads and model calls, erasure removes its derived work, and the audit log shows each action. | `src/core/features/learning/audit.ts`; `tests/base/learning-stage3.test.ts` |
