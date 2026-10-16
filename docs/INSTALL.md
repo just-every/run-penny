@@ -4,7 +4,7 @@ This page takes you from the Penny source to a running copy: first on your own c
 
 ## What you need
 
-- **Install Node.js 22 or newer first, before `rer`.** Check with `node --version`; if it is missing, install the LTS from [nodejs.org](https://nodejs.org/en/download) or run `nvm install 22`. `rer` then fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
+- **Nothing to install first.** The installer on [run-penny.com/run](https://run-penny.com/run) brings its own Node when you have none, and `rer` fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
 - **`rer`**, installed for you by the one line below.
 - **For your own Cloudflare account:** a Cloudflare account and an API token for it. For email, choose SendGrid or Resend with a verified sender, or set it up later. Managed Penny gets email from RER without a provider account or key entry. Running locally needs none of these.
 

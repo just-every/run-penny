@@ -46,16 +46,14 @@ delivery.
 
 ## Run it on your computer
 
-First install **Node.js 22 or newer**, before installing `rer`; the `rer` installer stops with
-`node is required` without it. Check with `node --version`. If it is missing or
-older, install the current LTS from [nodejs.org](https://nodejs.org/en/download)
-(the macOS and Windows installers include `npm`), or use a version manager such
-as `nvm install 22`. Nothing else is needed: `rer` downloads the exact Node
-(22.20.0) and pnpm (10.12.4) this checkout pins into its own cache and never
+You install nothing first. The installer on [run-penny.com/run](https://run-penny.com/run)
+(`curl -fsSL https://runeditrun.com/install.sh | sh`) brings its own Node when you have
+none, and `rer dev just-every/run-penny` then gets Penny and starts it. `rer` downloads the
+exact Node (22.20.0) and pnpm (10.12.4) this checkout pins into its own cache and never
 changes your global tools, so you do not install pnpm.
 
-Then the one line from [run-penny.com/run](https://run-penny.com/run). It installs
-`rer`, the Run Edit Run command, clones Penny and starts it; to start it again later, run
+Already have Node 22 or newer? This one line does both steps. It installs `rer`, the Run
+Edit Run command, clones Penny and starts it; to start it again later, run
 `cd run-penny && rer dev`:
 
 <!-- penny-local-commands -->
