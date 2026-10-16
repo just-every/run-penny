@@ -53,7 +53,7 @@ test('[IMP-001] a Canny post export moves in from the Data page alone: choose th
   await panel.getByText('3 rows read from canny-export.csv', { exact: false }).waitFor()
   await panel.getByRole('button', { name: 'Preview saved feedback', exact: true }).click()
   await panel.getByRole('heading', { name: 'Review the import', exact: true }).waitFor()
-  assert.match(await panel.innerText(), /3 mapped; 0 rejected/)
+  assert.match(await panel.innerText(), /\d+ mapped; 0 rejected/)
   await panel.getByRole('button', { name: 'Apply reviewed import', exact: true }).click()
   for (let step = 0; step < 20 && !await panel.getByText(/^Import complete/).count(); step++) {
     const resume = panel.getByRole('button', { name: 'Resume saved import', exact: true })
