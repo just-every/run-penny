@@ -109,7 +109,11 @@
                 503
               ]
             }
-          ]
+          ],
+          "signIn": {
+            "path": "/signin",
+            "loginHint": true
+          }
         }
       },
       "mail": {

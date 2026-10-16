@@ -50,6 +50,7 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
+        "node --test --test-concurrency=1 tests/browser/signin.test.mjs",
         "pnpm run test:browser:dev-credentials",
         "pnpm run test:browser:learning"
       ]
