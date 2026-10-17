@@ -49,8 +49,10 @@ export const rowKey=(table:Pick<Table,'columns'>,row:Row)=>canonical(keyColumns(
 const schemaHash=(tables:Table[])=>hash(tables.map(table=>({name:table.name,sql:table.sql})))
 export const state=(db:D1Database)=>db.prepare('SELECT origin,epoch,phase,lock_id FROM data_state WHERE singleton=1').first<State>()
 export type TableHeader={name:string;sql:string}
+// Migration ledgers (Wrangler's and the demo hosts' _rer_* ledgers) and Base's
+// hosted-demo state (rer_demo) belong to the host, not to Penny's data.
 export async function schemaHeaders(db:D1Database):Promise<TableHeader[]>{
- return (await db.prepare("SELECT name,sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' AND name NOT LIKE 'rer_portability_%' ORDER BY name").all<TableHeader>()).results
+ return (await db.prepare("SELECT name,sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT IN ('d1_migrations','_rer_deploy_migrations','_rer_portability_migrations','rer_demo') AND name NOT LIKE 'rer_portability_%' ORDER BY name").all<TableHeader>()).results
 }
 export function checkSchemaHeaders(headers:{name:string}[]):void{
  const classified=inventory as Record<string,{classification:string;columns:string[]}>,names=new Set(headers.map(table=>table.name))
