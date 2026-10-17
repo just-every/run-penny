@@ -8,7 +8,7 @@ it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected se
  const operator=await owner({finishSetup:false})
  const incomplete=await exports.default.fetch(new Request(origin+'/setup',{method:'POST',headers:{...operator,Origin:origin,'Content-Type':'application/x-www-form-urlencoded'},body:'confirm=yes&companyName=Example'}));expect(incomplete.status).toBe(400)
  expect(await env.DB.prepare('SELECT * FROM oa_first_run').first()).toBeNull()
- await accepted(finishFirstRun(operator),303)
+ await accepted(finishFirstRun(operator,'UTC'),303)
  const g=await graph(operator),slug=await g.submit();await g.publish(slug);await g.flush()
  await accepted(call(`/api/public/requests/${slug}/follow`,{},g.voter),204)
  const input={companyName:'Example Company',senderName:'Customer team',fromAddress:'updates@example.test',replyTo:'team@example.test',postalAddress:'14 Example Street, Brisbane QLD 4000'}

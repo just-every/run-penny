@@ -2,7 +2,7 @@ import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail
 import type { PennyRuntime } from '@/core/app/runtime'
 import { providerMail, mailUnsubscribe } from '../auth/mail'
 import { createUlid } from '@/core/shared/ulid'
-import { quietHours } from './eligibility'
+import {requesterQuietHours} from '../settings/workspace-clock'
 import { retryState, retryWindowMs, safeValidationCode } from './attempt-policy'
 import { unsubscribeUrl } from './unsubscribe'
 import { admitRejection, rejectionContext } from './rejection-admission'
@@ -13,7 +13,7 @@ export async function drainRejectionNotices(runtime:PennyRuntime,clock=Date.now)
  const db=runtime.database.binding,now=new Date(clock()).toISOString()
  if((await db.prepare('SELECT phase FROM data_state WHERE singleton=1').first<{phase:string}>())?.phase!=='idle')return
  await recoverRejections(db,now,new Date(clock()-300000).toISOString())
- if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone))return
+ if(await requesterQuietHours(runtime,new Date(clock())))return
  const rows=await db.prepare(`SELECT id,attempt_count AS attemptCount,first_attempt_at AS firstAttemptAt FROM notification_outbox
   WHERE event_type='moderation_rejected' AND delivery_state='queued' AND claim_id IS NULL AND available_at<=?
   ORDER BY available_at,id LIMIT 50`).bind(now).all<RejectionIntent>()
@@ -40,7 +40,7 @@ async function deliver(runtime:PennyRuntime,row:RejectionIntent,clock:()=>number
   const mailHeaders=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!)
   const footer=await requesterMailFooter(runtime,initial.requesterId,initial.addressId,initial.requestId??undefined)
   const globalLink=await unsubscribeUrl(runtime,{email:initial.email,addressId:initial.addressId,requesterId:initial.requesterId},'all')
-  if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone)){await finish('queued','quiet_hours',null,'suppressed',true);return}
+  if(await requesterQuietHours(runtime,new Date(clock()))){await finish('queued','quiet_hours',null,'suppressed',true);return}
   // Admission snapshots the current verified recipient atomically with content
   // and permission checks. No storage await separates admission from transport.
   const admission=await admitRejection(db,row.id,claim,initial.email,new Date(clock()).toISOString()),recipient=admission.context

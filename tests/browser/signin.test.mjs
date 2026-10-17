@@ -56,7 +56,7 @@ test('the declared owner sign-in opens with an editable email and reaches the wo
         if (new URL(page.url()).pathname === '/setup') {
           await page.getByLabel('Company name', {exact:true}).fill('Example Company')
           await page.getByLabel('Business postal address', {exact:true}).fill('14 Example Street, Brisbane QLD 4000, Australia')
-          await page.getByRole('checkbox').check()
+          await page.getByRole('checkbox', {name:'I confirm this owner account and business postal address are ready to use.'}).check()
           await page.getByRole('button', { name: 'Finish setup', exact: true }).click()
         }
         await page.waitForURL(url => url.pathname.startsWith('/app'))

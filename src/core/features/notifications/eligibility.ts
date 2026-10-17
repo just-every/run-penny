@@ -17,11 +17,6 @@ export const visibleEvent = `(e.kind='status' AND e.id='publication:'||e.request
    AND c.requester_id IS NOT n.requester_id
    AND (c.requester_id IS NULL OR person.blocked_at IS NULL)))`
 
-export function quietHours(now: Date, timezone: string): boolean {
- const hour=Number(new Intl.DateTimeFormat('en-GB',{timeZone:timezone,hour:'2-digit',hourCycle:'h23'}).format(now))
- return hour>=20 || hour<8
-}
-
 /** Identity merges can bring two address-specific queues together. A terminal
  * delivery fact keeps custody of its event; moving an identity never resends it. */
 export const unmailedEvent = `NOT EXISTS(SELECT 1 FROM notification_intents prior

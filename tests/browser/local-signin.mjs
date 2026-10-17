@@ -7,7 +7,7 @@ export async function finishFirstRun(page, audit) {
   await page.getByLabel('Company name', {exact:true}).fill('Example Company')
   await page.getByLabel('Business postal address', {exact:true}).fill('14 Example Street, Brisbane QLD 4000, Australia')
   await audit(page, 'first-run-setup', { axeZero: true })
-  await page.getByRole('checkbox').check()
+  await page.getByRole('checkbox', {name:'I confirm this owner account and business postal address are ready to use.'}).check()
   await page.getByRole('button', { name: 'Finish setup', exact: true }).click()
   await page.waitForURL(url => ['/app', '/app/', '/app/overview'].includes(url.pathname))
   await page.waitForLoadState('networkidle')

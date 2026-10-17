@@ -15,7 +15,9 @@ const execute = promisify(execFile)
 const archiveRows = archive => archive.filter(item => item.kind === 'part').flatMap(part => part.items).filter(item => item.kind === 'row')
 const tableCounts = archive => archiveRows(archive).reduce((counts,item) => ({...counts,[item.table]:(counts[item.table]??0)+1}),{})
 
-test('[DATA-001 DATA-003] local CLI restores original files and held effects into a fresh installation, refuses occupied restore, and survives contained reset', { timeout: 600000 }, async t => {
+// The nightly journey includes rer's mandatory capacity admission waits (up to
+// twenty minutes on the shared host), in addition to its ten-minute CLI budget.
+test('[DATA-001 DATA-003] local CLI restores original files and held effects into a fresh installation, refuses occupied restore, and survives contained reset', { timeout: 1800000 }, async t => {
   const area = await mkdtemp(join(tmpdir(), 'penny-cli-data-')), root = join(area, 'installation')
   t.after(() => rm(area, { recursive: true, force: true }))
   const source = resolve(new URL('../../', import.meta.url).pathname)
@@ -29,6 +31,7 @@ test('[DATA-001 DATA-003] local CLI restores original files and held effects int
   for (const name of Object.keys(env)) if (/^(AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|SETUP_TOKEN|OPERATOR_EMAIL|APP_ORIGIN|PENNY_)/.test(name)) delete env[name]
   delete env.RER_LOCAL_OPERATION // This disposable installation owns its own operation.
   const run = async (args, cwd = root) => {
+    console.log(`[portability] ${['export','import','reset'].find(verb => args.includes(verb)) ?? 'erasure'} started`)
     try { return await execute(process.execPath,args,{cwd,env,maxBuffer:4*1024*1024}) }
     catch(error) { throw new Error(`CLI failed (${error.code}): ${error.stderr?.slice(-3000) ?? ''}`,{cause:error}) }
   }

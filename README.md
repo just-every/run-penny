@@ -94,7 +94,7 @@ foreground (Ctrl-C stops it); started from a script or an agent it returns once
 Penny is ready and keeps running in the background until `rer dev --stop`. Open
 `RER_OPEN` in your
 browser; it trades the key for a local cookie and lands on `/setup`, the owner's
-first-run setup: review the owner and press **Finish setup** to open the app.
+first-run setup: enter your company and postal address, choose the workspace timezone and requester quiet hours, then press **Finish setup** to open the app.
 Until you do, every `/app` page sends the owner back to `/setup`; afterwards
 `/setup` opens the app. Keep `RER_OPEN` to yourself: anyone holding the key can
 sign in to this local copy. To act as a dev teammate (`teammate@dev.localhost`,
@@ -364,13 +364,13 @@ dependencies or provider accounts.
 
 ## Mail, quiet hours and suppression
 
-Requester email is held during quiet hours, **20:00–08:00** in the workspace
-time zone, which is **UTC** unless you choose another. To choose one, set
-`WORKSPACE_TIMEZONE` to an IANA name such as `Europe/London` in the environment of
-your first `rer deploy` and keep it for that workspace; invalid or empty values
-are refused. A local copy uses UTC. The hours, the
-one-minute coalescing window for a request's status updates and replies, and the
-minute Cron are fixed; conversion follows daylight-saving rules.
+Choose the workspace timezone at **Finish setup**. It starts with your browser's
+timezone, or `WORKSPACE_TIMEZONE` when that deployment input is set. Change it in
+**Feedback settings → Workspace time and customer email**, where you can also set
+requester quiet hours (default **20:00–08:00**) or turn them off. Older
+installations ask the owner to confirm their current timezone once. Changes apply
+at the next send check and follow daylight-saving rules. The fixed one-minute
+coalescing window and minute Cron remain. Operator review email has no quiet hours.
 
 Status updates and approved replies on a request are gathered for one minute from
 the first one, then sent to each follower as one email. When a release note goes

@@ -208,14 +208,19 @@ Stage intentional edits and removals, run `pnpm source:lock`, then
 
 ## Quiet hours and provider events
 
-Requester email quiet hours are fixed at **20:00–08:00**, using the IANA
-`workspaceTimezone` in `src/ext/config.server.ts`. Owner-account setup defaults to
-UTC; the artifact controller keeps the product fallback Australia/Brisbane.
-`WORKSPACE_TIMEZONE` is an optional server-only IANA timezone supplied through the
-deployment environment. Deployment passes it to the Worker after validation;
-invalid or empty supplied values fail. The hours, the fixed one-minute coalescing
-window and the minute Cron do not change; conversion uses `Intl.DateTimeFormat`,
-including daylight-saving rules.
+The owner records the workspace timezone at **Finish setup**. Owners and Admins change it in
+**Feedback settings → Workspace time and customer email**. Setup preselects the
+browser timezone, or the optional validated `WORKSPACE_TIMEZONE` deployment input.
+The saved choice takes precedence over deployment and source defaults. Older
+installations prompt the owner to confirm their current timezone once.
+
+Requester quiet hours default to **20:00–08:00** in that timezone. The owner may
+choose different start/end hours or turn quiet hours off. Each send rechecks the
+current setting; turning them off wakes queued requester mail, subject to the
+existing one-minute coalescing window. Minute Cron remains the recovery backstop.
+Daylight-saving conversion uses `Intl.DateTimeFormat`. Decision calendar reviews
+use the saved timezone; operator email has no quiet hours. These installation
+preferences are excluded from portable product archives and survive restores.
 
 Provider suppression uses `POST /api/public/mail/events`. Configure SendGrid's
 signed Event Webhook for this deployment URL, enable bounce and spam-report

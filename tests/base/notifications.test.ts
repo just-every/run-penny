@@ -8,7 +8,8 @@ import { createPennyRuntime } from '@/core/app/runtime'
 import { createPennyApi } from '@/core/app/api'
 import { drainNotifications } from '@/core/features/notifications/delivery'
 import { prepareBatches } from '@/core/features/notifications/batches'
-import { quietHours } from '@/core/features/notifications/eligibility'
+import {withinQuietHours} from '@/core/features/settings/workspace-clock'
+const quietHours=(now:Date,timezone:string)=>withinQuietHours(now,{timezone,quietEnabled:true,quietStart:20,quietEnd:8})
 import { unsubscribeUrl } from '@/core/features/notifications/unsubscribe'
 import { RequestOperatorRepository } from '@/core/features/requests/operator-repository'
 import { loadRuntimeConfiguration } from '@/core/platform/configuration'
@@ -21,7 +22,7 @@ const runtime=(provider='sendgrid')=>createPennyRuntime({...env,WORKSPACE_TIMEZO
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
 async function setup(){
- const operator=await owner(),person=await requester()
+ const operator=await owner({timezone:'UTC'}),person=await requester()
  expect((await call('/api/operator/boards',{name:'Feedback',slug:'product',visibility:'public'},operator)).status).toBe(201)
  await explicitConsentBoard('product',(path,method,body)=>call(path,body,operator,method))
  const response=await call('/api/public/requests',{title:'Private original title',description:'Private commercial evidence',boardSlug:'product',idempotencyKey:crypto.randomUUID()},person)

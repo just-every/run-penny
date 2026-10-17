@@ -1,7 +1,7 @@
 import type { PennyRuntime } from '@/core/app/runtime'
 import { createPennyRuntime } from '@/core/app/runtime'
 import type { AppBindings } from '@/core/shared/bindings'
-import { quietHours } from './eligibility'
+import {workspaceClock,withinQuietHours} from '../settings/workspace-clock'
 import { drainRequesterMail } from './scheduled'
 import { priorRequestUpdatesSettled } from '../releases/delivery-order'
 
@@ -44,9 +44,10 @@ async function nextNotificationDelay(runtime: PennyRuntime): Promise<number | un
   UNION ALL SELECT created_at FROM notification_intents WHERE batch_id IS NULL AND restoration_hold_at IS NULL
  )`).first<{due:string|null}>()
  if (!row?.due) return
+ const clock=await workspaceClock(runtime)
  let at = Math.max(now + 1000, Date.parse(row.due))
  // Queue delays cover twelve hours; longer quiet periods get another wakeup.
  // Minute boundaries retain half/quarter-hour zones and daylight-saving rules.
- while (at < now + 43_200_000 && quietHours(new Date(at), runtime.configuration.workspaceTimezone)) at = Math.floor(at / 60000) * 60000 + 60000
+ while (at < now + 43_200_000 && withinQuietHours(new Date(at),clock)) at = Math.floor(at / 60000) * 60000 + 60000
  return Math.min(43_200, Math.max(1, Math.ceil((at - now) / 1000)))
 }

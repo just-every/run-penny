@@ -8,7 +8,7 @@ export interface ProviderMessage {from:{name?:string;email:string};reply_to?:{em
 export const body=(message:ProviderMessage)=>message.content.find(part=>part.type==='text/plain')!.value
 export async function accepted(response:Promise<Response>,status=200){const result=await response;expect(result.status,await result.clone().text()).toBe(status);return result}
 export async function graph(existing?:{Cookie:string}){
- const operator=existing??await owner({finishSetup:false});if(!existing)await accepted(finishFirstRun(operator),303)
+ const operator=existing??await owner({finishSetup:false});if(!existing)await accepted(finishFirstRun(operator,'UTC'),303)
  await accepted(call('/api/operator/boards',{slug:'subscriptions',name:'Subscription board',visibility:'public'},operator),201)
  const author=await requester('Author'),voter=await requester('Voter')
  const boards=await (await call('/api/public/boards')).json() as {slug:string;subscriptionDisclosure:{enabled:boolean;version:number;vote:string;submission:string}}[]

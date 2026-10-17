@@ -410,6 +410,12 @@
       "name": "0071_author_publication_permission.sql",
       "sha256": "337d8a3f865db81d770026258e5ed80f957e0b6d0c8c4f40a500edb9e385214d",
       "sql": "-- Publication notices belong to authors who subscribed when they submitted.\n-- A publication without that permission creates no unused notification record.\nDROP TRIGGER notification_author_publication;\nCREATE TRIGGER notification_author_publication AFTER UPDATE OF published_at ON requests\nWHEN OLD.published_at IS NULL AND NEW.published_at IS NOT NULL AND NEW.moderation_state='approved'\n AND NEW.author_requester_id IS NOT NULL\n AND EXISTS(SELECT 1 FROM requester_update_permissions p WHERE p.request_id=NEW.id AND p.requester_id=NEW.author_requester_id\n  AND p.source='submission' AND p.revoked_at IS NULL AND p.suppressed_at IS NULL)\n AND (SELECT phase FROM data_state WHERE singleton=1)='idle'\nBEGIN\n INSERT OR IGNORE INTO notification_events(id,request_id,kind,subject_id,body,created_at,updated_at)\n VALUES('publication:'||NEW.id,NEW.id,'status',NEW.id,'Your request is now public.',NEW.published_at,NEW.published_at);\nEND;\n\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0072_workspace_clock.sql",
+      "sha256": "fcb855efd6c6243b7cde9274f18569404cca1d54cbc0f94a9d511b3a43b8bde2",
+      "sql": "-- Installation preferences never travel with a product archive or its authority.\nCREATE TABLE penny_workspace_clock (\n singleton INTEGER PRIMARY KEY CHECK(singleton=1),\n timezone TEXT NOT NULL,\n quiet_enabled INTEGER NOT NULL CHECK(quiet_enabled IN (0,1)),\n quiet_start INTEGER NOT NULL CHECK(quiet_start BETWEEN 0 AND 23),\n quiet_end INTEGER NOT NULL CHECK(quiet_end BETWEEN 0 AND 23),\n confirmed_at TEXT NOT NULL,\n updated_at TEXT NOT NULL,\n CHECK(quiet_enabled=0 OR quiet_start<>quiet_end)\n);\n"
     }
   ],
   "compatibilityDate": "2026-08-31",

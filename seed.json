@@ -11,17 +11,17 @@
   "replaces": ["Canny", "UserVoice", "Productboard"],
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
-{
-        "id": "scoped-cancellation-learning",
-        "description": "Private source-cited cancellation investigation over selected native feedback and exact Orbit delegated evidence targets, with versioned interpretation, no-build comparison, pre-action commitment and bounded scheduled refresh. Requires explicitly configured enforcing transport and model/source secrets; live customer usefulness, hosted recurrence and all Stage 4\u20135 outcomes remain open.",
-        "clauses": [
-            "LEARN-001",
-            "LEARN-002",
-            "LEARN-003",
-            "LEARN-004",
-            "LEARN-005",
-            "LEARN-006"
-        ]
+    {
+      "id": "scoped-cancellation-learning",
+      "description": "Private source-cited cancellation investigation over selected native feedback and exact Orbit delegated evidence targets, with versioned interpretation, no-build comparison, pre-action commitment and bounded scheduled refresh. Requires explicitly configured enforcing transport and model/source secrets; live customer usefulness, hosted recurrence and all Stage 4\u20135 outcomes remain open.",
+      "clauses": [
+        "LEARN-001",
+        "LEARN-002",
+        "LEARN-003",
+        "LEARN-004",
+        "LEARN-005",
+        "LEARN-006"
+      ]
     },
     {
       "id": "owner-front-door",
@@ -97,7 +97,7 @@
     },
     {
       "id": "requester-notification-dispatch",
-      "description": "Durable customer-safe public status/reply/approved-comment notifications, fixed first-event one-minute coalescing and 20:00\u201308:00 workspace quiet hours, drained by event-time Queue wakeups with a minute Cron backstop; selected provider acceptance, opt-outs and uncertain-send reconciliation are separately tested.",
+      "description": "Durable customer-safe public status/reply/approved-comment notifications, fixed first-event one-minute coalescing and owner-configured workspace quiet hours, drained by event-time Queue wakeups with a minute Cron backstop; selected provider acceptance, opt-outs and uncertain-send reconciliation are separately tested.",
       "clauses": [
         "NOTIFY-001",
         "NOTIFY-002"
@@ -122,6 +122,15 @@
       "description": "Public operator documentation at /docs and /docs/<slug>: the repository Markdown that docs/site.json publishes, rendered to HTML at build time by a Vite plugin that fails the build on a broken internal link, under the product landing's header and footer; it reads no workspace record and an unknown page is a 404.",
       "clauses": [
         "DOCS-001"
+      ]
+    },
+    {
+      "id": "workspace-time-and-quiet-hours",
+      "description": "The owner chooses the workspace timezone during setup; Owners and Admins change it in settings, and can set requester quiet hours or turn them off. Existing installations confirm their timezone once. Decision reviews use the chosen timezone and operator email has no quiet hours.",
+      "clauses": [
+        "OPS-008",
+        "OPS-005",
+        "NOTIFY-002"
       ]
     }
   ],

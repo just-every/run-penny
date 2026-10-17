@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Owners choose the workspace timezone and requester quiet hours during setup and in settings. Older installations prompt for confirmation once; turning quiet hours off makes queued mail eligible, while operator review mail stays immediate.
+
 ## 0.1.2 — 2026-10-17
 
 **Security fix: erasing a person also deleted other people's data. Every Penny version up to and including 0.1.1 is affected. Upgrade now.**

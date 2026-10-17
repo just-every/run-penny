@@ -151,6 +151,7 @@ export async function freshLocalRuntime(viewport, output) {
       for (const table of business) assert.equal(repeatedDb.prepare(`SELECT count(*) n FROM ${table}`).get().n, counts[table], '[G.2] repeat neither seeds nor deletes product data')
     } finally { repeatedDb.close() }
     const startServer = async () => {
+    await waitForLocalCapacity()
     // Register the generated admission key before the child can emit RER_OPEN.
     const secrets = [...vars.matchAll(/^(?:AUTH_SECRET|SESSION_SECRET|SETUP_TOKEN)=(.+)$/gm)].map(match => match[1]).concat(scope.token, await readDevKey(root))
     server = spawn('nice', ['-n', '15', process.execPath, ...rer(literal[2])], { cwd: root, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] })

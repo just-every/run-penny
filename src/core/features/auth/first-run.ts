@@ -1,3 +1,4 @@
+import {workspaceClock} from '../settings/workspace-clock'
 import {completeProductSetup} from './setup-completion'
 import {setupForm} from './setup-form'
 import {mailIdentity} from '../settings/mail-identity'
@@ -34,7 +35,7 @@ export function firstRunDocument(request: Request, bindings: AppBindings, config
     if (reads && (!response || response.status === 303 && response.headers.get('location') === '/setup')) {
       reads.firstRun = Promise.resolve(response !== null)
     }
-    if(response&&path==='/setup'&&request.method==='GET'&&response.status===200)response=await setupForm(response,await mailIdentity(runtime))
+    if(response&&path==='/setup'&&request.method==='GET'&&response.status===200)response=await setupForm(response,await mailIdentity(runtime),await workspaceClock(runtime),Boolean(runtime.bindings.WORKSPACE_TIMEZONE))
     return response ? pennyDocumentFonts(response) : null
   })
 }

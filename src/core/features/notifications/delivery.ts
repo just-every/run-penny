@@ -2,7 +2,7 @@ import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail
 import type { PennyRuntime } from '@/core/app/runtime'
 import { providerMail,mailUnsubscribe } from '@/core/features/auth/mail'
 import { createUlid } from '@/core/shared/ulid'
-import { quietHours } from './eligibility'
+import {requesterQuietHours} from '../settings/workspace-clock'
 import { admitDelivery } from './delivery-admission'
 import { prepareBatches } from './batches'
 import { unsubscribeUrl } from './unsubscribe'
@@ -24,7 +24,7 @@ export async function drainNotifications(runtime:PennyRuntime, clock=Date.now):P
    WHERE state='sending' AND claim_id IN(SELECT id FROM notification_attempts WHERE state='unknown')`).bind(now),
  ])
  await prepareBatches(db,now)
- if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone))return
+ if(await requesterQuietHours(runtime,new Date(clock())))return
  // A queued release note to the same address about the same request closes its open
  // window now, so this drain sends the status digest before the release drain that follows.
  await db.prepare(`UPDATE notification_batches SET window_end=?,next_attempt_at=?,updated_at=?
@@ -75,7 +75,7 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   const globalLink=await unsubscribeUrl(runtime,{...batch,email:recipient.email},'all')
   // This claim made no provider call: retain its audit and sealed membership,
   // but return its reserved attempt budget without starting a retry clock.
-  if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone)){await finish('queued','quiet_hours',null,'suppressed',true);return}
+  if(await requesterQuietHours(runtime,new Date(clock()))){await finish('queued','quiet_hours',null,'suppressed',true);return}
   // Final eligibility, payload and durable recipient snapshot commit together.
   // HTTP starts only for a successful admission; there is no later storage await.
   const admission=await admitDelivery(db,batch.id,claim,recipient.email),admitted=admission.recipient

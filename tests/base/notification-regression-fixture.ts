@@ -9,7 +9,7 @@ export const time=(offset=0)=>new Date(start+offset).toISOString()
 export const runtime=()=>createPennyRuntime({...env,WORKSPACE_TIMEZONE:'UTC'},{workspaceTimezone:'UTC',operatorAllowlist:['owner@penny.invalid'],publicOriginAllowlist:['https://penny.test']})
 export async function graph(count=1,otherAuthor=false){
  mockMail()
- const operator=await owner(),person=await requester(),author=otherAuthor?await requester('Other author'):person
+ const operator=await owner({timezone:'UTC'}),person=await requester(),author=otherAuthor?await requester('Other author'):person
  expect((await call('/api/operator/boards',{name:'Notifications',slug:'regression',visibility:'public'},operator)).status).toBe(201)
  await explicitConsentBoard('regression',(path,method,body)=>call(path,body,operator,method))
  const requests:{id:string;slug:string}[]=[]

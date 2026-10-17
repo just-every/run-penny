@@ -2,7 +2,7 @@ import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail
 import type { PennyRuntime } from '@/core/app/runtime'
 import { providerMail,mailUnsubscribe } from '../auth/mail'
 import { createUlid } from '@/core/shared/ulid'
-import { quietHours } from '../notifications/eligibility'
+import {requesterQuietHours} from '../settings/workspace-clock'
 import { retryAt,retryState,safeValidationCode,retryWindowMs } from '../notifications/attempt-policy'
 import { unsubscribeUrl } from '../notifications/unsubscribe'
 import { systemDeliveryAudit } from '../notifications/delivery-audit'
@@ -18,7 +18,7 @@ export async function drainReleaseDeliveries(runtime:PennyRuntime,clock=Date.now
   db.prepare("UPDATE notification_outbox_attempts SET state='unknown',failure_reason='attempt_interrupted_review_required',updated_at=? WHERE state='sending' AND created_at<?").bind(now,new Date(clock()-300000).toISOString()),
   db.prepare("UPDATE notification_outbox SET delivery_state='unknown',failure_reason='attempt_interrupted_review_required',updated_at=? WHERE delivery_state='queued' AND claim_id IN(SELECT id FROM notification_outbox_attempts WHERE state='unknown')").bind(now),
  ])
- if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone))return
+ if(await requesterQuietHours(runtime,new Date(clock())))return
  const rows=await db.prepare(`SELECT id,requester_id AS requesterId,address_id AS addressId,attempt_count AS attemptCount,first_attempt_at AS firstAttemptAt
  FROM notification_outbox WHERE event_type='release_version' AND release_snapshot_id IS NOT NULL AND delivery_state='queued' AND claim_id IS NULL AND available_at<=? ORDER BY available_at,id LIMIT 50`).bind(now).all<Outbox>()
  for(const row of rows.results)await deliver(runtime,row,clock)
@@ -53,7 +53,7 @@ async function deliver(runtime:PennyRuntime,row:Outbox,clock:()=>number){
   const mailHeaders=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!)
   const footer=await requesterMailFooter(runtime,row.requesterId,row.addressId,undefined,initial.flatMap(context=>context.requestSlug?[context.requestSlug]:[]))
   const globalLink=await unsubscribeUrl(runtime,{...row,email:initial[0].email},'all')
-  if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone)){await finish('queued','quiet_hours',null,'suppressed',true);return}
+  if(await requesterQuietHours(runtime,new Date(clock()))){await finish('queued','quiet_hours',null,'suppressed',true);return}
   const admission=await admitReleaseDelivery(db,row.id,claim,initial[0].email),contexts=admission.contexts,release=contexts[0]
   if(!admission.owned||!release){await finish('suppressed','eligibility_changed');return}
   const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,...mailHeaders,to:[release.email],subject:release.title.replace(/\s+/g,' '),

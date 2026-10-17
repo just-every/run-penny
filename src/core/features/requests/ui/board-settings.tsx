@@ -1,3 +1,4 @@
+import {WorkspaceClockSettings} from '../../settings/ui/workspace-clock-settings'
 import {useRouter} from '@tanstack/react-router'
 import type { Category } from '../../categories/ui-types'
 import {MailIdentitySettings} from '../../settings/ui/mail-identity-settings'
@@ -42,6 +43,7 @@ export function BoardSettings() {
         <IntegrationDestinations />
         <TrackerSettings />
         <MailIdentitySettings />
+        <WorkspaceClockSettings />
         <BrandingSettings />
         <FrameSettings />
         <RequestStatusSettings />

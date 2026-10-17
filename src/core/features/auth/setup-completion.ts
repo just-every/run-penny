@@ -1,3 +1,4 @@
+import {workspaceClockInput,saveWorkspaceClock} from '../settings/workspace-clock'
 import type {PennyRuntime} from '@/core/app/runtime'
 import {operatorAuth} from './operator'
 import {businessInput} from '../settings/mail-identity'
@@ -18,9 +19,12 @@ export async function completeProductSetup(request:Request,runtime:PennyRuntime)
  if(form.get('confirm')!=='yes')return failure('confirmation_required',400)
  const input=businessInput.safeParse({companyName:form.get('companyName'),postalAddress:form.get('postalAddress')})
  if(!input.success)return failure('company_name_and_postal_address_required',400)
+ const clock=workspaceClockInput.safeParse({timezone:form.get('timezone'),quietEnabled:form.get('quietEnabled')==='yes',quietStart:Number(form.get('quietStart')??'NaN'),quietEnd:Number(form.get('quietEnd')??'NaN')})
+ if(!clock.success)return failure('workspace_timezone_and_quiet_hours_required',400)
  const guard=sessionGuard(session);guard.sql+=" AND EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND role='owner')";guard.params.push(session.operatorId)
  const db=guardedDatabase(runtime.database.binding,guard)
  await db.batch([
+  saveWorkspaceClock(db,clock.data,new Date().toISOString(),true),
   db.prepare(`INSERT INTO penny_mail_identity(singleton,company_name,postal_address,updated_at) SELECT 1,?,?,? WHERE NOT EXISTS(SELECT 1 FROM oa_first_run WHERE singleton=1) ON CONFLICT(singleton) DO UPDATE SET company_name=excluded.company_name,postal_address=excluded.postal_address,updated_at=excluded.updated_at`).bind(input.data.companyName,input.data.postalAddress,new Date().toISOString()),
   db.prepare('INSERT INTO oa_first_run(singleton,completed_by,completed_at) VALUES(1,?,?) ON CONFLICT(singleton) DO NOTHING').bind(session.operatorId,Date.now()),
  ])

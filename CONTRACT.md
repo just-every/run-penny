@@ -627,11 +627,13 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 Judged from the code and tests at commit `02374e4552e429e26a81bd6f0973aa691759b2b9` (16 October 2026).
 
+OPS-005 and OPS-008 were updated on 18 October 2026 from the route and browser tests cited in those rows.
+
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 101 | 13 | 0 | 114 |
-| Target and push further | 1 | 51 | 81 | 133 |
-| All | 102 | 64 | 81 | 247 |
+| Published | 102 | 12 | 0 | 114 |
+| Target and push further | 2 | 50 | 81 | 133 |
+| All | 104 | 62 | 81 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -641,8 +643,8 @@ Judged from the code and tests at commit `02374e4552e429e26a81bd6f0973aa691759b2
 | `OPS-001` | Roles | published | partial | `tests/base/auth.test.ts` (line 83) | one operator per role attempts every guarded action through its route and UI; a Viewer is refused every write with 403; a Contributor captures evidence, records a proxy vote and comments internally but is refused moderation, publication, commitment, settings and commercial fields; a Product manager is refused settings, integrations and roles; an Admin is refused handover, export and erasure; each refusal changes nothing; a role change applies on the next request. |
 | `OPS-002` | Management | published | done | `tests/base/auth.test.ts` (line 83); `tests/base/auth.test.ts` (line 132); `tests/base/auth.test.ts` (line 160) |  |
 | `OPS-003` | Overview | published | done | `tests/browser/operator-pages.mjs` |  |
-| `OPS-005` | First-run setup | published | partial | `tests/base/first-run.test.ts`; `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/OPS-005/` | Owner setup requires company name and postal address, commits business details with installation-only completion under current native authority, redirects unfinished app visits, and finishes once; fresh rer setup/dev browser proof passes at 1440/390. Gap: workspace timezone choice and requester quiet hours (OPS-008) remain missing. |
-| `OPS-008` | Workspace timezone and requester quiet hours | target | partial | `src/core/platform/configuration.ts`; `tests/base/notifications.test.ts` (line 122) | Setup refuses Finish without a timezone; setup under an `America/New_York` browser timezone stores it; with default quiet hours a 21:00 Eastern status update sends at 08:00 Eastern and a 14:00 Eastern one sends within the coalescing window; with quiet hours off a 23:00 Eastern update sends within the coalescing window; changing the timezone moves the next quiet period; the one-time confirmation prompt appears for an older installation. |
+| `OPS-005` | First-run setup | published | done | `tests/base/first-run.test.ts`; `tests/base/mail-identity.test.ts`; `tests/base/workspace-clock.test.ts`; `tests/browser/workspace-clock.mjs` |  |
+| `OPS-008` | Workspace timezone and requester quiet hours | target | done | `tests/base/workspace-clock.test.ts`; `tests/base/notifications.test.ts`; `tests/browser/workspace-clock.mjs` |  |
 | `OPS-004` | Global search | published | partial | `tests/browser/operator-completeness-requester.mjs` | Search across the named fields works; the 500 ms first page at declared capacity is not load-tested. |
 | `ROLE-001` | Custom roles and restricted commercial fields | target | missing |  | A base test signs in under a role without commercial permission and reads requests, accounts, prioritisation views, CSV exports and Ask Penny answers through their routes: no revenue, opportunity or health value appears; granting the permission reveals them on the next request; each role change is in the audit log (ROLE-004). |
 | `ROLE-002` | Operator single sign-on | target | partial | `src/core/features/auth/dependencies.ts` | A browser journey against SAML and OIDC test identity providers at the network edge: a first sign-in creates a Contributor, a group claim maps another user to Admin, an enforced domain refuses an email link, and an IdP-side deactivation ends access at the next session check. |

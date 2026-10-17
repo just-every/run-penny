@@ -2707,5 +2707,17 @@
       "tested_at",
       "consumed_at"
     ]
+  },
+  "penny_workspace_clock": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "timezone",
+      "quiet_enabled",
+      "quiet_start",
+      "quiet_end",
+      "confirmed_at",
+      "updated_at"
+    ]
   }
 }

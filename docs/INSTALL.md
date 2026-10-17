@@ -29,7 +29,7 @@ A few things to know about setup:
 Local mode needs no email provider and `dev` signs you straight in.
 
 1. Open the `RER_OPEN` link that `dev` prints. It holds this copy's private dev key, so keep it to yourself.
-2. You land on **Finish setup**, the first-run page. Review the owner, tick the confirmation and press **Finish setup**.
+2. You land on **Finish setup**, the first-run page. Enter the company name and postal address, choose the workspace timezone and requester quiet hours, tick the confirmation and press **Finish setup**.
 3. You arrive on the empty operator Overview, ready for your first board or evidence item.
 
 Until you finish setup, every operator page sends you back to it; afterwards the setup address opens the app. The nav and title read **Penny Dev**. Mail is silently suppressed. Use `rer dev --as teammate` or `--as signed-out` to choose another dev identity, and `rer demo` to explore an isolated sample workspace as **Penny Demo**.
@@ -50,7 +50,7 @@ export const publicLandingConfig = {
 } as const
 ```
 
-`ownerName` is also the browser tab title. In `src/ext/config.server.ts`, which never reaches the browser, you can change the fallback workspace timezone (setup and deploy save UTC unless you set `WORKSPACE_TIMEZONE`), the operator allow-list and the origins you permit. See [Make it yours](/docs/customise) for more, including the one extra step that checking your changes needs.
+`ownerName` is also the browser tab title. In `src/ext/config.server.ts`, which never reaches the browser, you can change the fallback workspace timezone (the owner records the actual choice at first-run setup), the operator allow-list and the origins you permit. See [Make it yours](/docs/customise) for more, including the one extra step that checking your changes needs.
 
 ## Email
 

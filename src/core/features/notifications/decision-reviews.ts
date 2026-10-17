@@ -1,3 +1,4 @@
+import {workspaceClock} from '../settings/workspace-clock'
 import type { PennyRuntime } from '@/core/app/runtime'
 import { createUlid } from '@/core/shared/ulid'
 import { authMail } from '../auth/mail'
@@ -13,9 +14,10 @@ export function reviewDatePassed(reviewAt:string,now:Date,timezone:string):boole
 export async function drainDecisionReviews(runtime:PennyRuntime,clock=Date.now):Promise<void>{
  const db=runtime.database.binding,now=new Date(clock()).toISOString()
  if((await db.prepare('SELECT phase FROM data_state WHERE singleton=1').first<{phase:string}>())?.phase!=='idle')return
+ const {timezone}=await workspaceClock(runtime)
  const candidates=await db.prepare("SELECT id,review_at AS reviewAt,review_generation AS generation FROM decisions WHERE state='committed' AND review_at IS NOT NULL AND review_completed_at IS NULL").all<{id:string;reviewAt:string;generation:number}>()
  for(const decision of candidates.results){
-  if(!reviewDatePassed(decision.reviewAt,new Date(clock()),runtime.configuration.workspaceTimezone))continue
+  if(!reviewDatePassed(decision.reviewAt,new Date(clock()),timezone))continue
   const id=createUlid()
   await db.batch([
    db.prepare(`INSERT INTO decision_review_notifications(id,decision_id,owner_operator_id,review_generation,review_at,state,next_attempt_at,created_at,updated_at)

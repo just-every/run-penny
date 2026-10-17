@@ -79,9 +79,9 @@ Customers choose to hear from you. A requester becomes eligible for email by fol
 
 **Request updates are batched.** When something email-worthy happens on a request, Penny starts a one-minute window for that requester and request. Everything that happens inside the window goes out as one message, and later events never extend the window.
 
-**Quiet hours apply.** Requester email is held from 20:00 until 08:00 in your workspace timezone, which is UTC unless you set `WORKSPACE_TIMEZONE` to an IANA timezone name (such as `Europe/London`) in the environment of your first `rer deploy`, and keep it for that workspace. A local copy uses UTC. The hours themselves are fixed, and daylight-saving changes are handled.
+**Quiet hours apply.** Choose the workspace timezone at setup and change it in **Feedback settings → Workspace time and customer email**. Requester quiet hours default to 20:00–08:00 in that timezone. The owner can choose different start and end hours or turn quiet hours off. Each send checks the current choice, including daylight-saving changes. Older installations ask the owner to confirm the timezone once.
 
-**Release emails** have their own schedule. They are not batched. They go out straight away between 08:00 and 20:00, and ones published in quiet hours wait until 08:00. If a follower's request updates are still being batched when a release email goes to them, the batch is sent first, in the same minute, so the release never arrives before the news that led to it.
+**Release emails** have their own schedule. They are not batched. They go out straight away outside your configured quiet hours; ones published during quiet hours wait until those hours end. With quiet hours off, they become due immediately. If a follower's request updates are still being batched when a release email goes to them, the batch is sent first, in the same minute, so the release never arrives before the news that led to it.
 
 Every link in these emails is a full address on your deployment, so it opens from any mail client. Private tags never appear in them.
 

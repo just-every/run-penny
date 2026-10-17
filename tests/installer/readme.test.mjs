@@ -36,7 +36,8 @@ test('[BASE-OPS-002 BASE-ACCESS-002] README install/setup/dev and one-click sign
           page.on('requestfailed',request=>diagnostics.push({kind:'requestfailed',path:new URL(request.url()).pathname,error:request.failure()?.errorText}))
           const claimBefore = await context.request.get(runtime.origin + '/setup/state')
           assert.equal(claimBefore.status(), 200)
-          assert.deepEqual(await claimBefore.json(), {state:'unclaimed'})
+          // rer setup claims the configured local owner before dev starts.
+          assert.deepEqual(await claimBefore.json(), {state:'claimed'})
           assert.ok(claimBefore.headers()['cache-control'].includes('no-store'))
           assert.equal(claimBefore.headers()['set-cookie'], undefined)
           // Signed out, setup sends the visitor to sign-in with the way back.

@@ -54,6 +54,15 @@
       "commands": [
         "pnpm run test:browser:dev-flows"
       ]
+    },
+    {
+      "name": "workspace-clock",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/workspace-clock.mjs"
+      ]
     }
   ],
   "nightly": [
