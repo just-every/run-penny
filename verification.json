@@ -37,14 +37,6 @@
       ]
     },
     {
-      "name": "installer",
-      "browser": true,
-      "hosted": false,
-      "commands": [
-        "pnpm run test:installer"
-      ]
-    },
-    {
       "name": "browser",
       "browser": true,
       "hosted": false,
@@ -71,6 +63,14 @@
       "hosted": false,
       "commands": [
         "pnpm run test:browser:readme"
+      ]
+    },
+    {
+      "name": "installer",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run test:installer"
       ]
     }
   ]

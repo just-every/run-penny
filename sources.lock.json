@@ -2952,7 +2952,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "06b68cfb4af78b75f96740fd31327c72d1680ba2c5bdd81b8f29a0a4187d82fe",
+      "sha256": "f226e251431002d8423efec522bdcf222aa8f7999706292daad3415e097b4f6a",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -7036,7 +7036,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "a33c0abc3a042b08419a8dd005f66d962f6e853e7e7f39faf5280a91197c7ce3",
+      "sha256": "ba64de1c7c5baa66efb33757225bd499b283411d9d3de5342454b3dca95ee8dd",
       "executable": false
     },
     "visual/01-landing.jpg": {
