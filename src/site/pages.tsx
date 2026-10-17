@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { contractPageHtml } from '../base/contract-page'
 import { runPageHtml, siteNotFoundHtml, type SiteBuild, type SiteContext } from '../base/run-site'
 import { identity } from '../identity'
 import { run } from './run'
@@ -11,7 +12,7 @@ import { pages, problem, repository, sections, version } from 'virtual:penny-doc
 import '../index.css'
 import '../core/ui/brand/styles'
 
-export async function sitePages({ styles }: SiteContext): Promise<SiteBuild> {
+export async function sitePages({ styles, contract }: SiteContext): Promise<SiteBuild> {
   if (problem) throw new Error(problem)
   const document = (title: string, description: string, body: ReactElement) => '<!doctype html>' + renderToStaticMarkup(
     <html lang="en"><head><meta charSet="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,9 +28,10 @@ export async function sitePages({ styles }: SiteContext): Promise<SiteBuild> {
   return {
     pages: [
       { path: '/', html: document(copy.meta.title, copy.meta.description, <Landing variant="site" />) },
-      { path: '/run', html: runPageHtml(identity, run) },
+      { path: '/run', html: runPageHtml(identity, run, contract) },
+      ...(contract ? [{ path: '/contract', html: contractPageHtml(identity, run, contract) }] : []),
       ...docs,
-      { path: '/404', html: siteNotFoundHtml(identity, run) },
+      { path: '/404', html: siteNotFoundHtml(identity, run, contract) },
     ],
     assets: ['rer-theme.css', 'fonts', 'brand'],
   }

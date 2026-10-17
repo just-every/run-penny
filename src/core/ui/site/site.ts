@@ -3,12 +3,13 @@
 // load nothing from them.
 export const site = {
   brand: 'Penny',
-  nav: { label: 'Main navigation', docs: 'Docs', portal: 'Public board', source: 'Source', signIn: 'Sign in' },
+  nav: { label: 'Main navigation', docs: 'Docs', contract: 'Contract', portal: 'Public board', source: 'Source', signIn: 'Sign in' },
   footer: { label: 'Footer navigation', credit: 'Powered by Penny · ', creditLink: 'runeditrun.com' },
 } as const
 
 export const siteLinks = {
   docs: '/docs',
+  contract: '/contract',
   portal: '/portal',
   signIn: '/signin',
   source: 'https://github.com/just-every/run-penny',

@@ -21,6 +21,7 @@ export function SiteFooter() {
       </a>
       <nav className="pl-footer-nav" aria-label={footer.label}>
         <SiteLink href={siteLinks.docs}>{nav.docs}</SiteLink>
+        {variant === 'site' ? <a href={siteLinks.contract}>{nav.contract}</a> : null}
         {variant === 'instance' ? <SiteLink href={siteLinks.portal}>{nav.portal}</SiteLink> : null}
         <a href={siteLinks.source}>{nav.source}</a>
         {variant === 'instance' ? <SiteLink href={siteLinks.signIn}>{nav.signIn}</SiteLink> : null}
