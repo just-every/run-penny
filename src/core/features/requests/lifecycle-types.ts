@@ -17,6 +17,7 @@ export type SubmissionInput = {
   readonly impactStatement: string | null
   readonly categoryId?: string | null
   readonly boardSlug: string
+  readonly subscriptionVersion?: number
   readonly emailUpdates: boolean
   readonly idempotencyKey: string
 }

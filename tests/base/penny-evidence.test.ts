@@ -1,5 +1,6 @@
 import {providerMessages} from './provider-messages'
 import {mockMail} from './support'
+import {explicitConsentBoard} from './explicit-consent-board'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
@@ -28,6 +29,7 @@ async function fixture(){
  await call('/api/operator/evidence',undefined,operator)
  const ownerId=actor??(await env.DB.prepare('SELECT id FROM operators').first<{id:string}>())?.id
  await json(call('/api/operator/boards',{name:'Feedback',slug:'feedback',visibility:'public'},operator),201)
+ await explicitConsentBoard('feedback',async(path,method,body)=>call(path,body,operator,method))
  const request=await json<{id:string;slug:string}>(call('/api/operator/requests',{title:'Export project reports',description:'CSV workspace reports',boardSlug:'feedback',evidenceIds:[]},operator),201)
  const id=ownerId??(await env.DB.prepare('SELECT id FROM operators').first<{id:string}>())!.id
  const decision=await json<{id:string;slug:string}>(call('/api/operator/decisions',{question:'How should reports improve?',ownerOperatorId:id},operator),201)

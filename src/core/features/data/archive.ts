@@ -1,4 +1,5 @@
 import { validateCategoryArchive } from '../categories/archive'
+import {validateMailIdentityArchive} from '../settings/mail-identity-archive'
 import {validateLearningArchive} from '../learning/archive'
 import {learningErasureStatements} from '../learning/privacy'
 import {GRANT_REVOCATION_CHECKPOINT} from '../learning/journal'
@@ -130,8 +131,8 @@ export const audit=(db:D1Database,action:string,id:string,authority?:DataAuthori
 export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:DataAuthority):Promise<{archive:Archive;journal:ErasureJournal}>{
  const id=await reserve(db,'export',{},authority)
  try {
-  const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateFeedbackArchive(data);await validateLearningArchive(data)
-  if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
+  const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)
+  if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
   if(data.request_attachment_uploads?.length||data.evidence_attachment_uploads?.length)fail('unfinished_attachment_uploads')
   const journal=await readErasureJournal(db)
   const expectedKeys=new Set(data.attachments.map(row=>String(row.storage_key)));let cursor:string|undefined
@@ -152,7 +153,7 @@ export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:Dat
 async function bytesHash(bytes:Uint8Array):Promise<string>{return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes as Uint8Array<ArrayBuffer>))].map(value=>value.toString(16).padStart(2,'0')).join('')}
 // The migration seeds roadmap defaults before any business data exists; an
 // otherwise empty restore replaces that configuration with the archived choice.
-const bootstrapTables=new Set(['penny_status_roadmap_settings','operators','operator_sessions','native_magic_links','local_auth_outbox','native_rate_limits'])
+const bootstrapTables=new Set(['penny_mail_identity','penny_status_roadmap_settings','operators','operator_sessions','native_magic_links','local_auth_outbox','native_rate_limits'])
 async function validated(db:D1Database,value:unknown,journalValue:unknown):Promise<{archive:Archive;journal:ErasureJournal;tables:Table[];bytes:Uint8Array[]}>{
  const parsed=archiveShape.safeParse(value),parsedJournal=journalShape.safeParse(journalValue)
  if(!parsed.success||!parsedJournal.success)fail('invalid_archive',400)
@@ -167,7 +168,7 @@ async function validated(db:D1Database,value:unknown,journalValue:unknown):Promi
  if(current.origin===journal.origin&&current.epoch>journal.epoch)fail('stale_archive')
  const tables=await schema(db)
  if(await schemaHash(tables)!==archive.schemaHash||canonical(Object.keys(archive.tables).sort())!==canonical(tables.map(table=>table.name).sort()))fail('unsupported_archive_schema')
- limits(archive.tables);validateNativeIdentity(archive.tables);validateCategoryArchive(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
+ limits(archive.tables);validateNativeIdentity(archive.tables);validateCategoryArchive(archive.tables);validateMailIdentityArchive(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
  if(archive.tables.request_attachment_uploads.length||archive.tables.evidence_attachment_uploads.length)fail('unfinished_attachment_uploads')
  for(const table of tables){
   const keys=new Set<string>()

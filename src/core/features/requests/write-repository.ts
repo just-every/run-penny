@@ -1,4 +1,5 @@
 import { requesterCommentAdmission, commentsAllowedAdmission } from '../categories/comment-policy'
+import {boardConsent,consentScope,grantRequestPermission} from './subscription-consent'
 import { requestStatusExpression } from './status-sql'
 import { requestSuggestions } from './suggestions'
 import { resumeRequestEmailStatement } from '@/core/features/notifications/link-epochs'
@@ -25,22 +26,24 @@ export class RequestWriteRepository {
 
   async submit(identity: RequesterReference, input: SubmissionInput, _now: string): Promise<PublicMutationResult> {
     const addressId = await this.findVerifiedAddress(identity)
-    return await submitNativeRequest(this.connection, { id: identity.requesterId, addressId, email: identity.verifiedEmail, displayName: identity.displayName,sessionId:identity.sessionId }, { ...input, proposedSolution: input.proposedSolution ?? undefined, impactStatement: input.impactStatement ?? undefined }) as PublicMutationResult
+    return await submitNativeRequest(this.connection, { id: identity.requesterId, addressId, email: identity.verifiedEmail, displayName: identity.displayName,sessionId:identity.sessionId,verifiedAt:identity.verifiedAt,verificationSessions:identity.verificationSessions,hostEmailHash:identity.hostEmailHash,hostClaimHash:identity.hostClaimHash }, { ...input, proposedSolution: input.proposedSolution ?? undefined, impactStatement: input.impactStatement ?? undefined }) as PublicMutationResult
   }
 
-  async vote(identity: RequesterReference, slug: string, emailUpdates: boolean, now: string): Promise<void> {
+  async vote(identity: RequesterReference, slug: string, emailUpdates: boolean, now: string, subscriptionVersion?:number): Promise<void> {
     const request = await this.findVotableRequest(slug)
     if (!request) throw new RequestLifecycleError(404, 'not_found', 'The published request does not exist.')
     if (request.status === 'declined' || request.status === 'shipped') throw new RequestLifecycleError(409, 'voting_closed', 'Voting is closed for this request.')
-    const requesterAddressId = emailUpdates ? await this.findVerifiedAddress(identity) : null
+    const board=await boardConsent(this.connection.binding,request.boardId,subscriptionVersion), consent=consentScope(board)
+    const requesterAddressId = emailUpdates?await this.findVerifiedAddress(identity):board.enabled?await this.findVerifiedAddress(identity,true):null
     const statements = [
       this.connection.binding.prepare(`
         INSERT INTO request_vote_contributions (request_id, requester_id, created_at, updated_at)
         VALUES (?, ?, ?, ?) ON CONFLICT(request_id, requester_id) DO UPDATE SET updated_at = excluded.updated_at
       `).bind(request.id, identity.requesterId, now, now),
     ]
-    if (emailUpdates) statements.push(...this.followStatements(request.id, identity, requesterAddressId!, 'vote', now))
-    await requesterWrite(this.connection,identity,[...statements, ...projectContributions(this.connection, [request.id])],{sql:votingAdmission,values:[request.id,request.id]})
+    if (emailUpdates) statements.push(...grantRequestPermission(this.connection.binding,request.id,identity,requesterAddressId!,'vote','explicit',now))
+    if(board.enabled)statements.push(...grantRequestPermission(this.connection.binding,request.id,identity,requesterAddressId!,'vote','vote_subscription',now,board))
+    await requesterWrite(this.connection,identity,[...statements, ...projectContributions(this.connection, [request.id])],{sql:`${votingAdmission} AND ${consent.sql} AND EXISTS(SELECT 1 FROM requests WHERE id=? AND board_id=?)`,values:[request.id,request.id,...consent.values,request.id,board.id]})
   }
 
   async removeVote(identity: RequesterReference, slug: string): Promise<void> {
@@ -48,6 +51,7 @@ export class RequestWriteRepository {
     if (!request) throw new RequestLifecycleError(404, 'not_found', 'The published request does not exist.')
     await requesterWrite(this.connection,identity,[
       this.connection.binding.prepare(`DELETE FROM request_vote_contributions WHERE request_id IN (${contributionScope}) AND requester_id=?`).bind(request.id,identity.requesterId),
+      this.connection.binding.prepare(`UPDATE requester_update_permissions SET revoked_at=?,updated_at=? WHERE request_id IN (${contributionScope}) AND requester_id=? AND grant_origin='vote_subscription' AND revoked_at IS NULL`).bind(new Date().toISOString(),new Date().toISOString(),request.id,identity.requesterId),
       ...projectContributions(this.connection,[request.id]),
     ],{sql:publishedAdmission,values:[request.id]})
   }
@@ -57,21 +61,9 @@ export class RequestWriteRepository {
     if (!request) throw new RequestLifecycleError(404, 'not_found', 'The published request does not exist.')
     const addressId = await this.findVerifiedAddress(identity)
     await requesterWrite(this.connection,identity,[
-      ...this.followStatements(request.id,identity,addressId,'follow',now),
+      ...grantRequestPermission(this.connection.binding,request.id,identity,addressId,'follow','explicit',now),
       ...projectContributions(this.connection,[request.id]),
     ],{sql:publishedAdmission,values:[request.id]})
-  }
-
-  private followStatements(requestId:string, identity:RequesterReference, addressId:string, source:'follow'|'vote', now:string) {
-    const db=this.connection.binding
-    return [
-      db.prepare(`INSERT INTO request_follow_contributions(request_id,requester_id,permission_granted_at,muted_at,created_at,updated_at)
-        VALUES(?,?,?,NULL,?,?) ON CONFLICT(request_id,requester_id) DO UPDATE SET muted_at=NULL,updated_at=excluded.updated_at`).bind(requestId,identity.requesterId,now,now,now),
-      // This predicate executes in the write transaction, including concurrent replays.
-      db.prepare(`INSERT INTO requester_update_permissions(id,requester_id,requester_address_id,request_id,source,granted_at,created_at,updated_at)
-        SELECT ?,?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM requester_update_permissions WHERE requester_id=? AND requester_address_id=? AND request_id=? AND revoked_at IS NULL)`)
-        .bind(createRequestId(),identity.requesterId,addressId,requestId,source,now,now,now,identity.requesterId,addressId,requestId),
-    ]
   }
 
   private async followedRequest(identity:RequesterReference,slug:string) {
@@ -167,6 +159,7 @@ export class RequestWriteRepository {
     `).bind(slug, identity.requesterId).first<{ id: string }>()
     if (!request) throw new RequestLifecycleError(404, 'not_found', 'The requester-owned request does not exist.')
     await requesterWrite(this.connection,identity,[
+      this.connection.binding.prepare(`UPDATE requester_update_permissions SET revoked_at=?,updated_at=? WHERE request_id=? AND requester_id=? AND grant_origin='author_subscription' AND revoked_at IS NULL`).bind(now,now,request.id,identity.requesterId),
       this.connection.binding.prepare(`UPDATE requests SET public_state = 'withdrawn', withdrawn_at = ?, updated_at = ? WHERE id = ?`).bind(now, now, request.id),
       this.connection.binding.prepare(`
         UPDATE evidence_items SET withdrawn_at = ?, updated_at = ?
@@ -212,19 +205,19 @@ export class RequestWriteRepository {
     `).bind(slug).first<{ id: string }>()
   }
 
-  private async findVerifiedAddress(identity: RequesterReference): Promise<string> {
+  private async findVerifiedAddress(identity: RequesterReference,allowSuppressed=false): Promise<string> {
     const address = await this.connection.binding.prepare(`
       SELECT id FROM requester_addresses
-      WHERE requester_id = ? AND email = ? AND verified_at IS NOT NULL AND suppressed_at IS NULL
+      WHERE requester_id = ? AND email = ? AND verified_at IS NOT NULL AND (?=1 OR suppressed_at IS NULL)
       LIMIT 1
-    `).bind(identity.requesterId, identity.verifiedEmail).first<{ id: string }>()
+    `).bind(identity.requesterId, identity.verifiedEmail,Number(allowSuppressed)).first<{ id: string }>()
     if (!address) throw new RequestLifecycleError(403, 'requester_address_unavailable', 'The verified requester address is unavailable.')
     return address.id
   }
 
-  private async findVotableRequest(slug: string): Promise<{ readonly id: string; readonly status: string } | null> {
+  private async findVotableRequest(slug: string): Promise<{ readonly id: string; readonly status: string; readonly boardId:string } | null> {
     return this.connection.binding.prepare(`
-      SELECT r.id AS id,
+      SELECT r.id AS id,r.board_id AS boardId,
         ${requestStatusExpression} AS status
       FROM requests r
       INNER JOIN boards b ON b.id = r.board_id
@@ -234,6 +227,6 @@ export class RequestWriteRepository {
       LEFT JOIN roadmap_items ri ON ri.id = rp.roadmap_item_id AND ri.status != 'dropped'
       WHERE r.slug = ? AND ${publicRequestPredicate}
       LIMIT 1
-    `).bind(slug).first<{ id: string; status: string }>()
+    `).bind(slug).first<{ id: string; status: string; boardId:string }>()
   }
 }

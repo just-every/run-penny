@@ -51,7 +51,7 @@ export async function applyUnsubscribe(runtime:PennyRuntime,token:string){
  const guard=crypto.randomUUID()
  try {await db.batch([
   db.prepare(`INSERT INTO requester_write_guards(id,permitted) VALUES(?,CASE WHEN ${epochSql}=? AND EXISTS(SELECT 1 FROM requester_addresses WHERE id=? AND requester_id=? AND email=?) THEN 1 ELSE 0 END)`).bind(guard,c.addressId,c.scope,c.epoch??0,c.addressId,c.requesterId,c.resolvedEmail!),
-  action,...(c.scope==='all'?[db.prepare("UPDATE requester_update_permissions SET revoked_at=?,updated_at=? WHERE requester_id=? AND requester_address_id=? AND source='subscription' AND request_id IS NULL AND revoked_at IS NULL").bind(now,now,c.requesterId,c.addressId)]:[]),db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(guard),
+  action,db.prepare(`UPDATE requester_update_permissions SET revoked_at=?,updated_at=? WHERE requester_id=? AND requester_address_id=? AND grant_origin IN('vote_subscription','author_subscription') AND revoked_at IS NULL AND (?='all' OR request_id IN(SELECT origin_id FROM request_canonical_roots WHERE canonical_id=(SELECT canonical_id FROM request_canonical_roots WHERE origin_id=?)))`).bind(now,now,c.requesterId,c.addressId,c.scope,c.scope),...(c.scope==='all'?[db.prepare("UPDATE requester_update_permissions SET revoked_at=?,updated_at=? WHERE requester_id=? AND requester_address_id=? AND source='subscription' AND request_id IS NULL AND revoked_at IS NULL").bind(now,now,c.requesterId,c.addressId)]:[]),db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(guard),
  ])}catch(error){if(String(error).includes('requester_write_admitted'))throw new NativeError('invalid_unsubscribe_link',400);throw error}
  return c.scope
 }

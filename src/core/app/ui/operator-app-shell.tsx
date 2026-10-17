@@ -1,3 +1,4 @@
+import {PostalAddressPrompt} from '@/core/features/settings/ui/postal-address-prompt'
 import { ReviewNotifications } from '@/core/features/notifications/ui/review-notifications'
 import { useState } from 'react'
 import { Link, Outlet, useLocation } from '@tanstack/react-router'
@@ -87,7 +88,7 @@ export function OperatorAppShell() {
           </div>
         </div>
       </header>
-      <main id="operator-content" className="mx-auto w-full max-w-[1600px] px-4 pt-6 pb-12 sm:px-6 sm:pt-9 lg:ml-60 lg:w-[calc(100%_-_15rem)] lg:px-12 lg:pt-10"><ReviewNotifications/><Outlet /></main>
+      <main id="operator-content" className="mx-auto w-full max-w-[1600px] px-4 pt-6 pb-12 sm:px-6 sm:pt-9 lg:ml-60 lg:w-[calc(100%_-_15rem)] lg:px-12 lg:pt-10"><ReviewNotifications/><PostalAddressPrompt/><Outlet /></main>
     </BrandRoot>
   )
 }

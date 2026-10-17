@@ -89,7 +89,7 @@ export class RequestOperatorRepository {
   async createBoard(input: { readonly slug: string; readonly name: string; readonly visibility: 'public' | 'internal'; readonly now: string }): Promise<void> {
     const position = await this.connection.binding.prepare(`SELECT COALESCE(MAX(position), -1) + 1 AS position FROM boards`).first<{ position: number }>()
     await this.connection.binding.prepare(`
-      INSERT INTO boards (id, slug, name, visibility, position, archived_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NULL, ?, ?)
+      INSERT INTO boards (id, slug, name, visibility, position, archived_at, created_at, updated_at,vote_subscriptions) VALUES (?, ?, ?, ?, ?, NULL, ?, ?,CASE WHEN EXISTS(SELECT 1 FROM penny_mail_identity WHERE singleton=1 AND trim(postal_address)!='') THEN 1 ELSE 0 END)
     `).bind(createRequestId(), input.slug, input.name, input.visibility, position?.position ?? 0, input.now, input.now).run()
   }
 

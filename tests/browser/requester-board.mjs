@@ -1,6 +1,7 @@
 import { chromium } from '@playwright/test'
 import { execFileSync } from 'node:child_process'
 import { mkdir, writeFile } from 'node:fs/promises'
+import {explicitConsentBoard} from './explicit-consent-board.mjs'
 const origin='http://127.0.0.1:41869'
 const state=process.env.PENNY_LOCAL_STATE
 if(!state)throw new Error('PENNY_LOCAL_STATE must name the isolated capture store.')
@@ -23,6 +24,7 @@ const signed=await api(`/api/auth/magic-link/consume?token=${outbox('owner@penny
 const cookie=signed.headers.get('set-cookie').split(';')[0]
 const unique=Date.now().toString(36),board=`capture-${unique}`
 await api('/api/operator/boards',{name:'Product feedback',slug:board,visibility:'public'},{Cookie:cookie})
+await explicitConsentBoard(origin,board,cookie)
 const browser=await chromium.launch({headless:true})
 const captures=[],errors=[]
 try{
@@ -55,6 +57,9 @@ try{
   await review.getByText('Approved wording is now public.').waitFor()
   await shot(review,'approve')
   await page.goto(origin+`/portal/feedback/${slug}`)
+  // Submission records the author's vote; remove and restore it through the mounted controls.
+  await page.getByRole('button',{name:'Remove vote',exact:true}).click()
+  await page.getByText('Vote removed.',{exact:true}).waitFor()
   await page.getByRole('button',{name:'Vote',exact:true}).click()
   await page.getByText('Vote saved.',{exact:true}).waitFor()
   await shot(page,'vote')

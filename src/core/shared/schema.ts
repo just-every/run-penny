@@ -80,6 +80,8 @@ export const boards = sqliteTable('boards', {
   showVoters: integer('show_voters').notNull().default(0),
   anonymousRequesters: integer('anonymous_requesters').notNull().default(0),
   archivedAt: text('archived_at'),
+  voteSubscriptions: integer('vote_subscriptions', { mode: 'boolean' }).notNull().default(false),
+  voteSubscriptionVersion: integer('vote_subscription_version').notNull().default(1),
   ...timestamps,
 })
 

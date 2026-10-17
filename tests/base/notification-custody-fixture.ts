@@ -2,6 +2,7 @@ import { expect } from 'vitest'
 import { call, env, owner, requester, messages } from './support'
 import { createPennyRuntime } from '../../src/core/app/runtime'
 import { prepareBatches } from '../../src/core/features/notifications/batches'
+import {explicitConsentBoard} from './explicit-consent-board'
 
 export const notificationTables = ['notification_events', 'notification_intents', 'notification_batches', 'notification_attempts', 'requester_notification_preferences', 'request_notification_mutes'] as const
 export const runtime = () => createPennyRuntime(env)
@@ -12,6 +13,7 @@ export async function notificationRows() {
 export async function notificationGraph(count = 2) {
  const operator = await owner(), person = await requester()
  expect((await call('/api/operator/boards', { name: 'Feedback board', slug: 'custody', visibility: 'public' }, operator)).status).toBe(201)
+ await explicitConsentBoard('custody',(path,method,body)=>call(path,body,operator,method))
  const requests: { id: string; slug: string }[] = []
  for (let i = 0; i < count; i++) {
   const response = await call('/api/public/requests', { title: `Original wording ${i}`, description: `Private detail ${i}`, boardSlug: 'custody', idempotencyKey: crypto.randomUUID() }, person)

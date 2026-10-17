@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
 import { chromium } from '@playwright/test'
 import { origin,sql,api,identity,operatorCookie,shot,manifest } from './requester-repair-support.mjs'
+import {explicitConsentBoard} from './explicit-consent-board.mjs'
 const cookie=await operatorCookie(),unique=Date.now().toString(36),board=`repair-${unique}`
 await api('/api/operator/boards',{slug:board,name:'Product feedback',visibility:'public'},{Cookie:cookie})
+await explicitConsentBoard(origin,board,cookie)
 const browser=await chromium.launch({headless:true}),errors=[],checks=[]
 try {
  for(const width of [1440,390]){
@@ -29,6 +31,8 @@ try {
   await card.getByRole('button',{name:'Approve and publish',exact:true}).click()
   await review.getByText('Approved wording is now public.',{exact:true}).waitFor();await shot(review,'approved',width)
   await page.goto(origin+`/portal/feedback/${slug}`)
+  // Submission records the author's vote; remove and restore it through the mounted controls.
+  await page.getByRole('button',{name:'Remove vote',exact:true}).click();await page.getByText('Vote removed.',{exact:true}).waitFor()
   await page.getByRole('button',{name:'Vote',exact:true}).click();await page.getByText('Vote saved.',{exact:true}).waitFor();await shot(page,'voted',width)
   await page.getByRole('button',{name:'Follow',exact:true}).click();await page.getByText('Following with email permission.',{exact:true}).waitFor();await shot(page,'followed',width)
   await page.getByLabel('Add a comment',{exact:true}).fill('Monthly scheduling avoids a manual step.')

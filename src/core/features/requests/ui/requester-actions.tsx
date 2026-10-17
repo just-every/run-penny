@@ -1,3 +1,5 @@
+import type {PublicBoard} from '@/core/shared/api/public'
+import {usePublicResource} from '@/core/features/portal/ui/public-resource'
 import { requesterMutation } from './requester-client'
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
@@ -7,6 +9,9 @@ import { PortalIcon } from '@/core/features/portal/ui/public-primitives'
 import { rememberReturn } from '@/core/features/auth/requester-return'
 
 export function RequesterActions({slug,onChange,compact=false,commentsAllowed=true,showVoters=false,onSelected}:{slug:string;onChange?:()=>void;compact?:boolean;commentsAllowed?:boolean;showVoters?:boolean;onSelected?:(action:'vote'|'follow')=>void}) {
+  const [request]=usePublicResource<{board:{slug:string}}>(`/api/public/requests/${slug}`)
+  const [boards]=usePublicResource<PublicBoard[]>('/api/public/boards')
+  const disclosure=boards.kind==='ready'&&request.kind==='ready'?boards.data.find(b=>b.slug===request.data.board.slug)?.subscriptionDisclosure:undefined
   const [verified,setVerified]=useState(false),[voted,setVoted]=useState(false),[following,setFollowing]=useState(false)
   const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),[updates,setUpdates]=useState(false)
   useEffect(()=>{
@@ -19,18 +24,19 @@ export function RequesterActions({slug,onChange,compact=false,commentsAllowed=tr
   },[slug])
   async function act(kind:'vote'|'follow') {
     setBusy(true);setMessage('')
-    try {const active=kind==='vote'?voted:following;await requesterMutation(`/api/public/requests/${slug}/${kind}`,active?'DELETE':'POST',active?undefined:kind==='vote'?{emailUpdates:updates}:{})
+    try {const active=kind==='vote'?voted:following;await requesterMutation(`/api/public/requests/${slug}/${kind}`,active?'DELETE':'POST',active?undefined:kind==='vote'?{emailUpdates:updates,subscriptionVersion:disclosure?.version}:{})
       if(kind==='vote')setVoted(!active);else setFollowing(!active)
-      // A vote with "Email me updates" also follows; reload so the page says so.
-      if(kind==='vote'&&!active&&updates)window.dispatchEvent(new Event('penny-requester-changed'))
+      // Adding or removing a vote can change automatic email permission.
+      if(kind==='vote')window.dispatchEvent(new Event('penny-requester-changed'))
       setMessage(kind==='vote'?(active?'Vote removed.':'Vote saved.'):(active?'Unfollowed.':'Following with email permission.'));onChange?.();if(!active)onSelected?.(kind)
     }catch(e){setMessage(e instanceof Error?e.message:'Action failed.')}finally{setBusy(false)}
   }
   return <section className="mt-6 space-y-4" aria-label="Participate in feedback">
     {!verified?<p className="text-sm text-penny-ink"><Link to="/portal/feedback/new" onClick={()=>rememberReturn(`/portal/feedback/${slug}`)} className={`${accentLinkClass} inline-flex min-h-11 items-center`}>Verify your email</Link> to vote, follow or comment.</p>:null}
     {showVoters?<p className="text-sm text-penny-ink">Voter display names are listed publicly on this board. Anonymous boards display Anonymous.</p>:null}
+    {!voted&&disclosure?.enabled?<p className="text-sm leading-6 text-penny-ink">{disclosure.vote}</p>:null}
     <div className="flex flex-wrap gap-3">
-      <button type="button" disabled={busy||!verified} className={buttonClass} onClick={()=>void act('vote')}><PortalIcon name="vote" />{voted?'Remove vote':'Vote'}</button>
+      <button type="button" disabled={busy||!verified||request.kind!=='ready'||boards.kind!=='ready'} className={buttonClass} onClick={()=>void act('vote')}><PortalIcon name="vote" />{voted?'Remove vote':'Vote'}</button>
       <button type="button" disabled={busy||!verified} className={secondaryButtonClass} onClick={()=>void act('follow')}><PortalIcon name="bell" />{following?'Unfollow':'Follow'}</button>
     </div>
     {!voted&&!following?<label className="flex min-h-11 items-center gap-2 text-sm text-penny-ink"><input type="checkbox" className="size-4 accent-penny-ink" checked={updates} onChange={e=>setUpdates(e.target.checked)}/>Email me updates</label>:null}

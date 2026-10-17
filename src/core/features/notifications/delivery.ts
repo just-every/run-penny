@@ -1,5 +1,6 @@
+import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
-import { authMail,mailUnsubscribe } from '@/core/features/auth/mail'
+import { providerMail,mailUnsubscribe } from '@/core/features/auth/mail'
 import { createUlid } from '@/core/shared/ulid'
 import { quietHours } from './eligibility'
 import { admitDelivery } from './delivery-admission'
@@ -66,8 +67,10 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
  try {
   const recipient=await notificationContent(db,batch.id)
   if(!recipient){await finish('suppressed','recipient_no_longer_eligible');return}
-  const sender=authMail(runtime)
+  const sender=providerMail(runtime)
   if(!sender){await finish('failed','mail_configuration_missing');return}
+  const mailHeaders=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!)
+  const footer=await requesterMailFooter(runtime,batch.requesterId,batch.addressId,recipient.requestId)
   const requestLink=await unsubscribeUrl(runtime,{...batch,email:recipient.email},recipient.requestId)
   const globalLink=await unsubscribeUrl(runtime,{...batch,email:recipient.email},'all')
   // This claim made no provider call: retain its audit and sealed membership,
@@ -80,8 +83,8 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   const events=JSON.parse(admitted.events) as NotificationEvent[],origin=runtime.configuration.appOrigin
   if(!events.length){await finish('suppressed','no_public_events');return}
   if(!admission.owned){await finish('suppressed','eligibility_changed');return}
-  const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:batch.id,from:runtime.configuration.mailFrom!,to:[recipient.email],subject:`Updates: ${admitted.title.replace(/\s+/g,' ')}`,
-   text:`${admitted.title}\n\n${events.map(e=>`${e.kind==='status'?'Status update':'Public reply'}\n${e.body}${e.requests?.length?`\n\nYour requests:\n${e.requests.map(r=>`${r.title}: ${origin}/portal/feedback/${r.slug}`).join('\n')}`:''}`).join('\n\n')}\n\nView feedback: ${origin}/portal/feedback/${admitted.slug}\n\nMute this request: ${requestLink}\nUnsubscribe from all requester email: ${globalLink}`,
+  const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:batch.id,...mailHeaders,to:[recipient.email],subject:`Updates: ${admitted.title.replace(/\s+/g,' ')}`,
+   text:`${admitted.title}\n\n${events.map(e=>`${e.kind==='status'?'Status update':'Public reply'}\n${e.body}${e.requests?.length?`\n\nYour requests:\n${e.requests.map(r=>`${r.title}: ${origin}/portal/feedback/${r.slug}`).join('\n')}`:''}`).join('\n\n')}\n\nView feedback: ${origin}/portal/feedback/${admitted.slug}\n\nMute this request: ${requestLink}\nUnsubscribe from all requester email: ${globalLink}${footer}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){

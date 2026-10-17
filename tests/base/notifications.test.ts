@@ -14,6 +14,7 @@ import { RequestOperatorRepository } from '@/core/features/requests/operator-rep
 import { loadRuntimeConfiguration } from '@/core/platform/configuration'
 import { authMail } from '@/core/features/auth/mail'
 import type { AppBindings } from '@/core/shared/bindings'
+import {explicitConsentBoard} from './explicit-consent-board'
 const start=Date.parse('2026-10-07T09:00:00.000Z'),time=(offset=0)=>new Date(start+offset).toISOString()
 const source={operatorAllowlist:['owner@penny.invalid'],workspaceTimezone:'UTC',publicOriginAllowlist:['https://penny.test']}
 const runtime=(provider='sendgrid')=>createPennyRuntime({...env,WORKSPACE_TIMEZONE:source.workspaceTimezone,MAIL_PROVIDER:provider,...(provider==='resend'?{MAIL_API_KEY:'synthetic-resend-key'}:{})},source)
@@ -22,6 +23,7 @@ afterEach(()=>vi.restoreAllMocks())
 async function setup(){
  const operator=await owner(),person=await requester()
  expect((await call('/api/operator/boards',{name:'Feedback',slug:'product',visibility:'public'},operator)).status).toBe(201)
+ await explicitConsentBoard('product',(path,method,body)=>call(path,body,operator,method))
  const response=await call('/api/public/requests',{title:'Private original title',description:'Private commercial evidence',boardSlug:'product',idempotencyKey:crypto.randomUUID()},person)
  expect(response.status).toBe(201);const {slug}=await response.json() as {slug:string}
  expect((await call(`/api/operator/moderation/${slug}`,{verdict:'approved',title:'Approved title',description:'Public description',boardSlug:'product',displayName:'Public name'},operator)).status).toBe(200)
@@ -287,9 +289,13 @@ it('[REQ-030 BASE-OPS-005] chosen private request and comment rejection reaches 
  vi.spyOn(Date,'now').mockReturnValue(rejectionTime)
  await runNotificationSchedule(createScheduledController({scheduledTime:rejectionTime,cron:'* * * * *'}),bindings)
  await runNotificationSchedule(createScheduledController({scheduledTime:rejectionTime,cron:'* * * * *'}),bindings)
- expect(sent).toHaveLength(2)
- const mail=await providerMessages(local)!.list()
+ expect(sent).toHaveLength(3) // Two rejection notices and the subscribed author's publication notice.
+ const allMail=await providerMessages(local)!.list()
+ expect(allMail).toHaveLength(3)
+ const rejectionIds=new Set((await rejectionRows()).map(row=>row.id))
+ const mail=allMail.filter(row=>rejectionIds.has(row.message.deliveryId))
  expect(mail).toHaveLength(2)
+ expect(allMail.filter(row=>!rejectionIds.has(row.message.deliveryId))).toHaveLength(1)
  expect(mail.map(row=>row.message.to[0]).sort()).toEqual([request.email,comment.email].sort())
  for(const row of mail){expect(row.message.text).toContain('Please explain the workflow you need.');expect(row.message.text).toContain('/api/public/notifications/unsubscribe?');expect(JSON.stringify(row.message)).not.toMatch(/PRIVATE|COMMERCIAL|HELD/)}
  expect(await rejectionRows()).toMatchObject([{state:'accepted',attempts:1},{state:'accepted',attempts:1}])

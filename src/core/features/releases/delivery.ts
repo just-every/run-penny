@@ -1,5 +1,6 @@
+import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
-import { authMail,mailUnsubscribe } from '../auth/mail'
+import { providerMail,mailUnsubscribe } from '../auth/mail'
 import { createUlid } from '@/core/shared/ulid'
 import { quietHours } from '../notifications/eligibility'
 import { retryAt,retryState,safeValidationCode,retryWindowMs } from '../notifications/attempt-policy'
@@ -47,14 +48,16 @@ async function deliver(runtime:PennyRuntime,row:Outbox,clock:()=>number){
  try{
   const initial=await releaseContent(db,row.id)
   if(!initial.length){await finish('suppressed','recipient_no_longer_eligible');return}
-  const sender=authMail(runtime)
+  const sender=providerMail(runtime)
   if(!sender){await finish('failed','mail_configuration_missing');return}
+  const mailHeaders=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!)
+  const footer=await requesterMailFooter(runtime,row.requesterId,row.addressId,undefined,initial.flatMap(context=>context.requestSlug?[context.requestSlug]:[]))
   const globalLink=await unsubscribeUrl(runtime,{...row,email:initial[0].email},'all')
   if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone)){await finish('queued','quiet_hours',null,'suppressed',true);return}
   const admission=await admitReleaseDelivery(db,row.id,claim,initial[0].email),contexts=admission.contexts,release=contexts[0]
   if(!admission.owned||!release){await finish('suppressed','eligibility_changed');return}
-  const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,from:runtime.configuration.mailFrom!,to:[release.email],subject:release.title.replace(/\s+/g,' '),
-   text:`${release.title}\n${releaseTypeLabel[release.releaseType]} · ${release.publicationDate}\n\n${release.body}\n${release.setupUrl?`${release.setupUrl}\n`:''}\nYour requests:\n${contexts.filter(c=>c.requestSlug).map(c=>`${c.requestTitle}: ${runtime.configuration.appOrigin}/portal/feedback/${c.requestSlug}`).join('\n')}\n\nRead update: ${runtime.configuration.appOrigin}/portal/updates/${release.slug}\nUnsubscribe from all requester email: ${globalLink}`,
+  const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,...mailHeaders,to:[release.email],subject:release.title.replace(/\s+/g,' '),
+   text:`${release.title}\n${releaseTypeLabel[release.releaseType]} · ${release.publicationDate}\n\n${release.body}\n${release.setupUrl?`${release.setupUrl}\n`:''}\nYour requests:\n${contexts.filter(c=>c.requestSlug).map(c=>`${c.requestTitle}: ${runtime.configuration.appOrigin}/portal/feedback/${c.requestSlug}`).join('\n')}\n\nRead update: ${runtime.configuration.appOrigin}/portal/updates/${release.slug}\nUnsubscribe from all requester email: ${globalLink}${footer}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){await finish(retryState(row.attemptCount),result.code??result.status,null,result.status);return}

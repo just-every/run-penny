@@ -5,6 +5,7 @@ import {chromium} from '@playwright/test'
 import {browserOptions} from './browser-options.mjs'
 import {startBrowserRuntime} from './base-runtime.mjs'
 import {createHostExample} from '../../examples/host-identity/server.mjs'
+import {explicitConsentBoard} from './explicit-consent-board.mjs'
 const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/host-identity-browser'),checks=[]
 assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
@@ -25,6 +26,7 @@ try{
    assert.equal(frames.status,200)
    assert.deepEqual(await frames.json(),{publicOriginAllowlist:[hostOrigin]})
    const board=await fetch(runtime.origin+'/api/operator/boards',{method:'POST',headers:{Origin:runtime.origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify({name:'Product feedback',slug:'feedback',visibility:'public'})});assert.equal(board.status,201)
+   await explicitConsentBoard(runtime.origin,'feedback',cookie)
    context=await browser.newContext({viewport:{width,height:width===390?844:900}})
    const page=await context.newPage(),errors=[],external=[]
    page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(message.type()==='error')errors.push({message:message.text(),resource:message.location().url?.split('?')[0]})})

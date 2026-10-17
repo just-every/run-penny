@@ -54,7 +54,9 @@ test('the declared owner sign-in opens with an editable email and reaches the wo
         await page.getByRole('button', { name: 'Confirm', exact: true }).click()
         await page.waitForURL(url => url.pathname === '/setup' || url.pathname.startsWith('/app'))
         if (new URL(page.url()).pathname === '/setup') {
-          await page.getByLabel('I confirm this owner account is ready to use.').check()
+          await page.getByLabel('Company name', {exact:true}).fill('Example Company')
+          await page.getByLabel('Business postal address', {exact:true}).fill('14 Example Street, Brisbane QLD 4000, Australia')
+          await page.getByRole('checkbox').check()
           await page.getByRole('button', { name: 'Finish setup', exact: true }).click()
         }
         await page.waitForURL(url => url.pathname.startsWith('/app'))

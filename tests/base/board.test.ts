@@ -3,10 +3,12 @@ import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterEach,vi, expect,inject,it } from 'vitest'
 import { call,env,owner,requester,mockMail,origin } from './support'
 import { exports } from 'cloudflare:workers'
+import {explicitConsentBoard} from './explicit-consent-board'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()});afterEach(()=>vi.restoreAllMocks())
 async function graph(){
  const operator=await owner(),person=await requester()
  expect((await call('/api/operator/boards',{name:'Product feedback',slug:'product',visibility:'public'},operator)).status).toBe(201)
+ await explicitConsentBoard('product',(path,method,body)=>call(path,body,operator,method))
  async function submit(title:string){const r=await call('/api/public/requests',{title,description:'Private first-post wording',boardSlug:'product',idempotencyKey:crypto.randomUUID()},person);expect(r.status).toBe(201);return (await r.json() as {slug:string}).slug}
  async function approve(slug:string,title:string){expect((await call(`/api/operator/moderation/${slug}`,{verdict:'approved',title,description:'Approved public wording',boardSlug:'product',displayName:'Public requester'},operator)).status).toBe(200)}
  return {operator,person,submit,approve}

@@ -6,6 +6,7 @@ import { mkdir, writeFile, readFile } from 'node:fs/promises'
 import assert from 'node:assert/strict'
 import { startBrowserRuntime } from './base-runtime.mjs'
 import { createAudit, viewports } from './acceptance-audit.mjs'
+import {explicitConsentBoard} from './explicit-consent-board.mjs'
 const output=process.env.PENNY_EVIDENCE
 if(!output)throw new Error('PENNY_EVIDENCE must name the evidence directory.')
 await mkdir(output,{recursive:true})
@@ -22,6 +23,7 @@ const signed=await api('/auth/bootstrap',{token:'synthetic-base-browser-setup-to
 const cookie=signed.headers.get('set-cookie').split(';')[0]
 const unique=Date.now().toString(36),board=`capture-${unique}`
 await api('/api/operator/boards',{name:'Product feedback',slug:board,visibility:'public'},{Cookie:cookie})
+await explicitConsentBoard(origin,board,cookie)
 browser=await chromium.launch(browserOptions())
 const captures=[],errors=[]
  for(const viewport of viewports){
@@ -65,6 +67,9 @@ const captures=[],errors=[]
   await review.getByText('Approved wording is now public.').waitFor()
   await shot(review,'approve')
   await page.goto(origin+`/portal/feedback/${slug}`)
+  // Submission records the author's vote; remove and restore it through the mounted controls.
+  await page.getByRole('button',{name:'Remove vote',exact:true}).click()
+  await page.getByText('Vote removed.',{exact:true}).waitFor()
   await page.getByRole('button',{name:'Vote',exact:true}).click()
   await page.getByText('Vote saved.',{exact:true}).waitFor()
   await shot(page,'vote')

@@ -1,5 +1,6 @@
 import { CategorySettings } from '../../categories/category-settings'
 import type { Category } from '../../categories/ui-types'
+import {BoardSubscriptionSettings} from '../../settings/ui/board-subscription-settings'
 import { useRef } from 'react'
 import { Chip } from '@/core/ui/app/Chip'
 import { fieldLabelClass, primaryButtonClass, textLinkClass } from '@/core/ui/app/classes'
@@ -7,7 +8,7 @@ import { fieldClass } from '@/core/features/auth/client-mutations'
 import { checkboxClass, checkRowClass } from './form-classes'
 import { settingsPanelClass } from './settings-catalog'
 
-export interface Board { id:string;category_mode:'off'|'optional'|'required';posting_policy:'requesters'|'operators';comments_allowed:number;show_vote_counts:number;show_voters:number;anonymous_requesters:number; slug: string; name: string; visibility: string; position: number; archived_at: string | null }
+export interface Board { id:string;category_mode:'off'|'optional'|'required';posting_policy:'requesters'|'operators';comments_allowed:number;show_vote_counts:number;show_voters:number;anonymous_requesters:number; slug: string; name: string; visibility: string; position: number; archived_at: string | null;vote_subscriptions:number;vote_subscription_version:number }
 export type SettingsAct = (path: string, body: unknown, method?: string, form?: HTMLFormElement) => Promise<void>
 
 const input = fieldClass
@@ -37,6 +38,7 @@ export function BoardCard({ board: b, categories, act }: { board: Board; categor
         <button className={primaryButtonClass}>Save board</button>
       </form>
       <CategorySettings boardSlug={b.slug} categories={categories.filter(c=>c.board_id===b.id)} act={act}/>
+      <BoardSubscriptionSettings key={b.vote_subscription_version} slug={b.slug} enabled={Boolean(b.vote_subscriptions)} version={b.vote_subscription_version} act={act}/>
     </div>
   )
 }

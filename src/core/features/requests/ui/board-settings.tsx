@@ -1,5 +1,6 @@
 import {useRouter} from '@tanstack/react-router'
 import type { Category } from '../../categories/ui-types'
+import {MailIdentitySettings} from '../../settings/ui/mail-identity-settings'
 import {StatusRoadmapSettings} from '../../roadmap/ui/status-roadmap-settings'
 import {RequestStatusSettings} from '../../settings/ui/request-status-settings'
 import {IntegrationDestinations} from '../../integrations/ui/destinations'
@@ -40,6 +41,7 @@ export function BoardSettings() {
         <ApiKeys />
         <IntegrationDestinations />
         <TrackerSettings />
+        <MailIdentitySettings />
         <BrandingSettings />
         <FrameSettings />
         <RequestStatusSettings />

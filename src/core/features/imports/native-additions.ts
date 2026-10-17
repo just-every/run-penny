@@ -4,5 +4,5 @@
 // with replacement/reversal instead of being discarded.
 export const nativeAdditiveDefaults:Readonly<Record<string,Readonly<Record<string,string|number>>>>={
  requests:{latest_status_source:'direct'},
- boards:{category_mode:'off',posting_policy:'requesters',comments_allowed:1,show_vote_counts:1,show_voters:0,anonymous_requesters:0},
+ boards:{category_mode:'off',posting_policy:'requesters',comments_allowed:1,show_vote_counts:1,show_voters:0,anonymous_requesters:0,vote_subscriptions:0,vote_subscription_version:1},
 }

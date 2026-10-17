@@ -1,4 +1,5 @@
 import { validateCategoryArchive } from '../../src/core/features/categories/archive'
+import { validateMailIdentityArchive } from '../../src/core/features/settings/mail-identity-archive'
 import { validateLearningArchive } from '../../src/core/features/learning/archive'
 import { GRANT_REVOCATION_CHECKPOINT } from '../../src/core/features/learning/journal'
 import type { ArchivePolicy } from '@runeditrun/rer/modules/portability'
@@ -22,9 +23,9 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
   return {
     product: 'just-every/penny',
     excludeTables: Object.keys(inventory).filter(name => !product.includes(name) && !['data_state', 'data_tombstones'].includes(name)),
-    // Migrations seed this singleton even in an otherwise empty installation.
-    // Restore replaces it with the archive's choice, as the native restore does.
-    replaceableTables: ['data_state', 'penny_status_roadmap_settings'],
+    // Setup and migrations create these settings before any product records.
+    // Restore replaces them with the archive's choices.
+    replaceableTables: ['data_state','penny_status_roadmap_settings','penny_mail_identity'],
     requiredConfiguration: ['OPERATOR_EMAIL', 'AUTH_SECRET', 'SETUP_TOKEN', 'APP_ORIGIN', 'MAIL_PROVIDER', 'MAIL_FROM'],
     buckets: { FILES: { objectReferences: { table: 'attachments', keyColumn: 'storage_key' } } },
     exportRow: (table, row) => normalize(table, productRow(row)),
@@ -36,7 +37,7 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
       for (const name of expected) data[name] = (await read(name)).map(productRow)
       const records = product.flatMap(name => data[name])
       if (records.length > LOCAL_DATA_LIMITS.rows || new TextEncoder().encode(canonical(records)).byteLength > LOCAL_DATA_LIMITS.recordBytes) refuse('archive_limit')
-      validateNativeIdentity(data);validateCategoryArchive(data); validateFeedbackArchive(data); await validateLearningArchive(data)
+      validateNativeIdentity(data);validateCategoryArchive(data); validateMailIdentityArchive(data); validateFeedbackArchive(data); await validateLearningArchive(data)
       if (data.request_attachment_uploads.length || data.evidence_attachment_uploads.length) refuse('unfinished_attachment_uploads')
       if (manifest.payloads.length || manifest.objects.length !== data.attachments.length || manifest.objects.some(object => object.bucket !== 'FILES' || !data.attachments.some(row => row.storage_key === object.key))) refuse('invalid_archive_files')
       let fileBytes = 0

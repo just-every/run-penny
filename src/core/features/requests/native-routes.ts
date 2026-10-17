@@ -17,7 +17,7 @@ const title=z.string().trim().min(1).max(200),description=z.string().trim().min(
 export function registerNativeRequestRoutes(app:Hono<Environment>):void{
   app.post('/api/public/requests',async c=>{
     const runtime=c.get('runtime')
-    const input=await parseInput(c.req.raw,z.object({title,description,boardSlug,categoryId:z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u).nullable().optional(),proposedSolution:z.string().trim().max(5000).optional(),impactStatement:z.string().trim().max(5000).optional(),emailUpdates:z.boolean().optional(),idempotencyKey:z.string().min(16).max(128)}).strict())
+    const input=await parseInput(c.req.raw,z.object({title,description,boardSlug,categoryId:z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u).nullable().optional(),proposedSolution:z.string().trim().max(5000).optional(),impactStatement:z.string().trim().max(5000).optional(),emailUpdates:z.boolean().optional(),subscriptionVersion:z.number().int().positive().optional(),idempotencyKey:z.string().min(16).max(128)}).strict())
     await submissionBoard(runtime.database,input.boardSlug,input.categoryId)
     // Existing verified identities need no new mail. First-time host provisioning
     // and anonymous holds retain the verification-transport admission boundary.

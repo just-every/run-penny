@@ -2,7 +2,10 @@ export type PublicRequestStatus = 'open' | 'under_review' | 'planned' | 'in_prog
 
 export interface PublicCategory {readonly id:string;readonly name:string;readonly parentId:string|null;readonly position:number;readonly archived:boolean;readonly requestCount:number}
 export interface PublicCategoryReference {readonly id:string;readonly name:string;readonly parent:{readonly id:string;readonly name:string}|null}
+export interface SubscriptionDisclosure { readonly enabled:boolean; readonly version:number; readonly vote:string|null; readonly submission:string|null }
+
 export interface PublicBoard {
+  readonly subscriptionDisclosure?:SubscriptionDisclosure
   readonly slug: string
   readonly name: string
   readonly requestCount: number

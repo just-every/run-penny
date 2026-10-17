@@ -1,5 +1,6 @@
+import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
-import { authMail, mailUnsubscribe } from '../auth/mail'
+import { providerMail, mailUnsubscribe } from '../auth/mail'
 import { createUlid } from '@/core/shared/ulid'
 import { quietHours } from './eligibility'
 import { retryState, retryWindowMs, safeValidationCode } from './attempt-policy'
@@ -34,8 +35,10 @@ async function deliver(runtime:PennyRuntime,row:RejectionIntent,clock:()=>number
   if(row.firstAttemptAt&&clock()-Date.parse(row.firstAttemptAt)>=retryWindowMs){await finish('failed','retry_window_exhausted');return}
   const initial=await rejectionContext(db,row.id)
   if(!initial||initial.suppressionReason||!initial.email||!initial.addressId||!initial.requesterId){await finish('suppressed',initial?.suppressionReason??'recipient_no_longer_eligible');return}
-  const sender=authMail(runtime)
+  const sender=providerMail(runtime)
   if(!sender){await finish('failed','mail_configuration_missing');return}
+  const mailHeaders=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!)
+  const footer=await requesterMailFooter(runtime,initial.requesterId,initial.addressId,initial.requestId??undefined)
   const globalLink=await unsubscribeUrl(runtime,{email:initial.email,addressId:initial.addressId,requesterId:initial.requesterId},'all')
   if(quietHours(new Date(clock()),runtime.configuration.workspaceTimezone)){await finish('queued','quiet_hours',null,'suppressed',true);return}
   // Admission snapshots the current verified recipient atomically with content
@@ -43,8 +46,8 @@ async function deliver(runtime:PennyRuntime,row:RejectionIntent,clock:()=>number
   const admission=await admitRejection(db,row.id,claim,initial.email,new Date(clock()).toISOString()),recipient=admission.context
   if(!admission.owned||!recipient?.email){await finish('suppressed',recipient?.suppressionReason??'eligibility_changed');return}
   const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,
-   from:runtime.configuration.mailFrom!,to:[recipient.email],subject:'Your feedback was reviewed',
-   text:`An operator reviewed your feedback and did not approve it.\n\nReason:\n${recipient.reason}\n\nThis notice is private to you.\n\nUnsubscribe from all requester email: ${globalLink}`,
+   ...mailHeaders,to:[recipient.email],subject:'Your feedback was reviewed',
+   text:`An operator reviewed your feedback and did not approve it.\n\nReason:\n${recipient.reason}\n\nThis notice is private to you.\n\nUnsubscribe from all requester email: ${globalLink}${footer}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){await finish(retryState(row.attemptCount),result.code??result.status,null,result.status);return}

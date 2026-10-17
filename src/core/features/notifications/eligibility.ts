@@ -10,7 +10,8 @@ export const eligibleRecipient = `a.requester_id=n.requester_id AND a.verified_a
  AND NOT EXISTS(SELECT 1 FROM requester_notification_preferences p WHERE p.requester_id=n.requester_id AND p.muted_at IS NOT NULL)
  AND NOT EXISTS(SELECT 1 FROM request_notification_mutes m JOIN request_canonical_roots root ON root.origin_id=m.request_id WHERE m.requester_id=n.requester_id AND root.canonical_id=r.id)`
 
-export const visibleEvent = `(e.kind='status' AND EXISTS(SELECT 1 FROM request_status_updates s WHERE s.id=e.subject_id AND s.request_id=e.request_id))
+export const visibleEvent = `(e.kind='status' AND e.id='publication:'||e.request_id AND e.subject_id=e.request_id AND EXISTS(SELECT 1 FROM requests published_request WHERE published_request.id=e.request_id AND published_request.author_requester_id=n.requester_id))
+ OR (e.kind='status' AND EXISTS(SELECT 1 FROM request_status_updates s WHERE s.id=e.subject_id AND s.request_id=e.request_id))
  OR (e.kind='comment' AND EXISTS(SELECT 1 FROM request_comments c LEFT JOIN requesters person ON person.id=c.requester_id
    WHERE c.id=e.subject_id AND c.request_id=e.request_id AND c.moderation_state='approved' AND c.published_at IS NOT NULL
    AND c.requester_id IS NOT n.requester_id

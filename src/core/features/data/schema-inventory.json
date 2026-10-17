@@ -61,7 +61,9 @@
       "comments_allowed",
       "show_vote_counts",
       "show_voters",
-      "anonymous_requesters"
+      "anonymous_requesters",
+      "vote_subscriptions",
+      "vote_subscription_version"
     ]
   },
   "candidate_bet_account_links": {
@@ -2186,7 +2188,10 @@
       "revoked_at",
       "created_at",
       "updated_at",
-      "suppressed_at"
+      "suppressed_at",
+      "grant_origin",
+      "board_id",
+      "setting_version"
     ]
   },
   "requester_write_guards": {
@@ -2676,6 +2681,31 @@
       "merged_into_category_id",
       "created_at",
       "updated_at"
+    ]
+  },
+  "penny_mail_identity": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "company_name",
+      "sender_name",
+      "from_address",
+      "reply_to",
+      "postal_address",
+      "updated_at"
+    ]
+  },
+  "penny_mail_identity_tests": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "operator_id",
+      "operator_version",
+      "input_hash",
+      "provider",
+      "outcome",
+      "tested_at",
+      "consumed_at"
     ]
   }
 }

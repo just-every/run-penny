@@ -2,6 +2,7 @@ import { expect, vi } from 'vitest'
 import { call, env, mockMail, owner, requester } from './support'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { RequestOperatorRepository } from '@/core/features/requests/operator-repository'
+import {explicitConsentBoard} from './explicit-consent-board'
 
 export const start=Date.parse('2026-10-07T09:00:00.000Z')
 export const time=(offset=0)=>new Date(start+offset).toISOString()
@@ -10,6 +11,7 @@ export async function graph(count=1,otherAuthor=false){
  mockMail()
  const operator=await owner(),person=await requester(),author=otherAuthor?await requester('Other author'):person
  expect((await call('/api/operator/boards',{name:'Notifications',slug:'regression',visibility:'public'},operator)).status).toBe(201)
+ await explicitConsentBoard('regression',(path,method,body)=>call(path,body,operator,method))
  const requests:{id:string;slug:string}[]=[]
  for(let index=0;index<count;index++){
   const submitted=await call('/api/public/requests',{title:`Request ${index}`,description:'Requester wording',boardSlug:'regression',idempotencyKey:crypto.randomUUID()},author)

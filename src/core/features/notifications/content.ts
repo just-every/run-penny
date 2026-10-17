@@ -21,6 +21,7 @@ export const notificationPayloadSql=`WITH ordinary AS MATERIALIZED (${ordinaryCo
  grouped AS MATERIALIZED (${groupedContext}),
  events AS (
  SELECT e.kind,CASE WHEN e.kind='comment' THEN (SELECT body FROM request_comments WHERE id=e.subject_id)
+ WHEN e.id='publication:'||e.request_id AND e.subject_id=e.request_id THEN 'Your request is now public.'
  ELSE (SELECT CASE WHEN body='' THEN 'Status changed to '||CASE public_status WHEN 'under_review' THEN 'Under review' WHEN 'in_progress' THEN 'In progress' ELSE upper(substr(public_status,1,1))||substr(public_status,2) END||'.' ELSE body END FROM request_status_updates WHERE id=e.subject_id) END AS body,NULL AS requests,e.created_at,e.id
  FROM notification_batches n JOIN notification_intents i ON i.batch_id=n.id JOIN notification_events e ON e.id=i.event_id
  WHERE n.id=? AND e.roadmap_update_version_id IS NULL AND EXISTS(SELECT 1 FROM ordinary) AND (${visibleEvent}) AND ${unmailedEvent}

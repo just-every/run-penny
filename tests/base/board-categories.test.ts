@@ -2,10 +2,11 @@ import { applyD1Migrations,reset } from 'cloudflare:test'
 import { afterAll,beforeAll,expect,inject,it,vi } from 'vitest'
 import { env,seedLoop,request,json,publicRequest } from './decision-loop-fixture'
 import { mockMail,owner,requester } from './support'
+import {explicitConsentBoard} from './explicit-consent-board'
 let previous:{id:string;slug:string}
 beforeAll(async()=>{
  const migrations=inject('migrations') as {name:string}[]
- await applyD1Migrations(env.DB,migrations.filter(m=>!m.name.startsWith('0066_')) as never)
+ await applyD1Migrations(env.DB,migrations.slice(0,migrations.findIndex(m=>m.name.startsWith('0066_'))) as never)
  await seedLoop();previous=await publicRequest();mockMail()
  await applyD1Migrations(env.DB,migrations as never)
  await applyD1Migrations(env.DB,migrations as never)
@@ -14,6 +15,7 @@ afterAll(()=>vi.restoreAllMocks())
 it('[REQ-012][REQ-034][REQ-040] upgrades populated boards and supports category browsing, ranking, canonical merges and board participation/privacy through routes',async()=>{
  expect(await json(request(`/api/public/requests/${previous.slug}`))).toMatchObject({title:'Safe request',category:null,voteCount:0})
  await json(request('/api/operator/boards','POST',{slug:'category-lab',name:'Category lab',visibility:'public'}),201)
+ await explicitConsentBoard('category-lab',request)
  const base='/api/operator/boards/category-lab',patch=(body:unknown)=>json(request(base,'PATCH',body))
  const root=await json(request(`${base}/categories`,'POST',{name:'Platform'}),201)
  const child=await json(request(`${base}/categories`,'POST',{name:'Workflows',parentId:root.id}),201)

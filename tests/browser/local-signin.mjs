@@ -4,8 +4,10 @@ import { readDevKey } from '../../base/modules/operator-auth/dev/sign-in-as.mjs'
 export async function finishFirstRun(page, audit) {
   if (new URL(page.url()).pathname !== '/setup') return false
   await page.getByRole('heading', { name: 'Finish setup', exact: true }).waitFor()
+  await page.getByLabel('Company name', {exact:true}).fill('Example Company')
+  await page.getByLabel('Business postal address', {exact:true}).fill('14 Example Street, Brisbane QLD 4000, Australia')
   await audit(page, 'first-run-setup', { axeZero: true })
-  await page.getByLabel('I confirm this owner account is ready to use.').check()
+  await page.getByRole('checkbox').check()
   await page.getByRole('button', { name: 'Finish setup', exact: true }).click()
   await page.waitForURL(url => ['/app', '/app/', '/app/overview'].includes(url.pathname))
   await page.waitForLoadState('networkidle')

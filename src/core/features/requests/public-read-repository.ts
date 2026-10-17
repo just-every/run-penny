@@ -1,7 +1,7 @@
 import { publicBoards } from '../categories/public-boards'
 import { publicRequestPredicate } from './publication-predicate'
 import { requestStatusExpression, requestStatusLabelExpression } from './status-sql'
-import type { PublicRequestCard, PublicRequestComment, PublicRequestDetail, PublicRequestStatus } from '@/core/shared/api/public'
+import type { PublicBoard, PublicRequestCard, PublicRequestComment, PublicRequestDetail, PublicRequestStatus } from '@/core/shared/api/public'
 import type { DatabaseConnection } from '@/core/platform/database'
 
 interface PublicRequestRow extends Omit<PublicRequestCard, 'board' | 'status' | 'voteCount' | 'commentCount' | 'category'> {
@@ -104,7 +104,21 @@ export class PublicRequestsReadRepository {
     this.connection = connection
   }
 
-  async listBoards() { return publicBoards(this.connection) }
+  async listBoards(): Promise<readonly PublicBoard[]> {
+    const boards=await publicBoards(this.connection)
+    const result=await this.connection.binding.prepare(`SELECT slug,vote_subscriptions AS enabled,vote_subscription_version AS version
+      FROM boards WHERE visibility='public' AND archived_at IS NULL`).all<{slug:string;enabled:number;version:number}>()
+    const policies=new Map(result.results.map(policy=>[policy.slug,policy]))
+    // Keep category, participation and privacy projections from the board directory.
+    // A board made private after that read must not regain exposure here.
+    return boards.flatMap(board=>{
+      const policy=policies.get(board.slug)
+      if(!policy)return []
+      return [{...board,subscriptionDisclosure:{enabled:Boolean(policy.enabled),version:policy.version,
+        vote:policy.enabled?'Voting subscribes you to updates on this request. Remove your vote, unfollow, or use the unsubscribe link in any email to stop.':null,
+        submission:policy.enabled?'Submitting subscribes you to updates on your request. Unfollow, withdraw your request, or use the unsubscribe link in any email to stop.':null}}]
+    })
+  }
 
   async list(filters: PublicRequestFilters): Promise<readonly PublicRequestCard[]> {
     const conditions: string[] = []

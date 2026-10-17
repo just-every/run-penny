@@ -7,6 +7,7 @@ import { exportArchive,planErasure,normalize } from '@/core/features/data/archiv
 import { eraseEntity } from '@/core/features/data/operations'
 import {canonical} from '@/core/features/data/archive'
 import {call,json,fixture,path,bindings,sent,network} from './learning-test-runtime'
+import {explicitConsentBoard} from './explicit-consent-board'
 it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke',async()=>{
  const f=await fixture(),runtime=createPennyRuntime(bindings()),url=path+`/investigations/${f.investigation.id}`
  await drainLearning(runtime,Date.now()+1000)
@@ -81,6 +82,7 @@ it('[LEARN-004] contribution erasure removes every dependent version/snapshot, p
  const requesterId=(await env.DB.prepare('SELECT requester_id FROM requester_addresses WHERE email=? AND verified_at IS NOT NULL').bind(email).first<string>('requester_id'))!
  expect(requesterId).toBeTruthy()
  await json(call('/api/operator/boards',{name:'Native feedback',slug:'native-feedback',visibility:'public'},f.cookie),201)
+ await explicitConsentBoard('native-feedback',(path,method,body)=>publicCall(path,body,{Cookie:f.cookie},method))
  const nativeRequest=await json<{slug:string}>(publicCall('/api/public/requests',{title:'Clearer handoff',description:'A verified native contributor needs a clearer handoff.',boardSlug:'native-feedback',idempotencyKey:crypto.randomUUID()},{Authorization:`Bearer ${requesterToken}`}),201)
  const requestId=(await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(nativeRequest.slug).first<string>('id'))!
  const createNative=async(nativeEvidenceIds:string[],nativeRequestIds:string[]=[])=>json<{id:string}>(call(path+'/investigations',{question:'What would improve this handoff?',nativeEvidenceIds,nativeRequestIds,purpose:'Review native feedback',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)

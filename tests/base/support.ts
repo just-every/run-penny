@@ -18,7 +18,7 @@ export function call(path:string, body?:unknown, headers:Record<string,string>={
  return exports.default.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'penny.test',Origin:origin,'CF-Connecting-IP':`198.18.${Math.floor(ip / 254) % 256}.${++ip % 254 + 1}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}))
 }
 export function finishFirstRun(cookie:{Cookie:string}){
- return exports.default.fetch(new Request(origin+'/setup',{method:'POST',redirect:'manual',headers:{Host:'penny.test',Origin:origin,...cookie,'Content-Type':'application/x-www-form-urlencoded'},body:'confirm=yes'}))
+ return exports.default.fetch(new Request(origin+'/setup',{method:'POST',redirect:'manual',headers:{Host:'penny.test',Origin:origin,...cookie,'Content-Type':'application/x-www-form-urlencoded'},body:'confirm=yes&companyName=Test+business&postalAddress=1+Test+Street' }))
 }
 // The owner signs in with first-run setup finished, so app documents open; pass false to start from an unfinished setup.
 /** Populated-upgrade fixtures use current HTTP admission to create historical
@@ -34,5 +34,5 @@ async function installAuthSchema(){
  if(prerequisites.length)await applyD1Migrations(env.DB,prerequisites as never)
 }
 export async function owner({finishSetup=true}={}){await installAuthSchema();const r=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner',returnTo:'/app'});expect(r.status,await r.clone().text()).toBe(303);const cookie={Cookie:r.headers.get('Set-Cookie')!.split(';')[0]};// A store still on a prior schema head has no first-run record yet; the migration marks its existing owner done.
-if(finishSetup&&await env.DB.prepare("SELECT 1 AS present FROM sqlite_master WHERE name='oa_first_run'").first())expect((await finishFirstRun(cookie)).status).toBe(303);return cookie}
+if(finishSetup&&await env.DB.prepare("SELECT 1 AS present FROM sqlite_master WHERE name='penny_mail_identity'").first())expect((await finishFirstRun(cookie)).status).toBe(303);return cookie}
 export async function requester(displayName='Private display'){const email=`${crypto.randomUUID()}@example.test`;expect((await call('/api/public/identity/email',{email,displayName})).status).toBe(202);const link=messages.findLast(m=>m.to===email)!;expect(link).toBeDefined();const token=new URLSearchParams(new URL(link.url).hash.slice(1)).get('token');const r=await call('/api/public/identity/email/verify',{token});expect(r.status).toBe(200);return {Authorization:`Bearer ${(await r.json() as {token:string}).token}`}}

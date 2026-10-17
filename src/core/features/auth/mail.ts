@@ -1,8 +1,9 @@
+import {mailIdentity,identityHeaders} from '../settings/mail-identity'
 import { createMailSender, type NotificationMessage, type PennyMailSender } from '../../../base-mail'
 import type { PennyRuntime } from '@/core/app/runtime'
 
 /** Shared Base owns all provider serialization, validation and transport. */
-export function authMail(runtime: PennyRuntime): PennyMailSender | undefined {
+export function providerMail(runtime: PennyRuntime): PennyMailSender | undefined {
   const { mailFrom, mailProvider, mailApiKey, mailRelayUrl } = runtime.configuration
   if (mailFrom && suppressesMail(runtime)) {
     return createMailSender({provider:'development',mode:'development'})
@@ -12,6 +13,10 @@ export function authMail(runtime: PennyRuntime): PennyMailSender | undefined {
   }
   if (!mailFrom || (mailProvider !== 'sendgrid' && mailProvider !== 'resend') || !mailApiKey) return undefined
   return createMailSender({ provider: mailProvider, mode: 'production', apiKey: mailApiKey })
+}
+export function authMail(runtime:PennyRuntime):PennyMailSender|undefined {
+ const sender=providerMail(runtime)
+ return sender?{send:async message=>sender.send({...message,...identityHeaders(await mailIdentity(runtime),message.from)})}:undefined
 }
 export function mailReady(runtime: PennyRuntime): boolean { return authMail(runtime) !== undefined }
 export function mailTransport(runtime: PennyRuntime): string { return mailReady(runtime) ? runtime.configuration.mailProvider! : 'unavailable' }

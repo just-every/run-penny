@@ -28,9 +28,9 @@ const submissionSchema = z.object({
   impactStatement: z.string().trim().min(1).max(10_000).nullable().optional().default(null),
   boardSlug: slug,
   categoryId: z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u).nullable().optional(),
-  emailUpdates: z.boolean().optional().default(false),
+  emailUpdates: z.boolean().optional().default(false), subscriptionVersion:z.number().int().positive().optional(),
 }).strict()
-const voteSchema = z.object({ emailUpdates: z.boolean().optional().default(false) }).strict()
+const voteSchema = z.object({ emailUpdates: z.boolean().optional().default(false), subscriptionVersion:z.number().int().positive().optional() }).strict()
 const commentSchema = z.object({ body: text }).strict()
 const requestEditSchema = submissionSchema.pick({ title: true, description: true, proposedSolution: true, impactStatement: true })
 const appealSchema = z.object({
@@ -58,11 +58,11 @@ export function registerPublicRequestMutationRoutes(app: Hono<PublicRequestRoute
     const input = await parse(context.req.raw, voteSchema)
     const requestSlug = slug.safeParse(context.req.param('slug'))
     if (!input || !requestSlug.success) return context.json({ error: 'validation_failed', message: 'The vote is invalid.' }, 400)
-    const action: PendingRequesterAction = { type: 'vote', slug: requestSlug.data, emailUpdates: input.emailUpdates }
+    const action: PendingRequesterAction = { type: 'vote', slug: requestSlug.data, emailUpdates: input.emailUpdates, subscriptionVersion:input.subscriptionVersion }
     const identity = await identityOrHold(context, action)
     if (identity instanceof Response) return identity
     try {
-      await new RequestWriteRepository(context.get('runtime').database).vote(identity, action.slug, action.emailUpdates, now())
+      await new RequestWriteRepository(context.get('runtime').database).vote(identity, action.slug, action.emailUpdates, now(),action.subscriptionVersion)
       return context.body(null, 204)
     } catch (error) {
       return lifecycleFailure(context, error)

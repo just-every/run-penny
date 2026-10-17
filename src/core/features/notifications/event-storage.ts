@@ -51,7 +51,7 @@ export function eventStorage(db:D1Database,owned:OwnedEvent[]){
    // A provider unsubscribe withdraws all requester email exactly as Penny's own
    // global link does; follows, votes and portal access stay.
    if(owner.unsubscribe&&owner.requesterId&&owner.addressId)statements.push(globalMuteStatement(db,owner.requesterId,true,now),
-    db.prepare("UPDATE requester_update_permissions SET revoked_at=?,updated_at=? WHERE requester_id=? AND requester_address_id=? AND source='subscription' AND request_id IS NULL AND revoked_at IS NULL").bind(now,now,owner.requesterId,owner.addressId))
+    db.prepare("UPDATE requester_update_permissions SET revoked_at=?,updated_at=? WHERE requester_id=? AND requester_address_id=? AND ((source='subscription' AND request_id IS NULL) OR grant_origin IN('vote_subscription','author_subscription')) AND revoked_at IS NULL").bind(now,now,owner.requesterId,owner.addressId))
   }
   // Only Base's applied state writes change operator delivery counts. Receipt
   // arrival alone cannot roll an already terminal state backward.

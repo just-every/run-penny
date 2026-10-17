@@ -1,3 +1,5 @@
+import {registerMailIdentityRoutes} from '@/core/features/settings/mail-identity-routes'
+import {registerBoardSubscriptionRoutes} from '@/core/features/settings/board-subscriptions'
 import { registerRequestStatusSettingsRoutes } from '@/core/features/settings/request-statuses'
 import {registerLearningRoutes} from '@/core/features/learning/routes'
 import {publishesNotification,queueNotificationWork} from '@/core/features/notifications/queue'
@@ -93,6 +95,8 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerLearningRoutes(app)
   registerIntegrationApi(app)
   registerRequestStatusSettingsRoutes(app)
+  registerMailIdentityRoutes(app)
+  registerBoardSubscriptionRoutes(app)
   registerBrandingRoutes(app)
   registerFrameSettings(app)
   registerDeliveryRoutes(app)

@@ -1,10 +1,12 @@
 import { submissionBoard, submissionBoardAdmission } from '../categories/category-policy'
+import {boardConsent,consentScope,grantRequestPermission} from './subscription-consent'
+import {projectContributions} from './contributions'
 import { requesterWrite } from './write-admission'
 import type { DatabaseConnection } from '@/core/platform/database'
 import type { RequesterIdentity } from '@/core/features/auth/native-service'
 import { digest, NativeError, takeRateLimit } from '@/core/features/auth/native-tokens'
 import { createUlid } from '@/core/shared/ulid'
-export interface Submission {categoryId?:string|null;title:string;description:string;boardSlug:string;proposedSolution?:string;impactStatement?:string;idempotencyKey:string;emailUpdates?:boolean}
+export interface Submission {categoryId?:string|null;title:string;description:string;boardSlug:string;proposedSolution?:string;impactStatement?:string;idempotencyKey:string;emailUpdates?:boolean;subscriptionVersion?:number}
 export async function submitNativeRequest(database:DatabaseConnection,identity:RequesterIdentity,input:Submission):Promise<{slug:string;moderationState:string}> {
   const db=database.binding,now=new Date().toISOString()
   const canonicalInput={...input,emailUpdates:input.emailUpdates??false}
@@ -15,6 +17,7 @@ export async function submitNativeRequest(database:DatabaseConnection,identity:R
   const saved=await previous();if(saved)return replay(saved)
   await takeRateLimit(db,'submissions',identity.id,10,3600000)
   const board=await submissionBoard(database,input.boardSlug,input.categoryId)
+  const consent=await boardConsent(db,board.id,input.subscriptionVersion),scope=consentScope(consent)
   const requestId=createUlid(),evidenceId=createUlid(),slug=`feedback-${requestId.toLowerCase()}`
   // Each statement and the key reservation are one atomic D1 batch. A concurrent
   // duplicate's unique key violation rolls back its complete graph.
@@ -30,13 +33,12 @@ export async function submitNativeRequest(database:DatabaseConnection,identity:R
       db.prepare('INSERT INTO request_evidence_contributions(request_id,evidence_id,created_at) VALUES(?,?,?)').bind(requestId,evidenceId,now),
       db.prepare('INSERT INTO request_submission_keys(key_hash,body_hash,request_id,evidence_id,expires_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').bind(keyHash,bodyHash,requestId,evidenceId,new Date(Date.now()+30*86400000).toISOString(),now,now),
       db.prepare(`INSERT INTO request_content_submissions(id,request_id,requester_id,title,description,proposed_solution,impact_statement,moderation_state,is_initial,created_at,updated_at) VALUES(?,?,?,?,?,?,?,'awaiting_review',1,?,?)`).bind(createUlid(),requestId,identity.id,input.title,input.description,input.proposedSolution??null,input.impactStatement??null,now,now),
-      ...(input.emailUpdates ? [
-        db.prepare('INSERT INTO request_follows(request_id,requester_id,permission_granted_at,created_at,updated_at) VALUES(?,?,?,?,?)').bind(requestId,identity.id,now,now,now),
-        db.prepare('INSERT INTO request_follow_contributions(request_id,requester_id,permission_granted_at,created_at,updated_at) VALUES(?,?,?,?,?)').bind(requestId,identity.id,now,now,now),
-        db.prepare("INSERT INTO requester_update_permissions(id,requester_id,requester_address_id,request_id,source,granted_at,created_at,updated_at) VALUES(?,?,?,?,'submission',?,?,?)").bind(createUlid(),identity.id,identity.addressId,requestId,now,now,now)
-      ] : []),
+      db.prepare('INSERT INTO request_vote_contributions(request_id,requester_id,created_at,updated_at) VALUES(?,?,?,?)').bind(requestId,identity.id,now,now),
+      ...(input.emailUpdates?grantRequestPermission(db,requestId,{requesterId:identity.id,verifiedEmail:identity.email,displayName:identity.displayName},identity.addressId,'submission','explicit',now):[]),
+      ...(consent.enabled?grantRequestPermission(db,requestId,{requesterId:identity.id,verifiedEmail:identity.email,displayName:identity.displayName},identity.addressId,'submission','author_subscription',now,consent):[]),
+      ...projectContributions(database,[requestId]),
       db.prepare("INSERT INTO audit_entries(id,actor_type,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'system','request.submitted','request',?,?,?,?)").bind(createUlid(),requestId,now,now,now),
-    ],{sql:submissionBoardAdmission,values:[board.id,input.categoryId??null,input.categoryId??null,input.categoryId??null]})
+    ],{sql:`(${submissionBoardAdmission}) AND (${scope.sql})`,values:[board.id,input.categoryId??null,input.categoryId??null,input.categoryId??null,...scope.values]})
   }catch(error){const winner=await previous();if(winner)return replay(winner);throw error}
   return {slug,moderationState:'awaiting_review'}
 }
