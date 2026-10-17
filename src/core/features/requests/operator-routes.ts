@@ -1,3 +1,4 @@
+import { statusPublicationSchema } from './status-schema'
 import {integrationOperator} from '../integrations/destinations'
 import { readAttachment } from './mutation-boundaries'
 import { NativeError } from '@/core/features/auth/native-tokens'
@@ -24,7 +25,6 @@ const moderationSchema = z.object({
   reason: z.string().trim().min(1).max(2_000).optional(),
 }).strict()
 const simpleVerdictSchema = z.object({ body:text.optional(), notifyAuthor:z.boolean().optional(), verdict: z.enum(['approved', 'rejected']), reason: z.string().trim().min(1).max(2_000).optional(), publicAuthorDisplayName: z.string().trim().min(1).max(160).optional() }).strict()
-const statusSchema = z.object({ status: z.enum(['open', 'under_review', 'declined']), body: text, pinned: z.boolean().optional().default(false), idempotencyKey: z.string().min(1).max(128).regex(/^[A-Za-z0-9_-]+$/).optional() }).strict()
 const noteSchema = z.object({ body: text }).strict()
 const boardCreateSchema = z.object({ slug, name: z.string().trim().min(1).max(160), visibility: z.enum(['public', 'internal']) }).strict()
 const boardUpdateSchema = z.object({ name: z.string().trim().min(1).max(160).optional(), visibility: z.enum(['public', 'internal']).optional(), position: z.number().int().min(0).optional(), archived: z.boolean().optional() }).strict()
@@ -100,7 +100,7 @@ export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironm
   })
 
   app.post('/api/operator/requests/:slug/status-updates', async (context) => {
-    const input = await parseMutationBody(context, statusSchema)
+    const input = await parseMutationBody(context, statusPublicationSchema)
     const requestSlug = slug.safeParse(context.req.param('slug'))
     if (!input || !requestSlug.success) return invalid(context)
     return operatorMutation(context, async (operator) => {

@@ -2049,7 +2049,12 @@
       "created_at",
       "updated_at",
       "action_key",
-      "publication_version"
+      "publication_version",
+      "public_eta",
+      "internal_status_id",
+      "previous_status_source",
+      "previous_direct_status_changed_at",
+      "previous_internal_status_id"
     ]
   },
   "request_submission_keys": {
@@ -2219,7 +2224,12 @@
       "merged_into_request_id",
       "merged_at",
       "public_author_display_name",
-      "author_operator_id"
+      "author_operator_id",
+      "internal_status_id",
+      "public_eta",
+      "direct_status_changed_at",
+      "mapped_status_changed_at",
+      "latest_status_source"
     ]
   },
   "rer_dependency_codes": {
@@ -2614,6 +2624,37 @@
       "commitment_id",
       "reason",
       "created_at"
+    ]
+  },
+  "request_internal_statuses": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "public_status",
+      "show_public_label",
+      "position",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_status_templates": {
+    "classification": "product",
+    "columns": [
+      "public_status",
+      "body",
+      "updated_at"
+    ]
+  },
+  "penny_status_roadmap_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "source",
+      "board_slugs_json",
+      "columns_json",
+      "shipped_days",
+      "updated_at"
     ]
   }
 }

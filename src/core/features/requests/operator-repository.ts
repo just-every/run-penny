@@ -43,7 +43,10 @@ export class RequestOperatorRepository {
     `).bind(slug).first<{ id: string; requestId: string; previousState: string | null }>()
     if (!decline?.previousState) throw new RequestLifecycleError(409, 'decline_not_reversible', 'There is no active decline to reverse.')
     await this.connection.binding.batch([
-      this.connection.binding.prepare(`UPDATE requests SET public_state = ?, declined_reason = NULL, updated_at = ? WHERE id = ?`).bind(decline.previousState, now, decline.requestId),
+      this.connection.binding.prepare(`UPDATE requests SET public_state = ?, declined_reason = NULL,
+        latest_status_source=CASE WHEN latest_status_source='roadmap' THEN 'roadmap' ELSE COALESCE((SELECT previous_status_source FROM request_status_updates WHERE id=?),'direct') END,
+        direct_status_changed_at=(SELECT previous_direct_status_changed_at FROM request_status_updates WHERE id=?),
+        internal_status_id=(SELECT previous_internal_status_id FROM request_status_updates WHERE id=?),updated_at = ? WHERE id = ?`).bind(decline.previousState,decline.id,decline.id,decline.id, now, decline.requestId),
       this.connection.binding.prepare(`
         INSERT INTO audit_entries (id, actor_type, actor_id, action, entity_type, entity_id, occurred_at, details_json, created_at, updated_at)
         VALUES (?, 'operator', ?, 'request.decline_reversed', 'request', ?, ?, NULL, ?, ?)

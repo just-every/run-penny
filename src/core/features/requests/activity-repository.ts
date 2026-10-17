@@ -6,7 +6,7 @@ export async function readRequesterActivity(connection: DatabaseConnection, iden
   const [requests, votes, follows, comments] = await Promise.all([
     connection.binding.prepare(`
       SELECT id, slug, title, description, proposed_solution AS proposedSolution, impact_statement AS impactStatement,
-        moderation_state AS moderationState, public_state AS publicState, withdrawn_at AS withdrawnAt,
+        moderation_state AS moderationState, (SELECT status FROM penny_request_status WHERE request_id=requests.id) AS publicState, withdrawn_at AS withdrawnAt,
         CASE WHEN moderation_state = 'rejected' THEN (
           SELECT event.reason FROM request_moderation_events event
           WHERE event.subject_type = 'request' AND event.subject_id = requests.id

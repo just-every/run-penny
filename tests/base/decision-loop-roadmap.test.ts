@@ -2,7 +2,7 @@ import { applyD1Migrations } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeAll,describe,expect,inject,it } from 'vitest'
 import { seedLoop,request,json,document,committed,publicRequest,approve,row,ready,commitInput,stamp } from './decision-loop-fixture'
-beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop()})
+beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop();const settings=await json<any>(request('/api/operator/settings/status-roadmap'));await json(request('/api/operator/settings/status-roadmap','PUT',{...settings.settings,source:'approved_items'}))})
 const publication=(id:string)=>env.DB.prepare('SELECT * FROM roadmap_publications WHERE roadmap_item_id=?').bind(id).first<{id:string;public_slug:string;approved_at:string;updated_at:string;withdrawn_at:string|null}>()
 const move=(id:string,status:string,key=crypto.randomUUID())=>request(`/api/operator/roadmap/${id}/move`,'POST',{status,reason:'Measured delivery reason',idempotencyKey:key})
 describe('Explicit roadmap publication',()=>{

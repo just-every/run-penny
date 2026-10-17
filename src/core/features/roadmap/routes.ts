@@ -5,8 +5,12 @@ import { z } from 'zod'
 import { parseMutationBody,type OperatorMutationEnvironment } from '@/core/app/operator-mutations'
 import { loopMutation } from '@/core/app/loop-mutation'
 import { approveRoadmap,editRoadmap,moveRoadmap,withdrawRoadmap } from './write-service'
+import { getOperatorRoadmapSettings, publicRoadmapSettings, saveStatusRoadmapSettings } from './status-roadmap-settings'
 const nullable=z.string().max(20000).nullable()
 export function registerRoadmapRoutes(app:Hono<OperatorMutationEnvironment>){
+ app.get('/api/operator/settings/status-roadmap',getOperatorRoadmapSettings)
+ app.put('/api/operator/settings/status-roadmap',saveStatusRoadmapSettings)
+ app.get('/api/public/roadmap/settings',async c=>{c.header('Cache-Control','no-store');return c.json(await publicRoadmapSettings(c.get('runtime').database.binding))})
  app.get('/api/operator/roadmap/:id/context',c=>loopMutation(c,async()=>{
  const db=c.get('runtime').database.binding,id=c.req.param('id')
  const contexts=await roadmapContexts(db,[id]),context=contexts[id]

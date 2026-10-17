@@ -50,7 +50,7 @@ export function publicResources(href: string): Promise<Resources> {
   }
   if (path === '/portal/feedback/new') return read(['/api/public/boards', '/api/auth/capabilities'])
   if (/^\/portal\/roadmap\/[a-z0-9-]+$/.test(path)) return read([path.replace('/portal/roadmap/', '/api/public/roadmap/')])
-  if (path === '/portal/roadmap') return read(['/api/public/roadmap'])
+  if (path === '/portal/roadmap') return read(['/api/public/roadmap', '/api/public/roadmap/settings'])
   if (path === '/portal/updates') return read(['/api/public/releases'])
   if (/^\/portal\/feedback\/[a-z0-9-]+$/.test(path) && path !== '/portal/feedback/new') return read([path.replace('/portal/feedback/', '/api/public/requests/')])
   if (/^\/portal\/updates\/[a-z0-9-]+$/.test(path)) return read([path.replace('/portal/updates/', '/api/public/releases/')])

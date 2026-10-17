@@ -7,7 +7,7 @@ The portal has four places:
 | Page | Address | What it shows |
 |---|---|---|
 | Feedback board | `/portal/feedback` | Published requests, with search, board and status filters. |
-| Roadmap | `/portal/roadmap` | Items you have approved for the public, grouped by status. |
+| Roadmap | `/portal/roadmap` | Published request statuses, or separately approved roadmap items, grouped by status. |
 | Updates | `/portal/updates` | Your published releases. |
 | Your feedback | `/portal/feedback/activity` | A requester's own requests, votes, follows and comments. |
 
@@ -70,11 +70,19 @@ Every published request shows one of six statuses.
 | **Shipped** | It is done. New votes are closed. |
 | **Declined** | You have decided not to do it, and gave a public reason. New votes are closed, and existing votes and comments stay visible. |
 
-Planned, In progress and Shipped come from the roadmap item a request is mapped to, so a request only shows them after you approve that mapping. An operator can reverse a decline.
+Operators set any of the six statuses directly from a published request’s controls in **Moderation**. The public comment is optional unless declining. A status can also carry a public ETA such as `2027-03` or `2027-Q1`; leaving it blank clears the ETA. Saving the current status with no comment or ETA change creates no update or notification.
+
+An approved roadmap mapping can also set a request’s status. The latest direct change, mapping approval or mapped item transition wins. Withdrawing the mapping restores the last direct status. Declined takes precedence until an operator reverses it. The operator controls show which source currently supplies the public status.
+
+In **Feedback settings → Request statuses**, the owner defines internal statuses mapped to the six public statuses and a comment template for each public status. Internal names stay private unless the owner chooses to show one publicly. Changing a mapping updates its requests without publishing an update or sending email. A template is offered when selecting a status and can be edited before publication.
 
 ## The roadmap and updates
 
-The public roadmap lists only items an operator has approved, grouped under Under review, Planned, In progress and Shipped. Each shows your customer-safe title and summary and links to its requests. It never shows accounts, dates, confidence, reasoning or evidence. A Dropped item leaves the public roadmap.
+In **Feedback settings → Public roadmap**, the owner chooses request statuses or approved roadmap items. New installations start with request statuses; an existing roadmap keeps its approved-item source.
+
+A status roadmap shows published requests from the selected public boards under Under review, Planned, In progress and Shipped. Each card links to its request and shows its board, vote total and optional public ETA. Open, Declined, held and internal-board requests are absent. The owner can hide or rename columns and show all Shipped requests or only the last 30, 90 or 365 days. The page refreshes current status automatically.
+
+With approved roadmap items selected, only explicitly approved customer-safe item wording is shown, with links to mapped requests. A Dropped item leaves that roadmap. Neither source exposes internal target dates, accounts, confidence, reasoning or evidence.
 
 The updates page lists your published releases, newest first. Until you publish one, it says there are no updates yet, and shows no placeholder.
 

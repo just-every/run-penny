@@ -1,0 +1,37 @@
+import { applyD1Migrations } from 'cloudflare:test'
+import { beforeAll,expect,inject,it } from 'vitest'
+import { env,seedLoop,request,json,publicRequest,committed,approve,row } from './decision-loop-fixture'
+beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop()})
+
+it('[REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards',async()=>{
+ const r=await publicRequest(),get=()=>json(request(`/api/public/requests/${r.slug}`)),set=(status:string,extra:Record<string,unknown>={})=>request(`/api/operator/requests/${r.slug}/status-updates`,'POST',{status,...extra})
+ expect(await get()).toMatchObject({status:'open'})
+ await json(set('planned',{publicEta:'2027-Q1'}));expect(await get()).toMatchObject({status:'planned',publicEta:'2027-Q1'})
+ const count=async()=>Number((await env.DB.prepare('SELECT COUNT(*) n FROM request_status_updates WHERE request_id=?').bind(r.id).first<{n:number}>())!.n)
+ const n=await count();await json(set('planned'));expect(await count()).toBe(n)
+ expect((await set('declined')).status).toBe(400);expect((await set('planned',{publicEta:'tomorrow'})).status).toBe(400)
+ const internal=await json(request('/api/operator/settings/request-statuses','POST',{name:'Design validation',publicStatus:'in_progress'}),201)
+ await json(set('in_progress',{internalStatusId:internal.id}));expect(await get()).toMatchObject({status:'in_progress',statusLabel:null});expect(JSON.stringify(await get())).not.toContain('Design validation')
+ const before=await count();await json(request(`/api/operator/settings/request-statuses/${internal.id}`,'PATCH',{publicStatus:'under_review',showPublicLabel:true}))
+ expect(await get()).toMatchObject({status:'under_review',statusLabel:'Design validation'});expect(await count()).toBe(before)
+ const c=await committed();await json(request(`/api/operator/roadmap/${c.itemId}/move`,'POST',{status:'in_progress',reason:'Delivery started',idempotencyKey:crypto.randomUUID()}));await approve(c.itemId,[r.id]);expect(await get()).toMatchObject({status:'in_progress',statusLabel:null})
+ await json(set('planned'));expect(await get()).toMatchObject({status:'planned'})
+ await json(request(`/api/operator/roadmap/${c.itemId}/move`,'POST',{status:'shipped',reason:'Delivered',idempotencyKey:crypto.randomUUID()}));expect(await get()).toMatchObject({status:'shipped'})
+ await json(set('declined',{body:'We no longer support this direction.'}));expect(await get()).toMatchObject({status:'declined'})
+ await json(request(`/api/operator/requests/${r.slug}/decline/reverse`,'POST',{}));expect(await get()).toMatchObject({status:'shipped'})
+ await json(request(`/api/operator/roadmap/${c.itemId}/withdraw`,'POST',{}));expect(await get()).toMatchObject({status:'planned'})
+ const settings=await json<any>(request('/api/operator/settings/status-roadmap'))
+ await json(request('/api/operator/settings/status-roadmap','PUT',{...settings.settings,source:'request_statuses',boardSlugs:['loop-board']}))
+ let cards=await json<any[]>(request('/api/public/roadmap'));expect(cards.filter(card=>card.slug===r.slug)).toHaveLength(1);expect(cards.find(card=>card.slug===r.slug)).toMatchObject({status:'planned',publicEta:'2027-Q1',source:'requests'})
+ const open=await publicRequest();expect(cards.some(card=>card.slug===open.slug)).toBe(false)
+ const hidden={...settings.settings,source:'request_statuses',boardSlugs:['loop-board'],columns:settings.settings.columns.map((column:any)=>({...column,visible:column.status!=='planned'}))}
+ await json(request('/api/operator/settings/status-roadmap','PUT',hidden));expect((await json<any[]>(request('/api/public/roadmap'))).some(card=>card.slug===r.slug)).toBe(false)
+ await json(request('/api/operator/settings/status-roadmap','PUT',{...hidden,columns:settings.settings.columns,shippedDays:30}));await json(set('shipped'));expect((await json<any[]>(request('/api/public/roadmap'))).some(card=>card.slug===r.slug)).toBe(true)
+ await env.DB.prepare("UPDATE requests SET direct_status_changed_at='2020-01-01T00:00:00Z' WHERE id=?").bind(r.id).run();expect((await json<any[]>(request('/api/public/roadmap'))).some(card=>card.slug===r.slug)).toBe(false)
+ await json(request('/api/operator/settings/status-roadmap','PUT',{...settings.settings,source:'approved_items'}));await approve(c.itemId,[r.id]);cards=await json<any[]>(request('/api/public/roadmap'));const publishedSlug=await publicationSlug(c.itemId);expect(cards.some(card=>card.slug===publishedSlug)).toBe(true)
+ expect(await row('requests',r.id)).toMatchObject({public_eta:'2027-Q1'})
+ await env.DB.prepare("UPDATE requests SET public_state='withdrawn',withdrawn_at=? WHERE id=?").bind(new Date().toISOString(),r.id).run()
+ expect((await request(`/api/public/requests/${r.slug}`)).status).toBe(410)
+ expect(await json(request(`/api/operator/requests/${r.slug}/context`))).toMatchObject({statusDetails:{status:'withdrawn',statusSource:'direct'}})
+})
+async function publicationSlug(id:string){return (await env.DB.prepare('SELECT public_slug FROM roadmap_publications WHERE roadmap_item_id=?').bind(id).first<{public_slug:string}>())!.public_slug}

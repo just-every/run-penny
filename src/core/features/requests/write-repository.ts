@@ -1,3 +1,4 @@
+import { requestStatusExpression } from './status-sql'
 import { requestSuggestions } from './suggestions'
 import { resumeRequestEmailStatement } from '@/core/features/notifications/link-epochs'
 import { readRequesterActivity } from './activity-repository'
@@ -220,12 +221,7 @@ export class RequestWriteRepository {
   private async findVotableRequest(slug: string): Promise<{ readonly id: string; readonly status: string } | null> {
     return this.connection.binding.prepare(`
       SELECT r.id AS id,
-        CASE
-          WHEN r.public_state = 'declined' THEN 'declined'
-          WHEN ri.status = 'exploring' THEN 'under_review'
-          WHEN ri.status IN ('planned', 'in_progress', 'shipped') THEN ri.status
-          ELSE r.public_state
-        END AS status
+        ${requestStatusExpression} AS status
       FROM requests r
       INNER JOIN boards b ON b.id = r.board_id
       LEFT JOIN requesters author ON author.id = r.author_requester_id

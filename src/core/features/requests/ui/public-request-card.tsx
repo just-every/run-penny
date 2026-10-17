@@ -8,7 +8,7 @@ export function PublicRequestCardView({ request }: { readonly request: PublicReq
   return (
     <article className={`${paperCardClass} p-5 transition-colors hover:border-penny-line-strong sm:p-6`}>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <PublicStatus status={request.status} />
+        <PublicStatus status={request.status} label={request.statusLabel} />
         <span className="text-xs font-medium text-penny-muted">{request.board.name}</span>
       </div>
       <h2 className="mt-3 break-words text-lg font-bold tracking-[-0.015em] text-penny-ink sm:text-xl">

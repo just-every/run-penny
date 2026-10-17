@@ -103,7 +103,7 @@ function FeedbackDetail({ request, onChange }: { readonly request: PublicRequest
   return (
     <>
       <PublicCard className="p-5 sm:p-7">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2"><PublicStatus status={request.status} /><span className="text-sm font-medium text-penny-muted">{request.board.name}</span></div>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2"><PublicStatus status={request.status} label={request.statusLabel} /><span className="text-sm font-medium text-penny-muted">{request.board.name}</span></div>
         <h2 className="mt-4 break-words text-2xl font-extrabold tracking-[-0.02em] text-penny-ink">{request.title}</h2>
         {request.authorDisplayName ? <p className="mt-1 text-sm text-penny-muted">Submitted by {request.authorDisplayName}</p> : null}
         <p className="mt-4 break-words whitespace-pre-wrap text-base leading-7 text-penny-ink">{request.description}</p>
@@ -111,6 +111,7 @@ function FeedbackDetail({ request, onChange }: { readonly request: PublicRequest
           <DataField portal label="Votes" valueClassName="text-lg font-bold tabular-nums">{request.voteCount}</DataField>
           <DataField portal label="Published" valueClassName="text-lg font-bold"><time dateTime={request.publishedAt}>{formatPublicDate(request.publishedAt)}</time></DataField>
         </dl>
+        {request.publicEta ? <p className="mt-4 text-sm font-semibold text-penny-ink">Public ETA: {request.publicEta}</p> : null}
         <RequesterActions slug={request.slug} onChange={onChange} />
         {request.attachments.map((file) => <a key={file.id} className={`${textLinkClass} mt-3 block break-words`} href={`/api/public/attachments/${file.id}`}>{file.filename}</a>)}
       </PublicCard>

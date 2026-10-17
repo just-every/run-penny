@@ -77,7 +77,7 @@ Each move of an approved item prepares a private draft status update naming the 
 
 If you change the approval or mappings after a draft is prepared, that draft becomes stale and cannot be published. Discard it, then make the next roadmap move to prepare a fresh one.
 
-You can also post a status update straight onto a request from its controls in **Moderation**, choosing Open, Under review or Declined, optionally pinning it above the comments. Declining needs a public reason.
+You can also post a status update straight onto a request from its controls in **Moderation**, choosing any of the six public statuses or an internal status mapped to one, optionally pinning it above the comments and adding a public month or quarter ETA. The comment is optional except when declining. A saved status with no comment or ETA change publishes nothing. The latest direct change or approved mapped roadmap change supplies the request’s public status.
 
 ## 6. Publish a release
 

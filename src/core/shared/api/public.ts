@@ -11,6 +11,8 @@ export interface PublicRequestCard {
   readonly board: Pick<PublicBoard, 'slug' | 'name'>
   readonly title: string
   readonly description: string
+  readonly publicEta?:string|null
+  readonly statusLabel?:string|null
   readonly status: PublicRequestStatus
   readonly voteCount: number
   readonly commentCount: number
@@ -36,6 +38,10 @@ export interface PublicRequestDetail extends PublicRequestCard {
 }
 
 export interface PublicRoadmapItem {
+  readonly source?:'requests'
+  readonly voteCount?:number
+  readonly publicEta?:string|null
+  readonly statusLabel?:string|null
   readonly board?: {readonly slug:string;readonly name:string}
   readonly slug: string
   readonly title: string

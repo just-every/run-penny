@@ -45,8 +45,8 @@ const statusTones: Record<PublicRequestStatus, ChipTone> = {
   declined: 'muted',
 }
 
-export function PublicStatus({ status }: { readonly status: PublicRequestStatus }) {
-  return <Chip portal tone={statusTones[status]}>{statusLabels[status]}</Chip>
+export function PublicStatus({ status, label }: { readonly status: PublicRequestStatus; readonly label?:string|null }) {
+  return <Chip portal tone={statusTones[status]}>{label || statusLabels[status]}</Chip>
 }
 
 export function ReleaseType({ type }: { readonly type: PublicRelease['releaseType'] }) {

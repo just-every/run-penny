@@ -1,3 +1,4 @@
+import { requestStatusExpression, requestStatusLabelExpression } from './status-sql'
 import type { PublicRequestCard, PublicRequestComment, PublicRequestDetail, PublicRequestStatus } from '@/core/shared/api/public'
 import type { DatabaseConnection } from '@/core/platform/database'
 
@@ -8,6 +9,8 @@ interface PublicRequestRow extends Omit<PublicRequestCard, 'board' | 'status' | 
   readonly status: PublicRequestStatus
   readonly voteCount: number
   readonly commentCount: number
+  readonly publicEta: string|null
+  readonly statusLabel: string|null
 }
 
 export interface PublicRequestFilters {
@@ -17,15 +20,7 @@ export interface PublicRequestFilters {
   readonly sort?: 'recent' | 'votes'
 }
 
-const statusExpression = `
-  CASE
-    WHEN r.public_state = 'declined' THEN 'declined'
-    WHEN ri.status = 'exploring' THEN 'under_review'
-    WHEN ri.status IN ('planned', 'in_progress', 'shipped') THEN ri.status
-    WHEN r.public_state = 'under_review' THEN 'under_review'
-    ELSE 'open'
-  END
-`
+const statusExpression = requestStatusExpression
 
 const publicRequestFrom = `
   FROM requests r
@@ -52,7 +47,7 @@ function requestSelect(): string {
     SELECT
       r.slug AS slug, b.slug AS boardSlug, b.name AS boardName,
       r.public_title AS title, r.public_description AS description, r.public_author_display_name AS authorDisplayName,
-      ${statusExpression} AS status, r.published_at AS publishedAt,
+      ${statusExpression} AS status, r.public_eta AS publicEta, ${requestStatusLabelExpression} AS statusLabel, r.published_at AS publishedAt,
       (
         SELECT COUNT(*) FROM request_votes rv
         INNER JOIN requesters voter ON voter.id = rv.requester_id AND voter.blocked_at IS NULL
@@ -81,6 +76,7 @@ function mapRequest(row: PublicRequestRow): PublicRequestCard {
     title: row.title,
     description: row.description,
     status: row.status,
+    publicEta: row.publicEta, statusLabel: row.statusLabel,
     voteCount: Number(row.voteCount),
     commentCount: Number(row.commentCount),
     publishedAt: row.publishedAt,

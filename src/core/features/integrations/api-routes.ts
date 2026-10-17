@@ -1,3 +1,4 @@
+import { statusPublicationSchema } from '../requests/status-schema'
 import {revokeKey} from './revocation'
 import type {Hono} from 'hono'
 import {z} from 'zod'
@@ -13,7 +14,7 @@ import {apiAuthority,apiScopes,managedKeys} from './keys'
 const text=z.string().trim().min(1).max(20000),slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(128)
 const create=z.object({title:z.string().trim().min(1).max(280),description:text,boardSlug:slug,evidenceIds:z.array(z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/)).max(100).default([])}).strict()
 const comment=z.object({body:text,approve:z.literal(true)}).strict()
-const status=z.object({status:z.enum(['open','under_review','declined']),body:text,pinned:z.boolean().default(false),idempotencyKey:z.string().regex(/^[A-Za-z0-9_-]+$/).max(128),approve:z.literal(true)}).strict()
+const status=statusPublicationSchema.extend({idempotencyKey:z.string().regex(/^[A-Za-z0-9_-]+$/).min(1).max(128),approve:z.literal(true)}).strict()
 const issue=z.object({name:z.string().trim().min(1).max(200),scopes:z.array(z.enum(apiScopes)).min(1),expiresAt:z.number().int().optional()}).strict()
 export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
  app.use('/api/v1/*',async(c,next)=>{c.header('Cache-Control','private, no-store');await next()})

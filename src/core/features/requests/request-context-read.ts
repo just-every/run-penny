@@ -5,6 +5,7 @@ import { requestActions, requestAvailabilitySql, type RequestActions, type Reque
 import { requestContextRowsSql, type RequestContextRowName } from './request-context-rows'
 
 export type RequestContext = Record<RequestContextRowName, Record<string, unknown>[]> & {
+  statusDetails: Pick<RequestAvailabilityRow,'status'|'statusSource'|'publicEta'|'internalStatusId'|'internalStatusName'>
   requestId: string
   actions: RequestActions
   statusVersions: ReturnType<typeof requestVersionCounts>
@@ -40,7 +41,7 @@ export async function requestContexts(database: DatabaseConnection, slugs: strin
   const contextsById = new Map<string, RequestContext>()
   for (const request of requests) {
     contextsById.set(request.id, {
-      requestId: request.id, actions: requestActions(request),
+      requestId: request.id, statusDetails:{status:request.status,statusSource:request.statusSource,publicEta:request.publicEta,internalStatusId:request.internalStatusId,internalStatusName:request.internalStatusName}, actions: requestActions(request),
       statusVersions: [], deliveryCounts: emptyCounts(),
       voters: [], accounts: [], notes: [], comments: [], edits: [], attachments: [],
       commentEdits: [], appeals: [], uploads: [], votesByAccount: [], tags: [],

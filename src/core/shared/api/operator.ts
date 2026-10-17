@@ -31,6 +31,9 @@ export interface OperatorEvidenceCard {
 }
 
 export interface OperatorRequestCard {
+  readonly statusSource?:'direct'|'roadmap'
+  readonly publicEta?:string|null
+  readonly internalStatusName?:string|null
   readonly id: string
   readonly slug: string
   readonly title: string

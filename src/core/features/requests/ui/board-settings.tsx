@@ -1,3 +1,6 @@
+import {useRouter} from '@tanstack/react-router'
+import {StatusRoadmapSettings} from '../../roadmap/ui/status-roadmap-settings'
+import {RequestStatusSettings} from '../../settings/ui/request-status-settings'
 import {IntegrationDestinations} from '../../integrations/ui/destinations'
 import {TrackerSettings} from '../../integrations/ui/tracker-settings'
 import {BrandingSettings} from '../../settings/ui/branding-settings'
@@ -18,9 +21,10 @@ import { CreateTagCard, SettingsSection, TagCard, type Tag } from './settings-ca
 interface Settings { boards: Board[]; tags: Tag[] }
 
 export function BoardSettings() {
+  const router=useRouter()
   const [data, refresh] = usePublicResource<Settings>('/api/operator/catalog/settings'), [message, setMessage] = useState(''), [success, setSuccess] = useState(false)
   async function act(path: string, body: unknown, method = 'POST', form?: HTMLFormElement) {
-    try { await operatorMutation(path, body, method); form?.reset(); setSuccess(true); setMessage('Saved.'); refresh() } catch (e) { setSuccess(false); setMessage(e instanceof Error ? e.message : 'Could not save.') }
+    try { await operatorMutation(path, body, method); form?.reset(); setSuccess(true); setMessage('Saved.'); refresh(); await router.invalidate() } catch (e) { setSuccess(false); setMessage(e instanceof Error ? e.message : 'Could not save.') }
   }
   const section = useRef<HTMLElement>(null)
   useSettingsAnchor(section)
@@ -37,6 +41,8 @@ export function BoardSettings() {
         <TrackerSettings />
         <BrandingSettings />
         <FrameSettings />
+        <RequestStatusSettings />
+        <StatusRoadmapSettings />
         <SettingsSection id="settings-boards" icon="board" title="Boards">
           {data.kind !== 'ready' ? <p className="text-base text-penny-muted">Loading settings…</p> : null}
           {ready && ready.boards.length === 0 ? <p className="mb-4 text-base text-penny-muted">No boards yet</p> : null}

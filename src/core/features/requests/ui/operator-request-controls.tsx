@@ -1,6 +1,6 @@
 import { DeliveryCounts, useMailSuppressed } from '@/core/features/releases/ui/delivery-counts'
 import type { DeliveryCounts as Counts } from '@/core/features/releases/counts'
-import { StatusUpdateForm } from './status-update-form'
+import { StatusUpdateForm, type RequestStatusDetails } from './status-update-form'
 import { AttachmentRecovery } from './attachment-recovery'
 import { operatorMutation } from './operator-client'
 import { RequestMetadata } from './request-metadata'
@@ -27,7 +27,7 @@ function followerSummary(counts: Counts, mailSuppressed: boolean): string {
   if (counts.unknown > 0) parts.push(`${counts.unknown} need review`)
   return parts.length > 0 ? parts.join(', ') : 'No followers to notify.'
 }
-interface Context extends HeldContext { actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; notes: InternalNote[]; tags: { id: string; name: string }[] }
+interface Context extends HeldContext { statusDetails:RequestStatusDetails; actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; notes: InternalNote[]; tags: { id: string; name: string }[] }
 
 export function OperatorRequestControls({ slug }: { slug: string }) {
   const [context, refresh] = usePublicResource<Context>(`/api/operator/requests/${slug}/context`), [message, setMessage] = useState(''), router = useRouter()
@@ -58,7 +58,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
           <p className="mt-3 text-sm font-semibold text-penny-ink empty:hidden" role="status">{message}</p>
           {context.kind === 'ready' ? held.map(({ item, path, label }) => <HeldItemForm key={item.id} item={item} path={path} label={label} act={act} canReview={context.data.actions.moderation} />) : null}
           {context.kind === 'ready' ? <TrackerLinks requestId={context.data.requestId} /> : null}
-          {context.kind === 'ready' && context.data.actions.publish ? <StatusUpdateForm key={slug} slug={slug} onSaved={refresh} onMessage={setMessage} onReverse={context.data.actions.reverseDecline ? () => void act(`/api/operator/requests/${slug}/decline/reverse`, {}) : undefined} /> : null}
+          {context.kind === 'ready' && context.data.actions.publish ? <StatusUpdateForm key={`${slug}-${JSON.stringify(context.data.statusDetails)}`} current={context.data.statusDetails} slug={slug} onSaved={()=>{refresh();void router.invalidate()}} onMessage={setMessage} onReverse={context.data.actions.reverseDecline ? () => void act(`/api/operator/requests/${slug}/decline/reverse`, {}) : undefined} /> : null}
           {context.kind === 'ready' && !context.data.actions.publish && context.data.actions.reverseDecline ? <button type="button" className={quietButtonClass} onClick={() => void act(`/api/operator/requests/${slug}/decline/reverse`, {})}>Reverse decline</button> : null}
           {context.kind === 'ready' && context.data.actions.publish ? <form className={`${subformClass} space-y-3`} onSubmit={(e) => { e.preventDefault(); void act(`/api/operator/requests/${slug}/comments`, { body: new FormData(e.currentTarget).get('body') }) }}><label className={fieldLabelClass}>Operator comment<textarea name="body" required className={fieldClass} /></label><button className={primaryButtonClass}>Post public comment</button></form> : null}
           {context.kind === 'ready' && context.data.actions.merge ? <form className={`${subformClass} space-y-3`} onSubmit={(e) => { e.preventDefault(); void act(`/api/operator/requests/${slug}/merge`, { targetSlug: new FormData(e.currentTarget).get('target') }) }}><label className={fieldLabelClass}>Canonical request slug<input name="target" required className={fieldClass} /></label><div className="flex flex-wrap items-center gap-3"><button className={primaryButtonClass}>Merge duplicate</button></div></form> : null}

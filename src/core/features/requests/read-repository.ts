@@ -1,3 +1,4 @@
+import { requestStatusExpression, requestStatusSourceExpression } from './status-sql'
 import { boundedIds } from '@/core/features/workspace/list-query'
 import type { OperatorRequestCard } from '@/core/shared/api/operator'
 import type { DatabaseConnection } from '@/core/platform/database'
@@ -13,7 +14,8 @@ export class RequestsReadRepository {
     const result = await this.connection.binding.prepare(`
       SELECT
         r.id AS id, r.slug AS slug, r.title AS title, r.description AS description,
-        r.moderation_state AS moderationState, r.public_state AS publicState,
+        r.moderation_state AS moderationState, ${requestStatusExpression} AS publicState, ${requestStatusSourceExpression} AS statusSource, r.public_eta AS publicEta,
+        (SELECT name FROM request_internal_statuses WHERE id=r.internal_status_id) AS internalStatusName,
         b.slug AS boardSlug, b.name AS boardName, b.visibility AS boardVisibility,
         author.id AS authorId, author.display_name AS authorName,
         (
@@ -40,6 +42,7 @@ export class RequestsReadRepository {
       LIMIT 25
     `).bind(...(ids ?? [])).all<{
       readonly id: string; readonly slug: string; readonly title: string; readonly description: string
+      readonly statusSource:'direct'|'roadmap'; readonly publicEta:string|null; readonly internalStatusName:string|null
       readonly moderationState: OperatorRequestCard['moderationState']; readonly publicState: OperatorRequestCard['publicState']
       readonly boardSlug: string; readonly boardName: string; readonly boardVisibility: 'public' | 'internal'
       readonly authorId: string | null; readonly authorName: string | null; readonly authorEmail: string | null
@@ -47,7 +50,7 @@ export class RequestsReadRepository {
     }>()
     return result.results.map((row) => ({
       id: row.id, slug: row.slug, title: row.title, description: row.description,
-      moderationState: row.moderationState, publicState: row.publicState,
+      moderationState: row.moderationState, publicState: row.publicState, statusSource:row.statusSource,publicEta:row.publicEta,internalStatusName:row.internalStatusName,
       board: { slug: row.boardSlug, name: row.boardName, visibility: row.boardVisibility },
       author: row.authorId && row.authorName ? { id: row.authorId, displayName: row.authorName, email: row.authorEmail } : null,
       voteCount: Number(row.voteCount), evidenceCount: Number(row.evidenceCount),

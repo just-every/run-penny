@@ -1,3 +1,4 @@
+import { requestStatusExpression } from './status-sql'
 import type { DatabaseConnection } from '@/core/platform/database'
 import type { RequesterReference } from './lifecycle-types'
 import { RequestLifecycleError } from './lifecycle-types'
@@ -28,10 +29,7 @@ export const publishedAdmission = `EXISTS(SELECT 1 FROM requests r JOIN boards b
   LEFT JOIN requesters author ON author.id=r.author_requester_id WHERE r.id=? AND r.moderation_state='approved'
   AND r.published_at IS NOT NULL AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL
   AND b.visibility='public' AND (author.id IS NULL OR author.blocked_at IS NULL))`
-export const votingAdmission = `${publishedAdmission} AND NOT EXISTS(SELECT 1 FROM requests r WHERE r.id=? AND (r.public_state='declined'
-  OR EXISTS(SELECT 1 FROM roadmap_request_mappings m JOIN roadmap_publications p ON p.roadmap_item_id=m.roadmap_item_id
-    JOIN roadmap_items i ON i.id=p.roadmap_item_id WHERE m.request_id=r.id AND m.approved_at IS NOT NULL
-      AND m.withdrawn_at IS NULL AND p.withdrawn_at IS NULL AND i.status='shipped')))`
+export const votingAdmission = `${publishedAdmission} AND EXISTS(SELECT 1 FROM requests r WHERE r.id=? AND ${requestStatusExpression} IN ('open','under_review','planned','in_progress'))`
 export const ownRequestAdmission = `EXISTS(SELECT 1 FROM requests WHERE id=? AND author_requester_id=?
   AND withdrawn_at IS NULL AND merged_into_request_id IS NULL)`
 

@@ -149,7 +149,9 @@ export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:Dat
  }catch(error){await finish(db,id,'aborted');throw error}
 }
 async function bytesHash(bytes:Uint8Array):Promise<string>{return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes as Uint8Array<ArrayBuffer>))].map(value=>value.toString(16).padStart(2,'0')).join('')}
-const bootstrapTables=new Set(['operators','operator_sessions','native_magic_links','local_auth_outbox','native_rate_limits'])
+// The migration seeds roadmap defaults before any business data exists; an
+// otherwise empty restore replaces that configuration with the archived choice.
+const bootstrapTables=new Set(['penny_status_roadmap_settings','operators','operator_sessions','native_magic_links','local_auth_outbox','native_rate_limits'])
 async function validated(db:D1Database,value:unknown,journalValue:unknown):Promise<{archive:Archive;journal:ErasureJournal;tables:Table[];bytes:Uint8Array[]}>{
  const parsed=archiveShape.safeParse(value),parsedJournal=journalShape.safeParse(journalValue)
  if(!parsed.success||!parsedJournal.success)fail('invalid_archive',400)

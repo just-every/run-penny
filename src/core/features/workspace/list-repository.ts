@@ -24,7 +24,7 @@ export function listPredicate(entity: ListEntity, query: ListQuery): { sql: stri
  if(entity==='requests') {
   if(query.moderation)add('x.moderation_state=?',query.moderation)
   if(query.board)add('EXISTS(SELECT 1 FROM boards b WHERE b.id=x.board_id AND (b.id=? OR b.slug=?))',query.board),values.push(query.board)
-  if(query.status)add('x.public_state=?',query.status)
+  if(query.status)add('(SELECT status FROM penny_request_status WHERE request_id=x.id)=?',query.status)
   if(query.decision)add(`(EXISTS(SELECT 1 FROM roadmap_request_mappings m JOIN roadmap_items ri ON ri.id=m.roadmap_item_id JOIN decisions d ON d.id=ri.decision_id WHERE m.request_id=x.id AND m.withdrawn_at IS NULL AND (d.id=? OR d.slug=?)) OR EXISTS(SELECT 1 FROM request_evidence_links rel JOIN candidate_bet_evidence_links el ON el.evidence_id=rel.evidence_id JOIN candidate_bets cb ON cb.id=el.candidate_bet_id JOIN decisions d ON d.id=cb.decision_id WHERE rel.request_id=x.id AND (d.id=? OR d.slug=?)))`,query.decision),values.push(query.decision,query.decision,query.decision)
   if(query.account)add(`(EXISTS(SELECT 1 FROM request_evidence_links l JOIN evidence_items e ON e.id=l.evidence_id JOIN accounts a ON a.id=e.account_id WHERE l.request_id=x.id AND (a.id=? OR a.slug=?)) OR EXISTS(SELECT 1 FROM requester_account_links l JOIN accounts a ON a.id=l.account_id WHERE l.requester_id=x.author_requester_id AND (a.id=? OR a.slug=?)))`,query.account),values.push(query.account,query.account,query.account)
  } else if(query.moderation||query.board||query.decision) throw new ListQueryError('Request filters require the request queue')

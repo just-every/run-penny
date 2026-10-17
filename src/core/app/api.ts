@@ -1,3 +1,4 @@
+import { registerRequestStatusSettingsRoutes } from '@/core/features/settings/request-statuses'
 import {registerLearningRoutes} from '@/core/features/learning/routes'
 import {publishesNotification,queueNotificationWork} from '@/core/features/notifications/queue'
 import {registerOperatorManagementRoutes} from '@/core/features/auth/operator-management-routes'
@@ -91,6 +92,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
 
   registerLearningRoutes(app)
   registerIntegrationApi(app)
+  registerRequestStatusSettingsRoutes(app)
   registerBrandingRoutes(app)
   registerFrameSettings(app)
   registerDeliveryRoutes(app)

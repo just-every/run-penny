@@ -25,7 +25,7 @@ identifiers; request bodies cannot choose either. JSON bodies are bounded to
 | GET `/requests/:slug/comments` | `comments:read` | Approved published comments, with safe display names. |
 | POST `/requests/:slug/comments` | `comments:write` | Publish `{body, approve:true}` on an already published public request. |
 | GET `/requests/:slug/status-updates` | `status:read` | Native public status history. |
-| POST `/requests/:slug/status-updates` | `status:write` | Publish `{status,body,idempotencyKey,approve:true,pinned?}`. Status is open, under_review or declined. |
+| POST `/requests/:slug/status-updates` | `status:write` | Publish `{status,body?,idempotencyKey,approve:true,pinned?,publicEta?,internalStatusId?}`. Status accepts open, under_review, planned, in_progress, shipped or declined. Declined requires a public body. ETA is a month or quarter (`YYYY-MM` / `YYYY-Q1`); null clears it, omission preserves it. The internal status must map to the supplied public status. An unchanged status without wording or ETA change publishes nothing. |
 | GET `/releases` and `/releases/:slug` | `releases:read` | Immutable native published release wording. |
 | POST `/releases` | `releases:write` | Save a native draft with title, body, releaseType, tagIds, publicationDate, targetIds and optional setupUrl. The server selects the issuing actor. |
 | POST `/releases/:slug/publish` | `releases:write` | Explicit `{approve:true}` publication, subject to the native reviewed targets, Shipped state, mappings and snapshot seals. |
