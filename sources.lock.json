@@ -636,7 +636,7 @@
       "executable": false
     },
     ".github/workflows/verify.yml": {
-      "sha256": "74061aced20fb34ad06d7aaf1cbebd07daeb57e2c308a6a9ce36bd5e7f4f7732",
+      "sha256": "d6e85e6aa9120b875fac5d825f8dfdb74f87038da05649db61e54c6a76c29b61",
       "executable": false
     },
     ".gitignore": {
@@ -5276,7 +5276,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-tabs.tsx": {
-      "sha256": "a84d7dd580011103004469d88b030b845c76fb96522057edbd08e4c5e4e4aa42",
+      "sha256": "25caae7fd7b01820b4d4c431925aeeb6bae2c1d46f4b273afd9676bf891f2731",
       "executable": false
     },
     "src/core/features/learning/ui/learning.css": {
@@ -6816,7 +6816,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "6e8d1bf5da7fa7a35cb8eae06da6eefa18f55ad914b6e841054f1863e1403cd6",
+      "sha256": "843ee85b2f0fef68b7c5d9389a00a2ddbe4c54c8fafc86e2da66dc55638f79ea",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {

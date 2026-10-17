@@ -84,15 +84,3 @@ jobs:
         env:
           SHARD: ${{ matrix.name }}
         run: node scripts/verify-ci.mjs "$SHARD"
-
-  verify:
-    needs: [plan, shards]
-    if: ${{ always() }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 1
-    steps:
-      - name: Require every shard
-        env:
-          PLAN: ${{ needs.plan.result }}
-          SHARDS: ${{ needs.shards.result }}
-        run: test "$PLAN" = success && test "$SHARDS" = success

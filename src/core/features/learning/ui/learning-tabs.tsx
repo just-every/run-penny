@@ -1,4 +1,4 @@
-import { useRef, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 
 export type LearningTab = 'results' | 'learning' | 'needs-you'
 const sections: { id: LearningTab; label: string }[] = [
@@ -9,6 +9,8 @@ const sections: { id: LearningTab; label: string }[] = [
 
 export function LearningTabs({ selected, onSelect, needsYou }: { selected: LearningTab; onSelect: (tab: LearningTab) => void; needsYou: boolean }) {
  const tabs = useRef<(HTMLButtonElement | null)[]>([])
+ const [ready, setReady] = useState(false)
+ useEffect(() => { setReady(true) }, [])
  function move(event: KeyboardEvent<HTMLButtonElement>, index: number) {
   const next = event.key === 'ArrowRight' ? (index + 1) % sections.length
    : event.key === 'ArrowLeft' ? (index + sections.length - 1) % sections.length
@@ -18,10 +20,10 @@ export function LearningTabs({ selected, onSelect, needsYou }: { selected: Learn
   tabs.current[next]?.focus()
   onSelect(sections[next].id)
  }
- return <div className="tabs" role="tablist" aria-label="Learning sections">{sections.map((section, index) => <button
+ return <div className="tabs" role="tablist" aria-label="Learning sections" aria-busy={!ready}>{sections.map((section, index) => <button
   key={section.id} ref={node => { tabs.current[index] = node }} type="button" role="tab"
   id={`learning-tab-${section.id}`} aria-controls={`learning-panel-${section.id}`}
-  aria-selected={selected === section.id} tabIndex={selected === section.id ? 0 : -1}
+  aria-selected={selected === section.id} tabIndex={selected === section.id ? 0 : -1} disabled={!ready}
   onClick={() => onSelect(section.id)} onKeyDown={event => move(event, index)}
  >{section.label}{section.id === 'needs-you' && needsYou ? ' (1)' : ''}</button>)}</div>
 }
