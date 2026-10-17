@@ -2836,7 +2836,7 @@
       "executable": false
     },
     "docs/INSTALL.md": {
-      "sha256": "d372fc078b7f899d5a4cbd484c1be4082cce9ee1684428ddc98d020c8df2e163",
+      "sha256": "dc761f418e74a8f10cdf9d090966371777f0c1331a9b206f2f1f0120337ca237",
       "executable": false
     },
     "docs/INTEGRATIONS.md": {
@@ -3252,7 +3252,7 @@
       "executable": false
     },
     "README.md": {
-      "sha256": "a046591f97de2efb7ca41abe6e5b5e1d3c332a97984b0a7d222cb96da8c5177e",
+      "sha256": "cb73b105af8b48475a8bc19d052edff1410caee795692faf1182af4cfb7274f2",
       "executable": false
     },
     "RELEASE.json": {
@@ -3272,7 +3272,7 @@
       "executable": false
     },
     "RUN-LOCALLY.md": {
-      "sha256": "269ddba57387d98e8e8a04726d47d7b2ef8614041168ff7789df1ed34400dca0",
+      "sha256": "3478417a63d0ed7b5299b632a08c8c5ff7b001156acdda34e4ae5f92c1a11897",
       "executable": false
     },
     "sample-data/penny.v1.json": {
