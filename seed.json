@@ -132,6 +132,13 @@
         "OPS-005",
         "NOTIFY-002"
       ]
+    },
+    {
+      "id": "private-feedback-ownership",
+      "description": "Operators assign or unassign requests and evidence, set board defaults for capture and work their own request, evidence and requester-comment queue. Assignments remain private and portable without granting sign-in authority. Theme defaults remain unavailable.",
+      "clauses": [
+        "TRIAGE-001"
+      ]
     }
   ],
   "nonGoals": [

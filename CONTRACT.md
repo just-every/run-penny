@@ -627,13 +627,13 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 Judged from the code and tests at commit `02374e4552e429e26a81bd6f0973aa691759b2b9` (16 October 2026).
 
-OPS-005 and OPS-008 were updated on 18 October 2026 from the route and browser tests cited in those rows.
+OPS-005, OPS-008 and TRIAGE-001 were updated on 18 October 2026 from the route and browser tests cited in those rows.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 102 | 12 | 0 | 114 |
-| Target and push further | 2 | 50 | 81 | 133 |
-| All | 104 | 62 | 81 | 247 |
+| Target and push further | 2 | 51 | 80 | 133 |
+| All | 104 | 63 | 80 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -750,7 +750,7 @@ OPS-005 and OPS-008 were updated on 18 October 2026 from the route and browser t
 | `REQ-038` | Operator editing and removal of public content | target | missing |  | On a holding board and an auto-publish board: a retitled published request shows the new title in the request page, board list, search and API within 5 seconds while the old title appears only in the operator history; an edited operator comment shows the new wording marked Edited and keeps the old for operators; a removed published request answers 404 and leaves the vote total, category counts, search and the status roadmap column within 5 seconds, and restoring it brings each back; a removed requester comment leaves the portal and its author's activity view shows the reason; removing a status update leaves the status unchanged; no action sends mail except one author notice when ticked; a Contributor is refused each action with 403; each action has one audit entry. |
 | `REQ-039` | Social sign-in for requesters | target | missing |  | Against Google and GitHub OAuth fixtures: a signed-out visitor votes, chooses Continue with Google and returns to the request with the vote applied and no cookie set; a GitHub account with no verified email is sent to the emailed link; a forged or replayed OAuth state is refused and changes nothing; with both providers off neither button appears. |
 | `REQ-040` | Board participation and display settings | target | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-040/` | Posting/comment policy, hidden public vote totals, disclosed display-name voter lists and anonymity apply to portal, roadmap and public/API projections; operators retain identity and totals. Operators-only submissions return 403 while permitted votes/comments work; 1440/390 journeys pass. Gap: Canny per-board participation/display settings import remains missing. |
-| `TRIAGE-001` | Request owner | target | missing |  | A captured item takes its board's default owner; reassignment moves it between queues; a queue lists only the operator's own items. |
+| `TRIAGE-001` | Request owner | target | partial | `tests/base/ownership.test.ts`; `tests/browser/ownership-journey.mjs` | Requests and inbox evidence have one private owner; active board defaults apply on capture; reassignment and unassignment update each native operator's own request, evidence and requester-comment queues. Handling a comment requires moderation first. Theme defaults remain: native themes (AI-005) do not exist yet. |
 | `TRIAGE-002` | Aging and reminders | target | partial | `src/core/features/overview`; `tests/browser/operator-pages.mjs` | A clock-advanced test sends one reminder per age step, returns a snoozed item on its date, flags a request left in Planned for 28 days as stale with one reminder and clears the flag when its status changes, and the overview's aging and stale counts link to their records. |
 | `TRIAGE-003` | Automation rules | target | missing |  | A rule dry-runs against a fixture inbox, then applies once per item with one audit entry each; a hold rule keeps a matching auto-publish submission in moderation with the rule as its reason; the rule editor offers no publication, vote, customer-notification or commitment action. |
 | `TRIAGE-004` | Mentions and internal discussion | target | missing |  | A mention notifies its operator once; the note and its replies never appear in a public payload. |

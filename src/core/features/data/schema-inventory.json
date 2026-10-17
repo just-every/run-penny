@@ -2719,5 +2719,45 @@
       "confirmed_at",
       "updated_at"
     ]
+  },
+  "penny_board_owners": {
+    "classification": "product",
+    "columns": [
+      "board_id",
+      "operator_id",
+      "updated_at"
+    ]
+  },
+  "penny_request_owners": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "operator_id",
+      "updated_at"
+    ]
+  },
+  "penny_evidence_owners": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "operator_id",
+      "updated_at"
+    ]
+  },
+  "penny_comment_receipts": {
+    "classification": "product",
+    "columns": [
+      "comment_id",
+      "operator_id",
+      "comment_updated_at",
+      "acknowledged_at"
+    ]
+  },
+  "penny_ownership_guards": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "allowed"
+    ]
   }
 }

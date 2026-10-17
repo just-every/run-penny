@@ -1,6 +1,6 @@
 # The decision loop
 
-This page is for the person who runs Penny: the operator. It follows one piece of customer feedback from the first note to a published release, using the operator app at `/app`. Penny has one operator today, the owner, who can see and do everything, so there are no roles to set up.
+This page is for the person who runs Penny: the operator. It follows one piece of customer feedback from the first note to a published release, using the operator app at `/app`. Invited operators share product access; the installation owner manages installation controls.
 
 The operator app has these sections: Overview, Feedback (your evidence inbox), Moderation, Decisions, Roadmap, Releases, Accounts, Feedback settings and Data. Start on **Overview**, which lists what needs you: requests to moderate, evidence awaiting review, decisions ready to commit, status updates waiting to be published and shipped items with no release.
 
@@ -26,6 +26,24 @@ Linking does not mark anything reviewed, and linking or unlinking never changes 
 An evidence item can have private attachments and later wording versions. Editing wording keeps the item's identity and all earlier versions. Only operators can read these versions and files, even when a linked request is public. The Accounts page shows commercial context, requesters, evidence in observed-time order, and linked requests and decisions. None of this private context is copied to the portal or requester email.
 
 Before a request is public, someone needs to approve it in **Moderation**. That page, and what customers see, is covered in [The public portal](/docs/portal).
+
+## Assign follow-up
+
+Every request and evidence item has an optional **Accountable owner**. Select an
+active operator and **Save owner**, or choose **Unassigned**. Reassignment keeps
+the record and its history intact. Ownership stays private.
+
+In **Feedback settings → Capture ownership**, choose a default for each board.
+New requests and their captured evidence take that owner. For manually recorded,
+unlinked evidence, choose **Capture board (optional)** to use its default. A
+changed default applies only to future captures; an inactive operator is never
+assigned automatically. Theme defaults are not available yet.
+
+**Feedback → My queue** shows your assigned requests, unreviewed evidence and
+requester comments. A reassignment moves work between operators' queues. Review
+held comments in Moderation, then use **Mark handled** when a public comment no
+longer needs your attention. Ownership and handled-comment history travel in a
+product backup, without granting operator sign-in authority.
 
 ## 2. Build a decision
 

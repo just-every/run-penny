@@ -1,3 +1,4 @@
+import {registerOwnershipRoutes} from '@/core/features/ownership/routes'
 import {registerWorkspaceClockRoutes} from '@/core/features/settings/workspace-clock-routes'
 import {registerMailIdentityRoutes} from '@/core/features/settings/mail-identity-routes'
 import {registerBoardSubscriptionRoutes} from '@/core/features/settings/board-subscriptions'
@@ -98,6 +99,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerRequestStatusSettingsRoutes(app)
   registerMailIdentityRoutes(app)
   registerWorkspaceClockRoutes(app)
+  registerOwnershipRoutes(app)
   registerBoardSubscriptionRoutes(app)
   registerBrandingRoutes(app)
   registerFrameSettings(app)

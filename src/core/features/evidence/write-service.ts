@@ -1,10 +1,12 @@
 import { MutationError } from '@/core/app/operator-mutations'
+import { capturedEvidenceOwner, captureOwnerFailure } from '../ownership/capture'
 import { createUlid } from '@/core/shared/ulid'
 import { audit,exists,refreshReadiness,validObservedTime } from '../decisions/write-support'
 
 export interface RecordEvidence {
  sourceType:'sales_call'|'support_conversation'|'interview'|'email'|'free_text'
  sourceLabel?:string|null;wording:string;observedAt:string;namedSpeaker?:string|null;accountId?:string|null
+ boardSlug?:string|null
  requestLinks?:{id:string;stance:'supporting'|'contradicting'}[];betLinks?:{id:string;stance:'supporting'|'contradicting'}[];releaseId?:string|null
 }
 export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:string,now:string) {
@@ -15,8 +17,9 @@ export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:st
  for(const link of input.betLinks??[])await exists(db,'candidate_bets',link.id)
  if(input.releaseId&&!await db.prepare('SELECT id FROM releases WHERE id=?').bind(input.releaseId).first())throw new MutationError(422,'Release not found.')
  const id=createUlid(),versionId=createUlid()
- await db.batch([
+ try { await db.batch([
   db.prepare(`INSERT INTO evidence_items(id,source_type,source_label,named_speaker,account_id,requester_id,recorded_by_operator_id,observed_at,release_id,review_state,created_at,updated_at) VALUES(?,?,?,?,?,NULL,?,?,?,'unreviewed',?,?)`).bind(id,input.sourceType,input.sourceLabel??null,input.namedSpeaker??null,input.accountId??null,actor,input.observedAt,input.releaseId??null,now,now),
+  ...capturedEvidenceOwner(db,id,input.boardSlug,now),
   db.prepare(`INSERT INTO evidence_versions(id,evidence_id,version_number,wording,edited_by_operator_id,created_at,updated_at) VALUES(?,?,1,?,?,?,?)`).bind(versionId,id,input.wording,actor,now,now),
   ...(input.requestLinks??[]).flatMap(link=>[
    db.prepare('INSERT INTO request_evidence_links(request_id,evidence_id,stance,created_at) VALUES(?,?,?,?)').bind(link.id,id,link.stance,now),
@@ -26,7 +29,7 @@ export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:st
    db.prepare('INSERT INTO candidate_bet_evidence_links(candidate_bet_id,evidence_id,stance,created_at) VALUES(?,?,?,?)').bind(link.id,id,link.stance,now),refreshReadiness(db,link.id,true),
   ]),
   audit(db,actor,'evidence',id,'evidence.recorded',now),
- ])
+ ]) } catch(error) { captureOwnerFailure(error) }
  return {id,versionId}
 }
 export async function reviewEvidence(db:D1Database,id:string,reviewed:boolean,reason:string|null,actor:string,now:string) {

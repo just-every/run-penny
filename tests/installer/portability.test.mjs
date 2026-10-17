@@ -11,6 +11,7 @@ import { promisify } from 'node:util'
 import { getPlatformProxy } from 'wrangler'
 import { currentClauseGraph } from '../data/current-clause-graph.mjs'
 import { originalBytes } from '../data/prior-clause-graph.mjs'
+import { waitForLocalCapacity } from '../browser/local-resource-limits.mjs'
 const execute = promisify(execFile)
 const archiveRows = archive => archive.filter(item => item.kind === 'part').flatMap(part => part.items).filter(item => item.kind === 'row')
 const tableCounts = archive => archiveRows(archive).reduce((counts,item) => ({...counts,[item.table]:(counts[item.table]??0)+1}),{})
@@ -31,6 +32,7 @@ test('[DATA-001 DATA-003] local CLI restores original files and held effects int
   for (const name of Object.keys(env)) if (/^(AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|SETUP_TOKEN|OPERATOR_EMAIL|APP_ORIGIN|PENNY_)/.test(name)) delete env[name]
   delete env.RER_LOCAL_OPERATION // This disposable installation owns its own operation.
   const run = async (args, cwd = root) => {
+    await waitForLocalCapacity()
     console.log(`[portability] ${['export','import','reset'].find(verb => args.includes(verb)) ?? 'erasure'} started`)
     try { return await execute(process.execPath,args,{cwd,env,maxBuffer:4*1024*1024}) }
     catch(error) { throw new Error(`CLI failed (${error.code}): ${error.stderr?.slice(-3000) ?? ''}`,{cause:error}) }

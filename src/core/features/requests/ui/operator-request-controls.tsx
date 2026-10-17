@@ -1,4 +1,5 @@
 import { RequestCategoryForm } from '../../categories/request-category-form'
+import { OwnerControl } from '../../ownership/ui/owner-control'
 import { DeliveryCounts, useMailSuppressed } from '@/core/features/releases/ui/delivery-counts'
 import type { DeliveryCounts as Counts } from '@/core/features/releases/counts'
 import { StatusUpdateForm, type RequestStatusDetails } from './status-update-form'
@@ -37,6 +38,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
   const mailSuppressed = useMailSuppressed()
   return (
     <>
+      <OwnerControl entity="requests" value={slug} />
       {context.kind === 'ready' ? (
         <section className="mt-6 border-t border-penny-line pt-5" aria-label="Status update delivery">
           <h3 className="font-bold text-penny-ink">Follower notifications</h3>

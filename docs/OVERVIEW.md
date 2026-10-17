@@ -6,7 +6,7 @@ It runs on your own Cloudflare account as one Worker, with your data in your own
 
 ## Who it is for
 
-Penny is built for a single software business listening to its own customers. One workspace, one public portal, and one operator account: the owner you set up at install, who sees everything. There are no roles and no tenants, and there is no way yet to invite more operators. If you need many businesses in one install, or a place for customers to chat with each other, Penny is not that.
+Penny is built for a single software business listening to its own customers. One workspace and one public portal, with an owner and invited operators who share product access. Invite operators in Feedback settings; each has a private queue of assigned requests, evidence and requester comments. Product roles and separate tenants are not available yet. If you need many businesses in one install, or a place for customers to chat with each other, Penny is not that.
 
 ## The loop
 

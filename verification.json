@@ -63,6 +63,15 @@
         "pnpm run build",
         "node tests/browser/workspace-clock.mjs"
       ]
+    },
+    {
+      "name": "ownership",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/ownership-journey.mjs"
+      ]
     }
   ],
   "nightly": [

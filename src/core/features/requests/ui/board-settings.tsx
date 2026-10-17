@@ -1,3 +1,4 @@
+import {BoardOwnerSettings} from '../../ownership/ui/board-owner-settings'
 import {WorkspaceClockSettings} from '../../settings/ui/workspace-clock-settings'
 import {useRouter} from '@tanstack/react-router'
 import type { Category } from '../../categories/ui-types'
@@ -48,6 +49,7 @@ export function BoardSettings() {
         <FrameSettings />
         <RequestStatusSettings />
         <StatusRoadmapSettings />
+        <BoardOwnerSettings key={JSON.stringify(ready?.boards.map(board=>[board.slug,board.name]))} />
         <SettingsSection id="settings-boards" icon="board" title="Boards">
           {data.kind !== 'ready' ? <p className="text-base text-penny-muted">Loading settings…</p> : null}
           {ready && ready.boards.length === 0 ? <p className="mb-4 text-base text-penny-muted">No boards yet</p> : null}
