@@ -1,3 +1,4 @@
+import { nativeAdditiveDefaults } from './native-additions'
 import {createUlid} from '@/core/shared/ulid'
 import { canonicalJson,sha256 } from '../../../../base/modules/import-kit/src/d1/index.ts'
 import type { D1Database as KitDatabase, D1TargetAdapter, D1Sql } from '../../../../base/modules/import-kit/src/d1/index.ts'
@@ -28,7 +29,7 @@ export function feedbackTargets(namespace:string,dependencies:NativeDependency[]
   removal.set(kind+':'+id,keys)
   for(const key of keys){
    const where=keyPredicate(key),values=await db.prepare(`SELECT * FROM ${quote(key.table)} WHERE ${where.sql}`).bind(...where.params).first<Record<string,Json>>()
-   rows.push({table:key.table,values:Object.fromEntries(Object.entries(values??{}).filter(([column,value])=>mappedColumns.get(key.table)!.has(column)||value!==null))})
+   rows.push({table:key.table,values:Object.fromEntries(Object.entries(values??{}).filter(([column,value])=>mappedColumns.get(key.table)!.has(column)||(value!==null&&nativeAdditiveDefaults[key.table]?.[column]!==value)))})
   }
   return {destination,targetKind:kind,targetId:id,revision:meta.revision,value:{rows,provenance:{sourceId:meta.source_id,artifactHash:meta.artifact_hash,payloadHash:meta.source_hash}} as unknown as Json}
  }
@@ -46,9 +47,9 @@ export function feedbackTargets(namespace:string,dependencies:NativeDependency[]
    if(!currentColumns?.length)throw new Error('IMPORT_NATIVE_SCHEMA')
    // A single JSON bind covers all native fields without exceeding D1's bound
    // parameter count. SQL NULL is compared with IS, never coerced to a value.
-   // Omitted additive columns must still be NULL inside the transaction: native
-   // work between read and removal cannot disappear from the receipt fence.
-   predicates.push({sql:`(SELECT COUNT(*) FROM ${quote(part.table)} n,(SELECT json(?) value) expected WHERE ${conjunction([...new Set([...currentColumns,...Object.keys(part.values)])].map(column=>`n.${quote(column)} IS json_extract(expected.value,'$.${column}')`))})=1`,params:[canonicalJson(part.values)]})
+   // Omitted additive columns must still equal their SQL defaults inside the
+   // transaction; native work cannot disappear from the receipt fence.
+   predicates.push({sql:`(SELECT COUNT(*) FROM ${quote(part.table)} n,(SELECT json(?) value) expected WHERE ${conjunction([...new Set([...currentColumns,...Object.keys(part.values)])].map(column=>`n.${quote(column)} IS json_extract(expected.value,'$.${column}')`))})=1`,params:[canonicalJson({...nativeAdditiveDefaults[part.table],...part.values})]})
    // Keyless transfer identities can otherwise match multiple different full
    // rows. Removal must consume exactly the one row whose value was checked.
    predicates.push({sql:`(SELECT COUNT(*) FROM ${quote(part.table)} n,(SELECT json(?) value) expected WHERE ${conjunction(Object.keys(key.keys).map(column=>`n.${quote(column)} IS json_extract(expected.value,'$.${column}')`))})=1`,params:[canonicalJson(key.keys)]})

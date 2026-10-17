@@ -1,3 +1,4 @@
+import { previousNotificationGraph } from './previous-notification-fixture'
 import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,expect,inject,it} from 'vitest'
 import {Buffer} from 'node:buffer'
@@ -58,10 +59,11 @@ it('[OWN-001][BASE-ACCESS-004] preserves setup-token bootstrap and refuses takeo
 it('[OWN-001][BASE-OPS-002][DATA-001] upgrades populated native and imported history without resetting authority, revocation or original files',async()=>{
  const migrations=inject('migrations'),boundary=migrations.findIndex(migration=>migration.name.startsWith('0018_'))
  await reset();await applyD1Migrations(env.DB,migrations.slice(0,boundary))
- const {graph,time}=await import('./notification-regression-fixture'),{populateLegacyRelease}=await import('./legacy-release-fixture')
+ const {time}=await import('./notification-regression-fixture'),{populateLegacyRelease}=await import('./legacy-release-fixture')
  const {applyPreviousFeedback,feedbackFixture}=await import('./feedback-import-fixture')
- const g=await graph(2)
- expect((await call('/api/public/requests/'+g.requests[0].slug+'/vote',{},g.person)).status).toBe(204)
+ const g=await previousNotificationGraph(2)
+ await g.vote(0)
+ expect(await env.DB.prepare('SELECT requester_id FROM request_votes WHERE request_id=?').bind(g.requests[0].id).first('requester_id')).toBe(g.recipient.requesterId)
  expect((await call('/api/operator/requests/'+g.requests[1].slug+'/merge',{targetSlug:g.requests[0].slug},g.operator)).status).toBe(200)
  await g.publish(0,'Preserved approved update')
  const release=await populateLegacyRelease(env.DB,g.requests[0].id,time())

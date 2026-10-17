@@ -150,6 +150,8 @@ it('[EVID-006] commercial fields and source attribution are absent from public A
  const commitment=await json<{itemId:string;slug:string}>(call(`/api/operator/decisions/${g.decision.id}/commit`,{selectedCandidateBetId:g.bet.id,rationale,ownerOperatorId:g.actor,confidence:'medium',reviewAt:'2026-11-01',noViableAlternativeReason:alternative},g.operator))
  const privateRoadmap={title:'Private delivery title',summary:'Private delivery summary',targetWindow:'Private target window',deliveryNotes:'Private delivery notes',accountImpact:'Private account impact'}
  await json(call(`/api/operator/roadmap/${commitment.itemId}`,{...privateRoadmap,ownerOperatorId:g.actor,confidence:'medium',decisionId:g.decision.id,candidateBetId:g.bet.id,publicTitle:null,publicSummary:null,evidenceIds:[g.evidence.id]},g.operator,'PATCH'))
+ const {settings}=await json<{settings:Record<string,unknown>}>(call('/api/operator/settings/status-roadmap',undefined,g.operator))
+ await json(call('/api/operator/settings/status-roadmap',{...settings,source:'approved_items'},g.operator,'PUT'))
  const roadmapCopy={title:'Downloadable project reports',summary:'Save your reports as a CSV file'}
  await json(call(`/api/operator/roadmap/${commitment.itemId}/approve`,{publicTitle:roadmapCopy.title,publicSummary:roadmapCopy.summary,boardSlug:'feedback',requestIds:[g.request.id]},g.operator))
  const transitionReason='Private shipment rationale'

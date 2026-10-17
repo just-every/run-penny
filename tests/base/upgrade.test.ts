@@ -19,14 +19,13 @@ it('[BASE-ACCESS-002 DATA-001] additive Base migration retains attribution/data,
 
 it('[BASE-OPS-002 DATA-001] populated requester graph and R2 bytes survive every current migration with historical columns intact',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
- const {importPennySample}=await import('../../src/core/features/sample-data/service')
- const {createDatabaseConnection}=await import('../../src/core/platform/database')
+ const {populatePreviousPennySample}=await import('./previous-sample-fixture')
  const sample=(await import('../../sample-data/penny.v1.json')).default
  const migrations=inject('migrations') as D1Migration[]
  const quote=(identifier:string)=>`"${identifier.replaceAll('"','""')}"`
  const tableQuery="SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT IN ('d1_migrations','operator_sessions','native_requester_sessions','native_magic_links','local_auth_outbox') ORDER BY name"
  await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0009'))
- await importPennySample(createDatabaseConnection(env.DB),sample)
+ await populatePreviousPennySample(env.DB,sample)
  const bytes=new Uint8Array([137,80,78,71,42]);await env.FILES.put('upgrade-preserved-bytes',bytes)
  const tables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const historical=await Promise.all(tables.map(async table=>({

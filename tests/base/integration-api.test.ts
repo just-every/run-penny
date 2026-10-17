@@ -1,9 +1,10 @@
+import { previousNotificationGraph } from './previous-notification-fixture'
 import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,afterEach,expect,inject,it,vi} from 'vitest'
 import {createPennyApi} from '@/core/app/api'
 import {env,origin,owner} from './support'
 import {observeD1} from './review-race-storage'
-import {graph,runtime} from './notification-regression-fixture'
+import {graph} from './notification-regression-fixture'
 const api=createPennyApi()
 function request(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST',db=env.DB){
  return api.fetch(new Request(origin+path,{method,headers:{Origin:origin,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),{...env,DB:db})
@@ -96,7 +97,7 @@ it('[API-003 REQ-010 REL-001] composes native public reads, comments, status pub
 it('[API-002 BASE-OPS-002 DATA-001] applies each new migration to populated prior native history and preserves revoked authority, files and seals',async()=>{
  const migrations=inject('migrations'),boundary=migrations.findIndex(item=>item.name.startsWith('0020_'))
  await reset();await applyD1Migrations(env.DB,migrations.slice(0,boundary))
- const g=await graph();await g.publish(0,'Preserved status')
+ const g=await previousNotificationGraph();await g.publish(0,'Preserved status')
  const {applyPreviousFeedback,feedbackFixture}=await import('./feedback-import-fixture')
  await applyPreviousFeedback(feedbackFixture('api-upgrade-history'),g.operator)
  expect(await env.DB.prepare('SELECT count(*) n FROM feedback_import_records').first('n')).toBe(19)

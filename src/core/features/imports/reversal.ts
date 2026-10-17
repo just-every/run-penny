@@ -1,3 +1,4 @@
+import { nativeAdditiveDefaults } from './native-additions'
 import type { D1Database as KitDatabase,D1ImportContext,D1Sql,TargetRow } from '../../../../base/modules/import-kit/src/d1/index'
 import { atomic } from '../../../../base/modules/import-kit/src/d1/database'
 import { canonicalJson,sha256 } from '../../../../base/modules/import-kit/src/d1/index'
@@ -44,7 +45,7 @@ export async function prepareReversal(id:string,context:D1ImportContext,stream:b
    const keys=Object.keys(rowKey({table,values:values[0]}).keys)
    const unique=`(SELECT COUNT(*) FROM ${quote(table)} n WHERE ${and(keys.map(column=>`n.${quote(column)} IS json_extract(e.value,'$.${column}')`))})=1`
    const same=and(definition.columns.map(column=>`n.${quote(column)} IS json_extract(e.value,'$.${column}')`))
-   checks.push({table,sql:`${relations.ctes.length?'WITH '+relations.ctes.join(',')+' ':''}SELECT NOT EXISTS(SELECT 1 FROM json_each(?) e WHERE NOT (${and([`(SELECT COUNT(*) FROM ${quote(table)} n WHERE ${same})=1`,unique,`(${relations.sql})`])})) allowed`,params:[...relations.params??[],canonicalJson(values)]})
+   checks.push({table,sql:`${relations.ctes.length?'WITH '+relations.ctes.join(',')+' ':''}SELECT NOT EXISTS(SELECT 1 FROM json_each(?) e WHERE NOT (${and([`(SELECT COUNT(*) FROM ${quote(table)} n WHERE ${same})=1`,unique,`(${relations.sql})`])})) allowed`,params:[...relations.params??[],canonicalJson(values.map(value=>({...nativeAdditiveDefaults[table],...value})))]})
   }
  }
  const metadata=[...effects.values()].map(row=>{const value=row.value as unknown as NativeImportValue;return {target_kind:row.targetKind,target_id:row.targetId,namespace:context.namespace,source_id:value.provenance.sourceId,artifact_hash:value.provenance.artifactHash,source_hash:value.provenance.payloadHash,revision:row.revision,row_keys_json:canonicalJson(value.rows.map(rowKey)),attribution:'historical-unverified'}})

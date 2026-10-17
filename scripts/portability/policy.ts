@@ -21,7 +21,9 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
   return {
     product: 'just-every/penny',
     excludeTables: Object.keys(inventory).filter(name => !product.includes(name) && !['data_state', 'data_tombstones'].includes(name)),
-    replaceableTables: ['data_state'],
+    // Migrations seed this singleton even in an otherwise empty installation.
+    // Restore replaces it with the archive's choice, as the native restore does.
+    replaceableTables: ['data_state', 'penny_status_roadmap_settings'],
     requiredConfiguration: ['OPERATOR_EMAIL', 'AUTH_SECRET', 'SETUP_TOKEN', 'APP_ORIGIN', 'MAIL_PROVIDER', 'MAIL_FROM'],
     buckets: { FILES: { objectReferences: { table: 'attachments', keyColumn: 'storage_key' } } },
     exportRow: (table, row) => normalize(table, productRow(row)),

@@ -1,3 +1,4 @@
+import { previousNotificationGraph } from './previous-notification-fixture'
 import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,afterEach,expect,inject,it,vi} from 'vitest'
 import {createPennyApi} from '@/core/app/api'
@@ -75,8 +76,8 @@ it('[REQ-014 REQ-031 DATA-003] fences conflicting or older claims, erased identi
 it('[REQ-014 BASE-OPS-002 DATA-001] upgrades populated prior history with authority, revocation, files and all native records intact',async()=>{
  const migrations=inject('migrations'),boundary=migrations.findIndex(item=>item.name.startsWith('0019_'))
  await reset();await applyD1Migrations(env.DB,migrations.slice(0,boundary))
- const {graph}=await import('./notification-regression-fixture'),{applyPreviousFeedback,feedbackFixture}=await import('./feedback-import-fixture')
- const g=await graph(2)
+ const {applyPreviousFeedback,feedbackFixture}=await import('./feedback-import-fixture')
+ const g=await previousNotificationGraph(2)
  await g.publish(0,'Preserved approved update')
  await applyPreviousFeedback(feedbackFixture('host-upgrade-history'),g.operator)
  expect(await env.DB.prepare('SELECT count(*) n FROM feedback_import_records').first('n')).toBe(19)
