@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "parent": null,
   "edition": "just-every/penny",
-  "manifest": "da6d00b085948192e8acd2eaac4083cc5dfceb089b1dd68791d0938f5f70d1f0",
+  "manifest": "5275463197b5da8e1acc656b133b82b22aa1fcf3f512f4c18e698473f98727f1",
   "toolchain": {
     "id": "runeditrun/edition-authoring",
     "version": "1.1.0",
@@ -453,7 +453,10 @@
           "scripts/delivery/base/schema/setup-validation.mjs",
           "scripts/delivery/base/setup-manifest.mjs",
           "scripts/delivery/base/mail.mjs",
-          "scripts/delivery/base/spec.mjs"
+          "scripts/delivery/base/spec.mjs",
+          "scripts/delivery/base/native-export.mjs",
+          "scripts/delivery/base/sign-in.mjs",
+          "scripts/delivery/base/sql-statements.mjs"
         ],
         "origin": {
           "repository": "https://github.com/runeditrun/base.git",
@@ -479,7 +482,10 @@
             "schema/setup-validation.mjs",
             "modules/delivery-producer/setup-manifest.mjs",
             "modules/delivery-producer/spec.mjs",
-            "modules/delivery-producer/mail.mjs"
+            "modules/delivery-producer/mail.mjs",
+            "modules/delivery-producer/native-export.mjs",
+            "modules/delivery-producer/sign-in.mjs",
+            "modules/delivery-producer/sql-statements.mjs"
           ]
         },
         "mappings": [
@@ -566,13 +572,25 @@
           {
             "path": "scripts/delivery/base/mail.mjs",
             "originPath": "modules/delivery-producer/mail.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/native-export.mjs",
+            "originPath": "modules/delivery-producer/native-export.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/sign-in.mjs",
+            "originPath": "modules/delivery-producer/sign-in.mjs"
+          },
+          {
+            "path": "scripts/delivery/base/sql-statements.mjs",
+            "originPath": "modules/delivery-producer/sql-statements.mjs"
           }
         ]
       },
       "baseline": {
-        "key": "084f2d9aebf62fd991a55831d7ef0ed9747259bb5824885946e3550f7f737c36",
-        "digest": "30ae36b70c432e4f7b6452a676ad61df01e23d8641ca060085cdeef60e654744",
-        "sha256": "707aebbf970947b77e60e1fa0dcc8a53eff7013dee8cad3412530fba50699719"
+        "key": "96bdaf60ede9a16b736a0569a63036247f5ae66212c1d4a7064bf2e59a66ca94",
+        "digest": "1023d5d18996b3d73d2b3aa544317eb49385c79aba6f563e58f12657fc5d9247",
+        "sha256": "b06d4b4621767a9a9f5fa99027d1bd7a854e3292a48f75b6b2559a60cff32bd6"
       }
     }
   ],
@@ -2706,7 +2724,7 @@
       "executable": false
     },
     "base/PROVENANCE.json": {
-      "sha256": "59080f5b8c33c807a8d5436ade653fb5eda84e20a90c4324532d4422382100d1",
+      "sha256": "48e5132df06c830d78b9241bb4aef9307dda01361863e60a27544a157fb5a4ee",
       "executable": false
     },
     "BASELINE.md": {
@@ -2898,7 +2916,7 @@
       "executable": false
     },
     "edition.json": {
-      "sha256": "da6d00b085948192e8acd2eaac4083cc5dfceb089b1dd68791d0938f5f70d1f0",
+      "sha256": "5275463197b5da8e1acc656b133b82b22aa1fcf3f512f4c18e698473f98727f1",
       "executable": false
     },
     "examples/host-identity/embed.js": {
@@ -3345,6 +3363,10 @@
       "sha256": "41650d5f2c22c0dbf8c4d8640bc89d872907828b558df4af89c4f70059d4878f",
       "executable": false
     },
+    "scripts/delivery/base/native-export.mjs": {
+      "sha256": "5c0f90e688f5242dbc2f62416259cbb3074647298df8daa431a7022aa10d1a41",
+      "executable": false
+    },
     "scripts/delivery/base/package.mjs": {
       "sha256": "5a32dec3274b66474e12d5141e973542248ceeecf0f8464f6e9da87d60228cb4",
       "executable": false
@@ -3381,8 +3403,16 @@
       "sha256": "b2746ebde1a8b5e2da26766a289d7f88faa8b454c8baca6ca3a410cfd2d24f76",
       "executable": false
     },
+    "scripts/delivery/base/sign-in.mjs": {
+      "sha256": "951aada2c00131ab7c808974827654b0fda20bcaeed1f2f97194b25441c03aff",
+      "executable": false
+    },
     "scripts/delivery/base/spec.mjs": {
       "sha256": "65179ca5222485513260e8d58aaae6740ae6fe1b27065e96f0d95d197fc6d3f0",
+      "executable": false
+    },
+    "scripts/delivery/base/sql-statements.mjs": {
+      "sha256": "8819f7f91b7781905796ea35b01dd1a55e08ed3893ff6d8aafaf03d2f35c1c9a",
       "executable": false
     },
     "scripts/delivery/deployment-spec.mjs": {
