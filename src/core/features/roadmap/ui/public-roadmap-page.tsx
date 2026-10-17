@@ -66,7 +66,8 @@ function RoadmapItemCard({ item }: { readonly item: PublicRoadmapItem }) {
       <p className="mt-2 break-words text-sm leading-6 text-penny-muted">{item.summary}</p>
       {item.source === 'requests' ? <div className="mt-4 space-y-2 border-t border-penny-line pt-3 text-xs text-penny-muted">
         {item.board ? <p className="break-words">{item.board.name}</p> : null}
-        <p className="inline-flex items-center gap-1.5"><PortalIcon name="vote" className="size-3.5" />{item.voteCount} {item.voteCount === 1 ? 'vote' : 'votes'}</p>
+        {item.category ? <p className="break-words">{item.category.parent ? `${item.category.parent.name} / ` : ''}{item.category.name}</p> : null}
+        {item.voteCount!==undefined?<p className="inline-flex items-center gap-1.5"><PortalIcon name="vote" className="size-3.5" />{item.voteCount} {item.voteCount === 1 ? 'vote' : 'votes'}</p>:null}
         {item.publicEta ? <p>ETA: {item.publicEta}</p> : null}
       </div> : item.requests.length > 0 ? <div className="mt-4 border-t border-penny-line pt-3"><p className={dataLabelClass}>Related feedback</p><ul className="mt-2 space-y-1">{item.requests.map((request) => <li key={request.slug} className="min-w-0"><Link to="/portal/feedback/$requestSlug" params={{ requestSlug: request.slug }} className={`${textLinkClass} flex min-h-11 w-full min-w-0 max-w-full items-center gap-1 text-sm font-medium`}><span className="min-w-0 break-all">{request.title}</span><PortalIcon name="arrow" className="size-3.5 shrink-0" /></Link></li>)}</ul></div> : null}
     </PublicCard>

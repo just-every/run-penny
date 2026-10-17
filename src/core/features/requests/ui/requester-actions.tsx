@@ -6,7 +6,7 @@ import { buttonClass, fieldClass, accentLinkClass, fieldLabelClass, secondaryBut
 import { PortalIcon } from '@/core/features/portal/ui/public-primitives'
 import { rememberReturn } from '@/core/features/auth/requester-return'
 
-export function RequesterActions({slug,onChange,compact=false,onSelected}:{slug:string;onChange?:()=>void;compact?:boolean;onSelected?:(action:'vote'|'follow')=>void}) {
+export function RequesterActions({slug,onChange,compact=false,commentsAllowed=true,showVoters=false,onSelected}:{slug:string;onChange?:()=>void;compact?:boolean;commentsAllowed?:boolean;showVoters?:boolean;onSelected?:(action:'vote'|'follow')=>void}) {
   const [verified,setVerified]=useState(false),[voted,setVoted]=useState(false),[following,setFollowing]=useState(false)
   const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),[updates,setUpdates]=useState(false)
   useEffect(()=>{
@@ -28,13 +28,15 @@ export function RequesterActions({slug,onChange,compact=false,onSelected}:{slug:
   }
   return <section className="mt-6 space-y-4" aria-label="Participate in feedback">
     {!verified?<p className="text-sm text-penny-ink"><Link to="/portal/feedback/new" onClick={()=>rememberReturn(`/portal/feedback/${slug}`)} className={`${accentLinkClass} inline-flex min-h-11 items-center`}>Verify your email</Link> to vote, follow or comment.</p>:null}
+    {showVoters?<p className="text-sm text-penny-ink">Voter display names are listed publicly on this board. Anonymous boards display Anonymous.</p>:null}
     <div className="flex flex-wrap gap-3">
       <button type="button" disabled={busy||!verified} className={buttonClass} onClick={()=>void act('vote')}><PortalIcon name="vote" />{voted?'Remove vote':'Vote'}</button>
       <button type="button" disabled={busy||!verified} className={secondaryButtonClass} onClick={()=>void act('follow')}><PortalIcon name="bell" />{following?'Unfollow':'Follow'}</button>
     </div>
     {!voted&&!following?<label className="flex min-h-11 items-center gap-2 text-sm text-penny-ink"><input type="checkbox" className="size-4 accent-penny-ink" checked={updates} onChange={e=>setUpdates(e.target.checked)}/>Email me updates</label>:null}
     {verified&&(voted||following)?<p className="text-sm text-penny-muted">{following?'Email updates are on for this request.':'Email updates are off for this request. Follow it to get them.'}</p>:null}
-    {!compact&&verified?<form className="space-y-3 border-t border-penny-line pt-5" onSubmit={async e=>{e.preventDefault();const form=e.currentTarget;setBusy(true);try{await requesterMutation(`/api/public/requests/${slug}/comments`,'POST',{body:new FormData(form).get('body')});form.reset();setMessage('Your comment is awaiting review.');onChange?.()}catch(error){setMessage(error instanceof Error?error.message:'Comment failed.')}finally{setBusy(false)}}}><label className={fieldLabelClass}>Add a comment<textarea required maxLength={20000} name="body" rows={3} className={fieldClass}/></label><button className={buttonClass} disabled={busy}>Send comment for review</button></form>:null}
+    {!compact&&verified&&commentsAllowed?<form className="space-y-3 border-t border-penny-line pt-5" onSubmit={async e=>{e.preventDefault();const form=e.currentTarget;setBusy(true);try{await requesterMutation(`/api/public/requests/${slug}/comments`,'POST',{body:new FormData(form).get('body')});form.reset();setMessage('Your comment is awaiting review.');onChange?.()}catch(error){setMessage(error instanceof Error?error.message:'Comment failed.')}finally{setBusy(false)}}}><label className={fieldLabelClass}>Add a comment<textarea required maxLength={20000} name="body" rows={3} className={fieldClass}/></label><button className={buttonClass} disabled={busy}>Send comment for review</button></form>:null}
+    {!compact&&!commentsAllowed?<p className="text-sm text-penny-muted">Requester comments are disabled on this board.</p>:null}
     <p role="status" className="text-sm leading-6 text-penny-ink">{message}</p>
   </section>
 }

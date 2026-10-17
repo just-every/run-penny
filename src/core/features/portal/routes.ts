@@ -9,11 +9,12 @@ interface PortalRouteEnvironment {
   Variables: { runtime: PennyRuntime }
 }
 
-const publicRequestFiltersSchema = z.object({
+export const publicRequestFiltersSchema = z.object({
   q: z.string().trim().min(1).max(200).optional(),
   board: z.string().trim().min(1).max(128).optional(),
   status: z.enum(['open', 'under_review', 'planned', 'in_progress', 'shipped', 'declined']).optional(),
-  sort: z.enum(['recent', 'votes']).optional(),
+  category:z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u).optional(),
+  sort: z.enum(['recent', 'votes','newest','trending']).optional(),
 }).strict()
 
 const publicSlugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'slug must be lowercase kebab-case').max(128)

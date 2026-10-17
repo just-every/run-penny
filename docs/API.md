@@ -19,7 +19,8 @@ identifiers; request bodies cannot choose either. JSON bodies are bounded to
 
 | Method and route | Scope | Behavior |
 | --- | --- | --- |
-| GET `/requests` | `requests:read` | Current approved published public requests. |
+| GET `/boards` | `requests:read` | Public boards, participation/display settings and public category counts. |
+| GET `/requests` | `requests:read` | Current approved published public requests; filters `q`, `board`, `category` (category ID, including its subcategories), `status` and `sort` (`recent`, `votes`, `newest`, `trending`). |
 | GET `/requests/:slug` | `requests:read` | Native found, redirect or withdrawn result; absent returns 404. |
 | POST `/requests` | `requests:write` | Create an unpublished operator request with title, description, boardSlug and optional evidenceIds. It does not publish wording. |
 | GET `/requests/:slug/comments` | `comments:read` | Approved published comments, with safe display names. |
@@ -53,3 +54,31 @@ Errors are JSON `{error:<code>}`: `integration_token_required` (401),
 the native `idempotency_conflict` code. A refused request creates no business
 rows; a safe authorization-attempt receipt may remain. Retry only after reading
 the error, and use the same native idempotency key for an intended status action.
+
+Public request cards and details include `category` (`null`, or `{id,name,parent}`,
+with `parent` null or `{id,name}`). Boards include `categoryMode` (`off`,
+`optional`, `required`), `postingPolicy` (`requesters`, `operators`),
+`commentsAllowed`, `showVoteCounts`, `showVoters`, `anonymousRequesters` and
+`categories` (`id`, `name`, `parentId`, `position`, `archived`, `requestCount`).
+A parent category's count and filter include its direct subcategories. Archived
+categories remain on existing requests but cannot be chosen for a new submission.
+Public counts exclude unpublished, held, withdrawn, merged, blocked-author,
+and internal-board requests. Archived boards leave navigation; their published request URLs stay reachable.
+
+When a board hides vote totals, `voteCount` is absent from its public cards,
+details and status-roadmap cards, including scoped API reads. Sorting by votes
+still works. A detail includes `showVoters` and `commentsAllowed`; `voters` is
+absent unless enabled, and then contains display names only. Board anonymity
+changes requester attribution and voter names to `Anonymous`; operators retain
+private identities. The portal discloses a public voter list before voting.
+`trending` scores current votes and approved comments from the last 14 days,
+each weighted by `1 / (1 + age in days)`; `newest` uses request creation time.
+
+Requester POST `/api/public/requests` accepts optional `categoryId`; required
+boards refuse its omission (400), and operators-only boards refuse requester
+submission (403). Disabled requester comments and comment edits return 403.
+These controls apply to requester actions, including embedded portal actions;
+operator API request creation and approved operator comments remain available.
+Operators can download a private CSV of up to 2,000 requests, including parent
+category and category, at `/api/operator/requests/export.csv`. Larger exports
+return `csv_export_limit` (413); use the complete portable archive instead.

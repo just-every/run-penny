@@ -1,3 +1,4 @@
+import { RequestCategoryForm } from '../../categories/request-category-form'
 import { DeliveryCounts, useMailSuppressed } from '@/core/features/releases/ui/delivery-counts'
 import type { DeliveryCounts as Counts } from '@/core/features/releases/counts'
 import { StatusUpdateForm, type RequestStatusDetails } from './status-update-form'
@@ -27,7 +28,7 @@ function followerSummary(counts: Counts, mailSuppressed: boolean): string {
   if (counts.unknown > 0) parts.push(`${counts.unknown} need review`)
   return parts.length > 0 ? parts.join(', ') : 'No followers to notify.'
 }
-interface Context extends HeldContext { statusDetails:RequestStatusDetails; actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; notes: InternalNote[]; tags: { id: string; name: string }[] }
+interface Context extends HeldContext {boardId:string;categoryId:string|null; statusDetails:RequestStatusDetails; actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; notes: InternalNote[]; tags: { id: string; name: string }[] }
 
 export function OperatorRequestControls({ slug }: { slug: string }) {
   const [context, refresh] = usePublicResource<Context>(`/api/operator/requests/${slug}/context`), [message, setMessage] = useState(''), router = useRouter()
@@ -63,6 +64,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
           {context.kind === 'ready' && context.data.actions.publish ? <form className={`${subformClass} space-y-3`} onSubmit={(e) => { e.preventDefault(); void act(`/api/operator/requests/${slug}/comments`, { body: new FormData(e.currentTarget).get('body') }) }}><label className={fieldLabelClass}>Operator comment<textarea name="body" required className={fieldClass} /></label><button className={primaryButtonClass}>Post public comment</button></form> : null}
           {context.kind === 'ready' && context.data.actions.merge ? <form className={`${subformClass} space-y-3`} onSubmit={(e) => { e.preventDefault(); void act(`/api/operator/requests/${slug}/merge`, { targetSlug: new FormData(e.currentTarget).get('target') }) }}><label className={fieldLabelClass}>Canonical request slug<input name="target" required className={fieldClass} /></label><div className="flex flex-wrap items-center gap-3"><button className={primaryButtonClass}>Merge duplicate</button></div></form> : null}
           {context.kind === 'ready' && context.data.actions.unmerge ? <button type="button" className={quietButtonClass} onClick={() => void act(`/api/operator/requests/${slug}/unmerge`, {})}>Unmerge</button> : null}
+          {context.kind === 'ready' ? <RequestCategoryForm slug={slug} boardId={context.data.boardId} categoryId={context.data.categoryId} act={act}/> : null}
           {context.kind === 'ready' ? <form className={`${subformClass} space-y-3`} onSubmit={(e) => { e.preventDefault(); void act(`/api/operator/requests/${slug}/board`, { boardSlug: new FormData(e.currentTarget).get('board') }, 'PATCH') }}><label className={fieldLabelClass}>Move to board<input name="board" required className={fieldClass} /></label><button className={primaryButtonClass}>Move request</button></form> : null}
           {context.kind === 'ready' ? <>
             <RequestMetadata requestId={context.data.requestId} tags={context.data.tags} onChanged={refresh} />

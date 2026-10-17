@@ -1,3 +1,4 @@
+import type { PublicBoard } from '@/core/shared/api/public'
 import { OperatorCard } from '@/core/app/ui/operator-primitives'
 import { Chip, type ChipTone } from '@/core/ui/app/Chip'
 import { dataLabelClass, fieldLabelClass, primaryButtonClass, secondaryButtonClass } from '@/core/ui/app/classes'
@@ -10,6 +11,7 @@ import { OperatorRequestControls } from './operator-request-controls'
 import type { ModerationAvailability } from '../operator-availability'
 
 export interface QueueRequest extends Pick<OperatorRequestCard, 'slug' | 'title' | 'description' | 'moderationState' | 'publicState'> {
+  categoryId?:string|null
   boardSlug: string
   displayName: string | null
   reason: string | null
@@ -46,8 +48,10 @@ export function ModerationCard({ row, report }: { row: QueueRequest; report: (me
 }
 
 function ReviewForm({ row, report }: { row: QueueRequest; report: (message: string) => void }) {
-  const [boards] = usePublicResource<{ slug: string; name: string }[]>('/api/public/boards')
+  const [boards] = usePublicResource<PublicBoard[]>('/api/public/boards')
   const [busy, setBusy] = useState(false), router = useRouter()
+  const [boardSlug,setBoardSlug]=useState(row.boardSlug)
+  const categories=boards.kind==='ready'?boards.data.find(b=>b.slug===boardSlug)?.categories??[]:[]
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget, data = new FormData(form)
@@ -56,7 +60,7 @@ function ReviewForm({ row, report }: { row: QueueRequest; report: (message: stri
     if (verdict === 'rejected' && !String(data.get('reason') ?? '').trim()) { report('A rejection needs a reason.'); return }
     setBusy(true); report('')
     try {
-      await postJson(`/api/operator/moderation/${row.slug}`, verdict === 'rejected' ? { verdict, reason: data.get('reason'), notifyAuthor: data.get('notifyAuthor') === 'on' } : { verdict, title: data.get('title'), description: data.get('description'), boardSlug: data.get('boardSlug'), displayName: data.get('displayName') })
+      await postJson(`/api/operator/moderation/${row.slug}`, verdict === 'rejected' ? { verdict, reason: data.get('reason'), notifyAuthor: data.get('notifyAuthor') === 'on' } : { verdict, title: data.get('title'), description: data.get('description'), boardSlug: data.get('boardSlug'), categoryId:data.get('category')||null, displayName: data.get('displayName') })
       await router.invalidate()
       report(verdict === 'approved' ? 'Approved wording is now public.' : data.get('notifyAuthor') === 'on' ? 'Feedback rejected. The private author notice is queued for eligibility and delivery checks.' : 'Feedback rejected without an email notice.')
     } catch (error) { report(error instanceof Error ? error.message : 'Review failed.') } finally { setBusy(false) }
@@ -66,9 +70,10 @@ function ReviewForm({ row, report }: { row: QueueRequest; report: (message: stri
       <label className={fieldLabelClass}>Public title<input name="title" defaultValue={row.title} className={fieldClass} required maxLength={200} /></label>
       <label className={fieldLabelClass}>Public description<textarea name="description" defaultValue={row.description} className={fieldClass} required rows={4} maxLength={10000} /></label>
       <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
-        <label className={fieldLabelClass}>Public board<select name="boardSlug" defaultValue={row.boardSlug} className={fieldClass} required>{boards.kind === 'ready' ? boards.data.map((b) => <option key={b.slug} value={b.slug}>{b.name}</option>) : <option value="">Loading boards…</option>}</select></label>
+        <label className={fieldLabelClass}>Public board<select name="boardSlug" value={boardSlug} onChange={e=>setBoardSlug(e.target.value)} className={fieldClass} required>{boards.kind === 'ready' ? boards.data.map((b) => <option key={b.slug} value={b.slug}>{b.name}</option>) : <option value="">Loading boards…</option>}</select></label>
         <label className={fieldLabelClass}>Approved display name<input name="displayName" defaultValue={row.displayName ?? 'Customer'} className={fieldClass} required maxLength={160} /></label>
       </div>
+      <label className={fieldLabelClass}>Public category<select key={boardSlug} name="category" defaultValue={boardSlug===row.boardSlug?row.categoryId??'':''} className={fieldClass}><option value="">No category</option>{categories.filter(c=>!c.archived||c.id===row.categoryId).map(c=><option key={c.id} value={c.id}>{c.parentId?`${categories.find(p=>p.id===c.parentId)?.name} / `:''}{c.name}</option>)}</select></label>
       <label className={fieldLabelClass}>Reason (required for rejection)<textarea name="reason" className={fieldClass} rows={2} maxLength={2000} /></label>
       <label className="flex items-start gap-3 text-sm leading-6 text-penny-ink"><input type="checkbox" name="notifyAuthor" className="mt-1 size-4" />Email the author this rejection reason</label>
       <div className="flex flex-wrap gap-3">

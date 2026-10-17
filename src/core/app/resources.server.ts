@@ -45,7 +45,9 @@ export function publicResources(href: string): Promise<Resources> {
     const board = url.searchParams.get('board')?.trim()
     const sort = url.searchParams.get('sort')
     if (board) query.set('board', board)
-    if (sort === 'votes' || sort === 'recent') query.set('sort', sort)
+    const category=url.searchParams.get('category')
+    if(category)query.set('category',category)
+    if (sort === 'votes' || sort === 'recent' || sort==='newest' || sort==='trending') query.set('sort', sort)
     return read([`/api/public/requests${query.size ? `?${query}` : ''}`, '/api/public/boards'])
   }
   if (path === '/portal/feedback/new') return read(['/api/public/boards', '/api/auth/capabilities'])

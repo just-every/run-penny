@@ -22,7 +22,7 @@ export class RequestsRepository {
 
   async insertRequests(records: PennySample['requests'], now: string): Promise<void> {
     if (records.length === 0) return
-    await this.database.insert(requests).values(records.map((record) => ({
+    await insertSampleRows(this.connection.binding,requests,records.map((record) => ({
       id: record.id,
       slug: record.slug,
       boardId: record.boardId,
@@ -40,7 +40,7 @@ export class RequestsRepository {
       withdrawnAt: record.withdrawnAt,
       createdAt: now,
       updatedAt: now,
-    }))).onConflictDoNothing().run()
+    })))
 
     const evidenceLinks = records.flatMap((record) => record.evidenceIds.map((evidenceId) => ({ requestId: record.id, evidenceId, createdAt: now })))
     const tagAssignments = records.flatMap((record) => record.tagIds.map((tagId) => ({ requestId: record.id, tagId, createdAt: now })))

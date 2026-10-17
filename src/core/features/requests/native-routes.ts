@@ -1,3 +1,4 @@
+import { submissionBoard } from '../categories/category-policy'
 import { mailReady } from '@/core/features/auth/mail'
 import { existingVerifiedHostIdentity } from '@/core/features/auth/requester'
 import type { Hono } from 'hono'
@@ -16,12 +17,13 @@ const title=z.string().trim().min(1).max(200),description=z.string().trim().min(
 export function registerNativeRequestRoutes(app:Hono<Environment>):void{
   app.post('/api/public/requests',async c=>{
     const runtime=c.get('runtime')
+    const input=await parseInput(c.req.raw,z.object({title,description,boardSlug,categoryId:z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u).nullable().optional(),proposedSolution:z.string().trim().max(5000).optional(),impactStatement:z.string().trim().max(5000).optional(),emailUpdates:z.boolean().optional(),idempotencyKey:z.string().min(16).max(128)}).strict())
+    await submissionBoard(runtime.database,input.boardSlug,input.categoryId)
     // Existing verified identities need no new mail. First-time host provisioning
     // and anonymous holds retain the verification-transport admission boundary.
     const existingHost = !mailReady(runtime) && !/^Bearer [A-Za-z0-9_-]{43}$/.test(c.req.header('Authorization')??'')
       ? await existingVerifiedHostIdentity(runtime,c.req.raw) : undefined
     if(existingHost === null)throw new NativeError('mail_unavailable',503)
-    const input=await parseInput(c.req.raw,z.object({title,description,boardSlug,proposedSolution:z.string().trim().max(5000).optional(),impactStatement:z.string().trim().max(5000).optional(),emailUpdates:z.boolean().optional(),idempotencyKey:z.string().min(16).max(128)}).strict())
     const requester=await identityOrHold(c,{type:'submission',input:{...input,proposedSolution:input.proposedSolution??null,impactStatement:input.impactStatement??null,emailUpdates:input.emailUpdates??false}},existingHost)
     if(requester instanceof Response)return requester
     const address=await runtime.database.binding.prepare('SELECT id FROM requester_addresses WHERE requester_id=? AND email=? AND verified_at IS NOT NULL').bind(requester.requesterId,requester.verifiedEmail).first<{id:string}>()
@@ -33,7 +35,7 @@ export function registerNativeRequestRoutes(app:Hono<Environment>):void{
   app.post('/api/operator/moderation/:slug',async c=>{
     const operator=await currentOperator(c);if(!operator)throw new NativeError('unauthenticated',401)
     const input=await parseInput(c.req.raw,z.discriminatedUnion('verdict',[
-      z.object({verdict:z.literal('approved'),title,description,boardSlug,displayName:z.string().trim().min(1).max(160)}).strict(),
+      z.object({verdict:z.literal('approved'),title,description,boardSlug,categoryId:z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u).nullable().optional(),displayName:z.string().trim().min(1).max(160)}).strict(),
       z.object({verdict:z.literal('rejected'),notifyAuthor:z.boolean().optional(),reason:z.string().trim().min(1).max(2000)}).strict(),
     ]))
     const runtime=c.get('runtime'),binding=await decisionDatabase(runtime,c.req.raw)

@@ -1,3 +1,4 @@
+import { publicRequestFiltersSchema } from '../portal/routes'
 import { statusPublicationSchema } from '../requests/status-schema'
 import {revokeKey} from './revocation'
 import type {Hono} from 'hono'
@@ -30,7 +31,8 @@ export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
  app.delete('/api/operator/integrations/keys/:id',async c=>{
   await revokeKey(c.get('runtime'),c.req.raw,c.req.param('id'));return c.json({revoked:true})
  })
- app.get('/api/v1/requests',async c=>{const auth=await apiAuthority(c.get('runtime'),c.req.raw,'requests:read','requests');return c.json(await portalReadService(auth.database).listRequests({}))})
+ app.get('/api/v1/boards',async c=>{const auth=await apiAuthority(c.get('runtime'),c.req.raw,'requests:read','boards');return c.json(await portalReadService(auth.database).listBoards())})
+ app.get('/api/v1/requests',async c=>{const auth=await apiAuthority(c.get('runtime'),c.req.raw,'requests:read','requests');const filters=publicRequestFiltersSchema.safeParse(Object.fromEntries(Object.entries(c.req.query()).filter(([,value])=>value!=='')));if(!filters.success)throw new NativeError('validation_failed',400);return c.json(await portalReadService(auth.database).listRequests(filters.data))})
  app.get('/api/v1/requests/:slug',async c=>{
   const key=slug.parse(c.req.param('slug')),auth=await apiAuthority(c.get('runtime'),c.req.raw,'requests:read','requests')
   const result=await portalReadService(auth.database).getRequest(key)

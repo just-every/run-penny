@@ -31,6 +31,7 @@ export interface OperatorEvidenceCard {
 }
 
 export interface OperatorRequestCard {
+  readonly categoryId?:string|null
   readonly statusSource?:'direct'|'roadmap'
   readonly publicEta?:string|null
   readonly internalStatusName?:string|null

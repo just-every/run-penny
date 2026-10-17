@@ -1,4 +1,5 @@
 import {useRouter} from '@tanstack/react-router'
+import type { Category } from '../../categories/ui-types'
 import {StatusRoadmapSettings} from '../../roadmap/ui/status-roadmap-settings'
 import {RequestStatusSettings} from '../../settings/ui/request-status-settings'
 import {IntegrationDestinations} from '../../integrations/ui/destinations'
@@ -18,7 +19,7 @@ import { DeliveryReview } from './delivery-review'
 import { BoardCard, CreateBoardCard, type Board } from './settings-boards'
 import { CreateTagCard, SettingsSection, TagCard, type Tag } from './settings-catalog'
 
-interface Settings { boards: Board[]; tags: Tag[] }
+interface Settings { categories:Category[]; boards: Board[]; tags: Tag[] }
 
 export function BoardSettings() {
   const router=useRouter()
@@ -46,8 +47,9 @@ export function BoardSettings() {
         <SettingsSection id="settings-boards" icon="board" title="Boards">
           {data.kind !== 'ready' ? <p className="text-base text-penny-muted">Loading settings…</p> : null}
           {ready && ready.boards.length === 0 ? <p className="mb-4 text-base text-penny-muted">No boards yet</p> : null}
+          <p className="mb-4 text-sm"><a className="inline-flex min-h-11 items-center text-penny-ink underline underline-offset-4" href="/api/operator/requests/export.csv">Export requests with categories (CSV)</a></p>
           <div className="grid min-w-0 grid-cols-1 items-start gap-4 lg:grid-cols-2">
-            {ready ? ready.boards.map((b) => <BoardCard key={b.slug} board={b} act={act} />) : null}
+            {ready ? ready.boards.map((b) => <BoardCard key={b.slug} board={b} categories={ready.categories} act={act} />) : null}
             <CreateBoardCard act={act} />
           </div>
         </SettingsSection>

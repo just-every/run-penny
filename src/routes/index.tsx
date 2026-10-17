@@ -7,11 +7,12 @@ import { PublicFeedbackHomePage } from '@/core/features/requests/ui/public-feedb
 
 /** The installed public board, with the same filters and public resource loader as its compatibility route. */
 export const Route = createFileRoute('/')({
-  validateSearch: (search): { q?: string; status?: string; board?: string; sort?: 'recent' | 'votes' } => ({
+  validateSearch: (search): { q?: string; status?: string; board?: string; category?:string;sort?: 'recent' | 'votes' | 'newest' | 'trending' } => ({
     ...(typeof search.q === 'string' && search.q.trim() ? { q: search.q.trim() } : {}),
     ...(typeof search.status === 'string' && search.status ? { status: search.status } : {}),
     ...(typeof search.board === 'string' && search.board.trim() ? { board: search.board.trim() } : {}),
-    ...(search.sort === 'recent' || search.sort === 'votes' ? { sort: search.sort } : {}),
+    ...(typeof search.category==='string'&&search.category?{category:search.category}:{}),
+    ...(search.sort === 'recent' || search.sort === 'votes' || search.sort === 'newest' || search.sort === 'trending' ? { sort: search.sort } : {}),
   }),
   loaderDeps: ({ search }) => search,
   loader: ({ location }) => loadPublicResources({ data: location.href }),

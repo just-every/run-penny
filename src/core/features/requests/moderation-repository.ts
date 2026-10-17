@@ -1,3 +1,4 @@
+import { validateCategory } from '../categories/category-policy'
 import type { DatabaseConnection } from '@/core/platform/database'
 import { RequestLifecycleError } from './lifecycle-types'
 import { rejectionNotice } from './rejection-notice'
@@ -5,31 +6,33 @@ import { activeModerationAuthor, commitModeration, currentModerationRequest, las
 
 export async function moderateRequest(db: DatabaseConnection, input: VerdictInput & {
   readonly slug: string; readonly title?: string; readonly description?: string
-  readonly publicAuthorDisplayName?: string; readonly boardSlug?: string
+  readonly publicAuthorDisplayName?: string; readonly boardSlug?: string; readonly categoryId?:string|null
 }): Promise<void> {
-  const query = `SELECT r.id,r.id AS requestId,r.title,r.description,r.board_id AS boardId,r.author_requester_id AS requesterId,
+  const query = `SELECT r.id,r.id AS requestId,r.title,r.description,r.board_id AS boardId,r.category_id AS categoryId,r.author_requester_id AS requesterId,
     r.published_at AS publishedAt,r.public_state AS publicState,r.public_author_display_name AS publicAuthorDisplayName,r.moderation_state AS moderationState,
     (SELECT id FROM request_content_submissions WHERE request_id=r.id AND moderation_state='awaiting_review' ORDER BY created_at DESC,rowid DESC LIMIT 1) AS submissionId,
     ${lastModeration('request','r.id')} AS lastVerdict
     FROM requests r WHERE r.slug=? AND ${currentModerationRequest('r')}`
-  const request = await db.binding.prepare(query).bind(input.slug).first<{id:string;requestId:string;title:string;description:string;boardId:string;requesterId:string|null;publicState:string;publishedAt:string|null;publicAuthorDisplayName:string|null;moderationState:string;submissionId:string|null;lastVerdict:string|null}>()
+  const request = await db.binding.prepare(query).bind(input.slug).first<{id:string;requestId:string;title:string;description:string;boardId:string;categoryId:string|null;requesterId:string|null;publicState:string;publishedAt:string|null;publicAuthorDisplayName:string|null;moderationState:string;submissionId:string|null;lastVerdict:string|null}>()
   if (!request) throw new RequestLifecycleError(404,'not_found','The request does not exist.')
   requireRejectionReason(input)
   if (request.moderationState===input.verdict && (input.verdict!=='approved'||request.publishedAt!==null)) throw new RequestLifecycleError(409,'moderation_conflict','This verdict has already been recorded.')
   const board = input.boardSlug ? await db.binding.prepare('SELECT id FROM boards WHERE slug=?').bind(input.boardSlug).first<{id:string}>() : null
   if (input.boardSlug && !board) throw new RequestLifecycleError(404,'board_not_found','The board does not exist.')
+  const categoryId=input.categoryId!==undefined?input.categoryId:board&&board.id!==request.boardId?null:request.categoryId
+  if(input.categoryId&&(input.categoryId!==request.categoryId||(board?.id??request.boardId)!==request.boardId))await validateCategory(db,board?.id??request.boardId,input.categoryId)
   const approved=input.verdict==='approved', name=input.publicAuthorDisplayName??request.publicAuthorDisplayName
   if (approved && request.requesterId!==null && !name) throw new RequestLifecycleError(400,'public_author_name_required','Approving a requester submission requires an approved public author name.')
   // Recheck the selected board as well as the full subject snapshot in the claim.
   const claimQuery = `${query} AND (? IS NULL OR EXISTS(SELECT 1 FROM boards WHERE id=? AND slug=?))`
   const claim = moderationClaim(db,'request',claimQuery,[input.slug,board?.id??null,board?.id??null,input.boardSlug??null],request,input)
   await commitModeration(db,claim,input,[
-    db.binding.prepare(`UPDATE requests SET board_id=COALESCE(?,board_id),public_title=?,public_description=?,
+    db.binding.prepare(`UPDATE requests SET board_id=COALESCE(?,board_id),category_id=?,public_title=?,public_description=?,
       public_author_display_name=CASE WHEN ?='approved' THEN ? ELSE public_author_display_name END,
       approved_author_name=CASE WHEN ?='approved' THEN ? ELSE approved_author_name END,
       moderation_state=?,public_state=?,published_at=CASE WHEN ?='approved' THEN COALESCE(published_at,?) ELSE published_at END,updated_at=?
       WHERE id=? AND ${claim.gate}`)
-      .bind(board?.id??null,approved?(input.title??request.title):null,approved?(input.description??request.description):null,input.verdict,name,input.verdict,name,input.verdict,approved&&request.publicState==='unpublished'?'open':request.publicState,input.verdict,input.now,input.now,request.id,claim.id),
+      .bind(board?.id??null,categoryId,approved?(input.title??request.title):null,approved?(input.description??request.description):null,input.verdict,name,input.verdict,name,input.verdict,approved&&request.publicState==='unpublished'?'open':request.publicState,input.verdict,input.now,input.now,request.id,claim.id),
     db.binding.prepare(`UPDATE request_content_submissions SET moderation_state=?,rejection_reason=?,approved_at=?,updated_at=? WHERE id=? AND ${claim.gate}`)
       .bind(input.verdict,approved?null:input.reason,approved?input.now:null,input.now,request.submissionId,claim.id),
     ...rejectionNotice(db,input,'request',request.id,request.requesterId,claim.id),

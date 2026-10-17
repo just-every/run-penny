@@ -1,9 +1,18 @@
 export type PublicRequestStatus = 'open' | 'under_review' | 'planned' | 'in_progress' | 'shipped' | 'declined'
 
+export interface PublicCategory {readonly id:string;readonly name:string;readonly parentId:string|null;readonly position:number;readonly archived:boolean;readonly requestCount:number}
+export interface PublicCategoryReference {readonly id:string;readonly name:string;readonly parent:{readonly id:string;readonly name:string}|null}
 export interface PublicBoard {
   readonly slug: string
   readonly name: string
   readonly requestCount: number
+  readonly categoryMode:'off'|'optional'|'required'
+  readonly postingPolicy:'requesters'|'operators'
+  readonly commentsAllowed:boolean
+  readonly showVoteCounts:boolean
+  readonly showVoters:boolean
+  readonly anonymousRequesters:boolean
+  readonly categories:readonly PublicCategory[]
 }
 
 export interface PublicRequestCard {
@@ -14,7 +23,8 @@ export interface PublicRequestCard {
   readonly publicEta?:string|null
   readonly statusLabel?:string|null
   readonly status: PublicRequestStatus
-  readonly voteCount: number
+  readonly category:PublicCategoryReference|null
+  readonly voteCount?: number
   readonly commentCount: number
   readonly publishedAt: string
   readonly recentActivityAt: string
@@ -32,12 +42,16 @@ export interface PublicRequestComment {
 
 export interface PublicRequestDetail extends PublicRequestCard {
   readonly authorDisplayName: string | null
+  readonly commentsAllowed:boolean
+  readonly showVoters:boolean
+  readonly voters?:readonly {readonly displayName:string}[]
   readonly comments: readonly PublicRequestComment[]
   readonly statusUpdates: readonly {id:string;status:PublicRequestStatus|'withdrawn';body:string;pinned:number;publishedAt:string}[]
   readonly attachments: readonly {id:string;filename:string;contentType:string}[]
 }
 
 export interface PublicRoadmapItem {
+  readonly category?:PublicCategoryReference|null
   readonly source?:'requests'
   readonly voteCount?:number
   readonly publicEta?:string|null

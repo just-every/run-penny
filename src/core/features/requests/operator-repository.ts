@@ -80,7 +80,7 @@ export class RequestOperatorRepository {
     const board = await this.findBoard(boardSlug)
     if (!board) throw new RequestLifecycleError(404, 'board_not_found', 'The board does not exist.')
     const db=this.connection.binding,result=await db.batch([
-      db.prepare(`UPDATE requests SET board_id=?,updated_at=? WHERE slug=? RETURNING 1 AS affected`).bind(board.id,now,slug),
+      db.prepare(`UPDATE requests SET category_id=CASE WHEN board_id=? THEN category_id ELSE NULL END,board_id=?,updated_at=? WHERE slug=? RETURNING 1 AS affected`).bind(board.id,board.id,now,slug),
       db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,'operator',?,'request.board_changed','request',id,?,?,? FROM requests WHERE slug=? AND changes()>0`).bind(createRequestId(),actorId,now,now,now,slug),
     ])
     if (result[0].results.length !== 1) throw new RequestLifecycleError(404, 'not_found', 'The request does not exist.')
@@ -93,14 +93,15 @@ export class RequestOperatorRepository {
     `).bind(createRequestId(), input.slug, input.name, input.visibility, position?.position ?? 0, input.now, input.now).run()
   }
 
-  async updateBoard(input: { readonly operatorId: string; readonly slug: string; readonly name?: string; readonly visibility?: 'public' | 'internal'; readonly position?: number; readonly archived?: boolean; readonly now: string }): Promise<void> {
+  async updateBoard(input: { readonly categoryMode?: 'off'|'optional'|'required'; readonly postingPolicy?: 'requesters'|'operators'; readonly commentsAllowed?:boolean; readonly showVoteCounts?:boolean; readonly showVoters?:boolean; readonly anonymousRequesters?:boolean; readonly operatorId: string; readonly slug: string; readonly name?: string; readonly visibility?: 'public' | 'internal'; readonly position?: number; readonly archived?: boolean; readonly now: string }): Promise<void> {
     const db=this.connection.binding
     const result=await db.batch([
       db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at)
         SELECT ?,'operator',?,?,'board',id,?,?,? FROM boards WHERE slug=?`).bind(createRequestId(),input.operatorId,input.archived===true?'board.archived':'board.settings_updated',input.now,input.now,input.now,input.slug),
       db.prepare(`UPDATE boards SET name=COALESCE(?,name),visibility=COALESCE(?,visibility),position=COALESCE(?,position),
+        category_mode=COALESCE(?,category_mode),posting_policy=COALESCE(?,posting_policy),comments_allowed=COALESCE(?,comments_allowed),show_vote_counts=COALESCE(?,show_vote_counts),show_voters=COALESCE(?,show_voters),anonymous_requesters=COALESCE(?,anonymous_requesters),
         archived_at=CASE WHEN ? IS NULL THEN archived_at WHEN ?=1 THEN ? ELSE NULL END,updated_at=? WHERE slug=? RETURNING 1 AS affected`)
-        .bind(input.name??null,input.visibility??null,input.position??null,input.archived===undefined?null:1,input.archived?1:0,input.now,input.now,input.slug),
+        .bind(input.name??null,input.visibility??null,input.position??null,input.categoryMode??null,input.postingPolicy??null,input.commentsAllowed===undefined?null:Number(input.commentsAllowed),input.showVoteCounts===undefined?null:Number(input.showVoteCounts),input.showVoters===undefined?null:Number(input.showVoters),input.anonymousRequesters===undefined?null:Number(input.anonymousRequesters),input.archived===undefined?null:1,input.archived?1:0,input.now,input.now,input.slug),
     ])
     if(result[1].results.length!==1)throw new RequestLifecycleError(404,'board_not_found','The board does not exist.')
   }

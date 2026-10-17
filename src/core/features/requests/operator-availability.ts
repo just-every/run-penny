@@ -19,11 +19,12 @@ export const moderationAvailabilitySql = (alias: string) => `CASE
 
 export interface RequestAvailabilityRow {
   status:string;statusSource:'direct'|'roadmap';publicEta:string|null;internalStatusId:string|null;internalStatusName:string|null
+  boardId:string;boardSlug:string;categoryId:string|null
   id: string; slug: string; moderationAvailability: ModerationAvailability
   canPublish: number; canReverseDecline: number; canMerge: number; canUnmerge: number
 }
 
-export const requestAvailabilitySql = `SELECT r.id,r.slug,${requestStatusExpression} AS status,${requestStatusSourceExpression} AS statusSource,r.public_eta AS publicEta,
+export const requestAvailabilitySql = `SELECT r.id,r.slug,r.board_id AS boardId,b.slug AS boardSlug,r.category_id AS categoryId,${requestStatusExpression} AS status,${requestStatusSourceExpression} AS statusSource,r.public_eta AS publicEta,
     r.internal_status_id AS internalStatusId,(SELECT name FROM request_internal_statuses WHERE id=r.internal_status_id) AS internalStatusName,
     ${moderationAvailabilitySql('r')} AS moderationAvailability,
     (b.visibility='public' AND r.moderation_state='approved' AND r.published_at IS NOT NULL

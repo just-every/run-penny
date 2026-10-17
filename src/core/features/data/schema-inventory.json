@@ -55,7 +55,13 @@
       "position",
       "archived_at",
       "created_at",
-      "updated_at"
+      "updated_at",
+      "category_mode",
+      "posting_policy",
+      "comments_allowed",
+      "show_vote_counts",
+      "show_voters",
+      "anonymous_requesters"
     ]
   },
   "candidate_bet_account_links": {
@@ -2229,7 +2235,8 @@
       "public_eta",
       "direct_status_changed_at",
       "mapped_status_changed_at",
-      "latest_status_source"
+      "latest_status_source",
+      "category_id"
     ]
   },
   "rer_dependency_codes": {
@@ -2654,6 +2661,20 @@
       "board_slugs_json",
       "columns_json",
       "shipped_days",
+      "updated_at"
+    ]
+  },
+  "request_categories": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "board_id",
+      "parent_id",
+      "name",
+      "position",
+      "archived_at",
+      "merged_into_category_id",
+      "created_at",
       "updated_at"
     ]
   }

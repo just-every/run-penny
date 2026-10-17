@@ -1,9 +1,18 @@
+import { publicBoards } from '../categories/public-boards'
+import { publicRequestPredicate } from './publication-predicate'
 import { requestStatusExpression, requestStatusLabelExpression } from './status-sql'
 import type { PublicRequestCard, PublicRequestComment, PublicRequestDetail, PublicRequestStatus } from '@/core/shared/api/public'
 import type { DatabaseConnection } from '@/core/platform/database'
 
-interface PublicRequestRow extends Omit<PublicRequestCard, 'board' | 'status' | 'voteCount' | 'commentCount'> {
+interface PublicRequestRow extends Omit<PublicRequestCard, 'board' | 'status' | 'voteCount' | 'commentCount' | 'category'> {
   readonly authorDisplayName: string | null
+  readonly categoryId:string|null
+  readonly categoryName:string|null
+  readonly parentId:string|null
+  readonly parentName:string|null
+  readonly showVoteCounts:number
+  readonly showVoters:number
+  readonly commentsAllowed:number
   readonly boardSlug: string
   readonly boardName: string
   readonly status: PublicRequestStatus
@@ -17,7 +26,8 @@ export interface PublicRequestFilters {
   readonly board?: string
   readonly q?: string
   readonly status?: PublicRequestStatus
-  readonly sort?: 'recent' | 'votes'
+  readonly category?: string
+  readonly sort?: 'recent' | 'votes' | 'newest' | 'trending'
 }
 
 const statusExpression = requestStatusExpression
@@ -26,6 +36,8 @@ const publicRequestFrom = `
   FROM requests r
   INNER JOIN boards b ON b.id = r.board_id AND b.visibility = 'public'
   LEFT JOIN requesters author ON author.id = r.author_requester_id
+  LEFT JOIN request_categories category ON category.id=r.category_id
+  LEFT JOIN request_categories parent ON parent.id=category.parent_id
   LEFT JOIN roadmap_request_mappings rrm
     ON rrm.request_id = r.id
     AND rrm.approved_at IS NOT NULL
@@ -36,17 +48,17 @@ const publicRequestFrom = `
   LEFT JOIN roadmap_items ri
     ON ri.id = rp.roadmap_item_id
     AND ri.status != 'dropped'
-  WHERE r.moderation_state = 'approved'
-    AND r.published_at IS NOT NULL
-    AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL
-    AND (author.id IS NULL OR author.blocked_at IS NULL)
+  WHERE ${publicRequestPredicate}
 `
 
 function requestSelect(): string {
   return `
     SELECT
       r.slug AS slug, b.slug AS boardSlug, b.name AS boardName,
-      r.public_title AS title, r.public_description AS description, r.public_author_display_name AS authorDisplayName,
+      r.public_title AS title, r.public_description AS description,
+      CASE WHEN b.anonymous_requesters=1 AND r.author_operator_id IS NULL THEN 'Anonymous' ELSE r.public_author_display_name END AS authorDisplayName,
+      category.id AS categoryId,category.name AS categoryName,parent.id AS parentId,parent.name AS parentName,
+      b.show_vote_counts AS showVoteCounts,b.show_voters AS showVoters,b.comments_allowed AS commentsAllowed,
       ${statusExpression} AS status, r.public_eta AS publicEta, ${requestStatusLabelExpression} AS statusLabel, r.published_at AS publishedAt,
       (
         SELECT COUNT(*) FROM request_votes rv
@@ -77,7 +89,8 @@ function mapRequest(row: PublicRequestRow): PublicRequestCard {
     description: row.description,
     status: row.status,
     publicEta: row.publicEta, statusLabel: row.statusLabel,
-    voteCount: Number(row.voteCount),
+    category:row.categoryId?{id:row.categoryId,name:row.categoryName!,parent:row.parentId?{id:row.parentId,name:row.parentName!}:null}:null,
+    ...(row.showVoteCounts?{voteCount:Number(row.voteCount)}:{}),
     commentCount: Number(row.commentCount),
     publishedAt: row.publishedAt,
     recentActivityAt: row.recentActivityAt,
@@ -91,18 +104,7 @@ export class PublicRequestsReadRepository {
     this.connection = connection
   }
 
-  async listBoards(): Promise<readonly { readonly slug: string; readonly name: string; readonly requestCount: number }[]> {
-    const result = await this.connection.binding.prepare(`
-      SELECT b.slug AS slug, b.name AS name, COUNT(CASE WHEN author.id IS NULL OR author.blocked_at IS NULL THEN r.id END) AS requestCount
-      FROM boards b
-      LEFT JOIN requests r ON r.board_id = b.id AND r.moderation_state = 'approved' AND r.published_at IS NOT NULL AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL
-      LEFT JOIN requesters author ON author.id = r.author_requester_id
-      WHERE b.visibility = 'public' AND b.archived_at IS NULL
-      GROUP BY b.id, b.slug, b.name
-      ORDER BY b.position ASC, b.name ASC
-    `).all<{ readonly slug: string; readonly name: string; readonly requestCount: number }>()
-    return result.results.map((row) => ({ ...row, requestCount: Number(row.requestCount) }))
-  }
+  async listBoards() { return publicBoards(this.connection) }
 
   async list(filters: PublicRequestFilters): Promise<readonly PublicRequestCard[]> {
     const conditions: string[] = []
@@ -111,6 +113,7 @@ export class PublicRequestsReadRepository {
       conditions.push('b.slug = ?')
       values.push(filters.board)
     }
+    if(filters.category){conditions.push('(r.category_id=? OR category.parent_id=?)');values.push(filters.category,filters.category)}
     if (filters.q) {
       // Bound parameters stay literal; INSTR avoids D1's short LIKE-pattern limit.
       conditions.push('(INSTR(LOWER(r.public_title), LOWER(?)) > 0 OR INSTR(LOWER(r.public_description), LOWER(?)) > 0)')
@@ -121,7 +124,7 @@ export class PublicRequestsReadRepository {
       values.push(filters.status)
     }
     const where = conditions.length > 0 ? `AND ${conditions.join(' AND ')}` : ''
-    const order = filters.sort === 'votes' ? 'voteCount DESC, recentActivityAt DESC, slug ASC' : 'recentActivityAt DESC, slug ASC'
+    const order = filters.sort === 'votes' ? 'voteCount DESC, recentActivityAt DESC, slug ASC' : filters.sort==='newest'?'r.created_at DESC, slug ASC':filters.sort==='trending'?`${trendingScore} DESC, recentActivityAt DESC, slug ASC`:'recentActivityAt DESC, slug ASC'
     const result = await this.connection.binding.prepare(`
       ${requestSelect()}
       ${publicRequestFrom}
@@ -134,11 +137,11 @@ export class PublicRequestsReadRepository {
   async find(slug: string): Promise<PublicRequestDetail | null> {
     // D1 batch reads one database snapshot: a later private-board update cannot
     // be joined to an earlier public admission check, including in Start SSR.
-    const [request,comments,statusUpdates,attachments] = await this.connection.binding.batch([
+    const [request,comments,statusUpdates,attachments,voters] = await this.connection.binding.batch([
       this.connection.binding.prepare(`${requestSelect()} ${publicRequestFrom} AND r.slug=? LIMIT 1`).bind(slug),
-      this.connection.binding.prepare(`SELECT rc.id,rc.public_author_display_name AS displayName,
+      this.connection.binding.prepare(`SELECT rc.id,CASE WHEN b.anonymous_requesters=1 AND rc.operator_id IS NULL THEN 'Anonymous' ELSE rc.public_author_display_name END AS displayName,
         rc.public_author_kind AS kind,rc.body,rc.published_at AS publishedAt
-        FROM request_comments rc LEFT JOIN requesters requester ON requester.id=rc.requester_id
+        FROM request_comments rc JOIN requests r ON r.id=rc.request_id JOIN boards b ON b.id=r.board_id LEFT JOIN requesters requester ON requester.id=rc.requester_id
         WHERE rc.request_id=(SELECT id FROM requests WHERE slug=?) AND rc.moderation_state='approved'
         AND rc.published_at IS NOT NULL AND (requester.id IS NULL OR requester.blocked_at IS NULL)
         ORDER BY rc.published_at,rc.id`).bind(slug),
@@ -150,11 +153,15 @@ export class PublicRequestsReadRepository {
         ORDER BY pinned DESC,publishedAt DESC,id DESC`).bind(slug,slug),
       this.connection.binding.prepare(`SELECT id,original_filename AS filename,content_type AS contentType FROM attachments
         WHERE request_id=(SELECT id FROM requests WHERE slug=?) AND public_state='published'`).bind(slug),
+      this.connection.binding.prepare(`SELECT CASE WHEN b.anonymous_requesters=1 THEN 'Anonymous' ELSE voter.display_name END AS displayName
+       FROM request_votes v JOIN requesters voter ON voter.id=v.requester_id JOIN requests r ON r.id=v.request_id JOIN boards b ON b.id=r.board_id
+       WHERE r.slug=? AND b.show_voters=1 AND voter.blocked_at IS NULL ORDER BY v.created_at,v.requester_id`).bind(slug),
     ])
     const row=request.results[0] as PublicRequestRow|undefined
     if(!row)return null
     return {
-      ...mapRequest(row),authorDisplayName:row.authorDisplayName,
+      ...mapRequest(row),authorDisplayName:row.authorDisplayName,commentsAllowed:!!row.commentsAllowed,showVoters:!!row.showVoters,
+      ...(row.showVoters?{voters:voters.results as {displayName:string}[]}:{}),
       statusUpdates:statusUpdates.results as {id:string;status:PublicRequestStatus|'withdrawn';body:string;pinned:number;publishedAt:string}[],
       attachments:attachments.results as {id:string;filename:string;contentType:string}[],
       comments:(comments.results as (PublicRequestComment & {displayName:string;kind:'requester'|'operator'})[]).map(comment=>({
@@ -188,3 +195,15 @@ export class PublicRequestsReadRepository {
     return result !== null
   }
 }
+
+// One current vote per requester and approved comment, scored over a rolling 14-day
+// window. Each event decays as 1/(1+age in days); private/held activity has no effect.
+const trendingScore=`(
+ COALESCE((SELECT SUM(1.0/(1.0+MAX(0,julianday('now')-julianday(v.created_at)))) FROM request_votes v
+ JOIN requesters voter ON voter.id=v.requester_id AND voter.blocked_at IS NULL
+ WHERE v.request_id=r.id AND julianday(v.created_at) BETWEEN julianday('now')-14 AND julianday('now')),0)
+ +COALESCE((SELECT SUM(1.0/(1.0+MAX(0,julianday('now')-julianday(c.published_at)))) FROM request_comments c
+ LEFT JOIN requesters commenter ON commenter.id=c.requester_id
+ WHERE c.request_id=r.id AND c.moderation_state='approved' AND c.published_at IS NOT NULL
+ AND (commenter.id IS NULL OR commenter.blocked_at IS NULL)
+ AND julianday(c.published_at) BETWEEN julianday('now')-14 AND julianday('now')),0))`

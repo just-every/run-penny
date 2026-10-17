@@ -28,7 +28,7 @@ export function requesterAdmission(identity: RequesterReference) {
 export const publishedAdmission = `EXISTS(SELECT 1 FROM requests r JOIN boards b ON b.id=r.board_id
   LEFT JOIN requesters author ON author.id=r.author_requester_id WHERE r.id=? AND r.moderation_state='approved'
   AND r.published_at IS NOT NULL AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL
-  AND b.visibility='public' AND (author.id IS NULL OR author.blocked_at IS NULL))`
+  AND b.visibility='public' AND r.public_state NOT IN ('unpublished','withdrawn') AND (author.id IS NULL OR author.blocked_at IS NULL))`
 export const votingAdmission = `${publishedAdmission} AND EXISTS(SELECT 1 FROM requests r WHERE r.id=? AND ${requestStatusExpression} IN ('open','under_review','planned','in_progress'))`
 export const ownRequestAdmission = `EXISTS(SELECT 1 FROM requests WHERE id=? AND author_requester_id=?
   AND withdrawn_at IS NULL AND merged_into_request_id IS NULL)`

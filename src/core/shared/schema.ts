@@ -73,7 +73,24 @@ export const boards = sqliteTable('boards', {
   name: text('name').notNull(),
   visibility: text('visibility', { enum: ['public', 'internal'] }).notNull(),
   position: integer('position').notNull(),
+  categoryMode: text('category_mode', { enum: ['off','optional','required'] }).notNull().default('off'),
+  postingPolicy: text('posting_policy', { enum: ['requesters','operators'] }).notNull().default('requesters'),
+  commentsAllowed: integer('comments_allowed').notNull().default(1),
+  showVoteCounts: integer('show_vote_counts').notNull().default(1),
+  showVoters: integer('show_voters').notNull().default(0),
+  anonymousRequesters: integer('anonymous_requesters').notNull().default(0),
   archivedAt: text('archived_at'),
+  ...timestamps,
+})
+
+export const requestCategories = sqliteTable('request_categories', {
+  id: text('id').primaryKey(),
+  boardId: text('board_id').notNull().references(() => boards.id),
+  parentId: text('parent_id'),
+  name: text('name').notNull(),
+  position: integer('position').notNull().default(0),
+  archivedAt: text('archived_at'),
+  mergedIntoCategoryId: text('merged_into_category_id'),
   ...timestamps,
 })
 
@@ -133,6 +150,7 @@ export const requests = sqliteTable(
     id: text('id').primaryKey(),
     slug: text('slug').notNull().unique(),
     boardId: text('board_id').notNull().references(() => boards.id),
+    categoryId: text('category_id').references(() => requestCategories.id),
     authorRequesterId: text('author_requester_id').references(() => requesters.id),
     title: text('title').notNull(),
     description: text('description').notNull(),

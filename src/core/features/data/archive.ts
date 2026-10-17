@@ -1,3 +1,4 @@
+import { validateCategoryArchive } from '../categories/archive'
 import {validateLearningArchive} from '../learning/archive'
 import {learningErasureStatements} from '../learning/privacy'
 import {GRANT_REVOCATION_CHECKPOINT} from '../learning/journal'
@@ -166,7 +167,7 @@ async function validated(db:D1Database,value:unknown,journalValue:unknown):Promi
  if(current.origin===journal.origin&&current.epoch>journal.epoch)fail('stale_archive')
  const tables=await schema(db)
  if(await schemaHash(tables)!==archive.schemaHash||canonical(Object.keys(archive.tables).sort())!==canonical(tables.map(table=>table.name).sort()))fail('unsupported_archive_schema')
- limits(archive.tables);validateNativeIdentity(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
+ limits(archive.tables);validateNativeIdentity(archive.tables);validateCategoryArchive(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
  if(archive.tables.request_attachment_uploads.length||archive.tables.evidence_attachment_uploads.length)fail('unfinished_attachment_uploads')
  for(const table of tables){
   const keys=new Set<string>()

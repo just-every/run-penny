@@ -7,11 +7,12 @@ import { PublicFeedbackHomePage } from '@/core/features/requests/ui/public-feedb
 
 /** REQ-001 (HOME-001 was superseded by HOME-002 on 9 October 2026). The public feedback board's canonical address. */
 export const Route = createFileRoute('/portal/feedback/')({
-  validateSearch: (search): { q?: string; status?: string; board?: string; sort?: 'recent' | 'votes' } => ({
+  validateSearch: (search): { q?: string; status?: string; board?: string; category?:string;sort?: 'recent' | 'votes' | 'newest' | 'trending' } => ({
     ...(typeof search.q === 'string' && search.q.trim() ? { q: search.q.trim() } : {}),
     ...(typeof search.status === 'string' && search.status ? { status: search.status } : {}),
     ...(typeof search.board === 'string' && search.board.trim() ? { board: search.board.trim() } : {}),
-    ...(search.sort === 'recent' || search.sort === 'votes' ? { sort: search.sort } : {}),
+    ...(typeof search.category==='string'&&search.category?{category:search.category}:{}),
+    ...(search.sort === 'recent' || search.sort === 'votes' || search.sort === 'newest' || search.sort === 'trending' ? { sort: search.sort } : {}),
   }),
   loaderDeps: ({ search }) => search,
   loader: ({ location }) => loadPublicResources({ data: location.href }),

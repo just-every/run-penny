@@ -1,3 +1,4 @@
+import { requesterCommentAdmission, commentsAllowedAdmission } from '../categories/comment-policy'
 import { requestStatusExpression } from './status-sql'
 import { requestSuggestions } from './suggestions'
 import { resumeRequestEmailStatement } from '@/core/features/notifications/link-epochs'
@@ -111,11 +112,12 @@ export class RequestWriteRepository {
     const request = await this.findVotableRequest(slug)
     if (!request) throw new RequestLifecycleError(404, 'not_found', 'The published request does not exist.')
     if (request.status === 'declined') throw new RequestLifecycleError(409, 'comments_closed', 'Comments are closed for this request.')
+    await requesterCommentAdmission(this.connection,slug)
     const id = createRequestId()
     await requesterWrite(this.connection,identity,[this.connection.binding.prepare(`
       INSERT INTO request_comments (id, request_id, requester_id, operator_id, body, moderation_state, published_at, created_at, updated_at)
       VALUES (?, ?, ?, NULL, ?, 'awaiting_review', NULL, ?, ?)
-    `).bind(id, request.id, identity.requesterId, body, now, now)],{sql:`${publishedAdmission} AND NOT EXISTS(SELECT 1 FROM requests WHERE id=? AND public_state='declined')`,values:[request.id,request.id]})
+    `).bind(id, request.id, identity.requesterId, body, now, now)],{sql:`${publishedAdmission} AND ${commentsAllowedAdmission} AND NOT EXISTS(SELECT 1 FROM requests WHERE id=? AND public_state='declined')`,values:[request.id,request.id,request.id]})
     return { id, moderationState: 'awaiting_review' }
   }
 
@@ -146,6 +148,8 @@ export class RequestWriteRepository {
   }
 
   async editOwnComment(identity: RequesterReference, commentId: string, body: string, now: string): Promise<{ readonly moderationState: 'awaiting_review' }> {
+    const board=await this.connection.binding.prepare('SELECT b.comments_allowed FROM request_comments c JOIN requests r ON r.id=c.request_id JOIN boards b ON b.id=r.board_id WHERE c.id=?').bind(commentId).first<{comments_allowed:number}>()
+    if(board?.comments_allowed===0)throw new RequestLifecycleError(403,'comments_disabled','Requester comments are disabled on this board.')
     const comment = await this.connection.binding.prepare(`
       SELECT id FROM request_comments WHERE id = ? AND requester_id = ? LIMIT 1
     `).bind(commentId, identity.requesterId).first<{ id: string }>()
@@ -153,7 +157,7 @@ export class RequestWriteRepository {
     await requesterWrite(this.connection,identity,[this.connection.binding.prepare(`
       INSERT INTO request_comment_edits (id, comment_id, requester_id, body, moderation_state, rejection_reason, approved_at, created_at, updated_at)
       VALUES (?, ?, ?, ?, 'awaiting_review', NULL, NULL, ?, ?)
-    `).bind(createRequestId(), comment.id, identity.requesterId, body, now, now)],{sql:'EXISTS(SELECT 1 FROM request_comments WHERE id=? AND requester_id=?)',values:[comment.id,identity.requesterId]})
+    `).bind(createRequestId(), comment.id, identity.requesterId, body, now, now)],{sql:'EXISTS(SELECT 1 FROM request_comments c JOIN requests r ON r.id=c.request_id JOIN boards b ON b.id=r.board_id WHERE c.id=? AND c.requester_id=? AND b.comments_allowed=1)',values:[comment.id,identity.requesterId]})
     return { moderationState: 'awaiting_review' }
   }
 

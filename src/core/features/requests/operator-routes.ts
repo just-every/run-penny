@@ -1,3 +1,5 @@
+import { requestCategoryCsv } from '../categories/request-csv'
+import { CategoriesRepository } from '../categories/repository'
 import { statusPublicationSchema } from './status-schema'
 import {integrationOperator} from '../integrations/destinations'
 import { readAttachment } from './mutation-boundaries'
@@ -22,17 +24,41 @@ const moderationSchema = z.object({
   description: text.optional(),
   publicAuthorDisplayName: z.string().trim().min(1).max(160).optional(),
   boardSlug: slug.optional(),
+  categoryId: identifier.nullable().optional(),
   reason: z.string().trim().min(1).max(2_000).optional(),
 }).strict()
 const simpleVerdictSchema = z.object({ body:text.optional(), notifyAuthor:z.boolean().optional(), verdict: z.enum(['approved', 'rejected']), reason: z.string().trim().min(1).max(2_000).optional(), publicAuthorDisplayName: z.string().trim().min(1).max(160).optional() }).strict()
 const noteSchema = z.object({ body: text }).strict()
 const boardCreateSchema = z.object({ slug, name: z.string().trim().min(1).max(160), visibility: z.enum(['public', 'internal']) }).strict()
-const boardUpdateSchema = z.object({ name: z.string().trim().min(1).max(160).optional(), visibility: z.enum(['public', 'internal']).optional(), position: z.number().int().min(0).optional(), archived: z.boolean().optional() }).strict()
+const boardUpdateSchema = z.object({ categoryMode:z.enum(['off','optional','required']).optional(), postingPolicy:z.enum(['requesters','operators']).optional(), commentsAllowed:z.boolean().optional(), showVoteCounts:z.boolean().optional(), showVoters:z.boolean().optional(), anonymousRequesters:z.boolean().optional(), name: z.string().trim().min(1).max(160).optional(), visibility: z.enum(['public', 'internal']).optional(), position: z.number().int().min(0).optional(), archived: z.boolean().optional() }).strict()
 const mergeSchema = z.object({ targetSlug: slug }).strict()
 const requesterMergeSchema = z.object({ targetRequesterId: identifier }).strict()
 const moveSchema = z.object({ boardSlug: slug }).strict()
 
 export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironment>): void {
+  app.get('/api/operator/requests/export.csv',async context=>operatorMutation(context,async()=>requestCategoryCsv(context.get('runtime').database)))
+  const categorySchema=z.object({name:z.string().trim().min(1).max(160),parentId:identifier.nullable().optional(),position:z.number().int().min(0).optional(),archived:z.boolean().optional()}).strict()
+  app.post('/api/operator/boards/:slug/categories',async context=>{
+    const input=await parseMutationBody(context,categorySchema),board=slug.safeParse(context.req.param('slug'))
+    if(!input||!board.success)return invalid(context)
+    return operatorMutation(context,async operator=>context.json(await new CategoriesRepository(context.get('runtime').database,operator.id).create(board.data,input),201))
+  })
+  app.patch('/api/operator/boards/:slug/categories/:id',async context=>{
+    const input=await parseMutationBody(context,categorySchema.partial()),board=slug.safeParse(context.req.param('slug')),id=identifier.safeParse(context.req.param('id'))
+    if(!input||!board.success||!id.success)return invalid(context)
+    return operatorMutation(context,async operator=>{await new CategoriesRepository(context.get('runtime').database,operator.id).update(board.data,id.data,input);return context.json({ok:true})})
+  })
+  app.post('/api/operator/boards/:slug/categories/:id/merge',async context=>{
+    const input=await parseMutationBody(context,z.object({targetId:identifier}).strict()),board=slug.safeParse(context.req.param('slug')),id=identifier.safeParse(context.req.param('id'))
+    if(!input||!board.success||!id.success)return invalid(context)
+    return operatorMutation(context,async operator=>{await new CategoriesRepository(context.get('runtime').database,operator.id).merge(board.data,id.data,input.targetId);return context.json({ok:true})})
+  })
+  app.patch('/api/operator/requests/:slug/category',async context=>{
+    const input=await parseMutationBody(context,z.object({categoryId:identifier.nullable()}).strict()),requestSlug=slug.safeParse(context.req.param('slug'))
+    if(!input||!requestSlug.success)return invalid(context)
+    return operatorMutation(context,async operator=>{await new CategoriesRepository(context.get('runtime').database,operator.id).setRequest(requestSlug.data,input.categoryId);return context.json({ok:true})})
+  })
+
   app.get('/api/operator/attachment-uploads',async context=>operatorMutation(context,async()=>context.json((await context.get('runtime').database.binding.prepare('SELECT id,request_id,original_filename,byte_size,created_at,writing FROM request_attachment_uploads ORDER BY created_at').all()).results)))
   app.post('/api/operator/attachment-uploads/:id/release-writer',async context=>operatorMutation(context,async()=>{if(!await parseMutationBody(context,z.object({priorWriterStopped:z.literal(true)}).strict()))return context.json({error:'prior_writer_confirmation_required'},400);await releaseInterruptedAttachmentWriter(context.get('runtime').database,context.req.param('id'));return context.json({ok:true})}))
   app.post('/api/operator/attachment-uploads/:id/recover',async context=>operatorMutation(context,async()=>{const runtime=context.get('runtime');const original=context.req.header('Content-Type')?.startsWith('multipart/form-data;')?await readAttachment(context.req.raw):undefined;await recoverAttachment(runtime.database,runtime.blobs,context.req.param('id'),original);return context.json({ok:true})}))
@@ -227,6 +253,7 @@ async function operatorMutation(context: Context<OperatorMutationEnvironment>, a
   } catch (error) {
     if (error instanceof NativeError && error.hint) return context.json({ error: error.code, message: error.hint }, error.status)
     if (error instanceof RequestLifecycleError || error instanceof NativeError) return context.json({ error: error.code }, error.status)
+    if(/invalid_category_parent|category_depth_exceeded|invalid_category_merge|invalid_request_category/.test(String(error)))return context.json({error:'invalid_category_change'},400)
     return mutationFailure(context, error)
   }
 }

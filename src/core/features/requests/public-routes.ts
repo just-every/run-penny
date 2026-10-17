@@ -1,3 +1,4 @@
+import { requesterCommentAdmission } from '../categories/comment-policy'
 import type { ExistingHostIdentity } from '@/core/features/auth/host-identity'
 import { limitPublicWrite, readAttachment } from './mutation-boundaries'
 import { parseInput } from '@/core/features/auth/native-routes'
@@ -26,6 +27,7 @@ const submissionSchema = z.object({
   proposedSolution: z.string().trim().min(1).max(10_000).nullable().optional().default(null),
   impactStatement: z.string().trim().min(1).max(10_000).nullable().optional().default(null),
   boardSlug: slug,
+  categoryId: z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u).nullable().optional(),
   emailUpdates: z.boolean().optional().default(false),
 }).strict()
 const voteSchema = z.object({ emailUpdates: z.boolean().optional().default(false) }).strict()
@@ -107,6 +109,7 @@ export function registerPublicRequestMutationRoutes(app: Hono<PublicRequestRoute
     const input = await parse(context.req.raw, commentSchema)
     const requestSlug = slug.safeParse(context.req.param('slug'))
     if (!input || !requestSlug.success) return context.json({ error: 'validation_failed', message: 'The comment is invalid.' }, 400)
+    await requesterCommentAdmission(context.get('runtime').database,requestSlug.data)
     const action: PendingRequesterAction = { type: 'comment', slug: requestSlug.data, body: input.body }
     const identity = await identityOrHold(context, action)
     if (identity instanceof Response) return identity

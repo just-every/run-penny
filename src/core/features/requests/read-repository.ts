@@ -13,7 +13,7 @@ export class RequestsReadRepository {
   async list(ids?: readonly string[]): Promise<readonly OperatorRequestCard[]> {
     const result = await this.connection.binding.prepare(`
       SELECT
-        r.id AS id, r.slug AS slug, r.title AS title, r.description AS description,
+        r.id AS id, r.slug AS slug,r.category_id AS categoryId, r.title AS title, r.description AS description,
         r.moderation_state AS moderationState, ${requestStatusExpression} AS publicState, ${requestStatusSourceExpression} AS statusSource, r.public_eta AS publicEta,
         (SELECT name FROM request_internal_statuses WHERE id=r.internal_status_id) AS internalStatusName,
         b.slug AS boardSlug, b.name AS boardName, b.visibility AS boardVisibility,
@@ -41,7 +41,7 @@ export class RequestsReadRepository {
       ORDER BY r.updated_at DESC, r.id ASC
       LIMIT 25
     `).bind(...(ids ?? [])).all<{
-      readonly id: string; readonly slug: string; readonly title: string; readonly description: string
+      readonly id: string; readonly slug: string; readonly categoryId:string|null; readonly title: string; readonly description: string
       readonly statusSource:'direct'|'roadmap'; readonly publicEta:string|null; readonly internalStatusName:string|null
       readonly moderationState: OperatorRequestCard['moderationState']; readonly publicState: OperatorRequestCard['publicState']
       readonly boardSlug: string; readonly boardName: string; readonly boardVisibility: 'public' | 'internal'
@@ -49,7 +49,7 @@ export class RequestsReadRepository {
       readonly voteCount: number; readonly evidenceCount: number
     }>()
     return result.results.map((row) => ({
-      id: row.id, slug: row.slug, title: row.title, description: row.description,
+      id: row.id, slug: row.slug,categoryId:row.categoryId, title: row.title, description: row.description,
       moderationState: row.moderationState, publicState: row.publicState, statusSource:row.statusSource,publicEta:row.publicEta,internalStatusName:row.internalStatusName,
       board: { slug: row.boardSlug, name: row.boardName, visibility: row.boardVisibility },
       author: row.authorId && row.authorName ? { id: row.authorId, displayName: row.authorName, email: row.authorEmail } : null,
