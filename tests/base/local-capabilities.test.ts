@@ -32,6 +32,8 @@ for(const mode of ['preview','production'])it(`[BASE-ACCESS-001 REQ-023] ${mode}
 })
 
 it('[REQ-003 REQ-023 BASE-SECRET-002] missing mail cannot provision or hold an unverified submission',async()=>{
+ const stamp=new Date().toISOString()
+ await env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('board','feedback','Feedback','public',0,?,?)").bind(stamp,stamp).run()
  const bindings={...env,PENNY_ENVIRONMENT:'production',MAIL_PROVIDER:undefined,MAIL_FROM:undefined,MAIL_API_KEY:undefined}
  const payload={title:'Unverified request',description:'Cannot establish identity',boardSlug:'feedback',idempotencyKey:crypto.randomUUID()}
  const cases:{headers:Record<string,string>;error:string}[]=[{headers:{},error:'mail_unavailable'},{headers:{'X-Penny-Pending-Token':opaqueToken()},error:'mail_unavailable'},{headers:{'X-Penny-Identity':'unsigned','X-Penny-Identity-Signature':'unsigned'},error:'auth_unavailable'}]

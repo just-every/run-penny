@@ -6576,7 +6576,7 @@
       "executable": false
     },
     "tests/base/local-capabilities.test.ts": {
-      "sha256": "88dac86d490f02c94272294fbd86c8d277034dcef2772eac615b9b173c57499d",
+      "sha256": "80c2001b42082c6f40f0e468e52e447da0df0ed4f0b83a0a797cea1a0593159e",
       "executable": false
     },
     "tests/base/no-mail-identity.test.ts": {
