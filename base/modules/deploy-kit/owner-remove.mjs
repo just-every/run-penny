@@ -42,78 +42,100 @@ export async function ownerRemove({api: provider, target, statePath, clock, slee
   const api = withSettledLists(withScopeHints(provider));
   return withStateLock(statePath, async () => {
     const state = await readOwnerState(statePath, target);
-    if (await settlePendingSecret(api, target.worker, state, {preflight:true})) await writeOwnerState(statePath, state);
-    const owned = KINDS.flatMap(kind => Object.entries(state.owned[kind]).map(([name, entry]) => ({kind, name, entry})));
-    assert(state.owned.worker || owned.length, 'nothing-to-remove');
-    // Preflight, read-only.
-    let worker = null;
-    if (await workerSettings(api, target.worker) !== null) {
-      if (!state.owned.worker) throw refuse('resource-name-collision', 'worker', target.worker);
-      const expected = state.pendingUpload?.provider ?? state.receipt?.provider;
-      if (!expected) throw refuse('uncertain-resource-create', 'worker', target.worker);
-      const live = await activeWorker(api, target.worker);
-      if (!sameDeployment(live, expected)) throw refuse('owned-resource-replaced', 'worker', target.worker);
-      worker = target.worker;
-    }
-    assert(!state.pendingSecret, 'secret-change-unsettled');
-    const listed = {}, doomed = [];
-    for (const kind of KINDS) {
-      if (!owned.some(item => item.kind === kind)) continue;
-      listed[kind] = await resourceKinds[kind].list(api);
-      for (const {name, entry} of owned.filter(item => item.kind === kind)) {
-        const row = findResource(listed[kind], kind, name);
-        if (!row) continue;
-        if (kind === 'r2') requireBucketIdentity(name, entry);
-        if (entry.status === 'pending') await confirmEmpty(api, target.worker, kind, name, resourceId(kind, row));
-        else checkResourceIdentity(kind, name, row, entry);
-        if (kind === 'r2' && entry.status === 'created' && entry.id) await checkBucket(api, name, entry);
-        doomed.push({kind, name, entry, id:resourceId(kind, row)});
-      }
-    }
-    const removed = [];
-    // A Worker that consumes one of these queues is released first.
-    for (const queue of doomed.filter(item => item.kind === 'queues')) {
-      for (const consumer of await api.list(`/queues/${queue.id}/consumers`, {pagination:'single'})) {
-        assert(hexId(consumer.consumer_id), 'invalid-consumer-id');
-        await api.request(`/queues/${queue.id}/consumers/${consumer.consumer_id}`, {method:'DELETE'});
-      }
-    }
-    if (worker) { await deleteWorker({api, worker, ...(clock ? {clock} : {}), ...(sleep ? {sleep} : {})}); removed.push(`worker:${worker}`); }
-    const failed = [];
-    for (const item of doomed) {
-      try {
-        if (item.kind === 'r2') await removeBucket(api, item);
-        else {
-          await remove[item.kind](api, item.id, item.name);
-          if (item.kind === 'queues') await waitForQueueRemoval(api,item,{clock,sleep});
+    const remaining = new Set([...(state.owned.worker ? [`worker:${target.worker}`] : []), ...KINDS.flatMap(kind => Object.keys(state.owned[kind]).map(name => `${kind}:${name}`))]);
+    const removed = [], failed = [];
+    try {
+      if (await settlePendingSecret(api, target.worker, state, {preflight:true})) await writeOwnerState(statePath, state);
+      const owned = KINDS.flatMap(kind => Object.entries(state.owned[kind]).map(([name, entry]) => ({kind, name, entry})));
+      assert(state.owned.worker || owned.length, 'nothing-to-remove');
+      // Preflight, read-only.
+      let worker = null;
+      if (await workerSettings(api, target.worker) !== null) {
+        if (!state.owned.worker) throw refuse('resource-name-collision', 'worker', target.worker);
+        const expected = state.pendingUpload?.provider ?? state.receipt?.provider;
+        if (!expected) throw refuse('uncertain-resource-create', 'worker', target.worker);
+        const live = await activeWorker(api, target.worker);
+        if (!sameDeployment(live, expected)) throw refuse('owned-resource-replaced', 'worker', target.worker);
+        worker = target.worker;
+      } else remaining.delete(`worker:${target.worker}`);
+      assert(!state.pendingSecret, 'secret-change-unsettled');
+      const listed = {}, doomed = [];
+      for (const kind of KINDS) {
+        if (!owned.some(item => item.kind === kind)) continue;
+        listed[kind] = await resourceKinds[kind].list(api);
+        for (const {name, entry} of owned.filter(item => item.kind === kind)) {
+          const row = findResource(listed[kind], kind, name);
+          if (!row) { remaining.delete(`${kind}:${name}`); continue; }
+          if (kind === 'r2') requireBucketIdentity(name, entry);
+          if (entry.status === 'pending') await confirmEmpty(api, target.worker, kind, name, resourceId(kind, row));
+          else checkResourceIdentity(kind, name, row, entry);
+          if (kind === 'r2' && entry.status === 'created' && entry.id) await checkBucket(api, name, entry);
+          doomed.push({kind, name, entry, id:resourceId(kind, row)});
         }
-        removed.push(`${item.kind}:${item.name}`);
       }
-      catch (error) { failed.push({resource:`${item.kind}:${item.name}`, code:error.message, error}); }
-    }
-    // Read back: nothing this environment created is still listed.
-    const remaining = [];
-    if (await workerSettings(api, target.worker) !== null) remaining.push(`worker:${target.worker}`);
-    const namespaces = await api.list('/workers/durable_objects/namespaces');
-    for (const row of namespaces) if (row.script === target.worker) remaining.push(`durable-object:${row.class}`);
-    for (const kind of KINDS) {
-      if (!listed[kind]) continue;
-      const rows = await resourceKinds[kind].list(api);
-      for (const {name} of owned.filter(item => item.kind === kind)) if (findResource(rows, kind, name)) remaining.push(`${kind}:${name}`);
-    }
-    if (remaining.length) {
-      // Keep the record of what is left, so a later --remove finishes it.
-      for (const kind of KINDS) for (const name of Object.keys(state.owned[kind])) if (!remaining.includes(`${kind}:${name}`)) delete state.owned[kind][name];
-      if (!remaining.includes(`worker:${target.worker}`)) {
-        state.owned.worker = null; state.receipt = null; delete state.pendingUpload;
-        delete state.ownerClaim; delete state.retiredSecrets;
+      // A Worker that consumes one of these queues is released first.
+      for (const queue of doomed.filter(item => item.kind === 'queues')) {
+        for (const consumer of await api.list(`/queues/${queue.id}/consumers`, {pagination:'single'})) {
+          assert(hexId(consumer.consumer_id), 'invalid-consumer-id');
+          await api.request(`/queues/${queue.id}/consumers/${consumer.consumer_id}`, {method:'DELETE'});
+        }
       }
-      await writeOwnerState(statePath, state);
-      const error = new Error('remove-incomplete'); error.remaining = remaining; error.failed = failed; error.removed = removed.filter(resource => !remaining.includes(resource));
+      if (worker) { await deleteWorker({api, worker, ...(clock ? {clock} : {}), ...(sleep ? {sleep} : {})}); removed.push(`worker:${worker}`); }
+      for (const item of doomed) {
+        try {
+          if (item.kind === 'r2') await removeBucket(api, item);
+          else {
+            await remove[item.kind](api, item.id, item.name);
+            if (item.kind === 'queues') await waitForQueueRemoval(api,item,{clock,sleep});
+          }
+          removed.push(`${item.kind}:${item.name}`);
+        }
+        catch (error) { failed.push({resource:`${item.kind}:${item.name}`, code:error.message, error}); }
+      }
+      // Only complete, successful reads prove absence. Keep every unverified
+      // resource recorded even when its DELETE returned success.
+      let readFailure;
+      const readback = async read => { try { await read(); } catch (error) { readFailure ??= error; } };
+      await readback(async () => {
+        if (await workerSettings(api, target.worker) !== null) remaining.add(`worker:${target.worker}`);
+        else remaining.delete(`worker:${target.worker}`);
+      });
+      let namespacesKnown = false;
+      await readback(async () => {
+        const namespaces = await api.list('/workers/durable_objects/namespaces');
+        for (const row of namespaces) if (row.script === target.worker) remaining.add(`durable-object:${row.class}`);
+        namespacesKnown = true;
+      });
+      // Missing namespace readback cannot establish that the Worker's data is gone.
+      if (!namespacesKnown && state.owned.worker) remaining.add(`worker:${target.worker}`);
+      for (const kind of KINDS) {
+        if (!listed[kind]) continue;
+        await readback(async () => {
+          const rows = await resourceKinds[kind].list(api);
+          for (const {name} of owned.filter(item => item.kind === kind)) {
+            if (findResource(rows, kind, name)) remaining.add(`${kind}:${name}`);
+            else remaining.delete(`${kind}:${name}`);
+          }
+        });
+      }
+      if (remaining.size || readFailure) {
+        // Keep proof for every survivor or resource whose absence is unverified.
+        for (const kind of KINDS) for (const name of Object.keys(state.owned[kind])) if (!remaining.has(`${kind}:${name}`)) delete state.owned[kind][name];
+        if (!remaining.has(`worker:${target.worker}`) && ![...remaining].some(name => name.startsWith('durable-object:'))) {
+          state.owned.worker = null; state.receipt = null; delete state.pendingUpload;
+          delete state.ownerClaim; delete state.retiredSecrets;
+        }
+        await writeOwnerState(statePath, state);
+        throw readFailure ?? new Error('remove-incomplete');
+      }
+      await rm(statePath, {force:true});
+      return {worker:target.worker, removed, remaining:[]};
+    } catch (error) {
+      error.remaining = [...remaining];
+      error.failed = failed;
+      error.removed = removed.filter(resource => !remaining.has(resource));
       throw error;
     }
-    await rm(statePath, {force:true});
-    return {worker:target.worker, removed, remaining:[]};
   });
 }
 

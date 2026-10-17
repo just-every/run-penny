@@ -2,6 +2,5 @@
   "version": 1,
   "domain": "run-penny.com",
   "name": "Penny",
-  "instanceType": "basic",
   "ownerEmail": "aisha@example.test"
 }

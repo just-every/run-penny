@@ -25,6 +25,24 @@ export function providerRefusal(error, redact = String) {
   const said = refusal.errors.map(item => [item?.code, typeof item?.message === 'string' ? redact(item.message).slice(0,300) : undefined].filter(part => part !== undefined && part !== '').join(' ')).filter(Boolean).slice(0,3);
   return `Cloudflare refused ${redact(refusal.operation).slice(0,200)}${said.length ? `: ${said.join('; ')}` : ''}`;
 }
+/** What a migration that failed or stays refused means for the next run, from the
+ * error's own `migration` or `migrationClaim` (set by any copy of the kit) and its
+ * `d1:<name>` resource; undefined otherwise. */
+export function migrationFailure(error, again = 'rer deploy') {
+  const safe = value => String(value).replace(/[^\w. -]/g,'?').slice(0,120);
+  const database = /^d1:([a-z0-9-]+)$/.exec(error?.resource ?? '')?.[1];
+  const claim = error?.migrationClaim;
+  if (typeof claim?.name === 'string') {
+    const name = safe(claim.name).replaceAll(' ','?');
+    const run = sql => `npx wrangler d1 execute ${database ?? '<database>'} --remote --command "${sql} WHERE name='${name}' AND state='applying'"`;
+    const present = (Array.isArray(claim.present) ? claim.present : []).slice(0,5).map(safe);
+    return `Migration ${name} in ${database ? `D1 ${database}` : 'its D1 database'} was started but never confirmed, and rer runs it again only when it can prove none of it applied. ${present.length
+      ? `Some of its changes are present (${present.join(', ')}). Undo them so the database is as it was before ${name}, then run ${again} again: rer checks again and runs it.`
+      : `It creates no table, index, view, trigger or column, so rer cannot check whether it applied. If none of its changes are present, delete its claim with ${run('DELETE FROM d1_migrations')}, then run ${again} again.`} If it did apply in full, record that instead with ${run("UPDATE d1_migrations SET state='applied'")}.`;
+  }
+  if (typeof error?.migration === 'string') return `Migration ${safe(error.migration)} did not apply; the next ${again} runs it again once rer proves none of it applied.`;
+  return undefined;
+}
 /** Safe call identity travels with errors from independently vendored kits. */
 export function providerTransport(error, redact = String) {
   const detail = error?.providerTransport;
@@ -94,4 +112,16 @@ export function providerFailure(error, redact = String) {
   if (typeof call?.operation !== 'string') return undefined;
   const clean = value => redact(String(value)).replace(/[\x00-\x1f\x7f-\x9f]+/g,' ').replace(/\b[a-f0-9]{32}\b/gi,'[REDACTED]').slice(0,300);
   return `Cloudflare call ${clean(call.operation)}: ${clean(call.reason ?? error.message)} (no Cloudflare error code or message supplied)`;
+}
+
+// Asset paths are build inputs; the CLI still redacts them before display.
+export function nameAssetFailure(error, paths, status = error.status ?? error.providerTransport?.status) {
+  error.assetFailure = {paths, status};
+  return error;
+}
+export function assetFailure(error, redact = String) {
+  const detail = error?.assetFailure;
+  if (!Array.isArray(detail?.paths)) return undefined;
+  const names = detail.paths.slice(0,8).map(path => redact(String(path)).replace(/[\x00-\x1f\x7f-\x9f]+/g,' ').slice(0,300));
+  return `Asset ${names.join(', ')}${detail.paths.length > 8 ? ` (+${detail.paths.length - 8} more)` : ''}: ${Number.isInteger(detail.status) ? `HTTP ${detail.status}` : 'no HTTP status (transport failure)'}`;
 }
