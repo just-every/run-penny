@@ -1,18 +1,21 @@
 import { expect } from 'vitest'
 import { createUlid } from '@/core/shared/ulid'
-import { digest } from '@/core/features/auth/native-tokens'
-import { call,env,mockMail,owner,requester } from './support'
-import { time } from './notification-regression-fixture'
+import { digest,opaqueToken } from '@/core/features/auth/native-tokens'
+import { authenticateOperator } from '@/core/features/auth/operator'
+import { call,env,mockMail,origin,owner } from './support'
+import { runtime,time } from './notification-regression-fixture'
 
-/** Explicit pre-0020 product rows. Current voting/status SQL requires 0063;
- * old stores must remain old while the migration assertions inspect them.
- * The unchanged authority, verification, follow and merge doors remain real. */
+/** Explicit pre-0020 product rows. Today's mail identity, board defaults and
+ * permission provenance require later product migrations. Populate historical
+ * records without applying those migrations before the preservation snapshot.
+ * Native owner/session admission, link consumption and merge remain real. */
 export async function previousNotificationGraph(count=1){
  mockMail()
- const operator=await owner(),person=await requester()
- expect((await call('/api/operator/boards',{name:'Notifications',slug:'regression',visibility:'public'},operator)).status).toBe(201)
- const board=await env.DB.prepare("SELECT id FROM boards WHERE slug='regression'").first<string>('id')
- const actor=await env.DB.prepare("SELECT id FROM operators WHERE email='owner@penny.invalid'").first<string>('id')
+ const operator=await owner(),person=await historicalRequester(),board=createUlid(),createdAt=new Date().toISOString()
+ await env.DB.prepare("INSERT INTO boards(id,name,slug,visibility,position,created_at,updated_at) VALUES(?,'Notifications','regression','public',0,?,?)").bind(board,createdAt,createdAt).run()
+ const admitted=await authenticateOperator(runtime(),new Request(origin+'/app',{headers:operator}))
+ expect(admitted).not.toBeNull()
+ const actor=admitted!.id
  const recipient=(await env.DB.prepare('SELECT requester_id AS requesterId,id AS addressId,email FROM requester_addresses LIMIT 1').first<{requesterId:string;addressId:string;email:string}>())!
  const requests:{id:string;slug:string}[]=[]
  for(let index=0;index<count;index++){
@@ -31,7 +34,11 @@ export async function previousNotificationGraph(count=1){
    env.DB.prepare(`INSERT INTO audit_entries(id,actor_type,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'system','request.submitted','request',?,?,?,?)`).bind(createUlid(),id,stamp,stamp,stamp),
    env.DB.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'operator',?,'request.moderated','request',?,?,?,?)`).bind(createUlid(),actor,id,stamp,stamp,stamp),
   ])
-  expect((await call(`/api/public/requests/${slug}/follow`,{},person)).status).toBe(204)
+  await env.DB.batch([
+   ...['request_follow_contributions','request_follows'].map(table=>env.DB.prepare(`INSERT INTO ${table}(request_id,requester_id,permission_granted_at,created_at,updated_at) VALUES(?,?,?,?,?)`).bind(id,recipient.requesterId,stamp,stamp,stamp)),
+   env.DB.prepare("INSERT INTO requester_update_permissions(id,requester_id,requester_address_id,request_id,source,granted_at,created_at,updated_at) VALUES(?,?,?,?,'follow',?,?,?)").bind(createUlid(),recipient.requesterId,recipient.addressId,id,stamp,stamp,stamp),
+  ])
+  expect(await env.DB.prepare('SELECT COUNT(*) FROM request_follows WHERE request_id=? AND requester_id=?').bind(id,recipient.requesterId).first('COUNT(*)')).toBe(1)
   requests.push({id,slug})
  }
  async function vote(index:number){
@@ -47,4 +54,17 @@ export async function previousNotificationGraph(count=1){
   ])
  }
  return {operator,person,requests,recipient,publish,vote}
+}
+
+/** A previously issued link belongs to the old store, rather than asking the
+ * current sender to compose mail using configuration that does not exist yet. */
+async function historicalRequester(){
+ const token=opaqueToken(),now=new Date().toISOString()
+ await env.DB.prepare(`INSERT INTO native_magic_links(id,purpose,email,display_name,token_hash,expires_at,created_at,updated_at)
+  VALUES(?,'requester',?,'Private display',?,?,?,?)`).bind(createUlid(),`${crypto.randomUUID()}@example.test`,await digest(token),new Date(Date.now()+30*60000).toISOString(),now,now).run()
+ const response=await call('/api/public/identity/email/verify',{token})
+ expect(response.status,await response.clone().text()).toBe(200)
+ const person={Authorization:`Bearer ${(await response.json() as {token:string}).token}`}
+ expect((await call('/api/public/identity/session',undefined,person)).status).toBe(200)
+ return person
 }

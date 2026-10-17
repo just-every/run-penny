@@ -3236,11 +3236,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "33667eab575c34b75f865b1feb90d80e3819e990ddcc4f666924005219b976f1",
+      "sha256": "82b51ec06b6a3f0dd2610f7dbbe58cc3740783b8cfa2513c0bd934cb650afee9",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "30ecc3720bd846ca1b9254928a2f93b539bb3b0bb07521c7489235e0b408b450",
+      "sha256": "02f62a6272797e995659ec3ee5319416115e2950a5ffb2e4bc5e2798b2d686c3",
       "executable": false
     },
     "public/brand/band.svg": {
@@ -6680,7 +6680,7 @@
       "executable": false
     },
     "tests/base/previous-notification-fixture.ts": {
-      "sha256": "c3f91fed85d38d4cb6c1b24654c0760a5438f6eb897451556caffe916b9e5736",
+      "sha256": "99aaaadf33b0c891e51ec0d6a18b58843f3bd9a173b2a10aecce646c784ceab2",
       "executable": false
     },
     "tests/base/previous-sample-fixture.ts": {
@@ -7124,7 +7124,7 @@
       "executable": false
     },
     "tests/runtime/mail-events-restart.test.mjs": {
-      "sha256": "3f893825a0d0d7a0e86e9932bc0c5fa5bc71c76161cb259a3c1165cc07bda139",
+      "sha256": "ad8a177b53d8fe418ca7f3108fb453fa0f162c4a85a61aa205286e5d6f89dee7",
       "executable": false
     },
     "tsconfig.app.json": {

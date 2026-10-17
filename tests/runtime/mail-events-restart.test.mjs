@@ -46,7 +46,7 @@ async function managedRelay(mf,configuration,restart){
  const boot=await call('/auth/bootstrap',{token:setup,displayName:'Owner',returnTo:'/setup'})
  assert.equal(boot.status,303,await boot.text())
  const cookie=boot.headers.get('set-cookie').split(';')[0]
- assert.equal((await mf.dispatchFetch(origin+'/setup',{method:'POST',redirect:'manual',headers:{Origin:origin,Cookie:cookie,'Content-Type':'application/x-www-form-urlencoded'},body:'confirm=yes'})).status,303)
+ assert.equal((await mf.dispatchFetch(origin+'/setup',{method:'POST',redirect:'manual',headers:{Origin:origin,Cookie:cookie,'Content-Type':'application/x-www-form-urlencoded'},body:'confirm=yes&companyName=Relay+fixture+business&postalAddress=1+Test+Street'})).status,303)
  const signIn=()=>call('/api/auth/magic-link',{email:owner})
  assert.equal((await signIn()).status,202);assert.equal(requests.length,1)
  assert.equal(requests[0].to,owner);assert.ok(requests[0].text.includes(origin+'/auth/confirm?token='))
