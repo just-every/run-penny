@@ -49,16 +49,11 @@ delivery.
 
 ## Run it on your computer
 
-You install nothing first. The installer on [run-penny.com/run](https://run-penny.com/run)
-(`curl -fsSL https://runeditrun.com/install.sh | sh`) brings its own Node when you have
-none, and `rer dev just-every/run-penny` then clones Penny's `main` branch (the newest
-source, which can be ahead of the latest release) and starts it. `rer` downloads the
+You install nothing first. This one line fetches `rer`, the Run Edit Run command, clones
+Penny's `main` branch (the newest source, which can be ahead of the latest release) and
+starts it; to start it again later, run `cd run-penny && rer dev`. `rer` downloads the
 exact Node (22.20.0) and pnpm (10.12.4) this checkout pins into its own cache and never
-changes your global tools, so you do not install pnpm.
-
-Already have Node 22 or newer? This one line does both steps. It installs `rer`, the Run
-Edit Run command, clones Penny and starts it; to start it again later, run
-`cd run-penny && rer dev`:
+changes your global tools, so you do not install pnpm:
 
 <!-- penny-local-commands -->
 ```bash
@@ -66,14 +61,20 @@ npx -y @runeditrun/rer dev just-every/run-penny
 ```
 <!-- /penny-local-commands -->
 
+It needs Node 22 or newer. Without Node, the installer on
+[run-penny.com/run](https://run-penny.com/run) brings its own:
+`curl -fsSL https://runeditrun.com/install.sh | sh -s -- dev just-every/run-penny`.
+To set Penny up without starting it, use `npx -y @runeditrun/rer setup just-every/run-penny`.
+
 `rer dev` installs the locked dependencies, sets up a local owner
 (the email you gave `rer setup`, or a default `.test` address) with an empty workspace, starts Penny and prints a link
 that opens it signed in. Penny pins `@runeditrun/rer` in `package.json` and its
 lockfile (currently 0.2.37), and the global `rer` always runs that pinned copy. The first start
 takes a few minutes.
 
-To be the owner under your own email address instead, run setup once before the
-first `rer dev`:
+To be the owner under your own email address instead, fetch the checkout without
+starting it (`npx -y @runeditrun/rer install just-every/run-penny`), then run setup once
+from the `run-penny` folder before the first `rer dev`:
 
 <!-- penny-owner-commands -->
 ```bash
