@@ -7,8 +7,9 @@ const migrations = await readD1Migrations(fileURLToPath(new URL('./migrations/co
 const fullMigrationNames = (await readdir(new URL('./migrations/core', import.meta.url))).filter(name=>name.endsWith('.sql')).sort()
 // The same built Worker and bindings, with Queue delivery controlled explicitly
 // by cloudflare:test instead of racing fixtures' historical mail clocks.
+// Producers stay; the real consumer does not start unless PENNY_TEST_QUEUE_CONSUMERS=1.
 const workerConfig = JSON.parse(await readFile(new URL('./dist/server/wrangler.json', import.meta.url), 'utf8'))
-if (workerConfig.queues) workerConfig.queues.consumers = []
+if (workerConfig.queues && process.env.PENNY_TEST_QUEUE_CONSUMERS !== '1') workerConfig.queues.consumers = []
 await writeFile(new URL('./dist/server/wrangler.test.json', import.meta.url), JSON.stringify(workerConfig))
 export default defineConfig({
  resolve:{alias:{'@':fileURLToPath(new URL('./src',import.meta.url))}},
