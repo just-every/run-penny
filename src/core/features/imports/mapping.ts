@@ -29,13 +29,16 @@ export function feedbackMapping(source: FeedbackSource, actor: string): ImportMa
    rows.push(nativeRow('requesters',{id:target,display_name:sourceText(p.name,'historical contributor name',200),...time}));used=['id','name','created']
   } else if(record.kind==='tags') {
    rows.push(nativeRow('tags',{id:target,name:sourceText(p.name,'private tag',200)+' · '+target.slice(-8),...time}));used=['id','name','created']
+  } else if(record.kind==='statuses') {
+   rows.push(nativeRow('request_internal_statuses',{id:target,name:p.name,public_status:p.publicStatus,show_public_label:Number(p.showPublicLabel),position:p.position,...time}));used=Object.keys(p)
   } else if(record.kind==='posts') {
    const csv=p._format==='classic-csv', mapped=uv?uv.mapped as FeedbackStatus|undefined:source.options.statuses[sourceText(idea?idea.status:p.status??p['Post Status'],'source status',100)]
    if(!mapped)throw new Error('Status has no reviewed mapping')
    const title=sourceText(idea?idea.title:p.title??p['Post Title'],'post title',500), body=sourceText(idea?idea.details:p.details??p['Post Detail'],'post detail')
    const evidence=id('evidence',key), author=idea?(idea.author?id('users',uv?reference(idea.author):'csv-author:'+key):null):p.author?id('users',reference(p.author)):(csv&&p['Post Author'])?id('users','csv-author:'+key):null, canonical=id('posts',graph.root(key))
    if(!author&&!idea)throw new Error('Missing historical author; no identity is inferred')
-   rows.push(nativeRow('requests',{id:target,slug:'feedback-'+target.toLowerCase(),board_id:id('boards',graph.boardId(record)),author_requester_id:author,title,description:body,moderation_state:'awaiting_review',public_state:mapped,merged_into_request_id:graph.parents.has(key)?id('posts',graph.parents.get(key)!):null,merged_at:graph.parents.has(key)?sourceTime(asObject([...graph.merges.values()].find(r=>reference(asObject(r.payload).sourcePostId)===key)!.payload).created):null,...time}),
+   const sourceStatus=sourceText(idea?idea.status:p.status??p['Post Status'],'source status',100),internal=source.options.internalStatuses?.[sourceStatus]
+   rows.push(nativeRow('requests',{...(internal?{internal_status_id:id('statuses',sourceStatus)}:{}),id:target,slug:'feedback-'+target.toLowerCase(),board_id:id('boards',graph.boardId(record)),author_requester_id:author,title,description:body,moderation_state:'awaiting_review',public_state:mapped,merged_into_request_id:graph.parents.has(key)?id('posts',graph.parents.get(key)!):null,merged_at:graph.parents.has(key)?sourceTime(asObject([...graph.merges.values()].find(r=>reference(asObject(r.payload).sourcePostId)===key)!.payload).created):null,...time}),
     ...(author?[nativeRow('request_content_submissions',{id:id('submission',key),request_id:target,requester_id:author,title,description:body,moderation_state:'awaiting_review',is_initial:1,...time})]:[]),
     nativeRow('evidence_items',{id:evidence,source_type:'free_text',source_label:record.location.artifact+' · '+source.options.namespace+' · '+(uv?'Idea ID '+key+' (UserVoice)':key),requester_id:author,recorded_by_operator_id:actor,observed_at:created,review_state:'unreviewed',...time}),
     nativeRow('evidence_versions',{id:id('evidence-version',key),evidence_id:evidence,version_number:1,wording:body,edited_by_operator_id:actor,...time}),

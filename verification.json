@@ -130,6 +130,15 @@
         "pnpm run build",
         "node tests/browser/merge-notices.mjs"
       ]
+    },
+    {
+      "name": "import-statuses",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/import-statuses.mjs"
+      ]
     }
   ],
   "nightly": [

@@ -225,3 +225,25 @@ No real owner export, live Canny acceptance, hosted capacity, deployed provider
 behavior, registry admission or public release is established by synthetic proof.
 Run the [reversible local trial](TRIAL.md) with one owner-supplied export before
 judging suitability. Keep your current tool if it works.
+
+## Keep custom status names
+
+In **Data → Move saved feedback in**, map each Canny status to a public status,
+then choose **Keep source status names as internal statuses**. Preview the
+mapping before applying. The imported requests remain held for moderation;
+approval preserves the mapped status. The names are private until the owner
+chooses **Show this internal name publicly** in Feedback settings. Changing a
+mapping there moves all requests using it without publishing an update or
+sending mail.
+
+For saved API bundles, add `internalStatuses` beside `statuses` in the private
+manifest, keyed by the exact source status:
+
+```json
+{"statuses":{"researching":"under_review"},"internalStatuses":{"researching":{"name":"Researching","showPublicLabel":false}}}
+```
+
+Each definition must name a status in the supplied posts. Definitions and
+request links share reviewed source custody: identical replay creates nothing,
+undo removes unchanged imported definitions, and later native edits or references
+refuse reversal. Historical people gain no identity or email permission.

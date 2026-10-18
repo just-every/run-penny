@@ -634,5 +634,40 @@
       "request_id",
       "requester_id"
     ]
+  },
+  "request_internal_statuses": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "name",
+        "default": null
+      },
+      {
+        "name": "public_status",
+        "default": null
+      },
+      {
+        "name": "show_public_label",
+        "default": "0"
+      },
+      {
+        "name": "position",
+        "default": "0"
+      },
+      {
+        "name": "created_at",
+        "default": null
+      },
+      {
+        "name": "updated_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
   }
 }

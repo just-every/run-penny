@@ -638,8 +638,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 105 | 9 | 0 | 114 |
-| Target and push further | 6 | 50 | 77 | 133 |
-| All | 111 | 59 | 77 | 247 |
+| Target and push further | 7 | 49 | 77 | 133 |
+| All | 112 | 58 | 77 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -763,7 +763,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `TRIAGE-005` | Bulk actions | target | missing |  | Tagging and assigning 200 fixture items writes one audited batch; undo restores every item; a bulk removal (REQ-038) records one reason per batch. |
 | `TRIAGE-006` | Accountable background work | target | partial | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts`; `tests/base/notifications.test.ts` (line 87) | For each worker type, a kill-and-restart test resumes without duplicates and shows the failure state until resolved. |
 | `PRIO-001` | Product hierarchy | target | missing |  | A base test rolls three requests from two accounts up to one feature, counting each account once; moving the feature to another component keeps every link. |
-| `PRIO-002` | Configurable statuses and fields | target | partial | `tests/base/request-status-workflow.test.ts`; `visual/request-status-workflow/PRIO-002/` | Internal statuses, mapped public labels, optional public names and remapping without notification are proved through the API and browser at 1440/390. Canny custom-status migration remains missing. |
+| `PRIO-002` | Configurable statuses and fields | target | done | `tests/base/request-status-workflow.test.ts`; `tests/base/import-statuses.test.ts`; `tests/browser/import-statuses.mjs` |  |
 | `PRIO-003` | Prioritisation views and formulas | target | missing |  | A RICE view sorts fixture features with every component visible; changing a weight re-sorts; the decision brief and every public payload show no score. |
 | `PRIO-004` | Scorecards | target | missing |  | Two operators' inputs are both visible on a card; the weighted rank is computed; changing the criteria keeps earlier scores readable. |
 | `PRIO-005` | Effort from delivery | target | missing |  | A Linear, a ClickUp and an Asana fixture estimate each appear as effort on the linked feature with their source; a manual override is marked as such. |
