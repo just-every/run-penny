@@ -1,3 +1,4 @@
+import {registerPlanningRoutes} from '@/core/features/planning/routes'
 import {registerPrioritisationRoutes} from '@/core/features/prioritisation/routes'
 import {registerHierarchyRoutes} from '@/core/features/hierarchy/routes'
 import {registerTriageRoutes} from '@/core/features/triage/routes'
@@ -98,6 +99,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
     context.res = await editorDocumentHeaders(context.res, context.get('runtime'), context.req.path)
   })
 
+  registerPlanningRoutes(app)
   registerPrioritisationRoutes(app)
   registerHierarchyRoutes(app)
   registerLearningRoutes(app)

@@ -2940,5 +2940,31 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_release_plans": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "release_date",
+      "revision",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_release_plan_items": {
+    "classification": "product",
+    "columns": [
+      "plan_id",
+      "roadmap_item_id"
+    ]
+  },
+  "penny_roadmap_dependencies": {
+    "classification": "product",
+    "columns": [
+      "blocker_id",
+      "dependent_id",
+      "created_at"
+    ]
   }
 }

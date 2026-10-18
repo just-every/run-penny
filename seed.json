@@ -16,6 +16,13 @@
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
     {
+      "id": "release-planning",
+      "description": "Group roadmap items into dated internal release plans, link blockers and dependents, and flag slipped dependencies and affected approved public ETAs without changing public wording.",
+      "clauses": [
+        "ROAD-011"
+      ]
+    },
+    {
       "id": "saved-prioritisation",
       "description": "Save private or operator-shared comparisons of requests/features with native voters, accounts, evidence and importance, explicit manual RICE/value-over-effort/segment-demand/weighted-sum inputs and visible unknowns. Commercial, segment/date, custom-field, scorecard and delivery-estimate columns remain partial.",
       "clauses": [

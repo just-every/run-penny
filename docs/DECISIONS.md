@@ -117,6 +117,14 @@ If you change the approval or mappings after a draft is prepared, that draft bec
 
 You can also post a status update straight onto a request from its controls in **Moderation**, choosing any of the six public statuses or an internal status mapped to one, optionally pinning it above the comments and adding a public month or quarter ETA. The comment is optional except when declining. A saved status with no comment or ETA change publishes nothing. The latest direct change or approved mapped roadmap change supplies the request’s public status.
 
+## Plan a release and its dependencies
+
+Under **Roadmap → Release planning**, create a named release plan, choose its date and select the roadmap items it will contain. Each item keeps its current state and can appear in several plans. Edit a plan to change the date or membership.
+
+Open **Manage dependencies** and choose a **Blocker** and a **Blocked item**. Penny refuses a cycle. The recorded list shows both sides of the relationship. An overdue or dropped blocker, or one scheduled after its dependent, flags each downstream active item. If that item has an approved public ETA, the warning names it as at risk. Shipping the blocker or removing the dependency clears the warning. Warnings use the workspace calendar and explicit date, month or quarter windows; Penny does not guess a date from free text.
+
+Plans and warnings stay internal. Update an approved public ETA separately when you decide to change a customer promise.
+
 ## 6. Publish a release
 
 When items have shipped, open **Releases** and create a release draft:

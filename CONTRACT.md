@@ -627,6 +627,8 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 Judged from the code and tests at commit `935028e7c6397a649bd8bcc95efa4b016cb2e7a7` (19 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
+ROAD-011 was completed on 19 October 2026: dated internal release plans list live roadmap states; acyclic blockers flag downstream active work and affected approved public ETAs. Route/Worker and 1440/390 browser journeys cover slip, resolution, saved membership, authority, transactional audit rollback, populated upgrade, archive inclusion and public isolation.
+
 PRIO-001 was completed on 19 October 2026: private product/component/feature creation, renaming and moves preserve request and roadmap links. Feature demand deduplicates people, accounts, recorded revenue and evidence; populated upgrades, transactional audit refusal, portable table custody, public isolation and 1440/390 browser journeys pass. Recorded revenue retains its existing account meaning and makes no ARR/MRR claim.
 
 PRIO-003 gained saved private/shared comparisons on 19 October 2026. Native demand and importance, explicit manual formula inputs, unscored unknowns, reordering, ownership and stale-edit fences, archive inclusion and 1440/390 journeys are proved. Commercial/segment/date and custom-field columns, scorecards and delivery-sourced effort remain partial.
@@ -646,8 +648,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 105 | 9 | 0 | 114 |
-| Target and push further | 10 | 49 | 74 | 133 |
-| All | 115 | 58 | 74 | 247 |
+| Target and push further | 11 | 48 | 74 | 133 |
+| All | 116 | 57 | 74 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -794,7 +796,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `ROAD-008` | Status update publication | published | done | `tests/browser/operator-pages-status.mjs` |  |
 | `ROAD-009` | Roadmap views | target | missing |  | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. |
 | `ROAD-010` | Several and audience roadmaps | target | missing |  | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. |
-| `ROAD-011` | Release planning and dependencies | target | partial | `src/core/features/releases/drafts.ts`; `tests/browser/loopjourney-release.mjs` | A slipped dependency flags each dependent item and its ETA; the release plan lists its items with their states. |
+| `ROAD-011` | Release planning and dependencies | target | done | `tests/base/release-planning.test.ts`; `tests/browser/release-planning.mjs` |  |
 | `ROAD-012` | Public ETA | target | done | `tests/base/roadmap-public-eta.test.ts`; `tests/browser/roadmap-public-eta.mjs` |  |
 | `ROAD-013` | Roadmap sharing and export | target | missing |  | An export contains only fields the exporter's role may see; the shared link refuses a signed-out visitor. |
 | `ROAD-014` | Status roadmap | target | done | `tests/base/request-status-workflow.test.ts`; `tests/base/import-roadmap.test.ts`; `tests/browser/import-roadmap.mjs` |  |

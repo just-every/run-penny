@@ -482,6 +482,12 @@
       "name": "0083_prioritisation_views.sql",
       "sha256": "74c062427fab16fbe1b6d2d15b177dfd6abe2c23dc02487b8f2fa1bb70ba2c85",
       "sql": "CREATE TABLE penny_priority_views (\n id TEXT PRIMARY KEY,\n owner_id TEXT NOT NULL REFERENCES operators(id),\n name TEXT NOT NULL CHECK(length(trim(name))>0),\n shared INTEGER NOT NULL CHECK(shared IN(0,1)),\n definition_json TEXT NOT NULL CHECK(json_valid(definition_json)),\n revision INTEGER NOT NULL CHECK(revision>0),\n created_at TEXT NOT NULL,updated_at TEXT NOT NULL\n);\nCREATE INDEX penny_priority_views_owner ON penny_priority_views(owner_id,shared);\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0084_release_planning.sql",
+      "sha256": "47fa0c5c51195dac7aa49846fd9e6fedceeffb81d8eb8ecff05012a0692bc6ae",
+      "sql": "-- Internal delivery plans never confer publication or change customer promises.\nCREATE TABLE penny_release_plans (\n id TEXT PRIMARY KEY, name TEXT NOT NULL, release_date TEXT NOT NULL,\n revision INTEGER NOT NULL DEFAULT 1, created_at TEXT NOT NULL, updated_at TEXT NOT NULL\n);\nCREATE TABLE penny_release_plan_items (\n plan_id TEXT NOT NULL REFERENCES penny_release_plans(id) ON DELETE CASCADE,\n roadmap_item_id TEXT NOT NULL REFERENCES roadmap_items(id) ON DELETE CASCADE,\n PRIMARY KEY(plan_id,roadmap_item_id)\n);\nCREATE INDEX penny_release_plan_item ON penny_release_plan_items(roadmap_item_id);\nCREATE TABLE penny_roadmap_dependencies (\n blocker_id TEXT NOT NULL REFERENCES roadmap_items(id) ON DELETE CASCADE,\n dependent_id TEXT NOT NULL REFERENCES roadmap_items(id) ON DELETE CASCADE,\n created_at TEXT NOT NULL,\n PRIMARY KEY(blocker_id,dependent_id), CHECK(blocker_id != dependent_id)\n);\nCREATE INDEX penny_roadmap_dependent ON penny_roadmap_dependencies(dependent_id);\nCREATE TRIGGER penny_dependency_acyclic BEFORE INSERT ON penny_roadmap_dependencies\nWHEN EXISTS (\n WITH RECURSIVE downstream(id) AS (\n  SELECT dependent_id FROM penny_roadmap_dependencies WHERE blocker_id=NEW.dependent_id\n  UNION SELECT d.dependent_id FROM penny_roadmap_dependencies d JOIN downstream s ON d.blocker_id=s.id\n ) SELECT 1 FROM downstream WHERE id=NEW.blocker_id\n)\nBEGIN SELECT RAISE(ABORT,'planning_dependency_cycle'); END;\n"
     }
   ],
   "compatibilityDate": "2026-08-31",

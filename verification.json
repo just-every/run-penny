@@ -185,6 +185,15 @@
         "pnpm run build",
         "node tests/browser/prioritisation.mjs"
       ]
+    },
+    {
+      "name": "release-planning",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/release-planning.mjs"
+      ]
     }
   ],
   "nightly": [

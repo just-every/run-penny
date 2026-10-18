@@ -582,7 +582,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence a
 
 Current entries include the shipped setup and workspace clocks, request status controls and status roadmap, board categories and participation, requester subscriptions and sender identity, ownership, aging and private discussion. REQ-017 now includes repeated-decline reversal to the prior direct or mapped status; REQ-022 includes the private requester directory, existing-session refusal, contribution hiding and restoration, and atomic audit refusal. The installed board is served at `/` and `/portal/feedback`; HOME-002 remains the separate run-site landing. Local dev enters as the owner and suppresses outgoing mail without retaining or displaying captured messages (BASE-DATA-002). Each partial entry keeps its remaining acceptance work separate; dated receipts above retain their historical scope.
 
-**Counts:** 115 done, 58 partial, 74 missing (247 clauses).
+**Counts:** 116 done, 57 partial, 74 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -729,7 +729,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | ROAD-008 | done | Publishing a draft queues one notification per version per eligible follower. | `tests/browser/operator-pages-status.mjs` |
 | ROAD-009 | missing | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. | — |
 | ROAD-010 | missing | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. | — |
-| ROAD-011 | partial | A slipped dependency flags each dependent item and its ETA; the release plan lists its items with their states. | `src/core/features/releases/drafts.ts`; `tests/browser/loopjourney-release.mjs` |
+| ROAD-011 | done | Dated internal plans list live item states; overdue, dropped and conflicting blockers flag downstream active work and approved public ETAs without publishing. Route/Worker tests cover cycle/stale-edit/origin refusal, atomic audit rollback, populated upgrade and portable/public boundaries. The 1440/390 browser journey creates, edits and reloads plans, links dependencies and clears warnings through a normal Shipped move. | `tests/base/release-planning.test.ts`; `tests/browser/release-planning.mjs` |
 | ROAD-012 | done | Explicit month/quarter approval on an approved item; change/removal drafts one safe update, unchanged approval does not; API and 1440/390 built-page journeys exclude private target dates. Stale/unauthorised writes and late-draft rollback, populated previous-head upgrade and repeat are covered. | `tests/base/roadmap-public-eta.test.ts`; `tests/browser/roadmap-public-eta.mjs` |
 | ROAD-013 | missing | An export contains only fields the exporter's role may see; the shared link refuses a signed-out visitor. | — |
 | ROAD-014 | done | Status-roadmap settings and visibility projections, plus reviewed saved-Canny reconstruction of board selection, column visibility/headings and the Shipped limit, preserved direct statuses on moderation, stale-preview refusal, replay, before/after settings custody, undo and later-edit conflicts. Browser journeys at 1440/390 rebuild, move cards, hide/rename columns and apply the Shipped limit. Live source acquisition remains MIG-001. | `tests/base/request-status-workflow.test.ts`; `tests/base/import-roadmap.test.ts`; `tests/browser/import-roadmap.mjs` |
