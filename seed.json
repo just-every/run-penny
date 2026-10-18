@@ -11,6 +11,7 @@
   "replaces": ["Canny", "UserVoice", "Productboard"],
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
+    {"id":"merge-subscriber-notices","description":"Preview and optionally notify eligible duplicate subscribers when merging; exclude existing canonical subscribers, defer private targets until publication, and preserve consent, opt-outs, quiet hours and durable delivery custody.","clauses":["NOTIFY-012"]},
     {"id":"approved-roadmap-eta","description":"Operators explicitly approve a public month or quarter separately from private delivery windows; changing or removing it prepares a customer-safe update draft without sending it.","clauses":["ROAD-012"]},
     {
       "id": "aging-and-follow-up",

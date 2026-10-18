@@ -119,6 +119,15 @@
         "pnpm run build",
         "node tests/browser/roadmap-public-eta.mjs"
       ]
+    },
+    {
+      "name": "merge-notices",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/merge-notices.mjs"
+      ]
     }
   ],
   "nightly": [

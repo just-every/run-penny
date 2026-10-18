@@ -111,3 +111,7 @@ Open **Feedback settings** in the operator app and look under **Requester email 
 - **Local copies send nothing.** Penny Dev records what it would send but emails nobody. It does not test a provider, your sender verification or your domain's reputation.
 - **There is no exactly-once guarantee.** Penny records each send durably and avoids repeats where it can, but it does not claim a message is delivered once and only once.
 - **Check your live deployment yourself.** Send a real verification link to an address you control and watch the first notification arrive. With your own provider, also confirm your sender is verified. Managed stage validation and inbox proof remain separate from this source change.
+
+## Merge notices
+
+In a request’s controls, enter the canonical request’s slug and choose **Review merge**. The preview counts eligible subscribers from the duplicate who do not already follow the canonical request. **Notify subscribers about this merge** starts checked; untick it for a silent merge. The notice names and links the canonical request, and the duplicate’s subscribers follow that request after merging. If the canonical request is private, the notice waits until it is published on a public board. Current permission, suppression, mutes, quiet hours and unsubscribe are checked before sending. Unmerge sends no notice and cancels any unsent notice for that merge.

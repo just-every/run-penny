@@ -10,7 +10,12 @@ export const eligibleRecipient = `a.requester_id=n.requester_id AND a.verified_a
  AND NOT EXISTS(SELECT 1 FROM requester_notification_preferences p WHERE p.requester_id=n.requester_id AND p.muted_at IS NOT NULL)
  AND NOT EXISTS(SELECT 1 FROM request_notification_mutes m JOIN request_canonical_roots root ON root.origin_id=m.request_id WHERE m.requester_id=n.requester_id AND root.canonical_id=r.id)`
 
-export const visibleEvent = `(e.kind='status' AND e.id='publication:'||e.request_id AND e.subject_id=e.request_id AND EXISTS(SELECT 1 FROM requests published_request WHERE published_request.id=e.request_id AND published_request.author_requester_id=n.requester_id))
+export const visibleEvent = `(e.kind='merge' AND EXISTS(SELECT 1 FROM request_merges merge_row
+ JOIN penny_merge_notices notice ON notice.merge_id=merge_row.id AND notice.enabled=1
+ JOIN penny_merge_notice_recipients recipient ON recipient.merge_id=notice.merge_id
+ JOIN request_canonical_roots root ON root.origin_id=merge_row.target_request_id
+ WHERE merge_row.id=e.subject_id AND merge_row.unmerged_at IS NULL AND root.canonical_id=e.request_id
+ AND recipient.requester_id=n.requester_id AND recipient.address_id=n.address_id)) OR (e.kind='status' AND e.id='publication:'||e.request_id AND e.subject_id=e.request_id AND EXISTS(SELECT 1 FROM requests published_request WHERE published_request.id=e.request_id AND published_request.author_requester_id=n.requester_id))
  OR (e.kind='status' AND EXISTS(SELECT 1 FROM request_status_updates s WHERE s.id=e.subject_id AND s.request_id=e.request_id))
  OR (e.kind='comment' AND EXISTS(SELECT 1 FROM request_comments c LEFT JOIN requesters person ON person.id=c.requester_id
    WHERE c.id=e.subject_id AND c.request_id=e.request_id AND c.moderation_state='approved' AND c.published_at IS NOT NULL

@@ -1,3 +1,4 @@
+import { captureMergeNotice, activateMergeNoticeStatements } from './merge-notices'
 import { projectContributions } from './contributions'
 import type { DatabaseConnection } from '@/core/platform/database'
 import { createRequestId } from './lifecycle-ids'
@@ -10,7 +11,7 @@ export class RequestMergeRepository {
     this.connection = connection
   }
 
-  async merge(sourceSlug: string, targetSlug: string, operatorId: string, now: string): Promise<void> {
+  async merge(sourceSlug: string, targetSlug: string, operatorId: string, now: string, notifySubscribers=false): Promise<void> {
     const source = await this.findUnmergedRequest(sourceSlug)
     if (!source) throw new RequestLifecycleError(404, 'source_not_found', 'The duplicate request does not exist.')
     const target = await this.resolveCanonical(targetSlug)
@@ -25,6 +26,7 @@ export class RequestMergeRepository {
         VALUES (?, (SELECT id FROM requests WHERE id=? AND merged_into_request_id IS NULL),
           (SELECT t.id FROM requests t JOIN boards tb ON tb.id=t.board_id JOIN requests s ON s.id=? JOIN boards sb ON sb.id=s.board_id WHERE t.id=? AND t.merged_into_request_id IS NULL AND tb.visibility=sb.visibility), ?, ?, NULL, NULL, ?, ?)
       `).bind(mergeId, source.id, source.id, target.id, operatorId, now, now, now),
+      ...captureMergeNotice(this.connection.binding,mergeId,source.id,target.id,notifySubscribers,now),
       this.connection.binding.prepare(`
         INSERT INTO request_merge_evidence_transfers (merge_id, evidence_id, target_was_linked, created_at)
         SELECT ?, source_link.evidence_id,
@@ -57,10 +59,11 @@ export class RequestMergeRepository {
       this.connection.binding.prepare(`INSERT OR IGNORE INTO request_tag_assignments (request_id, tag_id, created_at) SELECT ?, tag_id, ? FROM request_tag_assignments WHERE request_id = ?`).bind(target.id, now, source.id),
       this.connection.binding.prepare(`UPDATE requests SET merged_into_request_id = ?, merged_at = ?, updated_at = ? WHERE id = ?`).bind(target.id, now, now, source.id),
       ...projectContributions(this.connection, [target.id]),
+      ...activateMergeNoticeStatements(this.connection.binding,now),
       this.connection.binding.prepare(`
         INSERT INTO audit_entries (id, actor_type, actor_id, action, entity_type, entity_id, occurred_at, details_json, created_at, updated_at)
-        VALUES (?, 'operator', ?, 'request.merged', 'request', ?, ?, ?, ?, ?)
-      `).bind(createRequestId(), operatorId, source.id, now, JSON.stringify({ canonicalRequestId: target.id }), now, now),
+        VALUES (?, 'operator', ?, 'request.merged', 'request', ?, ?, json_object('canonicalRequestId',?,'notifySubscribers',?,'noticeRecipients',(SELECT COUNT(*) FROM penny_merge_notice_recipients WHERE merge_id=?)), ?, ?)
+      `).bind(createRequestId(), operatorId, source.id, now, target.id,notifySubscribers?1:0,mergeId, now, now),
     ])
   }
 

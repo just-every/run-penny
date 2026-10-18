@@ -636,8 +636,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 104 | 10 | 0 | 114 |
-| Target and push further | 4 | 51 | 78 | 133 |
-| All | 108 | 61 | 78 | 247 |
+| Target and push further | 5 | 51 | 77 | 133 |
+| All | 109 | 61 | 77 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -827,7 +827,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `NOTIFY-009` | Notify captured contacts | target | missing |  | With "Also email people linked through captured evidence" ticked, a captured contact linked through Zendesk evidence gets one email, a contact who is also a follower gets one in total, and a suppressed or previously unsubscribed contact gets none; unticked, no captured contact is emailed; neither creates a permission record; the audit entry records the choice and the count. |
 | `NOTIFY-010` | Weekly requester digest | target | missing |  | A clock-advanced test sends one digest per opted-in requester per week containing only their requests' public changes, sends nothing for an empty week, and the unsubscribe link stops the next digest. |
 | `NOTIFY-011` | The author's vote and subscription | target | partial | `tests/base/requester-subscriptions.test.ts`; `visual/requester-subscriptions/NOTIFY-011/` | Verified submissions record the author vote and disclosed submission permission; publication notifies once, replies/status/release/rejection use the durable permission path, removing the vote retains it, and withdrawal/unsubscribe revoke it. Held-verification and board-off cases pass through routes; 1440/390 journeys pass. Gap: a separate SDK disclosure journey and live inbox acceptance remain unproved. |
-| `NOTIFY-012` | Merge notice | target | missing |  | Merging a duplicate with two followers and a vote-subscribed voter, one of whom already follows the canonical request, sends two messages naming and linking it; with the notice unticked it sends none; unmerging sends nothing. |
+| `NOTIFY-012` | Merge notice | target | done | `tests/base/merge-notices.test.ts`; `tests/browser/merge-notices.mjs` |  |
 | `NOTIFY-013` | Sender identity and postal address | target | partial | `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/` | Company/postal setup and legacy prompt, provider-tested sender acceptance/refusal, sender/reply-to headers, postal footer and automatic-subscription admission are implemented; real provider clients use HTTP-edge fixtures. API and 1440/390 browser proof pass. Gap: Admin-role settings, future capture-address exclusion, unsupported carry-over/captured-contact/digest choices, and live verified-domain/reply/inbox acceptance remain missing. |
 | `MEAS-001` | Amplitude | target | missing |  | Amplitude API fixtures return a feature's event counts over a window and a cohort that becomes a segment. |
 | `MEAS-002` | Mixpanel | target | missing |  | Mixpanel API fixtures match MEAS-001's journey. |

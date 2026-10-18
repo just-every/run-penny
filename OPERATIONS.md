@@ -336,3 +336,9 @@ Migration `0074_internal_discussion.sql` adds one-level note threads and durable
 ## Aging and follow-up upgrade
 
 Migration `0075_triage_aging.sql` adds portable age settings, effective-status clocks, evidence snoozes and durable in-app owner reminders. Apply it after 0074 using `rer setup` or the existing hosted deployment path. Existing requests initialize from their current direct/mapped status timestamp. Later real status changes reset the clock; wording and ETA edits do not. Minute Cron records one reminder per subject, owner, age origin and age step, with a wording-free audit entry. Repeated or restarted drains do not duplicate it. A resolved flag disappears immediately from the live projection. These reminders require no mail provider, and send no customer email. Settings, snoozes, clocks and reminder history travel in archives; current operator membership still controls access. Keep the expanded schema on source rollback.
+
+## Public ETA and merge-notice upgrades
+
+Migration `0076_roadmap_public_eta.sql` adds the separately approved public ETA and distinguishes ETA approval events from status transitions. Migration `0077_merge_notices.sql` expands the notification event kind and adds portable merge choices and address-bound audiences. Apply both through `rer setup` or the existing hosted deployment path before running this source; prior event, intent and delivery rows remain intact. No provider or account configuration changes are needed.
+
+Keep the expanded schema on rollback. Do not run an older mail drain against queued merge events: retain this source until those deliveries are resolved. Restored pending merge audiences and delivery intent are held and never send automatically. Merge reversal cancels unsent notices through current eligibility; it does not recall an accepted email. Public ETA changes prepare drafts and require a separate publication action to notify followers.

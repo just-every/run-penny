@@ -16,7 +16,7 @@ export async function queueNotificationWork(runtime: PennyRuntime, delaySeconds 
 /** Only routes capable of publishing mail intents need an event-time wakeup. */
 export function publishesNotification(method: string, path: string): boolean {
  if (method !== 'POST') return false
- return /^\/api\/operator\/(?:requests\/[^/]+\/(?:comments|status-updates|decline\/reverse)|comments\/(?:edits\/)?[^/]+\/moderate|(?:requests\/[^/]+\/moderate|moderation\/[^/]+)|requests\/edits\/[^/]+\/moderate|releases\/[^/]+\/(?:publish|versions\/[^/]+\/deliver)|roadmap-updates\/[^/]+\/publish)$/.test(path)
+ return /^\/api\/operator\/(?:requests\/[^/]+\/(?:comments|status-updates|merge|decline\/reverse)|comments\/(?:edits\/)?[^/]+\/moderate|(?:requests\/[^/]+\/moderate|moderation\/[^/]+)|requests\/edits\/[^/]+\/moderate|releases\/[^/]+\/(?:publish|versions\/[^/]+\/deliver)|roadmap-updates\/[^/]+\/publish)$/.test(path)
   || /^\/api\/v1\/(?:requests\/[^/]+\/(?:comments|status-updates)|releases\/[^/]+\/publish)$/.test(path)
 }
 

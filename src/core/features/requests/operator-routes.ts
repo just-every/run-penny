@@ -31,7 +31,7 @@ const simpleVerdictSchema = z.object({ body:text.optional(), notifyAuthor:z.bool
 const noteSchema = z.object({ body: text }).strict()
 const boardCreateSchema = z.object({ slug, name: z.string().trim().min(1).max(160), visibility: z.enum(['public', 'internal']) }).strict()
 const boardUpdateSchema = z.object({ categoryMode:z.enum(['off','optional','required']).optional(), postingPolicy:z.enum(['requesters','operators']).optional(), commentsAllowed:z.boolean().optional(), showVoteCounts:z.boolean().optional(), showVoters:z.boolean().optional(), anonymousRequesters:z.boolean().optional(), name: z.string().trim().min(1).max(160).optional(), visibility: z.enum(['public', 'internal']).optional(), position: z.number().int().min(0).optional(), archived: z.boolean().optional() }).strict()
-const mergeSchema = z.object({ targetSlug: slug }).strict()
+const mergeSchema = z.object({ targetSlug: slug, notifySubscribers:z.boolean().default(true) }).strict()
 const requesterMergeSchema = z.object({ targetRequesterId: identifier }).strict()
 const moveSchema = z.object({ boardSlug: slug }).strict()
 
@@ -166,12 +166,18 @@ export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironm
     })
   })
 
+  app.get('/api/operator/requests/:slug/merge-preview',async context=>operatorMutation(context,async()=>{
+    const input=z.object({targetSlug:slug}).strict().safeParse(context.req.query()),source=slug.safeParse(context.req.param('slug'))
+    if(!input.success||!source.success)return invalid(context)
+    const {previewMergeNotice}=await import('./merge-notices')
+    return context.json(await previewMergeNotice(context.get('runtime').database,source.data,input.data.targetSlug))
+  }))
   app.post('/api/operator/requests/:slug/merge', async (context) => {
     const input = await parseMutationBody(context, mergeSchema)
     const requestSlug = slug.safeParse(context.req.param('slug'))
     if (!input || !requestSlug.success) return invalid(context)
     return operatorMutation(context, async (operator) => {
-      await new RequestMergeRepository(context.get('runtime').database).merge(requestSlug.data, input.targetSlug, operator.id, now())
+      await new RequestMergeRepository(context.get('runtime').database).merge(requestSlug.data, input.targetSlug, operator.id, now(), input.notifySubscribers)
       return context.json({ ok: true })
     })
   })
