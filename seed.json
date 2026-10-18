@@ -8,15 +8,41 @@
     "id": "feedback",
     "record": "request with attributed evidence"
   },
-  "replaces": ["Canny", "UserVoice", "Productboard"],
+  "replaces": [
+    "Canny",
+    "UserVoice",
+    "Productboard"
+  ],
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
-    {"id":"merge-subscriber-notices","description":"Preview and optionally notify eligible duplicate subscribers when merging; exclude existing canonical subscribers, defer private targets until publication, and preserve consent, opt-outs, quiet hours and durable delivery custody.","clauses":["NOTIFY-012"]},
-    {"id":"approved-roadmap-eta","description":"Operators explicitly approve a public month or quarter separately from private delivery windows; changing or removing it prepares a customer-safe update draft without sending it.","clauses":["ROAD-012"]},
+    {
+      "id": "canny-status-workflow",
+      "description": "Reviewed saved Canny imports retain custom internal status names and can reconstruct a public status roadmap from selected public boards, with replay and conflict-safe undo. Imported requests remain held for native moderation; approval preserves their mapped status.",
+      "clauses": [
+        "PRIO-002",
+        "ROAD-014"
+      ]
+    },
+    {
+      "id": "merge-subscriber-notices",
+      "description": "Preview and optionally notify eligible duplicate subscribers when merging; exclude existing canonical subscribers, defer private targets until publication, and preserve consent, opt-outs, quiet hours and durable delivery custody.",
+      "clauses": [
+        "NOTIFY-012"
+      ]
+    },
+    {
+      "id": "approved-roadmap-eta",
+      "description": "Operators explicitly approve a public month or quarter separately from private delivery windows; changing or removing it prepares a customer-safe update draft without sending it.",
+      "clauses": [
+        "ROAD-012"
+      ]
+    },
     {
       "id": "aging-and-follow-up",
       "description": "Flag overdue inbox work, unanswered comments, requests without a public response and stale public statuses; configure the ages, snooze evidence, and record one in-app owner reminder per age step.",
-      "clauses": ["TRIAGE-002"]
+      "clauses": [
+        "TRIAGE-002"
+      ]
     },
     {
       "id": "scoped-cancellation-learning",

@@ -1,3 +1,4 @@
+import {defaultImportColumns} from '../status-roadmap-policy'
 import { parseFeedbackCsv } from '../csv'
 import { documentedColumn } from '../uservoice-columns'
 import type { FeedbackStatus, SavedFeedbackInput } from '../types'
@@ -12,6 +13,7 @@ export const pennyStatuses: readonly FeedbackStatus[] = ['open', 'under_review',
 export interface SavedCsv { readonly name: string; readonly base64: string; readonly headings: string[]; readonly rows: Record<string, string>[] }
 export interface BuilderChoices {
   readonly boardPolicy?: import('../board-policy').FeedbackBoardPolicy
+  readonly rebuildRoadmap?:boolean
   readonly keepStatusNames?: boolean
   readonly boardName: string
   readonly isPrivate: boolean
@@ -94,6 +96,7 @@ export const uservoicePrivateColumns = (ideas: SavedCsv | null, voters: SavedCsv
 
 export function buildBundle(kind: Exclude<ExportKind, 'bundle'>, main: SavedCsv, voters: SavedCsv | null, choices: BuilderChoices): SavedFeedbackInput {
   const created = new Date().toISOString(), boardId = slug(choices.boardName)
+  const roadmap=choices.rebuildRoadmap&&kind!=='uservoice'&&!choices.isPrivate?{boardIds:[boardId],columns:defaultImportColumns,shippedDays:null}:undefined
   const internalStatuses=choices.keepStatusNames&&kind!=='uservoice'?Object.fromEntries(Object.keys(choices.statuses).filter(name=>name.trim()).map(name=>[name,{name,showPublicLabel:false}])):undefined
   const boardPolicies=choices.boardPolicy?{[boardId]:choices.boardPolicy}:undefined
   const boards = [{ id: boardId, name: choices.boardName.trim(), isPrivate: choices.isPrivate, created }]
@@ -103,18 +106,18 @@ export function buildBundle(kind: Exclude<ExportKind, 'bundle'>, main: SavedCsv,
     const rest = main.headings.filter(heading => !mapped.has(heading))
     const aggregates = Object.fromEntries(rest.filter(heading => choices.classes[heading] && choices.classes[heading] !== 'private').map(heading => [heading, choices.classes[heading] as Exclude<IdeaClass, 'private'>]))
     const ideas = { key: key!, title: title!, details: details!, status: status!, created: date!, ...(author ? { author } : {}), aggregates, omissions: rest.filter(heading => !(heading in aggregates)) }
-    return { namespace, statuses: choices.statuses, ...(internalStatuses?{internalStatuses}:{}), boards, ...(boardPolicies?{boardPolicies}:{}), files: [{ name: main.name, kind: 'posts', version: 'ideas-csv', boardId, base64: main.base64, ideas }] }
+    return { namespace, statuses: choices.statuses, ...(internalStatuses?{internalStatuses}:{}), ...(roadmap?{roadmap}:{}), boards, ...(boardPolicies?{boardPolicies}:{}), files: [{ name: main.name, kind: 'posts', version: 'ideas-csv', boardId, base64: main.base64, ideas }] }
   }
   if (kind === 'canny') {
     const names = [...new Set(Object.values(choices.tags).flatMap(tagNames))], tagId = (name: string) => `tag-${names.indexOf(name) + 1}`
     const tagMapping = Object.fromEntries(Object.entries(choices.tags).map(([cell, text]) => [cell, tagNames(text).map(tagId)]))
     const files: SavedFeedbackInput['files'] = [{ name: main.name, kind: 'posts', version: 'classic-csv', boardId, base64: main.base64, ...(names.length ? { tagMapping } : {}) }]
     if (names.length) files.unshift({ name: 'penny-tags.json', kind: 'tags', version: 'v1', base64: base64(new TextEncoder().encode(JSON.stringify({ tags: names.map(name => ({ id: tagId(name), name, created })) }))) })
-    return { namespace, statuses: choices.statuses, ...(internalStatuses?{internalStatuses}:{}), boards, ...(boardPolicies?{boardPolicies}:{}), files }
+    return { namespace, statuses: choices.statuses, ...(internalStatuses?{internalStatuses}:{}), ...(roadmap?{roadmap}:{}), boards, ...(boardPolicies?{boardPolicies}:{}), files }
   }
   const uservoice = { scope: choices.scope, ...(choices.scope === 'filtered' ? { filter: choices.filter.trim() } : {}) }
   const omitted = (csv: SavedCsv, isVoters: boolean) => { const list = undocumented(csv, isVoters); return list.length ? { omissions: list } : {} }
   const files: SavedFeedbackInput['files'] = [{ name: main.name, kind: 'posts', version: 'uservoice-ideas-csv', boardId, base64: main.base64, uservoice: { ...uservoice, ...omitted(main, false) } }]
   if (voters) files.push({ name: voters.name === main.name ? 'voters-' + voters.name : voters.name, kind: 'votes', version: 'uservoice-voters-csv', base64: voters.base64, uservoice: { ...uservoice, ...omitted(voters, true) } })
-  return { namespace, statuses: choices.statuses, ...(internalStatuses?{internalStatuses}:{}), boards, ...(boardPolicies?{boardPolicies}:{}), files }
+  return { namespace, statuses: choices.statuses, ...(internalStatuses?{internalStatuses}:{}), ...(roadmap?{roadmap}:{}), boards, ...(boardPolicies?{boardPolicies}:{}), files }
 }

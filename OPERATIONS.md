@@ -351,3 +351,13 @@ existing hosted deployment path. There are no provider or account changes;
 retain the additive triggers on source rollback. Imported status definitions
 and their links are included in the existing archive classification. Upgrade
 rer to 0.2.60 in package mode and run `rer install` before use.
+
+## Imported status-roadmap custody
+
+Migration `0079_import_status_roadmap.sql` records before/after roadmap settings
+for reviewed imports. Apply through `rer setup` or the existing hosted deployment
+path; populated earlier imports keep their records. The setting transition and
+its reversal commit with native import custody, and later roadmap edits invalidate
+reversal preflights. Restore carries the history without replaying its effects.
+Keep the expanded schema on source rollback; complete or undo an active roadmap
+import with this source before using an older importer. No provider setup is needed.

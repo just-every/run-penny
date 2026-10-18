@@ -139,6 +139,15 @@
         "pnpm run build",
         "node tests/browser/import-statuses.mjs"
       ]
+    },
+    {
+      "name": "import-roadmap",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/import-roadmap.mjs"
+      ]
     }
   ],
   "nightly": [
