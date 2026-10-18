@@ -108,6 +108,7 @@
         "pnpm run build",
         "node tests/browser/requester-blocking.mjs",
         "node tests/browser/request-withdrawal.mjs",
+        "node tests/browser/requester-activity.mjs",
         "node tests/browser/request-demand.mjs"
       ]
     },

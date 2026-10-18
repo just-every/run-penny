@@ -86,7 +86,7 @@ With approved roadmap items selected, only explicitly approved customer-safe ite
 
 The updates page lists your published releases, newest first. Until you publish one, it says there are no updates yet, and shows no placeholder.
 
-After verifying your email, you can subscribe to all releases from Updates. You can unsubscribe there or with the unsubscribe link in any notification. Unsubscribing withdraws that permission and leaves your requests, votes and follows in place.
+After verifying your email, you can subscribe to all releases from Updates or Your feedback. You can unsubscribe in either place or with the unsubscribe link in any notification. Unsubscribing withdraws that permission and leaves your requests, votes and follows in place.
 
 If you were included when a release was first published, its page lets you answer Adopted, Partly adopted or Not yet for each target. You can change your answer and can still answer after muting or unsubscribing. Your identity and individual answers are private to you and the operators. A corrected release shows its current wording without resetting your response.
 

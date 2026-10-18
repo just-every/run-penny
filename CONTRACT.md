@@ -625,7 +625,7 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 ## Status
 
-Judged from the code and tests at commit `453bbc591df7105eecf62efaa2583577a0f4a97f` (19 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes. REQ-025 remains partial because the requester activity view lacks its REL-012 updates-subscription control.
+Judged from the code and tests at commit `453bbc591df7105eecf62efaa2583577a0f4a97f` (19 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 October 2026 from the route and browser tests cited in those rows.
 
@@ -635,9 +635,9 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 104 | 10 | 0 | 114 |
+| Published | 105 | 9 | 0 | 114 |
 | Target and push further | 5 | 51 | 77 | 133 |
-| All | 109 | 61 | 77 | 247 |
+| All | 110 | 60 | 77 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -738,7 +738,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
 | `REQ-023` | Email verification | published | done | `tests/base/auth.test.ts` (line 46); `tests/browser/no-mail-journey.mjs` |  |
 | `REQ-024` | Requester identity merge | published | done | `tests/base/notifications.test.ts` (line 229) |  |
-| `REQ-025` | Requester activity | published | partial | `tests/base/notifications.test.ts` (line 152) | The requester activity page lacks the REL-012 updates-subscription control; the control and API ship only on the Updates page. |
+| `REQ-025` | Requester activity | published | done | `tests/base/penny-releases.test.ts`; `tests/browser/requester-activity.mjs` |  |
 | `REQ-026` | Demand attribution | published | partial | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` | Separate vote, linked-evidence and distinct-account figures, per-account vote totals, every verified address/account association and complete expandable supporter history ship privately; multiple-address/account, vote removal, blocked-voter exclusion, historical proxy marks and 1440/390 privacy journeys pass. Remaining: SEG-007 ARR/MRR, opportunity and churn value figures beside these counts, and CAP-014 native proxy vote recording. |
 | `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` (line 58) |  |
 | `REQ-028` | Request queue | published | partial | `tests/browser/operator-completeness-read.mjs` | Queue filters and sorts work; the 500 ms first page at declared capacity is not load-tested. |

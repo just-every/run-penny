@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "ac42f7aef9f18d83c852ec9f6e9c3429c25e8b1cf2c263c87666e957ad27c150",
+      "sha256": "92c91860fedbdd5fcd6bd097a21daf1091eca6fd0b9acc8e8f1627a2e4ef6342",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2740,7 +2740,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "fbda715a0d744c89ac615505c54edee47440b92a08bc48909a94f699a48b0bf3",
+      "sha256": "65477c011d4062a1f12abfde2f4312f12e745d7ae5802cdd03b43a3f88e3b274",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2752,7 +2752,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "06be7a7655994e2eec619fc6d252501cf2e58a1926fbad2495247f7f1d43f070",
+      "sha256": "2dccb8d3e2624dd54bd50a1305083d42c9dbc160a33ccfcc4077792b9be69220",
       "executable": false
     },
     "DEMO.md": {
@@ -2864,7 +2864,7 @@
       "executable": false
     },
     "docs/PORTAL.md": {
-      "sha256": "11861bea929a1749409ae1e6b1936d276651d49357ac20e1546ec9041563748e",
+      "sha256": "508ab4d6b121a8efc61d0aea340ad19b18e01d6cd5232f61ae4d2fad9f5837f3",
       "executable": false
     },
     "docs/read-spine.md": {
@@ -3732,7 +3732,7 @@
       "executable": false
     },
     "seed.json": {
-      "sha256": "1aced0dd4236978ce8ab887043ef00d8ff99e7fef03570f65f60554a27ec23fa",
+      "sha256": "9a81640b045280fcdfa624e0e50184b20ce506b6983d554d6386a62e0d9c0a5c",
       "executable": false
     },
     "src/base-mail.ts": {
@@ -5868,7 +5868,7 @@
       "executable": false
     },
     "src/core/features/requests/ui/requester-activity-page.tsx": {
-      "sha256": "66df8de4abe8f0607aa3c97854edcca863b54f754c2834d3235e37b8fabb52f0",
+      "sha256": "aabdde1399e6da2585a46b4326758460852dcf383e04ce461adb8538778ab431",
       "executable": false
     },
     "src/core/features/requests/ui/requester-block-control.tsx": {
@@ -6824,7 +6824,7 @@
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
-      "sha256": "1e83ffae6f3eeac7205d8d67190d556e433979bd8ed91eaf9dabafbb0f70186d",
+      "sha256": "3f54df2e9ae98862932eb50fe00ff8d8996742db626a67675a868d7df40900b0",
       "executable": false
     },
     "tests/base/previous-notification-fixture.ts": {
@@ -7147,6 +7147,10 @@
       "sha256": "159627d56c6a19cc463163eb4270c7de5b5a57431bcd9e44e8d2407f02650dfa",
       "executable": false
     },
+    "tests/browser/requester-activity.mjs": {
+      "sha256": "b60f1de89b09ae2af77be6a11810e4c3bb6786d13544e773dc578607d0a0d5fc",
+      "executable": false
+    },
     "tests/browser/requester-blocking.mjs": {
       "sha256": "3934df08c4b0dfe6b00ad85915717db7ea4aaa8cddda1adff97d77e6aa3067ab",
       "executable": false
@@ -7376,7 +7380,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "21078e1d7844cc73076a01365204f050b6f08b66d12e77787e77582f6d69d7da",
+      "sha256": "106d64006def1133b896f10d706da45c56117280ef6dcfb4b1f6f527da841496",
       "executable": false
     },
     "visual/01-landing.jpg": {

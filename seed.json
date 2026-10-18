@@ -49,7 +49,7 @@
     },
     {
       "id": "requester-board-local",
-      "description": "Requester submission, votes, explicit follows, moderated comments and edits, withdrawal and activity with separate provider email verification through Base. Decline closes new votes and requester comments, preserves discussion, and reverses to the previous status. Operators block and unblock requesters from the private directory; blocking hides their public contributions and excludes votes without deleting records. Existing appeals and host-signed identity are retained. Status changes record notification intent; notification delivery is a separate gate.",
+      "description": "Requester submission, votes, explicit follows, moderated comments and edits, withdrawal and activity including release-subscription controls, with separate provider email verification through Base. Decline closes new votes and requester comments, preserves discussion, and reverses to the previous status. Operators block and unblock requesters from the private directory; blocking hides their public contributions and excludes votes without deleting records. Existing appeals and host-signed identity are retained. Status changes record notification intent; notification delivery is a separate gate.",
       "clauses": [
         "REQ-006",
         "REQ-007",

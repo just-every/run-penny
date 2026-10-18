@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Your feedback now includes the product-update subscription, beside request email preferences. Subscribe or unsubscribe without leaving your activity; votes, requests and follows stay intact (REQ-025).
+
 - Historical owner-upgrade fixtures seed pre-notice merge custody before applying current migrations. The current merge route is exercised on its required schema; every existing per-migration row, authority, revocation and original-file preservation assertion remains.
 
 - Merging a duplicate previews its eligible subscriber count and offers a notice opt-out. The canonical request’s existing subscribers are excluded; a private canonical waits for publication, and unmerge sends nothing. Consent, unsubscribe, quiet hours, restore holds and durable delivery claims still apply (NOTIFY-012). Migration 0077 preserves event and delivery custody while adding typed merge events and captured audiences.

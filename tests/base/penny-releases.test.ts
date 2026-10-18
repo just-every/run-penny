@@ -126,7 +126,7 @@ it('[EVID-009 REL-001] a private tag on a published release stays out of the pub
  expect(mail.text).toContain(g.input.body);expect(page).toContain(g.input.body)
  for(const surface of [mail.text,mail.html??'',page,await (await call('/portal/updates')).text(),await (await call('/api/public/releases')).text(),await (await call(`/api/public/releases/${g.draft.slug}`)).text()])expect(surface).not.toContain(secret)
 })
-it('[REL-012] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows',async()=>{
+it('[REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows',async()=>{
  const g=await votedReleaseGraph(),subscriber=await requester('Subscriber only'),endpoint='/api/public/updates/subscription'
  expect((await call(endpoint,{subscribed:true},{},'PATCH')).status).toBe(401)
  await json(await call(endpoint,{subscribed:true},subscriber,'PATCH'))
@@ -150,11 +150,13 @@ it('[REL-012] request mute retains update subscription and global unsubscribe wi
  expect(await rows('requester_update_permissions')).toEqual(permissions)
  expect(await rows('request_notification_mutes')).toEqual([expect.objectContaining({requester_id:g.recipient.requesterId,request_id:g.requests[0].id})])
  expect(await Promise.all(['requests','request_follows','request_votes'].map(rows))).toEqual(before)
+ const activityBefore=await json(await call('/api/public/requester/activity',undefined,g.person))
  const globalUrl=new URL(await unsubscribeUrl(runtime(),g.recipient,'all'))
  expect((await call(globalUrl.pathname+globalUrl.search,{})).status).toBe(200)
  expect(await json(await call(endpoint,undefined,g.person))).toMatchObject({subscribed:false})
  expect(await json(await call('/api/public/requester/notifications',undefined,g.person))).toEqual({muted:true})
  expect(await Promise.all(['requests','request_follows','request_votes'].map(rows))).toEqual(before)
+ expect(await json(await call('/api/public/requester/activity',undefined,g.person))).toEqual(activityBefore)
  expect((await rows('requester_update_permissions')).filter(p=>p.source==='subscription').every(p=>p.revoked_at)).toBe(true)
  expect((await rows('requester_update_permissions')).filter(p=>p.source!=='subscription')).toEqual(permissions.filter(p=>p.source!=='subscription'))
 })
