@@ -682,7 +682,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | REQ-023 | done | Single-use 30-minute link and held pre-verification action. | `tests/base/auth.test.ts:46`; `tests/browser/no-mail-journey.mjs` |
 | REQ-024 | done | Identity merge keeps both addresses, collapses votes and keeps mutes. | `tests/base/notifications.test.ts:229` |
 | REQ-025 | done | Requester activity with unfollow, mute and subscription changes. | `tests/base/notifications.test.ts:152` |
-| REQ-026 | partial | Voters, verified addresses and per-account totals shown privately; a named test of the three separate figures is required. | `src/core/features/requests/operator-context.ts` |
+| REQ-026 | partial | Separate voter, evidence and distinct-account counts; account vote breakdown; every verified address/account association; complete supporter history including historical proxy marks. Routes and 1440/390 browser journeys cover multiple addresses/accounts, evidence-only accounts, vote removal, blocking and public privacy. Remaining: SEG-007 ARR/MRR, opportunity and churn value figures and CAP-014 native proxy recording. | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` |
 | REQ-027 | done | Framing allowed only from allow-listed origins. | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts:58` |
 | REQ-028 | partial | Queue filters and sorts work; the 500 ms first page at declared capacity is not load-tested. | `tests/browser/operator-completeness-read.mjs` |
 | REQ-029 | done | A request created from evidence skips moderation and publishes only through REQ-005. | `tests/browser/operator-pages-decisions.mjs` |

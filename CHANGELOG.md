@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Moderation shows votes, linked evidence and distinct accounts separately, with per-account totals and every voter’s verified addresses and linked accounts. Show more reaches the complete supporter history; blocked voters are excluded. Revenue demand and native proxy recording remain open (REQ-026, SEG-007, CAP-014).
+
 - Withdrawing feedback from Your feedback now confirms that it is no longer public and its votes no longer count. Pending moderation removal, published 410 responses, vote exclusion and retained original evidence are covered through routes and both browser widths (REQ-021).
 
 - Customers → Requesters now shows access state and confirmed block/unblock controls. Blocking hides that person’s public requests and comments and excludes their votes; unblocking restores them without deleting their private records (REQ-022).
