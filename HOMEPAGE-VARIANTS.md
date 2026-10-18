@@ -271,3 +271,22 @@ Mango's `/subscribe` stay on their own paths; those seeds use the Lobby.
   page there differs from the owner-approved one only in its primary action.
 - `rer build --site` and `rer deploy --site --dry-run` pass.
 - Screenshots at 1440 and 390 sit beside the 12ui authority images.
+
+### Browser icons on Base pages
+
+The app Vite config includes `seedIcons()` from `@runeditrun/rer/seed-icons`;
+`rer build --site` includes it itself.
+It reads public files at build time and freezes same-origin links into the
+Lobby, Run/Contract/site heads, setup and sign-in pages, and the local gate.
+The browser installer snapshots the same files when it starts; the native demo
+gate uses the exported app assets. No page probes for missing icons.
+
+Links are ordered: `favicon.ico` (`sizes="any"`), one small SVG or 32×32 PNG,
+then `apple-touch-icon.png`. Each name is supported at the public root and
+under `brand/`, preferring the root for that name. Small-icon preference is
+`favicon-32.svg`, `favicon.svg`, `icon.svg`, `favicon-32.png`,
+`favicon-32x32.png`, `favicon.png`, `icon-32.png`, `icon.png`; PNG dimensions
+are checked. The SVG is the seed's small icon artwork, not its full mark.
+Only when none of those icons exists is `brand/mark.svg` linked, and only if
+that file exists too. The site export includes every selected icon even when
+its asset list omits it. Keep the plugin when adopting these Base copies.
