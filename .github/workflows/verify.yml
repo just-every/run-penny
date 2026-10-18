@@ -84,3 +84,9 @@ jobs:
         env:
           SHARD: ${{ matrix.name }}
         run: node scripts/verify-ci.mjs "$SHARD"
+      - name: Read redacted dev failure diagnostics
+        if: failure()
+        run: |
+          if [ -d ../evidence ]; then
+            find ../evidence -type f -name 'failure-dev-*' -print -exec cat {} \;
+          fi
