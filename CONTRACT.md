@@ -635,9 +635,9 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 104 | 10 | 0 | 114 |
+| Published | 105 | 9 | 0 | 114 |
 | Target and push further | 3 | 51 | 79 | 133 |
-| All | 107 | 61 | 79 | 247 |
+| All | 108 | 60 | 79 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -734,7 +734,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REQ-018` | Boards | published | done | `tests/base/board.test.ts` (line 41) |  |
 | `REQ-019` | Internal boards | published | done | `tests/base/board.test.ts` (line 41) |  |
 | `REQ-020` | Requester's own content | published | done | `tests/browser/requester-repair.mjs` |  |
-| `REQ-021` | Requester withdrawal | published | partial | `tests/browser/requester-repair.mjs` (line 86) | Withdrawing a pending request removes it from moderation (tested); the 410 public URL and vote exclusion need a test. |
+| `REQ-021` | Requester withdrawal | published | done | `tests/base/request-withdrawal.test.ts`; `tests/browser/request-withdrawal.mjs` |  |
 | `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
 | `REQ-023` | Email verification | published | done | `tests/base/auth.test.ts` (line 46); `tests/browser/no-mail-journey.mjs` |  |
 | `REQ-024` | Requester identity merge | published | done | `tests/base/notifications.test.ts` (line 229) |  |

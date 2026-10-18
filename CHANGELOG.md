@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Withdrawing feedback from Your feedback now confirms that it is no longer public and its votes no longer count. Pending moderation removal, published 410 responses, vote exclusion and retained original evidence are covered through routes and both browser widths (REQ-021).
+
 - Customers → Requesters now shows access state and confirmed block/unblock controls. Blocking hides that person’s public requests and comments and excludes their votes; unblocking restores them without deleting their private records (REQ-022).
 
 - Declined requests clearly close new votes and requester comments while retaining their existing discussion and votes. Reversing a decline restores the previous direct or mapped status even after revising the decline reason (REQ-017).
