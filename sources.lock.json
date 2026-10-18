@@ -3784,7 +3784,7 @@
       "executable": false
     },
     "scripts/portability/worker.ts": {
-      "sha256": "51c94d1eb13e646268f155531f3fe9d09e92eb905e989254760bf4952047e8c9",
+      "sha256": "da22dfa02da2f27f388b98e767dd760eaca88a5a95bf7f71afb82bbb7291b8a0",
       "executable": false
     },
     "scripts/project-operations.mjs": {
@@ -4336,7 +4336,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "7fbb7d4678104b080728115c9fd1dd9ab7d61e9b2566bbb7e1228bb38b458a11",
+      "sha256": "dc180119a6b6f881ceeb94f17d77d062196b574a8e8c2f0a48d51eac3c6e1a76",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -4375,12 +4375,16 @@
       "sha256": "3f2f9189485daba1d20a95ed179b8e3105ff3c986eff2d4494b9e2bdb0d3acc8",
       "executable": false
     },
+    "src/core/features/data/original-files.ts": {
+      "sha256": "4d04a621baba698b4e8069e89b7fc119dc3988d21f9b3a5e875af07afa644d85",
+      "executable": false
+    },
     "src/core/features/data/portability-lock.ts": {
       "sha256": "cb073b2375711e20b0fd5d07e063eb5cfe5677dc20e4c8bd38cc7874360e4d33",
       "executable": false
     },
     "src/core/features/data/portability.ts": {
-      "sha256": "02f0fd8fa586d9624b137b88d8e8e9e882c6bd8417d35f0987ba688d87169f1f",
+      "sha256": "14225d1145cd6ba6178a09c66658a0806cc035fc9fb9539ae5c64e885e0a072e",
       "executable": false
     },
     "src/core/features/data/routes.ts": {
@@ -7216,7 +7220,7 @@
       "executable": false
     },
     "tests/base/rich-changelog.test.ts": {
-      "sha256": "88d69dcae646af719f01e6147db715b1c1046b3f92dfdd8fdebe163f6848eca0",
+      "sha256": "2fdbc994098442d549012ca34bda95b10df7a2cebf3c1595c77c3c0330f3ac5e",
       "executable": false
     },
     "tests/base/roadmap-public-eta.test.ts": {

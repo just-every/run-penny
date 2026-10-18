@@ -1,3 +1,4 @@
+import {assertOriginalFiles} from './original-files'
 import { validateCategoryArchive } from '../categories/archive'
 import {validateMailIdentityArchive} from '../settings/mail-identity-archive'
 import {validateLearningArchive} from '../learning/archive'
@@ -138,8 +139,7 @@ export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:Dat
   const journal=await readErasureJournal(db)
   if(data.release_attachments.some(row=>row.state==='writing'))fail('unfinished_attachment_uploads')
   const attachments=[...data.attachments,...data.release_attachments]
-  const expectedKeys=new Set(attachments.map(row=>String(row.storage_key)));let cursor:string|undefined
-  do{const listing=await bucket.list({limit:1000,...(cursor?{cursor}:{})});if(listing.objects.some(object=>!expectedKeys.has(object.key)))fail('untracked_attachment_objects',503);cursor=listing.truncated?listing.cursor:undefined}while(cursor)
+  await assertOriginalFiles(db,bucket)
   const files:Archive['files']=[];let total=0
   for(const attachment of attachments){
    const object=await bucket.get(String(attachment.storage_key));if(!object)fail('missing_attachment',503)

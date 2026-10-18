@@ -1,3 +1,4 @@
+import {assertOriginalFiles} from './original-files'
 import type { Context, Hono } from 'hono'
 import { createPortabilityHandler, excludedTable } from '@runeditrun/rer/modules/portability'
 import { abortPortabilitySnapshot, abortPortabilityActor, portabilitySnapshotStatus } from '../../../../scripts/portability/cleanup.mjs'
@@ -67,6 +68,7 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
    const tables = await schemaPart(db, headers)
    const counts = await db.batch(tables.map(table => db.prepare(`SELECT count(*) n FROM "${table.name}"`)))
    if (counts.reduce((sum, result) => sum + (result.results[0] as { n: number }).n, 0) > LOCAL_DATA_LIMITS.rows) throw new NativeError('archive_limit', 413)
+   await assertOriginalFiles(guarded,c.env.FILES)
   }
   const journal = await readErasureJournal(db), productPolicy = policy(journal)
   // The live lock is installation custody. The archived state is an idle target.

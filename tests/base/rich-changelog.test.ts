@@ -80,6 +80,15 @@ it('[REL-015] approved release images, public label/product filters and correcte
   for await(const record of readArchive(new Response(archiveBytes).body!))if(record.kind==='manifest')imageFound=record.objects.some(object=>object.key===saved.archive.tables.release_attachments[0].storage_key&&object.sha256===saved.archive.files.find(file=>file.key===object.key)!.sha256)
   expect(imageFound).toBe(true)
  }finally{await portable.exports.abort(job)}
+ const hosted=await result<{id:string}>(await call('/api/portability/exports',{},g.operator),201)
+ try{
+  while((await result<{phase:string}>(await call(`/api/portability/exports/${hosted.id}/advance`,{maxParts:100},g.operator))).phase==='building'){}
+  const download=await call(`/api/portability/exports/${hosted.id}/download`,undefined,g.operator)
+  expect(download.status).toBe(200)
+  let found=false
+  for await(const record of readArchive(download.body!))if(record.kind==='manifest')found=record.objects.some(object=>object.key===saved.archive.tables.release_attachments[0].storage_key)
+  expect(found).toBe(true)
+ }finally{await result(await call(`/api/portability/exports/${hosted.id}/abort`,{},g.operator))}
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
  expect((await restoreArchive(env.DB,env.FILES,saved.archive,saved.journal)).status).toBe('complete')
  expect(await result(await call(`/api/public/releases/${g.draft.slug}`))).toMatchObject({labels:published.labels,products:published.products,title:'Corrected report'})

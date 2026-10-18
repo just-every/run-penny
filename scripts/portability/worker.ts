@@ -1,3 +1,4 @@
+import {assertOriginalFiles} from '../../src/core/features/data/original-files'
 // This is Penny's binding/policy boundary. Base owns archive framing, integrity,
 // resource enumeration, staged validation and atomic restore.
 import { createReadStream, createWriteStream } from 'node:fs'
@@ -64,6 +65,7 @@ try {
     progress.stage = direction
     if (direction === 'export') {
       await mkdir(dirname(path), { recursive: true, mode: 0o700 })
+      await assertOriginalFiles(db,bucket)
       id = await service.exports.create()
       while ((await service.exports.advance(id, { maxParts: 16 })).phase === 'building') {}
       temporary = path + '.' + randomUUID() + '.partial'
