@@ -625,11 +625,11 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 ## Status
 
-REQ-017 was completed on 18 October 2026: public closure, retained votes and discussion, and repeated-decline reversal are covered by the route and both-width browser journeys cited below.
-
 Judged from the code and tests at commit `94bb4defa551a19f5d7c14c52dd994ea766e0676` (18 October 2026).
 
 OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 October 2026 from the route and browser tests cited in those rows.
+
+REQ-017 was completed on 18 October 2026: public closure, retained votes and discussion, and repeated-decline reversal are covered by the route and both-width browser journeys cited below.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |

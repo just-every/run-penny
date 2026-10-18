@@ -61,8 +61,11 @@ try{
    await stale.getByRole('heading',{name:'Stale status (1)',exact:true}).waitFor()
    await audit(page,'request-queue-stale',stale)
    await page.goto(origin+'/app/settings')
-   await page.getByText('Aging and reminder settings',{exact:true}).click()
    const settings=page.locator('details').filter({has:page.getByText('Aging and reminder settings',{exact:true})})
+   // The settings resource mounts its form after client hydration. Opening the
+   // server-rendered disclosure earlier can be reset when React takes over.
+   await settings.locator('form').waitFor({state:'attached'})
+   await settings.locator('summary').click()
    await settings.getByLabel('Planned stale (days)',{exact:true}).fill('14')
    await settings.getByRole('button',{name:'Save follow-up ages',exact:true}).click()
    await settings.getByRole('status').filter({hasText:'Follow-up ages saved.'}).waitFor()
