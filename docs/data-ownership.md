@@ -398,10 +398,10 @@ beside it. Native journal identity and tombstones restore atomically with domain
 rows. Install fresh owner authority after restore. A failed transfer prints its stage, the error codes and, for a code an
 operator can act on, one fixed sentence saying why; never a name or a value.
 
-A running installation also supports the same Base archive through:
+From a checkout with dependencies installed, a running installation supports the same Base archive through Penny’s hosted export helper:
 
 ```sh
-rer export --target remote --origin https://penny.example --session-file private/owner.cookie --output exports/hosted-penny.rer
+node scripts/portability/remote-export.mjs https://penny.example private/owner.cookie exports/hosted-penny.rer
 ```
 
 The session path is relative to this checkout. The private session file must be
