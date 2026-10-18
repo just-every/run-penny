@@ -22,7 +22,7 @@ test.before(async () => {
   page.on('pageerror', error => errors.push(error.message))
   await signIn(page, runtime, async () => {})
 })
-test.after(async () => { await browser?.close(); await runtime?.close() })
+test.after(async () => { await runtime?.saveDiagnostics(); await browser?.close(); await runtime?.close() })
 
 const post = (path, body) => page.evaluate(async ([path, body]) => (await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).status, [path, body])
 

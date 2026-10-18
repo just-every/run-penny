@@ -6888,7 +6888,7 @@
       "executable": false
     },
     "tests/browser/dev-operator-flows.test.mjs": {
-      "sha256": "b1ec21b249f5320eef10e181775f9fdcf74c5c6d0ff3a35ec9876a828f9ea62a",
+      "sha256": "b642a85d03433ded8804b561e2115049cc45a325e0934a44bf718debcd132684",
       "executable": false
     },
     "tests/browser/editor-admission.mjs": {
@@ -7244,7 +7244,7 @@
       "executable": false
     },
     "tests/installer/dev-credentials.test.mjs": {
-      "sha256": "178287607669a9b44c759252e681c630dbb8dd8a36ddffff413542a873792e0d",
+      "sha256": "e43ff6a1406709209f6dbe2a444f4901b28661ec42a4ad83d241c55954a1db99",
       "executable": false
     },
     "tests/installer/owner-fixture.mjs": {

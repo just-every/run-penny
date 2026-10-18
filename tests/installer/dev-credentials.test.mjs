@@ -98,6 +98,7 @@ test('[SC-05 API-001] an API key minted in a dev session works only behind the c
       for (const table of ['integration_tokens', 'oa_dev_credentials']) assert.equal(restored.prepare(`SELECT COUNT(*) n FROM ${table}`).get().n, 0, `${table} stays empty after a restore`)
     } finally { restored.close() }
   } finally {
+    await runtime.saveDiagnostics()
     await proxy.close()
     await runtime.close()
   }
