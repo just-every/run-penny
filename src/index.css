@@ -56,6 +56,8 @@
 /* App roots wear .penny-brand for the paper, grain, ink and font; app text keeps breaking long user-supplied words, where
    the landing's prose does not. */
 .penny-brand.penny-app {
+  --rer-muted: var(--soft);
+  --rer-text: var(--ink);
   overflow-wrap: anywhere;
 }
 
@@ -70,31 +72,29 @@ html:has(.penny-brand.penny-workspace), body:has(.penny-brand.penny-workspace) {
   background: var(--paper);
 }
 
-/* A select's dropdown caret, one rule for every select in the app. The browsers place their native arrow differently (and
-   hug the border), so the native arrow is dropped and a chevron is drawn at the field's own text inset (--field-inset, set
-   with the left padding by inputClass), vertically centred. It is two diagonal strokes in currentColor, so it takes the
-   field's text colour and dims with a disabled field. The right padding clears the caret (and keeps an auto-width select as
-   wide as the native control was) so option text never runs under it. This rule is outside the cascade layers so that it
-   beats the padding utilities; the native picker, keyboard use and accessible name are untouched. */
-select:not([multiple], [size]) {
-  --select-caret-width: 0.625rem;
-  --select-caret-gap: 0.625rem;
+/* Single-choice fields share a painted chevron; listboxes keep their native appearance. */
+select:not([multiple],[size]:not([size="1"])) {
+  --rer-select-ink: var(--rer-muted);
+  -webkit-appearance: none;
   appearance: none;
-  padding-right: calc(var(--field-inset, 0.75rem) + var(--select-caret-width) + var(--select-caret-gap));
+  padding-inline-end: 40px;
+  text-overflow: ellipsis;
   background-image:
-    linear-gradient(to top right, transparent calc(50% - 1.1px), currentColor calc(50% - 0.6px), currentColor calc(50% + 0.6px), transparent calc(50% + 1.1px)),
-    linear-gradient(to top left, transparent calc(50% - 1.1px), currentColor calc(50% - 0.6px), currentColor calc(50% + 0.6px), transparent calc(50% + 1.1px));
-  background-size: calc(var(--select-caret-width) / 2) calc(var(--select-caret-width) / 2);
-  background-position: right calc(var(--field-inset, 0.75rem) + var(--select-caret-width) / 2) top 50%, right var(--field-inset, 0.75rem) top 50%;
+    linear-gradient(to top right, transparent calc(50% - 1.1px), var(--rer-select-ink) calc(50% - .55px), var(--rer-select-ink) calc(50% + .55px), transparent calc(50% + 1.1px)),
+    linear-gradient(to top left, transparent calc(50% - 1.1px), var(--rer-select-ink) calc(50% - .55px), var(--rer-select-ink) calc(50% + .55px), transparent calc(50% + 1.1px));
   background-repeat: no-repeat;
+  background-position: right 20px center, right 14px center;
+  background-size: 6px 6px;
 }
+select:not([multiple],[size]:not([size="1"])):focus-visible { --rer-select-ink: var(--rer-text); }
+select:not([multiple],[size]:not([size="1"])):disabled { --rer-select-ink: color-mix(in srgb, var(--rer-muted) 55%, transparent); }
 
 /* Forced colours (Windows high contrast) drops background images, so the drawn chevron would vanish: the browser's own arrow,
    which it draws in the system colours, takes over, and the right padding goes back to the field's inset because the native
    arrow reserves its own room. */
 @media (forced-colors: active) {
-  select:not([multiple], [size]) {
+  select:not([multiple],[size]:not([size="1"])) {
     appearance: auto;
-    padding-right: var(--field-inset, 0.75rem);
+    padding-inline-end: var(--field-inset, 0.75rem);
   }
 }

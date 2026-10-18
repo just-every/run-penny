@@ -35,7 +35,7 @@ export const dataLabelClass = 'text-[11px] font-semibold tracking-[0.12em] text-
 /**
  * A text input, select, textarea or file input on paper: a fine ink line, copper when focused. Typed text is always normal
  * weight, whatever the label around it sets. Callers add the top margin. --field-inset is the text's inset from the side
- * border; a select's caret sits the same distance from the right border (src/index.css).
+ * border; src/index.css reserves a separate right inset for the select chevron.
  */
 export const inputClass = 'block min-h-12 w-full min-w-0 rounded-lg border border-penny-line-strong bg-penny-card [--field-inset:1rem] px-(--field-inset) py-2 font-normal text-penny-ink placeholder:text-penny-muted transition-colors focus-visible:border-penny-copper focus-visible:ring-3 focus-visible:ring-penny-copper/30 focus-visible:outline-none disabled:opacity-60'
 

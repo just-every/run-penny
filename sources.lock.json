@@ -6184,7 +6184,7 @@
       "executable": false
     },
     "src/core/ui/app/classes.ts": {
-      "sha256": "dccfd876393b1d28a49427acd17a3b4d2a4b936f298fd3c0bbfe402c24a406f6",
+      "sha256": "c39f24fae2e39e234aa072f73cc41457fea2f2394d306a17dcd2e1b33ebee5d2",
       "executable": false
     },
     "src/core/ui/app/collage/collage.css": {
@@ -6388,7 +6388,7 @@
       "executable": false
     },
     "src/index.css": {
-      "sha256": "a7a151ade73b8144000bbd79ace5e43035efc09084ddf3916017f133d21ca385",
+      "sha256": "5b636bc15f62a53de66a2c446510e9fed1c2a71be5f70e88e2576aeb7794d36f",
       "executable": false
     },
     "src/routes/__root.tsx": {
