@@ -13,7 +13,7 @@ export function requestContextRowsSql(requestIdsSql: string) {
       WHERE v.request_id IN (${requestIdsSql}) ORDER BY r.id,a.id,account.id`,
     accounts: `SELECT DISTINCT requested.id AS contextRequestId,a.id,a.slug,a.name FROM requests requested JOIN accounts a ON
       EXISTS(SELECT 1 FROM evidence_items e JOIN request_evidence_links l ON l.evidence_id=e.id WHERE e.account_id=a.id AND l.request_id=requested.id)
-      OR EXISTS(SELECT 1 FROM requester_account_links l JOIN request_votes v ON v.requester_id=l.requester_id WHERE l.account_id=a.id AND v.request_id=requested.id)
+      OR EXISTS(SELECT 1 FROM requester_account_links l JOIN request_votes v ON v.requester_id=l.requester_id JOIN requesters voter ON voter.id=v.requester_id AND voter.blocked_at IS NULL WHERE l.account_id=a.id AND v.request_id=requested.id)
       WHERE requested.id IN (${requestIdsSql}) ORDER BY a.name`,
     notes: `SELECT n.request_id AS contextRequestId,n.*,o.display_name AS operator_display_name,d.name AS receiver_name FROM request_notes n
       LEFT JOIN operators o ON o.id=n.operator_id LEFT JOIN penny_integration_receipts r ON r.note_id=n.id

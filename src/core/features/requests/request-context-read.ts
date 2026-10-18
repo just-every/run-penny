@@ -13,6 +13,7 @@ export type RequestContext = Record<RequestContextRowName, Record<string, unknow
   actions: RequestActions
   statusVersions: ReturnType<typeof requestVersionCounts>
   deliveryCounts: DeliveryCounts
+  demand: {voteCount:number;evidenceCount:number;accountCount:number}
 }
 
 function groupByRequest<T extends { requestId: string }>(rows: T[]) {
@@ -39,6 +40,9 @@ export async function requestContexts(database: DatabaseConnection, slugs: strin
     ...rowQueries.map(([, sql]) => db.prepare(sql).bind(...selected)),
     db.prepare(requestVersionDeliverySql(requestIdsSql)).bind(...selected),
     db.prepare(requestDeliverySql(requestIdsSql)).bind(...selected),
+    db.prepare(`SELECT r.id AS requestId,COUNT(DISTINCT l.evidence_id) AS evidenceCount
+      FROM requests r LEFT JOIN request_evidence_links l ON l.request_id=r.id
+      WHERE r.slug IN (${placeholders}) GROUP BY r.id`).bind(...selected),
   ])
   const requests = results[0].results as unknown as RequestAvailabilityRow[]
   const contextsById = new Map<string, RequestContext>()
@@ -46,6 +50,7 @@ export async function requestContexts(database: DatabaseConnection, slugs: strin
     contextsById.set(request.id, {
       requestId: request.id,boardId:request.boardId,boardSlug:request.boardSlug,categoryId:request.categoryId, statusDetails:{status:request.status,statusSource:request.statusSource,publicEta:request.publicEta,internalStatusId:request.internalStatusId,internalStatusName:request.internalStatusName}, actions: requestActions(request),
       statusVersions: [], deliveryCounts: emptyCounts(),
+      demand:{voteCount:0,evidenceCount:0,accountCount:0},
       voters: [], accounts: [], notes: [], comments: [], edits: [], attachments: [],
       commentEdits: [], appeals: [], uploads: [], votesByAccount: [], tags: [],
     })
@@ -59,7 +64,9 @@ export async function requestContexts(database: DatabaseConnection, slugs: strin
   const deliveryRows = results[rowQueries.length + 2].results as unknown as { requestId: string; state: string; n: number }[]
   const versions = groupByRequest(versionRows)
   const deliveries = groupByRequest(deliveryRows)
+  const evidenceCounts=new Map(results[rowQueries.length+3].results.map(row=>[row.requestId as string,Number(row.evidenceCount)]))
   for (const [id, context] of contextsById) {
+    context.demand={voteCount:new Set(context.voters.map(voter=>voter.id)).size,evidenceCount:evidenceCounts.get(id)??0,accountCount:context.accounts.length}
     context.statusVersions = requestVersionCounts(versions.get(id) ?? [])
     context.deliveryCounts = counts(deliveries.get(id) ?? [])
     for (const version of context.statusVersions) {
