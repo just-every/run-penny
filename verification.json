@@ -106,7 +106,8 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
-        "node tests/browser/requester-blocking.mjs"
+        "node tests/browser/requester-blocking.mjs",
+        "node tests/browser/request-withdrawal.mjs"
       ]
     }
   ],

@@ -580,7 +580,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence a
 
 Current entries include the shipped setup and workspace clocks, request status controls and status roadmap, board categories and participation, requester subscriptions and sender identity, ownership, aging and private discussion. REQ-017 now includes repeated-decline reversal to the prior direct or mapped status; REQ-022 includes the private requester directory, existing-session refusal, contribution hiding and restoration, and atomic audit refusal. The installed board is served at `/` and `/portal/feedback`; HOME-002 remains the separate run-site landing. Local dev enters as the owner and suppresses outgoing mail without retaining or displaying captured messages (BASE-DATA-002). Each partial entry keeps its remaining acceptance work separate; dated receipts above retain their historical scope.
 
-**Counts:** 107 done, 61 partial, 79 missing (247 clauses).
+**Counts:** 108 done, 60 partial, 79 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -677,7 +677,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | REQ-018 | done | Board create, rename, archive and move keep votes, comments and links. | `tests/base/board.test.ts:41` |
 | REQ-019 | done | Internal boards withdraw requests from every public read. | `tests/base/board.test.ts:41` |
 | REQ-020 | done | Edits to public text re-enter moderation while the approved text stays, on a board without auto-publish (REQ-033). | `tests/browser/requester-repair.mjs` |
-| REQ-021 | partial | Withdrawing a pending request removes it from moderation (tested); the 410 public URL and vote exclusion need a test. | `tests/browser/requester-repair.mjs:86` |
+| REQ-021 | done | The author withdraws pending and published requests through activity; pending items leave moderation, public URLs return 410, projected votes stop counting and original evidence versions survive. Unauthenticated, foreign-origin and other-requester attempts are refused; failed audit rolls back withdrawal. Route and 1440/390 browser journeys pass. | `tests/base/request-withdrawal.test.ts`; `tests/browser/request-withdrawal.mjs` |
 | REQ-022 | done | Operators block/unblock in the private requester directory. Existing sessions receive 403 for submission, vote, comment, follow and outcome writes; public requests/comments hide and votes stop counting, while operator records survive. Unblocking restores visibility, counts and participation. Audit refusal rolls back. API and 1440/390 journeys pass. | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |
 | REQ-023 | done | Single-use 30-minute link and held pre-verification action. | `tests/base/auth.test.ts:46`; `tests/browser/no-mail-journey.mjs` |
 | REQ-024 | done | Identity merge keeps both addresses, collapses votes and keeps mutes. | `tests/base/notifications.test.ts:229` |

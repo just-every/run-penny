@@ -71,3 +71,5 @@ cannot authorize replay; a new verification link is needed for held actions. No 
 link, action, permission or receipt is deleted by migration. Terminally invalid held
 actions are consumed and reported so later valid actions can proceed. Normalized
 submission hashes retain compatibility with A's original idempotency receipts.
+
+Customers withdraw their own feedback from **Your feedback**. A pending request leaves moderation; a published request leaves the board and its public URL returns 410. Its votes stop counting, while its original evidence remains private for operators.
