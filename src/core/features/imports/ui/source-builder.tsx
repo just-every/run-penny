@@ -1,3 +1,5 @@
+import { BoardPolicyFields } from './board-policy-fields'
+import type { FeedbackBoardPolicy } from '../board-policy'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { fieldClass } from '../../auth/client-mutations'
 import { fieldLabelClass, fileInputClass, textLinkClass } from '@/core/ui/app/classes'
@@ -19,6 +21,7 @@ const statusLabel = (status: string) => status.replaceAll('_', ' ')
 export function SourceBuilder({ disabled, onSource }: { disabled: boolean; onSource: (source: SavedFeedbackInput | null) => void }) {
   const [kind, setKind] = useState<ExportKind>('canny'), [main, setMain] = useState<SavedCsv | null>(null), [voters, setVoters] = useState<SavedCsv | null>(null)
   const [bundle, setBundle] = useState<SavedFeedbackInput | null>(null), [error, setError] = useState('')
+  const [boardPolicy,setBoardPolicy]=useState<FeedbackBoardPolicy|undefined>()
   const [boardName, setBoardName] = useState(defaultBoard.canny), [isPrivate, setPrivate] = useState(true), [scope, setScope] = useState<'complete' | 'filtered'>('complete'), [filter, setFilter] = useState('')
   const [statusChoice, setStatusChoice] = useState<Record<string, FeedbackStatus>>({}), [tagChoice, setTagChoice] = useState<Record<string, string>>({})
   const [columnChoice, setColumnChoice] = useState<Partial<Record<IdeaColumn, string>>>({}), [classChoice, setClassChoice] = useState<Record<string, IdeaClass>>({})
@@ -30,7 +33,7 @@ export function SourceBuilder({ disabled, onSource }: { disabled: boolean; onSou
   const classes = Object.fromEntries(unmapped.map(heading => [heading, classChoice[heading] ?? guessIdeaClass(main!, heading)]))
   const problem = !main ? null : kind === 'canny' ? cannyCheck(main) : kind === 'uservoice' ? uservoiceCheck(main, false) ?? (voters && uservoiceCheck(voters, true)) : kind === 'canny-ideas' ? ideasCheck({ columns }) : null
   // One bundle per set of choices: it is the exact source a preview and its apply share.
-  const choicesKey = JSON.stringify({ boardName, isPrivate, statuses, tags, scope, filter, columns, classes })
+  const choicesKey = JSON.stringify({ boardName, isPrivate, boardPolicy, statuses, tags, scope, filter, columns, classes })
   const source = useMemo(() => {
     if (kind === 'bundle') return bundle
     const choices = JSON.parse(choicesKey) as Parameters<typeof buildBundle>[3]
@@ -43,7 +46,7 @@ export function SourceBuilder({ disabled, onSource }: { disabled: boolean; onSou
     setError(''); setter(null)
     if (file) void readCsv(file).then(setter, (reason: unknown) => setError(reason instanceof Error ? reason.message : 'The file could not be read.'))
   }
-  const reset = (next: ExportKind) => { setKind(next); setMain(null); setVoters(null); setBundle(null); setError(''); setStatusChoice({}); setTagChoice({}); setColumnChoice({}); setClassChoice({}); if (Object.values(defaultBoard).includes(boardName)) setBoardName(defaultBoard[next]) }
+  const reset = (next: ExportKind) => { setKind(next); setBoardPolicy(undefined); setMain(null); setVoters(null); setBundle(null); setError(''); setStatusChoice({}); setTagChoice({}); setColumnChoice({}); setClassChoice({}); if (Object.values(defaultBoard).includes(boardName)) setBoardName(defaultBoard[next]) }
   const file = (label: string, onFile: (file: File | undefined) => void, accept = '.csv,text/csv', required = true) => <label className={fieldLabelClass}>{label}<input className={`${fieldClass} ${fileInputClass}`} type="file" accept={accept} required={required} disabled={disabled} onChange={event => onFile(event.currentTarget.files?.[0])}/></label>
   const current = kinds.find(item => item.id === kind)!
 
@@ -59,6 +62,7 @@ export function SourceBuilder({ disabled, onSource }: { disabled: boolean; onSou
         {unmapped.length ? <><p className="text-sm text-penny-muted">Other columns stay in Penny’s private copy of the file. Mark totals as counts or revenue to see them in the preview.</p><div className="grid gap-4 sm:grid-cols-2">{unmapped.map(heading => <label key={heading} className={fieldLabelClass}>{heading}<select className={fieldClass} value={classes[heading]} disabled={disabled} onChange={event => setClassChoice(previous => ({ ...previous, [heading]: event.target.value as IdeaClass }))}>{Object.entries(classLabels).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>)}</div></> : null}
       </fieldset> : null}
       <div className="grid gap-4 sm:grid-cols-2"><label className={fieldLabelClass}>Penny board for these ideas<input className={fieldClass} value={boardName} required maxLength={80} disabled={disabled} onChange={event => setBoardName(event.target.value)}/></label><label className="flex min-h-11 items-center gap-3 self-end text-sm text-penny-ink"><input type="checkbox" className="size-4" checked={isPrivate} disabled={disabled} onChange={event => setPrivate(event.target.checked)}/>Private board (only operators see it)</label></div>
+      {kind !== 'uservoice' ? <BoardPolicyFields policy={boardPolicy} onChange={setBoardPolicy} disabled={disabled}/> : null}
       {statusValues.length ? <fieldset className="space-y-3"><legend className={fieldLabelClass}>Match each status to Penny’s</legend><div className="grid gap-4 sm:grid-cols-2">{statusValues.map(value => <label key={value} className={fieldLabelClass}>{value || '(no status)'}<select className={fieldClass} value={statuses[value]} disabled={disabled} onChange={event => setStatusChoice(previous => ({ ...previous, [value]: event.target.value as FeedbackStatus }))}>{pennyStatuses.map(status => <option key={status} value={status}>{statusLabel(status)}</option>)}</select></label>)}</div></fieldset> : null}
       {Object.keys(tags).length ? <fieldset className="space-y-3"><legend className={fieldLabelClass}>Tags: Penny tag names for each Tags cell, separated by commas</legend><div className="grid gap-4 sm:grid-cols-2">{Object.entries(tags).map(([cell, text]) => <label key={cell} className={fieldLabelClass}>{cell}<input className={fieldClass} value={text} disabled={disabled} onChange={event => setTagChoice(previous => ({ ...previous, [cell]: event.target.value }))}/></label>)}</div></fieldset> : null}
       {kind === 'uservoice' ? <fieldset className="space-y-3"><legend className={fieldLabelClass}>Did the export include every idea?</legend><label className="flex min-h-11 items-center gap-3 text-sm"><input type="radio" name="uservoice-scope" checked={scope === 'complete'} disabled={disabled} onChange={() => setScope('complete')}/>Yes, no filters were applied</label><label className="flex min-h-11 items-center gap-3 text-sm"><input type="radio" name="uservoice-scope" checked={scope === 'filtered'} disabled={disabled} onChange={() => setScope('filtered')}/>No, it was a filtered view</label>{scope === 'filtered' ? <label className={fieldLabelClass}>Which filters?<input className={fieldClass} value={filter} required maxLength={500} placeholder="Status: open; Forum: Product ideas" disabled={disabled} onChange={event => setFilter(event.target.value)}/></label> : null}

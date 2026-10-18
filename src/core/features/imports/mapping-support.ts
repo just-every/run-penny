@@ -1,4 +1,5 @@
 import schema from './native-schema.json'
+import { nativeAdditiveDefaults } from './native-additions'
 import { canonicalJson, sha256 } from '../../../../base/modules/import-kit/src/d1/index.ts'
 import type { Json, SourceRecord, TargetEffect } from '../../../../base/modules/import-kit/src/types.ts'
 import type { NativeImportValue } from './types'
@@ -23,9 +24,12 @@ export function reference(value: Json | undefined): string {
 }
 export function nativeRow(table: string, values: Record<string,Json>): NativeImportValue['rows'][number] {
  const columns = (schema as Record<string,{columns:{name:string;default:string|null}[]}>)[table]?.columns
- if (!columns || Object.keys(values).some(key=>!columns.some(c=>c.name===key))) throw new Error('Unsupported native mapping')
+ const additive=nativeAdditiveDefaults[table]??{}
+ if (!columns || Object.keys(values).some(key=>!columns.some(c=>c.name===key)&&!(key in additive))) throw new Error('Unsupported native mapping')
  const defaultValue = (value:string|null):Json => value===null||value==='NULL'?null:/^-?\d+$/.test(value)?Number(value):value.startsWith("'")?value.slice(1,-1).replaceAll("''", "'"):null
- return {table,values:Object.fromEntries(columns.map(column=>[column.name,values[column.name] ?? defaultValue(column.default)]))}
+ // Default additive values stay absent, preserving every legacy effect hash.
+ const extra=Object.entries(values).filter(([key,value])=>key in additive&&value!==additive[key])
+ return {table,values:Object.fromEntries([...columns.map(column=>[column.name,values[column.name] ?? defaultValue(column.default)]),...extra])}
 }
 export function omissionFields(record: SourceRecord, used: string[]): {field:string;reason:string}[] {
  return Object.keys(asObject(record.payload)).filter(key=>!used.includes(key)).map(field=>({field,reason:'Retained in the private original; not mapped to product behavior.'}))

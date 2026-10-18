@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Canny imports accept reviewed per-board participation and display mappings. Copy posting, comment, vote-count, voter-list and anonymity settings in the CSV form or the private manifest; imported boards enforce them immediately. The settings join source custody, replay and conflict-safe undo without changing old import hashes (REQ-040).
+
 - Your feedback now includes the product-update subscription, beside request email preferences. Subscribe or unsubscribe without leaving your activity; votes, requests and follows stay intact (REQ-025).
 
 - Historical owner-upgrade fixtures seed pre-notice merge custody before applying current migrations. The current merge route is exercised on its required schema; every existing per-migration row, authority, revocation and original-file preservation assertion remains.

@@ -629,6 +629,8 @@ Judged from the code and tests at commit `453bbc591df7105eecf62efaa2583577a0f4a9
 
 OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 October 2026 from the route and browser tests cited in those rows.
 
+REQ-040 was completed on 19 October 2026: reviewed owner mappings carry Canny board participation and display settings through saved-file import, replay and conflict-safe undo. The source API does not expose these toggles; no live migration is claimed.
+
 REQ-017 was completed on 18 October 2026: public closure, retained votes and discussion, and repeated-decline reversal are covered by the route and both-width browser journeys cited below.
 
 REQ-022 was completed on 18 October 2026: the private requester directory exposes block/unblock, with route refusal, retained contributions, public hiding and restoration covered by the journeys cited below.
@@ -636,8 +638,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 105 | 9 | 0 | 114 |
-| Target and push further | 5 | 51 | 77 | 133 |
-| All | 110 | 60 | 77 | 247 |
+| Target and push further | 6 | 50 | 77 | 133 |
+| All | 111 | 59 | 77 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -753,7 +755,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REQ-037` | Comment replies and images | target | missing |  | At both widths: a requester's reply to an operator comment is held, then shown under its parent once approved; an operator's reply is public at once and notifies followers once; a comment image on a holding board stays hidden until approved and on an auto-publish board publishes with the comment; a reply to a rejected comment is refused; a Canny fixture reply lands under its parent with its image. |
 | `REQ-038` | Operator editing and removal of public content | target | missing |  | On a holding board and an auto-publish board: a retitled published request shows the new title in the request page, board list, search and API within 5 seconds while the old title appears only in the operator history; an edited operator comment shows the new wording marked Edited and keeps the old for operators; a removed published request answers 404 and leaves the vote total, category counts, search and the status roadmap column within 5 seconds, and restoring it brings each back; a removed requester comment leaves the portal and its author's activity view shows the reason; removing a status update leaves the status unchanged; no action sends mail except one author notice when ticked; a Contributor is refused each action with 403; each action has one audit entry. |
 | `REQ-039` | Social sign-in for requesters | target | missing |  | Against Google and GitHub OAuth fixtures: a signed-out visitor votes, chooses Continue with Google and returns to the request with the vote applied and no cookie set; a GitHub account with no verified email is sent to the emailed link; a forged or replayed OAuth state is refused and changes nothing; with both providers off neither button appears. |
-| `REQ-040` | Board participation and display settings | target | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-040/` | Posting/comment policy, hidden public vote totals, disclosed display-name voter lists and anonymity apply to portal, roadmap and public/API projections; operators retain identity and totals. Operators-only submissions return 403 while permitted votes/comments work; 1440/390 journeys pass. Gap: Canny per-board participation/display settings import remains missing. |
+| `REQ-040` | Board participation and display settings | target | done | `tests/base/board-categories.test.ts`; `tests/base/import-board-policy.test.ts`; `tests/browser/import-board-policy.mjs`; `visual/board-categories/REQ-040/` |  |
 | `TRIAGE-001` | Request owner | target | partial | `tests/base/ownership.test.ts`; `tests/browser/ownership-journey.mjs` | Requests and inbox evidence have one private owner; active board defaults apply on capture; reassignment and unassignment update each native operator's own request, evidence and requester-comment queues. Handling a comment requires moderation first. Theme defaults remain: native themes (AI-005) do not exist yet. |
 | `TRIAGE-002` | Aging and reminders | target | done | `tests/base/triage-aging.test.ts`; `tests/browser/triage-aging.mjs` |  |
 | `TRIAGE-003` | Automation rules | target | missing |  | A rule dry-runs against a fixture inbox, then applies once per item with one audit entry each; a hold rule keeps a matching auto-publish submission in moderation with the rule as its reason; the rule editor offers no publication, vote, customer-notification or commitment action. |

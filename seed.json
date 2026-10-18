@@ -80,7 +80,7 @@
     },
     {
       "id": "operator-request-workspace",
-      "description": "Maintained Base operator sessions authorize moderation, comment/edit review, status updates, merge/unmerge, boards, private tags, typed custom fields and separately approved attachments. Private Hono and Start boundaries independently check Base admission.",
+      "description": "Maintained Base operator sessions authorize moderation, comment/edit review, status updates, merge/unmerge, boards, private tags, typed custom fields and separately approved attachments. Reviewed saved-Canny board mappings retain posting, comment and public-display policy. Private Hono and Start boundaries independently check Base admission.",
       "clauses": [
         "OPS-003"
       ]

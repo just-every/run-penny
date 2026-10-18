@@ -18,6 +18,43 @@ Do not save request bodies, API credentials, cookies or signing material with
 response files. Credential-bearing source data is refused, including fields a
 mapping would omit.
 
+## Copy board participation and display settings
+
+For a Canny CSV import, the import form offers **Board participation and display**.
+Copy the source board's posting, comment, vote-count, voter-list and anonymity
+choices before previewing. A board with posting off and vote totals hidden stays
+operators-only with hidden totals after import; customers can still vote and
+comment when those actions are allowed. Operators retain names and vote totals.
+
+The [Canny board API](https://developers.canny.io/api-reference) supplies visibility
+and private-comment information, but does not document those five toggles.
+Penny does not infer them from `privateComments` or invent API fields. For saved
+API files, put an explicit `boardPolicies` map in the private source manifest,
+keyed by each source board ID:
+
+```json
+{
+  "boardPolicies": {
+    "source-board-id": {
+      "postingPolicy": "operators",
+      "commentsAllowed": true,
+      "showVoteCounts": false,
+      "showVoters": false,
+      "anonymousRequesters": true
+    }
+  }
+}
+```
+
+Each supplied policy needs all five settings and must name a supplied board.
+The reviewed fingerprint binds these choices; changing them requires a new
+preview. `penny-mapping.json` retains them with the private originals. With no
+mapping, the form explains Penny's defaults: requester posts and comments on,
+vote totals visible, voter lists hidden and requester names visible. Existing
+imports and previews keep their original hashes. Replaying creates no duplicate;
+undo removes unchanged imported settings, and refuses after later native edits.
+This is saved-file and owner-mapping support; live Canny migration remains open.
+
 ## From the Data page
 
 On **Data → Move saved feedback in**, choose what you exported and the file:

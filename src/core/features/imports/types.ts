@@ -21,6 +21,8 @@ export interface UserVoiceOptions {
 }
 export type UserVoiceVersion='uservoice-ideas-csv'|'uservoice-voters-csv'
 export interface SavedFeedbackInput {
+ /** Settings copied by the owner from each source board; keyed by source board ID. */
+ boardPolicies?:Record<string,import('./board-policy').FeedbackBoardPolicy>
  namespace: string
  files: { name: string; kind: FeedbackKind; version: 'v1' | 'v2' | 'classic-csv' | 'ideas-csv' | UserVoiceVersion | 'relationships-v1'; base64: string; boardId?: string; tagMapping?: Record<string, string[]>; ideas?:IdeasColumns; uservoice?:UserVoiceOptions }[]
  statuses: Record<string, FeedbackStatus>

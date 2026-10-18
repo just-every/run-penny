@@ -1,6 +1,7 @@
 import type { ImportMapping, Json, SourceRecord, TargetEffect } from '../../../../base/modules/import-kit/src/types.ts'
 import type { FeedbackSource, FeedbackStatus, NativeImportValue } from './types'
 import { feedbackGraph } from './graph'
+import { boardPolicyValues } from './board-policy'
 import { asObject, nativeRow, omissionFields, reference, sourceText, sourceTime, stableFeedbackId } from './mapping-support'
 
 export const feedbackMappingVersion='penny-saved-feedback-1'
@@ -20,9 +21,10 @@ export function feedbackMapping(source: FeedbackSource, actor: string): ImportMa
   // different label, so an undone trial import under another namespace never holds this one's erasure.
   const key=record.sourceId, target=id(record.kind,key), rows:NativeImportValue['rows']=[]; let used:string[]=[]
   if(record.kind==='boards') {
+   const policy=source.options.boardPolicies&&Object.hasOwn(source.options.boardPolicies,key)?source.options.boardPolicies[key]:undefined
    if(typeof p.isPrivate!=='boolean')throw new Error('Board visibility must be supplied')
    if(p.privateComments!==undefined&&typeof p.privateComments!=='boolean')throw new Error('Board comment visibility is invalid')
-   rows.push(nativeRow('boards',{id:target,slug:'import-'+target.toLowerCase(),name:sourceText(p.name,'board name',200),visibility:p.isPrivate?'internal':'public',position:0,...time}));used=['id','name','isPrivate','privateComments','created']
+   rows.push(nativeRow('boards',{id:target,slug:'import-'+target.toLowerCase(),name:sourceText(p.name,'board name',200),visibility:p.isPrivate?'internal':'public',position:0,...time,...(policy?boardPolicyValues(policy):{})}));used=['id','name','isPrivate','privateComments','created']
   } else if(record.kind==='users') {
    rows.push(nativeRow('requesters',{id:target,display_name:sourceText(p.name,'historical contributor name',200),...time}));used=['id','name','created']
   } else if(record.kind==='tags') {

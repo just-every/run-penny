@@ -21,6 +21,8 @@ Every request belongs to exactly one board, such as "Product" or "Integrations".
 - **Internal boards** never appear in any portal page, on the roadmap, in a release or in a requester email. Use one for requests you want to track privately.
 - **Archived boards** leave the navigation and stop taking new submissions. Requests already published on them stay reachable at their addresses.
 
+Public boards also choose who may post, whether requester comments are allowed, whether vote totals or voter names are public, and whether requester names appear as Anonymous. Operators retain attribution and totals. Canny imports can copy these choices through reviewed board-settings mappings.
+
 Visitors can search request titles and descriptions, filter by status and sort by recent activity or most votes.
 
 ## Submitting a request
