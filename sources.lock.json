@@ -2740,7 +2740,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "599fb2c23cc93c7f09dbd8f4331d15a19862b2d6e147873904cd298e17503fc7",
+      "sha256": "fbda715a0d744c89ac615505c54edee47440b92a08bc48909a94f699a48b0bf3",
       "executable": false
     },
     "CLAUDE.md": {
@@ -6800,7 +6800,7 @@
       "executable": false
     },
     "tests/base/owner-claim.test.ts": {
-      "sha256": "7e9b36cdf70eddeaebbde027622e4c1e2c2bb8d879cbb1eb9c2644fbbc17820f",
+      "sha256": "72b4ca17241e318c0f4cb11fda2c305ac6c91704dcc163e94cc42f30fe2fd867",
       "executable": false
     },
     "tests/base/ownership-fixture.ts": {
@@ -6828,7 +6828,7 @@
       "executable": false
     },
     "tests/base/previous-notification-fixture.ts": {
-      "sha256": "99aaaadf33b0c891e51ec0d6a18b58843f3bd9a173b2a10aecce646c784ceab2",
+      "sha256": "2d37568f7d776a7e1dbe8496b85497ef3eed0ed31f38a9a092243908cddaf09c",
       "executable": false
     },
     "tests/base/previous-sample-fixture.ts": {

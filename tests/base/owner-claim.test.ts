@@ -64,7 +64,7 @@ it('[OWN-001][BASE-OPS-002][DATA-001] upgrades populated native and imported his
  const g=await previousNotificationGraph(2)
  await g.vote(0)
  expect(await env.DB.prepare('SELECT requester_id FROM request_votes WHERE request_id=?').bind(g.requests[0].id).first('requester_id')).toBe(g.recipient.requesterId)
- expect((await call('/api/operator/requests/'+g.requests[1].slug+'/merge',{targetSlug:g.requests[0].slug},g.operator)).status).toBe(200)
+ await g.merge(1,0)
  await g.publish(0,'Preserved approved update')
  const release=await populateLegacyRelease(env.DB,g.requests[0].id,time())
  await applyPreviousFeedback(feedbackFixture('owner-upgrade-history'),g.operator)
