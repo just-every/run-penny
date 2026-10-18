@@ -28,16 +28,16 @@ class OperatorResourceError extends Error {
   }
 }
 
-export function useOperatorResource<T>(path: string): readonly [OperatorResourceState<T>, () => void, { readonly pending: boolean; readonly attempt: number }] {
+export function useOperatorResource<T>(path: string | null): readonly [OperatorResourceState<T>, () => void, { readonly pending: boolean; readonly attempt: number }] {
   const matches = useMatches()
-  const prefetched = matches.map((match) => (match.loaderData as Resources | undefined)?.[path]).find((resource) => resource !== undefined)
+  const prefetched = path ? matches.map((match) => (match.loaderData as Resources | undefined)?.[path]).find((resource) => resource !== undefined) : undefined
   const [attempt, setAttempt] = useState(0)
   const key = `${path}\u0000${attempt}`
   const [resource, setResource] = useState<KeyedOperatorResourceState<T>>({ key, state: { kind: 'loading' } })
   const retry = useCallback(() => setAttempt((current) => current + 1), [])
 
   useEffect(() => {
-    if (attempt === 0 && prefetched) return
+    if (!path || (attempt === 0 && prefetched)) return
     const controller = new AbortController()
     void resourceRequest(path, controller.signal)
       .then(async (response) => {
@@ -66,7 +66,8 @@ export function useOperatorResource<T>(path: string): readonly [OperatorResource
   // Each render must return the same state object until the data changes:
   // consumers key effects on it, and a fresh object per render loops them.
   const snapshot = useMemo<OperatorResourceState<T> | null>(() => prefetched ? snapshotState<T>(prefetched) : null, [prefetched])
-  const request = { pending: !(attempt === 0 && prefetched) && (resource.key !== key || resource.state.kind === 'loading'), attempt }
+  const request = { pending: Boolean(path) && !(attempt === 0 && prefetched) && (resource.key !== key || resource.state.kind === 'loading'), attempt }
+  if (!path) return [loading, retry, request]
   if (attempt === 0 && snapshot) return [snapshot, retry, request]
   // Keep forms mounted during refresh; auxiliary resources without a loader
   // snapshot fetch on first mount and still require server-side admission.

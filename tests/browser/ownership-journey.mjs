@@ -86,6 +86,10 @@ try {
    assert.equal(await evidence.getByRole('combobox', { name: 'Accountable owner' }).inputValue(), self.id)
    await mine.getByRole('heading', { name: 'Evidence (1)', exact: true }).waitFor()
    await audit(page, 'captured-default-and-own-queue', { detail: mine })
+   await evidence.getByText('Record a customer’s vote', { exact: true }).click()
+   assert.equal(await evidence.getByRole('button', { name: 'Record proxy vote', exact: true }).isDisabled(), true, 'a proxy vote needs an available request')
+   await audit(page, 'proxy-vote-before-first-request', { detail: evidence.getByRole('button', { name: 'Record proxy vote', exact: true }).locator('..') })
+   await evidence.getByText('Record a customer’s vote', { exact: true }).click()
    await recorder.screenshot({ path: join(output, `capture-board-form-${width}.png`) })
    await evidence.getByRole('form', { name: 'Accountable owner', exact: true }).screenshot({ path: join(output, `captured-evidence-owner-${width}.png`) })
 

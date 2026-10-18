@@ -11,8 +11,12 @@ export async function graph(existing?:{Cookie:string}){
  const operator=existing??await owner({finishSetup:false});if(!existing)await accepted(finishFirstRun(operator,'UTC'),303)
  await accepted(call('/api/operator/boards',{slug:'subscriptions',name:'Subscription board',visibility:'public'},operator),201)
  const author=await requester('Author'),voter=await requester('Voter')
- const boards=await (await call('/api/public/boards')).json() as {slug:string;subscriptionDisclosure:{enabled:boolean;version:number;vote:string;submission:string}}[]
- const disclosure=boards.find(board=>board.slug==='subscriptions')!.subscriptionDisclosure
+ // Historical upgrade journeys run before newer public board dependencies
+ // exist. Read only this fixture's stored consent inputs at that schema head;
+ // creation, consent and delivery still exercise the public routes and Worker.
+ const board=await env.DB.prepare('SELECT vote_subscriptions,vote_subscription_version FROM boards WHERE slug=?').bind('subscriptions').first<{vote_subscriptions:number;vote_subscription_version:number}>()
+ expect(board,'The freshly created subscription board must exist.').not.toBeNull()
+ const disclosure={enabled:board!.vote_subscriptions===1,version:board!.vote_subscription_version}
  const sent:ProviderMessage[]=[]
  vi.mocked(fetch).mockImplementation(async(url,init)=>{expect(String(url)).toBe('https://api.sendgrid.com/v3/mail/send');const message=JSON.parse(String(init?.body)) as ProviderMessage;sent.push(message);const link=body(message).match(/https?:\/\/[^\s]+/)?.[0];if(link)messages.push({to:message.personalizations[0].to[0].email,url:link});return new Response(null,{status:202,headers:{'x-message-id':crypto.randomUUID()}})})
  const submit=async(person=author,emailUpdates=false)=>{
