@@ -1,3 +1,4 @@
+import {drainAging} from '../triage/reminders'
 import {advanceDataWork} from '../data/runner/advance'
 import {drainLearning} from '../learning/scheduled'
 import { createPennyRuntime, type PennyRuntime } from '@/core/app/runtime'
@@ -16,6 +17,7 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  await advanceDataWork(bindings)
  await drainLearning(runtime,_controller.scheduledTime)
  await drainDecisionReviews(runtime)
+ await drainAging(runtime.database.binding)
  await drainRequesterMail(runtime)
  await drainIntegrations(runtime)
  await drainTrackers(runtime)

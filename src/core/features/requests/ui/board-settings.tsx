@@ -1,3 +1,4 @@
+import {AgingSettings} from '../../triage/aging-settings'
 import {BoardOwnerSettings} from '../../ownership/ui/board-owner-settings'
 import {WorkspaceClockSettings} from '../../settings/ui/workspace-clock-settings'
 import {useRouter} from '@tanstack/react-router'
@@ -44,7 +45,7 @@ export function BoardSettings() {
         <IntegrationDestinations />
         <TrackerSettings />
         <MailIdentitySettings />
-        <WorkspaceClockSettings />
+        <AgingSettings/><WorkspaceClockSettings />
         <BrandingSettings />
         <FrameSettings />
         <RequestStatusSettings />

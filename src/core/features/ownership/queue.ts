@@ -11,7 +11,7 @@ const requestFrom = `FROM penny_request_owners a JOIN requests r ON r.id=a.reque
 const requestWhere = `a.operator_id=? AND ${currentRequest} AND r.moderation_state!='rejected'
  AND (SELECT status FROM penny_request_status WHERE request_id=r.id) NOT IN ('shipped','declined','withdrawn')`
 const evidenceFrom = 'FROM penny_evidence_owners a JOIN evidence_items e ON e.id=a.evidence_id'
-const evidenceWhere = `a.operator_id=? AND e.review_state='unreviewed'`
+const evidenceWhere = `a.operator_id=? AND e.review_state='unreviewed' AND NOT EXISTS(SELECT 1 FROM penny_evidence_snoozes z WHERE z.evidence_id=e.id AND z.until_at>strftime('%Y-%m-%dT%H:%M:%fZ','now'))`
 const commentFrom = `${requestFrom} JOIN request_comments c ON c.request_id=r.id JOIN requesters customer ON customer.id=c.requester_id`
 const pendingCommentEdit = `EXISTS(SELECT 1 FROM request_comment_edits edit WHERE edit.comment_id=c.id AND edit.moderation_state='awaiting_review')`
 const commentNeedsReview = `(c.moderation_state='awaiting_review' OR ${pendingCommentEdit})`

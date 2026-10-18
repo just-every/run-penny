@@ -1,3 +1,4 @@
+import {registerTriageRoutes} from '@/core/features/triage/routes'
 import {registerDiscussionRoutes} from '@/core/features/discussion/routes'
 import {registerOwnershipRoutes} from '@/core/features/ownership/routes'
 import {registerWorkspaceClockRoutes} from '@/core/features/settings/workspace-clock-routes'
@@ -102,6 +103,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerWorkspaceClockRoutes(app)
   registerOwnershipRoutes(app)
   registerDiscussionRoutes(app)
+  registerTriageRoutes(app)
   registerBoardSubscriptionRoutes(app)
   registerBrandingRoutes(app)
   registerFrameSettings(app)

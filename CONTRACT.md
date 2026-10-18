@@ -627,13 +627,13 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 Judged from the code and tests at commit `02374e4552e429e26a81bd6f0973aa691759b2b9` (16 October 2026).
 
-OPS-005, OPS-008 and TRIAGE-001 were updated on 18 October 2026 from the route and browser tests cited in those rows.
+OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 October 2026 from the route and browser tests cited in those rows.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 102 | 12 | 0 | 114 |
-| Target and push further | 2 | 52 | 79 | 133 |
-| All | 104 | 64 | 79 | 247 |
+| Target and push further | 3 | 51 | 79 | 133 |
+| All | 105 | 63 | 79 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -751,7 +751,7 @@ OPS-005, OPS-008 and TRIAGE-001 were updated on 18 October 2026 from the route a
 | `REQ-039` | Social sign-in for requesters | target | missing |  | Against Google and GitHub OAuth fixtures: a signed-out visitor votes, chooses Continue with Google and returns to the request with the vote applied and no cookie set; a GitHub account with no verified email is sent to the emailed link; a forged or replayed OAuth state is refused and changes nothing; with both providers off neither button appears. |
 | `REQ-040` | Board participation and display settings | target | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-040/` | Posting/comment policy, hidden public vote totals, disclosed display-name voter lists and anonymity apply to portal, roadmap and public/API projections; operators retain identity and totals. Operators-only submissions return 403 while permitted votes/comments work; 1440/390 journeys pass. Gap: Canny per-board participation/display settings import remains missing. |
 | `TRIAGE-001` | Request owner | target | partial | `tests/base/ownership.test.ts`; `tests/browser/ownership-journey.mjs` | Requests and inbox evidence have one private owner; active board defaults apply on capture; reassignment and unassignment update each native operator's own request, evidence and requester-comment queues. Handling a comment requires moderation first. Theme defaults remain: native themes (AI-005) do not exist yet. |
-| `TRIAGE-002` | Aging and reminders | target | partial | `src/core/features/overview`; `tests/browser/operator-pages.mjs` | A clock-advanced test sends one reminder per age step, returns a snoozed item on its date, flags a request left in Planned for 28 days as stale with one reminder and clears the flag when its status changes, and the overview's aging and stale counts link to their records. |
+| `TRIAGE-002` | Aging and reminders | target | done | `tests/base/triage-aging.test.ts`; `tests/browser/triage-aging.mjs` |  |
 | `TRIAGE-003` | Automation rules | target | missing |  | A rule dry-runs against a fixture inbox, then applies once per item with one audit entry each; a hold rule keeps a matching auto-publish submission in moderation with the rule as its reason; the rule editor offers no publication, vote, customer-notification or commitment action. |
 | `TRIAGE-004` | Mentions and internal discussion | target | partial | `tests/base/internal-discussion.test.ts`; `tests/browser/internal-discussion.mjs` | Private one-level note replies and selected operator @mentions create one durable in-app notice per note and recipient, with idempotent save, dismissal, active-member admission and archive/erasure custody. API and 1440/390 browser journeys pass. Gap: NOTIFY-006 channel preferences, email/chat/push delivery and digests remain missing. |
 | `TRIAGE-005` | Bulk actions | target | missing |  | Tagging and assigning 200 fixture items writes one audited batch; undo restores every item; a bulk removal (REQ-038) records one reason per batch. |

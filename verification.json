@@ -81,6 +81,15 @@
         "pnpm run build",
         "node tests/browser/internal-discussion.mjs"
       ]
+    },
+    {
+      "name": "triage-aging",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/triage-aging.mjs"
+      ]
     }
   ],
   "nightly": [

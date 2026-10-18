@@ -1,0 +1,11 @@
+import type { AgingPolicy } from './routes'
+import { useState } from 'react'
+import { useOperatorResource } from '@/core/app/ui/operator-resource'
+import { fieldClass } from '@/core/features/auth/client-mutations'
+import { disclosureSummaryClass,fieldLabelClass,secondaryButtonClass } from '@/core/ui/app/classes'
+import { operatorMutation } from '../requests/ui/operator-client'
+export function AgingSettings(){
+ const [resource,reload]=useOperatorResource<AgingPolicy&{canConfigure:boolean}>('/api/operator/triage/settings'),[message,setMessage]=useState('')
+ const fields={inbox_days:'Untriaged inbox (days)',comment_days:'Unanswered comments (days)',response_days:'No public response (days)',under_review_days:'Under review stale (days)',planned_days:'Planned stale (days)',in_progress_days:'In progress stale (days)'}
+ return <details className="group mt-6 rounded-xl border border-penny-line bg-penny-card p-5"><summary className={disclosureSummaryClass}>Aging and reminder settings</summary><p className="mt-3 text-sm text-penny-muted">Owners and Admins choose each age step. Reminders appear in the app once per step, with no customer mail.</p>{resource.kind==='ready'?<form className="mt-4 space-y-4" onSubmit={async e=>{e.preventDefault();const form=new FormData(e.currentTarget);setMessage('');try{await operatorMutation('/api/operator/triage/settings',Object.fromEntries(Object.keys(fields).map(k=>[k,Number(form.get(k))])),'PATCH');reload();setMessage('Follow-up ages saved.')}catch(error){setMessage(error instanceof Error?error.message:'Could not save ages.')}}}><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(fields).map(([key,label])=><label key={key} className={fieldLabelClass}>{label}<input className={fieldClass} name={key} type="number" min="1" max="3650" disabled={!resource.data.canConfigure} defaultValue={resource.data[key as keyof AgingPolicy]} required/></label>)}</div><button disabled={!resource.data.canConfigure} className={secondaryButtonClass}>Save follow-up ages</button></form>:<p className="mt-3">{resource.kind==='loading'?'Loading ages…':'Could not load ages.'}</p>}<p role="status" className="mt-3 text-sm empty:hidden">{message}</p></details>
+}

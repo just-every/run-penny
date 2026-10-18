@@ -2776,5 +2776,48 @@
       "id",
       "allowed"
     ]
+  },
+  "penny_triage_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "inbox_days",
+      "comment_days",
+      "response_days",
+      "under_review_days",
+      "planned_days",
+      "in_progress_days",
+      "updated_at"
+    ]
+  },
+  "penny_evidence_snoozes": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "until_at",
+      "updated_at"
+    ]
+  },
+  "penny_triage_reminders": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "kind",
+      "request_id",
+      "evidence_id",
+      "comment_id",
+      "owner_operator_id",
+      "age_origin",
+      "age_step",
+      "created_at"
+    ]
+  },
+  "penny_triage_status_clock": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "status",
+      "since_at"
+    ]
   }
 }

@@ -1,3 +1,4 @@
+import {AgingPanel} from '../../triage/aging-panel'
 import { ListControls } from '@/core/features/workspace/ui/list-controls'
 import { Link, useLocation } from '@tanstack/react-router'
 import type { WorkspaceOverviewDto } from '@/core/features/workspace/overview-dto'
@@ -31,6 +32,7 @@ function OverviewContent({ overview }: { readonly overview: WorkspaceOverviewDto
   return (
     <div className="space-y-10">
       <AttentionSection overview={overview} />
+      <AgingPanel/>
       <div className="grid min-w-0 grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2">
         <DecisionsSection decisions={overview.decisions} />
         <EvidenceSection evidence={overview.unreviewedEvidence} />

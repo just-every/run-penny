@@ -579,7 +579,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence i
 
 OPS-005 and OPS-008 below reflect the 18 October 2026 implementation and named journeys; other ratings retain their earlier scope.
 
-**Counts:** 104 done, 64 partial, 79 missing (247 clauses).
+**Counts:** 105 done, 63 partial, 79 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -697,7 +697,7 @@ OPS-005 and OPS-008 below reflect the 18 October 2026 implementation and named j
 | REQ-039 | missing | Against Google and GitHub OAuth fixtures: a signed-out visitor votes, chooses Continue with Google and returns to the request with the vote applied and no cookie set; a GitHub account with no verified email is sent to the emailed link; a forged or replayed OAuth state is refused and changes nothing; with both providers off neither button appears. | — |
 | REQ-040 | partial | Posting/comment policy, hidden public vote totals, disclosed display-name voter lists and anonymity apply to portal, roadmap and public/API projections; operators retain identity and totals. Operators-only submissions return 403 while permitted votes/comments work; 1440/390 journeys pass. Gap: Canny per-board participation/display settings import remains missing. | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-040/` |
 | TRIAGE-001 | partial | Native request and evidence assignment, active board defaults on capture, personal queues, requester-comment handling after moderation, reassignment, unassignment, archive/restore and erasure are covered through routes and the 1440/390 UI. Theme defaults remain because native themes (AI-005) do not exist. | `tests/base/ownership.test.ts`; `tests/browser/ownership-journey.mjs` |
-| TRIAGE-002 | partial | A clock-advanced test sends one reminder per age step, returns a snoozed item on its date, flags a request left in Planned for 28 days as stale with one reminder and clears the flag when its status changes, and the overview's aging and stale counts link to their records. | `src/core/features/overview`; `tests/browser/operator-pages.mjs` |
+| TRIAGE-002 | done | Overdue inbox, unanswered comments, no-response requests and stale effective statuses; configurable ages, durable per-owner reminders, snooze return, direct/mapped clearing and archive/erasure custody pass through routes and built pages at 1440/390. | `tests/base/triage-aging.test.ts`; `tests/browser/triage-aging.mjs` |
 | TRIAGE-003 | missing | A rule dry-runs against a fixture inbox, then applies once per item with one audit entry each; a hold rule keeps a matching auto-publish submission in moderation with the rule as its reason; the rule editor offers no publication, vote, customer-notification or commitment action. | — |
 | TRIAGE-004 | partial | Private one-level note replies and selected operator @mentions create one durable in-app notice per note and recipient, with idempotent save, dismissal, active-member admission and archive/erasure custody. API and 1440/390 browser journeys pass. Gap: NOTIFY-006 channel preferences, email/chat/push delivery and digests remain missing. | `tests/base/internal-discussion.test.ts`; `tests/browser/internal-discussion.mjs` |
 | TRIAGE-005 | missing | Tagging and assigning 200 fixture items writes one audited batch; undo restores every item; a bulk removal (REQ-038) records one reason per batch. | — |

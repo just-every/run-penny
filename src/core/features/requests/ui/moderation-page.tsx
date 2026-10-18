@@ -1,3 +1,4 @@
+import {AgingPanel} from '../../triage/aging-panel'
 import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { OperatorEmpty, OperatorResourceLoading } from '@/core/app/ui/operator-resource-state'
 import { OperatorCard } from '@/core/app/ui/operator-primitives'
@@ -14,6 +15,7 @@ export function ModerationPage() {
   return (
     <section>
       <OperatorPageHeader eyebrow="Customer feedback" title="Review feedback before it becomes public." art={resource.kind === 'ready' && resource.data.length === 0 || resource.kind === 'error' ? null : { note: 'Nothing goes public until approved.' }} action={<a href="/app/settings" className={secondaryButtonClass}><Icon name="settings" />Feedback settings</a>}>Approve customer-safe wording, board and display name explicitly. Original evidence remains private and unchanged.</OperatorPageHeader><ListControls page={page} entity="requests"/>
+      <AgingPanel staleOnly/>
       {includesAccountHistory ? <p className="text-sm text-penny-muted">Account results include current feedback and retained history, including withdrawn and merged requests and inactive authors.</p> : null}
       <p role="status" className="mt-5 text-base font-semibold text-penny-ink empty:hidden">{message}</p>
       <div className="mt-6 sm:mt-8">

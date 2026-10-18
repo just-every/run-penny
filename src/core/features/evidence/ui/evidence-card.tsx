@@ -1,3 +1,4 @@
+import {EvidenceSnooze} from '../../triage/evidence-snooze'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { OwnerControl } from '../../ownership/ui/owner-control'
 import { EvidenceHistory } from './evidence-history'
@@ -28,6 +29,7 @@ export function EvidenceCard({ evidence, onSaved }: { readonly evidence: Operato
       {evidence.reviewReason ? <p className="mt-4 flex gap-2 border-t border-penny-line pt-4 text-base leading-normal text-penny-muted"><Icon name="check" className="mt-1 size-4 shrink-0 text-penny-moss" />{evidence.reviewReason}</p> : null}
       <CustomFieldsEditor entityType="evidence" entityId={evidence.id} />
       <OwnerControl entity="evidence" value={evidence.id} onSaved={onSaved} />
+      {evidence.reviewState==='unreviewed'?<EvidenceSnooze id={evidence.id} onSaved={onSaved}/>:null}
       {onSaved ? <><EvidenceActions evidence={evidence} onSaved={onSaved} /><EvidenceHistory id={evidence.id} onSaved={onSaved} /></> : null}
     </OperatorCard>
   )

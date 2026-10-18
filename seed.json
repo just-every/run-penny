@@ -12,6 +12,11 @@
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
     {
+      "id": "aging-and-follow-up",
+      "description": "Flag overdue inbox work, unanswered comments, requests without a public response and stale public statuses; configure the ages, snooze evidence, and record one in-app owner reminder per age step.",
+      "clauses": ["TRIAGE-002"]
+    },
+    {
       "id": "scoped-cancellation-learning",
       "description": "Private source-cited cancellation investigation over selected native feedback and exact Orbit delegated evidence targets, with versioned interpretation, no-build comparison, pre-action commitment and bounded scheduled refresh. Requires explicitly configured enforcing transport and model/source secrets; live customer usefulness, hosted recurrence and all Stage 4\u20135 outcomes remain open.",
       "clauses": [

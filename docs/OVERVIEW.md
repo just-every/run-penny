@@ -53,3 +53,7 @@ Penny is an early release. This documentation describes what it does today.
 - [Make it yours](/docs/customise): where to change the name, theme and behaviour, and how updates arrive.
 
 On a request in **Moderation → Internal notes**, write a private note or reply to an existing note, and select operators under **@mention operators**. Each selected operator sees one notice in **Your mentions**, with a link to the discussion and a Dismiss action. Notes and replies stay private. Mentions currently use in-app notices; email, chat, push and digest preferences are not available.
+
+**Overview → Aging and follow-up** lists evidence waiting for triage, unanswered requester comments, requests without a public response and stale Under review, Planned or In progress requests. The counts open the matching records. Owners and Admins set the age steps in **Feedback settings → Aging and reminder settings** (7 days for incoming work, 28 days per active status by default). Minute Cron records one in-app reminder for the assigned owner per age step. Unassigned work stays flagged. Reviews, public responses and status changes clear the applicable flags; editing a status comment or ETA without changing status keeps its clock.
+
+Use **Snooze evidence** on an inbox item to choose when it returns. Snoozed evidence leaves the active inbox and personal queue until then; Overview lists its return time and offers **Return to inbox now**. Snoozing does not change its review state or attribution.

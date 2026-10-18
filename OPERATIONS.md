@@ -331,3 +331,7 @@ Keep the expanded schema if rolling source back; do not edit or undo applied SQL
 ## Private discussion upgrade
 
 Migration `0074_internal_discussion.sql` adds one-level note threads and durable operator mention notices. Apply it through `rer setup` or the existing hosted deployment path before running this source. Existing notes keep their text and authors and become top-level notes. Archives retain note threads and mention/dismissal history, without granting operator authority. Keep the expanded schema on source rollback. No provider or account configuration is required for in-app mentions.
+
+## Aging and follow-up upgrade
+
+Migration `0075_triage_aging.sql` adds portable age settings, effective-status clocks, evidence snoozes and durable in-app owner reminders. Apply it after 0074 using `rer setup` or the existing hosted deployment path. Existing requests initialize from their current direct/mapped status timestamp. Later real status changes reset the clock; wording and ETA edits do not. Minute Cron records one reminder per subject, owner, age origin and age step, with a wording-free audit entry. Repeated or restarted drains do not duplicate it. A resolved flag disappears immediately from the live projection. These reminders require no mail provider, and send no customer email. Settings, snoozes, clocks and reminder history travel in archives; current operator membership still controls access. Keep the expanded schema on source rollback.
