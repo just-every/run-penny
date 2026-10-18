@@ -1,3 +1,5 @@
+import { registerRichReleaseRoutes } from './rich-routes'
+import { releaseLabels } from './rich-repository'
 import {decisionDatabase} from '../decisions/authority'
 import { registerReleaseEngagementRoutes } from './engagement-routes'
 import type { Hono } from 'hono'
@@ -7,12 +9,13 @@ import { publishRelease } from './publication'
 import { discardStaleRoadmapUpdate } from '../roadmap/update-review'
 import { publishRoadmapUpdate } from '../roadmap/update-publication'
 export function registerReleaseMutationRoutes(app:Hono<OperatorMutationEnvironment>){
+ registerRichReleaseRoutes(app)
  registerReleaseEngagementRoutes(app)
  app.get('/api/operator/releases/options',async c=>{
   if(!await requireOperator(c))return c.json({authenticated:false},401)
   const db=c.get('runtime').database.binding
   const [tags,operators,targets]=await Promise.all([db.prepare('SELECT id,name FROM tags ORDER BY name').all(),db.prepare('SELECT id,display_name AS name FROM operators ORDER BY display_name').all(),db.prepare(`SELECT i.id,p.public_title AS title,i.status FROM roadmap_items i JOIN roadmap_publications p ON p.roadmap_item_id=i.id WHERE p.approved_at IS NOT NULL AND p.withdrawn_at IS NULL AND i.decision_id IS NOT NULL AND EXISTS(SELECT 1 FROM roadmap_request_mappings m WHERE m.roadmap_item_id=i.id AND m.approved_at IS NOT NULL AND m.withdrawn_at IS NULL) ORDER BY p.public_title`).all()])
-  return c.json({tags:tags.results,operators:operators.results,targets:targets.results})
+  return c.json({tags:tags.results,operators:operators.results,targets:targets.results,products:(await db.prepare('SELECT id,name FROM penny_products ORDER BY name,id').all()).results,labels:await releaseLabels(db)})
  })
  for(const method of ['post','patch'] as const)app[method](method==='post'?'/api/operator/releases':'/api/operator/releases/:slug',async c=>{
   const actor=await requireOperator(c);if(!actor)return c.json({authenticated:false},401)

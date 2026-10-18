@@ -53,14 +53,14 @@ export class ReleasesReadRepository {
     }))
   }
 
-  async find(slug: string): Promise<OperatorReleaseDetail | null> {
+  async find(slug: string): Promise<(OperatorReleaseDetail & {labelIds:string[];productIds:string[]}) | null> {
     const record = await this.connection.binding.prepare('SELECT id FROM releases WHERE slug=? LIMIT 1').bind(slug).first<{id:string}>()
     const release = record ? (await this.list([record.id]))[0] : undefined
     if (!release) return null
     const version = await this.connection.binding.prepare(`
-      SELECT rv.id AS versionId,rv.subject_tags_json AS tagIdsJson, rv.body AS body, rv.setup_url AS setupUrl, rv.outcome_prompt AS outcomePrompt
+      SELECT rv.public_products_json AS productsJson,rv.public_labels_json AS labelsJson,rv.id AS versionId,rv.subject_tags_json AS tagIdsJson, rv.body AS body, rv.setup_url AS setupUrl, rv.outcome_prompt AS outcomePrompt
       FROM releases r INNER JOIN release_versions rv ON rv.id = r.current_version_id WHERE r.slug = ? LIMIT 1
-    `).bind(slug).all<{ readonly versionId: string; readonly tagIdsJson:string; readonly body: string; readonly setupUrl: string | null; readonly outcomePrompt: string }>()
+    `).bind(slug).all<{ readonly productsJson:string; readonly labelsJson:string; readonly versionId: string; readonly tagIdsJson:string; readonly body: string; readonly setupUrl: string | null; readonly outcomePrompt: string }>()
     const targets = await this.connection.binding.prepare(`
       SELECT ri.slug AS roadmapSlug, ri.title AS roadmapTitle, ri.status AS roadmapStatus, d.slug AS decisionSlug, d.title AS decisionTitle
       FROM releases r
@@ -71,6 +71,6 @@ export class ReleasesReadRepository {
     `).bind(slug).all<OperatorReleaseDetail['targets'][number]>()
     const fields = version.results[0]
     const targetIds=(await this.connection.binding.prepare('SELECT roadmap_item_id AS id FROM release_targets WHERE release_id=?').bind(release.id).all<{id:string}>()).results.map(r=>r.id)
-    return fields ? { ...release, ...fields, tagIds:JSON.parse(fields.tagIdsJson) as string[],targetIds, deliveryCounts:await releaseDeliveryCounts(this.connection.binding,fields.versionId), targets: targets.results } : null
+    return fields ? { ...release, ...fields, productIds:(JSON.parse(fields.productsJson) as {id:string}[]).map(product=>product.id),labelIds:(JSON.parse(fields.labelsJson) as {id:string}[]).map(label=>label.id),tagIds:JSON.parse(fields.tagIdsJson) as string[],targetIds, deliveryCounts:await releaseDeliveryCounts(this.connection.binding,fields.versionId), targets: targets.results } : null
   }
 }

@@ -6,6 +6,7 @@ import { NativeError } from '@/core/features/auth/native-tokens'
 // history edges introduced/used by the clause work instead of relying on an
 // opaque-ID substring accidentally discovering those children.
 const edges = [
+ ['release_attachments','release_id','releases'],
  ['penny_release_plan_items','roadmap_item_id','roadmap_items'],
  ['penny_roadmap_dependencies','blocker_id','roadmap_items'],
  ['penny_roadmap_dependencies','dependent_id','roadmap_items'],
@@ -100,7 +101,7 @@ export function expandClauseErasure(data:Record<string,Row[]>,selected:Record<st
 }
 
 export function erasureFiles(selected:Record<string,Row[]>):string[]{
- return [...new Set(['attachments','request_attachment_uploads','evidence_attachment_uploads'].flatMap(table=>(selected[table]??[]).map(row=>String(row.storage_key))))].sort()
+ return [...new Set(['attachments','release_attachments','request_attachment_uploads','evidence_attachment_uploads'].flatMap(table=>(selected[table]??[]).map(row=>String(row.storage_key))))].sort()
 }
 
 export function clauseDeletionOrder<T extends {name:string;foreignKeys:{table:string;on_delete?:string}[]}>(tables:T[]):T[]{

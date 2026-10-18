@@ -1,3 +1,4 @@
+import type {ReleaseFilters} from '../releases/rich-repository'
 import type { PublicRelease, PublicRequestDetail } from '@/core/shared/api/public'
 import type { DatabaseConnection } from '@/core/platform/database'
 import { PublicReleasesReadRepository } from '@/core/features/releases/public-read-repository'
@@ -41,8 +42,8 @@ export class PortalReadService {
     return this.roadmap.list()
   }
 
-  listReleases() {
-    return this.releases.list()
+  listReleases(filters:ReleaseFilters={}) {
+    return this.releases.list(filters)
   }
 
   async getRelease(slug: string): Promise<PublicRelease | null> {

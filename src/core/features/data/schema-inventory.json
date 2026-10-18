@@ -1804,7 +1804,9 @@
       "tag_names_json",
       "snapshot_sealed_at",
       "original_publication_version_id",
-      "delivery_requested_at"
+      "delivery_requested_at",
+      "public_labels_json",
+      "public_products_json"
     ]
   },
   "releases": {
@@ -2965,6 +2967,31 @@
       "blocker_id",
       "dependent_id",
       "created_at"
+    ]
+  },
+  "release_labels": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "release_attachments": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "release_id",
+      "storage_key",
+      "original_filename",
+      "content_type",
+      "byte_size",
+      "sha256",
+      "state",
+      "approved_at",
+      "created_at",
+      "updated_at"
     ]
   }
 }

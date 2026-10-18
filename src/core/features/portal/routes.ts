@@ -1,3 +1,4 @@
+import {releaseFiltersSchema} from '../releases/rich-repository'
 import type { Hono } from 'hono'
 import { z } from 'zod'
 import type { PennyRuntime } from '@/core/app/runtime'
@@ -35,7 +36,7 @@ export function registerPortalRoutes(app: Hono<PortalRouteEnvironment>): void {
     return result.kind === 'withdrawn' ? context.json({ error: 'withdrawn' }, 410) : context.json({ error: 'not_found' }, 404)
   })
   app.get('/api/public/roadmap', async (context) => context.json(await portalReadService(context.get('runtime').database).listRoadmap()))
-  app.get('/api/public/releases', async (context) => context.json(await portalReadService(context.get('runtime').database).listReleases()))
+  app.get('/api/public/releases', async context => {const filters=releaseFiltersSchema.safeParse(context.req.query());if(!filters.success)return context.json({error:'validation_failed'},400);return context.json(await portalReadService(context.get('runtime').database).listReleases(filters.data))})
   app.get('/api/public/releases/:slug', async (context) => {
     const slug = publicSlugSchema.safeParse(context.req.param('slug'))
     if (!slug.success) return context.json({ error: 'validation_failed', message: 'Invalid public release slug.' }, 400)

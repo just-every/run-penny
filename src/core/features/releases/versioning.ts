@@ -1,3 +1,4 @@
+import { releaseMediaGuard } from './media-approval'
 import { z } from 'zod'
 import { MutationError } from '@/core/app/operator-mutations'
 import type { PennyRuntime } from '@/core/app/runtime'
@@ -23,11 +24,12 @@ export async function correctRelease(db:D1Database,slug:string,input:ReleaseCorr
  const old=await db.prepare(`SELECT v.*,r.current_version_id FROM releases r JOIN release_versions v ON v.id=r.current_version_id WHERE r.slug=? AND r.state='published'`).bind(slug).first<{id:string;release_id:string;version_number:number;original_publication_version_id:string|null}>()
  if(!old)throw new MutationError(404,'Published release not found.')
  if(old.id!==input.expectedVersionId)throw new MutationError(409,'The current release changed. Refresh before correcting it.')
+ const media=releaseMediaGuard(slug,input.body)
  const id=createUlid(),guard=createUlid(),now=new Date().toISOString()
  try{await db.batch([
-  publicationGuard(db,guard,`${authority.sql} AND EXISTS(SELECT 1 FROM releases WHERE id=? AND current_version_id=? AND state='published')`,[...authority.values,old.release_id,input.expectedVersionId]),
-  db.prepare(`INSERT INTO release_versions(id,release_id,version_number,title,release_type,body,publication_date,setup_url,outcome_prompt,subject_tags_json,is_portal_current,author_name,tag_names_json,snapshot_sealed_at,original_publication_version_id,created_at,updated_at)
-   SELECT ?,release_id,version_number+1,?,release_type,?,publication_date,?,?,subject_tags_json,0,author_name,tag_names_json,?,COALESCE(original_publication_version_id,id),?,? FROM release_versions WHERE id=?`).bind(id,input.title,input.body,input.setupUrl||null,input.outcomePrompt,now,now,now,old.id),
+  publicationGuard(db,guard,`${authority.sql} AND EXISTS(SELECT 1 FROM releases WHERE id=? AND current_version_id=? AND state='published') AND ${media.sql}`,[...authority.values,old.release_id,input.expectedVersionId,...media.values]),
+  db.prepare(`INSERT INTO release_versions(id,release_id,version_number,title,release_type,body,publication_date,setup_url,outcome_prompt,subject_tags_json,is_portal_current,author_name,tag_names_json,public_labels_json,public_products_json,snapshot_sealed_at,original_publication_version_id,created_at,updated_at)
+   SELECT ?,release_id,version_number+1,?,release_type,?,publication_date,?,?,subject_tags_json,0,author_name,tag_names_json,public_labels_json,public_products_json,?,COALESCE(original_publication_version_id,id),?,? FROM release_versions WHERE id=?`).bind(id,input.title,input.body,input.setupUrl||null,input.outcomePrompt,now,now,now,old.id),
   db.prepare('UPDATE release_versions SET is_portal_current=0 WHERE release_id=?').bind(old.release_id),
   db.prepare('UPDATE release_versions SET is_portal_current=1 WHERE id=?').bind(id),
   db.prepare('UPDATE releases SET current_version_id=?,updated_at=? WHERE id=?').bind(id,now,old.release_id),

@@ -582,7 +582,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence a
 
 Current entries include the shipped setup and workspace clocks, request status controls and status roadmap, board categories and participation, requester subscriptions and sender identity, ownership, aging and private discussion. REQ-017 now includes repeated-decline reversal to the prior direct or mapped status; REQ-022 includes the private requester directory, existing-session refusal, contribution hiding and restoration, and atomic audit refusal. The installed board is served at `/` and `/portal/feedback`; HOME-002 remains the separate run-site landing. Local dev enters as the owner and suppresses outgoing mail without retaining or displaying captured messages (BASE-DATA-002). Each partial entry keeps its remaining acceptance work separate; dated receipts above retain their historical scope.
 
-**Counts:** 116 done, 57 partial, 74 missing (247 clauses).
+**Counts:** 117 done, 56 partial, 74 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -747,7 +747,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | REL-012 | done | Subscribe and unsubscribe keep votes and follows. | `tests/base/penny-releases.test.ts` |
 | REL-013 | done | Delivery states never move backward or double count. | `tests/base/release-custody.test.ts` |
 | REL-014 | missing | A clock-advanced test publishes a scheduled release once at its time; a release whose target is no longer Shipped stays draft and notifies its author. | — |
-| REL-015 | partial | An inline image renders from an approved attachment; the label filter returns only matching releases; raw HTML in a body is not rendered. | `src/core/features/releases/drafts.ts`; `src/core/features/releases/public-read-repository.ts` |
+| REL-015 | done | Markdown and visible escaped HTML, release-owned approved images, custom public labels, explicit public product names and changelog filters; approved-host video loads only on the reader’s choice. Native route tests cover pending-image refusal, source-byte recovery, publication/correction snapshots, both archive formats, restore and populated upgrade. The 1440/390 browser journey creates and edits a release, recovers/approves its image, publishes, filters and explicitly loads the video fixture. | `tests/base/rich-changelog.test.ts`; `tests/browser/rich-changelog.mjs` |
 | REL-016 | partial | The feeds validate and list only published versions; a segment send reaches exactly the intersection of consent and segment. | `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts` |
 | REL-017 | missing | A Linear fixture completion drafts a release containing only approved wording and marked items. | — |
 | REL-018 | missing | An entry with no target publishes, appears on the changelog page, both feeds and the widget, and emails each updates subscriber once and nobody else; with Notify subscribers unticked it emails nobody; it shows no outcome prompt; a release whose roadmap target is Planned is still refused; a release with an Open request target is refused unless Mark linked requests Shipped is ticked, which makes the request Shipped and adds its subscribed voters to the snapshot once each. | — |

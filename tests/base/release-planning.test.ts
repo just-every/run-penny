@@ -13,6 +13,7 @@ it('[ROAD-011] dated release plans retain items and states; slipped dependencies
  const before=(await env.DB.prepare('SELECT * FROM roadmap_items ORDER BY id').all()).results
  await applyD1Migrations(env.DB,inject('migrations').filter(m=>m.name<'0085'));await applyD1Migrations(env.DB,inject('migrations').filter(m=>m.name<'0085'))
  expect((await env.DB.prepare('SELECT * FROM roadmap_items ORDER BY id').all()).results).toEqual(before)
+ await applyD1Migrations(env.DB,inject('migrations'))
  await env.DB.prepare("UPDATE roadmap_publications SET public_eta='2099-Q4' WHERE id='planning-public'").run()
  const json=async<T>(path:string,body?:unknown,method?:string,status=200):Promise<T>=>{const response=await call(path,body,operator,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
  const read=()=>json<Planning>('/api/operator/release-planning')

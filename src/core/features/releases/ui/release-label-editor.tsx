@@ -1,0 +1,8 @@
+import { useState } from 'react'
+import { operatorMutation } from '@/core/features/requests/ui/operator-client'
+import { choicePillClass,fieldLabelClass,inputClass,secondaryButtonClass } from '@/core/ui/app/classes'
+import type { PublicReleaseLabel } from '../rich-content'
+export function ReleaseLabelEditor({labels,selected,reload}:{labels:PublicReleaseLabel[];selected?:readonly string[];reload:()=>void}){
+ const [name,setName]=useState(''),[message,setMessage]=useState(''),[busy,setBusy]=useState(false)
+ return <fieldset className="min-w-0 space-y-3"><legend className={fieldLabelClass}>Public labels</legend><p className="text-sm text-penny-muted">The release type and selected labels appear publicly. Select public product labels below to include this release in product filters.</p><div className="flex flex-wrap gap-2">{labels.map(label=><label className={choicePillClass} key={label.id}><input type="checkbox" name="labelIds" value={label.id} defaultChecked={selected?.includes(label.id)} className="size-4 accent-penny-ink"/>{label.name}</label>)}</div><div className="flex flex-wrap items-end gap-2"><label className={fieldLabelClass}>New public label<input value={name} onChange={event=>setName(event.target.value)} maxLength={80} className={`mt-2 ${inputClass}`}/></label><button type="button" disabled={busy||!name.trim()} className={secondaryButtonClass} onClick={async()=>{setBusy(true);setMessage('');try{await operatorMutation('/api/operator/releases/labels',{name});setName('');reload()}catch(error){setMessage(error instanceof Error?error.message:'Could not add label.')}finally{setBusy(false)}}}>Add label</button></div>{message?<p role="status" className="text-sm">{message}</p>:null}</fieldset>
+}

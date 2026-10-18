@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Publish Markdown release notes with approved same-origin images, explicit public labels and product names, and opt-in YouTube/Vimeo videos (REL-015). The changelog filters by label and product; raw HTML remains text and corrections preserve public snapshots. Migration 0085 adds image custody and public snapshot fields; both archive paths retain original images. Keep the expanded schema on rollback.
+
 - Plan dated releases from internal roadmap items and record blockers and dependents (ROAD-011). Overdue, dropped or later-scheduled blockers flag downstream work and its approved public ETA; shipping or removing the blocker clears the live warning. Plans never publish or alter a promise. Migration 0084 adds portable plans and acyclic links; rollback retains the additive schema. Pin rer 0.2.63 in package mode.
 
 - Save private or shared request/feature comparisons with live native demand and importance counts, explicit RICE/value-over-effort/manual segment-demand/weighted-sum inputs, visible weights and unscored missing inputs (PRIO-003 partial). Comparisons sort only their own rows. Commercial/segment/date and custom-field columns, scorecards and tracker estimates remain open. Migration 0083 adds portable saved definitions with creator-only edits and stale-revision refusal; rollback retains its additive schema.

@@ -136,14 +136,16 @@ export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:Dat
   if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
   if(data.request_attachment_uploads?.length||data.evidence_attachment_uploads?.length)fail('unfinished_attachment_uploads')
   const journal=await readErasureJournal(db)
-  const expectedKeys=new Set(data.attachments.map(row=>String(row.storage_key)));let cursor:string|undefined
+  if(data.release_attachments.some(row=>row.state==='writing'))fail('unfinished_attachment_uploads')
+  const attachments=[...data.attachments,...data.release_attachments]
+  const expectedKeys=new Set(attachments.map(row=>String(row.storage_key)));let cursor:string|undefined
   do{const listing=await bucket.list({limit:1000,...(cursor?{cursor}:{})});if(listing.objects.some(object=>!expectedKeys.has(object.key)))fail('untracked_attachment_objects',503);cursor=listing.truncated?listing.cursor:undefined}while(cursor)
   const files:Archive['files']=[];let total=0
-  for(const attachment of data.attachments){
+  for(const attachment of attachments){
    const object=await bucket.get(String(attachment.storage_key));if(!object)fail('missing_attachment',503)
    if(object.size!==attachment.byte_size||object.size>DATA_LIMITS.fileBytes)fail('attachment_size',413)
    total+=object.size;if(total>DATA_LIMITS.filesBytes)fail('archive_limit',413)
-   const bytes=new Uint8Array(await object.arrayBuffer());let binary='';for(const byte of bytes)binary+=String.fromCharCode(byte)
+   const bytes=new Uint8Array(await object.arrayBuffer());if(attachment.sha256&&await bytesHash(bytes)!==attachment.sha256)fail('attachment_hash',503);let binary='';for(const byte of bytes)binary+=String.fromCharCode(byte)
    files.push({key:String(attachment.storage_key),bytes:btoa(binary),sha256:await bytesHash(bytes),contentType:String(attachment.content_type),size:bytes.byteLength})
   }
   const body={format:'penny-data' as const,version:1 as const,schemaHash:await schemaHash(tables),origin:journal.origin,epoch:journal.epoch,journalHash:journal.sha256,tables:Object.fromEntries(tables.map(table=>[table.name,data[table.name].map(row=>normalize(table.name,row))])),files}
@@ -180,14 +182,16 @@ async function validated(db:D1Database,value:unknown,journalValue:unknown):Promi
  }
  // Tombstones compare opaque primary-key hashes, never original private wording.
  for(const item of journal.tombstones){if(item.table_name===GRANT_REVOCATION_CHECKPOINT)continue;const table=tables.find(table=>table.name===item.table_name);if(!table)fail('unsupported_journal_schema');for(const row of archive.tables[table.name])if(await hash([journal.origin,table.name,rowKey(table,row)])===item.key_hash)fail('erased_archive_record')}
- const files=new Map(archive.files.map(file=>[file.key,file]));if(files.size!==archive.files.length||files.size!==archive.tables.attachments.length)fail('invalid_archive_files',400)
+ if(archive.tables.release_attachments.some(row=>row.state==='writing'))fail('unfinished_attachment_uploads')
+ const attachments=[...archive.tables.attachments,...archive.tables.release_attachments]
+ const files=new Map(archive.files.map(file=>[file.key,file]));if(files.size!==archive.files.length||files.size!==attachments.length)fail('invalid_archive_files',400)
  let total=0;const bytes:Uint8Array[]=[]
  for(const file of archive.files){
-  const attachment=archive.tables.attachments.find(row=>row.storage_key===file.key)
+  const attachment=attachments.find(row=>row.storage_key===file.key)
   if(!attachment||attachment.byte_size!==file.size||attachment.content_type!==file.contentType||file.size>DATA_LIMITS.fileBytes)fail('invalid_archive_files',400)
   if(file.bytes.length!==Math.ceil(file.size/3)*4||!/^[A-Za-z0-9+/]*={0,2}$/.test(file.bytes))fail('archive_corrupt',400)
   let buffer:Uint8Array;try{buffer=Uint8Array.from(atob(file.bytes),character=>character.charCodeAt(0))}catch{fail('archive_corrupt',400)}
-  if(buffer!.byteLength!==file.size||await bytesHash(buffer!)!==file.sha256)fail('archive_corrupt',400)
+  if(buffer!.byteLength!==file.size||await bytesHash(buffer!)!==file.sha256||(attachment.sha256&&attachment.sha256!==file.sha256))fail('archive_corrupt',400)
   total+=buffer!.byteLength;if(total>DATA_LIMITS.filesBytes)fail('archive_limit',413);bytes.push(buffer!)
  }
  return {archive,journal,tables,bytes}

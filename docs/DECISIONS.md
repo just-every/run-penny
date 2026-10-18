@@ -129,13 +129,18 @@ Plans and warnings stay internal. Update an approved public ETA separately when 
 
 When items have shipped, open **Releases** and create a release draft:
 
-- a customer-safe **title** and **body**;
-- a **type**: New, Improved or Fixed;
+- a customer-safe **title** and Markdown **body**;
+- a **type**: New, Improved or Fixed, plus any public labels you create;
+- optional **Public products**, explicitly selected product names that customers may see; unselected hierarchy names stay private;
 - a publication date, an author and an optional setup or usage link;
 - at least one **private tag**, created beforehand in **Feedback settings** (tags are for your own filtering; customers never see them);
 - one or more **targets**, which are roadmap items that you have approved.
 
 A release can be published only when it has a title, a body and a target, and every target is Shipped. Publishing puts it on `/portal/updates` and queues one email for each eligible recipient. The release page shows delivery counts as they are processed.
+
+Under **Release images**, upload a PNG, JPEG, GIF or WebP allowed by this installation, approve it for public use, and paste its Markdown into the body. The image stays unavailable publicly until a version referencing it is published. A failed upload can be recovered only with the same original bytes; confirm the original process stopped before recovering an active writer. YouTube and Vimeo Markdown links become video controls; readers choose whether to load the provider. Other links remain links, external images never load, and raw HTML appears as text.
+
+The public changelog filters by type or custom label and by the product names you chose. Labels and product names are frozen with the published version; renaming a private product later changes no published wording.
 
 Published wording is never overwritten. Correcting it creates a new version and marks it as the current portal version; operators can still read every earlier version. A correction sends no email until you explicitly send that version as a new delivery. Sending the same version again creates no duplicate delivery command.
 

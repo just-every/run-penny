@@ -1,3 +1,4 @@
+import {releaseVideoOrigins} from '../releases/rich-content'
 import {hostFrameOrigins} from '../auth/host-frames'
 import {editorConfiguration} from './config'
 import type {PennyRuntime} from '@/core/app/runtime'
@@ -7,6 +8,11 @@ export async function editorDocumentHeaders(response:Response,runtime:PennyRunti
  const index=directives.findIndex(value=>/^frame-src(?:\s|$)/.test(value))
  if(config&&index<0)directives.push("frame-src 'self' "+config.managementOrigin)
  else if(config&&!directives[index].split(/\s+/).includes(config.managementOrigin))directives[index]+=' '+config.managementOrigin
+ if(pathname==='/portal/updates'||pathname.startsWith('/portal/updates/')){
+  const frame=directives.findIndex(value=>/^frame-src(?:\s|$)/.test(value))
+  if(frame<0)directives.push("frame-src 'self' "+releaseVideoOrigins.join(' '))
+  else directives[frame]+=' '+releaseVideoOrigins.join(' ')
+ }
  const ancestors=["'self'",...((pathname==='/'||pathname==='/portal'||pathname.startsWith('/portal/'))?await hostFrameOrigins(runtime):[])].join(' ')
  const frameIndex=directives.findIndex(value=>/^frame-ancestors(?:\s|$)/.test(value))
  if(frameIndex<0)directives.push('frame-ancestors '+ancestors);else directives[frameIndex]='frame-ancestors '+ancestors

@@ -1,3 +1,4 @@
+import { releaseMediaGuard } from './media-approval'
 import { MutationError } from '@/core/app/operator-mutations'
 import { createUlid } from '@/core/shared/ulid'
 import { recipientSelection } from './recipients'
@@ -20,12 +21,13 @@ export async function publishRelease(db:D1Database,slug:string,now=new Date().to
  const targets=await db.prepare(`SELECT i.id,p.public_title AS title,i.status FROM release_targets t JOIN roadmap_items i ON i.id=t.roadmap_item_id LEFT JOIN roadmap_publications p ON p.roadmap_item_id=i.id WHERE t.release_id=?`).bind(release.id).all<{id:string;title:string;status:string}>()
  const missing=[...(!release.title.trim()?['Title']:[]),...(!release.body.trim()?['Body']:[]),...(!release.publicationDate?['Publication date']:[]),...(!targets.results.length?['At least one target']:[]),...targets.results.filter(t=>t.status!=='shipped').map(t=>`${t.title}: must be Shipped`)]
  if(missing.length)throw new MutationError(422,`Required: ${missing.join('; ')}.`)
+ const media=releaseMediaGuard(slug,release.body)
  const claim=createUlid(),versionId=release.versionId
  const source=`SELECT request_id FROM release_target_snapshots WHERE version_id=? AND EXISTS(SELECT 1 FROM release_versions WHERE id=? AND publication_claim=?)`
  try{await db.batch([
   publicationGuard(db,claim,`EXISTS(SELECT 1 FROM releases r JOIN release_versions v ON v.id=r.current_version_id WHERE r.id=? AND (r.state='published' OR
    (v.id=? AND trim(v.title)!='' AND trim(v.body)!='' AND v.publication_date IS NOT NULL AND json_array_length(v.subject_tags_json)>0
-    AND NOT EXISTS(SELECT 1 FROM json_each(v.subject_tags_json) selected WHERE NOT EXISTS(SELECT 1 FROM tags WHERE id=selected.value)) AND ${validTargets})))`,[release.id,versionId]),
+    AND NOT EXISTS(SELECT 1 FROM json_each(v.subject_tags_json) selected WHERE NOT EXISTS(SELECT 1 FROM tags WHERE id=selected.value)) AND ${validTargets} AND ${media.sql})))`,[release.id,versionId,...media.values]),
   db.prepare(`UPDATE release_versions SET publication_claim=?,updated_at=?,author_name=(SELECT o.display_name FROM releases r JOIN operators o ON o.id=r.author_operator_id WHERE r.id=release_id),tag_names_json=(SELECT json_group_array(name) FROM (SELECT tag.name FROM tags tag JOIN json_each(subject_tags_json) selected ON selected.value=tag.id ORDER BY tag.name)) WHERE id=? AND publication_claim IS NULL AND EXISTS(SELECT 1 FROM releases WHERE id=release_id AND state='draft')`).bind(claim,now,versionId),
   db.prepare(`INSERT INTO release_target_snapshots(version_id,roadmap_item_id,decision_id,request_id,created_at,updated_at)
    SELECT ?,t.roadmap_item_id,t.decision_id,m.request_id,?,? FROM release_targets t JOIN release_draft_mappings m ON m.release_id=t.release_id AND m.roadmap_item_id=t.roadmap_item_id
@@ -44,6 +46,6 @@ export async function publishRelease(db:D1Database,slug:string,now=new Date().to
   db.prepare("UPDATE releases SET state='published',published_at=?,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM release_versions WHERE id=? AND publication_claim=?)").bind(now,now,release.id,versionId,claim),
   db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,?,?,'release.published','release',?,?,?,? WHERE EXISTS(SELECT 1 FROM release_versions WHERE id=? AND publication_claim=?)`).bind(createUlid(),actorId?'operator':'system',actorId??'release.publication',release.id,now,now,now,versionId,claim),
   db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(claim),
- ])}catch(error){if(String(error).includes('requester_write_admitted')||String(error).includes('permitted'))throw new MutationError(409,'Release targets, approved wording or mappings changed; review every target and Shipped status.');throw error}
+ ])}catch(error){if(String(error).includes('requester_write_admitted')||String(error).includes('permitted'))throw new MutationError(409,'Release targets, approved wording, images or mappings changed; review every target, approved image and Shipped status.');throw error}
  return {id:release.id,versionId}
 }

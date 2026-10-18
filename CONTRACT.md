@@ -629,6 +629,8 @@ Judged from the code and tests at commit `935028e7c6397a649bd8bcc95efa4b016cb2e7
 
 ROAD-011 was completed on 19 October 2026: dated internal release plans list live roadmap states; acyclic blockers flag downstream active work and affected approved public ETAs. Route/Worker and 1440/390 browser journeys cover slip, resolution, saved membership, authority, transactional audit rollback, populated upgrade, archive inclusion and public isolation.
 
+REL-015 was completed on 19 October 2026: Markdown, separately approved original images, explicitly selected public label/product snapshots, opt-in approved-host videos and changelog filters ship. Populated upgrades, image recovery, corrections and both archive formats preserve custody; route/Worker and 1440/390 browser journeys prove publication and public isolation.
+
 PRIO-001 was completed on 19 October 2026: private product/component/feature creation, renaming and moves preserve request and roadmap links. Feature demand deduplicates people, accounts, recorded revenue and evidence; populated upgrades, transactional audit refusal, portable table custody, public isolation and 1440/390 browser journeys pass. Recorded revenue retains its existing account meaning and makes no ARR/MRR claim.
 
 PRIO-003 gained saved private/shared comparisons on 19 October 2026. Native demand and importance, explicit manual formula inputs, unscored unknowns, reordering, ownership and stale-edit fences, archive inclusion and 1440/390 journeys are proved. Commercial/segment/date and custom-field columns, scorecards and delivery-sourced effort remain partial.
@@ -648,8 +650,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 105 | 9 | 0 | 114 |
-| Target and push further | 11 | 48 | 74 | 133 |
-| All | 116 | 57 | 74 | 247 |
+| Target and push further | 12 | 47 | 74 | 133 |
+| All | 117 | 56 | 74 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -814,7 +816,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REL-012` | Update subscription | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-013` | Delivery states | published | done | `tests/base/release-custody.test.ts` |  |
 | `REL-014` | Scheduled publication | target | missing |  | A clock-advanced test publishes a scheduled release once at its time; a release whose target is no longer Shipped stays draft and notifies its author. |
-| `REL-015` | Rich changelog | target | partial | `src/core/features/releases/drafts.ts`; `src/core/features/releases/public-read-repository.ts` | An inline image renders from an approved attachment; the label filter returns only matching releases; raw HTML in a body is not rendered. |
+| `REL-015` | Rich changelog | target | done | `tests/base/rich-changelog.test.ts`; `tests/browser/rich-changelog.mjs` |  |
 | `REL-016` | Changelog distribution | target | partial | `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts` | The feeds validate and list only published versions; a segment send reaches exactly the intersection of consent and segment. |
 | `REL-017` | Release notes from delivered work | target | missing |  | A Linear fixture completion drafts a release containing only approved wording and marked items. |
 | `REL-018` | Announcements and request targets | target | missing |  | An entry with no target publishes, appears on the changelog page, both feeds and the widget, and emails each updates subscriber once and nobody else; with Notify subscribers unticked it emails nobody; it shows no outcome prompt; a release whose roadmap target is Planned is still refused; a release with an Open request target is refused unless Mark linked requests Shipped is ticked, which makes the request Shipped and adds its subscribed voters to the snapshot once each. |

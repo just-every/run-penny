@@ -27,7 +27,8 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
     // Restore replaces them with the archive's choices.
     replaceableTables: ['penny_triage_settings','data_state','penny_status_roadmap_settings','penny_mail_identity'],
     requiredConfiguration: ['OPERATOR_EMAIL', 'AUTH_SECRET', 'SETUP_TOKEN', 'APP_ORIGIN', 'MAIL_PROVIDER', 'MAIL_FROM'],
-    buckets: { FILES: { objectReferences: { table: 'attachments', keyColumn: 'storage_key' } } },
+    // Penny validates references across both attachment tables before exposing an archive and before restore.
+    buckets: { FILES: {} },
     exportRow: (table, row) => normalize(table, productRow(row)),
     async validateStaged({ db, tables, read, manifest }) {
       const expected = [...product, 'data_state', 'data_tombstones'].sort()
@@ -39,11 +40,13 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
       if (records.length > LOCAL_DATA_LIMITS.rows || new TextEncoder().encode(canonical(records)).byteLength > LOCAL_DATA_LIMITS.recordBytes) refuse('archive_limit')
       validateNativeIdentity(data);validateCategoryArchive(data); validateMailIdentityArchive(data); validateFeedbackArchive(data); await validateLearningArchive(data)
       if (data.request_attachment_uploads.length || data.evidence_attachment_uploads.length) refuse('unfinished_attachment_uploads')
-      if (manifest.payloads.length || manifest.objects.length !== data.attachments.length || manifest.objects.some(object => object.bucket !== 'FILES' || !data.attachments.some(row => row.storage_key === object.key))) refuse('invalid_archive_files')
+      if(data.release_attachments.some(row=>row.state==='writing'))refuse('unfinished_attachment_uploads')
+      const attachments=[...data.attachments,...data.release_attachments]
+      if (manifest.payloads.length || manifest.objects.length !== attachments.length || manifest.objects.some(object => object.bucket !== 'FILES' || !attachments.some(row => row.storage_key === object.key))) refuse('invalid_archive_files')
       let fileBytes = 0
-      for (const attachment of data.attachments) {
+      for (const attachment of attachments) {
         const object = manifest.objects.find(object => object.bucket === 'FILES' && object.key === attachment.storage_key)
-        if (!object || object.size !== attachment.byte_size || object.httpMetadata.contentType !== attachment.content_type || object.size > DATA_LIMITS.fileBytes) refuse('invalid_archive_files')
+        if (!object || object.size !== attachment.byte_size || object.httpMetadata.contentType !== attachment.content_type || object.size > DATA_LIMITS.fileBytes || (attachment.sha256 && object.sha256 !== attachment.sha256)) refuse('invalid_archive_files')
         fileBytes += object!.size
       }
       if (fileBytes > DATA_LIMITS.filesBytes) refuse('archive_limit')

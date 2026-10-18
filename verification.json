@@ -194,6 +194,15 @@
         "pnpm run build",
         "node tests/browser/release-planning.mjs"
       ]
+    },
+    {
+      "name": "rich-changelog",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/rich-changelog.mjs"
+      ]
     }
   ],
   "nightly": [

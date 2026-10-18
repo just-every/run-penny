@@ -16,6 +16,13 @@
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
     {
+      "id": "rich-changelog",
+      "description": "Publish Markdown release notes with separately approved local images, explicit public labels and product names, and YouTube/Vimeo videos loaded only on the reader\u2019s choice. Filter the changelog by label and product; corrections retain the published snapshots.",
+      "clauses": [
+        "REL-015"
+      ]
+    },
+    {
       "id": "release-planning",
       "description": "Group roadmap items into dated internal release plans, link blockers and dependents, and flag slipped dependencies and affected approved public ETAs without changing public wording.",
       "clauses": [
@@ -339,6 +346,18 @@
       ],
       "adapters": [
         "penny.zendesk-proxy.v1"
+      ]
+    },
+    {
+      "id": "release-video-embeds",
+      "required": false,
+      "why": "Readers may explicitly load a release video from the approved YouTube privacy-enhanced or Vimeo player origin. No provider request occurs before that choice.",
+      "data": [
+        "video identity selected in published release wording",
+        "reader network request to the selected video provider after opt-in"
+      ],
+      "adapters": [
+        "penny.release-video.v1"
       ]
     }
   ],
