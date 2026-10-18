@@ -16,6 +16,13 @@
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
     {
+      "id": "saved-prioritisation",
+      "description": "Save private or operator-shared comparisons of requests/features with native voters, accounts, evidence and importance, explicit manual RICE/value-over-effort/segment-demand/weighted-sum inputs and visible unknowns. Commercial, segment/date, custom-field, scorecard and delivery-estimate columns remain partial.",
+      "clauses": [
+        "PRIO-003"
+      ]
+    },
+    {
       "id": "product-hierarchy",
       "description": "Organise requests into private products, components and features, attach roadmap work and retain links on moves. Feature demand counts distinct people, accounts, recorded account revenue and evidence.",
       "clauses": [

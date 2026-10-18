@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Save private or shared request/feature comparisons with live native demand and importance counts, explicit RICE/value-over-effort/manual segment-demand/weighted-sum inputs, visible weights and unscored missing inputs (PRIO-003 partial). Comparisons sort only their own rows. Commercial/segment/date and custom-field columns, scorecards and tracker estimates remain open. Migration 0083 adds portable saved definitions with creator-only edits and stale-revision refusal; rollback retains its additive schema.
+
 - Organise requests into private products, components and features, attach roadmap work and move features without losing links (PRIO-001). Deduplicate people, accounts, recorded revenue and evidence across linked requests. Migration 0082 adds portable hierarchy and links without changing prior rows; rollback keeps its additive schema. Adopt rer 0.2.62 in package mode.
 
 - Ask voters for optional importance with three or four board labels, private counts, change/clear and source-stated native/Zendesk proxy importance. Canny saved vote priorities import with per-enum receipts and reversible custody. Commercial-value breakdowns, prioritisation use and Productboard importance remain open (REQ-035). Migration 0081 adds settings and origin-bound choices.

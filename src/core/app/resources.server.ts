@@ -77,6 +77,7 @@ export async function operatorResources(href: string): Promise<Resources> {
   const path = operatorUrl.pathname.replace(/\/$/, '')
   const routes: Record<string, string> = { '/app': 'overview', '/app/overview': 'overview', '/app/feedback': 'evidence', '/app/moderation': 'moderation', '/app/decisions': 'decisions', '/app/roadmap': 'roadmap', '/app/releases': 'releases', '/app/customers': operatorUrl.searchParams.get('directory') === 'requesters' ? 'requesters' : 'accounts', '/app/search': 'search', '/app/learning': 'learning' }
   const route = routes[path]
+  if (path === '/app/prioritisation') return operatorSnapshot(operatorUrl,'/api/operator/prioritisation',read)
   if (path === '/app/features') return operatorSnapshot(operatorUrl,'/api/operator/hierarchy',read)
   if (path === '/app/settings') return operatorSnapshot(operatorUrl,'/api/operator/catalog/settings',read)
   if (path === '/app/data') return operatorSnapshot(operatorUrl,'/api/operator/data/overview',read)

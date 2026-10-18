@@ -2927,5 +2927,18 @@
       "feature_id",
       "created_at"
     ]
+  },
+  "penny_priority_views": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "owner_id",
+      "name",
+      "shared",
+      "definition_json",
+      "revision",
+      "created_at",
+      "updated_at"
+    ]
   }
 }

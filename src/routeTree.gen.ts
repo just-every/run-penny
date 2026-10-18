@@ -22,6 +22,7 @@ import { Route as AppFeedbackRouteImport } from './routes/app.feedback'
 import { Route as AppLearningRouteImport } from './routes/app.learning'
 import { Route as AppModerationRouteImport } from './routes/app.moderation'
 import { Route as AppOverviewRouteImport } from './routes/app.overview'
+import { Route as AppPrioritisationRouteImport } from './routes/app.prioritisation'
 import { Route as AppReleasesRouteImport } from './routes/app.releases'
 import { Route as AppRoadmapRouteImport } from './routes/app.roadmap'
 import { Route as AppSearchRouteImport } from './routes/app.search'
@@ -111,6 +112,11 @@ const AppModerationRoute = AppModerationRouteImport.update({
 const AppOverviewRoute = AppOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPrioritisationRoute = AppPrioritisationRouteImport.update({
+  id: '/prioritisation',
+  path: '/prioritisation',
   getParentRoute: () => AppRoute,
 } as any)
 const AppReleasesRoute = AppReleasesRouteImport.update({
@@ -256,6 +262,7 @@ export interface FileRoutesByFullPath {
   '/app/learning': typeof AppLearningRoute
   '/app/moderation': typeof AppModerationRoute
   '/app/overview': typeof AppOverviewRoute
+  '/app/prioritisation': typeof AppPrioritisationRoute
   '/app/releases': typeof AppReleasesRouteWithChildren
   '/app/roadmap': typeof AppRoadmapRoute
   '/app/search': typeof AppSearchRoute
@@ -292,6 +299,7 @@ export interface FileRoutesByTo {
   '/app/learning': typeof AppLearningRoute
   '/app/moderation': typeof AppModerationRoute
   '/app/overview': typeof AppOverviewRoute
+  '/app/prioritisation': typeof AppPrioritisationRoute
   '/app/roadmap': typeof AppRoadmapRoute
   '/app/search': typeof AppSearchRoute
   '/app/settings': typeof AppSettingsRoute
@@ -329,6 +337,7 @@ export interface FileRoutesById {
   '/app/learning': typeof AppLearningRoute
   '/app/moderation': typeof AppModerationRoute
   '/app/overview': typeof AppOverviewRoute
+  '/app/prioritisation': typeof AppPrioritisationRoute
   '/app/releases': typeof AppReleasesRouteWithChildren
   '/app/roadmap': typeof AppRoadmapRoute
   '/app/search': typeof AppSearchRoute
@@ -371,6 +380,7 @@ export interface FileRouteTypes {
     | '/app/learning'
     | '/app/moderation'
     | '/app/overview'
+    | '/app/prioritisation'
     | '/app/releases'
     | '/app/roadmap'
     | '/app/search'
@@ -407,6 +417,7 @@ export interface FileRouteTypes {
     | '/app/learning'
     | '/app/moderation'
     | '/app/overview'
+    | '/app/prioritisation'
     | '/app/roadmap'
     | '/app/search'
     | '/app/settings'
@@ -443,6 +454,7 @@ export interface FileRouteTypes {
     | '/app/learning'
     | '/app/moderation'
     | '/app/overview'
+    | '/app/prioritisation'
     | '/app/releases'
     | '/app/roadmap'
     | '/app/search'
@@ -571,6 +583,13 @@ declare module '@tanstack/react-router' {
       path: '/overview'
       fullPath: '/app/overview'
       preLoaderRoute: typeof AppOverviewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/prioritisation': {
+      id: '/app/prioritisation'
+      path: '/prioritisation'
+      fullPath: '/app/prioritisation'
+      preLoaderRoute: typeof AppPrioritisationRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/releases': {
@@ -802,6 +821,7 @@ interface AppRouteChildren {
   AppLearningRoute: typeof AppLearningRoute
   AppModerationRoute: typeof AppModerationRoute
   AppOverviewRoute: typeof AppOverviewRoute
+  AppPrioritisationRoute: typeof AppPrioritisationRoute
   AppReleasesRoute: typeof AppReleasesRouteWithChildren
   AppRoadmapRoute: typeof AppRoadmapRoute
   AppSearchRoute: typeof AppSearchRoute
@@ -818,6 +838,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLearningRoute: AppLearningRoute,
   AppModerationRoute: AppModerationRoute,
   AppOverviewRoute: AppOverviewRoute,
+  AppPrioritisationRoute: AppPrioritisationRoute,
   AppReleasesRoute: AppReleasesRouteWithChildren,
   AppRoadmapRoute: AppRoadmapRoute,
   AppSearchRoute: AppSearchRoute,

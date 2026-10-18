@@ -2,7 +2,7 @@
 
 This page is for the person who runs Penny: the operator. It follows one piece of customer feedback from the first note to a published release, using the operator app at `/app`. Invited operators share product access; the installation owner manages installation controls.
 
-The operator app has these sections: Overview, Feedback (your evidence inbox), Moderation, Features, Decisions, Roadmap, Releases, Accounts, Feedback settings and Data. Start on **Overview**, which lists what needs you: requests to moderate, evidence awaiting review, decisions ready to commit, status updates waiting to be published and shipped items with no release.
+The operator app has these sections: Overview, Feedback (your evidence inbox), Moderation, Features, Prioritisation, Decisions, Roadmap, Releases, Accounts, Feedback settings and Data. Start on **Overview**, which lists what needs you: requests to moderate, evidence awaiting review, decisions ready to commit, status updates waiting to be published and shipped items with no release.
 
 ## 1. Record evidence
 
@@ -56,6 +56,14 @@ product backup, without granting operator sign-in authority.
 Open **Features** to create a product, add its components, then add features. On a feature, **Manage feature links** attaches requests and roadmap items. A request belongs to one feature; attaching it elsewhere moves that link. Detaching preserves the request itself. **Edit feature** changes its name or component without losing its links, and a component can move between products.
 
 Each feature shows distinct voters, accounts, linked evidence and recorded account revenue across its requests. The same account and its revenue count once. Unknown revenue stays unknown; this is the revenue recorded on the account, not an ARR or MRR estimate. The hierarchy and these figures stay operator-only.
+
+## Compare priorities
+
+Open **Prioritisation**, then **Create comparison**. Choose requests or features, a sorting formula, and whether every operator can read it. Only its creator can edit a saved view. Open the saved link to see the same live native counts with your team; private views stay private. A stale edit is refused so it cannot overwrite another change.
+
+RICE uses distinct voters as reach, with your stated impact, confidence percentage and positive effort. Value over effort and segment demand use explicitly entered manual figures; they are not CRM, segment or tracker data. A custom weighted sum can use voters, accounts, evidence and importance levels, plus your manual inputs. Open **Inputs and weights** on each result to inspect every component. A missing required input leaves the row unscored. Adjust inputs or weights in **Edit comparison** and save to re-sort.
+
+Feature importance counts are request-level choices; one person may have a choice on several requests. Boards can use different importance labels, so the view names their ordinal levels. Commercial/segment/date and custom-field columns, scorecards and delivery-sourced estimates are not available yet. A formula never enters a decision or changes a roadmap or public status.
 
 ## 2. Build a decision
 

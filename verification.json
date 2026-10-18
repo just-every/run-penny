@@ -176,6 +176,15 @@
         "pnpm run build",
         "node tests/browser/product-hierarchy.mjs"
       ]
+    },
+    {
+      "name": "prioritisation",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/prioritisation.mjs"
+      ]
     }
   ],
   "nightly": [

@@ -16,6 +16,7 @@ const navigation = [
   { to: '/app/feedback', label: 'Feedback', icon: 'feedback' },
   { to: '/app/moderation', label: 'Moderation', icon: 'moderation' },
   { to: '/app/features', label: 'Features', icon: 'decisions' },
+  { to: '/app/prioritisation', label: 'Prioritisation', icon: 'decisions' },
   { to: '/app/decisions', label: 'Decisions', icon: 'decisions' },
   { to: '/app/roadmap', label: 'Roadmap', icon: 'roadmap' },
   { to: '/app/releases', label: 'Releases', icon: 'releases' },
