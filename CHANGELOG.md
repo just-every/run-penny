@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 — 2026-10-18
+
+Description only; no product change. The catalogue description is now "Turn customer feedback into clear product priorities, roadmaps, and release updates.", the same sentence as main. The application, contract, migrations and configuration are identical to 0.1.2, so upgrading from 0.1.2 needs no migration, configuration or data step.
+
 ## 0.1.2 — 2026-10-17
 
 **Security fix: erasing a person also deleted other people's data. Every Penny version up to and including 0.1.1 is affected. Upgrade now.**

@@ -1,7 +1,7 @@
 {
   "id": "penny",
   "name": "Penny",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "maturity": "requester-board-notification-candidate",
   "category": "feedback",
   "spine": {
@@ -9,7 +9,7 @@
     "record": "request with attributed evidence"
   },
   "replaces": ["Canny", "UserVoice", "Productboard"],
-  "description": "A self-hosted customer-feedback decision system connecting attributed evidence, accountable product decisions, approved roadmaps, status updates and immutable releases for one B2B software business.",
+  "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
 {
         "id": "scoped-cancellation-learning",
