@@ -3,6 +3,7 @@
 ## Unreleased
 
 - The deploy declaration identifies conditional mail inputs and optional event credentials correctly for the current rer target preflight. CI exercises the real deploy dry run against read-only Cloudflare HTTP fixtures; provider selection still requires its matching sender and credential.
+- Moderation shows votes, linked evidence and distinct accounts separately, with per-account totals and every voter’s verified addresses and linked accounts. Show more reaches the complete supporter history; blocked voters are excluded. Revenue demand and native proxy recording remain open (REQ-026, SEG-007, CAP-014).
 
 - Withdrawing feedback from Your feedback now confirms that it is no longer public and its votes no longer count. Pending moderation removal, published 410 responses, vote exclusion and retained original evidence are covered through routes and both browser widths (REQ-021).
 

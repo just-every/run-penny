@@ -73,3 +73,5 @@ actions are consumed and reported so later valid actions can proceed. Normalized
 submission hashes retain compatibility with A's original idempotency receipts.
 
 Customers withdraw their own feedback from **Your feedback**. A pending request leaves moderation; a published request leaves the board and its public URL returns 410. Its votes stop counting, while its original evidence remains private for operators.
+
+In Moderation, **Customer demand** shows separate voter, linked-evidence and distinct-account counts. Expand **Votes by account** for its breakdown and **Supporters** for verified addresses and linked accounts; **Show more supporters** reaches the rest of the history. These details are private. Historical UserVoice proxy marks remain visible; native proxy entry and ARR/MRR/opportunity/churn demand are not yet available.

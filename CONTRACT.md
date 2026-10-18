@@ -739,7 +739,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REQ-023` | Email verification | published | done | `tests/base/auth.test.ts` (line 46); `tests/browser/no-mail-journey.mjs` |  |
 | `REQ-024` | Requester identity merge | published | done | `tests/base/notifications.test.ts` (line 229) |  |
 | `REQ-025` | Requester activity | published | done | `tests/base/notifications.test.ts` (line 152) |  |
-| `REQ-026` | Demand attribution | published | partial | `src/core/features/requests/operator-context.ts` | Voters, verified addresses and per-account totals shown privately; a named test of the three separate figures is required. |
+| `REQ-026` | Demand attribution | published | partial | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` | Separate vote, linked-evidence and distinct-account figures, per-account vote totals, every verified address/account association and complete expandable supporter history ship privately; multiple-address/account, vote removal, blocked-voter exclusion, historical proxy marks and 1440/390 privacy journeys pass. Remaining: SEG-007 ARR/MRR, opportunity and churn value figures beside these counts, and CAP-014 native proxy vote recording. |
 | `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` (line 58) |  |
 | `REQ-028` | Request queue | published | partial | `tests/browser/operator-completeness-read.mjs` | Queue filters and sorts work; the 500 ms first page at declared capacity is not load-tested. |
 | `REQ-029` | Operator-authored request | published | done | `tests/browser/operator-pages-decisions.mjs` |  |

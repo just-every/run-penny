@@ -7,6 +7,7 @@ import { AttachmentRecovery } from './attachment-recovery'
 import { operatorMutation } from './operator-client'
 import { RequestMetadata } from './request-metadata'
 import { RequestSupporters, type RequestVoter } from './request-supporters'
+import {RequestDemand,type RequestDemandContext} from './request-demand'
 import { InternalNotes, type InternalNote } from './internal-notes'
 import {TrackerLinks} from '../../integrations/ui/tracker-links'
 import { AppealReview, HeldItemForm } from './held-items'
@@ -29,7 +30,7 @@ function followerSummary(counts: Counts, mailSuppressed: boolean): string {
   if (counts.unknown > 0) parts.push(`${counts.unknown} need review`)
   return parts.length > 0 ? parts.join(', ') : 'No followers to notify.'
 }
-interface Context extends HeldContext {boardId:string;categoryId:string|null; statusDetails:RequestStatusDetails; actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; notes: InternalNote[]; tags: { id: string; name: string }[] }
+interface Context extends HeldContext,RequestDemandContext {boardId:string;categoryId:string|null; statusDetails:RequestStatusDetails; actions: RequestActions; statusVersions: { id: string; title: string; publicStatus: string; counts: Counts }[]; deliveryCounts: Counts; uploads: { id: string; original_filename: string; writing: number }[]; requestId: string; voters: RequestVoter[]; notes: InternalNote[]; tags: { id: string; name: string }[] }
 
 export function OperatorRequestControls({ slug }: { slug: string }) {
   const [context, refresh] = usePublicResource<Context>(`/api/operator/requests/${slug}/context`), [message, setMessage] = useState(''), router = useRouter()
@@ -39,6 +40,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
   return (
     <>
       <OwnerControl entity="requests" value={slug} />
+      {context.kind==='ready'?<RequestDemand context={context.data}/>:null}
       {context.kind === 'ready' ? (
         <section className="mt-6 border-t border-penny-line pt-5" aria-label="Status update delivery">
           <h3 className="font-bold text-penny-ink">Follower notifications</h3>

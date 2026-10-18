@@ -1,26 +1,37 @@
-import { Chip } from '@/core/ui/app/Chip'
-import { disclosureSummaryClass } from '@/core/ui/app/classes'
+import {useState} from 'react'
+import {Link} from '@tanstack/react-router'
+import {Chip} from '@/core/ui/app/Chip'
+import {disclosureSummaryClass,secondaryButtonClass,textLinkClass} from '@/core/ui/app/classes'
 
-export interface RequestVoter { id: string; displayName: string; votedAt: string; supporterType: 'proxy' | 'unmarked' | null }
-const shown = 100
+export interface RequestVoter {
+ id:string;displayName:string;votedAt:string;supporterType:'proxy'|'unmarked'|null
+ email:string|null;accountId:string|null;accountSlug:string|null;accountName:string|null
+}
+const pageSize=50
 
-// Operator-only. Historical supporters keep their source's type: a proxy vote
-// an admin entered stays visibly proxy and never becomes a person's own vote.
-export function RequestSupporters({ voters }: { voters: readonly RequestVoter[] }) {
-  const people = [...new Map(voters.map(voter => [voter.id, voter])).values()]
-  if (!people.length) return null
-  return <details className="group mt-5 border-t border-penny-line pt-1">
-    <summary className={disclosureSummaryClass}>Supporters ({people.length})</summary>
-    <ul className="mt-3 max-w-3xl divide-y divide-penny-line text-sm" aria-label="Supporters">
-      {people.slice(0, shown).map(voter => <li key={voter.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
-        <span className="min-w-0 break-words font-medium text-penny-ink">{voter.displayName}</span>
-        <span className="flex flex-wrap items-center gap-2 text-penny-muted">
-          <time dateTime={voter.votedAt} className="tabular-nums">{voter.votedAt.slice(0, 10)}</time>
-          {voter.supporterType === 'proxy' ? <Chip tone="sand">Proxy, entered by a UserVoice admin</Chip> : voter.supporterType === 'unmarked' ? <Chip tone="muted">UserVoice, not marked as proxy</Chip> : null}
-        </span>
-      </li>)}
-    </ul>
-    {people.length > shown ? <p className="mt-2 text-sm text-penny-muted">Showing the first {shown} of {people.length} supporters.</p> : null}
-    <p className="mt-2 text-sm leading-6 text-penny-muted">Imported supporters are historical attributions. They cannot sign in and are never contacted.</p>
-  </details>
+// Address/account joins may produce several rows for one person. Keep every
+// association while presenting each vote once, including historical proxies.
+export function RequestSupporters({voters}:{voters:readonly RequestVoter[]}){
+ const [visible,setVisible]=useState(pageSize)
+ const people=new Map<string,{voter:RequestVoter;emails:Set<string>;accounts:Map<string,{slug:string;name:string}>}>()
+ for(const voter of voters){
+  let person=people.get(voter.id)
+  if(!person){person={voter,emails:new Set(),accounts:new Map()};people.set(voter.id,person)}
+  if(voter.email)person.emails.add(voter.email)
+  if(voter.accountId&&voter.accountSlug&&voter.accountName)person.accounts.set(voter.accountId,{slug:voter.accountSlug,name:voter.accountName})
+ }
+ if(!people.size)return null
+ return <details className="group mt-5 border-t border-penny-line pt-1">
+  <summary className={disclosureSummaryClass}>Supporters ({people.size})</summary>
+  <ul className="mt-3 max-w-3xl divide-y divide-penny-line text-sm" aria-label="Supporters">
+   {[...people.values()].slice(0,visible).map(({voter,emails,accounts})=><li key={voter.id} className="min-w-0 space-y-2 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-2"><span className="min-w-0 break-words font-medium text-penny-ink">{voter.displayName}</span><time dateTime={voter.votedAt} className="text-penny-muted tabular-nums">{voter.votedAt.slice(0,10)}</time></div>
+    {emails.size?<ul aria-label="Verified addresses">{[...emails].map(email=><li key={email} className="break-all text-penny-muted">{email}</li>)}</ul>:<p className="text-penny-muted">No verified address</p>}
+    {accounts.size?<ul aria-label="Linked accounts">{[...accounts.entries()].map(([id,account])=><li key={id}><Link className={`${textLinkClass} inline-flex min-h-11 items-center break-words`} to="/app/customers/$accountSlug" params={{accountSlug:account.slug}}>{account.name}</Link></li>)}</ul>:<p className="text-penny-muted">No linked account</p>}
+    {voter.supporterType==='proxy'?<Chip tone="sand">Proxy, entered by a UserVoice admin</Chip>:voter.supporterType==='unmarked'?<Chip tone="muted">UserVoice, not marked as proxy</Chip>:null}
+   </li>)}
+  </ul>
+  {people.size>visible?<button type="button" className={`${secondaryButtonClass} mt-3`} onClick={()=>setVisible(value=>value+pageSize)}>Show more supporters ({people.size-visible} remaining)</button>:null}
+  {voters.some(voter=>voter.supporterType)?<p className="mt-2 text-sm leading-6 text-penny-muted">Imported supporters are historical attributions. They cannot sign in and are never contacted.</p>:null}
+ </details>
 }
