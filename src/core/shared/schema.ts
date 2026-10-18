@@ -352,6 +352,7 @@ export const roadmapItems = sqliteTable(
 )
 
 export const roadmapTransitions = sqliteTable('roadmap_transitions', {
+  kind: text('kind').notNull().default('status'),
   id: text('id').primaryKey(),
   roadmapItemId: text('roadmap_item_id').notNull().references(() => roadmapItems.id),
   actionKey:text('action_key').unique(),
@@ -363,6 +364,7 @@ export const roadmapTransitions = sqliteTable('roadmap_transitions', {
 })
 
 export const roadmapPublications = sqliteTable('roadmap_publications', {
+  publicEta: text('public_eta'),
   id: text('id').primaryKey(),
   roadmapItemId: text('roadmap_item_id').notNull().unique().references(() => roadmapItems.id),
   publicSlug:text('public_slug').unique(),

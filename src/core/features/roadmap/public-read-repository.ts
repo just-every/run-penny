@@ -42,7 +42,7 @@ export class PublicRoadmapReadRepository {
     WHERE m.roadmap_item_id=ri.id AND m.approved_at IS NOT NULL AND m.withdrawn_at IS NULL
      AND r.moderation_state='approved' AND r.published_at IS NOT NULL AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL
      AND rb.visibility='public' AND rb.archived_at IS NULL AND (a.id IS NULL OR a.blocked_at IS NULL) ORDER BY r.slug
-   ) safe) AS requests,NULL AS category,NULL AS source,NULL AS voteCount,NULL AS publicEta,NULL AS statusLabel
+   ) safe) AS requests,NULL AS category,NULL AS source,NULL AS voteCount,rp.public_eta AS publicEta,NULL AS statusLabel
    FROM roadmap_items ri JOIN roadmap_publications rp ON rp.roadmap_item_id=ri.id
    LEFT JOIN boards b ON b.id=rp.board_id
    CROSS JOIN settings s
@@ -60,7 +60,7 @@ export class PublicRoadmapReadRepository {
   ) SELECT * FROM cards
    ORDER BY CASE status WHEN 'under_review' THEN 1 WHEN 'planned' THEN 2 WHEN 'in_progress' THEN 3 ELSE 4 END,slug`).all<RoadmapRow>()
   return rows.results.map(({requests,boardSlug,boardName,source,voteCount,publicEta,statusLabel,category,...safe})=>({
-   ...safe,...(boardSlug?{board:{slug:boardSlug,name:boardName!}}:{}),requests:JSON.parse(requests),
+   ...safe,publicEta,...(boardSlug?{board:{slug:boardSlug,name:boardName!}}:{}),requests:JSON.parse(requests),
    ...(source==='requests'?{source,category:category?JSON.parse(category) as PublicCategoryReference:null,...(voteCount===null?{}:{voteCount:Number(voteCount)}),publicEta,...(statusLabel?{statusLabel}:{})}:{}),
   }))
  }

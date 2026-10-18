@@ -580,7 +580,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence a
 
 Current entries include the shipped setup and workspace clocks, request status controls and status roadmap, board categories and participation, requester subscriptions and sender identity, ownership, aging and private discussion. REQ-017 now includes repeated-decline reversal to the prior direct or mapped status; REQ-022 includes the private requester directory, existing-session refusal, contribution hiding and restoration, and atomic audit refusal. The installed board is served at `/` and `/portal/feedback`; HOME-002 remains the separate run-site landing. Local dev enters as the owner and suppresses outgoing mail without retaining or displaying captured messages (BASE-DATA-002). Each partial entry keeps its remaining acceptance work separate; dated receipts above retain their historical scope.
 
-**Counts:** 108 done, 60 partial, 79 missing (247 clauses).
+**Counts:** 109 done, 60 partial, 78 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -728,7 +728,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | ROAD-009 | missing | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. | — |
 | ROAD-010 | missing | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. | — |
 | ROAD-011 | partial | A slipped dependency flags each dependent item and its ETA; the release plan lists its items with their states. | `src/core/features/releases/drafts.ts`; `tests/browser/loopjourney-release.mjs` |
-| ROAD-012 | missing | The ETA appears only after approval; changing it drafts an update; an internal target date is absent from every public payload. | — |
+| ROAD-012 | done | Explicit month/quarter approval on an approved item; change/removal drafts one safe update, unchanged approval does not; API and 1440/390 built-page journeys exclude private target dates. Stale/unauthorised writes and late-draft rollback, populated previous-head upgrade and repeat are covered. | `tests/base/roadmap-public-eta.test.ts`; `tests/browser/roadmap-public-eta.mjs` |
 | ROAD-013 | missing | An export contains only fields the exporter's role may see; the shared link refuses a signed-out visitor. | — |
 | ROAD-014 | partial | Request-status source, board selection, hidden/renamed columns, Shipped limits, deduplicated cards, board/category, visibility-aware votes and ETA are implemented; API and 1440/390 browser journeys pass, with approved-item source preserved. Gap: Canny roadmap reconstruction remains missing. | `tests/base/request-status-workflow.test.ts`; `visual/request-status-workflow/ROAD-014/`; `visual/board-categories/REQ-034/` |
 | REL-001 | done | Targeted release drafts with roadmap targets and fields (request targets and announcements are REL-018). | `tests/browser/loopjourney-release.mjs` |

@@ -21,6 +21,7 @@ export function PublicRoadmapDetail({ content }: { content: PublicPortalContent 
             <PageTitle id="roadmap-detail-heading" className="mt-4">{resource.data.title}</PageTitle>
             <PublicCard className="mt-6 p-5 sm:p-7">
               <p className="whitespace-pre-wrap break-words text-base leading-7 text-penny-ink">{resource.data.summary}</p>
+              {resource.data.publicEta ? <p className="mt-5 text-sm text-penny-muted">ETA: {resource.data.publicEta}</p> : null}
               {resource.data.board ? <p className="mt-5 text-sm text-penny-muted"><span className={dataLabelClass}>Board</span> <span className="ml-2 font-semibold text-penny-ink">{resource.data.board.name}</span></p> : null}
               {resource.data.requests.length > 0 ? (
                 <ul className="mt-5 divide-y divide-penny-line border-t border-penny-line">

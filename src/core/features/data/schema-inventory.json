@@ -2354,7 +2354,8 @@
       "created_at",
       "updated_at",
       "public_slug",
-      "board_id"
+      "board_id",
+      "public_eta"
     ]
   },
   "roadmap_request_mappings": {
@@ -2379,7 +2380,8 @@
       "actor_operator_id",
       "created_at",
       "updated_at",
-      "action_key"
+      "action_key",
+      "kind"
     ]
   },
   "roadmap_update_contexts": {

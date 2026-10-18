@@ -118,3 +118,7 @@ Outcomes and evidence recorded against a linked release appear on its decisions 
 ## What customers are never shown
 
 Throughout the loop, the public sees only the wording you approved. Accounts, evidence, rationale, declined bets, confidence and internal dates stay in the operator app.
+
+## Public roadmap ETA
+
+Under **Roadmap → Edit, approve or move**, approve the public projection first. **Approve public ETA** then accepts a month (`2027-03`) or quarter (`2027-Q1`). Leave it blank and approve to remove the ETA. This is separate from the private target window. Each change prepares a pending status update for review; publish that draft separately to notify the mapped requests’ followers. Saving the same ETA again creates no new draft.

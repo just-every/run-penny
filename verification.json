@@ -110,6 +110,15 @@
         "node tests/browser/request-withdrawal.mjs",
         "node tests/browser/request-demand.mjs"
       ]
+    },
+    {
+      "name": "roadmap-public-eta",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/roadmap-public-eta.mjs"
+      ]
     }
   ],
   "nightly": [

@@ -636,8 +636,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 105 | 9 | 0 | 114 |
-| Target and push further | 3 | 51 | 79 | 133 |
-| All | 108 | 60 | 79 | 247 |
+| Target and push further | 4 | 51 | 78 | 133 |
+| All | 109 | 60 | 78 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -785,7 +785,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `ROAD-009` | Roadmap views | target | missing |  | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. |
 | `ROAD-010` | Several and audience roadmaps | target | missing |  | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. |
 | `ROAD-011` | Release planning and dependencies | target | partial | `src/core/features/releases/drafts.ts`; `tests/browser/loopjourney-release.mjs` | A slipped dependency flags each dependent item and its ETA; the release plan lists its items with their states. |
-| `ROAD-012` | Public ETA | target | missing |  | The ETA appears only after approval; changing it drafts an update; an internal target date is absent from every public payload. |
+| `ROAD-012` | Public ETA | target | done | `tests/base/roadmap-public-eta.test.ts`; `tests/browser/roadmap-public-eta.mjs` |  |
 | `ROAD-013` | Roadmap sharing and export | target | missing |  | An export contains only fields the exporter's role may see; the shared link refuses a signed-out visitor. |
 | `ROAD-014` | Status roadmap | target | partial | `tests/base/request-status-workflow.test.ts`; `visual/request-status-workflow/ROAD-014/`; `visual/board-categories/REQ-034/` | Request-status source, board selection, hidden/renamed columns, Shipped limits, deduplicated cards, board/category, visibility-aware votes and ETA are implemented; API and 1440/390 browser journeys pass, with approved-item source preserved. Gap: Canny roadmap reconstruction remains missing. |
 | `REL-001` | Draft and targets | published | done | `tests/browser/loopjourney-release.mjs` |  |

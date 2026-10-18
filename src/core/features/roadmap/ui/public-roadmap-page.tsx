@@ -27,7 +27,7 @@ export function PublicRoadmapPage({ content }: { readonly content: PublicPortalC
   return (
     <PublicPortalLayout content={content}>
       <HydrationUnit><section aria-labelledby="roadmap-heading">
-        <header className="min-w-0"><PageTitle id="roadmap-heading" eyebrow="Roadmap">What we're working toward</PageTitle><p className={ledeClass}>{settings.kind === 'ready' && settings.data.source === 'request_statuses' ? 'Follow the progress of published feedback. Any ETA shown is a month or quarter.' : 'Only approved customer-safe roadmap items are shown here. Delivery dates are not published.'}</p></header>
+        <header className="min-w-0"><PageTitle id="roadmap-heading" eyebrow="Roadmap">What we're working toward</PageTitle><p className={ledeClass}>{settings.kind === 'ready' && settings.data.source === 'request_statuses' ? 'Follow the progress of published feedback. Any ETA shown is a month or quarter.' : 'Only approved customer-safe roadmap items are shown here. Any ETA shown is an approved month or quarter.'}</p></header>
         <div className="mt-8">
           {roadmap.kind === 'loading' || settings.kind === 'loading' ? <ResourceLoading label="Loading the public roadmap…" /> : null}
           {roadmap.kind === 'error' ? <ResourceFailure status={roadmap.status} onRetry={retry} /> : null}
@@ -64,6 +64,7 @@ function RoadmapItemCard({ item }: { readonly item: PublicRoadmapItem }) {
     <PublicCard className="p-4">
       <h3 className="break-words text-base font-bold tracking-[-0.015em] text-penny-ink">{item.source === 'requests' ? <Link to="/portal/feedback/$requestSlug" params={{requestSlug:item.slug}} className="inline-flex min-h-11 min-w-0 max-w-full items-center [overflow-wrap:anywhere] hover:underline hover:decoration-penny-copper hover:underline-offset-4">{item.title}</Link> : <Link to="/portal/roadmap/$roadmapSlug" params={{roadmapSlug:item.slug}} className="inline-flex hover:underline hover:decoration-penny-copper hover:underline-offset-4 min-h-11 min-w-0 max-w-full items-center [overflow-wrap:anywhere]">{item.title}</Link>}</h3>
       <p className="mt-2 break-words text-sm leading-6 text-penny-muted">{item.summary}</p>
+      {item.source !== 'requests' && item.publicEta ? <p className="mt-3 text-sm text-penny-muted">ETA: {item.publicEta}</p> : null}
       {item.source === 'requests' ? <div className="mt-4 space-y-2 border-t border-penny-line pt-3 text-xs text-penny-muted">
         {item.board ? <p className="break-words">{item.board.name}</p> : null}
         {item.category ? <p className="break-words">{item.category.parent ? `${item.category.parent.name} / ` : ''}{item.category.name}</p> : null}
