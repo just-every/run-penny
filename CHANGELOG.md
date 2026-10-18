@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Historical owner-upgrade fixtures seed pre-notice merge custody before applying current migrations. The current merge route is exercised on its required schema; every existing per-migration row, authority, revocation and original-file preservation assertion remains.
+
 - Merging a duplicate previews its eligible subscriber count and offers a notice opt-out. The canonical request’s existing subscribers are excluded; a private canonical waits for publication, and unmerge sends nothing. Consent, unsubscribe, quiet hours, restore holds and durable delivery claims still apply (NOTIFY-012). Migration 0077 preserves event and delivery custody while adding typed merge events and captured audiences.
 
 - Approve a public month or quarter on a roadmap item separately from its private target window. Changing or removing the ETA creates a customer-safe update draft; repeated approval sends and drafts nothing (ROAD-012). Migration 0076 preserves prior rows and retains the expanded schema on rollback. Adopt rer 0.2.59 in package mode.
