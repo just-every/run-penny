@@ -116,23 +116,25 @@ older approved versions stay readable to operators and correction delivery
 requires its own explicit command.
 
 Notifications retain consent, mute, suppression, current eligibility and public
-content checks, fixed first-event one-minute windows and 20:00–08:00 workspace quiet
-hours, sent by a Queue consumer woken at publication with the minute Cron as
-backstop. Release deliveries use separate immediate commands.
+content checks and fixed first-event one-minute windows. Requester mail follows
+the configured workspace timezone and quiet hours (default 20:00–08:00, or off;
+OPS-008); operator email has no quiet hours. A Queue consumer wakes at publication
+with the minute Cron as backstop. Release deliveries use separate immediate commands.
 Claims/attempts, address-bound generations, provider event correlation and
 uncertainty survive restarts. Known pre-acceptance retries are bounded; unknown
 sends are not retried. Restored intent is held, new native intent cannot join a
 restored batch, and restoration makes no provider call.
 
-Every applied SQL byte remains immutable. The reviewed main inventory ends at
-0029, including native dev sessions and dev-minted credential custody. The
-integrated clause candidate adds migrations 0030–0033. Its populated 0029 test
+Every applied SQL byte remains immutable. Historical integration evidence,
+11 October 2026: the reviewed main inventory ended at 0029, including native dev
+sessions and dev-minted credential custody; the integrated clause candidate
+added migrations 0030–0033. Its populated 0029 test
 compares every prior column after each added migration and repeated application,
 with original files, authority, snapshots, delivery and erasure custody populated.
 Native valid, revoked and expired sessions and ordinary, revoked and dev-minted
 API credentials are exercised before and after migration. The historical
 populated 0015 restoration-hold proof remains as a separate predecessor check.
-Current integrated pass/fail receipts belong to the external report below.
+Those dated integration receipts do not describe the current migration inventory.
 Production applies the complete product inventory. Historical predecessor tests
 apply the complete inventory, including native authority prerequisites, while
 keeping the predecessor transport under its own entry point. Export inventories explicit tables/columns and original R2 hashes;
@@ -171,7 +173,7 @@ assertions. The 321-request suggestion call took 2 ms. The following tests in
 tests/base/penny-evidence.test.ts, penny-decisions.test.ts and
 penny-releases.test.ts passed through the Hono routes:
 
-The EVID-006 case also passed its final populated privacy expansion: genuine
+Historical feature evidence, 11 October 2026: the EVID-006 case also passed its final populated privacy expansion: genuine
 roadmap approval and release publication, positive safe-copy assertions and
 commercial/source/internal markers absent from list/detail APIs and complete
 built roadmap/updates HTML, metadata and hydration. The same case also
@@ -344,14 +346,14 @@ errors or external requests. Native requester host sign-in and a persisted local
 visual edit are bounded local proof; platform signing-key transport, registry
 admission, live host configuration and hosted source publication remain unmet.
 
-The literal README journey also passed on this source inside the full gate,
+Historical evidence, 10 October 2026: the literal README journey also passed on this source inside the full gate,
 using its own frozen scratch install and real development outbox sign-in.
 Final source receipts and a fresh complete installer slow-start/cancellation
 proof remain separate from this dated accepted slice.
 
-### Maintained CLI adoption — scoped pending acceptance
+### Historical maintained CLI adoption — 10 October 2026, scoped pending acceptance
 
-The single-pin adapter, contained state migration refusal and native owner-account
+Historical preparation, 10 October 2026 (the outbox command below is obsolete; current dev enters automatically as the owner and suppresses mail silently): the single-pin adapter, contained state migration refusal and native owner-account
 flows have 14 passing local assertions; TypeScript passes. Base source bytes and
 modes verify against the reviewed checkout. Real CLI portability and the amended
 fresh-clone browser journey must pass on the final source; historical receipts
@@ -696,7 +698,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | REQ-037 | missing | At both widths: a requester's reply to an operator comment is held, then shown under its parent once approved; an operator's reply is public at once and notifies followers once; a comment image on a holding board stays hidden until approved and on an auto-publish board publishes with the comment; a reply to a rejected comment is refused; a Canny fixture reply lands under its parent with its image. | — |
 | REQ-038 | missing | On a holding board and an auto-publish board: a retitled published request shows the new title in the request page, board list, search and API within 5 seconds while the old title appears only in the operator history; an edited operator comment shows the new wording marked Edited and keeps the old for operators; a removed published request answers 404 and leaves the vote total, category counts, search and the status roadmap column within 5 seconds, and restoring it brings each back; a removed requester comment leaves the portal and its author's activity view shows the reason; removing a status update leaves the status unchanged; no action sends mail except one author notice when ticked; a Contributor is refused each action with 403; each action has one audit entry. Edit-then-approve before publication ships (REQ-030); nothing edits or removes published content (`src/core/features/requests/operator-routes.ts`). | — |
 | REQ-039 | missing | Against Google and GitHub OAuth fixtures: a signed-out visitor votes, chooses Continue with Google and returns to the request with the vote applied and no cookie set; a GitHub account with no verified email is sent to the emailed link; a forged or replayed OAuth state is refused and changes nothing; with both providers off neither button appears. | — |
-| REQ-040 | done | Posting/comment policy, hidden public vote totals, disclosed voter lists and anonymity apply to portal, roadmap and API projections; operators retain attribution and totals. Canny saved-file imports carry explicitly reviewed per-board owner mappings (the API omits these toggles), bound to the preview and retained originals. Replay, undo, later-edit conflict and 1440/390 import-to-portal journeys pass. Live migration remains MIG-001. | `tests/base/board-categories.test.ts`; `tests/base/import-board-policy.test.ts`; `tests/browser/import-board-policy.mjs`; `visual/board-categories/REQ-040/` |
+| REQ-040 | done | Posting/comment policy, hidden public vote totals, disclosed voter lists and anonymity apply to portal, roadmap and API projections; operators retain attribution and totals. Canny saved-file imports automatically map board visibility (`isPrivate`) and historical comment visibility (`privateComments`), the fields exposed by [Canny’s API reference](https://developers.canny.io/api-reference). Posting permission, vote-count visibility, voter visibility and anonymity require a reviewed mapping for each board, with Canny dashboard values entered or confirmed by the owner; comment participation is also explicitly reviewed. Unverified settings are not imported, and the mapping is bound to the preview and retained originals. Replay, undo, later-edit conflict and 1440/390 import-to-portal journeys pass. Live migration remains MIG-001. | `tests/base/board-categories.test.ts`; `tests/base/import-board-policy.test.ts`; `tests/browser/import-board-policy.mjs`; `visual/board-categories/REQ-040/` |
 | TRIAGE-001 | partial | Native request and evidence assignment, active board defaults on capture, personal queues, requester-comment handling after moderation, reassignment, unassignment, archive/restore and erasure are covered through routes and the 1440/390 UI. Theme defaults remain because native themes (AI-005) do not exist. | `tests/base/ownership.test.ts`; `tests/browser/ownership-journey.mjs` |
 | TRIAGE-002 | done | Overdue inbox, unanswered comments, no-response requests and stale effective statuses; configurable ages, durable per-owner reminders, snooze return, direct/mapped clearing and archive/erasure custody pass through routes and built pages at 1440/390. | `tests/base/triage-aging.test.ts`; `tests/browser/triage-aging.mjs` |
 | TRIAGE-003 | missing | A rule dry-runs against a fixture inbox, then applies once per item with one audit entry each; a hold rule keeps a matching auto-publish submission in moderation with the rule as its reason; the rule editor offers no publication, vote, customer-notification or commitment action. | — |
