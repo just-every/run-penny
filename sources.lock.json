@@ -2740,7 +2740,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "528756483ef0be33fc35ba2da7cde8cee1869ed7d30705ec064a44e8986b72ff",
+      "sha256": "a01d093ddaa5f7a65187e4f5aa2c217d23dc22989c118cd5525318b40d5d2d0a",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2768,7 +2768,7 @@
       "executable": false
     },
     "deploy.json": {
-      "sha256": "d245194b4b917e623976cafb64718054575b6624137c59e448815c9cd5d51550",
+      "sha256": "8d624df680af1b611ac876542791690b221108ff7604bf1f31984268871860f0",
       "executable": false
     },
     "DIVERGENCE.md": {
@@ -2844,7 +2844,7 @@
       "executable": false
     },
     "docs/INSTALL.md": {
-      "sha256": "eabea59c78cbe9ce933feb44be29797ed57cfb63a0ef07bfb7777c08dd96ed4a",
+      "sha256": "878345ef7caa18e8fb59d392e95529b741f70c205f1233f6f8744a61dde81fd6",
       "executable": false
     },
     "docs/INTEGRATIONS.md": {
@@ -3252,7 +3252,7 @@
       "executable": false
     },
     "OPERATIONS.md": {
-      "sha256": "e91c38e4b67f2c1725d9af0288d5ba09c069c01e8e60e0c39e5660b4313e46a4",
+      "sha256": "2d4237bddb374d40ba88fd22f85f98ca14943c2e3189ea4b8771c6bead975b5a",
       "executable": false
     },
     "OWNER-STEPS.md": {
@@ -3552,7 +3552,7 @@
       "executable": false
     },
     "scripts/installer/deploy.mjs": {
-      "sha256": "0497c4f6761805ecac40a6722bcf313392f63ade702b44da6751baadd04e43fa",
+      "sha256": "815986306d8c830cf0e6bb427e01fd777ecd132ceedd7c3d1e0e7fc2368578a9",
       "executable": false
     },
     "scripts/installer/local.mjs": {
@@ -7263,6 +7263,14 @@
       "sha256": "886bff5eb878e64a68004ceb638ce69f747741039cf9c95a66884fb9054112f2",
       "executable": false
     },
+    "tests/installer/cloudflare-dry-run-fixture.mjs": {
+      "sha256": "c5902d14ffdb82c7d446f2ce201433d246bf67fc476b7bbe7ab2f19961543aee",
+      "executable": false
+    },
+    "tests/installer/deploy-dry-run.test.mjs": {
+      "sha256": "e8ea2a6b487c29b49115134f3dbdb38abe548e068f8f900c3baf01d6133b0da9",
+      "executable": false
+    },
     "tests/installer/dev-credentials.test.mjs": {
       "sha256": "e43ff6a1406709209f6dbe2a444f4901b28661ec42a4ad83d241c55954a1db99",
       "executable": false
@@ -7320,7 +7328,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "dc6d87a828832a7f4d8dfbb4dae9b8d328ab789a1be48af8a3e23139e40ea145",
+      "sha256": "ea3de99840891a119f179bca9480bee0589458f0fa84099b41445b944e33ef16",
       "executable": false
     },
     "visual/01-landing.jpg": {

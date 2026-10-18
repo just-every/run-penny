@@ -13,9 +13,9 @@
     { "binding": "MAIL_PROVIDER", "environment": "MAIL_PROVIDER", "verifyStandIn": "sendgrid" },
     { "binding": "MAIL_FROM", "environment": "MAIL_FROM", "verifyStandIn": "penny@example.com" },
     { "binding": "MAIL_API_KEY", "environment": "MAIL_API_KEY" },
-    { "binding": "MAIL_RELAY_URL", "environment": "MAIL_RELAY_URL" },
-    { "binding": "SENDGRID_EVENT_PUBLIC_KEY", "environment": "SENDGRID_EVENT_PUBLIC_KEY" },
-    { "binding": "RESEND_WEBHOOK_SECRET", "environment": "RESEND_WEBHOOK_SECRET" }
+    { "binding": "MAIL_RELAY_URL", "environment": "MAIL_RELAY_URL", "optional": true },
+    { "binding": "SENDGRID_EVENT_PUBLIC_KEY", "environment": "SENDGRID_EVENT_PUBLIC_KEY", "optional": true },
+    { "binding": "RESEND_WEBHOOK_SECRET", "environment": "RESEND_WEBHOOK_SECRET", "optional": true }
   ],
   "crons": ["* * * * *"],
   "vars": { "WORKSPACE_TIMEZONE": "UTC", "OPERATOR_EMAIL": "owner@penny.invalid" },
