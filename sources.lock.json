@@ -3644,7 +3644,7 @@
       "executable": false
     },
     "scripts/portability/policy.ts": {
-      "sha256": "1239fb58d5129f783d1c01494b2cb7bfb787ded3187075c7a5d0f39fa1db633b",
+      "sha256": "33d3e5b952a1caa7ac2db68af2c40e6192d34e2037dc3f480bd3c285a1bd41b0",
       "executable": false
     },
     "scripts/portability/remote-export.mjs": {
@@ -4808,7 +4808,7 @@
       "executable": false
     },
     "src/core/features/imports/native-ownership.ts": {
-      "sha256": "af9109d986c182ac29da82992e018d04eef68bd293e8a586ba42f46d5cb0e1f0",
+      "sha256": "60580b45bff556ca17693d03db512ae0ee5ac171c6a66bca85d3a9324aaa2776",
       "executable": false
     },
     "src/core/features/imports/native-relations.ts": {

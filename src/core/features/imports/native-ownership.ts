@@ -8,7 +8,9 @@ import type { NativeDependency } from './native-relations'
 export function relationshipCheck(table:string,parent:(column:string)=>string,scope:D1Sql,namespace:string,dependencies:NativeDependency[]):D1Sql&{ctes:string[]} {
  const relations:string[]=[],tables=new Map<string,NativeDependency>()
  for(const dependency of dependencies){
-  if(['request_votes','request_follows'].includes(dependency.table))continue // derived projections; contributions own custody
+  // The status clock is read-only derived state, cascaded with its request.
+  // Native request values and mapping relationships retain the reversal fence.
+  if(['request_votes','request_follows','penny_triage_status_clock'].includes(dependency.table))continue // derived projections; contributions own custody
   const groups=new Map<number,NativeDependency['foreign']>()
   for(const fk of dependency.foreign.filter(fk=>fk.table===table))groups.set(fk.id,[...(groups.get(fk.id)??[]),fk])
   for(const foreign of groups.values()){

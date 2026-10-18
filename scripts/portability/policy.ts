@@ -25,7 +25,7 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
     excludeTables: Object.keys(inventory).filter(name => !product.includes(name) && !['data_state', 'data_tombstones'].includes(name)),
     // Setup and migrations create these settings before any product records.
     // Restore replaces them with the archive's choices.
-    replaceableTables: ['data_state','penny_status_roadmap_settings','penny_mail_identity'],
+    replaceableTables: ['penny_triage_settings','data_state','penny_status_roadmap_settings','penny_mail_identity'],
     requiredConfiguration: ['OPERATOR_EMAIL', 'AUTH_SECRET', 'SETUP_TOKEN', 'APP_ORIGIN', 'MAIL_PROVIDER', 'MAIL_FROM'],
     buckets: { FILES: { objectReferences: { table: 'attachments', keyColumn: 'storage_key' } } },
     exportRow: (table, row) => normalize(table, productRow(row)),
