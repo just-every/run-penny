@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Customers → Requesters now shows access state and confirmed block/unblock controls. Blocking hides that person’s public requests and comments and excludes their votes; unblocking restores them without deleting their private records (REQ-022).
+
 - Declined requests clearly close new votes and requester comments while retaining their existing discussion and votes. Reversing a decline restores the previous direct or mapped status even after revising the decline reason (REQ-017).
 
 - The ownership browser journey waits for My queue to load before filling the server-rendered evidence form, so capture cannot race hydration. Save, default-owner and reassignment checks remain unchanged.

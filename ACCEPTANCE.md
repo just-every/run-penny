@@ -580,7 +580,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence a
 
 Current entries include the shipped setup and workspace clocks, request status controls and status roadmap, board categories and participation, requester subscriptions and sender identity, ownership, aging and private discussion. Each partial entry keeps its remaining acceptance work separate; dated receipts above retain their historical scope.
 
-**Counts:** 106 done, 62 partial, 79 missing (247 clauses).
+**Counts:** 107 done, 61 partial, 79 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -678,7 +678,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | REQ-019 | done | Internal boards withdraw requests from every public read. | `tests/base/board.test.ts:41` |
 | REQ-020 | done | Edits to public text re-enter moderation while the approved text stays, on a board without auto-publish (REQ-033). | `tests/browser/requester-repair.mjs` |
 | REQ-021 | partial | Withdrawing a pending request removes it from moderation (tested); the 410 public URL and vote exclusion need a test. | `tests/browser/requester-repair.mjs:86` |
-| REQ-022 | partial | Blocked identities are refused at sign-in in code; a journey for hide, refuse with 403, uncount and unblock is required. | `src/core/features/auth/native-service.ts`; `src/core/features/requests/operator-routes.ts` |
+| REQ-022 | done | Operators block/unblock in the private requester directory. Existing sessions receive 403 for submission, vote, comment, follow and outcome writes; public requests/comments hide and votes stop counting, while operator records survive. Unblocking restores visibility, counts and participation. Audit refusal rolls back. API and 1440/390 journeys pass. | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |
 | REQ-023 | done | Single-use 30-minute link and held pre-verification action. | `tests/base/auth.test.ts:46`; `tests/browser/no-mail-journey.mjs` |
 | REQ-024 | done | Identity merge keeps both addresses, collapses votes and keeps mutes. | `tests/base/notifications.test.ts:229` |
 | REQ-025 | done | Requester activity with unfollow, mute and subscription changes. | `tests/base/notifications.test.ts:152` |

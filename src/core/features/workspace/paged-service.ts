@@ -9,7 +9,7 @@ import { moderationAvailabilitySql, type ModerationAvailability } from '@/core/f
 import { RoadmapReadRepository } from '@/core/features/roadmap/read-repository'
 import { listIds } from './list-repository'
 import type { ListEntity, ListQuery } from './list-query'
-export interface OperatorRequesterCard {id:string;displayName:string;email:string|null}
+export interface OperatorRequesterCard {id:string;displayName:string;email:string|null;blockedAt:string|null}
 export async function pagedList(database:DatabaseConnection,entity:ListEntity,query:ListQuery,extra?:string) {
  const {ids,...page}=await listIds(database,entity,query,extra)
  const rows = entity==='requests' ? await new RequestsReadRepository(database).list(ids)
@@ -18,7 +18,7 @@ export async function pagedList(database:DatabaseConnection,entity:ListEntity,qu
  : entity==='roadmap' ? await new RoadmapReadRepository(database).list(ids)
  : entity==='releases' ? await new ReleasesReadRepository(database).list(ids)
  : entity==='accounts' ? await new AccountsReadRepository(database).list(ids)
- : (await database.binding.prepare(`SELECT id,display_name AS displayName,(SELECT email FROM requester_addresses a WHERE a.requester_id=p.id ORDER BY CASE WHEN verified_at IS NOT NULL AND suppressed_at IS NULL THEN 0 ELSE 1 END,created_at,id LIMIT 1) AS email FROM requesters p WHERE id IN (${ids.length?ids.map(()=>'?').join(','):'NULL'}) LIMIT 25`).bind(...ids).all<OperatorRequesterCard>()).results
+ : (await database.binding.prepare(`SELECT id,display_name AS displayName,blocked_at AS blockedAt,(SELECT email FROM requester_addresses a WHERE a.requester_id=p.id ORDER BY CASE WHEN verified_at IS NOT NULL AND suppressed_at IS NULL THEN 0 ELSE 1 END,created_at,id LIMIT 1) AS email FROM requesters p WHERE id IN (${ids.length?ids.map(()=>'?').join(','):'NULL'}) LIMIT 25`).bind(...ids).all<OperatorRequesterCard>()).results
  const items=ids.flatMap(id=>{const row=rows.find(row=>row.id===id);return row?[row]:[]})
  return {items,...page}
 }

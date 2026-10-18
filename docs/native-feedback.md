@@ -91,3 +91,5 @@ wording through redirects or public aliases. There is no production rollout or
 released-native-URL compatibility claim.
 
 A declined request keeps its existing votes and discussion visible. New votes and requester comments close until an operator reverses the decline in Moderation. A public reason is required; revising that reason does not replace the saved status the reversal restores.
+
+In **Accounts → Requesters**, an operator can block or unblock a requester. Blocking hides their published requests and comments, stops counting their votes and refuses further participation, including with an existing session. Their private records stay available to operators; unblocking restores their content, votes and access.

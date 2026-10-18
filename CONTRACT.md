@@ -625,6 +625,8 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 ## Status
 
+REQ-022 was completed on 18 October 2026: the private requester directory exposes block/unblock, with route refusal, retained contributions, public hiding and restoration covered by the journeys cited below.
+
 REQ-017 was completed on 18 October 2026: public closure, retained votes and discussion, and repeated-decline reversal are covered by the route and both-width browser journeys cited below.
 
 Judged from the code and tests at commit `94bb4defa551a19f5d7c14c52dd994ea766e0676` (18 October 2026).
@@ -633,9 +635,9 @@ OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 Octob
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 103 | 11 | 0 | 114 |
+| Published | 104 | 10 | 0 | 114 |
 | Target and push further | 3 | 51 | 79 | 133 |
-| All | 106 | 62 | 79 | 247 |
+| All | 107 | 61 | 79 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -733,7 +735,7 @@ OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 Octob
 | `REQ-019` | Internal boards | published | done | `tests/base/board.test.ts` (line 41) |  |
 | `REQ-020` | Requester's own content | published | done | `tests/browser/requester-repair.mjs` |  |
 | `REQ-021` | Requester withdrawal | published | partial | `tests/browser/requester-repair.mjs` (line 86) | Withdrawing a pending request removes it from moderation (tested); the 410 public URL and vote exclusion need a test. |
-| `REQ-022` | Blocking a requester | published | partial | `src/core/features/auth/native-service.ts`; `src/core/features/requests/operator-routes.ts` | Blocked identities are refused at sign-in in code; a journey for hide, refuse with 403, uncount and unblock is required. |
+| `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
 | `REQ-023` | Email verification | published | done | `tests/base/auth.test.ts` (line 46); `tests/browser/no-mail-journey.mjs` |  |
 | `REQ-024` | Requester identity merge | published | done | `tests/base/notifications.test.ts` (line 229) |  |
 | `REQ-025` | Requester activity | published | done | `tests/base/notifications.test.ts` (line 152) |  |

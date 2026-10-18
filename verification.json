@@ -99,6 +99,15 @@
         "pnpm run build",
         "node tests/browser/request-decline.mjs"
       ]
+    },
+    {
+      "name": "requester-blocking",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/requester-blocking.mjs"
+      ]
     }
   ],
   "nightly": [
