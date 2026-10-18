@@ -5,7 +5,7 @@ import {disclosureSummaryClass,secondaryButtonClass,textLinkClass} from '@/core/
 
 export interface RequestVoter {
  id:string;displayName:string;votedAt:string;supporterType:'proxy'|'unmarked'|null
- nativeProxy?:number;proxyAttributionsJson?:string
+ importance?:number|null;nativeProxy?:number;proxyAttributionsJson?:string
  email:string|null;accountId:string|null;accountSlug:string|null;accountName:string|null
 }
 const pageSize=50

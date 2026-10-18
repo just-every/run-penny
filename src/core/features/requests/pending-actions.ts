@@ -7,7 +7,7 @@ import { RequestWriteRepository } from './write-repository'
 
 export type PendingRequesterAction =
   | { readonly type: 'submission'; readonly input: SubmissionInput }
-  | { readonly type: 'vote'; readonly slug: string; readonly emailUpdates: boolean; readonly subscriptionVersion?:number }
+  | { readonly type: 'vote'; readonly slug: string; readonly emailUpdates: boolean; readonly subscriptionVersion?:number; readonly importance?:number|null }
   | { readonly type: 'follow'; readonly slug: string }
   | { readonly type: 'comment'; readonly slug: string; readonly body: string }
 
@@ -110,7 +110,7 @@ async function applyPendingAction(repository: RequestWriteRepository, identity: 
       await repository.submit(identity, action.input, now)
       return
     case 'vote':
-      await repository.vote(identity, action.slug, action.emailUpdates, now,action.subscriptionVersion)
+      await repository.vote(identity, action.slug, action.emailUpdates, now,action.subscriptionVersion,action.importance)
       return
     case 'follow':
       await repository.follow(identity, action.slug, now)

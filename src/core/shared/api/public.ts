@@ -5,6 +5,7 @@ export interface PublicCategoryReference {readonly id:string;readonly name:strin
 export interface SubscriptionDisclosure { readonly enabled:boolean; readonly version:number; readonly vote:string|null; readonly submission:string|null }
 
 export interface PublicBoard {
+  readonly importanceChoices?:readonly string[]
   readonly subscriptionDisclosure?:SubscriptionDisclosure
   readonly slug: string
   readonly name: string

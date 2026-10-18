@@ -128,3 +128,9 @@ Throughout the loop, the public sees only the wording you approved. Accounts, ev
 ## Public roadmap ETA
 
 Under **Roadmap → Edit, approve or move**, approve the public projection first. **Approve public ETA** then accepts a month (`2027-03`) or quarter (`2027-Q1`). Leave it blank and approve to remove the ETA. This is separate from the private target window. Each change prepares a pending status update for review; publish that draft separately to notify the mapped requests’ followers. Saving the same ETA again creates no new draft.
+
+## Ask how important a vote is
+
+The owner can enable **Vote importance** on a board in Feedback settings, rename the three default labels or add a fourth. Voters may leave it blank, change it with **Save importance**, or clear it. Request cards show private counts at each level and Not specified; each customer counts once. Public visitors see the vote total.
+
+When recording a proxy vote, select a level only if the customer stated it. Inbox/request controls and the private Zendesk sidebar use the board's saved labels. Export individual votes to retain their importance and source attribution. Revenue by importance, prioritisation views and Productboard importance move-in remain future work.

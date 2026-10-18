@@ -5,6 +5,7 @@ const words: Record<string, string> = {
   requesters: 'People', requester_addresses: 'Email addresses', requester_account_links: 'Links to accounts',
   requester_identity_merges: 'Merged identities', requester_update_permissions: 'Email permissions', requester_notification_preferences: 'Email preferences',
   requests: 'Feedback requests', request_content_submissions: 'Submitted wording', request_comments: 'Comments', request_comment_edits: 'Comment edits',
+  penny_proxy_votes:'Proxy vote sources', penny_vote_importance:'Vote importance',penny_vote_importance_settings:'Vote importance settings',
   request_votes: 'Votes', request_vote_contributions: 'Votes', request_vote_supporter_types: 'Votes', request_follows: 'Follows', request_follow_contributions: 'Follows',
   request_evidence_contributions: 'Evidence on requests', request_evidence_links: 'Evidence on requests', request_tag_assignments: 'Tags on requests',
   request_merges: 'Merged requests', request_status_updates: 'Status updates', request_notes: 'Internal notes', request_submission_keys: 'Submission reservations',

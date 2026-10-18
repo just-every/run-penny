@@ -1,3 +1,4 @@
+import { importanceInput,importanceValue } from './vote-importance'
 import { requesterCommentAdmission } from '../categories/comment-policy'
 import type { ExistingHostIdentity } from '@/core/features/auth/host-identity'
 import { limitPublicWrite, readAttachment } from './mutation-boundaries'
@@ -30,7 +31,7 @@ const submissionSchema = z.object({
   categoryId: z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u).nullable().optional(),
   emailUpdates: z.boolean().optional().default(false), subscriptionVersion:z.number().int().positive().optional(),
 }).strict()
-const voteSchema = z.object({ emailUpdates: z.boolean().optional().default(false), subscriptionVersion:z.number().int().positive().optional() }).strict()
+const voteSchema = z.object({ importance:importanceValue.optional(),emailUpdates: z.boolean().optional().default(false), subscriptionVersion:z.number().int().positive().optional() }).strict()
 const commentSchema = z.object({ body: text }).strict()
 const requestEditSchema = submissionSchema.pick({ title: true, description: true, proposedSolution: true, impactStatement: true })
 const appealSchema = z.object({
@@ -58,16 +59,23 @@ export function registerPublicRequestMutationRoutes(app: Hono<PublicRequestRoute
     const input = await parse(context.req.raw, voteSchema)
     const requestSlug = slug.safeParse(context.req.param('slug'))
     if (!input || !requestSlug.success) return context.json({ error: 'validation_failed', message: 'The vote is invalid.' }, 400)
-    const action: PendingRequesterAction = { type: 'vote', slug: requestSlug.data, emailUpdates: input.emailUpdates, subscriptionVersion:input.subscriptionVersion }
+    const action: PendingRequesterAction = { type: 'vote', slug: requestSlug.data, emailUpdates: input.emailUpdates, subscriptionVersion:input.subscriptionVersion,importance:input.importance }
     const identity = await identityOrHold(context, action)
     if (identity instanceof Response) return identity
     try {
-      await new RequestWriteRepository(context.get('runtime').database).vote(identity, action.slug, action.emailUpdates, now(),action.subscriptionVersion)
+      await new RequestWriteRepository(context.get('runtime').database).vote(identity, action.slug, action.emailUpdates, now(),action.subscriptionVersion,action.importance)
       return context.body(null, 204)
     } catch (error) {
       return lifecycleFailure(context, error)
     }
   })
+
+  app.patch('/api/public/requests/:slug/vote-importance',async context=>withIdentity(context,async identity=>{
+    const input=await parse(context.req.raw,importanceInput),requestSlug=slug.safeParse(context.req.param('slug'))
+    if(!input||!requestSlug.success)return context.json({error:'validation_failed'},400)
+    await new RequestWriteRepository(context.get('runtime').database).setVoteImportance(identity,requestSlug.data,input.importance,now())
+    return context.body(null,204)
+  }))
 
   app.delete('/api/public/requests/:slug/vote', async (context) => withIdentity(context, async (identity) => {
     const requestSlug = slug.safeParse(context.req.param('slug'))

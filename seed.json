@@ -23,6 +23,13 @@
       ]
     },
     {
+      "id": "vote-importance",
+      "description": "Optional board-labelled voter importance, private per-request counts and source-stated proxy importance; saved Canny vote priorities retain reversible import receipts. Commercial values, prioritisation use and Productboard importance remain partial.",
+      "clauses": [
+        "REQ-035"
+      ]
+    },
+    {
       "id": "canny-status-workflow",
       "description": "Reviewed saved Canny imports retain custom internal status names and can reconstruct a public status roadmap from selected public boards, with replay and conflict-safe undo. Imported requests remain held for native moderation; approval preserves their mapped status.",
       "clauses": [

@@ -1,3 +1,4 @@
+import { checkImportance,importanceAdmission,importanceStatements } from './vote-importance'
 import { requesterCommentAdmission, commentsAllowedAdmission } from '../categories/comment-policy'
 import {boardConsent,consentScope,grantRequestPermission} from './subscription-consent'
 import { requestStatusExpression } from './status-sql'
@@ -29,10 +30,12 @@ export class RequestWriteRepository {
     return await submitNativeRequest(this.connection, { id: identity.requesterId, addressId, email: identity.verifiedEmail, displayName: identity.displayName,sessionId:identity.sessionId,verifiedAt:identity.verifiedAt,verificationSessions:identity.verificationSessions,hostEmailHash:identity.hostEmailHash,hostClaimHash:identity.hostClaimHash }, { ...input, proposedSolution: input.proposedSolution ?? undefined, impactStatement: input.impactStatement ?? undefined }) as PublicMutationResult
   }
 
-  async vote(identity: RequesterReference, slug: string, emailUpdates: boolean, now: string, subscriptionVersion?:number): Promise<void> {
+  async vote(identity: RequesterReference, slug: string, emailUpdates: boolean, now: string, subscriptionVersion?:number,importance?:number|null): Promise<void> {
     const request = await this.findVotableRequest(slug)
     if (!request) throw new RequestLifecycleError(404, 'not_found', 'The published request does not exist.')
     if (request.status === 'declined' || request.status === 'shipped') throw new RequestLifecycleError(409, 'voting_closed', 'Voting is closed for this request.')
+    await checkImportance(this.connection.binding,request.boardId,importance)
+    const priority=importance===undefined?{sql:'1',values:[]}:importanceAdmission(request.boardId,importance)
     const board=await boardConsent(this.connection.binding,request.boardId,subscriptionVersion), consent=consentScope(board)
     const requesterAddressId = emailUpdates?await this.findVerifiedAddress(identity):board.enabled?await this.findVerifiedAddress(identity,true):null
     const statements = [
@@ -44,7 +47,18 @@ export class RequestWriteRepository {
     ]
     if (emailUpdates) statements.push(...grantRequestPermission(this.connection.binding,request.id,identity,requesterAddressId!,'vote','explicit',now))
     if(board.enabled)statements.push(...grantRequestPermission(this.connection.binding,request.id,identity,requesterAddressId!,'vote','vote_subscription',now,board))
-    await requesterWrite(this.connection,identity,[...statements, ...projectContributions(this.connection, [request.id])],{sql:`${votingAdmission} AND ${consent.sql} AND EXISTS(SELECT 1 FROM requests WHERE id=? AND board_id=?)`,values:[request.id,request.id,...consent.values,request.id,board.id]})
+    await requesterWrite(this.connection,identity,[...statements,...importanceStatements(this.connection,request.id,identity.requesterId,importance,now), ...projectContributions(this.connection, [request.id])],{sql:`${votingAdmission} AND ${consent.sql} AND EXISTS(SELECT 1 FROM requests WHERE id=? AND board_id=?) AND ${priority.sql}`,values:[request.id,request.id,...consent.values,request.id,board.id,...priority.values]})
+  }
+
+  async setVoteImportance(identity:RequesterReference,slug:string,importance:number|null,now:string):Promise<void>{
+    const request=await this.findVotableRequest(slug)
+    if(!request)throw new RequestLifecycleError(404,'not_found','The published request does not exist.')
+    await checkImportance(this.connection.binding,request.boardId,importance)
+    const priority=importanceAdmission(request.boardId,importance)
+    await requesterWrite(this.connection,identity,importanceStatements(this.connection,request.id,identity.requesterId,importance,now),{
+      sql:`${publishedAdmission} AND EXISTS(SELECT 1 FROM request_votes WHERE request_id=? AND requester_id=?) AND ${priority.sql}`,
+      values:[request.id,request.id,identity.requesterId,...priority.values],
+    })
   }
 
   async removeVote(identity: RequesterReference, slug: string): Promise<void> {

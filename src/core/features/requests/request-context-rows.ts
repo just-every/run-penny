@@ -1,3 +1,4 @@
+import { voteImportanceSql } from './vote-importance'
 import { nativeProxyPredicate } from './proxy-votes'
 // A UserVoice proxy vote stays visibly proxy; a supporter with any unmarked
 // origin vote is shown unmarked. Native and Canny votes have no source type.
@@ -7,7 +8,7 @@ const supporterType = `CASE WHEN ${supporterOrigins('unmarked')} THEN 'unmarked'
 /** Only the bound, page-scoped request selection is supplied by the reader. */
 export function requestContextRowsSql(requestIdsSql: string) {
   return {
-    voters: `SELECT v.request_id AS contextRequestId,r.id,r.display_name AS displayName,v.created_at AS votedAt,${supporterType} AS supporterType,${nativeProxyPredicate()} AS nativeProxy,
+    voters: `SELECT v.request_id AS contextRequestId,r.id,r.display_name AS displayName,v.created_at AS votedAt,${supporterType} AS supporterType,${nativeProxyPredicate()} AS nativeProxy,${voteImportanceSql()} AS importance,
       (SELECT json_group_array(json_object('recorderId',proxy.recorder_operator_id,'recorderName',o.display_name,'source',proxy.source,'sourceUrl',proxy.source_url,'evidenceId',proxy.evidence_id,'recordedAt',proxy.created_at,'directVoteAt',proxy.direct_vote_at))
        FROM penny_proxy_votes proxy JOIN request_canonical_roots root ON root.origin_id=proxy.request_id JOIN operators o ON o.id=proxy.recorder_operator_id WHERE root.canonical_id=v.request_id AND proxy.requester_id=v.requester_id) AS proxyAttributionsJson,a.email,account.id AS accountId,account.slug AS accountSlug,account.name AS accountName
       FROM request_votes v JOIN requesters r ON r.id=v.requester_id AND r.blocked_at IS NULL

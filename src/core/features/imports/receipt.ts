@@ -15,6 +15,7 @@ export interface FeedbackReceipt {
  originalsRetained:boolean
  conflicts:{kind:string;sourceId:string;reason:string}[]
  uservoice?:UserVoiceReceipt
+ voteImportance?:{sourceValue:string;importance:number|null;planned:number;created:number;removed:number;retained:number}[]
 }
 export function feedbackReceipt(plans:Iterable<ImportPlan>,phase='preview',committed=new Map<string,{owned:boolean;reversed:boolean}>()):FeedbackReceipt {
  const accumulator=receiptAccumulator(phase,committed);for(const plan of plans)accumulator.add(plan);return accumulator.finish()
@@ -22,6 +23,7 @@ export function feedbackReceipt(plans:Iterable<ImportPlan>,phase='preview',commi
 export function receiptAccumulator(phase='preview',committed=new Map<string,{owned:boolean;reversed:boolean}>()){
  const sources=new Map<string,FeedbackReceipt['sources'][number]>(),destinations=new Map<string,FeedbackReceipt['destinations'][number]>(),omissions=new Map<string,FeedbackReceipt['omissions'][number]>(),aggregates=new Map<string,FeedbackReceipt['aggregates'][number]>(),unresolved:FeedbackReceipt['unresolved']=[]
  const history=uservoiceAccumulator(),parents=new Map<string,string>(),votes:{request:string;requester:string;owned:boolean;reversed:boolean}[]=[]
+ const importanceCounts=new Map<string,NonNullable<FeedbackReceipt['voteImportance']>[number]>()
  const sourceKind=(kind:string)=>{const source=sources.get(kind)??{kind,read:0,generated:0,eligible:0,applied:0,reused:0,skipped:[]};sources.set(kind,source);return source}
  const skipped=(source:FeedbackReceipt['sources'][number],reason:string)=>{const prior=source.skipped.find(item=>item.reason===reason);if(prior)prior.count++;else source.skipped.push({reason,count:1})}
  const add=(plan:ImportPlan)=>{
@@ -46,6 +48,10 @@ export function receiptAccumulator(phase='preview',committed=new Map<string,{own
    for(const effect of entry.effects)for(const row of (effect.value as unknown as NativeImportValue).rows){
     if(row.table==='requests'&&row.values.merged_into_request_id)parents.set(String(row.values.id),String(row.values.merged_into_request_id))
     if(row.table==='request_vote_contributions')votes.push({request:String(row.values.request_id),requester:String(row.values.requester_id),owned:Boolean(state?.owned),reversed:Boolean(state?.reversed)})
+    if(row.table==='penny_vote_importance'){
+     const sourceValue=String(asObject(entry.source.payload).votePriority),item=importanceCounts.get(sourceValue)??{sourceValue,importance:row.values.importance as number|null,planned:0,created:0,removed:0,retained:0}
+     item.planned++;if(state?.owned){item.created++;if(state.reversed)item.removed++;else item.retained++}importanceCounts.set(sourceValue,item)
+    }
     const item=destinations.get(row.table)??{table:row.table,planned:0,created:0,removed:0,retained:0};item.planned++
     if(state?.owned){item.created++;if(state.reversed)item.removed++;else item.retained++}destinations.set(row.table,item)
    }
@@ -56,7 +62,7 @@ export function receiptAccumulator(phase='preview',committed=new Map<string,{own
  const plannedVotes=new Set<string>(),createdVotes=new Set<string>(),retainedVotes=new Set<string>()
  for(const vote of votes){let request=vote.request;const visited=new Set<string>();while(parents.has(request)&&!visited.has(request)){visited.add(request);request=parents.get(request)!}const key=request+':'+vote.requester;plannedVotes.add(key);if(vote.owned){createdVotes.add(key);if(!vote.reversed)retainedVotes.add(key)}}
  if(votes.length)destinations.set('request_votes',{table:'request_votes',planned:plannedVotes.size,created:createdVotes.size,removed:createdVotes.size-retainedVotes.size,retained:retainedVotes.size})
- return {phase,sources:[...sources.values()],destinations:[...destinations.values()],omissions:[...omissions.values()],aggregates:[...aggregates.values()],unresolved,identities:[...sources.keys()].map(kind=>({kind,treatment:kind==='users'?'Historical, non-authorizing contributors only: no login, verified identity, consent or outreach audience.':'Historical evidence only: no login, verified identity, consent, outreach audience or commercial authority.'})),effects:{mail:0,notifications:0},originalsRetained:true,conflicts:[],...(uservoice?{uservoice}:{})}
+ return {phase,sources:[...sources.values()],destinations:[...destinations.values()],omissions:[...omissions.values()],aggregates:[...aggregates.values()],unresolved,identities:[...sources.keys()].map(kind=>({kind,treatment:kind==='users'?'Historical, non-authorizing contributors only: no login, verified identity, consent or outreach audience.':'Historical evidence only: no login, verified identity, consent, outreach audience or commercial authority.'})),effects:{mail:0,notifications:0},originalsRetained:true,conflicts:[],...(uservoice?{uservoice}:{}),...(importanceCounts.size?{voteImportance:[...importanceCounts.values()]}:{})}
  };return {add,finish}
 }
 function aggregateRecord(record:SourceRecord,result:Map<string,FeedbackReceipt['aggregates'][number]>):void {

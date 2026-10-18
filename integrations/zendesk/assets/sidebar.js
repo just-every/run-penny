@@ -3,6 +3,7 @@ import {pennyApi, visibleError} from './penny-api.js';
 const el = id => document.getElementById(id);
 let client, api, ticketUrl, ticketSnapshot, loading = false, generation = 0, reloadTicket = false;
 const requests = new Map();
+let boards = [];
 function error(value) { el('error').textContent = value; el('error').hidden = !value; }
 function invalidate() { el('review').checked = false; el('status').textContent = ''; }
 async function run(action) {
@@ -44,7 +45,7 @@ async function loadTicket() {
   el('email').value = data['ticket.requester.email'] ?? '';
   el('new-contact').checked = false; el('confirm-contact').checked = false; toggleNew();
   el('customer').replaceChildren(new Option('Choose a customer…', ''));
-  el('source').value = ''; invalidate(); el('vote-form').hidden = false;
+  el('source').value = ''; el('importance').value = ''; invalidate(); el('vote-form').hidden = false;
   el('status').textContent = 'Find and select the customer, or confirm a new contact.';
 }
 function toggleNew() {
@@ -61,13 +62,20 @@ el('fields').addEventListener('change', event => { if (event.target.id !== 'revi
 el('find-contact').addEventListener('click', () => run(findContacts));
 el('find-request').addEventListener('click', () => run(async () => {
   invalidate();
-  const rows = await api('/api/v1/requests?q=' + encodeURIComponent(el('request-query').value.trim()));
+  const [rows, currentBoards] = await Promise.all([api('/api/v1/requests?q=' + encodeURIComponent(el('request-query').value.trim())),api('/api/v1/boards')]);
+  boards = currentBoards;
   requests.clear(); for (const row of rows) requests.set(row.slug, row);
   options(el('request'), rows.map(row => ({...row, id: row.slug})), row => row.title);
   el('request-status').textContent = '';
   el('status').textContent = rows.length ? 'Choose the request this customer supports.' : 'No published requests found.';
 }));
-el('request').addEventListener('change', () => { const row = requests.get(el('request').value); el('request-status').textContent = row ? `Public status: ${row.statusLabel ?? row.status}` : ''; });
+el('request').addEventListener('change', () => {
+ const row = requests.get(el('request').value);
+ el('request-status').textContent = row ? `Public status: ${row.statusLabel ?? row.status}` : '';
+ const choices = boards.find(board => board.slug === row?.board.slug)?.importanceChoices ?? [];
+ el('importance-field').hidden = !choices.length;
+ options(el('importance'), choices.map((label,index)=>({id:String(index+1),label})),item=>item.label);
+});
 el('vote-form').addEventListener('submit', event => {
   event.preventDefault();
   run(async () => {
@@ -77,7 +85,7 @@ el('vote-form').addEventListener('submit', event => {
     if (newContact ? !el('confirm-contact').checked : !el('customer').value) throw new Error('Select an existing customer or confirm a new unverified contact.');
     const email = el('email').value.trim();
     const identity = newContact ? {contact: {displayName: el('display-name').value.trim(), ...(email ? {email} : {})}} : {requesterId: el('customer').value};
-    const result = await api(`/api/v1/requests/${encodeURIComponent(el('request').value)}/proxy-votes`, {...identity, source: el('source').value.trim(), sourceUrl: ticketUrl});
+    const result = await api(`/api/v1/requests/${encodeURIComponent(el('request').value)}/proxy-votes`, {...identity, source: el('source').value.trim(), sourceUrl: ticketUrl,...(!el('importance-field').hidden&&el('importance').value?{importance:Number(el('importance').value)}:{})});
     el('review').checked = false;
     if (newContact) { el('new-contact').checked = false; toggleNew(); el('contact-query').value = email || el('display-name').value; await findContacts(); el('customer').value = result.requesterId; }
     el('status').textContent = result.created ? 'Customer vote recorded. No identity verification or email subscription was created.' : 'This customer already supports this request. No additional vote was recorded.';

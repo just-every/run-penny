@@ -1,3 +1,4 @@
+import { registerVoteImportanceSettings } from './vote-importance-settings'
 import { registerProxyVoteRoutes } from './proxy-vote-routes'
 import { requestCategoryCsv } from '../categories/request-csv'
 import { CategoriesRepository } from '../categories/repository'
@@ -38,6 +39,7 @@ const moveSchema = z.object({ boardSlug: slug }).strict()
 
 export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironment>): void {
   registerProxyVoteRoutes(app)
+  registerVoteImportanceSettings(app)
   app.get('/api/operator/requests/export.csv',async context=>operatorMutation(context,async()=>requestCategoryCsv(context.get('runtime').database)))
   const categorySchema=z.object({name:z.string().trim().min(1).max(160),parentId:identifier.nullable().optional(),position:z.number().int().min(0).optional(),archived:z.boolean().optional()}).strict()
   app.post('/api/operator/boards/:slug/categories',async context=>{

@@ -8,6 +8,7 @@ export async function zendeskProxyVotesJourney({runtime,origin,operator,json,sen
  await person('nina@example.test','Nina Rao')
  const request=await json('/api/public/requests',{title:'Schedule monthly finance exports',description:'Finance needs a monthly CSV for its board review.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},{Authorization:`Bearer ${author.token}`},'POST',201)
  await json(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title:'Schedule monthly finance exports',description:'Schedule monthly exports for finance reviews.',boardSlug:'finance',displayName:'Eli Wong'},operator)
+ await json('/api/operator/boards/finance/vote-importance',{enabled:true,labels:['Nice to have','Important','Must have']},operator,'PUT')
  const {token:key,credential}=await json('/api/operator/integrations/keys',{name:'Zendesk sidebar',scopes:['requests:read','votes:write']},operator,'POST',201)
  // A separate page represents the Zendesk-hosted iframe, using real app bytes.
  // pageFor's public-Penny network guard remains on its own page.
@@ -38,11 +39,14 @@ export async function zendeskProxyVotesJourney({runtime,origin,operator,json,sen
  assert.equal(posts().length,0)
  await page.getByLabel('Existing customer',{exact:true}).selectOption(customerId)
  await page.getByLabel('I reviewed the customer, request and source.').check()
+ await page.getByLabel('Customer’s stated importance (optional)').selectOption('3')
+ await page.getByLabel('I reviewed the customer, request and source.').check()
  await capture(page,'zendesk-existing-review')
  await page.getByRole('button',{name:'Record proxy vote',exact:true}).click()
  await page.getByRole('status').filter({hasText:'Customer vote recorded.'}).waitFor()
  assert.equal(posts().length,1)
- assert.deepEqual(JSON.parse(posts()[0].data),{requesterId:customerId,source:'Nina asked for scheduled monthly exports in ticket 738.',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738'})
+ assert.equal(await runtime.db.prepare('SELECT importance FROM penny_vote_importance WHERE requester_id=?').bind(customerId).first('importance'),3)
+ assert.deepEqual(JSON.parse(posts()[0].data),{requesterId:customerId,source:'Nina asked for scheduled monthly exports in ticket 738.',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',importance:3})
  await page.getByLabel('I reviewed the customer, request and source.').check()
  await page.getByRole('button',{name:'Record proxy vote',exact:true}).click()
  await page.getByRole('status').filter({hasText:'already supports'}).waitFor()

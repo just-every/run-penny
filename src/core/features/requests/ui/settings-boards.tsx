@@ -1,3 +1,4 @@
+import { VoteImportanceSettings } from './vote-importance-settings'
 import { CategorySettings } from '../../categories/category-settings'
 import type { Category } from '../../categories/ui-types'
 import {BoardSubscriptionSettings} from '../../settings/ui/board-subscription-settings'
@@ -37,6 +38,7 @@ export function BoardCard({ board: b, categories, act }: { board: Board; categor
         <label className={checkRowClass}><input name="archived" type="checkbox" defaultChecked={!!b.archived_at} className={checkboxClass} />Archive board</label>
         <button className={primaryButtonClass}>Save board</button>
       </form>
+      <VoteImportanceSettings slug={b.slug}/>
       <CategorySettings boardSlug={b.slug} categories={categories.filter(c=>c.board_id===b.id)} act={act}/>
       <BoardSubscriptionSettings key={b.vote_subscription_version} slug={b.slug} enabled={Boolean(b.vote_subscriptions)} version={b.vote_subscription_version} act={act}/>
     </div>

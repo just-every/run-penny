@@ -158,6 +158,15 @@
         "node tests/browser/proxy-votes.mjs",
         "node tests/browser/zendesk-proxy-votes.mjs"
       ]
+    },
+    {
+      "name": "vote-importance",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/vote-importance.mjs"
+      ]
     }
   ],
   "nightly": [

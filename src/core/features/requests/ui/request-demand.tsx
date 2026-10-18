@@ -1,8 +1,10 @@
+import {VoteImportanceBreakdown} from './vote-importance-breakdown'
 import {Link} from '@tanstack/react-router'
 import {dataLabelClass,disclosureSummaryClass,textLinkClass} from '@/core/ui/app/classes'
 import type {RequestVoter} from './request-supporters'
 
 export interface RequestDemandContext {
+ importanceLabels:readonly string[]
  demand:{voteCount:number;evidenceCount:number;accountCount:number}
  accounts:{id:string;slug:string;name:string}[]
  votesByAccount:{accountId:string;slug:string;name:string;voteCount:number}[]
@@ -19,5 +21,6 @@ export function RequestDemand({context}:{context:RequestDemandContext}){
   </dl>
   <p className="mt-3 text-sm leading-6 text-penny-muted">Each person counts once. Accounts include those linked through voters or evidence; each account counts once.</p>
   {context.accounts.length||unlinked?<details className="group mt-3"><summary className={disclosureSummaryClass}>Votes by account</summary><ul className="divide-y divide-penny-line text-sm" aria-label="Votes by account">{context.accounts.map(account=><li key={account.id} className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2"><Link to="/app/customers/$accountSlug" params={{accountSlug:account.slug}} className={`${textLinkClass} inline-flex min-h-11 min-w-0 items-center break-words`}>{account.name}</Link><span className="text-penny-muted tabular-nums">{votes.get(account.id)??0} {votes.get(account.id)===1?'vote':'votes'}</span></li>)}{unlinked?<li className="flex min-h-11 flex-wrap items-center justify-between gap-3 py-2 text-penny-muted"><span>No linked account</span><span className="tabular-nums">{unlinked} {unlinked===1?'vote':'votes'}</span></li>:null}</ul><p className="mt-2 text-sm leading-6 text-penny-muted">A voter linked to several accounts appears in each account’s breakdown.</p></details>:null}
+ <VoteImportanceBreakdown voters={context.voters} labels={context.importanceLabels}/>
  </section>
 }

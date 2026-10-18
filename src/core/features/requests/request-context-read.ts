@@ -1,3 +1,4 @@
+import { defaultImportanceLabels } from './vote-importance'
 import type { DatabaseConnection } from '@/core/platform/database'
 import { MutationError } from '@/core/app/operator-mutations'
 import { counts, emptyCounts, requestDeliverySql, requestVersionCounts, requestVersionDeliverySql, type DeliveryCounts, type RequestVersionDeliveryRow } from '../releases/counts'
@@ -7,6 +8,7 @@ import { requestContextRowsSql, type RequestContextRowName } from './request-con
 export type RequestContext = Record<RequestContextRowName, Record<string, unknown>[]> & {
   statusDetails: Pick<RequestAvailabilityRow,'status'|'statusSource'|'publicEta'|'internalStatusId'|'internalStatusName'>
   requestId: string
+  importanceLabels:readonly string[]
   boardId:string
   boardSlug:string
   categoryId:string|null
@@ -35,6 +37,8 @@ export async function requestContexts(database: DatabaseConnection, slugs: strin
   const placeholders = selected.map(() => '?').join(',')
   const requestIdsSql = `SELECT id FROM requests WHERE slug IN (${placeholders})`
   const rowQueries = Object.entries(requestContextRowsSql(requestIdsSql)) as [RequestContextRowName, string][]
+  const settings=await db.prepare('SELECT board_id,labels_json FROM penny_vote_importance_settings WHERE board_id IN(SELECT board_id FROM requests WHERE slug IN ('+placeholders+'))').bind(...selected).all<{board_id:string;labels_json:string}>()
+  const importanceLabels=new Map(settings.results.map(row=>[row.board_id,JSON.parse(row.labels_json) as string[]]))
   const results = await db.batch<Record<string, unknown>>([
     db.prepare(`${requestAvailabilitySql} WHERE r.slug IN (${placeholders})`).bind(...selected),
     ...rowQueries.map(([, sql]) => db.prepare(sql).bind(...selected)),
@@ -48,7 +52,7 @@ export async function requestContexts(database: DatabaseConnection, slugs: strin
   const contextsById = new Map<string, RequestContext>()
   for (const request of requests) {
     contextsById.set(request.id, {
-      requestId: request.id,boardId:request.boardId,boardSlug:request.boardSlug,categoryId:request.categoryId, statusDetails:{status:request.status,statusSource:request.statusSource,publicEta:request.publicEta,internalStatusId:request.internalStatusId,internalStatusName:request.internalStatusName}, actions: requestActions(request),
+      requestId: request.id,importanceLabels:importanceLabels.get(request.boardId)??defaultImportanceLabels,boardId:request.boardId,boardSlug:request.boardSlug,categoryId:request.categoryId, statusDetails:{status:request.status,statusSource:request.statusSource,publicEta:request.publicEta,internalStatusId:request.internalStatusId,internalStatusName:request.internalStatusName}, actions: requestActions(request),
       statusVersions: [], deliveryCounts: emptyCounts(),
       demand:{voteCount:0,evidenceCount:0,accountCount:0},
       voters: [], accounts: [], notes: [], comments: [], edits: [], attachments: [],

@@ -3,6 +3,7 @@ import type { FeedbackSource, FeedbackStatus, NativeImportValue } from './types'
 import { feedbackGraph } from './graph'
 import { boardPolicyValues } from './board-policy'
 import { asObject, nativeRow, omissionFields, reference, sourceText, sourceTime, stableFeedbackId } from './mapping-support'
+import { cannyVoteImportance } from './vote-importance'
 
 export const feedbackMappingVersion='penny-saved-feedback-1'
 export function feedbackMapping(source: FeedbackSource, actor: string): ImportMapping {
@@ -49,8 +50,13 @@ export function feedbackMapping(source: FeedbackSource, actor: string): ImportMa
    used=uv?Object.keys(p):idea?Object.keys(p).filter(field=>!(idea.omissions as string[]).includes(field)):csv?['Post URL','Post Title','Post Detail','Post Status','Date created','Post Author','Tags','tags','_boardId','_format']:['id','title','details','status','board','author','created','tags','mergeHistory']
   } else if(record.kind==='votes') {
    const post=reference(p.post), user=reference(p.voter)
+   let importance:number|null|undefined
+   if(!uv&&Object.hasOwn(p,'votePriority')){
+    try{importance=cannyVoteImportance(p.votePriority)}catch(error){const reason=(error as Error).message;return {effects:[],rejection:reason,unmapped:[{field:'votePriority',reason}]}}
+   }
    if(firstVotes.get(votePair(record))!==record.sourceId)return {effects:[],unmapped:[{reason:'Duplicate vote for the same historical contributor and post; original retained.'}]}
    rows.push(nativeRow('request_vote_contributions',{request_id:id('posts',post),requester_id:id('users',user),...time}));used=uv?Object.keys(p):['id','post','voter','created']
+   if(importance!==undefined){rows.push(nativeRow('penny_vote_importance',{request_id:id('posts',post),requester_id:id('users',user),importance,...time}));used.push('votePriority')}
    if(uv)rows.push(nativeRow('request_vote_supporter_types',{request_id:id('posts',post),requester_id:id('users',user),supporter_type:sourceText(uv.supporterType,'supporter type',20),created_at:created}))
   } else if(record.kind==='comments') {
    if(typeof p.internal!=='boolean'||typeof p.private!=='boolean')throw new Error('Comment privacy must be supplied')

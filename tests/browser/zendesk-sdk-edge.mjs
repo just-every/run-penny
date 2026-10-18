@@ -24,7 +24,7 @@ export async function zendeskSidebar({page,origin,key,ticket}){
   assert.equal(options.cors,false)
   assert.equal(options.headers.Authorization,'Bearer {{setting.penny_api_key}}')
   assert.equal(JSON.stringify(options).includes(key),false)
-  assert.match(url.pathname,/^\/api\/v1\/(?:requests|proxy-vote-contacts)(?:\/|$)/)
+  assert.match(url.pathname,/^\/api\/v1\/(?:requests|proxy-vote-contacts|boards)(?:\/|$)/)
   calls.push(options)
   const response=await fetch(origin+url.pathname+url.search,{
    method:options.type,redirect:'manual',

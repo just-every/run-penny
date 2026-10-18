@@ -2863,5 +2863,24 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_vote_importance_settings": {
+    "classification": "product",
+    "columns": [
+      "board_id",
+      "enabled",
+      "labels_json",
+      "updated_at"
+    ]
+  },
+  "penny_vote_importance": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "importance",
+      "created_at",
+      "updated_at"
+    ]
   }
 }

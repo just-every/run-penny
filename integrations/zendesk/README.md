@@ -73,3 +73,7 @@ Official references checked 19 October 2026:
 - [ZAF client and official SDK CDN](https://developer.zendesk.com/api-reference/apps/apps-core-api/client_api/)
 - [Ticket sidebar and requester events](https://developer.zendesk.com/api-reference/apps/apps-support-api/ticket_sidebar/)
 - [Current account subdomain](https://developer.zendesk.com/api-reference/apps/apps-support-api/all_locations/)
+
+When the selected request's board asks for importance, the sidebar offers its
+three or four labels. Leave it blank unless the customer stated a level.
+Penny validates the board's current choices in the vote transaction.

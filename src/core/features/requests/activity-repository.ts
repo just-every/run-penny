@@ -1,3 +1,4 @@
+import { voteImportanceSql } from './vote-importance'
 import type { DatabaseConnection } from '@/core/platform/database'
 import type { RequesterReference } from './lifecycle-types'
 import { publicRequestPredicate } from './publication-predicate'
@@ -17,14 +18,14 @@ export async function readRequesterActivity(connection: DatabaseConnection, iden
     connection.binding.prepare(`
       SELECT DISTINCT CASE WHEN ${publicRequestPredicate} THEN r.slug ELSE original.slug END AS slug,
         CASE WHEN ${publicRequestPredicate} THEN r.public_title END AS title,
-        CASE WHEN ${publicRequestPredicate} THEN 1 ELSE 0 END AS available
+        CASE WHEN ${publicRequestPredicate} THEN 1 ELSE 0 END AS available,${voteImportanceSql('r.id','contribution.requester_id')} AS importance
       FROM request_vote_contributions contribution JOIN requests original ON original.id=contribution.request_id
       JOIN request_canonical_roots root ON root.origin_id=original.id
       JOIN requests r ON r.id=root.canonical_id JOIN boards b ON b.id=r.board_id
       LEFT JOIN requesters author ON author.id=r.author_requester_id
       JOIN request_votes rv ON rv.request_id=r.id AND rv.requester_id=contribution.requester_id
       WHERE contribution.requester_id=? AND original.withdrawn_at IS NULL ORDER BY slug ASC
-    `).bind(identity.requesterId).all<{ slug: string; title: string | null; available: number }>(),
+    `).bind(identity.requesterId).all<{ slug: string; title: string | null; available: number;importance:number|null }>(),
     connection.binding.prepare(`
       SELECT DISTINCT CASE WHEN ${publicRequestPredicate} THEN r.slug ELSE original.slug END AS slug,
         CASE WHEN ${publicRequestPredicate} THEN r.public_title END AS title,

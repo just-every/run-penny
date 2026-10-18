@@ -36,17 +36,21 @@ it('[CAP-014 REQ-026 REQ-010] records inbox-sourced customer demand once, withou
  expect(await total('requester_update_permissions')).toBe(before.permissions)
 })
 
-it('[CAP-014 REQ-008 REQ-009 DATA-001] retains native source attribution through merge, unmerge and the product archive',async()=>{
+it('[CAP-014 REQ-035 REQ-008 REQ-009 DATA-001] retains native source attribution and importance through merge, unmerge and the product archive',async()=>{
  const g=await graph(2),a=g.requests[0],b=g.requests[1]
- const contact=await json<{requesterId:string}>(`/api/operator/requests/${a.slug}/proxy-votes`,{contact:{displayName:'Morgan Reed'},source:'Sales call, customer explicitly asked'},g.operator)
- await json(`/api/operator/requests/${b.slug}/proxy-votes`,{requesterId:contact.requesterId,source:'Follow-up support conversation'},g.operator)
+ expect((await call('/api/operator/boards/regression/vote-importance',{enabled:true,labels:['Nice to have','Important','Must have']},g.operator,'PUT')).status).toBe(200)
+ const contact=await json<{requesterId:string}>(`/api/operator/requests/${a.slug}/proxy-votes`,{contact:{displayName:'Morgan Reed'},source:'Sales call, customer explicitly asked',importance:3},g.operator)
+ await json(`/api/operator/requests/${b.slug}/proxy-votes`,{requesterId:contact.requesterId,source:'Follow-up support conversation',importance:2},g.operator)
  await json(`/api/operator/requests/${a.slug}/merge`,{targetSlug:b.slug,notifySubscribers:false},g.operator)
  const merged=await json<{demand:{voteCount:number};voters:{id:string;proxyAttributionsJson:string}[]}>(`/api/operator/requests/${b.slug}/context`,undefined,g.operator)
  expect(merged.demand.voteCount).toBe(2);expect(JSON.parse(merged.voters.find(v=>v.id===contact.requesterId)!.proxyAttributionsJson)).toHaveLength(2)
  await json(`/api/operator/requests/${a.slug}/unmerge`,{},g.operator)
  expect((await json<typeof merged>(`/api/operator/requests/${a.slug}/context`,undefined,g.operator)).demand.voteCount).toBe(2)
- const exported=await json<{archive:{tables:{penny_proxy_votes:unknown[]}}}>('/api/operator/data/export',undefined,g.operator)
+ const exported=await json<{archive:{tables:{penny_proxy_votes:unknown[];penny_vote_importance:{importance:number}[];penny_vote_importance_settings:{enabled:number;labels_json:string}[]}}}>('/api/operator/data/export',undefined,g.operator)
  expect(exported.archive.tables.penny_proxy_votes).toHaveLength(2)
+ expect(exported.archive.tables.penny_vote_importance.map(row=>row.importance).sort()).toEqual([2,3])
+ expect(exported.archive.tables.penny_vote_importance_settings).toHaveLength(1)
+ const importanceBefore=(await env.DB.prepare('SELECT * FROM penny_vote_importance ORDER BY request_id').all()).results,settingsBefore=(await env.DB.prepare('SELECT * FROM penny_vote_importance_settings').all()).results
  expect(await total('penny_proxy_votes')).toBe(2)
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
  const operator=await owner(),imported=await call('/api/operator/data/import',exported,operator)
@@ -54,6 +58,8 @@ it('[CAP-014 REQ-008 REQ-009 DATA-001] retains native source attribution through
  let restored=await imported.json() as {operationId:string;status:string}
  for(let step=0;step<100&&restored.status!=='complete';step++)restored=await json(`/api/operator/data/operations/${restored.operationId}/resume`,{},operator)
  expect(restored.status).toBe('complete');expect(await total('penny_proxy_votes')).toBe(2)
+ expect((await env.DB.prepare('SELECT * FROM penny_vote_importance ORDER BY request_id').all()).results).toEqual(importanceBefore)
+ expect((await env.DB.prepare('SELECT * FROM penny_vote_importance_settings').all()).results).toEqual(settingsBefore)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
 

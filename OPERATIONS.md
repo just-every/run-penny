@@ -365,3 +365,9 @@ import with this source before using an older importer. No provider setup is nee
 ## Native proxy votes
 
 Apply additive migration `0080_native_proxy_votes.sql` through `rer setup` or the existing deployment path. Existing votes and contribution origins are unchanged. Proxy attribution follows its contribution through request merges and reversals; a customer's later direct vote counts once and marks the attribution as superseded. Product archives retain the source, recorder and unverified contact without granting authority or consent. Keep the expanded schema on rollback. The optional private Zendesk sidebar app uses a Zendesk secure setting for a Penny key with `requests:read` and `votes:write`; no Zendesk token or key is added to Penny archives. The wider Zendesk capture connector remains CAP-003.
+
+## Vote importance
+
+Apply additive migration `0081_vote_importance.sql` through `rer setup` or deployment. In Feedback settings, expand a board's **Vote importance**, enable it and save three or four distinct labels. Existing votes stay unspecified. Turning it off retains recorded choices; the API permits their owners to clear them. Settings and choices are product data in archives and erasure, not identity or permission. Request merges project each person's latest explicit choice; a later change updates their contribution origins so unmerge retains it. Keep the expanded schema on rollback.
+
+Canny saved `votePriority` strings map Nice to have/Important/Must have to levels 1/2/3 and No priority to an explicit empty choice. Missing fields create nothing; unknown strings and numeric create-API parameters are refused, never inferred. Preview and completed receipts count every saved enum. Replay and conflict-aware undo retain original-file and native-row custody.

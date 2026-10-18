@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure, OperatorResourceLoading, OperatorResourceNotFound, OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
 import { secondaryButtonClass } from '@/core/ui/app/classes'
+import type { FeedbackReceipt } from '../receipt'
 import type { UserVoiceReceipt } from '../uservoice-receipt'
 import { UserVoiceReceiptSection } from './uservoice-receipt'
 import { byPlainName } from '../../data/ui/record-words'
@@ -17,6 +18,7 @@ export interface ImportReceipt {
   effects: { mail: number; notifications: number }
   originalsRetained: boolean
   conflicts: { kind: string; sourceId: string; reason: string }[]
+  voteImportance?:FeedbackReceipt['voteImportance']
   uservoice?: UserVoiceReceipt
 }
 
@@ -73,6 +75,7 @@ export function ReceiptContent({ receipt, title }: { receipt: ImportReceipt; tit
       {receipt.sources.some(source => source.skipped.length > 0) ? <ul className="space-y-2 text-sm leading-6 text-penny-muted">{receipt.sources.flatMap(source => source.skipped.map(item => <li key={`${source.kind}-${item.reason}`}><span className="font-medium text-penny-ink">{source.kind}: {item.count} skipped.</span> {item.reason}</li>))}</ul> : null}
     </div>
 
+    {receipt.voteImportance?.length?<section className="space-y-2" aria-label="Imported vote importance"><h4 className="font-bold text-penny-ink">Imported vote importance</h4><ul className="grid gap-3 text-sm sm:grid-cols-2">{receipt.voteImportance.map(item=><li key={item.sourceValue} className="rounded-lg border border-penny-line p-3"><span className="font-semibold">{item.sourceValue}</span><p className="mt-1 text-penny-muted">{item.planned} in source · {item.created} imported · {item.removed} removed · {item.retained} retained</p></li>)}</ul></section>:null}
     {receipt.uservoice ? <UserVoiceReceiptSection history={receipt.uservoice}/> : null}
 
     {receipt.aggregates.length ? <div className="space-y-2">

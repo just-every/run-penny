@@ -1,4 +1,14 @@
 {
+  "penny_vote_importance": {
+    "columns": [
+      { "name": "request_id", "default": null },
+      { "name": "requester_id", "default": null },
+      { "name": "importance", "default": null },
+      { "name": "created_at", "default": null },
+      { "name": "updated_at", "default": null }
+    ],
+    "keys": ["request_id", "requester_id"]
+  },
   "boards": {
     "columns": [
       {
