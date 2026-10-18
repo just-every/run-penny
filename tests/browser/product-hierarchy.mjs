@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict'
+import {moderationJourney} from './moderation-runtime.mjs'
+await moderationJourney('product-hierarchy',async({runtime,origin,operator,json,person,pageFor,capture})=>{
+ const customer=await person('eli@example.test','Eli Wong'),auth={Authorization:`Bearer ${customer.token}`}
+ const requests=[]
+ for(const [title,description] of [['Schedule monthly finance exports','Finance needs a monthly CSV for its board review.'],['Export reports by department','Finance reconciles costs by department.'],['Send reporting summaries','Account managers need regular summaries.']])requests.push(await json('/api/public/requests',{title,description,boardSlug:'finance',idempotencyKey:crypto.randomUUID()},auth,'POST',201))
+ const actor=await runtime.db.prepare('SELECT id FROM operators').first('id')
+ const account=await json('/api/operator/accounts',{name:'Harbor Analytics',internalOwnerId:actor,revenueCents:2400000},operator,'POST',201)
+ const requester=await runtime.db.prepare('SELECT id FROM requesters WHERE display_name=?').bind('Eli Wong').first('id')
+ await runtime.db.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(requester,account.id,new Date().toISOString()).run()
+ const item='01J00000000000000000000000',now=new Date().toISOString()
+ await runtime.db.prepare("INSERT INTO roadmap_items(id,slug,title,summary,status,created_at,updated_at) VALUES(?,?,'Scheduled reporting delivery','Monthly reporting for finance','planned',?,?)").bind(item,item,now,now).run()
+ const owner=await pageFor({cookie:operator.Cookie})
+ await owner.goto(origin+'/app/features',{waitUntil:'networkidle'})
+ await capture(owner,'empty-products')
+ const create=async(kind,name,parent)=>{const summary=owner.locator('summary').filter({hasText:new RegExp(`^Create ${kind}$`)});if(!await summary.evaluate(el=>el.parentElement.open))await summary.click();const form=owner.getByRole('form',{name:`Create ${kind}`,exact:true});await form.getByLabel(`${kind[0].toUpperCase()+kind.slice(1)} name`,{exact:true}).fill(name);if(parent)await form.getByRole('combobox').selectOption({label:parent});await form.getByRole('button',{name:`Create ${kind}`,exact:true}).click();await form.getByRole('status').waitFor();await owner.getByRole('heading',{name,exact:true}).waitFor()}
+ await create('product','Harbor Platform')
+ await create('component','Finance workflows','Harbor Platform')
+ await create('component','Customer reporting','Harbor Platform')
+ await create('feature','Scheduled finance reports','Harbor Platform / Finance workflows')
+ const card=owner.getByRole('article',{name:'Scheduled finance reports',exact:true})
+ await card.getByText('Manage feature links',{exact:true}).click()
+ const form=card.getByRole('form',{name:'Link a request',exact:true})
+ for(const request of requests){const record=await runtime.db.prepare('SELECT id FROM requests WHERE slug=?').bind(request.slug).first();await form.getByLabel('Request',{exact:true}).selectOption(record.id);await form.getByRole('button',{name:'Save link',exact:true}).click();await card.getByRole('link',{name:(await runtime.db.prepare('SELECT title FROM requests WHERE id=?').bind(record.id).first()).title,exact:true}).waitFor()}
+ const roadmapForm=card.getByRole('form',{name:'Link a roadmap',exact:true})
+ await roadmapForm.getByLabel('Roadmap item',{exact:true}).selectOption(item)
+ await roadmapForm.getByRole('button',{name:'Save link',exact:true}).click()
+ await card.getByRole('link',{name:'Scheduled reporting delivery',exact:true}).waitFor()
+ await capture(owner,'feature-demand',card)
+ await card.locator('summary').filter({hasText:'Edit feature: Scheduled finance reports'}).click()
+ const edit=card.getByRole('form',{name:'Edit feature: Scheduled finance reports',exact:true})
+ await edit.getByLabel('Component',{exact:true}).selectOption({label:'Customer reporting'})
+ await Promise.all([owner.waitForResponse(r=>r.request().method()==='PATCH'&&r.url().includes('/hierarchy/feature/')),edit.getByRole('button',{name:'Save changes',exact:true}).click()])
+ const target=owner.getByRole('region',{name:'Harbor Platform',exact:true})
+ await target.getByRole('heading',{name:'Customer reporting',exact:true}).waitFor()
+ await owner.reload({waitUntil:'networkidle'})
+ assert.equal((await json('/api/operator/hierarchy',undefined,operator)).features[0].requests.length,3)
+ await capture(owner,'moved-feature')
+ const visitor=await pageFor();await visitor.goto(origin+'/app/features',{waitUntil:'networkidle'});assert.match(new URL(visitor.url()).pathname,/signin/)
+ assert.equal((await fetch(origin+'/api/operator/hierarchy')).status,401)
+})

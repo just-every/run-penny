@@ -582,7 +582,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence a
 
 Current entries include the shipped setup and workspace clocks, request status controls and status roadmap, board categories and participation, requester subscriptions and sender identity, ownership, aging and private discussion. REQ-017 now includes repeated-decline reversal to the prior direct or mapped status; REQ-022 includes the private requester directory, existing-session refusal, contribution hiding and restoration, and atomic audit refusal. The installed board is served at `/` and `/portal/feedback`; HOME-002 remains the separate run-site landing. Local dev enters as the owner and suppresses outgoing mail without retaining or displaying captured messages (BASE-DATA-002). Each partial entry keeps its remaining acceptance work separate; dated receipts above retain their historical scope.
 
-**Counts:** 114 done, 57 partial, 76 missing (247 clauses).
+**Counts:** 115 done, 57 partial, 75 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -705,7 +705,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | TRIAGE-004 | partial | Private one-level note replies and selected operator @mentions create one durable in-app notice per note and recipient by default, with idempotent save, dismissal, active-member admission and archive/erasure custody. API and 1440/390 browser journeys pass. Gap: NOTIFY-006 channel preferences, email/chat/push delivery and digests remain missing. | `tests/base/internal-discussion.test.ts`; `tests/browser/internal-discussion.mjs` |
 | TRIAGE-005 | missing | Tagging and assigning 200 fixture items writes one audited batch; undo restores every item; a bulk removal (REQ-038) records one reason per batch. | — |
 | TRIAGE-006 | partial | For each worker type, a kill-and-restart test resumes without duplicates and shows the failure state until resolved. | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts`; `tests/base/notifications.test.ts:87` |
-| PRIO-001 | missing | A base test rolls three requests from two accounts up to one feature, counting each account once; moving the feature to another component keeps every link. | — |
+| PRIO-001 | done | Products contain components and features; three requests from two accounts roll up once per account, moves preserve all links, and private authority, archive and public boundaries hold at both widths. | `tests/base/product-hierarchy.test.ts`; `tests/browser/product-hierarchy.mjs` |
 | PRIO-002 | done | Reviewed saved Canny API/CSV status names become native internal statuses with mapped public labels, private names by default, remapping without mail, replay, undo and later-edit conflict custody. Browser journeys at 1440/390 exercise import and native editing. | `tests/base/request-status-workflow.test.ts`; `tests/base/import-statuses.test.ts`; `tests/browser/import-statuses.mjs` |
 | PRIO-003 | missing | A RICE view sorts fixture features with every component visible; changing a weight re-sorts; the decision brief and every public payload show no score. | — |
 | PRIO-004 | missing | Two operators' inputs are both visible on a card; the weighted rank is computed; changing the criteria keeps earlier scores readable. | — |

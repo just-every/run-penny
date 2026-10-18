@@ -2882,5 +2882,50 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_products": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_components": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "product_id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_features": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "component_id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_feature_requests": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "feature_id",
+      "created_at"
+    ]
+  },
+  "penny_feature_roadmap": {
+    "classification": "product",
+    "columns": [
+      "roadmap_item_id",
+      "feature_id",
+      "created_at"
+    ]
   }
 }

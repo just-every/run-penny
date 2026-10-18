@@ -2,7 +2,7 @@
 
 This page is for the person who runs Penny: the operator. It follows one piece of customer feedback from the first note to a published release, using the operator app at `/app`. Invited operators share product access; the installation owner manages installation controls.
 
-The operator app has these sections: Overview, Feedback (your evidence inbox), Moderation, Decisions, Roadmap, Releases, Accounts, Feedback settings and Data. Start on **Overview**, which lists what needs you: requests to moderate, evidence awaiting review, decisions ready to commit, status updates waiting to be published and shipped items with no release.
+The operator app has these sections: Overview, Feedback (your evidence inbox), Moderation, Features, Decisions, Roadmap, Releases, Accounts, Feedback settings and Data. Start on **Overview**, which lists what needs you: requests to moderate, evidence awaiting review, decisions ready to commit, status updates waiting to be published and shipped items with no release.
 
 ## 1. Record evidence
 
@@ -50,6 +50,12 @@ requester comments. A reassignment moves work between operators' queues. Review
 held comments in Moderation, then use **Mark handled** when a public comment no
 longer needs your attention. Ownership and handled-comment history travel in a
 product backup, without granting operator sign-in authority.
+
+## Organise related requests
+
+Open **Features** to create a product, add its components, then add features. On a feature, **Manage feature links** attaches requests and roadmap items. A request belongs to one feature; attaching it elsewhere moves that link. Detaching preserves the request itself. **Edit feature** changes its name or component without losing its links, and a component can move between products.
+
+Each feature shows distinct voters, accounts, linked evidence and recorded account revenue across its requests. The same account and its revenue count once. Unknown revenue stays unknown; this is the revenue recorded on the account, not an ARR or MRR estimate. The hierarchy and these figures stay operator-only.
 
 ## 2. Build a decision
 

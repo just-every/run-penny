@@ -17,6 +17,7 @@ import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppCustomersRouteImport } from './routes/app.customers'
 import { Route as AppDataRouteImport } from './routes/app.data'
 import { Route as AppDecisionsRouteImport } from './routes/app.decisions'
+import { Route as AppFeaturesRouteImport } from './routes/app.features'
 import { Route as AppFeedbackRouteImport } from './routes/app.feedback'
 import { Route as AppLearningRouteImport } from './routes/app.learning'
 import { Route as AppModerationRouteImport } from './routes/app.moderation'
@@ -85,6 +86,11 @@ const AppDataRoute = AppDataRouteImport.update({
 const AppDecisionsRoute = AppDecisionsRouteImport.update({
   id: '/decisions',
   path: '/decisions',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFeaturesRoute = AppFeaturesRouteImport.update({
+  id: '/features',
+  path: '/features',
   getParentRoute: () => AppRoute,
 } as any)
 const AppFeedbackRoute = AppFeedbackRouteImport.update({
@@ -245,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/app/customers': typeof AppCustomersRouteWithChildren
   '/app/data': typeof AppDataRoute
   '/app/decisions': typeof AppDecisionsRouteWithChildren
+  '/app/features': typeof AppFeaturesRoute
   '/app/feedback': typeof AppFeedbackRoute
   '/app/learning': typeof AppLearningRoute
   '/app/moderation': typeof AppModerationRoute
@@ -280,6 +287,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signin': typeof SigninRoute
   '/app/data': typeof AppDataRoute
+  '/app/features': typeof AppFeaturesRoute
   '/app/feedback': typeof AppFeedbackRoute
   '/app/learning': typeof AppLearningRoute
   '/app/moderation': typeof AppModerationRoute
@@ -316,6 +324,7 @@ export interface FileRoutesById {
   '/app/customers': typeof AppCustomersRouteWithChildren
   '/app/data': typeof AppDataRoute
   '/app/decisions': typeof AppDecisionsRouteWithChildren
+  '/app/features': typeof AppFeaturesRoute
   '/app/feedback': typeof AppFeedbackRoute
   '/app/learning': typeof AppLearningRoute
   '/app/moderation': typeof AppModerationRoute
@@ -357,6 +366,7 @@ export interface FileRouteTypes {
     | '/app/customers'
     | '/app/data'
     | '/app/decisions'
+    | '/app/features'
     | '/app/feedback'
     | '/app/learning'
     | '/app/moderation'
@@ -392,6 +402,7 @@ export interface FileRouteTypes {
     | '/'
     | '/signin'
     | '/app/data'
+    | '/app/features'
     | '/app/feedback'
     | '/app/learning'
     | '/app/moderation'
@@ -427,6 +438,7 @@ export interface FileRouteTypes {
     | '/app/customers'
     | '/app/data'
     | '/app/decisions'
+    | '/app/features'
     | '/app/feedback'
     | '/app/learning'
     | '/app/moderation'
@@ -524,6 +536,13 @@ declare module '@tanstack/react-router' {
       path: '/decisions'
       fullPath: '/app/decisions'
       preLoaderRoute: typeof AppDecisionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/features': {
+      id: '/app/features'
+      path: '/features'
+      fullPath: '/app/features'
+      preLoaderRoute: typeof AppFeaturesRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/feedback': {
@@ -778,6 +797,7 @@ interface AppRouteChildren {
   AppCustomersRoute: typeof AppCustomersRouteWithChildren
   AppDataRoute: typeof AppDataRoute
   AppDecisionsRoute: typeof AppDecisionsRouteWithChildren
+  AppFeaturesRoute: typeof AppFeaturesRoute
   AppFeedbackRoute: typeof AppFeedbackRoute
   AppLearningRoute: typeof AppLearningRoute
   AppModerationRoute: typeof AppModerationRoute
@@ -793,6 +813,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCustomersRoute: AppCustomersRouteWithChildren,
   AppDataRoute: AppDataRoute,
   AppDecisionsRoute: AppDecisionsRouteWithChildren,
+  AppFeaturesRoute: AppFeaturesRoute,
   AppFeedbackRoute: AppFeedbackRoute,
   AppLearningRoute: AppLearningRoute,
   AppModerationRoute: AppModerationRoute,
