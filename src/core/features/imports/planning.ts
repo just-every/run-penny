@@ -4,6 +4,7 @@ import type { ImportStreamPlan } from '../../../../base/modules/import-kit/src/d
 import {planFingerprint} from '../../../../base/modules/import-kit/src/plan/index'
 import { sourceIdentity } from '../../../../base/modules/import-kit/src/provenance/identity'
 import { canonicalSize } from '../../../../base/modules/import-kit/src/provenance/canonical-stream'
+import {importRoadmapRecord} from './status-roadmap'
 import { feedbackMapping } from './mapping'
 import { withoutLabelNamespace } from './mapping-support'
 import { readSavedFeedback } from './source'
@@ -14,7 +15,10 @@ import { erasedPlanRecords } from './erasure-preview'
 import { NativeError } from '../auth/native-tokens'
 
 export async function prepareFeedback(input:SavedFeedbackInput,context:D1ImportContext,actor:string){
- const source=await readSavedFeedback(input),nativeMapping=feedbackMapping(source,actor)
+ const source=await readSavedFeedback(input)
+ const roadmap=await importRoadmapRecord(source,context.storage.database as unknown as D1Database)
+ if(roadmap)source.records.push(roadmap)
+ const nativeMapping=feedbackMapping(source,actor)
  if(source.records.length>importBounds.records)throw new NativeError(`Saved history including derived contributors has ${source.records.length} records; the limit is ${importBounds.records}. No history was applied.`,413)
  const claims=new Map<string,{identity:string;source_hash:string;mapping_version:string;effects_hash:string}>()
  for(let start=0;start<source.records.length;start+=500){

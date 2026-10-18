@@ -1,3 +1,4 @@
+import {roadmapCustodyCheck} from './status-roadmap'
 import type { D1Sql } from '../../../../base/modules/import-kit/src/d1/index'
 import { quote } from './native-keys'
 import type { NativeDependency } from './native-relations'
@@ -6,7 +7,8 @@ import type { NativeDependency } from './native-relations'
  * decoded key columns retain composite/NULL identities for the anti-join,
  * rather than re-reading and decoding every receipt for every native row. */
 export function relationshipCheck(table:string,parent:(column:string)=>string,scope:D1Sql,namespace:string,dependencies:NativeDependency[]):D1Sql&{ctes:string[]} {
- const relations:string[]=[],tables=new Map<string,NativeDependency>()
+ const roadmap=roadmapCustodyCheck(table,parent)
+ const relations:string[]=roadmap?[roadmap]:[],tables=new Map<string,NativeDependency>()
  for(const dependency of dependencies){
   // The status clock is read-only derived state, cascaded with its request.
   // Native request values and mapping relationships retain the reversal fence.

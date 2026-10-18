@@ -29,6 +29,8 @@ export function feedbackMapping(source: FeedbackSource, actor: string): ImportMa
    rows.push(nativeRow('requesters',{id:target,display_name:sourceText(p.name,'historical contributor name',200),...time}));used=['id','name','created']
   } else if(record.kind==='tags') {
    rows.push(nativeRow('tags',{id:target,name:sourceText(p.name,'private tag',200)+' · '+target.slice(-8),...time}));used=['id','name','created']
+  } else if(record.kind==='roadmap') {
+   rows.push(nativeRow('penny_import_roadmaps',{id:target,before_json:p.before,after_json:p.after,created_at:created}));used=Object.keys(p)
   } else if(record.kind==='statuses') {
    rows.push(nativeRow('request_internal_statuses',{id:target,name:p.name,public_status:p.publicStatus,show_public_label:Number(p.showPublicLabel),position:p.position,...time}));used=Object.keys(p)
   } else if(record.kind==='posts') {

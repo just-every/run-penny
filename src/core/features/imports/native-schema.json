@@ -669,5 +669,28 @@
     "keys": [
       "id"
     ]
+  },
+  "penny_import_roadmaps": {
+    "columns": [
+      {
+        "name": "id",
+        "default": null
+      },
+      {
+        "name": "before_json",
+        "default": null
+      },
+      {
+        "name": "after_json",
+        "default": null
+      },
+      {
+        "name": "created_at",
+        "default": null
+      }
+    ],
+    "keys": [
+      "id"
+    ]
   }
 }

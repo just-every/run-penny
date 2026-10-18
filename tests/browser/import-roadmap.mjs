@@ -1,0 +1,53 @@
+import assert from 'node:assert/strict'
+import {moderationJourney} from './moderation-runtime.mjs'
+
+await moderationJourney('import-roadmap',async({origin,runtime,operator,json,pageFor,capture})=>{
+ const prior=(await json('/api/operator/settings/status-roadmap',undefined,operator)).settings
+ await json('/api/operator/settings/status-roadmap',{...prior,source:'approved_items'},operator,'PUT')
+ const owner=await pageFor({cookie:operator.Cookie}),visitor=await pageFor()
+ await owner.goto(origin+'/app/data',{waitUntil:'networkidle'})
+ const panel=owner.locator('article').filter({has:owner.getByRole('heading',{name:'Move saved feedback in',exact:true})}).last()
+ const csv='Post Title,Post Detail,Post Status,Date created,Post Author,Post URL\r\nScheduled exports,Keep finance exports predictable.,planned,2024-07-08T09:10:11Z,Avery Morgan,https://finance.canny.io/p/schedules\r\nFaster exports,Prepare large exports sooner.,complete,2024-07-08T09:10:11Z,Avery Morgan,https://finance.canny.io/p/faster\r\nCustom columns,Choose export columns.,open,2024-07-08T09:10:11Z,Avery Morgan,https://finance.canny.io/p/columns\r\n'
+ await panel.getByLabel('Export file',{exact:true}).setInputFiles({name:'finance-roadmap.csv',mimeType:'text/csv',buffer:Buffer.from(csv)})
+ await panel.getByLabel('Penny board for these ideas',{exact:true}).fill('Finance history')
+ await panel.getByLabel('Private board (only operators see it)',{exact:true}).uncheck()
+ await panel.getByRole('checkbox',{name:/Rebuild the public status roadmap from this board/}).check()
+ await capture(owner,'review-roadmap-rebuild',panel)
+ const apply=async()=>{
+  await panel.getByRole('button',{name:'Preview saved feedback',exact:true}).click()
+  await panel.getByRole('button',{name:'Apply reviewed import',exact:true}).click()
+  await panel.getByText('Import complete. Historical people have no sign-in or email permissions.',{exact:true}).waitFor()
+ }
+ await apply()
+ assert.equal((await json('/api/operator/settings/status-roadmap',undefined,operator)).settings.source,'request_statuses')
+ await panel.getByRole('button',{name:'Undo unchanged imported effects',exact:true}).click()
+ await panel.getByText('Imported effects removed. Source originals remain private unless erased.',{exact:true}).waitFor()
+ assert.equal((await json('/api/operator/settings/status-roadmap',undefined,operator)).settings.source,'approved_items')
+ await apply()
+ assert.deepEqual(await json('/api/public/roadmap'),[])
+ const board=(await json('/api/public/boards')).find(b=>b.name==='Finance history')
+ const records=(await runtime.db.prepare('SELECT slug,title,description FROM requests').all()).results
+ for(const record of records)await json('/api/operator/moderation/'+record.slug,{verdict:'approved',title:record.title,description:record.description,boardSlug:board.slug,displayName:'Avery Morgan'},operator)
+ await visitor.goto(origin+'/portal/roadmap',{waitUntil:'networkidle'})
+ await visitor.getByRole('link',{name:'Scheduled exports',exact:true}).waitFor()
+ await visitor.getByRole('link',{name:'Faster exports',exact:true}).waitFor()
+ assert.equal(await visitor.getByRole('link',{name:'Custom columns',exact:true}).count(),0)
+ await capture(visitor,'rebuilt-status-roadmap')
+ const scheduled=records.find(r=>r.title==='Scheduled exports')
+ await json(`/api/operator/requests/${scheduled.slug}/status-updates`,{status:'shipped',body:'Monthly schedules are ready.',publicEta:'2027-Q1'},operator)
+ await visitor.reload({waitUntil:'networkidle'})
+ assert.equal((await json('/api/public/roadmap')).filter(card=>card.status==='shipped').length,2)
+ await capture(visitor,'moved-imported-request')
+ await owner.goto(origin+'/app/settings',{waitUntil:'networkidle'})
+ const settings=owner.getByRole('form',{name:'Public roadmap settings',exact:true})
+ await settings.locator('input[name="planned-visible"]').uncheck()
+ await settings.locator('input[name="shipped-label"]').fill('Delivered')
+ await settings.locator('select[name="shippedDays"]').selectOption('30')
+ await settings.getByRole('button',{name:'Save public roadmap',exact:true}).click()
+ await owner.getByText('Public roadmap saved.',{exact:true}).waitFor()
+ await capture(owner,'imported-roadmap-settings',settings)
+ await visitor.reload({waitUntil:'networkidle'})
+ await visitor.getByRole('heading',{name:/Delivered/}).waitFor()
+ assert.equal(await visitor.getByRole('heading',{name:/^Planned/}).count(),0)
+ await capture(visitor,'configured-imported-roadmap')
+})

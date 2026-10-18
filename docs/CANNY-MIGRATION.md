@@ -247,3 +247,21 @@ Each definition must name a status in the supplied posts. Definitions and
 request links share reviewed source custody: identical replay creates nothing,
 undo removes unchanged imported definitions, and later native edits or references
 refuse reversal. Historical people gain no identity or email permission.
+
+## Rebuild the status roadmap
+
+For a public CSV destination board, choose **Rebuild the public status roadmap
+from this board** before preview. It replaces the installation's current roadmap
+selection with that board and the four standard status columns, showing all
+Shipped requests. Importing still holds requests for moderation; approval keeps
+the imported Planned or Shipped status. Feedback settings can then hide or rename
+columns and limit Shipped to 30, 90 or 365 days.
+
+Prepared bundles can copy the source's exact board and column choices in a
+`roadmap` mapping: `boardIds` lists supplied public source-board IDs, `columns`
+contains each of `under_review`, `planned`, `in_progress` and `shipped` with a
+`label` and `visible` flag, and `shippedDays` is `null`, `30`, `90` or `365`.
+The preview binds the current settings; a later change invalidates approval.
+Replay changes nothing. Undo restores the earlier settings before removing the
+imported boards, and refuses if the roadmap or imported records changed later.
+This saved-file path does not acquire live Canny data (MIG-001).

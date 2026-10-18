@@ -25,6 +25,7 @@ export interface SavedFeedbackInput {
  boardPolicies?:Record<string,import('./board-policy').FeedbackBoardPolicy>
  /** Source status names retained as internal statuses; public mappings remain explicit below. */
  internalStatuses?:Record<string,{name:string;showPublicLabel:boolean}>
+ roadmap?:import('./status-roadmap-policy').ImportRoadmap
  namespace: string
  files: { name: string; kind: FeedbackKind; version: 'v1' | 'v2' | 'classic-csv' | 'ideas-csv' | UserVoiceVersion | 'relationships-v1'; base64: string; boardId?: string; tagMapping?: Record<string, string[]>; ideas?:IdeasColumns; uservoice?:UserVoiceOptions }[]
  statuses: Record<string, FeedbackStatus>
