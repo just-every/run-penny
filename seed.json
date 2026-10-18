@@ -16,6 +16,13 @@
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
     {
+      "id": "native-proxy-votes",
+      "description": "Record a customer proxy vote from an inbox item, request card or private Zendesk sidebar, with private source/recorder attribution, one vote per customer, no identity verification or email consent, individual-voter CSV and portable custody. Zendesk proof uses its SDK/proxy edge fixtures; no live account installation is claimed.",
+      "clauses": [
+        "CAP-014"
+      ]
+    },
+    {
       "id": "canny-status-workflow",
       "description": "Reviewed saved Canny imports retain custom internal status names and can reconstruct a public status roadmap from selected public boards, with replay and conflict-safe undo. Imported requests remain held for native moderation; approval preserves their mapped status.",
       "clauses": [
@@ -178,7 +185,7 @@
     "Multiple workspaces, businesses, or tenants",
     "Granular roles, permissions, and approval chains",
     "A CRM, support inbox, survey, NPS, community chat, or general-purpose forum",
-    "Anonymous or unverified live voting",
+    "Requester self-voting without verified identity; operator-recorded proxy attribution never grants identity",
     "AI outside the bounded source-cited cancellation investigation in LEARN-001 through LEARN-006; no scoring, ranking or automatic merging",
     "A combined priority score or automatic ranking of requests, bets, or roadmap items",
     "Automated CRM/support breadth, review scraping and call ingestion beyond owner-selected Orbit evidence targets in LEARN-001",
@@ -291,6 +298,19 @@
       ],
       "adapters": [
         "penny.learning-egress.v1"
+      ]
+    },
+    {
+      "id": "zendesk-proxy-sidebar",
+      "required": false,
+      "why": "Optional private Zendesk ticket-sidebar app loads the official ZAF SDK inside Zendesk. Zendesk\u2019s secure server proxy uses an installation-held Penny API key to read selected request/customer choices and record explicitly reviewed proxy votes. Penny makes no outbound Zendesk call.",
+      "data": [
+        "customer choice display names and addresses returned only within the delegated votes:write scope",
+        "published request search results",
+        "ticket requester and source link supplied for the selected proxy vote"
+      ],
+      "adapters": [
+        "penny.zendesk-proxy.v1"
       ]
     }
   ],

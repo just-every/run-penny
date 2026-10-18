@@ -25,6 +25,12 @@ Linking does not mark anything reviewed, and linking or unlinking never changes 
 
 An evidence item can have private attachments and later wording versions. Editing wording keeps the item's identity and all earlier versions. Only operators can read these versions and files, even when a linked request is public. The Accounts page shows commercial context, requesters, evidence in observed-time order, and linked requests and decisions. None of this private context is copied to the portal or requester email.
 
+### Record a customer’s vote
+
+On an inbox item or a request in Moderation, open **Record a customer’s vote**. Find and select an existing customer, or explicitly create a new unverified contact. Choose the request and enter the source that justifies the vote; an original source URL is optional. The request’s supporter list shows the proxy mark, recorder and source privately. **Export individual votes (CSV)** includes that attribution.
+
+One customer counts once, including when they later verify their address and vote themselves. Recording the proxy never verifies an address or subscribes anyone to email. Public pages include the vote only in the total, even on a board that lists direct voters. Merge and unmerge retain each source’s attribution. A private Zendesk ticket-sidebar app is supplied under `integrations/zendesk`; its setup guide explains the server-held scoped key. This is the proxy-vote action, not the wider Zendesk capture connector.
+
 Before a request is public, someone needs to approve it in **Moderation**. That page, and what customers see, is covered in [The public portal](/docs/portal).
 
 ## Assign follow-up

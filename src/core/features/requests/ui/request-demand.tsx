@@ -13,7 +13,7 @@ export function RequestDemand({context}:{context:RequestDemandContext}){
  const votes=new Map(context.votesByAccount.map(account=>[account.accountId,account.voteCount]))
  const unlinked=new Set(context.voters.filter(voter=>!voter.accountId).map(voter=>voter.id)).size
  return <section className="mt-5 border-t border-penny-line pt-5" aria-label="Customer demand">
-  <h3 className="font-bold text-penny-ink">Customer demand</h3>
+  <h3 className="font-bold text-penny-ink">Customer demand</h3><a href="/api/operator/votes/export.csv" className={`${textLinkClass} inline-flex min-h-11 items-center text-sm`}>Export individual votes (CSV)</a>
   <dl className="mt-3 grid grid-cols-3 gap-3" aria-label="Demand figures">
    {([['Votes',context.demand.voteCount],['Linked evidence',context.demand.evidenceCount],['Distinct accounts',context.demand.accountCount]] as const).map(([label,value])=><div key={label}><dt className={dataLabelClass}>{label}</dt><dd className="mt-1 text-xl font-bold text-penny-ink tabular-nums">{value}</dd></div>)}
   </dl>

@@ -1,3 +1,4 @@
+import { nativeProxyPredicate } from './proxy-votes'
 import { publicBoards } from '../categories/public-boards'
 import { publicRequestPredicate } from './publication-predicate'
 import { requestStatusExpression, requestStatusLabelExpression } from './status-sql'
@@ -169,7 +170,7 @@ export class PublicRequestsReadRepository {
         WHERE request_id=(SELECT id FROM requests WHERE slug=?) AND public_state='published'`).bind(slug),
       this.connection.binding.prepare(`SELECT CASE WHEN b.anonymous_requesters=1 THEN 'Anonymous' ELSE voter.display_name END AS displayName
        FROM request_votes v JOIN requesters voter ON voter.id=v.requester_id JOIN requests r ON r.id=v.request_id JOIN boards b ON b.id=r.board_id
-       WHERE r.slug=? AND b.show_voters=1 AND voter.blocked_at IS NULL ORDER BY v.created_at,v.requester_id`).bind(slug),
+       WHERE r.slug=? AND b.show_voters=1 AND voter.blocked_at IS NULL AND NOT ${nativeProxyPredicate()} ORDER BY v.created_at,v.requester_id`).bind(slug),
     ])
     const row=request.results[0] as PublicRequestRow|undefined
     if(!row)return null

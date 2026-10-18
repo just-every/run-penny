@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Record native customer proxy votes from inbox items, request cards and a private Zendesk sidebar app, with source and recorder attribution, one vote per customer, no identity verification or email permission, private CSV export and archive/erasure custody (CAP-014). Migration 0080 adds attribution without changing existing votes. Pin rer 0.2.61 in package mode.
+
 - Canny move-in can rebuild the public status roadmap from reviewed public boards, columns and Shipped limits (ROAD-014). Saved statuses survive moderation; replay creates nothing, and undo restores unchanged prior settings. Migration 0079 retains portable before/after custody without replaying effects on restore.
 
 - Canny move-in can retain custom status names as native internal statuses, with reviewed public mappings, idempotent replay and conflict-safe undo (PRIO-002). Moderation preserves their status; names stay private until explicitly shown. Migration 0078 fences later definition edits. Adopt rer 0.2.60 in package mode.

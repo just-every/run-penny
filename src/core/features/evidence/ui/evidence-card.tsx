@@ -1,3 +1,4 @@
+import { ProxyVoteForm } from '../../requests/ui/proxy-vote-form'
 import {EvidenceSnooze} from '../../triage/evidence-snooze'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { OwnerControl } from '../../ownership/ui/owner-control'
@@ -30,7 +31,7 @@ export function EvidenceCard({ evidence, onSaved }: { readonly evidence: Operato
       <CustomFieldsEditor entityType="evidence" entityId={evidence.id} />
       <OwnerControl entity="evidence" value={evidence.id} onSaved={onSaved} />
       {evidence.reviewState==='unreviewed'?<EvidenceSnooze id={evidence.id} onSaved={onSaved}/>:null}
-      {onSaved ? <><EvidenceActions evidence={evidence} onSaved={onSaved} /><EvidenceHistory id={evidence.id} onSaved={onSaved} /></> : null}
+      {onSaved ? <><ProxyVoteForm evidenceId={evidence.id} requesterId={evidence.requester?.id} onSaved={onSaved}/><EvidenceActions evidence={evidence} onSaved={onSaved} /><EvidenceHistory id={evidence.id} onSaved={onSaved} /></> : null}
     </OperatorCard>
   )
 }

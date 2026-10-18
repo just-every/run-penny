@@ -19,6 +19,8 @@ identifiers; request bodies cannot choose either. JSON bodies are bounded to
 
 | Method and route | Scope | Behavior |
 | --- | --- | --- |
+| GET `/proxy-vote-contacts?q=...` | `votes:write` | Private active customer choices (name, ID and an address), limited to 25 results. Use a server-held key. |
+| POST `/requests/:slug/proxy-votes` | `votes:write` | Record demand for an explicitly selected requesterId or new unverified contact `{displayName,email?}`, with required source and optional sourceUrl/evidenceId. An existing supporter adds no second vote. This creates no verification or email permission. |
 | GET `/boards` | `requests:read` | Public boards, participation/display settings and public category counts. |
 | GET `/requests` | `requests:read` | Current approved published public requests; filters `q`, `board`, `category` (category ID, including its subcategories), `status` and `sort` (`recent`, `votes`, `newest`, `trending`). |
 | GET `/requests/:slug` | `requests:read` | Native found, redirect or withdrawn result; absent returns 404. |

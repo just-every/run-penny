@@ -625,6 +625,8 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 ## Status
 
+CAP-014 was completed on 19 October 2026: native inbox/request controls and the private Zendesk sidebar record one attributed customer vote without verification or email permission. Route, archive/restore, erasure, scoped-key and 1440/390 browser journeys pass. The Zendesk SDK/proxy is a network-edge fixture; no live Zendesk installation is claimed.
+
 Judged from the code and tests at commit `9fb9abbfa62e5be4a449a65fb4f972c50dc45279` (19 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 October 2026 from the route and browser tests cited in those rows.
@@ -638,8 +640,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 105 | 9 | 0 | 114 |
-| Target and push further | 8 | 48 | 77 | 133 |
-| All | 113 | 57 | 77 | 247 |
+| Target and push further | 9 | 47 | 77 | 133 |
+| All | 114 | 56 | 77 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -681,7 +683,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `CAP-011` | Microsoft Teams | target | missing |  | Bot Framework fixtures with token validation capture a message once and refuse an unsigned request. |
 | `CAP-012` | Browser extension | target | missing |  | A Playwright extension journey on a fixture page creates an inbox item with the URL, excerpt and screenshot attachment; a signed-out extension is refused. |
 | `CAP-013` | CRM record panels | target | missing |  | HubSpot and Salesforce fixtures render the panel for a record's company, capture feedback tied to an opportunity amount and attribute a proxy vote to the right customer. |
-| `CAP-014` | Proxy votes | target | partial | `tests/base/feedback-import-uservoice.test.ts` | A base test records proxy votes from the inbox and from a Zendesk sidebar fixture: each counts once, collapses with the customer's own later vote, creates no permission record, and appears in the CSV export with its recorder. |
+| `CAP-014` | Proxy votes | target | done | `tests/base/proxy-votes.test.ts`; `tests/browser/proxy-votes.mjs`; `tests/browser/zendesk-proxy-votes.mjs` |  |
 | `CAP-015` | Automation platforms | target | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` | A Zapier CLI test against a running installation fires each trigger once per event and runs each action within its key's scopes; an out-of-scope action is refused. |
 | `CAP-016` | Connector health | target | partial | `tests/browser/integration-states.mjs` | A clock-advanced fixture with an expired token and a rate limit shows the connector failing with its reason once an hour passes without a successful sync (or after the owner's shorter setting), notifies the owner once, and after reconnect resumes from its cursor without duplicate items. |
 | `CAP-017` | Capture scope, minimisation and consent | target | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` | Connector fixtures assert that no request is made for out-of-scope records, that redaction precedes the write, and that captured people hold no permission record (NOTIFY-009 sends create none either). |

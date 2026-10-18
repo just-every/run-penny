@@ -1,0 +1,44 @@
+{
+  "name": "Penny proxy votes",
+  "author": {
+    "name": "Your company",
+    "email": "owner@example.com",
+    "url": "https://example.com"
+  },
+  "version": "1.0.0",
+  "frameworkVersion": "2.0",
+  "defaultLocale": "en",
+  "private": true,
+  "location": {
+    "support": {
+      "ticket_sidebar": {
+        "url": "assets/iframe.html",
+        "flexible": true
+      }
+    }
+  },
+  "domainWhitelist": [
+    "{{setting.penny_host}}"
+  ],
+  "parameters": [
+    {
+      "name": "penny_origin",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "penny_host",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "penny_api_key",
+      "type": "text",
+      "required": true,
+      "secure": true,
+      "scopes": [
+        "header"
+      ]
+    }
+  ]
+}

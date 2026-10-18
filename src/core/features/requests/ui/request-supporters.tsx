@@ -5,6 +5,7 @@ import {disclosureSummaryClass,secondaryButtonClass,textLinkClass} from '@/core/
 
 export interface RequestVoter {
  id:string;displayName:string;votedAt:string;supporterType:'proxy'|'unmarked'|null
+ nativeProxy?:number;proxyAttributionsJson?:string
  email:string|null;accountId:string|null;accountSlug:string|null;accountName:string|null
 }
 const pageSize=50
@@ -28,6 +29,8 @@ export function RequestSupporters({voters}:{voters:readonly RequestVoter[]}){
     <div className="flex flex-wrap items-center justify-between gap-2"><span className="min-w-0 break-words font-medium text-penny-ink">{voter.displayName}</span><time dateTime={voter.votedAt} className="text-penny-muted tabular-nums">{voter.votedAt.slice(0,10)}</time></div>
     {emails.size?<ul aria-label="Verified addresses">{[...emails].map(email=><li key={email} className="break-all text-penny-muted">{email}</li>)}</ul>:<p className="text-penny-muted">No verified address</p>}
     {accounts.size?<ul aria-label="Linked accounts">{[...accounts.entries()].map(([id,account])=><li key={id}><Link className={`${textLinkClass} inline-flex min-h-11 items-center break-words`} to="/app/customers/$accountSlug" params={{accountSlug:account.slug}}>{account.name}</Link></li>)}</ul>:<p className="text-penny-muted">No linked account</p>}
+    {voter.nativeProxy?<Chip tone="sand">Proxy vote</Chip>:null}
+    {voter.proxyAttributionsJson?(JSON.parse(voter.proxyAttributionsJson) as {recorderId:string;recorderName:string;source:string;sourceUrl:string|null;evidenceId:string|null;recordedAt:string;directVoteAt:string|null}[]).map((attribution,index)=><p key={index} className="break-words text-sm leading-6 text-penny-muted">Recorded by {attribution.recorderName} · {attribution.source}{attribution.sourceUrl?<> · <a className={textLinkClass} href={attribution.sourceUrl} target="_blank" rel="noreferrer">Original source</a></>:null}{attribution.directVoteAt?' · Customer has since voted directly.':null}</p>):null}
     {voter.supporterType==='proxy'?<Chip tone="sand">Proxy, entered by a UserVoice admin</Chip>:voter.supporterType==='unmarked'?<Chip tone="muted">UserVoice, not marked as proxy</Chip>:null}
    </li>)}
   </ul>

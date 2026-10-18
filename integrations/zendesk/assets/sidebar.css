@@ -1,0 +1,25 @@
+:root { font: 14px/1.5 system-ui, sans-serif; color: #2f3941; background: #fff; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 14px; }
+main { max-width: 460px; }
+h1 { font-size: 17px; line-height: 1.35; margin: 0 0 8px; }
+p { margin: 10px 0; overflow-wrap: anywhere; }
+.hint { color: #49545c; font-size: 13px; }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+label { display: block; font-weight: 600; margin: 14px 0 5px; }
+input, select, textarea, button { font: inherit; }
+input:not([type=checkbox]), select, textarea { width: 100%; min-width: 0; padding: 9px; color: inherit; background: #fff; border: 1px solid #87929d; border-radius: 4px; }
+textarea { resize: vertical; }
+.search { display: flex; flex-wrap: wrap; gap: 6px; }
+.search input { flex: 1 1 150px; }
+button { border: 1px solid #52616b; border-radius: 4px; background: #fff; color: #2f3941; padding: 9px 12px; cursor: pointer; }
+#record { background: #1f73b7; border-color: #1f73b7; color: #fff; width: 100%; margin-top: 14px; }
+button:disabled { opacity: .65; cursor: wait; }
+:focus-visible { outline: 3px solid #1f73b7; outline-offset: 2px; }
+.check { display: flex; align-items: flex-start; gap: 8px; font-weight: 400; }
+.check input { flex: 0 0 auto; margin: 4px 0 0; width: 17px; height: 17px; }
+.ticket { border-left: 3px solid #c2c8cc; padding-left: 10px; }
+a { color: #125a94; }
+#error { background: #fff0f1; color: #8c232c; border: 1px solid #c5656c; border-radius: 4px; padding: 10px; }
+#status:empty, [hidden] { display: none !important; }

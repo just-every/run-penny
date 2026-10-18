@@ -2849,5 +2849,19 @@
       "after_json",
       "created_at"
     ]
+  },
+  "penny_proxy_votes": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "recorder_operator_id",
+      "source",
+      "source_url",
+      "evidence_id",
+      "direct_vote_at",
+      "created_at",
+      "updated_at"
+    ]
   }
 }

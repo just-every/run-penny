@@ -36,6 +36,7 @@ export class RequestWriteRepository {
     const board=await boardConsent(this.connection.binding,request.boardId,subscriptionVersion), consent=consentScope(board)
     const requesterAddressId = emailUpdates?await this.findVerifiedAddress(identity):board.enabled?await this.findVerifiedAddress(identity,true):null
     const statements = [
+      this.connection.binding.prepare(`UPDATE penny_proxy_votes SET direct_vote_at=?,updated_at=? WHERE request_id IN (${contributionScope}) AND requester_id=?`).bind(now,now,request.id,identity.requesterId),
       this.connection.binding.prepare(`
         INSERT INTO request_vote_contributions (request_id, requester_id, created_at, updated_at)
         VALUES (?, ?, ?, ?) ON CONFLICT(request_id, requester_id) DO UPDATE SET updated_at = excluded.updated_at

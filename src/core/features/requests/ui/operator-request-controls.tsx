@@ -1,3 +1,4 @@
+import { ProxyVoteForm } from './proxy-vote-form'
 import { MergeRequestForm } from './merge-request-form'
 import { RequestCategoryForm } from '../../categories/request-category-form'
 import { OwnerControl } from '../../ownership/ui/owner-control'
@@ -41,7 +42,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
   return (
     <>
       <OwnerControl entity="requests" value={slug} />
-      {context.kind==='ready'?<RequestDemand context={context.data}/>:null}
+      {context.kind==='ready'?<><RequestDemand context={context.data}/><ProxyVoteForm slug={slug} onSaved={()=>{refresh();void router.invalidate()}}/></>:null}
       {context.kind === 'ready' ? (
         <section className="mt-6 border-t border-penny-line pt-5" aria-label="Status update delivery">
           <h3 className="font-bold text-penny-ink">Follower notifications</h3>

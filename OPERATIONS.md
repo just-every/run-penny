@@ -361,3 +361,7 @@ its reversal commit with native import custody, and later roadmap edits invalida
 reversal preflights. Restore carries the history without replaying its effects.
 Keep the expanded schema on source rollback; complete or undo an active roadmap
 import with this source before using an older importer. No provider setup is needed.
+
+## Native proxy votes
+
+Apply additive migration `0080_native_proxy_votes.sql` through `rer setup` or the existing deployment path. Existing votes and contribution origins are unchanged. Proxy attribution follows its contribution through request merges and reversals; a customer's later direct vote counts once and marks the attribution as superseded. Product archives retain the source, recorder and unverified contact without granting authority or consent. Keep the expanded schema on rollback. The optional private Zendesk sidebar app uses a Zendesk secure setting for a Penny key with `requests:read` and `votes:write`; no Zendesk token or key is added to Penny archives. The wider Zendesk capture connector remains CAP-003.

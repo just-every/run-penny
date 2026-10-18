@@ -1,3 +1,4 @@
+import { nativeProxyPredicate } from './proxy-votes'
 // A UserVoice proxy vote stays visibly proxy; a supporter with any unmarked
 // origin vote is shown unmarked. Native and Canny votes have no source type.
 const supporterOrigins = (type: string) => `EXISTS(SELECT 1 FROM request_vote_supporter_types t JOIN request_canonical_roots root ON root.origin_id = t.request_id WHERE root.canonical_id = v.request_id AND t.requester_id = v.requester_id AND t.supporter_type = '${type}')`
@@ -6,7 +7,9 @@ const supporterType = `CASE WHEN ${supporterOrigins('unmarked')} THEN 'unmarked'
 /** Only the bound, page-scoped request selection is supplied by the reader. */
 export function requestContextRowsSql(requestIdsSql: string) {
   return {
-    voters: `SELECT v.request_id AS contextRequestId,r.id,r.display_name AS displayName,v.created_at AS votedAt,${supporterType} AS supporterType,a.email,account.id AS accountId,account.slug AS accountSlug,account.name AS accountName
+    voters: `SELECT v.request_id AS contextRequestId,r.id,r.display_name AS displayName,v.created_at AS votedAt,${supporterType} AS supporterType,${nativeProxyPredicate()} AS nativeProxy,
+      (SELECT json_group_array(json_object('recorderId',proxy.recorder_operator_id,'recorderName',o.display_name,'source',proxy.source,'sourceUrl',proxy.source_url,'evidenceId',proxy.evidence_id,'recordedAt',proxy.created_at,'directVoteAt',proxy.direct_vote_at))
+       FROM penny_proxy_votes proxy JOIN request_canonical_roots root ON root.origin_id=proxy.request_id JOIN operators o ON o.id=proxy.recorder_operator_id WHERE root.canonical_id=v.request_id AND proxy.requester_id=v.requester_id) AS proxyAttributionsJson,a.email,account.id AS accountId,account.slug AS accountSlug,account.name AS accountName
       FROM request_votes v JOIN requesters r ON r.id=v.requester_id AND r.blocked_at IS NULL
       LEFT JOIN requester_addresses a ON a.requester_id=r.id AND a.verified_at IS NOT NULL
       LEFT JOIN requester_account_links ral ON ral.requester_id=r.id LEFT JOIN accounts account ON account.id=ral.account_id

@@ -1,0 +1,13 @@
+{
+  "app": {
+    "name": "Penny proxy votes",
+    "short_description": "Record a customer's vote with its Zendesk ticket source.",
+    "long_description": "Search published Penny requests and explicitly record a proxy vote for an existing customer or a new unverified contact.",
+    "installation_instructions": "Use your Penny HTTPS origin, the same hostname without a scheme, and a scoped Penny API key. See README.md."
+  },
+  "parameters": {
+    "penny_origin": {"label": "Penny HTTPS origin", "helpText": "For example https://feedback.example.com (no path)."},
+    "penny_host": {"label": "Penny allowed hostname", "helpText": "The same hostname without https://, for example feedback.example.com."},
+    "penny_api_key": {"label": "Penny API key", "helpText": "Requires requests:read and votes:write. Zendesk stores this as a secure setting."}
+  }
+}

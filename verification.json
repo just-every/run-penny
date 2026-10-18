@@ -148,6 +148,16 @@
         "pnpm run build",
         "node tests/browser/import-roadmap.mjs"
       ]
+    },
+    {
+      "name": "proxy-votes",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/proxy-votes.mjs",
+        "node tests/browser/zendesk-proxy-votes.mjs"
+      ]
     }
   ],
   "nightly": [

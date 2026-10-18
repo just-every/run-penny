@@ -10,7 +10,7 @@ import {devAdmitted} from '../auth/dev-admission'
 import {guardedDatabase,type AuthorityGuard} from './guarded-database'
 import {createUlid} from '@/core/shared/ulid'
 
-export const apiScopes=['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write'] as const
+export const apiScopes=['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write','votes:write'] as const
 const namespace='penny-api'
 export function sessionGuard(session:Session):AuthorityGuard {
  return {sql:`EXISTS(SELECT 1 FROM oa_sessions s JOIN oa_operators o ON o.id=s.operator_id WHERE s.id=? AND s.operator_id=? AND s.revoked_at IS NULL AND s.expires_at>unixepoch('subsec')*1000 AND o.status='active' AND o.version=s.operator_version AND o.version=? AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle'))`,params:[session.id,session.operatorId,session.operator.version]}

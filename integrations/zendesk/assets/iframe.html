@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Penny proxy votes</title>
+  <link rel="stylesheet" href="sidebar.css">
+  <script defer src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
+  <script type="module" src="sidebar.js"></script>
+</head>
+<body>
+<main>
+  <h1>Record a customer’s vote</h1>
+  <p class="hint">Add this ticket as the private source of a Penny proxy vote.</p>
+  <p id="status" role="status" aria-live="polite">Connecting to Zendesk…</p>
+  <p id="error" role="alert" hidden></p>
+  <form id="vote-form" hidden>
+    <fieldset id="fields">
+      <legend>Customer and request</legend>
+      <p id="ticket-customer" class="ticket"></p>
+      <label for="contact-query">Find an existing customer</label>
+      <div class="search"><input id="contact-query" maxlength="200" type="search"><button id="find-contact" type="button">Find customer</button></div>
+      <label for="customer">Existing customer</label>
+      <select id="customer"><option value="">Choose a customer…</option></select>
+      <label class="check"><input id="new-contact" type="checkbox"> Create a new unverified contact</label>
+      <div id="new-fields" hidden>
+        <label for="display-name">Customer display name</label>
+        <input id="display-name" maxlength="160" autocomplete="off">
+        <label for="email">Customer email (optional, remains unverified)</label>
+        <input id="email" type="email" maxlength="254" autocomplete="off">
+        <label class="check"><input id="confirm-contact" type="checkbox"> I confirm this new contact represents the ticket requester.</label>
+      </div>
+      <label for="request-query">Find a request</label>
+      <div class="search"><input id="request-query" maxlength="200" type="search"><button id="find-request" type="button">Search requests</button></div>
+      <label for="request">Request</label>
+      <select id="request" required><option value="">Choose a request…</option></select>
+      <p id="request-status" class="hint"></p>
+      <label for="source">Source justifying this vote</label>
+      <textarea id="source" rows="3" maxlength="2000" required placeholder="What did this customer ask for in the ticket?"></textarea>
+      <p class="source">Original source: <a id="ticket-link" target="_blank" rel="noopener noreferrer"></a></p>
+      <p class="hint">A proxy vote counts once per customer. It does not verify their identity or subscribe them to email updates.</p>
+      <label class="check"><input id="review" type="checkbox" required> I reviewed the customer, request and source.</label>
+      <button id="record" type="submit">Record proxy vote</button>
+    </fieldset>
+  </form>
+  <noscript>JavaScript and the Zendesk Apps framework are required.</noscript>
+</main>
+</body>
+</html>
