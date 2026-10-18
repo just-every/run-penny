@@ -15,7 +15,7 @@
         "pnpm run lint",
         "pnpm run test:mail-runtime",
         "pnpm run test:data:commands",
-        "env CLOUDFLARE_ACCOUNT_ID=00000000000000000000000000000000 CLOUDFLARE_API_TOKEN=readme-dry-run OPERATOR_EMAIL=owner@example.com MAIL_PROVIDER=sendgrid MAIL_FROM=penny@example.com MAIL_API_KEY=readme-dry-run pnpm exec rer deploy --dry-run"
+        "node --test tests/installer/deploy-dry-run.test.mjs"
       ]
     },
     {

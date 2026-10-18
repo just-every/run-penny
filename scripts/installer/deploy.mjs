@@ -18,7 +18,7 @@ export async function deployPenny(context) {
     const resources = Object.fromEntries(['d1', 'r2', 'queues'].map(kind => [kind, plan[kind].map(item => item.name)]))
     const schedules = plan.crons.map(cron => ({ cron }))
     context.store.report(`deploy: ${JSON.stringify({ environment: target.environment, worker: target.worker, resources, schedules, scheduleRegistration: 'PUT after changed Worker upload; read back exact set', runtimeEnvironment: plan.vars.PENNY_ENVIRONMENT, state: target.stateFile, credentialFile: target.credentialFile, declarationFile: target.declarationFile })}`)
-    context.store.report('deploy: dry run complete; no deployment occurred and no provider request was made.')
+    context.store.report('deploy: local build and resource plan complete; no upload occurred.')
     return { dryRun: true, deployed: false, environment: target.environment, worker: target.worker, resources, schedules, state: target.stateFile }
   }
   const env = { ...process.env, RER_LOCAL_OPERATION: context.operationToken }
