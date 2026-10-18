@@ -625,9 +625,9 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 ## Status
 
-CAP-014 was completed on 19 October 2026: native inbox/request controls and the private Zendesk sidebar record one attributed customer vote without verification or email permission. Route, archive/restore, erasure, scoped-key and 1440/390 browser journeys pass. The Zendesk SDK/proxy is a network-edge fixture; no live Zendesk installation is claimed.
-
 Judged from the code and tests at commit `9fb9abbfa62e5be4a449a65fb4f972c50dc45279` (19 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+
+CAP-014 was completed on 19 October 2026: native inbox/request controls and the private Zendesk sidebar record one attributed customer vote without verification or email permission. Route, archive/restore, erasure, scoped-key and 1440/390 browser journeys pass. The Zendesk SDK/proxy is a network-edge fixture; no live Zendesk installation is claimed.
 
 OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 October 2026 from the route and browser tests cited in those rows.
 
