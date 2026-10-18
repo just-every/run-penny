@@ -104,6 +104,7 @@ export const normalize=(name:string,row:Row):Row=>{
  if(name==='penny_integration_destinations'||name==='penny_tracker_connections')return {...row,revoked_at:row.revoked_at??0}
  if(name==='penny_integration_events')return {...row,held:1}
  if(name==='penny_tracker_commands')return {...row,held:1}
+ if(name==='penny_merge_notices')return {...row,restoration_hold_at:row.restoration_hold_at??'1970-01-01T00:00:00.000Z'}
  if(name==='notification_intents')return {...row,restoration_hold_at:row.restoration_hold_at??'1970-01-01T00:00:00.000Z'}
  if(name==='requester_pending_actions')return {...row,pending_token_hash:`disabled-${row.id}`,claimed_at:row.claimed_at??'1970-01-01T00:00:00.000Z'}
  if(name==='requester_pending_action_bindings')return {...row,pending_token_hash:String(row.pending_token_hash).startsWith('disabled-')?row.pending_token_hash:`disabled-${row.pending_token_hash}`,expires_at:'1970-01-01T00:00:00.000Z'}

@@ -1,3 +1,4 @@
+import { activateMergeNoticeStatements } from '../requests/merge-notices'
 import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
 import { providerMail,mailUnsubscribe } from '@/core/features/auth/mail'
@@ -23,6 +24,7 @@ export async function drainNotifications(runtime:PennyRuntime, clock=Date.now):P
   db.prepare(`UPDATE notification_batches SET state='unknown',failure_reason='attempt_interrupted_review_required',updated_at=?
    WHERE state='sending' AND claim_id IN(SELECT id FROM notification_attempts WHERE state='unknown')`).bind(now),
  ])
+ await db.batch(activateMergeNoticeStatements(db,now))
  await prepareBatches(db,now)
  if(await requesterQuietHours(runtime,new Date(clock())))return
  // A queued release note to the same address about the same request closes its open
@@ -84,7 +86,7 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   if(!events.length){await finish('suppressed','no_public_events');return}
   if(!admission.owned){await finish('suppressed','eligibility_changed');return}
   const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:batch.id,...mailHeaders,to:[recipient.email],subject:`Updates: ${admitted.title.replace(/\s+/g,' ')}`,
-   text:`${admitted.title}\n\n${events.map(e=>`${e.kind==='status'?'Status update':'Public reply'}\n${e.body}${e.requests?.length?`\n\nYour requests:\n${e.requests.map(r=>`${r.title}: ${origin}/portal/feedback/${r.slug}`).join('\n')}`:''}`).join('\n\n')}\n\nView feedback: ${origin}/portal/feedback/${admitted.slug}\n\nMute this request: ${requestLink}\nUnsubscribe from all requester email: ${globalLink}${footer}`,
+   text:`${admitted.title}\n\n${events.map(e=>`${e.kind==='merge'?'Request merged':e.kind==='status'?'Status update':'Public reply'}\n${e.body}${e.requests?.length?`\n\nYour requests:\n${e.requests.map(r=>`${r.title}: ${origin}/portal/feedback/${r.slug}`).join('\n')}`:''}`).join('\n\n')}\n\nView feedback: ${origin}/portal/feedback/${admitted.slug}\n\nMute this request: ${requestLink}\nUnsubscribe from all requester email: ${globalLink}${footer}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){

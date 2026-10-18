@@ -2821,5 +2821,24 @@
       "status",
       "since_at"
     ]
+  },
+  "penny_merge_notices": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "enabled",
+      "queued_at",
+      "restoration_hold_at",
+      "created_at"
+    ]
+  },
+  "penny_merge_notice_recipients": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "requester_id",
+      "address_id",
+      "created_at"
+    ]
   }
 }
