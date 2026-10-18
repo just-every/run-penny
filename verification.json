@@ -90,6 +90,15 @@
         "pnpm run build",
         "node tests/browser/triage-aging.mjs"
       ]
+    },
+    {
+      "name": "request-decline",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/request-decline.mjs"
+      ]
     }
   ],
   "nightly": [

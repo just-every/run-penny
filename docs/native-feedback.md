@@ -89,3 +89,5 @@ Stage 0 URLs remain stable. IDs, evidence links and audit references are retaine
 Old unsafe native URLs deliberately stop resolving rather than expose private
 wording through redirects or public aliases. There is no production rollout or
 released-native-URL compatibility claim.
+
+A declined request keeps its existing votes and discussion visible. New votes and requester comments close until an operator reverses the decline in Moderation. A public reason is required; revising that reason does not replace the saved status the reversal restores.

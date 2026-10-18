@@ -24,7 +24,15 @@ export async function publishStatusUpdate(connection:DatabaseConnection,input:St
    SELECT ?,r.id,?,CASE WHEN ?='declined' THEN CASE WHEN r.public_state='declined' THEN
     (SELECT previous_public_state FROM request_status_updates WHERE request_id=r.id AND public_status='declined' AND previous_public_state!='declined' ORDER BY publication_version DESC,published_at DESC,id DESC LIMIT 1)
     ELSE r.public_state END ELSE NULL END,?,?,?,?,?,?,?,
-    (SELECT COALESCE(MAX(publication_version),0)+1 FROM request_status_updates WHERE request_id=r.id),CASE WHEN ?=1 THEN ? ELSE r.public_eta END,?,r.latest_status_source,r.direct_status_changed_at,r.internal_status_id
+    (SELECT COALESCE(MAX(publication_version),0)+1 FROM request_status_updates WHERE request_id=r.id),CASE WHEN ?=1 THEN ? ELSE r.public_eta END,?,CASE WHEN r.public_state='declined' THEN
+    (SELECT previous_status_source FROM request_status_updates WHERE request_id=r.id AND public_status='declined' ORDER BY publication_version DESC,published_at DESC,id DESC LIMIT 1)
+    ELSE r.latest_status_source END,
+   CASE WHEN r.public_state='declined' THEN
+    (SELECT previous_direct_status_changed_at FROM request_status_updates WHERE request_id=r.id AND public_status='declined' ORDER BY publication_version DESC,published_at DESC,id DESC LIMIT 1)
+    ELSE r.direct_status_changed_at END,
+   CASE WHEN r.public_state='declined' THEN
+    (SELECT previous_internal_status_id FROM request_status_updates WHERE request_id=r.id AND public_status='declined' ORDER BY publication_version DESC,published_at DESC,id DESC LIMIT 1)
+    ELSE r.internal_status_id END
    FROM requests r JOIN boards b ON b.id=r.board_id LEFT JOIN requesters author ON author.id=r.author_requester_id
    WHERE r.id=? AND b.visibility='public' AND r.moderation_state='approved' AND r.published_at IS NOT NULL
     AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL AND (author.id IS NULL OR author.blocked_at IS NULL)

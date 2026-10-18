@@ -625,15 +625,17 @@ Penny does the whole feedback-to-roadmap job; these neighbouring jobs stay in th
 
 ## Status
 
+REQ-017 was completed on 18 October 2026: public closure, retained votes and discussion, and repeated-decline reversal are covered by the route and both-width browser journeys cited below.
+
 Judged from the code and tests at commit `94bb4defa551a19f5d7c14c52dd994ea766e0676` (18 October 2026).
 
 OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 October 2026 from the route and browser tests cited in those rows.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 102 | 12 | 0 | 114 |
+| Published | 103 | 11 | 0 | 114 |
 | Target and push further | 3 | 51 | 79 | 133 |
-| All | 105 | 63 | 79 | 247 |
+| All | 106 | 62 | 79 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -726,7 +728,7 @@ OPS-005, OPS-008, TRIAGE-001, TRIAGE-002 and TRIAGE-004 were updated on 18 Octob
 | `REQ-014` | Identity failure | published | done | `tests/base/host-identity.test.ts` |  |
 | `REQ-015` | Status updates | published | done | `tests/base/board.test.ts` (line 14) |  |
 | `REQ-016` | Public status | published | done | `tests/base/request-status-workflow.test.ts`; `tests/base/decision-loop-roadmap.test.ts`; `visual/request-status-workflow/REQ-016/` |  |
-| `REQ-017` | Decline | published | partial | `src/core/features/requests/status-publication.ts` | A decline without a reason is refused in code; a journey proving vote/comment refusal and reversal is required. |
+| `REQ-017` | Decline | published | done | `tests/base/request-status-workflow.test.ts`; `tests/browser/request-decline.mjs` |  |
 | `REQ-018` | Boards | published | done | `tests/base/board.test.ts` (line 41) |  |
 | `REQ-019` | Internal boards | published | done | `tests/base/board.test.ts` (line 41) |  |
 | `REQ-020` | Requester's own content | published | done | `tests/browser/requester-repair.mjs` |  |

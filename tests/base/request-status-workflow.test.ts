@@ -1,9 +1,10 @@
 import { applyD1Migrations } from 'cloudflare:test'
 import { beforeAll,expect,inject,it } from 'vitest'
+import { mockMail,requester } from './support'
 import { env,seedLoop,request,json,publicRequest,committed,approve,row } from './decision-loop-fixture'
-beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop()})
+beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop();mockMail()})
 
-it('[REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards',async()=>{
+it('[REQ-017][REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards',async()=>{
  const r=await publicRequest(),get=()=>json(request(`/api/public/requests/${r.slug}`)),set=(status:string,extra:Record<string,unknown>={})=>request(`/api/operator/requests/${r.slug}/status-updates`,'POST',{status,...extra})
  expect(await get()).toMatchObject({status:'open'})
  await json(set('planned',{publicEta:'2027-Q1'}));expect(await get()).toMatchObject({status:'planned',publicEta:'2027-Q1'})
@@ -14,12 +15,28 @@ it('[REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, resolves 
  await json(set('in_progress',{internalStatusId:internal.id}));expect(await get()).toMatchObject({status:'in_progress',statusLabel:null});expect(JSON.stringify(await get())).not.toContain('Design validation')
  const before=await count();await json(request(`/api/operator/settings/request-statuses/${internal.id}`,'PATCH',{publicStatus:'under_review',showPublicLabel:true}))
  expect(await get()).toMatchObject({status:'under_review',statusLabel:'Design validation'});expect(await count()).toBe(before)
+ const participant=await requester('Finance customer')
+ expect((await request(`/api/public/requests/${r.slug}/vote`,'POST',{},participant)).status).toBe(204)
+ const comment=await json(request(`/api/public/requests/${r.slug}/comments`,'POST',{body:'Please keep this workflow available.'},participant),201)
+ await json(request(`/api/operator/comments/${comment.id}/moderate`,'POST',{verdict:'approved',publicAuthorDisplayName:'Finance customer'}))
  const c=await committed();await json(request(`/api/operator/roadmap/${c.itemId}/move`,'POST',{status:'in_progress',reason:'Delivery started',idempotencyKey:crypto.randomUUID()}));await approve(c.itemId,[r.id]);expect(await get()).toMatchObject({status:'in_progress',statusLabel:null})
  await json(set('planned'));expect(await get()).toMatchObject({status:'planned'})
  await json(request(`/api/operator/roadmap/${c.itemId}/move`,'POST',{status:'shipped',reason:'Delivered',idempotencyKey:crypto.randomUUID()}));expect(await get()).toMatchObject({status:'shipped'})
- await json(set('declined',{body:'We no longer support this direction.'}));expect(await get()).toMatchObject({status:'declined'})
+ await json(set('declined',{body:'We no longer support this direction.'}));expect(await get()).toMatchObject({status:'declined',voteCount:1,comments:[{body:'Please keep this workflow available.'}]})
+ expect((await request(`/api/public/requests/${r.slug}/vote`,'POST',{},participant)).status).toBe(409)
+ expect((await request(`/api/public/requests/${r.slug}/comments`,'POST',{body:'This must remain held.'},participant)).status).toBe(409)
+ await json(set('declined',{body:'The replacement workflow is now available.'}))
  await json(request(`/api/operator/requests/${r.slug}/decline/reverse`,'POST',{}));expect(await get()).toMatchObject({status:'shipped'})
  await json(request(`/api/operator/roadmap/${c.itemId}/withdraw`,'POST',{}));expect(await get()).toMatchObject({status:'planned'})
+ await json(set('open'))
+ await approve(c.itemId,[r.id]);expect(await get()).toMatchObject({status:'shipped'})
+ await json(set('declined',{body:'First decline reason.'}))
+ await json(set('declined',{body:'Revised decline reason.'}))
+ await json(request(`/api/operator/requests/${r.slug}/decline/reverse`,'POST',{}));expect(await get()).toMatchObject({status:'shipped'})
+ await json(request(`/api/operator/roadmap/${c.itemId}/withdraw`,'POST',{}));expect(await get()).toMatchObject({status:'open'})
+ await json(set('planned'))
+ expect((await request(`/api/public/requests/${r.slug}/vote`,'POST',{},participant)).status).toBe(204)
+ await json(request(`/api/public/requests/${r.slug}/comments`,'POST',{body:'Participation is open again.'},participant),201)
  const settings=await json<any>(request('/api/operator/settings/status-roadmap'))
  await json(request('/api/operator/settings/status-roadmap','PUT',{...settings.settings,source:'request_statuses',boardSlugs:['loop-board']}))
  let cards=await json<any[]>(request('/api/public/roadmap'));expect(cards.filter(card=>card.slug===r.slug)).toHaveLength(1);expect(cards.find(card=>card.slug===r.slug)).toMatchObject({status:'planned',publicEta:'2027-Q1',source:'requests'})

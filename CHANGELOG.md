@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Declined requests clearly close new votes and requester comments while retaining their existing discussion and votes. Reversing a decline restores the previous direct or mapped status even after revising the decline reason (REQ-017).
+
 - The ownership browser journey waits for My queue to load before filling the server-rendered evidence form, so capture cannot race hydration. Save, default-owner and reassignment checks remain unchanged.
 
 - Overview now flags overdue inbox items, unanswered requester comments, requests without a public response and stale Under review/Planned/In progress statuses. Owners and Admins choose the age steps; Cron records deduplicated in-app owner reminders. Evidence can be snoozed until a chosen time, and direct or mapped status changes clear stale attention (TRIAGE-002).

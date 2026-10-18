@@ -580,7 +580,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence a
 
 Current entries include the shipped setup and workspace clocks, request status controls and status roadmap, board categories and participation, requester subscriptions and sender identity, ownership, aging and private discussion. Each partial entry keeps its remaining acceptance work separate; dated receipts above retain their historical scope.
 
-**Counts:** 105 done, 63 partial, 79 missing (247 clauses).
+**Counts:** 106 done, 62 partial, 79 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -673,7 +673,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | REQ-014 | done | Expired, future or forged host identity is refused and changes nothing. | `tests/base/host-identity.test.ts` |
 | REQ-015 | done | Status updates render distinctly, pin and notify followers. | `tests/base/board.test.ts:14` |
 | REQ-016 | done | The latest-change rule, decline/reversal and withdrawal pass the public API journey; direct statuses and roadmap movement pass at both browser widths. | `tests/base/request-status-workflow.test.ts`; `tests/base/decision-loop-roadmap.test.ts`; `visual/request-status-workflow/REQ-016/` |
-| REQ-017 | partial | A decline without a reason is refused in code; a journey proving vote/comment refusal and reversal is required. | `src/core/features/requests/status-publication.ts` |
+| REQ-017 | done | Decline requires a public reason, retains existing votes and comments, closes new votes/comments, and reversal restores the prior direct or mapped status even after another decline reason. API rules and 1440/390 customer/operator journeys pass. | `tests/base/request-status-workflow.test.ts`; `tests/browser/request-decline.mjs` |
 | REQ-018 | done | Board create, rename, archive and move keep votes, comments and links. | `tests/base/board.test.ts:41` |
 | REQ-019 | done | Internal boards withdraw requests from every public read. | `tests/base/board.test.ts:41` |
 | REQ-020 | done | Edits to public text re-enter moderation while the approved text stays, on a board without auto-publish (REQ-033). | `tests/browser/requester-repair.mjs` |

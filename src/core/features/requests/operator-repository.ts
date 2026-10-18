@@ -40,7 +40,7 @@ export class RequestOperatorRepository {
       FROM request_status_updates update_row
       INNER JOIN requests request_row ON request_row.id = update_row.request_id
       WHERE request_row.slug = ? AND request_row.public_state='declined' AND update_row.public_status = 'declined' AND update_row.previous_public_state!='declined'
-      ORDER BY update_row.published_at DESC, update_row.id DESC LIMIT 1
+      ORDER BY update_row.publication_version DESC, update_row.published_at DESC, update_row.id DESC LIMIT 1
     `).bind(slug).first<{ id: string; requestId: string; previousState: string | null }>()
     if (!decline?.previousState) throw new RequestLifecycleError(409, 'decline_not_reversible', 'There is no active decline to reverse.')
     await this.connection.binding.batch([

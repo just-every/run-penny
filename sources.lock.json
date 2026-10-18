@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "9976fec8ac2482714f7aa216d90abec5731c8db8ee2a7eedc52dd76ad694020f",
+      "sha256": "a38589acdd8e433c650eaf3d83a94a2210b1ee12770fe6c9fd0c24de465aa080",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2740,7 +2740,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "0a82dcdced512faaa03a3b23f1db348489cab973969830e1d89a0335df9e329a",
+      "sha256": "45208b50be01b6472f45f7ae38dec4353c86498107ddcb1039376fa18abb3727",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2752,7 +2752,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "73df56784691d8c256e55e55dcbc87377470efbb04fec52770eb3413d88436fc",
+      "sha256": "388d1159b0386c13eb033ec2600cee0c8ec04f6b598dffdbaaf89f491444d56e",
       "executable": false
     },
     "DEMO.md": {
@@ -2856,7 +2856,7 @@
       "executable": false
     },
     "docs/native-feedback.md": {
-      "sha256": "068bfea965278dbae451a156dc1431c577d2c3e93ca709388ead1970e157bf4b",
+      "sha256": "733b6ef7533f6e6bb7d68e10cb2e2c7ebf929d0eaad1c5e65279976b8b3718d2",
       "executable": false
     },
     "docs/OVERVIEW.md": {
@@ -3724,7 +3724,7 @@
       "executable": false
     },
     "seed.json": {
-      "sha256": "0bbd82b637f0464f33ae32786f0305f8277b4131efe547af1b4e1535581dd4f4",
+      "sha256": "dfe81188bfa2bd9f3efeba2f3221fd0e90fa8799ed610c1555f6e07dbd5b4adc",
       "executable": false
     },
     "src/base-mail.ts": {
@@ -5716,7 +5716,7 @@
       "executable": false
     },
     "src/core/features/requests/operator-repository.ts": {
-      "sha256": "cdbc8bc0964e49cdff7d6248c82652a6ff2a2d0dc7850dfe28b9140ae4e769f3",
+      "sha256": "742b9449a80d2b521a8ce567feb15345f574af58b6b7fd34873086daf46a9dcf",
       "executable": false
     },
     "src/core/features/requests/operator-routes.ts": {
@@ -5764,7 +5764,7 @@
       "executable": false
     },
     "src/core/features/requests/status-publication.ts": {
-      "sha256": "bd592e7f0a58fbe641c3c75597386552765795499fb40191b29017be328b1d33",
+      "sha256": "d1e4bec3fcc879fe8c3b78d3c8287fb649184796094eb6bfe6d57c69a378469d",
       "executable": false
     },
     "src/core/features/requests/status-schema.ts": {
@@ -5844,7 +5844,7 @@
       "executable": false
     },
     "src/core/features/requests/ui/requester-actions.tsx": {
-      "sha256": "2fa234d60742b4ca1d2ec45fc4820e565ac41cbaa30e43ab8050dc51e31339ed",
+      "sha256": "a79ea1cf78642e36678221e381ba7ef899bb1b8fc08a9d485812a9d2d5418c34",
       "executable": false
     },
     "src/core/features/requests/ui/requester-activity-page.tsx": {
@@ -6824,7 +6824,7 @@
       "executable": false
     },
     "tests/base/request-status-workflow.test.ts": {
-      "sha256": "e07d07d7b3e3c336e9a115e438962e742368dc1da2d62b5d5abdeb320ba361e1",
+      "sha256": "ace1c69d344252dee7293d6803c72228b58c8aa92db550f856b017c41362f724",
       "executable": false
     },
     "tests/base/requester-subscriptions.test.ts": {
@@ -6999,6 +6999,10 @@
       "sha256": "f50ef9f19a6a4e2fd1bc989d2e0b4739140009775e5a78b33974d3cfb2fb11dc",
       "executable": false
     },
+    "tests/browser/moderation-runtime.mjs": {
+      "sha256": "df31e71097b9a5fb1bbaaca74e2345c7be8ea0df653b5b3f06200964687899bc",
+      "executable": false
+    },
     "tests/browser/no-mail-journey.mjs": {
       "sha256": "0fad0b36f1e7217d87d63362a9a81761571b8a859157fbe6791e4ff74e164f75",
       "executable": false
@@ -7077,6 +7081,10 @@
     },
     "tests/browser/public-entry-pacing.mjs": {
       "sha256": "61fab054f3b5932ee924f38e845cf6e385480f4687ff3589caf1a056a5c48f87",
+      "executable": false
+    },
+    "tests/browser/request-decline.mjs": {
+      "sha256": "5ad80b0625924de324adc46834007fcbcd0429c89818ebb7d751afd287b5ca9e",
       "executable": false
     },
     "tests/browser/requester-board.mjs": {
@@ -7292,7 +7300,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "bf71394424dfd9bec1aeca20dde3f40f9c2df1fa35a750496ccf0694bc2399b7",
+      "sha256": "d85535c532c60d3c206d0c3ebe5d482ea2a36d0585df8d5b312f46d78548e081",
       "executable": false
     },
     "visual/01-landing.jpg": {
