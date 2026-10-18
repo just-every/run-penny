@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Internal notes now support one level of private replies and selected operator @mentions. Each mention creates one durable in-app notice; replaying a save does not repeat it, and dismissal survives reload. Wider notification channel preferences and digests remain unimplemented (TRIAGE-004, NOTIFY-006).
+
 - Assign requests and evidence to active operators, apply board defaults during capture, and follow requests, unreviewed evidence and requester comments in My queue. Private ownership survives product backups; theme defaults await native themes.
 
 - Owners choose the workspace timezone and requester quiet hours during setup and in settings. Older installations prompt for confirmation once; turning quiet hours off makes queued mail eligible, while operator review mail stays immediate.

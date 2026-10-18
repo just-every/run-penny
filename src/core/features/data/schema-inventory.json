@@ -2031,7 +2031,8 @@
       "operator_id",
       "body",
       "created_at",
-      "updated_at"
+      "updated_at",
+      "parent_note_id"
     ]
   },
   "request_notification_mutes": {
@@ -2754,6 +2755,22 @@
     ]
   },
   "penny_ownership_guards": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "allowed"
+    ]
+  },
+  "penny_note_mentions": {
+    "classification": "product",
+    "columns": [
+      "note_id",
+      "operator_id",
+      "created_at",
+      "dismissed_at"
+    ]
+  },
+  "penny_discussion_guards": {
     "classification": "installation",
     "columns": [
       "id",

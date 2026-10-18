@@ -1,3 +1,4 @@
+import {addInternalNote} from '../discussion/service'
 import { mergeRequesterIdentities } from './identity-merge'
 import { moderateRequest, moderateComment, moderateAttachment } from './moderation-repository'
 import { moderateRequestEdit, moderateCommentEdit } from './edit-moderation'
@@ -55,11 +56,7 @@ export class RequestOperatorRepository {
   }
 
   async addNote(slug: string, operatorId: string, body: string, now: string): Promise<void> {
-    const request = await this.findRequest(slug)
-    if (!request) throw new RequestLifecycleError(404, 'not_found', 'The request does not exist.')
-    await this.connection.binding.prepare(`
-      INSERT INTO request_notes (id, request_id, operator_id, body, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)
-    `).bind(createRequestId(), request.id, operatorId, body, now, now).run()
+    await addInternalNote(this.connection.binding,slug,operatorId,{body},now)
   }
 
   async setRequesterBlocked(requesterId: string, blocked: boolean, operatorId: string, now: string): Promise<void> {
@@ -114,7 +111,5 @@ export class RequestOperatorRepository {
     return this.connection.binding.prepare('SELECT id FROM boards WHERE slug = ? LIMIT 1').bind(slug).first<{ id: string }>()
   }
 
-  private async findRequest(slug: string): Promise<{ id: string } | null> {
-    return this.connection.binding.prepare('SELECT id FROM requests WHERE slug = ? LIMIT 1').bind(slug).first<{ id: string }>()
-  }
+
 }

@@ -51,3 +51,5 @@ Penny is an early release. This documentation describes what it does today.
 - [Email and notifications](/docs/email): provider setup, what requesters are sent and when.
 - [Export and restore](/docs/data): your data archive, restoring it and erasing personal data.
 - [Make it yours](/docs/customise): where to change the name, theme and behaviour, and how updates arrive.
+
+On a request in **Moderation → Internal notes**, write a private note or reply to an existing note, and select operators under **@mention operators**. Each selected operator sees one notice in **Your mentions**, with a link to the discussion and a Dismiss action. Notes and replies stay private. Mentions currently use in-app notices; email, chat, push and digest preferences are not available.

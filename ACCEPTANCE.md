@@ -579,7 +579,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence i
 
 OPS-005 and OPS-008 below reflect the 18 October 2026 implementation and named journeys; other ratings retain their earlier scope.
 
-**Counts:** 104 done, 63 partial, 80 missing (247 clauses).
+**Counts:** 104 done, 64 partial, 79 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -699,7 +699,7 @@ OPS-005 and OPS-008 below reflect the 18 October 2026 implementation and named j
 | TRIAGE-001 | partial | Native request and evidence assignment, active board defaults on capture, personal queues, requester-comment handling after moderation, reassignment, unassignment, archive/restore and erasure are covered through routes and the 1440/390 UI. Theme defaults remain because native themes (AI-005) do not exist. | `tests/base/ownership.test.ts`; `tests/browser/ownership-journey.mjs` |
 | TRIAGE-002 | partial | A clock-advanced test sends one reminder per age step, returns a snoozed item on its date, flags a request left in Planned for 28 days as stale with one reminder and clears the flag when its status changes, and the overview's aging and stale counts link to their records. | `src/core/features/overview`; `tests/browser/operator-pages.mjs` |
 | TRIAGE-003 | missing | A rule dry-runs against a fixture inbox, then applies once per item with one audit entry each; a hold rule keeps a matching auto-publish submission in moderation with the rule as its reason; the rule editor offers no publication, vote, customer-notification or commitment action. | — |
-| TRIAGE-004 | missing | A mention notifies its operator once; the note and its replies never appear in a public payload. | — |
+| TRIAGE-004 | partial | Private one-level note replies and selected operator @mentions create one durable in-app notice per note and recipient, with idempotent save, dismissal, active-member admission and archive/erasure custody. API and 1440/390 browser journeys pass. Gap: NOTIFY-006 channel preferences, email/chat/push delivery and digests remain missing. | `tests/base/internal-discussion.test.ts`; `tests/browser/internal-discussion.mjs` |
 | TRIAGE-005 | missing | Tagging and assigning 200 fixture items writes one audited batch; undo restores every item; a bulk removal (REQ-038) records one reason per batch. | — |
 | TRIAGE-006 | partial | For each worker type, a kill-and-restart test resumes without duplicates and shows the failure state until resolved. | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts`; `tests/base/notifications.test.ts:87` |
 | PRIO-001 | missing | A base test rolls three requests from two accounts up to one feature, counting each account once; moving the feature to another component keeps every link. | — |

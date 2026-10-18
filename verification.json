@@ -72,6 +72,15 @@
         "pnpm run build",
         "node tests/browser/ownership-journey.mjs"
       ]
+    },
+    {
+      "name": "internal-discussion",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/internal-discussion.mjs"
+      ]
     }
   ],
   "nightly": [
