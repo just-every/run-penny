@@ -342,3 +342,12 @@ Migration `0075_triage_aging.sql` adds portable age settings, effective-status c
 Migration `0076_roadmap_public_eta.sql` adds the separately approved public ETA and distinguishes ETA approval events from status transitions. Migration `0077_merge_notices.sql` expands the notification event kind and adds portable merge choices and address-bound audiences. Apply both through `rer setup` or the existing hosted deployment path before running this source; prior event, intent and delivery rows remain intact. No provider or account configuration changes are needed.
 
 Keep the expanded schema on rollback. Do not run an older mail drain against queued merge events: retain this source until those deliveries are resolved. Restored pending merge audiences and delivery intent are held and never send automatically. Merge reversal cancels unsent notices through current eligibility; it does not recall an accepted email. Public ETA changes prepare drafts and require a separate publication action to notify followers.
+
+## Imported internal-status custody
+
+Migration `0078_import_status_custody.sql` invalidates import reversal preflights
+when internal status definitions change. Apply it through `rer setup` or the
+existing hosted deployment path. There are no provider or account changes;
+retain the additive triggers on source rollback. Imported status definitions
+and their links are included in the existing archive classification. Upgrade
+rer to 0.2.60 in package mode and run `rer install` before use.

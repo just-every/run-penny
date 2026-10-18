@@ -9,6 +9,7 @@ import { parseFeedbackCsv, feedbackCsvTags } from './csv'
 import { feedbackKinds, importBounds, type SavedFeedbackInput, type FeedbackSource } from './types'
 import { ideasRows,FeedbackSourceError } from './ideas'
 import { uservoiceIdeas,uservoiceVoters } from './uservoice'
+import {internalStatusRecords} from './internal-statuses'
 import { feedbackBoardPolicySchema } from './board-policy'
 
 const object = (value: Json): Record<string,Json> => { if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('SOURCE_OBJECT'); return value }
@@ -87,9 +88,10 @@ export async function readSavedFeedback(input: SavedFeedbackInput): Promise<Feed
   const boards=new Set(bundle.records.filter(record=>record.kind==='boards').map(record=>record.sourceId))
   for(const [id,policy] of Object.entries(input.boardPolicies))if(!boards.has(id)||!feedbackBoardPolicySchema.safeParse(policy).success)throw new NativeError('Board policy must name a supplied board and contain every participation and display setting.',422)
  }
+ bundle.records.push(...internalStatusRecords(input,bundle.records))
  // Mapping choices are source custody too: replay cannot silently change status
  // or board policy while retaining the same source IDs.
- const mappingChoices = {statuses:input.statuses,...(input.boardPolicies?{boardPolicies:input.boardPolicies}:{}),...(input.files.some(file=>file.uservoice)?{uservoice:input.files.filter(file=>file.uservoice).map(file=>({name:file.name,options:file.uservoice!}))}:{}),...(input.files.some(file=>file.ideas)?{ideasMappings:input.files.filter(file=>file.ideas).map(file=>({name:file.name,columns:file.ideas!}))}:{}),...(input.files.some(file=>file.tagMapping)?{tagMappings:input.files.filter(file=>file.tagMapping).map(file=>({name:file.name,tags:file.tagMapping!}))}:{})}
+ const mappingChoices = {statuses:input.statuses,...(input.internalStatuses?{internalStatuses:input.internalStatuses}:{}),...(input.boardPolicies?{boardPolicies:input.boardPolicies}:{}),...(input.files.some(file=>file.uservoice)?{uservoice:input.files.filter(file=>file.uservoice).map(file=>({name:file.name,options:file.uservoice!}))}:{}),...(input.files.some(file=>file.ideas)?{ideasMappings:input.files.filter(file=>file.ideas).map(file=>({name:file.name,columns:file.ideas!}))}:{}),...(input.files.some(file=>file.tagMapping)?{tagMappings:input.files.filter(file=>file.tagMapping).map(file=>({name:file.name,tags:file.tagMapping!}))}:{})}
  safeValue(mappingChoices)
  const choices = Buffer.from(JSON.stringify(mappingChoices))
  bundle.artifacts.push({name:'penny-mapping.json',sha256:sha256(choices),size:choices.byteLength,original:{status:'available',base64:choices.toString('base64')}})

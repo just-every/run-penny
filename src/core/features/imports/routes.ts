@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import {internalStatusMappings} from './internal-statuses'
 import { feedbackBoardPolicySchema } from './board-policy'
 import type { Hono } from 'hono'
 import type { AppBindings } from '@/core/shared/bindings'
@@ -13,7 +14,7 @@ import { continueImport,runImportAction } from '../data/runner/import-steps'
 import { confirmed } from '../data/runner/inline'
 import { importWorkProgress } from '../data/runner/import-status'
 const file=z.object({name:z.string().min(1).max(100),kind:z.enum(['boards','users','posts','votes','comments','tags','merges']),version:z.enum(['v1','v2','classic-csv','ideas-csv','uservoice-ideas-csv','uservoice-voters-csv','relationships-v1']),base64:z.string(),boardId:z.string().optional(),tagMapping:z.record(z.string(),z.array(z.string().min(1))).optional(),ideas:z.object({key:z.string().min(1),title:z.string().min(1),details:z.string().min(1),status:z.string().min(1),created:z.string().min(1),author:z.string().min(1).optional(),aggregates:z.record(z.string(),z.enum(['count','company','revenue'])).optional(),omissions:z.array(z.string().min(1)).optional()}).strict().optional(),uservoice:z.object({scope:z.enum(['complete','filtered']).optional(),filter:z.string().min(1).max(1000).optional(),headings:z.record(z.string(),z.string().min(1)).optional(),forums:z.record(z.string(),z.string().min(1)).optional(),omissions:z.array(z.string().min(1)).optional()}).strict().optional()}).strict()
-const source=z.object({boardPolicies:z.record(z.string().min(1),feedbackBoardPolicySchema).optional(),namespace:z.string().min(1).max(80),files:z.array(file).min(1).max(30),statuses:z.record(z.string(),z.enum(['open','under_review','planned','in_progress','shipped','declined'])),boards:z.array(z.object({id:z.string(),name:z.string(),isPrivate:z.boolean(),created:z.string()}).strict()).optional()}).strict()
+const source=z.object({internalStatuses:internalStatusMappings.optional(),boardPolicies:z.record(z.string().min(1),feedbackBoardPolicySchema).optional(),namespace:z.string().min(1).max(80),files:z.array(file).min(1).max(30),statuses:z.record(z.string(),z.enum(['open','under_review','planned','in_progress','shipped','declined'])),boards:z.array(z.object({id:z.string(),name:z.string(),isPrivate:z.boolean(),created:z.string()}).strict()).optional()}).strict()
 type Environment={Bindings:AppBindings;Variables:{runtime:PennyRuntime}}
 export function registerFeedbackImportRoutes(app:Hono<Environment>):void {
  app.use('/api/operator/feedback-import/*',async(c,next)=>{c.header('Cache-Control','private, no-store');try{await importAuthority(c.get('runtime'),c.req.raw);await next()}catch(error){

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Canny move-in can retain custom status names as native internal statuses, with reviewed public mappings, idempotent replay and conflict-safe undo (PRIO-002). Moderation preserves their status; names stay private until explicitly shown. Migration 0078 fences later definition edits. Adopt rer 0.2.60 in package mode.
+
 - Canny imports accept reviewed per-board participation and display mappings. Copy posting, comment, vote-count, voter-list and anonymity settings in the CSV form or the private manifest; imported boards enforce them immediately. The settings join source custody, replay and conflict-safe undo without changing old import hashes (REQ-040).
 
 - Your feedback now includes the product-update subscription, beside request email preferences. Subscribe or unsubscribe without leaving your activity; votes, requests and follows stay intact (REQ-025).

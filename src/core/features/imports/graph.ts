@@ -55,7 +55,7 @@ export function feedbackGraph(source: FeedbackSource) {
   const author=record.kind==='votes'?'voter':'author';if(!users.has(reference(p[author])))missing(record,author,reference(p[author]))
   if(record.kind==='comments'&&p.parentID&&!comments.has(reference(p.parentID)))missing(record,'parentID',reference(p.parentID))
  }
- const rank = (r:SourceRecord) => ({boards:0,users:1,tags:2,posts:3,votes:4,comments:5,merges:6}[r.kind]??7)
+ const rank = (r:SourceRecord) => ({boards:0,users:1,tags:2,statuses:2.5,posts:3,votes:4,comments:5,merges:6}[r.kind]??7)
  const depth = (id:string):number => parents.has(id)?1+depth(parents.get(id)!):0
  const existingUsers=new Set(records.filter(r=>r.kind==='users').map(r=>r.sourceId))
  records.push(...[...users.values()].filter(u=>!existingUsers.has(u.sourceId)))
