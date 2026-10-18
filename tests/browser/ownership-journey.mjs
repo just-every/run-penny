@@ -68,6 +68,10 @@ try {
    await audit(page, 'board-default-owner', { detail: defaults })
 
    await page.goto(origin + '/app/feedback')
+   const mine = page.getByRole('region', { name: 'My queue', exact: true })
+   // The recorder and board choices are server-rendered. The queue's loaded
+   // contents prove the page has hydrated before we fill or submit the form.
+   await mine.getByRole('heading', { name: 'Evidence (0)', exact: true }).waitFor()
    const recorder = page.getByRole('form', { name: 'New evidence', exact: true })
    await recorder.getByLabel('Source', { exact: true }).selectOption('interview')
    await recorder.getByLabel('Original wording', { exact: true }).fill('Harbor Analytics needs scheduled CSV exports for its monthly finance review. Maya will follow up with the finance team.')
@@ -77,7 +81,7 @@ try {
    await recorder.getByRole('status').filter({ hasText: 'Saved.' }).waitFor()
    const evidenceId = await runtime.db.prepare('SELECT evidence_id FROM penny_evidence_owners WHERE operator_id=?').bind(self.id).first('evidence_id')
    assert.ok(evidenceId)
-   const evidence = page.locator(`#evidence-${evidenceId}`), mine = page.getByRole('region', { name: 'My queue', exact: true })
+   const evidence = page.locator(`#evidence-${evidenceId}`)
    await evidence.getByRole('combobox', { name: 'Accountable owner', exact: true }).waitFor()
    assert.equal(await evidence.getByRole('combobox', { name: 'Accountable owner' }).inputValue(), self.id)
    await mine.getByRole('heading', { name: 'Evidence (1)', exact: true }).waitFor()

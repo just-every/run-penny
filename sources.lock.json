@@ -2740,7 +2740,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "4145d6a545b01ffdca694b9931a25f4b3457a4df2216481e6043c431db6079b6",
+      "sha256": "0a82dcdced512faaa03a3b23f1db348489cab973969830e1d89a0335df9e329a",
       "executable": false
     },
     "CLAUDE.md": {
@@ -7072,7 +7072,7 @@
       "executable": false
     },
     "tests/browser/ownership-journey.mjs": {
-      "sha256": "63e4f3d509e1d87538f64814429a0e945c3e1b8af49f784e505a53910157d40a",
+      "sha256": "deefc16041cfa911211482504231079781f43cceb92ad5df333d9d025c531003",
       "executable": false
     },
     "tests/browser/public-entry-pacing.mjs": {

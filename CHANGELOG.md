@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The ownership browser journey waits for My queue to load before filling the server-rendered evidence form, so capture cannot race hydration. Save, default-owner and reassignment checks remain unchanged.
+
 - Overview now flags overdue inbox items, unanswered requester comments, requests without a public response and stale Under review/Planned/In progress statuses. Owners and Admins choose the age steps; Cron records deduplicated in-app owner reminders. Evidence can be snoozed until a chosen time, and direct or mapped status changes clear stale attention (TRIAGE-002).
 
 - Internal notes now support one level of private replies and selected operator @mentions. Each mention creates one durable in-app notice; replaying a save does not repeat it, and dismissal survives reload. Wider notification channel preferences and digests remain unimplemented (TRIAGE-004, NOTIFY-006).
