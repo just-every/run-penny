@@ -8,12 +8,12 @@
       "status": "documented format",
       "evidence": {
         "link": "https://github.com/just-every/run-penny/blob/main/docs/CANNY-MIGRATION.md",
-        "sha256": "986b743d8fa700d978750f9c9669daf40dec1dc79e6b49ba392994fefeeec890",
-        "size": 15656,
-        "sourceRepository": "urn:git:commit:1fd6369b2a6970b3d2500c98b554aa19550ab266",
-        "sourceRevision": "1fd6369b2a6970b3d2500c98b554aa19550ab266",
+        "sha256": "33a1d88ea784bf1d3902801fa7e2f6f1d701e29e68cda4fb72456031d13226bd",
+        "size": 17824,
+        "sourceRepository": "urn:git:commit:c9cb7484f7aa20744792b73e48c817ff0378ff00",
+        "sourceRevision": "c9cb7484f7aa20744792b73e48c817ff0378ff00",
         "sourcePath": "docs/CANNY-MIGRATION.md",
-        "sourceSha256": "986b743d8fa700d978750f9c9669daf40dec1dc79e6b49ba392994fefeeec890",
+        "sourceSha256": "33a1d88ea784bf1d3902801fa7e2f6f1d701e29e68cda4fb72456031d13226bd",
         "validation": "synthetic-only",
         "realExport": "not-supplied"
       }
