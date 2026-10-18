@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Organise requests into private products, components and features, attach roadmap work and move features without losing links (PRIO-001). Deduplicate people, accounts, recorded revenue and evidence across linked requests. Migration 0082 adds portable hierarchy and links without changing prior rows; rollback keeps its additive schema. Adopt rer 0.2.62 in package mode.
+
 - Ask voters for optional importance with three or four board labels, private counts, change/clear and source-stated native/Zendesk proxy importance. Canny saved vote priorities import with per-enum receipts and reversible custody. Commercial-value breakdowns, prioritisation use and Productboard importance remain open (REQ-035). Migration 0081 adds settings and origin-bound choices.
 
 - Record native customer proxy votes from inbox items, request cards and a private Zendesk sidebar app, with source and recorder attribution, one vote per customer, no identity verification or email permission, private CSV export and archive/erasure custody (CAP-014). Migration 0080 adds attribution without changing existing votes. Pin rer 0.2.61 in package mode.

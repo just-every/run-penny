@@ -16,6 +16,13 @@
   "description": "Turn customer feedback into clear product priorities, roadmaps, and release updates.",
   "capabilities": [
     {
+      "id": "product-hierarchy",
+      "description": "Organise requests into private products, components and features, attach roadmap work and retain links on moves. Feature demand counts distinct people, accounts, recorded account revenue and evidence.",
+      "clauses": [
+        "PRIO-001"
+      ]
+    },
+    {
       "id": "native-proxy-votes",
       "description": "Record a customer proxy vote from an inbox item, request card or private Zendesk sidebar, with private source/recorder attribution, one vote per customer, no identity verification or email consent, individual-voter CSV and portable custody. Zendesk proof uses its SDK/proxy edge fixtures; no live account installation is claimed.",
       "clauses": [

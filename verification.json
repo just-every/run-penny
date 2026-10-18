@@ -167,6 +167,15 @@
         "pnpm run build",
         "node tests/browser/vote-importance.mjs"
       ]
+    },
+    {
+      "name": "product-hierarchy",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/product-hierarchy.mjs"
+      ]
     }
   ],
   "nightly": [
