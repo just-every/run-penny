@@ -1,9 +1,41 @@
 # Seed command contract 1
 
+To bring existing data into a seed, sign in as the owner and use its import
+screen. First step: open this path on the destination app:
+
+```text
+/app/import
+```
+
+Upload a supported source export, review the plan and its differences, then
+approve that exact plan to apply it. Reconcile the result against native data;
+use Undo from the same history when needed. Base's reference accepts people JSON
+here, not installation `.rer` archives. Editions adopt this same door
+with their own supported readers and native adapters.
+
 This is the required maintained command path for every first-party seed,
 including Base's default seed and composed foundation editions. Independently
 authored projects may use this CLI and installer, but RER does not require
 either; owners keep their own supported operations and integration choices.
+
+## One data import door
+
+Owner move-in uses the signed-in `/app/import` screen and
+`POST /api/operator/import/{uploads,plan,apply,status,reconcile,undo}` with native
+session, Origin and CSRF checks. Upload original bytes, show the plan's counts,
+rejections and differences, and apply only its reviewed fingerprint. Reconcile
+from native data and expose history and Undo from this same pipeline. RER and
+Business import automation use that door's grant mount with their declared
+authority; they must not create a second importer. Follow Base's
+[door adoption guide](https://github.com/runeditrun/base/blob/main/modules/import-kit/src/door/ADOPTING.md).
+The technical foundation needs a product reader, native adapter and screen
+before it offers data move-in.
+
+The required `export` and `import` verbs below retain their existing archive
+contract to back up and restore this installation. Archive restore is
+separate from reviewed source import: it requires an empty destination and has
+no door plan or Undo. The reference door accepts people JSON source exports,
+not `.rer` archives; do not imply that `rer import --input` uses the door.
 
 ## Browser-free agent check
 
@@ -63,6 +95,32 @@ default branch or the release tag when that tag resolves to the same commit.
 `gates.verify` in the receipt and site provenance records `workflowFile`,
 `workflowName`, `workflowId`, `runId` and `runUrl`. `--local-verify` explicitly
 runs frozen installation and the seed's local verification targets instead.
+
+For a tag-first patch release from an already public source, push the branch,
+create `git -c tag.gpgSign=false tag -a --cleanup=verbatim v<version> <exact-source-sha> -m "$release_message"`, push that
+tag, wait for its selected Verify workflow to finish green on that SHA, then run
+`rer release --repo DIR --ref <exact-source-sha> --tag v<version> --project PUBLISHER/NAME --repository GITHUB_URL --output NEW_DIR`.
+Build `release_message` from the selected commit: the version tag alone, or the
+tag followed by two newlines and trimmed `RELEASE.json.publicReleaseNotes` when
+present. Notes must be nonempty text. The annotation must match that verbatim
+message followed by exactly one newline. `modules/release/README.md` in Base
+has the shell recipe.
+
+The producer may adopt that remote annotated tag only when it directly targets
+the selected commit, its embedded name and requested tag both equal the committed
+version tag, and its annotation message bytes match the generated message.
+Lightweight or nested tags and differing commits, names or messages are refused;
+existing tags are never rewritten. The producer captures one immutable object
+and direct source commit, checks the staged and imported identities before tag
+mutation and before reporting RELEASED, and refuses if any tag changed. The
+receipt retains the adopted tag object ID.
+This changes neither the exact-SHA GitHub Verify gate nor the other release gates.
+
+Every release, including an unchanged stable patch, validates the selected
+commit's `CONTRACT.md` with the current parser. Predecessor tags cannot authorize
+inheritance: existing release records contain no authenticated fresh contract
+PASS to inherit. Older contracts need a current-format refresh before release.
+The catalogue reads the validated contract's published clauses.
 
 `--no-queue` is available only on the heavy commands that list it and only
 when the original caller has `CI=true`. The actual descriptor is authoritative
@@ -180,6 +238,8 @@ First-run completion is stored durably; a setup rerun does not clear it.
 
 A first-party seed may declare one theme so the shared installer, sign-in confirmation, `/setup` pages wear its look: a CSS file at the root of its served static directory (conventionally `public/rer-theme.css`) holding only `:root` `--rer-*` tokens (page, surface, text, muted, border, focus, optional accent pair, link, font stacks, radius, logo) and `@font-face` rules for font files the app serves. The app serves it at `/rer-theme.css` (a Worker that admits only listed static paths lists it). The installer seed descriptor names it as `theme: 'public/rer-theme.css'`; the Worker passes `/rer-theme.css` to operator-auth `branding.theme`, to `firstRunResponse(..., { theme })`. The installer refuses a theme outside that grammar, naming a file the app does not serve, or whose declared colours fail contrast (4.5:1 for text pairs, 3:1 for focus and borders). Without a theme the pages are unchanged. Vendored seeds keep the token table and wiring note in `scripts/base-onboarding/README.md`.
 
+Operator-auth also accepts optional `branding.mark: '/brand/mark.svg'`, independently of the theme. Serve that SVG or PNG from the installation and allow its static path through the Worker. The root-relative pathname is 2–2048 characters using ASCII letters, digits, `/`, `.`, `_`, `~` and `-`, with no doubled slashes or `.`/`..` segments; URLs, encoded paths, queries, fragments, whitespace, quotes and angle brackets are refused. Sign-in, one-click entry and confirmation headers show the mark at 32×32 beside the product name as text; the dev key exchange header uses 40×40. Images have the product name as alt text and decode asynchronously under same-origin CSP. The explicit mark takes precedence over `--rer-logo`; omitting it leaves the existing HTML unchanged.
+
 ## Installed homepage and run site
 
 The run site privacy check matches the saved owner's whole name and exact email
@@ -223,6 +283,8 @@ A seed's `CONTRACT.md` says what the product is being built towards and how far 
 `rer deploy` uploads `dist/client/` behind the Worker (`assets.run_worker_first`), so the Worker sees every request first and a built file reaches the browser only when the Worker hands it to `env.ASSETS`. Make `staticAssetResponse(request, env)` from Base's `foundation/runtime/static-assets.ts` (in an edition, `src/base/static-assets.ts`) the first thing the Worker entry's `fetch` does, and return its answer when it is not null. It answers GET and HEAD for paths with a file extension from `env.ASSETS` (a built `.html` file too: when assets' `html_handling` answers `/guide.html` with a redirect to `/guide`, it follows that redirect inside `env.ASSETS` and returns the file with 200) and returns null on a miss, so app routes and documents keep their own handling; it never looks up dot paths (`.rer`, `.seed`, `.well-known`, `.dev.vars`), `/exports/`, `/__dev/` or `*.rer`. Declare `ASSETS?: Fetcher` in the seed's bindings type; TypeScript rejects the call until the type shares it. A seed that prerenders pages builds with the same routing, so `rer preview` serves them as deployed: give the Cloudflare Vite plugin `config: { assets: { binding: 'ASSETS', run_worker_first: true } }` for the build only (the reference's `vite.config.ts`; under `vite dev` the Worker would also take Vite's module requests). A prerendered page then reaches the browser as the Worker's document, with its `Cache-Control`, under preview as under deploy. The uploaded assets never hold `dist/client/.assetsignore` or any file its gitignore-style patterns name (the Cloudflare Vite plugin writes it with `wrangler.json` and `.dev.vars`): `rer deploy` and the delivery producer's artifact (`modules/delivery-producer`, a seed's `scripts/delivery/base/`) both leave them out, so `/.assetsignore` answers 404 when hosted.
 
 Answer `/health` with `deploymentHealth(env)` from `foundation/runtime/deployment-health.ts` (`src/base/deployment-health.ts`): `{ok: true, deployment: {sourceSha, fingerprint, versionId}}` from the `RER_DEPLOY_SOURCE`, `RER_DEPLOY_FINGERPRINT` and `RER_VERSION` bindings the deploy kit sets. Spread it into a body that carries other fields (`{status: 'ok', ...deploymentHealth(env)}`) and run any readiness check first. Declare `RER_DEPLOY_SOURCE?: string`, `RER_DEPLOY_FINGERPRINT?: string` and `RER_VERSION?: { id: string }` in the bindings type too. `rer deploy` compares these three values with what it just deployed and exits 1 when they differ.
+
+The owner deployment declaration may set top-level `"productDirectory": ".rer/deploy/product"` for a product staged by the build or deploy hook. It must name a normalized checkout-relative subdirectory: no absolute path, backslash, empty, `.` or `..` segment. The directory must exist after the build or hook, with no symlink on its path. rer reads this field and passes `--product` only to the kit's packaging commands (`dry-run`, `deploy` and `health`), including its extra dry run after a custom hook. A hook that invokes the kit itself still supplies `--product` on its own invocation; the wrapper reads the declaration for its own steps. Omitting the field keeps packaging at the checkout root. State, root ownership, secret changes and removal keep their existing locations and behavior; dry run still requires credentials for target secret reads.
 
 For an optional canonical public origin, declare `"publicOriginSetting": "PUBLIC_ORIGIN"` beside `originVar` (`AUTH_ORIGIN` or `APP_ORIGIN`) in `deploy.json`. `rer deploy` reads `PUBLIC_ORIGIN` from the adapter's saved settings; the process environment overrides saved settings and `--env-file` wins over both. The value must be `https://host[:port]`, with no credentials, path (including a trailing `/`), query, fragment, whitespace or backslashes; it is normalized to `URL.origin`. When omitted, the origin remains workers.dev. This changes only `originVar`: readiness, health checks, the deployment target, recorded resource names and IDs, and the owner claim retain the kit's workers.dev origin and identity.
 
@@ -371,14 +433,13 @@ withdrawn, and the shared record keeps its resume and undo. Replace a seed's
 
 ### Importing files too large for one request
 
-Replace the review/prepare pair with `prepareD1ImportSteps(source, mapping,
-context)` called once per request until `reviewable`, then
-`publishD1ImportPreparation(id, { ...context, reviewedFingerprint })` and
-`resumeD1ImportStream` as before. Apply import-kit's
-`d1PreparationStepsSchema` as a new numbered migration (default-seed's
-`0021_import_preparation_steps.sql`, plus `0022_import_stream_sources.sql` for
-its later `ik_d1_stream_sources` table) before refreshing, since erasure,
-cancellation and replay read its tables. See the D1 README, "Preparation across requests".
+Use the shared door's resumable `uploads` action. Send bounded chunks with
+per-chunk and complete-bundle SHA-256, then request a plan from the completed
+upload. Apply that plan in bounded calls with the exact reviewed fingerprint
+until the returned job is complete; reconcile and undo through the same door.
+Do not recreate the old review/prepare/publish routes or call stream job APIs
+from the move-in screen. The door adoption guide lists its ordered migrations
+and native-adapter size requirements; unsupported sizes must fail visibly.
 
 ### Shipping a reviewed rewrite of a released migration
 
@@ -560,25 +621,33 @@ An import job is bound to the principal that created it, and its plan and finger
 
 Independent projects without an adapter use `OPERATIONS.json` v2 `commands.NAME.argv`, `inputs`, effects, environmentSources and loops. Execute argv directly with shell false in the checkout, forwarding explicit arguments after `--` unchanged; never translate them into Cloudflare/pnpm/Base behavior. Common wrapper flags are consumed before the separator. No declared verb means exit 4, not an inferred command/fallback. Existing v1 inspection remains supported. Do not infer runnable commands from the platform registration descriptor's shell strings. No global pins, aliases, installer, state layout or required verb set is imposed on independent projects; runtime requirements remain project-owned. Independent check still validates the actual declaration and refuses missing/outside-checkout inputs.
 
-## Optional grant-authorised import door
+## Optional grant authority for the shared import door
 
 A seed may explicitly mount import-kit's D1-only
 `createImportDoorHandler(options)` from `modules/import-kit/src/door/index.ts`
-under POST `/api/rer/import/{uploads,plan,apply,status,reconcile,undo}`. This is
-an optional product import integration. The seed supplies its database, real
+under POST `/api/rer/import/{uploads,plan,apply,status,reconcile,undo,archive,restore-check}`
+(the last two grant-only). This is
+the optional grant authority for the same pipeline used by the signed-in
+operator mount, not a second importer. The seed supplies its database, real
 target adapter, parser/mapping, destination and actual owner principal, and
 applies `importDoorSchema` in a new numbered migration after its D1 kit schemas.
 A seed that already installed the door never re-applies `importDoorSchema`
 (it refuses on that older door schema, so the deploy fails rather than keep the
 old plan table). It applies the door migrations once each, in order, each in a
 new numbered migration: `importDoorApplyFailureMigration` as a single atomic
-batch, then `importDoorScopesMigration`. Until both are applied, an enabled
-door answers every route with 503 `import_door_schema_outdated`.
+batch, then `importDoorScopesMigration`, then `importDoorArchiveMigration`.
+Until the first two are applied, an enabled door answers every route with 503
+`import_door_schema_outdated`; without the third, only `archive` and
+`restore-check` do.
 Base does not mount the door in a seed automatically. Copy the module's
 `CONTRACT.md` and `src/door/README.md` with its runtime and dependencies.
 
-The door returns 404 until the installation explicitly opts in. The seed's
-server-only existing owner session, or provisioning under the owner's approved
+The grant mount returns 404 until the installation explicitly opts in. This
+setting does not disable owner-session imports or owner Undo. Mount
+`createImportOperatorHandler` from `door/operator.ts` with the same stable
+server-owned installation key, native adapter and source allow-list, and mount
+the grant handler first. The seed's server-only existing owner session, or
+provisioning under the owner's approved
 plan, writes enablement through `writeImportDoorSettings` with a current owner
 SQL predicate. The same control revokes trusted key ids permanently; rotation
 uses a new id. The public door cannot enable itself. Each request requires a
@@ -600,9 +669,10 @@ replacements to be strictly below 5% of baseline source count. Other changes
 require a new reviewed proposal. Reconcile derives source-id presence and
 disposition, native/provenance values, revisions, attachments and counts.
 
-Use `readImportDoorHistory` under owner authority to join approval metadata to
-real jobs, captioned "approved via Business by <owner> at <time>, fingerprint
-<x>". The ordinary seed owner can undo those jobs with the same configured
+Use `readImportDoorHistory` under current owner authority with the shared door
+key to join approval metadata to real jobs from both authorities. Caption local
+approvals "approved by" and Business approvals "approved via Business by",
+including the owner, time and fingerprint. The ordinary seed owner can undo those jobs with the same configured
 principal; snapshots undo newest first. Original bytes stay in the seed and RER
 retains receipts only. The seed owns route integration, native field sampling
 and acceptance evidence. This module has no external side effects and makes no
@@ -741,17 +811,28 @@ legacy `--login` uses the same entry). State whether external mail is sent
 and preserve the actual local auth and data requirements. Stop `dev` with
 `rer dev --stop` or Ctrl-C, and stop `preview` with
 `rer preview --stop` before build or verification. Then show the current
-verification, reset, transfer, deployment and description commands:
+verification, reset, deployment and description commands:
 
 ```sh
 rer verify
 rer reset --yes
-rer export --output exports/installation.rer
-rer import --input exports/installation.rer --yes
 rer deploy
 rer describe
 ```
 
+For data move-in, put the signed-in import door first, in plain words, with
+`/app/import` as the copyable first step. Describe upload, review, apply,
+reconcile and Undo, and the seed's actual supported formats. Show low-level
+archive commands under a "Back up and restore this installation" heading:
+
+```sh
+rer export --output exports/installation.rer
+rer import --input exports/installation.rer --yes
+```
+
+Explain their empty-destination requirement and the absence of a door plan and
+Undo. Keep source-copy seed creation (`exportReference` /
+`scripts/export-reference.mjs`) separate from installation data export.
 Document the actual flags, effects and cautions for each operation.
 
 Base's root guide directs maintainers into its runnable first-party seed.

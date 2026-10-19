@@ -29,6 +29,27 @@ non-generated owner-visible secret must explicitly say `input: "entered"`.
 Public fields cannot declare `input`, `generate` or `ownerVisible`. Secrets cannot
 declare defaults, prefill, options or `runtimeEditable` (even false).
 
+Public fields and groups may declare `audience: "owner" | "developer"`.
+An omitted group audience means `"owner"`. A public field inherits its group's
+audience when omitted, or defaults to `"owner"` without a group audience.
+A field may narrow an owner group to `"developer"`; an explicit `"owner"` field
+inside a `"developer"` group is refused, so a group cannot accidentally expose
+one of its developer settings. Unknown values are refused with the field name
+or group ID. Secrets cannot declare `audience`; their existing `ownerVisible`
+and `input` contract is unchanged.
+
+For example, `{"id":"technical","label":"Technical settings","audience":"developer"}`
+makes public fields with `"group":"technical"` developer settings, even when
+those fields omit `audience`. `setupFieldAudience(field, groups)` returns this
+effective audience for a validated public field. The installer model also
+exposes it through `fieldDefinition` and `groupDefinition`.
+Consumers with an owner/developer distinction can use it to keep developer-only
+settings away from owners. Base's local browser installer and `rer setup` have
+no such distinction: both continue to render and validate all active public
+fields, including developer settings. Audience does not change requiredness,
+defaults, conditions, runtime editability or submitted values. Existing
+manifests without audience keep their current behavior.
+
 A field may declare `localDefault`, a value that only the zero-setup local
 launch (`rer dev` on a checkout that is not set up) fills into an empty active
 field. It takes one of three forms: a literal string for a public field, which
