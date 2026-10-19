@@ -582,7 +582,7 @@ CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence a
 
 Current entries include the shipped setup and workspace clocks, request status controls and status roadmap, board categories and participation, requester subscriptions and sender identity, ownership, aging and private discussion. REQ-017 now includes repeated-decline reversal to the prior direct or mapped status; REQ-022 includes the private requester directory, existing-session refusal, contribution hiding and restoration, and atomic audit refusal. The installed board is served at `/` and `/portal/feedback`; HOME-002 remains the separate run-site landing. Local dev enters as the owner and suppresses outgoing mail without retaining or displaying captured messages (BASE-DATA-002). Each partial entry keeps its remaining acceptance work separate; dated receipts above retain their historical scope.
 
-**Counts:** 117 done, 56 partial, 74 missing (247 clauses).
+**Counts:** 118 done, 55 partial, 74 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -619,7 +619,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | CAP-006 | missing | Help Scout API fixtures: link, create, tag capture and mapping, each once per conversation. | — |
 | CAP-007 | missing | Gong API fixtures: filtered calls are ingested, proposals carry exact transcript spans and timestamps, accounts map through Gong's CRM association, and the fixture records no request for an out-of-filter call. | — |
 | CAP-008 | missing | Fathom, Zoom, Google Meet, Fireflies, Grain and tl;dv fixtures each ingest one filtered call with timestamped spans and ignore an out-of-filter call; a VTT upload produces a searchable transcript whose highlight becomes evidence with a timestamp link; an audio upload shows progress, reserved and metered cost, and a visible failure when the provider fails. | — |
-| CAP-009 | missing | Inbound-mail fixtures: forwarded Gmail and Outlook messages each create one item attributed to the original sender; a replayed message ID, an unaligned sender and a reply to a Penny notification create nothing. | — |
+| CAP-009 | missing | Inbound-mail fixtures: forwarded Gmail and Outlook messages each create one item attributed to the original sender; a replayed message ID, an unaligned sender, mail from Penny's own sender address and a reply to a Penny notification create nothing (NOTIFY-004). | — |
 | CAP-010 | missing | Signed Slack Events and Interactivity fixtures: the shortcut and the reaction each capture a message once, a bad signature is refused, and a Slack Connect channel maps to its account; the same capture runs against a Nook test installation. | — |
 | CAP-011 | missing | Bot Framework fixtures with token validation capture a message once and refuse an unsigned request. | — |
 | CAP-012 | missing | A Playwright extension journey on a fixture page creates an inbox item with the URL, excerpt and screenshot attachment; a signed-out extension is refused. | — |
@@ -764,7 +764,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 | NOTIFY-001 | done | Followers notified for the named public events only (vote-subscribed voters, subscribed authors and merge notices are NOTIFY-008, NOTIFY-011 and NOTIFY-012). | `tests/base/notifications.test.ts:40`; `tests/base/notifications.test.ts:68` |
 | NOTIFY-002 | done | Default quiet hours, coalescing, Queue wakeup and unsubscribe (owner-set quiet hours and the setup timezone are OPS-008). | `tests/base/notifications.test.ts:122`; `tests/base/notifications.test.ts:213` |
 | NOTIFY-003 | done | One owner email and in-app notice per review-due schedule. | `tests/base/penny-decisions.test.ts` |
-| NOTIFY-004 | partial | No-reply sending and no inbound route ship; a test that a notification reply creates nothing, and CAP-009's separate capture route, are required. | `src/core/features/notifications/delivery.ts` |
+| NOTIFY-004 | done | A follower's status notification has the deployment sender, no reply-to and `Auto-Submitted: auto-generated`; its reply, posted as a raw message, an Inbound Parse form and a JSON inbound webhook to the provider event route and plausible capture paths, is refused and changes no table except the per-IP request counters. CAP-009 inherits refusing Penny's own sender addresses and its reply-creates-nothing fixture; NOTIFY-013 inherits keeping a reply-to off the capture address. | `src/core/features/notifications/delivery.ts`; `tests/base/notifications.test.ts` |
 | NOTIFY-005 | done | Durable keys, bounded retries and failure states for requester and operator mail. | `tests/base/notifications.test.ts:87`; `tests/base/notifications.test.ts:269` |
 | NOTIFY-006 | partial | A preference-matrix test delivers each event once on each chosen channel and nowhere else; a digest coalesces a day's events into one message. | `src/core/features/integrations/destinations.ts`; `tests/base/egress-delivery.test.ts:35`; `tests/base/penny-decisions.test.ts` |
 | NOTIFY-007 | missing | Zendesk and Freshdesk fixtures: a shipped request drafts one reply per linked ticket; nothing is sent until an agent sends it. | — |

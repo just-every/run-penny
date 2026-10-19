@@ -309,3 +309,31 @@ it('[REQ-030 BASE-OPS-005] chosen private request and comment rejection reaches 
  expect(audits.results).toHaveLength(4)
  for(const row of audits.results){expect(row).toMatchObject({actor_type:'system',actor_id:'moderation_rejection_mail',entity_id:expect.any(String),occurred_at:expect.any(String)});expect(String(row.details_json)).not.toMatch(/@|Please explain|PRIVATE/)}
 })
+it('[NOTIFY-004] a reply to a notification creates nothing',async()=>{
+ const g=await setup();await g.follow();await g.status('Reply loop check')
+ const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
+ expect(sent).toHaveLength(1)
+ // Without a NOTIFY-013 reply-to, a reply goes to the deployment sender, which Penny never reads.
+ const mail=sent[0].body as {from:{email:string};reply_to?:unknown;headers?:Record<string,string>}
+ expect(mail.from.email).toBe(env.MAIL_FROM);expect(mail.reply_to).toBeUndefined()
+ expect(mail.headers).toMatchObject({'Auto-Submitted':'auto-generated'})
+ // Per-IP request counters are charged for every HTTP request whatever it carries; every other table must stay as it was.
+ const counters=new Set(['penny_public_admission','native_rate_limits'])
+ const rows=async()=>Object.fromEntries(await Promise.all((await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").all<{name:string}>()).results
+  .filter(({name})=>!counters.has(name)).map(async({name})=>[name,(await env.DB.prepare(`SELECT count(*) AS n FROM "${name}"`).first<{n:number}>())!.n])))
+ const before=await rows(),subject='Re: Updates: Approved title',text='Thanks, but we still need this for the finance export.'
+ const raw=`From: ${g.email}\r\nTo: ${mail.from.email}\r\nSubject: ${subject}\r\nIn-Reply-To: <${g.requestId}@penny.test>\r\nAuto-Submitted: no\r\n\r\n${text}`
+ const parse=new FormData();for(const [key,value] of Object.entries({from:g.email,to:mail.from.email,subject,text,email:raw}))parse.set(key,value)
+ // Raw message, SendGrid Inbound Parse and a JSON inbound webhook, at the origin root, the signed provider event route and plausible capture paths.
+ const shapes:[string,BodyInit][]=[['message/rfc822',raw],['',parse],['application/json',JSON.stringify({type:'email.received',data:{from:g.email,to:[mail.from.email],subject,text}})]]
+ let ip=0
+ for(const path of ['/','/email','/inbound','/api/inbound','/api/email','/api/public/email','/api/public/inbound','/api/public/mail/events','/api/public/mail/inbound','/api/operator/evidence','/api/operator/inbox'])for(const [type,body] of shapes){
+  const response=await exports.default.fetch(new Request('https://penny.test'+path,{method:'POST',redirect:'manual',headers:{Host:'penny.test','CF-Connecting-IP':`198.51.100.${++ip}`,...(type?{'Content-Type':type}:{})},body}))
+  const label=`${path} ${type||'multipart/form-data'}`
+  // The origin root renders the public document whatever the method; every other path refuses the message.
+  if(path==='/')expect(response.headers.get('Content-Type'),label).toMatch(/^text\/html/)
+  else expect(response.status,label).toBeGreaterThanOrEqual(400)
+  await response.body?.cancel()
+ }
+ expect(await rows()).toEqual(before)
+})

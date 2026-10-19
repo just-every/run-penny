@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- A reply to any notification creates no record (NOTIFY-004): notifications carry `Auto-Submitted: auto-generated` and no reply-to unless one is set, and a reply posted to the origin, the signed provider event route or any plausible capture path is refused with every table unchanged.
+
 ## 0.1.4 — 2026-10-19
 
 **Fix: on RER Managed, backup, restore and erasure refused. Penny 0.1.3 and every earlier version are affected.**
