@@ -2,7 +2,7 @@
   "version": "0.1.3",
   "previousVersion": "0.1.2",
   "date": "2026-10-18",
-  "publicReleaseNotes": "Penny 0.1.3 changes only the catalogue description, which is now: Turn customer feedback into clear product priorities, roadmaps, and release updates. Description only; no product change. The application, contract, migrations and configuration are identical to 0.1.2.",
+  "publicReleaseNotes": "Penny 0.1.3 changes only the catalogue description, which is now: Turn customer feedback into clear product priorities, roadmaps, and release updates. Description only; no product change. The application, contract, migrations and configuration are identical to 0.1.2. Product screenshot: public/brand/releases/penny-0.1.1-1440.png (unchanged).",
   "contractChanges": {
     "DATA-003": {
       "change": "changed",
