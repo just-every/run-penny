@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.1.4 — 2026-10-19
+
+**Fix: on RER Managed, backup, restore and erasure refused. Penny 0.1.3 and every earlier version are affected.**
+
+RER Managed (RER Platform) installs Penny with its own migration ledger, the `rer_migrations` table. Penny 0.1.3 and earlier did not recognise it, so on a Managed installation the Data page's Export this workspace, Restore a backup and Erase personal data (and their APIs and commands) all refused with `unclassified_archive_schema`: the owner could not back up, move or restore Penny. 0.1.4 treats `rer_migrations` as the installation's bookkeeping, by its exact name and using Base's list of platform tables. It never goes into a backup, and a restore never changes the destination's ledger. On every backup and restore the ledger must list exactly this version's migrations with their file hashes; anything else (an edited, missing, extra or half-applied migration) refuses with `migration_history_mismatch`. Every other unknown table, including other `rer_` names, still refuses. Local and other hosted installations are unaffected. Nothing to do beyond updating.
+
+Also in 0.1.4, everything on main since 0.1.2 (migrations 0063–0085; RELEASE.json lists each with its steps):
 
 - Publish Markdown release notes with approved same-origin images, explicit public labels and product names, and opt-in YouTube/Vimeo videos (REL-015). The changelog filters by label and product; raw HTML remains text and corrections preserve public snapshots. Migration 0085 adds image custody and public snapshot fields; both archive paths retain original images. Keep the expanded schema on rollback.
 
@@ -46,6 +52,10 @@
 - Assign requests and evidence to active operators, apply board defaults during capture, and follow requests, unreviewed evidence and requester comments in My queue. Private ownership survives product backups; theme defaults await native themes.
 
 - Owners choose the workspace timezone and requester quiet hours during setup and in settings. Older installations prompt for confirmation once; turning quiet hours off makes queued mail eligible, while operator review mail stays immediate.
+
+## 0.1.3 — 2026-10-18
+
+Description only; no product change. The catalogue description is now "Turn customer feedback into clear product priorities, roadmaps, and release updates.", the same sentence as main. The application, contract, migrations and configuration are identical to 0.1.2, so upgrading from 0.1.2 needs no migration, configuration or data step.
 
 ## 0.1.2 — 2026-10-17
 
