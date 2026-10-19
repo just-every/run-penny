@@ -13,6 +13,7 @@ import { readErasureJournal, schema } from '../../src/core/features/data/archive
 import { policy, laterJournalFence, LOCAL_DATA_LIMITS } from './policy'
 import { readJournal } from './local-journal'
 import { verifyExport } from './verify'
+import { restoreMigrations } from './migrations.mjs'
 import { privateInput } from '../data/private-files.mjs'
 import { failureLine, type Progress } from './failure'
 // `later` is `rer import --journal LATER_ARCHIVE`: a later archive of this installation.
@@ -59,7 +60,9 @@ try {
   const tables = await schema(db)
   let rowCount = 0
   for (const table of tables) { rowCount += (await db.prepare(`SELECT COUNT(*) n FROM "${table.name}"`).first<{n:number}>())!.n; if (rowCount > LOCAL_DATA_LIMITS.rows) throw new Error('archive_limit') }
-  const service = await createPortability({ db, buckets: { FILES: bucket }, policy: policy(journal) })
+  const archivePolicy = policy(journal)
+  // Base places an older archive in this installation's migration history by replaying it.
+  const service = await createPortability({ db, buckets: { FILES: bucket }, policy: archivePolicy, migrations: () => restoreMigrations(db, archivePolicy) })
   let id: string | undefined, complete = false
   try {
     progress.stage = direction

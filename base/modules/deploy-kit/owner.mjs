@@ -23,7 +23,7 @@ import { publicOrigin } from './public-origin.mjs';
 const segment = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
 const STATE_KIND = 'rer-deploy-owner-state';
 export const KINDS = ['d1','r2','kv','queues'];
-const DECLARATION_KEYS = ['version','project','compatibilityDate','compatibilityFlags','d1','r2','kv','queues','durableObjects','secrets','crons','vars','originVar','publicOriginSetting','publicSettings','services','workersDev','platforms','container','deployGuide'];
+const DECLARATION_KEYS = ['version','project','compatibilityDate','compatibilityFlags','d1','r2','kv','queues','durableObjects','secrets','crons','vars','originVar','publicOriginSetting','publicSettings','services','workersDev','platforms','container','deployGuide','productDirectory'];
 const ENTRY_KEYS = {d1:['binding'],r2:['binding','locationHint'],kv:['binding'],queues:['binding','consumer','deadLetterQueue'],durableObjects:['binding','className','storage'],secrets:['binding','environment','verifyStandIn','optional'],services:['binding','project','entrypoint','allowedHosts','grant']};
 
 export function refuse(code, kind, name) { const error = new Error(code); error.resource = `${kind}:${name}`; return error; }
