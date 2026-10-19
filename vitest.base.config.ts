@@ -1,10 +1,13 @@
 import { fileURLToPath } from 'node:url'
+import { createHash } from 'node:crypto'
 import { readFile, readdir, writeFile } from 'node:fs/promises'
 import { cloudflareTest, readD1Migrations } from '@cloudflare/vitest-plugin'
 import { defineConfig } from 'vitest/config'
 import { generatedTransport } from './tests/migration/generated-transport.ts'
 const migrations = await readD1Migrations(fileURLToPath(new URL('./migrations/core', import.meta.url)))
 const fullMigrationNames = (await readdir(new URL('./migrations/core', import.meta.url))).filter(name=>name.endsWith('.sql')).sort()
+// What RER Platform records in rer_migrations when it installs this revision: each file's name and SHA-256 of its bytes.
+const platformLedger = await Promise.all(fullMigrationNames.map(async name=>({name,sha256:createHash('sha256').update(await readFile(new URL('./migrations/core/'+name, import.meta.url))).digest('hex')})))
 // The same built Worker and bindings, with Queue delivery controlled explicitly
 // by cloudflare:test instead of racing fixtures' historical mail clocks.
 // Producers stay; the real consumer does not start unless PENNY_TEST_QUEUE_CONSUMERS=1.
@@ -24,6 +27,6 @@ export default defineConfig({
   maxWorkers:1,
   // Native Worker/D1 round trips take far longer than the 5 s default on a loaded shared host.
   testTimeout:60_000,hookTimeout:60_000,
-  include:['tests/base/**/*.test.ts'],provide:{migrations,fullMigrationNames,generatedTransport:await generatedTransport()},
+  include:['tests/base/**/*.test.ts'],provide:{migrations,fullMigrationNames,platformLedger,generatedTransport:await generatedTransport()},
  },
 })

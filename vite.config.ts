@@ -23,7 +23,7 @@ export default defineConfig(({ command, isPreview }) => ({
   // `vite dev` serves only what the app is built from: never rer's private
   // folders (the dev key, installer state), export archives, settings or local
   // data. The Cloudflare plugin also denies .dev.vars and .wrangler.
-  server: { fs: { strict: true, allow: ['src', 'public', 'base', 'scripts/portability', 'node_modules/@runeditrun/rer/modules/portability', 'node_modules/@runeditrun/rer/modules/erasure', 'seed.json', 'sample-data/penny.v1.json', 'node_modules'].map(checkout),
+  server: { fs: { strict: true, allow: ['src', 'public', 'base', 'migrations/core', 'scripts/portability', 'node_modules/@runeditrun/rer/modules/portability', 'node_modules/@runeditrun/rer/modules/erasure', 'seed.json', 'sample-data/penny.v1.json', 'node_modules'].map(checkout),
     deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/*.rer', ...['.rer', '.seed', 'private', 'exports'].map(folder => checkout(folder) + '/**')] } },
   plugins: [demoSockets(), localHostAdmission(), cloudflare({ persistState: { path: process.env.RER_STATE_DIR ?? '.wrangler/state' },
     ...(command === 'serve' && !isPreview ? { config: serve } : process.env.RER_DEV_ORIGIN ? { config: { vars: local('RER_DEV_ORIGIN') } } : {}),

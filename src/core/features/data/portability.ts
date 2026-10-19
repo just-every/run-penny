@@ -9,6 +9,7 @@ import { operatorAuth } from '../auth/operator'
 import { NativeError } from '../auth/native-tokens'
 import { finish, readErasureJournal, reserve, schemaHeaders, checkSchemaHeaders, schemaPart, state } from './archive'
 import { assertDataAuthority } from './authority'
+import { assertPlatformLedger } from './platform-ledger'
 import { claimPortabilityRunner } from './portability-lock'
 import { policy, LOCAL_DATA_LIMITS } from '../../../../scripts/portability/policy'
 import { verifyExport } from '../../../../scripts/portability/verify'
@@ -63,6 +64,7 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
   }
   const headers = (await schemaHeaders(db)).filter(table => !excludedTable(table.name))
   checkSchemaHeaders(headers)
+  await assertPlatformLedger(db)
   // The data lock holds every row still from creation to abort, so the row limit is checked once, in one round trip.
   if (creating) {
    const tables = await schemaPart(db, headers)

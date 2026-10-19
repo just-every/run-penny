@@ -20,6 +20,8 @@ import { feedbackRestoreCustody } from '../imports/archive-restore'
 import {eraseArchivedSourceOptions,eraseExportedSourceOptions} from '../imports/archive-source-erasure'
 import { clauseDeletionOrder } from './erasure-dependencies'
 import { checkCopyResolutions, redactionStatements, type BlockedCopy, type CopyResolution, type Redaction } from './erasure-redaction'
+import {assertPlatformLedger} from './platform-ledger'
+import {excludedTable} from '@runeditrun/rer/modules/portability'
 import {startNativeScope,stepNativeScope,finishNativeScope,type NativeScope,type ErasureTable} from './erasure-native'
 import { assertDataAuthority, dataBatch, type DataAuthority } from './authority'
 import { claimPortabilityRunner, requirePortabilityOwner } from './portability-lock'
@@ -52,10 +54,14 @@ export const rowKey=(table:Pick<Table,'columns'>,row:Row)=>canonical(keyColumns(
 const schemaHash=(tables:Table[])=>hash(tables.map(table=>({name:table.name,sql:table.sql})))
 export const state=(db:D1Database)=>db.prepare('SELECT origin,epoch,phase,lock_id FROM data_state WHERE singleton=1').first<State>()
 export type TableHeader={name:string;sql:string}
-// Migration ledgers (Wrangler's and the demo hosts' _rer_* ledgers) and Base's
-// hosted-demo state (rer_demo) belong to the host, not to Penny's data.
+// Host bookkeeping is not Penny's data: Base's platform list names the migration
+// ledgers (Wrangler's, the demo hosts' _rer_* and RER Platform's rer_migrations),
+// Base's hosted-demo state (rer_demo) and portability's working tables. Naming a
+// table in includeTables leaves only that mandatory platform test, by exact name
+// or Base's own prefixes. Base tables Penny's inventory classifies keep its checks.
+const hostTable=(name:string)=>!Object.hasOwn(inventory,name)&&excludedTable(name,{includeTables:[name]})
 export async function schemaHeaders(db:D1Database):Promise<TableHeader[]>{
- return (await db.prepare("SELECT name,sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT IN ('d1_migrations','_rer_deploy_migrations','_rer_portability_migrations','rer_demo') AND name NOT LIKE 'rer_portability_%' ORDER BY name").all<TableHeader>()).results
+ return (await db.prepare("SELECT name,sql FROM sqlite_master WHERE type='table' ORDER BY name").all<TableHeader>()).results.filter(table=>!hostTable(table.name))
 }
 export function checkSchemaHeaders(headers:{name:string}[]):void{
  const classified=inventory as Record<string,{classification:string;columns:string[]}>,names=new Set(headers.map(table=>table.name))
@@ -133,6 +139,7 @@ export const audit=(db:D1Database,action:string,id:string,authority?:DataAuthori
 export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:DataAuthority):Promise<{archive:Archive;journal:ErasureJournal}>{
  const id=await reserve(db,'export',{},authority)
  try {
+  await assertPlatformLedger(db)
   const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)
   if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
   if(data.request_attachment_uploads?.length||data.evidence_attachment_uploads?.length)fail('unfinished_attachment_uploads')
@@ -169,6 +176,7 @@ async function validated(db:D1Database,value:unknown,journalValue:unknown):Promi
  const current=(await state(db))!,known=await readErasureJournal(db)
  if(known.tombstones.length&&(known.origin!==journal.origin||known.tombstones.some(item=>!journal.tombstones.some(other=>canonical(item)===canonical(other)))))fail('erasure_journal_regression')
  if(current.origin===journal.origin&&current.epoch>journal.epoch)fail('stale_archive')
+ await assertPlatformLedger(db)
  const tables=await schema(db)
  if(await schemaHash(tables)!==archive.schemaHash||canonical(Object.keys(archive.tables).sort())!==canonical(tables.map(table=>table.name).sort()))fail('unsupported_archive_schema')
  limits(archive.tables);validateNativeIdentity(archive.tables);validateCategoryArchive(archive.tables);validateMailIdentityArchive(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)

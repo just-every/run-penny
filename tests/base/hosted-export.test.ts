@@ -102,12 +102,62 @@ it('[DATA-001] hosted archive includes every classified product table and exact 
  await env.FILES.delete('untracked');await env.FILES.delete('original')
  expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
 })
-it('[DATA-001] unknown tables, columns and stale product schema refuse export without leaving the fence held',async()=>{
- const cookie=await owner()
- await env.DB.exec('CREATE TABLE unclassified_personal_data(id TEXT PRIMARY KEY,private_value TEXT)')
- expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
- await env.DB.exec('DROP TABLE unclassified_personal_data; ALTER TABLE requests ADD COLUMN unclassified_private TEXT')
- expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
+// RER Managed installs with Platform's own ledger and no Wrangler d1_migrations.
+const platformLedgerDdl='CREATE TABLE rer_migrations (name TEXT PRIMARY KEY, sha256 TEXT NOT NULL, applied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)'
+async function managedInstall(appliedAt:string){
+ await env.DB.batch([env.DB.prepare('DROP TABLE d1_migrations'),env.DB.prepare(platformLedgerDdl),...inject('platformLedger').map(({name,sha256})=>env.DB.prepare('INSERT INTO rer_migrations(name,sha256,applied_at) VALUES(?,?,?)').bind(name,sha256,appliedAt))])
+}
+const platformLedger=async()=>(await env.DB.prepare('SELECT name,sha256,applied_at FROM rer_migrations ORDER BY name').all()).results
+async function refused(response:Response,error:string){expect(response.status).toBe(503);expect(await response.json()).toEqual({error})}
+it('[DATA-001] a RER Managed archive round trips while each installation keeps its own validated Platform migration ledger and unknown schema is refused',async()=>{
+ await managedInstall('2026-10-01 00:00:00')
+ let cookie=await owner();const bytes=await seedOriginal(),source=await platformLedger()
+ // v0.1.3 refused this database at the export door with unclassified_archive_schema.
+ const response=await call('/api/operator/data/export',undefined,cookie)
+ expect(response.status).toBe(200)
+ const bundle=await response.json() as Awaited<ReturnType<typeof exportArchive>>
+ expect(Object.keys(bundle.archive.tables)).not.toContain('rer_migrations')
+ expect(JSON.stringify(bundle)).not.toContain(source[0].sha256 as string)
+ expect(bundle.archive.tables.requests).toHaveLength(1)
+ // The ledger is checked, not merely skipped: it must list exactly this revision's migrations and file hashes.
+ const last=source.at(-1)!.name as string,first=source[0].name as string
+ const tampering=[`UPDATE rer_migrations SET sha256='changed-sql-bytes' WHERE name='${first}'`,`UPDATE rer_migrations SET name='9999_unrecognized.sql' WHERE name='${first}'`,`UPDATE rer_migrations SET name='${last}#0-1' WHERE name='${last}'`,`DELETE FROM rer_migrations WHERE name='${last}'`]
+ const untamper=()=>env.DB.batch([env.DB.prepare('DELETE FROM rer_migrations'),...source.map(row=>env.DB.prepare('INSERT INTO rer_migrations(name,sha256,applied_at) VALUES(?,?,?)').bind(row.name,row.sha256,row.applied_at))])
+ for(const change of tampering){await env.DB.exec(change);await refused(await call('/api/operator/data/export',undefined,cookie),'migration_history_mismatch');await untamper()}
+ // Only the exact ledger name is the host's; any other unknown table, rer_ or not, and any unknown column still refuse.
+ for(const name of ['rer_migrations_future','unclassified_personal_data']){
+  await env.DB.exec(`CREATE TABLE ${name}(id TEXT PRIMARY KEY,private_value TEXT)`)
+  await refused(await call('/api/operator/data/export',undefined,cookie),'unclassified_archive_schema')
+  await env.DB.exec(`DROP TABLE ${name}`)
+ }
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+ expect(await platformLedger()).toEqual(source)
+
+ // A fresh Managed destination: a tampered ledger refuses the restore before anything is written.
+ await reset();await applyD1Migrations(env.DB,inject('migrations'));await managedInstall('2026-10-19 00:00:00')
+ cookie=await owner();const destination=await platformLedger()
+ expect(destination).not.toEqual(source)
+ for(const change of tampering){
+  await env.DB.exec(change);const tampered=await platformLedger()
+  await refused(await call('/api/operator/data/import',bundle,cookie),'migration_history_mismatch')
+  expect(await platformLedger()).toEqual(tampered);await env.DB.batch([env.DB.prepare('DELETE FROM rer_migrations'),...destination.map(row=>env.DB.prepare('INSERT INTO rer_migrations(name,sha256,applied_at) VALUES(?,?,?)').bind(row.name,row.sha256,row.applied_at))])
+ }
+ expect(await env.DB.prepare('SELECT count(*) n FROM requests').first('n')).toBe(0)
+ expect((await env.FILES.list()).objects).toHaveLength(0)
+ expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+ expect((await call('/api/operator/data/import',bundle,cookie)).status).toBe(200)
+ expect(await platformLedger()).toEqual(destination)
+ expect(new Uint8Array(await (await env.FILES.get('race-original'))!.arrayBuffer())).toEqual(bytes)
+ // Re-export from the destination is the same archive, apart from the destination's own restore audit entry.
+ const again=await (await call('/api/operator/data/export',undefined,cookie)).json() as Awaited<ReturnType<typeof exportArchive>>
+ const restoreAudit=again.archive.tables.audit_entries.filter(row=>row.action==='data.restored')
+ expect(restoreAudit).toHaveLength(1)
+ const body=({sha256,...rest}:typeof bundle.archive)=>{void sha256;return rest},restored=body(again.archive)
+ expect({...restored,tables:{...restored.tables,audit_entries:restored.tables.audit_entries.filter(row=>row.action!=='data.restored')}}).toEqual(body(bundle.archive))
+ expect(again.journal).toEqual(bundle.journal)
+ expect(await platformLedger()).toEqual(destination)
+ await env.DB.exec('ALTER TABLE requests ADD COLUMN unclassified_private TEXT')
+ await refused(await call('/api/operator/data/export',undefined,cookie),'unclassified_archive_schema')
  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
 })
 
