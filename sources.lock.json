@@ -4336,7 +4336,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "dc180119a6b6f881ceeb94f17d77d062196b574a8e8c2f0a48d51eac3c6e1a76",
+      "sha256": "1db95843abc74ecc9cb269d4dfc6f83120c881438f4c735a757a3a60a9b3f715",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -4379,12 +4379,16 @@
       "sha256": "4d04a621baba698b4e8069e89b7fc119dc3988d21f9b3a5e875af07afa644d85",
       "executable": false
     },
+    "src/core/features/data/platform-ledger.ts": {
+      "sha256": "e5cdbfc366056d487884eb9928453b9438aeaf786cf5d783e56987e181824375",
+      "executable": false
+    },
     "src/core/features/data/portability-lock.ts": {
       "sha256": "cb073b2375711e20b0fd5d07e063eb5cfe5677dc20e4c8bd38cc7874360e4d33",
       "executable": false
     },
     "src/core/features/data/portability.ts": {
-      "sha256": "14225d1145cd6ba6178a09c66658a0806cc035fc9fb9539ae5c64e885e0a072e",
+      "sha256": "cb00f260d27cfd80a599af9a2350465244e0cb658cf29c97e7ab1a6c2514edc4",
       "executable": false
     },
     "src/core/features/data/routes.ts": {
@@ -7024,7 +7028,7 @@
       "executable": false
     },
     "tests/base/hosted-export.test.ts": {
-      "sha256": "c62e44ef03707a793cacdf29c5eddfaba794d344a7d952b7057ecfd7bd71fae5",
+      "sha256": "acc90d7378b3cf4ec85e42d789ec9935cd112116695fe510b439bf3bd99fda49",
       "executable": false
     },
     "tests/base/import-board-policy.test.ts": {
@@ -7248,7 +7252,7 @@
       "executable": false
     },
     "tests/base/vitest-context.d.ts": {
-      "sha256": "c8773f5437b0bf9d161a20fc906ca9ec9e5ba9bd74271484cb97012b382e29f1",
+      "sha256": "887b3d50b16c50a4fb9eadfe38c443401ff6c1402070be482e10f15c6d880fe0",
       "executable": false
     },
     "tests/base/vote-importance.test.ts": {
@@ -8156,7 +8160,7 @@
       "executable": false
     },
     "vite.config.ts": {
-      "sha256": "ee069f27731793b75d6154a57b41d5c9cbf24e15eb4f95fe949e08240f181b58",
+      "sha256": "2268483f11521d58b418abeb739c32aa92ccce9afa761b8b53835f33b44f4682",
       "executable": false
     },
     "vite.site.config.ts": {
@@ -8164,7 +8168,7 @@
       "executable": false
     },
     "vitest.base.config.ts": {
-      "sha256": "fe5f769458c8d368fab9e02d563000d65273f0a355d04123be2d05a3cb3eb836",
+      "sha256": "76ad6675aabcc4cc8d0f831167541de43d34a5426534ca3a440d352f8f8f4b42",
       "executable": false
     },
     "wrangler.jsonc": {
