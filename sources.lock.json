@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "818d0d91012c9a2a0997879285e627cf23d19ac5d6ca38c52f522f7868391bae",
+      "sha256": "a0dcc0f748219cd5a26e4bd109d2653dc23a30d5e202de8ff9f5243c19842568",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2800,7 +2800,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "15d714156f8c8c7204d40df4900642273badeae840cfd0e2eebbfa06add38ab8",
+      "sha256": "2b22b11caeb307f218371661fbfe21a820189a7142f61bdfbe484c6301750aca",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2812,7 +2812,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "3e402d3629693b03cc0fd9c061f9b6a40be62ff6bb5eb74b498f36d536b3aca7",
+      "sha256": "f21df591919b892f487d5f2782866ce27088d455873334a8384316fa126f8e08",
       "executable": false
     },
     "DEMO.md": {
@@ -4336,7 +4336,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "1db95843abc74ecc9cb269d4dfc6f83120c881438f4c735a757a3a60a9b3f715",
+      "sha256": "4efc61db966999b96b8ab5cb5eb7927da566e7dee5406981939d1e94b4591e7c",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -4389,6 +4389,10 @@
     },
     "src/core/features/data/portability.ts": {
       "sha256": "cb00f260d27cfd80a599af9a2350465244e0cb658cf29c97e7ab1a6c2514edc4",
+      "executable": false
+    },
+    "src/core/features/data/restore-order.ts": {
+      "sha256": "be0dd957b260b281e783c90cd06c515a64031d5e15798ed5428569ae73cfc641",
       "executable": false
     },
     "src/core/features/data/routes.ts": {
@@ -7056,7 +7060,7 @@
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {
-      "sha256": "d0b32a303da51088c1d0245ba863a6df1f84e77160d476c9f70aeff9fbc454fe",
+      "sha256": "8d361651751aaacf8f930a108ce0cf91a7d0d241315a3d9fd0ed0ed238b115c1",
       "executable": false
     },
     "tests/base/learning-fixture.ts": {

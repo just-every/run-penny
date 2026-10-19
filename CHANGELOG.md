@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Fix: restoring a backup failed with service unavailable when an internal note reply's id sorted before the note it answers. Restore now inserts a row that names another row of its own table after that row (TRIAGE-004).
 - A reply to any notification creates no record (NOTIFY-004): notifications carry `Auto-Submitted: auto-generated` and no reply-to unless one is set, and a reply posted to the origin, the signed provider event route or any plausible capture path is refused with every table unchanged.
 
 ## 0.1.4 — 2026-10-19

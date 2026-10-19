@@ -19,6 +19,7 @@ import { validateFeedbackArchive } from '../imports/archive-custody'
 import { feedbackRestoreCustody } from '../imports/archive-restore'
 import {eraseArchivedSourceOptions,eraseExportedSourceOptions} from '../imports/archive-source-erasure'
 import { clauseDeletionOrder } from './erasure-dependencies'
+import { parentsFirst } from './restore-order'
 import { checkCopyResolutions, redactionStatements, type BlockedCopy, type CopyResolution, type Redaction } from './erasure-redaction'
 import {assertPlatformLedger} from './platform-ledger'
 import {excludedTable} from '@runeditrun/rer/modules/portability'
@@ -267,7 +268,7 @@ export async function applyRestore(db:D1Database,bucket:R2Bucket,id:string,autho
   eraseArchivedSourceOptions(archive.tables)
   const importCustody=await feedbackRestoreCustody(db,archive.tables)
   const statements=[...applyStart(db,id),...importCustody.before,...tables.map(table=>db.prepare(`DELETE FROM ${ident(table.name)}`))]
-  for(const table of tables)for(const original of archive.tables[table.name]){
+  for(const table of tables)for(const original of parentsFirst(table,archive.tables[table.name])){
    const row=normalize(table.name,original),columns=table.columns.map(column=>column.name)
    statements.push(db.prepare(`INSERT INTO ${ident(table.name)}(${columns.map(ident).join(',')}) VALUES(${columns.map(()=>'?').join(',')})`).bind(...columns.map(column=>row[column])))
   }

@@ -16,7 +16,8 @@ it('[TRIAGE-004] a selected mention persists once across retries and dismissal; 
  const input={body:'Private root discussion',mentionOperatorIds:[other.id,other.id],idempotencyKey:crypto.randomUUID()}
  const root=await good(path,input,cookie,'POST',201)
  await good(path,input,cookie,'POST',201)
- const reply=await good(path,{body:'Private threaded reply',parentNoteId:root.id,mentionOperatorIds:[other.id]},cookie,'POST',201)
+ // The archive lists notes by id: this reply sorts before its parent, so restore must still place the parent first.
+ const reply=await good(path,{body:'Private threaded reply',parentNoteId:root.id,mentionOperatorIds:[other.id],idempotencyKey:'00000000-0000-4000-8000-000000000000'},cookie,'POST',201)
  const notices=await good<{mentions:{noteId:string}[]}>('/api/operator/discussion/mentions',undefined,other.cookie)
  expect(notices.mentions.map(row=>row.noteId).sort()).toEqual([root.id,reply.id].sort())
  expect((await good<{mentions:unknown[]}>('/api/operator/discussion/mentions',undefined,cookie)).mentions).toEqual([])
@@ -41,6 +42,20 @@ it('[TRIAGE-004] a selected mention persists once across retries and dismissal; 
  await good('/api/operator/data/erasure',{...target,planHash:preview.planHash},cookie)
  expect(await env.DB.prepare('SELECT * FROM penny_note_mentions').all()).toMatchObject({results:[]})
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ // A fresh installation restores the archived discussion: each reply keeps its parent, each mention its recipient and dismissal.
+ await reset();await applyD1Migrations(env.DB,inject('migrations'))
+ const restorer=await owner()
+ let restoring=await call('/api/operator/data/import',exported,restorer)
+ for(let step=0;step<50&&restoring.status===202;step++){
+  const {operationId,status}=await restoring.json() as {operationId:string;status:string}
+  if(status==='complete'){restoring=new Response(JSON.stringify({status}),{status:200});break}
+  restoring=await call(`/api/operator/data/operations/${operationId}/resume`,{},restorer)
+ }
+ expect(restoring.status,await restoring.clone().text()).toBe(200)
+ const byKey=(rows:unknown[])=>(rows as Record<string,string>[]).toSorted((a,b)=>`${a.id??a.note_id}:${a.operator_id}`.localeCompare(`${b.id??b.note_id}:${b.operator_id}`))
+ for(const table of ['request_notes','penny_note_mentions'])
+  expect(byKey((await env.DB.prepare(`SELECT * FROM ${table}`).all()).results),table).toEqual(byKey(exported.archive.tables[table]))
+ expect((await env.DB.prepare('SELECT parent_note_id FROM request_notes WHERE id=?').bind(reply.id).first())?.parent_note_id).toBe(root.id)
 })
 it('[TRIAGE-004] upgrading populated notes preserves the original discussion and accepts a threaded reply',async()=>{
  const migrations=inject('migrations') as {name:string}[],cut=migrations.findIndex(row=>row.name.startsWith('0074_'))
