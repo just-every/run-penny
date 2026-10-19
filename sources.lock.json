@@ -2860,7 +2860,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "2b22b11caeb307f218371661fbfe21a820189a7142f61bdfbe484c6301750aca",
+      "sha256": "a7d2c00a2c4a58d19a9903ec71bf4846bdddf91b229b10a84dc4ba289f61d41a",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2924,7 +2924,7 @@
       "executable": false
     },
     "docs/data-ownership.md": {
-      "sha256": "55133ebecf5e9380105dfeedaf747ad93513853fd9a0ec4a4c534c0cd8cbe9f5",
+      "sha256": "52cc26a2653fab0ef0fd064bb1cbd1744fb9ee99b54b6c799108c952e1e7e2d5",
       "executable": false
     },
     "docs/DATA.md": {

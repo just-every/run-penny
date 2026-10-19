@@ -483,8 +483,13 @@ records in one admitted transaction and reinstalls the maintained custody
 triggers before checking the result. It does not replay creation or fabricate
 witnesses. Destination authority remains separate. Penny's reviewed large-history
 streams carry their pages and product bundle metadata. Unowned streams or private
-preparation/publication state refuse archive completion visibly. Re-export after migration: an older
-archive has a different schema and is not silently upgraded during restore.
+preparation/publication state refuse archive completion visibly. An older archive restores across later
+migrations only where Base can place it in this installation's migration history: the restore door
+(`scripts/portability/migrations.mjs`) replays the applied migrations from this checkout's files, in the
+ledger's order (Wrangler's `d1_migrations` or RER Platform's `rer_migrations`), and Base admits later
+migrations that only add tables, columns or indexes, or whose backfills it replays. Any other later
+migration refuses the restore with `schema_mismatch`, before anything is written; rows are never
+silently upgraded.
 
 Migration 0034 adds reviewed bundle/receipt metadata, exact original chunks and
 native revision fences for conflict-preserving undo. Migration 0035 adds the

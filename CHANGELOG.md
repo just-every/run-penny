@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Restore places an older backup in this installation's migration history (DATA-001). `rer import` and the local restore door now pass Base the installation's applied migrations, replayed from this checkout's files in its ledger's order (Wrangler's `d1_migrations` or RER Managed's `rer_migrations`), so a backup from before later additive migrations restores instead of refusing with `schema_mismatch`. Later migrations that rewrite rows still refuse before anything is written. Known issue: every backup made before migrations 0075 (triage aging) and 0077 (merge notices), including those from Penny 0.1.3 and earlier, still refuses with `schema_mismatch:migration_data` (0075_triage_aging.sql for a backup at migration 0071). It will restore once a rer release replays 0075's settings row and status-clock backfill and admits 0077's row-preserving rebuild of notification events. Pin rer 0.2.71 in package mode; every recorded Base copy refreshed to Base 052e5ea.
 - Fix: restoring a backup failed with service unavailable when an internal note reply's id sorted before the note it answers. Restore now inserts a row that names another row of its own table after that row (TRIAGE-004).
 - A reply to any notification creates no record (NOTIFY-004): notifications carry `Auto-Submitted: auto-generated` and no reply-to unless one is set, and a reply posted to the origin, the signed provider event route or any plausible capture path is refused with every table unchanged.
 
