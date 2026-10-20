@@ -71,6 +71,12 @@ it('[OPS-008][NOTIFY-002] sends Eastern daytime updates, holds overnight to 08:0
  await g.publish(0,'Custom daytime quiet hours',custom-Date.parse('2026-10-07T09:00:00Z'))
  await drainNotifications(runtime(),()=>custom+60000);expect(sent).toHaveLength(4)
  await drainNotifications(runtime(),()=>Date.parse('2026-10-11T17:00:00Z'));expect(sent).toHaveLength(5)
+ expect((await save(g.operator,{...clock,timezone:'Australia/Sydney'})).status).toBe(200)
+ const dst=Date.parse('2026-10-12T10:00:00Z')
+ await g.publish(0,'Sydney daylight saving',dst-Date.parse('2026-10-07T09:00:00Z'))
+ await drainNotifications(runtime(),()=>Date.parse('2026-10-12T20:59:59Z'));expect(sent).toHaveLength(5)
+ await drainNotifications(runtime(),()=>Date.parse('2026-10-12T21:00:00Z'));expect(sent).toHaveLength(6)
+
 })
 
 it('[OPS-008][DEC-007][NOTIFY-003] calendar reviews use the recorded timezone and operator mail has no requester quiet hours',async()=>{
