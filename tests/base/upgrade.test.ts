@@ -10,6 +10,7 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010] populated v0.1.4 data and originals s
  const tableQuery="SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT IN ('d1_migrations','operator_sessions','native_requester_sessions','native_magic_links','local_auth_outbox') ORDER BY name"
  await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0009'))
  await populatePreviousPennySample(env.DB,sample)
+ const historicOperators=(await env.DB.prepare('SELECT id,email FROM operators ORDER BY id').all<{id:string;email:string}>()).results
  const legacyOwner=await env.DB.prepare('SELECT id FROM operators ORDER BY id LIMIT 1').first<string>('id'),stamp=new Date().toISOString()
  await env.DB.prepare('INSERT INTO operator_sessions(id,operator_id,token_hash,expires_at,last_used_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').bind('old-session',legacyOwner,'prior-sha-hash','2099-01-01',stamp,stamp,stamp).run()
 
@@ -52,5 +53,6 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010] populated v0.1.4 data and originals s
  expect(new Uint8Array(await (await env.FILES.get('upgrade-preserved-bytes'))!.arrayBuffer())).toEqual(bytes)
  expect(await env.DB.prepare('SELECT revoked_at FROM operator_sessions WHERE id=?').bind('old-session').first()).toMatchObject({revoked_at:expect.any(String)})
  expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual([])
+ expect((await env.DB.prepare('SELECT id,email,status FROM oa_operators ORDER BY id').all()).results).toEqual(historicOperators.map(o=>({...o,status:'active'})))
  expect(await env.DB.prepare('SELECT COUNT(*) AS count FROM oa_operators').first()).toEqual(await env.DB.prepare('SELECT COUNT(*) AS count FROM operators').first())
 })

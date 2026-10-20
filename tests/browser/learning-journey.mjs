@@ -33,6 +33,7 @@ try {
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)
     assert.deepEqual(await page.evaluate(async()=>(await window.axe.run(document.getElementById('ai-models').closest('section'))).violations.filter(v=>['serious','critical'].includes(v.impact))),[])
     await page.getByRole('region',{name:'AI models and budget',exact:true}).screenshot({path:join(output,label+'-'+width+'.png')})
+    await page.locator('#ai-models').evaluate(n=>n.scrollIntoView({block:'start'}));await page.screenshot({path:join(output,label+'-top-'+width+'.png')});await page.getByLabel('AI cost report').scrollIntoViewIfNeeded();await page.screenshot({path:join(output,label+'-cost-'+width+'.png')})
    }
    async function saveAi(budget){
     const form=page.getByRole('form',{name:'AI configuration',exact:true});await form.getByLabel('Monthly AI budget (USD)',{exact:true}).fill(budget)
