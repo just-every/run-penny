@@ -1,3 +1,4 @@
+import {draft,draftInput} from './drafts'
 import {z} from 'zod'
 import type {Hono} from 'hono'
 import type {OperatorMutationEnvironment} from '@/core/app/operator-mutations'
@@ -7,6 +8,7 @@ import {parseInput} from '../auth/native-routes'
 import {capabilities,providers,provider,settings,costReport} from './configuration'
 export const aiSettingsInput=z.object({monthlyBudgetMicros:z.number().int().min(0).max(100000000000),includePrivate:z.boolean(),choices:z.array(z.object({capability:z.enum(Object.keys(capabilities) as [keyof typeof capabilities,...(keyof typeof capabilities)[]]),provider,model:z.string().min(1).max(160)}).strict()).max(16)}).strict()
 export function registerAiRoutes(app:Hono<OperatorMutationEnvironment>){
+ app.post('/api/operator/ai/drafts',async c=>c.json(await draft(c.get('runtime'),c.req.raw,await parseInput(c.req.raw,draftInput))))
  app.get('/api/operator/settings/ai',async c=>{
   const runtime=c.get('runtime'),{db,session}=await integrationOperator(runtime,c.req.raw),s=await settings(db),all=providers(runtime),rows=(await db.prepare('SELECT * FROM penny_ai_capabilities').all<{capability:string;provider:string;model:string}>()).results
   return c.json({canConfigure:session.operator.role==='owner',monthlyBudgetMicros:s.monthly_budget_micros,includePrivate:!!s.include_private,report:await costReport(db),capabilities:Object.entries(capabilities).map(([id,label])=>({id,label,provider:rows.find(r=>r.capability===id)?.provider??'anthropic',model:rows.find(r=>r.capability===id)?.model??all.anthropic?.models[0]?.id??''})),catalog:Object.entries(all).flatMap(([provider,c])=>(c?.models??[]).map(m=>({provider,...m}))),transport:!!runtime.bindings.PENNY_LEARNING_EGRESS})

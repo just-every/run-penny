@@ -1,3 +1,4 @@
+import {draftNetwork} from '../fixtures/ai/draft-network'
 import {providerMessages} from './provider-messages'
 import {mockMail} from './support'
 import {explicitConsentBoard} from './explicit-consent-board'
@@ -14,13 +15,21 @@ import type { EvidenceVersion,EvidenceAttachments,RequestSuggestion } from '@/co
 import type { OperatorAccountDetail,OperatorDecisionBrief } from '@/core/shared/api/operator'
 const app=createPennyApi(),origin='https://127.0.0.1:8787'
 const devKey='synthetic-evidence-checkout-key-for-local-outbox-tests'
-const bindings=()=>({...env,RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key',WORKSPACE_TIMEZONE:'UTC'})
+let ai=false,onModel:()=>Promise<void>=async()=>{}
+const modelEdge={send:async(wire:{url:string;body:string})=>{
+ expect(wire.url).toBe('https://api.anthropic.com/v1/messages')
+ const input=JSON.parse(JSON.parse(wire.body).messages[0].content)
+ for(const value of ['Secret Acme account','987654321','Private operator request note'])expect(JSON.stringify(input)).not.toContain(value)
+ await onModel()
+ return {status:200,headers:{},body:JSON.stringify({content:[{type:'text',text:JSON.stringify(draftNetwork(input))}],stop_reason:'end_turn',usage:{input_tokens:103,output_tokens:211}})}
+}}
+const bindings=()=>({...env,...(ai?{PENNY_AI:JSON.stringify({anthropic:{apiKey:'synthetic-draft-network-key',models:[{id:'fixture-claude',inputMicrosPerToken:0.1,outputMicrosPerToken:0.5,maxOutputTokens:600}]}}),PENNY_LEARNING_EGRESS:modelEdge}:{}),RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key',WORKSPACE_TIMEZONE:'UTC'})
 let ip=0
 function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST'){
  return app.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'127.0.0.1:8787',Origin:origin,'CF-Connecting-IP':`192.0.2.${++ip}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings())
 }
 async function json<T>(response:Response|Promise<Response>,status=200):Promise<T>{const r=await response;expect(r.status,await r.clone().text()).toBe(status);return r.json() as Promise<T>}
-beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
+beforeEach(async()=>{ai=false;onModel=async()=>{};await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
 async function fixture(){
  const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303)
@@ -145,7 +154,7 @@ it('[EVID-008] original evidence attachment bytes stay operator-only with export
  await env.DB.prepare("UPDATE data_state SET phase='locked',lock_id='maintenance' WHERE singleton=1").run()
  expect((await upload(`/api/operator/evidence/${g.evidence.id}/attachments`,g.operator)).status).toBe(409)
 })
-it('[EVID-006] commercial fields and source attribution are absent from public APIs, documents, metadata, sitemap and requester mail',async()=>{
+it('[AI-006 EVID-006] resolves cited summaries and editable reply drafts while keeping private records out of publication and requester mail',async()=>{
  const g=await fixture();await publish(g)
  const note='Private operator request note',rationale='Private commercial commitment rationale',alternative='Private alternative rejection'
  await json(call(`/api/operator/requests/${g.request.slug}/notes`,{body:note},g.operator),201)
@@ -189,5 +198,33 @@ it('[EVID-006] commercial fields and source attribution are absent from public A
  expect(releaseMessages[0]).toMatchObject({to:['requester@example.test'],subject:releaseCopy.title})
  for(const approved of [releaseCopy.title,releaseCopy.body,`Export project reports: ${origin}/portal/feedback/${g.request.slug}`,`${origin}/portal/updates/${release.slug}`])expect(releaseMessages[0].text).toContain(approved)
  for(const message of messages)for(const marker of markers)expect(JSON.stringify(message.message)).not.toContain(marker)
+ ai=true
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:1000000,includePrivate:false,choices:[]},g.operator,'PUT'))
+ const comment=await json<{id:string}>(call(`/api/operator/requests/${g.request.slug}/comments`,{body:'Can reports include a date filter?'},g.operator),201)
+ const beforeDraft=await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n')
+ const notificationCount=await env.DB.prepare('SELECT count(*) n FROM notification_outbox').first('n')
+ for(const [kind,id] of [['request',g.request.id],['decision',g.decision.id],['account',g.account.id],['comment',comment.id],['inbox',g.evidence.id]]){
+  const result=await json<{text:string;citations:{id:string;href:string}[];flags:string[];notices:string[];costMicros:number}>(call('/api/operator/ai/drafts',{kind,id},g.operator))
+  expect(result.citations.length).toBeGreaterThan(0);expect(result.citations.every(c=>c.id!=='evidence:missing-record')).toBe(true)
+  expect(result.notices.some(n=>n.includes('unresolvable'))).toBe(true)
+  expect(result.costMicros).toBe(116)
+  for(const citation of result.citations){
+   if(citation.id.startsWith('evidence:')){const versions=await json<{id:string}[]>(call(citation.href,undefined,g.operator));expect(versions.some(v=>`evidence:${v.id}`===citation.id)).toBe(true)}
+   else {const stored=await json<{requestId:string;comments:{id:string}[]}>(call(`/api/operator/requests/${g.request.slug}/context`,undefined,g.operator));expect(citation.id===`request:${stored.requestId}`||stored.comments.some(c=>`comment:${c.id}`===citation.id)||citation.id===`decision:${g.decision.id}`||citation.id===`bet:${g.bet.id}`).toBe(true)}
+  }
+  if(kind==='comment'||kind==='inbox'){
+   expect(result.flags).toContain('Account name')
+   expect((await call(`/api/operator/requests/${g.request.slug}/comments`,{body:result.text,aiDraft:true},g.operator)).status).toBe(422)
+  }
+ }
+ expect(await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n')).toBe(beforeDraft)
+ expect(await env.DB.prepare('SELECT count(*) n FROM notification_outbox').first('n')).toBe(notificationCount)
+ for(const headers of [{},requester])expect((await call('/api/operator/ai/drafts',{kind:'request',id:g.request.id},headers)).status).toBe(401)
+ await json(call(`/api/operator/requests/${g.request.slug}/comments`,{body:'Thank you. We are reviewing the report export evidence; no delivery date is committed.',aiDraft:true},g.operator),201)
+ expect(await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n')).toBe(Number(beforeDraft)+1)
+ onModel=async()=>{await env.DB.prepare('UPDATE oa_sessions SET revoked_at=?').bind(Date.now()).run()}
+ expect((await call('/api/operator/ai/drafts',{kind:'request',id:g.request.id},g.operator)).status).toBe(401)
+ expect(await env.DB.prepare("SELECT count(*) n FROM penny_ai_runs WHERE state='metered'").first('n')).toBe(6)
+
 
 })

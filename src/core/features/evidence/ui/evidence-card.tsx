@@ -1,3 +1,4 @@
+import {DraftPanel} from '../../ai/ui/draft-panel'
 import { ProxyVoteForm } from '../../requests/ui/proxy-vote-form'
 import {EvidenceSnooze} from '../../triage/evidence-snooze'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
@@ -28,6 +29,7 @@ export function EvidenceCard({ evidence, onSaved }: { readonly evidence: Operato
       {evidence.namedSpeaker ? <p className="mt-3 text-base text-penny-ink">Named speaker: {evidence.namedSpeaker}</p> : null}
       {onSaved ? <div className="mt-4"><TagEditor label="Evidence tags" tagNames={evidence.tags} onChanged={onSaved} {...evidenceTagApi(evidence.id)} /></div> : evidence.tags.length > 0 ? <ul className="mt-4 flex list-none flex-wrap gap-2 p-0" aria-label="Evidence tags">{evidence.tags.map((tag) => <li key={tag}><Chip tone="sand">{tag}</Chip></li>)}</ul> : null}
       {evidence.reviewReason ? <p className="mt-4 flex gap-2 border-t border-penny-line pt-4 text-base leading-normal text-penny-muted"><Icon name="check" className="mt-1 size-4 shrink-0 text-penny-moss" />{evidence.reviewReason}</p> : null}
+      <DraftPanel kind="inbox" id={evidence.id} onSent={onSaved} />
       <CustomFieldsEditor entityType="evidence" entityId={evidence.id} />
       <OwnerControl entity="evidence" value={evidence.id} onSaved={onSaved} />
       {evidence.reviewState==='unreviewed'?<EvidenceSnooze id={evidence.id} onSaved={onSaved}/>:null}

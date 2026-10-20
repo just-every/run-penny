@@ -1,3 +1,4 @@
+import {DraftPanel} from '../../ai/ui/draft-panel'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { DecisionReview } from './decision-review'
 import { DecisionPostRelease } from './decision-post-release'
@@ -34,6 +35,7 @@ function DecisionContent({ decision, onSaved }: { readonly decision: OperatorDec
     <>
       <OperatorDetailBack to="/app/decisions">All decisions</OperatorDetailBack>
       <OperatorPageHeader eyebrow="Decision brief" title={decision.title} art={{ note: 'Good decisions compound.' }}>{decision.question.trim() !== decision.title.trim() ? <span>{decision.question}</span> : null}</OperatorPageHeader>
+      <DraftPanel kind="decision" id={decision.id} />
       <div className="mt-6 space-y-10 sm:mt-8">
         <section className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)]">
           <OperatorCard className="p-5 sm:p-6">

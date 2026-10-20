@@ -1,3 +1,4 @@
+import {publicationFlags} from '../ai/drafts'
 import { registerVoteImportanceSettings } from './vote-importance-settings'
 import { registerProxyVoteRoutes } from './proxy-vote-routes'
 import { requestCategoryCsv } from '../categories/request-csv'
@@ -80,8 +81,11 @@ export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironm
     return operatorMutation(context,async operator=>{await reviewAppeal(context.get('runtime').database,context.req.param('id'),operator.id,input.resolution,input.reason,now());return context.json({ok:true})})
   })
   app.post('/api/operator/requests/:slug/comments' ,async context=>{
-    const input=await parseMutationBody(context,noteSchema);if(!input)return invalid(context)
-    return operatorMutation(context,async operator=>context.json(await postOperatorComment(context.get('runtime').database,context.req.param('slug'),input.body,operator),201))
+    const input=await parseMutationBody(context,noteSchema.extend({aiDraft:z.literal(true).optional()}));if(!input)return invalid(context)
+    return operatorMutation(context,async operator=>{
+      if(input.aiDraft&&(await publicationFlags(context.get('runtime').database.binding,input.body)).length)return context.json({error:'ai_private_draft',message:'This draft contains a private account value or internal note. Edit it before publishing.'},422)
+      return context.json(await postOperatorComment(context.get('runtime').database,context.req.param('slug'),input.body,operator),201)
+    })
   })
   app.get('/api/operator/requests/:slug/context' , async context => operatorMutation(context, async () => context.json(await requestContext(context.get('runtime').database, context.req.param('slug')))))
   app.post('/api/operator/requests', async context => {

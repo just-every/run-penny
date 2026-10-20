@@ -1,3 +1,4 @@
+import {DraftPanel} from '../../ai/ui/draft-panel'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { AccountEditor } from './account-editor'
 import type { OperatorAccountDetail } from '@/core/shared/api/operator'
@@ -23,6 +24,7 @@ function AccountContent({ account, onSaved }: { readonly account: OperatorAccoun
     <OperatorDetailBack to="/app/customers">All accounts</OperatorDetailBack>
     <OperatorPageHeader eyebrow="Account detail" title={account.name} art={{ note: 'Every customer, heard.' }}><span>Customer context is operator-only and stays linked to the decisions and evidence it informs.</span></OperatorPageHeader>
     <AccountEditor account={account} onSaved={onSaved} />
+    <DraftPanel kind="account" id={account.id} />
     <div className="mt-7 grid min-w-0 grid-cols-1 gap-7 xl:grid-cols-[minmax(0,1fr)_340px]">
       <div className="min-w-0 space-y-8">
         <OperatorCard className="p-5 sm:p-6">
