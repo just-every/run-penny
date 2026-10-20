@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "c1175e6addce1c1df2e690cf737379371120b6c0f93dd4e3d8664414a6d62b36",
+      "sha256": "2780fd10250c4e3c63bb6f8c85bbd6a4a2aae949fcd52d9c1f0d3ffc57051951",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2812,7 +2812,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "2b85828f040d802f429143a9fb424846575a9a16282a8e22add6add73b01f57c",
+      "sha256": "2e49250e2c0dad05078726445df30b0addfd6d72c50f0e0a0967fb4a2312abfa",
       "executable": false
     },
     "DEMO.md": {
@@ -3052,7 +3052,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "f12e4d560795c15edf26116160d314a8a8345215245b9014f224e926cc7d6598",
+      "sha256": "92bec25069fbc20b9d02cfbea5dc5840b7bc4f52c4dd8694f2fe58a1da1d13fe",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -3380,7 +3380,7 @@
       "executable": false
     },
     "migrations/core/0087_ai_configuration.sql": {
-      "sha256": "f514b2380cff0f6f0eeeed23b520a530ea69b9620c73ec5da4ebd09bb69c1d2a",
+      "sha256": "632dcbb323bb997922fd722773b7662504aa9cfef74a20b9367d9d7e8a9575fe",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -4156,7 +4156,7 @@
       "executable": false
     },
     "src/core/features/ai/configuration.ts": {
-      "sha256": "991b0e1ae4809acbe9ec557fa619f967b71677f9416007f83415c0a60bbda03f",
+      "sha256": "a6691adc3240301f0304eedc41d2615ff752191edb23173f4eaeb39dd2a9113f",
       "executable": false
     },
     "src/core/features/ai/cost.ts": {
@@ -4180,7 +4180,7 @@
       "executable": false
     },
     "src/core/features/ai/routes.ts": {
-      "sha256": "a1c80d9b602ab7a5919db6477bdf5e17274382241ad4c742eb3bd9b3906a8c08",
+      "sha256": "2da27ca28be33857e734640c6b627dfe30d83117117ff4b1fdae42fa0ec4b2c2",
       "executable": false
     },
     "src/core/features/ai/ui/model-settings.tsx": {
@@ -4380,7 +4380,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "22e3278f2db9af6eb7c52f1b1ca52caf9554ba7ff74fdbc91e911e62a7be1f74",
+      "sha256": "d3bb24e15e17938c47f683f1d2b8d300b666286064dff50edd53b94b9e8bea88",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -7268,7 +7268,7 @@
       "executable": false
     },
     "tests/base/remote-portability.test.ts": {
-      "sha256": "47c9ed3015091af174c5e08a14f2412d9f67b287452656fa2199f4d48f3ca61b",
+      "sha256": "efbaa54a8e29349d9d1b255e1aa715233e873b0214e55d10195be691100f442f",
       "executable": false
     },
     "tests/base/request-demand.test.ts": {
@@ -7880,11 +7880,11 @@
       "executable": false
     },
     "visual/ai-models/ai-budget-refusal-1440.png": {
-      "sha256": "de8773e86bd4f6b9778939b2499408a42b7c5069e3a0d4c798ba6cb96953ae6c",
+      "sha256": "429bd707bae4a30ca34d1778e57e86005598e5bf8b2bcc585d3e9d0f9a8ad3e6",
       "executable": false
     },
     "visual/ai-models/ai-budget-refusal-390.png": {
-      "sha256": "3bf5b7c3137f5a660050c7110cb0c28980103a14c0fb54f7b24999c63a2335c5",
+      "sha256": "4970f3d8158400aa79f232aafb0b6854205d068c1e95277fe57f77233319b363",
       "executable": false
     },
     "visual/ai-models/ai-capped-settings-1440.png": {
@@ -7896,7 +7896,7 @@
       "executable": false
     },
     "visual/ai-models/ai-capped-settings-cost-1440.png": {
-      "sha256": "ab52eb98d5c94ecf01b012bf9f5974c5dc15c5bd90c54c436eb4dec37b441e1b",
+      "sha256": "3b4f5e93cba876640ff821edad72b42105869c8c5d2958a67d7fa959acf4fe54",
       "executable": false
     },
     "visual/ai-models/ai-capped-settings-cost-390.png": {
@@ -7988,7 +7988,7 @@
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-390.png": {
-      "sha256": "e33d5dca2cab8bbd0902c1453df58379192850644d531360be65e042eed81120",
+      "sha256": "cc8b109e5c7e78682da400efb4e1f4f6a9b28d055668169307c37a78ee382654",
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-cost-1440.png": {
