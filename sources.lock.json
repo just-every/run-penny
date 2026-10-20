@@ -8191,6 +8191,182 @@
       "sha256": "54b4890f57393f55d1b968f46cff8e26c7d739fbf8e37cde92418b8527371243",
       "executable": false
     },
+    "visual/scheduled-publication/REL-014-author-failure-notice-dismissed-1440.png": {
+      "sha256": "73949b44ad96c12f3dc28693faab9140640e0428bc405731b782bb48cca4c331",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-author-failure-notice-dismissed-390.png": {
+      "sha256": "b1eeba3405ab1c99d82a355c05c3856b0bdf53e4c0e9f6284ed3f33942234058",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-author-failure-notice-dismissed-detail-1440.png": {
+      "sha256": "d68967bac467044d2388bba1130230af6e49d21065965fe3f8924faa79e0aff0",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-author-failure-notice-dismissed-detail-390.png": {
+      "sha256": "9c9a83b59206bdba959fb7a448ca54f5d0d7d25607c12a670a04d0a7a6532c40",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-author-publication-failure-notice-1440.png": {
+      "sha256": "5938ec910adb08ce39068fff4245893f4a840f6736dd59843ce3860550339198",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-author-publication-failure-notice-390.png": {
+      "sha256": "8e42307789128808801e9077fdb53267986004458ba55c7d2242161c84665653",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-author-publication-failure-notice-detail-1440.png": {
+      "sha256": "7e9cea781914e4e0ef3390f18af7097c45dcfa82cb4385e6c37c595e000e042e",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-author-publication-failure-notice-detail-390.png": {
+      "sha256": "12eb537930ddf32dc0f244487ec0d086210ae09410d1f24ad4ae665fa0bdd35a",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-failing-release-schedule-form-1440.png": {
+      "sha256": "73eb0ac57ce62472616e29bc517a14900835889d1d2e5c5a8962b322f8fcf865",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-failing-release-schedule-form-390.png": {
+      "sha256": "dd1aff242c0230e79b0305b0f7a446111c5adeae6d3f795b2bbdecfc90cd1f38",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-failing-release-schedule-form-detail-1440.png": {
+      "sha256": "d7f830088c019fc1578a5b0b12ca73356f663f6bad9040eb123f10567d72b7bc",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-failing-release-schedule-form-detail-390.png": {
+      "sha256": "d2ee0c3c99b96784102711d9fef5b58154d2b1a1a1813f05928e75c4d6ebd2ae",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-failing-release-scheduled-1440.png": {
+      "sha256": "f1ce6a8a8600af844d10fd06e650b507e744dfc562b6e021ffee04c93cbb9b75",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-failing-release-scheduled-390.png": {
+      "sha256": "21922af4d5e0f0b3c36ea497ab073dc481fd7325b3b54cabeac611821e54dbba",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-failing-release-scheduled-detail-1440.png": {
+      "sha256": "fd5ad02578c345374ba8efe2f01968446d92dc5ff908bbfb3ffcea9789a624bc",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-failing-release-scheduled-detail-390.png": {
+      "sha256": "9b8146e44934ecd80081f9063c498df5a6e9d00207ae2c4aabdaaa451b807127",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-schedule-cancelled-1440.png": {
+      "sha256": "96d647d20114c046b44e45cc5785e045fc832114f12d845ba195c681655d73d3",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-schedule-cancelled-390.png": {
+      "sha256": "22d763c2367bca68c3b971aca5038733414cf4ef6beb9d8e4052fbea55500880",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-schedule-cancelled-detail-1440.png": {
+      "sha256": "3d5d4734965ab4bea90be24782a6094eb67d54ba160797bfaacb8c020d58885f",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-schedule-cancelled-detail-390.png": {
+      "sha256": "c7d83a0d8dd19de93adbeb8b41aff847e37f8995a0ac8ce069a6a49ddcbff4d2",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-schedule-form-1440.png": {
+      "sha256": "7b071dfb3190163099f9caec0c52c5772915aca621bd933e38ffc6615d962c4f",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-schedule-form-390.png": {
+      "sha256": "5d664418281fcc443666647d1008d5a93b17dbadc8884064424a1f96f0784331",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-schedule-form-detail-1440.png": {
+      "sha256": "d7f830088c019fc1578a5b0b12ca73356f663f6bad9040eb123f10567d72b7bc",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-schedule-form-detail-390.png": {
+      "sha256": "d2ee0c3c99b96784102711d9fef5b58154d2b1a1a1813f05928e75c4d6ebd2ae",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-scheduled-1440.png": {
+      "sha256": "a77b27b72deeb10e28a3fe76ba5744fcf3886139019b939781ea1b91439d3449",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-scheduled-390.png": {
+      "sha256": "45911977a49920ea3046bb1e1023967cf6c35f5460ebcbc872fdc1f69d6b5dc3",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-scheduled-detail-1440.png": {
+      "sha256": "fd5ad02578c345374ba8efe2f01968446d92dc5ff908bbfb3ffcea9789a624bc",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-scheduled-detail-390.png": {
+      "sha256": "9b8146e44934ecd80081f9063c498df5a6e9d00207ae2c4aabdaaa451b807127",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-scheduled-publication-failed-1440.png": {
+      "sha256": "90c346e282f93e61531d88a18b0a3a4dfa465f8272bde61143d165a629ab2a1b",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-scheduled-publication-failed-390.png": {
+      "sha256": "05b5e93eb7c0d959d41c860da9e9070a3c54f1e8ffdb968c946cf4876fd1b55e",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-scheduled-publication-failed-detail-1440.png": {
+      "sha256": "6723dc172c7c66c5450039c37dc5a47614c69f635a96f11441443aa4c34dc023",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-release-scheduled-publication-failed-detail-390.png": {
+      "sha256": "c8cd6320bc7d17e2355c85d7ac3f86d2f410524e7e4addd456425a56960ae9a1",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-schedule-cancelled-1440.png": {
+      "sha256": "3899dab210e9edc85071389227112df521153f2625e898429ca5c2b086f3d841",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-schedule-cancelled-390.png": {
+      "sha256": "096f49c5f9f5ab79f5820d815503d93a02dde15f3a5a02691828719e57712ad7",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-schedule-cancelled-detail-1440.png": {
+      "sha256": "a1ebba0b226da5609850012a1afdd7b78ac4c9fbaade69b27abc5110025fc6cd",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-schedule-cancelled-detail-390.png": {
+      "sha256": "2e6098d25ffd3ead36098b9ab86e6a3369e356f8e7db44ca3b5896f4ce73a46a",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-schedule-form-1440.png": {
+      "sha256": "5af2ffa40a6e4f720889decc02d61329b302fa105c5d5a9132095e70251d0cd7",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-schedule-form-390.png": {
+      "sha256": "6202ed5e607c47acbb201e28030950750b39408899ca98d49fbf8bd64b4ddd1f",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-schedule-form-detail-1440.png": {
+      "sha256": "6d4bb3ce3f9410dd6a34d585b49167c5896822e14e1afea15c1706e770fb053b",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-schedule-form-detail-390.png": {
+      "sha256": "54a7155f6e716a8e3aaf322e4fafddf4c744bccf90f550ded952520346d98fe0",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-scheduled-1440.png": {
+      "sha256": "fbdd5bec968c487c3164875391a5d646d67c3720dc519f9d0467def6c61046ec",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-scheduled-390.png": {
+      "sha256": "975109558ff613818ff61f232672418a4c0de70f5b3cea7f5f0c74c68bdfcbff",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-scheduled-detail-1440.png": {
+      "sha256": "09aa4fbbf05949827c695f5ec04617074527cfa847a782dd3a19e88242b7fe0d",
+      "executable": false
+    },
+    "visual/scheduled-publication/REL-014-status-update-scheduled-detail-390.png": {
+      "sha256": "3b7cf9c6b952b2940e776f2c60250198ecbf8fcc64e6c24a9c3937bc66b847ac",
+      "executable": false
+    },
     "vite.config.ts": {
       "sha256": "2268483f11521d58b418abeb739c32aa92ccce9afa761b8b53835f33b44f4682",
       "executable": false
