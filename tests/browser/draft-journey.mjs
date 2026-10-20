@@ -16,8 +16,9 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
  }
  const operator=await runtime.db.prepare('SELECT id FROM operators LIMIT 1').first()
  await api('/api/operator/settings/ai',{monthlyBudgetMicros:10000000,includePrivate:false,choices:[]},'PUT')
+ await api('/api/operator/boards',{name:'Product reporting',slug:'reporting',visibility:'public'})
  const account=await api('/api/operator/accounts',{name:'Northstar Labs',internalOwnerId:operator.id,revenueCents:4800000,health:'Renewal discussion is internal',renewalDate:'2027-03-15'})
- const request=await api('/api/operator/requests',{title:'Export reports with a date filter',description:'Finance teams need to select a reporting period before downloading CSV reports.',boardSlug:'feedback',evidenceIds:[]})
+ const request=await api('/api/operator/requests',{title:'Export reports with a date filter',description:'Finance teams need to select a reporting period before downloading CSV reports.',boardSlug:'reporting',evidenceIds:[]})
  await api(`/api/operator/requests/${request.slug}/moderate`,{verdict:'approved'})
  const decision=await api('/api/operator/decisions',{question:'How should report exports handle reporting periods?',ownerOperatorId:operator.id})
  const bet=await api(`/api/operator/decisions/${decision.id}/bets`,{title:'Date-filtered CSV export',summary:'Explore choosing a reporting period before export.'})
