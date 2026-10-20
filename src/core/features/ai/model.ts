@@ -10,7 +10,7 @@ const usage=z.object({input:z.number().int().nonnegative(),output:z.number().int
 /** One enforcing RPC path, one reservation, no retry after ambiguous paid work. */
 export async function modelCall(runtime:PennyRuntime,db:D1Database,capability:Capability,instructions:string,input:unknown,schema:Record<string,unknown>,ceiling=Number.MAX_SAFE_INTEGER,onSend=async()=>{},prepaid?:Reservation){
  const c=await selected(runtime,db,capability),user=JSON.stringify(await promptInput(db,input))
- const body=JSON.stringify(c.provider==='openai'?{model:c.id,messages:[{role:'system',content:instructions},{role:'user',content:user}],max_completion_tokens:c.maxOutputTokens,response_format:{type:'json_schema',json_schema:{name:'penny_output',strict:true,schema}}}:{model:c.id,system:instructions,messages:[{role:'user',content:user}],max_tokens:c.maxOutputTokens,output_config:{format:{type:'json_schema',schema}}})
+ const body=JSON.stringify(c.provider==='openai'?{model:c.id,messages:[{role:'system',content:instructions},{role:'user',content:user}],max_completion_tokens:c.maxOutputTokens,response_format:{type:'json_schema',json_schema:{name:'penny_output',strict:true,schema}}}:{model:c.id,system:instructions,thinking:{type:'disabled'},messages:[{role:'user',content:user}],max_tokens:c.maxOutputTokens,output_config:{format:{type:'json_schema',schema}}})
  // All prompt/schema UTF-8 bytes plus conservative provider framing. No tools,
  // images, caching, extended thinking or automatic provider calls are enabled.
  const upper=meteredCost(new TextEncoder().encode(body).length+16000,c.maxOutputTokens,c.inputMicrosPerToken,c.outputMicrosPerToken)
@@ -20,7 +20,7 @@ export async function modelCall(runtime:PennyRuntime,db:D1Database,capability:Ca
  try{
   // Recheck operator/scope authority immediately before the network edge.
   await onSend();await db.prepare('SELECT 1').first();transmitted=true
-  const response=await send(runtime,{url:c.provider==='openai'?'https://api.openai.com/v1/chat/completions':'https://api.anthropic.com/v1/messages',method:'POST',headers:c.provider==='openai'?{Authorization:`Bearer ${c.apiKey}`,'Content-Type':'application/json'}:{'x-api-key':c.apiKey,'anthropic-version':'2023-06-01','Content-Type':'application/json'},body})
+  const response=await send(runtime,{url:c.provider==='openai'?'https://api.openai.com/v1/chat/completions':'https://api.anthropic.com/v1/messages',method:'POST',headers:c.provider==='openai'?{Authorization:`Bearer ${c.apiKey}`,'Content-Type':'application/json'}:{'x-api-key':c.apiKey,...(c.workspaceId?{'anthropic-workspace-id':c.workspaceId}:{}),'anthropic-version':'2023-06-01','Content-Type':'application/json'},body})
   if(response.status!==200)throw new NativeError('learning_model_failed',409)
   let raw:Record<string,any>,tokens:z.infer<typeof usage>
   try{raw=JSON.parse(response.body);tokens=usage.parse(c.provider==='openai'?{input:raw.usage.prompt_tokens,output:raw.usage.completion_tokens}:{input:raw.usage.input_tokens,output:raw.usage.output_tokens})}catch{throw new NativeError('learning_model_payload_invalid',409)}
