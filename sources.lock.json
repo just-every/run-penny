@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "7280f4c935f22c3c76feb14fa106e3cea6fbd7dc4f4c77d0a00b3be365381ad4",
+      "sha256": "6b151ebf7e072761a82516149014946e57d846d6318c824f561bb3aeb04f7d14",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2800,7 +2800,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "dd8c0f192a0352fe75252015d1804cc23bc99a94e7319852c222235d4fa9777c",
+      "sha256": "8e3341f368804beb813c9d235d8b507be12fee3b8092e0c3996d7770aab1174b",
       "executable": false
     },
     "CLAUDE.md": {
@@ -2812,7 +2812,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "4fb6ed4d342796013559703f5455d42501dc0d8281fed6755a496c21b10edf3b",
+      "sha256": "b13191a2430bf80a59692c454d8aafb02d61cdbb0e40fdb682f774d500a89d7e",
       "executable": false
     },
     "DEMO.md": {
@@ -5615,8 +5615,12 @@
       "sha256": "07274dbb7bec4aadf88610fbd435efdb894a4eb74f5ac1d1ca1c66a1ba79d2e8",
       "executable": false
     },
+    "src/core/features/overview/ui/loop-health.tsx": {
+      "sha256": "59199db9cd1b9bbd50ec4c57d26e0c56d64b44a25aa40c08ff034d21e1db6dc4",
+      "executable": false
+    },
     "src/core/features/overview/ui/overview-page.tsx": {
-      "sha256": "620188bafb5dcb324ab5ec516a1377912ae60d63d188ff8c92239199b725e393",
+      "sha256": "44507062d5d89921b6f6b1f7a1c8e53408f5f0270b980e1e66af5609643ffd53",
       "executable": false
     },
     "src/core/features/overview/ui/overview-parts.tsx": {
@@ -5668,7 +5672,7 @@
       "executable": false
     },
     "src/core/features/planning/risk.ts": {
-      "sha256": "4070b9f3e1d474d25eebfe4fb7037c363417a2ca19db29d38a7638092025b1a6",
+      "sha256": "e19e009abbee95d50c70502948e9d20f321847a7e08a4292557c2478fe342894",
       "executable": false
     },
     "src/core/features/planning/routes.ts": {
@@ -6475,12 +6479,20 @@
       "sha256": "0b5430d13ce9cade4cde082764cc3a73a828aa2ab7ef7353687d26c64c53beb2",
       "executable": false
     },
+    "src/core/features/workspace/loop-health-read.ts": {
+      "sha256": "2cf503ae05e26bff63a18848a8d3aba4fac7f62cb8b957d298da5fe25b0a0571",
+      "executable": false
+    },
+    "src/core/features/workspace/loop-health-types.ts": {
+      "sha256": "3879793cdbc9747c80220803424b0f6f705d9b23ec7dad243857918a73109474",
+      "executable": false
+    },
     "src/core/features/workspace/overview-dto.ts": {
-      "sha256": "50881ae4571527b0ec4c77f6536fab35b863750e923aa57a98818d76355fed2c",
+      "sha256": "87d546dc47a3e9d9cae1d259b3b4bcc009cf82428ba6c6cbb5ee1c9cb31f4d97",
       "executable": false
     },
     "src/core/features/workspace/overview-read.ts": {
-      "sha256": "9354772a50d57c15bd7401c4f474fb17573e478a8c51f675b1be3783b6166efa",
+      "sha256": "f65f0f4144b7601e2b78d8bed6316bfeb365731a9c3e4a8bef7605330d0cdf5b",
       "executable": false
     },
     "src/core/features/workspace/paged-service.ts": {
@@ -6488,7 +6500,7 @@
       "executable": false
     },
     "src/core/features/workspace/routes.ts": {
-      "sha256": "e25774eff9850e4a85e927d493add0d09b61d036f0ef54f6ea788a64d32fefad",
+      "sha256": "ab07f815f11359b53d4ed1e9b65123009985276c30d89968498ac70927b7117c",
       "executable": false
     },
     "src/core/features/workspace/search-repository.ts": {
@@ -6496,7 +6508,7 @@
       "executable": false
     },
     "src/core/features/workspace/service.ts": {
-      "sha256": "ec330e0221b89cdcfddc72d18aecf8a91840e6523c9383b30e4a3f8db372206e",
+      "sha256": "9c85cf4733e53a2a418506257d5c4c1da2edab2eae9904d055e17a9eb6b9a55b",
       "executable": false
     },
     "src/core/features/workspace/tag-relations.ts": {
@@ -7500,7 +7512,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-data.mjs": {
-      "sha256": "dec464bd4d262955067aaaa1da2acf4d6953ad06f1a4046998fc1a9ef362f48c",
+      "sha256": "e1184ef83be93e707b36a180e85fb88b6e4c5c39cf028a1957f53cefb37e9287",
       "executable": false
     },
     "tests/browser/operator-pages-decisions.mjs": {
@@ -7516,7 +7528,7 @@
       "executable": false
     },
     "tests/browser/operator-pages.mjs": {
-      "sha256": "003082c2a7411054981308c6bc47617b62566923db30e89a116ff7ab0e6d400f",
+      "sha256": "8b64b3fb361d2d36bd84a12deee9a3b3d58900d41efc214a2e516f2bfd2ad70d",
       "executable": false
     },
     "tests/browser/ownership-journey.mjs": {
@@ -7804,7 +7816,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "2c98b91bd30edc1b1ad51509a62599b44f5a35efeb9158dcbfca4a5fa6f6a2bc",
+      "sha256": "a2304c1786ab45ecfebed10400c0dc1c108231d34aea7d9ffcf547b93adc186c",
       "executable": false
     },
     "visual/01-landing.jpg": {
@@ -7941,6 +7953,58 @@
     },
     "visual/landing-docs/06-board-1536.jpg": {
       "sha256": "ed6a964c3fb2b25e7382b51b1acb6abcc24e92c7441e4ddac31f732cd1aaba47",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-empty-1440.png": {
+      "sha256": "5f0c4b55718a92d48af46478fc2a3f5a06de9c5ab7a8efa1073a3d39218ea147",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-empty-390.png": {
+      "sha256": "427d9e29e197903aeaf874ee46a27ab2cf0f8a7cee33ea7f1ac415b6a53bd7db",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-notified-1440.png": {
+      "sha256": "84f1c8514793c2a6f6710d1fa59217ba1b9477bd168bf0dabe5c213bd989b269",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-notified-390.png": {
+      "sha256": "240d78126f3f0cc45c550b1981b02bbd77f6ce3a60cbf60be44a20aa949cdbbb",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-overview-1440.png": {
+      "sha256": "9c387cf68a5652d60a45c4b6bba6279f2a6a4d9d678cc8c3daab72eb18a17bca",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-overview-390.png": {
+      "sha256": "1f001ce8204cc8a47fd32b36282eae6a8150abbcd86dea3b5fc883c76d755524",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-ownership-1440.png": {
+      "sha256": "1077b3f1225fb997987e631e2a1660d4cc5c2926d0758e2eb6bec9370d2ac383",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-ownership-390.png": {
+      "sha256": "d6b476d770f735c9703abd4e21d40ea98957c03d79f61ba1b11fd140b2d5f278",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-promises-1440.png": {
+      "sha256": "46a90928837d2e1866a0a0adae592b88fd48ef595baf9922abc853d74e09ec8b",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-promises-390.png": {
+      "sha256": "fd4a18afe46a8b6a734781b03d0de7edc2f911ece8111a235c571cfc2719af4d",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-response-1440.png": {
+      "sha256": "5384fc586c860b6c1ce884ef1addb021e6ab34f5eb35557a0137265a86539c6c",
+      "executable": false
+    },
+    "visual/loop-health/loop-health-response-390.png": {
+      "sha256": "5fedd177dd452d788c06ced6aec736935370e21a215225e4f021f4d176e8efc2",
+      "executable": false
+    },
+    "visual/loop-health/results.json": {
+      "sha256": "ac382efdc52ec0e2224cd8eddfeb31f445080d965d28359d6f77cd3849376978",
       "executable": false
     },
     "visual/README.md": {

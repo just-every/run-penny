@@ -204,6 +204,15 @@
         "pnpm run build",
         "node tests/browser/rich-changelog.mjs"
       ]
+    },
+    {
+      "name": "loop-health",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "PENNY_LOOP_HEALTH_ONLY=1 node tests/browser/operator-pages.mjs"
+      ]
     }
   ],
   "nightly": [

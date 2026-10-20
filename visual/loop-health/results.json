@@ -1,0 +1,76 @@
+{
+  "clauses": "[MEAS-006 OPS-001 OPS-002 OPS-004 REQ-027 REQ-028 EVID-009 DATA-004 BASE-ACCESS-003 BASE-OPS-005 OPS-003 REQ-014 REQ-030 EVID-003 DEC-001 ROAD-007 ROAD-008 REL-001 DATA-001 DATA-003]",
+  "checks": [
+    {
+      "label": "first-run-setup",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-overview",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-ownership",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-response",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-notified",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-promises",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-empty",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "first-run-setup",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-overview",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-ownership",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-response",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-notified",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-promises",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-empty",
+      "width": 390,
+      "phase": "positive"
+    }
+  ],
+  "negativeChecks": []
+}

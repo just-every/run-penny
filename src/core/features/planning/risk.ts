@@ -1,6 +1,6 @@
 import type {PlanningItem,ReleasePlan} from './types'
 /** A free-text window is not guessed. ISO days, months and quarters have explicit ends. */
-function windowEnd(value:string|null):string|null {
+export function windowEnd(value:string|null):string|null {
  if(!value)return null
  if(/^\d{4}-\d{2}-\d{2}$/.test(value)&&!Number.isNaN(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value)return value
  if(/^\d{4}-(0[1-9]|1[0-2])$/.test(value))return new Date(Date.UTC(Number(value.slice(0,4)),Number(value.slice(5)),0)).toISOString().slice(0,10)

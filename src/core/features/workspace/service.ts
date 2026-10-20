@@ -24,7 +24,7 @@ export class WorkspaceReadService {
     this.releases = new ReleasesReadRepository(database)
   }
 
-  getOverview(query: ListQuery = {}): Promise<WorkspaceOverviewDto> { return overviewRead(this.database,query) }
+  getOverview(query: ListQuery, today: string): Promise<WorkspaceOverviewDto> { return overviewRead(this.database,query,today) }
 
   findDecision(slug: string): Promise<OperatorDecisionBrief | null> {
     return this.decisions.find(slug)

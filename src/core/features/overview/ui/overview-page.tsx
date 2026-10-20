@@ -9,6 +9,7 @@ import { OperatorCard } from '@/core/app/ui/operator-primitives'
 import { accentLinkClass } from '@/core/ui/app/classes'
 import { SectionHeading } from '@/core/ui/app/SectionHeading'
 import { AttentionLink } from './overview-parts'
+import { LoopHealth } from './loop-health'
 import { DecisionsSection, EvidenceSection, ReleasesSection, RoadmapSection } from './overview-sections'
 
 export function OverviewPage() {
@@ -31,6 +32,7 @@ export function OverviewPage() {
 function OverviewContent({ overview }: { readonly overview: WorkspaceOverviewDto }) {
   return (
     <div className="space-y-10">
+      <LoopHealth health={overview.loopHealth} />
       <AttentionSection overview={overview} />
       <AgingPanel/>
       <div className="grid min-w-0 grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-2">

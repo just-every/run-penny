@@ -546,7 +546,7 @@ Vector, not Penny, is the issue tracker where work is built (https://github.com/
 
 - **MEAS-005 — Release adoption.** For a shipped release target with a declared success measure (DEC-003, LEARN-003), Penny reads usage for the requesting accounts and the comparison cohort over the window and shows adoption against baseline beside the outcome responses (REL-008, REL-009). Missing or partial usage is shown as unknown, never as success. Outcome responses and coverage ship today. *Acceptance:* Fixture usage yields adoption with its denominator and baseline; removing the usage data reports unknown.
 
-- **MEAS-006 — Loop health.** The overview tracks how well the team closes the loop: share of requests with an owner, median time to first public response, share of shipped requests whose followers were notified, and promises at risk (AGENT-006). *Acceptance:* Each figure matches a count over fixture records and links to them.
+- **MEAS-006 — Loop health.** The overview tracks how well the team closes the loop: the share of current canonical requests with an owner; median seconds from capture to the first published public comment or status update, including ROAD-008 updates and ignoring held comments; the share of shipped requests with a nonempty recipient snapshot whose recipients all have delivered receipts (provider acceptance alone is insufficient); and the distinct active items with promises at risk from approved public ETAs past due or ROAD-011 slipped blockers. Each figure links through an overview drilldown to the records counted. AGENT-006 remains partial and inherits the remaining promise-detection kinds, including a Planned reply on a dropped item and a ticket told "soon" whose issue slipped, together with its correction and reminder requirements. *Acceptance:* Fixture records reconcile all four figures and their linked drilldowns, including first-response ordering, held-comment exclusion, ROAD-008 publication, accepted versus delivered receipts, empty snapshots and distinct risk counting; the overview and drilldowns work at 1440 and 390 widths.
 
 ### Target: Data
 
@@ -627,7 +627,9 @@ Payroll, general project/work management and monitoring/observability stay outsi
 
 ## Status
 
-Judged from the code and tests at commit `f3875a3ce3773a683ad906fa14559f75259cbc3b` (20 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+Judged from the code and tests at commit `6ecb2d8827b16f93eac18e66d77ceaf9a53ce18d` (21 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+
+MEAS-006 was completed on 21 October 2026: the overview shows current canonical request ownership, median seconds to the first public comment or status update after capture (including ROAD-008, excluding held comments), shipped-request coverage by fully delivered nonempty recipient snapshots, and distinct active items at risk from approved past-due public ETAs or ROAD-011 slipped blockers. Each figure opens its counted records. The existing overview browser proof in `tests/browser/operator-pages.mjs` covers the fixture arithmetic and drilldowns at 1440/390, with captures under `visual/loop-health/`. AGENT-006 remains partial and inherits the remaining promise-detection kinds and its correction/reminder requirements.
 
 REL-014 was completed on 20 October 2026: release and ROAD-008 status-update schedules retain the UTC instant and entered IANA zone, support cancellation, recheck the current guarded publication conditions at the due Cron run, and retain a draft with a durable author notice on failure. Scheduler audit, once-only publication, populated migration 0086 and 1440/390 browser controls are covered by the named journeys. REL-018 inherits the same scheduling behavior when announcements and request targets ship; that clause remains missing. Local scheduled-handler proof does not establish hosted Cron execution or inbox delivery.
 
@@ -662,8 +664,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 107 | 7 | 0 | 114 |
-| Target and push further | 15 | 45 | 73 | 133 |
-| All | 122 | 52 | 73 | 247 |
+| Target and push further | 16 | 45 | 72 | 133 |
+| All | 123 | 52 | 72 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -860,7 +862,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `MEAS-003` | PostHog, Segment and Vane | target | missing |  | PostHog, Vane and Segment fixtures produce the same feature usage counts for a linked roadmap item. |
 | `MEAS-004` | Insight reports | target | partial | `src/core/features/releases/outcomes.ts`; `src/core/features/requests/operator-context.ts` | Report totals reconcile with record counts on fixture data; response and resolution times on a fixture with a public comment, a status update, a snooze and a decline equal the hand-computed median and 90th percentile; a scheduled report sends once per period. |
 | `MEAS-005` | Release adoption | target | partial | `src/core/features/releases/outcomes.ts`; `tests/base/penny-releases.test.ts` | Fixture usage yields adoption with its denominator and baseline; removing the usage data reports unknown. |
-| `MEAS-006` | Loop health | target | missing |  | Each figure matches a count over fixture records and links to them. |
+| `MEAS-006` | Loop health | target | done | `tests/browser/operator-pages.mjs` (MEAS-006); `visual/loop-health/` |  |
 | `DATA-001` | Export contents | published | done | `tests/base/hosted-export.test.ts` (line 83); `tests/installer/portability.test.mjs` |  |
 | `DATA-002` | Public/private boundary | published | done | `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts` |  |
 | `DATA-003` | Erasure outranks history | published | done | `tests/base/penny-erasure.test.ts` (line 137); `tests/base/penny-erasure.test.ts` (line 178) |  |
