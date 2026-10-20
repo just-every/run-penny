@@ -100,6 +100,7 @@ it('[NOTIFY-002/005] overlapping drains claim once, persist ownership before HTT
 })
 it('[NOTIFY-002 REQ-019/022] rechecks each configured input after enqueue',async()=>{
  for(const change of ['mute','global','suppression','block','permission','unpublish','internal','author-block'] as const){
+  vi.restoreAllMocks();mockMail()
   await reset();await applyD1Migrations(env.DB,inject('migrations'))
   await (async()=>{
  const g=await setup();await g.follow();await g.status('Pending')
