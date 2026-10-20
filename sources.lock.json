@@ -7528,7 +7528,7 @@
       "executable": false
     },
     "tests/browser/operator-pages.mjs": {
-      "sha256": "8b64b3fb361d2d36bd84a12deee9a3b3d58900d41efc214a2e516f2bfd2ad70d",
+      "sha256": "cc19168172b9dcbc92c60d28dc173b34f3fd625f8912e6face2cd754403469a0",
       "executable": false
     },
     "tests/browser/ownership-journey.mjs": {
@@ -7972,7 +7972,7 @@
       "executable": false
     },
     "visual/loop-health/loop-health-overview-1440.png": {
-      "sha256": "9c387cf68a5652d60a45c4b6bba6279f2a6a4d9d678cc8c3daab72eb18a17bca",
+      "sha256": "9a1685d6fbd0e88c394773a043382c25d8da8e916818493783010478af38cb47",
       "executable": false
     },
     "visual/loop-health/loop-health-overview-390.png": {

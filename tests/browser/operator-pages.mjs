@@ -13,6 +13,7 @@ import { reviewDecisionPages } from './operator-pages-decisions.mjs'
 import { seedOverviewAttention, duplicateOverviewAttention, seedLoopHealth, clearLoopHealth, loopHealthProof } from './operator-pages-data.mjs'
 import { prepareHostedDataReview, reviewHostedData } from './operator-pages-hosted-data.mjs'
 import { finishFirstRun } from './local-signin.mjs'
+process.env.PENNY_BROWSER_EXECUTABLE ??= chromium.executablePath()
 // REQ-014, REQ-018: moderation and settings forms wear the operator kit's own card and label, whatever those classes are.
 const { fieldLabelClass, paperCardClass } = await import('../../src/core/ui/app/classes.ts')
 
