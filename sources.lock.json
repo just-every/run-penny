@@ -3844,7 +3844,7 @@
       "executable": false
     },
     "scripts/portability/policy.ts": {
-      "sha256": "ed9ea492fd358a7f53f6c322180b277dc50468ef795af605bdc5c6f12ddb3763",
+      "sha256": "32b2f03a834e7e6c346650dff7c652d673254abb82c5c7cc96ddc3c4c048c6bd",
       "executable": false
     },
     "scripts/portability/remote-export.mjs": {
@@ -4508,7 +4508,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "c50facc99b629edd03285c2ebf13631731e1ac308b0bce40484e7faebb5282b3",
+      "sha256": "49b59c8cc00e3ca5af8a645162baf5eb202c72461b9e07bc814df3276e1a06d3",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {

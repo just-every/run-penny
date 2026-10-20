@@ -2,7 +2,7 @@ import { validateCategoryArchive } from '../../src/core/features/categories/arch
 import { validateMailIdentityArchive } from '../../src/core/features/settings/mail-identity-archive'
 import { validateLearningArchive } from '../../src/core/features/learning/archive'
 import { GRANT_REVOCATION_CHECKPOINT } from '../../src/core/features/learning/journal'
-import type { ArchivePolicy } from '@runeditrun/rer/modules/portability'
+import { excludedTable, type ArchivePolicy } from '@runeditrun/rer/modules/portability'
 import inventory from '../../src/core/features/data/schema-inventory.json'
 import { normalize, validateNativeIdentity, canonical, hash as digest, DATA_LIMITS, type Row, type ErasureJournal } from '../../src/core/features/data/archive'
 import { validateFeedbackArchive } from '../../src/core/features/imports/archive-custody'
@@ -19,7 +19,7 @@ function productRow(row: Record<string, unknown>): Row {
 }
 export const LOCAL_DATA_LIMITS={...DATA_LIMITS,rows:500000,recordBytes:512*1024*1024}
 export function policy(journal: ErasureJournal): ArchivePolicy {
-  const product = Object.entries(inventory).filter(([, value]) => value.classification === 'product').map(([name]) => name)
+  const product = Object.entries(inventory).filter(([, value]) => value.classification === 'product' && !excludedTable(name, {includeTables: [name]})).map(([name]) => name)
   return {
     product: 'just-every/penny',
     excludeTables: Object.keys(inventory).filter(name => !product.includes(name) && !['data_state', 'data_tombstones'].includes(name)),
