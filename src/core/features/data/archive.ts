@@ -103,6 +103,7 @@ export const normalize=(name:string,row:Row):Row=>{
  if(name==='learning_runs'&&row.state==='running')return {...row,state:'uncertain',reason:'restored_run_reconciliation_required'}
  if(name==='operator_sessions'||name==='native_requester_sessions')return {...row,token_hash:`disabled-${row.id}`,revoked_at:row.revoked_at??'1970-01-01T00:00:00.000Z'}
  if(name==='native_magic_links')return {...row,token_hash:`disabled-${row.id}`,consumed_at:row.consumed_at??'1970-01-01T00:00:00.000Z'}
+ if(name==='penny_publication_schedules'&&row.state==='scheduled')return {...row,state:'held',last_error:'Restored schedule requires review before rescheduling.'}
  if(name==='notification_outbox'&&row.delivery_state==='queued')return {...row,delivery_state:'unknown',failure_reason:'restored_delivery_review_required'}
  if(name==='decision_review_notifications'&&['queued','sending','unknown'].includes(String(row.state)))return {...row,state:'held',claim_id:null,failure_reason:'restored_delivery_review_required'}
  if(name==='notification_batches'&&row.state==='queued')return {...row,failure_reason:'restored_delivery_review_required'}

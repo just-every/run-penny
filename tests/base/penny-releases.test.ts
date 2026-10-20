@@ -1,6 +1,7 @@
 import { applyD1Migrations,reset,createScheduledController } from 'cloudflare:test'
 import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { call,env,requester } from './support'
+import { proveScheduledPublications,scheduleOriginalRelease } from './scheduled-publication-fixture'
 import { releaseGraph } from './release-fixture'
 import { graph,rows,runtime,time } from './notification-regression-fixture'
 import { createPennyRuntime } from '@/core/app/runtime'
@@ -32,16 +33,16 @@ async function addSecondReleaseTarget(g:Awaited<ReturnType<typeof releaseGraph>>
  ])
  await json(await call(`/api/operator/releases/${g.draft.slug}`,{...g.input,targetIds:['release-item','second-item']},g.operator,'PATCH'))
 }
-it('[REL-003] correction preserves original context and operator history; portal marks current; one explicit delivery command per version',async()=>{
+it('[REL-003 REL-014] clock-advanced scheduled releases and status updates publish once, cancel, notify failures and round-trip; corrections preserve snapshots',async()=>{
  const g=await votedReleaseGraph()
  await json(await call('/api/public/updates/subscription',{subscribed:true},g.person,'PATCH'))
  vi.mocked(fetch).mockClear()
  const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key'}
- const nextDay=new Date();nextDay.setUTCDate(nextDay.getUTCDate()+1);nextDay.setUTCHours(9,0,0,0)
- vi.spyOn(Date,'now').mockReturnValue(nextDay.getTime())
+ const nextDay=new Date();nextDay.setUTCDate(nextDay.getUTCDate()+1);nextDay.setUTCHours(23,0,0,0)
+ const clock=vi.spyOn(Date,'now').mockReturnValue(nextDay.getTime()-3600000)
  const cron=()=>runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
  const capture=providerMessages(createPennyRuntime(bindings))!
- await json(await publish(g))
+ await scheduleOriginalRelease(g,nextDay,clock,cron)
  await cron()
  const original=(await capture.list())[0]
  expect(await capture.list()).toHaveLength(1)
@@ -110,6 +111,7 @@ it('[REL-003] correction preserves original context and operator history; portal
  expect((await call('/api/public/requester/activity',undefined,g.person)).status).toBe(200)
  expect(await capture.list()).toEqual(captured)
  expect(fetch).toHaveBeenCalledTimes(2)
+ await proveScheduledPublications(g,nextDay,clock,cron,capture)
 })
 it('[EVID-009 REL-001] a private tag on a published release stays out of the public updates pages and the customer email',async()=>{
  const g=await votedReleaseGraph(),secret='Confidential billing tag'

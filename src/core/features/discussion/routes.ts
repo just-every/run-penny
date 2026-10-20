@@ -13,7 +13,11 @@ export function registerDiscussionRoutes(app:Hono<OperatorMutationEnvironment>){
  }))
  app.get('/api/operator/discussion/mentions',c=>loopMutation(c,async actor=>c.json({mentions:await mentionNotices(await decisionDatabase(c.get('runtime'),c.req.raw),actor)})))
  app.post('/api/operator/discussion/mentions/:id/dismiss',c=>loopMutation(c,async(actor,now)=>{
-  await c.get('runtime').database.binding.prepare('UPDATE penny_note_mentions SET dismissed_at=COALESCE(dismissed_at,?) WHERE note_id=? AND operator_id=?').bind(now,c.req.param('id'),actor).run()
+  const db=c.get('runtime').database.binding
+  await db.batch([
+   db.prepare('UPDATE penny_note_mentions SET dismissed_at=COALESCE(dismissed_at,?) WHERE note_id=? AND operator_id=?').bind(now,c.req.param('id'),actor),
+   db.prepare("UPDATE penny_publication_schedules SET dismissed_at=COALESCE(dismissed_at,?) WHERE id=? AND author_operator_id=? AND state='failed'").bind(now,c.req.param('id'),actor),
+  ])
   return c.json({ok:true})
  }))
 }

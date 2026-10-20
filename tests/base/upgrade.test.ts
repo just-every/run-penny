@@ -17,7 +17,7 @@ it('[BASE-ACCESS-002 DATA-001] additive Base migration retains attribution/data,
  expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual([])
 })
 
-it('[BASE-OPS-002 DATA-001] populated requester graph and R2 bytes survive every current migration with historical columns intact',async()=>{
+it('[BASE-OPS-002 DATA-001 REL-014] populated v0.1.4 data and original files survive the additive schedule upgrade and repeat',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
  const {populatePreviousPennySample}=await import('./previous-sample-fixture')
  const sample=(await import('../../sample-data/penny.v1.json')).default
@@ -33,7 +33,18 @@ it('[BASE-OPS-002 DATA-001] populated requester graph and R2 bytes survive every
   columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name),
  })))
  const before=await env.DB.batch(historical.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
- await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0009'))
+ // v0.1.4 released the schema through 0085. Populate it before applying the
+ // new additive schedule migration, and compare every pre-existing column/row.
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0009'&&m.name<'0086'))
+ const releasedTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const released=await Promise.all(releasedTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
+ const releasedRows=await env.DB.batch(released.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0086'))
+ const upgradedRows=await env.DB.batch(released.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
+ expect(upgradedRows.map(result=>result.results)).toEqual(releasedRows.map(result=>result.results))
+ expect((await env.DB.prepare('SELECT * FROM penny_publication_schedules').all()).results).toEqual([])
+ await applyD1Migrations(env.DB,migrations)
+ expect((await env.DB.batch(released.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)).toEqual(upgradedRows.map(result=>result.results))
  const after=await env.DB.batch(historical.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
  expect(after.map(result=>result.results)).toEqual(before.map(result=>result.results))
  const applied=(await env.DB.prepare('SELECT name FROM d1_migrations ORDER BY name').all<{name:string}>()).results.map(row=>row.name)

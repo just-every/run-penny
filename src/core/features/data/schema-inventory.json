@@ -2993,5 +2993,23 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_publication_schedules": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "release_id",
+      "roadmap_update_id",
+      "author_operator_id",
+      "scheduled_by_operator_id",
+      "scheduled_at",
+      "time_zone",
+      "state",
+      "last_error",
+      "dismissed_at",
+      "completed_at",
+      "created_at",
+      "updated_at"
+    ]
   }
 }

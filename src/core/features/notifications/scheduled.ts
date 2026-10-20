@@ -1,3 +1,4 @@
+import {drainScheduledPublications} from '../releases/scheduled'
 import {drainAging} from '../triage/reminders'
 import {advanceDataWork} from '../data/runner/advance'
 import {drainLearning} from '../learning/scheduled'
@@ -18,6 +19,7 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  await drainLearning(runtime,_controller.scheduledTime)
  await drainDecisionReviews(runtime)
  await drainAging(runtime.database.binding)
+ await drainScheduledPublications(runtime.database.binding,_controller.scheduledTime)
  await drainRequesterMail(runtime)
  await drainIntegrations(runtime)
  await drainTrackers(runtime)

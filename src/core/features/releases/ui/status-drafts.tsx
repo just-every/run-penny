@@ -7,6 +7,7 @@ import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure, OperatorResourceLoading, OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
 import { paperCardClass, primaryButtonClass, secondaryButtonClass } from '@/core/ui/app/classes'
 import { operatorMutation } from '@/core/features/requests/ui/operator-client'
+import { PublicationSchedule } from './publication-schedule'
 
 /** `generation` counts roadmap saves: each one may prepare a draft, so the list refetches rather than reusing the page's loader snapshot. */
 export function StatusDrafts({ generation = 0 }: { generation?: number }) {
@@ -36,6 +37,7 @@ export function StatusDrafts({ generation = 0 }: { generation?: number }) {
   {drafts.map(draft => <article key={draft.id} className={`${paperCardClass} mt-4 p-5`}>
    <h3 className="font-bold text-penny-ink">{draft.title}</h3><p className="mt-3 whitespace-pre-wrap leading-7 text-penny-ink">{draft.body}</p>
    {draft.publicationState === 'stale' ? <p className="mt-3 text-sm text-penny-muted">Approval, mappings or request visibility changed. This draft cannot be published. Discard it, review the current roadmap approval, then make the next status move to prepare a new draft.</p> : null}
+   <PublicationSchedule path={`/api/operator/roadmap-updates/${encodeURIComponent(draft.id)}/schedule`} subject="Status update" revision={resource.kind === 'ready' ? resource.data : null} disabled={busy !== null} canSchedule={draft.publicationState !== 'stale'} />
    <button type="button" disabled={busy !== null} className={`${draft.publicationState === 'stale' ? secondaryButtonClass : primaryButtonClass} mt-4`} onClick={() => act(draft)}>{draft.publicationState === 'stale' ? 'Discard stale draft' : 'Publish status update'}</button>
   </article>)}
  </section>

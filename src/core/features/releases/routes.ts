@@ -1,3 +1,4 @@
+import { registerPublicationScheduleRoutes } from './schedule-routes'
 import { registerRichReleaseRoutes } from './rich-routes'
 import { releaseLabels } from './rich-repository'
 import {decisionDatabase} from '../decisions/authority'
@@ -9,6 +10,7 @@ import { publishRelease } from './publication'
 import { discardStaleRoadmapUpdate } from '../roadmap/update-review'
 import { publishRoadmapUpdate } from '../roadmap/update-publication'
 export function registerReleaseMutationRoutes(app:Hono<OperatorMutationEnvironment>){
+ registerPublicationScheduleRoutes(app)
  registerRichReleaseRoutes(app)
  registerReleaseEngagementRoutes(app)
  app.get('/api/operator/releases/options',async c=>{

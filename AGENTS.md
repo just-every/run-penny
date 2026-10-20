@@ -144,8 +144,8 @@ exports; fixture evidence alone leaves `seed.json.replaces` empty. Scoped API
 keys, owner claim/editor admission, tracker receipts and webhook/Slack delivery
 must meet their named native authority, replay and custody checks before they
 are advertised. Outbound Worker integrations require an enforcing deployment
-transport; ordinary fetch is not a substitute. General tracker sync, automatic
-publication and passive ingestion remain outside current supported scope.
+transport; ordinary fetch is not a substitute. General tracker sync and passive ingestion remain outside current supported
+scope. Operator-scheduled publication follows REL-014.
 
 ## Change and verification rules
 

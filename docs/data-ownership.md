@@ -94,6 +94,16 @@ capabilities disabled. Pending requester actions are claimed/disabled, and queue
 operational lock/runner bookkeeping belong to the target, not the business
 archive. The separate journal preserves erasure fences.
 
+Release and roadmap status-update schedules (REL-014) are product data: their UTC
+instant, entered IANA timezone, author, state, failure reason and notice dismissal
+history travel in both archive paths. A failed schedule is itself the durable
+failure-notice record; it is shown and dismissed through the existing operator
+notices, without a separate notice table. Restore changes a pending schedule to
+held, so it never publishes automatically in the destination. An operator must
+explicitly reschedule it there; current author authority and publication
+conditions are checked again before publication. Migration 0086 is additive;
+retain its expanded schema on source rollback.
+
 Public entry rate limits and ordinary sign-in/verification mail attempt history
 also belong to the installation. Migration 0055 gives them independent tables,
 so rate admission and durable mail receipts continue during product maintenance.

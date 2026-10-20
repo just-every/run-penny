@@ -29,7 +29,10 @@ export async function addInternalNote(db:D1Database,slug:string,actor:string,inp
  return {id}
 }
 export async function mentionNotices(db:D1Database,actor:string){
- return (await db.prepare(`SELECT m.note_id AS noteId,m.created_at AS createdAt,n.body,n.parent_note_id AS parentNoteId,r.slug,r.id AS requestId,r.title,o.display_name AS author
+ return (await db.prepare(`SELECT m.note_id AS noteId,m.created_at AS createdAt,n.body,n.parent_note_id AS parentNoteId,r.slug,r.id AS requestId,r.title,o.display_name AS author,'mention' AS kind,NULL AS href
  FROM penny_note_mentions m JOIN request_notes n ON n.id=m.note_id JOIN requests r ON r.id=n.request_id LEFT JOIN operators o ON o.id=n.operator_id
- WHERE m.operator_id=? AND m.dismissed_at IS NULL ORDER BY m.created_at DESC,m.note_id`).bind(actor).all()).results
+ WHERE m.operator_id=? AND m.dismissed_at IS NULL
+ UNION ALL SELECT s.id AS noteId,s.completed_at AS createdAt,s.last_error AS body,NULL AS parentNoteId,r.slug,COALESCE(r.id,s.roadmap_update_id) AS requestId,COALESCE(v.title,u.title) AS title,'Penny scheduler' AS author,'publication' AS kind,CASE WHEN r.id IS NOT NULL THEN '/app/releases/'||r.slug ELSE '/app/releases' END AS href
+ FROM penny_publication_schedules s LEFT JOIN releases r ON r.id=s.release_id LEFT JOIN release_versions v ON v.id=r.current_version_id LEFT JOIN roadmap_update_versions u ON u.id=s.roadmap_update_id
+ WHERE s.author_operator_id=? AND s.state='failed' AND s.dismissed_at IS NULL ORDER BY createdAt DESC,noteId`).bind(actor,actor).all()).results
 }

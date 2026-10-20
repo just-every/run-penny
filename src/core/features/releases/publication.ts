@@ -1,3 +1,4 @@
+import { publicationActor,type PublicationActor } from '../releases/publication-actor'
 import { releaseMediaGuard } from './media-approval'
 import { MutationError } from '@/core/app/operator-mutations'
 import { createUlid } from '@/core/shared/ulid'
@@ -14,7 +15,7 @@ const validTargets=`EXISTS(SELECT 1 FROM release_targets WHERE release_id=v.rele
  WHERE d.release_id=v.release_id AND (m.request_id IS NULL OR m.approved_at IS NOT d.approval_at OR m.updated_at IS NOT d.approval_updated_at OR m.withdrawn_at IS NOT NULL OR d.request_id NOT IN(${visibleRequestIds})))
  AND NOT EXISTS(SELECT 1 FROM roadmap_request_mappings m JOIN release_targets t ON t.roadmap_item_id=m.roadmap_item_id
  WHERE t.release_id=v.release_id AND m.approved_at IS NOT NULL AND m.withdrawn_at IS NULL AND NOT EXISTS(SELECT 1 FROM release_draft_mappings d WHERE d.release_id=t.release_id AND d.roadmap_item_id=m.roadmap_item_id AND d.request_id=m.request_id))`
-export async function publishRelease(db:D1Database,slug:string,now=new Date().toISOString(),actorId?:string){
+export async function publishRelease(db:D1Database,slug:string,now=new Date().toISOString(),actorId?:PublicationActor){
  const release=await db.prepare(`SELECT r.id,r.state,r.current_version_id AS versionId,v.title,v.body,v.publication_date AS publicationDate FROM releases r JOIN release_versions v ON v.id=r.current_version_id WHERE r.slug=?`).bind(slug).first<{id:string;state:string;versionId:string;title:string;body:string;publicationDate:string|null}>()
  if(!release)throw new MutationError(404,'Release not found.')
  if(release.state==='published')return {id:release.id,versionId:release.versionId}
@@ -44,7 +45,7 @@ export async function publishRelease(db:D1Database,slug:string,now=new Date().to
    FROM release_recipient_snapshots s JOIN release_versions v ON v.id=s.release_version_id WHERE v.id=? AND v.publication_claim=?`).bind(now,now,now,versionId,claim),
   db.prepare('UPDATE release_versions SET is_portal_current=1 WHERE id=? AND publication_claim=?').bind(versionId,claim),
   db.prepare("UPDATE releases SET state='published',published_at=?,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM release_versions WHERE id=? AND publication_claim=?)").bind(now,now,release.id,versionId,claim),
-  db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,?,?,'release.published','release',?,?,?,? WHERE EXISTS(SELECT 1 FROM release_versions WHERE id=? AND publication_claim=?)`).bind(createUlid(),actorId?'operator':'system',actorId??'release.publication',release.id,now,now,now,versionId,claim),
+  db.prepare(`INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,?,?,'release.published','release',?,?,?,? WHERE EXISTS(SELECT 1 FROM release_versions WHERE id=? AND publication_claim=?)`).bind(createUlid(),...publicationActor(actorId,'release.publication'),release.id,now,now,now,versionId,claim),
   db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(claim),
  ])}catch(error){if(String(error).includes('requester_write_admitted')||String(error).includes('permitted'))throw new MutationError(409,'Release targets, approved wording, images or mappings changed; review every target, approved image and Shipped status.');throw error}
  return {id:release.id,versionId}
