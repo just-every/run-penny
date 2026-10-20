@@ -62,12 +62,12 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
    await finish(guarded, operationId!, 'complete', session)
    return Response.json(result, { headers: { 'Cache-Control': 'private, no-store' } })
   }
-  const headers = (await schemaHeaders(db)).filter(table => !excludedTable(table.name))
+  const headers = await schemaHeaders(db)
   checkSchemaHeaders(headers)
   await assertPlatformLedger(db)
   // The data lock holds every row still from creation to abort, so the row limit is checked once, in one round trip.
   if (creating) {
-   const tables = await schemaPart(db, headers)
+   const tables = await schemaPart(db, headers.filter(table => !excludedTable(table.name)))
    const counts = await db.batch(tables.map(table => db.prepare(`SELECT count(*) n FROM "${table.name}"`)))
    if (counts.reduce((sum, result) => sum + (result.results[0] as { n: number }).n, 0) > LOCAL_DATA_LIMITS.rows) throw new NativeError('archive_limit', 413)
    await assertOriginalFiles(guarded,c.env.FILES)
