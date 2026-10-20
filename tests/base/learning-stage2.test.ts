@@ -25,9 +25,17 @@ it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact s
  expect({status:restored.status,originals:again.archive.tables.learning_observations,snapshots:again.archive.tables.learning_commitments}).toEqual({status:'complete',originals:exported.archive.tables.learning_observations,snapshots:exported.archive.tables.learning_commitments})
 })
 it('[AI-010 LEARN-002] configures providers, meters the monthly cap, preserves manual work and refuses invalid or revoked learning',async()=>{
- const f=await fixture();network.badCitation=true;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0)
+ const f=await fixture()
+ const actor=await env.DB.prepare('SELECT id FROM operators LIMIT 1').first<string>('id')
+ await json(call('/api/operator/accounts',{name:'Hidden C6 Account',internalOwnerId:actor,revenueCents:987654321,health:'Internal renewal warning'},f.cookie),201)
+ await json(call('/api/operator/boards',{name:'Feedback',slug:'feedback',visibility:'public'},f.cookie),201)
+ const request=await json<{id:string;slug:string}>(call('/api/operator/requests',{title:'Private-context policy check',description:'Report handoff',boardSlug:'feedback'},f.cookie),201)
+ await json(call(`/api/operator/requests/${request.slug}/notes`,{body:'Internal-only negotiation detail'},f.cookie),201)
+ network.sourceText=canonical({id:'cancellation',subject:'Hidden C6 Account: Internal-only negotiation detail; 987654321',occurred_at:'2026-10-01T00:00:00Z'})
+ network.badCitation=true;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0)
 
- const report=await json<{report:{meteredMicros:number;reservedMicros:number;inputTokens:number;outputTokens:number}}>(call('/api/operator/settings/ai',undefined,f.cookie));expect(report.report).toMatchObject({meteredMicros:1100,reservedMicros:0,inputTokens:100,outputTokens:500});expect(network.lastBody).toContain('configured-claude')
+ const report=await json<{report:{meteredMicros:number;reservedMicros:number;inputTokens:number;outputTokens:number}}>(call('/api/operator/settings/ai',undefined,f.cookie));expect(report.report).toMatchObject({meteredMicros:1100,reservedMicros:0,inputTokens:100,outputTokens:500});expect(network.lastBody).toContain('configured-claude');for(const value of ['Hidden C6 Account','Internal-only negotiation detail','987654321'])expect(network.lastBody).not.toContain(value)
+ network.sourceText=null
  await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:0,includePrivate:false,choices:[]},f.cookie,undefined,'PUT'))
  const count=sent.length;const refusal=await json(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie),409);expect(refusal.error).toBe('ai_budget_exhausted');expect(refusal.message).toBeTruthy();expect(sent).toHaveLength(count)
  await json(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Manual while capped',wording:'Export still needs a date filter',observedAt:'2026-10-01T00:00:00Z'},f.cookie),201)

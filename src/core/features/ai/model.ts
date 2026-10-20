@@ -1,3 +1,4 @@
+import {meteredCost} from './cost'
 import {reserve,settle,failReservation,type Reservation} from './budget'
 import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
@@ -12,7 +13,7 @@ export async function modelCall(runtime:PennyRuntime,db:D1Database,capability:Ca
  const body=JSON.stringify(c.provider==='openai'?{model:c.id,messages:[{role:'system',content:instructions},{role:'user',content:user}],max_completion_tokens:c.maxOutputTokens,response_format:{type:'json_schema',json_schema:{name:'penny_output',strict:true,schema}}}:{model:c.id,system:instructions,messages:[{role:'user',content:user}],max_tokens:c.maxOutputTokens,output_config:{format:{type:'json_schema',schema}}})
  // All prompt/schema UTF-8 bytes plus conservative provider framing. No tools,
  // images, caching, extended thinking or automatic provider calls are enabled.
- const upper=Math.ceil((new TextEncoder().encode(body).length+16000)*c.inputMicrosPerToken+c.maxOutputTokens*c.outputMicrosPerToken)
+ const upper=meteredCost(new TextEncoder().encode(body).length+16000,c.maxOutputTokens,c.inputMicrosPerToken,c.outputMicrosPerToken)
  if(!Number.isSafeInteger(upper)||upper>ceiling)throw new NativeError('learning_call_budget_exceeded',409)
  const native=runtime.database.binding,reservation=prepaid??await reserve(db,capability,c.provider,c.id,upper)
  let transmitted=false
@@ -23,7 +24,7 @@ export async function modelCall(runtime:PennyRuntime,db:D1Database,capability:Ca
   if(response.status!==200)throw new NativeError('learning_model_failed',409)
   let raw:Record<string,any>,tokens:z.infer<typeof usage>
   try{raw=JSON.parse(response.body);tokens=usage.parse(c.provider==='openai'?{input:raw.usage.prompt_tokens,output:raw.usage.completion_tokens}:{input:raw.usage.input_tokens,output:raw.usage.output_tokens})}catch{throw new NativeError('learning_model_payload_invalid',409)}
-  const costMicros=Math.ceil(tokens.input*c.inputMicrosPerToken+tokens.output*c.outputMicrosPerToken)
+  const costMicros=meteredCost(tokens.input,tokens.output,c.inputMicrosPerToken,c.outputMicrosPerToken)
   await settle(native,reservation,costMicros+reservation.extraMicros,tokens.input,tokens.output)
   if(costMicros>upper)throw new NativeError('learning_provider_cost_exceeded',409)
   let content:string

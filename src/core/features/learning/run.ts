@@ -71,7 +71,6 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   return {runId,artifactId,unchanged:false}
  }catch(error){
   const reason=error instanceof NativeError?error.code:'learning_output_or_source_invalid'
-  if(!['ai_budget_exhausted','ai_model_unconfigured','learning_call_budget_exceeded'].includes(reason)&&runtime.bindings.PENNY_AI)paid=paid||['learning_model_failed','learning_transport_failed','learning_model_payload_invalid','learning_model_output_invalid','learning_model_incomplete','learning_provider_cost_exceeded'].includes(reason)
   if(reservation)await failReservation(native,reservation,paid)
   // Record uncertainty without retaining model/provider exception strings. A
   // revoke/erase may have removed the run, in which case this writes nothing.
