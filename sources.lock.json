@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "1f236bea38ba3982db83ac58b946966aee397331c16c7d64971d16abe364995d",
+      "sha256": "c1175e6addce1c1df2e690cf737379371120b6c0f93dd4e3d8664414a6d62b36",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2812,7 +2812,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "bf8a5cd97cfed2a221d477ba4035e43e891613f26c0c73104f5d4debf72305f3",
+      "sha256": "dfeb015183a285b7b34d0b286b7cd724d20fa003f46ea22c7baf2df6192c930e",
       "executable": false
     },
     "DEMO.md": {
@@ -3388,7 +3388,7 @@
       "executable": false
     },
     "OPERATIONS.md": {
-      "sha256": "5d635cfcd5c51b69492437d5721404611e6635d146877cb16e6e8a596709df34",
+      "sha256": "0446dc8d7bc5c26efc4fe916c97502a50055a5e6a254b2eac22d1e257d520e62",
       "executable": false
     },
     "OWNER-STEPS.md": {
@@ -4152,7 +4152,7 @@
       "executable": false
     },
     "src/core/features/ai/budget.ts": {
-      "sha256": "35ebd702e8ae10e377961191162a313e8398f24bc2439be534d91716dfd45a0a",
+      "sha256": "83f7ef88ce8874252db3b1c961712e64c2e1335d7a6278ed0375930a5a29833b",
       "executable": false
     },
     "src/core/features/ai/configuration.ts": {
@@ -4163,12 +4163,16 @@
       "sha256": "98c09dce1aff439dbc85b4271317531c8e4812615496cf2fb060b864024ee77c",
       "executable": false
     },
+    "src/core/features/ai/learning-policy.ts": {
+      "sha256": "d361507214048c7be053b4273af29d7432deb0f6556e592b45a706c27e63608b",
+      "executable": false
+    },
     "src/core/features/ai/model.ts": {
-      "sha256": "c2873dc84a4afd7841aa9d540d18e3d34070e9eea3fa36ca222fb834d62c86fe",
+      "sha256": "589f39c5d281a78f218672207234393b421575326d6ea6829436df8a5b16b6f3",
       "executable": false
     },
     "src/core/features/ai/privacy.ts": {
-      "sha256": "7f8dda3415ba8ef2d8c2b06b7d24aafff4e8809c38d8b97df792fd84b1595b8b",
+      "sha256": "ce190bdd0e5a5cef74439cc0bd891cd17efb9452c570b2634d3bf4aac6b24b2c",
       "executable": false
     },
     "src/core/features/ai/routes.ts": {
@@ -7136,7 +7140,7 @@
       "executable": false
     },
     "tests/base/learning-stage2.test.ts": {
-      "sha256": "993fb776289fc3318d0798585c97bbce8a83331734d222d51e4e1bb415b7635d",
+      "sha256": "00e724736db2800aa1f86b85cef4f187812e590371390fbaec304fb356c56f33",
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
@@ -7144,7 +7148,7 @@
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {
-      "sha256": "56c6a48e203338447d4012a8bc346fa22ac8828068ab7144ace867dc9b923a16",
+      "sha256": "5bac20f29b70a79125e8d437b80ca0289c16482399d89c4e7812d311eba53f99",
       "executable": false
     },
     "tests/base/legacy-feedback-fixture.ts": {
@@ -7424,7 +7428,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "0dc99dc92af88b5dab183b837d08f1b997d621b18910aaa3adf6cba7a7fec5fb",
+      "sha256": "c84a064604357c433295b8611269970573928c8176fd9dce8b6791f93a9f1134",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {
@@ -7872,11 +7876,11 @@
       "executable": false
     },
     "visual/ai-models/ai-budget-refusal-1440.png": {
-      "sha256": "e990b0fa32a832103b00f5e8c029d70c643ae53a11e41e086bd504deffe1c39f",
+      "sha256": "679203a178d7bfb9aa4b84e0bf2a9461160d98529fb7934d809ecffc37906822",
       "executable": false
     },
     "visual/ai-models/ai-budget-refusal-390.png": {
-      "sha256": "4557a7c5bb878e462da8075a610a1356b1bc7f84c4b716a85d96a9495b47a7a5",
+      "sha256": "65dc7d62c65e472dded9deb7209efae75fe5561f35d83322c90cba58f0ead354",
       "executable": false
     },
     "visual/ai-models/ai-capped-settings-1440.png": {
@@ -7927,6 +7931,30 @@
       "sha256": "3e3e6a0ca52171f8729b73f14b2d961de4be5f59d9627d28a3b38fd39b226682",
       "executable": false
     },
+    "visual/ai-models/ai-private-enabled-1440.png": {
+      "sha256": "dd2ddc1dfd279d202536e3bcaa358f5dcb1a7914a384ef17346c13f6a46d74eb",
+      "executable": false
+    },
+    "visual/ai-models/ai-private-enabled-390.png": {
+      "sha256": "24f0b1378c9faac9ee77da6210a0427e2711027f17cfc7dea50c99fb43ae69f7",
+      "executable": false
+    },
+    "visual/ai-models/ai-private-enabled-cost-1440.png": {
+      "sha256": "3b4f5e93cba876640ff821edad72b42105869c8c5d2958a67d7fa959acf4fe54",
+      "executable": false
+    },
+    "visual/ai-models/ai-private-enabled-cost-390.png": {
+      "sha256": "050fc079dcd480fd017b988991f683be58c747b944c63ef53e595b14debd62e7",
+      "executable": false
+    },
+    "visual/ai-models/ai-private-enabled-top-1440.png": {
+      "sha256": "9d5f4bfe68f874501d60e2faeea947be9d389eaaba8c94c294d382d820fedba4",
+      "executable": false
+    },
+    "visual/ai-models/ai-private-enabled-top-390.png": {
+      "sha256": "e00d2b64bcd14afcd02be308783015378875902e33c2b35c127231a4742e9f27",
+      "executable": false
+    },
     "visual/ai-models/ai-settings-1440.png": {
       "sha256": "ad66a4ddadfd0313c2e485cd535723d368c91011a343f64559f90a3a51c4105b",
       "executable": false
@@ -7952,11 +7980,11 @@
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-1440.png": {
-      "sha256": "05e7cf5e9a258e7d7f4eebbafd25100a21dab8badb1f05eb213f1eaaf813b11c",
+      "sha256": "38d3d6e3e6b6ca37c217cb76725ae0a07dd32ffe825afaf7609d55d7e980b791",
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-390.png": {
-      "sha256": "9880fe22f597d602b9d99c4374c17bfe3ca03bd0d752d49840c65a40db97d4f0",
+      "sha256": "cc8b109e5c7e78682da400efb4e1f4f6a9b28d055668169307c37a78ee382654",
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-cost-1440.png": {
@@ -7968,11 +7996,11 @@
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-top-1440.png": {
-      "sha256": "7435c1bf12f5dce36efe613119235c8edfd58290734037824aa8382c7da1a04b",
+      "sha256": "d741fc679ecd3b3239559f7496ebfb262271733b776d92cb51b86abea77f35b1",
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-top-390.png": {
-      "sha256": "04e2a862e5bf1a460c11148add86e6857b64242e202039de4ee40f907f03bbbc",
+      "sha256": "17a1d919fc9582da3b55073fa63bab1217e61e19fbdd6508a6782352b9794dfc",
       "executable": false
     },
     "visual/board-categories/REQ-012/newest-1440.png": {
