@@ -12,6 +12,8 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
   await page.evaluate(async()=>{await document.fonts.ready});await panel.scrollIntoViewIfNeeded()
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,label+' overflow')
   await page.evaluate(axe);assert.deepEqual(await page.evaluate(async()=>(await window.axe.run(document)).violations.filter(v=>['serious','critical'].includes(v.impact))),[],label+' accessibility')
+  await panel.evaluate(n=>window.scrollTo(0,Math.max(0,n.getBoundingClientRect().top+window.scrollY-80)))
+  await page.screenshot({path:join(output,label+'-top-'+width+'.png')})
   await panel.screenshot({path:join(output,label+'-panel-'+width+'.png')});await page.screenshot({path:join(output,label+'-'+width+'.png'),fullPage:true})
  }
  const operator=await runtime.db.prepare('SELECT id FROM operators LIMIT 1').first()
