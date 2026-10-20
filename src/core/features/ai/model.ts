@@ -1,3 +1,4 @@
+import {anthropicSchema} from './provider-schema'
 import {meteredCost} from './cost'
 import {reserve,settle,failReservation,type Reservation} from './budget'
 import {z} from 'zod'
@@ -10,7 +11,7 @@ const usage=z.object({input:z.number().int().nonnegative(),output:z.number().int
 /** One enforcing RPC path, one reservation, no retry after ambiguous paid work. */
 export async function modelCall(runtime:PennyRuntime,db:D1Database,capability:Capability,instructions:string,input:unknown,schema:Record<string,unknown>,ceiling=Number.MAX_SAFE_INTEGER,onSend=async()=>{},prepaid?:Reservation){
  const c=await selected(runtime,db,capability),user=JSON.stringify(await promptInput(db,input,capability))
- const body=JSON.stringify(c.provider==='openai'?{model:c.id,messages:[{role:'system',content:instructions},{role:'user',content:user}],max_completion_tokens:c.maxOutputTokens,response_format:{type:'json_schema',json_schema:{name:'penny_output',strict:true,schema}}}:{model:c.id,system:instructions,thinking:{type:'disabled'},messages:[{role:'user',content:user}],max_tokens:c.maxOutputTokens,output_config:{format:{type:'json_schema',schema}}})
+ const body=JSON.stringify(c.provider==='openai'?{model:c.id,messages:[{role:'system',content:instructions},{role:'user',content:user}],max_completion_tokens:c.maxOutputTokens,response_format:{type:'json_schema',json_schema:{name:'penny_output',strict:true,schema}}}:{model:c.id,system:instructions,thinking:{type:'disabled'},messages:[{role:'user',content:user}],max_tokens:c.maxOutputTokens,output_config:{format:{type:'json_schema',schema:anthropicSchema(schema)}}})
  // All prompt/schema UTF-8 bytes plus conservative provider framing. No tools,
  // images, caching, extended thinking or automatic provider calls are enabled.
  const upper=meteredCost(new TextEncoder().encode(body).length+16000,c.maxOutputTokens,c.inputMicrosPerToken,c.outputMicrosPerToken)
