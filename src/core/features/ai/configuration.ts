@@ -8,7 +8,7 @@ const model=z.object({id:z.string().min(1).max(160),inputMicrosPerToken:z.number
 const installation=z.record(provider,z.object({apiKey:z.string().min(1),workspaceId:z.string().regex(/^wrkspc_[A-Za-z0-9]+$/).optional(),models:z.array(model).min(1).max(100)}).strict().optional())
 export type Provider=z.infer<typeof provider>
 export type Model=z.infer<typeof model>
-export function providers(runtime:PennyRuntime){try{return installation.parse(JSON.parse(runtime.bindings.PENNY_AI??'{}'))}catch{throw new NativeError('ai_configuration_invalid',503)}}
+export function providers(runtime:PennyRuntime){try{return installation.parse(JSON.parse(runtime.bindings.PENNY_AI||'{}'))}catch{throw new NativeError('ai_configuration_invalid',503)}}
 export async function settings(db:D1Database){return (await db.prepare('SELECT monthly_budget_micros,include_private FROM penny_ai_settings WHERE singleton=1').first<{monthly_budget_micros:number;include_private:number}>())!}
 export async function selected(runtime:PennyRuntime,db:D1Database,capability:Capability){
  const all=providers(runtime),choice=await db.prepare('SELECT provider,model FROM penny_ai_capabilities WHERE capability=?').bind(capability).first<{provider:Provider;model:string}>(),p=choice?.provider??'anthropic',id=choice?.model??all.anthropic?.models[0]?.id??'',entry=all[p],m=entry?.models.find(m=>m.id===id)

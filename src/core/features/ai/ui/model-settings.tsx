@@ -9,7 +9,7 @@ const dollars=(micros:number)=>(micros/1000000).toFixed(6)
 export function ModelSettings(){
  const [resource,reload]=useOperatorResource<Data>('/api/operator/settings/ai')
  return <SectionCard id="ai-models" icon="form" title="AI models and budget" description="Choose a model for each capability. Claude is the default. Provider keys are controlled by the installation and are never shown or stored here.">
- {resource.kind==='ready'?<ModelForm key={JSON.stringify(resource.data)} data={resource.data} reload={reload}/>:<p role="status">{resource.kind==='loading'?'Loading AI settings…':'AI settings could not be loaded.'}</p>}
+ {resource.kind==='ready'?<ModelForm key={JSON.stringify(resource.data)} data={resource.data} reload={reload}/>:<div><p role={resource.kind==='loading'?'status':'alert'}>{resource.kind==='loading'?'Loading AI settings…':'AI settings could not be loaded. Check the installation model configuration.'}</p>{resource.kind!=='loading'?<button className={buttonClass} onClick={reload}>Retry AI settings</button>:null}</div>}
  </SectionCard>
 }
 function ModelForm({data,reload}:{data:Data;reload:()=>void}){
