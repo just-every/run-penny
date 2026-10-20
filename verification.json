@@ -192,7 +192,8 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
-        "node tests/browser/release-planning.mjs"
+        "node tests/browser/release-planning.mjs",
+        "node tests/browser/loopjourney-release.mjs"
       ]
     },
     {
