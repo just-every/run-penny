@@ -610,7 +610,7 @@ Enterpret and Productboard cluster feedback and rank popularity. These clauses g
 
 Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the systems that own them, and Penny connects to them.
 
-Payroll, general project/work management and monitoring/observability stay outside Penny's scope, in the buyer's tools. The corresponding sibling projects are [Envelope](https://github.com/just-every/run-envelope), [Pegboard](https://github.com/just-every/run-pegboard) and [Porthole](https://github.com/just-every/run-porthole).
+Payroll, general project/work management and monitoring/observability stay outside Penny's scope, in the buyer's tools. The RunEditRun products for those jobs are [Envelope](https://github.com/just-every/run-envelope), [Pegboard](https://github.com/just-every/run-pegboard) and [Porthole](https://github.com/just-every/run-porthole).
 
 - **Not a help desk.** Tickets and chats live in Zendesk, Freshdesk, Intercom, Help Scout or HappyToHelp. Penny captures linked excerpts (CAP-003–CAP-006, CAP-019) and drafts replies there (NOTIFY-007).
 - **Not a CRM or billing system.** Salesforce, HubSpot, Orbit, Stripe Billing and Nectar stay authoritative for accounts, deals and revenue; Penny reads the attributes it needs and writes back only what the owner enables (SEG).
