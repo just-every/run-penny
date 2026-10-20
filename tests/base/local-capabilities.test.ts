@@ -6,7 +6,8 @@ import { createPennyRuntime } from '@/core/app/runtime'
 import { authMail } from '@/core/features/auth/mail'
 const app=createPennyApi()
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
-for(const mode of ['preview','production'])it(`[BASE-ACCESS-001 REQ-023] ${mode} refuses development capture and viewer`,async()=>{
+it('[BASE-ACCESS-001 REQ-023] deployed modes refuse development capture and report absent mail',async()=>{
+ for(const mode of ['preview','production']){
  const deployed={...env,PENNY_ENVIRONMENT:mode,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,MAIL_API_KEY:undefined}
  const rt=createPennyRuntime(deployed)
  const forced={...rt,configuration:{...rt.configuration,mailProvider:'development'}}
@@ -14,6 +15,8 @@ for(const mode of ['preview','production'])it(`[BASE-ACCESS-001 REQ-023] ${mode}
  for(const path of ['/__dev/outbox','/__dev/outbox?message=anything']) expect((await app.fetch(new Request('https://penny.test'+path),deployed)).status).toBe(404)
  expect(()=>createPennyRuntime({...deployed,MAIL_PROVIDER:'development',MAIL_FROM:'auth@localhost.test'})).toThrow('MAIL_PROVIDER')
  expect(await env.DB.prepare('SELECT count(*) n FROM rer_mail_development_outbox').first('n')).toBe(0)
+ const capabilities=await app.fetch(new Request('https://penny.test/api/auth/capabilities'),deployed);expect(capabilities.status).toBe(200);expect(await capabilities.json()).toMatchObject({transport:'unavailable'})
+ }
 })
 
 it('[BASE-ACCESS-001 BASE-SECRET-002] existing operator authority remains usable without a mail provider',async()=>{

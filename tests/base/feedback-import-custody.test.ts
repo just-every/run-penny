@@ -52,7 +52,10 @@ async function refuseSharedTransferIdentity(jobId:string,operator:Record<string,
  expect((await env.DB.prepare('SELECT * FROM request_merge_comment_transfers ORDER BY rowid').all()).results).toEqual(rows.results)
  await env.DB.prepare('DELETE FROM request_merge_comment_transfers WHERE merge_id=? AND comment_id=? AND created_at=?').bind(transfer!.merge_id,transfer!.comment_id,later).run()
 }
-it.each(['api','export'] as const)('[IMP-003][IMP-004] resumes %s persisted jobs, repeats exactly and undoes only unchanged imported effects',async family=>{
+it('[IMP-003][IMP-004] resumes each configured input persisted jobs, repeats exactly and undoes only unchanged imported effects',async()=>{
+ for(const family of ['api','export'] as const){
+  await reset();await applyD1Migrations(env.DB,inject('migrations'))
+  await (async()=>{
  const operator=await owner(),source=family==='api'?feedbackFixture():exportFeedbackFixture(),plan=await preview(source,operator)
  const response=await call(importPath+'/apply',{source,fingerprint:plan.fingerprint},operator),partial=await response.json() as {id:string;state:string;checkpoint:number}
  expect(response.status,JSON.stringify(partial)).toBe(202);expect(partial.checkpoint).toBeGreaterThan(0)
@@ -69,6 +72,9 @@ it.each(['api','export'] as const)('[IMP-003][IMP-004] resumes %s persisted jobs
  expect(Object.values(await counts())).toEqual(Array(10).fill(0))
  undo=await call(importPath+'/jobs/'+job.id+'/undo',{},operator);expect(undo.status).toBe(200)
  expect((await env.DB.prepare('SELECT COUNT(*) n FROM ik_originals').first<{n:number}>())!.n).toBeGreaterThan(0)
+
+  })()
+ }
 })
 it('[IMP-004] refuses undo after later native wording, votes, follows, comments, publication or unmerge and preserves the complete graph',async()=>{
  const operator=await owner(),source=feedbackFixture(),job=await apply(source,operator),slug='feedback-'+stableFeedbackId(source.namespace,'posts','post-0').toLowerCase()
@@ -114,7 +120,10 @@ it('[IMP-003][BASE-ACCESS-002] keeps a failed late D1 batch resumable and rolls 
  expect((await env.DB.prepare('SELECT COUNT(*) n FROM ik_jobs').first<{n:number}>())!.n).toBe(1)
 })
 
-it.each(['current','legacy'] as const)('[IMP-005][DATA-001] erasure purges exact retained %s history and blocks old source resurrection',async family=>{
+it('[IMP-005][DATA-001] erasure purges exact retained each configured input history and blocks old source resurrection',async()=>{
+ for(const family of ['current','legacy'] as const){
+  await reset();await applyD1Migrations(env.DB,inject('migrations'))
+  await (async()=>{
  let operator=await owner()
  const source={namespace:'historical-person',statuses:{},files:[{name:'users.json',kind:'users' as const,version:'v2' as const,base64:Buffer.from(JSON.stringify({users:[{id:'person',name:'Erased historical speaker',created:'2024-07-08T09:10:11.000Z',profile:'Private saved profile. '.repeat(4000)}]})).toString('base64')}]}
  const {populateFeedback}=await import('./feedback-import-fixture')
@@ -148,6 +157,9 @@ it.each(['current','legacy'] as const)('[IMP-005][DATA-001] erasure purges exact
  expect((await restoreArchive(env.DB,env.FILES,erasedSnapshot.archive,erasedSnapshot.journal)).status).toBe('complete')
  const reviewed=await preview(source,operator),refused=await call(importPath+'/apply',{source,fingerprint:reviewed.fingerprint},operator)
  expect(refused.status).toBe(422);expect(await refused.json()).toEqual({error:'feedback_mapping_rejected'})
+
+  })()
+ }
 },60000)
 
 it('[IMP-003][IMP-005][DATA-001] validates a bounded stream archive and keeps its receipt and exact originals after restore',async()=>{

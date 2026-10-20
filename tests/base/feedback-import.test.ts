@@ -8,7 +8,10 @@ import type { SavedFeedbackInput } from '@/core/features/imports/types'
 import classicCsv from '../fixtures/imports/classic.csv?raw'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 
-it.each(['api','export'] as const)('[IMP-001][REQ-031][EVID-006] imports %s multi-board history without authority, consent or publication effects',async family=>{
+it('[IMP-001][REQ-031][EVID-006] imports each configured input multi-board history without authority, consent or publication effects',async()=>{
+ for(const family of ['api','export'] as const){
+  await reset();await applyD1Migrations(env.DB,inject('migrations'))
+  await (async()=>{
  const operator=await owner(),source=family==='api'?feedbackFixture():exportFeedbackFixture(),plan=await preview(source,operator)
  expect(plan.rows.filter(r=>r.kind==='votes'&&r.applied===0)).toHaveLength(1)
  const job=await apply(source,operator)
@@ -30,6 +33,8 @@ it.each(['api','export'] as const)('[IMP-001][REQ-031][EVID-006] imports %s mult
  expect(originals.headers.get('Cache-Control')).toContain('no-store')
  const retained=await originals.json() as {name:string;original:{base64:string}}[]
  for(const file of source.files)expect(retained.find(r=>r.name===file.name)?.original.base64).toBe(file.base64)
+  })()
+ }
 })
 
 it('[IMP-001][IMP-002] previews classic CSV omissions and retains multiline Unicode originals without invented aggregates',async()=>{
@@ -81,7 +86,10 @@ it('[IMP-002] refuses incomplete API merge history and unmapped CSV tags before 
  expect((await env.DB.prepare('SELECT COUNT(*) n FROM ik_jobs').first<{n:number}>())!.n).toBe(0)
 })
 
-it.each([false,true])('[IMP-006][IMP-007] previews, applies, replays and reverses explicit Ideas mappings and duplicate rows with supplied author %s',async suppliedAuthor=>{
+it('[IMP-006][IMP-007] previews, applies, replays and reverses explicit Ideas mappings and duplicate rows with supplied author each configured input',async()=>{
+ for(const suppliedAuthor of [false,true] as const){
+  await reset();await applyD1Migrations(env.DB,inject('migrations'))
+  await (async()=>{
  const {ideasFeedbackFixture}=await import('./feedback-import-fixture')
  const operator=await owner(),source=ideasFeedbackFixture(),file=source.files[0],created='2024-07-08T09:10:11.000Z'
  const privateCells={title:'Wrong title',details:'Wrong details',status:'wrong-status',created:'invalid raw date',author:'not-a-supplied-requester','Post Title':'Wrong classic title','Post Detail':'Wrong classic details','Post Status':'wrong-classic-status','Post Author':'Wrong classic author','Date created':'invalid classic date',board:'not-the-file-board',tags:'["invented-tag"]',mergeHistory:'[{"post":"invented-post"}]',Owner:'Assigned operator'}
@@ -120,6 +128,8 @@ it.each([false,true])('[IMP-006][IMP-007] previews, applies, replays and reverse
  expect(reversed.phase).toBe('undone');expect(reversed.destinations.every(row=>row.created===row.removed)).toBe(true)
  expect(reversed.sources).toEqual(receipt.sources);expect(reversed.aggregates).toEqual(receipt.aggregates);expect(reversed.omissions).toEqual(receipt.omissions)
  const reapplied=await apply(source,operator);expect(reapplied.id).not.toBe(job.id);expect(await counts()).toEqual(before)
+  })()
+ }
 })
 it('[IMP-002][IMP-006] refuses unknown and missing Ideas headings by name and lists all unresolved relationships',async()=>{
  const {ideasFeedbackFixture}=await import('./feedback-import-fixture'),operator=await owner()

@@ -3,7 +3,7 @@ import { afterEach,beforeEach,expect,inject,it,vi } from 'vitest'
 import { Buffer } from 'node:buffer'
 import { call,env,messages,mockMail,owner } from './support'
 import { apply,complete,counts,erasurePreview,importPath,preview } from './feedback-import-fixture'
-import { created,defaultIdeas,defaultVoters,ideaHeadings,largeUservoiceFixture,pagedUservoiceFixture,uservoiceCsv,uservoiceFixture } from './uservoice-fixture'
+import { created,defaultIdeas,ideaHeadings,largeUservoiceFixture,pagedUservoiceFixture,uservoiceCsv,uservoiceFixture } from './uservoice-fixture'
 import { stableFeedbackId } from '@/core/features/imports/mapping-support'
 import type { FeedbackReceipt } from '@/core/features/imports/receipt'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
@@ -95,7 +95,10 @@ async function finishErasure(response:Response,operator:Record<string,string>){
  for(let step=0;step<100&&result.status!=='complete';step++){const next=await call('/api/operator/data/operations/'+result.operationId+'/resume',{},operator);expect([200,202],await next.clone().text()).toContain(next.status);result=await next.json() as typeof result}
  expect(result.status).toBe('complete')
 }
-it.each(['requesters','requests'] as const)('[IMP-008][IMP-004][IMP-005] fences undo behind later native votes and erases a UserVoice %s with its originals and a replay fence',async table=>{
+it('[IMP-008][IMP-004][IMP-005] fences undo behind later native votes and erases a UserVoice each configured input with its originals and a replay fence',async()=>{
+ for(const table of ['requesters','requests'] as const){
+  await reset();await applyD1Migrations(env.DB,inject('migrations'))
+  await (async()=>{
  mockMail()
  const operator=await owner(),source=uservoiceFixture('uservoice-erasure-'+table),job=await apply(source,operator)
  const slug='feedback-'+stableFeedbackId(source.namespace,'posts','101').toLowerCase()
@@ -125,6 +128,9 @@ it.each(['requesters','requests'] as const)('[IMP-008][IMP-004][IMP-005] fences 
  expect(after.request_vote_supporter_types).toBeLessThan(rows.before.request_vote_supporter_types);expect(after.ik_d1_erased_targets).toBeGreaterThan(rows.before.ik_d1_erased_targets)
  const replay=await preview(source,operator),refused=await call(importPath+'/apply',{source,fingerprint:replay.fingerprint},operator)
  expect(refused.status).toBe(422);expect(await env.DB.prepare('SELECT COUNT(*) n FROM '+table+' WHERE id=?').bind(id).first('n')).toBe(0)
+
+  })()
+ }
 },60000)
 
 it('[IMP-008][IMP-005] a paged UserVoice import keeps every supporter and erases one whose votes fall on two pages',async()=>{

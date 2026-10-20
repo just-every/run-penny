@@ -200,7 +200,10 @@ it('[BASE-ACCESS-002 DATA-001] revocation during R2 export withholds the archive
  expect((await operations()).map(row=>row.status)).toEqual(['aborted'])
 })
 
-it.each(['sign-out','operator-version'] as const)('[BASE-ACCESS-002 DATA-001] %s during a restore R2 write refuses the apply transaction and keeps destination authority',async change=>{
+it('[BASE-ACCESS-002 DATA-001] each configured input during a restore R2 write refuses the apply transaction and keeps destination authority',async()=>{
+ for(const change of ['sign-out','operator-version'] as const){
+  await reset();await applyD1Migrations(env.DB,inject('migrations'))
+  await (async()=>{
  const cookie=await owner();await seedOriginal()
  const bundle=await (await call('/api/operator/data/export',undefined,cookie)).json() as Awaited<ReturnType<typeof exportArchive>>
  await env.DB.batch([env.DB.prepare('DELETE FROM attachments'),env.DB.prepare('DELETE FROM requests'),env.DB.prepare('DELETE FROM boards')])
@@ -226,6 +229,9 @@ it.each(['sign-out','operator-version'] as const)('[BASE-ACCESS-002 DATA-001] %s
  expect(await dataState()).toEqual(before)
  expect((await env.DB.prepare('SELECT * FROM oa_operators').all()).results).toEqual(authority)
  expect((await operations()).filter(row=>row.kind==='restore').map(row=>row.status)).toEqual(['aborted'])
+
+  })()
+ }
 })
 
 it('[BASE-ACCESS-002 DATA-003] revocation during erasure file cleanup retains a pending operation for current-authority recovery',async()=>{

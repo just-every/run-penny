@@ -5,7 +5,6 @@ import { beforeEach, afterEach, expect, inject, it, vi } from 'vitest'
 import { createPennyApi } from '@/core/app/api'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { providerMessages } from './provider-messages'
-import { authMail } from '@/core/features/auth/mail'
 import { exportArchive,planErasure } from '@/core/features/data/archive'
 import { eraseEntity } from '@/core/features/data/operations'
 const origin='https://127.0.0.1:8787'
@@ -72,15 +71,4 @@ it('[BASE-ACCESS-002 OPS-002] branded invitation is multipart and cancelled iden
  // An accepted native member can invite a peer with the same product authority.
  expect((await call(management,{email:'peer@example.test'},invitee)).status).toBe(202)
  expect(await env.DB.prepare('SELECT status,role FROM oa_operators WHERE id=?').bind(person!.id).first()).toEqual({status:'active',role:person!.role})
-})
-it('[BASE-ACCESS-001 REQ-023] deployed no-provider forms remain readable and never expose development capture',async()=>{
- const deployed={...bindings(),PENNY_ENVIRONMENT:'production',APP_ORIGIN:'https://penny.test',MAIL_PROVIDER:undefined,MAIL_FROM:undefined}
- const rt=createPennyRuntime(deployed)
- expect(authMail(rt)).toBeUndefined()
- for(const path of ['/__dev/outbox','/__dev/outbox?message=anything']) {
-  const response=await app.fetch(new Request('https://penny.test'+path,{headers:{Host:'penny.test'}}),deployed)
-  expect(response.status).toBe(404)
- }
- const response=await app.fetch(new Request('https://penny.test/api/auth/capabilities'),deployed)
- expect(response.status).toBe(200);expect(await response.json()).toMatchObject({transport:'unavailable'})
 })

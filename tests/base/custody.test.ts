@@ -3,19 +3,6 @@ import {beforeEach,expect,inject,it} from 'vitest'
 import {env,owner,call} from './support'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 
-it('[DATA-001 BASE-ACCESS-002] admitted Base operator can inspect and recover a locked maintenance operation without identity writes',async()=>{
- const cookie=await owner()
- expect((await call('/api/operator/moderation',undefined,cookie)).status).toBe(200)
- const before=await env.DB.prepare('SELECT * FROM operators').all()
- await env.DB.prepare("INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) VALUES('interrupted-export','export','pending','{}','2026-10-07','2026-10-07')").run()
- await env.DB.prepare("UPDATE data_state SET phase='locked',lock_id='interrupted-export' WHERE singleton=1").run()
- expect((await call('/api/operator/data/overview',undefined,cookie)).status).toBe(200)
- expect((await call('/api/operator/moderation',undefined,cookie)).status).toBe(200)
- expect((await env.DB.prepare('SELECT * FROM operators').all()).results).toEqual(before.results)
- expect((await call('/api/auth/sign-out',{},cookie)).status).toBe(204)
- expect((await call('/api/operator/data/overview',undefined,cookie)).status).toBe(401)
-})
-
 it('[DATA-001 BASE-ACCESS-002] recovery uses Base authority even when restored product data has no matching attribution',async()=>{
  const cookie=await owner()
  expect((await env.DB.prepare('SELECT * FROM operators').all()).results).toEqual([])

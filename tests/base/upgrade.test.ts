@@ -1,22 +1,6 @@
 import { applyD1Migrations,type D1Migration } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { expect,inject,it } from 'vitest'
-it('[BASE-ACCESS-002 DATA-001] additive Base migration retains attribution/data, explicitly revokes predecessor credentials',async()=>{
- const migrations=inject('migrations') as D1Migration[]
- await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0009'))
- const now='2026-10-01T00:00:00.000Z'
- await env.DB.batch([
-  env.DB.prepare('INSERT INTO operators(id,email,display_name,created_at,updated_at) VALUES(?,?,?,?,?)').bind('01J0000000000000000000000A','existing@example.test','Existing owner',now,now),
-  env.DB.prepare('INSERT INTO operator_sessions(id,operator_id,token_hash,expires_at,last_used_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').bind('old-session','01J0000000000000000000000A','prior-sha-hash','2099-01-01',now,now,now),
- ])
- const before=await env.DB.prepare('SELECT * FROM operators').all()
- await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0009'))
- expect((await env.DB.prepare('SELECT * FROM operators').all()).results).toEqual(before.results)
- expect(await env.DB.prepare('SELECT id,email,status FROM oa_operators').first()).toEqual({id:'01J0000000000000000000000A',email:'existing@example.test',status:'active'})
- expect(await env.DB.prepare('SELECT revoked_at FROM operator_sessions').first()).toMatchObject({revoked_at:expect.any(String)})
- expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual([])
-})
-
 it('[BASE-OPS-002 DATA-001 REL-014 AI-010] populated v0.1.4 data and originals survive scheduling and model configuration upgrades and repeat',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
  const {populatePreviousPennySample}=await import('./previous-sample-fixture')
@@ -26,6 +10,9 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010] populated v0.1.4 data and originals s
  const tableQuery="SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name NOT IN ('d1_migrations','operator_sessions','native_requester_sessions','native_magic_links','local_auth_outbox') ORDER BY name"
  await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0009'))
  await populatePreviousPennySample(env.DB,sample)
+ const legacyOwner=await env.DB.prepare('SELECT id FROM operators ORDER BY id LIMIT 1').first<string>('id'),stamp=new Date().toISOString()
+ await env.DB.prepare('INSERT INTO operator_sessions(id,operator_id,token_hash,expires_at,last_used_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?)').bind('old-session',legacyOwner,'prior-sha-hash','2099-01-01',stamp,stamp,stamp).run()
+
  const bytes=new Uint8Array([137,80,78,71,42]);await env.FILES.put('upgrade-preserved-bytes',bytes)
  const tables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const historical=await Promise.all(tables.map(async table=>({
@@ -63,5 +50,7 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010] populated v0.1.4 data and originals s
  expect(await env.DB.prepare('SELECT COUNT(*) AS count FROM requester_addresses WHERE verification_epoch!=0').first()).toEqual({count:0})
  expect(await env.DB.prepare('SELECT COUNT(*) AS count FROM requester_update_permissions p JOIN requester_addresses a ON a.id=p.requester_address_id WHERE p.suppressed_at IS NOT a.suppressed_at').first()).toEqual({count:0})
  expect(new Uint8Array(await (await env.FILES.get('upgrade-preserved-bytes'))!.arrayBuffer())).toEqual(bytes)
+ expect(await env.DB.prepare('SELECT revoked_at FROM operator_sessions WHERE id=?').bind('old-session').first()).toMatchObject({revoked_at:expect.any(String)})
+ expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual([])
  expect(await env.DB.prepare('SELECT COUNT(*) AS count FROM oa_operators').first()).toEqual(await env.DB.prepare('SELECT COUNT(*) AS count FROM operators').first())
 })

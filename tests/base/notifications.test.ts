@@ -98,7 +98,10 @@ it('[NOTIFY-002/005] overlapping drains claim once, persist ownership before HTT
  expect(sends).toBe(1);expect(await batches()).toMatchObject([{state:'accepted',provider_message_id:null}])
  await drainNotifications(runtime(),()=>start+7200000);expect(sends).toBe(1)
 })
-it.each(['mute','global','suppression','block','permission','unpublish','internal','author-block'] as const)('[NOTIFY-002 REQ-019/022] rechecks %s after enqueue',async change=>{
+it('[NOTIFY-002 REQ-019/022] rechecks each configured input after enqueue',async()=>{
+ for(const change of ['mute','global','suppression','block','permission','unpublish','internal','author-block'] as const){
+  await reset();await applyD1Migrations(env.DB,inject('migrations'))
+  await (async()=>{
  const g=await setup();await g.follow();await g.status('Pending')
  if(change==='mute')await call(`/api/public/requests/${g.slug}/follow`,{muted:true},g.person,'PATCH')
  if(change==='global')await call('/api/public/requester/notifications',{muted:true},g.person,'PATCH')
@@ -109,6 +112,9 @@ it.each(['mute','global','suppression','block','permission','unpublish','interna
  if(change==='internal')await env.DB.exec("UPDATE boards SET visibility='internal'")
  const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
  expect(sent).toHaveLength(0);expect(await batches()).toMatchObject([{state:'suppressed'}])
+
+  })()
+ }
 })
 it('[NOTIFY-002 EVID-006] mixed batch drops a newly held comment and still sends its public status',async()=>{
  const g=await setup();await g.follow();await g.status('Still public')

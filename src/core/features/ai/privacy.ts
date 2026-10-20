@@ -1,12 +1,18 @@
 import {settings} from './configuration'
-/** Source policy is applied before serialization, including copied private values
- * inside free text. This setting never grants a role additional read permission. */
+import {NativeError} from '../auth/native-tokens'
+export interface PrivateValue {value:string;field:string}
+/** Stored literals also protect copies in otherwise permitted free text. */
+export async function privateValues(db:D1Database):Promise<PrivateValue[]>{
+ const [accounts,notes]=await Promise.all([db.prepare('SELECT name,revenue_cents,renewal_date,health FROM accounts LIMIT 10001').all<{name:string;revenue_cents:number|null;renewal_date:string|null;health:string|null}>(),db.prepare('SELECT body FROM request_notes LIMIT 10001').all<{body:string}>()])
+ if(accounts.results.length>10000||notes.results.length>10000)throw new NativeError('ai_privacy_scope_limit',413,'AI cannot safely inspect all private context within this call. Manual work remains available.')
+ return [...accounts.results.flatMap(a=>[{value:a.name,field:'Account name'},{value:a.renewal_date??'',field:'Renewal date'},{value:a.health??'',field:'Account health'},...(a.revenue_cents===null?[]:[{value:String(a.revenue_cents),field:'Revenue'},{value:(a.revenue_cents/100).toFixed(2),field:'Revenue'},{value:new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}).format(a.revenue_cents/100),field:'Revenue'}])]),...notes.results.map(n=>({value:n.body,field:'Internal note'}))].filter(v=>v.value.length>0).sort((a,b)=>b.value.length-a.value.length)
+}
+/** Apply policy before serialization. This switch never grants read permission. */
 export async function promptInput(db:D1Database,input:unknown):Promise<unknown>{
  if((await settings(db)).include_private)return input
- const values=(await db.prepare("SELECT name value FROM accounts UNION SELECT renewal_date FROM accounts WHERE renewal_date IS NOT NULL UNION SELECT health FROM accounts WHERE health IS NOT NULL UNION SELECT CAST(revenue_cents AS TEXT) FROM accounts WHERE revenue_cents>0 UNION SELECT printf('%.2f',revenue_cents/100.0) FROM accounts WHERE revenue_cents>0 UNION SELECT body FROM request_notes").all<{value:string}>()).results.map(r=>r.value).filter(Boolean).sort((a,b)=>b.length-a.length)
- const hidden=/^(account(Name|Id)?|revenue.*|mrr|arr|opportunity.*|health|internalNote.*|privateNote.*|notes|original)$/i
+ const values=await privateValues(db),hidden=/^(account(Name|Id)?|revenue.*|mrr|arr|opportunity.*|health|internalNote.*|privateNote.*|notes|original)$/i
  function clean(value:unknown):unknown{
-  if(typeof value==='string'){for(const literal of values)value=(value as string).replace(new RegExp(literal.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),'[private context withheld]');return value}
+  if(typeof value==='string'){for(const {value:literal} of values)value=(value as string).replace(new RegExp(literal.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),'[private context withheld]');return value}
   if(Array.isArray(value))return value.map(clean)
   if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).filter(([key])=>!hidden.test(key)).map(([key,item])=>[key,clean(item)]))
   return value

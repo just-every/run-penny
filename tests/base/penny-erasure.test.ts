@@ -85,7 +85,10 @@ async function pendingFile(g:Awaited<ReturnType<typeof graph>>,writing=0){
 }
 
 type Preview={planHash:string;counts:Record<string,number>;fileCount:number;blockedCopies:unknown[]}
-for(const root of ['evidence_items','accounts'] as const)it(`[DATA-003 BASE-DATA-003] ${root} erasure fences every history child and original file against revision and stale restore`,async()=>{
+it('[DATA-003 BASE-DATA-003] evidence and account erasure fence every history child and original file against revision and stale restore',async()=>{
+ for(const root of ['evidence_items','accounts'] as const){
+ await reset();await applyD1Migrations(env.DB,inject('migrations'))
+ await (async()=>{
  const g=await graph(),id=root==='accounts'?g.account.id:g.evidence.id
  const saved=await good<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export',undefined,g.operator)
  const publishedVersions=(await rows('release_versions')).filter(row=>[g.release.versionId,g.corrected.versionId].includes(String(row.id)))
@@ -128,6 +131,9 @@ for(const root of ['evidence_items','accounts'] as const)it(`[DATA-003 BASE-DATA
   const remaining=await rows(table);for(const row of plan.selected[table])expect(remaining.some(other=>other.id===row.id)).toBe(false)
  }
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+
+ })()
+ }
 })
 
 // Erasing a person removes their own records, never anyone else's: evidence an

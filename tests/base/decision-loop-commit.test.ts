@@ -27,8 +27,11 @@ describe('Accountable commitment',()=>{
   await link(e.id,a.id,'supporting','DELETE');await link(latest.id,b.id,'contradicting');expect(await snapshots(result.revisionId)).toEqual(before);expect(await row('evidence_items',e.id)).toEqual(evidenceBefore);expect(await row('evidence_versions',version)).toEqual(versionBefore);expect(await row('decisions',d.id)).toMatchObject({state:'committed'})
   await env.DB.prepare("UPDATE decisions SET state='review_due' WHERE id=?").bind(d.id).run();await link(counter.id,a.id,'supporting','DELETE');expect(await row('decisions',d.id)).toMatchObject({state:'review_due'})
  })
- for(const [field,label] of [['selectedCandidateBetId','Selected bet'],['rationale','Rationale'],['ownerOperatorId','Owner'],['confidence','Confidence'],['reviewAt','Review date']])it(`[DEC-004] names missing ${label} and makes no mutations`,async()=>{
+ it('[DEC-004] names every missing commitment field and makes no mutations',async()=>{
+  for(const [field,label] of [['selectedCandidateBetId','Selected bet'],['rationale','Rationale'],['ownerOperatorId','Owner'],['confidence','Confidence'],['reviewAt','Review date']]){
+
   const {d,a}=await ready(),input:Record<string,unknown>=commitInput(a.id);delete input[field];const before=await row('decisions',d.id);const response=await request(`/api/operator/decisions/${d.id}/commit`,'POST',input);expect(response.status).toBe(422);expect(await response.text()).toContain(label);expect(await row('decisions',d.id)).toEqual(before);expect((await env.DB.prepare('SELECT * FROM decision_revisions WHERE decision_id=?').bind(d.id).all()).results).toEqual([])
+  }
  })
  it('[DEC-004] requires a viable-alternative explanation for one bet, rejects foreign choices and invalid dates',async()=>{
   const d=await decision(),a=await bet(d.id),e=await evidence();await link(e.id,a.id)
