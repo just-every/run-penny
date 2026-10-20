@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- AI-006: editable cited summaries for requests, decisions and accounts, plus comment/inbox reply drafts. Unknown citations are dropped with a notice; private values are flagged and checked again on explicit publication through the existing comment path. Drafts never send themselves.
+
 ## 0.2.1 — 2026-10-21
 
 **Fix: a local `rer import` or `rer export` on a database RER Platform migrated stopped before moving any data. Penny 0.2.0 and every earlier version are affected.**
