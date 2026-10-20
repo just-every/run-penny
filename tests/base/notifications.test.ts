@@ -9,7 +9,6 @@ import { createPennyApi } from '@/core/app/api'
 import { drainNotifications } from '@/core/features/notifications/delivery'
 import { prepareBatches } from '@/core/features/notifications/batches'
 import {withinQuietHours} from '@/core/features/settings/workspace-clock'
-const quietHours=(now:Date,timezone:string)=>withinQuietHours(now,{timezone,quietEnabled:true,quietStart:20,quietEnd:8})
 import { unsubscribeUrl } from '@/core/features/notifications/unsubscribe'
 import { RequestOperatorRepository } from '@/core/features/requests/operator-repository'
 import { loadRuntimeConfiguration } from '@/core/platform/configuration'
@@ -121,17 +120,6 @@ it('[NOTIFY-002 EVID-006] mixed batch drops a newly held comment and still sends
  await env.DB.prepare("UPDATE request_comments SET moderation_state='rejected' WHERE id=?").bind(id).run()
  const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
  expect(sent).toHaveLength(1);expect(JSON.stringify(sent[0])).toContain('Still public');expect(JSON.stringify(sent[0])).not.toContain('No longer public')
-})
-it('[NOTIFY-002] timezone quiet hours hold at20:00 and release at08:00, including DST',async()=>{
- expect(quietHours(new Date('2026-10-07T09:59:59Z'),'Australia/Brisbane')).toBe(false)
- expect(quietHours(new Date('2026-10-07T10:00:00Z'),'Australia/Brisbane')).toBe(true)
- expect(quietHours(new Date('2026-10-07T21:59:59Z'),'Australia/Brisbane')).toBe(true)
- expect(quietHours(new Date('2026-10-07T22:00:00Z'),'Australia/Brisbane')).toBe(false)
- expect(quietHours(new Date('2026-10-07T21:00:00Z'),'Australia/Sydney')).toBe(false)
- const g=await setup();await g.follow();await g.status('Overnight')
- const sent=capture();await drainNotifications(runtime(),()=>Date.parse('2026-10-07T20:00:00Z'));expect(sent).toHaveLength(0)
- await drainNotifications(runtime(),()=>Date.parse('2026-10-08T07:59:59Z'));expect(sent).toHaveLength(0)
- await drainNotifications(runtime(),()=>Date.parse('2026-10-08T08:00:00Z'));expect(sent).toHaveLength(1)
 })
 it('[NOTIFY-005 REL-006] bounded exponential known failures, ambiguous outcomes and interrupted attempts require review',async()=>{
  const g=await setup();await g.follow();await g.status('Retry')

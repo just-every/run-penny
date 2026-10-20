@@ -1,4 +1,5 @@
 export interface AppBindings {
+  PENNY_AI?: string
   PENNY_LEARNING?: string
   PENNY_LEARNING_EGRESS?: import('../features/learning/configuration').LearningEgress
   PENNY_EGRESS?: import('../features/integrations/transport').EnforcingEgress

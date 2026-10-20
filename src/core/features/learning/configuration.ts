@@ -3,7 +3,7 @@ import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
 import {NativeError} from '../auth/native-tokens'
 import {validateDestination} from '../../../../base/modules/integrations/core/destination'
-const config=z.object({orbit:z.object({origin:z.string().url(),token:z.string().min(1),installationId:z.string().min(1),audiencePrincipalIds:z.array(z.string().min(1)).min(1),readCostMicros:z.number().int().nonnegative()}).strict().optional(),model:z.object({apiKey:z.string().min(1),model:z.string().min(1),inputMicrosPerToken:z.number().finite().nonnegative(),outputMicrosPerToken:z.number().finite().nonnegative(),maxOutputTokens:z.number().int().min(1).max(16000)}).strict().optional()}).strict()
+const config=z.object({orbit:z.object({origin:z.string().url(),token:z.string().min(1),installationId:z.string().min(1),audiencePrincipalIds:z.array(z.string().min(1)).min(1),readCostMicros:z.number().int().nonnegative()}).strict().optional()}).strict()
 export type LearningConfiguration=z.infer<typeof config>
 export interface LearningWire {url:string;method:'GET'|'POST';headers:Record<string,string>;body:string}
 /** Deployment-owned RPC: enforce public DNS/IP at connection, verified TLS,

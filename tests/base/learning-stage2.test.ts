@@ -24,8 +24,16 @@ it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact s
  const restored=await json<{status:string}>(call('/api/operator/data/import',reordered,cookie)),again=await json<typeof exported>(call('/api/operator/data/export',undefined,cookie))
  expect({status:restored.status,originals:again.archive.tables.learning_observations,snapshots:again.archive.tables.learning_commitments}).toEqual({status:'complete',originals:exported.archive.tables.learning_observations,snapshots:exported.archive.tables.learning_commitments})
 })
-it('[LEARN-002] refuses forged citations, absent model configuration and an in-flight authority revocation without a derived result',async()=>{
+it('[AI-010 LEARN-002] configures providers, meters the monthly cap, preserves manual work and refuses invalid or revoked learning',async()=>{
  const f=await fixture();network.badCitation=true;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0)
+
+ const report=await json<{report:{meteredMicros:number;reservedMicros:number;inputTokens:number;outputTokens:number}}>(call('/api/operator/settings/ai',undefined,f.cookie));expect(report.report).toMatchObject({meteredMicros:1100,reservedMicros:0,inputTokens:100,outputTokens:500});expect(network.lastBody).toContain('configured-claude')
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:0,includePrivate:false,choices:[]},f.cookie,undefined,'PUT'))
+ const count=sent.length;const refusal=await json(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie),409);expect(refusal.error).toBe('ai_budget_exhausted');expect(refusal.message).toBeTruthy();expect(sent).toHaveLength(count)
+ await json(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Manual while capped',wording:'Export still needs a date filter',observedAt:'2026-10-01T00:00:00Z'},f.cookie),201)
+ expect((await call('/api/operator/triage',undefined,f.cookie)).ok).toBe(true)
+ expect((await call('/api/public/requests/suggestions?title=export')).ok).toBe(true)
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:false,choices:[{capability:'learning',provider:'openai',model:'configured-model'}]},f.cookie,undefined,'PUT'))
  network.badCitation=false
  const logged=vi.spyOn(console,'error').mockImplementation(()=>{})
  try{
@@ -36,6 +44,6 @@ it('[LEARN-002] refuses forged citations, absent model configuration and an in-f
    const runs=(await env.DB.prepare('SELECT * FROM learning_runs').all()).results;expect(JSON.stringify(runs)).not.toContain('PRIVATE');expect(JSON.stringify(runs)).not.toContain('network-edge');expect(runs.some(run=>run.reason===fault.reason&&run.state===(fault.method==='POST'?'uncertain':'refused'))).toBe(true)
   }
  }finally{logged.mockRestore()}
- const noConfig=bindings();delete noConfig.PENNY_LEARNING;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie,noConfig)).status).toBe(503)
+ const noConfig=bindings();delete noConfig.PENNY_AI;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie,noConfig)).status).toBe(503)
  network.beforeModel=async()=>{await env.DB.prepare('UPDATE oa_sessions SET revoked_at=?').bind(Date.now()).run()};expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(401);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0)
 })

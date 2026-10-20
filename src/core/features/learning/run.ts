@@ -34,7 +34,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
  let paid=false
  try{
   const config=learningConfiguration(runtime)
-  if(!config.model||!runtime.bindings.PENNY_LEARNING_EGRESS)throw new NativeError('learning_model_unconfigured',503)
+  if(!runtime.bindings.PENNY_AI||!runtime.bindings.PENNY_LEARNING_EGRESS)throw new NativeError('learning_model_unconfigured',503)
   const sourceCost=s.provider==='orbit'?(config.orbit?.readCostMicros??0)*(JSON.parse(s.resource_ids_json) as string[]).length:0
   if(sourceCost>=i.max_run_cost_micros)throw new NativeError('learning_call_budget_exceeded',409)
   if(sourceCost>0)paid=true
@@ -51,7 +51,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   await assertScope(native,i,s)
   // This db read also rechecks native session and erasure journal before paid work.
   await db.prepare('SELECT 1').first()
-  const generated=await interpret(runtime,{question:i.question,purpose:i.purpose,observations:observations.map(o=>({id:o.id,wording:o.wording,citableRanges:citationRanges(o),observedAt:o.observed_at,requesterId:o.requester_id,accountId:o.account_id})),corrections,budgetMicros:i.budget_micros-i.spent_micros},i.max_run_cost_micros-sourceCost,async()=>{await db.prepare('SELECT 1').first();paid=true})
+  const generated=await interpret(runtime,db,{question:i.question,purpose:i.purpose,observations:observations.map(o=>({id:o.id,wording:o.wording,citableRanges:citationRanges(o),observedAt:o.observed_at,requesterId:o.requester_id,accountId:o.account_id})),corrections,budgetMicros:i.budget_micros-i.spent_micros},i.max_run_cost_micros-sourceCost,async()=>{await db.prepare('SELECT 1').first()})
   generated.costMicros+=sourceCost
   const body=validateLearning(generated.output,observations,i.budget_micros-i.spent_micros),artifactId=crypto.randomUUID()
   const guards=records.flatMap(record=>record.nativeGuard?[db.prepare(`INSERT INTO penny_integration_guards(id,allowed) VALUES(?,(${record.nativeGuard.sql}))`).bind(crypto.randomUUID(),...record.nativeGuard.params)]:[])
@@ -67,6 +67,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   return {runId,artifactId,unchanged:false}
  }catch(error){
   const reason=error instanceof NativeError?error.code:'learning_output_or_source_invalid'
+  if(!['ai_budget_exhausted','ai_model_unconfigured','learning_call_budget_exceeded'].includes(reason)&&runtime.bindings.PENNY_AI)paid=paid||['learning_model_failed','learning_transport_failed','learning_model_payload_invalid','learning_model_output_invalid','learning_model_incomplete','learning_provider_cost_exceeded'].includes(reason)
   // Record uncertainty without retaining model/provider exception strings. A
   // revoke/erase may have removed the run, in which case this writes nothing.
   await native.batch([native.prepare("UPDATE learning_runs SET state=?,reason=?,actual_micros=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(paid?'uncertain':'refused',reason,paid?null:0,new Date().toISOString(),runId,claim),systemLearningAudit(native,'learning.run','learning_investigation',id,'learning.run_failed',{runId,reason},true),native.prepare('UPDATE learning_investigations SET last_reason=?,spent_micros=spent_micros-? WHERE id=? AND version=?').bind(reason,paid?0:i.max_run_cost_micros,id,i.version)])

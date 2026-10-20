@@ -1,3 +1,4 @@
+import {ModelSettings} from '../../ai/ui/model-settings'
 import {AgingSettings} from '../../triage/aging-settings'
 import {BoardOwnerSettings} from '../../ownership/ui/board-owner-settings'
 import {WorkspaceClockSettings} from '../../settings/ui/workspace-clock-settings'
@@ -39,6 +40,7 @@ export function BoardSettings() {
       <OperatorPageHeader eyebrow="Customer feedback" title="Feedback settings" art={data.kind === 'error' ? null : { note: 'Better feedback builds better products.' }}>Requester submissions, edits and comments are reviewed before publication.</OperatorPageHeader>
       <div className="mt-6 space-y-6 sm:mt-8">
         <OperatorSettings />
+        <ModelSettings />
         <TestCustomers />
         <DeliveryReview />
         <ApiKeys />

@@ -17,7 +17,7 @@ it('[BASE-ACCESS-002 DATA-001] additive Base migration retains attribution/data,
  expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual([])
 })
 
-it('[BASE-OPS-002 DATA-001 REL-014] populated v0.1.4 data and original files survive the additive schedule upgrade and repeat',async()=>{
+it('[BASE-OPS-002 DATA-001 REL-014 AI-010] populated v0.1.4 data and originals survive scheduling and model configuration upgrades and repeat',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
  const {populatePreviousPennySample}=await import('./previous-sample-fixture')
  const sample=(await import('../../sample-data/penny.v1.json')).default
@@ -34,7 +34,7 @@ it('[BASE-OPS-002 DATA-001 REL-014] populated v0.1.4 data and original files sur
  })))
  const before=await env.DB.batch(historical.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
  // v0.1.4 released the schema through 0085. Populate it before applying the
- // new additive schedule migration, and compare every pre-existing column/row.
+ // new additive schedule and AI migrations, and compare every pre-existing column/row.
  await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0009'&&m.name<'0086'))
  const releasedTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const released=await Promise.all(releasedTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))

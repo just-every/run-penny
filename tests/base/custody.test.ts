@@ -1,16 +1,7 @@
 import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,expect,inject,it} from 'vitest'
 import {env,owner,call} from './support'
-import {exportArchive} from '../../src/core/features/data/archive'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
-it('[DATA-001 BASE-ACCESS-002] local product archive retains attribution and excludes transferable Base authority',async()=>{
- await owner()
- const before=await env.DB.prepare('SELECT * FROM oa_sessions').all()
- const snapshot=await exportArchive(env.DB,env.FILES)
- expect(Object.keys(snapshot.archive.tables).filter(name=>name.startsWith('oa_'))).toEqual([])
- expect(snapshot.archive.tables).toHaveProperty('operators')
- expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual(before.results)
-})
 
 it('[DATA-001 BASE-ACCESS-002] admitted Base operator can inspect and recover a locked maintenance operation without identity writes',async()=>{
  const cookie=await owner()

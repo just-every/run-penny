@@ -3011,5 +3011,37 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_ai_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "monthly_budget_micros",
+      "include_private"
+    ]
+  },
+  "penny_ai_capabilities": {
+    "classification": "product",
+    "columns": [
+      "capability",
+      "provider",
+      "model"
+    ]
+  },
+  "penny_ai_runs": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "month",
+      "capability",
+      "provider",
+      "model",
+      "reserved_micros",
+      "actual_micros",
+      "input_tokens",
+      "output_tokens",
+      "state",
+      "created_at"
+    ]
   }
 }
