@@ -31,7 +31,7 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
   await page.goto(origin+path);await page.waitForLoadState('networkidle')
   const panel=page.locator(`[data-draft-kind="${kind}"][data-draft-id="${id}"]`);await panel.locator('summary').click()
   await panel.getByRole('button',{name:kind==='inbox'||kind==='comment'?'Draft reply':'Draft summary',exact:true}).click()
-  await expect(panel.getByLabel(kind==='inbox'||kind==='comment'?'Edit reply':'Edit summary',{exact:true})).not.toHaveValue('')
+  await expect(panel.getByRole('textbox',{name:kind==='inbox'||kind==='comment'?'Edit reply':'Edit summary',exact:true})).not.toHaveValue('')
   await expect(panel.getByText(/unresolvable citation/)).toBeVisible()
   const links=panel.getByRole('link');assert.ok(await links.count()>0)
   assert.equal((await api(`/api/operator/requests/${request.slug}/context`)).comments.length,baseline,'draft generation never sends')
@@ -41,7 +41,7 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
    expectedRefusal(true);await panel.getByRole('button',{name:'Post public reply',exact:true}).click();await expect(panel.getByRole('status').filter({hasText:'private account value'})).toBeVisible();expectedRefusal(false)
    await capture('draft-private-refused',panel)
    const edited='Thank you for explaining the reporting workflow. We are reviewing date-filtered CSV exports; no delivery date is committed.'
-   await panel.getByLabel('Edit reply',{exact:true}).fill(edited);await capture('draft-edited',panel)
+   await panel.getByRole('textbox',{name:'Edit reply',exact:true}).fill(edited);await capture('draft-edited',panel)
    await panel.getByRole('button',{name:'Post public reply',exact:true}).click();await expect(panel.getByRole('status')).toContainText('Reply posted')
    assert.equal((await api(`/api/operator/requests/${request.slug}/context`)).comments.length,baseline+1)
    await capture('draft-posted',panel)
