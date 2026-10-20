@@ -4508,7 +4508,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "49b59c8cc00e3ca5af8a645162baf5eb202c72461b9e07bc814df3276e1a06d3",
+      "sha256": "c50facc99b629edd03285c2ebf13631731e1ac308b0bce40484e7faebb5282b3",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {
@@ -7812,7 +7812,7 @@
       "executable": false
     },
     "tests/installer/older-archive.test.mjs": {
-      "sha256": "52c16dd174be54debe074af52e094c5472d6699a764fa6c8bebf7a66a511b5d2",
+      "sha256": "9a4adaa7e1e5ac97486ff1b076b084a540f66353b2fa6eadeb702dd848c2e929",
       "executable": false
     },
     "tests/installer/owner-fixture.mjs": {

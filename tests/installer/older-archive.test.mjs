@@ -29,7 +29,7 @@ test('[DATA-001 DATA-003] import before setup restores an older backup and repla
   try {
     await execute(process.execPath, [rer, 'import', '--input', 'exports/penny.rer', '--yes', '--non-interactive'], {cwd: root, env, maxBuffer: 4 * 1024 * 1024})
   } catch (error) {
-    throw new Error('Older archive import failed: ' + error.stderr?.slice(-3000), {cause: error})
+    throw new Error('Older archive import failed: ' + error.stderr?.slice(-3000))
   }
   await assert.rejects(stat(join(root, '.dev.vars')), {code: 'ENOENT'}, 'restore precedes setup and never creates private settings')
   const proxy = await getPlatformProxy({configPath: resolve(root, 'wrangler.jsonc'), persist: {path: join(root, '.wrangler/state/v3')}, remoteBindings: false})
