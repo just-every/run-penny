@@ -627,7 +627,7 @@ Payroll, general project/work management and monitoring/observability stay outsi
 
 ## Status
 
-Judged from the code and tests at commit `28b784990084d3622da0346ab857aad55a67a879` (21 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+Judged from the code and tests at commit `7dcacd1a8ed01248273f27de9778a7ed5d7241fc` (21 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 AI-010 was completed on 21 October 2026: owner-only model settings, default-private prompt construction, OpenAI/Anthropic enforcing RPC calls, atomic monthly reservations, metered micro-dollar reports and visible refusals ship. Learning reserves its own whole ceiling inside that budget before acquiring evidence. Migration 0087 is additive and joins the portable product archive; it contains no prompt, subject identifier or credential.
 

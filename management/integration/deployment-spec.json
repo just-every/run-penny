@@ -500,6 +500,12 @@
       "name": "0086_scheduled_publications.sql",
       "sha256": "e03bed9f2850655d7fd856d220fd859efb49442db74924ec0d25afbbeff227c1",
       "sql": "-- Publication and this row's terminal state commit in the same guarded batch.\nCREATE TABLE penny_publication_schedules (\n id TEXT PRIMARY KEY,\n release_id TEXT UNIQUE REFERENCES releases(id) ON DELETE CASCADE,\n roadmap_update_id TEXT UNIQUE REFERENCES roadmap_update_versions(id) ON DELETE CASCADE,\n author_operator_id TEXT NOT NULL REFERENCES operators(id),\n scheduled_by_operator_id TEXT NOT NULL REFERENCES operators(id),\n scheduled_at TEXT NOT NULL,\n time_zone TEXT NOT NULL,\n state TEXT NOT NULL CHECK(state IN ('scheduled','published','failed','cancelled','held')),\n last_error TEXT,\n dismissed_at TEXT,\n completed_at TEXT,\n created_at TEXT NOT NULL,\n updated_at TEXT NOT NULL,\n CHECK ((release_id IS NOT NULL) + (roadmap_update_id IS NOT NULL) = 1)\n);\nCREATE INDEX penny_publication_schedules_due ON penny_publication_schedules(state,scheduled_at);\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0087_ai_configuration.sql",
+      "sha256": "632dcbb323bb997922fd722773b7662504aa9cfef74a20b9367d9d7e8a9575fe",
+      "sql": "-- Configuration contains no credential; costs contain no prompt or subject data.\nCREATE TABLE penny_ai_settings (\n singleton INTEGER PRIMARY KEY CHECK(singleton=1),\n monthly_budget_micros INTEGER NOT NULL DEFAULT 0 CHECK(monthly_budget_micros>=0),\n include_private INTEGER NOT NULL DEFAULT 0 CHECK(include_private IN(0,1))\n);\nCREATE TABLE penny_ai_capabilities (\n capability TEXT PRIMARY KEY,\n provider TEXT NOT NULL CHECK(provider IN('anthropic','openai')),\n model TEXT NOT NULL\n);\nCREATE TABLE penny_ai_runs (\n id TEXT PRIMARY KEY,\n month TEXT NOT NULL,\n capability TEXT NOT NULL,\n provider TEXT NOT NULL,\n model TEXT NOT NULL,\n reserved_micros INTEGER NOT NULL CHECK(reserved_micros>=0),\n actual_micros INTEGER,\n input_tokens INTEGER,\n output_tokens INTEGER,\n state TEXT NOT NULL CHECK(state IN('reserved','metered','uncertain','refused')),\n created_at TEXT NOT NULL\n);\nCREATE INDEX penny_ai_month ON penny_ai_runs(month);\n"
     }
   ],
   "compatibilityDate": "2026-08-31",
