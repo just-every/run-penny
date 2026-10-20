@@ -213,6 +213,14 @@
         "pnpm run build",
         "PENNY_LOOP_HEALTH_ONLY=1 node tests/browser/operator-pages.mjs"
       ]
+    },
+    {
+      "name": "older-archive",
+      "browser": false,
+      "hosted": false,
+      "commands": [
+        "node --test tests/installer/older-archive.test.mjs"
+      ]
     }
   ],
   "nightly": [
