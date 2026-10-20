@@ -26,6 +26,7 @@ it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact s
 })
 it('[AI-010 LEARN-002] configures providers, meters the monthly cap, preserves manual work and refuses invalid or revoked learning',async()=>{
  const f=await fixture()
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:false,choices:[]},f.cookie,undefined,'PUT'))
  const actor=await env.DB.prepare('SELECT id FROM operators LIMIT 1').first<string>('id')
  await json(call('/api/operator/accounts',{name:'Hidden C6 Account',internalOwnerId:actor,revenueCents:987654321,health:'Internal renewal warning'},f.cookie),201)
  await json(call('/api/operator/boards',{name:'Feedback',slug:'feedback',visibility:'public'},f.cookie),201)
@@ -35,6 +36,12 @@ it('[AI-010 LEARN-002] configures providers, meters the monthly cap, preserves m
  network.badCitation=true;expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0)
 
  const report=await json<{report:{meteredMicros:number;reservedMicros:number;inputTokens:number;outputTokens:number}}>(call('/api/operator/settings/ai',undefined,f.cookie));expect(report.report).toMatchObject({meteredMicros:1100,reservedMicros:0,inputTokens:100,outputTokens:500});expect(network.lastBody).toContain('configured-claude');for(const value of ['Hidden C6 Account','Internal-only negotiation detail','987654321'])expect(network.lastBody).not.toContain(value)
+ const commercialSource=await json<{id:string}>(call(path+'/sources',{name:'Selected company',provider:'orbit',resourceIds:['companies/policy-company'],useBasis:'Explicitly selected company context',allOperatorsAuthorized:true},f.cookie),201)
+ const commercialRun=await json<{id:string}>(call(path+'/investigations',{sourceId:commercialSource.id,nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Explain Foreign commercial account feedback',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ network.sourceText=canonical({id:'policy-company',name:'Foreign commercial account',updated_at:'2026-10-01T00:00:00Z'})
+ await json(call(path+`/investigations/${commercialRun.id}/run`,{},f.cookie),409);expect(network.lastBody).not.toContain('Foreign commercial account')
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:true,choices:[]},f.cookie,undefined,'PUT'))
+ await json(call(path+`/investigations/${commercialRun.id}/run`,{},f.cookie),409);expect(network.lastBody).toContain('Foreign commercial account')
  network.sourceText=null
  await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:0,includePrivate:false,choices:[]},f.cookie,undefined,'PUT'))
  const count=sent.length;const refusal=await json(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie),409);expect(refusal.error).toBe('ai_budget_exhausted');expect(refusal.message).toBeTruthy();expect(sent).toHaveLength(count)
