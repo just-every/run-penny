@@ -2812,7 +2812,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "dfeb015183a285b7b34d0b286b7cd724d20fa003f46ea22c7baf2df6192c930e",
+      "sha256": "2b85828f040d802f429143a9fb424846575a9a16282a8e22add6add73b01f57c",
       "executable": false
     },
     "DEMO.md": {
@@ -3388,7 +3388,7 @@
       "executable": false
     },
     "OPERATIONS.md": {
-      "sha256": "0446dc8d7bc5c26efc4fe916c97502a50055a5e6a254b2eac22d1e257d520e62",
+      "sha256": "0207aac7191b03d8045af667edbcb25086d0df8ce6b8144d94838c0782616d92",
       "executable": false
     },
     "OWNER-STEPS.md": {
@@ -4168,11 +4168,15 @@
       "executable": false
     },
     "src/core/features/ai/model.ts": {
-      "sha256": "589f39c5d281a78f218672207234393b421575326d6ea6829436df8a5b16b6f3",
+      "sha256": "9b1450fec38ad4a3d99d10a9381621cf5e36e4b8aacc22e86802443471f4908d",
       "executable": false
     },
     "src/core/features/ai/privacy.ts": {
       "sha256": "ce190bdd0e5a5cef74439cc0bd891cd17efb9452c570b2634d3bf4aac6b24b2c",
+      "executable": false
+    },
+    "src/core/features/ai/provider-schema.ts": {
+      "sha256": "40a6ce8d03ee24ba0b0b83048e0ca0e7d133e446804daf1d731f30fa97c913a2",
       "executable": false
     },
     "src/core/features/ai/routes.ts": {
@@ -7148,7 +7152,7 @@
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {
-      "sha256": "5bac20f29b70a79125e8d437b80ca0289c16482399d89c4e7812d311eba53f99",
+      "sha256": "a1c8fcaf7ecfe732dfe343c190869efa079b316f431bda82209c5d3334a00a29",
       "executable": false
     },
     "tests/base/legacy-feedback-fixture.ts": {
@@ -7876,11 +7880,11 @@
       "executable": false
     },
     "visual/ai-models/ai-budget-refusal-1440.png": {
-      "sha256": "679203a178d7bfb9aa4b84e0bf2a9461160d98529fb7934d809ecffc37906822",
+      "sha256": "de8773e86bd4f6b9778939b2499408a42b7c5069e3a0d4c798ba6cb96953ae6c",
       "executable": false
     },
     "visual/ai-models/ai-budget-refusal-390.png": {
-      "sha256": "65dc7d62c65e472dded9deb7209efae75fe5561f35d83322c90cba58f0ead354",
+      "sha256": "3bf5b7c3137f5a660050c7110cb0c28980103a14c0fb54f7b24999c63a2335c5",
       "executable": false
     },
     "visual/ai-models/ai-capped-settings-1440.png": {
@@ -7984,7 +7988,7 @@
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-390.png": {
-      "sha256": "cc8b109e5c7e78682da400efb4e1f4f6a9b28d055668169307c37a78ee382654",
+      "sha256": "e33d5dca2cab8bbd0902c1453df58379192850644d531360be65e042eed81120",
       "executable": false
     },
     "visual/ai-models/ai-unconfigured-cost-1440.png": {
