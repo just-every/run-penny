@@ -19,7 +19,7 @@ function productRow(row: Record<string, unknown>): Row {
 }
 export const LOCAL_DATA_LIMITS={...DATA_LIMITS,rows:500000,recordBytes:512*1024*1024}
 export function policy(journal: ErasureJournal): ArchivePolicy {
-  const product = Object.entries(inventory).filter(([, value]) => value.classification === 'product' && !excludedTable(name, {includeTables: [name]})).map(([name]) => name)
+  const product = Object.entries(inventory).filter(([name, value]) => value.classification === 'product' && !excludedTable(name, {includeTables: [name]})).map(([name]) => name)
   return {
     product: 'just-every/penny',
     excludeTables: Object.keys(inventory).filter(name => !product.includes(name) && !['data_state', 'data_tombstones'].includes(name)),

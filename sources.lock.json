@@ -3844,7 +3844,7 @@
       "executable": false
     },
     "scripts/portability/policy.ts": {
-      "sha256": "32b2f03a834e7e6c346650dff7c652d673254abb82c5c7cc96ddc3c4c048c6bd",
+      "sha256": "6b26a035dad9f9bc56ff8aef24e8feede09dae0db8cace1e44a28ccfb3dfa7e9",
       "executable": false
     },
     "scripts/portability/remote-export.mjs": {
