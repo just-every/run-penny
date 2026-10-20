@@ -16,7 +16,7 @@ export function registerAiRoutes(app:Hono<OperatorMutationEnvironment>){
   if(session.operator.role!=='owner')throw new NativeError('ai_owner_required',403)
   const input=await parseInput(c.req.raw,aiSettingsInput),all=providers(runtime)
   if(new Set(input.choices.map(c=>c.capability)).size!==input.choices.length||input.choices.some(c=>!all[c.provider]?.models.some(m=>m.id===c.model)))throw new NativeError('ai_model_unconfigured',409)
-  await db.batch([db.prepare('DELETE FROM penny_ai_capabilities'),db.prepare('UPDATE penny_ai_settings SET monthly_budget_micros=?,include_private=? WHERE singleton=1').bind(input.monthlyBudgetMicros,input.includePrivate?1:0),...input.choices.map(c=>db.prepare('INSERT INTO penny_ai_capabilities(capability,provider,model) VALUES(?,?,?) ON CONFLICT(capability) DO UPDATE SET provider=excluded.provider,model=excluded.model').bind(c.capability,c.provider,c.model))])
+  await db.batch([db.prepare('DELETE FROM penny_ai_capabilities'),db.prepare('INSERT INTO penny_ai_settings(singleton,monthly_budget_micros,include_private) VALUES(1,?,?) ON CONFLICT(singleton) DO UPDATE SET monthly_budget_micros=excluded.monthly_budget_micros,include_private=excluded.include_private').bind(input.monthlyBudgetMicros,input.includePrivate?1:0),...input.choices.map(c=>db.prepare('INSERT INTO penny_ai_capabilities(capability,provider,model) VALUES(?,?,?) ON CONFLICT(capability) DO UPDATE SET provider=excluded.provider,model=excluded.model').bind(c.capability,c.provider,c.model))])
   return c.json({saved:true})
  })
 }

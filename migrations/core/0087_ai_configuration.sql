@@ -4,7 +4,6 @@ CREATE TABLE penny_ai_settings (
  monthly_budget_micros INTEGER NOT NULL DEFAULT 0 CHECK(monthly_budget_micros>=0),
  include_private INTEGER NOT NULL DEFAULT 0 CHECK(include_private IN(0,1))
 );
-INSERT INTO penny_ai_settings(singleton) VALUES(1);
 CREATE TABLE penny_ai_capabilities (
  capability TEXT PRIMARY KEY,
  provider TEXT NOT NULL CHECK(provider IN('anthropic','openai')),

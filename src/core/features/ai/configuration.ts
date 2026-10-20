@@ -9,7 +9,7 @@ const installation=z.record(provider,z.object({apiKey:z.string().min(1),workspac
 export type Provider=z.infer<typeof provider>
 export type Model=z.infer<typeof model>
 export function providers(runtime:PennyRuntime){try{return installation.parse(JSON.parse(runtime.bindings.PENNY_AI||'{}'))}catch{throw new NativeError('ai_configuration_invalid',503)}}
-export async function settings(db:D1Database){return (await db.prepare('SELECT monthly_budget_micros,include_private FROM penny_ai_settings WHERE singleton=1').first<{monthly_budget_micros:number;include_private:number}>())!}
+export async function settings(db:D1Database){return (await db.prepare('SELECT monthly_budget_micros,include_private FROM penny_ai_settings WHERE singleton=1').first<{monthly_budget_micros:number;include_private:number}>())??{monthly_budget_micros:0,include_private:0}}
 export async function selected(runtime:PennyRuntime,db:D1Database,capability:Capability){
  const all=providers(runtime),choice=await db.prepare('SELECT provider,model FROM penny_ai_capabilities WHERE capability=?').bind(capability).first<{provider:Provider;model:string}>(),p=choice?.provider??'anthropic',id=choice?.model??all.anthropic?.models[0]?.id??'',entry=all[p],m=entry?.models.find(m=>m.id===id)
  if(!entry||!m||!runtime.bindings.PENNY_LEARNING_EGRESS)throw new NativeError('ai_model_unconfigured',503,'AI is unavailable. Ask the installation owner to configure the selected model and enforcing transport.')

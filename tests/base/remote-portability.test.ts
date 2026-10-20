@@ -8,7 +8,7 @@ import { laterJournalFence, policy } from '../../scripts/portability/policy'
 import { archiveJournal } from '../../scripts/portability/archive-journal.mjs'
 const app = createPennyApi(), origin = 'https://penny.test'
 const bindings = { ...env, PENNY_ENVIRONMENT: 'production', APP_ORIGIN: origin, MAIL_PROVIDER: undefined, MAIL_FROM: undefined, MAIL_API_KEY: undefined }
-const call = (path: string, body?: unknown, headers: Record<string, string> = {}, currentBindings = bindings) => app.fetch(new Request(origin + path, { method: body === undefined ? 'GET' : 'POST', headers: { Origin: origin, 'CF-Connecting-IP': '192.0.2.1', ...headers, ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }), currentBindings)
+const call = (path: string, body?: unknown, headers: Record<string, string> = {}, currentBindings = bindings, method = body === undefined ? 'GET' : 'POST') => app.fetch(new Request(origin + path, { method, headers: { Origin: origin, 'CF-Connecting-IP': '192.0.2.1', ...headers, ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }), currentBindings)
 async function owner() { const response = await call('/auth/bootstrap', { token: bindings.SETUP_TOKEN, displayName: 'Owner', returnTo: '/app' }); expect(response.status).toBe(303); return { Cookie: response.headers.get('Set-Cookie')!.split(';')[0] } }
 const base = '/api/portability/exports'
 beforeEach(async () => { await reset(); await applyD1Migrations(env.DB, inject('migrations')) })
@@ -20,6 +20,7 @@ async function complete(id: string, cookie: Record<string, string>) {
 }
 it('exports the hosted Base archive and matching journal, restores the same originals locally, and removes source snapshots', async () => {
  const cookie = await owner(), stamp = new Date().toISOString()
+ expect((await call('/api/operator/settings/ai',{monthlyBudgetMicros:12345000,includePrivate:false,choices:[]},cookie,bindings,'PUT')).status).toBe(200)
  await env.DB.batch([
   env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('remote-board','remote-board','Remote records','public',0,?,?)").bind(stamp, stamp),
   env.DB.prepare("INSERT INTO requests(id,slug,board_id,title,description,moderation_state,public_state,created_at,updated_at) VALUES('remote-request','remote-request','remote-board','Hosted marker','Private original','awaiting_review','open',?,?)").bind(stamp, stamp),
@@ -65,6 +66,7 @@ it('exports the hosted Base archive and matching journal, restores the same orig
   else closing = record
  }
  expect((await service.imports.finalize(imported!, { contentHash: closing!.contentHash, archiveHash: closing!.archiveHash })).phase).toBe('complete')
+ expect(await env.DB.prepare('SELECT monthly_budget_micros,include_private FROM penny_ai_settings WHERE singleton=1').first()).toEqual({monthly_budget_micros:12345000,include_private:0})
  expect(await env.DB.prepare("SELECT * FROM requests WHERE id='remote-request'").first()).toEqual(expected)
  const original = await env.FILES.get('remote-original')
  expect(new Uint8Array(await original!.arrayBuffer())).toEqual(new Uint8Array([5, 4, 3, 2])); expect(original!.customMetadata).toEqual({ purpose: 'original' })
