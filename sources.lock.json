@@ -7884,7 +7884,7 @@
       "executable": false
     },
     "tests/installer/deploy-dry-run.test.mjs": {
-      "sha256": "e8ea2a6b487c29b49115134f3dbdb38abe548e068f8f900c3baf01d6133b0da9",
+      "sha256": "605dca6bd4101c913646d73f674f2c523df5df2c255b86ba4850570804bc8120",
       "executable": false
     },
     "tests/installer/dev-credentials.test.mjs": {
