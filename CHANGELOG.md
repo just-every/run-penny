@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.2.0 — 2026-10-21
+
+Older backups now restore with their original data and files, releases and status updates can be scheduled, Overview shows loop health, and the owner sets the AI model, budget and privacy. Update the source and run `rer install` then `rer setup`, which applies the additive migrations 0086 and 0087; hosted installations use `rer deploy`. No owner reconfiguration is required: AI stays refused at the initial $0 monthly cap. Restore into an empty installation before setup and keep the matching latest erasure journal.
+
 - AI-010: installation-controlled OpenAI/Anthropic catalogs, owner model and privacy settings, monthly USD reservations and exact metered cost reporting; migration 0087 preserves existing data.
 - Measure loop health on Overview with ownership share, median seconds to the first public comment or status update, shipped requests whose nonempty recipient snapshots are fully delivered, and distinct active items at risk from approved past-due public ETAs or slipped blockers (MEAS-006). Each figure opens the counted records. Held comments are excluded from response timing; ROAD-008 publications are included. Delivery requires delivered receipts. AGENT-006 retains the remaining promise detection and correction/reminder work.
 - Schedule releases and roadmap status updates for a workspace-local time, review the retained timezone and cancel before publication (REL-014, ROAD-008). Minute Cron rechecks the same publication conditions, publishes once and leaves a failed draft with a durable author notice. Apply additive migration 0086 through `rer setup` or the existing hosted path; keep the expanded schema on rollback. No new provider configuration is required. Announcement and request-target entry creation remains REL-018, which inherits these scheduling rules.
@@ -9,6 +13,8 @@
 - Base's sign-in confirmation and `/setup` keep their look while `public/rer-theme.css` holds only rer's theme grammar: the coin mark's sizing moves to `public/fonts/fonts.css`, which Base's `/auth` documents now link as `/setup` already did. No visible change.
 - Fix: restoring a backup failed with service unavailable when an internal note reply's id sorted before the note it answers. Restore now inserts a row that names another row of its own table after that row (TRIAGE-004).
 - A reply to any notification creates no record (NOTIFY-004): notifications carry `Auto-Submitted: auto-generated` and no reply-to unless one is set, and a reply posted to the origin, the signed provider event route or any plausible capture path is refused with every table unchanged.
+
+Known issues: SendGrid has no provider duplicate suppression; ambiguous sends remain held for review. Live Canny/UserVoice/Zendesk provider acceptance and whole-product acceptance beyond the core loop remain unproved.
 
 ## 0.1.4 — 2026-10-19
 

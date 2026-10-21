@@ -39,10 +39,10 @@ with maintained Base operator authentication, RER-provided Managed mail and
 selectable SendGrid or Resend mail for Free and Assisted hosting, are implemented.
 The public source repository is
 [just-every/run-penny](https://github.com/just-every/run-penny). The latest release
-is 0.1.4, the annotated tag `v0.1.4` ([RELEASE.md](RELEASE.md); upgrading from 0.0.0 is
+is 0.2.0, the annotated tag `v0.2.0` ([RELEASE.md](RELEASE.md); upgrading from 0.0.0 is
 [below](#upgrade-from-000)); `main` carries the newest source, which can be ahead of it.
-0.1.4 makes backup, restore and erasure work on RER Managed, where 0.1.3 and earlier refused
-them. **If you are on 0.1.1 or earlier, upgrade now: erasing a person there also deleted other
+0.2.0 restores backups made by earlier versions, schedules releases and status updates, shows
+loop health on Overview and lets the owner set the AI model, budget and privacy. **If you are on 0.1.1 or earlier, upgrade now: erasing a person there also deleted other
 people's records on their requests (fixed in 0.1.2);** [CHANGELOG.md](CHANGELOG.md) says what
 was lost and how to recover it. Wider release obligations are in
 [ACCEPTANCE.md](ACCEPTANCE.md), and local checks do not establish hosted mail
