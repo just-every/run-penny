@@ -1,6 +1,7 @@
 import { workerSettings } from './owner.mjs';
 import { readinessAPI } from './readiness-window.mjs';
 import { assert } from './validation.mjs';
+import { verifySiteRuntime } from './site-runtime.mjs';
 
 const ANNOTATION = /^rer-site:[0-9a-f]{64}$/;
 function refuse(code, worker) { return Object.assign(new Error(code), { resource: `worker:${worker}` }); }
@@ -33,7 +34,7 @@ export async function ownedSiteVersion(api, worker) {
 
 /** Only the upload response and the exact preflight version may appear while
  * Cloudflare's deployment and version reads converge. Never replay the upload. */
-export async function waitForSiteUpload({ api, worker, versionId, fingerprint, previous, window }) {
+export async function waitForSiteUpload({ api, worker, versionId, fingerprint, previous, window, runtime, module }) {
   const bounded = readinessAPI(api, window, 'site-upload-timeout');
   const annotation = `rer-site:${fingerprint}`;
   let lastSeen = null, delay = 2000;
@@ -48,7 +49,16 @@ export async function waitForSiteUpload({ api, worker, versionId, fingerprint, p
         || lastSeen.visible && lastSeen.annotation !== expected
         || lastSeen.versionId === previous?.versionId && lastSeen.deploymentId !== previous.deploymentId)
         throw refuse('owned-resource-replaced', worker);
-      if (lastSeen.current && lastSeen.versionId === versionId && lastSeen.annotation === annotation) return lastSeen;
+      if (lastSeen.current && lastSeen.versionId === versionId && lastSeen.annotation === annotation) {
+        if (!runtime) return lastSeen;
+        try {
+          await verifySiteRuntime(bounded, worker, versionId, runtime, module);
+          return lastSeen;
+        } catch (error) {
+          if (window.remaining() <= 0 || error.name === 'TimeoutError') throw timeout(error);
+          if (error.status !== 404) throw error;
+        }
+      }
     }
     await window.sleep(Math.min(delay, window.remaining()));
     delay = Math.min(delay * 2, 10000);

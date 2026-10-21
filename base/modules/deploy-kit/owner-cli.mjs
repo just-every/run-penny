@@ -102,7 +102,8 @@ export async function main(argv = process.argv.slice(2), env = process.env, {fet
     assert(live && sameDeployment(live, state.receipt.provider), 'owned-resource-replaced');
     const rows = await api.request(`/workers/scripts/${target.worker}/secrets`);
     assert(Array.isArray(rows), 'invalid-secret-list');
-    return {ok:true, origin:target.origin, versionId:live.versionId, retiredSecrets, ownerClaim:state.ownerClaim, liveSecrets:rows.map(row => row.name)};
+    // Native uploaders record their configured app origin with the deployment identity.
+    return {ok:true, origin:state.receipt.origin ?? target.origin, versionId:live.versionId, retiredSecrets, ownerClaim:state.ownerClaim, liveSecrets:rows.map(row => row.name)};
   }
   const current = retiredSecrets.length && Array.isArray(declaration.secrets) ? {...declaration,secrets:declaration.secrets.filter(item => !retiredSecrets.includes(item?.binding))} : declaration;
   artifact ??= await ownerArtifact(root,values.product);

@@ -160,7 +160,11 @@ export function siteNotFoundHtml(identity: EditionIdentity, run: RunData, contra
 }
 
 /** What a seed's site entry returns: each page by path, and the public files they use. */
-export interface SiteBuild { pages: { path: string; html: string }[]; assets: string[] }
+export interface SiteBuild {
+ pages: { path: string; html: string }[]; assets: string[];
+ /** Sections from the same render, using its published heading ids. */
+ searchPages?: { href: string; searchSections: { anchor: string; titlePath: string[]; text: string }[] }[];
+}
 
 /**
  * What `rer build --site` passes to sitePages(): `styles`, the site paths of the

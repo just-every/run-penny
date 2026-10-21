@@ -181,23 +181,68 @@ A seed's run site (`run-<seed>.com`: its marketing homepage, `/run` and docs, wr
 The domain is an apex hostname: no scheme, path, port, upper case or `www.`. The plan (`sitePlan`) names:
 
 - the Worker `<project>-<environment>--site`. Owner Worker names never contain `--`, so it can never be the installed app's Worker (`<project>-<environment>`), and a site deploy never reads or writes the app Worker or any of its resources;
-- its one module, `site-worker.mjs` (`SITE_WORKER`): fixed content Base generates, with no seed code. Its only binding is the assets (`ASSETS`), it runs first on every request (`run_worker_first`), and it has no secrets, no schedules and workers.dev off. A request to `www.<domain>` gets a 301 to `https://<domain>` with path and query kept; every other request is answered from the assets exactly as an assets-only Worker would answer it: the `rer build --site` folder with `html_handling: auto-trailing-slash` (`/run` serves `run.html`) and `not_found_handling: 404-page`;
+- by default its one module, `site-worker.mjs` (`SITE_WORKER`): fixed content Base generates, with no seed code. Its only binding is the assets (`ASSETS`), it runs first on every request (`run_worker_first`), and it has no secrets, no schedules and workers.dev off. A request to `www.<domain>` gets a 301 to `https://<domain>` with path and query kept; every other request is answered from the assets exactly as an assets-only Worker would answer it: the `rer build --site` folder with `html_handling: auto-trailing-slash` (`/run` serves `run.html`) and `not_found_handling: 404-page`;
 - the apex as a Workers Custom Domain, and `www.<domain>` as a second Custom Domain on the same Worker, so the www host has DNS and a certificate and its requests reach the Worker's redirect.
 
 No zone ruleset is read or written. Every request now invokes the Worker: one page view costs one Worker request for the page and one per same-origin file it loads (the default seed's run site: at most 7 per uncached page view).
 
-`rer deploy --site --dry-run` builds the site and prints that plan (`--json`: a `site` event and a result with `dryRun: true`, `deployed: false` and the same `site` object) with no provider request and nothing written, even with `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` set. Without `--dry-run` it needs both inputs. Ownership is read from the provider alone, so a deploy from a fresh checkout (a CI runner with no `.rer/`) recognises the site it deployed before:
+`rer deploy --site --dry-run` builds the site and prints that plan (`--json`: a `site` event and a result with `dryRun: true`, `deployed: false` and the same `site` object) with local build outputs but no provider request or remote write, even with `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` set. Without `--dry-run` it needs both inputs. Ownership is read from the provider alone, so a deploy from a fresh checkout (a CI runner with no `.rer/`) recognises the site it deployed before:
 
 - the Worker is the kit's when its latest deployment serves, at 100%, the Worker's newest version, and that version's message annotation is the kit's `rer-site:<fingerprint>` (every site upload sets it);
 - a Custom Domain is the kit's when its service is the kit's Worker.
 
 A read-only preflight reads the zone (it must be in this account, else `site-zone-missing`), the Worker and the zone's Custom Domains, and refuses before any write: `resource-name-collision` for a Worker of the name whose live version the kit did not upload, or for a hostname attached to another service (or to a Worker that is not the kit's); `owned-resource-replaced` for a kit Worker whose latest deployment is not the kit's upload (a dashboard rollback or a split deployment). It then uploads the assets and the site Worker, checks that the new version is live, turns workers.dev off, attaches each missing hostname, and reads the Worker and both domains back. Both post-upload Worker checks share a 90-second upload window: missing visibility or the exact preflight version waits with backoff until the upload response's version serves alone as newest with its expected fingerprint. A foreign version, changed fingerprint or split deployment refuses immediately. A timeout names the last serving/newest versions and fingerprint. A repeat attaches nothing new. `.rer/deploy/site-<environment>.json` receives a receipt for the person; it is never read. Provider propagation cases are tested against the fake Cloudflare API in `tests/site-provider.mjs`, where every zone ruleset path answers 403.
 
+A seed can opt into docs search through its command adapter's `site.runtime`:
+
+```ts
+runtime: {
+  type: 'docs-search', module: 'docs-search', bindings: ['ASSETS', 'AI'],
+  endpoint: '/docs/search', corpus: '.rer/docs-search/corpus.json',
+}
+```
+
+This selects Base's docs-search implementation rather than seed JavaScript.
+The site Worker adds the query endpoint and the Workers AI binding; its asset
+handling, www redirect, ownership checks and Custom Domains stay the same.
+No application binding, seed-defined ownership annotation or separate Wrangler
+configuration/deployment is accepted. The domain declaration is unchanged.
+Without `site.runtime`, the assets-only path is unchanged.
+
+The renderer produces `pages`, `assets` and
+`searchPages: [{ href, searchSections: [{ anchor, titlePath, text }] }]` from one
+`sitePages` call and writes the latter to the declared staging corpus. Build and
+dry run make no provider or embedding requests. Their plan reports runtime type,
+module, bindings, endpoint, model, pooling, `corpusHash`, module digest and the
+deployment fingerprint; it does not claim vectors exist.
+
+Only real deployment prepares vectors. It uses the corpus parent as its local
+preparation/cache directory and always reads the previous published index from
+`https://<site domain>/docs-search-vectors.json`. Model
+`@cf/baai/bge-base-en-v1.5`, pooling `cls` and 768 dimensions are fixed by the
+Base module. Vectors are reused by model, pooling and chunk hash with valid
+matching dimensions. A previous-index 404 permits a first index; other fetch,
+parse or embedding errors stop before any site publication. The same render's
+assets, completed vector index and query module are then uploaded together in
+one site deployment. There is no second render or separate search deployment.
+
+The UI source is copied from `modules/site/docs-search` under the seed's chosen
+source path, with `site.clients.docsSearch` naming its `client.ts`. The seed
+renders `SearchField`, imports `search.css`, loads the emitted island module and
+provides `--ink`, `--ink-soft`, `--rule` and `--paper`. The rendered page layout
+and copy stay seed-owned. Local builds have no prepared semantic search service.
+
+For CI, the `run-site` environment supplies `CLOUDFLARE_ACCOUNT_ID` from
+`vars.CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` from
+`secrets.CLOUDFLARE_API_TOKEN`. After a frozen install, run the checkout's pinned
+`pnpm exec rer deploy --site`. The guarded template is `export/run-site.yml`.
+
 The token needs, beyond the owner-account permissions above:
 
 | Permission | Scope | Used for |
 | --- | --- | --- |
 | Workers Scripts: Edit | the account | the site Worker upload, its assets, versions and deployments, workers.dev, and Workers Custom Domains (`/workers/domains`) |
+| Workers AI: Read/Edit | the account, docs-search sites only | preparing embeddings and the runtime AI binding |
 | Zone: Read | the run site zones | finding the zone by name |
 | Workers Routes: Edit | the run site zones | Workers Custom Domains, which also create their DNS records and certificates |
 
