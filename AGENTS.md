@@ -80,9 +80,12 @@ First-run setup (`/setup`) is Base's first-run runtime, copied byte-exact to
 `src/core/ui/brand/font-head.ts`. Base's sign-in confirmation and `/setup` wear Penny's
 look through Base's theme hook: `public/rer-theme.css` (brand tokens, Inter Tight
 and `public/brand/penny-mark.svg`), declared in the operator-auth branding and
-passed to `firstRunResponse`. Its record is the installation-owned `oa_first_run` row,
-excluded from portable archives. Penny's self-hosted fonts live in `public/fonts`
-and are linked once from the root document; Base's default font does not apply.
+passed to `firstRunResponse`. The theme holds only what rer's theme reader accepts
+(`--rer-*` tokens and `@font-face` rules); the mark's sizing in those frames lives in
+`public/fonts/fonts.css`, which `/setup` and Base's `/auth` documents link. Its record
+is the installation-owned `oa_first_run` row, excluded from portable archives. Penny's
+self-hosted fonts live in `public/fonts` and are linked once from the root document;
+Base's default font does not apply.
 
 Local development and demos suppress mail silently (DEMO.md). Public internet
 reads run for real in demos; effects reaching people or third-party accounts

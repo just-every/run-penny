@@ -664,7 +664,7 @@
       "executable": false
     },
     "AGENTS.md": {
-      "sha256": "44236e06efeaf2f85ad397eeea0a03330bcf3ca45c5b08b10559ae6c869e4523",
+      "sha256": "7bedef7500637ad7c6796e19cd8987cb689ab5fb6bc7234b6210076dee36a5fd",
       "executable": false
     },
     "base/modules/d1-transport/index.d.mts": {
@@ -2868,7 +2868,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "b3d2f9c772953857871484673b23da92a30433111a00b127e16870e7f99f9b26",
+      "sha256": "cc423a2dd1cefd857d92d9e06ae535180f212236fb0980375570244d265751da",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3076,7 +3076,7 @@
       "executable": false
     },
     "HANDOVER.md": {
-      "sha256": "044679e92616fa09ef3b5fe085582cfbb86428f7758f4718b2e34a64998908ae",
+      "sha256": "40b75faf8031544b2492184afb6612cdb149aac266378b1b8bdfe790abaaa991",
       "executable": false
     },
     "HOMEPAGE-VARIANTS.md": {

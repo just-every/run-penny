@@ -107,7 +107,7 @@ uncertain effects explicitly.
   marks, and the 16-unit drawing for the favicon only. Each drawing fills its grid,
   so a lockup sets `--coin-slot` (the height it gives the mark) and `coin.css`
   narrows the box to the coin; Base's 32px logo square is narrowed the same way in
-  `public/rer-theme.css`. The owner dislikes
+  `public/fonts/fonts.css`. The owner dislikes
   pixel-snapped art on the large coins. The copper stamp is a freehand
   five-point star; the eight-arm asterisk was dropped because it read as another
   company's logo.
@@ -117,10 +117,12 @@ uncertain effects explicitly.
   `<details>` uses the chevron summary classes. The accent reads
   `--penny-brand-accent`, set from `src/branding.json` (copper text tone
   `#ad4a1f`) and the owner's portal branding. `/auth/confirm` and `/setup`
-  wear Penny's look through Base's theme hook (`public/rer-theme.css`);
-  `/__dev/outbox` keeps Base's layout.
+  wear Penny's look through Base's theme hook (`public/rer-theme.css`, which
+  holds only rer's theme grammar) and link `public/fonts/fonts.css` for the mark's
+  sizing; `/__dev/outbox` keeps Base's layout.
 - Fonts are Penny's own: Inter Tight (and Kalam for the drawings), self-hosted in
-  `public/fonts`, linked from the root document and from the first-run page. Base's
+  `public/fonts`, linked from the root document, the first-run page and Base's `/auth`
+  documents. Base's
   default font does not apply, and the type stacks are declared in
   `src/core/ui/brand/tokens.css`.
 - Operators are equals; only native owners configure the embedded editor and portal
