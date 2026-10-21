@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "8215e29a4eff7c46ee30bb5bc249d2ad247714d3677e8bd3410d0b8d40fa1f7d",
+      "sha256": "1236ce724eccf66b04e850de6edc1e3575aeb20a6856d72916c167c71a56d793",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -664,7 +664,7 @@
       "executable": false
     },
     "AGENTS.md": {
-      "sha256": "f335d14c2d9b6667e2cc2f4bc7607c27ad11862f3977fb35775ede07a7da0ed9",
+      "sha256": "768fc39363575ac7fe00f21626798765baeb4d9af09e683d8d40fdc589b3702f",
       "executable": false
     },
     "base/modules/d1-transport/index.d.mts": {
@@ -2868,7 +2868,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "99175a9974c572f0a01b6ad70153aca9d75d0c6cf8ede3a76f64f17e84eb4fef",
+      "sha256": "72de611223ce6987478e4c87a9bca49f5409aa0463c65cc7259a75ab839c80bd",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3464,7 +3464,7 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "08cdf94cfea1e53c3e9fb30988a2131e1dec15e41b9ea29ecbf00e17a9f85b4b",
+      "sha256": "1a29359cd7cd39e3a9bbea891942a2f89efb6a4dbe0c5e42662099fca5cc7bac",
       "executable": false
     },
     "pnpm-lock.yaml": {
@@ -3516,15 +3516,15 @@
       "executable": false
     },
     "README.md": {
-      "sha256": "0405c487d548f9740173edbaeda4d35cf00a69eb8adba8b5c5d3513ecbdba23d",
+      "sha256": "056e9a81e6a788b841055de3e4515b7ae840c5a6fbe13cfe30c79252a9287ac2",
       "executable": false
     },
     "RELEASE.json": {
-      "sha256": "81669463207003a16a40fb10d3cf3c12409130aa6c3ccfda66af1a6a6264719e",
+      "sha256": "c27d4eb5c175b1ce3c173f2be09f91cfcf370775229058b90c32029d2224be13",
       "executable": false
     },
     "RELEASE.md": {
-      "sha256": "0dcc118298381db7ce669d6dca0df086668b61f44e79e497bed053a92ff69fab",
+      "sha256": "c908eeb1bb108c55f60c617122001082b74fc8ca4a6abc40779675161c7950e0",
       "executable": false
     },
     "rer-project.json": {
@@ -3948,7 +3948,7 @@
       "executable": false
     },
     "seed.json": {
-      "sha256": "b177160639b26f20ea1a4315f718f884146bdad3fe8a8e05d0442e64d8bcdbea",
+      "sha256": "ed522bf957c1d2a2ae4cb8da0c8c7adc5c09f674750b3e06ea252f86b8a829a0",
       "executable": false
     },
     "src/base-mail.ts": {

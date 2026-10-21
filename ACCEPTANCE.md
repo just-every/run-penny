@@ -17,8 +17,8 @@ CONTRACT.md is the target contract. [Target contract acceptance](#target-contrac
 
 ## Unmet first-release obligations
 
-Penny 0.2.0 is public at `just-every/run-penny` (tag `v0.2.0`; earlier releases
-`v0.1.4`, `v0.1.3`, `v0.1.2`, `v0.1.1`, `v0.1.0` and `v0.0.0`); later heads are unreleased source. A named passing test or exact-head receipt
+Penny 0.2.1 is public at `just-every/run-penny` (tag `v0.2.1`; earlier releases
+`v0.2.0`, `v0.1.4`, `v0.1.3`, `v0.1.2`, `v0.1.1`, `v0.1.0` and `v0.0.0`); later heads are unreleased source. A named passing test or exact-head receipt
 satisfies only its bounded claim. Uncovered, local-only and provider-limited
 requirements remain unmet; a table, build, listing or historical receipt cannot
 close them. CONTRACT.md and BASELINE.md retain their full authority.

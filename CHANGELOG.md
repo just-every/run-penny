@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## 0.2.1 — 2026-10-21
+
+**Fix: a local `rer import` or `rer export` on a database RER Platform migrated stopped before moving any data. Penny 0.2.0 and every earlier version are affected.**
+
+RER Managed (RER Platform) migrates Penny's database with its own runner and records each migration in its `rer_migrations` ledger, which Wrangler cannot read. A local `rer import` or `rer export` ran `wrangler d1 migrations apply` regardless, so Wrangler re-applied every migration and the command stopped at "Applying local migrations" with `table operators already exists`, before Penny's transfer started; nothing was restored or exported, and the Data page in the app was not affected. A local transfer now reads the migration ledger first (`scripts/portability/ledger.mjs`, Base's own check). On a Platform-migrated database it leaves migrations to Platform's runner and runs no Wrangler migration, and it refuses before writing anything with `migration_ledger:unapplied:<file>` until Platform has applied every migration file of this version (matched by SHA-256), or with `migration_ledger:multiple:rer_migrations` when a Wrangler ledger sits beside it. Any other database is migrated by Wrangler before the transfer, as before. A backup made by an earlier Penny (the catalogue's d4c99123) and a backup made by this version both restore with every archived row, cell and original file intact into Platform-migrated and native installations, and back up again from there. Uses rer 0.2.77; recorded Base copies are unchanged. No migrations: update the source and run `rer install` (hosted installations: `rer deploy`); nothing else to do.
+
+Known issues: local `rer setup` and `rer dev` still migrate with Wrangler, so a local database carrying Platform's migration ledger is supported for backup and restore only, not for local development. SendGrid has no provider duplicate suppression; ambiguous sends remain held for review. Live Canny/UserVoice/Zendesk provider acceptance and whole-product acceptance beyond the core loop remain unproved.
+
+Product screenshot: `public/brand/releases/penny-0.2.0-1440.png` (the interface is unchanged since 0.2.0).
+
 ## 0.2.0 — 2026-10-21
 
 Older backups now restore with their original data and files, releases and status updates can be scheduled, Overview shows loop health, and the owner sets the AI model, budget and privacy. Update the source and run `rer install` then `rer setup`, which applies the additive migrations 0086 and 0087; hosted installations use `rer deploy`. No owner reconfiguration is required: AI stays refused at the initial $0 monthly cap. Restore into an empty installation before setup and keep the matching latest erasure journal.
