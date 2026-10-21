@@ -8,6 +8,8 @@ import { createUlid } from '@/core/shared/ulid'
 import { NativeError } from './native-tokens'
 import branding from '@/branding.json'
 import { operatorDocumentReads } from '@/core/app/request-context.server'
+import { fontDocumentResponse } from '@/base/font-response'
+import { pennyDocumentFonts } from '@/core/ui/brand/font-head'
 
 export interface AuthenticatedOperator { readonly id: string; readonly email: string; readonly displayName: string }
 type Environment = { Bindings: AppBindings; Variables: { runtime: PennyRuntime } }
@@ -66,7 +68,8 @@ export function registerOperatorAuthRoutes(app: Hono<Environment>): void {
     // Penny has no roles, and review/password entry points are not exposed.
     // The provider routes answer only once the owner has linked an Auth install and enabled it.
     if (!['/auth/session','/auth/confirm','/auth/bootstrap','/auth/magic-link','/auth/signout','/auth/settings/identity','/auth/setup-complete'].includes(c.req.path) && !c.req.path.startsWith('/auth/oidc/')) return c.json({error:'not_found'},404)
-    return (await createAuthHandler(operatorAuth(c.get('runtime')))(c.req.raw))!
+    // Base's themed auth documents link only rer-theme.css; Penny's mark sizing lives in fonts.css, as on /setup.
+    return pennyDocumentFonts((await fontDocumentResponse(await createAuthHandler(operatorAuth(c.get('runtime')))(c.req.raw)))!)
   })
   app.post('/api/auth/magic-link', async c => forward(c.req.raw, '/auth/magic-link', c.get('runtime')))
   app.post('/api/auth/sign-out', async c => forward(c.req.raw, '/auth/signout', c.get('runtime')))

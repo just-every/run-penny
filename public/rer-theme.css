@@ -56,15 +56,3 @@
   --rer-radius: 14px;
   --rer-logo: url('/brand/penny-mark.svg');
 }
-/* Base draws --rer-logo in a 32px square. The mark is the coin alone and fills its drawing, so the square narrows to 32px / 1.2
-   (26.7px, which draws the same 25px coin as ever) and keeps its 32px height, which keeps the lockup's height. The margins pull the
-   drawing's own 4.25% edge back so the coin sits flush against Base's 12px gap to the name. Higher specificity than Base's inline rule. */
-html.rer-themed .rer-brand::before,
-html.rer-themed .brand::before {
-  width: calc(32px / 1.2);
-  margin-inline: calc(32px / 1.2 * -0.0425);
-}
-/* The setup frame's 18px name sits about 0.9px above the middle of its 32px line, so its coin rises 0.8px to stay centred on it. */
-html.rer-themed .rer-brand::before {
-  background-position: center calc(50% - 0.8px);
-}

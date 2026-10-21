@@ -3484,7 +3484,7 @@
       "executable": false
     },
     "public/fonts/fonts.css": {
-      "sha256": "5290fea96c337f5f64610ddc5a5d97c605cbcd1e4474af6c1c106b3b756eaf1a",
+      "sha256": "ca85067bac37e706a59eab4821743ef21f9fcbd98f0194ddf5ec4fc44fcd5ff8",
       "executable": false
     },
     "public/fonts/inter-tight/inter-tight-latin-wght-normal.woff2": {
@@ -3504,7 +3504,7 @@
       "executable": false
     },
     "public/rer-theme.css": {
-      "sha256": "0a8dfb89db62a3d790211481f9fa40590e9374aaf2a16dc371c573d26ecec554",
+      "sha256": "8ac6b84e3492d0a6e62eab3f26a642aba9844b44c67b5c6e48521e14bebadabb",
       "executable": false
     },
     "README.md": {
@@ -4340,7 +4340,7 @@
       "executable": false
     },
     "src/core/features/auth/operator.ts": {
-      "sha256": "9ded491310c5b7a5f02d6bf450d05658442e9090c84ef4e0b04774e1bc3c68eb",
+      "sha256": "595607f7dbd1b792404d11bef03a070a887b066d51c9769e8279f5443a84690a",
       "executable": false
     },
     "src/core/features/auth/owner-claim.ts": {
