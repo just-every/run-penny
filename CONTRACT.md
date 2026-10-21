@@ -627,7 +627,7 @@ Payroll, general project/work management and monitoring/observability stay outsi
 
 ## Status
 
-Judged from the code and tests at commit `18a0c69806defd107f17a3ed8511aaa66749cde0` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+Judged from the code and tests at commit `6b89f6b5ca78587ef61ed537765c229fe5869ebb` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 AI-006 was completed on 21 October 2026: requests, decisions and accounts have editable cited summaries; comments and inbox evidence have reply drafts, with dropped-reference disclosure, private-value flags, current-authority checks and explicit posting through the existing discussion path. Drafting never sends itself. Current evidence and future obligations: AI-011 retains measured quality (no evaluation bars apply to AI-006), and missing ROLE-001 retains restricted commercial-field roles, including draft context and publication checks; current native operators share product access.
 
