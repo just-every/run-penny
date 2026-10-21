@@ -2932,7 +2932,7 @@
       "executable": false
     },
     "docs/data-ownership.md": {
-      "sha256": "10f817ef6459226896d7cbb8db24d0441938a44ab58fd0696f9bf7a5f88e88cb",
+      "sha256": "61f241cb1de5366c9bede1349e57c5f8799b9ed9650320b2415aa366975b6e7e",
       "executable": false
     },
     "docs/DATA.md": {
@@ -3464,11 +3464,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "2cfd72070305534e3558722a327e6462e2fe2d88ffeec96ee71ee28950afd78a",
+      "sha256": "08cdf94cfea1e53c3e9fb30988a2131e1dec15e41b9ea29ecbf00e17a9f85b4b",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "87d05337fedf7859297fcbd3b01a6a36e0b0eb82a9c8c140b489170c5bf93185",
+      "sha256": "d7e826cfa989ee99d390758f846acb419c2acb1bab81753c051a92d0df15493e",
       "executable": false
     },
     "public/brand/band.svg": {
@@ -3828,7 +3828,7 @@
       "executable": false
     },
     "scripts/portability/adapter.mjs": {
-      "sha256": "55e1d510cbd6f5140e8e20ff113698fcc5b38244158a8d77e7fe95e54c6672d9",
+      "sha256": "3a1d173e582bf9cc8c142a464bf0cc81adcabdf7f3107687a9c2a061de746557",
       "executable": false
     },
     "scripts/portability/archive-journal.d.mts": {
@@ -3849,6 +3849,10 @@
     },
     "scripts/portability/failure.ts": {
       "sha256": "fb91629f3528b3a2c26c77aeda00357757652f63f742a1de20f9d36de21aaa6b",
+      "executable": false
+    },
+    "scripts/portability/ledger.mjs": {
+      "sha256": "ba7f36eefc42e6431370fcf4ce23928113d3ac502447b09ca1b493f16a67a0af",
       "executable": false
     },
     "scripts/portability/local-journal.ts": {
@@ -7900,7 +7904,7 @@
       "executable": false
     },
     "tests/installer/older-archive.test.mjs": {
-      "sha256": "9a4adaa7e1e5ac97486ff1b076b084a540f66353b2fa6eadeb702dd848c2e929",
+      "sha256": "1b0d57b3a298f588552d22688a39a97d325f61bedac45c1d95248f305fcb7cbe",
       "executable": false
     },
     "tests/installer/owner-fixture.mjs": {

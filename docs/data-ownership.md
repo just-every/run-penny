@@ -501,6 +501,15 @@ migrations that only add tables, columns or indexes, or whose backfills it repla
 migration refuses the restore with `schema_mismatch`, before anything is written; rows are never
 silently upgraded.
 
+A local `rer export` or `rer import` first reads the database's migration ledger
+(`scripts/portability/ledger.mjs`, Base's own check). A database RER Platform migrated records its
+migrations in `rer_migrations`, which Wrangler cannot read, so Platform's runner stays its only
+migration authority: the transfer runs no Wrangler migrations there, and refuses with
+`migration_ledger:unapplied:<file>` until Platform has applied every migration file of this checkout
+(matched by SHA-256), or with `migration_ledger:multiple:rer_migrations` when a Wrangler ledger sits
+beside it. Both refusals come before anything is written. Any other database is migrated by Wrangler
+before the transfer, as before.
+
 Migration 0034 adds reviewed bundle/receipt metadata, exact original chunks and
 native revision fences for conflict-preserving undo. Migration 0035 adds the
 withdrawn-original state, installation-only resumable erasure worklist and
