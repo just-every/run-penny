@@ -578,7 +578,7 @@ landing, and none of this is hosted proof.
 
 ## Target contract acceptance (18 October 2026)
 
-Judged from the code and tests at commit `30623ccdbf5b182a5b429cfb1079042f4d4b8d43` (22 October 2026).
+Judged from the code and tests at commit `1c263d670f2658c399418b4fdf333fe389c91141` (22 October 2026).
 
 CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence and status below agree with CONTRACT.md's Status table, reconciled against main `e3292a8a87bc48a4f6981ffd3e241d76b44afc2e` (21 October 2026). The first buyer review (round 1) added OPS-007, CAP-019–CAP-022, WIDGET-007, AI-011, REQ-033–REQ-035, PRIO-006, DELIV-009, DELIV-010, NOTIFY-008–NOTIFY-010 and MIG-007 and sharpened the rows it names. The second buyer review (round 2) added OPS-008, REQ-036, REQ-037, ROAD-014, REL-018, NOTIFY-011 and NOTIFY-012, added OPS-005's timezone step, and sharpened REQ-016, PRIO-002, TRIAGE-002, ROAD-006, REL-001, REL-002, NOTIFY-001, NOTIFY-002 and MIG-001. The third buyer review (round 3) added WIDGET-008, REQ-038–REQ-040 and NOTIFY-013, expanded INT-007 to the full portal brand, and sharpened OPS-001, OPS-005, ROLE-004, WIDGET-002, WIDGET-006, REQ-033, REQ-012, ROAD-014, TRIAGE-005, NOTIFY-008, NOTIFY-009, NOTIFY-011 and MIG-006. `done` names the passing test through a public door; `partial` and `missing` name the journey or test that would close the clause. Provider fixtures stand only at the paid or network edge, and a replacement claim for any incumbent still requires a tested real owner export. This section adds requirements; it does not reopen the bounded receipts above.
 
@@ -586,13 +586,13 @@ Current entries include the shipped setup and workspace clocks, request status c
 
 REL-014 adds operator-scheduled releases and ROAD-008 status updates with a retained UTC instant and entered IANA timezone, cancellation, current publication checks, scheduler audit and durable in-app author notices on failure. Clock-advanced Worker proof and the 1440/390 browser controls are named below; hosted Cron execution and inbox delivery still need their own receipts. REL-018 inherits the scheduling, cancellation and failure behavior for announcements and request targets when those entry types ship, and remains missing.
 
-**Counts:** 111 done, 68 partial, 68 missing (247 clauses).
+**Counts:** 112 done, 67 partial, 68 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
-| HOME-001 | partial | The installed board answers at `/` and `/portal/feedback` with the configured description and no operator data (route review, both widths). Gap: `route-review.mjs` is not loaded by push Verify or the named nightly job; full acceptance for configured portal identity, description and public-only content is not asserted by the running tests. | `tests/browser/route-review.mjs` |
+| HOME-001 | partial | The installed board answers at `/` and `/portal/feedback` with the configured description and no operator data (route review, both widths). Gap: owner-configured workspace identity and a changed portal description have no passing assertion. | `tests/browser/route-review.mjs` — push Verify shard rich-changelog |
 | HOME-002 | partial | The run site's built landing page at both widths with no cross-origin request, cookie or workspace read; no test reads the built site yet. | `src/site/pages.tsx` |
-| DOCS-001 | partial | Docs routes render from the manifest; an unlisted Markdown file or broken link fails the build. Gap: `route-review.mjs` is not loaded by push Verify or the named nightly job; full acceptance for public documentation navigation, content and privacy is not asserted by the running tests. | `tests/browser/route-review.mjs`; `docs/site.json` |
+| DOCS-001 | partial | Docs routes render from the manifest; an unlisted Markdown file or broken link fails the build. Gap: manifest navigation order, rejection of unlisted Markdown and broken links, and session/cookie isolation have no passing assertion. | `tests/browser/route-review.mjs` — push Verify shard rich-changelog; `docs/site.json` |
 | OPS-001 | partial | Operators share product access; Owners and Admins can configure workspace clocks, while other settings remain owner-only. Required: one operator per role attempts every guarded action through its route and UI; a Viewer is refused every write with 403; a Contributor captures evidence, records a proxy vote and comments internally but is refused moderation, publication, commitment, settings and commercial fields; a Product manager is refused settings, integrations and roles; an Admin is refused handover, export and erasure; each refusal changes nothing; a role change applies on the next request. | `tests/base/auth.test.ts:83` |
 | OPS-002 | done | Invite, remove and owner handover with revocation and audit. | `tests/base/auth.test.ts:83`; `tests/base/auth.test.ts:132`; `tests/base/auth.test.ts:160` |
 | OPS-003 | partial | Overview figures link to their records; empty sections name the creating action. Gap: `operator-pages.mjs full mode` is not loaded by push Verify or the named nightly job; full acceptance for all overview figures, linked records and empty-state actions is not asserted by the running tests. | `tests/browser/operator-pages.mjs` |
@@ -746,7 +746,7 @@ REL-014 adds operator-scheduled releases and ROAD-008 status updates with a reta
 | REL-007 | partial | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression. | `tests/base/release-custody.test.ts` |
 | REL-008 | done | Snapshot recipients answer per target; changes append revisions. | `tests/base/penny-releases.test.ts` |
 | REL-009 | done | Coverage over original recipients with private links. | `tests/base/penny-releases.test.ts` |
-| REL-010 | partial | Empty feed shows no placeholder entry. Gap: `route-review.mjs` is not loaded by push Verify or the named nightly job; full acceptance for empty public updates feed with no draft or placeholder is not asserted by the running tests. | `tests/browser/route-review.mjs` |
+| REL-010 | done | Empty feed shows no placeholder entry. | `tests/browser/route-review.mjs` — checkEmptyRoutes, push Verify shard rich-changelog, empty updates at 1440/390 with zero release articles |
 | REL-011 | done | Hard bounce and complaint suppress; soft bounce fails one delivery. | `tests/runtime/mail-events-restart.test.mjs` |
 | REL-012 | done | Subscribe and unsubscribe keep votes and follows. | `tests/base/penny-releases.test.ts` |
 | REL-013 | done | Delivery states never move backward or double count. | `tests/base/release-custody.test.ts` |

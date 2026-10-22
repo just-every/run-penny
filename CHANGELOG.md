@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Load route review in push Verify, keep browser journeys on the pinned headless shell, and consolidate commitment validation to a 246-registration ceiling.
+- Wrap long linked account names and release-planning item labels within operator cards at phone widths.
+
 - Retain the admitted email forwarder in portable evidence provenance and label body attribution as stated in the forward; accept structured threaded forwards while refusing notification replies.
 - Link approved roadmap items to their published releases on cards and detail pages.
 - Separate simulated requester/operator client addresses, remove retired journey modules, and reconcile clause status with assertions loaded by verification.

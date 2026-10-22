@@ -627,7 +627,7 @@ Payroll, general project/work management and monitoring/observability stay outsi
 
 ## Status
 
-Judged from the code and tests at commit `30623ccdbf5b182a5b429cfb1079042f4d4b8d43` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+Judged from the code and tests at commit `1c263d670f2658c399418b4fdf333fe389c91141` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 AI-008 is partial on 22 October 2026: deterministic owner rules mark supported captures before storage, preserve marked text through D1 search and portable export/restore, and provide audited, previewed irreversible evidence-wording reapplication. Migration 0090 upgrades populated previous-head data without rewriting it. The first untuned redaction-v1 run on 210 synthetic excerpts measured precision and recall of 1.00 for each default kind. Rule settings and marked items have 1440/390 browser proof. This is a deterministic rule-only implementation; optional model detection is not built and AI-010 is unchanged. Binary attachments are not rewritten. Operator evidence, CAP-009 email capture and native portal submission use guarded before-storage rules. AI-011 remains missing and inherits extending the minimal redaction-v1 runner. Gap: saved-import originals and learning source envelopes are not redacted before storage. Explicit reapplication currently covers at most 200 evidence wording versions, not every stored transcript or copied request field; larger stores need paged reapplication. The full before-storage and reapplication promises remain open.
 
@@ -673,15 +673,15 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 91 | 23 | 0 | 114 |
+| Published | 92 | 22 | 0 | 114 |
 | Target and push further | 20 | 45 | 68 | 133 |
-| All | 111 | 68 | 68 | 247 |
+| All | 112 | 67 | 68 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
-| `HOME-001` | Public feedback portal | published | partial | `tests/browser/route-review.mjs` | Gap: `route-review.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for configured portal identity, description and public-only content. |
+| `HOME-001` | Public feedback portal | published | partial | `tests/browser/route-review.mjs` — push Verify shard rich-changelog | Gap: owner-configured workspace identity and a changed portal description have no passing assertion. |
 | `HOME-002` | Public product landing | published | partial | `src/site/pages.tsx` | The run site's built landing page at both widths with no cross-origin request, cookie or workspace read; no test reads the built site yet. |
-| `DOCS-001` | Public documentation | published | partial | `tests/browser/route-review.mjs`; `docs/site.json` | Gap: `route-review.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for public documentation navigation, content and privacy. |
+| `DOCS-001` | Public documentation | published | partial | `tests/browser/route-review.mjs` — push Verify shard rich-changelog; `docs/site.json` | Gap: manifest navigation order, rejection of unlisted Markdown and broken links, and session/cookie isolation have no passing assertion. |
 | `OPS-001` | Roles | published | partial | `tests/base/auth.test.ts` (line 83) | one operator per role attempts every guarded action through its route and UI; a Viewer is refused every write with 403; a Contributor captures evidence, records a proxy vote and comments internally but is refused moderation, publication, commitment, settings and commercial fields; a Product manager is refused settings, integrations and roles; an Admin is refused handover, export and erasure; each refusal changes nothing; a role change applies on the next request. |
 | `OPS-002` | Management | published | done | `tests/base/auth.test.ts` (line 83); `tests/base/auth.test.ts` (line 132); `tests/base/auth.test.ts` (line 160) |  |
 | `OPS-003` | Overview | published | partial | `tests/browser/operator-pages.mjs` | Gap: `operator-pages.mjs full mode` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for all overview figures, linked records and empty-state actions. |
@@ -835,7 +835,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REL-007` | Idempotent delivery and provider events | published | partial | `tests/base/release-custody.test.ts` | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression. |
 | `REL-008` | Outcome response | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-009` | Outcome coverage | published | done | `tests/base/penny-releases.test.ts` |  |
-| `REL-010` | Empty feed | published | partial | `tests/browser/route-review.mjs` | Gap: `route-review.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for empty public updates feed with no draft or placeholder. |
+| `REL-010` | Empty feed | published | done | `tests/browser/route-review.mjs` — checkEmptyRoutes, push Verify shard rich-changelog, empty updates at 1440/390 with zero release articles |  |
 | `REL-011` | Bounces and complaints | published | done | `tests/runtime/mail-events-restart.test.mjs` |  |
 | `REL-012` | Update subscription | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-013` | Delivery states | published | done | `tests/base/release-custody.test.ts` |  |

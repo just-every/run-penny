@@ -46,15 +46,15 @@ cannot recover the original text from Penny.
 
 ## Evidence reconciliation · 22 October 2026
 
-Current contract counts: 111 done, 68 partial, 68 missing (247 clauses).
+Current contract counts: 112 done, 67 partial, 68 missing (247 clauses).
 
 CAP-009 is done against provider-edge fixtures (22 October 2026). Direct or BCC copies without recoverable forwarded headers are attributed to the admitted sender and marked not forwarded. Message-ID digests stay after erasure so a replay cannot recreate an item. Refusals keep only non-personal reason counts. Hosted Email Routing, a real domain and live mail acceptance: NOT RUN. Admission depends on the `Authentication-Results: mx.cloudflare.net;` header, which only a hosted receipt can confirm. HTML-only mail is refused (`excerpt_size_or_plain_text_required`). Captured source provenance records "Forwarded by <admitted sender>"; a recovered body address is labeled "Sender stated in forward".
 
 | Clause | Status | Evidence boundary |
 | --- | --- | --- |
-| HOME-001 | partial | `route-review.mjs` is not loaded by Verify/nightly; configured portal identity, description and public-only content needs complete running assertions. |
-| DOCS-001 | partial | `route-review.mjs` is not loaded by Verify/nightly; public documentation navigation, content and privacy needs complete running assertions. |
-| REL-010 | partial | `route-review.mjs` is not loaded by Verify/nightly; empty public updates feed with no draft or placeholder needs complete running assertions. |
+| HOME-001 | partial | `tests/browser/route-review.mjs` — push Verify shard rich-changelog. Gap: owner-configured workspace identity and a changed portal description have no passing assertion. |
+| DOCS-001 | partial | `tests/browser/route-review.mjs` — push Verify shard rich-changelog; `docs/site.json`. Gap: manifest navigation order, rejection of unlisted Markdown and broken links, and session/cookie isolation have no passing assertion. |
+| REL-010 | done | `tests/browser/route-review.mjs` — checkEmptyRoutes, push Verify shard rich-changelog, empty updates at 1440/390 with zero release articles. |
 | EVID-002 | partial | `operator-pages.mjs full mode via operator-pages-decisions.mjs` is not loaded by Verify/nightly; complete recorded provenance and nullable attribution needs complete running assertions. |
 | REQ-029 | partial | `operator-pages.mjs full mode via operator-pages-decisions.mjs` is not loaded by Verify/nightly; operator authorship, evidence links and explicit publication needs complete running assertions. |
 | ROAD-002 | partial | `operator-pages.mjs full mode via operator-pages-decisions.mjs` is not loaded by Verify/nightly; all internal roadmap fields and linked context needs complete running assertions. |
