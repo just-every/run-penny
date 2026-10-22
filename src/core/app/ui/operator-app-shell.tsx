@@ -2,7 +2,7 @@ import {MentionNotices} from '@/core/features/discussion/mention-notices'
 import {WorkspaceClockPrompt} from '@/core/features/settings/ui/workspace-clock-settings'
 import {PostalAddressPrompt} from '@/core/features/settings/ui/postal-address-prompt'
 import { ReviewNotifications } from '@/core/features/notifications/ui/review-notifications'
-import { useState } from 'react'
+import { useRef } from 'react'
 import { Link, Outlet, useLocation } from '@tanstack/react-router'
 import { publicLandingConfig } from '@/core/app/extension-config'
 import { BrandRoot } from '@/core/ui/app/BrandRoot'
@@ -67,7 +67,7 @@ function Brand({ small = false }: { readonly small?: boolean }) {
 }
 
 export function OperatorAppShell() {
-  const [isMenuOpen, setMenuOpen] = useState(false)
+  const menu = useRef<HTMLDetailsElement>(null)
 
   return (
     <BrandRoot className="penny-workspace relative">
@@ -85,9 +85,9 @@ export function OperatorAppShell() {
           <Brand small />
           <div className="flex shrink-0 items-center gap-1 whitespace-nowrap">
             <SignOutButton className="inline-flex min-h-11 items-center rounded-full px-2 text-base text-penny-soft transition-colors hover:text-penny-ink sm:px-3" />
-            <details className="relative" open={isMenuOpen} onToggle={(event) => setMenuOpen(event.currentTarget.open)}>
+            <details ref={menu} className="relative">
               <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border border-penny-ink px-4 text-base font-medium text-penny-ink transition-colors hover:bg-penny-ink/6 [&::-webkit-details-marker]:hidden"><Icon name="menu" className="size-5" />Menu</summary>
-              <div className="absolute right-0 top-[calc(100%+0.5rem)] w-60 rounded-xl border border-penny-line bg-penny-card p-2 shadow-[0_12px_32px_rgb(92_62_32_/_0.14)]"><NavigationLinks onNavigate={() => setMenuOpen(false)} /></div>
+              <div className="absolute right-0 top-[calc(100%+0.5rem)] w-60 rounded-xl border border-penny-line bg-penny-card p-2 shadow-[0_12px_32px_rgb(92_62_32_/_0.14)]"><NavigationLinks onNavigate={() => { if (menu.current) menu.current.open = false }} /></div>
             </details>
           </div>
         </div>

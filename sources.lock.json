@@ -2868,7 +2868,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "378d8f5d5cf9a3c766566718c34e793a8c48bd1129dda8ca540e014d95bd3e94",
+      "sha256": "f52e68cafb7a904013778133a91a1d4b897019e6dabc47c1a7f5bea770f541a0",
       "executable": false
     },
     "CLAUDE.md": {
@@ -4176,7 +4176,7 @@
       "executable": false
     },
     "src/core/app/ui/operator-app-shell.tsx": {
-      "sha256": "6a8e9a5793bc12d8216b04cf2adb9238681df01b07ce28dae0fb1b69be83ea42",
+      "sha256": "8e335f1dc5d559a86a1e49c7f5c9798cf870c2bf7958e8b3efe486494b5bc911",
       "executable": false
     },
     "src/core/app/ui/operator-format.ts": {
