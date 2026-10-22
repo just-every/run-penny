@@ -578,7 +578,7 @@ landing, and none of this is hosted proof.
 
 ## Target contract acceptance (18 October 2026)
 
-Judged from the code and tests at commit `673965f9291b9cff5ad35c428398bbe3e74bb4b7` (22 October 2026).
+Judged from the code and tests at commit `30623ccdbf5b182a5b429cfb1079042f4d4b8d43` (22 October 2026).
 
 CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence and status below agree with CONTRACT.md's Status table, reconciled against main `e3292a8a87bc48a4f6981ffd3e241d76b44afc2e` (21 October 2026). The first buyer review (round 1) added OPS-007, CAP-019–CAP-022, WIDGET-007, AI-011, REQ-033–REQ-035, PRIO-006, DELIV-009, DELIV-010, NOTIFY-008–NOTIFY-010 and MIG-007 and sharpened the rows it names. The second buyer review (round 2) added OPS-008, REQ-036, REQ-037, ROAD-014, REL-018, NOTIFY-011 and NOTIFY-012, added OPS-005's timezone step, and sharpened REQ-016, PRIO-002, TRIAGE-002, ROAD-006, REL-001, REL-002, NOTIFY-001, NOTIFY-002 and MIG-001. The third buyer review (round 3) added WIDGET-008, REQ-038–REQ-040 and NOTIFY-013, expanded INT-007 to the full portal brand, and sharpened OPS-001, OPS-005, ROLE-004, WIDGET-002, WIDGET-006, REQ-033, REQ-012, ROAD-014, TRIAGE-005, NOTIFY-008, NOTIFY-009, NOTIFY-011 and MIG-006. `done` names the passing test through a public door; `partial` and `missing` name the journey or test that would close the clause. Provider fixtures stand only at the paid or network edge, and a replacement claim for any incumbent still requires a tested real owner export. This section adds requirements; it does not reopen the bounded receipts above.
 
