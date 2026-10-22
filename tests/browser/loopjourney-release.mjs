@@ -2,7 +2,49 @@ import assert from 'node:assert/strict'
 import { expect } from '@playwright/test'
 import { pathToFileURL } from 'node:url'
 import { moderationJourney } from './moderation-runtime.mjs'
-import { save } from './loopjourney-steps.mjs'
+async function boundedStep(page, label, run, { timeout = 30_000, details = () => ({}) } = {}) {
+  let timer
+  const started = Date.now()
+  console.log(`[E.1] ${label} started`)
+  try {
+    const result = await Promise.race([
+      Promise.resolve().then(run),
+      new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(`${label} exceeded ${timeout}ms`)), timeout) }),
+    ])
+    console.log(`[E.1] ${label} passed (${Date.now()-started}ms)`)
+    return result
+  } catch (error) {
+    const diagnostic = { phase: label, elapsedMs: Date.now()-started, document: new URL(page.url()).pathname, pageClosed: page.isClosed(), ...details() }
+    console.error(`[E.1] Journey failure: ${JSON.stringify(diagnostic)}`)
+    throw new Error(`${label} failed; diagnostics: ${JSON.stringify(diagnostic)}`, { cause: error })
+  } finally { clearTimeout(timer) }
+}
+async function save(page, scope, button, path) {
+  const state = { path, method: null, status: null, responseReceived: false, requestFinished: false, requestFailed: false }
+  const matches = request => new URL(request.url()).pathname === path && request.method() !== 'GET'
+  const finished = request => { if(matches(request)) state.requestFinished = true }
+  const failed = request => { if(matches(request)) state.requestFailed = true }
+  page.on('requestfinished', finished)
+  page.on('requestfailed', failed)
+  try {
+    const response = await boundedStep(page, `${button}: click and response`, async () => {
+      const pending = page.waitForResponse(r => matches(r.request()), { timeout: 30_000 })
+      // Observe both promises immediately, including when the click itself fails.
+      const [, response] = await Promise.all([scope.getByRole('button', {name:button,exact:true}).click({timeout:30_000}), pending])
+      Object.assign(state, { method: response.request().method(), status: response.status(), responseReceived: true })
+      return response
+    }, { details: () => state })
+    // Response bodies have no Playwright deadline; a committed write must still
+    // return its real JSON before this UI action can count as successful.
+    const body = await boundedStep(page, `${button}: response JSON`, () => response.json(), { details: () => state })
+    assert.equal(response.ok(),true,`[DEC-001/EVID-001/ROAD-001] UI action ${button} returned ${response.status()}: ${body.message ?? ''}`)
+    return body
+  } finally {
+    page.off('requestfinished', finished)
+    page.off('requestfailed', failed)
+  }
+}
+
 
 export const releaseTitle = 'Onboarding progress is live'
 const releaseBody = 'You can now see each onboarding step and what needs attention.'

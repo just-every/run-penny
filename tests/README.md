@@ -1,8 +1,9 @@
 # Tests
 
-The seed cap is 200 tests. Count expanded framework cases, imported registrations
-and each executable browser journey; exclude helpers and repeated screenshots or
-viewports. Keep tests through routes, Worker exports, commands and built pages,
+The seed cap is 255 tests, as justified in `test-budget.json`. Count one framework
+registration per test, including imported registrations and each executable browser
+journey; a data-driven matrix asserting one behavior counts once. Exclude helpers
+and repeated screenshots or viewports. Keep tests through routes, Worker exports, commands and built pages,
 with provider fixtures at the network edge.
 
 Run the relevant explicit package commands after a change:

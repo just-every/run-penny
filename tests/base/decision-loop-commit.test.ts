@@ -3,7 +3,7 @@ import { applyD1Migrations } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeAll,describe,expect,inject,it } from 'vitest'
 import type { OperatorDecisionBrief } from '../../src/core/shared/api/operator'
-import { seedLoop,request,json,evidence,decision,bet,link,row,ready,commitInput,operatorId,stamp } from './decision-loop-fixture'
+import { seedLoop,request,json,evidence,decision,bet,link,row,ready,commitInput,operatorId,stamp,publicRequest } from './decision-loop-fixture'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop()})
 const snapshots=async(id:string)=>(await env.DB.prepare('SELECT * FROM decision_bet_snapshots WHERE decision_revision_id=? ORDER BY candidate_bet_id').bind(id).all()).results
 describe('Accountable commitment',()=>{
@@ -18,10 +18,23 @@ describe('Accountable commitment',()=>{
   const version='metric-current-version';await env.DB.prepare('INSERT INTO evidence_versions(id,evidence_id,version_number,wording,edited_by_operator_id,created_at,updated_at) VALUES(?,?,2,?,?,?,?)').bind(version,e.id,'Latest original wording',operatorId,stamp,stamp).run()
   const brief=await json<OperatorDecisionBrief>(request(`/api/operator/decisions/${d.slug}`));expect(brief).toMatchObject({state:'ready',evidenceCount:3,accountCount:1});expect(brief.bets.find(item=>item.id===a.id)?.metrics).toEqual({supportingCount:2,contradictingCount:1,affectedAccountCount:1,affectedRequesterCount:1,latestSupportAt:'2026-10-08T00:30:00Z'})
   const evidenceBefore=await row('evidence_items',e.id),versionBefore=await row('evidence_versions',version)
+  const versions=async()=>(await env.DB.prepare('SELECT * FROM evidence_versions WHERE evidence_id=? ORDER BY version_number,id').bind(e.id).all()).results
+  const versionsBefore=await versions()
+  const unchanged=async()=>{expect(await row('evidence_items',e.id)).toEqual(evidenceBefore);expect(await versions()).toEqual(versionsBefore)}
+  const further=await bet((await decision()).id)
+  await link(e.id,further.id);await unchanged()
+  const tag=await json(request('/api/operator/catalog/tags','POST',{name:'synthetic-penny-1'}),201)
+  for(const method of ['PUT','DELETE']){await json(request(`/api/operator/evidence/${e.id}/tag`,method,{tagId:tag.id}));await unchanged()}
+  const source=await publicRequest(),target=await publicRequest()
+  await json(request(`/api/operator/evidence/${e.id}/links`,'PUT',{target:'request',targetId:source.id,stance:'supporting'}));await unchanged()
+  await json(request(`/api/operator/requests/${source.slug}/merge`,'POST',{targetSlug:target.slug}));await unchanged()
+  await json(request(`/api/operator/requests/${source.slug}/unmerge`,'POST',{}));await unchanged()
   const result=await json(request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id)))
   expect(await row('decisions',d.id)).toMatchObject({state:'committed',selected_candidate_bet_id:a.id});expect(await row('roadmap_items',result.itemId)).toMatchObject({status:'planned',candidate_bet_id:a.id})
+  await unchanged()
   const before=await snapshots(result.revisionId);expect(before).toHaveLength(2);expect(before.find(s=>s.candidate_bet_id===a.id)).toMatchObject({disposition:'selected',supporting_count:2,contradicting_count:1,affected_account_count:1,affected_requester_count:1,latest_support_at:'2026-10-08T00:30:00Z',urgency:'This quarter',delivery_shape:'Small release',success_measure:'Completion time below 30 seconds'});expect(before.find(s=>s.candidate_bet_id===b.id)).toMatchObject({disposition:'declined'})
   expect((await env.DB.prepare('SELECT evidence_version_id FROM decision_evidence_snapshots WHERE decision_revision_id=? AND evidence_id=?').bind(result.revisionId,e.id).all()).results.every(s=>s.evidence_version_id===version)).toBe(true)
+  await link(e.id,further.id,'supporting','DELETE');await unchanged()
   await env.DB.prepare('INSERT INTO evidence_versions(id,evidence_id,version_number,wording,edited_by_operator_id,created_at,updated_at) VALUES(?,?,3,?,?,?,?)').bind('post-commit-version',e.id,'Later wording version',operatorId,stamp,stamp).run();
   expect((await env.DB.prepare('SELECT evidence_version_id FROM decision_evidence_snapshots WHERE decision_revision_id=? AND evidence_id=?').bind(result.revisionId,e.id).all()).results.every(s=>s.evidence_version_id===version)).toBe(true)
   await link(e.id,a.id,'supporting','DELETE');await link(latest.id,b.id,'contradicting');expect(await snapshots(result.revisionId)).toEqual(before);expect(await row('evidence_items',e.id)).toEqual(evidenceBefore);expect(await row('evidence_versions',version)).toEqual(versionBefore);expect(await row('decisions',d.id)).toMatchObject({state:'committed'})

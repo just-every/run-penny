@@ -160,3 +160,11 @@ same pre-storage redaction function as operator evidence. Stable markers name
 the kind and never contain its original value. Sender attribution remains
 separate identity data under normal erasure custody. Binary attachments are not
 rewritten. See [data ownership](data-ownership.md) for reapplication limits.
+
+Captured email provenance includes “Forwarded by <admitted sender>” in the existing
+source label, which travels with product archives and the evidence erasure census.
+A body From address is shown as “Sender stated in forward”; it is not a verified
+identity. Gmail/Outlook-style multipart forwards may carry threading headers.
+Threaded mail without a recoverable forward, automated mail and forwards naming
+Penny's own sender remain refused. Hosted admission still needs a receipt confirming
+Cloudflare's Authentication-Results header; HTML-only mail is refused.

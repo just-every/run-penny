@@ -1,0 +1,4 @@
+{
+  "maxTests": 255,
+  "reason": "Penny carries 247 contract clauses, and its money, erasure and moderation doors each need their own public-door integration tests (SEED-PLAYBOOK, Light code tests: raise the cap for a complex seed with a written reason)."
+}

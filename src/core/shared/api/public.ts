@@ -55,6 +55,7 @@ export interface PublicRequestDetail extends PublicRequestCard {
 }
 
 export interface PublicRoadmapItem {
+  readonly releases?: readonly { readonly slug:string; readonly title:string }[]
   readonly category?:PublicCategoryReference|null
   readonly source?:'requests'
   readonly voteCount?:number

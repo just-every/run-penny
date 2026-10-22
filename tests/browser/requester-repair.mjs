@@ -11,7 +11,7 @@ try {
  await api('/api/operator/boards',{slug:board,name:'Product feedback',visibility:'public'},setup.page.request)
  await explicitConsentBoard(board,setup.page.request);await setup.context.close()
  for(const width of [1440,390]){
-  const {context:requester,page,token}=await harness.requester(width,`repair-${unique}-${width}@example.test`),auth={Authorization:`Bearer ${token}`}
+  const {context:requester,page,token,clientAddress}=await harness.requester(width,`repair-${unique}-${width}@example.test`),auth={Authorization:`Bearer ${token}`,'CF-Connecting-IP':clientAddress}
   const {context:operator,page:review}=await harness.operator(width)
   for(const p of [page,review])p.on('pageerror',error=>errors.push(error.message))
   const title=`Scheduled exports ${width} ${unique}`
@@ -98,5 +98,6 @@ try {
   await page.goto(origin+'/portal/feedback');await page.getByLabel('Search feedback',{exact:true}).fill('Scheduled exports');await page.locator('select[name=status]').selectOption('under_review');await page.getByRole('button',{name:'Search',exact:true}).click();await page.getByRole('heading',{name:title,exact:true}).waitFor();await shot(page,'search-filter',width)
   await requester.close();await operator.close()
  }
+ harness.assertNoRateLimits()
  await manifest('manifest',errors,checks,origin)
-}finally{await browser.close();await runtime?.close()}
+}catch(error){for(const context of browser.contexts())for(const page of context.pages()){console.error('Failure page: '+await page.locator('body').innerText());await page.screenshot({path:process.env.PENNY_EVIDENCE+'/failure-'+page.viewportSize().width+'-'+browser.contexts().indexOf(context)+'.png',fullPage:true})}throw error}finally{await browser.close();await runtime?.close()}

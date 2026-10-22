@@ -5,7 +5,7 @@ import { requestStatusExpression, requestStatusChangedAtExpression } from '../re
 
 interface RoadmapRow {
  slug: string; title: string; summary: string; status: PublicRoadmapItem['status']
- boardSlug: string | null; boardName: string | null; requests: string
+ boardSlug: string | null; boardName: string | null; requests: string; releases: string
  category:string|null; source: 'requests' | null; voteCount: number | null; publicEta: string | null; statusLabel: string | null
 }
 
@@ -42,7 +42,13 @@ export class PublicRoadmapReadRepository {
     WHERE m.roadmap_item_id=ri.id AND m.approved_at IS NOT NULL AND m.withdrawn_at IS NULL
      AND r.moderation_state='approved' AND r.published_at IS NOT NULL AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL
      AND rb.visibility='public' AND rb.archived_at IS NULL AND (a.id IS NULL OR a.blocked_at IS NULL) ORDER BY r.slug
-   ) safe) AS requests,NULL AS category,NULL AS source,NULL AS voteCount,rp.public_eta AS publicEta,NULL AS statusLabel
+   ) safe) AS requests,
+   (SELECT json_group_array(json_object('slug',published.slug,'title',published.title)) FROM (
+    SELECT r.slug,v.title FROM release_targets t JOIN releases r ON r.id=t.release_id
+    JOIN release_versions v ON v.id=r.current_version_id AND v.is_portal_current=1
+    WHERE t.roadmap_item_id=ri.id AND r.state='published' AND r.published_at IS NOT NULL AND v.publication_date IS NOT NULL
+    ORDER BY v.publication_date DESC,r.slug
+   ) published) AS releases,NULL AS category,NULL AS source,NULL AS voteCount,rp.public_eta AS publicEta,NULL AS statusLabel
    FROM roadmap_items ri JOIN roadmap_publications rp ON rp.roadmap_item_id=ri.id
    LEFT JOIN boards b ON b.id=rp.board_id
    CROSS JOIN settings s
@@ -51,7 +57,7 @@ export class PublicRoadmapReadRepository {
     AND ri.status IN ('exploring','planned','in_progress','shipped')
    UNION ALL
    SELECT r.slug,r.title,r.summary,r.status,r.boardSlug,r.boardName,
-    json_array(json_object('slug',r.slug,'title',r.title)) AS requests,r.category,'requests' AS source,r.voteCount,r.publicEta,
+    json_array(json_object('slug',r.slug,'title',r.title)) AS requests,'[]' AS releases,r.category,'requests' AS source,r.voteCount,r.publicEta,
     json_extract(col.value,'$.label') AS statusLabel
    FROM status_requests r CROSS JOIN settings s JOIN json_each(s.columns_json) AS col
     ON json_extract(col.value,'$.status')=r.status AND json_extract(col.value,'$.visible')=1
@@ -59,8 +65,8 @@ export class PublicRoadmapReadRepository {
     AND (r.status<>'shipped' OR s.shipped_days IS NULL OR julianday(r.statusChangedAt)>=julianday('now')-s.shipped_days)
   ) SELECT * FROM cards
    ORDER BY CASE status WHEN 'under_review' THEN 1 WHEN 'planned' THEN 2 WHEN 'in_progress' THEN 3 ELSE 4 END,slug`).all<RoadmapRow>()
-  return rows.results.map(({requests,boardSlug,boardName,source,voteCount,publicEta,statusLabel,category,...safe})=>({
-   ...safe,publicEta,...(boardSlug?{board:{slug:boardSlug,name:boardName!}}:{}),requests:JSON.parse(requests),
+  return rows.results.map(({requests,releases,boardSlug,boardName,source,voteCount,publicEta,statusLabel,category,...safe})=>({
+   ...safe,publicEta,...(boardSlug?{board:{slug:boardSlug,name:boardName!}}:{}),requests:JSON.parse(requests),releases:JSON.parse(releases),
    ...(source==='requests'?{source,category:category?JSON.parse(category) as PublicCategoryReference:null,...(voteCount===null?{}:{voteCount:Number(voteCount)}),publicEta,...(statusLabel?{statusLabel}:{})}:{}),
   }))
  }

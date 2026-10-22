@@ -18,7 +18,7 @@ export async function captureEmail(message:ForwardableEmailMessage,bindings:AppB
   const own=await ownMailboxes(runtime),from=mailbox(message.headers.get('from')),envelope=mailbox(message.from)
   if(!from||!envelope)return await refuse('invalid_sender')
   if(own.includes(from)||own.includes(envelope))return await refuse('penny_sender_or_reply_to')
-  if(message.headers.has('in-reply-to')||message.headers.has('references')||message.headers.has('auto-submitted')&&message.headers.get('auto-submitted')?.toLowerCase()!=='no')return await refuse('notification_or_automated_reply')
+  if(message.headers.has('auto-submitted')&&message.headers.get('auto-submitted')?.toLowerCase()!=='no')return await refuse('notification_or_automated_reply')
   const aligned=alignedFrom(message.headers)
   if(!aligned)return await refuse('dmarc_not_aligned')
   const domain=aligned.split('@')[1],operator=await raw.prepare("SELECT 1 FROM oa_operators WHERE email=? AND status='active'").bind(aligned).first()
@@ -33,6 +33,9 @@ export async function captureEmail(message:ForwardableEmailMessage,bindings:AppB
   const parsed=await PostalMime.parse(bytes,{maxNestingDepth:20,maxHeadersSize:65536}),wording=parsed.text?.trim()
   if(!wording||wording.length>20000)return await refuse('excerpt_size_or_plain_text_required')
   const recovered=originalSender(wording),notes:string[]=[],files:File[]=[];let total=0
+  // Mail clients retain threading headers when forwarding. Admit an explicit
+  // forward, while ordinary threaded replies and forwarded Penny mail stay out.
+  if((message.headers.has('in-reply-to')||message.headers.has('references'))&&!recovered.forwarded||recovered.address&&own.includes(recovered.address))return await refuse('notification_or_automated_reply')
   for(const attachment of parsed.attachments){
    const content=attachment.content
    if(typeof content==='string'){notes.push('attachment encoding');continue}
@@ -43,7 +46,7 @@ export async function captureEmail(message:ForwardableEmailMessage,bindings:AppB
    if(!attachment.filename||attachment.filename.length>255){notes.push('filename length');continue}
    total+=length;files.push(new File([Uint8Array.from(content instanceof ArrayBuffer?new Uint8Array(content):content)],attachment.filename,{type:attachment.mimeType}))
   }
-  const label=[recovered.forwarded?'Forwarded email':'Email — not forwarded',...(notes.length?['Attachment omitted: '+[...new Set(notes)].join(', ')]:[])].join('. ')
+  const label=[recovered.forwarded?'Forwarded email':'Email — not forwarded',`Forwarded by ${aligned}`,...(notes.length?['Attachment omitted: '+[...new Set(notes)].join(', ')]:[])].join('. ')
   const state=await raw.prepare("SELECT epoch FROM data_state WHERE singleton=1 AND phase='idle'").first<{epoch:number}>()
   if(!state)return await refuse('maintenance_in_progress')
   const db=guardedDatabase(raw,{sql:`EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?) AND EXISTS(SELECT 1 FROM penny_email_capture_settings WHERE singleton=1 AND capture_address=?) AND (EXISTS(SELECT 1 FROM oa_operators WHERE email=? AND status='active') OR EXISTS(SELECT 1 FROM penny_email_capture_domains WHERE domain=?)) AND NOT EXISTS(SELECT 1 FROM penny_mail_identity WHERE from_address IN(?,?) OR reply_to IN(?,?))`,params:[state.epoch,settings.captureAddress,aligned,domain,from,envelope,from,envelope]})

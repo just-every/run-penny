@@ -5,8 +5,12 @@ import { finishFirstRun } from './local-signin.mjs'
 /** Real browser sign-in; only outbound synthetic email is intercepted by the runtime. */
 export async function requesterAuth(browser) {
  const runtime=await startBrowserRuntime(),{origin}=runtime
+ const rateLimited=[],requesterAddresses=new Map()
+ let client=1
+ const harnessAddress='192.0.2.1',address=()=>`192.0.2.${++client}`
+ function observe(page){page.on('response',response=>{if(response.status()===429){const path=new URL(response.url()).pathname;rateLimited.push(path);console.error('requester-auth: 429 '+path)}})}
  async function api(path,body,authority={},method=body===undefined?'GET':'POST') {
-  const headers={Origin:origin,'Content-Type':'application/json'}
+  const headers={Origin:origin,'Content-Type':'application/json',...(typeof authority.fetch==='function'?{}:{'CF-Connecting-IP':requesterAddresses.get(authority.Authorization)??harnessAddress})}
   let response
   if(typeof authority.fetch==='function') {
    const result=await authority.fetch(origin+path,{method,headers,...(body===undefined?{}:{data:body}),maxRedirects:0})
@@ -18,7 +22,8 @@ export async function requesterAuth(browser) {
  // Installation custody uses the existing public bootstrap; its cookie is discarded.
  await api('/auth/bootstrap',{token:'synthetic-base-browser-setup-token-12345',displayName:'Review owner',returnTo:'/setup'})
  async function operator(width) {
-  const context=await browser.newContext({viewport:{width,height:1000}}),page=await context.newPage()
+  const clientAddress=address(),context=await browser.newContext({viewport:{width,height:1000},extraHTTPHeaders:{'CF-Connecting-IP':clientAddress}}),page=await context.newPage()
+  observe(page)
   try {
    await page.goto(origin+'/signin')
    await page.getByRole('textbox',{name:'Operator email',exact:true}).fill('owner@penny.invalid')
@@ -35,8 +40,9 @@ export async function requesterAuth(browser) {
   } catch(error) {await context.close();throw error}
  }
  async function requester(width,email) {
-  const context=await browser.newContext({viewport:{width,height:1000}}),page=await context.newPage(),cookies=[]
+  const clientAddress=address(),context=await browser.newContext({viewport:{width,height:1000},extraHTTPHeaders:{'CF-Connecting-IP':clientAddress}}),page=await context.newPage(),cookies=[]
   page.on('response',response=>{if(response.headers()['set-cookie'])cookies.push(new URL(response.url()).pathname)})
+  observe(page)
   try {
    await page.goto(origin+'/portal/feedback/new')
    await page.getByLabel('Display name',{exact:true}).fill('Review requester')
@@ -51,13 +57,14 @@ export async function requesterAuth(browser) {
    assert.equal(new URL(page.url()).hash,'','application removes the consumed link')
    const token=await page.evaluate(()=>localStorage.getItem('penny_requester_session'))
    assert.ok(token,'application created the browser-local requester session')
-   const headers={Authorization:`Bearer ${token}`}
+   requesterAddresses.set(`Bearer ${token}`,clientAddress)
+   const headers={Authorization:`Bearer ${token}`,'CF-Connecting-IP':clientAddress}
    assert.equal((await fetch(origin+'/api/public/identity/session',{headers})).status,200)
    assert.equal((await fetch(origin+'/api/operator/moderation',{headers})).status,401)
-   assert.equal((await fetch(origin+'/api/public/identity/session')).status,401)
+   assert.equal((await fetch(origin+'/api/public/identity/session',{headers:{'CF-Connecting-IP':harnessAddress}})).status,401)
    assert.deepEqual(await context.cookies(),[]);assert.deepEqual(cookies,[])
    console.log(`requester-auth: ${width}px public verification, browser-local session, cookie-free, operator refusal 401, signed-out refusal 401`)
-   return {context,page,token}
+   return {context,page,token,clientAddress}
   } catch(error) {await context.close();throw error}
  }
  async function explicitConsentBoard(slug,authority) {
@@ -70,5 +77,5 @@ export async function requesterAuth(browser) {
   const results=await runtime.db.batch(statements.map(statement=>runtime.db.prepare(statement)))
   return results[0].results
  }
- return {runtime,origin,api,operator,requester,explicitConsentBoard,sql}
+ return {runtime,origin,api,operator,requester,explicitConsentBoard,sql,assertNoRateLimits:()=>{assert.deepEqual(rateLimited,[],'each simulated person stays within admission policy');console.log('requester-auth: zero 429 responses')}}
 }

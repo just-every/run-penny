@@ -60,6 +60,22 @@ async function person(){
 async function publish(g:Awaited<ReturnType<typeof fixture>>){
  await env.DB.prepare("UPDATE requests SET public_title='Export project reports',public_description='CSV workspace reports',public_state='open',moderation_state='approved',published_at=? WHERE id=?").bind(new Date().toISOString(),g.request.id).run()
 }
+async function proveEvidenceCapture(g:Awaited<ReturnType<typeof fixture>>){
+ for(const sourceType of ['sales_call','support_conversation','interview','email','free_text']){
+  const sourceLabel=sourceType==='free_text'?'synthetic-penny-1':null
+  const item=await json<{id:string}>(call('/api/operator/evidence',{sourceType,sourceLabel,wording:'Synthetic captured words',observedAt:'2026-10-22T10:00:00Z'},g.operator),201)
+  const page=await json<{items:{id:string;sourceType:string;sourceLabel:string|null}[]}>(call('/api/operator/evidence',undefined,g.operator))
+  expect(page.items.find(row=>row.id===item.id)).toMatchObject({sourceType,sourceLabel})
+ }
+ const count=()=>env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n'),before=await count()
+ expect((await call('/api/operator/evidence',{sourceType:'free_text',wording:'Missing source',observedAt:'2026-10-22T10:00:00Z'},g.operator)).status).toBe(422)
+ expect(await count()).toBe(before)
+ const requester=await person(),requests=await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()
+ await env.DB.exec("CREATE TRIGGER synthetic_penny_capture_failure BEFORE INSERT ON evidence_items BEGIN SELECT RAISE(ABORT,'synthetic capture failure'); END")
+ try{expect((await call('/api/public/requests',{title:'synthetic-penny-2',description:'Atomic submission',boardSlug:'feedback',idempotencyKey:crypto.randomUUID()},requester)).status).toBe(503)}finally{await env.DB.exec('DROP TRIGGER synthetic_penny_capture_failure')}
+ expect((await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results).toEqual(requests.results)
+ expect(await count()).toBe(before)
+}
 it('[EVID-005] account writes require an owner and context includes transaction-linked requests and decisions in observed-time order',async()=>{
  const g=await fixture()
  const accountCount=await env.DB.prepare('SELECT count(*) n FROM accounts').first('n')
@@ -132,7 +148,7 @@ it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical ov
  const after=await env.DB.batch(['requests','evidence_items','request_content_submissions'].map(table=>env.DB.prepare(`SELECT count(*) n FROM ${table}`)))
  expect(after.map(r=>r.results)).toEqual(before.map(r=>r.results));expect(await env.DB.prepare('SELECT count(*) n FROM request_votes').first('n')).toBe(1);expect(await env.DB.prepare('SELECT count(*) n FROM request_follows').first('n')).toBe(1)
 })
-it('[CAP-009 EVID-008] admitted email captures and original attachments stay private with durable replay and upload custody',async()=>{
+it('[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps originals private with durable replay and upload custody',async()=>{
  await reset();const migrations=inject('migrations') as {name:string;queries:string[]}[]
  await applyD1Migrations(env.DB,migrations.filter(m=>Number(m.name.slice(0,4))<88))
  await env.DB.prepare("INSERT INTO evidence_items(id,source_type,source_label,observed_at,review_state,created_at,updated_at) VALUES('synthetic-penny-upgrade','free_text','Prior capture','2026-10-01','unreviewed','2026-10-01','2026-10-01')").run()
@@ -140,6 +156,7 @@ it('[CAP-009 EVID-008] admitted email captures and original attachments stay pri
  await applyD1Migrations(env.DB,migrations);await applyD1Migrations(env.DB,migrations)
  expect((await env.DB.prepare('SELECT * FROM evidence_items').all()).results).toEqual(previous)
  const g=await fixture();await publish(g)
+ await proveEvidenceCapture(g)
  const mailBefore=(await providerMessages().list()).length
  await proveEmailCapture(call,env.DB,g.operator)
  expect((await providerMessages().list()).length).toBe(mailBefore)
@@ -173,6 +190,7 @@ it('[CAP-009 EVID-008] admitted email captures and original attachments stay pri
  await json(call('/api/public/identity/email/verify',{token:verification}))
  const portable=await json<{archive:Archive;journal:ErasureJournal}>(call('/api/operator/data/export',undefined,g.operator))
  expect(portable.archive.tables.penny_email_capture_messages).toHaveLength(4)
+ for(const item of portable.archive.tables.evidence_items.filter(row=>row.source_type==='email'&&String(row.source_label).includes('Forwarded by ')))expect(item.source_label).toContain('Forwarded by operator@example.test')
  expect(JSON.stringify(portable)).not.toContain('<synthetic-penny-message-1@example.test>')
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
  const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'})
@@ -186,6 +204,7 @@ it('[CAP-009 EVID-008] admitted email captures and original attachments stay pri
  }
  await complete('/api/operator/data/import',portable)
  expect((await env.DB.prepare('SELECT * FROM penny_email_capture_messages ORDER BY message_digest').all()).results).toEqual([...portable.archive.tables.penny_email_capture_messages].sort((a,b)=>String(a.message_digest).localeCompare(String(b.message_digest))))
+ expect((await env.DB.prepare("SELECT * FROM evidence_items WHERE source_type='email' ORDER BY id").all()).results).toEqual(portable.archive.tables.evidence_items.filter(row=>row.source_type==='email').sort((a,b)=>String(a.id).localeCompare(String(b.id))))
  const restoredCount=await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')
  await incomingEmail();expect(await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')).toBe(restoredCount)
  const requester=await env.DB.prepare('SELECT requester_id FROM requester_addresses WHERE email=?').bind(capturedEmail).first<string>('requester_id')

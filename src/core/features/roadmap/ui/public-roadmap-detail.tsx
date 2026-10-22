@@ -1,3 +1,4 @@
+import { RoadmapReleases } from './public-roadmap-releases'
 import { HydrationUnit } from '@/base/hydration/unit'
 import { Link, useParams } from '@tanstack/react-router'
 import type { PublicRoadmapItem } from '@/core/shared/api/public'
@@ -28,6 +29,7 @@ export function PublicRoadmapDetail({ content }: { content: PublicPortalContent 
                   {resource.data.requests.map((request) => <li key={request.slug}><Link className={`${textLinkClass} inline-flex min-h-11 items-center`} to="/portal/feedback/$requestSlug" params={{ requestSlug: request.slug }}>{request.title}</Link></li>)}
                 </ul>
               ) : null}
+              <RoadmapReleases item={resource.data} />
             </PublicCard>
           </article></HydrationUnit>
         ) : <div className="mt-5"><ResourceFailure status={resource.kind === 'error' ? resource.status : 404} onRetry={retry} /></div>}
