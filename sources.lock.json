@@ -5876,7 +5876,7 @@
       "executable": false
     },
     "src/core/features/planning/panel.tsx": {
-      "sha256": "f7daee12733326ae44484944a07e4279f19f138cc74e8b0a9da9421330bf81a1",
+      "sha256": "5bb3bb0a910af11dd992015a3c58ea82b2375e848700e272ff42497acf3f78cb",
       "executable": false
     },
     "src/core/features/planning/repository.ts": {
@@ -6400,7 +6400,7 @@
       "executable": false
     },
     "src/core/features/requests/ui/request-supporters.tsx": {
-      "sha256": "2923e29a75beccb147af9f4e98e2b425c8e185964ee7b07a8a8856c59b3f26ba",
+      "sha256": "c6096d82fef52f5fc15d3bfec57e989a4a57c5f05e51961e6fac6fc3b060fcfd",
       "executable": false
     },
     "src/core/features/requests/ui/requester-actions.tsx": {
@@ -7617,6 +7617,10 @@
     },
     "tests/browser/fresh-setup-diagnostics.mjs": {
       "sha256": "d533e20f0ee93145eb39310a1aef05485295206c6e66dd25f6a5319066040561",
+      "executable": false
+    },
+    "tests/browser/headless-executable.mjs": {
+      "sha256": "7d84c36ede672de5316e599255b77ca51ac742c5cffb857c53542b0e7132033f",
       "executable": false
     },
     "tests/browser/host-identity.mjs": {
