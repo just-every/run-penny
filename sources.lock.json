@@ -7568,7 +7568,7 @@
       "executable": false
     },
     "tests/browser/browser-options.mjs": {
-      "sha256": "e90e08c399b486378e60c99a98d70c47606ecab7cba7492c287b76bb79a60927",
+      "sha256": "cff18322af52641e685b19f9cf9be19221c05d2f9457f265fa25567cd180e966",
       "executable": false
     },
     "tests/browser/dev-operator-flows.test.mjs": {
