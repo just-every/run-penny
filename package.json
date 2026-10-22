@@ -32,7 +32,7 @@
     "setup": "rer setup",
     "deploy": "rer deploy",
     "deploy:health": "node scripts/installer/owner-cli.mjs health",
-    "test:browser": "node tests/browser/base-board.mjs",
+    "test:browser": "node tests/browser/requester-board.mjs",
     "source:inspect": "node scripts/edition-authoring/cli.mjs inspect",
     "source:lock": "node scripts/edition-authoring/cli.mjs lock",
     "source:check": "node scripts/edition-authoring/cli.mjs check",

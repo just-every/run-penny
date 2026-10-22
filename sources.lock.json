@@ -3480,7 +3480,7 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "6bc749a749716f4008ba3ccd0ae1765e8df515e5d72b7cd7cc1d3b0360198de7",
+      "sha256": "d05eee5866a92ed42ba1b5d582734cd051979b1963b13167fde8ef033b36666f",
       "executable": false
     },
     "pnpm-lock.yaml": {
@@ -7551,10 +7551,6 @@
       "sha256": "8173387eb4c696e6f75d044a43af9f248c157f40d2066b5eb03d835ed32fbabf",
       "executable": false
     },
-    "tests/browser/base-board.mjs": {
-      "sha256": "c49c0adf23092e375e733662f4c6a8d806d0b9e8a1a0f4049878a865412c3443",
-      "executable": false
-    },
     "tests/browser/base-runtime.mjs": {
       "sha256": "58e20733b48aa229489fc10fac8e7c106e00e8ed5432c53c2951c74cd15558ed",
       "executable": false
@@ -7843,16 +7839,8 @@
       "sha256": "b938b340dd260bd5fec79e6ec3767a8f1920b60e9929b36701e9deaa806789d1",
       "executable": false
     },
-    "tests/browser/requester-repair-support.mjs": {
-      "sha256": "3d22763a3314eeba9efe9796fa2da9c566688f1adf41d34026e0e1fe27531c14",
-      "executable": false
-    },
     "tests/browser/requester-repair.mjs": {
       "sha256": "09a421d9a9037e6d34ac6a85a108a9fd2aefaa76d720a1dda154bd1dd2add347",
-      "executable": false
-    },
-    "tests/browser/requester-unconfigured-repair.mjs": {
-      "sha256": "a84852054ebd2d189f849221882245c9c37448b0cf75a416ba0b998c77eb3127",
       "executable": false
     },
     "tests/browser/rich-changelog.mjs": {
