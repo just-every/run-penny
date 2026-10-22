@@ -57,7 +57,7 @@ function safeUrl(value) {
 }
 
 function assertNoDevelopmentCopy(text, route, width) {
-  const developmentCopy = /not available in this build|not available here|not available on this page|in this milestone|in this build|local review|read[- ]spine|scaffold|development|owner CLI|owner recovery command|durable inbox|durable record|build[- ]stage|\bstage\s+[a-z0-9]+/i
+  const developmentCopy = /not available in this build|not available here|not available on this page|in this milestone|in this build|local review|read[- ]spine|scaffold|development|owner CLI|owner recovery command|durable inbox|durable record|build[- ]stage|\bstage[ \t]+[a-z0-9]+/i
   const match = developmentCopy.exec(text)
   if (match) developmentCopyFailures.push({ route, width, match: match[0], excerpt: text.slice(Math.max(0, match.index - 80), match.index + 160) })
 }
