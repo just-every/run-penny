@@ -14,6 +14,7 @@ export interface OperatorAccountReference {
 
 export interface OperatorEvidenceCard {
   readonly id: string
+  readonly admittedSender?: string | null
   readonly namedSpeaker?: string | null
   readonly wording: string
   readonly sourceType: string

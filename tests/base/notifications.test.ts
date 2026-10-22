@@ -338,7 +338,7 @@ it('[NOTIFY-004 CAP-009] notification replies create nothing through HTTP or the
   await response.body?.cancel()
  }
  for(const from of [String(env.MAIL_FROM),identity.fromAddress,identity.replyTo])await incomingEmail({id:'<synthetic-penny-own-sender@example.test>',from})
- await incomingEmail({id:'<synthetic-penny-notification-reply@example.test>',from:g.email,headers:{'in-reply-to':`<${g.requestId}@penny.test>`,'auto-submitted':'no'}})
+ await incomingEmail({id:'<synthetic-penny-notification-reply@example.test>',from:g.email,body:text,headers:{'in-reply-to':`<${g.requestId}@penny.test>`,'auto-submitted':'no'}})
  expect(sent).toHaveLength(sentBefore)
  expect(await rows()).toEqual(before)
 })

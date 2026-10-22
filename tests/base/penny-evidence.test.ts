@@ -154,7 +154,7 @@ it('[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps 
  await env.DB.prepare("INSERT INTO evidence_items(id,source_type,source_label,observed_at,review_state,created_at,updated_at) VALUES('synthetic-penny-upgrade','free_text','Prior capture','2026-10-01','unreviewed','2026-10-01','2026-10-01')").run()
  const previous=(await env.DB.prepare('SELECT * FROM evidence_items').all()).results
  await applyD1Migrations(env.DB,migrations);await applyD1Migrations(env.DB,migrations)
- expect((await env.DB.prepare('SELECT * FROM evidence_items').all()).results).toEqual(previous)
+ expect((await env.DB.prepare('SELECT * FROM evidence_items').all()).results).toEqual(previous.map(row=>({...row,admitted_sender:null})))
  const g=await fixture();await publish(g)
  await proveEvidenceCapture(g)
  const mailBefore=(await providerMessages().list()).length
@@ -184,13 +184,17 @@ it('[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps 
  expect((await upload(`/api/operator/evidence/${g.evidence.id}/attachments`,g.operator)).status).toBe(409)
  await env.DB.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1").run()
  const capturedEmail='synthetic-penny-1@example.test'
+ const forwarder='operator@example.test'
+ await json(call('/api/public/identity/email',{email:forwarder,displayName:'Synthetic admitted forwarder'}),202)
+ const forwardMail=(await providerMessages().list()).find(row=>row.message.to.includes(forwarder))!.message
+ await json(call('/api/public/identity/email/verify',{token:new URL(forwardMail.text!.match(/https?:\/\/\S+/)![0]).hash.slice(7)}))
  await json(call('/api/public/identity/email',{email:capturedEmail,displayName:'Synthetic captured customer'}),202)
  const sent=(await providerMessages().list()).find(row=>row.message.to.includes(capturedEmail))!
  const verification=new URL(sent.message.text!.match(/https?:\/\/\S+/)![0]).hash.slice(7)
  await json(call('/api/public/identity/email/verify',{token:verification}))
  const portable=await json<{archive:Archive;journal:ErasureJournal}>(call('/api/operator/data/export',undefined,g.operator))
  expect(portable.archive.tables.penny_email_capture_messages).toHaveLength(4)
- for(const item of portable.archive.tables.evidence_items.filter(row=>row.source_type==='email'&&String(row.source_label).includes('Forwarded by ')))expect(item.source_label).toContain('Forwarded by operator@example.test')
+ for(const item of portable.archive.tables.evidence_items.filter(row=>row.source_type==='email'&&row.admitted_sender!==null))expect(item.admitted_sender).toBe('operator@example.test')
  expect(JSON.stringify(portable)).not.toContain('<synthetic-penny-message-1@example.test>')
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
  const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'})
@@ -216,6 +220,12 @@ it('[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps 
  expect(erased.archive.tables.penny_email_capture_messages).toHaveLength(4)
  const erasedCount=await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')
  await incomingEmail();expect(await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')).toBe(erasedCount)
+ const forwarderId=await env.DB.prepare('SELECT requester_id FROM requester_addresses WHERE email=?').bind(forwarder).first('requester_id')
+ const forwardPreview=await json<{planHash:string;counts:Record<string,number>;blockedCopies:unknown[]}>(call('/api/operator/data/erasure/preview',{table:'requesters',id:forwarderId},destination))
+ expect(forwardPreview.counts.evidence_items).toBe(3);expect(forwardPreview.blockedCopies).toEqual([])
+ await complete('/api/operator/data/erasure',{table:'requesters',id:forwarderId,planHash:forwardPreview.planHash})
+ expect(await env.DB.prepare('SELECT count(*) n FROM evidence_items WHERE admitted_sender=?').bind(forwarder).first('n')).toBe(0)
+ expect(await env.DB.prepare('SELECT count(*) n FROM penny_email_capture_messages').first('n')).toBe(4)
 })
 it('[AI-006 EVID-006] resolves cited summaries and editable reply drafts while keeping private records out of publication and requester mail',async()=>{
  const g=await fixture();await publish(g)

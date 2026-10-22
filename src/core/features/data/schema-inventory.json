@@ -328,7 +328,8 @@
       "updated_at",
       "withdrawn_at",
       "named_speaker",
-      "release_id"
+      "release_id",
+      "admitted_sender"
     ]
   },
   "evidence_tag_assignments": {

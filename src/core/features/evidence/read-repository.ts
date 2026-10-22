@@ -6,6 +6,7 @@ import { parseTagNamesJson } from '@/core/shared/tag-names'
 export interface EvidenceReadRow {
   readonly id: string
   readonly wording: string
+  readonly admittedSender: string | null
   readonly namedSpeaker: string | null
   readonly sourceType: string
   readonly sourceLabel: string | null
@@ -23,7 +24,7 @@ export interface EvidenceReadRow {
 
 export const evidenceReadSelect = `
   SELECT
-    e.id AS id, ev.wording AS wording, e.named_speaker AS namedSpeaker, e.source_type AS sourceType, e.source_label AS sourceLabel,
+    e.id AS id, ev.wording AS wording, e.named_speaker AS namedSpeaker, e.admitted_sender AS admittedSender, e.source_type AS sourceType, e.source_label AS sourceLabel,
     e.observed_at AS observedAt, e.review_state AS reviewState, e.review_reason AS reviewReason,
     a.id AS accountId, a.slug AS accountSlug, a.name AS accountName,
     requester.id AS requesterId, requester.display_name AS requesterName,
@@ -61,6 +62,7 @@ export function mapEvidenceRead(row: EvidenceReadRow): OperatorEvidenceCard {
     id: row.id,
     wording: row.wording,
     namedSpeaker: row.namedSpeaker,
+    admittedSender: row.admittedSender,
     sourceType: row.sourceType,
     sourceLabel: row.sourceLabel,
     observedAt: row.observedAt,

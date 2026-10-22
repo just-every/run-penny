@@ -46,11 +46,11 @@ export async function captureEmail(message:ForwardableEmailMessage,bindings:AppB
    if(!attachment.filename||attachment.filename.length>255){notes.push('filename length');continue}
    total+=length;files.push(new File([Uint8Array.from(content instanceof ArrayBuffer?new Uint8Array(content):content)],attachment.filename,{type:attachment.mimeType}))
   }
-  const label=[recovered.forwarded?'Forwarded email':'Email — not forwarded',`Forwarded by ${aligned}`,...(notes.length?['Attachment omitted: '+[...new Set(notes)].join(', ')]:[])].join('. ')
+  const label=[recovered.forwarded?'Forwarded email':'Email — not forwarded',...(notes.length?['Attachment omitted: '+[...new Set(notes)].join(', ')]:[])].join('. ')
   const state=await raw.prepare("SELECT epoch FROM data_state WHERE singleton=1 AND phase='idle'").first<{epoch:number}>()
   if(!state)return await refuse('maintenance_in_progress')
   const db=guardedDatabase(raw,{sql:`EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?) AND EXISTS(SELECT 1 FROM penny_email_capture_settings WHERE singleton=1 AND capture_address=?) AND (EXISTS(SELECT 1 FROM oa_operators WHERE email=? AND status='active') OR EXISTS(SELECT 1 FROM penny_email_capture_domains WHERE domain=?)) AND NOT EXISTS(SELECT 1 FROM penny_mail_identity WHERE from_address IN(?,?) OR reply_to IN(?,?))`,params:[state.epoch,settings.captureAddress,aligned,domain,from,envelope,from,envelope]})
-  const now=new Date().toISOString(),item=await recordEvidence(db,{sourceType:'email',sourceLabel:label,wording,namedSpeaker:recovered.address??aligned,observedAt:now},null,now,messageDigest)
+  const now=new Date().toISOString(),item=await recordEvidence(db,{sourceType:'email',sourceLabel:label,wording,namedSpeaker:recovered.address??aligned,observedAt:now},null,now,messageDigest,aligned)
   for(const file of files)await uploadEvidenceAttachment(db,raw,runtime.blobs,item.id,file,now)
  }catch(error){
   // No raw message, sender, subject or exception is logged or retained. Never

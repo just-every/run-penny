@@ -10,7 +10,7 @@ export interface RecordEvidence {
  boardSlug?:string|null
  requestLinks?:{id:string;stance:'supporting'|'contradicting'}[];betLinks?:{id:string;stance:'supporting'|'contradicting'}[];releaseId?:string|null
 }
-export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:string|null,now:string,messageDigest?:string) {
+export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:string|null,now:string,messageDigest?:string,admittedSender?:string) {
  if(!validObservedTime(input.observedAt))throw new MutationError(422,'Observed time must include a valid date, time and timezone offset.')
  if(input.sourceType==='free_text'&&!input.sourceLabel?.trim())throw new MutationError(422,'Source label is required for free text.')
  await exists(db,'accounts',input.accountId)
@@ -21,7 +21,7 @@ export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:st
  const id=createUlid(),versionId=createUlid()
  try { await db.batch([fence.before,fence.after,
   ...(messageDigest?[db.prepare('INSERT INTO penny_email_capture_messages(message_digest) VALUES(?)').bind(messageDigest)]:[]),
-  db.prepare(`INSERT INTO evidence_items(id,source_type,source_label,named_speaker,account_id,requester_id,recorded_by_operator_id,observed_at,release_id,review_state,created_at,updated_at) VALUES(?,?,?,?,?,NULL,?,?,?,'unreviewed',?,?)`).bind(id,input.sourceType,input.sourceLabel??null,input.namedSpeaker??null,input.accountId??null,actor,input.observedAt,input.releaseId??null,now,now),
+  db.prepare(`INSERT INTO evidence_items(id,source_type,source_label,named_speaker,account_id,requester_id,recorded_by_operator_id,observed_at,release_id,review_state,created_at,updated_at,admitted_sender) VALUES(?,?,?,?,?,NULL,?,?,?,'unreviewed',?,?,?)`).bind(id,input.sourceType,input.sourceLabel??null,input.namedSpeaker??null,input.accountId??null,actor,input.observedAt,input.releaseId??null,now,now,admittedSender??null),
   ...capturedEvidenceOwner(db,id,input.boardSlug,now),
   db.prepare(`INSERT INTO evidence_versions(id,evidence_id,version_number,wording,edited_by_operator_id,created_at,updated_at) VALUES(?,?,1,?,?,?,?)`).bind(versionId,id,input.wording,actor,now,now),
   ...(input.requestLinks??[]).flatMap(link=>[

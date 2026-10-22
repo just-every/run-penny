@@ -21,13 +21,15 @@ export async function reviewEmailCapture({page,runtime,goto,capture}){
  await goto('/app/feedback')
  await page.getByText('Sender stated in forward: synthetic-penny-browser@example.test',{exact:true}).first().waitFor()
  await page.getByText('Please add scheduled report exports.',{exact:false}).first().waitFor()
- await page.getByText('Forwarded email. Forwarded by operator@example.test. Attachment omitted: allowed types',{exact:true}).waitFor()
+ await page.getByText('Forwarded email. Attachment omitted: allowed types',{exact:true}).waitFor()
+ await page.getByText('Forwarded by operator@example.test',{exact:true}).waitFor()
  await capture('CAP-009-original-sender-item')
  const direct=raw.replace('<synthetic-penny-browser@example.test>','<synthetic-penny-direct@example.test>').split('\r\n\r\n')[0]+'\r\n\r\nA synthetic direct BCC copy.'
  await runtime.email({from:'operator@example.test',to:'capture@penny.test',raw:direct})
  await goto('/app/feedback')
- await page.getByText('Email — not forwarded. Forwarded by operator@example.test',{exact:true}).waitFor()
+ await page.getByText('Email — not forwarded',{exact:true}).waitFor()
  await page.getByText('Named speaker: operator@example.test',{exact:true}).waitFor()
+ await page.locator('article').filter({has:page.getByText('A synthetic direct BCC copy.',{exact:false})}).getByText('Forwarded by operator@example.test',{exact:true}).waitFor()
  await capture('CAP-009-direct-sender-item')
  assert.equal(runtime.outbox.length,0,'Capture sends no email')
 }
