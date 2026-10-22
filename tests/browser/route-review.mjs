@@ -130,12 +130,14 @@ async function visit(page, width, { route, path, auth, contains, finalPath, stat
   expectedFailures.clear();observedFailures.clear()
   if(status>=400)expectFailure(requestedUrl,status)
   if(path.startsWith('/app/')&&(route.includes('missing')||path.includes('no-such-record')))expectFailure(path.replace('/app/customers/','/api/operator/accounts/').replace('/app/','/api/operator/'),404)
-  const response = await page.goto(requestedUrl, { waitUntil: 'load' })
+  const response = await page.goto(requestedUrl, { waitUntil: 'commit' })
+  // Read SSR bytes before hydration can replace a canonicalized document.
+  const serverText = response ? await response.text() : ''
   await page.locator('body').waitFor({ state: 'visible' })
   // Client route canonicalization must finish before axe evaluates the document.
   await page.waitForLoadState('networkidle')
   const actualStatus = response?.status() ?? 0
-  if(response) assertNoDevelopmentCopy(await response.text(),route+'-SSR',width)
+  if(response) assertNoDevelopmentCopy(serverText,route+'-SSR',width)
   assert.equal(actualStatus, status, `${route} returned HTTP ${actualStatus}`)
   assert.equal(new URL(page.url()).pathname, finalPath ?? new URL(requestedUrl).pathname, `${route} navigated to an unexpected URL`)
   // Hidden controls (closed editors) can repeat record titles earlier in the document, so wait for a visible match.
