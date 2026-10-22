@@ -4172,7 +4172,7 @@
       "executable": false
     },
     "src/core/app/ui/loop-form.tsx": {
-      "sha256": "9446acfb39d8a9aeb5c0e82cb28668a12459f62e8add447fd8f79d46f13a16ce",
+      "sha256": "5dff0a0658b0265cb9d3fd24e020378eb28b99bba473d917a891e39dd39201f6",
       "executable": false
     },
     "src/core/app/ui/operator-app-shell.tsx": {
