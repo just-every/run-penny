@@ -16,3 +16,10 @@ a mail message.” With CAP-009 it now says: “The Worker accepts inbound mail 
 through CAP-009’s dedicated platform-invoked email handler; no HTTP route accepts
 a posted mail message.” NOTIFY-004 remains done. No issued release metadata is
 changed by this contract round.
+
+
+REQ-039 is qualified with Google and GitHub fixtures at their network edges,
+including cookie-free browser completion. Real consent, an owner's OAuth client,
+hosted redirect URIs and provider-console acceptance are NOT RUN. WIDGET-006 and
+WIDGET-008 inherit: on an SSO-required portal only WIDGET-008 applies; current
+Penny has no such portal state. ROLE-002's status is unchanged.

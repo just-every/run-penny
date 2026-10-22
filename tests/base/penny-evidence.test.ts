@@ -132,7 +132,7 @@ it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical ov
 })
 it('[CAP-009 EVID-008] admitted email captures and original attachments stay private with durable replay and upload custody',async()=>{
  await reset();const migrations=inject('migrations') as {name:string;queries:string[]}[]
- await applyD1Migrations(env.DB,migrations.filter(m=>!m.name.startsWith('0088_')))
+ await applyD1Migrations(env.DB,migrations.filter(m=>Number(m.name.slice(0,4))<88))
  const g=await fixture();await publish(g)
  const previous=(await env.DB.prepare('SELECT * FROM evidence_items').all()).results
  await applyD1Migrations(env.DB,migrations);await applyD1Migrations(env.DB,migrations)

@@ -3070,5 +3070,24 @@
       "reason",
       "count"
     ]
+  },
+  "penny_requester_oauth": {
+    "classification": "product",
+    "columns": [
+      "provider",
+      "enabled"
+    ]
+  },
+  "penny_requester_oauth_states": {
+    "classification": "installation",
+    "columns": [
+      "state_hash",
+      "provider",
+      "challenge",
+      "pending_token",
+      "expires_at",
+      "claim_id",
+      "completed"
+    ]
   }
 }

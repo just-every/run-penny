@@ -1,3 +1,5 @@
+import {reviewRequesterOAuth} from './requester-oauth-journey.mjs'
+import {requesterOAuthBindings,requesterOAuthEdge} from './requester-oauth-edge.mjs'
 import {reviewEmailCapture} from './email-capture-journey.mjs'
 import { reviewOperatorCompleteness } from './operator-completeness.mjs'
 import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
@@ -24,6 +26,8 @@ await mkdir(output, { recursive: true })
 const axe = await readFile(new URL('../../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8')
 const checks = [], negativeChecks = []
 const captureOnly=process.env.PENNY_CAPTURE_ONLY==='1'
+const oauthOnly=process.env.PENNY_OAUTH_ONLY==='1'
+const focusedOnly=captureOnly||oauthOnly
 const loopHealthOnly=process.env.PENNY_LOOP_HEALTH_ONLY==='1'
 const completenessOnly=!loopHealthOnly&&process.env.PENNY_OPERATOR_COMPLETENESS_ONLY==='1'
 let browser, hosted
@@ -40,6 +44,7 @@ function sanitizeDiagnosticError(error) {
   if(!error||typeof error!=='object')return
   if(typeof error.message==='string')error.message=diagnosticMessage(error.message)
   if(typeof error.stack==='string')error.stack=diagnosticMessage(error.stack)
+  if(Array.isArray(error.log))error.log=error.log.map(value=>typeof value==='string'?diagnosticMessage(value):value)
   if(Array.isArray(error.errors))error.errors.forEach(sanitizeDiagnosticError)
 }
 async function capturePage(width,label,targetPage,details={}) {
@@ -121,11 +126,11 @@ async function reviewLoopHealth({page,db,goto,capture}) {
   await capture('loop-health-empty')
 }
 try {
-  if(!captureOnly&&!completenessOnly&&!loopHealthOnly)hosted = await prepareHostedDataReview()
+  if(!focusedOnly&&!completenessOnly&&!loopHealthOnly)hosted = await prepareHostedDataReview()
   const options=browserOptions()
   browser = await chromium.launch({...options,args:[...options.args,...(hosted?[hosted.trustArgument]:[])]})
   async function reviewWidth(width) {
-    const runtime = await startBrowserRuntime({bindings:localProofBindings})
+    const runtime = await startBrowserRuntime({bindings:{...localProofBindings,...(oauthOnly?requesterOAuthBindings:{})},...(oauthOnly?{networkWorker:requesterOAuthEdge}:{})})
     let context
     try {
       const {origin} = runtime
@@ -135,7 +140,7 @@ try {
       context = await browser.newContext({viewport:{width,height:width===390?844:900},timezoneId:'Australia/Brisbane',extraHTTPHeaders:{'CF-Connecting-IP':width===390?'198.51.100.10':'198.51.100.11'}})
       // This small operator-only flow keeps the live limiter and cache; any 429
       // still fails the normal network assertions, without full-journey pauses.
-      if(!captureOnly&&!loopHealthOnly)await pacePublicContext(context,runtime,width===390?'198.51.100.10':'198.51.100.11')
+      if(!focusedOnly&&!loopHealthOnly)await pacePublicContext(context,runtime,width===390?'198.51.100.10':'198.51.100.11')
       await context.addCookies([{name:pair.slice(0,split),value:pair.slice(split+1),url:origin,httpOnly:true,sameSite:'Lax'}])
       const page = await context.newPage(), errors=[], external=[], failedRequests=[]
       let phase='first-run'
@@ -143,6 +148,7 @@ try {
       page.on('console',message=>{
         if(message.type()!=='error')return
         const diagnostic={width,phase,message:diagnosticMessage(message.text()),path:diagnosticPath(message.location().url)}
+        if(oauthOnly&&diagnostic.path==='/api/operator/settings/requester-oauth'&&/status of 409/.test(message.text()))return
         errors.push(diagnostic)
         console.error('operator-pages browser error: '+JSON.stringify(diagnostic))
       })
@@ -152,12 +158,14 @@ try {
       async function capture(label,targetPage=page) {
         phase=label
         await capturePage(width,label,targetPage)
-        if(!captureOnly&&!loopHealthOnly)await pacePublicPhase(targetPage)
+        if(!focusedOnly&&!loopHealthOnly)await pacePublicPhase(targetPage)
       }
       async function goto(path) { phase=diagnosticPath(origin+path);const response=await page.goto(origin+path);assert.equal(response.status(),200);await page.locator('main h1').waitFor() }
       await goto('/setup')
-      assert.equal(await finishFirstRun(page,captureOnly?async()=>{}:(targetPage,label)=>capture(label,targetPage)),true,'[BASE-ACCESS-002] native owner finishes the real first-run form')
-      if(captureOnly){
+      assert.equal(await finishFirstRun(page,focusedOnly?async()=>{}:(targetPage,label)=>capture(label,targetPage)),true,'[BASE-ACCESS-002] native owner finishes the real first-run form')
+      if(oauthOnly){
+        await reviewRequesterOAuth({page,browser,runtime,width,goto,capture})
+      } else if(captureOnly){
         await reviewEmailCapture({page,runtime,goto,capture})
       } else if(loopHealthOnly) {
         const response=await fetch(origin+'/api/operator/boards',{method:'POST',headers:{Cookie:pair,Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({name:'Finance workflows',slug:'attention-board',visibility:'public'})})
@@ -228,14 +236,14 @@ try {
       await reviewClauseStates({page,goto,capture})
       }
       }
-      if(!captureOnly&&!loopHealthOnly)await reviewOperatorCompleteness({page,browser,runtime,width,capture,checks})
+      if(!focusedOnly&&!loopHealthOnly)await reviewOperatorCompleteness({page,browser,runtime,width,capture,checks})
       assert.deepEqual(errors,[],`No console or page errors; failed requests: ${JSON.stringify(failedRequests)}`)
       assert.deepEqual(external,[],'No external browser requests')
     } finally {
       try {await context?.close()}
       finally {await runtime.close()}
     }
-    if(!captureOnly&&!completenessOnly&&!loopHealthOnly)await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
+    if(!focusedOnly&&!completenessOnly&&!loopHealthOnly)await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
   }
   if(completenessOnly) {
     // Both isolated runtimes must finish cleanup before the shared browser closes.

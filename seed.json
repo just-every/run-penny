@@ -460,6 +460,7 @@
       "/api/public/identity/email",
       "/api/public/identity/email/verify",
       "/api/public/identity/session",
+      "/api/portal/oauth/",
       "/auth/confirm",
       "/auth/bootstrap",
       "/auth/magic-link",

@@ -1,3 +1,4 @@
+import {pendingRequesterToken} from '../../auth/requester-pending'
 import { VoteImportanceControl } from './vote-importance-control'
 import type {PublicBoard} from '@/core/shared/api/public'
 import {usePublicResource} from '@/core/features/portal/ui/public-resource'
@@ -10,6 +11,9 @@ import { PortalIcon } from '@/core/features/portal/ui/public-primitives'
 import { rememberReturn } from '@/core/features/auth/requester-return'
 
 export function RequesterActions({slug,onChange,compact=false,commentsAllowed=true,showVoters=false,onSelected}:{slug:string;onChange?:()=>void;compact?:boolean;commentsAllowed?:boolean;showVoters?:boolean;onSelected?:(action:'vote'|'follow')=>void}) {
+  const [verification]=usePublicResource<{transport:string}>('/api/auth/capabilities')
+  const [social]=usePublicResource<{providers:string[]}>('/api/portal/oauth/providers')
+  const canVerify=verification.kind==='ready'&&verification.data.transport!=='unavailable'||social.kind==='ready'&&social.data.providers.length>0
   const [request]=usePublicResource<{board:{slug:string};status:string}>(`/api/public/requests/${slug}`)
   const [boards]=usePublicResource<PublicBoard[]>('/api/public/boards')
   const disclosure=boards.kind==='ready'&&request.kind==='ready'?boards.data.find(b=>b.slug===request.data.board.slug)?.subscriptionDisclosure:undefined
@@ -29,7 +33,13 @@ export function RequesterActions({slug,onChange,compact=false,commentsAllowed=tr
   },[slug])
   async function act(kind:'vote'|'follow') {
     setBusy(true);setMessage('')
-    try {const active=kind==='vote'?voted:following;await requesterMutation(`/api/public/requests/${slug}/${kind}`,active?'DELETE':'POST',active?undefined:kind==='vote'?{emailUpdates:updates,subscriptionVersion:disclosure?.version,...(importanceChoices.length?{importance:importance?Number(importance):null}:{})}:{})
+    try {
+      if(!verified){
+        const response=await fetch(`/api/public/requests/${slug}/${kind}`,{method:'POST',headers:{'Content-Type':'application/json','X-Penny-Pending-Token':pendingRequesterToken()},body:JSON.stringify(kind==='vote'?{emailUpdates:updates,subscriptionVersion:disclosure?.version,...(importanceChoices.length?{importance:importance?Number(importance):null}:{})}:{})})
+        if(response.status!==202)throw new Error('Could not hold this action for verification.')
+        rememberReturn(`/portal/feedback/${slug}`);location.assign('/portal/feedback/new');return
+      }
+      const active=kind==='vote'?voted:following;await requesterMutation(`/api/public/requests/${slug}/${kind}`,active?'DELETE':'POST',active?undefined:kind==='vote'?{emailUpdates:updates,subscriptionVersion:disclosure?.version,...(importanceChoices.length?{importance:importance?Number(importance):null}:{})}:{})
       if(kind==='vote')setVoted(!active);else setFollowing(!active)
       // Adding or removing a vote can change automatic email permission.
       if(kind==='vote')window.dispatchEvent(new Event('penny-requester-changed'))
@@ -44,8 +54,8 @@ export function RequesterActions({slug,onChange,compact=false,commentsAllowed=tr
     {!voted&&!votingClosed&&disclosure?.enabled?<p className="text-sm leading-6 text-penny-ink">{disclosure.vote}</p>:null}
     {verified?<VoteImportanceControl choices={importanceChoices} value={importance} onChange={setImportance} voted={voted} busy={busy} onSave={()=>{setBusy(true);setMessage('');void requesterMutation(`/api/public/requests/${slug}/vote-importance`,'PATCH',{importance:importance?Number(importance):null}).then(()=>{setMessage('Importance saved.');onChange?.()},error=>setMessage(error instanceof Error?error.message:'Could not save importance.')).finally(()=>setBusy(false))}}/>:null}
     <div className="flex flex-wrap gap-3">
-      <button type="button" disabled={busy||!verified||(!voted&&votingClosed)||request.kind!=='ready'||boards.kind!=='ready'} className={buttonClass} onClick={()=>void act('vote')}><PortalIcon name="vote" />{voted?'Remove vote':'Vote'}</button>
-      <button type="button" disabled={busy||!verified} className={secondaryButtonClass} onClick={()=>void act('follow')}><PortalIcon name="bell" />{following?'Unfollow':'Follow'}</button>
+      <button type="button" disabled={busy||(!verified&&!canVerify)||(!voted&&votingClosed)||request.kind!=='ready'||boards.kind!=='ready'} className={buttonClass} onClick={()=>void act('vote')}><PortalIcon name="vote" />{voted?'Remove vote':'Vote'}</button>
+      <button type="button" disabled={busy||(!verified&&!canVerify)} className={secondaryButtonClass} onClick={()=>void act('follow')}><PortalIcon name="bell" />{following?'Unfollow':'Follow'}</button>
     </div>
     {!voted&&!following?<label className="flex min-h-11 items-center gap-2 text-sm text-penny-ink"><input type="checkbox" className="size-4 accent-penny-ink" checked={updates} onChange={e=>setUpdates(e.target.checked)}/>Email me updates</label>:null}
     {verified&&(voted||following)?<p className="text-sm text-penny-muted">{following?'Email updates are on for this request.':'Email updates are off for this request. Follow it to get them.'}</p>:null}

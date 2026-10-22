@@ -1,3 +1,5 @@
+import {registerOAuthSettings} from '../features/auth/oauth-settings'
+import {registerOAuthRoutes} from '../features/auth/oauth-routes'
 import {registerEmailCaptureSettings} from '../features/evidence/email-settings'
 import {registerAiRoutes} from '@/core/features/ai/routes'
 import {registerPlanningRoutes} from '@/core/features/planning/routes'
@@ -108,6 +110,8 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerLearningRoutes(app)
   registerIntegrationApi(app)
   registerRequestStatusSettingsRoutes(app)
+  registerOAuthSettings(app)
+  registerOAuthRoutes(app)
   registerEmailCaptureSettings(app)
   registerMailIdentityRoutes(app)
   registerWorkspaceClockRoutes(app)

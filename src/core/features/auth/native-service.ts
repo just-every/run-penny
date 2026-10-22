@@ -1,6 +1,7 @@
+import {mintVerifiedRequester} from './verified-requester'
 import { mailReady } from './mail'
 import { auditedIdentityMail } from './mail-audit'
-import { bindPendingRequesterActions, replayPendingRequesterAction } from '@/core/features/requests/pending-actions'
+import { bindPendingRequesterActions } from '@/core/features/requests/pending-actions'
 import type { PennyRuntime } from '@/core/app/runtime'
 import { createUlid } from '@/core/shared/ulid'
 import { digest, NativeError, opaqueToken, takeRateLimit } from './native-tokens'
@@ -37,7 +38,6 @@ export async function issueNativeLink(runtime: PennyRuntime, purpose: 'requester
 }
 
 export async function consumeNativeLink(runtime: PennyRuntime, purpose: 'requester', token: string): Promise<{token:string; displayName:string; rejectedPendingActions:number}> {
-  let rejectedPendingActions=0
   const db=runtime.database.binding, now=new Date().toISOString(), hash=await digest(token)
   const link=await db.prepare('SELECT email,display_name AS displayName,pending_token_hash AS pendingHash,pending_email_hash AS pendingEmailHash FROM native_magic_links WHERE purpose=? AND token_hash=? AND consumed_at IS NULL AND expires_at>?').bind(purpose,hash,now).first<{email:string; displayName:string|null;pendingHash:string|null;pendingEmailHash:string|null}>()
   if (!link) throw new NativeError('invalid_magic_link',401)
@@ -45,26 +45,9 @@ export async function consumeNativeLink(runtime: PennyRuntime, purpose: 'request
     const blocked=await db.prepare('SELECT r.blocked_at AS blocked FROM requesters r JOIN requester_addresses a ON a.requester_id=r.id WHERE a.email=?').bind(link.email).first<{blocked:string|null}>()
     if (blocked?.blocked) throw new NativeError('requester_blocked',403)
   }
-  // The consume predicate gates every following insert in the same D1 batch.
-  // A unique claim marker fences concurrent consumption; a loser writes nothing.
-  const claim=createUlid(), sessionToken=opaqueToken(), sessionHash=await digest(sessionToken), expires=new Date(Date.now()+30*day).toISOString()
-  const gate='EXISTS(SELECT 1 FROM native_magic_links WHERE token_hash=? AND claim_id=?)'
-  const statements=[db.prepare(`UPDATE native_magic_links SET claim_id=?,consumed_at=?,updated_at=? WHERE token_hash=? AND purpose=? AND consumed_at IS NULL AND expires_at>? AND NOT EXISTS(SELECT 1 FROM requesters r JOIN requester_addresses a ON a.requester_id=r.id WHERE a.email=? AND r.blocked_at IS NOT NULL) RETURNING 1 AS affected`).bind(claim,now,now,hash,purpose,now,link.email)]
-  {
-    const requesterId=createUlid()
-    statements.push(
-      db.prepare(`INSERT INTO requesters(id,display_name,created_at,updated_at) SELECT ?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM requester_addresses WHERE email=?) AND ${gate}`).bind(requesterId,link.displayName,now,now,link.email,hash,claim),
-      db.prepare(`INSERT INTO requester_addresses(id,requester_id,email,verified_at,created_at,updated_at) SELECT ?,?,?,?,?,? WHERE ${gate} ON CONFLICT(email) DO UPDATE SET verified_at=excluded.verified_at,suppressed_at=NULL,updated_at=excluded.updated_at`).bind(createUlid(),requesterId,link.email,now,now,now,hash,claim),
-      db.prepare(`INSERT INTO native_requester_sessions(id,requester_id,address_id,token_hash,expires_at,last_used_at,created_at,updated_at) SELECT ?,requester_id,id,?,?,?,?,? FROM requester_addresses WHERE email=? AND ${gate}`).bind(createUlid(),sessionHash,expires,now,now,now,link.email,hash,claim),
-    )
-  }
-  const results=await db.batch(statements)
-  if(results[0].results.length!==1) throw new NativeError('invalid_magic_link',401)
-  if(purpose==='requester' && link.pendingHash){
-    const identity=await authenticateNativeRequester(runtime,sessionToken)
-    if(link.pendingEmailHash){let result;do{result=await replayPendingRequesterAction(runtime.database,{requesterId:identity.id,displayName:identity.displayName,verifiedEmail:identity.email,addressId:identity.addressId,sessionId:identity.sessionId},link.pendingHash,link.pendingEmailHash,now);if(result.state==='rejected')rejectedPendingActions++}while(result.state!=='not_requested')}
-  }
-  return {token:sessionToken,displayName:link.displayName??link.email.split('@')[0],rejectedPendingActions}
+  const claim=createUlid(),gate='EXISTS(SELECT 1 FROM native_magic_links WHERE token_hash=? AND claim_id=?)'
+  const update=db.prepare(`UPDATE native_magic_links SET claim_id=?,consumed_at=?,updated_at=? WHERE token_hash=? AND purpose=? AND consumed_at IS NULL AND expires_at>? AND NOT EXISTS(SELECT 1 FROM requesters r JOIN requester_addresses a ON a.requester_id=r.id WHERE a.email=? AND r.blocked_at IS NOT NULL) RETURNING 1 AS affected`).bind(claim,now,now,hash,purpose,now,link.email)
+  try{return await mintVerifiedRequester(runtime,link,gate,[hash,claim],update)}catch(error){if(error instanceof NativeError&&error.code==='verification_claim_refused')throw new NativeError('invalid_magic_link',401);throw error}
 }
 
 export async function authenticateNativeRequester(runtime: PennyRuntime, token: string|null): Promise<RequesterIdentity> {

@@ -1,3 +1,5 @@
+import {SocialSignIn} from '../../auth/ui/social-signin'
+import {pendingRequesterToken} from '../../auth/requester-pending'
 import {hostRequesterName} from '@/core/features/auth/host-client'
 import { RequestSuggestions } from './request-suggestions'
 import { useEffect,useState } from 'react'
@@ -44,9 +46,9 @@ export function SubmitFeedbackPage({content}:{readonly content:PublicPortalConte
         </form></>:<>
         <h2 className={h2Class}>Verify your email first</h2><p className="mt-3 leading-7 text-penny-ink">A single-use verification link identifies your feedback. Your email stays private; an operator approves your display name before publication.</p>
         {capabilities.kind==='ready'&&capabilities.data.testCustomers?<p className="mt-4 rounded-lg border border-penny-line p-4 text-sm leading-6 text-penny-ink">Penny Dev sends no email, so no verification link can arrive here. To act as a customer, sign in as an operator and add a test customer in <a href="/app/settings#settings-test-customers" className={textLinkClass}>Feedback settings</a>.</p>:
-        <form className="mt-5 space-y-5" onSubmit={async event=>{event.preventDefault();const data=new FormData(event.currentTarget);setBusy(true);try{await postJson('/api/public/identity/email',{email:data.get('email'),displayName:data.get('displayName')});setMessage('Check your email for a verification link; it expires after 30 minutes.')}catch(error){setMessage(error instanceof Error?error.message:'Verification failed.')}finally{setBusy(false)}}}>
+        <form className="mt-5 space-y-5" onSubmit={async event=>{event.preventDefault();const data=new FormData(event.currentTarget);setBusy(true);try{await postJson('/api/public/identity/email',{email:data.get('email'),displayName:data.get('displayName'),pendingToken:pendingRequesterToken()});setMessage('Check your email for a verification link; it expires after 30 minutes.')}catch(error){setMessage(error instanceof Error?error.message:'Verification failed.')}finally{setBusy(false)}}}>
           <label className={fieldLabelClass}>Display name<input name="displayName" className={fieldClass} required maxLength={160}/></label><label className={fieldLabelClass}>Email<input name="email" type="email" autoComplete="email" className={fieldClass} required maxLength={254}/></label><button className={buttonClass} disabled={!ready||busy}>{busy?'Requesting…':'Send verification link'}</button>
-        </form>}</>}
+        </form>}<SocialSignIn/></>}
       <p role="status" className="mt-4 text-sm leading-6 text-penny-ink">{message}</p>
     </PublicCard><Link to="/" className={`${textLinkClass} mt-6 inline-flex min-h-11 items-center`}>Browse published feedback</Link>
   </div></PublicPortalLayout>

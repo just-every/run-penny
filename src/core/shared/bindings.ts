@@ -1,4 +1,8 @@
 export interface AppBindings {
+  REQUESTER_GOOGLE_CLIENT_ID?: string
+  REQUESTER_GOOGLE_CLIENT_SECRET?: string
+  REQUESTER_GITHUB_CLIENT_ID?: string
+  REQUESTER_GITHUB_CLIENT_SECRET?: string
   PENNY_AI?: string
   PENNY_LEARNING?: string
   PENNY_LEARNING_EGRESS?: import('../features/learning/configuration').LearningEgress

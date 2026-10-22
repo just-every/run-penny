@@ -1,3 +1,4 @@
+import {RequesterOAuthSettings} from '../../auth/ui/requester-oauth-settings'
 import {ModelSettings} from '../../ai/ui/model-settings'
 import {AgingSettings} from '../../triage/aging-settings'
 import {BoardOwnerSettings} from '../../ownership/ui/board-owner-settings'
@@ -41,6 +42,7 @@ export function BoardSettings() {
       <div className="mt-6 space-y-6 sm:mt-8">
         <OperatorSettings />
         <ModelSettings />
+        <RequesterOAuthSettings />
         <TestCustomers />
         <DeliveryReview />
         <ApiKeys />

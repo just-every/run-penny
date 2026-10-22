@@ -99,3 +99,38 @@ In **Feedback settings → Portal embedding**, save one exact HTTPS parent origi
 ## Customer-safe by design
 
 Only approved fields reach any portal page or the public API: a request's approved title and description, a display name, approved comments, and the customer-safe wording on roadmap items and releases. Requester email addresses, accounts, evidence, internal notes, internal boards and operator-only fields never appear there, including in fields the page does not display.
+
+
+## Requester Google and GitHub sign-in
+
+Owners can enable either provider under Feedback settings → Requester social
+sign-in. Both are off by default. Configure the installation bindings
+`REQUESTER_GOOGLE_CLIENT_ID`, `REQUESTER_GOOGLE_CLIENT_SECRET`,
+`REQUESTER_GITHUB_CLIENT_ID` and `REQUESTER_GITHUB_CLIENT_SECRET` in the deployment,
+plus the enforcing `PENNY_LEARNING_EGRESS` RPC service used for bounded GET/POST
+network calls. It must enforce public DNS/IP at connect time, verified TLS,
+no redirects and bounded requests/responses. The service makes no model call for
+sign-in. Credentials never enter D1, settings forms, archives or logs.
+
+The fixed redirects are `/api/portal/oauth/google/callback` and
+`/api/portal/oauth/github/callback` on the installation origin. Google setup may
+register localhost ports 8787, 8788 and 8789 plus the hosted installation's own
+origin. Configure clients and consent/test-user membership in the provider's
+console. Real Google/GitHub consent, credentials and hosted redirect acceptance
+were **NOT RUN**; qualification uses synthetic network-edge fixtures only.
+
+A signed-out vote or follow is held while the visitor verifies. Google’s verified
+email and GitHub’s primary verified email enter the same requester-only address
+and browser-local session path as emailed verification. Unverified addresses use
+an emailed link; a provider with no primary address sends the visitor to enter an
+address for that link. Sign-in grants no operator authority or subscription.
+Existing explicit actions and board subscription disclosures retain their rules.
+
+OAuth state expires after ten minutes, is single-use and requires the originating
+browser's PKCE verifier. No cookie is set. Erasure removes the requester/address
+and native session; no provider subject is stored. Portable provider switches
+restore off; credentials and in-flight states are never portable.
+
+Inherited duty: on an SSO-required portal (WIDGET-006), only WIDGET-008 applies.
+Current Penny has no portal SSO-required state; those clauses retain this duty.
+Operator SSO domain rules do not turn requester sign-in into operator access.

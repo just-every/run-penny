@@ -1,3 +1,4 @@
+import {proveRequesterOAuth} from './requester-oauth-fixture'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import {  beforeEach, afterEach, vi, expect, inject, it } from 'vitest'
 import { toJSONAsync } from 'seroval'
@@ -43,12 +44,13 @@ it('[BASE-ACCESS-001/002] expired links and expired sessions deny access; member
  expect(response.status).toBe(200)
  await env.DB.prepare('UPDATE oa_sessions SET expires_at=1').run();expect((await call('/api/auth/session',undefined,cookie)).status).toBe(401)
 })
-it('[BASE-ACCESS-001 REQ-023] missing mail config fails closed for both identity paths, no local production transport',async()=>{
+it('[REQ-039 BASE-ACCESS-001 REQ-023] requester OAuth verifies at the provider edge without cookies or operator authority; missing mail fails closed',async()=>{
  const app=createPennyApi();for(const path of ['/api/auth/magic-link','/api/public/identity/email']){
   const response=await app.fetch(new Request(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify(path.includes('public')?{email:'test@example.test',displayName:'Test'}:{email:'owner@penny.invalid'})}),{...env,MAIL_API_KEY:undefined,PENNY_AUTH_TRANSPORT:'local-outbox'})
   expect(response.status).toBe(503)
  }
  expect(messages).toHaveLength(0)
+ await proveRequesterOAuth()
 })
 
 it('[BASE-ACCESS-001 REQ-023] rejected provider sends invalidate both operator and requester verification links',async()=>{

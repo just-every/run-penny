@@ -96,6 +96,7 @@ function limits(data:Record<string,Row[]>):void{
  if(Object.values(data).reduce((n,items)=>n+items.length,0)>DATA_LIMITS.rows||new TextEncoder().encode(canonical(data)).byteLength>DATA_LIMITS.recordBytes)fail('archive_limit',413)
 }
 export const normalize=(name:string,row:Row):Row=>{
+ if(name==='penny_requester_oauth')return {...row,enabled:0}
  // Advance freshness only when imposing the restore hold, so normalized rows
  // remain unchanged through export validation, restore and later exports.
  if(name==='penny_ai_runs'&&row.state==='reserved')return {...row,state:'uncertain'}
