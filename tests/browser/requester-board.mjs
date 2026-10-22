@@ -53,6 +53,7 @@ try{
   await comment.getByLabel('Approved display name',{exact:true}).fill('Reviewed requester')
   await comment.getByRole('button',{name:'Approve comment',exact:true}).click()
   await comment.waitFor({state:'detached'})
+  await openRequestControls(card);await shot(review,'comment-approved',width)
   const status=card.locator('form').filter({has:review.getByRole('heading',{name:'Publish status update',exact:true})})
   await status.locator('select[name=status]').selectOption('under_review')
   await status.getByLabel('Public update',{exact:true}).fill('We are reviewing the monthly scheduling workflow.')

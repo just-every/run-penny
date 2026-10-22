@@ -41,6 +41,7 @@ try {
   const comment=card.locator('form').filter({has:review.getByRole('heading',{name:'Comment',exact:true})})
   await shot(review,'comment-approval-ready',width)
   await comment.getByLabel('Approved display name',{exact:true}).fill('Reviewed requester');await comment.getByRole('button',{name:'Approve comment',exact:true}).click();await comment.waitFor({state:'detached'})
+  await openRequestControls(card);await shot(review,'comment-approved',width)
   const status=card.locator('form').filter({has:review.getByRole('heading',{name:'Publish status update',exact:true})})
   await status.locator('select[name=status]').selectOption('under_review');await status.getByLabel('Public update',{exact:true}).fill('We are reviewing monthly scheduling.');const statusSaved=review.waitForResponse(r=>r.url().endsWith(`/api/operator/requests/${slug}/status-updates`)&&r.request().method()==='POST');await status.getByRole('button',{name:'Publish status update',exact:true}).click();assert.equal((await statusSaved).status(),200)
   await page.reload();await page.getByText('We are reviewing monthly scheduling.',{exact:true}).waitFor();await page.getByText('Monthly scheduling avoids a manual step.',{exact:true}).waitFor();await shot(page,'status-published',width)
