@@ -7688,7 +7688,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-auth.mjs": {
-      "sha256": "bfc75be78c8e4305ebb2c1b9005ab3d70f0357c211c1f195946abae26c280db6",
+      "sha256": "db99ab3568939832134b65336b3d3a01c5e21e494c26cfe8c20e7174d53a651c",
       "executable": false
     },
     "tests/browser/operator-completeness-data.mjs": {
@@ -7723,8 +7723,16 @@
       "sha256": "f9a132c53963eba1997876c38c07c945e0d5ef4804f17dfa351f835235eae3be",
       "executable": false
     },
+    "tests/browser/operator-evidence-flow.mjs": {
+      "sha256": "591fb6560b15406e0934472100cac365add3e080e769e2a3f77a3389a2565c51",
+      "executable": false
+    },
     "tests/browser/operator-navigation.mjs": {
       "sha256": "071e79cdfc622a25eca06105455b201319f4e6728f2676ea186e2174d0c2ec41",
+      "executable": false
+    },
+    "tests/browser/operator-overview-checks.mjs": {
+      "sha256": "415d12b76c257cd47cb10670c4984f0badcd613349142da5c38db0b347a36069",
       "executable": false
     },
     "tests/browser/operator-pages-clause-states.mjs": {
@@ -7753,6 +7761,10 @@
     },
     "tests/browser/operator-pages.mjs": {
       "sha256": "421885dea40e049ff715575b8a59565af8a5fc5ce6cefdb8acd19bf0adced3c6",
+      "executable": false
+    },
+    "tests/browser/operator-roadmap-record.mjs": {
+      "sha256": "08fd703a54c03a3eb1d9d3d531d28f6da815657d0a9829ab7960af6abc012324",
       "executable": false
     },
     "tests/browser/ownership-journey.mjs": {

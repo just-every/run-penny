@@ -4,7 +4,7 @@ import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
 export const localProofKey='synthetic-browser-local-gate-proof-1234567890'
 const offset=((12-new Date().getUTCHours()+12)%24)-12
 const businessTimezone=offset===0?'Etc/GMT':`Etc/GMT${offset>0?'-':'+'}${Math.abs(offset)}`
-export const localProofBindings={WORKSPACE_TIMEZONE:businessTimezone,PENNY_ENVIRONMENT:'test',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',MAIL_API_KEY:'synthetic-provider-test-key',RER_DEV_KEY:localProofKey}
+export const localProofBindings={WORKSPACE_TIMEZONE:businessTimezone,PENNY_ENVIRONMENT:'test',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',MAIL_API_KEY:'synthetic-browser-provider-key',RER_DEV_KEY:localProofKey}
 export async function api(page,path,body,method=body===undefined?'GET':'POST') {
  const response=await page.context().request.fetch(new URL(path,page.url()).href,{method,...(body===undefined?{}:{data:body,headers:{Origin:new URL(page.url()).origin}})})
  return response
