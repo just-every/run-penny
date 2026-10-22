@@ -7836,7 +7836,7 @@
       "executable": false
     },
     "tests/browser/route-review.mjs": {
-      "sha256": "39ae33b590208e40662133b74ecbbbb46009acb20a79b744c233885a6cefa5ba",
+      "sha256": "9dbb8b78b7e45654b6b9a8607ae6bdae0a2f2ab7fb7b1545ea41c3610aaf270f",
       "executable": false
     },
     "tests/browser/signin.test.mjs": {
