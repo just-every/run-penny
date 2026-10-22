@@ -85,6 +85,8 @@ async function invited(cookie:Record<string,string>,email:string){
 it('[OPS-001/002] equal native invitees operate and manage peers; removal revokes cookies, links, generated functions and keys with durable audit',async()=>{
  const first=await owner(),peer=await invited(first,'peer@example.test')
  for(const path of ['/api/operator/settings/requester-oauth','/api/operator/settings/redaction']){const read=await call(path,undefined,peer.cookie);expect(read.status).toBe(200);expect(await read.json()).toMatchObject({canConfigure:false});expect((await call(path,{},peer.cookie,'PUT')).status).toBe(403)}
+ expect((await call('/api/operator/settings/email-capture',undefined,peer.cookie)).status).toBe(403)
+ expect((await call('/api/operator/settings/email-capture',{},peer.cookie,'PUT')).status).toBe(403)
  expect((await call('/api/operator/moderation',undefined,peer.cookie)).status).toBe(200)
  expect((await call('/api/operator/catalog/tags',{name:'Peer managed tag'},peer.cookie)).status).toBe(201)
  const page=await call('/app/overview',undefined,{...peer.cookie,Accept:'text/html'});expect(page.status).toBe(200)

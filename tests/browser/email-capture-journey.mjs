@@ -8,10 +8,15 @@ export async function reviewEmailCapture({page,runtime,goto,capture}){
  await panel.getByRole('button',{name:'Save capture settings',exact:true}).click()
  assert.equal((await saved).status(),200)
  await panel.getByText('Capture settings saved. Hosted routing must be configured separately.').waitFor()
- await capture('CAP-009-capture-settings')
  const raw='From: operator@example.test\r\nTo: capture@penny.test\r\nMessage-ID: <synthetic-penny-browser@example.test>\r\nAuthentication-Results: mx.cloudflare.net; dmarc=pass header.from=example.test\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n---------- Forwarded message ---------\r\nFrom: Customer <synthetic-penny-browser@example.test>\r\nDate: Thu, 22 Oct 2026 09:00:00 +0000\r\nSubject: Reports\r\nTo: Operator <operator@example.test>\r\n\r\nPlease add scheduled report exports.'
  const mime=raw.replace('Content-Type: text/plain; charset=utf-8\r\n\r\n','MIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=synthetic-penny-boundary\r\n\r\n--synthetic-penny-boundary\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n')+'\r\n--synthetic-penny-boundary\r\nContent-Type: text/plain\r\nContent-Disposition: attachment; filename=synthetic-penny-refused.txt\r\n\r\nSynthetic attachment of a refused type\r\n--synthetic-penny-boundary--\r\n'
  await runtime.email({from:'operator@example.test',to:'capture@penny.test',raw:mime})
+ await runtime.email({from:'operator@example.test',to:'capture@penny.test',raw:mime})
+ await goto('/app/settings')
+ const reasons=page.getByRole('list',{name:'Email capture refusal counts'})
+ await reasons.getByText('duplicate message: 1',{exact:true}).waitFor()
+ assert.doesNotMatch(await reasons.innerText(),/synthetic-penny|example\.test|Reports/)
+ await capture('CAP-009-capture-settings')
  assert.equal(await runtime.db.prepare("SELECT named_speaker FROM evidence_items WHERE source_type='email'").first('named_speaker'),'synthetic-penny-browser@example.test')
  await goto('/app/feedback')
  await page.getByText('Named speaker: synthetic-penny-browser@example.test',{exact:true}).first().waitFor()

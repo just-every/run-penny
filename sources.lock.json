@@ -7212,7 +7212,7 @@
       "executable": false
     },
     "tests/base/auth.test.ts": {
-      "sha256": "a2be1fda15dcf8042bc44fde6c160ac47f6c5ce6ef9e466afb433840595c103c",
+      "sha256": "fb5c35b044beef3e656cc43b9f3345354108840e80d642c70f15509bffae656e",
       "executable": false
     },
     "tests/base/board-categories.test.ts": {
@@ -7256,7 +7256,7 @@
       "executable": false
     },
     "tests/base/email-capture-fixture.ts": {
-      "sha256": "b370848124636620a21735ac68b001bd168e00c726efb50529aa24e19a6d834f",
+      "sha256": "35ee7be8b45fda425011d127d872fa310b55c9777b828fb69a6869dcb4e7dbb9",
       "executable": false
     },
     "tests/base/explicit-consent-board.ts": {
@@ -7580,7 +7580,7 @@
       "executable": false
     },
     "tests/browser/email-capture-journey.mjs": {
-      "sha256": "6cc0e18d56aeb40b48c76c0ef20c6e6a2a172c8de26af96e13c1c04025b375a2",
+      "sha256": "7180fd5f37cfa51a697d166658276577ca4295426c435865509247c9eadfba49",
       "executable": false
     },
     "tests/browser/explicit-consent-board.mjs": {
