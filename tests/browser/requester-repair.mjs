@@ -1,18 +1,18 @@
 import assert from 'node:assert/strict'
 import { chromium } from '@playwright/test'
-import { origin,sql,api,identity,operatorCookie,shot,manifest } from './requester-repair-support.mjs'
-import {explicitConsentBoard} from './explicit-consent-board.mjs'
-const cookie=await operatorCookie(),unique=Date.now().toString(36),board=`repair-${unique}`
-await api('/api/operator/boards',{slug:board,name:'Product feedback',visibility:'public'},{Cookie:cookie})
-await explicitConsentBoard(origin,board,cookie)
-const browser=await chromium.launch({headless:true}),errors=[],checks=[]
+import { shot,manifest } from './requester-repair-support.mjs'
+import { requesterAuth } from './requester-auth.mjs'
+const browser=await chromium.launch({headless:true,args:['--use-mock-keychain','--password-store=basic']}),errors=[],checks=[]
+let runtime
 try {
+ const harness=await requesterAuth(browser);runtime=harness.runtime
+ const {origin,api,sql,explicitConsentBoard}=harness,unique=Date.now().toString(36),board=`repair-${unique}`
+ const setup=await harness.operator(1440)
+ await api('/api/operator/boards',{slug:board,name:'Product feedback',visibility:'public'},setup.page.request)
+ await explicitConsentBoard(board,setup.page.request);await setup.context.close()
  for(const width of [1440,390]){
-  const token=await identity(`repair-${unique}-${width}@example.test`),auth={Authorization:`Bearer ${token}`}
-  const requester=await browser.newContext({viewport:{width,height:1000}}),operator=await browser.newContext({viewport:{width,height:1000}})
-  await requester.addInitScript(value=>localStorage.setItem('penny_requester_session',value),token)
-  const [name,value]=cookie.split('=');await operator.addCookies([{name,value,url:origin,httpOnly:true,sameSite:'Lax'}])
-  const page=await requester.newPage(),review=await operator.newPage()
+  const {context:requester,page,token}=await harness.requester(width,`repair-${unique}-${width}@example.test`),auth={Authorization:`Bearer ${token}`}
+  const {context:operator,page:review}=await harness.operator(width)
   for(const p of [page,review])p.on('pageerror',error=>errors.push(error.message))
   const title=`Scheduled exports ${width} ${unique}`
   await page.goto(origin+'/portal/feedback/new');await page.getByLabel('Title',{exact:true}).fill(title)
@@ -45,7 +45,7 @@ try {
   await page.reload();await page.getByText('We are reviewing monthly scheduling.',{exact:true}).waitFor();await page.getByText('Monthly scheduling avoids a manual step.',{exact:true}).waitFor();await shot(page,'status-published',width)
   // A duplicate choice is a vote only, even when the draft itself is complete.
   await api(`/api/public/requests/${slug}/vote`,undefined,auth,'DELETE')
-  const before=sql('SELECT (SELECT COUNT(*) FROM requests) requests,(SELECT COUNT(*) FROM evidence_items) evidence')[0]
+  const before=(await sql('SELECT (SELECT COUNT(*) FROM requests) requests,(SELECT COUNT(*) FROM evidence_items) evidence'))[0]
   await page.goto(origin+'/portal/feedback/new');await page.getByLabel('Title',{exact:true}).fill(title)
   await page.getByLabel('Problem description',{exact:true}).fill('This unsent draft must not become a new submission.')
   await page.locator('select[name=board]').selectOption(board)
@@ -55,36 +55,36 @@ try {
   assert.equal(await page.getByRole('heading',{name:'Feedback is awaiting review',exact:true}).count(),0)
   assert.equal(await page.getByText('Your feedback and its original evidence were saved.',{exact:false}).count(),0)
   await page.getByText('No new feedback was submitted.',{exact:false}).waitFor();await shot(page,'duplicate-vote-success',width)
-  assert.deepEqual(sql('SELECT (SELECT COUNT(*) FROM requests) requests,(SELECT COUNT(*) FROM evidence_items) evidence')[0],before)
+  assert.deepEqual((await sql('SELECT (SELECT COUNT(*) FROM requests) requests,(SELECT COUNT(*) FROM evidence_items) evidence'))[0],before)
   checks.push({width,duplicateChoice:'vote',newRequests:0,newEvidence:0,falseSubmissionCopy:false})
   // The mounted appeal control can reopen an actual rejected edit.
   await api(`/api/public/requests/${slug}`,{title,description:'An edit with further scheduling detail.'},auth,'PATCH')
-  let context=await (await api(`/api/operator/requests/${slug}/context`,undefined,{Cookie:cookie})).json()
+  let context=await (await api(`/api/operator/requests/${slug}/context`,undefined,review.request)).json()
   const edit=context.edits.find(item=>item.moderation_state==='awaiting_review')
-  await api(`/api/operator/requests/edits/${edit.id}/moderate`,{verdict:'rejected',reason:'Please clarify the frequency.'},{Cookie:cookie})
+  await api(`/api/operator/requests/edits/${edit.id}/moderate`,{verdict:'rejected',reason:'Please clarify the frequency.'},review.request)
   await api(`/api/public/requests/${slug}/appeals`,{subjectType:'request_edit',subjectId:edit.id,body:'The monthly frequency is now clear.'},auth)
   await review.reload();await card.getByText('Discussion, status and request controls',{exact:true}).click()
   await card.getByLabel('Appeal decision reason',{exact:true}).fill('New context merits another review.')
   await card.getByRole('button',{name:'Reopen for moderation',exact:true}).click()
   await card.getByText('reopen: New context merits another review.',{exact:true}).waitFor()
   await card.getByRole('button',{name:'Approve request edit',exact:true}).waitFor();await shot(review,'appeal-reopened',width)
-  context=await (await api(`/api/operator/requests/${slug}/context`,undefined,{Cookie:cookie})).json()
+  context=await (await api(`/api/operator/requests/${slug}/context`,undefined,review.request)).json()
   assert.equal(context.appeals.at(-1).state,'reviewed');assert.equal(context.edits.find(item=>item.id===edit.id).moderation_state,'awaiting_review')
   checks.push({width,appealReopenedByMountedControl:true})
   // Synthetic interrupted metadata state, with original bytes uploaded via HTTP.
   const fileBytes=new TextEncoder().encode('%PDF-1.7 synthetic local recovery evidence'),form=new FormData()
   form.append('file',new Blob([fileBytes],{type:'application/pdf'}),'recovery.pdf')
-  const upload=await fetch(origin+`/api/public/requests/${slug}/attachments`,{method:'POST',headers:auth,body:form})
+  const upload=await fetch(origin+`/api/public/requests/${slug}/attachments`,{method:'POST',headers:{Origin:origin,...auth},body:form})
   assert.equal(upload.status,201);const {id:uploadId}=await upload.json()
   const fileHash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',fileBytes))].map(b=>b.toString(16).padStart(2,'0')).join('')
-  sql(`INSERT INTO request_attachment_uploads(id,request_id,storage_key,original_filename,content_type,byte_size,sha256,created_at,updated_at) SELECT id,request_id,storage_key,original_filename,content_type,byte_size,'${fileHash}',created_at,updated_at FROM attachments WHERE id='${uploadId}'; DELETE FROM attachments WHERE id='${uploadId}'`)
+  await sql(`INSERT INTO request_attachment_uploads(id,request_id,storage_key,original_filename,content_type,byte_size,sha256,created_at,updated_at) SELECT id,request_id,storage_key,original_filename,content_type,byte_size,'${fileHash}',created_at,updated_at FROM attachments WHERE id='${uploadId}'; DELETE FROM attachments WHERE id='${uploadId}'`)
   await review.reload();await card.getByText('Discussion, status and request controls',{exact:true}).click()
   await card.getByLabel('Original file (only if stored bytes are missing)',{exact:true}).setInputFiles({name:'recovery.pdf',mimeType:'application/pdf',buffer:Buffer.from(fileBytes)})
   await shot(review,'upload-recovery-ready',width)
   await card.getByRole('button',{name:'Verify and recover upload',exact:true}).click()
   await card.getByRole('button',{name:'Verify and recover upload',exact:true}).waitFor({state:'detached'})
   await card.getByRole('button',{name:'Approve attachment',exact:true}).waitFor();await shot(review,'upload-recovered',width)
-  const recovered=await api(`/api/operator/attachments/${uploadId}`,undefined,{Cookie:cookie})
+  const recovered=await api(`/api/operator/attachments/${uploadId}`,undefined,review.request)
   assert.deepEqual(new Uint8Array(await recovered.arrayBuffer()),fileBytes)
   checks.push({width,syntheticInterruptedUploadRecoveredByMountedControl:true,originalBytesPreserved:true})
   // A withdrawn pending request vanishes from the real moderation screen.
@@ -96,5 +96,5 @@ try {
   await page.goto(origin+'/portal/feedback');await page.getByLabel('Search feedback',{exact:true}).fill('Scheduled exports');await page.locator('select[name=status]').selectOption('under_review');await page.getByRole('button',{name:'Search',exact:true}).click();await page.getByRole('heading',{name:title,exact:true}).waitFor();await shot(page,'search-filter',width)
   await requester.close();await operator.close()
  }
- await manifest('manifest',errors,checks)
-}finally{await browser.close()}
+ await manifest('manifest',errors,checks,origin)
+}finally{await browser.close();await runtime?.close()}
