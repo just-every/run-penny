@@ -1,3 +1,4 @@
+import {publishFieldFixtures} from './operator-field-public-proof.mjs'
 import assert from 'node:assert/strict'
 import { entities,proofId } from './operator-completeness-data.mjs'
 import {generatedOperatorTransport,generatedHeaders} from './operator-completeness-transport.mjs'
@@ -71,12 +72,16 @@ export async function reviewCustomFields({page,peer,origin,capture,db}) {
   const fields=await (await api(peer,`/api/operator/custom-fields/account/${proofId(6)}`)).json()
   assert.equal(fields.find(row=>row.id===definition.id).value,value)
  }
+ await publishFieldFixtures({page,db,definitions,capture})
  const anonymous=await page.context().browser().newContext()
  try {
   for(const path of ['/','/portal/feedback','/portal/roadmap','/portal/updates','/api/public/requests','/api/public/roadmap','/api/public/releases']) {
    const response=await anonymous.request.get(origin+path)
    assert.equal(response.status(),200,'[DATA-004] public privacy probe opens a real document/API')
-   assert.doesNotMatch(await response.text(),/privateproof|customproof/,'[DATA-004] persisted definitions/values absent from public API/document/hydration')
+   const body=await response.text()
+   assert.doesNotMatch(body,/privateproof|customproof/,'[DATA-004] persisted definitions/values absent from public API/document/hydration')
+   const title=({'/api/public/requests':'Public field request','/api/public/roadmap':'Public field roadmap','/api/public/releases':'Public field release'})[path]
+   if(title)assert.ok(body.includes(title),'[DATA-004] privacy assertion reads a nonempty published projection')
   }
   const generated=await anonymous.request.get(origin+await generatedOperatorTransport(),{headers:generatedHeaders(origin)})
   assert.doesNotMatch(await generated.text(),/privateproof|customproof/,'[DATA-004] anonymous generated private field read denied')

@@ -77,6 +77,8 @@ async function proveEvidenceCapture(g:Awaited<ReturnType<typeof fixture>>){
  expect((await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results).toEqual(requests.results)
  expect(await count()).toBe(before)
  expect(await env.DB.prepare('SELECT e.*,v.wording FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id WHERE e.id=?').bind(g.evidence.id).first()).toMatchObject({source_type:g.evidenceInput.sourceType,source_label:g.evidenceInput.sourceLabel,wording:g.evidenceInput.wording,observed_at:g.evidenceInput.observedAt,recorded_by_operator_id:g.actor,named_speaker:g.evidenceInput.namedSpeaker,requester_id:null,account_id:g.account.id})
+ const associated=await env.DB.prepare('SELECT requester_id FROM native_requester_sessions ORDER BY created_at DESC LIMIT 1').first<string>('requester_id')
+ await env.DB.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(associated,g.account.id,new Date().toISOString()).run()
  const submitted=await json<{id:string;slug:string}>(call('/api/public/requests',{title:'synthetic-penny-3',description:'Original requester words',boardSlug:'feedback',idempotencyKey:crypto.randomUUID()},requester),201)
  const captured=await env.DB.prepare('SELECT e.*,v.wording,r.author_requester_id FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id JOIN request_evidence_links l ON l.evidence_id=e.id JOIN requests r ON r.id=l.request_id WHERE r.slug=?').bind(submitted.slug).first<{requester_id:string;author_requester_id:string;observed_at:string}>()
  expect(captured).toMatchObject({source_type:'portal_request',wording:'synthetic-penny-3\n\nOriginal requester words',recorded_by_operator_id:null,named_speaker:null,account_id:null})
