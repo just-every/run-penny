@@ -11,6 +11,7 @@ export async function api(page,path,body,method=body===undefined?'GET':'POST') {
 }
 export async function invitePeer({page,browser,origin,width,capture,runtime,email='proof-peer@example.test'}) {
  await page.goto(origin+'/app/settings')
+ await page.waitForLoadState('networkidle')
  const section=page.locator('#settings-operators')
  await section.getByLabel('Email',{exact:true}).fill(email)
  const invited=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/operator/settings/operators'&&r.request().method()==='POST')
@@ -32,6 +33,7 @@ export async function invitePeer({page,browser,origin,width,capture,runtime,emai
   await peer.getByRole('button',{name:'Confirm',exact:true}).click()
   await peer.waitForURL(url=>['/app','/app/','/app/overview'].includes(url.pathname))
   await peer.goto(origin+'/app/settings')
+  await peer.waitForLoadState('networkidle')
   await peer.getByRole('heading',{name:'Operators',exact:true}).waitFor()
   const members=await (await api(peer,'/api/operator/settings/operators')).json()
   const owner=members.operators.find(row=>row.initialOwner),invitee=members.operators.find(row=>row.email===email)
@@ -67,6 +69,7 @@ export async function invitePeer({page,browser,origin,width,capture,runtime,emai
 }
 export async function revokePeer({page,origin,peerState,capture,db}) {
  await page.goto(origin+'/app/settings')
+ await page.waitForLoadState('networkidle')
  await page.getByRole('button',{name:'Remove proof-peer@example.test',exact:true}).click()
  const removed=page.waitForResponse(r=>new URL(r.url()).pathname===`/api/operator/settings/operators/${peerState.invitee.id}`&&r.request().method()==='DELETE')
  await page.getByRole('button',{name:'Confirm removal',exact:true}).click()
@@ -94,6 +97,7 @@ export async function removeInitialOwner({page,origin,successor,capture,db}) {
  const members=(await (await api(page,'/api/operator/settings/operators')).json()).operators
  const owner=members.find(row=>row.initialOwner)
  await page.goto(origin+'/app/settings')
+ await page.waitForLoadState('networkidle')
  await page.getByRole('button',{name:`Remove ${owner.email}`,exact:true}).click()
  await page.getByLabel('Hand ownership to').selectOption({index:1})
  await page.getByRole('button',{name:'Confirm removal',exact:true}).click()
