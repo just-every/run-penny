@@ -132,12 +132,15 @@ async function visit(page, width, { route, path, auth, contains, finalPath, stat
   if(path.startsWith('/app/')&&(route.includes('missing')||path.includes('no-such-record')))expectFailure(path.replace('/app/customers/','/api/operator/accounts/').replace('/app/','/api/operator/'),404)
   const response = await page.goto(requestedUrl, { waitUntil: 'load' })
   await page.locator('body').waitFor({ state: 'visible' })
+  // Client route canonicalization must finish before axe evaluates the document.
+  await page.waitForLoadState('networkidle')
   const actualStatus = response?.status() ?? 0
   if(response) assertNoDevelopmentCopy(await response.text(),route+'-SSR',width)
   assert.equal(actualStatus, status, `${route} returned HTTP ${actualStatus}`)
   assert.equal(new URL(page.url()).pathname, finalPath ?? new URL(requestedUrl).pathname, `${route} navigated to an unexpected URL`)
   // Hidden controls (closed editors) can repeat record titles earlier in the document, so wait for a visible match.
   if (contains) await page.getByText(contains, { exact: false }).filter({ visible: true }).first().waitFor({ state: 'visible' })
+  console.log(`route-review: ${reviewState} ${route} ${width}`)
   const text = await capture(page, route, requestedUrl, actualStatus, auth, width)
   if (contains) assert.ok(text.includes(contains), `${route} did not show expected content: ${contains}`)
   if (expectPage) await expectPage(page, route)

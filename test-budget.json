@@ -1,4 +1,4 @@
 {
-  "maxTests": 255,
-  "reason": "Penny carries 247 contract clauses, and its money, erasure and moderation doors each need their own public-door integration tests (SEED-PLAYBOOK, Light code tests: raise the cap for a complex seed with a written reason)."
+  "maxTests": 246,
+  "reason": "Penny carries 247 contract clauses; per main's 22 Oct ruling the 255 budget stood only as a freeze, and the consolidation round folded registrations into public-door journeys without dropping an assertion that proves a clause sentence."
 }

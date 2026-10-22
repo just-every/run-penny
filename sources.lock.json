@@ -7224,7 +7224,7 @@
       "executable": false
     },
     "test-budget.json": {
-      "sha256": "6297fbdb80c1059c93062048df8b9d45506ef04ad6956638f5bc41d0ff8dccf5",
+      "sha256": "455a49852418a8dcc64dbd355eab60be80edb07611f59e8f4cfba8436e67ea47",
       "executable": false
     },
     "tests/base/auth.test.ts": {
@@ -7248,7 +7248,7 @@
       "executable": false
     },
     "tests/base/decision-loop-commit.test.ts": {
-      "sha256": "40c3436554de3c984abbadff2cee8fedabc256a38babc141f958e0d9fca4be84",
+      "sha256": "46fd9b56dea0a3d0c9e1a1af7e8441903b480cdda7e63cb1b91c2376bbf9de75",
       "executable": false
     },
     "tests/base/decision-loop-dimensions.test.ts": {
@@ -7836,7 +7836,7 @@
       "executable": false
     },
     "tests/browser/route-review.mjs": {
-      "sha256": "a0dad7099a6dfdfdfad8d12907fcb6bc33d9839a10aff1dbd3c7f140181326dd",
+      "sha256": "f3cb66c7ad1d5535336cf443351bdee1cc7574da0342110091b2b1c76f012cee",
       "executable": false
     },
     "tests/browser/signin.test.mjs": {
@@ -8048,7 +8048,7 @@
       "executable": false
     },
     "tests/README.md": {
-      "sha256": "8517be93025451c18ad4d2488cd887c4ed93cdeb0db793cfb2dd98374e02ae0f",
+      "sha256": "aa75b87793071268ca9996fa4474feb751140072bdee462db33cd21d8deac4e4",
       "executable": false
     },
     "tests/runtime/mail-events-restart.test.mjs": {
@@ -8080,7 +8080,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "232e94e9c3b4f1eb3fa71d0126cbf8769162105a272261815364290819bd3c35",
+      "sha256": "419069256722e008a3be027a1fe586022562b4a9703eef04133c3574a70fd71a",
       "executable": false
     },
     "visual/01-landing.jpg": {

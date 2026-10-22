@@ -1,6 +1,6 @@
 # Tests
 
-The seed cap is 255 tests, as justified in `test-budget.json`. Count one framework
+The seed cap is 246 tests, as justified in `test-budget.json`. Count one framework
 registration per test, including imported registrations and each executable browser
 journey; a data-driven matrix asserting one behavior counts once. Exclude helpers
 and repeated screenshots or viewports. Keep tests through routes, Worker exports, commands and built pages,

@@ -212,7 +212,8 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
-        "node tests/browser/rich-changelog.mjs"
+        "node tests/browser/rich-changelog.mjs",
+        "PENNY_BROWSER_EXECUTABLE=$(node --input-type=module -e \"import {chromium} from '@playwright/test';process.stdout.write(chromium.executablePath())\") pnpm run test:browser:routes"
       ]
     },
     {
