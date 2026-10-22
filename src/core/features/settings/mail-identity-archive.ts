@@ -1,9 +1,14 @@
+import {captureInput} from '../evidence/email-admission'
 import type {Row} from '../data/archive'
 import {NativeError} from '../auth/native-tokens'
 import {businessInput,mailIdentityInput} from './mail-identity'
 /** Provenance travels with product data; provider test receipts stay installation-owned. */
 export function validateMailIdentityArchive(data:Record<string,Row[]>){
  const fail=()=>{throw new NativeError('invalid_mail_identity_archive',400)}
+ for(const row of data.penny_email_capture_settings??[]){
+  if(!captureInput.safeParse({captureAddress:row.capture_address,domains:(data.penny_email_capture_domains??[]).map(item=>item.domain)}).success||(data.penny_mail_identity??[]).some(identity=>[identity.from_address,identity.reply_to].includes(row.capture_address)))fail()
+ }
+ for(const row of data.penny_email_capture_messages??[])if(!/^[a-f0-9]{64}$/.test(String(row.message_digest)))fail()
  for(const row of data.penny_mail_identity??[]){
   const business={companyName:row.company_name,postalAddress:row.postal_address}
   if(!businessInput.safeParse(business).success||!mailIdentityInput.pick({senderName:true,replyTo:true}).safeParse({senderName:row.sender_name,replyTo:row.reply_to}).success)fail()

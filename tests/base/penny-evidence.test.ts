@@ -1,3 +1,4 @@
+import {incomingEmail,proveEmailCapture} from './email-capture-fixture'
 import {draftNetwork} from '../fixtures/ai/draft-network'
 import {providerMessages} from './provider-messages'
 import {mockMail} from './support'
@@ -129,8 +130,16 @@ it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical ov
  const after=await env.DB.batch(['requests','evidence_items','request_content_submissions'].map(table=>env.DB.prepare(`SELECT count(*) n FROM ${table}`)))
  expect(after.map(r=>r.results)).toEqual(before.map(r=>r.results));expect(await env.DB.prepare('SELECT count(*) n FROM request_votes').first('n')).toBe(1);expect(await env.DB.prepare('SELECT count(*) n FROM request_follows').first('n')).toBe(1)
 })
-it('[EVID-008] original evidence attachment bytes stay operator-only with export and durable upload recovery',async()=>{
+it('[CAP-009 EVID-008] admitted email captures and original attachments stay private with durable replay and upload custody',async()=>{
+ await reset();const migrations=inject('migrations') as {name:string;queries:string[]}[]
+ await applyD1Migrations(env.DB,migrations.filter(m=>!m.name.startsWith('0088_')))
  const g=await fixture();await publish(g)
+ const previous=(await env.DB.prepare('SELECT * FROM evidence_items').all()).results
+ await applyD1Migrations(env.DB,migrations);await applyD1Migrations(env.DB,migrations)
+ expect((await env.DB.prepare('SELECT * FROM evidence_items').all()).results).toEqual(previous)
+ const mailBefore=(await providerMessages().list()).length
+ await proveEmailCapture(call,env.DB,g.operator)
+ expect((await providerMessages().list()).length).toBe(mailBefore)
  const file=new File(['original evidence bytes'],'source.pdf',{type:'application/pdf'})
  async function upload(path:string,headers:Record<string,string>,value:File=file){const form=new FormData();form.append('file',value);return app.fetch(new Request(origin+path,{method:'POST',headers:{Host:'127.0.0.1:8787',Origin:origin,...headers},body:form}),bindings())}
  const attachment=await json<{id:string}>(upload(`/api/operator/evidence/${g.evidence.id}/attachments`,g.operator),201)
@@ -153,6 +162,38 @@ it('[EVID-008] original evidence attachment bytes stay operator-only with export
  const list=await json<EvidenceAttachments>(call(`/api/operator/evidence/${g.evidence.id}/attachments`,undefined,g.operator));expect(list.files).toHaveLength(2);expect(list.uploads).toHaveLength(0)
  await env.DB.prepare("UPDATE data_state SET phase='locked',lock_id='maintenance' WHERE singleton=1").run()
  expect((await upload(`/api/operator/evidence/${g.evidence.id}/attachments`,g.operator)).status).toBe(409)
+ await env.DB.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1").run()
+ const capturedEmail='synthetic-penny-1@example.test'
+ await json(call('/api/public/identity/email',{email:capturedEmail,displayName:'Synthetic captured customer'}),202)
+ const sent=(await providerMessages().list()).find(row=>row.message.to.includes(capturedEmail))!
+ const verification=new URL(sent.message.text!.match(/https?:\/\/\S+/)![0]).hash.slice(7)
+ await json(call('/api/public/identity/email/verify',{token:verification}))
+ const portable=await json<{archive:Archive;journal:ErasureJournal}>(call('/api/operator/data/export',undefined,g.operator))
+ expect(portable.archive.tables.penny_email_capture_messages).toHaveLength(4)
+ expect(JSON.stringify(portable)).not.toContain('<synthetic-penny-message-1@example.test>')
+ await reset();await applyD1Migrations(env.DB,inject('migrations'))
+ const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'})
+ expect(boot.status).toBe(303)
+ const destination={Cookie:boot.headers.get('set-cookie')!.split(';')[0]}
+ const complete=async(path:string,body:unknown)=>{
+  let response=await call(path,body,destination);expect([200,202],await response.clone().text()).toContain(response.status)
+  let result=await response.json() as {status:string;operationId:string}
+  for(let step=0;result.status!=='complete'&&step<50;step++){response=await call(`/api/operator/data/operations/${result.operationId}/resume`,{},destination);expect([200,202],await response.clone().text()).toContain(response.status);result=await response.json() as typeof result}
+  expect(result.status).toBe('complete')
+ }
+ await complete('/api/operator/data/import',portable)
+ expect((await env.DB.prepare('SELECT * FROM penny_email_capture_messages ORDER BY message_digest').all()).results).toEqual([...portable.archive.tables.penny_email_capture_messages].sort((a,b)=>String(a.message_digest).localeCompare(String(b.message_digest))))
+ const restoredCount=await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')
+ await incomingEmail();expect(await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')).toBe(restoredCount)
+ const requester=await env.DB.prepare('SELECT requester_id FROM requester_addresses WHERE email=?').bind(capturedEmail).first<string>('requester_id')
+ const preview=await json<{planHash:string;blockedCopies:unknown[]}>(call('/api/operator/data/erasure/preview',{table:'requesters',id:requester},destination))
+ expect(preview.blockedCopies).toEqual([])
+ await complete('/api/operator/data/erasure',{table:'requesters',id:requester,planHash:preview.planHash})
+ const erased=await json<{archive:Archive}>(call('/api/operator/data/export',undefined,destination))
+ expect(JSON.stringify(erased)).not.toContain(capturedEmail)
+ expect(erased.archive.tables.penny_email_capture_messages).toHaveLength(4)
+ const erasedCount=await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')
+ await incomingEmail();expect(await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')).toBe(erasedCount)
 })
 it('[AI-006 EVID-006] resolves cited summaries and editable reply drafts while keeping private records out of publication and requester mail',async()=>{
  const g=await fixture();await publish(g)

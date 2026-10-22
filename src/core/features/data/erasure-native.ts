@@ -109,7 +109,7 @@ export async function stepNativeScope(db:D1Database,scope:NativeScope,incrementa
     }
     const referenced=[...groups.values()].some(references)
     const copied=Object.entries(row).filter(([column])=>!redacted(table.name,row,column)&&(table.name!=='learning_investigations'||!['native_evidence_ids_json','native_request_ids_json'].includes(column))).flatMap(([,value])=>strings(value)).some(text=>[...ids].some(id=>text.includes(id)))
-    const address=(table.name==='native_magic_links'&&emails.has(String(row.email)))||(table.name==='local_auth_outbox'&&emails.has(String(row.recipient)))
+    const address=(table.name==='evidence_items'&&emails.has(String(row.named_speaker)))||(table.name==='native_magic_links'&&emails.has(String(row.email)))||(table.name==='local_auth_outbox'&&emails.has(String(row.recipient)))
     const rate=table.name==='native_rate_limits'&&subjectHashes.has(String(row.subject_hash))
     if(referenced||copied||address||rate){selected[table.name].push(row);changed=true}
    }

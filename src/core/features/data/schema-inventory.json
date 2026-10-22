@@ -3043,5 +3043,32 @@
       "state",
       "created_at"
     ]
+  },
+  "penny_email_capture_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "capture_address",
+      "updated_at"
+    ]
+  },
+  "penny_email_capture_domains": {
+    "classification": "product",
+    "columns": [
+      "domain"
+    ]
+  },
+  "penny_email_capture_messages": {
+    "classification": "product",
+    "columns": [
+      "message_digest"
+    ]
+  },
+  "penny_email_capture_refusals": {
+    "classification": "installation",
+    "columns": [
+      "reason",
+      "count"
+    ]
   }
 }

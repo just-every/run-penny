@@ -1,3 +1,4 @@
+import {registerEmailCaptureSettings} from '../features/evidence/email-settings'
 import {registerAiRoutes} from '@/core/features/ai/routes'
 import {registerPlanningRoutes} from '@/core/features/planning/routes'
 import {registerPrioritisationRoutes} from '@/core/features/prioritisation/routes'
@@ -107,6 +108,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerLearningRoutes(app)
   registerIntegrationApi(app)
   registerRequestStatusSettingsRoutes(app)
+  registerEmailCaptureSettings(app)
   registerMailIdentityRoutes(app)
   registerWorkspaceClockRoutes(app)
   registerOwnershipRoutes(app)

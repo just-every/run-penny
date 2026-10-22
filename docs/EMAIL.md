@@ -115,3 +115,41 @@ Open **Feedback settings** in the operator app and look under **Requester email 
 ## Merge notices
 
 In a request’s controls, enter the canonical request’s slug and choose **Review merge**. The preview counts eligible subscribers from the duplicate who do not already follow the canonical request. **Notify subscribers about this merge** starts checked; untick it for a silent merge. The notice names and links the canonical request, and the duplicate’s subscribers follow that request after merging. If the canonical request is private, the notice waits until it is published on a public board. Current permission, suppression, mutes, quiet hours and unsubscribe are checked before sending. Unmerge sends no notice and cancels any unsent notice for that merge.
+
+## Capturing forwarded customer email
+
+The owner can configure a dedicated capture address and exact sender-domain
+allowlist in **Feedback settings → Email identity and postal address**. The
+allowlist starts empty; current operators are admitted only with aligned DMARC.
+The address must differ from the deployment sender, tested notification sender
+and monitored reply-to. Saving a conflicting reply-to is also refused.
+
+Route this address to the Worker's `email()` handler using Cloudflare Email
+Routing. There is no HTTP inbound-parse endpoint. The handler requires a single
+receiving-platform Authentication-Results field with aligned DMARC and a
+Message-ID. Missing, duplicate, malformed or unaligned results fail closed.
+Forwarded headers are attribution only: they never authorize a sender. Gmail
+forwarded blocks and Outlook header blocks recover the original sender; a direct
+or BCC copy without one is attributed to the admitted sender and marked “not
+forwarded”. No mail is sent or bounced by capture. Notification replies and mail
+from Penny's senders or reply-to are refused.
+
+Attachments use the existing private evidence store and `seed.json` type,
+per-file and total-byte limits. A refused attachment leaves a visible limit note
+on the created item. Oversize messages are refused before parsing. Refusals retain
+only reason counts in owner settings, never sender, subject or body.
+
+Capture configuration, domains and SHA-256 Message-ID digests join the portable
+archive. Digests have no foreign key to evidence: deleting or erasing an item
+cannot let an old message resurrect it. Restore copies records and files without
+reprocessing mail or sending anything. Erasure of an identified requester removes
+their captured evidence and attribution; ambiguous copies retain the existing
+explicit erasure hold. Domain entries contain no personal addresses. Original
+Message-IDs are not retained.
+
+No live route, domain or mail provider was used to qualify this feature. Tests
+invoke the platform email door with synthetic provider-edge messages. Hosted
+routing and actual receiver authentication headers remain the owner's setup and
+acceptance step, **NOT RUN**. Future AI-006 connector or mail reply drafts require
+explicit operator editing and sending, never auto-send, and a fresh private-value
+check before publication.

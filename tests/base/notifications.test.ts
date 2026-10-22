@@ -1,3 +1,4 @@
+import {incomingEmail} from './email-capture-fixture'
 import { applyD1Migrations,reset,createScheduledController,createMessageBatch } from 'cloudflare:test'
 import { beforeEach,afterEach,vi,expect,inject,it } from 'vitest'
 import { exports } from 'cloudflare:workers'
@@ -303,7 +304,7 @@ it('[REQ-030 BASE-OPS-005] chosen private request and comment rejection reaches 
  expect(audits.results).toHaveLength(4)
  for(const row of audits.results){expect(row).toMatchObject({actor_type:'system',actor_id:'moderation_rejection_mail',entity_id:expect.any(String),occurred_at:expect.any(String)});expect(String(row.details_json)).not.toMatch(/@|Please explain|PRIVATE/)}
 })
-it('[NOTIFY-004] a reply to a notification creates nothing',async()=>{
+it('[NOTIFY-004 CAP-009] notification replies create nothing through HTTP or the dedicated email door',async()=>{
  const g=await setup();await g.follow();await g.status('Reply loop check')
  const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
  expect(sent).toHaveLength(1)
@@ -312,7 +313,14 @@ it('[NOTIFY-004] a reply to a notification creates nothing',async()=>{
  expect(mail.from.email).toBe(env.MAIL_FROM);expect(mail.reply_to).toBeUndefined()
  expect(mail.headers).toMatchObject({'Auto-Submitted':'auto-generated'})
  // Per-IP request counters are charged for every HTTP request whatever it carries; every other table must stay as it was.
- const counters=new Set(['penny_public_admission','native_rate_limits'])
+ expect((await call('/api/operator/settings/email-capture',{captureAddress:'capture@penny.test',domains:['example.test']},g.operator,'PUT')).status).toBe(200)
+ const identity={companyName:'Synthetic Penny',postalAddress:'1 Synthetic Street',senderName:'Penny',fromAddress:'tested@example.test',replyTo:'reply@example.test'}
+ const tested=await call('/api/operator/settings/mail/test',identity,g.operator);expect(tested.status).toBe(200)
+ const receipt=await tested.json() as {testId:string}
+ expect((await call('/api/operator/settings/mail',{...identity,replyTo:'capture@penny.test',testId:receipt.testId,acceptProviderResult:true},g.operator,'PUT')).status).toBe(409)
+ expect((await call('/api/operator/settings/mail',{...identity,testId:receipt.testId,acceptProviderResult:true},g.operator,'PUT')).status).toBe(200)
+ const sentBefore=sent.length
+ const counters=new Set(['penny_public_admission','native_rate_limits','penny_email_capture_refusals'])
  const rows=async()=>Object.fromEntries(await Promise.all((await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%'").all<{name:string}>()).results
   .filter(({name})=>!counters.has(name)).map(async({name})=>[name,(await env.DB.prepare(`SELECT count(*) AS n FROM "${name}"`).first<{n:number}>())!.n])))
  const before=await rows(),subject='Re: Updates: Approved title',text='Thanks, but we still need this for the finance export.'
@@ -329,5 +337,8 @@ it('[NOTIFY-004] a reply to a notification creates nothing',async()=>{
   else expect(response.status,label).toBeGreaterThanOrEqual(400)
   await response.body?.cancel()
  }
+ for(const from of [String(env.MAIL_FROM),identity.fromAddress,identity.replyTo])await incomingEmail({id:'<synthetic-penny-own-sender@example.test>',from})
+ await incomingEmail({id:'<synthetic-penny-notification-reply@example.test>',from:g.email,headers:{'in-reply-to':`<${g.requestId}@penny.test>`,'auto-submitted':'no'}})
+ expect(sent).toHaveLength(sentBefore)
  expect(await rows()).toEqual(before)
 })

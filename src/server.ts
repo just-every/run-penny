@@ -1,3 +1,4 @@
+import {captureEmail} from './core/features/evidence/email-capture'
 import { withDemo } from '../base/modules/demo/index.mjs'
 import {isDeclaredSessionlessPath} from './core/app/public-paths'
 import {admitPublicRequest} from './core/app/public-rate'
@@ -22,6 +23,7 @@ import { failureSummary } from './core/app/failure-log'
 import { seedDemo, withDemoBindings } from './demo'
 
 export default withDemo({
+  email: captureEmail,
   async queue(batch: MessageBatch<unknown>, bindings: AppBindings): Promise<void> {
     // Confirmed erasures, restores and saved imports continue here, off the tab.
     if (batch.messages.every(message => isDataWork(message.body))) return runDataQueue(batch, withDemoBindings(bindings))

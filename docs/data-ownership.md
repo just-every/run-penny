@@ -527,3 +527,12 @@ Release corrections reuse `release_versions` with original-publication ancestry 
 `decision_reviews` stores the private review note and next date or revision. `decision_review_notifications` stores one reminder generation, owner attribution, durable email state and dismissal. Both are classified product records. Restored queued, sending or unknown reminders become held with no replay. Decision erasure follows their declared dependencies; operator authority remains installation-owned and protected.
 
 Penny's dependent closure follows erasure-1's memo: declare the new personal edges, fence every selected row with its own tombstone before any deletion cascades, delete rows before original files, and mark completion only after file cleanup. A random surviving audit reference replaces erased identity and private audit details. Interrupted file cleanup keeps maintenance active and needs authenticated resume. Older journals, stale archives and tombstoned records are refused; neither unmerge nor later decision/release revision can recreate them. Ambiguous unrelated private copies and protected operator attribution still refuse erasure. These are Penny's bounded roots and existing journal rules, not universal cross-installation journal continuity.
+
+### Email capture custody (migration 0088)
+
+The capture address, exact domain allowlist and Message-ID SHA-256 digests are
+product records. Refusal reason counters are installation records and are not a
+portable inbox. The private attachment lifecycle is unchanged. Dedupe digests
+survive evidence erasure and restore; restore never invokes capture or mail
+sending. An erased requester's address selects attributed email evidence and its
+versions/files for erasure. Original Message-IDs and full raw MIME are not stored.

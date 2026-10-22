@@ -41,11 +41,12 @@ export function registerMailIdentityRoutes(app:Hono<OperatorMutationEnvironment>
  })
  app.put('/api/operator/settings/mail',async c=>{
   const runtime=c.get('runtime'),body=await parseInput(c.req.raw,mailIdentityInput.extend({testId:z.string().min(1).max(128),acceptProviderResult:z.literal(true)})),{db,session,actor}=await owner(runtime,c.req.raw)
+  if(await runtime.database.binding.prepare('SELECT 1 FROM penny_email_capture_settings WHERE capture_address IN(?,?)').bind(body.fromAddress,body.replyTo).first())throw new NativeError('capture_sender_collision',409,'The sender and reply-to must differ from the capture address.')
   const {testId,acceptProviderResult:_,...input}=body,hash=await digest(JSON.stringify({input,provider:runtime.configuration.mailProvider,key:runtime.configuration.mailApiKey})),guard=createUlid(),now=new Date().toISOString()
   // A receipt belongs to this exact configuration and native operator version; a
   // changed setting or concurrent save cannot reuse it, and rejection never saves.
   try{await db.batch([
-   db.prepare(`INSERT INTO requester_write_guards(id,permitted) VALUES(?,CASE WHEN EXISTS(SELECT 1 FROM penny_mail_identity_tests WHERE id=? AND operator_id=? AND operator_version=? AND input_hash=? AND outcome='accepted' AND tested_at>? AND consumed_at IS NULL) THEN 1 ELSE 0 END)`).bind(guard,testId,session.operatorId,session.operator.version,hash,Date.now()-1800000),
+   db.prepare(`INSERT INTO requester_write_guards(id,permitted) VALUES(?,CASE WHEN EXISTS(SELECT 1 FROM penny_mail_identity_tests WHERE id=? AND operator_id=? AND operator_version=? AND input_hash=? AND outcome='accepted' AND tested_at>? AND consumed_at IS NULL) AND NOT EXISTS(SELECT 1 FROM penny_email_capture_settings WHERE capture_address IN(?,?)) THEN 1 ELSE 0 END)`).bind(guard,testId,session.operatorId,session.operator.version,hash,Date.now()-1800000,input.fromAddress,input.replyTo),
    db.prepare(`INSERT INTO penny_mail_identity(singleton,company_name,sender_name,from_address,reply_to,postal_address,updated_at) VALUES(1,?,?,?,?,?,?) ON CONFLICT(singleton) DO UPDATE SET company_name=excluded.company_name,sender_name=excluded.sender_name,from_address=excluded.from_address,reply_to=excluded.reply_to,postal_address=excluded.postal_address,updated_at=excluded.updated_at`).bind(input.companyName,input.senderName,input.fromAddress,input.replyTo,input.postalAddress,now),
    db.prepare('UPDATE penny_mail_identity_tests SET consumed_at=? WHERE id=?').bind(Date.now(),testId),audit(db,actor.id,'mail.identity_saved',now),db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(guard),
   ])}catch(error){if(String(error).includes('requester_write_admitted'))throw new NativeError('accepted_sender_test_required',409);throw error}

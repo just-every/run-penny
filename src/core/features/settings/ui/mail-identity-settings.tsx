@@ -1,3 +1,4 @@
+import {EmailCaptureSettings} from './email-capture-settings'
 import {useState} from 'react'
 import {useOperatorResource} from '@/core/app/ui/operator-resource'
 import {operatorMutation} from '../../requests/ui/operator-client'
@@ -7,7 +8,7 @@ import {SectionCard} from '@/core/ui/app/SectionCard'
 import type {MailIdentity} from '../mail-identity'
 export function MailIdentitySettings(){
  const [resource,reload]=useOperatorResource<{identity:MailIdentity;owner:boolean;providerTestAvailable:boolean}>('/api/operator/settings/mail')
- return <SectionCard id="mail-identity" icon="form" title="Email identity and postal address" description="Confirm the business address shown in customer email and test the sender with your mail provider.">{resource.kind==='ready'?resource.data.owner?<IdentityForm key={JSON.stringify(resource.data.identity)} {...resource.data} reload={reload}/>:<p>Owner access is required to configure email identity.</p>:resource.kind==='loading'?<p>Loading email settings…</p>:<><p role="alert">Email settings could not be loaded.</p><button className={textLinkClass} onClick={reload}>Retry</button></>}</SectionCard>
+ return <SectionCard id="mail-identity" icon="form" title="Email identity and postal address" description="Confirm the business address shown in customer email and test the sender with your mail provider.">{resource.kind==='ready'?resource.data.owner?<><IdentityForm key={JSON.stringify(resource.data.identity)} {...resource.data} reload={reload}/><EmailCaptureSettings/></>:<p>Owner access is required to configure email identity.</p>:resource.kind==='loading'?<p>Loading email settings…</p>:<><p role="alert">Email settings could not be loaded.</p><button className={textLinkClass} onClick={reload}>Retry</button></>}</SectionCard>
 }
 function IdentityForm({identity,providerTestAvailable,reload}:{identity:MailIdentity;providerTestAvailable:boolean;reload:()=>void}){
  const [message,setMessage]=useState(''),[test,setTest]=useState<{testId:string;accepted:boolean;message:string}|null>(null),[busy,setBusy]=useState(false)
