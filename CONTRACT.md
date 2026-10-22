@@ -627,7 +627,7 @@ Payroll, general project/work management and monitoring/observability stay outsi
 
 ## Status
 
-Judged from the code and tests at commit `2497452904327fbceab24804ed2fa37509a155d5` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+Judged from the code and tests at commit `90c58b5e722ad5462b4013e3a055ca1902f38043` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 AI-008 is partial on 22 October 2026: deterministic owner rules mark supported captures before storage, preserve marked text through D1 search and portable export/restore, and provide audited, previewed irreversible evidence-wording reapplication. Migration 0090 upgrades populated previous-head data without rewriting it. The first untuned redaction-v1 run on 210 synthetic excerpts measured precision and recall of 1.00 for each default kind. Rule settings and marked items have 1440/390 browser proof. This is a deterministic rule-only implementation; optional model detection is not built and AI-010 is unchanged. Binary attachments are not rewritten. Operator evidence, CAP-009 email capture and native portal submission use guarded before-storage rules. AI-011 remains missing and inherits extending the minimal redaction-v1 runner. Gap: saved-import originals and learning source envelopes are not redacted before storage. Explicit reapplication currently covers at most 200 evidence wording versions, not every stored transcript or copied request field; larger stores need paged reapplication. The full before-storage and reapplication promises remain open.
 
@@ -673,9 +673,9 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 97 | 17 | 0 | 114 |
+| Published | 99 | 15 | 0 | 114 |
 | Target and push further | 20 | 45 | 68 | 133 |
-| All | 117 | 62 | 68 | 247 |
+| All | 119 | 60 | 68 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -771,7 +771,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REQ-017` | Decline | published | done | `tests/base/request-status-workflow.test.ts`; `tests/browser/request-decline.mjs` |  |
 | `REQ-018` | Boards | published | done | `tests/base/board.test.ts` (line 41) |  |
 | `REQ-019` | Internal boards | published | done | `tests/base/board.test.ts` (line 41) |  |
-| `REQ-020` | Requester's own content | published | partial | `tests/browser/requester-repair.mjs` | Gap: `requester-repair.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for own request and comment edits, retained approved text and auto-publish history. |
+| `REQ-020` | Requester's own content | published | partial | `tests/browser/requester-repair.mjs` — push Verify shard requester-board | Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions. |
 | `REQ-021` | Requester withdrawal | published | done | `tests/base/request-withdrawal.test.ts`; `tests/browser/request-withdrawal.mjs` |  |
 | `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
 | `REQ-023` | Email verification | published | done | `tests/base/auth.test.ts` (line 46); `tests/browser/no-mail-journey.mjs` |  |
@@ -906,12 +906,12 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `API-001` | Scoped keys | published | done | `tests/base/integration-api.test.ts` (line 19) |  |
 | `API-002` | Current custody | published | done | `tests/base/integration-api.test.ts` (line 36); `tests/base/integration-api.test.ts` (line 54) |  |
 | `API-003` | Native publication | published | done | `tests/base/integration-api.test.ts` (line 73) |  |
-| `INT-001` | Explicit integration effects | published | partial | `tests/browser/integration-states.mjs` | Gap: `integration-states.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for selected public events, immutable destinations and held restored history. |
+| `INT-001` | Explicit integration effects | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Selected public event kinds, immutable destinations, atomic business-write/event-target capture and held restored history lack complete passing assertions. |
 | `INT-002` | Enforcing transport | published | done | `tests/base/egress-delivery.test.ts` (line 35) |  |
-| `INT-003` | Durable uncertainty | published | partial | `tests/browser/integration-states.mjs` | Gap: `integration-states.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for durable attempt identity, bounded retries and explicit reconciliation. |
-| `INT-004` | Signed inbound notes | published | partial | `tests/browser/integration-states.mjs` | Gap: `integration-states.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for raw-byte signature admission and idempotent private inbound notes. |
-| `INT-005` | Deliberate tracker issues | published | partial | `tests/browser/integration-states.mjs` | Gap: `integration-states.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for Linear and Jira create/link and uncertain-outcome reconciliation. |
-| `INT-006` | Private tracker receipts | published | partial | `tests/browser/integration-states.mjs` | Gap: `integration-states.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for authenticated source-ordered tracker receipts and private state. |
+| `INT-003` | Durable uncertainty | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Durable attempt identity, finite retry, ambiguity/reconciliation and revoked/private/blocked send fencing lack complete passing assertions. |
+| `INT-004` | Signed inbound notes | published | done | `tests/browser/integration-receiver-checks.mjs` via `tests/browser/integration-states.mjs` — push Verify shard workspace-clock |  |
+| `INT-005` | Deliberate tracker issues | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Complete Linear/Jira create and link from requests/decisions, entered-only wording and uncertain-outcome reconciliation lack passing assertions. |
+| `INT-006` | Private tracker receipts | published | done | `tests/browser/integration-tracker-checks.mjs` via `tests/browser/integration-states.mjs` — push Verify shard workspace-clock |  |
 | `INT-007` | Owner portal branding | published | partial | `src/core/features/settings/branding.ts`; `tests/browser/integration-states.mjs` | At 1440 and 390 pixels: the owner uploads a PNG logo and an ICO favicon and sets the name Acme and dark theme; the portal header shows the logo and Acme in dark theme; the document icon link is the uploaded favicon on the same origin; the widget panel and changelog page show the logo; a follower's status email carries Acme and the logo; a PDF, an oversize PNG and an SVG with a script are refused; |
 | `MOB-001` | Phone-width web | target | done | `tests/browser/acceptance-audit.mjs` (line 7); `tests/browser/operator-pages.mjs`; `tests/browser/requester-board.mjs` |  |
 | `MOB-002` | Installable app and push | target | missing |  | A PWA install check passes; a push fixture delivers once; an offline capture syncs once on reconnect. |

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Run signed integration receipts and requester repair in push Verify, and make the scrollable receiver example keyboard accessible.
+
 - Load operator provenance, evidence review, overview and roadmap checks in push Verify, with the seven-entity private custom-field matrix in its own short shard.
 
 - Load route review in push Verify, keep browser journeys on the pinned headless shell, and consolidate commitment validation to a 246-registration ceiling.
