@@ -3124,7 +3124,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "043df2c4585c2daa6c9058e0f59c25993274600c36ce754a44212f42dcc61362",
+      "sha256": "f27d6be07c3edf33e5b446218982b2e77cef3e7dca8bafb8eaceede7d041d2d6",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -7424,7 +7424,7 @@
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
-      "sha256": "e537647eb13e63017e3894dfc430c50d8f58ddabc7c78738d3528af0ae3ebcfe",
+      "sha256": "3cd1155f64fc04ec42098e1f46c72f1d8f8dbe155a7ad489b599ad47e9b9a48b",
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
@@ -7592,7 +7592,7 @@
       "executable": false
     },
     "tests/browser/email-capture-journey.mjs": {
-      "sha256": "28b0c87918297101ee656e96f232116c57fe1b274077df2af322df65677f03d1",
+      "sha256": "f029600fe7da9fea444271b97170d684a6ebce0bde089c1c415cda882c1957b9",
       "executable": false
     },
     "tests/browser/explicit-consent-board.mjs": {

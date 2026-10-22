@@ -149,12 +149,14 @@ it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical ov
  expect(after.map(r=>r.results)).toEqual(before.map(r=>r.results));expect(await env.DB.prepare('SELECT count(*) n FROM request_votes').first('n')).toBe(1);expect(await env.DB.prepare('SELECT count(*) n FROM request_follows').first('n')).toBe(1)
 })
 it('[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps originals private with durable replay and upload custody',async()=>{
- await reset();const migrations=inject('migrations') as {name:string;queries:string[]}[]
- await applyD1Migrations(env.DB,migrations.filter(m=>Number(m.name.slice(0,4))<88))
+ const migrations=inject('migrations') as {name:string;queries:string[]}[]
+ for(const cutoff of [88,91]){
+ await reset();await applyD1Migrations(env.DB,migrations.filter(m=>Number(m.name.slice(0,4))<cutoff))
  await env.DB.prepare("INSERT INTO evidence_items(id,source_type,source_label,observed_at,review_state,created_at,updated_at) VALUES('synthetic-penny-upgrade','free_text','Prior capture','2026-10-01','unreviewed','2026-10-01','2026-10-01')").run()
  const previous=(await env.DB.prepare('SELECT * FROM evidence_items').all()).results
  await applyD1Migrations(env.DB,migrations);await applyD1Migrations(env.DB,migrations)
  expect((await env.DB.prepare('SELECT * FROM evidence_items').all()).results).toEqual(previous.map(row=>({...row,admitted_sender:null})))
+ }
  const g=await fixture();await publish(g)
  await proveEvidenceCapture(g)
  const mailBefore=(await providerMessages().list()).length

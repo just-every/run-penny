@@ -29,7 +29,7 @@ export async function reviewEmailCapture({page,runtime,goto,capture}){
  await goto('/app/feedback')
  await page.getByText('Email — not forwarded',{exact:true}).waitFor()
  await page.getByText('Named speaker: operator@example.test',{exact:true}).waitFor()
- await page.locator('article').filter({has:page.getByText('A synthetic direct BCC copy.',{exact:false})}).getByText('Forwarded by operator@example.test',{exact:true}).waitFor()
+ await page.locator('[id^=evidence-]').filter({has:page.getByText('A synthetic direct BCC copy.',{exact:false})}).getByText('Forwarded by operator@example.test',{exact:true}).waitFor()
  await capture('CAP-009-direct-sender-item')
  assert.equal(runtime.outbox.length,0,'Capture sends no email')
 }

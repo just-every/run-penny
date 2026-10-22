@@ -524,6 +524,12 @@
       "name": "0090_evidence_redaction.sql",
       "sha256": "c37efe6930642437b8fec09cb2fad0eec34e766908e6c5ecf61c01e022430a64",
       "sql": "CREATE TABLE penny_redaction_settings (\n singleton INTEGER PRIMARY KEY CHECK(singleton=1),\n enabled INTEGER NOT NULL DEFAULT 0 CHECK(enabled IN (0,1)),\n kinds_json TEXT NOT NULL CHECK(json_valid(kinds_json)),\n patterns_json TEXT NOT NULL CHECK(json_valid(patterns_json)),\n revision INTEGER NOT NULL CHECK(revision>0)\n);\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0091_email_capture_provenance.sql",
+      "sha256": "c27b3440a76ec95d5d0a68574d441cea3aab40efddd1b8b8fc84b53dd7f2161e",
+      "sql": "-- The admitted email forwarder is provenance, separate from a stated body sender.\n-- Older evidence has unknown provenance; never infer it from body wording.\nALTER TABLE evidence_items ADD COLUMN admitted_sender TEXT;\n"
     }
   ],
   "compatibilityDate": "2026-08-31",
