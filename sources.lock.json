@@ -6356,7 +6356,7 @@
       "executable": false
     },
     "src/core/features/requests/ui/moderation-card.tsx": {
-      "sha256": "1f1aea8f553de0c772837a65504d46e1691378ce44273f0f7c37f1d158c9b4e2",
+      "sha256": "f96ebded4e1a97a200919494b2a0ea47b3f4e220377892f764afc0d2cf395eff",
       "executable": false
     },
     "src/core/features/requests/ui/moderation-page.tsx": {

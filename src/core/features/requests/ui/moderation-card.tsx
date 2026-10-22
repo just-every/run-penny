@@ -6,7 +6,7 @@ import { fieldClass, postJson } from '@/core/features/auth/client-mutations'
 import { usePublicResource } from '@/core/features/portal/ui/public-resource'
 import type { OperatorRequestCard } from '@/core/shared/api/operator'
 import { useRouter } from '@tanstack/react-router'
-import { useState, type FormEvent } from 'react'
+import { useState, useSyncExternalStore, type FormEvent } from 'react'
 import { OperatorRequestControls } from './operator-request-controls'
 import type { ModerationAvailability } from '../operator-availability'
 
@@ -47,9 +47,14 @@ export function ModerationCard({ row, report }: { row: QueueRequest; report: (me
   )
 }
 
+const subscribeNever = () => () => {}
+
 function ReviewForm({ row, report }: { row: QueueRequest; report: (message: string) => void }) {
   const [boards] = usePublicResource<PublicBoard[]>('/api/public/boards')
   const [busy, setBusy] = useState(false), router = useRouter()
+  // The queue is server-rendered: until React attaches, a decision would submit the form
+  // natively as a GET carrying its wording in the address and decide nothing.
+  const hydrated = useSyncExternalStore(subscribeNever, () => true, () => false)
   const [boardSlug,setBoardSlug]=useState(row.boardSlug)
   const categories=boards.kind==='ready'?boards.data.find(b=>b.slug===boardSlug)?.categories??[]:[]
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -77,8 +82,8 @@ function ReviewForm({ row, report }: { row: QueueRequest; report: (message: stri
       <label className={fieldLabelClass}>Reason (required for rejection)<textarea name="reason" className={fieldClass} rows={2} maxLength={2000} /></label>
       <label className="flex items-start gap-3 text-sm leading-6 text-penny-ink"><input type="checkbox" name="notifyAuthor" className="mt-1 size-4" />Email the author this rejection reason</label>
       <div className="flex flex-wrap gap-3">
-        <button className={primaryButtonClass} value="approved" disabled={busy}>Approve and publish</button>
-        <button className={secondaryButtonClass} value="rejected" disabled={busy} formNoValidate>Reject feedback</button>
+        <button className={primaryButtonClass} value="approved" disabled={busy || !hydrated}>Approve and publish</button>
+        <button className={secondaryButtonClass} value="rejected" disabled={busy || !hydrated} formNoValidate>Reject feedback</button>
       </div>
     </form>
   )
