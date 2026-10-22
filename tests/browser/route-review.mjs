@@ -195,6 +195,7 @@ async function checkOperatorRoutes(page, width) {
     { route: 'operator-customer-missing', path: '/app/customers/no-such-account', contains: 'Account not found' },
     { route: 'operator-data', path: '/app/data', contains: 'Workspace data' },
     { route: 'operator-settings', path: '/app/settings', contains: 'Requester email delivery' },
+    ...['features','learning','prioritisation','search'].map(name=>({route:`operator-${name}`,path:`/app/${name}`})),
   ]
   for (const item of routes) await visit(page, width, { ...item, auth: 'operator-session' })
 }
