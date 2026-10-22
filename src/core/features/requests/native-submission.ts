@@ -1,3 +1,4 @@
+import {redactCaptured,redactionFence} from '../redaction/settings'
 import { submissionBoard, submissionBoardAdmission } from '../categories/category-policy'
 import {boardConsent,consentScope,grantRequestPermission} from './subscription-consent'
 import {projectContributions} from './contributions'
@@ -9,6 +10,7 @@ import { createUlid } from '@/core/shared/ulid'
 export interface Submission {categoryId?:string|null;title:string;description:string;boardSlug:string;proposedSolution?:string;impactStatement?:string;idempotencyKey:string;emailUpdates?:boolean;subscriptionVersion?:number}
 export async function submitNativeRequest(database:DatabaseConnection,identity:RequesterIdentity,input:Submission):Promise<{slug:string;moderationState:string}> {
   const db=database.binding,now=new Date().toISOString()
+  const captured=await redactCaptured(db,{...input},['title','description','proposedSolution','impactStatement']),fence=redactionFence(db,captured.revision);input=captured.input
   const canonicalInput={...input,emailUpdates:input.emailUpdates??false}
   const keyHash=await digest(`${identity.id}:${input.idempotencyKey}`),bodyHash=await digest(JSON.stringify({...canonicalInput,idempotencyKey:undefined}))
   const previous=async()=>db.prepare(`SELECT k.body_hash AS bodyHash,r.slug,r.moderation_state AS moderationState FROM request_submission_keys k JOIN requests r ON r.id=k.request_id WHERE k.key_hash=? AND k.expires_at>?`).bind(keyHash,now).first<{bodyHash:string;slug:string;moderationState:string}>()
@@ -23,6 +25,7 @@ export async function submitNativeRequest(database:DatabaseConnection,identity:R
   // duplicate's unique key violation rolls back its complete graph.
   try {
     await requesterWrite(database,{requesterId:identity.id,verifiedEmail:identity.email,addressId:identity.addressId,sessionId:identity.sessionId,verifiedAt:identity.verifiedAt,verificationSessions:identity.verificationSessions,hostEmailHash:identity.hostEmailHash,hostClaimHash:identity.hostClaimHash,displayName:identity.displayName},[
+      fence.before,fence.after,
       db.prepare('DELETE FROM request_submission_keys WHERE key_hash=? AND expires_at<=?').bind(keyHash,now),
       db.prepare(`INSERT INTO requests(id,slug,board_id,category_id,author_requester_id,title,description,proposed_solution,impact_statement,moderation_state,public_state,created_at,updated_at)
         SELECT ?,?,?,?,?,?,?,?,?,'awaiting_review','unpublished',?,? WHERE EXISTS(SELECT 1 FROM requesters WHERE id=? AND blocked_at IS NULL) AND EXISTS(SELECT 1 FROM boards WHERE id=? AND visibility='public' AND archived_at IS NULL)`)

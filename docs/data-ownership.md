@@ -536,3 +536,20 @@ portable inbox. The private attachment lifecycle is unchanged. Dedupe digests
 survive evidence erasure and restore; restore never invokes capture or mail
 sending. An erased requester's address selects attributed email evidence and its
 versions/files for erasure. Original Message-IDs and full raw MIME are not stored.
+
+
+### Sensitive evidence rules (migration 0090)
+
+Redaction policy is a portable product record, with no provider/model credential.
+Restoring policy and already-redacted text does not run reapplication or send
+anything. Erasure removes custom patterns that literally repeat the person's
+address or words and advances policy revision. Ordinary edits retain version
+history; explicit owner-confirmed reapplication irreversibly replaces matched
+wording in evidence versions and records only changed counts in the audit.
+Preview and commit check the policy revision and the exact current text; changed
+inputs require a fresh preview. This bounded flow currently supports at most
+200 evidence versions and does not rewrite saved-import originals, learning
+source envelopes or every copied transcript. Those are AI-008's explicit gaps.
+Search reads the current D1 wording directly; there is no separate materialized
+full-text index retaining the original. Binary attachments retain their original
+bytes and are outside rule-only rewriting.

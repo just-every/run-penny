@@ -1,3 +1,4 @@
+import {redactCaptured,redactionFence} from '../redaction/settings'
 import { MutationError } from '@/core/app/operator-mutations'
 import { capturedEvidenceOwner, captureOwnerFailure } from '../ownership/capture'
 import { createUlid } from '@/core/shared/ulid'
@@ -16,8 +17,9 @@ export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:st
  for(const link of input.requestLinks??[])await exists(db,'requests',link.id)
  for(const link of input.betLinks??[])await exists(db,'candidate_bets',link.id)
  if(input.releaseId&&!await db.prepare('SELECT id FROM releases WHERE id=?').bind(input.releaseId).first())throw new MutationError(422,'Release not found.')
+ const captured=await redactCaptured(db,{...input},['wording']),fence=redactionFence(db,captured.revision);input=captured.input
  const id=createUlid(),versionId=createUlid()
- try { await db.batch([
+ try { await db.batch([fence.before,fence.after,
   ...(messageDigest?[db.prepare('INSERT INTO penny_email_capture_messages(message_digest) VALUES(?)').bind(messageDigest)]:[]),
   db.prepare(`INSERT INTO evidence_items(id,source_type,source_label,named_speaker,account_id,requester_id,recorded_by_operator_id,observed_at,release_id,review_state,created_at,updated_at) VALUES(?,?,?,?,?,NULL,?,?,?,'unreviewed',?,?)`).bind(id,input.sourceType,input.sourceLabel??null,input.namedSpeaker??null,input.accountId??null,actor,input.observedAt,input.releaseId??null,now,now),
   ...capturedEvidenceOwner(db,id,input.boardSlug,now),

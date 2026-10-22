@@ -134,3 +134,9 @@ restore off; credentials and in-flight states are never portable.
 Inherited duty: on an SSO-required portal (WIDGET-006), only WIDGET-008 applies.
 Current Penny has no portal SSO-required state; those clauses retain this duty.
 Operator SSO domain rules do not turn requester sign-in into operator access.
+
+
+Owner-enabled deterministic redaction also applies to new requester submission
+wording before its pending action, request, evidence and moderation copies are
+stored. Existing captured copies require the explicitly bounded reapplication
+work described in [data ownership](data-ownership.md); AI-008 remains partial.

@@ -1,3 +1,4 @@
+import {proveRedaction} from './redaction-fixture'
 import {incomingEmail,proveEmailCapture} from './email-capture-fixture'
 import {draftNetwork} from '../fixtures/ai/draft-network'
 import {providerMessages} from './provider-messages'
@@ -98,7 +99,7 @@ it('[EVID-005] account writes require an owner and context includes transaction-
  const outcome=await json<{id:string}>(call('/api/operator/evidence',{...g.evidenceInput,releaseId:'release'},g.operator),201)
  expect(await env.DB.prepare('SELECT release_id FROM evidence_items WHERE id=?').bind(outcome.id).first('release_id')).toBe('release')
 })
-it('[EVID-010] edits retain immutable operator wording versions and reject stale edits and revoked sessions',async()=>{
+it('[AI-008 EVID-010] edits retain wording versions and reject stale authority; explicit owner redaction irreversibly removes sensitive wording',async()=>{
  const g=await fixture(),path=`/api/operator/evidence/${g.evidence.id}`
  const edited=await json<{id:string;versionId:string}>(call(path+'/wording',{wording:'A revised private quotation',expectedVersionId:g.evidence.versionId},g.operator,'PATCH'))
  expect(edited.id).toBe(g.evidence.id)
@@ -109,6 +110,7 @@ it('[EVID-010] edits retain immutable operator wording versions and reject stale
  await env.DB.prepare('UPDATE oa_sessions SET revoked_at=?').bind(Date.now()).run()
  expect((await call(path+'/wording',{wording:'Revoked',expectedVersionId:edited.versionId},g.operator,'PATCH')).status).toBe(401)
  expect(await env.DB.prepare('SELECT count(*) n FROM evidence_versions WHERE evidence_id=?').bind(g.evidence.id).first('n')).toBe(2)
+ await proveRedaction(call,fixture,person)
 })
 it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical overlap within 500ms and actions create no draft',async()=>{
  const g=await fixture();await publish(g)
@@ -133,10 +135,11 @@ it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical ov
 it('[CAP-009 EVID-008] admitted email captures and original attachments stay private with durable replay and upload custody',async()=>{
  await reset();const migrations=inject('migrations') as {name:string;queries:string[]}[]
  await applyD1Migrations(env.DB,migrations.filter(m=>Number(m.name.slice(0,4))<88))
- const g=await fixture();await publish(g)
+ await env.DB.prepare("INSERT INTO evidence_items(id,source_type,source_label,observed_at,review_state,created_at,updated_at) VALUES('synthetic-penny-upgrade','free_text','Prior capture','2026-10-01','unreviewed','2026-10-01','2026-10-01')").run()
  const previous=(await env.DB.prepare('SELECT * FROM evidence_items').all()).results
  await applyD1Migrations(env.DB,migrations);await applyD1Migrations(env.DB,migrations)
  expect((await env.DB.prepare('SELECT * FROM evidence_items').all()).results).toEqual(previous)
+ const g=await fixture();await publish(g)
  const mailBefore=(await providerMessages().list()).length
  await proveEmailCapture(call,env.DB,g.operator)
  expect((await providerMessages().list()).length).toBe(mailBefore)

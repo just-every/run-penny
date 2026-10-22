@@ -40,7 +40,7 @@ export function planRedactions(found: { table: string; key: string; columns: str
  const redactions = new Map(kept.map(row => [id(row.table, row.key), { ...row, columns: Object.keys(keptRedaction) }]))
  const blockedCopies: BlockedCopy[] = []
  for (const copy of found) {
-  if (copies.has(copy.table)) {
+  if (copies.has(copy.table)||(copy.table==='penny_redaction_settings'&&copy.columns.every(column=>column==='patterns_json'))) {
    const existing = redactions.get(id(copy.table, copy.key))
    redactions.set(id(copy.table, copy.key), { ...copy, columns: [...new Set([...(existing?.columns ?? []), ...copy.columns])] })
   } else if (choices.has(copy.table)) {
@@ -89,6 +89,7 @@ export function redactionStatements(db: D1Database, tables: Table[], plan: { blo
   update(copy.table, copy.key, set)
  }
  for (const redaction of plan.redactions) {
+  if(redaction.table==='penny_redaction_settings'){const row=plan.rows.get(id(redaction.table,redaction.key))!;const patterns=JSON.parse(String(row.patterns_json)) as string[];update(redaction.table,redaction.key,{patterns_json:JSON.stringify(patterns.filter(pattern=>!literals.some(literal=>pattern.includes(literal)))),revision:Number(row.revision)+1});continue}
   const row = plan.rows.get(id(redaction.table, redaction.key))!, bet = redaction.table === 'decision_bet_snapshots' ? chosen.get(id('candidate_bets', JSON.stringify([row.candidate_bet_id]))) : undefined
   update(redaction.table, redaction.key, Object.fromEntries(redaction.columns.map(column => [column, column in keptRedaction && redaction.table === 'requests' ? kept(row, updates.get(id(redaction.table, redaction.key))?.set ?? {}, column) : bet && column in bet ? bet[column] : follow.get(String(row[column])) ?? redact(String(row[column]), literals)])))
  }

@@ -3089,5 +3089,15 @@
       "claim_id",
       "completed"
     ]
+  },
+  "penny_redaction_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "enabled",
+      "kinds_json",
+      "patterns_json",
+      "revision"
+    ]
   }
 }

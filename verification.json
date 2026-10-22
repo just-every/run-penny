@@ -12,6 +12,7 @@
         "pnpm run build",
         "pnpm run deployment-spec:check",
         "pnpm run typecheck",
+        "pnpm run eval:ai -- --set redaction-v1",
         "pnpm run lint",
         "pnpm run test:mail-runtime",
         "pnpm run test:data:commands",
@@ -211,7 +212,10 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
-        "PENNY_LOOP_HEALTH_ONLY=1 node tests/browser/operator-pages.mjs"
+        "PENNY_LOOP_HEALTH_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_CAPTURE_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_OAUTH_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_REDACTION_ONLY=1 node tests/browser/operator-pages.mjs"
       ]
     },
     {

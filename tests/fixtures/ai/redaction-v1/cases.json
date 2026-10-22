@@ -1,0 +1,2075 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "synthetic-penny-1",
+      "text": "synthetic-penny-1: Customer SSN 201111001; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 41,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-2",
+      "text": "synthetic-penny-2: Customer SSN 202-12-1002; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 43,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-3",
+      "text": "synthetic-penny-3: Customer SSN 203 13 1003; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 43,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-4",
+      "text": "synthetic-penny-4: Customer SSN 204141004; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 41,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-5",
+      "text": "synthetic-penny-5: Customer SSN 205-15-1005; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 43,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-6",
+      "text": "synthetic-penny-6: Customer SSN 206 16 1006; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 43,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-7",
+      "text": "synthetic-penny-7: Customer SSN 207171007; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 41,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-8",
+      "text": "synthetic-penny-8: Customer SSN 208-18-1008; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 43,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-9",
+      "text": "synthetic-penny-9: Customer SSN 209 19 1009; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 43,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-10",
+      "text": "synthetic-penny-10: Customer SSN 210201010; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-11",
+      "text": "synthetic-penny-11: Customer SSN 211-21-1011; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-12",
+      "text": "synthetic-penny-12: Customer SSN 212 22 1012; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-13",
+      "text": "synthetic-penny-13: Customer SSN 213231013; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-14",
+      "text": "synthetic-penny-14: Customer SSN 214-24-1014; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-15",
+      "text": "synthetic-penny-15: Customer SSN 215 25 1015; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-16",
+      "text": "synthetic-penny-16: Customer SSN 216261016; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-17",
+      "text": "synthetic-penny-17: Customer SSN 217-27-1017; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-18",
+      "text": "synthetic-penny-18: Customer SSN 218 28 1018; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-19",
+      "text": "synthetic-penny-19: Customer SSN 219291019; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-20",
+      "text": "synthetic-penny-20: Customer SSN 220-30-1020; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-21",
+      "text": "synthetic-penny-21: Customer SSN 221 31 1021; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-22",
+      "text": "synthetic-penny-22: Customer SSN 222321022; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-23",
+      "text": "synthetic-penny-23: Customer SSN 223-33-1023; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-24",
+      "text": "synthetic-penny-24: Customer SSN 224 34 1024; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-25",
+      "text": "synthetic-penny-25: Customer SSN 225351025; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-26",
+      "text": "synthetic-penny-26: Customer SSN 226-36-1026; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-27",
+      "text": "synthetic-penny-27: Customer SSN 227 37 1027; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-28",
+      "text": "synthetic-penny-28: Customer SSN 228381028; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-29",
+      "text": "synthetic-penny-29: Customer SSN 229-39-1029; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-30",
+      "text": "synthetic-penny-30: Customer SSN 230 40 1030; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-31",
+      "text": "synthetic-penny-31: Customer SSN 231411031; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-32",
+      "text": "synthetic-penny-32: Customer SSN 232-42-1032; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-33",
+      "text": "synthetic-penny-33: Customer SSN 233 43 1033; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-34",
+      "text": "synthetic-penny-34: Customer SSN 234441034; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-35",
+      "text": "synthetic-penny-35: Customer SSN 235-45-1035; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-36",
+      "text": "synthetic-penny-36: Customer SSN 236 46 1036; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-37",
+      "text": "synthetic-penny-37: Customer SSN 237471037; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-38",
+      "text": "synthetic-penny-38: Customer SSN 238-48-1038; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-39",
+      "text": "synthetic-penny-39: Customer SSN 239 49 1039; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 44,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-40",
+      "text": "synthetic-penny-40: Customer SSN 240501040; please remove it from the excerpt.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 42,
+          "kind": "ssn"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-41",
+      "text": "synthetic-penny-41: Payment card 9001000000000000 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-42",
+      "text": "synthetic-penny-42: Payment card 9001 0000 0000 0018 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-43",
+      "text": "synthetic-penny-43: Payment card 9001-0000-0000-0026 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-44",
+      "text": "synthetic-penny-44: Payment card 9001000000000034 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-45",
+      "text": "synthetic-penny-45: Payment card 9001 0000 0000 0042 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-46",
+      "text": "synthetic-penny-46: Payment card 9001-0000-0000-0059 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-47",
+      "text": "synthetic-penny-47: Payment card 9001000000000067 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-48",
+      "text": "synthetic-penny-48: Payment card 9001 0000 0000 0075 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-49",
+      "text": "synthetic-penny-49: Payment card 9001-0000-0000-0083 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-50",
+      "text": "synthetic-penny-50: Payment card 9001000000000091 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-51",
+      "text": "synthetic-penny-51: Payment card 9001 0000 0000 0109 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-52",
+      "text": "synthetic-penny-52: Payment card 9001-0000-0000-0117 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-53",
+      "text": "synthetic-penny-53: Payment card 9001000000000125 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-54",
+      "text": "synthetic-penny-54: Payment card 9001 0000 0000 0133 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-55",
+      "text": "synthetic-penny-55: Payment card 9001-0000-0000-0141 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-56",
+      "text": "synthetic-penny-56: Payment card 9001000000000158 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-57",
+      "text": "synthetic-penny-57: Payment card 9001 0000 0000 0166 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-58",
+      "text": "synthetic-penny-58: Payment card 9001-0000-0000-0174 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-59",
+      "text": "synthetic-penny-59: Payment card 9001000000000182 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-60",
+      "text": "synthetic-penny-60: Payment card 9001 0000 0000 0190 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-61",
+      "text": "synthetic-penny-61: Payment card 9001-0000-0000-0208 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-62",
+      "text": "synthetic-penny-62: Payment card 9001000000000216 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-63",
+      "text": "synthetic-penny-63: Payment card 9001 0000 0000 0224 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-64",
+      "text": "synthetic-penny-64: Payment card 9001-0000-0000-0232 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-65",
+      "text": "synthetic-penny-65: Payment card 9001000000000240 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-66",
+      "text": "synthetic-penny-66: Payment card 9001 0000 0000 0257 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-67",
+      "text": "synthetic-penny-67: Payment card 9001-0000-0000-0265 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-68",
+      "text": "synthetic-penny-68: Payment card 9001000000000273 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-69",
+      "text": "synthetic-penny-69: Payment card 9001 0000 0000 0281 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-70",
+      "text": "synthetic-penny-70: Payment card 9001-0000-0000-0299 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-71",
+      "text": "synthetic-penny-71: Payment card 9001000000000307 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-72",
+      "text": "synthetic-penny-72: Payment card 9001 0000 0000 0315 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-73",
+      "text": "synthetic-penny-73: Payment card 9001-0000-0000-0323 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-74",
+      "text": "synthetic-penny-74: Payment card 9001000000000331 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-75",
+      "text": "synthetic-penny-75: Payment card 9001 0000 0000 0349 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-76",
+      "text": "synthetic-penny-76: Payment card 9001-0000-0000-0356 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-77",
+      "text": "synthetic-penny-77: Payment card 9001000000000364 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-78",
+      "text": "synthetic-penny-78: Payment card 9001 0000 0000 0372 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-79",
+      "text": "synthetic-penny-79: Payment card 9001-0000-0000-0380 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 52,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-80",
+      "text": "synthetic-penny-80: Payment card 9001000000000398 appeared in the ticket.",
+      "spans": [
+        {
+          "start": 33,
+          "end": 49,
+          "kind": "card"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-81",
+      "text": "synthetic-penny-81: The callback number was +1 202 555 0100.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 59,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-82",
+      "text": "synthetic-penny-82: The callback number was (202) 555-0101.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 58,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-83",
+      "text": "synthetic-penny-83: The callback number was 202.555.0102.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 56,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-84",
+      "text": "synthetic-penny-84: The callback number was 2025550103.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 54,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-85",
+      "text": "synthetic-penny-85: The callback number was +1 202 555 0104.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 59,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-86",
+      "text": "synthetic-penny-86: The callback number was (202) 555-0105.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 58,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-87",
+      "text": "synthetic-penny-87: The callback number was 202.555.0106.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 56,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-88",
+      "text": "synthetic-penny-88: The callback number was 2025550107.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 54,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-89",
+      "text": "synthetic-penny-89: The callback number was +1 202 555 0108.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 59,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-90",
+      "text": "synthetic-penny-90: The callback number was (202) 555-0109.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 58,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-91",
+      "text": "synthetic-penny-91: The callback number was 202.555.0110.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 56,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-92",
+      "text": "synthetic-penny-92: The callback number was 2025550111.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 54,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-93",
+      "text": "synthetic-penny-93: The callback number was +1 202 555 0112.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 59,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-94",
+      "text": "synthetic-penny-94: The callback number was (202) 555-0113.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 58,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-95",
+      "text": "synthetic-penny-95: The callback number was 202.555.0114.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 56,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-96",
+      "text": "synthetic-penny-96: The callback number was 2025550115.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 54,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-97",
+      "text": "synthetic-penny-97: The callback number was +1 202 555 0116.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 59,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-98",
+      "text": "synthetic-penny-98: The callback number was (202) 555-0117.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 58,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-99",
+      "text": "synthetic-penny-99: The callback number was 202.555.0118.",
+      "spans": [
+        {
+          "start": 44,
+          "end": 56,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-100",
+      "text": "synthetic-penny-100: The callback number was 2025550119.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 55,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-101",
+      "text": "synthetic-penny-101: The callback number was +1 202 555 0120.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 60,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-102",
+      "text": "synthetic-penny-102: The callback number was (202) 555-0121.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 59,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-103",
+      "text": "synthetic-penny-103: The callback number was 202.555.0122.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 57,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-104",
+      "text": "synthetic-penny-104: The callback number was 2025550123.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 55,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-105",
+      "text": "synthetic-penny-105: The callback number was +1 202 555 0124.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 60,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-106",
+      "text": "synthetic-penny-106: The callback number was (202) 555-0125.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 59,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-107",
+      "text": "synthetic-penny-107: The callback number was 202.555.0126.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 57,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-108",
+      "text": "synthetic-penny-108: The callback number was 2025550127.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 55,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-109",
+      "text": "synthetic-penny-109: The callback number was +1 202 555 0128.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 60,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-110",
+      "text": "synthetic-penny-110: The callback number was (202) 555-0129.",
+      "spans": [
+        {
+          "start": 45,
+          "end": 59,
+          "kind": "phone"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-111",
+      "text": "synthetic-penny-111: Contact synthetic-penny-0@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 59,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-112",
+      "text": "synthetic-penny-112: Contact synthetic-penny-1+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 67,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-113",
+      "text": "synthetic-penny-113: Contact synthetic-penny-2@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 59,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-114",
+      "text": "synthetic-penny-114: Contact synthetic-penny-3+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 67,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-115",
+      "text": "synthetic-penny-115: Contact synthetic-penny-4@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 59,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-116",
+      "text": "synthetic-penny-116: Contact synthetic-penny-5+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 67,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-117",
+      "text": "synthetic-penny-117: Contact synthetic-penny-6@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 59,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-118",
+      "text": "synthetic-penny-118: Contact synthetic-penny-7+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 67,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-119",
+      "text": "synthetic-penny-119: Contact synthetic-penny-8@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 59,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-120",
+      "text": "synthetic-penny-120: Contact synthetic-penny-9+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 67,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-121",
+      "text": "synthetic-penny-121: Contact synthetic-penny-10@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-122",
+      "text": "synthetic-penny-122: Contact synthetic-penny-11+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-123",
+      "text": "synthetic-penny-123: Contact synthetic-penny-12@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-124",
+      "text": "synthetic-penny-124: Contact synthetic-penny-13+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-125",
+      "text": "synthetic-penny-125: Contact synthetic-penny-14@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-126",
+      "text": "synthetic-penny-126: Contact synthetic-penny-15+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-127",
+      "text": "synthetic-penny-127: Contact synthetic-penny-16@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-128",
+      "text": "synthetic-penny-128: Contact synthetic-penny-17+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-129",
+      "text": "synthetic-penny-129: Contact synthetic-penny-18@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-130",
+      "text": "synthetic-penny-130: Contact synthetic-penny-19+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-131",
+      "text": "synthetic-penny-131: Contact synthetic-penny-20@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-132",
+      "text": "synthetic-penny-132: Contact synthetic-penny-21+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-133",
+      "text": "synthetic-penny-133: Contact synthetic-penny-22@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-134",
+      "text": "synthetic-penny-134: Contact synthetic-penny-23+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-135",
+      "text": "synthetic-penny-135: Contact synthetic-penny-24@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-136",
+      "text": "synthetic-penny-136: Contact synthetic-penny-25+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-137",
+      "text": "synthetic-penny-137: Contact synthetic-penny-26@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-138",
+      "text": "synthetic-penny-138: Contact synthetic-penny-27+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-139",
+      "text": "synthetic-penny-139: Contact synthetic-penny-28@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 60,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-140",
+      "text": "synthetic-penny-140: Contact synthetic-penny-29+reports@example.test about reports.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 68,
+          "kind": "email"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-141",
+      "text": "synthetic-penny-141: password=synthetic-penny-0-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 30,
+          "end": 62,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-142",
+      "text": "synthetic-penny-142: secret=synthetic-penny-1-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 28,
+          "end": 60,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-143",
+      "text": "synthetic-penny-143: api_key=synthetic-penny-2-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 61,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-144",
+      "text": "synthetic-penny-144: access_token=synthetic-penny-3-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 34,
+          "end": 66,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-145",
+      "text": "synthetic-penny-145: credential=synthetic-penny-4-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 64,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-146",
+      "text": "synthetic-penny-146: password=synthetic-penny-5-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 30,
+          "end": 62,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-147",
+      "text": "synthetic-penny-147: secret=synthetic-penny-6-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 28,
+          "end": 60,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-148",
+      "text": "synthetic-penny-148: api_key=synthetic-penny-7-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 61,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-149",
+      "text": "synthetic-penny-149: access_token=synthetic-penny-8-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 34,
+          "end": 66,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-150",
+      "text": "synthetic-penny-150: credential=synthetic-penny-9-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 64,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-151",
+      "text": "synthetic-penny-151: password=synthetic-penny-10-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 30,
+          "end": 63,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-152",
+      "text": "synthetic-penny-152: secret=synthetic-penny-11-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 28,
+          "end": 61,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-153",
+      "text": "synthetic-penny-153: api_key=synthetic-penny-12-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 62,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-154",
+      "text": "synthetic-penny-154: access_token=synthetic-penny-13-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 34,
+          "end": 67,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-155",
+      "text": "synthetic-penny-155: credential=synthetic-penny-14-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 65,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-156",
+      "text": "synthetic-penny-156: password=synthetic-penny-15-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 30,
+          "end": 63,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-157",
+      "text": "synthetic-penny-157: secret=synthetic-penny-16-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 28,
+          "end": 61,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-158",
+      "text": "synthetic-penny-158: api_key=synthetic-penny-17-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 62,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-159",
+      "text": "synthetic-penny-159: access_token=synthetic-penny-18-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 34,
+          "end": 67,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-160",
+      "text": "synthetic-penny-160: credential=synthetic-penny-19-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 65,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-161",
+      "text": "synthetic-penny-161: password=synthetic-penny-20-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 30,
+          "end": 63,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-162",
+      "text": "synthetic-penny-162: secret=synthetic-penny-21-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 28,
+          "end": 61,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-163",
+      "text": "synthetic-penny-163: api_key=synthetic-penny-22-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 62,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-164",
+      "text": "synthetic-penny-164: access_token=synthetic-penny-23-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 34,
+          "end": 67,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-165",
+      "text": "synthetic-penny-165: credential=synthetic-penny-24-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 65,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-166",
+      "text": "synthetic-penny-166: password=synthetic-penny-25-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 30,
+          "end": 63,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-167",
+      "text": "synthetic-penny-167: secret=synthetic-penny-26-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 28,
+          "end": 61,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-168",
+      "text": "synthetic-penny-168: api_key=synthetic-penny-27-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 29,
+          "end": 62,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-169",
+      "text": "synthetic-penny-169: access_token=synthetic-penny-28-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 34,
+          "end": 67,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-170",
+      "text": "synthetic-penny-170: credential=synthetic-penny-29-invented-value; this is invented fixture data.",
+      "spans": [
+        {
+          "start": 32,
+          "end": 65,
+          "kind": "credential"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-penny-171",
+      "text": "synthetic-penny-171: Order 234567891 and tracking 987654321012345678901234. Batch 0.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-172",
+      "text": "synthetic-penny-172: Invalid identifier 000-12-3456 and 900-12-3456. Batch 1.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-173",
+      "text": "synthetic-penny-173: Invalid card check 4111111111111112. Batch 2.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-174",
+      "text": "synthetic-penny-174: Version 2.1.0 on 2026-10-22; build 20261022. Batch 3.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-175",
+      "text": "synthetic-penny-175: Credential status: pending; token label synthetic-penny-reference. Batch 4.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-176",
+      "text": "synthetic-penny-176: Order 234567891 and tracking 987654321012345678901234. Batch 5.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-177",
+      "text": "synthetic-penny-177: Invalid identifier 000-12-3456 and 900-12-3456. Batch 6.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-178",
+      "text": "synthetic-penny-178: Invalid card check 4111111111111112. Batch 7.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-179",
+      "text": "synthetic-penny-179: Version 2.1.0 on 2026-10-22; build 20261022. Batch 8.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-180",
+      "text": "synthetic-penny-180: Credential status: pending; token label synthetic-penny-reference. Batch 9.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-181",
+      "text": "synthetic-penny-181: Order 234567891 and tracking 987654321012345678901234. Batch 10.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-182",
+      "text": "synthetic-penny-182: Invalid identifier 000-12-3456 and 900-12-3456. Batch 11.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-183",
+      "text": "synthetic-penny-183: Invalid card check 4111111111111112. Batch 12.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-184",
+      "text": "synthetic-penny-184: Version 2.1.0 on 2026-10-22; build 20261022. Batch 13.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-185",
+      "text": "synthetic-penny-185: Credential status: pending; token label synthetic-penny-reference. Batch 14.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-186",
+      "text": "synthetic-penny-186: Order 234567891 and tracking 987654321012345678901234. Batch 15.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-187",
+      "text": "synthetic-penny-187: Invalid identifier 000-12-3456 and 900-12-3456. Batch 16.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-188",
+      "text": "synthetic-penny-188: Invalid card check 4111111111111112. Batch 17.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-189",
+      "text": "synthetic-penny-189: Version 2.1.0 on 2026-10-22; build 20261022. Batch 18.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-190",
+      "text": "synthetic-penny-190: Credential status: pending; token label synthetic-penny-reference. Batch 19.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-191",
+      "text": "synthetic-penny-191: Order 234567891 and tracking 987654321012345678901234. Batch 20.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-192",
+      "text": "synthetic-penny-192: Invalid identifier 000-12-3456 and 900-12-3456. Batch 21.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-193",
+      "text": "synthetic-penny-193: Invalid card check 4111111111111112. Batch 22.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-194",
+      "text": "synthetic-penny-194: Version 2.1.0 on 2026-10-22; build 20261022. Batch 23.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-195",
+      "text": "synthetic-penny-195: Credential status: pending; token label synthetic-penny-reference. Batch 24.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-196",
+      "text": "synthetic-penny-196: Order 234567891 and tracking 987654321012345678901234. Batch 25.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-197",
+      "text": "synthetic-penny-197: Invalid identifier 000-12-3456 and 900-12-3456. Batch 26.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-198",
+      "text": "synthetic-penny-198: Invalid card check 4111111111111112. Batch 27.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-199",
+      "text": "synthetic-penny-199: Version 2.1.0 on 2026-10-22; build 20261022. Batch 28.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-200",
+      "text": "synthetic-penny-200: Credential status: pending; token label synthetic-penny-reference. Batch 29.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-201",
+      "text": "synthetic-penny-201: Order 234567891 and tracking 987654321012345678901234. Batch 30.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-202",
+      "text": "synthetic-penny-202: Invalid identifier 000-12-3456 and 900-12-3456. Batch 31.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-203",
+      "text": "synthetic-penny-203: Invalid card check 4111111111111112. Batch 32.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-204",
+      "text": "synthetic-penny-204: Version 2.1.0 on 2026-10-22; build 20261022. Batch 33.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-205",
+      "text": "synthetic-penny-205: Credential status: pending; token label synthetic-penny-reference. Batch 34.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-206",
+      "text": "synthetic-penny-206: Order 234567891 and tracking 987654321012345678901234. Batch 35.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-207",
+      "text": "synthetic-penny-207: Invalid identifier 000-12-3456 and 900-12-3456. Batch 36.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-208",
+      "text": "synthetic-penny-208: Invalid card check 4111111111111112. Batch 37.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-209",
+      "text": "synthetic-penny-209: Version 2.1.0 on 2026-10-22; build 20261022. Batch 38.",
+      "spans": []
+    },
+    {
+      "id": "synthetic-penny-210",
+      "text": "synthetic-penny-210: Credential status: pending; token label synthetic-penny-reference. Batch 39.",
+      "spans": []
+    }
+  ]
+}

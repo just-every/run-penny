@@ -1,3 +1,4 @@
+import {registerRedactionRoutes} from '../features/redaction/routes'
 import {registerOAuthSettings} from '../features/auth/oauth-settings'
 import {registerOAuthRoutes} from '../features/auth/oauth-routes'
 import {registerEmailCaptureSettings} from '../features/evidence/email-settings'
@@ -110,6 +111,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerLearningRoutes(app)
   registerIntegrationApi(app)
   registerRequestStatusSettingsRoutes(app)
+  registerRedactionRoutes(app)
   registerOAuthSettings(app)
   registerOAuthRoutes(app)
   registerEmailCaptureSettings(app)

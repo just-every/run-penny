@@ -1,3 +1,4 @@
+import {RedactionSettings} from '../../redaction/settings-ui'
 import {RequesterOAuthSettings} from '../../auth/ui/requester-oauth-settings'
 import {ModelSettings} from '../../ai/ui/model-settings'
 import {AgingSettings} from '../../triage/aging-settings'
@@ -43,6 +44,7 @@ export function BoardSettings() {
         <OperatorSettings />
         <ModelSettings />
         <RequesterOAuthSettings />
+        <RedactionSettings />
         <TestCustomers />
         <DeliveryReview />
         <ApiKeys />

@@ -1,3 +1,4 @@
+import {redactCaptured,redactionFence} from '../redaction/settings'
 import type { DatabaseConnection } from '@/core/platform/database'
 import { createRequestId, digest } from './lifecycle-ids'
 import type { RequesterReference, SubmissionInput } from './lifecycle-types'
@@ -55,15 +56,19 @@ export async function holdPendingRequesterAction(
   action: PendingRequesterAction,
   now: string,
 ): Promise<void> {
+  const captured=action.type==='submission'?await redactCaptured(database.binding,{...action.input},['title','description','proposedSolution','impactStatement']):null
+  if(captured&&action.type==='submission')action={...action,input:captured.input}
+  const fence=captured?redactionFence(database.binding,captured.revision):null
   const expiresAt = new Date(new Date(now).getTime() + 24 * 60 * 60 * 1000).toISOString()
   // Replacement is a new immutable action identity. An earlier in-flight replay
   // can only claim, complete or release its captured id, never this new version.
-  await database.binding.prepare(`
+  const statement=database.binding.prepare(`
     INSERT INTO requester_pending_actions (id, pending_token_hash, action_type, payload_json, expires_at, claimed_at, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, NULL, ?, ?)
     ON CONFLICT(pending_token_hash, action_type) DO UPDATE SET
       id = excluded.id, payload_json = excluded.payload_json, expires_at = excluded.expires_at, claimed_at = NULL, updated_at = excluded.updated_at
-  `).bind(createRequestId(), await hashPendingRequesterActionToken(pendingToken), action.type, JSON.stringify(action), expiresAt, now, now).run()
+  `).bind(createRequestId(), await hashPendingRequesterActionToken(pendingToken), action.type, JSON.stringify(action), expiresAt, now, now)
+  if(fence)await database.binding.batch([fence.before,statement,fence.after]);else await statement.run()
 }
 
 export async function replayPendingRequesterAction(

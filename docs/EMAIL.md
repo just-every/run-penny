@@ -153,3 +153,10 @@ routing and actual receiver authentication headers remain the owner's setup and
 acceptance step, **NOT RUN**. Future AI-006 connector or mail reply drafts require
 explicit operator editing and sending, never auto-send, and a fresh private-value
 check before publication.
+
+
+When owner-enabled sensitive-evidence rules are active, email excerpts use the
+same pre-storage redaction function as operator evidence. Stable markers name
+the kind and never contain its original value. Sender attribution remains
+separate identity data under normal erasure custody. Binary attachments are not
+rewritten. See [data ownership](data-ownership.md) for reapplication limits.

@@ -1,3 +1,4 @@
+import {reviewRedaction} from './redaction-journey.mjs'
 import {reviewRequesterOAuth} from './requester-oauth-journey.mjs'
 import {requesterOAuthBindings,requesterOAuthEdge} from './requester-oauth-edge.mjs'
 import {reviewEmailCapture} from './email-capture-journey.mjs'
@@ -27,7 +28,8 @@ const axe = await readFile(new URL('../../node_modules/axe-core/axe.min.js', imp
 const checks = [], negativeChecks = []
 const captureOnly=process.env.PENNY_CAPTURE_ONLY==='1'
 const oauthOnly=process.env.PENNY_OAUTH_ONLY==='1'
-const focusedOnly=captureOnly||oauthOnly
+const redactionOnly=process.env.PENNY_REDACTION_ONLY==='1'
+const focusedOnly=captureOnly||oauthOnly||redactionOnly
 const loopHealthOnly=process.env.PENNY_LOOP_HEALTH_ONLY==='1'
 const completenessOnly=!loopHealthOnly&&process.env.PENNY_OPERATOR_COMPLETENESS_ONLY==='1'
 let browser, hosted
@@ -163,7 +165,9 @@ try {
       async function goto(path) { phase=diagnosticPath(origin+path);const response=await page.goto(origin+path);assert.equal(response.status(),200);await page.locator('main h1').waitFor() }
       await goto('/setup')
       assert.equal(await finishFirstRun(page,focusedOnly?async()=>{}:(targetPage,label)=>capture(label,targetPage)),true,'[BASE-ACCESS-002] native owner finishes the real first-run form')
-      if(oauthOnly){
+      if(redactionOnly){
+        await reviewRedaction({page,runtime,goto,capture})
+      } else if(oauthOnly){
         await reviewRequesterOAuth({page,browser,runtime,width,goto,capture})
       } else if(captureOnly){
         await reviewEmailCapture({page,runtime,goto,capture})

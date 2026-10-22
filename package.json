@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "rer dev",
     "typecheck": "tsc -b",
+    "eval:ai": "node scripts/ai-eval/run.mjs",
     "build": "rer build",
     "lint": "oxlint",
     "preview": "rer preview",

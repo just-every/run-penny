@@ -1,3 +1,4 @@
+import {validateRules} from '../redaction/settings'
 import {captureInput} from '../evidence/email-admission'
 import type {Row} from '../data/archive'
 import {NativeError} from '../auth/native-tokens'
@@ -5,6 +6,7 @@ import {businessInput,mailIdentityInput} from './mail-identity'
 /** Provenance travels with product data; provider test receipts stay installation-owned. */
 export function validateMailIdentityArchive(data:Record<string,Row[]>){
  const fail=()=>{throw new NativeError('invalid_mail_identity_archive',400)}
+ for(const row of data.penny_redaction_settings??[]){try{validateRules({enabled:row.enabled===1,kinds:JSON.parse(String(row.kinds_json)),patterns:JSON.parse(String(row.patterns_json))})}catch{throw new NativeError('invalid_redaction_archive',400)}}
  for(const row of data.penny_email_capture_settings??[]){
   if(!captureInput.safeParse({captureAddress:row.capture_address,domains:(data.penny_email_capture_domains??[]).map(item=>item.domain)}).success||(data.penny_mail_identity??[]).some(identity=>[identity.from_address,identity.reply_to].includes(row.capture_address)))fail()
  }
