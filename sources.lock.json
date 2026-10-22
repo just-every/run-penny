@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "2f111de3e061faceb49a08a16a6dffbd597aa46d62954107b3e102e72b5d4c94",
+      "sha256": "78fd708e19908fd2a862d7aeccc7f21630aaf085fabe2a0aa8806bb448f78d37",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2880,7 +2880,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "b012e13b072997fe47f5aca17a1f2b363f166be4c6dc1feebdeff8a3e595a6b8",
+      "sha256": "91e16f13841f4646c4f26069dcc19e89e34429dff71005f6fe0cae968be613f6",
       "executable": false
     },
     "DEMO.md": {
@@ -7424,7 +7424,7 @@
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
-      "sha256": "e4cf99e55981c3e7b3f232dd2e906f0488a646c35285890c9633be2547469421",
+      "sha256": "650378b5afe0d925755e55424fcb13e22f4d2d7bc9c002cc6e3fd35af5220541",
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
@@ -7704,7 +7704,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-fields.mjs": {
-      "sha256": "b4e522b6b5206b2eee5e89621cf51a3df5ed6dca17020763c222126645c9e532",
+      "sha256": "85b7684826d30579eac50bf466d4ed4e1d669abe0d0acbe4037b361ab4f70679",
       "executable": false
     },
     "tests/browser/operator-completeness-notices.mjs": {
@@ -7733,6 +7733,10 @@
     },
     "tests/browser/operator-evidence-flow.mjs": {
       "sha256": "591fb6560b15406e0934472100cac365add3e080e769e2a3f77a3389a2565c51",
+      "executable": false
+    },
+    "tests/browser/operator-field-public-proof.mjs": {
+      "sha256": "953b33bb046a5ff725b9d93b005832ddd1522070e7e8561109fc2938c6577335",
       "executable": false
     },
     "tests/browser/operator-navigation.mjs": {
