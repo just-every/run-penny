@@ -627,7 +627,7 @@ Payroll, general project/work management and monitoring/observability stay outsi
 
 ## Status
 
-Judged from the code and tests at commit `1c263d670f2658c399418b4fdf333fe389c91141` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+Judged from the code and tests at commit `2497452904327fbceab24804ed2fa37509a155d5` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 AI-008 is partial on 22 October 2026: deterministic owner rules mark supported captures before storage, preserve marked text through D1 search and portable export/restore, and provide audited, previewed irreversible evidence-wording reapplication. Migration 0090 upgrades populated previous-head data without rewriting it. The first untuned redaction-v1 run on 210 synthetic excerpts measured precision and recall of 1.00 for each default kind. Rule settings and marked items have 1440/390 browser proof. This is a deterministic rule-only implementation; optional model detection is not built and AI-010 is unchanged. Binary attachments are not rewritten. Operator evidence, CAP-009 email capture and native portal submission use guarded before-storage rules. AI-011 remains missing and inherits extending the minimal redaction-v1 runner. Gap: saved-import originals and learning source envelopes are not redacted before storage. Explicit reapplication currently covers at most 200 evidence wording versions, not every stored transcript or copied request field; larger stores need paged reapplication. The full before-storage and reapplication promises remain open.
 
@@ -673,9 +673,9 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 92 | 22 | 0 | 114 |
+| Published | 97 | 17 | 0 | 114 |
 | Target and push further | 20 | 45 | 68 | 133 |
-| All | 112 | 67 | 68 | 247 |
+| All | 117 | 62 | 68 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -684,7 +684,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `DOCS-001` | Public documentation | published | partial | `tests/browser/route-review.mjs` — push Verify shard rich-changelog; `docs/site.json` | Gap: manifest navigation order, rejection of unlisted Markdown and broken links, and session/cookie isolation have no passing assertion. |
 | `OPS-001` | Roles | published | partial | `tests/base/auth.test.ts` (line 83) | one operator per role attempts every guarded action through its route and UI; a Viewer is refused every write with 403; a Contributor captures evidence, records a proxy vote and comments internally but is refused moderation, publication, commitment, settings and commercial fields; a Product manager is refused settings, integrations and roles; an Admin is refused handover, export and erasure; each refusal changes nothing; a role change applies on the next request. |
 | `OPS-002` | Management | published | done | `tests/base/auth.test.ts` (line 83); `tests/base/auth.test.ts` (line 132); `tests/base/auth.test.ts` (line 160) |  |
-| `OPS-003` | Overview | published | partial | `tests/browser/operator-pages.mjs` | Gap: `operator-pages.mjs full mode` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for all overview figures, linked records and empty-state actions. |
+| `OPS-003` | Overview | published | done | `tests/browser/operator-pages.mjs`; `tests/browser/operator-overview-checks.mjs` — push Verify shard loop-health |  |
 | `OPS-005` | First-run setup | published | done | `tests/base/first-run.test.ts`; `tests/base/mail-identity.test.ts`; `tests/base/workspace-clock.test.ts`; `tests/browser/workspace-clock.mjs` |  |
 | `OPS-008` | Workspace timezone and requester quiet hours | target | done | `tests/base/workspace-clock.test.ts`; `tests/base/notifications.test.ts`; `tests/browser/workspace-clock.mjs` |  |
 | `OPS-004` | Global search | published | partial | `tests/browser/operator-completeness-requester.mjs` | Search across the named fields works; the 500 ms first page at declared capacity is not load-tested. |
@@ -695,8 +695,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `OPS-006` | Saved views and filters | target | missing |  | A browser test saves a filtered, sorted view, then a second operator opens the shared view and gets the same result set; a private view is not listed for them. |
 | `OPS-007` | Person view | target | partial | `src/core/features/requests/operator-context.ts`; `src/core/features/accounts/read-context.ts` | A fixture requester with two posts, three votes, a comment, captured Zendesk evidence and an account: the profile lists each with a link to its record; a role without commercial permission sees no ARR or MRR; the profile path answers 404 to a portal visitor and appears in no public payload. |
 | `EVID-001` | Capture | published | done | `tests/base/penny-evidence.test.ts` — "captures source provenance atomically and keeps originals private with durable replay and upload custody"; `tests/base/no-mail-identity.test.ts` |  |
-| `EVID-002` | Provenance | published | partial | `tests/browser/operator-pages-decisions.mjs` | Gap: `operator-pages.mjs full mode via operator-pages-decisions.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for complete recorded provenance and nullable attribution. |
-| `EVID-003` | Review lifecycle | published | partial | `tests/browser/operator-pages.mjs` | Gap: `operator-pages.mjs full mode` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for link/create/review/unreview lifecycle without implicit review. |
+| `EVID-002` | Provenance | published | done | `tests/base/penny-evidence.test.ts` — push Verify base shards; `tests/browser/operator-pages-decisions.mjs` — push Verify shard loop-health |  |
+| `EVID-003` | Review lifecycle | published | done | `tests/browser/operator-evidence-flow.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health |  |
 | `EVID-004` | Non-destructive linking | published | done | `tests/base/decision-loop-commit.test.ts` — "derives hand-computable dimensions and immutable current-version snapshots" |  |
 | `EVID-005` | Account context | published | done | `tests/base/penny-evidence.test.ts` (line 61) |  |
 | `EVID-006` | Private commercial data | published | done | `tests/base/penny-evidence.test.ts` (line 157) |  |
@@ -780,7 +780,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REQ-026` | Demand attribution | published | done | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` |  |
 | `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` (line 58) |  |
 | `REQ-028` | Request queue | published | partial | `tests/browser/operator-completeness-read.mjs` | Queue filters and sorts work; the 500 ms first page at declared capacity is not load-tested. |
-| `REQ-029` | Operator-authored request | published | partial | `tests/browser/operator-pages-decisions.mjs` | Gap: `operator-pages.mjs full mode via operator-pages-decisions.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for operator authorship, evidence links and explicit publication. |
+| `REQ-029` | Operator-authored request | published | partial | `tests/browser/operator-evidence-flow.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health | Gap: Skipping requester moderation and the complete explicit-publication transition lack passing assertions. |
 | `REQ-030` | Moderation verdicts | published | done | `tests/base/notifications.test.ts` (line 279) |  |
 | `REQ-031` | Host identity claims | published | done | `tests/base/host-identity.test.ts` |  |
 | `REQ-032` | Internal notes | published | done | `tests/base/penny-evidence.test.ts` (line 157) |  |
@@ -813,13 +813,13 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `DEC-007` | Review due | published | done | `tests/base/penny-decisions.test.ts` |  |
 | `DEC-008` | Outcome evidence | published | done | `tests/base/penny-releases.test.ts`; `tests/base/penny-decisions.test.ts` |  |
 | `ROAD-001` | Internal states | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
-| `ROAD-002` | Internal record | published | partial | `tests/browser/operator-pages-decisions.mjs` | Gap: `operator-pages.mjs full mode via operator-pages-decisions.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for all internal roadmap fields and linked context. |
+| `ROAD-002` | Internal record | published | done | `tests/browser/operator-roadmap-record.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health |  |
 | `ROAD-003` | Public projection | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `ROAD-004` | Approval is publication | published | done | `tests/base/decision-loop-roadmap.test.ts` (line 9); `tests/base/decision-loop-roadmap.test.ts` (line 17); `tests/base/request-status-workflow.test.ts` (line 7) |  |
 | `ROAD-005` | Commitment mapping | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `ROAD-006` | Public roadmap | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` — approved-only columns and counts, mapped request, published release on card and detail at 1440/390 |  |
 | `ROAD-007` | Status update draft | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` |  |
-| `ROAD-008` | Status update publication | published | partial | `tests/browser/operator-pages-status.mjs` | Gap: `operator-pages.mjs full mode via operator-pages-status.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for all mapped histories, eligible follower deduplication and repeat-publication refusal. |
+| `ROAD-008` | Status update publication | published | partial | `tests/browser/operator-pages-status.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health | Gap: Every mapped request history, eligible-follower deduplication and repeat-publication refusal lack complete passing assertions. |
 | `ROAD-009` | Roadmap views | target | missing |  | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. |
 | `ROAD-010` | Several and audience roadmaps | target | missing |  | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. |
 | `ROAD-011` | Release planning and dependencies | target | done | `tests/base/release-planning.test.ts`; `tests/browser/release-planning.mjs` |  |
@@ -876,7 +876,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `DATA-001` | Export contents | published | done | `tests/base/hosted-export.test.ts` (line 83); `tests/installer/portability.test.mjs` |  |
 | `DATA-002` | Public/private boundary | published | done | `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts` |  |
 | `DATA-003` | Erasure outranks history | published | done | `tests/base/penny-erasure.test.ts` (line 137); `tests/base/penny-erasure.test.ts` (line 178) |  |
-| `DATA-004` | Custom fields | published | partial | `tests/browser/operator-completeness-fields.mjs` | Gap: `operator-pages.mjs full mode via operator-completeness-fields.mjs` is not loaded by push Verify or the named nightly job; running tests do not assert the full acceptance for editing each custom-field entity and public exclusion. |
+| `DATA-004` | Custom fields | published | done | `tests/browser/operator-completeness-fields.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard import-statuses |  |
 | `DATA-005` | CSV exports | target | partial | `src/core/features/data/archive.ts`; `tests/base/hosted-export.test.ts` (line 83) | A CSV export of fixture data reconciles its vote totals with its individual voter rows and with record counts. |
 | `DATA-006` | Complete API and webhooks | target | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` (line 19) | OpenAPI contract tests exercise every resource through the public API; each webhook's signature verifies and replays are rejected. |
 | `DATA-007` | MCP server | target | missing |  | An MCP conformance client lists the tools and runs search and capture; a call outside the key's scope is refused. |

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Load operator provenance, evidence review, overview and roadmap checks in push Verify, with the seven-entity private custom-field matrix in its own short shard.
+
 - Load route review in push Verify, keep browser journeys on the pinned headless shell, and consolidate commitment validation to a 246-registration ceiling.
 - Wrap long linked account names and release-planning item labels within operator cards at phone widths.
 
