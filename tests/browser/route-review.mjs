@@ -407,6 +407,10 @@ try {
 
   await checkEmptyRoutes()
   await seedRouteReviewDatabase(runtime.db)
+  const ownerCookie=bootstrap.headers.get('set-cookie').split(';')[0]
+  const roadmapSettings=await (await api('/api/operator/settings/status-roadmap',undefined,{Cookie:ownerCookie})).json()
+  const selectedRoadmap=await api('/api/operator/settings/status-roadmap',{...roadmapSettings.settings,source:'approved_items'},{Cookie:ownerCookie},'PUT')
+  assert.equal(selectedRoadmap.status,200,'Route fixture selects its approved-item roadmap through owner settings')
   reviewState='populated'
   for (const width of [1440, 390]) {
     const operatorIp=width===390?'192.0.2.21':'192.0.2.20'
@@ -511,7 +515,7 @@ try {
   console.log(`Route review passed: ${captures.length} screenshots, ${checks.length} route/auth checks, no page errors or horizontal overflow.`)
   console.log(`Evidence: ${output}`)
 } catch(error) {
-  console.error('route-review diagnostics: '+JSON.stringify({pageErrors,consoleErrors,admission:(await runtime.db.prepare('SELECT scope,count FROM penny_public_admission').all()).results}))
+  console.error('route-review diagnostics: '+JSON.stringify({pageErrors,consoleErrors:consoleErrors.slice(0,5),consoleErrorCount:consoleErrors.length,admission:(await runtime.db.prepare('SELECT scope,count FROM penny_public_admission').all()).results}))
   throw error
 } finally {
   await browser?.close()
