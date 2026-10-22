@@ -6,12 +6,9 @@ import {setTimeout as delay} from 'node:timers/promises'
 const checkpoints=new WeakMap()
 const manifest=JSON.parse(await readFile(new URL('../../seed.json',import.meta.url),'utf8'))
 
-/** The review repeatedly hard-loads whole asset graphs faster than a person.
- * Keep the real cache, client identity, session and limiter intact. A document's
- * asset graph can exceed half the allowance, so wait for the current real window
- * to expire before starting another navigation or UI phase. This does not reserve
- * requests: an oversized burst still fails the journey's existing assertions.
- * Only navigation methods are paced, never network requests or mutations. */
+/** Reserve half the live read allowance for the next navigation and hydration.
+ * Wait only after that reserve is spent; keep the real client, cache and limiter.
+ * Requests and mutations are never intercepted or replayed. */
 export async function pacePublicContext(context,runtime,clientIp) {
  const subject=createHash('sha256').update(clientIp).digest('hex')
  const allowance=manifest.limits.publicReadRequestsPerMinutePerIp
@@ -19,7 +16,7 @@ export async function pacePublicContext(context,runtime,clientIp) {
  const checkpoint=async(page,action)=>{
   for(;;){
    const row=await runtime.db.prepare('SELECT count,expires_at FROM penny_public_admission WHERE scope=? AND subject_hash=?').bind('public_entry',subject).first()
-   if(!row)return
+   if(!row||row.count<allowance/2)return
    const waitMs=Date.parse(row.expires_at)-Date.now()
    assert.ok(Number.isFinite(waitMs),'Public admission has a valid real window')
    if(waitMs<=0)return

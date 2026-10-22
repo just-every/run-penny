@@ -7768,7 +7768,7 @@
       "executable": false
     },
     "tests/browser/public-entry-pacing.mjs": {
-      "sha256": "61fab054f3b5932ee924f38e845cf6e385480f4687ff3589caf1a056a5c48f87",
+      "sha256": "a3b871ea8590682be8af2fbf29086c25164e1c6956cef3becc2680bfb91a09c5",
       "executable": false
     },
     "tests/browser/redaction-journey.mjs": {
@@ -7836,7 +7836,7 @@
       "executable": false
     },
     "tests/browser/route-review.mjs": {
-      "sha256": "34ee267cd76c4900938bdd632e859b133b37b01077753171666aa69d8102de04",
+      "sha256": "65f1d02bb56d5a7122ad07e8bb3f665f8ef48f7f91368d3ba6410d6b66d9ecde",
       "executable": false
     },
     "tests/browser/signin.test.mjs": {

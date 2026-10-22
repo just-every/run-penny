@@ -1,3 +1,4 @@
+import {pacePublicContext} from './public-entry-pacing.mjs'
 import { browserOptions } from './browser-options.mjs'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
@@ -153,7 +154,7 @@ async function visit(page, width, { route, path, auth, contains, finalPath, stat
 async function api(path, body, headers = {}, method = body === undefined ? 'GET' : 'POST') {
   const response = await fetch(origin + path, {
     method,
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json', Origin: origin, ...headers },
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json', Origin: origin, 'CF-Connecting-IP':'192.0.2.1', ...headers },
     body: body === undefined ? undefined : JSON.stringify(body),
     redirect: 'manual',
   })
@@ -345,7 +346,9 @@ async function checkEmptyRoutes() {
  for(const table of ['boards','requests','evidence_items','decisions','roadmap_items','releases','requesters'])assert.equal((await runtime.db.prepare(`SELECT count(*) n FROM ${table}`).first()).n,0,'[E.2/G.2] native empty D1 fixture has no business data')
  const routeFiles=(await readdir('src/routes')).filter(f=>f.endsWith('.tsx')&&f!=='__root.tsx')
  for(const width of [1440,390]) {
-  const context=await browser.newContext({viewport:{width,height:width===390?844:900}})
+  const clientIp=width===390?'192.0.2.11':'192.0.2.10'
+  const context=await browser.newContext({viewport:{width,height:width===390?844:900},extraHTTPHeaders:{'CF-Connecting-IP':clientIp}})
+  await pacePublicContext(context,runtime,clientIp)
   try {
    const page=await context.newPage();watch(page)
    await authenticateOperator(page,context,width)
@@ -406,9 +409,15 @@ try {
   await seedRouteReviewDatabase(runtime.db)
   reviewState='populated'
   for (const width of [1440, 390]) {
-    const operatorContext = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 } })
-    const publicContext = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 } })
-    const anonymousContext = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 } })
+    const operatorIp=width===390?'192.0.2.21':'192.0.2.20'
+    const operatorContext = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 },extraHTTPHeaders:{'CF-Connecting-IP':operatorIp} })
+    await pacePublicContext(operatorContext,runtime,operatorIp)
+    const publicIp=width===390?'192.0.2.31':'192.0.2.30'
+    const publicContext = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 },extraHTTPHeaders:{'CF-Connecting-IP':publicIp} })
+    await pacePublicContext(publicContext,runtime,publicIp)
+    const anonymousIp=width===390?'192.0.2.41':'192.0.2.40'
+    const anonymousContext = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 },extraHTTPHeaders:{'CF-Connecting-IP':anonymousIp} })
+    await pacePublicContext(anonymousContext,runtime,anonymousIp)
     const operatorPage = await operatorContext.newPage()
     const publicPage = await publicContext.newPage()
     const anonymousPage = await anonymousContext.newPage()
@@ -501,6 +510,9 @@ try {
   assert.deepEqual(developmentCopyFailures, [], `User-visible development copy was retained: ${JSON.stringify(developmentCopyFailures)}`)
   console.log(`Route review passed: ${captures.length} screenshots, ${checks.length} route/auth checks, no page errors or horizontal overflow.`)
   console.log(`Evidence: ${output}`)
+} catch(error) {
+  console.error('route-review diagnostics: '+JSON.stringify({pageErrors,consoleErrors,admission:(await runtime.db.prepare('SELECT scope,count FROM penny_public_admission').all()).results}))
+  throw error
 } finally {
   await browser?.close()
   await runtime.close()
