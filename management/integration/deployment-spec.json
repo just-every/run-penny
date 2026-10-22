@@ -506,6 +506,24 @@
       "name": "0087_ai_configuration.sql",
       "sha256": "632dcbb323bb997922fd722773b7662504aa9cfef74a20b9367d9d7e8a9575fe",
       "sql": "-- Configuration contains no credential; costs contain no prompt or subject data.\nCREATE TABLE penny_ai_settings (\n singleton INTEGER PRIMARY KEY CHECK(singleton=1),\n monthly_budget_micros INTEGER NOT NULL DEFAULT 0 CHECK(monthly_budget_micros>=0),\n include_private INTEGER NOT NULL DEFAULT 0 CHECK(include_private IN(0,1))\n);\nCREATE TABLE penny_ai_capabilities (\n capability TEXT PRIMARY KEY,\n provider TEXT NOT NULL CHECK(provider IN('anthropic','openai')),\n model TEXT NOT NULL\n);\nCREATE TABLE penny_ai_runs (\n id TEXT PRIMARY KEY,\n month TEXT NOT NULL,\n capability TEXT NOT NULL,\n provider TEXT NOT NULL,\n model TEXT NOT NULL,\n reserved_micros INTEGER NOT NULL CHECK(reserved_micros>=0),\n actual_micros INTEGER,\n input_tokens INTEGER,\n output_tokens INTEGER,\n state TEXT NOT NULL CHECK(state IN('reserved','metered','uncertain','refused')),\n created_at TEXT NOT NULL\n);\nCREATE INDEX penny_ai_month ON penny_ai_runs(month);\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0088_email_capture.sql",
+      "sha256": "3db437bb2a70c52577eb9b0f0eb1fdb6504874146616cd0ef8eefd9790255ef9",
+      "sql": "-- The digest has no item foreign key: erasure must not permit replay resurrection.\nCREATE TABLE penny_email_capture_settings (\n singleton INTEGER PRIMARY KEY CHECK(singleton=1),\n capture_address TEXT NOT NULL,\n updated_at TEXT NOT NULL\n);\nCREATE TABLE penny_email_capture_domains (\n domain TEXT PRIMARY KEY NOT NULL\n);\nCREATE TABLE penny_email_capture_messages (\n message_digest TEXT PRIMARY KEY NOT NULL CHECK(length(message_digest)=64)\n);\nCREATE TABLE penny_email_capture_refusals (\n reason TEXT PRIMARY KEY NOT NULL,\n count INTEGER NOT NULL CHECK(count>0)\n);\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0089_requester_oauth.sql",
+      "sha256": "a6b99244fd1ecd930fa8c5b1a17022e74c7887e6e7620eaa502d0c8eea19c19e",
+      "sql": "CREATE TABLE penny_requester_oauth (\n provider TEXT PRIMARY KEY CHECK(provider IN ('google','github')),\n enabled INTEGER NOT NULL DEFAULT 0 CHECK(enabled IN (0,1))\n);\nCREATE TABLE penny_requester_oauth_states (\n state_hash TEXT PRIMARY KEY,\n provider TEXT NOT NULL CHECK(provider IN ('google','github')),\n challenge TEXT NOT NULL,\n pending_token TEXT,\n expires_at TEXT NOT NULL,\n claim_id TEXT,\n completed INTEGER NOT NULL DEFAULT 0 CHECK(completed IN (0,1))\n);\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0090_evidence_redaction.sql",
+      "sha256": "c37efe6930642437b8fec09cb2fad0eec34e766908e6c5ecf61c01e022430a64",
+      "sql": "CREATE TABLE penny_redaction_settings (\n singleton INTEGER PRIMARY KEY CHECK(singleton=1),\n enabled INTEGER NOT NULL DEFAULT 0 CHECK(enabled IN (0,1)),\n kinds_json TEXT NOT NULL CHECK(json_valid(kinds_json)),\n patterns_json TEXT NOT NULL CHECK(json_valid(patterns_json)),\n revision INTEGER NOT NULL CHECK(revision>0)\n);\n"
     }
   ],
   "compatibilityDate": "2026-08-31",
