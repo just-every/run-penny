@@ -56,7 +56,7 @@ try{
   await openRequestControls(card);await shot(review,'comment-approved',width)
   const status=card.locator('form').filter({has:review.getByRole('heading',{name:'Publish status update',exact:true})})
   await status.locator('select[name=status]').selectOption('under_review')
-  await status.getByLabel('Public update',{exact:true}).fill('We are reviewing the monthly scheduling workflow.')
+  await status.getByRole('textbox',{name:/^Public update\b/}).fill('We are reviewing the monthly scheduling workflow.')
   await status.getByLabel('Pin above comments',{exact:true}).check()
   await status.getByRole('button',{name:'Publish status update',exact:true}).click()
   await page.reload();await page.getByText('We are reviewing the monthly scheduling workflow.',{exact:true}).waitFor()

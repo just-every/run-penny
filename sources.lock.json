@@ -7824,7 +7824,7 @@
       "executable": false
     },
     "tests/browser/requester-board.mjs": {
-      "sha256": "edc1c8615765950d453d3ea60e038888bee02cedaf1743e177ad4c8d148dbec9",
+      "sha256": "91bb6beb8f1e123bae06d52da35f69bc62b652300747846b0431ac133f1d034f",
       "executable": false
     },
     "tests/browser/requester-evidence.mjs": {
@@ -7844,7 +7844,7 @@
       "executable": false
     },
     "tests/browser/requester-repair.mjs": {
-      "sha256": "5c832b41de9cc0e5782c76f325339cc9dbe8d6d1df890a894170a606f215201e",
+      "sha256": "09a421d9a9037e6d34ac6a85a108a9fd2aefaa76d720a1dda154bd1dd2add347",
       "executable": false
     },
     "tests/browser/requester-unconfigured-repair.mjs": {
