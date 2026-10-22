@@ -7824,7 +7824,11 @@
       "executable": false
     },
     "tests/browser/requester-board.mjs": {
-      "sha256": "1f76f7bbd1c3eaba8b1a3b8352a8af06732631b58d624ae12ba60419bb161c6f",
+      "sha256": "38303030ec8f0a67e59d260fa5552100336395896cf3aa327e79731d982b2e67",
+      "executable": false
+    },
+    "tests/browser/requester-evidence.mjs": {
+      "sha256": "79c6cea03c0dd8b32114b0f236b118d43339aa50b8d397beeeb4f36c700c7225",
       "executable": false
     },
     "tests/browser/requester-oauth-edge.mjs": {
@@ -7836,11 +7840,11 @@
       "executable": false
     },
     "tests/browser/requester-repair-support.mjs": {
-      "sha256": "90ecc2fe9af8d3bd600d059feed60be76a71b0afb94a05aba8a4b6152a870526",
+      "sha256": "3d22763a3314eeba9efe9796fa2da9c566688f1adf41d34026e0e1fe27531c14",
       "executable": false
     },
     "tests/browser/requester-repair.mjs": {
-      "sha256": "1bdfa45c9f65d05be9d5e8f98c4f334bd96879636d3aa672cb0686482694aa81",
+      "sha256": "feee2be682d6cddbac295a90ddb1183ece9209320a01a44b35c07934bfc066df",
       "executable": false
     },
     "tests/browser/requester-unconfigured-repair.mjs": {

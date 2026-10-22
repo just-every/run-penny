@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { chromium } from '@playwright/test'
-import { shot,manifest } from './requester-repair-support.mjs'
+import { shot,manifest,openRequestControls } from './requester-evidence.mjs'
 import { requesterAuth } from './requester-auth.mjs'
 const browser=await chromium.launch({headless:true,args:['--use-mock-keychain','--password-store=basic']}),errors=[],checks=[]
 let runtime
@@ -37,8 +37,9 @@ try {
   await page.getByRole('button',{name:'Follow',exact:true}).click();await page.getByText('Following with email permission.',{exact:true}).waitFor();await shot(page,'followed',width)
   await page.getByLabel('Add a comment',{exact:true}).fill('Monthly scheduling avoids a manual step.')
   await page.getByRole('button',{name:'Send comment for review',exact:true}).click();await page.getByText('Your comment is awaiting review.',{exact:true}).waitFor();await shot(page,'comment-held',width)
-  await review.reload();await card.getByText('Discussion, status and request controls',{exact:true}).click()
+  await review.reload();await openRequestControls(card)
   const comment=card.locator('form').filter({has:review.getByRole('heading',{name:'Comment',exact:true})})
+  await shot(review,'comment-approval-ready',width)
   await comment.getByLabel('Approved display name',{exact:true}).fill('Reviewed requester');await comment.getByRole('button',{name:'Approve comment',exact:true}).click();await comment.waitFor({state:'detached'})
   const status=card.locator('form').filter({has:review.getByRole('heading',{name:'Publish status update',exact:true})})
   await status.locator('select[name=status]').selectOption('under_review');await status.getByLabel('Public update',{exact:true}).fill('We are reviewing monthly scheduling.');const statusSaved=review.waitForResponse(r=>r.url().endsWith(`/api/operator/requests/${slug}/status-updates`)&&r.request().method()==='POST');await status.getByRole('button',{name:'Publish status update',exact:true}).click();assert.equal((await statusSaved).status(),200)
@@ -63,7 +64,7 @@ try {
   const edit=context.edits.find(item=>item.moderation_state==='awaiting_review')
   await api(`/api/operator/requests/edits/${edit.id}/moderate`,{verdict:'rejected',reason:'Please clarify the frequency.'},review.request)
   await api(`/api/public/requests/${slug}/appeals`,{subjectType:'request_edit',subjectId:edit.id,body:'The monthly frequency is now clear.'},auth)
-  await review.reload();await card.getByText('Discussion, status and request controls',{exact:true}).click()
+  await review.reload();await openRequestControls(card)
   await card.getByLabel('Appeal decision reason',{exact:true}).fill('New context merits another review.')
   await card.getByRole('button',{name:'Reopen for moderation',exact:true}).click()
   await card.getByText('reopen: New context merits another review.',{exact:true}).waitFor()
@@ -78,7 +79,7 @@ try {
   assert.equal(upload.status,201);const {id:uploadId}=await upload.json()
   const fileHash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',fileBytes))].map(b=>b.toString(16).padStart(2,'0')).join('')
   await sql(`INSERT INTO request_attachment_uploads(id,request_id,storage_key,original_filename,content_type,byte_size,sha256,created_at,updated_at) SELECT id,request_id,storage_key,original_filename,content_type,byte_size,'${fileHash}',created_at,updated_at FROM attachments WHERE id='${uploadId}'; DELETE FROM attachments WHERE id='${uploadId}'`)
-  await review.reload();await card.getByText('Discussion, status and request controls',{exact:true}).click()
+  await review.reload();await openRequestControls(card)
   await card.getByLabel('Original file (only if stored bytes are missing)',{exact:true}).setInputFiles({name:'recovery.pdf',mimeType:'application/pdf',buffer:Buffer.from(fileBytes)})
   await shot(review,'upload-recovery-ready',width)
   await card.getByRole('button',{name:'Verify and recover upload',exact:true}).click()

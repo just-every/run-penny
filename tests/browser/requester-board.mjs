@@ -1,5 +1,5 @@
 import { chromium } from '@playwright/test'
-import { shot,manifest } from './requester-repair-support.mjs'
+import { shot,manifest,openRequestControls } from './requester-evidence.mjs'
 import { requesterAuth } from './requester-auth.mjs'
 const browser=await chromium.launch({headless:true,args:['--use-mock-keychain','--password-store=basic']})
 let runtime
@@ -47,8 +47,9 @@ try{
   await page.getByText('Your comment is awaiting review.',{exact:true}).waitFor()
   await shot(page,'comment',width)
   await review.reload()
-  await card.getByText('Discussion, status and request controls',{exact:true}).click()
+  await openRequestControls(card)
   const comment=card.locator('form').filter({has:review.getByRole('heading',{name:'Comment',exact:true})})
+  await shot(review,'comment-approval-ready',width)
   await comment.getByLabel('Approved display name',{exact:true}).fill('Reviewed requester')
   await comment.getByRole('button',{name:'Approve comment',exact:true}).click()
   await comment.waitFor({state:'detached'})
