@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { fieldLabelClass, primaryButtonClass, secondaryButtonClass } from '@/core/ui/app/classes'
 import { fieldClass } from '@/core/features/auth/client-mutations'
 import type { Appeal, ModeratedItem } from './held-context'
+import { useHydrated } from '@/core/app/ui/hydrated'
 import { quietButtonClass, subformClass } from './form-classes'
 
 type Act = (path: string, body: unknown, method?: string, inline?: boolean) => Promise<string | null>
@@ -10,13 +11,15 @@ type Act = (path: string, body: unknown, method?: string, inline?: boolean) => P
 const nameRequired = /public author name/i
 
 export function AppealReview({ appeal, act, canReview }: { appeal: Appeal; act: Act; canReview: boolean }) {
+  // Request controls are server-rendered; a decision pressed before hydration would decide nothing.
+  const hydrated = useHydrated()
   return (
     <div className={subformClass}>
       <p className="text-sm text-penny-ink">Appeal ({appeal.state}): {appeal.body}</p>
       {appeal.state === 'open' && canReview ? (
         <form className="mt-3 space-y-3" onSubmit={(e) => { e.preventDefault(); const data = new FormData(e.currentTarget); void act(`/api/operator/appeals/${appeal.id}/review`, { resolution: (e.nativeEvent as SubmitEvent).submitter?.getAttribute('value'), reason: data.get('reason') }) }}>
           <label className={fieldLabelClass}>Appeal decision reason<textarea name="reason" required className={fieldClass} /></label>
-          <div className="flex flex-wrap gap-3"><button className={primaryButtonClass} value="reopen">Reopen for moderation</button><button className={secondaryButtonClass} value="dismiss">Keep rejection</button></div>
+          <div className="flex flex-wrap gap-3"><button className={primaryButtonClass} value="reopen" disabled={!hydrated}>Reopen for moderation</button><button className={secondaryButtonClass} value="dismiss" disabled={!hydrated}>Keep rejection</button></div>
         </form>
       ) : <p className="mt-1 text-sm text-penny-muted">{appeal.state === 'open' ? 'Retained as history. This request is not eligible for appeal review.' : `${appeal.resolution}: ${appeal.resolution_reason}`}</p>}
     </div>
@@ -34,7 +37,7 @@ export function HeldItemForm({ item, path, label, act, canReview }: { item: Mode
 }
 
 function HeldItemReview({ item, path, label, act }: { item: ModeratedItem; path: string; label: string; act: Act }) {
-  const [error, setError] = useState(''), [busy, setBusy] = useState(false)
+  const [error, setError] = useState(''), [busy, setBusy] = useState(false), hydrated = useHydrated()
   // Only a comment carries a public author name; edits keep the name already approved.
   const named = label === 'Comment'
   async function submit(e: FormEvent<HTMLFormElement>) {
@@ -55,7 +58,7 @@ function HeldItemReview({ item, path, label, act }: { item: ModeratedItem; path:
       <label className={fieldLabelClass}>Rejection reason<input name="reason" className={fieldClass} /></label>
       {label !== 'Attachment' ? <label className="flex items-start gap-3 text-sm leading-6 text-penny-ink"><input type="checkbox" name="notifyAuthor" className="mt-1 size-4" />Email the author this rejection reason</label> : null}
       <p id={`held-${item.id}-error`} role="alert" className="text-sm font-semibold text-penny-danger empty:hidden">{error}</p>
-      <div className="flex flex-wrap items-center gap-3"><button className={primaryButtonClass} value="approved" disabled={busy}>Approve {label.toLowerCase()}</button><button className={quietButtonClass} value="rejected" disabled={busy}>Reject</button></div>
+      <div className="flex flex-wrap items-center gap-3"><button className={primaryButtonClass} value="approved" disabled={busy || !hydrated}>Approve {label.toLowerCase()}</button><button className={quietButtonClass} value="rejected" disabled={busy || !hydrated}>Reject</button></div>
     </form>
   )
 }

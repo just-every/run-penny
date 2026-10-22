@@ -4159,6 +4159,10 @@
       "sha256": "4d4f822449baed5e62e125eeb523a11ff553f7f0514e181fe491a9e64f00a5ae",
       "executable": false
     },
+    "src/core/app/ui/hydrated.ts": {
+      "sha256": "0128b086f67c4d9778fc823a743e48a56345cd378feca92766c1cdc0533ef035",
+      "executable": false
+    },
     "src/core/app/ui/list-query-refusal.tsx": {
       "sha256": "884a7186f74869f7d8d92f81f6c5b1f51ac5a15abc3e9e737101ccd9756289e7",
       "executable": false
@@ -6344,7 +6348,7 @@
       "executable": false
     },
     "src/core/features/requests/ui/held-items.tsx": {
-      "sha256": "d780a92fef864306a74d77c5ad77dabd8aedacea06428cde9e27d94b370de3d7",
+      "sha256": "2370471ca06a9fbf503969aca158bd433a5eb882b55ba6fd669a3601026e3597",
       "executable": false
     },
     "src/core/features/requests/ui/internal-notes.tsx": {
@@ -6356,7 +6360,7 @@
       "executable": false
     },
     "src/core/features/requests/ui/moderation-card.tsx": {
-      "sha256": "f96ebded4e1a97a200919494b2a0ea47b3f4e220377892f764afc0d2cf395eff",
+      "sha256": "f7dc402de9b7c89139a2e2cbad2efdb848cde92b512783913193c69019ab48e6",
       "executable": false
     },
     "src/core/features/requests/ui/moderation-page.tsx": {

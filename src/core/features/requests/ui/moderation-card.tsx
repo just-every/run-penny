@@ -6,7 +6,8 @@ import { fieldClass, postJson } from '@/core/features/auth/client-mutations'
 import { usePublicResource } from '@/core/features/portal/ui/public-resource'
 import type { OperatorRequestCard } from '@/core/shared/api/operator'
 import { useRouter } from '@tanstack/react-router'
-import { useState, useSyncExternalStore, type FormEvent } from 'react'
+import { useHydrated } from '@/core/app/ui/hydrated'
+import { useState, type FormEvent } from 'react'
 import { OperatorRequestControls } from './operator-request-controls'
 import type { ModerationAvailability } from '../operator-availability'
 
@@ -47,14 +48,11 @@ export function ModerationCard({ row, report }: { row: QueueRequest; report: (me
   )
 }
 
-const subscribeNever = () => () => {}
-
 function ReviewForm({ row, report }: { row: QueueRequest; report: (message: string) => void }) {
   const [boards] = usePublicResource<PublicBoard[]>('/api/public/boards')
   const [busy, setBusy] = useState(false), router = useRouter()
-  // The queue is server-rendered: until React attaches, a decision would submit the form
-  // natively as a GET carrying its wording in the address and decide nothing.
-  const hydrated = useSyncExternalStore(subscribeNever, () => true, () => false)
+  // The queue is server-rendered; a decision pressed before hydration would decide nothing.
+  const hydrated = useHydrated()
   const [boardSlug,setBoardSlug]=useState(row.boardSlug)
   const categories=boards.kind==='ready'?boards.data.find(b=>b.slug===boardSlug)?.categories??[]:[]
   async function submit(event: FormEvent<HTMLFormElement>) {
