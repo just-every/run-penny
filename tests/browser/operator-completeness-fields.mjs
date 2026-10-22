@@ -3,6 +3,7 @@ import { entities,proofId } from './operator-completeness-data.mjs'
 import {generatedOperatorTransport,generatedHeaders} from './operator-completeness-transport.mjs'
 import { api } from './operator-completeness-auth.mjs'
 async function openField(page,name) {
+ await page.waitForLoadState('networkidle')
  const field=page.getByLabel(name,{exact:true})
  await field.waitFor({state:'attached'})
  const disclosures=field.locator('xpath=ancestor::details')
@@ -14,11 +15,13 @@ export async function reviewCustomFields({page,peer,origin,capture,db}) {
  const definitions=[]
  for(const [entity,,path,kind] of entities) {
   await page.goto(origin+'/app/settings')
+  await page.waitForLoadState('networkidle')
   const section=page.getByRole('region',{name:'Private custom fields',exact:true})
   const createForm=section.locator('form').filter({has:page.getByRole('button',{name:'Create field',exact:true})})
   // The selector is server-rendered; the create form requires the hydrated resource.
   await createForm.getByRole('button',{name:'Create field',exact:true}).waitFor()
   await section.getByLabel('Custom field entity type',{exact:true}).selectOption(entity)
+  await createForm.getByRole('heading',{name:`Create a field for ${entity==='roadmapItem'?'roadmap item':entity}`,exact:true}).waitFor()
   await section.getByLabel('New field name',{exact:true}).fill(`customproof-${entity}`)
   await createForm.getByRole('combobox',{name:'Field type',exact:true}).selectOption('text')
   const created=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/operator/settings/custom-fields'&&r.request().method()==='POST')
