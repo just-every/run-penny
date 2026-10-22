@@ -5,10 +5,15 @@ import { finishFirstRun } from './local-signin.mjs'
 /** Real browser sign-in; only outbound synthetic email is intercepted by the runtime. */
 export async function requesterAuth(browser) {
  const runtime=await startBrowserRuntime(),{origin}=runtime
- const rateLimited=[],requesterAddresses=new Map()
+ const rateLimited=[],diagnostics=[],requesterAddresses=new Map()
  let client=1
  const harnessAddress='192.0.2.1',address=()=>`192.0.2.${++client}`
- function observe(page){page.on('response',response=>{if(response.status()===429){const path=new URL(response.url()).pathname;rateLimited.push(path);console.error('requester-auth: 429 '+path)}})}
+ function observe(page){
+  page.on('response',response=>{if(response.status()===429){const path=new URL(response.url()).pathname;rateLimited.push(path);console.error('requester-auth: 429 '+path)}})
+  // Journeys that opt in assert no application console errors and no external browser requests.
+  page.on('console',message=>{if(message.type()==='error')diagnostics.push({kind:'console.error',path:new URL(page.url()).pathname,text:message.text().slice(0,300)})})
+  page.on('request',request=>{const url=new URL(request.url());if(['http:','https:'].includes(url.protocol)&&url.origin!==origin)diagnostics.push({kind:'external request',origin:url.origin,path:url.pathname})})
+ }
  async function api(path,body,authority={},method=body===undefined?'GET':'POST') {
   const headers={Origin:origin,'Content-Type':'application/json',...(typeof authority.fetch==='function'?{}:{'CF-Connecting-IP':requesterAddresses.get(authority.Authorization)??harnessAddress})}
   let response
@@ -77,5 +82,6 @@ export async function requesterAuth(browser) {
   const results=await runtime.db.batch(statements.map(statement=>runtime.db.prepare(statement)))
   return results[0].results
  }
- return {runtime,origin,api,operator,requester,explicitConsentBoard,sql,assertNoRateLimits:()=>{assert.deepEqual(rateLimited,[],'each simulated person stays within admission policy');console.log('requester-auth: zero 429 responses')}}
+ return {runtime,origin,api,operator,requester,explicitConsentBoard,sql,assertNoRateLimits:()=>{assert.deepEqual(rateLimited,[],'each simulated person stays within admission policy');console.log('requester-auth: zero 429 responses')},
+  assertNoBrowserDiagnostics:()=>{assert.deepEqual(diagnostics,[],'no console errors or external browser requests');console.log('requester-auth: zero console errors and external requests')}}
 }

@@ -67,5 +67,6 @@ try{
   await requester.close();await operator.close()
  }
  harness.assertNoRateLimits()
+ harness.assertNoBrowserDiagnostics()
  await manifest('manifest',errors,[],origin)
 }catch(error){for(const context of browser.contexts())for(const page of context.pages()){console.error('Failure page: '+await page.locator('body').innerText());await page.screenshot({path:process.env.PENNY_EVIDENCE+'/failure-'+page.viewportSize().width+'-'+browser.contexts().indexOf(context)+'.png',fullPage:true})}throw error}finally{await browser.close();await runtime?.close()}

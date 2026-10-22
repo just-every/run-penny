@@ -115,6 +115,15 @@
       ]
     },
     {
+      "name": "requester-board",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "PENNY_EVIDENCE=../evidence/requester-board pnpm run test:browser"
+      ]
+    },
+    {
       "name": "roadmap-public-eta",
       "browser": true,
       "hosted": false,
