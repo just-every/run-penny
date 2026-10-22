@@ -62,7 +62,8 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
-        "node tests/browser/workspace-clock.mjs"
+        "node tests/browser/workspace-clock.mjs",
+        "PENNY_EVIDENCE=../evidence/integration-states pnpm run test:browser:integrations"
       ]
     },
     {
@@ -120,7 +121,8 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
-        "PENNY_EVIDENCE=../evidence/requester-board pnpm run test:browser"
+        "PENNY_EVIDENCE=../evidence/requester-board pnpm run test:browser",
+        "PENNY_EVIDENCE=../evidence/requester-repair node tests/browser/requester-repair.mjs"
       ]
     },
     {

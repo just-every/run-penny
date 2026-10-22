@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "9b9d4a1fda434f3684fca2bac8df653b2b57f48b4c22612bb896b1758eef9c54",
+      "sha256": "56d2adec4e5b12360f82797785455ee490623ea29f49805211e1ca8f6be548b0",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2880,7 +2880,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "2fc9664a657fc0bc295572be70b9533754f144e4f39cb654bc97b80a2b97730e",
+      "sha256": "77eac21e33eb4fed60672aff3d224e12c4fb1d9b4a9cc90d5833afa97a8cc3df",
       "executable": false
     },
     "DEMO.md": {
@@ -2924,7 +2924,7 @@
       "executable": false
     },
     "docs/CLAIMS.md": {
-      "sha256": "c11ff6847a4ee18e944f985c8fd5ef1f60b28516d2db4f5555145dbd2d7532fc",
+      "sha256": "e4c09b5d6193715c17cf93bbd1178b9eb63f20b9dffd1068ad157d205093f606",
       "executable": false
     },
     "docs/CUSTOMISE.md": {
@@ -7643,8 +7643,16 @@
       "sha256": "87f1d7f2b80f84360ba3dfd1a358b4b99b9da76ac187cab09c30bf6b136ab729",
       "executable": false
     },
+    "tests/browser/integration-receiver-checks.mjs": {
+      "sha256": "c0fbf5c71f9301a1810b7ef88cb5577cf4531b7120f1443bfe3e3083f02c6d6e",
+      "executable": false
+    },
     "tests/browser/integration-states.mjs": {
-      "sha256": "24210fd5783cbcc8d7063e40add5b29e91b018b2cc5b0985e6bc16cb411f44a8",
+      "sha256": "448573ff216f1c9617117894fbd808b1fa2137850d9141aa4ef42e7494b04171",
+      "executable": false
+    },
+    "tests/browser/integration-tracker-checks.mjs": {
+      "sha256": "248d0c50330c3d8796e3c10122854a68fa5ebfda8e9bab7c15d8c295f1c429b0",
       "executable": false
     },
     "tests/browser/internal-discussion.mjs": {
@@ -8096,7 +8104,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "5f075cd806e162ce44a6cd589648b2c1f1183f72a88458c0d6bd5e2a4dd9a14d",
+      "sha256": "70b436485b349bd82a699abc4f38079ef03823a51686c136771deecbb284d23d",
       "executable": false
     },
     "visual/01-landing.jpg": {

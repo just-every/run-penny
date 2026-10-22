@@ -3,13 +3,17 @@ import {createHmac} from 'node:crypto'
 import {mkdir,readFile,writeFile} from 'node:fs/promises'
 import {resolve,join} from 'node:path'
 import {chromium} from '@playwright/test'
+import {checkTrackerReceipts} from './integration-tracker-checks.mjs'
+import {checkReceiver} from './integration-receiver-checks.mjs'
+import {finishFirstRun} from './local-signin.mjs'
 import {browserOptions} from './browser-options.mjs'
 import {startBrowserRuntime} from './base-runtime.mjs'
 import {createWebhookProtocol} from '../../base/modules/integrations/core/webhook.ts'
 const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/integration-states'),checks=[]
 assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
-const secret='test-only-browser-tracker-signing-material',teamId='461b4065-5ccf-49ae-a432-876d77554e04',organizationId='462adcc8-15a5-4802-a438-226f1fd930a6',externalId='91e7a381-a43e-4d71-95ad-cc1c2b8302ab',linearKey='lin_api_test-only-browser-key'
+process.env.PENNY_BROWSER_EXECUTABLE ??= chromium.executablePath()
+const secret='synthetic-penny-tracker-signing-material-1',teamId='461b4065-5ccf-49ae-a432-876d77554e04',organizationId='462adcc8-15a5-4802-a438-226f1fd930a6',externalId='91e7a381-a43e-4d71-95ad-cc1c2b8302ab',linearKey='synthetic-penny-linear-1'
 // Linear's GraphQL API is the network edge: setup lists the workspace's teams with the owner's key.
 const linear=async request=>{
  if(request.url!=='https://api.linear.app/graphql'||request.method!=='POST'||request.headers.get('Authorization')!==linearKey)throw new Error('Unexpected provider request')
@@ -36,6 +40,8 @@ try{
     await target.screenshot({path:join(output,label+'-'+width+'.png'),mask:[page.locator('input[type=password]')]});checks.push({label,width})
    }
    assert.equal((await page.goto(runtime.origin+'/app/settings')).status(),200)
+   await finishFirstRun(page,async()=>{})
+   if(new URL(page.url()).pathname!=='/app/settings')await page.goto(runtime.origin+'/app/settings')
    const destination=page.getByRole('form',{name:'New integration destination',exact:true})
    await destination.getByLabel('Connection name',{exact:true}).fill('Local signed notes');await destination.getByRole('combobox',{name:/^Connection type/}).selectOption('receiver')
    await destination.getByRole('button',{name:'Save connection',exact:true}).click()
@@ -52,14 +58,15 @@ try{
    await page.getByRole('button',{name:'Send a test note',exact:true}).click();await page.getByText(/^Test note received\./).waitFor()
    assert.equal(await runtime.db.prepare('SELECT count(*) n FROM request_notes WHERE request_id=?').bind(subject.id).first('n'),2)
    await capture('signed-receiver-guide',page.getByText('How Local signed notes sends a note',{exact:true}).locator('..'))
+   await checkReceiver({runtime,protocol,destinationId,subject})
    const tracker=page.getByRole('form',{name:'New tracker connection',exact:true})
    await tracker.getByLabel('Tracker name',{exact:true}).fill('Linear local evidence');await tracker.getByLabel('Linear personal API key',{exact:true}).fill(linearKey)
-   await tracker.getByRole('button',{name:'List my teams',exact:true}).click();await tracker.getByLabel('Team in Penny Labs',{exact:true}).selectOption({label:'Product'})
+   const teams=page.waitForResponse(r=>new URL(r.url()).pathname==='/api/operator/integrations/trackers/linear/teams');await tracker.getByRole('button',{name:'List my teams',exact:true}).click();const teamsResponse=await teams;assert.equal(teamsResponse.status(),200,'native Linear discovery accepts its network fixture');const teamsBody=await teamsResponse.json();assert.equal(teamsBody.organization.name,'Penny Labs');assert.equal(teamsBody.teams.length,2);await tracker.getByRole('combobox',{name:/^Team in Penny Labs/}).selectOption({label:'Product'})
    await tracker.getByLabel('Tracker webhook signing secret',{exact:true}).fill(secret);await tracker.getByRole('button',{name:'Save tracker connection',exact:true}).click();await page.getByText('Tracker connection saved. Secrets cannot be read back.',{exact:true}).waitFor()
    await capture('tracker-configured',tracker.locator('..'))
    const connectionId=await runtime.db.prepare("SELECT id FROM penny_tracker_connections WHERE name='Linear local evidence'").first('id'),branding=page.getByRole('form',{name:'Portal branding',exact:true})
    await branding.getByRole('textbox',{name:/^Portal description/}).fill('Feedback for our product, reviewed with care.');await branding.getByLabel('Portal accent',{exact:true}).fill('#173c2b');await branding.getByRole('button',{name:'Save portal branding',exact:true}).click();await page.getByText('Portal branding saved.',{exact:true}).waitFor()
-   await page.goto(runtime.origin+'/app/moderation')
+   await page.goto(runtime.origin+'/app/moderation');await page.waitForLoadState('networkidle')
    const card=page.locator('article').filter({has:page.getByRole('heading',{name:'Deliberate tracker subject',exact:true})});await card.getByText('Discussion, status and request controls',{exact:true}).click()
    const issueAction=card.getByRole('form',{name:'Tracker issue action',exact:true});await issueAction.getByRole('combobox',{name:/^Tracker connection/}).selectOption(connectionId)
    await issueAction.getByLabel('Stable issue ID',{exact:true}).fill(externalId);await issueAction.getByLabel('HTTPS issue URL',{exact:true}).fill('https://linear.app/penny/issue/PEN-42/owner-approved-issue')
@@ -69,13 +76,15 @@ try{
    await runtime.restart()
    assert.equal((await fetch(runtime.origin+'/api/integrations/trackers/'+connectionId,{method:'POST',headers:{'Linear-Signature':signature,'Linear-Delivery':crypto.randomUUID(),'Linear-Event':'Issue'},body:raw})).status,200)
    assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_tracker_receipts').first('n'),1)
-   await page.reload();await card.getByText('Discussion, status and request controls',{exact:true}).click();await card.getByText('In Progress',{exact:false}).first().waitFor();await capture('tracker-received-state',card)
+   await page.reload();await page.waitForLoadState('networkidle');await card.getByText('Discussion, status and request controls',{exact:true}).click();await card.getByText('In Progress',{exact:false}).first().waitFor();await capture('tracker-received-state',card)
    await issueAction.getByRole('combobox',{name:/^Tracker action/}).selectOption('create');assert.equal(await issueAction.getByRole('button',{name:'Create tracker issue',exact:true}).isDisabled(),true)
    assert.equal(await runtime.db.prepare('SELECT count(*) n FROM request_status_updates').first('n'),0)
+   await action('/api/operator/moderation/'+subject.slug,{verdict:'approved',title:'Deliberate tracker subject',description:'Customer-safe tracker subject',boardSlug:'feedback',displayName:'Product team'})
+   await checkTrackerReceipts({runtime,action,subject,connectionId,secret,teamId,organizationId,externalId})
    await page.goto(runtime.origin+'/portal/feedback');await page.getByText('Feedback for our product, reviewed with care.',{exact:true}).waitFor();assert.equal(await page.locator('.public-portal').evaluate(node=>getComputedStyle(node).getPropertyValue('--penny-brand-accent')),'#173c2b');await capture('branded-portal',page.locator('.public-portal'))
    assert.equal(await runtime.db.prepare('SELECT count(*) n FROM integration_deliveries').first('n'),0);assert.equal(runtime.outbox.length,0);assert.deepEqual(errors,[]);assert.deepEqual(external,[])
   }finally{await context?.close();await runtime.close()}
  }
- await writeFile(join(output,'results.json'),JSON.stringify({clauses:['INT-002','INT-004','INT-005','INT-006','INT-007'],checks,secretValuesMasked:true,unexpectedErrors:0,externalRequests:0,providerCalls:0,outbound:'configuration-disabled',nativeRuntimeRestarts:2,teardown:'fulfilled'},null,2)+'\n')
+ await writeFile(join(output,'results.json'),JSON.stringify({clauses:['INT-002','INT-004','INT-005','INT-006','INT-007'],checks,secretValuesMasked:true,unexpectedErrors:0,externalRequests:0,providerCalls:0,outbound:'configuration-disabled',nativeRuntimeRestarts:6,teardown:'fulfilled'},null,2)+'\n')
  console.log('integration-states: '+checks.length+' captures passed')
 }finally{await browser?.close()}
