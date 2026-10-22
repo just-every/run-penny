@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict'
+import {reviewRoadmapRecord} from './operator-roadmap-record.mjs'
+import {reviewEvidenceFlow} from './operator-evidence-flow.mjs'
 
 /** DOM acceptance for the decision and roadmap findings, on each caller viewport. */
 export async function reviewDecisionPages({page,db,goto,capture,width}) {
@@ -94,5 +96,7 @@ export async function reviewDecisionPages({page,db,goto,capture,width}) {
   const recorded=await db.prepare('SELECT e.observed_at,e.named_speaker,e.account_id FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id WHERE v.wording=?').bind('Browser-local observed time').first()
   assert.deepEqual(recorded,{observed_at:'2026-10-07T23:15:00.000Z',named_speaker:null,account_id:null},'[EVID-002] local observed input means its actual instant; optional provenance stays null')
   await capture('recorded-evidence')
+  await reviewEvidenceFlow({page,db,capture})
+  await reviewRoadmapRecord({page,db,goto,capture})
   return {width,phase:'negative',diagnostics}
 }

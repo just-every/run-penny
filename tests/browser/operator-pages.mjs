@@ -1,8 +1,9 @@
+import {checkEmptyOverview,checkPopulatedOverview} from './operator-overview-checks.mjs'
 import {reviewRedaction} from './redaction-journey.mjs'
 import {reviewRequesterOAuth} from './requester-oauth-journey.mjs'
 import {requesterOAuthBindings,requesterOAuthEdge} from './requester-oauth-edge.mjs'
 import {reviewEmailCapture} from './email-capture-journey.mjs'
-import { reviewOperatorCompleteness } from './operator-completeness.mjs'
+import { reviewOperatorCompleteness,reviewOperatorFields } from './operator-completeness.mjs'
 import {pacePublicContext,pacePublicPhase} from './public-entry-pacing.mjs'
 import { localProofBindings } from './operator-completeness-auth.mjs'
 import { reviewClauseStates } from './operator-pages-clause-states.mjs'
@@ -30,8 +31,10 @@ const captureOnly=process.env.PENNY_CAPTURE_ONLY==='1'
 const oauthOnly=process.env.PENNY_OAUTH_ONLY==='1'
 const redactionOnly=process.env.PENNY_REDACTION_ONLY==='1'
 const focusedOnly=captureOnly||oauthOnly||redactionOnly
+const coreOnly=process.env.PENNY_OPERATOR_CORE_ONLY==='1'
 const loopHealthOnly=process.env.PENNY_LOOP_HEALTH_ONLY==='1'
-const completenessOnly=!loopHealthOnly&&process.env.PENNY_OPERATOR_COMPLETENESS_ONLY==='1'
+const fieldsOnly=process.env.PENNY_OPERATOR_FIELDS_ONLY==='1'
+const completenessOnly=!loopHealthOnly&&(fieldsOnly||process.env.PENNY_OPERATOR_COMPLETENESS_ONLY==='1')
 let browser, hosted
 // Only paths enter diagnostics: sign-in and development URLs can carry secrets
 // in their query or fragment. Never log request headers, cookies or URL values.
@@ -128,7 +131,7 @@ async function reviewLoopHealth({page,db,goto,capture}) {
   await capture('loop-health-empty')
 }
 try {
-  if(!focusedOnly&&!completenessOnly&&!loopHealthOnly)hosted = await prepareHostedDataReview()
+  if(!coreOnly&&!focusedOnly&&!completenessOnly&&!loopHealthOnly)hosted = await prepareHostedDataReview()
   const options=browserOptions()
   browser = await chromium.launch({...options,args:[...options.args,...(hosted?[hosted.trustArgument]:[])]})
   async function reviewWidth(width) {
@@ -180,6 +183,7 @@ try {
       await page.getByText('Needs you',{exact:true}).waitFor()
       assert.equal(await page.getByRole('link',{name:'Create a board to collect feedback.'}).getAttribute('href'),'/app/settings#create-board')
       assert.equal(await page.locator('[aria-labelledby="overview-attention"] li').count(),0,'[OPS-003] zero attention has no placeholder rows')
+      await checkEmptyOverview(page)
       await capture('empty-overview')
       await goto('/app/settings')
       await page.getByText('No boards yet',{exact:true}).waitFor()
@@ -206,6 +210,7 @@ try {
       for(const [name,to] of [['1 request awaiting moderation','/app/moderation'],['1 unreviewed evidence item','/app/feedback'],['1 ready decision','/app/decisions'],['1 unpublished status update','/app/roadmap'],['1 Shipped item without a published release','/app/releases']]) {
         assert.equal(await page.getByRole('link',{name,exact:true}).getAttribute('href'),to,`[DEC-001 EVID-003 ROAD-007 ROAD-008 REL-001 REQ-014] ${name}`)
       }
+      await checkPopulatedOverview({page,db:runtime.db,goto,capture})
       await capture('populated-overview')
       await duplicateOverviewAttention(runtime.db)
       await goto('/app/overview')
@@ -237,17 +242,20 @@ try {
       await capture('moderation')
       negativeChecks.push(await reviewDecisionPages({page,db:runtime.db,goto,capture,width}))
       await reviewStatusDrafts({page,db:runtime.db,goto,capture})
-      await reviewClauseStates({page,goto,capture})
+      if(!coreOnly)await reviewClauseStates({page,goto,capture})
       }
       }
-      if(!focusedOnly&&!loopHealthOnly)await reviewOperatorCompleteness({page,browser,runtime,width,capture,checks})
+      if(!focusedOnly&&!loopHealthOnly) {
+        if(fieldsOnly)await reviewOperatorFields({page,browser,runtime,width,capture,checks})
+        else if(!coreOnly)await reviewOperatorCompleteness({page,browser,runtime,width,capture,checks})
+      }
       assert.deepEqual(errors,[],`No console or page errors; failed requests: ${JSON.stringify(failedRequests)}`)
       assert.deepEqual(external,[],'No external browser requests')
     } finally {
       try {await context?.close()}
       finally {await runtime.close()}
     }
-    if(!focusedOnly&&!completenessOnly&&!loopHealthOnly)await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
+    if(!coreOnly&&!focusedOnly&&!completenessOnly&&!loopHealthOnly)await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
   }
   if(completenessOnly) {
     // Both isolated runtimes must finish cleanup before the shared browser closes.

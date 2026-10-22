@@ -26,3 +26,13 @@ export async function reviewOperatorCompleteness(options) {
   try{await removeInitialOwner({...shared,successor})}finally{await successor.close()}
  }finally{await peerState.close()}
 }
+
+/** DATA-004's existing entity matrix, without unrelated account-management phases. */
+export async function reviewOperatorFields(options) {
+ const {runtime,page}=options,origin=runtime.origin
+ await seedCompleteness(runtime.db)
+ const peerState=await invitePeer({...options,origin})
+ try {
+  await reviewCustomFields({...options,origin,get db(){return runtime.db},peer:peerState.peer})
+ } finally {await peerState.close()}
+}

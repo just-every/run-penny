@@ -66,6 +66,7 @@ async function proveEvidenceCapture(g:Awaited<ReturnType<typeof fixture>>){
   const item=await json<{id:string}>(call('/api/operator/evidence',{sourceType,sourceLabel,wording:'Synthetic captured words',observedAt:'2026-10-22T10:00:00Z'},g.operator),201)
   const page=await json<{items:{id:string;sourceType:string;sourceLabel:string|null}[]}>(call('/api/operator/evidence',undefined,g.operator))
   expect(page.items.find(row=>row.id===item.id)).toMatchObject({sourceType,sourceLabel})
+  expect(await env.DB.prepare('SELECT e.*,v.wording FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id WHERE e.id=?').bind(item.id).first()).toMatchObject({source_type:sourceType,source_label:sourceLabel,wording:'Synthetic captured words',observed_at:'2026-10-22T10:00:00Z',recorded_by_operator_id:g.actor,named_speaker:null,requester_id:null,account_id:null})
  }
  const count=()=>env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n'),before=await count()
  expect((await call('/api/operator/evidence',{sourceType:'free_text',wording:'Missing source',observedAt:'2026-10-22T10:00:00Z'},g.operator)).status).toBe(422)
@@ -75,6 +76,12 @@ async function proveEvidenceCapture(g:Awaited<ReturnType<typeof fixture>>){
  try{expect((await call('/api/public/requests',{title:'synthetic-penny-2',description:'Atomic submission',boardSlug:'feedback',idempotencyKey:crypto.randomUUID()},requester)).status).toBe(503)}finally{await env.DB.exec('DROP TRIGGER synthetic_penny_capture_failure')}
  expect((await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results).toEqual(requests.results)
  expect(await count()).toBe(before)
+ expect(await env.DB.prepare('SELECT e.*,v.wording FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id WHERE e.id=?').bind(g.evidence.id).first()).toMatchObject({source_type:g.evidenceInput.sourceType,source_label:g.evidenceInput.sourceLabel,wording:g.evidenceInput.wording,observed_at:g.evidenceInput.observedAt,recorded_by_operator_id:g.actor,named_speaker:g.evidenceInput.namedSpeaker,requester_id:null,account_id:g.account.id})
+ const submitted=await json<{id:string;slug:string}>(call('/api/public/requests',{title:'synthetic-penny-3',description:'Original requester words',boardSlug:'feedback',idempotencyKey:crypto.randomUUID()},requester),201)
+ const captured=await env.DB.prepare('SELECT e.*,v.wording,r.author_requester_id FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id JOIN request_evidence_links l ON l.evidence_id=e.id JOIN requests r ON r.id=l.request_id WHERE r.slug=?').bind(submitted.slug).first<{requester_id:string;author_requester_id:string;observed_at:string}>()
+ expect(captured).toMatchObject({source_type:'portal_request',wording:'synthetic-penny-3\n\nOriginal requester words',recorded_by_operator_id:null,named_speaker:null,account_id:null})
+ expect(captured!.requester_id).toBe(captured!.author_requester_id)
+ expect(Number.isFinite(Date.parse(captured!.observed_at))).toBe(true)
 }
 it('[EVID-005] account writes require an owner and context includes transaction-linked requests and decisions in observed-time order',async()=>{
  const g=await fixture()

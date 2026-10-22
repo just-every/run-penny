@@ -7424,7 +7424,7 @@
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
-      "sha256": "3cd1155f64fc04ec42098e1f46c72f1d8f8dbe155a7ad489b599ad47e9b9a48b",
+      "sha256": "e4cf99e55981c3e7b3f232dd2e906f0488a646c35285890c9633be2547469421",
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
@@ -7720,7 +7720,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness.mjs": {
-      "sha256": "cabc3efc3294931d079f68dbc3ab35fc3b91cbf133f8468992d61825075919bf",
+      "sha256": "f9a132c53963eba1997876c38c07c945e0d5ef4804f17dfa351f835235eae3be",
       "executable": false
     },
     "tests/browser/operator-navigation.mjs": {
@@ -7736,11 +7736,11 @@
       "executable": false
     },
     "tests/browser/operator-pages-data.mjs": {
-      "sha256": "e1184ef83be93e707b36a180e85fb88b6e4c5c39cf028a1957f53cefb37e9287",
+      "sha256": "548d59cb54739a24adca791b903ab4d1c13b1356b1334cbee28bf12945bc39e5",
       "executable": false
     },
     "tests/browser/operator-pages-decisions.mjs": {
-      "sha256": "72112b5565d0d9f1344e07d3ec6a9b135c2a128112d53b022ad26456bf3ec803",
+      "sha256": "da055c593fe750465049b8c0b62c44a9c4c5188ab9677d7c6b5cbcbbda0b5700",
       "executable": false
     },
     "tests/browser/operator-pages-hosted-data.mjs": {
@@ -7752,7 +7752,7 @@
       "executable": false
     },
     "tests/browser/operator-pages.mjs": {
-      "sha256": "9c62490b8b52bb831fecdad3623ec2645b2b4ea1d2384aecc53196f52aafe344",
+      "sha256": "421885dea40e049ff715575b8a59565af8a5fc5ce6cefdb8acd19bf0adced3c6",
       "executable": false
     },
     "tests/browser/ownership-journey.mjs": {
@@ -8084,7 +8084,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "419069256722e008a3be027a1fe586022562b4a9703eef04133c3574a70fd71a",
+      "sha256": "5f075cd806e162ce44a6cd589648b2c1f1183f72a88458c0d6bd5e2a4dd9a14d",
       "executable": false
     },
     "visual/01-landing.jpg": {

@@ -14,17 +14,19 @@ export async function seedOverviewAttention(db) {
   await insert('evidence_items',{id:'attention-evidence',source_type:'interview',observed_at:now,review_state:'unreviewed'})
   await insert('evidence_versions',{id:'attention-evidence-version',evidence_id:'attention-evidence',version_number:1,wording:'Customers need a clear delivery promise.'})
   await insert('decisions',{id:'attention-decision',slug:'attention-decision',title:'Which promise?',question:'Which promise?',state:'ready',owner_operator_id:'attention-operator'})
-  for(const [id,status] of [['attention-planned','planned'],['attention-shipped','shipped'],['attention-released','shipped']])
+  for(const [id,status] of [['attention-planned','planned'],['attention-progress','in_progress'],['attention-shipped','shipped'],['attention-released','shipped']])
     await insert('roadmap_items',{id,slug:id,title:id,summary:'Customer problem',status,decision_id:'attention-decision'})
   await insert('roadmap_publications',{id:'attention-approval',roadmap_item_id:'attention-planned',public_title:'Customer promise',public_summary:'Customer problem',approved_by_operator_id:'attention-operator',approved_at:now,board_id:board.id})
   await insert('roadmap_transitions',{id:'attention-transition',roadmap_item_id:'attention-planned',to_status:'planned',reason:'Delivery decision',actor_operator_id:'attention-operator'})
   const approval = await db.prepare("SELECT public_slug FROM roadmap_publications WHERE id='attention-approval'").first()
   await insert('roadmap_update_versions',{id:'attention-update',transition_id:'attention-transition',roadmap_item_id:'attention-planned',author_operator_id:'attention-operator',version_number:1,public_status:'planned',title:'Customer promise',problem:'Customer problem',body:'Customer promise: Planned',public_slug:approval.public_slug,approval_id:'attention-approval',approval_at:now,approval_updated_at:now})
-  for (const [id,state,target] of [['attention-draft-release','draft','attention-shipped'],['attention-published-release','published','attention-released']]) {
-    await insert('releases',{id,slug:id,state,author_operator_id:'attention-operator',current_version_id:id+'-version',published_at:state==='published'?now:null})
+  for (const [id,state,target] of [['attention-draft-release','draft','attention-shipped'],['attention-published-release','published','attention-released'],['attention-old-release','published','attention-released']]) {
+    await insert('releases',{id,slug:id,state,author_operator_id:'attention-operator',current_version_id:id+'-version',published_at:state==='published'?(id==='attention-old-release'?new Date(Date.now()-40*86400000).toISOString():now):null})
     await insert('release_versions',{id:id+'-version',release_id:id,version_number:1,title:id,release_type:'new',body:'Customer-safe release',outcome_prompt:'Tell us how it went',subject_tags_json:'[]',is_portal_current:state==='published'?1:0})
     await insert('release_targets',{release_id:id,roadmap_item_id:target,decision_id:'attention-decision'})
   }
+  await insert('requesters',{id:'attention-outcome-person',display_name:'Reporting participant'})
+  for(const [revision,outcome] of [[1,'adopted'],[2,'partly_adopted']])await insert('release_outcomes',{id:`attention-outcome-${revision}`,release_version_id:'attention-published-release-version',requester_id:'attention-outcome-person',roadmap_item_id:'attention-released',outcome,revision_number:revision})
 }
 
 export async function duplicateOverviewAttention(db) {

@@ -147,7 +147,8 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
-        "node tests/browser/import-statuses.mjs"
+        "node tests/browser/import-statuses.mjs",
+        "PENNY_EVIDENCE=../evidence/operator-completeness PENNY_OPERATOR_FIELDS_ONLY=1 node tests/browser/operator-pages.mjs"
       ]
     },
     {
@@ -222,10 +223,10 @@
       "hosted": false,
       "commands": [
         "pnpm run build",
-        "PENNY_LOOP_HEALTH_ONLY=1 node tests/browser/operator-pages.mjs",
-        "PENNY_CAPTURE_ONLY=1 node tests/browser/operator-pages.mjs",
-        "PENNY_OAUTH_ONLY=1 node tests/browser/operator-pages.mjs",
-        "PENNY_REDACTION_ONLY=1 node tests/browser/operator-pages.mjs"
+        "PENNY_EVIDENCE=../evidence/operator-core PENNY_OPERATOR_CORE_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_EVIDENCE=../evidence/operator-capture PENNY_CAPTURE_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_EVIDENCE=../evidence/operator-oauth PENNY_OAUTH_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_EVIDENCE=../evidence/operator-redaction PENNY_REDACTION_ONLY=1 node tests/browser/operator-pages.mjs"
       ]
     },
     {
