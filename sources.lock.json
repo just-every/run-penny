@@ -5348,7 +5348,7 @@
       "executable": false
     },
     "src/core/features/integrations/read-database.ts": {
-      "sha256": "d19583d12b1c3c34d5ca2edbc38f69e6163a6fd4c9b6dbf8367e5b2913095937",
+      "sha256": "e8cc834d15927f89a635764b0c633915a7482ef17083e48a6a245b07a51ce85e",
       "executable": false
     },
     "src/core/features/integrations/receiver-protocol.ts": {

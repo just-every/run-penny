@@ -8,7 +8,7 @@ export function readDatabase(db:D1Database,guard:AuthorityGuard):D1Database {
  const refused=()=>{throw new NativeError('operator_read_only',403)}
  async function batch(input:D1PreparedStatement[]) {
   const native=input.map(statement=>statements.get(statement)??refused())
-  const [authority,...results]=await db.batch([
+  const [authority,...results]=await db.batch<Record<string,unknown>>([
    db.prepare(`SELECT (${guard.sql}) AS allowed`).bind(...guard.params),...native,
   ])
   if(!authority.results[0]?.allowed)throw new NativeError('integration_authority_changed',401)
