@@ -627,7 +627,7 @@ Payroll, general project/work management and monitoring/observability stay outsi
 
 ## Status
 
-Judged from the code and tests at commit `090b1389eea71ea019998a94731366a2d1aadba0` (23 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+Judged from the code and tests at commit `ddbebeaa682ce546a64862dfd2378010ddeba268` (23 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 AI-008 is partial on 22 October 2026: deterministic owner rules mark supported captures before storage, preserve marked text through D1 search and portable export/restore, and provide audited, previewed irreversible evidence-wording reapplication. Migration 0090 upgrades populated previous-head data without rewriting it. The first untuned redaction-v1 run on 210 synthetic excerpts measured precision and recall of 1.00 for each default kind. Rule settings and marked items have 1440/390 browser proof. This is a deterministic rule-only implementation; optional model detection is not built and AI-010 is unchanged. Binary attachments are not rewritten. Operator evidence, CAP-009 email capture and native portal submission use guarded before-storage rules. AI-011 remains missing and inherits extending the minimal redaction-v1 runner. Gap: saved-import originals and learning source envelopes are not redacted before storage. Explicit reapplication currently covers at most 200 evidence wording versions, not every stored transcript or copied request field; larger stores need paged reapplication. The full before-storage and reapplication promises remain open.
 
@@ -673,9 +673,9 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 101 | 13 | 0 | 114 |
+| Published | 102 | 12 | 0 | 114 |
 | Target and push further | 20 | 45 | 68 | 133 |
-| All | 121 | 58 | 68 | 247 |
+| All | 122 | 57 | 68 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -908,7 +908,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `API-003` | Native publication | published | done | `tests/base/integration-api.test.ts` (line 73) |  |
 | `INT-001` | Explicit integration effects | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Selected public event kinds, immutable destinations, atomic business-write/event-target capture, held restored history and portable safe integration history with nonportable credentials lack complete passing assertions. |
 | `INT-002` | Enforcing transport | published | done | `tests/base/egress-delivery.test.ts` (line 35) |  |
-| `INT-003` | Durable uncertainty | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Durable attempt identity, finite retry, ambiguity/reconciliation and revoked/private/blocked send fencing lack complete passing assertions. |
+| `INT-003` | Durable uncertainty | published | done | `tests/base/integration-durable.ts` — proveDurableIntegration in `tests/base/egress-delivery.test.ts` (enforcing egress and durable receipts preserve public-only delivery across restart, push Verify base shards): webhook and Slack durable identity/attempt history, stored finite retry limit, held unknown outcomes, once-only accepted/rejected reconciliation and zero-call revoked/private/blocked fences; `tests/browser/integration-uncertainty.mjs` — checkUncertainty via `tests/browser/integration-states.mjs`, push Verify workspace-clock: reopened D1, unchanged attempt identity, no resend, visible uncertain/accepted/rejected receipts and explicit reconciliation at 1440/390 | — |
 | `INT-004` | Signed inbound notes | published | done | `tests/browser/integration-receiver-checks.mjs` via `tests/browser/integration-states.mjs` — push Verify shard workspace-clock |  |
 | `INT-005` | Deliberate tracker issues | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Complete Linear/Jira create and link from requests/decisions, entered-only wording and uncertain-outcome reconciliation lack passing assertions. |
 | `INT-006` | Private tracker receipts | published | done | `tests/browser/integration-tracker-checks.mjs` via `tests/browser/integration-states.mjs` — push Verify shard workspace-clock |  |
