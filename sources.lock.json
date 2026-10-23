@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "55e327aa45826897965daa81bb66c7cd7cfbccaafcd80784614bb66c3200c2e9",
+      "sha256": "79844c51dc97151b4b7cb1dfc9242f67a9f7e63bb39cba783c92e8e9d46a9444",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2880,7 +2880,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "997bcce7ec7594e3a5960a430f1d897950a1cfc68efe3fa63efe83b38a27db5d",
+      "sha256": "5d5fde165f9312b622c40e693b4df71da59ab18d160aeaa335232d14cf62ca66",
       "executable": false
     },
     "DEMO.md": {
@@ -2924,7 +2924,7 @@
       "executable": false
     },
     "docs/CLAIMS.md": {
-      "sha256": "3c1141b7e8a7d29dde64c846f7b5f443fc2c786b7d04acc571383eee2b0b3671",
+      "sha256": "d82c1a0bc6f482be75f1b7f3ca126116ecbed23b4af943bec8fcda54ec10026e",
       "executable": false
     },
     "docs/CUSTOMISE.md": {
@@ -2983,6 +2983,10 @@
       "sha256": "bdb10a8e73e90958d046253a9dd441a96c0d06f8ed8404e5532bb0aaa39309cf",
       "executable": false
     },
+    "docs/MCP.md": {
+      "sha256": "edd2e2a43f770ef0aed7db24ad3388c1ad7baaa05f13dad549da02bb6eddb16f",
+      "executable": false
+    },
     "docs/MOVE-IN.md": {
       "sha256": "9717c53848317038e45f4c84e3c84be0a6a111680cccf87f1f15f20a1cf73b2f",
       "executable": false
@@ -3024,7 +3028,7 @@
       "executable": false
     },
     "docs/site.json": {
-      "sha256": "4a53fbded299d2f576263dafbda7a9bc9d25dabdbb62e52d2729b9e093b21daa",
+      "sha256": "90a45805fc10212038b09aba9183a9e5861ff080bf98455a78e786fdeab86dfb",
       "executable": false
     },
     "docs/SOURCE-PROVENANCE.md": {
@@ -4096,7 +4100,7 @@
       "executable": false
     },
     "src/core/app/api.ts": {
-      "sha256": "5ab392e4557c8283dc2815a958dfe18d7dbf2456cb2f95cacba6da76da60cfc7",
+      "sha256": "8ebd8866771bd21962f2060ac18c8fa3ccfecdba37eb7fb6e914c02fdc179a4b",
       "executable": false
     },
     "src/core/app/extension-config.server.ts": {
@@ -5745,6 +5749,26 @@
     },
     "src/core/features/learning/validation.ts": {
       "sha256": "e618d5bb8f1eb2c6c7f6fc19dbfd61f4666cf5d0de90d73f3911856c321b8853",
+      "executable": false
+    },
+    "src/core/features/mcp/authority.ts": {
+      "sha256": "cc003563de23883c15bc3fab459b8f674ae954077f7f0adddcf46a385a132e73",
+      "executable": false
+    },
+    "src/core/features/mcp/protocol.ts": {
+      "sha256": "b8ae662d0b55c3f6aca3f6ff8b6f896ff960e642cf6481f046857d26ec213bae",
+      "executable": false
+    },
+    "src/core/features/mcp/routes.ts": {
+      "sha256": "0e8b0766269e94163d44e20c1c2cf2d0283785800fec9fc9a515e3f8723bea4e",
+      "executable": false
+    },
+    "src/core/features/mcp/schemas.ts": {
+      "sha256": "e8af07d6399258eb034ab82b2a9e7dffd4f1adbc06a7864c6721f20fad80fc04",
+      "executable": false
+    },
+    "src/core/features/mcp/tools.ts": {
+      "sha256": "dec77a694779f8fd93f639519d17a8c6cf29b06cc4bbe67e97a9797207c4dfe5",
       "executable": false
     },
     "src/core/features/notifications/attempt-policy.ts": {
@@ -7455,6 +7479,10 @@
       "sha256": "a2743d85d4feb43e924a15e61f1fc08e0271c7b39aca53a0539d9a7e4aa87eb5",
       "executable": false
     },
+    "tests/base/mcp-proof.ts": {
+      "sha256": "b4277a4ac7ae3f183a2d8fd79983e7223e27e31d001ace156dd28d8f2dca6457",
+      "executable": false
+    },
     "tests/base/merge-notices.test.ts": {
       "sha256": "62cee0a1f3a8f64a15294fda5ba606b80bff835f1ab176aefe4fb5ed970420e4",
       "executable": false
@@ -7528,7 +7556,7 @@
       "executable": false
     },
     "tests/base/product-hierarchy.test.ts": {
-      "sha256": "5f3c6e7673b32f1b0013c5fb4605069ddc6a5f9ca84ac926109197f48e930c27",
+      "sha256": "706e11843ea6c8fef252749160725d8f0c0d82fdb9c21c41e666aab4603a53b0",
       "executable": false
     },
     "tests/base/provider-messages.ts": {
@@ -7536,7 +7564,7 @@
       "executable": false
     },
     "tests/base/proxy-votes.test.ts": {
-      "sha256": "8c342b887ad67fafdbb0c7d3d00621ed23bb7a2284aebe6f9e3f2cf842497fda",
+      "sha256": "3635836933cba3117662f29cc096c5586916b94d2cbb3a7acaf904fd1e7b90e5",
       "executable": false
     },
     "tests/base/redaction-fixture.ts": {

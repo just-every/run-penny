@@ -11,6 +11,7 @@
     ]},
     { "title": "Run it", "pages": [
       { "slug": "data", "source": "docs/DATA.md", "label": "Export and restore" },
+      { "slug": "mcp", "source": "docs/MCP.md", "label": "MCP clients" },
       { "slug": "customise", "source": "docs/CUSTOMISE.md", "label": "Make it yours" }
     ]}
   ],

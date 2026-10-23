@@ -674,8 +674,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 101 | 13 | 0 | 114 |
-| Target and push further | 20 | 46 | 67 | 133 |
-| All | 121 | 59 | 67 | 247 |
+| Target and push further | 20 | 47 | 66 | 133 |
+| All | 121 | 60 | 66 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -693,7 +693,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `ROLE-003` | SCIM provisioning | target | missing |  | Okta and Entra SCIM request fixtures through the public endpoint create, patch and deactivate a user; the deactivated user's session and API key are refused on their next request, as `tests/base/auth.test.ts` asserts for removal. |
 | `ROLE-004` | Audit log | target | partial | `tests/base/board.test.ts` (line 58) | Perform each listed action (including REQ-038's edit, removal, restore and permanent delete and INT-007 and NOTIFY-013 changes), then read and export the log through the UI and API; erase an operator and see their entries anonymized while the events remain. |
 | `OPS-006` | Saved views and filters | target | missing |  | A browser test saves a filtered, sorted view, then a second operator opens the shared view and gets the same result set; a private view is not listed for them. |
-| `OPS-007` | Person view | target | partial | `tests/base/proxy-votes.test.ts` (CAP-014 REQ-026 REQ-010 OPS-007, provePersonProfile); `tests/browser/requester-blocking.mjs` (personFlow, 1440/390) | Operator-only profile joins existing identity, custom fields, submitted/voted/followed/commented requests, importance/proxy marks, captured evidence with stored source links, permissions, suppression and outcomes; linked from search, directory, voters and accounts, with existing merge/block/Data actions. Commercial fields are omitted and never selected. Gap: distinct ARR/MRR and ROLE-001 commercial permissions, SEG-006 membership, MIG-007 carried-over addresses, contacts without a stored requester identifier, and a person-scoped export (Data currently exports the workspace). |
+| `OPS-007` | Person view | target | partial | `tests/base/product-hierarchy.test.ts` (provePersonProfile), push Verify base-1; `tests/browser/requester-blocking.mjs` (personFlow, 1440/390) | Operator-only profile joins existing identity, custom fields, submitted/voted/followed/commented requests, importance/proxy marks, captured evidence with stored source links, permissions, suppression and outcomes; linked from search, directory, voters and accounts, with existing merge/block/Data actions. Commercial fields are omitted and never selected. Gap: distinct ARR/MRR and ROLE-001 commercial permissions, SEG-006 membership, MIG-007 carried-over addresses, contacts without a stored requester identifier, and a person-scoped export (Data currently exports the workspace). |
 | `EVID-001` | Capture | published | done | `tests/base/penny-evidence.test.ts` — "captures source provenance atomically and keeps originals private with durable replay and upload custody"; `tests/base/no-mail-identity.test.ts` |  |
 | `EVID-002` | Provenance | published | done | `tests/base/penny-evidence.test.ts` — push Verify base shards; `tests/browser/operator-pages-decisions.mjs` — push Verify shard loop-health |  |
 | `EVID-003` | Review lifecycle | published | done | `tests/browser/operator-evidence-flow.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health |  |
@@ -879,7 +879,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `DATA-004` | Custom fields | published | done | `tests/browser/operator-completeness-fields.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard import-statuses |  |
 | `DATA-005` | CSV exports | target | partial | `src/core/features/data/archive.ts`; `tests/base/hosted-export.test.ts` (line 83) | A CSV export of fixture data reconciles its vote totals with its individual voter rows and with record counts. |
 | `DATA-006` | Complete API and webhooks | target | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` (line 19) | OpenAPI contract tests exercise every resource through the public API; each webhook's signature verifies and replays are rejected. |
-| `DATA-007` | MCP server | target | missing |  | An MCP conformance client lists the tools and runs search and capture; a call outside the key's scope is refused. |
+| `DATA-007` | MCP server | target | partial | `tests/base/product-hierarchy.test.ts` (proveMcp), push Verify base-1; `docs/MCP.md` | Scoped-key Streamable HTTP handshake, discovery, public request search and roadmap, unpublished feedback and attributed proxy votes are proved through the route; missing/out-of-scope/expired/revoked keys make no capture. Gap: private evidence has no existing API scope, OAuth is unavailable, and hosted client-specific integration is not claimed. |
 | `LEARN-001` | Permitted originals | published | done | `tests/base/learning-stage2.test.ts` |  |
 | `LEARN-002` | Contestable learning | published | done | `tests/base/learning-stage2.test.ts` |  |
 | `LEARN-003` | Accountable pre-action choice | published | done | `tests/base/learning-stage3.test.ts` |  |

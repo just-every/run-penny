@@ -1,5 +1,7 @@
+import {provePersonProfile} from './person-profile-proof'
+import {proveMcp} from './mcp-proof'
 import {proveScorecards} from './scorecard-proof'
-import {applyD1Migrations} from 'cloudflare:test'
+import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeAll,afterAll,expect,inject,it,vi} from 'vitest'
 import {call,env,requester} from './support'
 import {graph} from './notification-regression-fixture'
@@ -7,7 +9,7 @@ import type {Hierarchy} from '@/core/features/hierarchy/types'
 
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations').filter(m=>m.name<'0082'))})
 afterAll(()=>vi.restoreAllMocks())
-it('[PRIO-001 PRIO-004] populated upgrade, linked feature rollups, move custody and private source/archive boundaries work through operator routes',async()=>{
+it('[PRIO-001 PRIO-004 OPS-007 DATA-007] populated upgrade, linked feature rollups, move custody and private source/archive boundaries work through operator routes',async()=>{
  const g=await graph(3),second=await requester('Morgan Reed')
  for(const r of g.requests)expect((await call(`/api/public/requests/${r.slug}/vote`,{},second)).status).toBe(204)
  const actor=await env.DB.prepare('SELECT id FROM operators').first<string>('id')
@@ -48,4 +50,8 @@ it('[PRIO-001 PRIO-004] populated upgrade, linked feature rollups, move custody 
  const {schema}=await import('@/core/features/data/archive');expect((await schema(env.DB)).map(t=>t.name)).toEqual(expect.arrayContaining(['penny_products','penny_components','penny_features','penny_feature_requests','penny_feature_roadmap']))
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
  await proveScorecards(g.operator,g.requests)
+ await reset();await applyD1Migrations(env.DB,inject('migrations'))
+ const profileFixture=await graph(3)
+ await provePersonProfile(profileFixture.operator,profileFixture.requests[0])
+ await proveMcp(profileFixture)
 })

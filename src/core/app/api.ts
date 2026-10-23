@@ -1,3 +1,4 @@
+import {registerMcpRoutes} from '../features/mcp/routes'
 import {registerPeopleRoutes} from '../features/people/routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
 import {registerOAuthSettings} from '../features/auth/oauth-settings'
@@ -110,6 +111,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerPrioritisationRoutes(app)
   registerHierarchyRoutes(app)
   registerLearningRoutes(app)
+  registerMcpRoutes(app)
   registerIntegrationApi(app)
   registerRequestStatusSettingsRoutes(app)
   registerRedactionRoutes(app)
