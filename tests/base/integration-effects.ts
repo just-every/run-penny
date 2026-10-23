@@ -22,6 +22,7 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  const destinations=await Promise.all(events.map(event=>connection(operator,'webhook',[event],edge)))
  expect((await call('/api/operator/integrations/destinations',{name:'synthetic-penny-unapproved',kind:'webhook',endpoint:'https://events.example.com/penny',events:['request.private']})).status).toBe(400)
  const subject=await json<{id:string;slug:string}>('/api/operator/requests',{title:'synthetic-penny-private-title',description:'synthetic-penny-private-evidence',boardSlug:'regression'},201)
+ expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_targets').first('n')).toBe(0)
  await json('/api/operator/moderation/'+subject.slug,{verdict:'approved',title:'synthetic-penny-approved-request',description:'synthetic-penny-approved-description',boardSlug:'regression',displayName:'Product team'})
  await json('/api/operator/requests/'+subject.slug+'/comments',{body:'synthetic-penny-approved-reply'},201)
  const publish=(body:string,status='under_review')=>call('/api/operator/requests/'+subject.slug+'/status-updates',{status,body,idempotencyKey:crypto.randomUUID()})
