@@ -2259,7 +2259,9 @@
     "classification": "installation",
     "columns": [
       "singleton",
-      "sector_id"
+      "sector_id",
+      "keys_sealed",
+      "key_ids"
     ]
   },
   "rer_dependency_keys": {

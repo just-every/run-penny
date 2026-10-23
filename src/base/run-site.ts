@@ -126,7 +126,10 @@ export function header(identity: EditionIdentity, run: RunData, contract?: SeedC
 const inlineCode = (value: string) => `<code>${escape(value).replace(/\S+/g, word => `<span class="code-word">${word}</span>`)}</code>`
 // The one-line alternative can break only before the repository; keep plain spaces for copying.
 const inlineStart = (run: RunData) => `<code><span class="code-word">${escape(npxStart)}dev</span> <span class="code-word">${escape(run.clone.slice(npxStart.length + 'dev '.length))}</span></code>`
-const codeBlock = (lines: string[], label: string) => `<div class="code"><pre aria-label="${escape(label)}"><code>${lines.map(escape).join('\n')}</code></pre>`
+// A command line never wraps beside a shell pipe: `install.sh | sh` stays whole,
+// so a narrow block breaks before the URL or after its last slash instead.
+const pipelines = (line: string) => escape(line).replace(/[^\s/]+(?: \| \S+)+/g, words => `<span class="code-word">${words}</span>`)
+const codeBlock = (lines: string[], label: string) => `<div class="code"><pre aria-label="${escape(label)}"><code>${lines.map(pipelines).join('\n')}</code></pre>`
   + `<button class="copy" type="button" data-copy="${escape(lines.join('\n'))}"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="2"/><path d="M3 10.5V4a1.5 1.5 0 0 1 1.5-1.5H10"/></svg><span>Copy</span></button></div>`
 
 /** The Run page at /run. `contract`, the seed's parsed CONTRACT.md, links /contract from the header. */

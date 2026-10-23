@@ -9,6 +9,8 @@
   "durableObjects": [],
   "secrets": [
     { "binding": "AUTH_SECRET", "environment": "AUTH_SECRET" },
+    { "binding": "INSTALLATION_KEY", "environment": "INSTALLATION_KEY" },
+    { "binding": "INSTALLATION_KEY_PREVIOUS", "environment": "INSTALLATION_KEY_PREVIOUS", "optional": true },
     { "binding": "SETUP_TOKEN", "environment": "SETUP_TOKEN" },
     { "binding": "MAIL_PROVIDER", "environment": "MAIL_PROVIDER", "verifyStandIn": "sendgrid" },
     { "binding": "MAIL_FROM", "environment": "MAIL_FROM", "verifyStandIn": "penny@example.com" },

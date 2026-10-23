@@ -28,9 +28,14 @@ export async function boundedJSON(response, limit) {
 }
 const redactValues = (text, values) => values.filter(Boolean).flatMap(value=>[value,encodeURIComponent(value),JSON.stringify(value).slice(1,-1)]).sort((a,b)=>b.length-a.length).reduce((value,secret)=>value.split(secret).join('[REDACTED]'),text);
 /** Only this fixed origin and the explicitly selected account ever receive the token. */
-export function cloudflare({ accountId, token, fetch: request = globalThis.fetch, objectDelete = deleteR2Object, timeoutMs = 30000, maxRequests = 500, removal = false, budgetMigrations = false }) {
+export function cloudflare({ accountId, token, fetch: request = globalThis.fetch, objectDelete = deleteR2Object, timeoutMs = 30000, maxRequests = 500, removal = false, budgetMigrations = false, requestSignal = () => undefined }) {
   assert(hexId(accountId), 'invalid-cloudflare-account-id');
   assert(typeof token === 'string' && token.trim() && !/[\r\n]/.test(token), 'invalid-cloudflare-api-token');
+  // Capture an outer deadline once per operation, before transport retries.
+  const deadlineSignal = caller => {
+    const deadline = requestSignal();
+    return caller && deadline ? AbortSignal.any([caller,deadline]) : caller ?? deadline;
+  };
   let requests = 0;
   const migrationBudgets = new Set();
   function reserveMigrationRequests(id, pending) {
@@ -64,7 +69,7 @@ export function cloudflare({ accountId, token, fetch: request = globalThis.fetch
       error.providerTransport = {operation:redactCredentials(operation),endpoint,attempts,status,reason:transportReason(cause)};
       return recordDeployFailure(error,{output:redactAuth(transportOutput(cause))});
     };
-    const {response,output = ''} = await providerResponse({method,timeoutMs,callerSignal,removal,
+    const {response,output = ''} = await providerResponse({method,timeoutMs,callerSignal:deadlineSignal(callerSignal),removal,
       replayableAsset:method === 'POST' && (/^\/workers\/scripts\/[^/]+\/assets-upload-session$/.test(path) || path === '/workers/assets/upload?base64=true'),
       reserveRetry:() => requests < maxRequests && (++requests, true),failure:transportFailure,
       consume:(response,attempts) => response.body ? boundedText(response,undefined,cause => transportFailure(cause,attempts,response.status)) : '',
@@ -135,7 +140,7 @@ export function cloudflare({ accountId, token, fetch: request = globalThis.fetch
     assert(/^[a-z0-9-]{1,63}$/.test(worker) && /^[0-9a-f-]{36}$/.test(versionId), 'invalid-provider-path');
     assert(++requests <= maxRequests, 'provider-request-budget');
     const operation = 'GET /workers/scripts/[worker]/content/v2';
-    const {response,output} = await providerResponse({method:'GET',timeoutMs,reserveRetry:() => requests < maxRequests && (++requests, true),
+    const {response,output} = await providerResponse({method:'GET',timeoutMs,callerSignal:deadlineSignal(),reserveRetry:() => requests < maxRequests && (++requests, true),
       send:signal => request(`https://api.cloudflare.com/client/v4/accounts/${accountId}/workers/scripts/${worker}/content/v2?version=${versionId}`, {method:'GET',redirect:'error',signal,headers:{Authorization:`Bearer ${token}`}}),
       consume:response => response.body ? boundedBytes(response, 64 * 1024 * 1024) : Buffer.alloc(0),
       failure:(cause,attempts) => Object.assign(new Error('provider-transport-failed'), {providerTransport:{operation,endpoint:`https://api.cloudflare.com/client/v4/accounts/[REDACTED]/workers/scripts/${worker}/content/v2`,attempts,status:null,reason:transportReason(cause)}})});
@@ -149,7 +154,7 @@ export function cloudflare({ accountId, token, fetch: request = globalThis.fetch
   async function upload(url, bytes, etag) {
     const destination = importUploadURL(url);
     assert(++requests <= maxRequests, 'provider-request-budget');
-    const {response} = await providerResponse({method:'PUT',timeoutMs,
+    const {response} = await providerResponse({method:'PUT',timeoutMs,callerSignal:deadlineSignal(),
       reserveRetry:() => requests < maxRequests && (++requests, true),
       send:signal => request(destination, { method:'PUT', redirect:'error', signal, headers:{'Content-Length':String(bytes.length)}, body:bytes }),
       failure:(cause,attempts) => Object.assign(new Error('d1-import-upload-transport-failed'), {providerTransport:{operation:'PUT D1 import upload',endpoint:'https://[REDACTED].r2.cloudflarestorage.com/[D1 import upload]',attempts,status:null,reason:transportReason(cause)}}),
