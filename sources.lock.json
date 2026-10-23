@@ -3472,7 +3472,7 @@
       "executable": false
     },
     "migrations/core/0092_weekly_summary.sql": {
-      "sha256": "ea72228825aa9e981e3735fb886a0b7286242738349c2f716140d2989dee5b84",
+      "sha256": "3a5c605445151c765fdef6fcd24727a2b27340bd56280ba4838f62e61c36ea39",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -4548,7 +4548,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "2738e303eb0e5d1567d7a887403007aec44609e7d9d89c4319d97e032dc7fb45",
+      "sha256": "f97276af3b3bb6c6345afc82a3370724b38b4bf277d164c27d91d954eb620abf",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -4560,7 +4560,7 @@
       "executable": false
     },
     "src/core/features/data/erasure-dependencies.ts": {
-      "sha256": "5b90ab80c2df0e276414374e2c9b8e3f8168c4ba21f1ed4d6baa0c0f47b6ad46",
+      "sha256": "ea1896540343190dc071904de0bca24f6b2d5cda3b9cb201460b151483808dd7",
       "executable": false
     },
     "src/core/features/data/erasure-native.ts": {
@@ -4648,7 +4648,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "97b5b76499a467d1e424d1c7a514b981345346fc26f1b7c2f838e8addc785f87",
+      "sha256": "3e7622e7d9320b59b95a593e5983ffa4671c665cf14b766ecb4c96cdf32d1a2a",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {
@@ -5836,7 +5836,7 @@
       "executable": false
     },
     "src/core/features/notifications/weekly-content.ts": {
-      "sha256": "6c508b406d81d89929b5d394c03acf285510708c065ab4825f6945d58f30fedd",
+      "sha256": "6b99c64838653f19841b843b8db333f4f8441543b53d624996d37c70df46f308",
       "executable": false
     },
     "src/core/features/notifications/weekly-delivery.ts": {
@@ -7604,7 +7604,7 @@
       "executable": false
     },
     "tests/base/weekly-summary-flow.ts": {
-      "sha256": "7d0d05f386b5b6a480dbfc574f015285fd37c2ae6f89ff8c7f42e42640690161",
+      "sha256": "c981c31f6cee71addb76a9671f6afc59f13d5ed13144afb105d2212299194e58",
       "executable": false
     },
     "tests/base/weekly-summary-portability.ts": {
