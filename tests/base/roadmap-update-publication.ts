@@ -34,13 +34,14 @@ export async function proveRoadmapPublication(){
  const second=await publishMove('planned')
  expect((await intents()).results).toEqual([first.id,second.id].sort().map(id=>({requester_id:g.recipient.requesterId,address_id:g.recipient.addressId,roadmap_update_version_id:id})))
  const bindings={...env,WORKSPACE_TIMEZONE:'UTC'},capture=providerMessages(createPennyRuntime(bindings))!
- const before=(await capture.list()).length
+ const priorMail=await capture.list(),before=priorMail.length
+ const newMail=async()=>(await capture.list()).filter(row=>!priorMail.some(prior=>prior.id===row.id))
  const cron=()=>runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
  await cron()
  expect((await capture.list()).length).toBe(before)
  vi.setSystemTime(Date.now()+60_001)
  await cron()
- const delivered=(await capture.list()).slice(before)
+ const delivered=await newMail()
  expect(delivered.map(row=>row.message.to)).toEqual([[g.recipient.email]])
  expect(delivered[0].message.text).toEqual(expect.stringContaining(first.body))
  expect(delivered[0].message.text).toEqual(expect.stringContaining(second.body))
@@ -49,6 +50,6 @@ export async function proveRoadmapPublication(){
  expect(repeat.status).toBe(409)
  expect(await repeat.json()).toMatchObject({message:expect.any(String)})
  await cron()
- expect({histories:await histories(),intents:(await intents()).results,mail:(await capture.list()).slice(before)}).toEqual({...beforeRepeat,mail:delivered})
+ expect({histories:await histories(),intents:(await intents()).results,mail:await newMail()}).toEqual({...beforeRepeat,mail:delivered})
  }finally{vi.useRealTimers()}
 }
