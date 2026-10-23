@@ -39,3 +39,28 @@ WHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idl
 BEGIN SELECT RAISE(ABORT,'data_maintenance'); END;
 CREATE TRIGGER feedback_native_penny_weekly_choices_delete AFTER DELETE ON penny_weekly_choices
 BEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;
+
+-- Publication custody is captured only by a live native publication, never a restore.
+CREATE TABLE penny_weekly_publications (
+ version_id TEXT PRIMARY KEY REFERENCES release_versions(id),
+ published_at TEXT NOT NULL, held INTEGER NOT NULL DEFAULT 0 CHECK(held IN(0,1))
+);
+CREATE TRIGGER weekly_live_publication AFTER UPDATE OF snapshot_sealed_at ON release_versions
+WHEN OLD.snapshot_sealed_at IS NULL AND NEW.snapshot_sealed_at IS NOT NULL AND NEW.original_publication_version_id IS NULL
+ AND (SELECT phase FROM data_state WHERE singleton=1)='idle'
+BEGIN INSERT INTO penny_weekly_publications(version_id,published_at,held) VALUES(NEW.id,NEW.snapshot_sealed_at,0); END;
+CREATE TRIGGER data_guard_penny_weekly_publications_insert BEFORE INSERT ON penny_weekly_publications
+WHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))
+BEGIN SELECT RAISE(ABORT,'data_maintenance'); END;
+CREATE TRIGGER feedback_native_penny_weekly_publications_insert AFTER INSERT ON penny_weekly_publications
+BEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER data_guard_penny_weekly_publications_update BEFORE UPDATE ON penny_weekly_publications
+WHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))
+BEGIN SELECT RAISE(ABORT,'data_maintenance'); END;
+CREATE TRIGGER feedback_native_penny_weekly_publications_update AFTER UPDATE ON penny_weekly_publications
+BEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER data_guard_penny_weekly_publications_delete BEFORE DELETE ON penny_weekly_publications
+WHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))
+BEGIN SELECT RAISE(ABORT,'data_maintenance'); END;
+CREATE TRIGGER feedback_native_penny_weekly_publications_delete AFTER DELETE ON penny_weekly_publications
+BEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;

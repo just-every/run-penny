@@ -12,7 +12,7 @@ export async function proveWeeklySummary(){
  const g=await graph(2,true),prior=(await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results
  await applyD1Migrations(env.DB,migrations.slice(-1))
  expect((await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results).toEqual(prior)
- const action=async(path:string,body:unknown,who=g.operator,method='POST')=>{const response=await call(path,body,who,method);expect(response.ok,await response.clone().text()).toBe(true);return response}
+ const action=async(path:string,body:unknown,who:Record<string,string>=g.operator,method='POST')=>{const response=await call(path,body,who,method);expect(response.ok,await response.clone().text()).toBe(true);return response}
  expect(await (await call('/api/operator/settings/weekly-summary',undefined,g.operator)).json()).toMatchObject({enabled:false})
  expect((await call('/api/operator/settings/weekly-summary',{enabled:true},g.person,'PUT')).status).toBe(401)
  await runNotificationSchedule(createScheduledController({cron:'* * * * *',scheduledTime:Date.now()+7*86400000}),{...env,WORKSPACE_TIMEZONE:'UTC'})
@@ -40,7 +40,7 @@ export async function proveWeeklySummary(){
  const sent:{receipt:string;email:string;text:string;body:Record<string,unknown>}[]=[]
  vi.mocked(fetch).mockImplementation(async(input,init)=>{
   expect(String(input)).toBe('https://api.sendgrid.com/v3/mail/send');expect(init?.method).toBe('POST')
-  const body=JSON.parse(String(init.body)),receipt=`synthetic-penny-weekly-mail-${sent.length+1}`
+  const body=JSON.parse(String(init?.body)),receipt=`synthetic-penny-weekly-mail-${sent.length+1}`
   sent.push({receipt,email:body.personalizations[0].to[0].email,text:body.content.find((item:{type:string})=>item.type==='text/plain').value,body})
   return new Response(null,{status:202,headers:{'x-message-id':receipt}})
  })

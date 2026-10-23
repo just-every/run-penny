@@ -3122,5 +3122,13 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_weekly_publications": {
+    "classification": "product",
+    "columns": [
+      "version_id",
+      "published_at",
+      "held"
+    ]
   }
 }
