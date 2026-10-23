@@ -673,7 +673,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 104 | 10 | 0 | 104 |
+| Published | 104 | 10 | 0 | 114 |
 | Target and push further | 20 | 45 | 68 | 133 |
 | All | 124 | 55 | 68 | 247 |
 
