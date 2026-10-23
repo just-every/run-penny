@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "863865ead05ba376fe52e8e39bfbdd345db2b4aad6935c4e7e994ff3d5eac245",
+      "sha256": "8382b4e453faf990f9d7d098bc660600fceb9c53ef7bba9644cd78b2312d3be3",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -664,7 +664,7 @@
       "executable": false
     },
     "AGENTS.md": {
-      "sha256": "768fc39363575ac7fe00f21626798765baeb4d9af09e683d8d40fdc589b3702f",
+      "sha256": "da630f4ee51700093efaef8a24f47312e5e2aec97e1d01dc2794ec1ca02454a5",
       "executable": false
     },
     "base/modules/d1-transport/index.d.mts": {
@@ -2908,7 +2908,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "401e2fa57d94b1d3adaccc2536364547c56b7e6699fb61f288d7f4434e9eddd6",
+      "sha256": "407cb727fc84048d0a1fe020a0b7ed8087996d23abf6b970933b8dffa54f1931",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3536,7 +3536,7 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "322a12b435fa8d10ce28b067c509efb96bb3fefafe2ec7c2ff7c4f4730b0377f",
+      "sha256": "7d35a639dd7e86493b7be52df2074e1d7e8f509bb43bf07e584991cd045d1e2d",
       "executable": false
     },
     "pnpm-lock.yaml": {
@@ -3561,6 +3561,10 @@
     },
     "public/brand/releases/penny-0.2.0-390.png": {
       "sha256": "588c58189329a59b27f0a27982bf895afc49ef13ffb62c370c2d5f064a71d721",
+      "executable": false
+    },
+    "public/brand/releases/penny-0.2.2-1440.png": {
+      "sha256": "3d6141be7b9b2de66203549e13c364576f22b46c1c4d3f2a0da5553a171ce983",
       "executable": false
     },
     "public/fonts/fonts.css": {
@@ -3588,15 +3592,15 @@
       "executable": false
     },
     "README.md": {
-      "sha256": "056e9a81e6a788b841055de3e4515b7ae840c5a6fbe13cfe30c79252a9287ac2",
+      "sha256": "34a49dc8c82f1dab114ff571497e946f2269698b8d4be7abfecb615d50ad95d1",
       "executable": false
     },
     "RELEASE.json": {
-      "sha256": "c27d4eb5c175b1ce3c173f2be09f91cfcf370775229058b90c32029d2224be13",
+      "sha256": "8e2e9b1ec985847ad3a51e123d7f39c68d6d5b02c0a8fc562d6e5c4a93cd9af4",
       "executable": false
     },
     "RELEASE.md": {
-      "sha256": "c908eeb1bb108c55f60c617122001082b74fc8ca4a6abc40779675161c7950e0",
+      "sha256": "fbcf6422d975117d628b709b483f3e7bd7b22f8a4b5f71f6f4bf04f662d32447",
       "executable": false
     },
     "rer-project.json": {
@@ -4036,7 +4040,7 @@
       "executable": false
     },
     "seed.json": {
-      "sha256": "5a63a457b5498bd9b963263a57c3a1f4c9ae9ab3ac959cc4ab6621b8ddbd9052",
+      "sha256": "a0271d2a72f48f935d1e9000b8e51d0eb42e138d8caf9d128e218603f599eaa7",
       "executable": false
     },
     "src/base-mail.ts": {

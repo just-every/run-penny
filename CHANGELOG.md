@@ -2,28 +2,29 @@
 
 ## Unreleased
 
-- Reap every Chromium apt attempt's private process group before the next mirror attempt, so an orphaned dpkg cannot retain its installation lock. Existing deadlines and verification assertions are unchanged.
+## 0.2.2 — 2026-10-23
 
-- Refresh rer and recorded Base copies to 0.2.79 for Penny's themed hosted demo gate. Use the supported native migration preflight for local archives and keep receiver fields closed until their handlers attach. Apply the additive 0094 dependency-key sealing migration through the installation's migration runner.
+**Fix: on RER Managed, GET /app/feedback no longer fails while a workspace export or backup holds the data lock; the pause notice is scoped to feedback and clears when the export is finished or aborted.**
 
-- Keep requester participation closed during session refresh so immediate re-votes retain verified authority; scope learning spacing and prioritisation browser checks to their intended hydrated form content.
+On Penny 0.2.1, pressing Export workspace or Download backup on the Data page took the data lock, and while it was held the owner's feedback page (`/app/feedback`) answered most requests with a server error, because its server-rendered reads used the guard that writes use, which waits for an idle workspace. Operator reads now check the session's current authority without waiting for the lock, so the feedback page, the other operator pages and the settings key list stay readable during an export or backup, while every change is still refused until the export is finished or aborted. "Data changes pause until you finish or abort the export." now appears only on the feedback page, rendered by the server, and is gone on the next read after Finish export or Abort. Nothing to do beyond updating.
 
-- Keep operator form fields unavailable until their editing handlers attach, so hydration cannot discard an entered roadmap summary.
+Penny 0.2.2 also carries everything on main since 0.2.1, with seven additive migrations, 0088 to 0094 (RELEASE.json lists each with its steps). Update the source and run `rer install` then `rer setup`, which applies them in order; hosted installations use `rer deploy`, and RER Managed applies them through its migration runner. No owner reconfiguration is required: every new capability starts off or empty.
 
-- Close the phone's operator menu on navigation without competing with the browser's native details state.
+- Email capture (CAP-009; migrations 0088 and 0091): the owner sets a dedicated capture address and an exact sender-domain allowlist under Feedback settings → Email identity and postal address, then routes the address to the Worker's email handler with Cloudflare Email Routing. Mail that operators forward or BCC from their own addresses or allowlisted domains, with aligned DMARC, becomes attributed evidence with its attachments, within the existing attachment limits. "Forwarded by <admitted sender>" is kept apart from the sender stated in the forward, and earlier evidence keeps unknown provenance. Penny's own senders, its reply-to and notification replies are refused, keeping only non-personal reason counts, and Message-ID digests stop a replay from recreating an erased item. Proved with provider-edge fixtures; hosted Email Routing has not been run yet.
+- Requester sign-in with Google or GitHub (REQ-039; migration 0089): the owner can turn either provider on under Feedback settings → Requester social sign-in (both start off), using their own OAuth client as installation bindings. A provider-verified address joins the same requester-only session as the emailed link: no cookie, no operator authority and no subscription. Google signs in directly only for Gmail and a Workspace account's own domain; any other address is sent the emailed link. Real provider consent and hosted redirects have not been run yet.
+- Sensitive-evidence rules (AI-008, partial; migration 0090): owner-enabled deterministic rules redact the supported kinds and custom patterns in operator evidence, captured email and new portal submissions before they are stored, leaving a marker that names the kind. A previewed, owner-confirmed reapplication rewrites up to 200 stored evidence versions. Saved-import originals and learning sources are not redacted yet.
+- Cited AI drafts (AI-006): editable summaries for requests, decisions and accounts, and drafted comment and inbox replies. A citation that does not resolve to a stored record is dropped with a notice, a draft carrying a private value is flagged and cannot be published until edited, and drafts never send themselves.
+- Weekly requester summaries (NOTIFY-010, partial; migration 0092): the owner can turn on a weekly email that requesters choose on their activity and updates pages. It carries the public changes on the requests they follow and the week's releases, sends nothing in an empty week and has one-click unsubscribe. A live mailbox receipt for delivery and unsubscribe is still pending.
+- Request batches (TRIAGE-005, partial; migration 0093): tag and assign many requests in one audited batch, see what changed and undo it. A restored batch is history only, never an undo. The other bulk actions remain open.
+- Dependency key sealing (migration 0094): the installation's dependency record notes sealed keys and retired key ids, so a restored row can name a retired key that is no longer available. rer is pinned to 0.2.79 and the recorded Base copies are refreshed.
+- Roadmap cards and detail pages link approved items to their published releases.
+- Hardening: an integration key this installation never issued is refused before any usage is recorded; requester attachments are held to the per-request total before any bytes are stored; publishing an already-published status update is refused.
+- Operator screens: forms and decisions stay unavailable until the page has finished loading, so early input is not lost; the phone menu closes when you navigate; long account and release-item names wrap at phone widths; the scrollable signed-note example takes keyboard focus; requester-board actions stay closed while a requester's sign-in refreshes.
+- Verification: more journeys run in every push's Verify, browser checks use the pinned headless browser and the CI browser install is bounded. Clause status follows the assertions Verify loads, so HOME-001, DOCS-001, REQ-020, INT-001, INT-003 and INT-005 read partial until their journeys run there.
 
-- Run signed integration receipts and requester repair in push Verify, and make the scrollable receiver example keyboard accessible.
+Known issues: local `rer setup` and `rer dev` still migrate with Wrangler, so a local database carrying Platform's migration ledger is supported for backup and restore only, not for local development. SendGrid has no provider duplicate suppression; ambiguous sends remain held for review. Live Canny/UserVoice/Zendesk provider acceptance, hosted email capture, real Google and GitHub sign-in, the weekly summary's mailbox receipt and whole-product acceptance beyond the core loop remain unproved.
 
-- Load operator provenance, evidence review, overview and roadmap checks in push Verify, with the seven-entity private custom-field matrix in its own short shard.
-
-- Load route review in push Verify, keep browser journeys on the pinned headless shell, and consolidate commitment validation to a 246-registration ceiling.
-- Wrap long linked account names and release-planning item labels within operator cards at phone widths.
-
-- Retain the admitted email forwarder in portable evidence provenance and label body attribution as stated in the forward; accept structured threaded forwards while refusing notification replies.
-- Link approved roadmap items to their published releases on cards and detail pages.
-- Separate simulated requester/operator client addresses, remove retired journey modules, and reconcile clause status with assertions loaded by verification.
-
-- AI-006: editable cited summaries for requests, decisions and accounts, plus comment/inbox reply drafts. Unknown citations are dropped with a notice; private values are flagged and checked again on explicit publication through the existing comment path. Drafts never send themselves.
+Product screenshot: `public/brand/releases/penny-0.2.2-1440.png`.
 
 ## 0.2.1 — 2026-10-21
 
