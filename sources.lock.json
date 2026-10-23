@@ -7807,6 +7807,10 @@
       "sha256": "205e9dc6b9296fa74b521f9eb272883f66c393b27ce10df7d6eebfc17608f2f6",
       "executable": false
     },
+    "tests/browser/portal-identity-checks.mjs": {
+      "sha256": "8894e5dc7e60c6f8ecb5e34afacdc1ebb6d691633b5a6635d2a5bb26b276f547",
+      "executable": false
+    },
     "tests/browser/prioritisation.mjs": {
       "sha256": "0c5de67d38d22726ec303f1ebc6f61a2cf0a627c079cc94e6750ebc4198ba215",
       "executable": false
@@ -7888,7 +7892,7 @@
       "executable": false
     },
     "tests/browser/route-review.mjs": {
-      "sha256": "76bf5a13e5c0dd643e36faa1845dd296cca3152075377f7193b219779baa6f12",
+      "sha256": "cc94cc2a67e2bdbdd3e3e059950c23caaaf346842fa8306e286685bb0b772cf3",
       "executable": false
     },
     "tests/browser/signin.test.mjs": {
