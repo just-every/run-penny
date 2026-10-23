@@ -216,18 +216,6 @@
       "updated_at"
     ]
   },
-  "decision_review_delivery_facts": {
-    "classification": "product",
-    "columns": [
-      "notification_id",
-      "state",
-      "event_message_id",
-      "accepted_at",
-      "delivered_at",
-      "created_at",
-      "updated_at"
-    ]
-  },
   "decision_review_notifications": {
     "classification": "product",
     "columns": [
@@ -243,6 +231,18 @@
       "next_attempt_at",
       "provider_message_id",
       "failure_reason",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "decision_review_delivery_facts": {
+    "classification": "product",
+    "columns": [
+      "notification_id",
+      "state",
+      "event_message_id",
+      "accepted_at",
+      "delivered_at",
       "created_at",
       "updated_at"
     ]
@@ -393,13 +393,6 @@
       "bytes"
     ]
   },
-  "feedback_import_preview_revision": {
-    "classification": "installation",
-    "columns": [
-      "singleton",
-      "revision"
-    ]
-  },
   "feedback_import_receipt_notes": {
     "classification": "product",
     "columns": [
@@ -421,15 +414,6 @@
       "revision",
       "row_keys_json",
       "attribution"
-    ]
-  },
-  "feedback_import_reversal_scans": {
-    "classification": "installation",
-    "columns": [
-      "job_id",
-      "revision",
-      "intent",
-      "ordinal"
     ]
   },
   "feedback_import_reversals": {
@@ -1054,151 +1038,6 @@
       "revoked_at"
     ]
   },
-  "learning_artifacts": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "investigation_id",
-      "version",
-      "input_hash",
-      "body_json",
-      "state",
-      "deferred",
-      "created_at"
-    ]
-  },
-  "learning_commitments": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "investigation_id",
-      "artifact_id",
-      "snapshot_json",
-      "actor_id",
-      "created_at"
-    ]
-  },
-  "learning_contributions": {
-    "classification": "product",
-    "columns": [
-      "artifact_id",
-      "observation_id"
-    ]
-  },
-  "learning_corrections": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "investigation_id",
-      "artifact_id",
-      "correction",
-      "actor_id",
-      "created_at"
-    ]
-  },
-  "learning_erased_events": {
-    "classification": "product",
-    "columns": [
-      "source_id",
-      "event_hash"
-    ]
-  },
-  "learning_erased_people": {
-    "classification": "product",
-    "columns": [
-      "source_id",
-      "person_hash"
-    ]
-  },
-  "learning_invalidations": {
-    "classification": "product",
-    "columns": [
-      "commitment_id",
-      "reason",
-      "created_at"
-    ]
-  },
-  "learning_investigations": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "source_id",
-      "question",
-      "purpose",
-      "native_evidence_ids_json",
-      "native_request_ids_json",
-      "state",
-      "native_operator_id",
-      "operator_version",
-      "actor_id",
-      "expires_at",
-      "budget_micros",
-      "spent_micros",
-      "max_run_cost_micros",
-      "interval_minutes",
-      "next_run_at",
-      "last_reason",
-      "version",
-      "created_at"
-    ]
-  },
-  "learning_observations": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "investigation_id",
-      "source_id",
-      "event_key",
-      "content_hash",
-      "wording",
-      "original_json",
-      "observed_at",
-      "source_person_id",
-      "requester_id",
-      "account_id",
-      "evidence_id",
-      "request_id",
-      "created_at"
-    ]
-  },
-  "learning_runs": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "investigation_id",
-      "event_key",
-      "claim",
-      "grant_version",
-      "state",
-      "reserved_micros",
-      "actual_micros",
-      "reason",
-      "cursor_json",
-      "created_at",
-      "finished_at"
-    ]
-  },
-  "learning_source_people": {
-    "classification": "product",
-    "columns": [
-      "observation_id",
-      "source_person_id"
-    ]
-  },
-  "learning_sources": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "name",
-      "provider",
-      "installation_id",
-      "resource_ids_json",
-      "use_basis",
-      "state",
-      "version",
-      "created_at"
-    ]
-  },
   "local_auth_outbox": {
     "classification": "product",
     "columns": [
@@ -1665,15 +1504,6 @@
       "completed"
     ]
   },
-  "operator_mail_suppressions": {
-    "classification": "product",
-    "columns": [
-      "operator_id",
-      "suppressed_at",
-      "created_at",
-      "updated_at"
-    ]
-  },
   "operator_sessions": {
     "classification": "product",
     "columns": [
@@ -1687,6 +1517,15 @@
       "updated_at"
     ]
   },
+  "operator_mail_suppressions": {
+    "classification": "product",
+    "columns": [
+      "operator_id",
+      "suppressed_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
   "operators": {
     "classification": "product",
     "columns": [
@@ -1695,38 +1534,6 @@
       "display_name",
       "created_at",
       "updated_at"
-    ]
-  },
-  "penny_ai_capabilities": {
-    "classification": "product",
-    "columns": [
-      "capability",
-      "provider",
-      "model"
-    ]
-  },
-  "penny_ai_runs": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "month",
-      "capability",
-      "provider",
-      "model",
-      "reserved_micros",
-      "actual_micros",
-      "input_tokens",
-      "output_tokens",
-      "state",
-      "created_at"
-    ]
-  },
-  "penny_ai_settings": {
-    "classification": "product",
-    "columns": [
-      "singleton",
-      "monthly_budget_micros",
-      "include_private"
     ]
   },
   "penny_api_issuance": {
@@ -1748,142 +1555,10 @@
       "actor_id"
     ]
   },
-  "penny_auth_mail_attempts": {
-    "classification": "installation",
-    "columns": [
-      "id",
-      "feature",
-      "outcome",
-      "phase",
-      "transport",
-      "started_at",
-      "finished_at"
-    ]
-  },
-  "penny_board_owners": {
-    "classification": "product",
-    "columns": [
-      "board_id",
-      "operator_id",
-      "updated_at"
-    ]
-  },
-  "penny_comment_receipts": {
-    "classification": "product",
-    "columns": [
-      "comment_id",
-      "operator_id",
-      "comment_updated_at",
-      "acknowledged_at"
-    ]
-  },
-  "penny_components": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "product_id",
-      "name",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_discussion_guards": {
-    "classification": "installation",
-    "columns": [
-      "id",
-      "allowed"
-    ]
-  },
   "penny_effect_suppression": {
     "classification": "installation",
     "columns": [
       "singleton"
-    ]
-  },
-  "penny_email_capture_domains": {
-    "classification": "product",
-    "columns": [
-      "domain"
-    ]
-  },
-  "penny_email_capture_messages": {
-    "classification": "product",
-    "columns": [
-      "message_digest"
-    ]
-  },
-  "penny_email_capture_refusals": {
-    "classification": "installation",
-    "columns": [
-      "reason",
-      "count"
-    ]
-  },
-  "penny_email_capture_settings": {
-    "classification": "product",
-    "columns": [
-      "singleton",
-      "capture_address",
-      "updated_at"
-    ]
-  },
-  "penny_evidence_owners": {
-    "classification": "product",
-    "columns": [
-      "evidence_id",
-      "operator_id",
-      "updated_at"
-    ]
-  },
-  "penny_evidence_snoozes": {
-    "classification": "product",
-    "columns": [
-      "evidence_id",
-      "until_at",
-      "updated_at"
-    ]
-  },
-  "penny_feature_requests": {
-    "classification": "product",
-    "columns": [
-      "request_id",
-      "feature_id",
-      "created_at"
-    ]
-  },
-  "penny_feature_roadmap": {
-    "classification": "product",
-    "columns": [
-      "roadmap_item_id",
-      "feature_id",
-      "created_at"
-    ]
-  },
-  "penny_features": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "component_id",
-      "name",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_frame_settings": {
-    "classification": "product",
-    "columns": [
-      "singleton",
-      "public_origin_allowlist",
-      "updated_at"
-    ]
-  },
-  "penny_import_roadmaps": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "before_json",
-      "after_json",
-      "created_at"
     ]
   },
   "penny_integration_credentials": {
@@ -1948,66 +1623,6 @@
       "destination_id"
     ]
   },
-  "penny_mail_identity": {
-    "classification": "product",
-    "columns": [
-      "singleton",
-      "company_name",
-      "sender_name",
-      "from_address",
-      "reply_to",
-      "postal_address",
-      "updated_at"
-    ]
-  },
-  "penny_mail_identity_tests": {
-    "classification": "installation",
-    "columns": [
-      "id",
-      "operator_id",
-      "operator_version",
-      "input_hash",
-      "provider",
-      "outcome",
-      "tested_at",
-      "consumed_at"
-    ]
-  },
-  "penny_merge_notice_recipients": {
-    "classification": "product",
-    "columns": [
-      "merge_id",
-      "requester_id",
-      "address_id",
-      "created_at"
-    ]
-  },
-  "penny_merge_notices": {
-    "classification": "product",
-    "columns": [
-      "merge_id",
-      "enabled",
-      "queued_at",
-      "restoration_hold_at",
-      "created_at"
-    ]
-  },
-  "penny_note_mentions": {
-    "classification": "product",
-    "columns": [
-      "note_id",
-      "operator_id",
-      "created_at",
-      "dismissed_at"
-    ]
-  },
-  "penny_ownership_guards": {
-    "classification": "installation",
-    "columns": [
-      "id",
-      "allowed"
-    ]
-  },
   "penny_portal_branding": {
     "classification": "product",
     "columns": [
@@ -2015,143 +1630,6 @@
       "description",
       "accent",
       "show_logo",
-      "updated_at"
-    ]
-  },
-  "penny_priority_views": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "owner_id",
-      "name",
-      "shared",
-      "definition_json",
-      "revision",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_products": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "name",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_proxy_votes": {
-    "classification": "product",
-    "columns": [
-      "request_id",
-      "requester_id",
-      "recorder_operator_id",
-      "source",
-      "source_url",
-      "evidence_id",
-      "direct_vote_at",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_public_admission": {
-    "classification": "installation",
-    "columns": [
-      "scope",
-      "subject_hash",
-      "count",
-      "expires_at"
-    ]
-  },
-  "penny_publication_schedules": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "release_id",
-      "roadmap_update_id",
-      "author_operator_id",
-      "scheduled_by_operator_id",
-      "scheduled_at",
-      "time_zone",
-      "state",
-      "last_error",
-      "dismissed_at",
-      "completed_at",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_redaction_settings": {
-    "classification": "product",
-    "columns": [
-      "singleton",
-      "enabled",
-      "kinds_json",
-      "patterns_json",
-      "revision"
-    ]
-  },
-  "penny_release_plan_items": {
-    "classification": "product",
-    "columns": [
-      "plan_id",
-      "roadmap_item_id"
-    ]
-  },
-  "penny_release_plans": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "name",
-      "release_date",
-      "revision",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_request_owners": {
-    "classification": "product",
-    "columns": [
-      "request_id",
-      "operator_id",
-      "updated_at"
-    ]
-  },
-  "penny_requester_oauth": {
-    "classification": "product",
-    "columns": [
-      "provider",
-      "enabled"
-    ]
-  },
-  "penny_requester_oauth_states": {
-    "classification": "installation",
-    "columns": [
-      "state_hash",
-      "provider",
-      "challenge",
-      "pending_token",
-      "expires_at",
-      "claim_id",
-      "completed"
-    ]
-  },
-  "penny_roadmap_dependencies": {
-    "classification": "product",
-    "columns": [
-      "blocker_id",
-      "dependent_id",
-      "created_at"
-    ]
-  },
-  "penny_status_roadmap_settings": {
-    "classification": "product",
-    "columns": [
-      "singleton",
-      "source",
-      "board_slugs_json",
-      "columns_json",
-      "shipped_days",
       "updated_at"
     ]
   },
@@ -2227,110 +1705,6 @@
       "signing_key"
     ]
   },
-  "penny_triage_reminders": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "kind",
-      "request_id",
-      "evidence_id",
-      "comment_id",
-      "owner_operator_id",
-      "age_origin",
-      "age_step",
-      "created_at"
-    ]
-  },
-  "penny_triage_settings": {
-    "classification": "product",
-    "columns": [
-      "singleton",
-      "inbox_days",
-      "comment_days",
-      "response_days",
-      "under_review_days",
-      "planned_days",
-      "in_progress_days",
-      "updated_at"
-    ]
-  },
-  "penny_triage_status_clock": {
-    "classification": "product",
-    "columns": [
-      "request_id",
-      "status",
-      "since_at"
-    ]
-  },
-  "penny_vote_importance": {
-    "classification": "product",
-    "columns": [
-      "request_id",
-      "requester_id",
-      "importance",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_vote_importance_settings": {
-    "classification": "product",
-    "columns": [
-      "board_id",
-      "enabled",
-      "labels_json",
-      "updated_at"
-    ]
-  },
-  "penny_weekly_choices": {
-    "classification": "product",
-    "columns": [
-      "requester_id",
-      "address_id",
-      "subscribed",
-      "verification_epoch",
-      "granted_at",
-      "revoked_at",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "penny_weekly_summary": {
-    "classification": "product",
-    "columns": [
-      "singleton",
-      "enabled",
-      "enabled_at",
-      "updated_at"
-    ]
-  },
-  "penny_workspace_clock": {
-    "classification": "installation",
-    "columns": [
-      "singleton",
-      "timezone",
-      "quiet_enabled",
-      "quiet_start",
-      "quiet_end",
-      "confirmed_at",
-      "updated_at"
-    ]
-  },
-  "release_attachments": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "release_id",
-      "storage_key",
-      "original_filename",
-      "content_type",
-      "byte_size",
-      "sha256",
-      "state",
-      "approved_at",
-      "created_at",
-      "updated_at"
-    ]
-  },
   "release_draft_mappings": {
     "classification": "product",
     "columns": [
@@ -2339,15 +1713,6 @@
       "request_id",
       "approval_at",
       "approval_updated_at",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "release_labels": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "name",
       "created_at",
       "updated_at"
     ]
@@ -2473,20 +1838,6 @@
       "writing"
     ]
   },
-  "request_categories": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "board_id",
-      "parent_id",
-      "name",
-      "position",
-      "archived_at",
-      "merged_into_category_id",
-      "created_at",
-      "updated_at"
-    ]
-  },
   "request_comment_edits": {
     "classification": "product",
     "columns": [
@@ -2575,18 +1926,6 @@
       "requester_id",
       "permission_granted_at",
       "muted_at",
-      "created_at",
-      "updated_at"
-    ]
-  },
-  "request_internal_statuses": {
-    "classification": "product",
-    "columns": [
-      "id",
-      "name",
-      "public_status",
-      "show_public_label",
-      "position",
       "created_at",
       "updated_at"
     ]
@@ -2705,14 +2044,6 @@
       "requester_id",
       "request_id",
       "created_at",
-      "updated_at"
-    ]
-  },
-  "request_status_templates": {
-    "classification": "product",
-    "columns": [
-      "public_status",
-      "body",
       "updated_at"
     ]
   },
@@ -3119,6 +2450,675 @@
     "columns": [
       "id",
       "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "feedback_import_reversal_scans": {
+    "classification": "installation",
+    "columns": [
+      "job_id",
+      "revision",
+      "intent",
+      "ordinal"
+    ]
+  },
+  "feedback_import_preview_revision": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "revision"
+    ]
+  },
+  "penny_frame_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "public_origin_allowlist",
+      "updated_at"
+    ]
+  },
+  "penny_public_admission": {
+    "classification": "installation",
+    "columns": [
+      "scope",
+      "subject_hash",
+      "count",
+      "expires_at"
+    ]
+  },
+  "penny_auth_mail_attempts": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "feature",
+      "outcome",
+      "phase",
+      "transport",
+      "started_at",
+      "finished_at"
+    ]
+  },
+  "learning_sources": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "provider",
+      "installation_id",
+      "resource_ids_json",
+      "use_basis",
+      "state",
+      "version",
+      "created_at"
+    ]
+  },
+  "learning_investigations": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "source_id",
+      "question",
+      "purpose",
+      "native_evidence_ids_json",
+      "native_request_ids_json",
+      "state",
+      "native_operator_id",
+      "operator_version",
+      "actor_id",
+      "expires_at",
+      "budget_micros",
+      "spent_micros",
+      "max_run_cost_micros",
+      "interval_minutes",
+      "next_run_at",
+      "last_reason",
+      "version",
+      "created_at"
+    ]
+  },
+  "learning_observations": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "source_id",
+      "event_key",
+      "content_hash",
+      "wording",
+      "original_json",
+      "observed_at",
+      "source_person_id",
+      "requester_id",
+      "account_id",
+      "evidence_id",
+      "request_id",
+      "created_at"
+    ]
+  },
+  "learning_artifacts": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "version",
+      "input_hash",
+      "body_json",
+      "state",
+      "deferred",
+      "created_at"
+    ]
+  },
+  "learning_contributions": {
+    "classification": "product",
+    "columns": [
+      "artifact_id",
+      "observation_id"
+    ]
+  },
+  "learning_corrections": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "artifact_id",
+      "correction",
+      "actor_id",
+      "created_at"
+    ]
+  },
+  "learning_commitments": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "artifact_id",
+      "snapshot_json",
+      "actor_id",
+      "created_at"
+    ]
+  },
+  "learning_runs": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "event_key",
+      "claim",
+      "grant_version",
+      "state",
+      "reserved_micros",
+      "actual_micros",
+      "reason",
+      "cursor_json",
+      "created_at",
+      "finished_at"
+    ]
+  },
+  "learning_erased_events": {
+    "classification": "product",
+    "columns": [
+      "source_id",
+      "event_hash"
+    ]
+  },
+  "learning_erased_people": {
+    "classification": "product",
+    "columns": [
+      "source_id",
+      "person_hash"
+    ]
+  },
+  "learning_source_people": {
+    "classification": "product",
+    "columns": [
+      "observation_id",
+      "source_person_id"
+    ]
+  },
+  "learning_invalidations": {
+    "classification": "product",
+    "columns": [
+      "commitment_id",
+      "reason",
+      "created_at"
+    ]
+  },
+  "request_internal_statuses": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "public_status",
+      "show_public_label",
+      "position",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "request_status_templates": {
+    "classification": "product",
+    "columns": [
+      "public_status",
+      "body",
+      "updated_at"
+    ]
+  },
+  "penny_status_roadmap_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "source",
+      "board_slugs_json",
+      "columns_json",
+      "shipped_days",
+      "updated_at"
+    ]
+  },
+  "request_categories": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "board_id",
+      "parent_id",
+      "name",
+      "position",
+      "archived_at",
+      "merged_into_category_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_mail_identity": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "company_name",
+      "sender_name",
+      "from_address",
+      "reply_to",
+      "postal_address",
+      "updated_at"
+    ]
+  },
+  "penny_mail_identity_tests": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "operator_id",
+      "operator_version",
+      "input_hash",
+      "provider",
+      "outcome",
+      "tested_at",
+      "consumed_at"
+    ]
+  },
+  "penny_workspace_clock": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "timezone",
+      "quiet_enabled",
+      "quiet_start",
+      "quiet_end",
+      "confirmed_at",
+      "updated_at"
+    ]
+  },
+  "penny_board_owners": {
+    "classification": "product",
+    "columns": [
+      "board_id",
+      "operator_id",
+      "updated_at"
+    ]
+  },
+  "penny_request_owners": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "operator_id",
+      "updated_at"
+    ]
+  },
+  "penny_evidence_owners": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "operator_id",
+      "updated_at"
+    ]
+  },
+  "penny_comment_receipts": {
+    "classification": "product",
+    "columns": [
+      "comment_id",
+      "operator_id",
+      "comment_updated_at",
+      "acknowledged_at"
+    ]
+  },
+  "penny_ownership_guards": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "allowed"
+    ]
+  },
+  "penny_note_mentions": {
+    "classification": "product",
+    "columns": [
+      "note_id",
+      "operator_id",
+      "created_at",
+      "dismissed_at"
+    ]
+  },
+  "penny_discussion_guards": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "allowed"
+    ]
+  },
+  "penny_triage_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "inbox_days",
+      "comment_days",
+      "response_days",
+      "under_review_days",
+      "planned_days",
+      "in_progress_days",
+      "updated_at"
+    ]
+  },
+  "penny_evidence_snoozes": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "until_at",
+      "updated_at"
+    ]
+  },
+  "penny_triage_reminders": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "kind",
+      "request_id",
+      "evidence_id",
+      "comment_id",
+      "owner_operator_id",
+      "age_origin",
+      "age_step",
+      "created_at"
+    ]
+  },
+  "penny_triage_status_clock": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "status",
+      "since_at"
+    ]
+  },
+  "penny_merge_notices": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "enabled",
+      "queued_at",
+      "restoration_hold_at",
+      "created_at"
+    ]
+  },
+  "penny_merge_notice_recipients": {
+    "classification": "product",
+    "columns": [
+      "merge_id",
+      "requester_id",
+      "address_id",
+      "created_at"
+    ]
+  },
+  "penny_import_roadmaps": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "before_json",
+      "after_json",
+      "created_at"
+    ]
+  },
+  "penny_proxy_votes": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "recorder_operator_id",
+      "source",
+      "source_url",
+      "evidence_id",
+      "direct_vote_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_vote_importance_settings": {
+    "classification": "product",
+    "columns": [
+      "board_id",
+      "enabled",
+      "labels_json",
+      "updated_at"
+    ]
+  },
+  "penny_vote_importance": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "requester_id",
+      "importance",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_products": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_components": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "product_id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_features": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "component_id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_feature_requests": {
+    "classification": "product",
+    "columns": [
+      "request_id",
+      "feature_id",
+      "created_at"
+    ]
+  },
+  "penny_feature_roadmap": {
+    "classification": "product",
+    "columns": [
+      "roadmap_item_id",
+      "feature_id",
+      "created_at"
+    ]
+  },
+  "penny_priority_views": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "owner_id",
+      "name",
+      "shared",
+      "definition_json",
+      "revision",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_release_plans": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "release_date",
+      "revision",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_release_plan_items": {
+    "classification": "product",
+    "columns": [
+      "plan_id",
+      "roadmap_item_id"
+    ]
+  },
+  "penny_roadmap_dependencies": {
+    "classification": "product",
+    "columns": [
+      "blocker_id",
+      "dependent_id",
+      "created_at"
+    ]
+  },
+  "release_labels": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "release_attachments": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "release_id",
+      "storage_key",
+      "original_filename",
+      "content_type",
+      "byte_size",
+      "sha256",
+      "state",
+      "approved_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_publication_schedules": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "release_id",
+      "roadmap_update_id",
+      "author_operator_id",
+      "scheduled_by_operator_id",
+      "scheduled_at",
+      "time_zone",
+      "state",
+      "last_error",
+      "dismissed_at",
+      "completed_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_ai_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "monthly_budget_micros",
+      "include_private"
+    ]
+  },
+  "penny_ai_capabilities": {
+    "classification": "product",
+    "columns": [
+      "capability",
+      "provider",
+      "model"
+    ]
+  },
+  "penny_ai_runs": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "month",
+      "capability",
+      "provider",
+      "model",
+      "reserved_micros",
+      "actual_micros",
+      "input_tokens",
+      "output_tokens",
+      "state",
+      "created_at"
+    ]
+  },
+  "penny_email_capture_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "capture_address",
+      "updated_at"
+    ]
+  },
+  "penny_email_capture_domains": {
+    "classification": "product",
+    "columns": [
+      "domain"
+    ]
+  },
+  "penny_email_capture_messages": {
+    "classification": "product",
+    "columns": [
+      "message_digest"
+    ]
+  },
+  "penny_email_capture_refusals": {
+    "classification": "installation",
+    "columns": [
+      "reason",
+      "count"
+    ]
+  },
+  "penny_requester_oauth": {
+    "classification": "product",
+    "columns": [
+      "provider",
+      "enabled"
+    ]
+  },
+  "penny_requester_oauth_states": {
+    "classification": "installation",
+    "columns": [
+      "state_hash",
+      "provider",
+      "challenge",
+      "pending_token",
+      "expires_at",
+      "claim_id",
+      "completed"
+    ]
+  },
+  "penny_redaction_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "enabled",
+      "kinds_json",
+      "patterns_json",
+      "revision"
+    ]
+  },
+  "penny_weekly_summary": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "enabled",
+      "enabled_at",
+      "updated_at"
+    ]
+  },
+  "penny_weekly_choices": {
+    "classification": "product",
+    "columns": [
+      "requester_id",
+      "address_id",
+      "subscribed",
+      "verification_epoch",
+      "granted_at",
+      "revoked_at",
       "created_at",
       "updated_at"
     ]

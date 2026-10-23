@@ -3471,6 +3471,10 @@
       "sha256": "c27b3440a76ec95d5d0a68574d441cea3aab40efddd1b8b8fc84b53dd7f2161e",
       "executable": false
     },
+    "migrations/core/0092_weekly_summary.sql": {
+      "sha256": "ea72228825aa9e981e3735fb886a0b7286242738349c2f716140d2989dee5b84",
+      "executable": false
+    },
     "OPERATIONS.json": {
       "sha256": "9c38e14d22b4ff12a1cb89f95f302da25048fc76a21e05cb94c84556002a171d",
       "executable": false
@@ -4644,7 +4648,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "a0e9919ba6bf75721e520572669b044e504378f2b30d3f7db8cf1b7ad4ed02f2",
+      "sha256": "97b5b76499a467d1e424d1c7a514b981345346fc26f1b7c2f838e8addc785f87",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {
@@ -5819,12 +5823,36 @@
       "sha256": "46cb86af660331f47198e49cfb85dc11ce95861cd67675a58073f543e880e044",
       "executable": false
     },
+    "src/core/features/notifications/ui/weekly-summary.tsx": {
+      "sha256": "6c093131a14d1abf52e438925aa7c112be640312acdff33505c4625bf1190cb8",
+      "executable": false
+    },
     "src/core/features/notifications/unsubscribe-page.ts": {
       "sha256": "b3007312a6cf0a2a9a1f493ca4511c84cf4cc48c83c71440cc57acd688d304bc",
       "executable": false
     },
     "src/core/features/notifications/unsubscribe.ts": {
       "sha256": "169b2bf5b7f3a8bd4228961522e9f18b42cda9ea53a760dabe28b7330a3bce48",
+      "executable": false
+    },
+    "src/core/features/notifications/weekly-content.ts": {
+      "sha256": "6c508b406d81d89929b5d394c03acf285510708c065ab4825f6945d58f30fedd",
+      "executable": false
+    },
+    "src/core/features/notifications/weekly-delivery.ts": {
+      "sha256": "2fc109f3ad250f3f760575967ecc65cafce5db623d36959fb73043df821e0ffe",
+      "executable": false
+    },
+    "src/core/features/notifications/weekly-preferences.ts": {
+      "sha256": "3377b6886f54e7e7d5745740d7d5ed5f26992c9ac7cb85538c9fd66edd28535d",
+      "executable": false
+    },
+    "src/core/features/notifications/weekly-routes.ts": {
+      "sha256": "49e0b9cd2c420a35342fa4309a10169ed5c48bf063acec0dcdc21ba9202ff8e2",
+      "executable": false
+    },
+    "src/core/features/notifications/weekly-schedule.ts": {
+      "sha256": "f43b5d457d6413abc0af0e3a3d3dcf007cbfc6f3db353efc00c69a3d56de745c",
       "executable": false
     },
     "src/core/features/overview/index.ts": {
@@ -6673,6 +6701,10 @@
     },
     "src/core/features/settings/ui/request-status-settings.tsx": {
       "sha256": "b2ecb73d92d4daed832863069d149cf10c2090055ff2d312dcf44061d2e2278e",
+      "executable": false
+    },
+    "src/core/features/settings/ui/weekly-summary-setting.tsx": {
+      "sha256": "0e434888e964c34f2fbd5140b5873524a840dbc78d2f61e5d17205f22132427b",
       "executable": false
     },
     "src/core/features/settings/ui/workspace-clock-settings.tsx": {
@@ -7571,6 +7603,18 @@
       "sha256": "82ea28e7a9bc0397a1d575c07bb93a049a440580ed40db5856af4a04dfaafeef",
       "executable": false
     },
+    "tests/base/weekly-summary-flow.ts": {
+      "sha256": "7d0d05f386b5b6a480dbfc574f015285fd37c2ae6f89ff8c7f42e42640690161",
+      "executable": false
+    },
+    "tests/base/weekly-summary-portability.ts": {
+      "sha256": "27e794f5e34f4948e37ca27a23a1d09315aee4f8f3e887245d0508340ad2b97b",
+      "executable": false
+    },
+    "tests/base/weekly-summary-release.ts": {
+      "sha256": "a4975aabca2b1f34a2735649eb6d9b5aa8b249335f42aa520fa6385e679163d0",
+      "executable": false
+    },
     "tests/base/worker-environment.d.ts": {
       "sha256": "28db638fdf98dd3592a33d814d374c14b725d1d91fa9db6c6fd3881769113d05",
       "executable": false
@@ -7913,6 +7957,10 @@
     },
     "tests/browser/vote-importance.mjs": {
       "sha256": "7fa8c59af646ac133267ff5b44bd5ed41d660cca5f7169b92817f52e89fc921f",
+      "executable": false
+    },
+    "tests/browser/weekly-summary-choice.mjs": {
+      "sha256": "4fac5543ad522cfb111f2634ebeac10f9c156755bc346804e364d224891e2e0f",
       "executable": false
     },
     "tests/browser/workspace-clock.mjs": {
