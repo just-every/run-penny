@@ -8,6 +8,7 @@ import {operatorAuth,authenticateOperator} from '../auth/operator'
 import {NativeError} from '../auth/native-tokens'
 import {devAdmitted} from '../auth/dev-admission'
 import {guardedDatabase,type AuthorityGuard} from './guarded-database'
+import {readDatabase} from './read-database'
 import {createUlid} from '@/core/shared/ulid'
 
 export const apiScopes=['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write','votes:write'] as const
@@ -24,8 +25,8 @@ export async function managedKeys(runtime:PennyRuntime,request:Request,issuing=f
  const session=await operatorAuth(runtime).getSession(request)
  if(!session)throw new NativeError('unauthenticated',401)
  const actor=await authenticateOperator(runtime,request);if(!actor)throw new NativeError('unauthenticated',401)
- const guard=sessionGuard(session),db=runtime.database.binding
- const connection=guardedDatabase(db,guard,()=>issuing?[
+ const reading=request.method==='GET',guard=reading?sessionReadGuard(session):sessionGuard(session),db=runtime.database.binding
+ const connection=reading?readDatabase(db,guard):guardedDatabase(db,guard,()=>issuing?[
   // A token minted in a local dev session is recorded as dev-minted (migration 0029).
   db.prepare('INSERT INTO penny_api_issuance(singleton,native_operator_id,operator_version,actor_id,dev) VALUES (1,?,?,?,?)').bind(session.operatorId,session.operator.version,actor.id,session.kind==='dev'?1:0),
  ]:[])
