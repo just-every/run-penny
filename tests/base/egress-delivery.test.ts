@@ -1,3 +1,4 @@
+import {proveExplicitIntegration} from './integration-effects'
 import {proveDurableIntegration} from './integration-durable'
 import {applyD1Migrations,reset,createScheduledController} from 'cloudflare:test'
 import {afterEach,beforeEach,expect,inject,it,vi} from 'vitest'
@@ -33,7 +34,7 @@ async function deliverThroughCron(port:EnforcingEgress){
  return {state:delivery.state,outcome:JSON.parse(attempt!.outcome) as {kind:string;code:string;status?:number}}
 }
 
-it('[INT-002 INT-003] enforcing egress and durable receipts preserve public-only delivery across restart',async()=>{
+it('[INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart',async()=>{
  const g=await graph()
  // Without the relay nothing outbound is saved: the page says why instead of "saved".
  const target={name:'Public target',kind:'webhook',endpoint:'https://events.example.com/penny',events:['status.published']}
@@ -57,4 +58,5 @@ it('[INT-002 INT-003] enforcing egress and durable receipts preserve public-only
  expect(redirect.seen.connected).toEqual([])
  expect(redirected).toEqual({state:'uncertain',outcome:{kind:'uncertain',code:'webhook_response_uncertain',status:302}})
  await proveDurableIntegration(inject('migrations'))
+ await proveExplicitIntegration(inject('migrations'))
 })
