@@ -7672,7 +7672,7 @@
       "executable": false
     },
     "tests/browser/integration-states.mjs": {
-      "sha256": "ca9942a45f8e5c47f9cfdf0681e28f953a0fc4b7fd5a193767157dbbc02839bb",
+      "sha256": "bccac8ee12125d71bb053dde865b9c8e8d7cd5085687934d7dbf4852f6e007b3",
       "executable": false
     },
     "tests/browser/integration-tracker-actions.mjs": {

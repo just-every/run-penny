@@ -37,7 +37,7 @@ try{
    const subject=await action('/api/operator/requests',{title:'Deliberate tracker subject',description:'Private original wording',boardSlug:'feedback'})
    context=await browser.newContext({viewport:{width,height:width===390?844:900}});await context.addCookies([{name:cookie.slice(0,index),value:cookie.slice(index+1),url:runtime.origin}])
    const page=await context.newPage(),errors=[],external=[]
-   page.on('pageerror',()=>errors.push('pageerror'));page.on('console',message=>{if(message.type()==='error')errors.push('console.error')});page.on('request',request=>{if(new URL(request.url()).origin!==runtime.origin)external.push(new URL(request.url()).origin)})
+   page.on('pageerror',()=>errors.push('pageerror'));page.on('console',message=>{if(message.type()==='error')errors.push({kind:'console.error',message:message.text(),url:message.location().url})});page.on('request',request=>{if(new URL(request.url()).origin!==runtime.origin)external.push(new URL(request.url()).origin)})
    async function capture(label,target){
     assert.equal(await page.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)>innerWidth),false,label+' overflow')
     await page.evaluate(axe);assert.deepEqual(await page.evaluate(async()=>(await window.axe.run(document)).violations.filter(row=>['serious','critical'].includes(row.impact))),[],label+' accessibility')
