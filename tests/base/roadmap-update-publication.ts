@@ -8,7 +8,7 @@ import {providerMessages} from './provider-messages'
 
 /** The real publication route fans out history and one coalesced follower email. */
 export async function proveRoadmapPublication(){
- const clock=vi.spyOn(Date,'now').mockReturnValue(Date.parse('2026-10-23T09:00:00Z'))
+ vi.setSystemTime(new Date('2026-10-23T09:00:00Z'))
  const g=await releaseGraph(4),mapped=g.requests.slice(0,2),controls=g.requests.slice(2)
  await env.DB.prepare("UPDATE roadmap_request_mappings SET approved_at=NULL WHERE roadmap_item_id='release-item' AND request_id=?").bind(controls[0].id).run()
  await env.DB.prepare("DELETE FROM roadmap_request_mappings WHERE roadmap_item_id='release-item' AND request_id=?").bind(controls[1].id).run()
@@ -37,7 +37,7 @@ export async function proveRoadmapPublication(){
  const cron=()=>runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
  await cron()
  expect((await capture.list()).length).toBe(before)
- clock.mockReturnValue(Date.now()+60_001)
+ vi.setSystemTime(Date.now()+60_001)
  await cron()
  const delivered=(await capture.list()).slice(before)
  expect(delivered.map(row=>row.message.to)).toEqual([[g.recipient.email]])
@@ -49,4 +49,5 @@ export async function proveRoadmapPublication(){
  expect(await repeat.json()).toMatchObject({message:expect.any(String)})
  await cron()
  expect({histories:await histories(),intents:(await intents()).results,mail:(await capture.list()).slice(before)}).toEqual({...beforeRepeat,mail:delivered})
+ vi.useRealTimers()
 }

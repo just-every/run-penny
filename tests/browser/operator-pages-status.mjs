@@ -16,6 +16,15 @@ export async function reviewStatusDrafts({page,db,goto,capture}) {
  await page.getByRole('status').filter({hasText:'Stale draft discarded.'}).waitFor()
  await page.getByRole('button',{name:'Discard stale draft',exact:true}).nth(1).waitFor({state:'detached'})
  await capture('discarded-stale-status-draft')
+ const origin=new URL(page.url()).origin
+ const post=async(path,data)=>page.request.post(origin+path,{data,headers:{Origin:origin}})
+ const first=await db.prepare('SELECT id,slug,public_title title FROM requests WHERE author_operator_id IS NOT NULL AND published_at IS NOT NULL ORDER BY created_at DESC LIMIT 1').first()
+ const created=await post('/api/operator/requests',{title:'synthetic-penny-status-request',description:'Working request',boardSlug:'attention-board',evidenceIds:[]})
+ assert.equal(created.status(),201)
+ const second=await created.json()
+ assert.equal((await post(`/api/operator/moderation/${second.slug}`,{verdict:'approved',title:'Reporting export request',description:'Export each reporting step.',boardSlug:'attention-board',displayName:'Owner'})).status(),200)
+ assert.equal((await post('/api/operator/roadmap/attention-planned/approve',{publicTitle:'Current approved promise',publicSummary:'Customer problem',boardSlug:'attention-board',requestIds:[first.id,second.id]})).status(),200)
+ await page.reload();await page.waitForLoadState('networkidle')
  const card=page.locator('#roadmap-item-attention-planned')
  await card.getByText('Edit, approve or move',{exact:true}).click()
  const form=card.getByRole('form',{name:'Move roadmap item',exact:true})
@@ -28,4 +37,25 @@ export async function reviewStatusDrafts({page,db,goto,capture}) {
  assert.equal(await page.getByRole('button',{name:'Publish status update',exact:true}).count(),1)
  await page.getByRole('heading',{name:'Current approved promise',exact:true}).waitFor()
  await capture('current-authority-status-draft')
+ const published=page.waitForResponse(response=>new URL(response.url()).pathname.endsWith('/publish')&&response.request().method()==='POST')
+ await page.getByRole('button',{name:'Publish status update',exact:true}).click()
+ const publication=await published
+ assert.equal(publication.status(),200,'[ROAD-008] explicit publication succeeds')
+ await page.getByRole('button',{name:'Publish status update',exact:true}).waitFor({state:'detached'})
+ await capture('published-status-draft')
+ const duplicate=await post(new URL(publication.url()).pathname,{})
+ assert.equal(duplicate.status(),409,'[ROAD-008] the same published version visibly refuses another publication')
+ assert.ok((await duplicate.json()).message,'[ROAD-008] refusal has a readable reason')
+ for(const [request,title] of [[first,first.title],[second,'Reporting export request']]){
+  const detail=await (await page.request.get(origin+`/api/public/requests/${request.slug}`)).json()
+  assert.equal(detail.statusUpdates.length,1,'[ROAD-008] each mapped request receives exactly one history entry')
+  const publicPage=await page.context().newPage()
+  try{
+   await publicPage.goto(origin+`/portal/feedback/${request.slug}`)
+   await publicPage.getByRole('heading',{name:title,exact:true}).waitFor()
+   await publicPage.getByText(detail.statusUpdates[0].body,{exact:true}).waitFor()
+   await capture(`mapped-status-history-${request===first?'first':'second'}`,publicPage)
+  }finally{await publicPage.close()}
+ }
+
 }
