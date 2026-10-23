@@ -15,7 +15,9 @@ for attempt in 1 2 3; do
     [[ -f $src ]] || continue
     dest="$scratch/sources-$attempt/parts/${src##*/}"
     [[ $src != /etc/apt/sources.list ]] || dest="$scratch/sources-$attempt/sources.list"
-    sed -E "s@https?://(([a-z0-9.-]+\\.)?archive\\.ubuntu\\.com|security\\.ubuntu\\.com|mirrors\\.edge\\.kernel\\.org)/ubuntu/?@${mirror}/@g" "$src" > "$dest"
+    sed -E \
+      -e "s@mirror\\+file:/etc/apt/apt-mirrors(-security)?\\.txt@${mirror}/@g" \
+      -e "s@https?://(([a-z0-9.-]+\\.)?archive\\.ubuntu\\.com|security\\.ubuntu\\.com|mirrors\\.edge\\.kernel\\.org)/ubuntu/?@${mirror}/@g" "$src" > "$dest"
   done
   cat > "$scratch/apt.conf" <<APT
 Dir::Etc::sourcelist "$scratch/sources-$attempt/sources.list";
