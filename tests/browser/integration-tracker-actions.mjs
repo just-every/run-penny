@@ -14,7 +14,7 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    if(kind==='request')await page.locator('article').filter({has:page.getByRole('heading',{name:'Deliberate tracker subject',exact:true})}).getByText('Discussion, status and request controls',{exact:true}).click()
   }
   await visit()
-  const panel=kind==='request'?page.locator('article').filter({has:page.getByRole('heading',{name:'Deliberate tracker subject',exact:true})}):page.locator('#tracker-actions')
+  const panel=kind==='request'?page.locator('article').filter({has:page.getByRole('heading',{name:'Deliberate tracker subject',exact:true})}):page.getByRole('region',{name:'Create or link a tracker issue',exact:true})
   const form=panel.getByRole('form',{name:'Tracker issue action',exact:true})
   await form.getByRole('combobox',{name:/^Tracker connection/}).selectOption(connection.id)
   const linkedId=provider==='linear'?crypto.randomUUID():'10043',linkedUrl=provider==='linear'?'https://linear.app/penny/issue/PEN-43/entered-link':'https://penny-fixture.atlassian.net/browse/PEN-43'
