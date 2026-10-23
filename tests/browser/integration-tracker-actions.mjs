@@ -27,6 +27,7 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    if(unknown)await panel.getByRole('button',{name:'Start another create',exact:true}).last().click()
    await form.getByRole('combobox',{name:/^Tracker connection/}).selectOption(connection.id)
    await form.getByRole('combobox',{name:/^Tracker action/}).selectOption('create')
+   if(!unknown)assert.deepEqual(await form.locator('input[name="title"],textarea[name="description"]').evaluateAll(nodes=>nodes.map(node=>node.value)),['',''],'[INT-005] private source wording is not prefilled into the entered-only action')
    const title=`Entered ${provider} ${kind} ${unknown?'uncertain':'accepted'} title`,description='Entered public implementation wording'
    edge.expected.set(provider,provider==='linear'?{query:'mutation PennyIssueCreate($input: IssueCreateInput!) { issueCreate(input: $input) { success issue { id title url team { id } } } }',variables:{input:{teamId,title,description}}}:{fields:{project:{id:'10200'},issuetype:{id:'10001'},summary:title,description:{version:1,type:'doc',content:[{type:'paragraph',content:[{type:'text',text:description}]}]}}})
    edge.uncertain(unknown)
@@ -43,10 +44,13 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    assert.equal(edge.calls.length,before+1,'[INT-005] restart and Cron never duplicate the create')
    if(unknown){
     const receipt=panel.locator('li').filter({has:page.getByRole('button',{name:'Reconcile known issue',exact:true})})
-    await receipt.getByLabel('Known issue ID',{exact:true}).fill(provider==='linear'?crypto.randomUUID():'10044')
-    await receipt.getByLabel('Known issue HTTPS URL',{exact:true}).fill(provider==='linear'?'https://linear.app/penny/issue/PEN-44/known-outcome':'https://penny-fixture.atlassian.net/browse/PEN-44')
+    const known={...selected,connectionId:connection.id,externalId:provider==='linear'?crypto.randomUUID():'10044',url:provider==='linear'?'https://linear.app/penny/issue/PEN-44/known-outcome':'https://penny-fixture.atlassian.net/browse/PEN-44'}
+    await receipt.getByLabel('Known issue ID',{exact:true}).fill(known.externalId)
+    await receipt.getByLabel('Known issue HTTPS URL',{exact:true}).fill(known.url)
     await capture(`tracker-${provider}-${kind}-uncertain`,panel)
     await receipt.getByRole('button',{name:'Reconcile known issue',exact:true}).click();await panel.getByText('Known issue reconciled. No new create was sent.',{exact:true}).waitFor()
+    const repeat=await action(`/api/operator/integrations/trackers/commands/${command.id}/reconcile`,known)
+    assert.equal(repeat.id,await runtime.db.prepare('SELECT link_id FROM penny_tracker_commands WHERE id=?').bind(command.id).first('link_id'),'[INT-005] repeating a known reconciliation returns the same issue link')
     await runtime.restart();await runtime.schedule();await visit()
     assert.deepEqual({state:await state(),resolutions:await runtime.db.prepare('SELECT count(*) n FROM integration_resolutions WHERE delivery_id=?').bind(command.id).first('n'),calls:edge.calls.length},{state:'accepted',resolutions:1,calls:before+1},'[INT-005] explicit reconciliation resolves exactly once without another create')
     assert.equal(await panel.getByRole('button',{name:'Reconcile known issue',exact:true}).count(),0,'[INT-005] resolved commands no longer offer reconciliation')
