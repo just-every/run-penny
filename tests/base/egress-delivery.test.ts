@@ -1,3 +1,4 @@
+import {proveDurableIntegration} from './integration-durable'
 import {applyD1Migrations,reset,createScheduledController} from 'cloudflare:test'
 import {afterEach,beforeEach,expect,inject,it,vi} from 'vitest'
 import {env} from './support'
@@ -32,7 +33,7 @@ async function deliverThroughCron(port:EnforcingEgress){
  return {state:delivery.state,outcome:JSON.parse(attempt!.outcome) as {kind:string;code:string;status?:number}}
 }
 
-it('[INT-002] sends through the egress service binding and refuses private and redirect destinations without following them',async()=>{
+it('[INT-002 INT-003] enforcing egress and durable receipts preserve public-only delivery across restart',async()=>{
  const g=await graph()
  // Without the relay nothing outbound is saved: the page says why instead of "saved".
  const target={name:'Public target',kind:'webhook',endpoint:'https://events.example.com/penny',events:['status.published']}
@@ -55,4 +56,5 @@ it('[INT-002] sends through the egress service binding and refuses private and r
  expect(redirect.seen.fetched).toEqual([{url:'https://events.example.com/penny',redirect:'manual'}])
  expect(redirect.seen.connected).toEqual([])
  expect(redirected).toEqual({state:'uncertain',outcome:{kind:'uncertain',code:'webhook_response_uncertain',status:302}})
+ await proveDurableIntegration(inject('migrations'))
 })
