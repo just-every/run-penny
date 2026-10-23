@@ -50,6 +50,9 @@ export async function apiAuthority(runtime:PennyRuntime,request:Request,scope:ty
  const header=request.headers.get('Authorization')??''
  if(!/^Bearer int_[a-f0-9]{64}$/.test(header))throw new NativeError('integration_token_required',401)
  const token=header.slice(7),hash=await sha256(token),db=runtime.database.binding
+ // Authorization keeps a durable usage row per attempt, so a key this
+ // installation never issued is refused before it can add one.
+ if(!await db.prepare('SELECT 1 FROM integration_tokens WHERE namespace=? AND token_hash=?').bind(namespace,hash).first())throw new NativeError('integration_token_denied',401)
  const service=new TokenService(new IntegrationsRepository(new D1SqlDatabase(db),namespace),{
   grant:async()=>{throw new NativeError('integration_namespace_denied',403)},administer:async()=>{throw new NativeError('integration_namespace_denied',403)},
  })

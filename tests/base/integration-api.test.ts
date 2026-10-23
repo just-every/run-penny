@@ -17,19 +17,19 @@ async function key(operator:Record<string,string>,scopes:string[]){
 }
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 afterEach(()=>vi.restoreAllMocks())
-it('[API-001 BASE-ACCESS-002] issues a reveal-once hashed key and confines route-selected scopes to the REST namespace',async()=>{
- const operator=await owner(),issued=await key(operator,['requests:read'])
+it('[API-001 BASE-ACCESS-002] issues a reveal-once hashed key, confines route-selected scopes to the REST namespace and refuses unissued keys without a usage record',async()=>{
+ const operator=await owner(),issued=await key(operator,['requests:read']),unknown={Authorization:'Bearer int_'+'0'.repeat(64)}
  expect(await env.DB.prepare('SELECT token_hash FROM integration_tokens').first('token_hash')).not.toBe(issued.token)
  const listed=await request('/api/operator/integrations/keys',undefined,operator),listing=await listed.text()
  expect(listing).not.toContain(issued.token);expect(listing).not.toContain('token_hash')
  expect((await request('/api/v1/requests',undefined,issued.headers)).status).toBe(200)
  for(const path of ['/api/operator/requests','/api/operator/data/export','/api/editor/config'])expect((await request(path,undefined,issued.headers)).status).toBe(401)
- for(const headers of [{},{Authorization:'Bearer wrong'},issued.headers])expect((await request('/api/v1/requests',{title:'Attempt',description:'Body',boardSlug:'missing'},headers)).status).toBe(401)
+ for(const headers of [{},{Authorization:'Bearer wrong'},unknown,issued.headers])expect((await request('/api/v1/requests',{title:'Attempt',description:'Body',boardSlug:'missing'},headers)).status).toBe(401)
  expect((await request('/api/v1/releases',undefined,issued.headers)).status).toBe(401)
- expect((await request('/api/v1/requests',{resource:'releases'},issued.headers)).status).toBe(401)
- const usage=(await env.DB.prepare('SELECT resource,required_scopes,allowed FROM integration_token_usage').all()).results
+ expect((await request('/api/v1/requests',{resource:'releases'},issued.headers)).status).toBe(401);for(let attempt=0;attempt<3;attempt++)expect((await request('/api/v1/requests',undefined,unknown)).status).toBe(401)
+ const usage=(await env.DB.prepare('SELECT token_id,resource,required_scopes,allowed FROM integration_token_usage').all()).results
  expect(usage.some(row=>row.resource==='requests'&&row.allowed===1)).toBe(true)
- expect(usage.some(row=>row.resource==='requests'&&row.allowed===0)).toBe(true)
+ expect(usage.some(row=>row.resource==='requests'&&row.allowed===0)).toBe(true);expect(usage.every(row=>row.token_id===issued.credential.id),'a made-up key leaves no usage record').toBe(true)
  expect(await env.DB.prepare('SELECT count(*) n FROM requests').first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_api_issuance').first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_guards').first('n')).toBe(0)
