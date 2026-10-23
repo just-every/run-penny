@@ -636,7 +636,7 @@
       "executable": false
     },
     ".github/workflows/verify.yml": {
-      "sha256": "ed0809215b1c3cca92276ae1db643d33ac41fd825bc075fc22d97acf17eb3a74",
+      "sha256": "2226100f04f262eee083cf931aed3011147b74947a03cb8ec6c302e5949da47c",
       "executable": false
     },
     ".gitignore": {
@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "2d2884b8aaf6c04b2fdea74fa93daac271ec61ae3aadc394c483d459bbfc8ef0",
+      "sha256": "2f8b816fd10cf147b8a62988d475c285d3ce9a869b1a1fca38bf8927ed4c9e97",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2880,7 +2880,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "e3a74c20e541d88f528b30e312343b8a3dc8a9fb866e53a3d580929bf027c11b",
+      "sha256": "659eeff5215516ca0a8a3ecebe63bb8f2dfb75f1da7ed1c6feb559b20a04caab",
       "executable": false
     },
     "DEMO.md": {
@@ -2924,7 +2924,7 @@
       "executable": false
     },
     "docs/CLAIMS.md": {
-      "sha256": "b88768bd04108201c921a44499a9aaf36b1ae2214c3b970219c3c04b862c1f66",
+      "sha256": "7b21e212fe2602394f0f416121f372772ad72cc52e9beb858451e1952d6a1589",
       "executable": false
     },
     "docs/CUSTOMISE.md": {
@@ -3782,6 +3782,10 @@
     "scripts/feedback/status.mjs": {
       "sha256": "39f9e5cb5e4fc749792e310839682acbff31e3cf39f9b6facb7bf83766af43a9",
       "executable": false
+    },
+    "scripts/install-ci-chromium.sh": {
+      "sha256": "58bc59649d522b95ae2430333fa78a9c54ada419d6f476d370712c352136fd7d",
+      "executable": true
     },
     "scripts/installer/admission.mjs": {
       "sha256": "e6e7bc8a793579ccfbca4ab54a751691dc30235050d1164d2a6bbe001d6cb53e",
@@ -6540,7 +6544,7 @@
       "executable": false
     },
     "src/core/features/roadmap/update-publication.ts": {
-      "sha256": "18cbbc4562c25ef27f89e951fd24736f144dedb417f0e471ba9e22e5673bdf85",
+      "sha256": "f8c703c0804ab3cd42bd1bcbbe25cc2a667443e49b80659abca3636d2668ac04",
       "executable": false
     },
     "src/core/features/roadmap/update-review.ts": {
@@ -7236,7 +7240,7 @@
       "executable": false
     },
     "tests/base/board.test.ts": {
-      "sha256": "ad0d20d39c97c3f3704faf1502c34d38b6564c306afbf381f29cbea3121861fb",
+      "sha256": "c20439024bbf55c2900c8cfca6a973b2905b0ad1d464734c2f5ebd5b3b66d750",
       "executable": false
     },
     "tests/base/custody.test.ts": {
@@ -7403,6 +7407,10 @@
       "sha256": "5c2fc93e012efb3868e2e2544827b3685763838e0749d09e6294d646a2408e99",
       "executable": false
     },
+    "tests/base/operator-request-publication.ts": {
+      "sha256": "07d01537bbfaf8c73d86dac87dcab9cce6e6ce30e295e05db28b99a1d091de9d",
+      "executable": false
+    },
     "tests/base/owner-claim.test.ts": {
       "sha256": "72b4ca17241e318c0f4cb11fda2c305ac6c91704dcc163e94cc42f30fe2fd867",
       "executable": false
@@ -7424,7 +7432,7 @@
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
-      "sha256": "650378b5afe0d925755e55424fcb13e22f4d2d7bc9c002cc6e3fd35af5220541",
+      "sha256": "1b6b9679fff9ffbb429029f746dab8635481490098edbd4405f5036e86dcae8e",
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
@@ -7517,6 +7525,10 @@
     },
     "tests/base/roadmap-public-eta.test.ts": {
       "sha256": "bfb309060e46c2f5c2e9c9b73c9acb47d47d5adee683048cd10e86419c1d3476",
+      "executable": false
+    },
+    "tests/base/roadmap-update-publication.ts": {
+      "sha256": "cba2478218294068c9bfe14ff97bb88c6569c9d4760b17c84ee827d52d35785c",
       "executable": false
     },
     "tests/base/scheduled-publication-fixture.ts": {
@@ -7732,7 +7744,7 @@
       "executable": false
     },
     "tests/browser/operator-evidence-flow.mjs": {
-      "sha256": "591fb6560b15406e0934472100cac365add3e080e769e2a3f77a3389a2565c51",
+      "sha256": "93eb601b7b16aa89fa46557224b9b8c7773b286ac7240f360e8193ddef261853",
       "executable": false
     },
     "tests/browser/operator-field-public-proof.mjs": {
@@ -7768,7 +7780,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-status.mjs": {
-      "sha256": "a77ede3195035bdd3fcede8ef0efd43bc35ced1b6802879b089fd651a6b3a24c",
+      "sha256": "962c78b73d687fdae55ef7d15ef15b3b4b3587bf1b8c938990ddb2754f6ee6ca",
       "executable": false
     },
     "tests/browser/operator-pages.mjs": {
