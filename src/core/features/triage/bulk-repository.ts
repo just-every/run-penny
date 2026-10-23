@@ -18,7 +18,7 @@ export async function createRequestBatch(db:D1Database,actor:string,input:BatchI
   batchAudit(db,actor,id,'triage.batch_applied',JSON.stringify({selected:input.requestIds.length,tagId:input.tagId??null,...(ownerSet?{operatorId:input.operatorId}: {})}),now),
   db.prepare('DELETE FROM penny_ownership_guards WHERE id=?').bind(guard),
  ])}catch(error){if(String(error).includes('penny_ownership_admitted'))throw new NativeError('batch_targets_changed',409);throw error}
- const [count,tag,owner]=await db.batch([
+ const [count,tag,owner]=await db.batch<{n?:number;name?:string}>([
   db.prepare('SELECT count(*) n FROM penny_request_batch_items WHERE batch_id=? AND before_json!=after_json').bind(id),
   db.prepare('SELECT name FROM tags WHERE id=?').bind(input.tagId??null),
   db.prepare('SELECT display_name name FROM operators WHERE id=?').bind(input.operatorId??null),

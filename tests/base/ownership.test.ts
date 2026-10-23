@@ -1,3 +1,4 @@
+import {assertBatchArchive,assertRestoredBatchHeld,assertBatchErased} from './request-batch-custody'
 import { proveRequestBatches } from './request-batches'
 import { applyD1Migrations, reset } from 'cloudflare:test'
 import { afterEach, beforeEach, expect, inject, it, vi } from 'vitest'
@@ -135,8 +136,7 @@ it('[TRIAGE-001][DATA-001][DATA-003] archives retain private assignment history 
  expect(portable.archive.tables.penny_request_owners.find(row => row.request_id === request.id)?.operator_id).toBe(self.id)
  expect(portable.archive.tables.penny_evidence_owners.find(row => row.evidence_id === evidence.id)?.operator_id).toBe(self.id)
  expect(portable.archive.tables).not.toHaveProperty('penny_ownership_guards')
- expect(portable.archive.tables.penny_request_batches.find(row=>row.id===batch.id)?.held).toBe(1)
- expect(portable.archive.tables.penny_request_batch_items).toHaveLength(1)
+ assertBatchArchive(portable.archive,batch.id)
  await reset(); await applyD1Migrations(env.DB, inject('migrations'))
  const restored = await owner()
  let result = await good<{ status: string; operationId: string }>('/api/operator/data/import', portable, restored, 'POST', [200, 202])
@@ -146,7 +146,7 @@ it('[TRIAGE-001][DATA-001][DATA-003] archives retain private assignment history 
   result = await response.json() as typeof result
  }
  expect(result.status).toBe('complete')
- expect((await call(`/api/operator/triage/batches/${batch.id}/undo`,{},restored)).status).toBe(409)
+ await assertRestoredBatchHeld(restored,batch.id)
  expect((await ownerOf('requests', request.slug, restored)).owner?.id).toBe(self.id)
  expect((await ownerOf('evidence', evidence.id, restored)).owner?.id).toBe(self.id)
  expect((await queue(restored)).requests.map(row => row.id)).toEqual([request.id])
@@ -169,6 +169,6 @@ it('[TRIAGE-001][DATA-001][DATA-003] archives retain private assignment history 
  expect(JSON.stringify(anonymized.archive)).not.toContain('assigned-peer@example.test')
  const requestTarget={table:'requests',id:request.id},requestPreview=await good<{planHash:string}>('/api/operator/data/erasure/preview',requestTarget,restored)
  await good('/api/operator/data/erasure',{...requestTarget,planHash:requestPreview.planHash},restored)
- expect(await env.DB.prepare('SELECT count(*) n FROM penny_request_batch_items WHERE request_id=?').bind(request.id).first('n')).toBe(0)
+ await assertBatchErased(request.id)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

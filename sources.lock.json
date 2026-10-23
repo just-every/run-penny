@@ -6740,7 +6740,7 @@
       "executable": false
     },
     "src/core/features/triage/bulk-repository.ts": {
-      "sha256": "cfeda9b314451811da5a71f6f50e82e4326e1758265c724a86d3c3c66177322a",
+      "sha256": "7908096cd1193fdcd7c5f0683ad1d42fbe06f6df33fe3872a82bad6f7567b616",
       "executable": false
     },
     "src/core/features/triage/bulk-routes.ts": {
@@ -7488,7 +7488,7 @@
       "executable": false
     },
     "tests/base/ownership.test.ts": {
-      "sha256": "f3b71f1b1aef772158d82b167fad165661226da87871827b23805a41979903af",
+      "sha256": "cc06076bcc20d0688d6cf24a101a541e2b640b88a7aac46c6a571d9a175755eb",
       "executable": false
     },
     "tests/base/penny-decisions.test.ts": {
@@ -7553,6 +7553,10 @@
     },
     "tests/base/remote-portability.test.ts": {
       "sha256": "efbaa54a8e29349d9d1b255e1aa715233e873b0214e55d10195be691100f442f",
+      "executable": false
+    },
+    "tests/base/request-batch-custody.ts": {
+      "sha256": "9a921ac38ba63631e22ac04acb95b486d1b6dc865da75e3d175d2f6a52df0b34",
       "executable": false
     },
     "tests/base/request-batches.ts": {
