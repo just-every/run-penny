@@ -46,7 +46,7 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  await cron()
  expect(calls.map(wire=>JSON.parse(wire.body).event).sort()).toEqual([...events].sort())
  for(const wire of calls){expect(wire.url).toBe('https://events.example.com/penny');expect(wire.body).not.toContain('synthetic-penny-private')}
- const completed=(await env.DB.prepare('SELECT * FROM integration_attempts ORDER BY delivery_id,number').all()).results
+ const completed=(await env.DB.prepare('SELECT * FROM integration_attempts ORDER BY id').all()).results
  expect(completed).toHaveLength(captured.length)
  // Saved history cannot manufacture a live event or outbound call.
  await apply(feedbackFixture('synthetic-penny-integration-history'),operator)
@@ -69,7 +69,7 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  expect(bundle.archive.tables.penny_integration_credentials).toBeUndefined()
  await reset();await applyD1Migrations(env.DB,migrations);operator=await owner({timezone:'UTC'})
  await json('/api/operator/data/import',bundle)
- expect((await env.DB.prepare('SELECT * FROM integration_attempts ORDER BY delivery_id,number').all()).results).toEqual(completed)
+ expect((await env.DB.prepare('SELECT * FROM integration_attempts ORDER BY id').all()).results).toEqual(completed)
  expect((await env.DB.prepare('SELECT * FROM penny_integration_receipts ORDER BY id').all()).results).toEqual(receipts)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_credentials').first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_destinations WHERE revoked_at IS NULL').first('n')).toBe(0)
