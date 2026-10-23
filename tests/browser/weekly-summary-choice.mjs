@@ -50,9 +50,10 @@ export async function weeklySummaryChoice({browser,owner,runtime,viewport,inspec
   const region=()=>page.getByRole('region',{name:'Weekly summary',exact:true})
   const choice=()=>region().getByRole('checkbox',{name:'Email me a weekly summary',exact:true})
   async function toggle(value) {
-   const saved=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/public/requester/weekly-summary'&&response.request().method()==='PATCH')
-   await choice().setChecked(value)
-   const response=await saved
+   const [response]=await Promise.all([
+    page.waitForResponse(response=>new URL(response.url()).pathname==='/api/public/requester/weekly-summary'&&response.request().method()==='PATCH'),
+    choice().setChecked(value),
+   ])
    assert.equal(response.status(),200)
    assert.equal((await response.json()).subscribed,value)
    await region().getByRole('status').filter({hasText:value?'enabled.':'stopped.'}).waitFor()
