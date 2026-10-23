@@ -23,9 +23,10 @@ export async function proveWeeklySummary(){
  const plain=await requester('Plain voter')
  await action(`/api/public/requests/${g.requests[0].slug}/vote`,{},plain)
  const board=(await (await call('/api/public/boards')).json() as {slug:string;subscriptionDisclosure:{version:number}}[]).find(row=>row.slug==='regression')!
- await action('/api/operator/boards/regression/vote-subscriptions',{enabled:true,version:board.subscriptionDisclosure.version},g.operator,'PUT')
+ const enabled=await (await action('/api/operator/boards/regression/vote-subscriptions',{enabled:true,version:board.subscriptionDisclosure.version},g.operator,'PUT')).json() as {version:number}
  const voter=await requester('Subscribed voter'),voterEmail=messages.at(-1)!.to
- await action(`/api/public/requests/${g.requests[0].slug}/vote`,{},voter)
+ await action(`/api/public/requests/${g.requests[0].slug}/vote`,{subscriptionVersion:enabled.version},voter)
+ await action(`/api/public/requests/${g.requests[0].slug}/vote`,{subscriptionVersion:enabled.version},g.person)
  expect(await (await call('/api/public/requester/weekly-summary',undefined,voter)).json()).toMatchObject({subscribed:true,origin:'vote'})
  await action('/api/operator/settings/weekly-summary',{enabled:true},g.operator,'PUT')
  for(const who of [g.person,control])await action('/api/public/requester/weekly-summary',{subscribed:true},who,'PATCH')
@@ -49,11 +50,14 @@ export async function proveWeeklySummary(){
  const digests=async()=>{const receipts=(await env.DB.prepare("SELECT provider_message_id FROM notification_outbox WHERE event_type='weekly_digest' AND delivery_state='accepted'").all<{provider_message_id:string}>()).results.map(row=>row.provider_message_id);return sent.filter(row=>receipts.includes(row.receipt))}
  await cron(end+2*3600000)
  expect(await digests()).toHaveLength(0)
+ const intents=async()=>(await env.DB.prepare('SELECT event_id,requester_id,address_id FROM notification_intents ORDER BY event_id,address_id').all()).results
+ const membership=await intents()
  await cron(clock);await cron(clock)
+ expect(await intents()).toEqual(membership)
  expect((await digests()).map(row=>row.email).sort()).toEqual([g.recipient.email,controlEmail,voterEmail].sort())
  for(const mail of await digests()){
   for(const body of ['Public weekly status','Public weekly operator reply','Approved weekly requester comment','Public weekly release wording'])expect(mail.text).toContain(body)
-  for(const hidden of ['synthetic-penny-private','Unfollowed request public change','Requester wording'])expect(mail.text).not.toContain(hidden)
+  for(const hidden of ['synthetic-penny-private','Unfollowed request public change','Requester wording','Private display','Renewal negotiation','4800000','Exporting removes repeated manual preparation.'])expect(mail.text).not.toContain(hidden)
   expect(mail.body.headers).toMatchObject({'List-Unsubscribe-Post':'List-Unsubscribe=One-Click'})
  }
  await cron(clock+7*86400000)
