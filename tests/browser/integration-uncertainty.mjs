@@ -35,14 +35,15 @@ export async function checkUncertainty({runtime,page,action,subject,capture,call
   const receipt=page.locator('li').filter({hasText:held.id}).filter({has:page.getByRole('button',{name:'Reconcile receipt',exact:true})})
   await receipt.getByRole('combobox',{name:'Confirmed outcome',exact:true}).selectOption(outcome)
   await receipt.getByLabel('Receipt evidence code',{exact:true}).fill('synthetic_known_receipt')
-  await capture(`uncertain-${outcome}`,page.locator('#destinations-heading'))
+  await capture(`uncertain-${outcome}`,page.locator('section[aria-labelledby="destinations-heading"]'))
   await receipt.getByRole('button',{name:'Reconcile receipt',exact:true}).click()
   await page.getByRole('status').filter({hasText:'Receipt reconciled.'}).waitFor()
   assert.equal((await read()).deliveries.find(row=>row.id===held.id)?.state,outcome,'[INT-003] explicit known receipt resolves the held effect')
   await runtime.restart();await runtime.schedule();await page.reload();await page.waitForLoadState('networkidle')
   assert.deepEqual({calls:calls.length,resolutions:await runtime.db.prepare('SELECT count(*) n FROM integration_resolutions WHERE delivery_id=?').bind(held.id).first('n'),state:(await read()).deliveries.find(row=>row.id===held.id)?.state},{calls:sent,resolutions:1,state:outcome},'[INT-003] terminal reconciliation survives another restart without resend')
   assert.equal(await page.getByRole('button',{name:'Reconcile receipt',exact:true}).count(),0,'[INT-003] resolved receipts cannot be reconciled again')
-  await capture(`reconciled-${outcome}`,page.locator('#destinations-heading'))
+  assert.match(await page.locator('section[aria-labelledby="destinations-heading"] li').filter({hasText:held.id}).first().innerText(),new RegExp('\\b'+outcome+'\\b'),'[INT-003] the terminal receipt is visible after reopen')
+  await capture(`reconciled-${outcome}`,page.locator('section[aria-labelledby="destinations-heading"]'))
  }
  const before=calls.length
  await action(`/api/operator/requests/${subject.slug}/status-updates`,{status:'planned',body:'synthetic-penny-revoked-before-send',idempotencyKey:crypto.randomUUID()})
