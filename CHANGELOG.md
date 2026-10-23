@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep requester participation closed during session refresh so immediate re-votes retain verified authority; scope learning spacing and prioritisation browser checks to their intended hydrated form content.
+
 - Keep operator form fields unavailable until their editing handlers attach, so hydration cannot discard an entered roadmap summary.
 
 - Close the phone's operator menu on navigation without competing with the browser's native details state.

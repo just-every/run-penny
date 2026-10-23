@@ -2868,7 +2868,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "5c89ebfb84a43d567fac07a907832762d034b9c64a1fa6d5cc5813c13e8df54d",
+      "sha256": "317f72e4f514aa8275e5e629965d39b33e9a0539254bc15a44dfec1ce5d325ee",
       "executable": false
     },
     "CLAUDE.md": {
@@ -6448,7 +6448,7 @@
       "executable": false
     },
     "src/core/features/requests/ui/requester-actions.tsx": {
-      "sha256": "5cd90a4858555ae461feabcae47f83071bc1b94cc4651785e0b58f8d964aed5d",
+      "sha256": "1ff1af6a8cb1a71e435ff6d293b3e682bc305ee7c26f5cbe89266c7af9262462",
       "executable": false
     },
     "src/core/features/requests/ui/requester-activity-page.tsx": {
