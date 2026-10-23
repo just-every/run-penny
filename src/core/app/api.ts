@@ -1,3 +1,4 @@
+import {registerBulkRoutes} from '@/core/features/triage/bulk-routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
 import {registerOAuthSettings} from '../features/auth/oauth-settings'
 import {registerOAuthRoutes} from '../features/auth/oauth-routes'
@@ -122,6 +123,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerOwnershipRoutes(app)
   registerDiscussionRoutes(app)
   registerTriageRoutes(app)
+  registerBulkRoutes(app)
   registerBoardSubscriptionRoutes(app)
   registerBrandingRoutes(app)
   registerFrameSettings(app)
