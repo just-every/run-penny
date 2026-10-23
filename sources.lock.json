@@ -3784,7 +3784,7 @@
       "executable": false
     },
     "scripts/install-ci-chromium.sh": {
-      "sha256": "58bc59649d522b95ae2430333fa78a9c54ada419d6f476d370712c352136fd7d",
+      "sha256": "17e9c5ffc08aa6f77ef8b7ada30249391acdc214116ece1002b9cae3361717f6",
       "executable": true
     },
     "scripts/installer/admission.mjs": {
