@@ -1,5 +1,4 @@
 import {MentionNotices} from '@/core/features/discussion/mention-notices'
-import {DataMaintenanceNotice} from '@/core/features/data/ui/maintenance-notice'
 import {WorkspaceClockPrompt} from '@/core/features/settings/ui/workspace-clock-settings'
 import {PostalAddressPrompt} from '@/core/features/settings/ui/postal-address-prompt'
 import { ReviewNotifications } from '@/core/features/notifications/ui/review-notifications'
@@ -93,7 +92,7 @@ export function OperatorAppShell() {
           </div>
         </div>
       </header>
-      <main id="operator-content" className="mx-auto w-full max-w-[1600px] px-4 pt-6 pb-12 sm:px-6 sm:pt-9 lg:ml-60 lg:w-[calc(100%_-_15rem)] lg:px-12 lg:pt-10"><DataMaintenanceNotice/><ReviewNotifications/><MentionNotices/><PostalAddressPrompt/><WorkspaceClockPrompt/><Outlet /></main>
+      <main id="operator-content" className="mx-auto w-full max-w-[1600px] px-4 pt-6 pb-12 sm:px-6 sm:pt-9 lg:ml-60 lg:w-[calc(100%_-_15rem)] lg:px-12 lg:pt-10"><ReviewNotifications/><MentionNotices/><PostalAddressPrompt/><WorkspaceClockPrompt/><Outlet /></main>
     </BrandRoot>
   )
 }

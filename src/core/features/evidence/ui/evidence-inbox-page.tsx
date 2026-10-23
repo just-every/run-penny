@@ -1,4 +1,5 @@
 import { EvidenceRecorder } from './evidence-actions'
+import {DataMaintenanceNotice} from '../../data/ui/maintenance-notice'
 import { MyQueue } from '../../ownership/ui/my-queue'
 import { ownershipChanged } from '../../ownership/ui/owner-control'
 import { useSearch } from '@tanstack/react-router'
@@ -16,6 +17,7 @@ export function EvidenceInboxPage() {
   function saved() { retry(); ownershipChanged() }
   return (
     <>
+      <DataMaintenanceNotice/>
       <OperatorPageHeader eyebrow="Evidence inbox" title="Review the evidence before it becomes a roadmap promise." art={empty || evidence.kind === 'error' ? null : { note: 'Real feedback builds better products.' }}>Every source remains attributed while the team links it to a decision or records its review reason.</OperatorPageHeader><ListControls page={page} entity="evidence"/>
       <MyQueue />
       <EvidenceRecorder onSaved={saved} />

@@ -4132,7 +4132,7 @@
       "executable": false
     },
     "src/core/app/operator-snapshot.server.ts": {
-      "sha256": "44efe01cc2897f01913ca04eb028ee8a7a4bd7705264545a093e073a70dd86ad",
+      "sha256": "ce428bf35893689008acbcc2e1fe879200030e92df29e4a55efbf7b495d55f1b",
       "executable": false
     },
     "src/core/app/path-parameters.ts": {
@@ -4180,7 +4180,7 @@
       "executable": false
     },
     "src/core/app/ui/operator-app-shell.tsx": {
-      "sha256": "842adcb3a62a7234be13b4a49180218cd5121b094acf33e4bc63a36351c19bb9",
+      "sha256": "8e335f1dc5d559a86a1e49c7f5c9798cf870c2bf7958e8b3efe486494b5bc911",
       "executable": false
     },
     "src/core/app/ui/operator-format.ts": {
@@ -5044,7 +5044,7 @@
       "executable": false
     },
     "src/core/features/evidence/ui/evidence-inbox-page.tsx": {
-      "sha256": "c16a45e171eb6f62a0bd3de5782ca4ba5a50c86cf3b4b69513e94e8cc451542a",
+      "sha256": "d6f9d8e56fb378b5e5b5e0e56935a77c73dc574fb364953bf3bea1a8e5cd25b5",
       "executable": false
     },
     "src/core/features/evidence/ui/evidence-suggestions.tsx": {
@@ -7788,7 +7788,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-hosted-data.mjs": {
-      "sha256": "273ddbaa1e67f9ec53a8992621efc2b44010ed25a3abe964ddbea8f389bc6c48",
+      "sha256": "e89e5efe619a02db6a3bd72dd4c2b46686bc3515575b1f7f31db3267984e6c4b",
       "executable": false
     },
     "tests/browser/operator-pages-status.mjs": {

@@ -136,6 +136,8 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     assert.equal(await db.prepare('SELECT lock_id FROM data_state').first('lock_id'),null,'[DATA-001] browser export releases source maintenance')
     assert.equal((await db.prepare("SELECT name FROM sqlite_master WHERE name LIKE 'rer_portability_snap_%'").all()).results.length,0,'[DATA-001] browser export removes source snapshots')
     await reads.stop();reads=null
+    await feedback.reload()
+    assert.equal(await feedback.getByRole('status').filter({hasText:'Data changes pause until you finish or abort the export.'}).count(),0,'Finished exports no longer show the pause notice on the next read')
     await capture('DATA-001-hosted-downloads',page,{...details,format:verified.manifest.format,pairedJournal:true,sourceCleanup:true})
 
     reads=monitorLockReads(runtime,cookie,'Download backup')
