@@ -8132,11 +8132,11 @@
       "executable": false
     },
     "tests/runtime/mail-kill-child.mjs": {
-      "sha256": "ab7578d718d443de56fa9195d34dd065c6173208ae88a6ea45f74db182b5ff6d",
+      "sha256": "fe0faa7a29f9b503381ae949535882884c309ee6e91e188ecd38e74c61a6949e",
       "executable": false
     },
     "tests/runtime/mail-kill-proof.mjs": {
-      "sha256": "b2fd09296d78e1bb65fd5fe8765c804d6d5110138d3e912e54db104f52eccd0a",
+      "sha256": "ebff2c081b53780260c1b3242e891faadd62a11e1ec3952487008f0511e06b34",
       "executable": false
     },
     "tsconfig.app.json": {

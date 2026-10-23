@@ -7,8 +7,8 @@ const {readD1Migrations}=await import('@cloudflare/vitest-plugin')
 const modules=[]
 for(const path of await readdir('dist/server',{recursive:true}))if(/\.(mjs|js)$/.test(path))modules.push({type:'ESModule',path:resolve('dist/server',path),contents:await readFile('dist/server/'+path,'utf8')})
 modules.sort((a,b)=>a.path.endsWith('/index.js')?-1:b.path.endsWith('/index.js')?1:0)
-const origin='https://penny.test',setup='synthetic-penny-kill-setup-token-long-enough'
-const mf=new Miniflare(convertV4MiniflareOptions({modules,modulesRoot:resolve('dist/server'),cf:false,compatibilityDate:'2026-08-31',compatibilityFlags:['nodejs_compat'],resourcePersistencePath:process.env.PENNY_MAIL_KILL_STATE,d1Databases:{DB:'kill-mail'},r2Buckets:{FILES:'files'},queueProducers:{JOBS:'jobs'},bindings:{PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,AUTH_SECRET:'synthetic-penny-kill-auth-secret-long-enough',SETUP_TOKEN:setup,OPERATOR_EMAIL:'owner@penny.invalid',MAIL_PROVIDER:'sendgrid',MAIL_API_KEY:'synthetic-penny-mail-key',MAIL_FROM:'penny@example.test'},outboundService:async request=>{
+const port=Number(process.env.PENNY_MAIL_KILL_PORT),origin=`https://127.0.0.1:${port}`,setup='synthetic-penny-kill-setup-token-long-enough'
+const mf=new Miniflare(convertV4MiniflareOptions({modules,modulesRoot:resolve('dist/server'),cf:false,https:true,host:'127.0.0.1',port,compatibilityDate:'2026-08-31',compatibilityFlags:['nodejs_compat'],resourcePersistencePath:process.env.PENNY_MAIL_KILL_STATE,d1Databases:{DB:'kill-mail'},r2Buckets:{FILES:'files'},queueProducers:{JOBS:'jobs'},bindings:{PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,AUTH_SECRET:'synthetic-penny-kill-auth-secret-long-enough',SETUP_TOKEN:setup,OPERATOR_EMAIL:'owner@penny.invalid',MAIL_PROVIDER:'sendgrid',MAIL_API_KEY:'synthetic-penny-mail-key',MAIL_FROM:'penny@example.test'},outboundService:async request=>{
  if(request.url!=='https://api.sendgrid.com/v3/mail/send')throw new Error('Unexpected network destination')
  const body=await request.json()
  process.send({kind:'provider',recipient:body.personalizations[0].to[0].email,text:body.content.find(item=>item.type==='text/plain').value})

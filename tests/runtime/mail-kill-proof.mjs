@@ -1,3 +1,4 @@
+import {freshLocalPort} from '../browser/fresh-local-port.mjs'
 import assert from 'node:assert/strict'
 import {fork} from 'node:child_process'
 import {mkdtemp,rm} from 'node:fs/promises'
@@ -6,12 +7,12 @@ import {join} from 'node:path'
 
 /** Kill the owned Worker group after its durable claim and one accepted edge effect. */
 export async function proveKilledMail(){
- const state=await mkdtemp(join(tmpdir(),'penny-mail-kill-')),messages=[]
+ const state=await mkdtemp(join(tmpdir(),'penny-mail-kill-')),port=await freshLocalPort(),messages=[]
  let child,sequence=0,pending=new Map(),ready,provider
  function start(){
   let markReady,markProvider,rejectReady
   ready=new Promise((resolve,reject)=>{markReady=resolve;rejectReady=reject});provider=new Promise(resolve=>{markProvider=resolve})
-  child=fork(new URL('./mail-kill-child.mjs',import.meta.url),[],{env:{...process.env,PENNY_MAIL_KILL_STATE:state},execArgv:[],detached:true,stdio:['ignore','inherit','inherit','ipc']})
+  child=fork(new URL('./mail-kill-child.mjs',import.meta.url),[],{env:{...process.env,PENNY_MAIL_KILL_STATE:state,PENNY_MAIL_KILL_PORT:String(port)},execArgv:[],detached:true,stdio:['ignore','inherit','inherit','ipc']})
   console.log(`Owned mail runtime PID=${child.pid}`)
   child.on('message',message=>{
    if(message.kind==='ready')markReady()
