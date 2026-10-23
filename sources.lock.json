@@ -7687,8 +7687,16 @@
       "sha256": "ca9942a45f8e5c47f9cfdf0681e28f953a0fc4b7fd5a193767157dbbc02839bb",
       "executable": false
     },
+    "tests/browser/integration-tracker-actions.mjs": {
+      "sha256": "e8599f5acb17a541a17bbbecfe7b4d06da5680ff6547631ff5eb1a0edb880949",
+      "executable": false
+    },
     "tests/browser/integration-tracker-checks.mjs": {
       "sha256": "248d0c50330c3d8796e3c10122854a68fa5ebfda8e9bab7c15d8c295f1c429b0",
+      "executable": false
+    },
+    "tests/browser/integration-tracker-edge.mjs": {
+      "sha256": "5a3ad9cd98de6344557857f00361e6d43a0f27a2eed3828d3394e9c3cb61b03c",
       "executable": false
     },
     "tests/browser/integration-uncertainty.mjs": {
