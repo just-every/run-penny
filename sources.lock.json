@@ -7356,7 +7356,7 @@
       "executable": false
     },
     "tests/base/integration-effects.ts": {
-      "sha256": "76204d980021b4f36c0291ff7f02e1a1abc5bb493f2b264f8c7f602177ccdbc0",
+      "sha256": "923bad3ff7c071e885c3905686249125ca9a93d7b24f9fdc7f3cd50cb79cf11c",
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {
