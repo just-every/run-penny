@@ -627,7 +627,7 @@ Payroll, general project/work management and monitoring/observability stay outsi
 
 ## Status
 
-Judged from the code and tests at commit `1b2a2021c7d11d738031ff20497021cd72897996` (22 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
+Judged from the code and tests at commit `090b1389eea71ea019998a94731366a2d1aadba0` (23 October 2026). The reconciliation includes the shipped demand-attribution and public-ETA changes, reviewed saved-Canny custom statuses and status-roadmap reconstruction; live Canny API acquisition remains MIG-001’s requirement. REQ-025 was completed on 19 October 2026: requester activity includes the REL-012 updates-subscription control, with preserved contributions and both-width browser proof.
 
 AI-008 is partial on 22 October 2026: deterministic owner rules mark supported captures before storage, preserve marked text through D1 search and portable export/restore, and provide audited, previewed irreversible evidence-wording reapplication. Migration 0090 upgrades populated previous-head data without rewriting it. The first untuned redaction-v1 run on 210 synthetic excerpts measured precision and recall of 1.00 for each default kind. Rule settings and marked items have 1440/390 browser proof. This is a deterministic rule-only implementation; optional model detection is not built and AI-010 is unchanged. Binary attachments are not rewritten. Operator evidence, CAP-009 email capture and native portal submission use guarded before-storage rules. AI-011 remains missing and inherits extending the minimal redaction-v1 runner. Gap: saved-import originals and learning source envelopes are not redacted before storage. Explicit reapplication currently covers at most 200 evidence wording versions, not every stored transcript or copied request field; larger stores need paged reapplication. The full before-storage and reapplication promises remain open.
 
@@ -673,9 +673,9 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 99 | 15 | 0 | 114 |
+| Published | 100 | 14 | 0 | 114 |
 | Target and push further | 20 | 45 | 68 | 133 |
-| All | 119 | 60 | 68 | 247 |
+| All | 120 | 59 | 68 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -780,7 +780,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REQ-026` | Demand attribution | published | done | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` |  |
 | `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` (line 58) |  |
 | `REQ-028` | Request queue | published | partial | `tests/browser/operator-completeness-read.mjs` | Queue filters and sorts work; the 500 ms first page at declared capacity is not load-tested. |
-| `REQ-029` | Operator-authored request | published | partial | `tests/browser/operator-evidence-flow.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health | Gap: Skipping requester moderation and the complete explicit-publication transition lack passing assertions. |
+| `REQ-029` | Operator-authored request | published | done | `tests/base/operator-request-publication.ts` — proveOperatorPublication in `tests/base/penny-evidence.test.ts` (captures source provenance, push Verify base shards): one/several evidence links, operator authorship, no held requester submission, private-before/approved-after fields and private-evidence exclusion; `tests/browser/operator-evidence-flow.mjs` via `tests/browser/operator-pages.mjs` CORE — explicit publication and public detail at 1440/390, push Verify loop-health | — |
 | `REQ-030` | Moderation verdicts | published | done | `tests/base/notifications.test.ts` (line 279) |  |
 | `REQ-031` | Host identity claims | published | done | `tests/base/host-identity.test.ts` |  |
 | `REQ-032` | Internal notes | published | done | `tests/base/penny-evidence.test.ts` (line 157) |  |

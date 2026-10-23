@@ -578,7 +578,7 @@ landing, and none of this is hosted proof.
 
 ## Target contract acceptance (18 October 2026)
 
-Judged from the code and tests at commit `1b2a2021c7d11d738031ff20497021cd72897996` (22 October 2026).
+Judged from the code and tests at commit `090b1389eea71ea019998a94731366a2d1aadba0` (23 October 2026).
 
 CONTRACT.md is now Penny's target contract. Every clause's acceptance evidence and status below agree with CONTRACT.md's Status table, reconciled against main `e3292a8a87bc48a4f6981ffd3e241d76b44afc2e` (21 October 2026). The first buyer review (round 1) added OPS-007, CAP-019–CAP-022, WIDGET-007, AI-011, REQ-033–REQ-035, PRIO-006, DELIV-009, DELIV-010, NOTIFY-008–NOTIFY-010 and MIG-007 and sharpened the rows it names. The second buyer review (round 2) added OPS-008, REQ-036, REQ-037, ROAD-014, REL-018, NOTIFY-011 and NOTIFY-012, added OPS-005's timezone step, and sharpened REQ-016, PRIO-002, TRIAGE-002, ROAD-006, REL-001, REL-002, NOTIFY-001, NOTIFY-002 and MIG-001. The third buyer review (round 3) added WIDGET-008, REQ-038–REQ-040 and NOTIFY-013, expanded INT-007 to the full portal brand, and sharpened OPS-001, OPS-005, ROLE-004, WIDGET-002, WIDGET-006, REQ-033, REQ-012, ROAD-014, TRIAGE-005, NOTIFY-008, NOTIFY-009, NOTIFY-011 and MIG-006. `done` names the passing test through a public door; `partial` and `missing` name the journey or test that would close the clause. Provider fixtures stand only at the paid or network edge, and a replacement claim for any incumbent still requires a tested real owner export. This section adds requirements; it does not reopen the bounded receipts above.
 
@@ -586,7 +586,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 
 REL-014 adds operator-scheduled releases and ROAD-008 status updates with a retained UTC instant and entered IANA timezone, cancellation, current publication checks, scheduler audit and durable in-app author notices on failure. Clock-advanced Worker proof and the 1440/390 browser controls are named below; hosted Cron execution and inbox delivery still need their own receipts. REL-018 inherits the scheduling, cancellation and failure behavior for announcements and request targets when those entry types ship, and remains missing.
 
-**Counts:** 119 done, 60 partial, 68 missing (247 clauses).
+**Counts:** 120 done, 59 partial, 68 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -691,7 +691,7 @@ REL-014 adds operator-scheduled releases and ROAD-008 status updates with a reta
 | REQ-026 | done | Separate voter, evidence and distinct-account counts; account vote breakdown; every verified address/account association; complete supporter history including native and historical proxy marks, initially 50 people with Show more revealing 50 more at a time and no 100-person cap. Routes and 1440/390 browser journeys cover multiple addresses/accounts, evidence-only accounts, vote removal, blocking and public privacy. Native proxy recording ships from the inbox, request page and Zendesk edge (CAP-014). The demand payload holds exactly the three figures and no score. SEG-007 inherits the ARR/MRR, opportunity and churn value figures shown beside these counts. | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` |
 | REQ-027 | done | Framing allowed only from allow-listed origins. | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts:58` |
 | REQ-028 | partial | Queue filters and sorts work; the 500 ms first page at declared capacity is not load-tested. | `tests/browser/operator-completeness-read.mjs` |
-| REQ-029 | partial | Native creation from evidence preserves operator authorship and evidence links and remains unpublished. Gap: skipping requester moderation and the complete explicit-publication transition lack passing assertions. | `tests/browser/operator-evidence-flow.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health |
+| REQ-029 | done | One and several evidence sources retain operator authorship and all links without a requester submission hold. Explicit public-wording approval publishes only approved fields; original evidence stays private. The existing CORE journey asserts the publication and public detail at 1440/390. | `tests/base/operator-request-publication.ts` — proveOperatorPublication in `tests/base/penny-evidence.test.ts` (captures source provenance, push Verify base shards): one/several evidence links, operator authorship, no held requester submission, private-before/approved-after fields and private-evidence exclusion; `tests/browser/operator-evidence-flow.mjs` via `tests/browser/operator-pages.mjs` CORE — explicit publication and public detail at 1440/390, push Verify loop-health |
 | REQ-030 | done | Approve, edit-then-approve and reject with optional private notice. | `tests/base/notifications.test.ts:279` |
 | REQ-031 | done | Host claims verify the address and link the account; commercial fields stay private. | `tests/base/host-identity.test.ts` |
 | REQ-032 | done | Internal notes never appear in public payloads or mail. | `tests/base/penny-evidence.test.ts:157` |
