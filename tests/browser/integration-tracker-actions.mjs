@@ -40,25 +40,25 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    assert.equal(edge.calls.at(-1).id,command.id,'[INT-005] outbound create uses its durable command identity')
    const state=()=>runtime.db.prepare('SELECT state FROM integration_deliveries WHERE id=?').bind(command.id).first('state')
    assert.equal(await state(),unknown?'uncertain':'accepted','[INT-005] provider outcome is durably retained')
-   await runtime.restart();await runtime.schedule();await visit()
+   await page.waitForLoadState('networkidle');await runtime.restart();await runtime.schedule();await visit()
    assert.equal(edge.calls.length,before+1,'[INT-005] restart and Cron never duplicate the create')
    if(unknown){
     const receipt=panel.locator('li').filter({has:page.getByRole('button',{name:'Reconcile known issue',exact:true})})
     const known={...selected,connectionId:connection.id,externalId:provider==='linear'?crypto.randomUUID():'10044',url:provider==='linear'?'https://linear.app/penny/issue/PEN-44/known-outcome':'https://penny-fixture.atlassian.net/browse/PEN-44'}
     await receipt.getByLabel('Known issue ID',{exact:true}).fill(known.externalId)
     await receipt.getByLabel('Known issue HTTPS URL',{exact:true}).fill(known.url)
-    await capture(`tracker-${provider}-${kind}-uncertain`,panel)
+    await capture(`tracker-${provider}-${kind}-uncertain`,kind==='request'?form.locator('..'):panel)
     await receipt.getByRole('button',{name:'Reconcile known issue',exact:true}).click();await panel.getByText('Known issue reconciled. No new create was sent.',{exact:true}).waitFor()
     const repeat=await action(`/api/operator/integrations/trackers/commands/${command.id}/reconcile`,known)
     assert.equal(repeat.id,await runtime.db.prepare('SELECT link_id FROM penny_tracker_commands WHERE id=?').bind(command.id).first('link_id'),'[INT-005] repeating a known reconciliation returns the same issue link')
-    await runtime.restart();await runtime.schedule();await visit()
+    await page.waitForLoadState('networkidle');await runtime.restart();await runtime.schedule();await visit()
     assert.deepEqual({state:await state(),resolutions:await runtime.db.prepare('SELECT count(*) n FROM integration_resolutions WHERE delivery_id=?').bind(command.id).first('n'),calls:edge.calls.length},{state:'accepted',resolutions:1,calls:before+1},'[INT-005] explicit reconciliation resolves exactly once without another create')
     assert.equal(await panel.getByRole('button',{name:'Reconcile known issue',exact:true}).count(),0,'[INT-005] resolved commands no longer offer reconciliation')
    }else{
     assert.ok(await runtime.db.prepare('SELECT 1 FROM penny_tracker_links WHERE id=? AND state=\'created\'').bind(command.link_id??(await runtime.db.prepare('SELECT link_id FROM penny_tracker_commands WHERE id=?').bind(command.id).first('link_id'))).first(),'[INT-005] accepted create links its returned issue')
    }
-   await capture(`tracker-${provider}-${kind}-${unknown?'reconciled':'created'}`,panel)
+   await capture(`tracker-${provider}-${kind}-${unknown?'reconciled':'created'}`,kind==='request'?form.locator('..'):panel)
   }
  }
- return 16
+ return 12
 }

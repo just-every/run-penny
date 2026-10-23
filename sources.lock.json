@@ -7688,7 +7688,7 @@
       "executable": false
     },
     "tests/browser/integration-tracker-actions.mjs": {
-      "sha256": "71afb1b3acc16965bcedd2ab78e535950a76f0fd187a2365cad69b7108fbf167",
+      "sha256": "d9b51f8fca8e5d298eb4a8f525485c0f075b7d77aa82ba09e87e5b3eb0433821",
       "executable": false
     },
     "tests/browser/integration-tracker-checks.mjs": {
