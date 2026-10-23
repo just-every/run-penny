@@ -7612,7 +7612,7 @@
       "executable": false
     },
     "tests/base/weekly-summary-flow.ts": {
-      "sha256": "c981c31f6cee71addb76a9671f6afc59f13d5ed13144afb105d2212299194e58",
+      "sha256": "85f84afae953f82cc32801d3abf340e36eba09b0cf34d6af253b4e0fdf521c12",
       "executable": false
     },
     "tests/base/weekly-summary-portability.ts": {
@@ -7620,7 +7620,7 @@
       "executable": false
     },
     "tests/base/weekly-summary-release.ts": {
-      "sha256": "a4975aabca2b1f34a2735649eb6d9b5aa8b249335f42aa520fa6385e679163d0",
+      "sha256": "2321b92a63d083f52c769e6311ec3a45c4819daa77e94175065aa42d70ee1d42",
       "executable": false
     },
     "tests/base/worker-environment.d.ts": {
