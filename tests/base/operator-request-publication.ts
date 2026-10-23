@@ -1,6 +1,6 @@
 import {expect} from 'vitest'
 
-type Call=(path:string,body?:unknown,headers?:Record<string,string>,method?:string)=>Promise<Response>
+type Call=(path:string,body?:unknown,headers?:Record<string,string>,method?:string)=>Response|Promise<Response>
 /** Create through the two shipped doors; publication approves only safe fields. */
 export async function proveOperatorPublication(call:Call,db:D1Database,operator:Record<string,string>,evidenceIds:string[],actor:string){
  for(const ids of [evidenceIds.slice(0,1),evidenceIds]){
