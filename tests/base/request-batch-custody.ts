@@ -2,7 +2,7 @@ import {expect} from 'vitest'
 import type {Archive} from '../../src/core/features/data/archive'
 import {call,env} from './support'
 import type {Cookie} from './ownership-fixture'
-export function assertBatchArchive(archive:Archive,id:string){
+export async function assertBatchArchive(archive:Archive,id:string){
  expect(archive.tables.penny_request_batches.find(row=>row.id===id)?.held).toBe(1)
  expect(archive.tables.penny_request_batch_items).toHaveLength(1)
 }
