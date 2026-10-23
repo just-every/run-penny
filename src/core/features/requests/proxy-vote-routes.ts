@@ -2,8 +2,8 @@ import type { Hono } from 'hono'
 import { z } from 'zod'
 import { mutationFailure,parseMutationBody,requireOperator,type OperatorMutationEnvironment } from '@/core/app/operator-mutations'
 import { decisionDatabase } from '../decisions/authority'
-import { proxyVoteSchema,recordProxyVote,nativeProxyPredicate,proxyContacts } from './proxy-votes'
-import { proxyVotesCsv } from './proxy-votes-csv'
+import { proxyVoteSchema,recordProxyVote,proxyContacts } from './proxy-votes'
+import {ownerCsv} from '../data/csv-routes'
 export function registerProxyVoteRoutes(app:Hono<OperatorMutationEnvironment>){
  app.get('/api/operator/proxy-votes/contacts',async c=>{
   if(!await requireOperator(c))return c.json({authenticated:false},401)
@@ -14,7 +14,7 @@ export function registerProxyVoteRoutes(app:Hono<OperatorMutationEnvironment>){
  })
  app.get('/api/operator/votes/export.csv',async c=>{
   if(!await requireOperator(c))return c.json({authenticated:false},401)
-  try{return await proxyVotesCsv(await decisionDatabase(c.get('runtime'),c.req.raw),nativeProxyPredicate())}catch(error){return mutationFailure(c,error)}
+  try{return await ownerCsv(c.get('runtime'),c.req.raw,'voters')}catch(error){return mutationFailure(c,error)}
  })
  app.post('/api/operator/requests/:slug/proxy-votes',async c=>{
   const actor=await requireOperator(c);if(!actor)return c.json({authenticated:false},401)
