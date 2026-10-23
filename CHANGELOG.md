@@ -2,20 +2,30 @@
 
 ## Unreleased
 
-- Close the phone's operator menu on navigation without competing with the browser's native details state.
+## 0.2.2 — 2026-10-23
 
-- Run signed integration receipts and requester repair in push Verify, and make the scrollable receiver example keyboard accessible.
+**Fix: on RER Managed, GET /app/feedback no longer fails while a workspace export or backup holds the data lock; the pause notice is scoped to feedback and clears when the export is finished or aborted.**
 
-- Load operator provenance, evidence review, overview and roadmap checks in push Verify, with the seven-entity private custom-field matrix in its own short shard.
+**Export workspace** and **Download backup** on the Data page hold the data lock until the export is finished or aborted. In Penny 0.2.1, while it was held, the operator Feedback page (`/app/feedback`) failed with a server error on most reads during an export and on some during a backup. Its server snapshot read decisions, integration destinations and API key metadata through the write guard, which requires the workspace to be idle. Operator reads now run in a read-only transaction that checks the operator's current authority without that requirement and refuses every write, so Feedback and the other operator pages stay readable during an export while data changes still pause. The notice "Data changes pause until you finish or abort the export." is server-rendered on the Feedback page only and is gone on the first read after **Finish export** or **Abort export**. This fix needs no migration and no configuration.
 
-- Load route review in push Verify, keep browser journeys on the pinned headless shell, and consolidate commitment validation to a 246-registration ceiling.
-- Wrap long linked account names and release-planning item labels within operator cards at phone widths.
+Also in 0.2.2, everything on main since 0.2.1 (migrations 0088–0091, all additive; RELEASE.json lists each with its steps):
 
-- Retain the admitted email forwarder in portable evidence provenance and label body attribution as stated in the forward; accept structured threaded forwards while refusing notification replies.
-- Link approved roadmap items to their published releases on cards and detail pages.
-- Separate simulated requester/operator client addresses, remove retired journey modules, and reconcile clause status with assertions loaded by verification.
+- Email capture (CAP-009; migrations 0088 and 0091): save a dedicated capture address and an exact sender-domain allowlist under **Feedback settings → Email identity and postal address**, then route that address to the Worker with Cloudflare Email Routing (`docs/EMAIL.md`). Mail from current operators or allowlisted domains with aligned DMARC becomes one inbox item per Message-ID. A forwarded Gmail or Outlook message is attributed to its original sender ("Sender stated in forward") with the admitted forwarder kept as provenance ("Forwarded by …"); a direct or BCC copy is attributed to the admitted sender and marked not forwarded. Replays, unaligned senders, HTML-only mail, notification replies and mail from Penny's own senders or reply-to create nothing and keep only reason counts, and Message-ID digests outlast erasure so a replay cannot recreate an item. Hosted Email Routing and live mail acceptance are not yet run.
+- Requester Google and GitHub sign-in (REQ-039; migration 0089): turn on **Continue with Google** or **Continue with GitHub** under **Feedback settings → Requester social sign-in** (both off by default) after configuring the client bindings and egress service in `docs/PORTAL.md`. A provider-verified address signs the requester in with the same browser-local session as the emailed link, sets no cookie and applies the held vote, follow, comment or submission. Google is trusted only for Gmail addresses and a Workspace account's own domain; any other address gets the emailed link. Real provider consent and hosted redirects are not yet run.
+- Sensitive-data redaction, partial (AI-008; migration 0090): owner-enabled deterministic rules for US Social Security and payment card numbers, phone numbers, email addresses, credential shapes and custom patterns redact operator evidence, captured email and new portal submissions before storage, with stable markers; an owner-confirmed reapplication covers up to 200 stored evidence wording versions. Model detection, saved-import originals, learning source envelopes and binary attachments are not redacted.
+- Evidence summaries and reply drafts (AI-006): **Evidence summary** on a request, decision or account and **Reply draft** on a comment or inbox item produce editable, cited drafts under the AI-010 model, budget and privacy settings. Citations are resolved again against records the operator can see and unknown ones are dropped with a notice; private values are flagged and checked again when the operator posts the edited reply as a public comment. Drafts never send themselves.
+- Approved roadmap items link to their published releases on public roadmap cards and detail pages.
+- Operator loop forms, moderation decisions, held items and appeals stay disabled until the page has loaded, so an early click can no longer submit a form natively and put its wording in the page address.
+- The phone operator menu closes when you navigate, long account and release-planning item names wrap within their cards, and the scrollable signed-note example in the integrations receiver guide takes keyboard focus.
+- Requester attachments are held to the per-request upload total, counting uploads still in progress, before any bytes are stored. An integration API key this installation never issued is refused before any usage is recorded. Publishing a status update version that is already published is refused.
+- Acceptance records: CAP-009, REQ-039 and AI-006 are done against provider-edge fixtures and AI-008 is partial. HOME-001, DOCS-001, REQ-020, INT-001, INT-003 and INT-005 are now recorded as partial, with their remaining gaps named in CONTRACT.md; their behaviour did not change. Push verification loads the route review, signed-integration, requester-repair, operator-provenance and custom-field journeys in short shards within the 246-test ceiling.
+- New dependency: postal-mime 4.1.3, for parsing captured mail. Uses rer 0.2.77; recorded Base copies are unchanged.
 
-- AI-006: editable cited summaries for requests, decisions and accounts, plus comment/inbox reply drafts. Unknown citations are dropped with a notice; private values are flagged and checked again on explicit publication through the existing comment path. Drafts never send themselves.
+Update the source and run `rer install` then `rer setup`, which applies migrations 0088–0091 in order; hosted installations use `rer deploy`. Nothing needs reconfiguring: email capture, social sign-in and redaction stay off until the owner configures them.
+
+Known issues: local `rer setup` and `rer dev` still migrate with Wrangler, so a local database carrying Platform's migration ledger is supported for backup and restore only, not for local development. SendGrid has no provider duplicate suppression; ambiguous sends remain held for review. Hosted Email Routing for capture, real Google and GitHub consent, live Canny/UserVoice/Zendesk provider acceptance and whole-product acceptance beyond the core loop remain unproved.
+
+Product screenshot: `public/brand/releases/penny-0.2.2-1440.png` (the public updates page at 1440, from this version's core loop).
 
 ## 0.2.1 — 2026-10-21
 

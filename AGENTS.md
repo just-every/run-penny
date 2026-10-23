@@ -62,7 +62,7 @@ must not be represented as shipped merely because related tables exist.
 
 Read CONTRACT.md, BASELINE.md, ACCEPTANCE.md, HANDOVER.md, OPERATIONS.md and the
 package scripts before changing behavior. The public source repository is
-https://github.com/just-every/run-penny, version 0.2.1 (tag `v0.2.1`). Keep source
+https://github.com/just-every/run-penny, version 0.2.2 (tag `v0.2.2`). Keep source
 custody records truthful and preserve all repository history and existing tags.
 
 ## Runtime and trust boundaries
