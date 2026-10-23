@@ -1,3 +1,4 @@
+import { proveRequestBatches } from './request-batches'
 import { applyD1Migrations, reset } from 'cloudflare:test'
 import { afterEach, beforeEach, expect, inject, it, vi } from 'vitest'
 import { createPennyApi } from '../../src/core/app/api'
@@ -17,7 +18,7 @@ async function setup() {
 }
 const ownerOf = (entity: string, id: string, cookie: Cookie) => good<{ owner: ItemOwner | null }>(`/api/operator/ownership/${entity}/${id}`, undefined, cookie)
 
-it('[TRIAGE-001] upgrades populated records without granting an owner, captures the current board default, and moves only assigned work between native operator queues', async () => {
+it('[TRIAGE-001 TRIAGE-005] upgrades populated records without granting an owner, captures the current board default, and moves only assigned work between native operator queues', async () => {
  const migrations = inject('migrations') as { name: string }[], previousHead = migrations.slice(0, migrations.findIndex(migration => migration.name.startsWith('0073_')))
  await applyD1Migrations(env.DB, previousHead as never)
  const cookie = await owner()
@@ -68,6 +69,7 @@ it('[TRIAGE-001] upgrades populated records without granting an owner, captures 
  expect((await ownerOf('evidence', inactive.evidence.id, cookie)).owner).toBeNull()
  expect((await call('/api/operator/ownership/queue', undefined, other.cookie)).status).toBe(401)
  await assign('boards', 'owned-feedback', null, cookie)
+ await proveRequestBatches()
 })
 
 it('[TRIAGE-001] requester comments follow the request owner, require review before handling and reappear for a new owner', async () => {
@@ -128,10 +130,13 @@ it('[TRIAGE-001][DATA-001][DATA-003] archives retain private assignment history 
  const { cookie, self } = await setup()
  await assign('boards', 'owned-feedback', self.id, cookie)
  const { request, evidence } = await capture(cookie, 'owned-feedback')
+ const batch = await good<{id:string}>('/api/operator/triage/batches',{requestIds:[request.id],operatorId:self.id},cookie,'POST',201)
  const portable = await good<{ archive: Archive; journal: ErasureJournal }>('/api/operator/data/export', undefined, cookie)
  expect(portable.archive.tables.penny_request_owners.find(row => row.request_id === request.id)?.operator_id).toBe(self.id)
  expect(portable.archive.tables.penny_evidence_owners.find(row => row.evidence_id === evidence.id)?.operator_id).toBe(self.id)
  expect(portable.archive.tables).not.toHaveProperty('penny_ownership_guards')
+ expect(portable.archive.tables.penny_request_batches.find(row=>row.id===batch.id)?.held).toBe(1)
+ expect(portable.archive.tables.penny_request_batch_items).toHaveLength(1)
  await reset(); await applyD1Migrations(env.DB, inject('migrations'))
  const restored = await owner()
  let result = await good<{ status: string; operationId: string }>('/api/operator/data/import', portable, restored, 'POST', [200, 202])
@@ -141,6 +146,7 @@ it('[TRIAGE-001][DATA-001][DATA-003] archives retain private assignment history 
   result = await response.json() as typeof result
  }
  expect(result.status).toBe('complete')
+ expect((await call(`/api/operator/triage/batches/${batch.id}/undo`,{},restored)).status).toBe(409)
  expect((await ownerOf('requests', request.slug, restored)).owner?.id).toBe(self.id)
  expect((await ownerOf('evidence', evidence.id, restored)).owner?.id).toBe(self.id)
  expect((await queue(restored)).requests.map(row => row.id)).toEqual([request.id])
@@ -161,5 +167,8 @@ it('[TRIAGE-001][DATA-001][DATA-003] archives retain private assignment history 
  expect(retained?.active).toBe(false);expect(retained?.displayName).not.toBe(formerName)
  const anonymized=await good<{archive:Archive}>('/api/operator/data/export',undefined,restored)
  expect(JSON.stringify(anonymized.archive)).not.toContain('assigned-peer@example.test')
+ const requestTarget={table:'requests',id:request.id},requestPreview=await good<{planHash:string}>('/api/operator/data/erasure/preview',requestTarget,restored)
+ await good('/api/operator/data/erasure',{...requestTarget,planHash:requestPreview.planHash},restored)
+ expect(await env.DB.prepare('SELECT count(*) n FROM penny_request_batch_items WHERE request_id=?').bind(request.id).first('n')).toBe(0)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

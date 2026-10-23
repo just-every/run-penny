@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path'
 import { chromium } from '@playwright/test'
 import { browserOptions } from './browser-options.mjs'
 import { startBrowserRuntime } from './base-runtime.mjs'
+import { proveBulkActions } from './triage-bulk.mjs'
 import { finishFirstRun } from './local-signin.mjs'
 
 const output = resolve(process.env.PENNY_EVIDENCE ?? '../evidence/triage-ownership')
@@ -132,6 +133,7 @@ try {
    await page.locator(`#evidence-${evidenceId}`).getByRole('status').filter({ hasText: 'Owner saved.' }).waitFor()
    await peerPage.reload(); await peerQueue.getByRole('heading', { name: 'Evidence (0)', exact: true }).waitFor()
    await audit(peerPage, 'unassigned-leaves-own-queue', { detail: peerQueue })
+   await proveBulkActions({ page, runtime, viewport: width, inspect: audit })
    assert.deepEqual(errors, []); assert.deepEqual(external, [])
   } finally {
    for (const context of contexts.reverse()) await context.close()

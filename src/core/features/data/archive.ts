@@ -96,6 +96,7 @@ function limits(data:Record<string,Row[]>):void{
  if(Object.values(data).reduce((n,items)=>n+items.length,0)>DATA_LIMITS.rows||new TextEncoder().encode(canonical(data)).byteLength>DATA_LIMITS.recordBytes)fail('archive_limit',413)
 }
 export const normalize=(name:string,row:Row):Row=>{
+ if(name==='penny_request_batches')return {...row,held:1}
  if(name==='penny_weekly_publications')return {...row,held:1}
  if(name==='penny_weekly_summary')return {...row,enabled:0}
  if(name==='penny_weekly_choices')return {...row,subscribed:0,revoked_at:row.revoked_at??'1970-01-01T00:00:00.000Z'}
