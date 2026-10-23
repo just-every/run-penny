@@ -4556,7 +4556,7 @@
       "executable": false
     },
     "src/core/features/data/csv.ts": {
-      "sha256": "41aa958c4acff0e05bc39e01fd9d2f19e420912f46c8ed88a27d47ca3df7a211",
+      "sha256": "ecbb589ebd615a12ff412e38262db1e168042bf2d78b6c7c877a123407fa61fc",
       "executable": false
     },
     "src/core/features/data/erasure-copy-places.ts": {
@@ -7260,7 +7260,7 @@
       "executable": false
     },
     "tests/base/csv-export-proof.ts": {
-      "sha256": "3152a88d775b0dc0e39b9ead5424be0fa8ee2af26196ea5dea16d004dbfcf358",
+      "sha256": "6968469ea7ebc78d5a107e066c66cbecef159a0a73bfed6d68f8c79be48d02c4",
       "executable": false
     },
     "tests/base/custody.test.ts": {
@@ -7480,7 +7480,7 @@
       "executable": false
     },
     "tests/base/proxy-votes.test.ts": {
-      "sha256": "3fee3cce1b0a5d56e755a471f521a2b0d476f6ae76ba7f32389d9f33b6b604a3",
+      "sha256": "f7445309d179f620577fae2ec1a50dd2e773357ea664685bfa5bc92d0e23dc85",
       "executable": false
     },
     "tests/base/redaction-fixture.ts": {

@@ -26,7 +26,7 @@ it('[CAP-014 REQ-026 REQ-010] records inbox-sourced customer demand once, withou
  const publicBody=await(await call(`/api/public/requests/${r.slug}`)).text()
  for(const secret of ['Casey Bell','casey@example.test','738','recorderId','proxyAttributionsJson'])expect(publicBody).not.toContain(secret)
  const csv=await call('/api/operator/votes/export.csv',undefined,g.operator)
- expect(csv.status).toBe(200);const csvText=await csv.text();expect(csvText).toContain(vote.requesterId);expect(csvText).toContain('Casey Bell');expect(csvText).not.toContain('casey@example.test')
+ expect(csv.status).toBe(200);const csvText=await csv.text();expect(csvText).toContain(vote.requesterId);expect(csvText).toContain('Casey Bell');expect(csvText).not.toContain('casey@example.test');expect(csvText).toContain((await env.DB.prepare('SELECT display_name FROM operators ORDER BY id LIMIT 1').first<string>('display_name'))!)
  expect((await call('/api/public/identity/email',{email:'casey@example.test',displayName:'Casey Bell'})).status).toBe(202)
  const token=new URLSearchParams(new URL(messages.findLast(m=>m.to==='casey@example.test')!.url).hash.slice(1)).get('token')
  const verified=await json<{token:string}>('/api/public/identity/email/verify',{token},{})

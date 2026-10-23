@@ -27,6 +27,8 @@ export async function proveCsvExports(call:Call,cookie:Record<string,string>){
  expect(requests).toHaveLength(product.total)
  for(const row of requests)expect(voters.filter(voter=>voter.request_id===row.request_id)).toHaveLength(Number(row.vote_total))
  expect(voters.filter(row=>row.request_id===request.id)).toHaveLength(2);expect(voters.every(row=>row.proxy==='yes')).toBe(true)
+ const recorder=await env.DB.prepare("SELECT p.id,p.display_name FROM operators p JOIN oa_operators n ON n.email=p.email WHERE n.role='owner'").first<{id:string;display_name:string}>()
+ expect(voters.every(row=>row.recorder_id===recorder!.id&&row.recorder===recorder!.display_name)).toBe(true)
  for(const value of ['synthetic-penny-erased','synthetic-penny-withdrawn','@example.test','synthetic-penny-source'])expect(votersText).not.toContain(value)
  expect(voters.some(row=>row.request_id==='r')).toBe(false)
  expect(await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='data.csv_exported'").first('n')).toBe(Number(before)+2)
