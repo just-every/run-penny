@@ -84,10 +84,12 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     const cookie=await runtime.owner(),split=cookie.indexOf('='),{origin}=runtime
     context=await browser.newContext({viewport:{width,height:width===390?844:900},timezoneId:'Australia/Brisbane'})
     await context.addCookies([{name:cookie.slice(0,split),value:cookie.slice(split+1),url:origin,httpOnly:true,secure:true,sameSite:'Lax'}])
+    context.on('page',target=>{
+      target.on('pageerror',error=>errors.push(error.message))
+      target.on('console',message=>{if(message.type()==='error')errors.push(message.text())})
+      target.on('request',request=>{if(new URL(request.url()).origin!==origin)external.push(new URL(request.url()).origin)})
+    })
     const page=await context.newPage()
-    page.on('pageerror',error=>errors.push(error.message))
-    page.on('console',message=>{if(message.type()==='error')errors.push(message.text())})
-    page.on('request',request=>{if(new URL(request.url()).origin!==origin)external.push(new URL(request.url()).origin)})
     await page.goto(origin+'/app/data')
     assert.equal(await finishFirstRun(page,async()=>{}),true,'[BASE-ACCESS-002] native owner finishes the real first-run form')
     const idle=await runtime.call('/api/operator/data/overview',undefined,{Cookie:cookie})

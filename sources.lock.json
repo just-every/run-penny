@@ -4675,6 +4675,10 @@
       "sha256": "01e9208f1ff7948d271ef630bd5335ce3890b10540b5c26a11a28b34dc887701",
       "executable": false
     },
+    "src/core/features/data/ui/maintenance-notice.tsx": {
+      "sha256": "6039f6b80270982ebbfd282c5e70c711c68768abb145223922836c227008109e",
+      "executable": false
+    },
     "src/core/features/data/ui/progress-card.tsx": {
       "sha256": "309a4e7c104078b655016fbdb7f3bf7dcf8bfa00d2de34f054bc2e8086c5c1e1",
       "executable": false
@@ -5341,6 +5345,10 @@
     },
     "src/core/features/integrations/raw-body.ts": {
       "sha256": "49eaede127b75732018405cc21e0deb64a2e181af3b7830d5f0df597d35302cc",
+      "executable": false
+    },
+    "src/core/features/integrations/read-database.ts": {
+      "sha256": "d19583d12b1c3c34d5ca2edbc38f69e6163a6fd4c9b6dbf8367e5b2913095937",
       "executable": false
     },
     "src/core/features/integrations/receiver-protocol.ts": {
@@ -7583,6 +7591,10 @@
       "sha256": "cff18322af52641e685b19f9cf9be19221c05d2f9457f265fa25567cd180e966",
       "executable": false
     },
+    "tests/browser/data-lock-reads.mjs": {
+      "sha256": "20dbc6b4d808f6bda6fb589c9f0566fa5c6579fc2c450892a99fbb37d1ebd109",
+      "executable": false
+    },
     "tests/browser/dev-operator-flows.test.mjs": {
       "sha256": "b642a85d03433ded8804b561e2115049cc45a325e0934a44bf718debcd132684",
       "executable": false
@@ -7776,7 +7788,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-hosted-data.mjs": {
-      "sha256": "3570eedac5253835f85ec320502bc3944de33bc65ba75522fe76ebbb3e21dbca",
+      "sha256": "273ddbaa1e67f9ec53a8992621efc2b44010ed25a3abe964ddbea8f389bc6c48",
       "executable": false
     },
     "tests/browser/operator-pages-status.mjs": {
