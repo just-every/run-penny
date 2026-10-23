@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "2f8b816fd10cf147b8a62988d475c285d3ce9a869b1a1fca38bf8927ed4c9e97",
+      "sha256": "60d3d14dfc9e1debcf6dc4ee385be1130e3c8f56e4c7ecfe088133347eeb053e",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2880,7 +2880,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "659eeff5215516ca0a8a3ecebe63bb8f2dfb75f1da7ed1c6feb559b20a04caab",
+      "sha256": "9d90482b3103cb230cdbd60df4b4b1e26181b8f7388ee4cba7cf980f511f9206",
       "executable": false
     },
     "DEMO.md": {
@@ -2924,7 +2924,7 @@
       "executable": false
     },
     "docs/CLAIMS.md": {
-      "sha256": "7b21e212fe2602394f0f416121f372772ad72cc52e9beb858451e1952d6a1589",
+      "sha256": "df623dfdcc0de4bfbe032c1b6f10c4c9708c07d298d269d49c48cdb7e1e16f46",
       "executable": false
     },
     "docs/CUSTOMISE.md": {
@@ -7272,7 +7272,7 @@
       "executable": false
     },
     "tests/base/egress-delivery.test.ts": {
-      "sha256": "9020de214fb314f85b602294579f7d91dada762e92f8d825ca66c75feb377486",
+      "sha256": "d80ab067f7bc066c3d28c6743633361eea48969f888ae88c084e06f74bc70617",
       "executable": false
     },
     "tests/base/email-capture-fixture.ts": {
@@ -7341,6 +7341,10 @@
     },
     "tests/base/integration-delivery-fixture.ts": {
       "sha256": "921326f550280ceca6642aec390cd9bde49a7514ab8d425d7a33e17c3dfbfe5b",
+      "executable": false
+    },
+    "tests/base/integration-durable.ts": {
+      "sha256": "fabbe2eb18753cf023328e2f7d4c50701f64385ddd086cee264bc4da82f64dde",
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {
@@ -7576,7 +7580,7 @@
       "executable": false
     },
     "tests/browser/base-runtime.mjs": {
-      "sha256": "58e20733b48aa229489fc10fac8e7c106e00e8ed5432c53c2951c74cd15558ed",
+      "sha256": "9c87c3f3a771c584dd580e024232dc05dc6b69f74e13b31107ca735d865bf9c5",
       "executable": false
     },
     "tests/browser/browser-options.mjs": {
@@ -7660,11 +7664,15 @@
       "executable": false
     },
     "tests/browser/integration-states.mjs": {
-      "sha256": "448573ff216f1c9617117894fbd808b1fa2137850d9141aa4ef42e7494b04171",
+      "sha256": "9de4e64ca8e9a51794dd2d5701efa915ea05617f3eb6cbc8c86b5fc0e784ae46",
       "executable": false
     },
     "tests/browser/integration-tracker-checks.mjs": {
       "sha256": "248d0c50330c3d8796e3c10122854a68fa5ebfda8e9bab7c15d8c295f1c429b0",
+      "executable": false
+    },
+    "tests/browser/integration-uncertainty.mjs": {
+      "sha256": "33000c23aedb6b62e5bb5a074471b1d6d3130a0c242671906210709b477bac36",
       "executable": false
     },
     "tests/browser/internal-discussion.mjs": {
