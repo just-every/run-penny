@@ -2908,7 +2908,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "f52e68cafb7a904013778133a91a1d4b897019e6dabc47c1a7f5bea770f541a0",
+      "sha256": "a0886fb40fa681d5f7eea7fe30c3b23308f2bce30a3a2a572f1f276e3f92ef54",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3904,7 +3904,7 @@
       "executable": false
     },
     "scripts/portability/adapter.mjs": {
-      "sha256": "3a1d173e582bf9cc8c142a464bf0cc81adcabdf7f3107687a9c2a061de746557",
+      "sha256": "77b48b3651992e04861b67b54d72cce2e6501f6571ff32aa639a4498a4460f53",
       "executable": false
     },
     "scripts/portability/archive-journal.d.mts": {
@@ -3928,7 +3928,7 @@
       "executable": false
     },
     "scripts/portability/ledger.mjs": {
-      "sha256": "ba7f36eefc42e6431370fcf4ce23928113d3ac502447b09ca1b493f16a67a0af",
+      "sha256": "9f1ddb86cbc2a6f8abb214177c66e4ccfae05424941d48450835e0e62a40c5c2",
       "executable": false
     },
     "scripts/portability/local-journal.ts": {
@@ -4520,7 +4520,7 @@
       "executable": false
     },
     "src/core/features/auth/ui/verify-requester.tsx": {
-      "sha256": "29bfd445ef9a3926007313507dff96ae2ecb8e5f1fb6b38ac043ef919502793a",
+      "sha256": "497064e76aaca93d4767f7f841bf6c87dc4f57e928360969ad9d0d2d60b15296",
       "executable": false
     },
     "src/core/features/auth/verified-requester.ts": {
@@ -5448,7 +5448,7 @@
       "executable": false
     },
     "src/core/features/integrations/ui/destinations.tsx": {
-      "sha256": "63029dafd2f769ed3beb2d41ceaddb5039f096d8c7be43ff6259d6d3b1455ba5",
+      "sha256": "a67d3e72ed14b82c6da51519aa225956b6d711b9ff69ba4d00b16ad72948da2d",
       "executable": false
     },
     "src/core/features/integrations/ui/jira-project-picker.tsx": {
@@ -6564,7 +6564,7 @@
       "executable": false
     },
     "src/core/features/roadmap/ui/roadmap-actions.tsx": {
-      "sha256": "4dba6702b784688bd15a5abfd69b07921f4e080d401030f0c8fa7bde657af4e5",
+      "sha256": "4828cc2b96f97c7f382431532ea463d6d9a146863fa5e9731bc12e2fb8c51ae0",
       "executable": false
     },
     "src/core/features/roadmap/ui/roadmap-card.tsx": {
