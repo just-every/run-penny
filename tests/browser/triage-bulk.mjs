@@ -53,6 +53,7 @@ export async function proveBulkActions({ page, runtime, viewport, inspect }) {
   await form.getByLabel('Add tag (optional)', { exact: true }).selectOption(tag.id)
   await form.getByLabel('Assign owner (optional)', { exact: true }).selectOption(assignee.id)
   await bulk.getByRole('status').filter({ hasText: /^3 selected/ }).waitFor()
+  assert.deepEqual(await page.locator('main button').evaluateAll(nodes=>nodes.filter(node=>node.getClientRects().length&&!node.textContent.trim()).map(node=>node.getAttribute('aria-label')??'unnamed')), [], '[TRIAGE-005] visible actions name themselves; no icon-only control needs a tooltip')
   await inspect(page, 'bulk-review', { detail: bulk })
   const batchResponse = page.waitForResponse(response => new URL(response.url()).pathname === '/api/operator/triage/batches' && response.request().method() === 'POST')
   await form.getByRole('button', { name: 'Apply batch', exact: true }).click()

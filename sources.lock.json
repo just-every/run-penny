@@ -7984,7 +7984,7 @@
       "executable": false
     },
     "tests/browser/triage-bulk.mjs": {
-      "sha256": "c0d9c94e73469f9ca23e642a6147a14a43a2997de701800a9312d3bf2345df1e",
+      "sha256": "be9638cedbd26d8cd93f1e502c83e2e42582ce52a1a326a7454d4c1a425d0e94",
       "executable": false
     },
     "tests/browser/vote-importance.mjs": {
