@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Use rer 0.2.79's supported native migration preflight for local archive export and restore, preserving the installation's migration runner.
+
 - Close the phone's operator menu on navigation without competing with the browser's native details state.
 
 - Run signed integration receipts and requester repair in push Verify, and make the scrollable receiver example keyboard accessible.
