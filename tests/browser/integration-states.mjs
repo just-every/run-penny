@@ -26,7 +26,7 @@ try{
  browser=await chromium.launch(browserOptions())
  for(const width of [1440,390]){
   const edge=uncertaintyEdge()
-  const runtime=await startBrowserRuntime({mailService:linear,networkWorker:edge.worker,networkBinding:'PENNY_EGRESS'});let context
+  const runtime=await startBrowserRuntime({mailService:linear});let context
   try{
    const bootstrap=await fetch(runtime.origin+'/auth/bootstrap',{method:'POST',redirect:'manual',headers:{Origin:runtime.origin,'Content-Type':'application/json'},body:JSON.stringify({token:'synthetic-base-browser-setup-token-12345',displayName:'Owner',returnTo:'/app'})});assert.equal(bootstrap.status,303)
    const cookie=bootstrap.headers.get('set-cookie').split(';')[0],index=cookie.indexOf('='),headers={Origin:runtime.origin,Cookie:cookie,'Content-Type':'application/json'}
@@ -87,6 +87,7 @@ try{
    await checkTrackerReceipts({runtime,action,subject,connectionId,secret,teamId,organizationId,externalId})
    await page.goto(runtime.origin+'/portal/feedback');await page.getByText('Feedback for our product, reviewed with care.',{exact:true}).waitFor();assert.equal(await page.locator('.public-portal').evaluate(node=>getComputedStyle(node).getPropertyValue('--penny-brand-accent')),'#173c2b');await capture('branded-portal',page.locator('.public-portal'))
    assert.equal(await runtime.db.prepare('SELECT count(*) n FROM integration_deliveries').first('n'),0);assert.equal(runtime.outbox.length,0)
+   await runtime.configure({},{worker:edge.worker,binding:'PENNY_EGRESS'})
    outboundRestarts+=await checkUncertainty({runtime,page,action,subject,capture,calls:edge.calls});fixtureEgressCalls+=edge.calls.length
    assert.deepEqual(errors,[]);assert.deepEqual(external,[])
   }finally{await context?.close();await runtime.close()}
