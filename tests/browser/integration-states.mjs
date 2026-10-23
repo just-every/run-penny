@@ -1,4 +1,6 @@
 import {uncertaintyEdge,checkUncertainty} from './integration-uncertainty.mjs'
+import {trackerCreateEdge} from './integration-tracker-edge.mjs'
+import {checkTrackerActions} from './integration-tracker-actions.mjs'
 import assert from 'node:assert/strict'
 import {createHmac} from 'node:crypto'
 import {mkdir,readFile,writeFile} from 'node:fs/promises'
@@ -25,7 +27,7 @@ let browser
 try{
  browser=await chromium.launch(browserOptions())
  for(const width of [1440,390]){
-  const edge=uncertaintyEdge()
+  const edge=uncertaintyEdge(),trackerEdge=await trackerCreateEdge()
   const runtime=await startBrowserRuntime({mailService:linear});let context
   try{
    const bootstrap=await fetch(runtime.origin+'/auth/bootstrap',{method:'POST',redirect:'manual',headers:{Origin:runtime.origin,'Content-Type':'application/json'},body:JSON.stringify({token:'synthetic-base-browser-setup-token-12345',displayName:'Owner',returnTo:'/app'})});assert.equal(bootstrap.status,303)
@@ -89,6 +91,7 @@ try{
    assert.equal(await runtime.db.prepare('SELECT count(*) n FROM integration_deliveries').first('n'),0);assert.equal(runtime.outbox.length,0)
    await runtime.configure({},{worker:edge.worker,binding:'PENNY_EGRESS'})
    outboundRestarts+=await checkUncertainty({runtime,page,action,subject,capture,calls:edge.calls});fixtureEgressCalls+=edge.calls.length
+   outboundRestarts+=await checkTrackerActions({runtime,page,action,subject,capture,edge:trackerEdge,teamId,organizationId,secret});fixtureEgressCalls+=trackerEdge.calls.length
    assert.deepEqual(errors,[]);assert.deepEqual(external,[])
   }finally{await context?.close();await runtime.close()}
  }
