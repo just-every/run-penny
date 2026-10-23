@@ -7616,7 +7616,7 @@
       "executable": false
     },
     "tests/base/weekly-summary-portability.ts": {
-      "sha256": "27e794f5e34f4948e37ca27a23a1d09315aee4f8f3e887245d0508340ad2b97b",
+      "sha256": "f419b8e9fa1075cb4fc7208318312a115fd7060d63b8c0259f933eee63616dc8",
       "executable": false
     },
     "tests/base/weekly-summary-release.ts": {
