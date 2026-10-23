@@ -8,6 +8,10 @@ export async function weeklySummaryChoice({browser,owner,runtime,viewport,inspec
  await setting.getByRole('button',{name:'Save weekly summary setting',exact:true}).waitFor()
  assert.equal(await ownerChoice.isChecked(),false,'weekly summaries start off')
  await inspect('weekly-owner-off',setting)
+ // SubmitFeedbackPage closes posting before rendering verification when no
+ // requester-posting public board exists. Create that prerequisite natively.
+ const board=await owner.context().request.post(origin+'/api/operator/boards',{headers:{Origin:origin},data:{slug:'reporting-workflows',name:'Reporting workflows',visibility:'public'}})
+ assert.equal(board.status(),201,'owner creates the public requester-posting board')
  async function enable(value) {
   await ownerChoice.setChecked(value)
   const saved=owner.waitForResponse(response=>new URL(response.url()).pathname==='/api/operator/settings/weekly-summary'&&response.request().method()==='PUT')
@@ -31,6 +35,7 @@ export async function weeklySummaryChoice({browser,owner,runtime,viewport,inspec
    assert.equal((await ready).status(),200)
   }
   await authDocument(origin+'/portal/feedback/new')
+  await page.getByRole('heading',{name:'Verify your email first',exact:true}).waitFor()
   await page.getByLabel('Display name',{exact:true}).fill('Jordan Rivera')
   await page.getByLabel('Email',{exact:true}).fill(email)
   const requested=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/public/identity/email'&&response.request().method()==='POST')
