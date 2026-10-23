@@ -60,12 +60,14 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  expect(response.status).toBe(200)
  const receipts=(await env.DB.prepare('SELECT * FROM penny_integration_receipts ORDER BY id').all()).results
  expect(receipts).toHaveLength(1)
+ const slackEndpoint='https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3'
+ await json('/api/operator/integrations/destinations',{name:'synthetic-penny-portable-slack',kind:'slack',endpoint:slackEndpoint,events:['status.published']},201)
  const bundle=await json<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export')
  expect(bundle.archive.tables.penny_integration_targets).toEqual((await env.DB.prepare('SELECT * FROM penny_integration_targets ORDER BY id').all()).results)
  expect(bundle.archive.tables.integration_attempts).toEqual(completed)
  expect(bundle.archive.tables.penny_integration_receipts).toEqual(receipts)
  expect(bundle.archive.tables.penny_integration_events.every(row=>row.held===1)).toBe(true)
- for(const value of [receiver.signingKey,'https://events.example.com/penny','https://events.example.com/replacement'])expect(JSON.stringify(bundle)).not.toContain(value)
+ for(const value of [receiver.signingKey,slackEndpoint,'https://events.example.com/penny','https://events.example.com/replacement'])expect(JSON.stringify(bundle)).not.toContain(value)
  expect(bundle.archive.tables.penny_integration_credentials).toBeUndefined()
  await reset();await applyD1Migrations(env.DB,migrations);operator=await owner({timezone:'UTC'})
  await json('/api/operator/data/import',bundle)
