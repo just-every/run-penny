@@ -1,6 +1,6 @@
 /** The server runner's progress for the operation holding the workspace (data/runner/status.ts). */
 export type Progress = { stage: 'records' | 'imports' | 'files' | 'restore'; state: 'working' | 'retrying' | 'waiting' | 'stopped'; steps: number; reason: string | null; canCancel: boolean; needsBackup: boolean }
-export type Overview = { hosted:boolean;canExport?:boolean;ownExport?:{jobId:string|null;phase:string|null;completed:number}|null; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string; progress: Progress | null } | null; recent: { id: string; kind: string; result: 'complete' | 'aborted'; reason: string | null; finishedAt: number } | null }
+export type Overview = { hosted:boolean;canImport?:boolean;canExport?:boolean;blockedPrivateViews?:number;ownExport?:{jobId:string|null;phase:string|null;completed:number}|null; targets: { table: string; id: string; label: string }[]; operation: { id: string; kind: string; status: string; progress: Progress | null } | null; recent: { id: string; kind: string; result: 'complete' | 'aborted'; reason: string | null; finishedAt: number } | null }
 export type BlockedCopy = { table: string; key: string; columns: string[]; action?: string; occurredAt?: string; resolvable?: true; values?: Record<string, { current: string; redacted: string }>; label?: string | null; href?: string | null }
 export type AuditChoices = Record<string, 'unrelated' | 'clear'>
 export type CopyChoice = { resolution: 'redact' | 'rename'; values?: Record<string, string> }
@@ -44,7 +44,7 @@ export const reasonText = (code: string | null): string => code === null ? '' : 
 export class DataActionError extends Error {
   readonly code: string
   readonly status: number
-  constructor(code: string, status: number) { super(messages[code] ?? `Data action could not complete (${code}).`); this.code = code; this.status = status }
+  constructor(code: string, status: number, publicMessage?:string) { super(code==='private_views_export_refused'&&publicMessage?publicMessage:messages[code] ?? `Data action could not complete (${code}).`); this.code = code; this.status = status }
 }
 async function request(path: string, value?: unknown): Promise<Response> {
   const response = await fetch('/api/operator/data/' + path, {
@@ -52,8 +52,8 @@ async function request(path: string, value?: unknown): Promise<Response> {
     ...(value === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(value) }),
   })
   if (!response.ok) {
-    const result = await response.json() as { error?: string }
-    throw new DataActionError(result.error ?? String(response.status), response.status)
+    const result = await response.json() as { error?: string;message?:string }
+    throw new DataActionError(result.error ?? String(response.status), response.status,result.message)
   }
   return response
 }

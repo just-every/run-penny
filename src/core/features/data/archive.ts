@@ -143,8 +143,11 @@ export async function finish(db:D1Database,id:string,status:'complete'|'aborted'
 export const applyStart=(db:D1Database,id:string)=>[db.prepare("INSERT INTO data_apply_claims(operation_id) VALUES((SELECT lock_id FROM data_state WHERE singleton=1 AND lock_id=? AND phase='locked'))").bind(id),db.prepare("UPDATE data_state SET phase='applying' WHERE singleton=1 AND lock_id=?").bind(id),db.prepare('PRAGMA defer_foreign_keys=ON')]
 export const audit=(db:D1Database,action:string,id:string,authority?:DataAuthority,details:string|null=null)=>{const now=new Date().toISOString();return db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,details_json,created_at,updated_at) VALUES(?,?,?,?,'data_operation',?,?,?,?,?)").bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',action,id,now,details,now,now)}
 export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:DataAuthority):Promise<{archive:Archive;journal:ErasureJournal}>{
- await assertViewExport(db,await viewExportCreator(db,authority?.operatorId))
+ if(authority){if(authority.operator.role!=='owner')throw new NativeError('native_owner_session_required',403);await assertDataAuthority(db,authority)}
+ const privateCreator=await viewExportCreator(db,authority?.operatorId)
+ await assertViewExport(db,privateCreator)
  const id=await reserve(db,'export',{},authority)
+ try{await assertViewExport(db,privateCreator)}catch(error){await finish(db,id,'aborted',authority);throw error}
  try {
   await assertPlatformLedger(db)
   const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)

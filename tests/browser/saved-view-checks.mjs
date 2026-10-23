@@ -66,4 +66,24 @@ export async function checkSavedViews({page,peerPage,width,json,ownerCookie,peer
   await peerPage.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}))
   await audit(peerPage,`saved-${kind}-peer`,{detail:peers})
  }
+ const privateName=`synthetic-penny-backup-private-${width}`
+ const privateView=await json('/api/operator/saved-views',{listKind:'requests',name:privateName,scope:'private',filter:{},sort:'name',columns:['title']},peerCookie,'POST',201)
+ await page.goto(new URL('/app/data',page.url()).href)
+ const refusal=page.locator('[data-private-view-refusal]')
+ await refusal.waitFor()
+ const message=await refusal.innerText()
+ assert.match(message,/\b1\b/);assert.match(message,/\bshare\b/);assert.match(message,/\bdelete\b/)
+ assert.ok(!(await page.locator('body').innerText()).includes(privateName),'A backup refusal reveals no private definition name')
+ assert.equal(await page.getByRole('button',{name:'Download backup',exact:true}).isDisabled(),true)
+ await audit(page,'private-view-backup-refused',{detail:page.getByRole('button',{name:'Download backup',exact:true}).locator('..')})
+ const current=await json('/api/operator/saved-views/'+privateView.id,undefined,peerCookie)
+ await json('/api/operator/saved-views/'+privateView.id,{revision:current.revision},peerCookie,'DELETE')
+ await page.getByRole('button',{name:'Refresh backup availability',exact:true}).click();await refusal.waitFor({state:'hidden'})
+ assert.equal(await page.getByRole('button',{name:'Download backup',exact:true}).isDisabled(),false)
+ await audit(page,'private-view-backup-unblocked',{detail:page.getByRole('button',{name:'Download backup',exact:true}).locator('..')})
+ await peerPage.goto(new URL('/app/data',peerPage.url()).href)
+ assert.equal(await peerPage.getByRole('button',{name:'Download backup',exact:true}).isDisabled(),true,'A member cannot export a backup')
+ assert.equal(await peerPage.locator('[data-private-view-refusal]').count(),0,'A member sees no private-view count')
+ await audit(peerPage,'member-backup-owner-only',{detail:peerPage.getByRole('button',{name:'Download backup',exact:true}).locator('..')})
+
 }

@@ -15,12 +15,12 @@ const refusals: Record<string, string> = {
 }
 async function call(url: string, body?: unknown) {
  const response = await fetch(url, { method: body === undefined ? 'GET' : 'POST', redirect: 'error', credentials: 'same-origin', ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) })
- if (!response.ok) throw new DataActionError(((await response.json().catch(() => ({}))) as { error?: string }).error ?? `http_${response.status}`, response.status)
+ if (!response.ok) {const body=await response.json().catch(() => ({})) as {error?:string;message?:string};throw new DataActionError(body.error??`http_${response.status}`,response.status,body.message)}
  return response
 }
 const request = (path: string, body?: unknown) => call('/api/portability/exports' + path, body)
 const operationAction = (operationId: string, action: string, body: unknown) => call(`/api/operator/data/operations/${operationId}/${action}`, body)
-const failure = (error: unknown) => error instanceof DataActionError && refusals[error.code]
+const failure = (error: unknown) => error instanceof DataActionError&&error.code==='private_views_export_refused'?error.message:error instanceof DataActionError && refusals[error.code]
  || `The export stopped before it finished${error instanceof DataActionError ? ` (${error.code.replaceAll('_', ' ')})` : ''}. Reload this page to resume or abort the saved export.`
 export function HostedExport({ disabled, interrupted, onSettled }: { disabled: boolean; interrupted: InterruptedExport | null; onSettled: () => void }) {
  const [busy, setBusy] = useState(false), [message, setMessage] = useState(''), [failed, setFailed] = useState(false)

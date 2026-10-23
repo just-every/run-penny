@@ -1,4 +1,5 @@
 import {assertOriginalFiles} from '../../src/core/features/data/original-files'
+import {assertViewExport} from '../../src/core/features/views/archive'
 // This is Penny's binding/policy boundary. Base owns archive framing, integrity,
 // resource enumeration, staged validation and atomic restore.
 import { createReadStream, createWriteStream } from 'node:fs'
@@ -53,6 +54,7 @@ try {
   progress.stage = 'check_installation'
   const current = await db.prepare('SELECT phase,lock_id FROM data_state WHERE singleton=1').first<{phase:string;lock_id:string|null}>()
   if (current?.phase !== 'idle' || current.lock_id !== null) throw new Error('data_busy')
+  if(direction==='export')await assertViewExport(db)
   progress.stage = 'read_journal'
   const journal = direction === 'export' ? await readErasureJournal(db) : await readJournal(journalPath)
   if (laterProductJournal) { progress.stage = 'check_later_journal'; laterJournalFence(journal, laterProductJournal) }

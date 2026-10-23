@@ -16,7 +16,7 @@ import { policy, LOCAL_DATA_LIMITS } from '../../../../scripts/portability/polic
 import { verifyExport } from '../../../../scripts/portability/verify'
 
 type Environment = { Bindings: AppBindings; Variables: { runtime: PennyRuntime } }
-const reply = (error: string, status: number) => Response.json({ error }, { status, headers: { 'Cache-Control': 'private, no-store' } })
+const reply = (error: string, status: number, message?:string) => Response.json({ error, ...(message?{message}:{}) }, { status, headers: { 'Cache-Control': 'private, no-store' } })
 /** Base's export protocol, under Penny's existing durable maintenance fence. */
 export function registerPortabilityRoutes(app: Hono<Environment>) {
  app.all('/api/portability/*', hostedExport)
@@ -59,6 +59,7 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
   else return reply('method_not_allowed', 405)
   runner = await claimPortabilityRunner(db, operationId!, session)
   const guarded = runner.db
+  if(creating)await assertViewExport(guarded,privateCreator)
   if (jobId && action === 'abort' && request.method === 'POST') {
    const result = await abortPortabilitySnapshot(guarded, jobId)
    await finish(guarded, operationId!, 'complete', session)
@@ -106,7 +107,7 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
    try { await abortPortabilityActor(runner.db, actor); await finish(runner.db, operationId, 'aborted', session) }
    catch { return reply('portability_cleanup_required', 409) }
   }
-  return reply(error instanceof NativeError ? error.code : 'portability_export_refused', error instanceof NativeError ? error.status : 409)
+  return reply(error instanceof NativeError ? error.code : 'portability_export_refused', error instanceof NativeError ? error.status : 409,error instanceof NativeError&&error.code==='private_views_export_refused'?error.hint:undefined)
  } finally {
   if (runner) await runner.release()
  }

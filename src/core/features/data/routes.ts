@@ -1,3 +1,5 @@
+import {privateViewCount} from '../views/archive'
+import {integrationOperator} from '../integrations/destinations'
 import type { Context, Hono } from 'hono'
 import { z } from 'zod'
 import type { PennyRuntime } from '@/core/app/runtime'
@@ -62,10 +64,13 @@ export function registerDataRoutes(app:Hono<Environment>):void{
   const former=await c.env.DB.prepare("SELECT p.id,p.display_name AS label FROM operators p WHERE p.email NOT LIKE '%@erased.invalid' AND NOT EXISTS(SELECT 1 FROM oa_operators o WHERE lower(o.email)=lower(p.email) AND o.status<>'inactive') ORDER BY p.created_at DESC LIMIT 100").all<{id:string;label:string}>()
   const state=await c.env.DB.prepare('SELECT lock_id FROM data_state WHERE singleton=1').first<{lock_id:string|null}>(),operation=state?.lock_id?await dataOperation(c.env.DB,state.lock_id):null,journal=await readErasureJournal(c.env.DB)
   const configuration=c.get('runtime').configuration,hosted=!['local','test'].includes(configuration.environment)
-  const currentSession=await operatorAuth(c.get('runtime')).getSession(c.req.raw)
+  const admission=await integrationOperator(c.get('runtime'),c.req.raw),currentSession=admission.session
+  const canImport=currentSession?.operator.role==='owner'
+  const canExport=currentSession?.kind==='native'&&canImport
+  const blockedPrivateViews=canExport?await privateViewCount(admission.db,admission.actor.id):undefined
   if(await dataWorkDue(c.env.DB))keepAlive(c,advanceDataWork(c.env))
   const progress=operation&&operation.kind!=='export'?await operationProgress(c.env.DB,c.env.FILES,operation):null
-  return c.json({hosted,canExport:currentSession?.kind==='native'&&currentSession.operator.role==='owner',ownExport:await ownHostedExport(c.env.DB,operation,currentSession),targets:[...kinds.flatMap(([table],index)=>results[index].results.map(row=>({table,...row}))),...former.results.map(row=>({table:'operators',...row}))],operation:operation?{id:operation.id,kind:operation.kind,status:operation.status,progress}:null,recent:await recentOutcome(c.env.DB),epoch:journal.epoch})
+  return c.json({hosted,canImport,canExport,blockedPrivateViews,ownExport:await ownHostedExport(c.env.DB,operation,currentSession),targets:[...kinds.flatMap(([table],index)=>results[index].results.map(row=>({table,...row}))),...former.results.map(row=>({table:'operators',...row}))],operation:operation?{id:operation.id,kind:operation.kind,status:operation.status,progress}:null,recent:await recentOutcome(c.env.DB),epoch:journal.epoch})
  })
  app.post('/api/operator/data/import',async c=>{
   const input=await parseInput(c.req.raw,z.object({archive:z.unknown(),journal:z.unknown(),resumeOperationId:z.string().optional()}).strict(),DATA_LIMITS.archiveBytes)

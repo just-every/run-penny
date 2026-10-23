@@ -49,7 +49,16 @@ export async function proveListViews(owner:{Cookie:string},peer:{Cookie:string})
  const removedDefinition=await good<SavedView>(path(tagged.id),undefined,owner)
  expect((await call(path(tagged.id),{...definition,filter:removedDefinition.filter,revision:removedDefinition.revision},owner,'PUT')).status).toBe(400)
  const foreignPrivate=await create({...definition,scope:'private',name:'synthetic-penny-peer-private'},peer)
- for(const [url,body] of [['/api/operator/data/export',undefined],['/api/portability/exports',{}]] as const){const response=await call(url,body,owner);expect(response.status).toBe(409);expect(await response.json()).toEqual({error:'private_views_export_refused'})}
+ for(const [url,body] of [['/api/operator/data/export',undefined],['/api/portability/exports',{}]] as const){
+  const response=await call(url,body,owner);expect(response.status).toBe(409)
+  const refusal=await response.json() as {error:string;message:string}
+  expect(refusal).toEqual({error:'private_views_export_refused',message:expect.any(String)})
+  expect(refusal.message).toMatch(/\b1\b/);expect(refusal.message).toMatch(/\bshare\b/);expect(refusal.message).toMatch(/\bdelete\b/)
+  expect(refusal.message).not.toContain(foreignPrivate.id);expect(refusal.message).not.toContain('synthetic-penny-peer-private')
+ }
+ expect((await good<{blockedPrivateViews:number}>('/api/operator/data/overview',undefined,owner)).blockedPrivateViews).toBe(1)
+ expect((await good<{blockedPrivateViews?:number}>('/api/operator/data/overview',undefined,peer)).blockedPrivateViews).toBeUndefined()
+ expect((await call('/api/operator/data/export',undefined,peer)).status).toBe(403)
  expect((await call(path(foreignPrivate.id),undefined,owner)).status).toBe(404)
  await good(path(foreignPrivate.id),{revision:1},peer,'DELETE')
  const archived=await good<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export',undefined,owner)

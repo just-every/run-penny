@@ -1,3 +1,5 @@
+import {PrivateViewExportError} from '../../src/core/features/views/archive'
+import {privateViewsRefusal} from '../../src/core/features/views/export-refusal'
 /** The one stderr line a failed local transfer prints: where it stopped, the
  * underlying error chain and, for a known code, why in a fixed sentence. Errors
  * from Base, the platform and SQLite carry free text that can hold a name, an
@@ -63,6 +65,7 @@ export function failureLine(error: unknown, progress: Progress, root = process.c
   for (let next = error; chain.length < 4 && next !== undefined; next = next instanceof Error ? next.cause : undefined) chain.push(next)
   const where = progress.records === undefined ? progress.stage : `${progress.stage} after ${progress.records} record${progress.records === 1 ? '' : 's'}`
   const described = chain.map(item => describe(item, keep)).join(' <- ')
-  const reason = described.split(/[\s:]+/).map(token => REASONS[token]).find(Boolean)
+  const privateRefusal=chain.find((item):item is PrivateViewExportError=>item instanceof PrivateViewExportError)
+  const reason = privateRefusal?privateViewsRefusal(privateRefusal.count,privateRefusal.lowerBound):described.split(/[\s:]+/).map(token => REASONS[token]).find(Boolean)
   return `local_portability_failed: ${where}: ${described}${reason ? ` (${reason})` : ''}`
 }
