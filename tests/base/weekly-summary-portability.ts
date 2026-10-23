@@ -19,6 +19,8 @@ export async function weeklyPortability(operator:Record<string,string>){
  expect(bundle.archive.tables.penny_weekly_choices.length).toBeGreaterThan(0)
  expect(bundle.archive.tables.penny_weekly_choices.every(row=>row.subscribed===0&&row.revoked_at)).toBe(true)
  expect(bundle.archive.tables.penny_weekly_summary.every(row=>row.enabled===0)).toBe(true)
+ expect(bundle.archive.tables.penny_weekly_publications.length).toBeGreaterThan(0)
+ expect(bundle.archive.tables.penny_weekly_publications.every(row=>row.held===1)).toBe(true)
  await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail();operator=await owner({timezone:'UTC'})
  const restored=await call('/api/operator/data/import',bundle,operator)
  expect(restored.status,await restored.clone().text()).toBe(200)

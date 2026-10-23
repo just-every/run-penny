@@ -7608,7 +7608,7 @@
       "executable": false
     },
     "tests/base/weekly-summary-portability.ts": {
-      "sha256": "f419b8e9fa1075cb4fc7208318312a115fd7060d63b8c0259f933eee63616dc8",
+      "sha256": "50a66650a308081122ef8ba709b303471fcb87bf67cdad785b3a556d3941a1d6",
       "executable": false
     },
     "tests/base/weekly-summary-release.ts": {
