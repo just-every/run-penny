@@ -71,7 +71,7 @@ jobs:
       - run: pnpm run deps
       - name: Install Chromium and system libraries
         if: matrix.browser
-        run: pnpm exec playwright install --with-deps chromium
+        run: bash scripts/install-ci-chromium.sh
       - name: Reserve disk for native runtime journeys
         if: matrix.browser
         run: |
