@@ -530,6 +530,12 @@
       "name": "0091_email_capture_provenance.sql",
       "sha256": "c27b3440a76ec95d5d0a68574d441cea3aab40efddd1b8b8fc84b53dd7f2161e",
       "sql": "-- The admitted email forwarder is provenance, separate from a stated body sender.\n-- Older evidence has unknown provenance; never infer it from body wording.\nALTER TABLE evidence_items ADD COLUMN admitted_sender TEXT;\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0094_saved_views.sql",
+      "sha256": "b6edfeb544806d6af923357a052d1c1befb842832b04b3d344fe6518a58161e3",
+      "sql": "CREATE TABLE penny_saved_views (\n id TEXT PRIMARY KEY,\n list_kind TEXT NOT NULL CHECK(list_kind IN ('requests','evidence','roadmap')),\n name TEXT NOT NULL CHECK(length(trim(name)) BETWEEN 1 AND 160),\n scope TEXT NOT NULL CHECK(scope IN ('private','shared')),\n creator_id TEXT REFERENCES operators(id) ON DELETE SET NULL,\n filter_json TEXT NOT NULL CHECK(json_valid(filter_json)),\n sort TEXT NOT NULL,\n columns_json TEXT NOT NULL CHECK(json_valid(columns_json)),\n presentation_json TEXT NOT NULL DEFAULT '{}' CHECK(json_valid(presentation_json)),\n revision INTEGER NOT NULL DEFAULT 1 CHECK(revision>0),\n restored_private INTEGER NOT NULL DEFAULT 0 CHECK(restored_private IN (0,1)),\n created_at TEXT NOT NULL,\n updated_at TEXT NOT NULL\n);\nCREATE INDEX penny_saved_views_visibility ON penny_saved_views(list_kind,scope,creator_id);\nCREATE TRIGGER data_guard_penny_saved_views_insert BEFORE INSERT ON penny_saved_views\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\nCREATE TRIGGER data_guard_penny_saved_views_update BEFORE UPDATE ON penny_saved_views\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\nCREATE TRIGGER data_guard_penny_saved_views_delete BEFORE DELETE ON penny_saved_views\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\n"
     }
   ],
   "compatibilityDate": "2026-08-31",

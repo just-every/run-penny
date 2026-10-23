@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "0a30569efb55528da59f489c9bafb34cf628c9c27f44883ae291677407379825",
+      "sha256": "74b1e0c1cf74633f527560169654eddd4cc7d3a2c6295710f8eca239601a86db",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2880,7 +2880,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "8f307ef2d2985505d3806d79b797e2d5f13ed5d9bbeb54fec96cd011eaa47238",
+      "sha256": "a68da1dc41d9a9443ea4beceee113e2e4cdda91a07e276cabd3df08b39e6baf4",
       "executable": false
     },
     "DEMO.md": {
@@ -3124,7 +3124,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "f27d6be07c3edf33e5b446218982b2e77cef3e7dca8bafb8eaceede7d041d2d6",
+      "sha256": "c7952b7c36d452119c6f107bdc0c1f79ed6de186d4dffcce0518878e27e88675",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -6748,7 +6748,7 @@
       "executable": false
     },
     "src/core/features/views/repository.ts": {
-      "sha256": "52391e1221265ad1913a557852cc8e10b994c3ad71143d6f692a29f3bdd0c334",
+      "sha256": "248b92cb7de032aa973c8e1ae54f3fa8ca7ee301ea21c3544967d1d81c4b0231",
       "executable": false
     },
     "src/core/features/views/routes.ts": {
@@ -7428,7 +7428,7 @@
       "executable": false
     },
     "tests/base/list-views-proof.ts": {
-      "sha256": "81a9626e36ab2b71f6082fa3c95197b32aa2852d1a0898f4481f7873c7a9fa1c",
+      "sha256": "f90bb721e9250e90fbdd99280597e3500620791f0bc9550e7fe261f3fe905268",
       "executable": false
     },
     "tests/base/local-adoption.test.ts": {

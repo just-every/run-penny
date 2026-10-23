@@ -17,7 +17,10 @@ async function decode(db:D1Database,row:Stored,actor:ViewActor):Promise<SavedVie
 }
 export async function validateReferences(db:D1Database,input:{filter:ListQuery;listKind:ViewKind},saving:boolean):Promise<string[]>{
  const removed:string[]=[],filter=input.filter
- if(filter.tag){const tag=await db.prepare('SELECT id FROM tags WHERE id=? OR name=? ORDER BY CASE WHEN id=? THEN 0 ELSE 1 END LIMIT 1').bind(filter.tag,filter.tag,filter.tag).first<{id:string}>();if(!tag){if(saving)invalidView();removed.push('Tag removed')}else if(saving)filter.tag=tag.id}
+ if(filter.tag){
+  const tag=saving?await db.prepare('SELECT id FROM tags WHERE id=? OR name=? ORDER BY CASE WHEN id=? THEN 0 ELSE 1 END LIMIT 1').bind(filter.tag,filter.tag,filter.tag).first<{id:string}>():await db.prepare('SELECT id FROM tags WHERE id=?').bind(filter.tag).first<{id:string}>()
+  if(!tag){if(saving)invalidView();removed.push('Tag removed')}else if(saving)filter.tag=tag.id
+ }
  if(filter.owner&&!await db.prepare("SELECT p.id FROM operators p JOIN oa_operators n ON n.email=p.email WHERE p.id=? AND n.status='active'").bind(filter.owner).first()){if(saving)invalidView();removed.push('Owner removed')}
  if(filter.customField){
   const field=await db.prepare('SELECT entity_type,field_type FROM custom_field_definitions WHERE id=?').bind(filter.customField).first<{entity_type:string;field_type:'text'|'number'|'boolean'|'date'}>()
@@ -36,8 +39,12 @@ export async function readView(db:D1Database,id:string,actor:ViewActor):Promise<
  return decode(db,row,actor)
 }
 export async function saveView(db:D1Database,id:string|null,input:ViewInput,actor:ViewActor){
+ if(id){
+  const current=await readView(db,id,actor);if(!current.canManage)throw new NativeError('saved_view_creator_required',403);if(current.listKind!==input.listKind)invalidView();if(current.revision!==input.revision)throw new NativeError('saved_view_changed',409)
+  // An unchanged stored id cannot silently resolve to another tag's name.
+  if(input.filter.tag&&input.filter.tag===current.filter.tag&&(await validateReferences(db,input,false)).length)invalidView()
+ }
  await validateReferences(db,input,true)
- if(id){const current=await readView(db,id,actor);if(!current.canManage)throw new NativeError('saved_view_creator_required',403);if(current.listKind!==input.listKind)invalidView();if(current.revision!==input.revision)throw new NativeError('saved_view_changed',409)}
  const key=id??createUlid(),now=new Date().toISOString(),admin=Number(['owner','admin'].includes(actor.role))
  const permitted="id=? AND revision=? AND (creator_id=? OR (scope='shared' AND ?=1))"
  await db.batch([
