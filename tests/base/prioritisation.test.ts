@@ -1,3 +1,4 @@
+import {proveScorecards} from './scorecard-proof'
 import {applyD1Migrations} from 'cloudflare:test'
 import {beforeAll,afterAll,expect,inject,it,vi} from 'vitest'
 import {call,env,requester,messages} from './support'
@@ -6,11 +7,14 @@ import type {ViewResult,SavedView} from '@/core/features/prioritisation/reposito
 import type {ViewInput} from '@/core/features/prioritisation/formulas'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations').filter(m=>m.name<'0083'))})
 afterAll(()=>vi.restoreAllMocks())
-it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free',async()=>{
+it('[PRIO-003 PRIO-004 REQ-035] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free',async()=>{
  const g=await graph(2),second=await requester('Morgan Reed')
  const json=async<T>(path:string,body?:unknown,method?:string,status=200,headers=g.operator):Promise<T>=>{const response=await call(path,body,headers,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
- const pre=(await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results
- await applyD1Migrations(env.DB,inject('migrations'));await applyD1Migrations(env.DB,inject('migrations'));expect((await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results).toEqual(pre)
+ const prior=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' ORDER BY name").all<{name:string}>()).results
+ const tables=await Promise.all(prior.map(async({name})=>({name,columns:(await env.DB.prepare(`PRAGMA table_info("${name}")`).all<{name:string}>()).results.map(c=>c.name)})))
+ const readPrior=async()=>(await env.DB.batch(tables.map(({name,columns})=>env.DB.prepare(`SELECT ${columns.map(c=>'"'+c+'"').join(',')} FROM "${name}" ORDER BY rowid`)))).map(r=>r.results)
+ const pre=await readPrior()
+ await applyD1Migrations(env.DB,inject('migrations'));await applyD1Migrations(env.DB,inject('migrations'));expect(await readPrior()).toEqual(pre)
  await json('/api/operator/boards/regression/vote-importance',{enabled:true,labels:['Nice to have','Important','Must have']},'PUT')
  expect((await call(`/api/public/requests/${g.requests[0].slug}/vote`,{importance:3},second)).status).toBe(204)
  const p=await json<{id:string}>('/api/operator/hierarchy/product',{name:'Harbor platform'},'POST',201),c=await json<{id:string}>('/api/operator/hierarchy/component',{name:'Finance',parentId:p.id},'POST',201)
@@ -52,4 +56,5 @@ it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, r
  for(const url of ['/api/public/requests','/api/public/roadmap','/api/public/releases','/api/operator/decisions']){const text=await(await call(url,undefined,g.operator)).text();expect(text).not.toContain('Finance RICE');expect(text).not.toContain('"score"')}
  const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_priority_views).toHaveLength(2)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ await proveScorecards(g.operator,peer,g.requests)
 })

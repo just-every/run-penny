@@ -674,8 +674,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 101 | 13 | 0 | 114 |
-| Target and push further | 20 | 45 | 68 | 133 |
-| All | 121 | 58 | 68 | 247 |
+| Target and push further | 20 | 46 | 67 | 133 |
+| All | 121 | 59 | 67 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -801,7 +801,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `PRIO-001` | Product hierarchy | target | done | `tests/base/product-hierarchy.test.ts`; `tests/browser/product-hierarchy.mjs` |  |
 | `PRIO-002` | Configurable statuses and fields | target | done | `tests/base/request-status-workflow.test.ts`; `tests/base/import-statuses.test.ts`; `tests/browser/import-statuses.mjs` |  |
 | `PRIO-003` | Prioritization views and formulas | target | partial | `tests/base/prioritisation.test.ts`; `tests/browser/prioritisation.mjs` | Saved private/shared request and feature views show native voters, accounts, evidence and importance inputs; RICE, value/effort, manual segment demand and weighted sums sort only the view. Missing inputs stay unscored. Remaining: SEG-007 commercial/segment/date columns, custom-field columns, PRIO-004 scorecard inputs and PRIO-005 delivery-sourced effort. |
-| `PRIO-004` | Scorecards | target | missing |  | Two operators' inputs are both visible on a card; the weighted rank is computed; changing the criteria keeps earlier scores readable. |
+| `PRIO-004` | Scorecards | target | partial | `tests/base/prioritisation.test.ts` (PRIO-003 PRIO-004 REQ-035, proveScorecards); `tests/browser/prioritisation.mjs` (scorecardFlow) | Versioned criteria, two operators’ named inputs, normalized weighted percentages and their mean rank, own-only scoring, scale/stale refusal, saved-comparison totals, archive restore and operator erasure. Owners and Admins define criteria; all current operators score and read. Gap: no segment membership/filter model (SEG-006); manual segment-demand figures are not membership. |
 | `PRIO-005` | Effort from delivery | target | missing |  | A Linear, a ClickUp and an Asana fixture estimate each appear as effort on the linked feature with their source; a manual override is marked as such. |
 | `PRIO-006` | Objectives | target | missing |  | Features linked to an objective appear grouped under it on a roadmap view and filter a prioritization view; a key result reads its value from an Amplitude fixture; a Productboard fixture's objectives land with their feature links. |
 | `DEC-001` | States and queue | published | done | `tests/base/decision-loop-commit.test.ts` |  |

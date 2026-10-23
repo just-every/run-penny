@@ -46,7 +46,7 @@ cannot recover the original text from Penny.
 
 ## Evidence reconciliation · 22 October 2026
 
-Current contract counts: 121 done, 58 partial, 68 missing (247 clauses).
+Current contract counts: 121 done, 59 partial, 67 missing (247 clauses).
 
 CAP-009 is done against provider-edge fixtures (22 October 2026). Direct or BCC copies without recoverable forwarded headers are attributed to the admitted sender and marked not forwarded. Message-ID digests stay after erasure so a replay cannot recreate an item. Refusals keep only non-personal reason counts. Hosted Email Routing, a real domain and live mail acceptance: NOT RUN. Admission depends on the `Authentication-Results: mx.cloudflare.net;` header, which only a hosted receipt can confirm. HTML-only mail is refused (`excerpt_size_or_plain_text_required`). Captured source provenance records "Forwarded by <admitted sender>"; a recovered body address is labeled "Sender stated in forward".
 
@@ -77,3 +77,5 @@ CAP-009 is done against provider-edge fixtures (22 October 2026). Direct or BCC 
 | CAP-009 | done | Provider-edge capture, provenance, structured forwards, archive and erasure. Hosted mail NOT RUN. |
 | AI-008 | partial | Deterministic redaction only; existing storage/reapplication gaps remain. |
 | AI-011 | missing | Model selection, complete evaluation receipts/sets and table-driven quality bars remain. |
+
+| PRIO-004 | partial | `tests/base/prioritisation.test.ts` (proveScorecards) and `tests/browser/prioritisation.mjs` (scorecardFlow) prove named scorer inputs, weighted mean rank, immutable criteria history, own-only scores, scales, saved comparisons, archive restore and anonymized operator erasure. Owners/Admins define; operators score/read. Gap: SEG-006 membership and segment filters. |

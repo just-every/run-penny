@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "2f8b816fd10cf147b8a62988d475c285d3ce9a869b1a1fca38bf8927ed4c9e97",
+      "sha256": "5c123bd5b089a991da2dedb5747788970afd36503d07375f47667545d106b216",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2880,7 +2880,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "659eeff5215516ca0a8a3ecebe63bb8f2dfb75f1da7ed1c6feb559b20a04caab",
+      "sha256": "a987d98638750920328cc63d72ad04c03460148462bc215314a703b3c95607d3",
       "executable": false
     },
     "DEMO.md": {
@@ -2924,7 +2924,7 @@
       "executable": false
     },
     "docs/CLAIMS.md": {
-      "sha256": "7b21e212fe2602394f0f416121f372772ad72cc52e9beb858451e1952d6a1589",
+      "sha256": "2ad1e7c3fa68b5057fafddc9bb48ce9d678008c06be3284e1dcc0c81a1b39d07",
       "executable": false
     },
     "docs/CUSTOMISE.md": {
@@ -3124,7 +3124,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "f27d6be07c3edf33e5b446218982b2e77cef3e7dca8bafb8eaceede7d041d2d6",
+      "sha256": "edb0f4b4a65f8f57f7e27fd02a902d6998521c41d0917f37b78f2f5118c8e882",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -3469,6 +3469,10 @@
     },
     "migrations/core/0091_email_capture_provenance.sql": {
       "sha256": "c27b3440a76ec95d5d0a68574d441cea3aab40efddd1b8b8fc84b53dd7f2161e",
+      "executable": false
+    },
+    "migrations/core/0095_scorecards.sql": {
+      "sha256": "87a15806b987369f9e482b2485eb9140122f5b4598505469baa717354586b0df",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -4556,7 +4560,7 @@
       "executable": false
     },
     "src/core/features/data/erasure-dependencies.ts": {
-      "sha256": "3c238f0a05c75ef976afaea0fee76c80b1fbc07345c66c037be7f7ed6ac08db0",
+      "sha256": "c2d240e1b9fc87373c6ec3c702380c163ffeadee854b35e823581963b0d2c701",
       "executable": false
     },
     "src/core/features/data/erasure-native.ts": {
@@ -4644,7 +4648,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "8ed6f726922ede597a68f788d59d4f9b326f3108b0ad0b8e5831801fddda4966",
+      "sha256": "84acef1442b6556ab5cd19cbf9b6d6b4fd7485dbf11fa9388f5123a08b751708",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {
@@ -5956,7 +5960,7 @@
       "executable": false
     },
     "src/core/features/prioritisation/formulas.ts": {
-      "sha256": "5da61c3f8cdda78c6283409793e41b0ea35c1f29b5221adbac2ee6ce71a90374",
+      "sha256": "7351180e614a808a4810ff3bd6c19b68cebf97aaa9184b3d4a38387517595b95",
       "executable": false
     },
     "src/core/features/prioritisation/labels.ts": {
@@ -5964,23 +5968,43 @@
       "executable": false
     },
     "src/core/features/prioritisation/page.tsx": {
-      "sha256": "9b687267771e482a80155ab926caaace22f75ba3563d721348ceae21839236a8",
+      "sha256": "ce1aca5555bb6ef1dcfb46cafc99e3aa457147d1ff8cac15e5cd15d32cba6c8f",
       "executable": false
     },
     "src/core/features/prioritisation/repository.ts": {
-      "sha256": "4c7b02b1ad31acdfac295da3500871c59254d7f1e8bda4c6b7a6085f0b54324b",
+      "sha256": "1711aec8a2f2eef9ec0ff992e76b7455ea1b024925ab4f52e0c7d7c0f31c1261",
       "executable": false
     },
     "src/core/features/prioritisation/routes.ts": {
-      "sha256": "eb91b4dc262fad781d9c2895256cc93bd3d5f4e474d43d706f33c635ff0f6e2a",
+      "sha256": "7cd75cdf9eb06903a966adb6a0cf5bcc8268e82ced31860750abdfda62cb7eab",
       "executable": false
     },
     "src/core/features/prioritisation/rows.ts": {
       "sha256": "2973233cbdd4746d6959cb2f603846ce90192a911a9dfdd60824bdfa70f60e99",
       "executable": false
     },
+    "src/core/features/prioritisation/scorecard-editor.tsx": {
+      "sha256": "f17c5e02f4da29e307c25e0868cdbc2c7bccb539cd1226e65cedb2578efd5b5b",
+      "executable": false
+    },
+    "src/core/features/prioritisation/scorecard-model.ts": {
+      "sha256": "d11789990a13eeab546efc2b32cb96172f2ee60e3a06f1f195561983741ca951",
+      "executable": false
+    },
+    "src/core/features/prioritisation/scorecard-repository.ts": {
+      "sha256": "e0861cb4c27f668a15dd820e3508075c1b8592b96c5853db894f6639edce3e1a",
+      "executable": false
+    },
+    "src/core/features/prioritisation/scorecard-routes.ts": {
+      "sha256": "67ba75fb70d31dadcd005a5d4562846e3d5ab757c649f5e4c5d8584791acf624",
+      "executable": false
+    },
+    "src/core/features/prioritisation/scorecards.tsx": {
+      "sha256": "b330d8402550ea910d916a267967ea04aca84ed9f406b009598a2ace8b3e82bd",
+      "executable": false
+    },
     "src/core/features/prioritisation/view-editor.tsx": {
-      "sha256": "0e2d162768f04a5978decf1d80bb14579ab0aa3e1146af1137cd56c7cd7c2531",
+      "sha256": "09406719563f294e914dc9082a5e2654cd9f42a382d8503fe9e9086f68482f6c",
       "executable": false
     },
     "src/core/features/redaction/engine.ts": {
@@ -7456,7 +7480,7 @@
       "executable": false
     },
     "tests/base/prioritisation.test.ts": {
-      "sha256": "ec25c6fbd038711246e6d6ddca26c2b152da720f08e89d25478b10751d7fb761",
+      "sha256": "e8a35e1e4fbc241a0903d29246a830da3763a20f30e60e1956c49d36629e45b3",
       "executable": false
     },
     "tests/base/product-hierarchy.test.ts": {
@@ -7541,6 +7565,10 @@
     },
     "tests/base/scheduled-publication-fixture.ts": {
       "sha256": "8bb1407bed4ba98bcabfd109dc3c2803311721fcb80c616507a9cd8917961a78",
+      "executable": false
+    },
+    "tests/base/scorecard-proof.ts": {
+      "sha256": "f4606bcd124a3bb48d181154b5d3a0fc70f15d865aaca37982955f82aa992052",
       "executable": false
     },
     "tests/base/subscription-fixture.ts": {
@@ -7808,7 +7836,7 @@
       "executable": false
     },
     "tests/browser/prioritisation.mjs": {
-      "sha256": "0c5de67d38d22726ec303f1ebc6f61a2cf0a627c079cc94e6750ebc4198ba215",
+      "sha256": "3eb1a0a3100d214a7f1ae4b9ffed356be5ecfda62d385328c6f689c930c4b1e4",
       "executable": false
     },
     "tests/browser/product-hierarchy.mjs": {
@@ -7889,6 +7917,10 @@
     },
     "tests/browser/route-review.mjs": {
       "sha256": "76bf5a13e5c0dd643e36faa1845dd296cca3152075377f7193b219779baa6f12",
+      "executable": false
+    },
+    "tests/browser/scorecard-flow.mjs": {
+      "sha256": "51d316198063af135b8ab15a2c3399f257ac88ae07a9d146ed282ad01213363c",
       "executable": false
     },
     "tests/browser/signin.test.mjs": {

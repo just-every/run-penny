@@ -530,6 +530,12 @@
       "name": "0091_email_capture_provenance.sql",
       "sha256": "c27b3440a76ec95d5d0a68574d441cea3aab40efddd1b8b8fc84b53dd7f2161e",
       "sql": "-- The admitted email forwarder is provenance, separate from a stated body sender.\n-- Older evidence has unknown provenance; never infer it from body wording.\nALTER TABLE evidence_items ADD COLUMN admitted_sender TEXT;\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0095_scorecards.sql",
+      "sha256": "87a15806b987369f9e482b2485eb9140122f5b4598505469baa717354586b0df",
+      "sql": "CREATE TABLE penny_scorecards (\n id TEXT PRIMARY KEY,\n name TEXT NOT NULL,\n entity TEXT NOT NULL CHECK(entity IN('requests','features')),\n revision INTEGER NOT NULL CHECK(revision>0),\n created_at TEXT NOT NULL,\n updated_at TEXT NOT NULL\n);\nCREATE TABLE penny_scorecard_versions (\n id TEXT PRIMARY KEY,\n scorecard_id TEXT NOT NULL REFERENCES penny_scorecards(id) ON DELETE CASCADE,\n revision INTEGER NOT NULL,\n criteria_json TEXT NOT NULL CHECK(json_valid(criteria_json)),\n created_at TEXT NOT NULL,\n UNIQUE(scorecard_id,revision)\n);\nCREATE TABLE penny_score_submissions (\n id TEXT PRIMARY KEY,\n version_id TEXT NOT NULL REFERENCES penny_scorecard_versions(id) ON DELETE CASCADE,\n idea_id TEXT NOT NULL,\n created_at TEXT NOT NULL,\n updated_at TEXT NOT NULL\n);\n-- Attribution is a removable leaf. Erasing an operator leaves the numeric\n-- submission readable without an operator identifier or a retained name.\nCREATE TABLE penny_score_scorers (\n submission_id TEXT PRIMARY KEY REFERENCES penny_score_submissions(id) ON DELETE CASCADE,\n operator_id TEXT NOT NULL REFERENCES operators(id)\n);\nCREATE INDEX penny_score_scorers_operator ON penny_score_scorers(operator_id);\nCREATE TABLE penny_score_inputs (\n submission_id TEXT NOT NULL REFERENCES penny_score_submissions(id) ON DELETE CASCADE,\n criterion_index INTEGER NOT NULL CHECK(criterion_index>=0),\n value INTEGER NOT NULL CHECK(value BETWEEN 1 AND 10),\n PRIMARY KEY(submission_id,criterion_index)\n);\nCREATE INDEX penny_score_submissions_idea ON penny_score_submissions(version_id,idea_id);\n\nCREATE TRIGGER penny_score_operator_erasure AFTER UPDATE OF email ON operators\nWHEN NEW.email LIKE '%@erased.invalid'\nBEGIN\n DELETE FROM penny_score_scorers WHERE operator_id=NEW.id;\nEND;\n"
     }
   ],
   "compatibilityDate": "2026-08-31",

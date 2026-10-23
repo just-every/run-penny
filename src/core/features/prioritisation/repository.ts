@@ -1,3 +1,4 @@
+import {readScorecard} from './scorecard-repository'
 import {MutationError} from '@/core/app/operator-mutations'
 import {createUlid} from '@/core/shared/ulid'
 import {audit} from '../decisions/write-support'
@@ -15,9 +16,13 @@ export async function readView(db:D1Database,id:string,actor:string):Promise<Vie
  const row=await db.prepare('SELECT id,owner_id,revision,definition_json FROM penny_priority_views WHERE id=? AND (owner_id=? OR shared=1)').bind(id,actor).first<Stored>()
  if(!row)throw new MutationError(404,'View not found.')
  const saved=decode(row,actor)
- return {...saved,rows:sortRows(await comparisonRows(db,saved.view.entity),saved.view)}
+ const rows=await comparisonRows(db,saved.view.entity)
+ if(saved.view.scorecardId){const card=await readScorecard(db,saved.view.scorecardId,actor,false);if(card.entity!==saved.view.entity)throw new MutationError(422,'The scorecard compares a different kind of idea.');for(const row of rows)row.scorecardTotal=card.rows.find(result=>result.id===row.id)?.score??null}
+ return {...saved,rows:sortRows(rows,saved.view)}
 }
 export async function saveView(db:D1Database,id:string|null,view:ViewInput,actor:string,now:string,revision?:number){
+ if(view.formula==='scorecard'&&!view.scorecardId)throw new MutationError(422,'Choose a scorecard for this formula.')
+ if(view.scorecardId){const card=await readScorecard(db,view.scorecardId,actor,false);if(card.entity!==view.entity)throw new MutationError(422,'The scorecard compares a different kind of idea.')}
  const key=id??createUlid()
  if(id){
   const row=await db.prepare('SELECT owner_id,revision FROM penny_priority_views WHERE id=?').bind(id).first<{owner_id:string;revision:number}>()

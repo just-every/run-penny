@@ -1,0 +1,26 @@
+import {useLocation} from '@tanstack/react-router'
+import {useOperatorResource} from '@/core/app/ui/operator-resource'
+import {OperatorResourceFailure,OperatorResourceLoading,OperatorResourceNotFound,OperatorSessionExpired} from '@/core/app/ui/operator-resource-state'
+import {LoopForm,controlClass} from '@/core/app/ui/loop-form'
+import {WorkspaceLink} from '../workspace/ui/workspace-link'
+import {paperCardClass,textLinkClass,disclosureSummaryClass,fieldLabelClass} from '@/core/ui/app/classes'
+import {ScorecardEditor} from './scorecard-editor'
+import type {Scorecard,ScorecardResult} from './scorecard-model'
+export function Scorecards(){
+ const selected=new URLSearchParams(useLocation().searchStr).get('card'),[resource,reload]=useOperatorResource<{cards:Scorecard[];canDefine:boolean}>('/api/operator/scorecards')
+ return <><section className={`${paperCardClass} p-5`} aria-label="Scorecards"><h2 className="text-2xl font-bold">Scorecards</h2><p className="mt-2 text-sm text-penny-muted">Compare named criteria and see every operator’s inputs. Only the current version contributes to its ranking.</p>{resource.kind==='loading'?<OperatorResourceLoading label="Loading scorecards…"/>:resource.kind==='session_expired'?<OperatorSessionExpired/>:resource.kind!=='ready'?<OperatorResourceFailure title="Could not load scorecards." onRetry={reload}/>:<><ul className="mt-4 space-y-3">{resource.data.cards.map(card=><li key={card.id}><WorkspaceLink className={textLinkClass} href={`/app/prioritisation?card=${card.id}`}>{card.name}</WorkspaceLink></li>)}</ul>{!resource.data.cards.length?<p className="mt-3 text-penny-muted">No scorecards yet.</p>:null}{resource.data.canDefine?<details className="group mt-4"><summary className={disclosureSummaryClass}>Create scorecard</summary><div className="mt-3"><ScorecardEditor onSaved={reload}/></div></details>:null}</>}</section>{selected?<SelectedScorecard key={selected} id={selected} onSaved={reload}/>:null}</>
+}
+function SelectedScorecard({id,onSaved}:{id:string;onSaved:()=>void}){
+ const [resource,reload]=useOperatorResource<ScorecardResult>(`/api/operator/scorecards/${id}`)
+ if(resource.kind==='loading')return <OperatorResourceLoading label="Loading scorecard…"/>
+ if(resource.kind==='session_expired')return <OperatorSessionExpired/>
+ if(resource.kind==='not_found')return <OperatorResourceNotFound title="Scorecard unavailable">Choose an existing scorecard.</OperatorResourceNotFound>
+ if(resource.kind!=='ready')return <OperatorResourceFailure title="Could not load scorecard." onRetry={reload}/>
+ const card=resource.data,current=card.versions[0],saved=()=>{reload();onSaved()}
+ return <section className={`${paperCardClass} min-w-0 p-5`} aria-label={card.name}><h2 className="break-words text-2xl font-bold">{card.name}</h2><p className="mt-2 text-sm text-penny-muted">Criteria version {current.revision} · Mean of each scorer’s weighted percentage, using this version only. Segment filtering is unavailable.</p>
+ {card.canDefine?<details className="group mt-4"><summary className={disclosureSummaryClass}>Revise criteria</summary><div className="mt-3"><ScorecardEditor key={card.revision} card={card} onSaved={saved}/></div></details>:null}
+ <ol className="mt-5 space-y-4" aria-label="Scorecard ranking">{card.rows.map((row,index)=><li key={row.id} className="min-w-0 rounded-lg border border-penny-line p-4"><h3 className="break-words text-xl font-bold">{index+1}. {row.title}</h3><p className="mt-2 font-semibold">Weighted result: {row.score===null?'Unscored':`${Number(row.score.toFixed(2))}%`}</p>
+ <div className="mt-4 space-y-4">{card.versions.map(version=>{const inputs=card.submissions.filter(s=>s.ideaId===row.id&&s.versionId===version.id);return inputs.length?<section key={version.id} aria-label={`Criteria version ${version.revision}`}><h4 className="font-semibold">Criteria version {version.revision}{version.id!==current.id?' · Earlier inputs':''}</h4><ul className="mt-2 space-y-3">{inputs.map(input=><li key={input.id} className="break-words text-sm"><p className="font-semibold">{input.scorer}{input.own?' · Yours':''}: {Number(input.result.toFixed(2))}%</p><ul className="mt-1 space-y-1">{version.criteria.map((criterion,i)=><li key={i}>{criterion.name}: {input.values[i]} / {criterion.scale} · weight {criterion.weight}</li>)}</ul></li>)}</ul></section>:null})}</div>
+ <details className="group mt-4"><summary className={disclosureSummaryClass}>Your scores for {row.title}</summary><div className="mt-3"><LoopForm title={`Score ${row.title}`} action={`/api/operator/scorecards/${card.id}/ideas/${row.id}`} method="PUT" submit="Save your scores" onSaved={saved} transform={data=>({versionId:current.id,values:current.criteria.map((_,i)=>Number(data.get(`score.${i}`)))})}><div className="grid gap-3 sm:grid-cols-2">{current.criteria.map((criterion,i)=><label key={i} className={fieldLabelClass}>{criterion.name} (1–{criterion.scale}, weight {criterion.weight})<input className={controlClass} name={`score.${i}`} type="number" min="1" max={criterion.scale} step="1" required defaultValue={card.submissions.find(s=>s.own&&s.versionId===current.id&&s.ideaId===row.id)?.values[i]??''}/></label>)}</div></LoopForm></div></details></li>)}</ol>
+ </section>
+}

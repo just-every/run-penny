@@ -586,7 +586,7 @@ Current entries include the shipped setup and workspace clocks, request status c
 
 REL-014 adds operator-scheduled releases and ROAD-008 status updates with a retained UTC instant and entered IANA timezone, cancellation, current publication checks, scheduler audit and durable in-app author notices on failure. Clock-advanced Worker proof and the 1440/390 browser controls are named below; hosted Cron execution and inbox delivery still need their own receipts. REL-018 inherits the scheduling, cancellation and failure behavior for announcements and request targets when those entry types ship, and remains missing.
 
-**Counts:** 121 done, 58 partial, 68 missing (247 clauses).
+**Counts:** 121 done, 59 partial, 67 missing (247 clauses).
 
 | Clause | Status | Acceptance evidence | Current proof |
 | --- | --- | --- | --- |
@@ -712,7 +712,7 @@ REL-014 adds operator-scheduled releases and ROAD-008 status updates with a reta
 | PRIO-001 | done | Products contain components and features; three requests from two accounts roll up once per account, moves preserve all links, and private authority, archive and public boundaries hold at both widths. | `tests/base/product-hierarchy.test.ts`; `tests/browser/product-hierarchy.mjs` |
 | PRIO-002 | done | Reviewed saved Canny API/CSV status names become native internal statuses with mapped public labels, private names by default, remapping without mail, replay, undo and later-edit conflict custody. Browser journeys at 1440/390 exercise import and native editing. | `tests/base/request-status-workflow.test.ts`; `tests/base/import-statuses.test.ts`; `tests/browser/import-statuses.mjs` |
 | PRIO-003 | partial | Private/shared request and feature comparisons, explicit RICE/value-over-effort/manual segment demand/weighted-sum inputs, live native demand and importance, unknown inputs, stale-edit refusal and score-free decisions/public payloads pass through routes and both-width browser journeys. Remaining: commercial/segment/date and custom-field columns, scorecards and delivery-sourced effort. | `tests/base/prioritisation.test.ts`; `tests/browser/prioritisation.mjs` |
-| PRIO-004 | missing | Two operators' inputs are both visible on a card; the weighted rank is computed; changing the criteria keeps earlier scores readable. | — |
+| PRIO-004 | partial | Two operators’ inputs and the hand-computed weighted rank remain readable after criteria revision; own-only, scale and stale checks, saved comparison, archive restore and operator erasure pass through native routes. Owners and Admins define; current operators score/read. Gap: segment membership and ranking filters (SEG-006) do not exist; manual segment demand is not membership. | `tests/base/prioritisation.test.ts` (proveScorecards); `tests/browser/prioritisation.mjs` (scorecardFlow, 1440/390) |
 | PRIO-005 | missing | A Linear, a ClickUp and an Asana fixture estimate each appear as effort on the linked feature with their source; a manual override is marked as such. | — |
 | PRIO-006 | missing | Features linked to an objective appear grouped under it on a roadmap view and filter a prioritization view; a key result reads its value from an Amplitude fixture; a Productboard fixture's objectives land with their feature links. | — |
 | DEC-001 | done | Draft, ready, committed and review-due states in one queue. | `tests/base/decision-loop-commit.test.ts` |

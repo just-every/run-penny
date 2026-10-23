@@ -26,8 +26,9 @@ const manualInput = z.object({
 export const viewInput = z.object({
   name: z.string().trim().min(1).max(120),
   shared: z.boolean().default(false),
+  scorecardId: z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/).optional(),
   entity: z.enum(['requests', 'features']).default('requests'),
-  formula: z.enum(['none', 'rice', 'value_over_effort', 'weighted_segment_demand', 'weighted_sum']).default('none'),
+  formula: z.enum(['none', 'rice', 'value_over_effort', 'weighted_segment_demand', 'weighted_sum', 'scorecard']).default('none'),
   weights: weights.default(() => weights.parse({})),
   manualInputs: z.record(z.string().min(1), manualInput).default({}),
 }).strict();
@@ -42,6 +43,7 @@ export interface FormulaRow {
   evidence: number;
   /** Counts for importance levels 1 through 4, in that order. */
   importance: number[];
+  scorecardTotal?: number | null;
 }
 
 export interface EvaluatedRow extends FormulaRow {
@@ -95,6 +97,9 @@ export function evaluate(row: FormulaRow, view: ViewInput): EvaluatedRow {
       for (const key of Object.keys(view.weights) as (keyof ViewInput['weights'])[]) {
         if (view.weights[key] !== 0) score += required(key) * view.weights[key];
       }
+      break;
+    case 'scorecard':
+      score = row.scorecardTotal ?? null;
       break;
     case 'none':
       break;
