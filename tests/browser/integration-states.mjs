@@ -45,6 +45,7 @@ try{
    assert.equal((await page.goto(runtime.origin+'/app/settings')).status(),200)
    await finishFirstRun(page,async()=>{})
    if(new URL(page.url()).pathname!=='/app/settings')await page.goto(runtime.origin+'/app/settings')
+   await page.waitForLoadState('networkidle')
    const destination=page.getByRole('form',{name:'New integration destination',exact:true})
    await destination.getByLabel('Connection name',{exact:true}).fill('Local signed notes');await destination.getByRole('combobox',{name:/^Connection type/}).selectOption('receiver')
    await destination.getByRole('button',{name:'Save connection',exact:true}).click()
