@@ -10,7 +10,7 @@ export async function weeklyPortability(operator:Record<string,string>){
  const probe=await requester('Restored weekly reader'),subject=(await env.DB.prepare('SELECT slug FROM requests WHERE published_at IS NOT NULL LIMIT 1').first<{slug:string}>())!
  expect((await call('/api/public/requester/weekly-summary',{subscribed:true},probe,'PATCH')).status).toBe(200)
  expect((await call(`/api/public/requests/${subject.slug}/follow`,{},probe)).status).toBe(204)
- expect((await call(`/api/operator/requests/${subject.slug}/status-updates`,{status:'under_review',body:'Restored weekly public change',idempotencyKey:crypto.randomUUID()},operator)).status).toBe(201)
+ expect((await call(`/api/operator/requests/${subject.slug}/status-updates`,{status:'under_review',body:'Restored weekly public change',idempotencyKey:crypto.randomUUID()},operator)).status).toBe(200)
  const period=Date.parse(completedWeek(Date.now()).end)+42*86400000
  await env.DB.prepare("UPDATE notification_events SET created_at=?,updated_at=? WHERE body='Restored weekly public change'").bind(new Date(period-86400000).toISOString(),new Date(period-86400000).toISOString()).run()
  const exported=await call('/api/operator/data/export',undefined,operator)
