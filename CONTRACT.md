@@ -673,9 +673,9 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 100 | 14 | 0 | 114 |
+| Published | 101 | 13 | 0 | 114 |
 | Target and push further | 20 | 45 | 68 | 133 |
-| All | 120 | 59 | 68 | 247 |
+| All | 121 | 58 | 68 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -819,7 +819,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `ROAD-005` | Commitment mapping | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `ROAD-006` | Public roadmap | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` — approved-only columns and counts, mapped request, published release on card and detail at 1440/390 |  |
 | `ROAD-007` | Status update draft | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` |  |
-| `ROAD-008` | Status update publication | published | partial | `tests/browser/operator-pages-status.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health | Gap: Every mapped request history, eligible-follower deduplication and repeat-publication refusal lack complete passing assertions. |
+| `ROAD-008` | Status update publication | published | done | `tests/base/roadmap-update-publication.ts` — proveRoadmapPublication in `tests/base/board.test.ts` (publication and real scheduled mail, push Verify base shards): both approved mapped histories, unapproved/unmapped controls, one intent per eligible identity/version, muted-follower exclusion, coalesced mail and unchanged repeat; `tests/base/notifications.test.ts` (public event intent is atomic; fixed windows include all approved events, exclude held/internal/voter-only; rechecks each configured input after enqueue); `tests/browser/operator-pages-status.mjs` via `tests/browser/operator-pages.mjs` CORE — publication, both public histories and repeat refusal at 1440/390, push Verify loop-health | — |
 | `ROAD-009` | Roadmap views | target | missing |  | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. |
 | `ROAD-010` | Several and audience roadmaps | target | missing |  | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. |
 | `ROAD-011` | Release planning and dependencies | target | done | `tests/base/release-planning.test.ts`; `tests/browser/release-planning.mjs` |  |
