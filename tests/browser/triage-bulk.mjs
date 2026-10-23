@@ -27,9 +27,9 @@ export async function proveBulkActions({ page, runtime, viewport, inspect }) {
     'Schedule monthly finance exports',
     'Include invoice currency in billing reports',
     'Send department spending summaries',
-  ].map(title => json('/api/operator/requests', {
+  ].map(async title => ({...await json('/api/operator/requests', {
     title, description: 'The finance team needs this workflow before its next month-end review.', boardSlug,
-  }, 201)))
+  }, 201),title})))
   async function snapshot(request) {
     const [ownership, tags] = await Promise.all([
       json(`/api/operator/ownership/requests/${request.slug}`),
