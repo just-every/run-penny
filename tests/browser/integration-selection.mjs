@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 export async function selectPublicIntegration({runtime,page,capture}){
  await page.goto(runtime.origin+'/app/settings')
  const form=page.getByRole('form',{name:'New integration destination',exact:true})
+ await page.waitForFunction(()=>document.querySelector('form[aria-label="New integration destination"] button')?.disabled===false)
  await form.getByLabel('Connection name',{exact:true}).fill('synthetic-penny-public-webhook')
  await form.getByRole('combobox',{name:/^Connection type/}).selectOption('webhook')
  await form.getByLabel('Private HTTPS endpoint',{exact:true}).fill('https://events.example.com/penny')

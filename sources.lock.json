@@ -5404,7 +5404,7 @@
       "executable": false
     },
     "src/core/features/integrations/ui/destinations.tsx": {
-      "sha256": "63029dafd2f769ed3beb2d41ceaddb5039f096d8c7be43ff6259d6d3b1455ba5",
+      "sha256": "604a51f898a65dbc7d29730688510612d3486bee5da5509b70e4f28877fc70c7",
       "executable": false
     },
     "src/core/features/integrations/ui/jira-project-picker.tsx": {
@@ -7668,7 +7668,7 @@
       "executable": false
     },
     "tests/browser/integration-selection.mjs": {
-      "sha256": "54a58fd0e47f3aedbefaccbc4615bc0e8e1bb82916108a7c391b3c25bb30a4b2",
+      "sha256": "80c0c9a46fd4e9e199a2f28b0f8841159ce40989a1d8ee711e4bd40aa913a2cf",
       "executable": false
     },
     "tests/browser/integration-states.mjs": {
