@@ -4,6 +4,7 @@ import {ModelSettings} from '../../ai/ui/model-settings'
 import {AgingSettings} from '../../triage/aging-settings'
 import {BoardOwnerSettings} from '../../ownership/ui/board-owner-settings'
 import {WorkspaceClockSettings} from '../../settings/ui/workspace-clock-settings'
+import {WeeklySummarySetting} from '../../settings/ui/weekly-summary-setting'
 import {useRouter} from '@tanstack/react-router'
 import type { Category } from '../../categories/ui-types'
 import {MailIdentitySettings} from '../../settings/ui/mail-identity-settings'
@@ -52,6 +53,7 @@ export function BoardSettings() {
         <TrackerSettings />
         <MailIdentitySettings />
         <AgingSettings/><WorkspaceClockSettings />
+        <WeeklySummarySetting />
         <BrandingSettings />
         <FrameSettings />
         <RequestStatusSettings />

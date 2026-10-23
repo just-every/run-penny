@@ -15,6 +15,7 @@ import { loadRuntimeConfiguration } from '@/core/platform/configuration'
 import { authMail } from '@/core/features/auth/mail'
 import type { AppBindings } from '@/core/shared/bindings'
 import {explicitConsentBoard} from './explicit-consent-board'
+import {proveWeeklySummary} from './weekly-summary-flow'
 const start=Date.parse('2026-10-07T09:00:00.000Z'),time=(offset=0)=>new Date(start+offset).toISOString()
 const source={operatorAllowlist:['owner@penny.invalid'],workspaceTimezone:'UTC',publicOriginAllowlist:['https://penny.test']}
 const runtime=(provider='sendgrid')=>createPennyRuntime({...env,WORKSPACE_TIMEZONE:source.workspaceTimezone,MAIL_PROVIDER:provider,...(provider==='resend'?{MAIL_API_KEY:'synthetic-resend-key'}:{})},source)
@@ -39,7 +40,7 @@ function capture(status=202,receipt:string|null=null){
  return sent
 }
 async function batches(){return (await env.DB.prepare('SELECT * FROM notification_batches ORDER BY window_start').all()).results}
-it('[NOTIFY-001/002 REQ-007] public event intent is atomic; fixed windows include all approved events, exclude held/internal/voter-only',async()=>{
+it('[NOTIFY-001/002/010 REQ-007] public event intent is atomic; fixed windows and weekly summaries retain public-only consent',async()=>{
  const g=await setup()
  expect((await call(`/api/public/requests/${g.slug}/vote`,{},g.person)).status).toBe(204)
  await g.status('No consent');expect((await env.DB.prepare('SELECT count(*) n FROM notification_intents').first<{n:number}>())!.n).toBe(0)
@@ -66,6 +67,7 @@ it('[NOTIFY-001/002 REQ-007] public event intent is atomic; fixed windows includ
  await env.DB.exec("CREATE TRIGGER fail_intent BEFORE INSERT ON notification_intents BEGIN SELECT RAISE(ABORT,'injected atomic intent failure'); END;")
  await expect(g.status('Must roll back',10800000)).rejects.toThrow('injected atomic intent failure')
  expect(await env.DB.prepare("SELECT id FROM request_status_updates WHERE body='Must roll back'").first()).toBeNull()
+ await proveWeeklySummary()
 })
 it('[NOTIFY-001 REQ-007] public reply routes retain intents while excluding the recipient’s own approved comment from mail',async()=>{
  const g=await setup();await g.follow()
