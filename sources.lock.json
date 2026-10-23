@@ -6712,7 +6712,7 @@
       "executable": false
     },
     "src/core/features/settings/ui/weekly-summary-setting.tsx": {
-      "sha256": "0e434888e964c34f2fbd5140b5873524a840dbc78d2f61e5d17205f22132427b",
+      "sha256": "92dd4b8bc15e018be963f9daa555918845369d41446888d28f2d2847bc411e73",
       "executable": false
     },
     "src/core/features/settings/ui/workspace-clock-settings.tsx": {
