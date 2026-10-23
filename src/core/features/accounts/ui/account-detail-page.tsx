@@ -1,3 +1,4 @@
+import {AccountPeopleLinks} from '@/core/features/people/links'
 import {DraftPanel} from '../../ai/ui/draft-panel'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { AccountEditor } from './account-editor'
@@ -42,7 +43,7 @@ function AccountContent({ account, onSaved }: { readonly account: OperatorAccoun
         <AccountLinkedRequests account={account} />
         <AccountEvidence account={account} />
       </div>
-      <aside className="min-w-0"><AccountLinkedRequesters account={account} /></aside>
+      <aside className="min-w-0"><AccountPeopleLinks people={account.requesters}/><AccountLinkedRequesters account={account} /></aside>
     </div>
   </>
 }

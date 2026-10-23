@@ -1,7 +1,8 @@
 import {scorecardFlow} from './scorecard-flow.mjs'
 import assert from 'node:assert/strict'
 import {moderationJourney} from './moderation-runtime.mjs'
-await moderationJourney('prioritisation',async({runtime,origin,operator,json,send,person,pageFor,capture})=>{
+await moderationJourney('prioritisation',async({runtime,origin,operator,json,send,person,pageFor,capture:baseCapture})=>{
+ const capture=async(page,...args)=>{assert.equal(await page.evaluate(()=>window.__rerHydration?.count??0),0,'no hydration mismatch');return baseCapture(page,...args)}
  const customer=await person('eli@example.test','Eli Wong'),auth={Authorization:`Bearer ${customer.token}`},requests=[]
  for(const title of ['Schedule monthly finance exports','Send department summaries','Export invoices']){
   const request=await json('/api/public/requests',{title,description:'Finance needs reliable reports for its monthly account reviews.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},auth,'POST',201)

@@ -1,7 +1,9 @@
+import {personFlow} from './person-flow.mjs'
 import assert from 'node:assert/strict'
 import {moderationJourney} from './moderation-runtime.mjs'
 
-await moderationJourney('requester-blocking',async({origin,operator,json,send,person,pageFor,capture})=>{
+await moderationJourney('requester-blocking',async({runtime,origin,operator,json,send,person,pageFor,capture:baseCapture})=>{
+ const capture=async(page,...args)=>{assert.equal(await page.evaluate(()=>window.__rerHydration?.count??0),0,'no hydration mismatch');return baseCapture(page,...args)}
  const eli=await person('eli@example.test','Eli Wong'),noor=await person('noor@example.test','Noor Ahmed')
  const identity={Authorization:`Bearer ${eli.token}`},independent={Authorization:`Bearer ${noor.token}`}
  const own=await json('/api/public/requests',{title:'Schedule monthly finance exports',description:'Finance needs an export before its monthly review.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},identity,'POST',201)
@@ -49,4 +51,5 @@ await moderationJourney('requester-blocking',async({origin,operator,json,send,pe
  assert.equal((await json(`/api/public/requests/${shared.slug}`)).voteCount,2)
  await capture(visitor,'contributions-restored')
  await send(`/api/public/requests/${shared.slug}/follow`,{},identity,'POST',204)
+ await personFlow({runtime,origin,operator,json,send,pageFor,capture,owner,id,identity,shared})
 })

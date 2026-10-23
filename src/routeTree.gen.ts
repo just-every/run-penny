@@ -22,6 +22,7 @@ import { Route as AppFeedbackRouteImport } from './routes/app.feedback'
 import { Route as AppLearningRouteImport } from './routes/app.learning'
 import { Route as AppModerationRouteImport } from './routes/app.moderation'
 import { Route as AppOverviewRouteImport } from './routes/app.overview'
+import { Route as AppPeopleRouteImport } from './routes/app.people'
 import { Route as AppPrioritisationRouteImport } from './routes/app.prioritisation'
 import { Route as AppReleasesRouteImport } from './routes/app.releases'
 import { Route as AppRoadmapRouteImport } from './routes/app.roadmap'
@@ -38,6 +39,8 @@ import { Route as AppCustomersIndexRouteImport } from './routes/app.customers.in
 import { Route as AppCustomersAccountSlugRouteImport } from './routes/app.customers.$accountSlug'
 import { Route as AppDecisionsIndexRouteImport } from './routes/app.decisions.index'
 import { Route as AppDecisionsDecisionSlugRouteImport } from './routes/app.decisions.$decisionSlug'
+import { Route as AppPeopleIndexRouteImport } from './routes/app.people.index'
+import { Route as AppPeoplePersonIdRouteImport } from './routes/app.people.$personId'
 import { Route as AppReleasesIndexRouteImport } from './routes/app.releases.index'
 import { Route as AppReleasesReleaseSlugRouteImport } from './routes/app.releases.$releaseSlug'
 import { Route as PortalFeedbackIndexRouteImport } from './routes/portal.feedback.index'
@@ -112,6 +115,11 @@ const AppModerationRoute = AppModerationRouteImport.update({
 const AppOverviewRoute = AppOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPeopleRoute = AppPeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPrioritisationRoute = AppPrioritisationRouteImport.update({
@@ -195,6 +203,16 @@ const AppDecisionsDecisionSlugRoute =
     path: '/$decisionSlug',
     getParentRoute: () => AppDecisionsRoute,
   } as any)
+const AppPeopleIndexRoute = AppPeopleIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppPeopleRoute,
+} as any)
+const AppPeoplePersonIdRoute = AppPeoplePersonIdRouteImport.update({
+  id: '/$personId',
+  path: '/$personId',
+  getParentRoute: () => AppPeopleRoute,
+} as any)
 const AppReleasesIndexRoute = AppReleasesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -262,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/app/learning': typeof AppLearningRoute
   '/app/moderation': typeof AppModerationRoute
   '/app/overview': typeof AppOverviewRoute
+  '/app/people': typeof AppPeopleRouteWithChildren
   '/app/prioritisation': typeof AppPrioritisationRoute
   '/app/releases': typeof AppReleasesRouteWithChildren
   '/app/roadmap': typeof AppRoadmapRoute
@@ -277,6 +296,7 @@ export interface FileRoutesByFullPath {
   '/portal/': typeof PortalIndexRoute
   '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
+  '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
   '/portal/feedback/activity': typeof PortalFeedbackActivityRoute
@@ -285,6 +305,7 @@ export interface FileRoutesByFullPath {
   '/portal/updates/$releaseSlug': typeof PortalUpdatesReleaseSlugRoute
   '/app/customers/': typeof AppCustomersIndexRoute
   '/app/decisions/': typeof AppDecisionsIndexRoute
+  '/app/people/': typeof AppPeopleIndexRoute
   '/app/releases/': typeof AppReleasesIndexRoute
   '/portal/feedback/': typeof PortalFeedbackIndexRoute
   '/portal/roadmap/': typeof PortalRoadmapIndexRoute
@@ -310,6 +331,7 @@ export interface FileRoutesByTo {
   '/portal': typeof PortalIndexRoute
   '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
+  '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
   '/portal/feedback/activity': typeof PortalFeedbackActivityRoute
@@ -318,6 +340,7 @@ export interface FileRoutesByTo {
   '/portal/updates/$releaseSlug': typeof PortalUpdatesReleaseSlugRoute
   '/app/customers': typeof AppCustomersIndexRoute
   '/app/decisions': typeof AppDecisionsIndexRoute
+  '/app/people': typeof AppPeopleIndexRoute
   '/app/releases': typeof AppReleasesIndexRoute
   '/portal/feedback': typeof PortalFeedbackIndexRoute
   '/portal/roadmap': typeof PortalRoadmapIndexRoute
@@ -337,6 +360,7 @@ export interface FileRoutesById {
   '/app/learning': typeof AppLearningRoute
   '/app/moderation': typeof AppModerationRoute
   '/app/overview': typeof AppOverviewRoute
+  '/app/people': typeof AppPeopleRouteWithChildren
   '/app/prioritisation': typeof AppPrioritisationRoute
   '/app/releases': typeof AppReleasesRouteWithChildren
   '/app/roadmap': typeof AppRoadmapRoute
@@ -352,6 +376,7 @@ export interface FileRoutesById {
   '/portal/': typeof PortalIndexRoute
   '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
+  '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
   '/portal/feedback/activity': typeof PortalFeedbackActivityRoute
@@ -360,6 +385,7 @@ export interface FileRoutesById {
   '/portal/updates/$releaseSlug': typeof PortalUpdatesReleaseSlugRoute
   '/app/customers/': typeof AppCustomersIndexRoute
   '/app/decisions/': typeof AppDecisionsIndexRoute
+  '/app/people/': typeof AppPeopleIndexRoute
   '/app/releases/': typeof AppReleasesIndexRoute
   '/portal/feedback/': typeof PortalFeedbackIndexRoute
   '/portal/roadmap/': typeof PortalRoadmapIndexRoute
@@ -380,6 +406,7 @@ export interface FileRouteTypes {
     | '/app/learning'
     | '/app/moderation'
     | '/app/overview'
+    | '/app/people'
     | '/app/prioritisation'
     | '/app/releases'
     | '/app/roadmap'
@@ -395,6 +422,7 @@ export interface FileRouteTypes {
     | '/portal/'
     | '/app/customers/$accountSlug'
     | '/app/decisions/$decisionSlug'
+    | '/app/people/$personId'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
     | '/portal/feedback/activity'
@@ -403,6 +431,7 @@ export interface FileRouteTypes {
     | '/portal/updates/$releaseSlug'
     | '/app/customers/'
     | '/app/decisions/'
+    | '/app/people/'
     | '/app/releases/'
     | '/portal/feedback/'
     | '/portal/roadmap/'
@@ -428,6 +457,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/app/customers/$accountSlug'
     | '/app/decisions/$decisionSlug'
+    | '/app/people/$personId'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
     | '/portal/feedback/activity'
@@ -436,6 +466,7 @@ export interface FileRouteTypes {
     | '/portal/updates/$releaseSlug'
     | '/app/customers'
     | '/app/decisions'
+    | '/app/people'
     | '/app/releases'
     | '/portal/feedback'
     | '/portal/roadmap'
@@ -454,6 +485,7 @@ export interface FileRouteTypes {
     | '/app/learning'
     | '/app/moderation'
     | '/app/overview'
+    | '/app/people'
     | '/app/prioritisation'
     | '/app/releases'
     | '/app/roadmap'
@@ -469,6 +501,7 @@ export interface FileRouteTypes {
     | '/portal/'
     | '/app/customers/$accountSlug'
     | '/app/decisions/$decisionSlug'
+    | '/app/people/$personId'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
     | '/portal/feedback/activity'
@@ -477,6 +510,7 @@ export interface FileRouteTypes {
     | '/portal/updates/$releaseSlug'
     | '/app/customers/'
     | '/app/decisions/'
+    | '/app/people/'
     | '/app/releases/'
     | '/portal/feedback/'
     | '/portal/roadmap/'
@@ -583,6 +617,13 @@ declare module '@tanstack/react-router' {
       path: '/overview'
       fullPath: '/app/overview'
       preLoaderRoute: typeof AppOverviewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/people': {
+      id: '/app/people'
+      path: '/people'
+      fullPath: '/app/people'
+      preLoaderRoute: typeof AppPeopleRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/prioritisation': {
@@ -697,6 +738,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDecisionsDecisionSlugRouteImport
       parentRoute: typeof AppDecisionsRoute
     }
+    '/app/people/': {
+      id: '/app/people/'
+      path: '/'
+      fullPath: '/app/people/'
+      preLoaderRoute: typeof AppPeopleIndexRouteImport
+      parentRoute: typeof AppPeopleRoute
+    }
+    '/app/people/$personId': {
+      id: '/app/people/$personId'
+      path: '/$personId'
+      fullPath: '/app/people/$personId'
+      preLoaderRoute: typeof AppPeoplePersonIdRouteImport
+      parentRoute: typeof AppPeopleRoute
+    }
     '/app/releases/': {
       id: '/app/releases/'
       path: '/'
@@ -798,6 +853,20 @@ const AppDecisionsRouteWithChildren = AppDecisionsRoute._addFileChildren(
   AppDecisionsRouteChildren,
 )
 
+interface AppPeopleRouteChildren {
+  AppPeoplePersonIdRoute: typeof AppPeoplePersonIdRoute
+  AppPeopleIndexRoute: typeof AppPeopleIndexRoute
+}
+
+const AppPeopleRouteChildren: AppPeopleRouteChildren = {
+  AppPeoplePersonIdRoute: AppPeoplePersonIdRoute,
+  AppPeopleIndexRoute: AppPeopleIndexRoute,
+}
+
+const AppPeopleRouteWithChildren = AppPeopleRoute._addFileChildren(
+  AppPeopleRouteChildren,
+)
+
 interface AppReleasesRouteChildren {
   AppReleasesReleaseSlugRoute: typeof AppReleasesReleaseSlugRoute
   AppReleasesIndexRoute: typeof AppReleasesIndexRoute
@@ -821,6 +890,7 @@ interface AppRouteChildren {
   AppLearningRoute: typeof AppLearningRoute
   AppModerationRoute: typeof AppModerationRoute
   AppOverviewRoute: typeof AppOverviewRoute
+  AppPeopleRoute: typeof AppPeopleRouteWithChildren
   AppPrioritisationRoute: typeof AppPrioritisationRoute
   AppReleasesRoute: typeof AppReleasesRouteWithChildren
   AppRoadmapRoute: typeof AppRoadmapRoute
@@ -838,6 +908,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLearningRoute: AppLearningRoute,
   AppModerationRoute: AppModerationRoute,
   AppOverviewRoute: AppOverviewRoute,
+  AppPeopleRoute: AppPeopleRouteWithChildren,
   AppPrioritisationRoute: AppPrioritisationRoute,
   AppReleasesRoute: AppReleasesRouteWithChildren,
   AppRoadmapRoute: AppRoadmapRoute,

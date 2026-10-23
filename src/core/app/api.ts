@@ -1,3 +1,4 @@
+import {registerPeopleRoutes} from '../features/people/routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
 import {registerOAuthSettings} from '../features/auth/oauth-settings'
 import {registerOAuthRoutes} from '../features/auth/oauth-routes'
@@ -144,6 +145,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerCustomFieldRoutes(app)
   registerCatalogMutationRoutes(app)
   registerPortalRoutes(app)
+  registerPeopleRoutes(app)
   registerWorkspaceReadRoutes(app)
   registerNativeRequestRoutes(app)
   registerDataRoutes(app)

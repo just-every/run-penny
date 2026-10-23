@@ -1,3 +1,4 @@
+import {provePersonProfile} from './person-profile-proof'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterAll,expect,inject,it,vi } from 'vitest'
 import { call,env,messages,owner } from './support'
@@ -7,7 +8,7 @@ afterAll(()=>vi.restoreAllMocks())
 const json=async<T>(path:string,body:unknown,headers:Record<string,string>,status=200):Promise<T>=>{const response=await call(path,body,headers);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
 const total=async(table:string)=>env.DB.prepare(`SELECT COUNT(*) n FROM ${table}`).first<number>('n')
 
-it('[CAP-014 REQ-026 REQ-010] records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote',async()=>{
+it('[CAP-014 REQ-026 REQ-010 OPS-007] records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote',async()=>{
  const g=await graph(),r=g.requests[0],before={permissions:await total('requester_update_permissions'),sessions:await total('native_requester_sessions')}
  const evidence=await json<{id:string}>('/api/operator/evidence',{sourceType:'support_conversation',wording:'Customer needs monthly exports.',observedAt:new Date().toISOString(),requestLinks:[{id:r.id,stance:'supporting'}]},g.operator,201)
  const input={contact:{displayName:'Casey Bell',email:'casey@example.test'},source:'Zendesk ticket 738: monthly export request',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',evidenceId:evidence.id}
@@ -34,6 +35,7 @@ it('[CAP-014 REQ-026 REQ-010] records inbox-sourced customer demand once, withou
  const after=await json<typeof context>(`/api/operator/requests/${r.slug}/context`,undefined,g.operator)
  expect(after.demand.voteCount).toBe(2);expect(after.voters.find(v=>v.id===vote.requesterId)!.nativeProxy).toBe(0)
  expect(await total('requester_update_permissions')).toBe(before.permissions)
+ await provePersonProfile(g.operator,r)
 })
 
 it('[CAP-014 REQ-035 REQ-008 REQ-009 DATA-001] retains native source attribution and importance through merge, unmerge and the product archive',async()=>{

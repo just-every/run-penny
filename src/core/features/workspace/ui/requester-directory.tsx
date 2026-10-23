@@ -1,3 +1,4 @@
+import {PersonLink} from '@/core/features/people/links'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { RequesterBlockControl } from '@/core/features/requests/ui/requester-block-control'
 import { ListControls, useOperatorList } from './list-controls'
@@ -19,7 +20,7 @@ export function RequesterDirectory() {
         <div className="grid min-w-0 gap-4 sm:grid-cols-2">
           {state.data.map(row => (
             <OperatorCard key={row.id} id={`requesters-${row.id}`} className="min-w-0 p-5">
-              <h3 className="break-words text-xl font-bold">{row.displayName}</h3>
+              <h3 className="break-words text-xl font-bold"><PersonLink id={row.id}>{row.displayName}</PersonLink></h3>
               <p className="mt-2 break-all text-penny-muted">{row.email ?? 'No email address'}</p>
               <RequesterBlockControl requester={row} onSaved={retry} />
               <CustomFieldsEditor entityType="requester" entityId={row.id} />
