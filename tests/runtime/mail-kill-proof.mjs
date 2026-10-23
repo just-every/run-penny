@@ -9,8 +9,8 @@ export async function proveKilledMail(){
  const state=await mkdtemp(join(tmpdir(),'penny-mail-kill-')),messages=[]
  let child,sequence=0,pending=new Map(),ready,provider
  function start(){
-  let markReady,markProvider
-  ready=new Promise(resolve=>{markReady=resolve});provider=new Promise(resolve=>{markProvider=resolve})
+  let markReady,markProvider,rejectReady
+  ready=new Promise((resolve,reject)=>{markReady=resolve;rejectReady=reject});provider=new Promise(resolve=>{markProvider=resolve})
   child=fork(new URL('./mail-kill-child.mjs',import.meta.url),[],{env:{...process.env,PENNY_MAIL_KILL_STATE:state},execArgv:[],detached:true,stdio:['ignore','inherit','inherit','ipc']})
   console.log(`Owned mail runtime PID=${child.pid}`)
   child.on('message',message=>{
@@ -18,7 +18,7 @@ export async function proveKilledMail(){
    if(message.kind==='provider'){messages.push(message);markProvider(message)}
    if(message.kind==='result'){const result=pending.get(message.id);pending.delete(message.id);if(message.error)result?.reject(new Error(message.error));else result?.resolve(message.value)}
   })
-  child.on('exit',()=>{for(const result of pending.values())result.reject(new Error('Owned runtime stopped'));pending.clear()})
+  child.on('exit',()=>{rejectReady(new Error('Owned runtime stopped before startup'));for(const result of pending.values())result.reject(new Error('Owned runtime stopped'));pending.clear()})
   return ready
  }
  function command(action,extra={}){const id=++sequence;return new Promise((resolve,reject)=>{pending.set(id,{resolve,reject});child.send({id,action,...extra})})}

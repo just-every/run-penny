@@ -45,7 +45,7 @@ async function command(message){
   if(response.status!==200)throw new Error('Private notification read failed')
   return response.json()
  }
- if(message.action==='close'){await mf.dispose();process.disconnect();return null}
+ if(message.action==='close'){await mf.dispose();setImmediate(()=>process.disconnect());return null}
  throw new Error('Unknown harness command')
 }
 process.on('message',message=>{void command(message).then(value=>{if(process.connected)process.send({kind:'result',id:message.id,value})}).catch(error=>{if(process.connected)process.send({kind:'result',id:message.id,error:error.message})})})
