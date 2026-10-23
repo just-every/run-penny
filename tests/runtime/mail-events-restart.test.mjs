@@ -1,3 +1,4 @@
+import {proveKilledMail} from './mail-kill-proof.mjs'
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {createRequire} from 'node:module'
@@ -112,7 +113,7 @@ async function managedRelay(mf,configuration,restart){
  assert.equal(typeof (await db.prepare("SELECT muted_at FROM requester_notification_preferences WHERE requester_id='relay-person'").first()).muted_at,'string')
  console.log('Managed relay in emitted Worker/workerd: sign-in POST accepted; 401 and 302 revoke links; no redirect followed; 429 queues and retries across restart; native one-click unsubscribe: PASS')
 }
-test('[REL-011 BASE-OPS-003 NOTIFY-002] emitted Worker retains mail custody across restart and enforces Managed relay delivery policy',async()=>{
+test('[REL-011 BASE-OPS-003 NOTIFY-002 TRIAGE-006] emitted Worker retains mail custody across restart and enforces Managed relay delivery policy',async()=>{
  const state=await mkdtemp(join(tmpdir(),'penny-mail-restart-')),identity=await signer(),modules=[]
  for(const path of await readdir('dist/server',{recursive:true}))if(/\.(mjs|js)$/.test(path))modules.push({type:'ESModule',path:resolve('dist/server',path),contents:await readFile(join('dist/server',path),'utf8')})
  modules.sort((a,b)=>a.path.endsWith('/index.js')?-1:b.path.endsWith('/index.js')?1:0)
@@ -146,5 +147,7 @@ test('[REL-011 BASE-OPS-003 NOTIFY-002] emitted Worker retains mail custody acro
   assert.equal((await mf.dispatchFetch('https://penny.test/api/public/mail/events',await identity.sign({...event,type:'blocked'}))).status,400)
   assert.equal((await db.prepare('SELECT count(*) n FROM requester_write_guards').first()).n,0)
   await managedRelay(mf,configuration,async next=>{await mf.dispose();mf=new Miniflare(next);await mf.ready;return mf})
+  await mf.dispose();mf=undefined
+  await proveKilledMail()
  }finally{await mf?.dispose();await rm(state,{recursive:true,force:true})}
 })
