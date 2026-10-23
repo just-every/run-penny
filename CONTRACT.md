@@ -673,9 +673,9 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 104 | 10 | 0 | 114 |
+| Published | 101 | 13 | 0 | 114 |
 | Target and push further | 20 | 47 | 66 | 133 |
-| All | 124 | 57 | 66 | 247 |
+| All | 121 | 60 | 66 | 247 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -906,11 +906,11 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `API-001` | Scoped keys | published | done | `tests/base/integration-api.test.ts` (line 19) |  |
 | `API-002` | Current custody | published | done | `tests/base/integration-api.test.ts` (line 36); `tests/base/integration-api.test.ts` (line 54) |  |
 | `API-003` | Native publication | published | done | `tests/base/integration-api.test.ts` (line 73) |  |
-| `INT-001` | Explicit integration effects | published | done | `tests/base/integration-effects.ts` — proveExplicitIntegration in `tests/base/egress-delivery.test.ts` (selected public effects and durable receipts preserve custody across restart, push Verify base-1): all four selected approved public kinds and unselected controls, immutable destinations/history, target-insert rollback of business write/event/targets, saved-history zero-call suppression, event/attempt/signed-receipt archive custody, absent webhook/Slack/receiver credentials and held zero-call restore; `tests/browser/integration-selection.mjs` — selectPublicIntegration via `tests/browser/integration-states.mjs`, push Verify workspace-clock: mounted event selection and immutable saved destination at 1440/390 | — |
+| `INT-001` | Explicit integration effects | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Selected public event kinds, immutable destinations, atomic business-write/event-target capture, held restored history and portable safe integration history with nonportable credentials lack complete passing assertions. |
 | `INT-002` | Enforcing transport | published | done | `tests/base/egress-delivery.test.ts` (line 35) |  |
-| `INT-003` | Durable uncertainty | published | done | `tests/base/integration-durable.ts` — proveDurableIntegration in `tests/base/egress-delivery.test.ts` (selected public effects and durable receipts preserve custody across restart, push Verify base shards): webhook and Slack durable identity/attempt history, stored finite retry limit, held unknown outcomes, once-only accepted/rejected reconciliation and zero-call revoked/private/blocked fences; `tests/browser/integration-uncertainty.mjs` — checkUncertainty via `tests/browser/integration-states.mjs`, push Verify workspace-clock: reopened D1, unchanged attempt identity, no resend, visible uncertain/accepted/rejected receipts and explicit reconciliation at 1440/390 | — |
+| `INT-003` | Durable uncertainty | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Durable attempt identity, finite retry, ambiguity/reconciliation and revoked/private/blocked send fencing lack complete passing assertions. |
 | `INT-004` | Signed inbound notes | published | done | `tests/browser/integration-receiver-checks.mjs` via `tests/browser/integration-states.mjs` — push Verify shard workspace-clock |  |
-| `INT-005` | Deliberate tracker issues | published | done | `tests/browser/integration-states.mjs` via `tests/browser/integration-tracker-actions.mjs` and `tests/browser/integration-tracker-edge.mjs` — push Verify shard workspace-clock | — |
+| `INT-005` | Deliberate tracker issues | published | partial | `tests/browser/integration-states.mjs` — push Verify shard workspace-clock | Gap: Complete Linear/Jira create and link from requests/decisions, entered-only wording and uncertain-outcome reconciliation lack passing assertions. |
 | `INT-006` | Private tracker receipts | published | done | `tests/browser/integration-tracker-checks.mjs` via `tests/browser/integration-states.mjs` — push Verify shard workspace-clock |  |
 | `INT-007` | Owner portal branding | published | partial | `src/core/features/settings/branding.ts`; `tests/browser/integration-states.mjs` | At 1440 and 390 pixels: the owner uploads a PNG logo and an ICO favicon and sets the name Acme and dark theme; the portal header shows the logo and Acme in dark theme; the document icon link is the uploaded favicon on the same origin; the widget panel and changelog page show the logo; a follower's status email carries Acme and the logo; a PDF, an oversize PNG and an SVG with a script are refused; |
 | `MOB-001` | Phone-width web | target | done | `tests/browser/acceptance-audit.mjs` (line 7); `tests/browser/operator-pages.mjs`; `tests/browser/requester-board.mjs` |  |

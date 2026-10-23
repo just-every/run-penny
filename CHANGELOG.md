@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep operator form fields unavailable until their editing handlers attach, so hydration cannot discard an entered roadmap summary.
+
 - Close the phone's operator menu on navigation without competing with the browser's native details state.
 
 - Run signed integration receipts and requester repair in push Verify, and make the scrollable receiver example keyboard accessible.

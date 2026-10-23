@@ -3,9 +3,8 @@ import assert from 'node:assert/strict'
 export async function reviewRoadmapRecord({page,db,goto,capture}) {
  const id='attention-planned',card=page.locator(`#roadmap-item-${id}`)
  const approval=await db.prepare('SELECT * FROM roadmap_publications WHERE roadmap_item_id=?').bind(id).first()
- await goto('/app/roadmap')
- await card.getByText('Edit, approve or move',{exact:true}).click()
  const form=card.getByRole('form',{name:'Edit internal record',exact:true})
+ await openRecordBeforeHydration(page,card,form)
  const fields={
   'Internal title':'Make reporting dependable',
   'Internal summary':'Keep the evidence beside each reporting decision.',
@@ -29,4 +28,23 @@ export async function reviewRoadmapRecord({page,db,goto,capture}) {
  assert.equal(await db.prepare('SELECT status FROM roadmap_items WHERE id=?').bind(id).first('status'),'planned','[ROAD-002] editing context preserves the item status')
  assert.deepEqual(await db.prepare('SELECT * FROM roadmap_publications WHERE roadmap_item_id=?').bind(id).first(),approval,'[ROAD-002] draft wording keeps the separately approved public projection')
  await capture('roadmap-complete-internal-record')
+}
+
+/** Hold delivery, not content, to exercise the server-rendered editing window. */
+async function openRecordBeforeHydration(page,card,form) {
+ let release
+ const delivered=new Promise(resolve=>{release=resolve})
+ const scripts=/\.js(?:\?|$)/
+ const hold=async route=>{await delivered;await route.continue()}
+ await page.route(scripts,hold)
+ try {
+  const response=await page.goto(new URL('/app/roadmap',page.url()).href,{waitUntil:'commit'})
+  assert.equal(response.status(),200,'[ROAD-002] native roadmap document loads before hydration')
+  await card.getByText('Edit, approve or move',{exact:true}).click()
+  for(const label of ['Internal title','Internal summary','Owner']) {
+   const field=form.getByLabel(label,{exact:true})
+   await field.waitFor()
+   assert.equal(await field.isDisabled(),true,`[ROAD-002] ${label} waits for its editing handler`)
+  }
+ } finally {release();await page.unroute(scripts,hold)}
 }
