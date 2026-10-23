@@ -3,7 +3,8 @@ import {readFile} from 'node:fs/promises'
 
 /** Only the provider HTTP boundary is doubled; native commands and receipts use D1. */
 export async function trackerCreateEdge(){
- const fixtures=Object.fromEntries(await Promise.all(['linear','jira'].map(async provider=>[provider,JSON.parse(await readFile(new URL(`../fixtures/integrations/${provider}/issue.json`,import.meta.url),'utf8')))]))
+ const fixtures={}
+ for(const provider of ['linear','jira'])fixtures[provider]=JSON.parse(await readFile(new URL(`../fixtures/integrations/${provider}/issue.json`,import.meta.url),'utf8'))
  const calls=[],expected=new Map()
  let uncertain=false
  const worker={name:'tracker-create-edge',modules:true,compatibilityDate:'2026-08-31',script:`
