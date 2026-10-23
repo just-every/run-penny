@@ -136,7 +136,7 @@ it('[TRIAGE-001][DATA-001][DATA-003] archives retain private assignment history 
  expect(portable.archive.tables.penny_request_owners.find(row => row.request_id === request.id)?.operator_id).toBe(self.id)
  expect(portable.archive.tables.penny_evidence_owners.find(row => row.evidence_id === evidence.id)?.operator_id).toBe(self.id)
  expect(portable.archive.tables).not.toHaveProperty('penny_ownership_guards')
- assertBatchArchive(portable.archive,batch.id)
+ await assertBatchArchive(portable.archive,batch.id)
  await reset(); await applyD1Migrations(env.DB, inject('migrations'))
  const restored = await owner()
  let result = await good<{ status: string; operationId: string }>('/api/operator/data/import', portable, restored, 'POST', [200, 202])

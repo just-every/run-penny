@@ -7488,7 +7488,7 @@
       "executable": false
     },
     "tests/base/ownership.test.ts": {
-      "sha256": "cc06076bcc20d0688d6cf24a101a541e2b640b88a7aac46c6a571d9a175755eb",
+      "sha256": "c77d8895854135ae9a79096d4b69a25bb4d366e24cac44d613aaf2aa032b273f",
       "executable": false
     },
     "tests/base/penny-decisions.test.ts": {
@@ -7556,7 +7556,7 @@
       "executable": false
     },
     "tests/base/request-batch-custody.ts": {
-      "sha256": "9a921ac38ba63631e22ac04acb95b486d1b6dc865da75e3d175d2f6a52df0b34",
+      "sha256": "62236ed8eaeb4abcc81f84db57aa9fae398efb48f29a07d33002ccb37ca0c404",
       "executable": false
     },
     "tests/base/request-batches.ts": {
