@@ -5824,7 +5824,7 @@
       "executable": false
     },
     "src/core/features/notifications/ui/weekly-summary.tsx": {
-      "sha256": "6c093131a14d1abf52e438925aa7c112be640312acdff33505c4625bf1190cb8",
+      "sha256": "01e80dac7c500e8a7ee486e0dabce57a066a67e5ed0d9040df0f51aa5747b2cd",
       "executable": false
     },
     "src/core/features/notifications/unsubscribe-page.ts": {
@@ -7960,7 +7960,7 @@
       "executable": false
     },
     "tests/browser/weekly-summary-choice.mjs": {
-      "sha256": "4dc4fb83bb66d59d4faa355f7fea937ecb25c8d6ca33cc0af17c5cd45ba7e7c7",
+      "sha256": "4291a7e4851c8fcff53d17528a650cf1e1bacad8246b03813129941e4f99f573",
       "executable": false
     },
     "tests/browser/workspace-clock.mjs": {

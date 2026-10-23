@@ -16,7 +16,7 @@ export function WeeklySummary() {
   const heading = useId(), description = useId()
   const [permission, setPermission] = useState<WeeklyPermission | null>(null)
   const [state, setState] = useState<'loading' | 'ready' | 'expired' | 'error'>('loading')
-  const [attempt, retry] = useState(0), [busy, setBusy] = useState(false), [message, setMessage] = useState('')
+  const [attempt, retry] = useState(0), [busy, setBusy] = useState(false), [pending, setPending] = useState<boolean | null>(null), [message, setMessage] = useState('')
   useEffect(() => {
     const changed = () => retry(value => value + 1)
     window.addEventListener('penny-requester-changed', changed)
@@ -36,7 +36,7 @@ export function WeeklySummary() {
   }, [attempt])
 
   async function save(subscribed: boolean) {
-    setBusy(true); setMessage('')
+    setBusy(true); setPending(subscribed); setMessage('')
     try {
       const response = await fetch(path, { method: 'PATCH', headers: { ...requesterHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify({ subscribed }) })
       if (response.status === 401) { setState('expired'); return }
@@ -47,7 +47,7 @@ export function WeeklySummary() {
       setPermission(await response.json() as WeeklyPermission)
       setMessage(subscribed ? 'Weekly summary enabled.' : 'Weekly summary stopped. Your other email choices, follows and votes are unchanged.')
     } catch (error) { setMessage(error instanceof Error ? error.message : 'Could not save your weekly summary choice.') }
-    finally { setBusy(false) }
+    finally { setBusy(false); setPending(null) }
   }
 
   return <PublicCard className="mt-6 p-5">
@@ -62,7 +62,7 @@ export function WeeklySummary() {
           : 'Get one email a week with public changes to requests you follow and published product releases. Empty weeks send no summary.'}</p>
         {!permission.enabled ? <p className="mt-3 text-sm text-penny-muted">The workspace owner has turned weekly summaries off. {permission.subscribed ? 'You can still turn off your weekly summary choice.' : 'You can opt in when the owner enables them.'}</p> : null}
         <label className={`${checkRowClass} mt-4`}>
-          <input type="checkbox" className={checkboxClass} checked={permission.subscribed} disabled={busy || (!permission.enabled && !permission.subscribed)} aria-describedby={description} onChange={event => void save(event.target.checked)} />
+          <input type="checkbox" className={checkboxClass} checked={pending ?? permission.subscribed} disabled={busy || (!permission.enabled && !permission.subscribed)} aria-describedby={description} onChange={event => void save(event.target.checked)} />
           Email me a weekly summary
         </label>
         <p className="mt-2 text-sm text-penny-muted">Turning this off keeps your other email choices, follows and votes.</p>
