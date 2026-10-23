@@ -7780,7 +7780,7 @@
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
-      "sha256": "a7107ce8a13a0ef5d392af305f70fb523927c210c42f2edc35b95883be77152b",
+      "sha256": "e9c9650397cf1280986464f884d2548f9d3c4a5a6619a88f6015d4c06fe51bf4",
       "executable": false
     },
     "tests/browser/learning-provider.mjs": {
