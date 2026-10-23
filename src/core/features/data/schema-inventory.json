@@ -3130,5 +3130,26 @@
       "published_at",
       "held"
     ]
+  },
+  "penny_request_batches": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "actor_id",
+      "selected",
+      "created_at",
+      "undone_at",
+      "held"
+    ]
+  },
+  "penny_request_batch_items": {
+    "classification": "product",
+    "columns": [
+      "batch_id",
+      "request_id",
+      "before_json",
+      "after_json",
+      "restored"
+    ]
   }
 }
