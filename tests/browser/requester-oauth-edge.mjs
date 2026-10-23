@@ -9,7 +9,7 @@ export default class extends WorkerEntrypoint{
    return reply({access_token:'synthetic-penny-provider-access',token_type:'bearer'});
   }
   if(wire.method!=='GET')throw Error('OAuth fixture expected GET');
-  if(wire.url==='https://openidconnect.googleapis.com/v1/userinfo')return reply({email:'synthetic-penny-google@example.test',email_verified:true,name:'Synthetic requester'});
+  if(wire.url==='https://openidconnect.googleapis.com/v1/userinfo')return reply({email:'synthetic-penny-google@example.test',email_verified:true,hd:'example.test',name:'Synthetic requester'});
   if(wire.url==='https://api.github.com/user/emails')return reply([{email:'synthetic-penny-github@example.test',verified:false,primary:true}]);
   throw Error('Unexpected OAuth fixture destination');
  }

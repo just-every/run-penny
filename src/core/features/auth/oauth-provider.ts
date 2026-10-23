@@ -31,9 +31,12 @@ export async function oauthIdentity(runtime:PennyRuntime,provider:OAuthProvider,
  const identity=await send(endpoints.identity,'GET','',{Authorization:`Bearer ${token.data.access_token}`})
  const email=z.string().trim().toLowerCase().email().max(254)
  if(provider==='google'){
-  const result=z.object({email,email_verified:z.boolean().optional(),name:z.string().max(160).optional()}).safeParse(identity)
+  const result=z.object({email,email_verified:z.boolean().optional(),hd:z.string().max(253).optional(),name:z.string().max(160).optional()}).safeParse(identity)
   if(!result.success)throw new NativeError('oauth_provider_identity_invalid',401)
-  return {email:result.data.email,verified:result.data.email_verified===true,displayName:result.data.name??result.data.email.split('@')[0]}
+  // Google vouches for an address's current owner only for Gmail and for a
+  // Workspace account's own domain; any other address takes the emailed link.
+  const domain=result.data.email.slice(result.data.email.lastIndexOf('@')+1),authoritative=domain==='gmail.com'||result.data.hd?.toLowerCase()===domain
+  return {email:result.data.email,verified:result.data.email_verified===true&&authoritative,displayName:result.data.name??result.data.email.split('@')[0]}
  }
  const result=z.array(z.object({email,primary:z.boolean(),verified:z.boolean()})).max(100).safeParse(identity)
  if(!result.success)throw new NativeError('oauth_provider_identity_invalid',401)

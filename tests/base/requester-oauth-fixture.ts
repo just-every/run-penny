@@ -13,13 +13,14 @@ export async function proveRequesterOAuth(){
  const oldOwners=(await env.DB.prepare('SELECT * FROM oa_operators').all()).results
  await applyD1Migrations(env.DB,migrations);await applyD1Migrations(env.DB,migrations)
  expect((await env.DB.prepare('SELECT * FROM oa_operators').all()).results).toEqual(oldOwners)
- let email='synthetic-penny-google@example.test',verified=true,primary=true,edgeCalls=0,expireInFlight=false
+ // Google answers as a Workspace account whose hosted domain is the address's own, unless a case sets another.
+ let email='synthetic-penny-google@example.test',verified=true,primary=true,edgeCalls=0,expireInFlight=false,hostedDomain:string|undefined|null=null
  const edge={send:async(wire:{url:string;method:string;body:string})=>{
   edgeCalls++
   if(wire.url.endsWith('/token')||wire.url.endsWith('/access_token')){expect(wire.method).toBe('POST');const form=new URLSearchParams(wire.body);expect(form.get('code_verifier')).toMatch(/^[A-Za-z0-9_-]{43}$/);return {status:200,headers:{},body:JSON.stringify({access_token:'synthetic-penny-access',token_type:'bearer'})}}
   expect(wire.method).toBe('GET')
   if(expireInFlight)vi.setSystemTime(Date.now()+11*60000)
-  if(wire.url==='https://openidconnect.googleapis.com/v1/userinfo')return {status:200,headers:{},body:JSON.stringify({email,email_verified:verified,name:email.split('@')[0]})}
+  if(wire.url==='https://openidconnect.googleapis.com/v1/userinfo')return {status:200,headers:{},body:JSON.stringify({email,email_verified:verified,hd:hostedDomain===null?email.split('@')[1]:hostedDomain,name:email.split('@')[0]})}
   expect(wire.url).toBe('https://api.github.com/user/emails')
   return {status:200,headers:{},body:JSON.stringify([{email,verified,primary}])}
  }}
@@ -75,14 +76,15 @@ export async function proveRequesterOAuth(){
  expect(await env.DB.prepare('SELECT count(*) n FROM request_comments WHERE body=?').bind('Synthetic Penny comment held for verification').first('n')).toBe(1)
  expect(await env.DB.prepare('SELECT count(*) n FROM requests WHERE title=?').bind('Synthetic Penny held submission').first('n')).toBe(1)
  const votesBeforeFallback=await env.DB.prepare('SELECT count(*) n FROM request_votes').first('n')
- verified=false
- for(const provider of ['google','github']){
-  email=`synthetic-penny-unverified-${provider}@example.test`
+ // Unverified addresses, and verified Google addresses outside Gmail or their own Workspace domain, take the emailed link.
+ for(const [index,[provider,providerVerified,hosted]] of ([['google',false,null],['github',false,null],['google',true,undefined],['google',true,'other.example.test']] as const).entries()){
+  verified=providerVerified;hostedDomain=hosted;email=`synthetic-penny-unverified-${provider}-${index}@example.test`
   const queued=opaqueToken();expect((await call(`/api/public/requests/${request.slug}/vote`,{emailUpdates:false},{'X-Penny-Pending-Token':queued})).status).toBe(202)
   expect(await read(complete(await started(provider,queued),provider),202)).toEqual({fallback:true,emailLinkSent:true})
   expect(await env.DB.prepare('SELECT 1 FROM requester_addresses WHERE email=?').bind(email).first()).toBeNull()
   expect(await env.DB.prepare('SELECT 1 FROM native_magic_links WHERE email=? AND consumed_at IS NULL').bind(email).first()).toBeTruthy()
  }
+ hostedDomain=null;verified=false
  expect(await env.DB.prepare('SELECT count(*) n FROM request_votes').first('n')).toBe(votesBeforeFallback)
  primary=false;expect(await read(complete(await started('github'),'github'),202)).toEqual({fallback:true,emailLinkSent:false});primary=true;verified=true
  email='owner@penny.invalid';const operatorRequester=await read<{token:string}>(complete(await started()))
