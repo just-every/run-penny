@@ -6768,7 +6768,7 @@
       "executable": false
     },
     "src/core/features/triage/ui/request-bulk.tsx": {
-      "sha256": "2a098fb813cd293d76a2ec4f7bf133caca5786627ae4041296abf6a360bee194",
+      "sha256": "96695b51a8005dcca7d023d3ab501eb87b7ebff3dad3c34b4aa10d7603254ed2",
       "executable": false
     },
     "src/core/features/workspace/list-query.ts": {
