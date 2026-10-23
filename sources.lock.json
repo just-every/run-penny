@@ -7896,7 +7896,7 @@
       "executable": false
     },
     "tests/browser/operator-roadmap-record.mjs": {
-      "sha256": "66fae2478559a2a9243b4345b2755d8ea4dabde8b969535abf5f00fd00f6e8a6",
+      "sha256": "92c483fa4f7105c0df9c4f3b28eb056b6aa0e9b2f749f745890dfee0a418c3be",
       "executable": false
     },
     "tests/browser/ownership-journey.mjs": {

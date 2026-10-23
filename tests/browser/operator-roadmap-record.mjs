@@ -46,5 +46,5 @@ async function openRecordBeforeHydration(page,card,form) {
    await field.waitFor()
    assert.equal(await field.isDisabled(),true,`[ROAD-002] ${label} waits for its editing handler`)
   }
- } finally {release();await page.unroute(scripts,hold)}
+ } finally {release();await page.unrouteAll({behavior:'wait'})}
 }
