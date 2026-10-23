@@ -1,3 +1,4 @@
+import {proveRoadmapPublication} from './roadmap-update-publication'
 import './custom-field-races'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterEach,vi, expect,inject,it } from 'vitest'
@@ -96,6 +97,8 @@ it('[BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configurati
 })
 
 it('[BASE-OPS-005] publication and real scheduled mail retain feature outcomes; an unavailable audit prevents publication',async()=>{
+ await proveRoadmapPublication()
+ await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()
  const {releaseGraph}=await import('./release-fixture'),g=await releaseGraph(1)
  await env.DB.exec("CREATE TRIGGER refuse_publication_audit BEFORE INSERT ON audit_entries WHEN NEW.action='release.published' BEGIN SELECT RAISE(ABORT,'audit unavailable'); END")
  expect((await call(`/api/operator/releases/${g.draft.slug}/publish`,{},g.operator)).status).toBe(503)

@@ -9,8 +9,9 @@ import { publicationGuard } from '../releases/publication-policy'
  * broadening the old version's authority. */
 
 export async function publishRoadmapUpdate(db:D1Database,id:string,now=new Date().toISOString(),actorId?:PublicationActor){
- const exists=await db.prepare('SELECT id FROM roadmap_update_versions WHERE id=?').bind(id).first()
+ const exists=await db.prepare('SELECT id,published_at FROM roadmap_update_versions WHERE id=?').bind(id).first()
  if(!exists)throw new MutationError(404,'Status update not found.')
+ if(exists.published_at!==null)throw new MutationError(409,'This status update version is already published.')
  const claim=createUlid()
  const source=`SELECT t.request_id FROM roadmap_update_targets t JOIN roadmap_update_versions v ON v.id=t.version_id WHERE v.id=? AND v.publication_claim=?`
  try{await db.batch([
