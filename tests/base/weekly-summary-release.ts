@@ -9,7 +9,8 @@ export async function weeklyRelease(operator:Record<string,string>,requestId:str
  const actor=(await env.DB.prepare('SELECT id FROM operators LIMIT 1').first<string>('id'))!
  const decision=await action('/api/operator/decisions',{question:'How should scheduled exports reach finance?',ownerOperatorId:actor})
  const bet=await action(`/api/operator/decisions/${decision.id}/bets`,{title:'Scheduled exports',summary:'Prepare approved reporting exports.'})
- const evidence=await action('/api/operator/evidence',{sourceType:'interview',wording:'Finance needs an approved reporting export.',observedAt:new Date().toISOString()})
+ const account=await action('/api/operator/accounts',{name:'synthetic-penny-private finance customer',internalOwnerId:actor,revenueCents:4800000,health:'Renewal negotiation',renewalDate:'2027-03-15'})
+ const evidence=await action('/api/operator/evidence',{sourceType:'interview',wording:'synthetic-penny-private finance revenue evidence',observedAt:new Date().toISOString(),accountId:account.id,requestLinks:[{id:requestId,stance:'supporting'}]})
  await action(`/api/operator/evidence/${evidence.id}/links`,{target:'bet',targetId:bet.id,stance:'supporting'},'PUT')
  const item=await action(`/api/operator/decisions/${decision.id}/commit`,{selectedCandidateBetId:bet.id,rationale:'Exporting removes repeated manual preparation.',ownerOperatorId:actor,confidence:'medium',reviewAt:'2027-12-01',noViableAlternativeReason:'One bounded approach is ready for review.'})
  await action(`/api/operator/roadmap/${item.itemId}/approve`,{publicTitle:'Scheduled exports',publicSummary:'Approved reporting exports.',boardSlug:'regression',requestIds:[requestId]})
