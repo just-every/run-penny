@@ -5,6 +5,7 @@ import {resolve} from 'node:path'
 import {chromium} from '@playwright/test'
 import {startBrowserRuntime} from './base-runtime.mjs'
 import {browserOptions} from './browser-options.mjs'
+import {weeklySummaryChoice} from './weekly-summary-choice.mjs'
 
 const output=resolve(process.env.PENNY_CLOCK_SHOTS??'../workspace-clock-shots')
 await mkdir(output,{recursive:true})
@@ -20,14 +21,14 @@ try{
    const claim=await context.request.post(runtime.origin+'/auth/bootstrap',{headers:{Origin:runtime.origin},data:{token:'synthetic-base-browser-setup-token-12345',displayName:'Maya Chen',returnTo:'/setup'},maxRedirects:0})
    assert.equal(claim.status(),303)
    const page=await context.newPage()
-   async function inspect(name,locator){
-    await page.evaluate(()=>document.fonts.ready)
-    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,name+' fits the viewport')
-    await page.evaluate(axe)
-    const violations=await page.evaluate(async()=> (await window.axe.run()).violations.filter(v=>['serious','critical'].includes(v.impact)).map(v=>v.id))
+   async function inspect(name,locator,subject=page){
+    await subject.evaluate(()=>document.fonts.ready)
+    assert.equal(await subject.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)>innerWidth),false,name+' fits the viewport')
+    await subject.evaluate(axe)
+    const violations=await subject.evaluate(async()=> (await window.axe.run()).violations.filter(v=>['serious','critical'].includes(v.impact)).map(v=>v.id))
     assert.deepEqual(violations,[],name+' is accessible')
-    if(locator){await locator.getByRole('heading',{level:2}).evaluate(element=>element.scrollIntoView({block:'start'}));await page.screenshot({path:resolve(output,`${name}-context-${viewport.width}.png`)});await locator.screenshot({path:resolve(output,`${name}-${viewport.width}.png`)})}
-    else await page.screenshot({path:resolve(output,`${name}-${viewport.width}.png`),fullPage:true})
+    if(locator){await locator.getByRole('heading',{level:2}).evaluate(element=>element.scrollIntoView({block:'start'}));await subject.screenshot({path:resolve(output,`${name}-context-${viewport.width}.png`)});await locator.screenshot({path:resolve(output,`${name}-${viewport.width}.png`)})}
+    else await subject.screenshot({path:resolve(output,`${name}-${viewport.width}.png`),fullPage:true})
    }
    await page.goto(runtime.origin+'/setup',{waitUntil:'networkidle'})
    assert.equal(await page.getByLabel('Workspace timezone',{exact:true}).inputValue(),'America/New_York')
@@ -68,6 +69,7 @@ try{
    await page.goto(runtime.origin+'/app/overview',{waitUntil:'networkidle'})
    assert.equal(await page.getByRole('heading',{name:'Confirm your workspace time',exact:true}).count(),0)
    await inspect('confirmed')
+   await weeklySummaryChoice({browser,owner:page,runtime,viewport,inspect})
    const invitation=await context.request.post(runtime.origin+'/api/operator/settings/operators',{headers:{Origin:runtime.origin},data:{email:'clock-admin@example.test'}})
    assert.equal(invitation.status(),202)
    const token=new URL(runtime.outbox.findLast(message=>message.email==='clock-admin@example.test').url).searchParams.get('token')

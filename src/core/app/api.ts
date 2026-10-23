@@ -36,6 +36,7 @@ import { registerRoadmapRoutes } from '@/core/features/roadmap/routes'
 import { registerReleaseMutationRoutes } from '@/core/features/releases/routes'
 import { unsubscribeEndpoint, preferenceFailure, preferenceForbidden } from '@/core/features/notifications/unsubscribe-page'
 import { registerNotificationRoutes } from '@/core/features/notifications/routes'
+import {registerWeeklyRoutes} from '@/core/features/notifications/weekly-routes'
 import { RequestLifecycleError } from '@/core/features/requests/lifecycle-types'
 import { RequesterIdentityError } from '@/core/features/auth/requester'
 import { registerPublicRequestMutationRoutes } from '@/core/features/requests/public-routes'
@@ -105,6 +106,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   })
 
   registerAiRoutes(app)
+  registerWeeklyRoutes(app)
   registerPlanningRoutes(app)
   registerPrioritisationRoutes(app)
   registerHierarchyRoutes(app)
