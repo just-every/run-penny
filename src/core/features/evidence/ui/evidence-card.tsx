@@ -1,3 +1,4 @@
+import {useViewColumn} from '../../views/columns'
 import {DraftPanel} from '../../ai/ui/draft-panel'
 import { ProxyVoteForm } from '../../requests/ui/proxy-vote-form'
 import {EvidenceSnooze} from '../../triage/evidence-snooze'
@@ -14,16 +15,17 @@ import { Chip } from '@/core/ui/app/Chip'
 import { DataField, dataRowClass } from '@/core/ui/app/DataField'
 
 export function EvidenceCard({ evidence, onSaved }: { readonly evidence: OperatorEvidenceCard; readonly onSaved?: () => void }) {
+  const status=useViewColumn('status'),observed=useViewColumn('observedAt'),source=useViewColumn('source'),account=useViewColumn('account')
   return (
     <OperatorCard id={`evidence-${evidence.id}`} className="p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Chip tone={evidence.reviewState === 'unreviewed' ? 'copper' : 'moss'}>{evidence.reviewState === 'unreviewed' ? 'Unreviewed' : 'Reviewed'}</Chip>
-        <time className="text-sm text-penny-ink tabular-nums sm:text-base" dateTime={evidence.observedAt}>{formatObservedAt(evidence.observedAt)}</time>
+        {status?<Chip tone={evidence.reviewState === 'unreviewed' ? 'copper' : 'moss'}>{evidence.reviewState === 'unreviewed' ? 'Unreviewed' : 'Reviewed'}</Chip>:null}
+        {observed?<time className="text-sm text-penny-ink tabular-nums sm:text-base" dateTime={evidence.observedAt}>{formatObservedAt(evidence.observedAt)}</time>:null}
       </div>
       <p className="mt-4 text-lg leading-snug font-medium break-words whitespace-pre-wrap text-penny-ink sm:text-[22px]">“{evidence.wording}”</p>
       <dl className={`mt-5 border-t border-penny-line pt-4 ${dataRowClass}`}>
-        <DataField label="Source">{sourceLabel(evidence.sourceType, evidence.sourceLabel)}</DataField>
-        <DataField label="Account">{evidence.account?.name}</DataField>
+        {source?<DataField label="Source">{sourceLabel(evidence.sourceType, evidence.sourceLabel)}</DataField>:null}
+        {account?<DataField label="Account">{evidence.account?.name}</DataField>:null}
       </dl>
       {evidence.sourceType==='email'&&evidence.sourceLabel?<p className="mt-3 text-sm leading-6 text-penny-ink">{evidence.sourceLabel}</p>:null}
       {evidence.requester ? <dl className="mt-4"><DataField label="Requester" valueClassName="flex flex-wrap items-center gap-x-2 gap-y-1"><span>{evidence.requester.displayName}</span>{evidence.requester.email ? <span className="break-all text-penny-muted">{evidence.requester.email}</span> : null}</DataField></dl> : null}

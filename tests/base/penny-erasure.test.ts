@@ -261,8 +261,10 @@ it('[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and
  const former=(await env.DB.prepare('SELECT id,display_name FROM operators WHERE email=?').bind(email).first<{id:string;display_name:string}>())!
  const native=(await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind(email).first<{id:string}>())!
  const active=await call('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator);expect(active.status).toBe(409);expect(await active.json()).toEqual({error:'erasure_operator_active'})
- expect((await call(`/api/operator/settings/operators/${native.id}`,{},g.operator,'DELETE')).status).toBe(200)
  const saved=await good<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export',undefined,g.operator)
+ const views:Record<string,string>={}
+ for(const scope of ['private','shared']){views[scope]=(await good<{id:string}>('/api/operator/saved-views',{listKind:'requests',name:scope==='private'?email:'Team view',scope,filter:{},sort:'recent',columns:['title']},teammate)).id}
+ expect((await call(`/api/operator/settings/operators/${native.id}`,{},g.operator,'DELETE')).status).toBe(200)
  const owner=await env.DB.prepare('SELECT * FROM operators WHERE id<>?').bind(former.id).all(),notes=await rows('request_notes'),others=(await rows('request_comments')).filter(row=>row.operator_id!==former.id)
  const preview=await good<Preview>('/api/operator/data/erasure/preview',{table:'operators',id:former.id},g.operator)
  expect(preview.blockedCopies).toEqual([]);expect(preview.counts).toMatchObject({operators:1,oa_operators:1,'request_comments:public_author_display_name':1})
@@ -272,6 +274,9 @@ it('[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and
   const dump=JSON.stringify(await rows(name));expect(dump,name).not.toContain(email);expect(dump,name).not.toContain(JSON.stringify(former.display_name))
  }
  expect(await env.DB.prepare('SELECT display_name FROM operators WHERE id=?').bind(former.id).first('display_name')).toBe('Erased operator')
+ expect(await env.DB.prepare('SELECT id FROM penny_saved_views WHERE id=?').bind(views.private).first()).toBeNull()
+ expect(await env.DB.prepare('SELECT creator_id FROM penny_saved_views WHERE id=?').bind(views.shared).first()).toEqual({creator_id:null})
+ expect((await good<{creatorName:string}>('/api/operator/saved-views/'+views.shared,undefined,g.operator)).creatorName).toBe('Removed operator')
  expect(await rows('request_notes')).toEqual(notes)
  expect((await rows('request_comments')).find(row=>row.operator_id===former.id)).toMatchObject({body:'Teammate public reply',public_author_display_name:'Erased operator'})
  expect((await rows('request_comments')).filter(row=>row.operator_id!==former.id)).toEqual(others)

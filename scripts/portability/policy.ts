@@ -1,3 +1,4 @@
+import {privateViewExport} from '../../src/core/features/views/archive'
 import { validateCategoryArchive } from '../../src/core/features/categories/archive'
 import { validateMailIdentityArchive } from '../../src/core/features/settings/mail-identity-archive'
 import { validateLearningArchive } from '../../src/core/features/learning/archive'
@@ -18,7 +19,7 @@ function productRow(row: Record<string, unknown>): Row {
   return row as Row
 }
 export const LOCAL_DATA_LIMITS={...DATA_LIMITS,rows:500000,recordBytes:512*1024*1024}
-export function policy(journal: ErasureJournal): ArchivePolicy {
+export function policy(journal: ErasureJournal,privateCreator?:string): ArchivePolicy {
   const product = Object.entries(inventory).filter(([name, value]) => value.classification === 'product' && !excludedTable(name, {includeTables: [name]})).map(([name]) => name)
   return {
     product: 'just-every/penny',
@@ -29,7 +30,7 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
     requiredConfiguration: ['OPERATOR_EMAIL', 'AUTH_SECRET', 'SETUP_TOKEN', 'APP_ORIGIN', 'MAIL_PROVIDER', 'MAIL_FROM'],
     // Penny validates references across both attachment tables before exposing an archive and before restore.
     buckets: { FILES: {} },
-    exportRow: (table, row) => normalize(table, productRow(row)),
+    exportRow: (table, row) => {privateViewExport(table,row,privateCreator);return normalize(table, productRow(row))},
     async validateStaged({ db, tables, read, manifest }) {
       const expected = [...product, 'data_state', 'data_tombstones'].sort()
       if (canonical(Object.keys(tables).sort()) !== canonical(expected)) refuse('unclassified_archive_schema')

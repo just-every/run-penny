@@ -11,6 +11,7 @@ export const choicesComplete = (copies: BlockedCopy[], choices: CopyChoices) => 
 export type Plan = { table: string; id: string; planHash: string; counts: Record<string, number>; kept?: Record<string, number>; fileCount: number; importCount: number; blockedCopies: BlockedCopy[] }
 export type Receipt = { operationId: string; status: string }
 const messages: Record<string, string> = {
+  private_views_export_refused: 'A private saved view belongs to another operator. Ask its creator to share or delete it before backing up this workspace.',
   restore_requires_empty_target: 'This workspace already has records. Restore into an empty, migrated workspace.',
   restore_requires_empty_bucket: 'This workspace already has files. Restore into an empty file store.',
   stale_archive: 'This backup predates the supplied erasure journal. Export a fresh backup.',

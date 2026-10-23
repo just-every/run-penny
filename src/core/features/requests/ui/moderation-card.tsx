@@ -1,3 +1,4 @@
+import {useViewColumn} from '../../views/columns'
 import type { PublicBoard } from '@/core/shared/api/public'
 import { OperatorCard } from '@/core/app/ui/operator-primitives'
 import { Chip, type ChipTone } from '@/core/ui/app/Chip'
@@ -28,17 +29,18 @@ const historyDescriptions = {
 }
 
 export function ModerationCard({ row, report }: { row: QueueRequest; report: (message: string) => void }) {
+  const showStatus=useViewColumn('status'),showDescription=useViewColumn('description')
   const history = row.moderationAvailability === 'current' ? null : row.moderationAvailability
   const statusLabel = history ? historyLabels[history] : row.moderationState.replaceAll('_', ' ')
   return (
     <OperatorCard as="article" id={`request-${row.slug}`} className="p-5 sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="min-w-0 text-xl font-bold tracking-[-0.02em] break-words text-penny-ink">{row.title}</h2>
-        <Chip tone={history ? 'muted' : stateTones[row.moderationState] ?? 'neutral'}><span className="first-letter:uppercase">{statusLabel}</span></Chip>
+        <>{showStatus?<Chip tone={history ? 'muted' : stateTones[row.moderationState] ?? 'neutral'}><span className="first-letter:uppercase">{statusLabel}</span></Chip>:null}</>
       </div>
       {history || row.moderationState !== 'awaiting_review' ? (
         <>
-          <p className="mt-3 leading-7 whitespace-pre-wrap text-penny-ink">{row.description}</p>
+          {showDescription?<p className="mt-3 leading-7 whitespace-pre-wrap text-penny-ink">{row.description}</p>:null}
           {history ? <p className="mt-3 text-sm text-penny-muted">{historyDescriptions[history]}</p> : null}
           {row.reason ? <p className="mt-3 text-sm text-penny-muted"><span className={dataLabelClass}>Review reason</span><br />{row.reason}</p> : null}
         </>

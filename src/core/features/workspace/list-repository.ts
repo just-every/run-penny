@@ -18,9 +18,18 @@ export function listPredicate(entity: ListEntity, query: ListQuery): { sql: stri
  if(query.unreviewed && entity!=='evidence' || query.attention && entity!=='decisions' || query.active && entity!=='roadmap')throw new ListQueryError('Unsupported attention filter')
  const clauses:string[]=[], values:(string|number)[]=[]
  const add=(sql:string,value?:string)=>{clauses.push(sql);if(value!==undefined)values.push(value)}
+ if(query.owner||query.after||query.before||query.customField){
+  if(entity!=='requests'&&entity!=='evidence'&&entity!=='roadmap')throw new ListQueryError('Unsupported list field')
+  if(query.owner&&entity==='roadmap')add('x.owner_operator_id=?',query.owner)
+  else if(query.owner)add(`EXISTS(SELECT 1 FROM ${entity==='requests'?'penny_request_owners':'penny_evidence_owners'} own WHERE own.${entity==='requests'?'request_id':'evidence_id'}=x.id AND own.operator_id=?)`,query.owner)
+  if(query.after)add('x.created_at>=?',query.after)
+  if(query.before)add("x.created_at<datetime(?,'+1 day')",query.before)
+  if(query.customField){add(`EXISTS(SELECT 1 FROM custom_field_values v JOIN custom_field_definitions d ON d.id=v.definition_id WHERE v.entity_id=x.id AND d.id=? AND d.entity_type='${entity==='requests'?'request':'evidence'}' AND CASE d.field_type WHEN 'number' THEN json_extract(v.value_json,'$')=CAST(? AS REAL) WHEN 'boolean' THEN json_extract(v.value_json,'$')=CASE ? WHEN 'true' THEN 1 WHEN 'false' THEN 0 END ELSE CAST(json_extract(v.value_json,'$') AS TEXT)=? END)`,query.customField);values.push(query.customValue??'',query.customValue??'',query.customValue??'')}
+ }
+ if(query.product||query.component){if(entity!=='roadmap')throw new ListQueryError('Product and component filters require roadmap items');add(`EXISTS(SELECT 1 FROM penny_feature_roadmap l JOIN penny_features f ON f.id=l.feature_id JOIN penny_components c ON c.id=f.component_id WHERE l.roadmap_item_id=x.id${query.product?' AND c.product_id=?':''}${query.component?' AND c.id=?':''})`);if(query.product)values.push(query.product);if(query.component)values.push(query.component)}
  if(query.q) add(`instr(lower(${entitySource[entity].wording}),lower(?)) > 0`,query.q)
  if(query.item) add('x.id=?',query.item)
- if(query.tag) add(`EXISTS(SELECT 1 FROM tags t WHERE t.id IN (${tagRelation(entity)}) AND (t.id=? OR t.name=?))`,query.tag),values.push(query.tag)
+ if(query.tag) {add(`EXISTS(SELECT 1 FROM tags t WHERE t.id IN (${tagRelation(entity)}) AND ${query.view?'t.id=?':'(t.id=? OR t.name=?)'})`,query.tag);if(!query.view)values.push(query.tag)}
  if(entity==='requests') {
   if(query.moderation)add('x.moderation_state=?',query.moderation)
   if(query.board)add('EXISTS(SELECT 1 FROM boards b WHERE b.id=x.board_id AND (b.id=? OR b.slug=?))',query.board),values.push(query.board)

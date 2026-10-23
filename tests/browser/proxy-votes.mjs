@@ -1,5 +1,3 @@
-import {readFile} from 'node:fs/promises'
-import {csvRecords} from '../csv-records.mjs'
 import assert from 'node:assert/strict'
 import {moderationJourney} from './moderation-runtime.mjs'
 await moderationJourney('proxy-votes',async({runtime,origin,operator,json,send,person,pageFor,capture})=>{
@@ -45,15 +43,4 @@ await moderationJourney('proxy-votes',async({runtime,origin,operator,json,send,p
  await capture(visitor,'public-proxy-total')
  const csv=await send('/api/operator/votes/export.csv',undefined,operator)
  const csvText=await csv.text();assert.match(csvText,/Sam Rivera.*yes/);assert.ok(!csvText.includes('sam@example.test'))
- await owner.goto(origin+'/app/data')
- for(const family of ['requests','voters']){
-  const downloading=owner.waitForEvent('download')
-  await owner.getByRole('button',{name:`Export ${family} CSV`,exact:true}).click()
-  const download=await downloading,rows=csvRecords(await readFile(await download.path(),'utf8'))
-  assert.equal(await download.failure(),null)
-  if(family==='requests'){assert.equal(rows.length,1);assert.equal(rows[0].request,request.slug);assert.equal(Number(rows[0].vote_total),2)}
-  else {assert.equal(rows.length,2);assert.ok(rows.some(row=>row.voter==='Sam Rivera'&&row.proxy==='yes'));assert.ok(rows.some(row=>row.voter==='Eli Wong'&&row.proxy==='no'))}
- }
- await capture(owner,'csv-downloads-complete')
-
 })

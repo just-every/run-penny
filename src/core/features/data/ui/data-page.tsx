@@ -1,4 +1,3 @@
-import {CsvExports} from './csv-exports'
 import { HostedExport } from './hosted-export'
 import { useEffect, useState } from 'react'
 import { ImportPanel } from '../../imports/ui/import-panel'
@@ -71,7 +70,6 @@ export function DataPage() {
       })}>{busy && status?.text === 'Preparing your private backup…' ? 'Preparing backup…' : 'Download backup'}</button>
         <details className="group mt-4 text-sm text-penny-muted"><summary className={disclosureChevronClass}>Backup limits and journal</summary><p className="mt-2 leading-6">One backup holds up to 2,000 records, 4 MiB of record data and 20 MiB of original files. The erasure journal lists who was erased, without their data, so an older backup can never bring them back.</p><button className={secondaryButtonClass + ' mt-3'} disabled={busy} onClick={() => void saveJournal()}>Download current journal separately</button></details>
       </article>
-      {overview.canExport?<article className={card}><h2 className={heading}>CSV exports</h2><CsvExports/></article>:null}
       {overview.hosted && overview.canExport ? <HostedExport disabled={!!operation} interrupted={overview.ownExport && operation ? { operationId: operation.id, status: operation.status, ...overview.ownExport } : null} onSettled={retry}/> : null}
       <RestoreCard actions={actions} pendingRestore={operation?.kind === 'restore' && operation.progress?.needsBackup ? operation.id : null} locked={!!operation} onRestored={async receipt => {
         if (receipt.status === 'complete') setRestored(true)

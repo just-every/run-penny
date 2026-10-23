@@ -1,3 +1,4 @@
+import {proveRoadmapViews} from './roadmap-views-proof'
 import {applyD1Migrations} from 'cloudflare:test'
 import {beforeAll,afterAll,expect,inject,it,vi} from 'vitest'
 import {call,env,requester} from './support'
@@ -6,7 +7,7 @@ import type {Hierarchy} from '@/core/features/hierarchy/types'
 
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations').filter(m=>m.name<'0082'))})
 afterAll(()=>vi.restoreAllMocks())
-it('[PRIO-001] populated upgrade, linked feature rollups, move custody and private source/archive boundaries work through operator routes',async()=>{
+it('[PRIO-001 ROAD-009] populated upgrade, linked feature rollups, move custody and private source/archive boundaries work through operator routes',async()=>{
  const g=await graph(3),second=await requester('Morgan Reed')
  for(const r of g.requests)expect((await call(`/api/public/requests/${r.slug}/vote`,{},second)).status).toBe(204)
  const actor=await env.DB.prepare('SELECT id FROM operators').first<string>('id')
@@ -46,4 +47,5 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
  const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_feature_requests).toHaveLength(3);expect(exported.archive.tables.penny_features).toMatchObject([{id:feature.id,component_id:components[1].id}])
  const {schema}=await import('@/core/features/data/archive');expect((await schema(env.DB)).map(t=>t.name)).toEqual(expect.arrayContaining(['penny_products','penny_components','penny_features','penny_feature_requests','penny_feature_roadmap']))
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ await proveRoadmapViews(g.operator,feature.id,components[1].id,product.id,actor!)
 })

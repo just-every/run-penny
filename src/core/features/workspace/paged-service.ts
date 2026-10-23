@@ -1,3 +1,4 @@
+import {listFilterOptions} from './list-options'
 import type { DatabaseConnection } from '@/core/platform/database'
 import { AccountsReadRepository } from '@/core/features/accounts/read-repository'
 import { DecisionsReadRepository } from '@/core/features/decisions/read-repository'
@@ -20,7 +21,7 @@ export async function pagedList(database:DatabaseConnection,entity:ListEntity,qu
  : entity==='accounts' ? await new AccountsReadRepository(database).list(ids)
  : (await database.binding.prepare(`SELECT id,display_name AS displayName,blocked_at AS blockedAt,(SELECT email FROM requester_addresses a WHERE a.requester_id=p.id ORDER BY CASE WHEN verified_at IS NOT NULL AND suppressed_at IS NULL THEN 0 ELSE 1 END,created_at,id LIMIT 1) AS email FROM requesters p WHERE id IN (${ids.length?ids.map(()=>'?').join(','):'NULL'}) LIMIT 25`).bind(...ids).all<OperatorRequesterCard>()).results
  const items=ids.flatMap(id=>{const row=rows.find(row=>row.id===id);return row?[row]:[]})
- return {items,...page}
+ return {items,...page,filterOptions:await listFilterOptions(database.binding,entity)}
 }
 export async function pagedModeration(database:DatabaseConnection,query:ListQuery) {
  // Account continuations, explicit withdrawn status and focused items include history; ordinary

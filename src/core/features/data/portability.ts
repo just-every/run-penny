@@ -1,3 +1,4 @@
+import {assertViewExport,viewExportCreator} from '../views/archive'
 import {assertOriginalFiles} from './original-files'
 import type { Context, Hono } from 'hono'
 import { createPortabilityHandler, excludedTable } from '@runeditrun/rer/modules/portability'
@@ -37,6 +38,7 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
  if (request.headers.get('Sec-Fetch-Site') === 'cross-site' || request.headers.has('Origin') && request.headers.get('Origin') !== origin || !['GET', 'HEAD'].includes(request.method) && request.headers.get('Origin') !== origin) return reply('forbidden_origin', 403)
  const auth = operatorAuth(runtime), session = await auth.getSession(request)
  if (!session || session.kind !== 'native' || session.operator.role !== 'owner') return reply('native_owner_session_required', 401)
+ const privateCreator=await viewExportCreator(c.env.DB,session.operatorId)
  const db = c.env.DB, jobId = match[1], action = match[2], creating = !jobId && request.method === 'POST'
  const job = jobId ? await db.prepare("SELECT actor,phase FROM rer_portability_jobs WHERE id=? AND kind='export'").bind(jobId).first<{actor:string;phase:string}>() : null
  if (jobId && (!job || !job.actor.startsWith(session.operatorId + ':'))) return reply('job_not_found', 404)
@@ -53,7 +55,7 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
    }
    const current = await state(db)
    if (!operationId || current?.lock_id !== operationId || current.phase !== 'locked') return reply('data_operation_changed', 409)
-  } else if (creating) operationId = await reserve(db, 'export', { portabilityActor: actor }, session)
+  } else if (creating) {await assertViewExport(db,privateCreator);operationId = await reserve(db, 'export', { portabilityActor: actor }, session)}
   else return reply('method_not_allowed', 405)
   runner = await claimPortabilityRunner(db, operationId!, session)
   const guarded = runner.db
@@ -72,7 +74,7 @@ async function hostedExport(c: Context<Environment>): Promise<Response> {
    if (counts.reduce((sum, result) => sum + (result.results[0] as { n: number }).n, 0) > LOCAL_DATA_LIMITS.rows) throw new NativeError('archive_limit', 413)
    await assertOriginalFiles(guarded,c.env.FILES)
   }
-  const journal = await readErasureJournal(db), productPolicy = policy(journal)
+  const journal = await readErasureJournal(db), productPolicy = policy(journal,privateCreator)
   // The live lock is installation custody. The archived state is an idle target.
   const exportPolicy = { ...productPolicy, exportRow: (table: string, row: Parameters<NonNullable<typeof productPolicy.exportRow>>[1]) => table === 'data_state' ? { ...row, phase: 'idle', lock_id: null } : productPolicy.exportRow!(table, row) }
   const options = { db: guarded, buckets: { FILES: c.env.FILES }, policy: exportPolicy }

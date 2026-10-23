@@ -1,3 +1,4 @@
+import {checkSavedViews} from './saved-view-checks.mjs'
 import assert from 'node:assert/strict'
 import { mkdir, readFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
@@ -132,6 +133,7 @@ try {
    await page.locator(`#evidence-${evidenceId}`).getByRole('status').filter({ hasText: 'Owner saved.' }).waitFor()
    await peerPage.reload(); await peerQueue.getByRole('heading', { name: 'Evidence (0)', exact: true }).waitFor()
    await audit(peerPage, 'unassigned-leaves-own-queue', { detail: peerQueue })
+   await checkSavedViews({page,peerPage,width,json,ownerCookie,peerCookie,audit})
    assert.deepEqual(errors, []); assert.deepEqual(external, [])
   } finally {
    for (const context of contexts.reverse()) await context.close()

@@ -1,9 +1,10 @@
+import {viewList} from '../views/routes'
 import { workspaceClock } from '../settings/workspace-clock'
 import { loopHealthRecords } from './loop-health-read'
 import type { LoopHealthMetric } from './loop-health-types'
 import { pagedUpdates } from './update-list'
 import { validateListSearch, ListQueryError, type ListEntity } from './list-query'
-import { pagedList, pagedModeration } from './paged-service'
+import { pagedList } from './paged-service'
 import { searchRecords } from './search-repository'
 import type { Hono } from 'hono'
 import type { PennyRuntime } from '@/core/app/runtime'
@@ -31,12 +32,12 @@ export function registerWorkspaceReadRoutes(app: Hono<WorkspaceRouteEnvironment>
 
   for (const entity of ['evidence','requests','decisions','roadmap','releases','accounts','requesters'] as ListEntity[]) {
     app.get(`/api/operator/${entity}`, async context => {
-      try { return context.json(await pagedList(context.get('runtime').database, entity, validateListSearch(context.req.query()))) }
+      try { return context.json(entity==='requests'||entity==='evidence'||entity==='roadmap'?await viewList(context.get('runtime'),context.req.raw,entity,validateListSearch(context.req.query())):await pagedList(context.get('runtime').database, entity, validateListSearch(context.req.query()))) }
       catch(error) { if(error instanceof ListQueryError)return context.json({error:error.message},400);throw error }
     })
   }
   app.get('/api/operator/moderation', async context => {
-    try { return context.json(await pagedModeration(context.get('runtime').database,validateListSearch(context.req.query()))) }
+    try { return context.json(await viewList(context.get('runtime'),context.req.raw,'requests',validateListSearch(context.req.query()),true)) }
     catch(error) { if(error instanceof ListQueryError)return context.json({error:error.message},400);throw error }
   })
   app.get('/api/operator/roadmap-updates', async context => {

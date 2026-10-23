@@ -1,3 +1,4 @@
+import {proveListViews} from './list-views-proof'
 import {applyD1Migrations} from 'cloudflare:test'
 import {beforeAll,afterAll,expect,inject,it,vi} from 'vitest'
 import {call,env,requester,messages} from './support'
@@ -6,7 +7,7 @@ import type {ViewResult,SavedView} from '@/core/features/prioritisation/reposito
 import type {ViewInput} from '@/core/features/prioritisation/formulas'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations').filter(m=>m.name<'0083'))})
 afterAll(()=>vi.restoreAllMocks())
-it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free',async()=>{
+it('[PRIO-003 REQ-035 OPS-006] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free',async()=>{
  const g=await graph(2),second=await requester('Morgan Reed')
  const json=async<T>(path:string,body?:unknown,method?:string,status=200,headers=g.operator):Promise<T>=>{const response=await call(path,body,headers,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
  const pre=(await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results
@@ -52,4 +53,5 @@ it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, r
  for(const url of ['/api/public/requests','/api/public/roadmap','/api/public/releases','/api/operator/decisions']){const text=await(await call(url,undefined,g.operator)).text();expect(text).not.toContain('Finance RICE');expect(text).not.toContain('"score"')}
  const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_priority_views).toHaveLength(2)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ await proveListViews(g.operator,peer)
 })

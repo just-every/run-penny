@@ -4,6 +4,7 @@ import {registerOAuthRoutes} from '../features/auth/oauth-routes'
 import {registerEmailCaptureSettings} from '../features/evidence/email-settings'
 import {registerAiRoutes} from '@/core/features/ai/routes'
 import {registerCsvRoutes} from '@/core/features/data/csv-routes'
+import {registerViewRoutes} from '@/core/features/views/routes'
 import {registerPlanningRoutes} from '@/core/features/planning/routes'
 import {registerPrioritisationRoutes} from '@/core/features/prioritisation/routes'
 import {registerHierarchyRoutes} from '@/core/features/hierarchy/routes'
@@ -106,6 +107,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   })
 
   registerAiRoutes(app)
+  registerViewRoutes(app)
   registerCsvRoutes(app)
   registerPlanningRoutes(app)
   registerPrioritisationRoutes(app)

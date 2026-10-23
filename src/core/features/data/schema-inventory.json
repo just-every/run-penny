@@ -3100,5 +3100,23 @@
       "patterns_json",
       "revision"
     ]
+  },
+  "penny_saved_views": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "list_kind",
+      "name",
+      "scope",
+      "creator_id",
+      "filter_json",
+      "sort",
+      "columns_json",
+      "presentation_json",
+      "revision",
+      "restored_private",
+      "created_at",
+      "updated_at"
+    ]
   }
 }

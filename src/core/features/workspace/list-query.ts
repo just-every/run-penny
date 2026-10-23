@@ -1,8 +1,12 @@
+import type {ListFilterOptions} from './list-options'
+import type {SavedView} from '../views/definition'
+import {isCalendarDate} from '../settings/custom-field-types'
 export class ListQueryError extends Error {}
 export const PAGE_SIZE = 25
 export type ListEntity = 'requests' | 'evidence' | 'decisions' | 'roadmap' | 'releases' | 'accounts' | 'requesters'
-export interface ListQuery { updatesQ?:string; updatesTag?:string; updatesSort?:string; updatesPage?:number; entity?: ListEntity; directory?: 'requesters'; q?: string; tag?: string; sort?: string; page?: number; moderation?: string; board?: string; status?: string; decision?: string; account?: string; item?: string; unreviewed?: true; attention?: true; active?: true }
-export interface OperatorPage<T> { items: readonly T[]; total: number; page: number; pageSize: number }
+export interface ListQuery { view?:string; product?:string; component?:string; owner?:string; after?:string; before?:string; customField?:string; customValue?:string; updatesQ?:string; updatesTag?:string; updatesSort?:string; updatesPage?:number; entity?: ListEntity; directory?: 'requesters'; q?: string; tag?: string; sort?: string; page?: number; moderation?: string; board?: string; status?: string; decision?: string; account?: string; item?: string; unreviewed?: true; attention?: true; active?: true }
+export interface ReleaseWindow {itemId:string;name:string;releaseDate:string}
+export interface OperatorPage<T> { filterOptions?:ListFilterOptions; releaseWindows?:ReleaseWindow[]; savedView?:SavedView; items: readonly T[]; total: number; page: number; pageSize: number }
 const enums: Record<string, readonly string[]> = { moderation: ['awaiting_review','approved','rejected'], status: ['unpublished','open','under_review','planned','in_progress','shipped','declined','withdrawn','exploring','dropped','draft','published','ready','committed','review_due','unreviewed','reviewed','pending'], sort: ['name','recent','age','votes','observed'] }
 export function validateListSearch(input: Record<string, unknown>): ListQuery {
  if(input.directory!==undefined && input.directory!=='requesters')throw new ListQueryError('Invalid directory')
@@ -12,10 +16,11 @@ export function validateListSearch(input: Record<string, unknown>): ListQuery {
  if(input.entity)result.entity=String(input.entity)
  for(const key of ['updatesQ','updatesTag','updatesSort']) {const value=input[key];if(value===undefined||value==='')continue;if(typeof value!=='string'||value.length>(key==='updatesQ'?200:160)||key==='updatesSort'&&!['name','recent','age'].includes(value))throw new ListQueryError('Invalid status update filter');result[key]=value}
  if(input.updatesPage!==undefined){const page=Number(input.updatesPage);if(!Number.isSafeInteger(page)||page<1||page>10000)throw new ListQueryError('Invalid status update page');result.updatesPage=page}
- for (const key of ['q','tag','sort','moderation','board','status','decision','account','item']) {
+ for (const key of ['view','q','tag','sort','moderation','board','status','decision','account','item','owner','after','before','customField','customValue','product','component']) {
   const value = input[key]
   if(value === undefined || value === '') continue
-  if(typeof value !== 'string' || value.length > (key === 'q' ? 200 : 160) || (enums[key] && !enums[key].includes(value))) throw new ListQueryError(`Invalid ${key} filter`)
+  if(typeof value !== 'string' || value.length > (key === 'q' ? 200 : key==='customValue'?2000:160) || (enums[key] && !enums[key].includes(value))) throw new ListQueryError(`Invalid ${key} filter`)
+  if(['after','before'].includes(key)&&!isCalendarDate(value))throw new ListQueryError('Invalid date filter')
   result[key] = value.trim()
  }
  if(input.page !== undefined) { const page = Number(input.page); if(!Number.isSafeInteger(page) || page < 1 || page > 10000) throw new ListQueryError('Invalid page'); result.page=page }

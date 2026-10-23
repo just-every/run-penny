@@ -1,3 +1,4 @@
+import {checkRoadmapViews} from './roadmap-view-checks.mjs'
 import assert from 'node:assert/strict'
 import {moderationJourney} from './moderation-runtime.mjs'
 await moderationJourney('product-hierarchy',async({runtime,origin,operator,json,person,pageFor,capture})=>{
@@ -38,4 +39,5 @@ await moderationJourney('product-hierarchy',async({runtime,origin,operator,json,
  await capture(owner,'moved-feature')
  const visitor=await pageFor();await visitor.goto(origin+'/app/features',{waitUntil:'networkidle'});assert.match(new URL(visitor.url()).pathname,/signin/)
  assert.equal((await fetch(origin+'/api/operator/hierarchy')).status,401)
+ await checkRoadmapViews({runtime,origin,operator,json,owner,pageFor,capture,actor,item})
 })

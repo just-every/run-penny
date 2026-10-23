@@ -27,7 +27,12 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010] populated v0.1.4 data and originals s
  const releasedTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const released=await Promise.all(releasedTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
  const releasedRows=await env.DB.batch(released.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
- await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0086'))
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0086'&&m.name<'0094'))
+ const previous=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const priorRows=await env.DB.batch(previous.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0094'))
+ expect((await env.DB.batch(previous.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)).toEqual(priorRows.map(result=>result.results))
+ expect((await env.DB.prepare('SELECT * FROM penny_saved_views').all()).results).toEqual([])
  const upgradedRows=await env.DB.batch(released.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
  expect(upgradedRows.map(result=>result.results)).toEqual(releasedRows.map(result=>result.results))
  expect((await env.DB.prepare('SELECT * FROM penny_publication_schedules').all()).results).toEqual([])

@@ -1,3 +1,4 @@
+import {ViewColumns} from '../../views/columns'
 import {AgingPanel} from '../../triage/aging-panel'
 import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { OperatorEmpty, OperatorResourceLoading } from '@/core/app/ui/operator-resource-state'
@@ -22,7 +23,7 @@ export function ModerationPage() {
         {resource.kind === 'loading' ? <OperatorResourceLoading label="Loading moderation queue…" /> : null}
         {resource.kind === 'error' ? <OperatorCard className="p-6" role="alert"><p className="text-sm font-semibold text-penny-ink">Could not load feedback. Sign in again or refresh.</p><button type="button" onClick={refresh} className={`${secondaryButtonClass} mt-4`}>Try again</button></OperatorCard> : null}
         {resource.kind === 'ready' && resource.data.length === 0 ? <OperatorEmpty title="No feedback to review.">New customer submissions that need review will appear here.</OperatorEmpty> : null}
-        {resource.kind === 'ready' && resource.data.length > 0 ? <div className="space-y-5">{resource.data.map((row) => <ModerationCard key={row.slug} row={row} report={setMessage} />)}</div> : null}
+        {resource.kind === 'ready' && resource.data.length > 0 ? <ViewColumns value={page?.savedView?.columns}><div className="space-y-5">{resource.data.map((row) => <ModerationCard key={row.slug} row={row} report={setMessage} />)}</div></ViewColumns> : null}
       </div>
     </section>
   )

@@ -115,6 +115,8 @@ async function refused(response:Response,error:string){expect(response.status).t
 it('[DATA-001] a RER Managed archive round trips while each installation keeps its own validated Platform migration ledger and unknown schema is refused',async()=>{
  await managedInstall('2026-10-01 00:00:00')
  let cookie=await owner();const bytes=await seedOriginal(),source=await platformLedger()
+ const views:Record<string,string>={}
+ for(const scope of ['shared','private']){const response=await call('/api/operator/saved-views',{listKind:'requests',name:'synthetic-penny-'+scope,scope,filter:{q:'race'},sort:'name',columns:['title']},cookie);expect(response.status).toBe(201);views[scope]=(await response.json() as {id:string}).id}
  // v0.1.3 refused this database at the export door with unclassified_archive_schema.
  const response=await call('/api/operator/data/export',undefined,cookie)
  expect(response.status).toBe(200)
@@ -150,6 +152,9 @@ it('[DATA-001] a RER Managed archive round trips while each installation keeps i
  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
  expect((await call('/api/operator/data/import',bundle,cookie)).status).toBe(200)
  expect(await platformLedger()).toEqual(destination)
+ expect((await call('/api/operator/saved-views/'+views.private,undefined,cookie)).status).toBe(404)
+ expect((await call('/api/operator/moderation?view='+views.shared,undefined,cookie)).status).toBe(200)
+ expect((await env.DB.prepare('SELECT * FROM penny_saved_views ORDER BY id').all()).results).toEqual(bundle.archive.tables.penny_saved_views)
  expect(new Uint8Array(await (await env.FILES.get('race-original'))!.arrayBuffer())).toEqual(bytes)
  // Re-export from the destination is the same archive, apart from the destination's own restore audit entry.
  const again=await (await call('/api/operator/data/export',undefined,cookie)).json() as Awaited<ReturnType<typeof exportArchive>>

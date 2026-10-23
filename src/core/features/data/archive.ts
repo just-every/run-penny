@@ -1,3 +1,4 @@
+import {assertViewExport,viewExportCreator} from '../views/archive'
 import {assertOriginalFiles} from './original-files'
 import { validateCategoryArchive } from '../categories/archive'
 import {validateMailIdentityArchive} from '../settings/mail-identity-archive'
@@ -96,6 +97,7 @@ function limits(data:Record<string,Row[]>):void{
  if(Object.values(data).reduce((n,items)=>n+items.length,0)>DATA_LIMITS.rows||new TextEncoder().encode(canonical(data)).byteLength>DATA_LIMITS.recordBytes)fail('archive_limit',413)
 }
 export const normalize=(name:string,row:Row):Row=>{
+ if(name==='penny_saved_views'&&row.scope==='private')return {...row,restored_private:1}
  if(name==='penny_requester_oauth')return {...row,enabled:0}
  // Advance freshness only when imposing the restore hold, so normalized rows
  // remain unchanged through export validation, restore and later exports.
@@ -141,6 +143,7 @@ export async function finish(db:D1Database,id:string,status:'complete'|'aborted'
 export const applyStart=(db:D1Database,id:string)=>[db.prepare("INSERT INTO data_apply_claims(operation_id) VALUES((SELECT lock_id FROM data_state WHERE singleton=1 AND lock_id=? AND phase='locked'))").bind(id),db.prepare("UPDATE data_state SET phase='applying' WHERE singleton=1 AND lock_id=?").bind(id),db.prepare('PRAGMA defer_foreign_keys=ON')]
 export const audit=(db:D1Database,action:string,id:string,authority?:DataAuthority,details:string|null=null)=>{const now=new Date().toISOString();return db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,details_json,created_at,updated_at) VALUES(?,?,?,?,'data_operation',?,?,?,?,?)").bind(createUlid(),authority?'operator':'system',authority?.operatorId??'data.operations',action,id,now,details,now,now)}
 export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:DataAuthority):Promise<{archive:Archive;journal:ErasureJournal}>{
+ await assertViewExport(db,await viewExportCreator(db,authority?.operatorId))
  const id=await reserve(db,'export',{},authority)
  try {
   await assertPlatformLedger(db)

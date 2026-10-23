@@ -50,6 +50,8 @@ async function subject(db: D1Database, id: string): Promise<{ operator: Operator
 
 async function counts(db: D1Database, { operator, native }: { operator: Operator; native: Native }): Promise<Record<string, number>> {
  const queries: [string, D1PreparedStatement][] = [
+  ['penny_saved_views:private',db.prepare("SELECT count(*) n FROM penny_saved_views WHERE creator_id=? AND scope='private'").bind(operator.id)],
+  ['penny_saved_views:shared',db.prepare("SELECT count(*) n FROM penny_saved_views WHERE creator_id=? AND scope='shared'").bind(operator.id)],
   ['operator_sessions', db.prepare('SELECT count(*) n FROM operator_sessions WHERE operator_id=?').bind(operator.id)],
   ['mail_event_records', db.prepare('SELECT count(*) n FROM mail_event_records WHERE operator_id=?').bind(operator.id)],
   ['native_magic_links', db.prepare('SELECT count(*) n FROM native_magic_links WHERE lower(email)=lower(?)').bind(operator.email)],
@@ -74,7 +76,7 @@ async function copies(db: D1Database, operator: Operator, native: Native): Promi
  for (const table of (await schema(db)).filter(table => !handled.has(table.name))) {
   const columns = table.columns.map(column => column.name), ident = (name: string) => '"' + name + '"'
   // Receipts of the operator's own mail events are deleted with them.
-  const own = table.name === 'mail_event_records' ? ' AND operator_id IS NOT ?2' : ''
+  const own = table.name === 'mail_event_records' ? ' AND operator_id IS NOT ?2' : table.name==='penny_saved_views'?" AND NOT (scope='private' AND creator_id=?2)":''
   const rows = (await db.prepare(`SELECT * FROM ${ident(table.name)} WHERE (${columns.map(name => `instr(lower(CAST(${ident(name)} AS TEXT)),lower(?1))>0`).join(' OR ')})${own} LIMIT 21`).bind(operator.email, ...(own ? [operator.id] : [])).all<Row>()).results
   for (const row of rows) blocked.push({ table: table.name, key: rowKey(table, row), columns: columns.filter(name => typeof row[name] === 'string' && String(row[name]).toLowerCase().includes(operator.email.toLowerCase())) })
  }
@@ -127,6 +129,8 @@ export async function applyOperatorErasure(db: D1Database, operation: string, { 
    guard('EXISTS(SELECT 1 FROM operators WHERE id=? AND email=? AND display_name=?)', operator.id, operator.email, operator.display_name),
    native ? guard("EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND version=? AND status='inactive')", native.id, native.version) : guard('NOT EXISTS(SELECT 1 FROM oa_operators WHERE lower(email)=lower(?))', operator.email),
    db.prepare('UPDATE operators SET email=?,display_name=?,updated_at=? WHERE id=?').bind(email, LABEL, now, operator.id),
+   db.prepare("DELETE FROM penny_saved_views WHERE creator_id=? AND scope='private'").bind(operator.id),
+   db.prepare("UPDATE penny_saved_views SET creator_id=NULL,updated_at=? WHERE creator_id=? AND scope='shared'").bind(now,operator.id),
    db.prepare('DELETE FROM operator_sessions WHERE operator_id=?').bind(operator.id),
    db.prepare('DELETE FROM mail_event_records WHERE operator_id=?').bind(operator.id),
    db.prepare('DELETE FROM operator_mail_suppressions WHERE operator_id=?').bind(operator.id),
