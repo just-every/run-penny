@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useHydrated } from '@/core/app/ui/hydrated'
 import { takeReturn } from '@/core/features/auth/requester-return'
 import { Link } from '@tanstack/react-router'
 import { postJson, requesterStorageKey } from '@/core/features/auth/client-mutations'
@@ -8,6 +9,7 @@ import { PublicPortalLayout, type PublicPortalContent } from '@/core/features/po
 import { PublicCard } from '@/core/features/portal/ui/public-primitives'
 
 export function VerifyRequester({ content }: { readonly content: PublicPortalContent }) {
+  const hydrated = useHydrated()
   const [message, setMessage] = useState(''), [verified, setVerified] = useState(false), [busy, setBusy] = useState(false), [back, setBack] = useState<string | null>(null)
   const started=useRef(false)
   useEffect(()=>{
@@ -49,7 +51,7 @@ export function VerifyRequester({ content }: { readonly content: PublicPortalCon
         <PublicCard className="mt-8 p-5 sm:p-7">
           <p className="leading-7 text-penny-ink">Continue to verify your email and create this browser’s requester session. This does not subscribe you to email updates.</p>
           {!verified
-            ? <button className={`${buttonClass} mt-5`} disabled={busy} onClick={() => void verify()}>{busy ? 'Verifying…' : 'Verify email'}</button>
+            ? <button className={`${buttonClass} mt-5`} disabled={busy || !hydrated} onClick={() => void verify()}>{busy ? 'Verifying…' : 'Verify email'}</button>
             : back ? <div className="mt-5 flex flex-wrap items-center gap-4"><a href={back} className={buttonClass}>Back to the feedback you were reading</a><Link to="/portal/feedback/new" className={textLinkClass}>Submit new feedback</Link></div>
             : <Link to="/portal/feedback/new" className={`${buttonClass} mt-5`}>Continue to submit feedback</Link>}
           <p role="status" className="mt-4 text-sm leading-6 text-penny-ink">{message}</p>

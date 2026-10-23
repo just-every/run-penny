@@ -542,6 +542,12 @@
       "name": "0093_request_batches.sql",
       "sha256": "a159a8e41c4f5c4e7c1be0c079b3571a59aabf852b2f71cb3c0766c2b354e0f6",
       "sql": "-- Private metadata snapshots; restored history is never an actionable undo.\nCREATE TABLE penny_request_batches (\n id TEXT PRIMARY KEY, actor_id TEXT NOT NULL REFERENCES operators(id), selected INTEGER NOT NULL,\n created_at TEXT NOT NULL, undone_at TEXT, held INTEGER NOT NULL DEFAULT 0 CHECK(held IN(0,1))\n);\nCREATE TABLE penny_request_batch_items (\n batch_id TEXT NOT NULL REFERENCES penny_request_batches(id) ON DELETE CASCADE,\n request_id TEXT NOT NULL REFERENCES requests(id) ON DELETE CASCADE,\n before_json TEXT NOT NULL, after_json TEXT, restored INTEGER NOT NULL DEFAULT 0 CHECK(restored IN(0,1)),\n PRIMARY KEY(batch_id,request_id)\n);\nCREATE TRIGGER data_guard_penny_request_batches_insert BEFORE INSERT ON penny_request_batches\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\nCREATE TRIGGER feedback_native_penny_request_batches_insert AFTER INSERT ON penny_request_batches\nBEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER data_guard_penny_request_batches_update BEFORE UPDATE ON penny_request_batches\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\nCREATE TRIGGER feedback_native_penny_request_batches_update AFTER UPDATE ON penny_request_batches\nBEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER data_guard_penny_request_batches_delete BEFORE DELETE ON penny_request_batches\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\nCREATE TRIGGER feedback_native_penny_request_batches_delete AFTER DELETE ON penny_request_batches\nBEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER data_guard_penny_request_batch_items_insert BEFORE INSERT ON penny_request_batch_items\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\nCREATE TRIGGER feedback_native_penny_request_batch_items_insert AFTER INSERT ON penny_request_batch_items\nBEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER data_guard_penny_request_batch_items_update BEFORE UPDATE ON penny_request_batch_items\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\nCREATE TRIGGER feedback_native_penny_request_batch_items_update AFTER UPDATE ON penny_request_batch_items\nBEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER data_guard_penny_request_batch_items_delete BEFORE DELETE ON penny_request_batch_items\nWHEN NOT EXISTS(SELECT 1 FROM data_state s WHERE s.singleton=1 AND (s.phase='idle' OR (s.phase='applying' AND EXISTS(SELECT 1 FROM data_apply_claims c WHERE c.operation_id=s.lock_id))))\nBEGIN SELECT RAISE(ABORT,'data_maintenance'); END;\nCREATE TRIGGER feedback_native_penny_request_batch_items_delete AFTER DELETE ON penny_request_batch_items\nBEGIN UPDATE feedback_import_native_revision SET revision=revision+1 WHERE singleton=1; END;\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0094_dependency_keys_sealed.sql",
+      "sha256": "9c8fa5f94c48a230f326cd4d666cbc2bd1e7d5a18327b89e65b339ac6a533d9a",
+      "sql": "ALTER TABLE rer_dependency_installation ADD COLUMN keys_sealed INTEGER NOT NULL DEFAULT 0 CHECK(keys_sealed IN (0,1));\n-- Nonsecret version history lets restored rows name an unavailable retired key\n-- without confusing ciphertext tampering or a wrong current secret with restore.\nALTER TABLE rer_dependency_installation ADD COLUMN key_ids TEXT NOT NULL DEFAULT '[]' CHECK(json_valid(key_ids) AND json_type(key_ids)='array');\n"
     }
   ],
   "compatibilityDate": "2026-08-31",
@@ -559,9 +565,11 @@
   },
   "secretNames": [
     "AUTH_SECRET",
+    "INSTALLATION_KEY",
     "SETUP_TOKEN"
   ],
   "optionalSecretNames": [
+    "INSTALLATION_KEY_PREVIOUS",
     "MAIL_API_KEY",
     "RESEND_WEBHOOK_SECRET",
     "PORTAL_IDENTITY_SECRET"

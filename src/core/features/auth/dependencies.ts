@@ -18,6 +18,6 @@ export function registerDependencyRoutes(app: Hono<Environment>): void {
 
 async function handle(context: { req: { raw: Request }; get(key: 'runtime'): PennyRuntime }): Promise<Response> {
   const runtime = context.get('runtime'), config = authConfig(runtime)
-  const dependencies = createDependencies({ db: runtime.database.binding, origin: config.origin, name: branding.name, provider: runtime.bindings.IDENTITY_PROVIDER || undefined, local: config.local, auth: operatorAuth(runtime) })
+  const dependencies = createDependencies({ db: runtime.database.binding, origin: config.origin, name: branding.name, provider: runtime.bindings.IDENTITY_PROVIDER || undefined, local: config.local, INSTALLATION_KEY: config.INSTALLATION_KEY, INSTALLATION_KEY_PREVIOUS: config.INSTALLATION_KEY_PREVIOUS, auth: operatorAuth(runtime) })
   return (await dependencies.handle(context.req.raw)) ?? new Response('Not found', { status: 404 })
 }

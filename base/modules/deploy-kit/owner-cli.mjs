@@ -13,11 +13,12 @@ import { activeWorker, secretBindings } from './worker.mjs';
 import { ownerSecret } from './owner-secret.mjs';
 import { ownerRemove } from './owner-remove.mjs';
 import { ownerSignin } from './owner-signin.mjs';
+import { ownerRekey } from './owner-rekey.mjs';
 import { refuseLocalModels } from './local-only.mjs';
 import { publicOrigin } from './public-origin.mjs';
 
 export const cronNotice = 'This Worker has a Cron Trigger. Cloudflare may take up to about two hours to start its first scheduled run on some accounts.';
-const usage = 'usage: owner-cli.mjs deploy|dry-run|health|remove|inspect|record-owner|signin --declaration <file> --environment <name> [--product <dir>] [--state <file>] [--outcome claimed|kept] | secret ... --set NAME [--set NAME]|--unset NAME [--unset NAME]';
+const usage = 'usage: owner-cli.mjs deploy|dry-run|health|remove|inspect|record-owner|signin|rekey --declaration <file> --environment <name> [--product <dir>] [--state <file>] [--outcome claimed|kept] | secret ... --set NAME [--set NAME]|--unset NAME [--unset NAME]';
 
 /** The owner's committed source and existing local build. Run the seed's build first. */
 async function ownerArtifact(root, product) {
@@ -33,7 +34,7 @@ export async function main(argv = process.argv.slice(2), env = process.env, {fet
   try { parsed = parseArgs({args:argv,allowPositionals:true,strict:true,options:{declaration:{type:'string'},environment:{type:'string'},product:{type:'string',default:''},state:{type:'string'},set:{type:'string',multiple:true},unset:{type:'string',multiple:true},outcome:{type:'string'}}}); }
   catch { throw new Error('usage'); }
   const {positionals:[command,...rest],values} = parsed;
-  if (!['deploy','dry-run','health','secret','remove','inspect','record-owner','signin'].includes(command) || rest.length || !values.declaration || !values.environment) throw new Error('usage');
+  if (!['deploy','dry-run','health','secret','remove','inspect','record-owner','signin','rekey'].includes(command) || rest.length || !values.declaration || !values.environment) throw new Error('usage');
   if ((command === 'secret') !== (values.set !== undefined || values.unset !== undefined) || values.set !== undefined && values.unset !== undefined) throw new Error('usage');
   if (values.outcome !== undefined && command !== 'record-owner' || command === 'record-owner' && !['claimed','kept'].includes(values.outcome)) throw new Error('usage');
   await refuseLocalModels(resolve(cwd));
@@ -57,20 +58,31 @@ export async function main(argv = process.argv.slice(2), env = process.env, {fet
   // Bound each response, not the owner's bucket size; failures retain ownership.
   let requestWindow = propagation?.uploaded ? propagation.window : undefined;
   const request = fetch;
-  fetch = (input, init = {}) => {
-    if (!requestWindow?.active) return request(input, init);
+  const guardedRequest = (input, init = {}) => {
+    init.signal?.throwIfAborted();
+    // The window clock can expire before its shared abort timer fires.
+    assert(!requestWindow?.active || requestWindow.remaining() > 0, 'deployment-readiness-timeout');
+    return request(input, init);
+  };
+  const requestSignal = () => {
+    if (!requestWindow?.active) return undefined;
     const remaining = requestWindow.remaining();
     assert(remaining > 0, 'deployment-readiness-timeout');
-    const deadline = AbortSignal.timeout(Math.max(1, Math.ceil(remaining)));
-    return request(input, {...init,signal:init.signal ? AbortSignal.any([init.signal,deadline]) : deadline});
+    return AbortSignal.timeout(Math.max(1, Math.ceil(remaining)));
   };
-  const api = deploymentDiagnostics(cloudflare({accountId:env.CLOUDFLARE_ACCOUNT_ID,token:env.CLOUDFLARE_API_TOKEN,fetch,budgetMigrations:command === 'deploy',...(command === 'remove' ? {maxRequests:Infinity,removal:true} : {})}),{onCreated});
+  fetch = (input, init = {}) => {
+    const deadline = requestSignal();
+    return request(input, {...init,...(deadline ? {signal:init.signal ? AbortSignal.any([init.signal,deadline]) : deadline} : {})});
+  };
+  // Transport must see the same outer signal when deciding whether to retry.
+  const api = deploymentDiagnostics(cloudflare({accountId:env.CLOUDFLARE_ACCOUNT_ID,token:env.CLOUDFLARE_API_TOKEN,fetch:guardedRequest,requestSignal,budgetMigrations:command === 'deploy',...(command === 'remove' ? {maxRequests:Infinity,removal:true} : {})}),{onCreated});
   // Removal needs the recorded account/name identity, not a workers.dev route.
   const target = command === 'remove'
     ? {accountId:api.accountId,project:declaration.project,environment:values.environment,worker:ownerWorkerName(declaration.project,values.environment)}
     : await ownerTarget(api,{project:declaration.project,environment:values.environment});
   const statePath = values.state ? resolve(root,values.state) : join(root,'.rer','deploy',`${target.environment}.json`);
   if (command === 'remove') return {ok:true,...await ownerRemove({api,target,statePath}).catch(error => { throw api.annotateFailure(error,'remove'); })};
+  if (command === 'rekey') return ownerRekey({api,target,statePath,declaration,env,notice});
   if (command === 'secret') {
     // Every named secret is changed in one Worker version, or none is.
     const named = [...new Set(values.set ?? values.unset)], declared = Array.isArray(declaration.secrets) ? declaration.secrets : [];

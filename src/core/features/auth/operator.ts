@@ -20,6 +20,7 @@ export function authConfig(runtime: PennyRuntime): AuthConfig {
   const local = ['local','test'].includes(c.environment) && new URL(c.appOrigin).protocol === 'http:'
   return {
     origin: c.appOrigin, OWNER_EMAIL: c.ownerEmail, SESSION_SECRET: c.authSecret,
+    INSTALLATION_KEY: runtime.bindings.INSTALLATION_KEY, INSTALLATION_KEY_PREVIOUS: runtime.bindings.INSTALLATION_KEY_PREVIOUS,
     SETUP_TOKEN: c.setupToken, MAIL_FROM: authMail(runtime) ? c.mailFrom : undefined,
     branding: { productName: branding.name, accentColor: branding.accent, signInPath: '/signin', theme: '/rer-theme.css' },
     limitWindowSeconds: 3600, emailLimit: 5, ipLimit: 10, dependencies: true,

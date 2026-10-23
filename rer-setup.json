@@ -182,6 +182,16 @@
       "group": "authority"
     },
     {
+      "name": "INSTALLATION_KEY",
+      "label": "Installation encryption key",
+      "kind": "secret",
+      "input": "managed",
+      "ownerVisible": false,
+      "generate": "hex",
+      "required": true,
+      "group": "authority"
+    },
+    {
       "name": "SETUP_TOKEN",
       "label": "First-owner setup token",
       "kind": "secret",

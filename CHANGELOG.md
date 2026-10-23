@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Refresh rer and recorded Base copies to 0.2.79 for Penny's themed hosted demo gate. Use the supported native migration preflight for local archives and keep receiver fields closed until their handlers attach. Apply the additive 0094 dependency-key sealing migration through the installation's migration runner.
+
 - Keep requester participation closed during session refresh so immediate re-votes retain verified authority; scope learning spacing and prioritisation browser checks to their intended hydrated form content.
 
 - Keep operator form fields unavailable until their editing handlers attach, so hydration cannot discard an entered roadmap summary.

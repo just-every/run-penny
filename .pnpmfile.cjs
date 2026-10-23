@@ -7,7 +7,7 @@ const installs = new Set(['install', 'i', 'add', 'update', 'up', 'upgrade', 'reb
 const command = process.argv.slice(2).find(argument => !argument.startsWith('-'))
 if (command === undefined || installs.has(command)) {
   const credential = /(?:TOKEN|SECRET|PASSWORD|API_KEY|PRIVATE_KEY|AUTHORIZATION|COOKIE|CREDENTIAL)/i
-  const binding = /^(SESSION_SECRET|SETUP_TOKEN|OWNER_EMAIL|OPERATOR_EMAIL|APP_ORIGIN|PENNY_ENVIRONMENT|WORKSPACE_TIMEZONE|AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|CLOUDFLARE_|CF_|RER_DEPLOY_)/
+  const binding = /^(SESSION_SECRET|INSTALLATION_KEY(?:_|$)|SETUP_TOKEN|OWNER_EMAIL|OPERATOR_EMAIL|APP_ORIGIN|PENNY_ENVIRONMENT|WORKSPACE_TIMEZONE|AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|CLOUDFLARE_|CF_|RER_DEPLOY_)/
   for (const name of Object.keys(process.env)) if (credential.test(name) || binding.test(name)) delete process.env[name]
 }
 module.exports = {}

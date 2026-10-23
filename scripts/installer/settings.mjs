@@ -6,7 +6,7 @@ import { buildEnvironment } from '@runeditrun/rer/local/environment'
 import { installationFailure } from '@runeditrun/rer/failures'
 import { recoverInterrupted } from '@runeditrun/rer/local/recovery'
 
-export const bindings = /^(SESSION_SECRET|SETUP_TOKEN|OWNER_EMAIL|OPERATOR_EMAIL|APP_ORIGIN|PENNY_ENVIRONMENT|WORKSPACE_TIMEZONE|AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|CLOUDFLARE_ACCOUNT_ID|CLOUDFLARE_API_TOKEN|CF_THROWAWAY_|RER_DEPLOY_)/
+export const bindings = /^(SESSION_SECRET|INSTALLATION_KEY(?:_|$)|SETUP_TOKEN|OWNER_EMAIL|OPERATOR_EMAIL|APP_ORIGIN|PENNY_ENVIRONMENT|WORKSPACE_TIMEZONE|AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|CLOUDFLARE_ACCOUNT_ID|CLOUDFLARE_API_TOKEN|CF_THROWAWAY_|RER_DEPLOY_)/
 export const settings = root => readSettings(root, { file: '.dev.vars' })
 export async function recoveredSettings(root) {
   const operation = await recoverInterrupted(root)
