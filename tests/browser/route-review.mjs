@@ -1,5 +1,6 @@
 import {pacePublicContext} from './public-entry-pacing.mjs'
 import { browserOptions } from './browser-options.mjs'
+import {checkPortalIdentity} from './portal-identity-checks.mjs'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
 import { execFileSync } from 'node:child_process'
@@ -435,6 +436,7 @@ try {
     await visit(operatorPage, width, { route: 'operator-signin-existing-session', path: '/signin', auth: 'operator-session', contains: 'You are already signed in.' })
 
     const requesterEmail = `route-review-${width}-${Date.now().toString(36)}@example.test`
+    await checkPortalIdentity({page:publicPage,width,api,cookie,visit})
     const { requestTitle } = await checkPublicRoutes(publicPage, width, requesterEmail)
 
     const unauthenticatedNotifications = await api('/api/operator/notifications')
