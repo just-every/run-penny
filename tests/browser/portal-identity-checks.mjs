@@ -9,7 +9,7 @@ export async function checkPortalIdentity({page,width,api,cookie,visit}) {
   const saved=await api('/api/operator/settings/branding',{description,accent:branding.accent,showLogo:true},{Cookie:cookie},'PUT')
   assert.equal(saved.status,200,'Owner can change the installed portal description')
   const {text}=await visit(page,width,{route:`configured-portal-${index}`,path:'/portal/feedback',auth:'signed-out',contains:description})
-  assert.equal(await page.locator('header [data-rer-name]').innerText(),branding.name,'The portal identifies the owner-configured workspace')
+  assert.equal(await page.locator('header [data-rer-name]').innerText(),branding.name,'The portal displays the installation build-time branding label')
   assert.equal(await page.getByRole('link',{name:`${branding.name} feedback portal`,exact:true}).count(),1)
   assert.ok(!text.includes(index?descriptions[0]:branding.description),'The prior portal description is absent')
   assert.doesNotMatch(text,/\bpricing\b|\btestimonials?\b|trusted by \d|\d+% uptime|\$\d+\s*\/\s*month/i,'Portal makes no vendor, pricing, testimonial or metric claims')
