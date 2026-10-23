@@ -3,6 +3,7 @@ import { ChangelogFilters,ChangelogLabels } from './changelog-filters'
 import { ReleaseMarkdown } from './release-markdown'
 import { HydrationUnit } from '@/base/hydration/unit'
 import { ReleaseSubscription } from './release-subscription'
+import { WeeklySummary } from '@/core/features/notifications/ui/weekly-summary'
 import { ReleaseOutcomeForm } from './release-outcome-form'
 import { Link } from '@tanstack/react-router'
 import type { CurrentPublicRelease as PublicRelease } from '../public-read-repository'
@@ -24,7 +25,7 @@ export function PublicUpdatesPage({ content }: { readonly content: PublicPortalC
     <PublicPortalLayout content={content}>
       <HydrationUnit><section className="mx-auto max-w-3xl" aria-labelledby="updates-heading">
         <header className="min-w-0"><PageTitle id="updates-heading" eyebrow="Updates">Product updates</PageTitle><p className={ledeClass}>Published updates describe shipped customer-facing changes.</p></header>
-        <ReleaseSubscription/>{releases.kind==='ready'?<ChangelogFilters releases={releases.data} label={label} product={product} onLabel={setLabel} onProduct={setProduct}/>:null}<div className="mt-8 space-y-4">
+        <ReleaseSubscription/><WeeklySummary/>{releases.kind==='ready'?<ChangelogFilters releases={releases.data} label={label} product={product} onLabel={setLabel} onProduct={setProduct}/>:null}<div className="mt-8 space-y-4">
           {releases.kind === 'loading' ? <ResourceLoading label="Loading published updates…" /> : null}
           {releases.kind === 'error' ? <ResourceFailure status={releases.status} onRetry={retry} /> : null}
           {releases.kind === 'ready' && releases.data.length === 0 ? <PublicEmpty title="There are no updates yet.">Published updates will appear here.</PublicEmpty> : null}

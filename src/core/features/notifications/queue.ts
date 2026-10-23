@@ -39,7 +39,7 @@ async function nextNotificationDelay(runtime: PennyRuntime): Promise<number | un
   SELECT next_attempt_at AS due FROM notification_batches WHERE state='queued' AND failure_reason IS NOT 'restored_delivery_review_required'
   UNION ALL SELECT strftime('%Y-%m-%dT%H:%M:%fZ',updated_at,'+5 minutes') FROM notification_batches WHERE state='sending'
   UNION ALL SELECT available_at FROM notification_outbox n WHERE delivery_state='queued' AND claim_id IS NULL
-   AND (event_type='moderation_rejected' OR (event_type='release_version' AND ${priorRequestUpdatesSettled('n')}))
+   AND (event_type IN('moderation_rejected','weekly_digest') OR (event_type='release_version' AND ${priorRequestUpdatesSettled('n')}))
   UNION ALL SELECT strftime('%Y-%m-%dT%H:%M:%fZ',updated_at,'+5 minutes') FROM notification_outbox WHERE delivery_state='queued' AND claim_id IS NOT NULL
   UNION ALL SELECT created_at FROM notification_intents WHERE batch_id IS NULL AND restoration_hold_at IS NULL
  )`).first<{due:string|null}>()

@@ -1,6 +1,7 @@
 import type { MailEvent } from './event-intake'
 import type { MailOwner } from './event-correlation'
 import { globalMuteStatement } from './unsubscribe'
+import {revokeWeeklyChoice} from './weekly-preferences'
 
 export type OwnedEvent=MailOwner&{event:MailEvent}
 export interface EventTransaction {get(key:string):Promise<unknown>;put(key:string,value:unknown):Promise<void>}
@@ -50,7 +51,7 @@ export function eventStorage(db:D1Database,owned:OwnedEvent[]){
     ON CONFLICT(operator_id) DO UPDATE SET suppressed_at=excluded.suppressed_at,updated_at=excluded.updated_at`).bind(owner.operatorId,now,now,now))
    // A provider unsubscribe withdraws all requester email exactly as Penny's own
    // global link does; follows, votes and portal access stay.
-   if(owner.unsubscribe&&owner.requesterId&&owner.addressId)statements.push(globalMuteStatement(db,owner.requesterId,true,now),
+   if(owner.unsubscribe&&owner.requesterId&&owner.addressId)statements.push(globalMuteStatement(db,owner.requesterId,true,now),revokeWeeklyChoice(db,owner.requesterId,owner.addressId,now),
     db.prepare("UPDATE requester_update_permissions SET revoked_at=?,updated_at=? WHERE requester_id=? AND requester_address_id=? AND ((source='subscription' AND request_id IS NULL) OR grant_origin IN('vote_subscription','author_subscription')) AND revoked_at IS NULL").bind(now,now,owner.requesterId,owner.addressId))
   }
   // Only Base's applied state writes change operator delivery counts. Receipt

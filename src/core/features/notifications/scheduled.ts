@@ -10,6 +10,8 @@ import { drainRejectionNotices } from './rejection-delivery'
 import { drainReleaseDeliveries } from '../releases/delivery'
 import {drainIntegrations} from '../integrations/delivery'
 import {drainTrackers} from '../integrations/tracker-delivery'
+import {prepareWeekly} from './weekly-schedule'
+import {drainWeekly} from './weekly-delivery'
 
 /** The default Worker's scheduled event handler. */
 export async function runNotificationSchedule(_controller:ScheduledController,bindings:AppBindings):Promise<void>{
@@ -20,14 +22,16 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  await drainDecisionReviews(runtime)
  await drainAging(runtime.database.binding)
  await drainScheduledPublications(runtime.database.binding,_controller.scheduledTime)
- await drainRequesterMail(runtime)
+ await prepareWeekly(runtime,_controller.scheduledTime)
+ await drainRequesterMail(runtime,()=>_controller.scheduledTime)
  await drainIntegrations(runtime)
  await drainTrackers(runtime)
 }
 
 /** Queue and Cron share this order: status digests precede release notes. */
-export async function drainRequesterMail(runtime:PennyRuntime):Promise<void>{
+export async function drainRequesterMail(runtime:PennyRuntime,weeklyClock=Date.now):Promise<void>{
  await drainNotifications(runtime)
  await drainRejectionNotices(runtime)
  await drainReleaseDeliveries(runtime)
+ await drainWeekly(runtime,weeklyClock)
 }
