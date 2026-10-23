@@ -44,7 +44,7 @@ export async function proveDurableIntegration(migrations:Parameters<typeof apply
   await cron();restart()
  }
  expect((await snapshot()).deliveries.find(row=>row.id===queued.id)).toMatchObject({state:'rejected',attempts:limit})
- expect(calls.map(identity)).toEqual(Array(limit).fill(queued.id))
+ expect(calls.map(identity)).toEqual(Array.from({length:limit!},()=>queued.id))
  const terminalCalls=calls.length,terminalAttempts=await attempts()
  vi.setSystemTime(Date.now()+86_400_000);restart();await cron()
  expect({calls:calls.length,attempts:await attempts()}).toEqual({calls:terminalCalls,attempts:terminalAttempts})
