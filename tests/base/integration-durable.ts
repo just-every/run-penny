@@ -16,10 +16,10 @@ export async function proveDurableIntegration(migrations:Parameters<typeof apply
  const g=await graph(),calls:WireRequest[]=[]
  let reply:'retry'|'unknown'='retry',app=createPennyApp(),ip=0
  const edge={send:async(wire:WireRequest)=>{
+  calls.push(structuredClone(wire))
   expect(wire.url).toBe(endpoint)
   expect(wire.body).toContain('Public request 0')
   expect(identity(wire)).toBeTruthy()
-  calls.push(structuredClone(wire))
   if(reply==='unknown')throw new Error('synthetic-penny-response-unknown')
   return {status:429,headers:{'retry-after':'1'},body:''}
  }}
