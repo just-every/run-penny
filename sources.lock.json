@@ -2908,7 +2908,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "14eee71c0c4471459555aa2435342cf2e24957a47a1df7d63496bcb7c6702538",
+      "sha256": "401e2fa57d94b1d3adaccc2536364547c56b7e6699fb61f288d7f4434e9eddd6",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3631,6 +3631,10 @@
       "sha256": "60319475a5c020ffe829eb1836a802fc86ef34bd17085715b7a0d5a3bf43a752",
       "executable": false
     },
+    "scripts/ci/chromium-apt-attempt.mjs": {
+      "sha256": "e003763def3cd55c7c6111d153bc7695b6e7444ba7e9a3c63f9b19cb72bc8adb",
+      "executable": false
+    },
     "scripts/data-command.mjs": {
       "sha256": "a7d07ae30348fc43cb0adb758fb6f67c622b3d72d23d31913bab5c8b0b74b686",
       "executable": false
@@ -3836,7 +3840,7 @@
       "executable": false
     },
     "scripts/install-ci-chromium.sh": {
-      "sha256": "17e9c5ffc08aa6f77ef8b7ada30249391acdc214116ece1002b9cae3361717f6",
+      "sha256": "04655b6748e14139b31e59e50124cfa58dbb30e3b381f86939348e6532439a1e",
       "executable": true
     },
     "scripts/installer/admission.mjs": {

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reap every Chromium apt attempt's private process group before the next mirror attempt, so an orphaned dpkg cannot retain its installation lock. Existing deadlines and verification assertions are unchanged.
+
 - Refresh rer and recorded Base copies to 0.2.79 for Penny's themed hosted demo gate. Use the supported native migration preflight for local archives and keep receiver fields closed until their handlers attach. Apply the additive 0094 dependency-key sealing migration through the installation's migration runner.
 
 - Keep requester participation closed during session refresh so immediate re-votes retain verified authority; scope learning spacing and prioritisation browser checks to their intended hydrated form content.

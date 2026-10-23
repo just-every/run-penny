@@ -30,7 +30,7 @@ APT
   # apt's unprivileged downloader must be able to read the scratch sources.
   chmod -R a+rX "$scratch"
   printf 'Chromium apt: attempt %s/3 (90s deadline; mirror %s)\n' "$attempt" "$mirror"
-  if sudo env APT_CONFIG="$scratch/apt.conf" timeout --kill-after=5s 90s \
+  if sudo env APT_CONFIG="$scratch/apt.conf" "$node" scripts/ci/chromium-apt-attempt.mjs \
     bash -ec 'dpkg --configure -a; exec "$@"' bash \
     "$node" "$PWD/node_modules/@playwright/test/cli.js" install-deps chromium; then
     printf 'Chromium apt: complete (attempts=%s mirror=%s)\n' "$attempt" "$mirror"
