@@ -41,18 +41,19 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  const actor=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind('owner@penny.invalid').first<{id:string}>();expect(actor!.id).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/)
  expect((await env.DB.prepare('SELECT count(*) AS n FROM operator_sessions').first<{n:number}>())!.n).toBe(0)
 })
-it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags and separate file approval',async()=>{
+it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total',async()=>{
  const g=await graph(),slug=await g.submit('With attachment');await g.approve(slug,'Public attachment request')
  const tag=await call('/api/operator/catalog/tags',{name:'Private enterprise context'},g.operator);expect(tag.status).toBe(201)
  const tagId=(await tag.json() as {id:string}).id
  const requestId=(await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(slug).first<{id:string}>())!.id
  expect((await call(`/api/operator/catalog/requests/${requestId}/tags/${tagId}`,{},g.operator,'PUT')).status).toBe(200)
- const form=new FormData();form.set('file',new File([new Uint8Array([137,80,78,71])],'diagram.png',{type:'image/png'}))
- const upload=await exports.default.fetch(new Request(origin+`/api/public/requests/${slug}/attachments`,{method:'POST',headers:{...g.person,Origin:origin},body:form}));expect(upload.status).toBe(201)
- const file=(await upload.json() as {id:string}).id
+ const attach=(file:File)=>{const form=new FormData();form.set('file',file);return exports.default.fetch(new Request(origin+`/api/public/requests/${slug}/attachments`,{method:'POST',headers:{...g.person,Origin:origin},body:form}))}
+ const upload=await attach(new File([new Uint8Array([137,80,78,71])],'diagram.png',{type:'image/png'}));expect(upload.status).toBe(201)
+ const file=(await upload.json() as {id:string}).id,{limits}=(await import('../../seed.json')).default,stored=async()=>Number(await env.DB.prepare('SELECT SUM(byte_size) n FROM attachments WHERE request_id=?').bind(requestId).first('n')),pdf=(size:number)=>attach(new File([new Uint8Array(size)],'large.pdf',{type:'application/pdf'}))
  expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
  expect((await call(`/api/operator/attachments/${file}/moderate`,{verdict:'approved'},g.operator)).status).toBe(200)
  expect(new Uint8Array(await (await call(`/api/public/attachments/${file}`)).arrayBuffer())).toEqual(new Uint8Array([137,80,78,71]))
+ for(let room=Math.floor((limits.uploadBytesPerRequest-await stored())/limits.uploadBytesPerFile);room>0;room--)expect((await pdf(limits.uploadBytesPerFile)).status).toBe(201);const left=limits.uploadBytesPerRequest-await stored(),objects=(await env.FILES.list()).objects.length;expect((await Promise.all([pdf(left),pdf(left)])).map(r=>r.status).sort(),'a request keeps its files within the per-request total').toEqual([201,400]);expect(await stored()).toBe(limits.uploadBytesPerRequest);expect((await env.FILES.list()).objects.length).toBe(objects+1)
  expect(await (await call(`/api/public/requests/${slug}`)).text()).not.toContain('Private enterprise context')
  expect((await call('/api/operator/boards/product',{visibility:'internal'},g.operator,'PATCH')).status).toBe(200)
  expect((await call(`/api/public/requests/${slug}`)).status).toBe(404);expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
