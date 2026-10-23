@@ -10,7 +10,7 @@ const path = '/api/operator/settings/weekly-summary'
 
 export function WeeklySummarySetting() {
   const [resource, reload] = useOperatorResource<WeeklySetting>(path)
-  return <SectionCard id="weekly-summary" icon="form" title="Weekly requester summary" description="Let requesters choose a weekly email of public changes. Weekly summaries start off.">
+  return <SectionCard id="weekly-summary" className="[&_h2]:scroll-mt-24" icon="form" title="Weekly requester summary" description="Let requesters choose a weekly email of public changes. Weekly summaries start off.">
     {resource.kind === 'ready' ? resource.data.canConfigure
       ? <WeeklySettingForm key={String(resource.data.enabled)} initial={resource.data.enabled} />
       : <p>Weekly requester summaries are {resource.data.enabled ? 'on' : 'off'}. Only the installation owner can change this setting.</p>
