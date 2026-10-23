@@ -18,11 +18,11 @@ const mf=new Miniflare(convertV4MiniflareOptions({modules,modulesRoot:resolve('d
 await mf.ready
 const db=await mf.getD1Database('DB')
 if(!await db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='requests'").first())for(const migration of await readD1Migrations(resolve('migrations/core')))await db.batch(migration.queries.map(sql=>db.prepare(sql)))
-const call=(path,body,cookie)=>mf.dispatchFetch(origin+path,{method:body===undefined?'GET':'POST',redirect:'manual',headers:{Origin:origin,...(cookie?{Cookie:cookie}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})})
+const call=(path,body,cookie)=>mf.dispatchFetch(origin+path,{method:body===undefined?'GET':'POST',redirect:'manual',headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.79',...(cookie?{Cookie:cookie}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})})
 async function command(message){
  if(message.action==='setup'){
   const boot=await call('/auth/bootstrap',{token:setup,displayName:'Owner',returnTo:'/app'})
-  if(boot.status!==303)throw new Error('Bootstrap failed')
+  if(boot.status!==303)throw new Error('Bootstrap failed: '+boot.status+' '+await boot.text())
   const cookie=boot.headers.get('set-cookie').split(';')[0],stamp=new Date().toISOString(),old=new Date(Date.now()-600000).toISOString()
   await db.batch([
    db.prepare("INSERT INTO requesters(id,display_name,created_at,updated_at) VALUES('synthetic-penny-person','Customer',?,?)").bind(stamp,stamp),
