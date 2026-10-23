@@ -17,7 +17,7 @@ const mf=new Miniflare(convertV4MiniflareOptions({modules,modulesRoot:resolve('d
 }}))
 await mf.ready
 const db=await mf.getD1Database('DB')
-for(const migration of await readD1Migrations(resolve('migrations/core')))await db.batch(migration.queries.map(sql=>db.prepare(sql)))
+if(!await db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='requests'").first())for(const migration of await readD1Migrations(resolve('migrations/core')))await db.batch(migration.queries.map(sql=>db.prepare(sql)))
 const call=(path,body,cookie)=>mf.dispatchFetch(origin+path,{method:body===undefined?'GET':'POST',redirect:'manual',headers:{Origin:origin,...(cookie?{Cookie:cookie}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})})
 async function command(message){
  if(message.action==='setup'){
