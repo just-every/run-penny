@@ -1,3 +1,4 @@
+import {proveOperatorPublication} from './operator-request-publication'
 import {proveRedaction} from './redaction-fixture'
 import {incomingEmail,proveEmailCapture} from './email-capture-fixture'
 import {draftNetwork} from '../fixtures/ai/draft-network'
@@ -168,6 +169,8 @@ it('[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps 
  }
  const g=await fixture();await publish(g)
  await proveEvidenceCapture(g)
+ const second=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'interview',wording:'Private evidence wording',observedAt:'2026-10-22T10:00:00Z'},g.operator),201)
+ await proveOperatorPublication(call,env.DB,g.operator,[g.evidence.id,second.id],g.actor)
  const mailBefore=(await providerMessages().list()).length
  await proveEmailCapture(call,env.DB,g.operator)
  expect((await providerMessages().list()).length).toBe(mailBefore)
