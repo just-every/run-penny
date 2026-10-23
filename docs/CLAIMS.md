@@ -17,6 +17,15 @@ through CAP-009’s dedicated platform-invoked email handler; no HTTP route acce
 a posted mail message.” NOTIFY-004 remains done. No issued release metadata is
 changed by this contract round.
 
+DATA-005 published wording override (23 October 2026): `docs/DECISIONS.md`
+previously said: “**Export individual votes (CSV)** includes that attribution.”
+It now means: “Owner-only voter CSV includes proxy marks and recorder attribution;
+source prose, source URLs and email addresses stay out. Source attribution stays
+in the private supporter list.” The release-round documentation update is owed;
+no issued envelope or release metadata changes. CAP-014 retains its recorder
+CSV assertion. Source-field CSV policy remains an ASK to ct.
+
+
 
 REQ-039 is qualified with Google and GitHub fixtures at their network edges,
 including cookie-free browser completion. Real consent, an owner's OAuth client,
@@ -46,13 +55,13 @@ cannot recover the original text from Penny.
 
 ## Evidence reconciliation · 22 October 2026
 
-Current contract counts: 121 done, 58 partial, 68 missing (247 clauses).
+Current contract counts: 122 done, 57 partial, 68 missing (247 clauses).
 
 CAP-009 is done against provider-edge fixtures (22 October 2026). Direct or BCC copies without recoverable forwarded headers are attributed to the admitted sender and marked not forwarded. Message-ID digests stay after erasure so a replay cannot recreate an item. Refusals keep only non-personal reason counts. Hosted Email Routing, a real domain and live mail acceptance: NOT RUN. Admission depends on the `Authentication-Results: mx.cloudflare.net;` header, which only a hosted receipt can confirm. HTML-only mail is refused (`excerpt_size_or_plain_text_required`). Captured source provenance records "Forwarded by <admitted sender>"; a recovered body address is labeled "Sender stated in forward".
 
 | Clause | Status | Evidence boundary |
 | --- | --- | --- |
-| HOME-001 | partial | `tests/browser/route-review.mjs` — push Verify shard rich-changelog. Gap: owner-configured workspace identity and a changed portal description have no passing assertion. |
+| HOME-001 | done | `tests/browser/portal-identity-checks.mjs` via `tests/browser/route-review.mjs` — push Verify rich-changelog, owner-configured identity and two descriptions at 1440/390, signed-out isolation and claim exclusion |
 | DOCS-001 | partial | `tests/browser/route-review.mjs` — push Verify shard rich-changelog; `docs/site.json`. Gap: manifest navigation order; build/development rendering and rejection of unlisted Markdown, broken links and forbidden image paths; full header/footer and page-navigation semantics; client navigation and HTML escaping; nested-unknown-slug 404/article exclusion; and workspace/session/cookie isolation lack sentence-complete running assertions. |
 | REL-010 | done | `tests/browser/route-review.mjs` — checkEmptyRoutes, push Verify shard rich-changelog, empty updates at 1440/390 with zero release articles. |
 | EVID-002 | done | All source kinds retain original wording, observed time and recording operator; nullable supplied speaker/account and native portal requester attribution are asserted without inference. `tests/base/penny-evidence.test.ts` — push Verify base shards; `tests/browser/operator-pages-decisions.mjs` — push Verify shard loop-health |
@@ -77,3 +86,5 @@ CAP-009 is done against provider-edge fixtures (22 October 2026). Direct or BCC 
 | CAP-009 | done | Provider-edge capture, provenance, structured forwards, archive and erasure. Hosted mail NOT RUN. |
 | AI-008 | partial | Deterministic redaction only; existing storage/reapplication gaps remain. |
 | AI-011 | missing | Model selection, complete evaluation receipts/sets and table-driven quality bars remain. |
+| TRIAGE-006 | partial | `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts`; `tests/base/notifications.test.ts`; `tests/runtime/mail-kill-proof.mjs` via `tests/runtime/mail-events-restart.test.mjs` — push Verify mail-runtime. Mail kill/restart after provider-edge acceptance retains durable unknown/interrupted failure, repeats without a second message and exposes the same failure through the operator API. Gap: resolved-state proof and equivalent kill/restart proof for learning runs, scheduled publications and reminders; integration deliveries when present; connector sync, rules and delivery sync are not built. |
+| DATA-005 | partial | `tests/base/csv-export-proof.ts` via `tests/base/hosted-export.test.ts` — push Verify base shards; `tests/base/proxy-votes.test.ts`; `tests/browser/proxy-votes.mjs` — push Verify proxy-votes, downloaded request and voter CSV at 1440/390. Requests and individual voters reconcile record/vote counts, proxy marks and recorder attribution; formula cells, RFC 4180 quoting, UTF-8 without BOM, withdrawn/erased identities, private fields, audit and current Owner authority are asserted. Default ADOPTED: Owner only, no email, commercial fields or source prose/URLs. Gap: evidence/notes, features/hierarchy, accounts/requesters with attributes, roadmap/releases, role-by-field restrictions and exports from saved views. |
