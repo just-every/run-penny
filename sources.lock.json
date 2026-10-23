@@ -7972,7 +7972,7 @@
       "executable": false
     },
     "tests/browser/weekly-summary-choice.mjs": {
-      "sha256": "4fac5543ad522cfb111f2634ebeac10f9c156755bc346804e364d224891e2e0f",
+      "sha256": "4dc4fb83bb66d59d4faa355f7fea937ecb25c8d6ca33cc0af17c5cd45ba7e7c7",
       "executable": false
     },
     "tests/browser/workspace-clock.mjs": {
