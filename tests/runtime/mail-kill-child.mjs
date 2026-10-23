@@ -18,12 +18,14 @@ const mf=new Miniflare(convertV4MiniflareOptions({modules,modulesRoot:resolve('d
 await mf.ready
 const db=await mf.getD1Database('DB')
 if(!await db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='requests'").first())for(const migration of await readD1Migrations(resolve('migrations/core')))await db.batch(migration.queries.map(sql=>db.prepare(sql)))
-const call=(path,body,cookie)=>mf.dispatchFetch(origin+path,{method:body===undefined?'GET':'POST',redirect:'manual',headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.79',...(cookie?{Cookie:cookie}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})})
+const call=(path,body,cookie)=>mf.dispatchFetch(origin+path,{method:body===undefined?'GET':'POST',redirect:'manual',headers:{Host:new URL(origin).host,Origin:origin,'CF-Connecting-IP':'192.0.2.79',...(cookie?{Cookie:cookie}:{}),...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})})
 async function command(message){
  if(message.action==='setup'){
   const boot=await call('/auth/bootstrap',{token:setup,displayName:'Owner',returnTo:'/app'})
   if(boot.status!==303)throw new Error('Bootstrap failed: '+boot.status+' '+await boot.text())
   const cookie=boot.headers.get('set-cookie').split(';')[0],stamp=new Date().toISOString(),old=new Date(Date.now()-600000).toISOString()
+  const finished=await mf.dispatchFetch(origin+'/setup',{method:'POST',redirect:'manual',headers:{Host:new URL(origin).host,Origin:origin,Cookie:cookie,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({confirm:'yes',companyName:'synthetic-penny-business',postalAddress:'1 Synthetic Street',timezone:'UTC',quietStart:'20',quietEnd:'8'}).toString()})
+  if(finished.status!==303)throw new Error('First-run setup failed: '+finished.status)
   await db.batch([
    db.prepare("INSERT INTO requesters(id,display_name,created_at,updated_at) VALUES('synthetic-penny-person','Customer',?,?)").bind(stamp,stamp),
    db.prepare("INSERT INTO requester_addresses(id,requester_id,email,verified_at,created_at,updated_at) VALUES('synthetic-penny-address','synthetic-penny-person','synthetic-penny-person@example.test',?,?,?)").bind(stamp,stamp,stamp),
@@ -31,7 +33,7 @@ async function command(message){
    db.prepare("INSERT INTO requests(id,slug,board_id,title,description,public_title,public_description,moderation_state,public_state,published_at,created_at,updated_at) VALUES('synthetic-penny-request','synthetic-penny-request','synthetic-penny-board','Customer workflow','Customer problem','Customer workflow','Customer problem','approved','open',?,?,?)").bind(stamp,stamp,stamp),
    db.prepare("INSERT INTO request_follows(request_id,requester_id,permission_granted_at,created_at,updated_at) VALUES('synthetic-penny-request','synthetic-penny-person',?,?,?)").bind(stamp,stamp,stamp),
    db.prepare("INSERT INTO requester_update_permissions(id,requester_id,requester_address_id,request_id,source,granted_at,created_at,updated_at) VALUES('synthetic-penny-permission','synthetic-penny-person','synthetic-penny-address','synthetic-penny-request','follow',?,?,?)").bind(stamp,stamp,stamp),
-   db.prepare("INSERT INTO penny_workspace_clock(singleton,timezone,quiet_enabled,quiet_start,quiet_end,confirmed_at,updated_at) VALUES(1,'UTC',0,20,8,?,?)").bind(stamp,stamp),
+
   ])
   const update=await call('/api/operator/requests/synthetic-penny-request/status-updates',{status:'under_review',body:'synthetic-penny-update'},cookie)
   if(update.status!==200)throw new Error('Status publication failed: '+update.status)

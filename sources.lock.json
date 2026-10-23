@@ -8128,7 +8128,15 @@
       "executable": false
     },
     "tests/runtime/mail-events-restart.test.mjs": {
-      "sha256": "7c49857f9d47c6fcc93b4379fa21a0e626dac6b9d725a700eeaba95e19b2770f",
+      "sha256": "bfff64bd3cb00d8567b192723330da83b03c29752b1f89d3ca5d6deed72e2c38",
+      "executable": false
+    },
+    "tests/runtime/mail-kill-child.mjs": {
+      "sha256": "ab7578d718d443de56fa9195d34dd065c6173208ae88a6ea45f74db182b5ff6d",
+      "executable": false
+    },
+    "tests/runtime/mail-kill-proof.mjs": {
+      "sha256": "b2fd09296d78e1bb65fd5fe8765c804d6d5110138d3e912e54db104f52eccd0a",
       "executable": false
     },
     "tsconfig.app.json": {

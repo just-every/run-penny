@@ -25,8 +25,8 @@ export async function proveKilledMail(){
  async function kill(){const owned=child;child=undefined;const ended=new Promise(resolve=>owned.once('exit',resolve));process.kill(-owned.pid,'SIGKILL');await ended}
  try{
   await start();const {cookie}=await command('setup')
-  const sending=command('wake').catch(()=>null)
-  const accepted=await provider
+  const wake=command('wake'),sending=wake.catch(()=>null)
+  const accepted=await Promise.race([provider,wake.then(async()=>{const result=await command('read',{cookie});throw new Error('Drain finished before the provider checkpoint: '+JSON.stringify(result.deliveries.map(row=>({state:row.state,reason:row.failureReason}))))})])
   assert.equal(accepted.recipient,'synthetic-penny-person@example.test');assert.match(accepted.text,/synthetic-penny-update/)
   const during=(await command('read',{cookie})).deliveries.find(row=>row.state==='sending')
   assert.ok(during,'The native read door sees the durable sending claim before death')
