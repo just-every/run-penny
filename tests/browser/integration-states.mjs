@@ -1,3 +1,4 @@
+import {uncertaintyEdge,checkUncertainty} from './integration-uncertainty.mjs'
 import assert from 'node:assert/strict'
 import {createHmac} from 'node:crypto'
 import {mkdir,readFile,writeFile} from 'node:fs/promises'
@@ -10,6 +11,7 @@ import {browserOptions} from './browser-options.mjs'
 import {startBrowserRuntime} from './base-runtime.mjs'
 import {createWebhookProtocol} from '../../base/modules/integrations/core/webhook.ts'
 const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/integration-states'),checks=[]
+let fixtureEgressCalls=0,outboundRestarts=0
 assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
 process.env.PENNY_BROWSER_EXECUTABLE ??= chromium.executablePath()
@@ -23,7 +25,8 @@ let browser
 try{
  browser=await chromium.launch(browserOptions())
  for(const width of [1440,390]){
-  const runtime=await startBrowserRuntime({mailService:linear});let context
+  const edge=uncertaintyEdge()
+  const runtime=await startBrowserRuntime({mailService:linear,networkWorker:edge.worker,networkBinding:'PENNY_EGRESS'});let context
   try{
    const bootstrap=await fetch(runtime.origin+'/auth/bootstrap',{method:'POST',redirect:'manual',headers:{Origin:runtime.origin,'Content-Type':'application/json'},body:JSON.stringify({token:'synthetic-base-browser-setup-token-12345',displayName:'Owner',returnTo:'/app'})});assert.equal(bootstrap.status,303)
    const cookie=bootstrap.headers.get('set-cookie').split(';')[0],index=cookie.indexOf('='),headers={Origin:runtime.origin,Cookie:cookie,'Content-Type':'application/json'}
@@ -82,9 +85,11 @@ try{
    await action('/api/operator/moderation/'+subject.slug,{verdict:'approved',title:'Deliberate tracker subject',description:'Customer-safe tracker subject',boardSlug:'feedback',displayName:'Product team'})
    await checkTrackerReceipts({runtime,action,subject,connectionId,secret,teamId,organizationId,externalId})
    await page.goto(runtime.origin+'/portal/feedback');await page.getByText('Feedback for our product, reviewed with care.',{exact:true}).waitFor();assert.equal(await page.locator('.public-portal').evaluate(node=>getComputedStyle(node).getPropertyValue('--penny-brand-accent')),'#173c2b');await capture('branded-portal',page.locator('.public-portal'))
-   assert.equal(await runtime.db.prepare('SELECT count(*) n FROM integration_deliveries').first('n'),0);assert.equal(runtime.outbox.length,0);assert.deepEqual(errors,[]);assert.deepEqual(external,[])
+   assert.equal(await runtime.db.prepare('SELECT count(*) n FROM integration_deliveries').first('n'),0);assert.equal(runtime.outbox.length,0)
+   outboundRestarts+=await checkUncertainty({runtime,page,action,subject,capture,calls:edge.calls});fixtureEgressCalls+=edge.calls.length
+   assert.deepEqual(errors,[]);assert.deepEqual(external,[])
   }finally{await context?.close();await runtime.close()}
  }
- await writeFile(join(output,'results.json'),JSON.stringify({clauses:['INT-002','INT-004','INT-005','INT-006','INT-007'],checks,secretValuesMasked:true,unexpectedErrors:0,externalRequests:0,providerCalls:0,outbound:'configuration-disabled',nativeRuntimeRestarts:6,teardown:'fulfilled'},null,2)+'\n')
+ await writeFile(join(output,'results.json'),JSON.stringify({clauses:['INT-002','INT-003','INT-004','INT-005','INT-006','INT-007'],checks,secretValuesMasked:true,unexpectedErrors:0,externalRequests:0,providerCalls:0,fixtureEgressCalls,outbound:'synthetic-network-edge',nativeRuntimeRestarts:6+outboundRestarts,teardown:'fulfilled'},null,2)+'\n')
  console.log('integration-states: '+checks.length+' captures passed')
 }finally{await browser?.close()}

@@ -7,7 +7,7 @@ const require=createRequire(import.meta.resolve('@cloudflare/vitest-plugin'))
 const {Miniflare,convertV4MiniflareOptions}=require('miniflare')
 const {readD1Migrations}=await import('@cloudflare/vitest-plugin')
 /** Execute the exact emitted production modules. External mail and an optional source/model RPC edge are test fixtures. */
-export async function startBrowserRuntime({bindings={},https=false,port,networkWorker,mailService}={}){
+export async function startBrowserRuntime({bindings={},https=false,port,networkWorker,mailService,networkBinding='PENNY_LEARNING_EGRESS'}={}){
  port??=await freshLocalPort()
  const origin=`${https?'https':'http'}://127.0.0.1:${port}`,outbox=[],state=await mkdtemp(join(tmpdir(),'penny-base-browser-'))
  const modules=[];for(const path of await readdir('dist/server',{recursive:true}))if(/\.(js|mjs)$/.test(path))modules.push({type:'ESModule',path:resolve('dist/server',path),contents:await readFile(join('dist/server',path),'utf8')})
@@ -25,7 +25,7 @@ export async function startBrowserRuntime({bindings={},https=false,port,networkW
    return new Response(null,{status:202,headers:{'x-message-id':'synthetic-browser-message'}})
   }),
  }
- const runtimeOptions=()=>{const opts=convertV4MiniflareOptions({...configuration,...(networkWorker?{serviceBindings:{PENNY_LEARNING_EGRESS:networkWorker.name}}:{})});if(networkWorker)opts.workers.push(...convertV4MiniflareOptions(networkWorker).workers);return opts}
+ const runtimeOptions=()=>{const opts=convertV4MiniflareOptions({...configuration,...(networkWorker?{serviceBindings:{[networkBinding]:networkWorker.name}}:{})});if(networkWorker)opts.workers.push(...convertV4MiniflareOptions(networkWorker).workers);return opts}
  let options=runtimeOptions()
  let mf=new Miniflare(options)
  try{
