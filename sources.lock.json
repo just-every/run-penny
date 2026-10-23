@@ -7280,7 +7280,7 @@
       "executable": false
     },
     "tests/base/egress-delivery.test.ts": {
-      "sha256": "d80ab067f7bc066c3d28c6743633361eea48969f888ae88c084e06f74bc70617",
+      "sha256": "febc2de61da981b293199298484f07792ba7b567d13e6cb13ec87d6c92248a40",
       "executable": false
     },
     "tests/base/email-capture-fixture.ts": {
@@ -7353,6 +7353,10 @@
     },
     "tests/base/integration-durable.ts": {
       "sha256": "fabbe2eb18753cf023328e2f7d4c50701f64385ddd086cee264bc4da82f64dde",
+      "executable": false
+    },
+    "tests/base/integration-effects.ts": {
+      "sha256": "c4b31fdd45e8133db1fe016ecde11addea7b413d852e0c7e8619476ddeef2168",
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {
@@ -7675,6 +7679,10 @@
       "sha256": "c0fbf5c71f9301a1810b7ef88cb5577cf4531b7120f1443bfe3e3083f02c6d6e",
       "executable": false
     },
+    "tests/browser/integration-selection.mjs": {
+      "sha256": "54a58fd0e47f3aedbefaccbc4615bc0e8e1bb82916108a7c391b3c25bb30a4b2",
+      "executable": false
+    },
     "tests/browser/integration-states.mjs": {
       "sha256": "9de4e64ca8e9a51794dd2d5701efa915ea05617f3eb6cbc8c86b5fc0e784ae46",
       "executable": false
@@ -7684,7 +7692,7 @@
       "executable": false
     },
     "tests/browser/integration-uncertainty.mjs": {
-      "sha256": "33000c23aedb6b62e5bb5a074471b1d6d3130a0c242671906210709b477bac36",
+      "sha256": "bec081237320849ed1d6886eacbb1d95cc0fe4ce237786c7270adb9d5fc0ba07",
       "executable": false
     },
     "tests/browser/internal-discussion.mjs": {

@@ -1,3 +1,4 @@
+import {selectPublicIntegration} from './integration-selection.mjs'
 import assert from 'node:assert/strict'
 
 export function uncertaintyEdge(){
@@ -20,7 +21,7 @@ export function uncertaintyEdge(){
 }
 
 export async function checkUncertainty({runtime,page,action,subject,capture,calls}){
- const created=await action('/api/operator/integrations/destinations',{name:'synthetic-penny-public-webhook',kind:'webhook',endpoint:'https://events.example.com/penny',events:['status.published']})
+ const created=await selectPublicIntegration({runtime,page,capture})
  const read=async()=>(await page.request.get(runtime.origin+'/api/operator/integrations/destinations')).json()
  const records=async()=>(await runtime.db.prepare('SELECT * FROM integration_attempts ORDER BY delivery_id,number').all()).results
  for(const outcome of ['accepted','rejected']){
