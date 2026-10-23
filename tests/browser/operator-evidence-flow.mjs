@@ -38,6 +38,19 @@ export async function reviewEvidenceFlow({page,db,capture}) {
  assert.equal(stored.published_at,null,'[REQ-029] creating from evidence is not publication')
  assert.equal(await db.prepare('SELECT count(*) n FROM request_evidence_links WHERE request_id=? AND evidence_id=?').bind(request.id,item.id).first('n'),1)
  assert.equal((await page.request.get(new URL(`/api/public/requests/${request.slug}`,page.url()).href)).status(),404,'[REQ-029] the unapproved public projection is absent')
+ assert.equal(await db.prepare('SELECT count(*) n FROM request_content_submissions WHERE request_id=?').bind(request.id).first('n'),0,'[REQ-029] operator creation has no requester submission hold')
+ const approved={verdict:'approved',title:'Reporting workflow request',description:'Follow each reporting step.',boardSlug:'attention-board',displayName:'Owner',categoryId:null}
+ const published=await page.request.post(new URL(`/api/operator/moderation/${request.slug}`,page.url()).href,{data:approved,headers:{Origin:new URL(page.url()).origin}})
+ assert.equal(published.status(),200,'[REQ-029 REQ-005] publication is a separate explicit action')
+ const publicRecord=await (await page.request.get(new URL(`/api/public/requests/${request.slug}`,page.url()).href)).json()
+ assert.deepEqual({title:publicRecord.title,description:publicRecord.description,board:publicRecord.board.slug,author:publicRecord.authorDisplayName,category:publicRecord.category,attachments:publicRecord.attachments},{title:approved.title,description:approved.description,board:approved.boardSlug,author:approved.displayName,category:null,attachments:[]})
+ assert.doesNotMatch(JSON.stringify(publicRecord),/Browser-local observed time|Trace the monthly reporting evidence|Make the reporting workflow easier to follow/,'[REQ-029] evidence and unapproved working fields stay private')
+ const publicPage=await page.context().newPage()
+ try {
+  await publicPage.goto(new URL(`/portal/feedback/${request.slug}`,page.url()).href)
+  await publicPage.getByRole('heading',{name:approved.title,exact:true}).waitFor()
+  await capture('operator-request-published',publicPage)
+ } finally {await publicPage.close()}
  await open()
  const createDecision=card.getByRole('form',{name:'Create decision from evidence',exact:true})
  await createDecision.getByLabel('Decision question',{exact:true}).fill('Which reporting step should we simplify?')

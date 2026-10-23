@@ -1,5 +1,4 @@
 import {expect} from 'vitest'
-import type {D1Database} from '@cloudflare/workers-types'
 
 type Call=(path:string,body?:unknown,headers?:Record<string,string>,method?:string)=>Promise<Response>
 /** Create through the two shipped doors; publication approves only safe fields. */
@@ -10,8 +9,9 @@ export async function proveOperatorPublication(call:Call,db:D1Database,operator:
   },operator)
   expect(response.status).toBe(201)
   const request=await response.json() as {id:string;slug:string}
-  const list=await (await call('/api/operator/requests?q=synthetic-penny-operator-request',undefined,operator)).json() as {items:{id:string;author:{id:string};evidenceCount:number}[]}
-  expect(list.items.find(row=>row.id===request.id)).toMatchObject({author:{id:actor},evidenceCount:ids.length})
+  const list=await (await call('/api/operator/requests?q=synthetic-penny-operator-request',undefined,operator)).json() as {items:{id:string;evidenceCount:number}[]}
+  expect(list.items.find(row=>row.id===request.id)).toMatchObject({evidenceCount:ids.length})
+  expect(await db.prepare('SELECT author_operator_id,author_requester_id FROM requests WHERE id=?').bind(request.id).first()).toEqual({author_operator_id:actor,author_requester_id:null})
   // Operator drafts do not create the held requester submission that moderation
   // reviews. Explicit public-wording approval remains a separate action.
   expect((await db.prepare('SELECT id FROM request_content_submissions WHERE request_id=?').bind(request.id).all()).results).toEqual([])
