@@ -61,6 +61,8 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
  await owner.getByText('Missing: Impact (0–10), Confidence (%), Manual effort',{exact:true}).first().waitFor()
  await capture(owner,'missing-inputs')
  await scorecardFlow({origin,operator,json,send,pageFor,capture,owner,peer,peerCookie,requests})
+ await owner.goto(origin+'/docs/mcp',{waitUntil:'networkidle'})
+ await owner.getByRole('heading',{name:'Connect an MCP client',exact:true}).waitFor();await capture(owner,'mcp-documentation')
  assert.equal((await fetch(origin+'/api/operator/prioritisation')).status,401)
  for(const path of ['/api/public/requests','/api/public/roadmap','/api/public/releases']){const body=await(await fetch(origin+path)).text();assert.equal(body.includes('Finance priorities'),false);assert.equal(body.includes('"score"'),false)}
 })

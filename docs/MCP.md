@@ -13,12 +13,10 @@ and `tools/call`. Send `Accept: application/json, text/event-stream`, use
 header after initialization. There is no session identifier or SSE stream;
 GET and DELETE return 405. Responses are private and are not cached.
 
-| Tool | Key scope | Input and effect |
-| --- | --- | --- |
-| `search_requests` | `requests:read` | Public request filters such as `q`, `board`, `status` and `sort`. Returns approved customer-safe requests. |
-| `read_roadmap` | Any valid key | Empty input. Returns the portal’s approved customer-safe roadmap. |
-| `add_feedback` | `requests:write` | `title`, `description`, `boardSlug`, optional `evidenceIds`. Captures an unpublished request awaiting review and returns its slug. |
-| `record_proxy_vote` | `votes:write` | `requestSlug` and `vote`, using the REST proxy-vote input: one `requesterId` or `contact`, a `source`, optional `sourceUrl`, `evidenceId` and `importance`. Records demand without verification or notification consent. |
+- **`search_requests`** requires `requests:read`. Use public request filters such as `q`, `board`, `status` and `sort`. Returns approved customer-safe requests.
+- **`read_roadmap`** accepts any valid key. Use empty input. Returns the portal’s approved customer-safe roadmap.
+- **`add_feedback`** requires `requests:write`. Send `title`, `description`, `boardSlug` and optional `evidenceIds`. Captures an unpublished request awaiting review and returns its slug.
+- **`record_proxy_vote`** requires `votes:write`. Send `requestSlug` and `vote`, using the REST proxy-vote input: one `requesterId` or `contact`, a `source`, optional `sourceUrl`, `evidenceId` and `importance`. Records demand without verification or notification consent.
 
 Tool discovery includes only tools the key may call. Every call rechecks the
 key, its issuer, revocation and expiry through the same authority as the REST API.
