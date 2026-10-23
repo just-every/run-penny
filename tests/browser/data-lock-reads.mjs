@@ -27,6 +27,13 @@ export async function inspectLockedWorkspace({page,runtime,reads,capture,label})
  assert.match(await document.text(),/Data changes pause until you finish or abort the export\./,'The lock notice is server-rendered')
  assert.equal(await notice.locator('button,a').count(),0,'The data notice has no icon-only control')
  const paths=await page.locator('nav[aria-label="Operator workspace"]').first().locator('a').evaluateAll(links=>[...new Set(links.map(link=>link.getAttribute('href')))])
- for(const path of paths)await reads.read(path)
  await capture(label,page,{lockReads:reads.samples})
+ for(const path of paths) {
+  await reads.read(path)
+  if(label==='DATA-001-feedback-export-locked'&&path!=='/app/feedback') {
+   await page.goto(runtime.origin+path)
+   await page.locator('main h1').waitFor()
+   await capture(`DATA-001-locked-${path.split('/').at(-1)}`,page)
+  }
+ }
 }

@@ -7592,7 +7592,7 @@
       "executable": false
     },
     "tests/browser/data-lock-reads.mjs": {
-      "sha256": "20dbc6b4d808f6bda6fb589c9f0566fa5c6579fc2c450892a99fbb37d1ebd109",
+      "sha256": "aee7c7c63589a7c20e0d3998f251de21359292b77985ddfcd976c6b6111f7adf",
       "executable": false
     },
     "tests/browser/dev-operator-flows.test.mjs": {
