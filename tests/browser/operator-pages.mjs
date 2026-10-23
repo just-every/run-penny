@@ -131,7 +131,7 @@ async function reviewLoopHealth({page,db,goto,capture}) {
   await capture('loop-health-empty')
 }
 try {
-  if(!coreOnly&&!focusedOnly&&!completenessOnly&&!loopHealthOnly)hosted = await prepareHostedDataReview()
+  if(!focusedOnly&&!completenessOnly&&!loopHealthOnly)hosted = await prepareHostedDataReview()
   const options=browserOptions()
   browser = await chromium.launch({...options,args:[...options.args,...(hosted?[hosted.trustArgument]:[])]})
   async function reviewWidth(width) {
@@ -255,7 +255,7 @@ try {
       try {await context?.close()}
       finally {await runtime.close()}
     }
-    if(!coreOnly&&!focusedOnly&&!completenessOnly&&!loopHealthOnly)await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
+    if(!focusedOnly&&!completenessOnly&&!loopHealthOnly)await reviewHostedData({browser,hosted,width,capture:(label,page,details)=>capturePage(width,label,page,details)})
   }
   if(completenessOnly) {
     // Both isolated runtimes must finish cleanup before the shared browser closes.

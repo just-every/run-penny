@@ -4,7 +4,8 @@ import type {PennyRuntime} from '@/core/app/runtime'
 import {operatorAuth,operatorSession,authenticateOperator} from '../auth/operator'
 import {NativeError} from '../auth/native-tokens'
 import {guardedDatabase} from './guarded-database'
-import {sessionGuard} from './keys'
+import {sessionGuard,sessionReadGuard} from './keys'
+import {readDatabase} from './read-database'
 import {validateDestination} from '../../../../base/modules/integrations/core/destination.ts'
 import {integrationEvents} from './event-policy'
 import {outboundRelayRequired} from './relay'
@@ -15,7 +16,7 @@ export async function integrationOperator(runtime:PennyRuntime,request:Request) 
  if(request.method!=='GET'&&request.headers.get('Origin')!==runtime.configuration.appOrigin)throw new NativeError('forbidden_origin',403)
  const session=await (request.method==='GET'?operatorSession(runtime,request):operatorAuth(runtime).getSession(request)),actor=await authenticateOperator(runtime,request)
  if(!session||!actor)throw new NativeError('unauthenticated',401)
- return {session,actor,db:guardedDatabase(runtime.database.binding,sessionGuard(session))}
+ return {session,actor,db:request.method==='GET'?readDatabase(runtime.database.binding,sessionReadGuard(session)):guardedDatabase(runtime.database.binding,sessionGuard(session))}
 }
 export async function createDestination(runtime:PennyRuntime,request:Request,input:z.infer<typeof destinationInput>) {
  const {db,session,actor}=await integrationOperator(runtime,request)

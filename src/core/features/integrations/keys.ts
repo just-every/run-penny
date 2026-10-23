@@ -12,8 +12,12 @@ import {createUlid} from '@/core/shared/ulid'
 
 export const apiScopes=['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write','votes:write'] as const
 const namespace='penny-api'
+export function sessionReadGuard(session:Session):AuthorityGuard {
+ return {sql:`EXISTS(SELECT 1 FROM oa_sessions s JOIN oa_operators o ON o.id=s.operator_id WHERE s.id=? AND s.operator_id=? AND s.revoked_at IS NULL AND s.expires_at>unixepoch('subsec')*1000 AND o.status='active' AND o.version=s.operator_version AND o.version=?)`,params:[session.id,session.operatorId,session.operator.version]}
+}
 export function sessionGuard(session:Session):AuthorityGuard {
- return {sql:`EXISTS(SELECT 1 FROM oa_sessions s JOIN oa_operators o ON o.id=s.operator_id WHERE s.id=? AND s.operator_id=? AND s.revoked_at IS NULL AND s.expires_at>unixepoch('subsec')*1000 AND o.status='active' AND o.version=s.operator_version AND o.version=? AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle'))`,params:[session.id,session.operatorId,session.operator.version]}
+ const guard=sessionReadGuard(session)
+ return {...guard,sql:`${guard.sql} AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle')`}
 }
 export async function managedKeys(runtime:PennyRuntime,request:Request,issuing=false) {
  if(request.method!=='GET'&&request.headers.get('Origin')!==runtime.configuration.appOrigin)throw new NativeError('forbidden_origin',403)

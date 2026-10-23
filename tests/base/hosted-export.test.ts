@@ -161,17 +161,26 @@ it('[DATA-001] a RER Managed archive round trips while each installation keeps i
  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
 })
 
-it('[DATA-001] held original-byte export fences writes and overlapping export until completion',async()=>{
+it('[DATA-001] held original-byte export keeps authorized reads available while fencing writes and overlapping export',async()=>{
  const cookie=await owner()
+ const recorded=await call('/api/operator/evidence',{sourceType:'interview',wording:'Finance needs monthly CSV exports.',observedAt:new Date().toISOString()},cookie)
+ expect(recorded.status).toBe(201)
+ const evidence=await recorded.json() as {id:string}
  let entered!:()=>void,release!:()=>void
  const started=new Promise<void>(r=>{entered=r}),held=new Promise<void>(r=>{release=r})
  const bucket=new Proxy(env.FILES,{get(target,key){if(key==='list')return async(...args:Parameters<R2Bucket['list']>)=>{entered();await held;return target.list(...args)};const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value}})
  const exporting=exportArchive(env.DB,bucket);await started
  try{
   expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(409)
+  expect(await (await call('/api/operator/data/maintenance',undefined,cookie)).json()).toEqual({exporting:true})
+  for(const path of [`/api/operator/evidence/${evidence.id}/versions`,`/api/operator/evidence/${evidence.id}/links`,`/api/operator/custom-fields/evidence/${evidence.id}`])expect((await call(path,undefined,cookie)).status).toBe(200)
+  expect((await call(`/api/operator/evidence/${evidence.id}/review`,{reviewed:true,reason:'Reviewed'},cookie)).status).toBe(409)
   await expect(env.DB.prepare("INSERT INTO tags(id,name,created_at,updated_at) VALUES('held','Held','now','now')").run()).rejects.toThrow('maintenance')
  }finally{release();await exporting}
  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
+ expect(await (await call('/api/operator/data/maintenance',undefined,cookie)).json()).toEqual({exporting:false})
+ await call('/auth/signout',{},cookie)
+ expect((await call(`/api/operator/evidence/${evidence.id}/versions`,undefined,cookie)).status).toBe(401)
 })
 
 function barrier(){let release!:()=>void;const promise=new Promise<void>(resolve=>{release=resolve});return {promise,release}}

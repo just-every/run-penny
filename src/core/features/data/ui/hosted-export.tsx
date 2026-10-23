@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import {dataChangesPause} from './maintenance-notice'
 import { archiveJournal } from '../../../../../scripts/portability/archive-journal.mjs'
 import { buttonClass } from '../../auth/client-mutations'
 import { paperCardClass, secondaryButtonClass } from '../../../ui/app/classes'
@@ -83,7 +84,7 @@ export function HostedExport({ disabled, interrupted, onSettled }: { disabled: b
    </div>
   </> : <>
    <h2 className="text-lg font-bold tracking-[-0.01em] text-penny-ink">Export this workspace</h2>
-   <p className="mt-3 leading-7 text-penny-ink">Download your records, original files and matching erasure journal for restore into an empty local Penny installation. Preparing and verifying the snapshot can take about two minutes; larger workspaces may take longer. Progress is saved if you reload. Data changes pause until you finish or abort the export.</p>
+   <p className="mt-3 leading-7 text-penny-ink">Download your records, original files and matching erasure journal for restore into an empty local Penny installation. Preparing and verifying the snapshot can take about two minutes; larger workspaces may take longer. Progress is saved if you reload. {dataChangesPause}</p>
    <button className={buttonClass + ' mt-4'} disabled={disabled || busy} onClick={() => void prepare()}>{busy ? 'Preparing export…' : 'Export workspace'}</button>
   </>}
   {message ? <p role={failed ? 'alert' : 'status'} className="mt-3 text-sm leading-6 text-penny-muted">{message}{busy ? ` Elapsed: ${Math.floor(elapsed / 60)}m ${elapsed % 60}s.` : ''}</p> : null}

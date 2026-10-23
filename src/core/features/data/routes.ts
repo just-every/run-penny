@@ -50,6 +50,10 @@ export function registerDataRoutes(app:Hono<Environment>):void{
  })
  app.get('/api/operator/data/export',async c=>{const result=await exportArchive(c.env.DB,c.env.FILES,authority(c));c.header('Content-Disposition','attachment; filename="penny-data-bundle.json"');return c.json(result)})
  app.get('/api/operator/data/journal',async c=>{const result=await readErasureJournal(c.env.DB);c.header('Content-Disposition','attachment; filename="penny-erasure-journal.json"');return c.json(result)})
+ app.get('/api/operator/data/maintenance',async c=>{
+  const exporting=await c.env.DB.prepare("SELECT 1 FROM data_state s JOIN data_operations o ON o.id=s.lock_id WHERE s.singleton=1 AND s.phase='locked' AND o.kind='export'").first()
+  return c.json({exporting:Boolean(exporting)})
+ })
  app.get('/api/operator/data/overview',async c=>{
   // Each record is chosen by what an operator recognises: a name, a title or the evidence's own words.
   const kinds=[['requesters','display_name'],['requests','title'],['evidence_items',"COALESCE((SELECT substr(v.wording,1,80) FROM evidence_versions v WHERE v.evidence_id=evidence_items.id ORDER BY v.version_number DESC LIMIT 1),source_type)"],['accounts','name']] as const
