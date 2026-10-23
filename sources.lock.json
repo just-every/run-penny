@@ -7904,7 +7904,7 @@
       "executable": false
     },
     "tests/browser/prioritisation.mjs": {
-      "sha256": "0c5de67d38d22726ec303f1ebc6f61a2cf0a627c079cc94e6750ebc4198ba215",
+      "sha256": "f5b16c843078dc42c5254983afee9eee9b8b77e9bbabaf62f5acb1f105251b26",
       "executable": false
     },
     "tests/browser/product-hierarchy.mjs": {

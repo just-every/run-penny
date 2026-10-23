@@ -25,7 +25,7 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
  await form.getByLabel('Share with all operators (only you can edit)').check()
  await form.locator('summary').filter({hasText:'Per-row manual inputs'}).click()
  for(const [index,impact,confidence,effort] of [[0,3,80,2],[1,8,50,1]]){
-  const row=form.locator('fieldset').filter({hasText:features[index].name})
+  const row=form.getByRole('group',{name:features[index].name,exact:true})
   await row.getByLabel('Impact (0–10)',{exact:true}).fill(String(impact));await row.getByLabel('Confidence (%)',{exact:true}).fill(String(confidence));await row.getByLabel('Manual effort',{exact:true}).fill(String(effort))
  }
  await capture(owner,'rice-inputs')
