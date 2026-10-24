@@ -53,7 +53,7 @@ export function RulesForm({initial,draftScope,disabled,onChange,onSaving}:{initi
   if(!invalid)timer.current=setTimeout(()=>void save(current.current,'patterns'),600)
  }
  const restoreDraft=useEffectEvent(()=>{
-  try{const draft=localStorage.getItem(draftKey);if(draft!==null&&draft!==text.current)editPatterns(draft)}
+  try{const draft=localStorage.getItem(draftKey);if(draft===text.current)localStorage.removeItem(draftKey);else if(draft!==null)editPatterns(draft)}
   catch{setStorageError('This browser could not read the saved draft.')}
  })
  useEffect(()=>{restoreDraft();return ()=>clearTimeout(timer.current)},[draftKey])
