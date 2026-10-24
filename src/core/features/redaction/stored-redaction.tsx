@@ -39,7 +39,7 @@ export function StoredRedaction({run,setRun,enabled,saving}:{run:RedactionRun|nu
     {changing.length?<PlaceRows places={changing} changes/>:null}
     {unchanged.length?<details className="group" data-redaction-unchanged><summary className={disclosureSummaryClass}>{unchanged.length} places keep their text</summary><div className="mt-3 space-y-4">
      <PlaceRows places={unchanged.filter(place=>!place.blocked)}/>
-     {[...new Set(unchanged.filter(place=>place.blocked).map(place=>place.reason))].map(reason=><div key={reason}><h4 className="font-bold">{reason?.startsWith('Sealed')?'Sealed copies':reason?.startsWith('Canonical')?'Canonical addresses':'Preserved history'}</h4><PlaceRows places={unchanged.filter(place=>place.blocked&&place.reason===reason)}/></div>)}
+     {[...new Set(unchanged.filter(place=>place.blocked).map(place=>place.reason))].map(reason=><div key={reason}><h4 className="font-bold">{reason?.startsWith('Sealed')?'Sealed copies':reason?.startsWith('Canonical')?'Canonical addresses':reason?.startsWith('Original')?'Binary originals':'Preserved history'}</h4><PlaceRows places={unchanged.filter(place=>place.blocked&&place.reason===reason)}/></div>)}
      <p>Manage preserved text in <a className={textLinkClass} href="/app/data">Data</a>. Binary originals stay unchanged.</p>
     </div></details>:null}
     {run.planHash&&run.changes>0?<form className="space-y-3" aria-label="Confirm stored redaction" onSubmit={event=>{event.preventDefault();if(confirmed)void start('/reapply',{planHash:run.planHash,confirmIrreversible:true})}}>

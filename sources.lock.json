@@ -6124,7 +6124,7 @@
       "executable": false
     },
     "src/core/features/redaction/stored-redaction.tsx": {
-      "sha256": "3f2f700baaf8d13efe74fe1a540753556c6301be75aa486ed78abfff16cd4d47",
+      "sha256": "14930359a10ca75a448e0a41c4daed82c6b3761c7240b9c05e1f8abd32f4dd9d",
       "executable": false
     },
     "src/core/features/releases/attachments.ts": {
