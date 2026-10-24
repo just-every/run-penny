@@ -13,11 +13,13 @@ import { feedbackReceipt } from './receipt'
 import { planIterable } from './bundle'
 import { erasedPlanRecords } from './erasure-preview'
 import { NativeError } from '../auth/native-tokens'
+import {redactFeedbackSource,assertPrivateRoadmapSnapshot} from './redaction-source'
+import type {ImportRedactionPolicy} from './redaction-policy'
 
-export async function prepareFeedback(input:SavedFeedbackInput,context:D1ImportContext,actor:string){
- const source=await readSavedFeedback(input)
+export async function prepareFeedback(input:SavedFeedbackInput,context:D1ImportContext,actor:string,policy:ImportRedactionPolicy){
+ const source=redactFeedbackSource(await readSavedFeedback(input),policy)
  const roadmap=await importRoadmapRecord(source,context.storage.database as unknown as D1Database)
- if(roadmap)source.records.push(roadmap)
+ if(roadmap){assertPrivateRoadmapSnapshot(String((roadmap.payload as {before:string}).before),policy);source.records.push(roadmap)}
  const nativeMapping=feedbackMapping(source,actor)
  if(source.records.length>importBounds.records)throw new NativeError(`Saved history including derived contributors has ${source.records.length} records; the limit is ${importBounds.records}. No history was applied.`,413)
  const claims=new Map<string,{identity:string;source_hash:string;mapping_version:string;effects_hash:string}>()
@@ -41,7 +43,7 @@ export async function prepareFeedback(input:SavedFeedbackInput,context:D1ImportC
  const artifacts=source.artifacts,diagnostics=[...source.diagnostics]
  if(source.records.length<=200){
   ordinary=await planD1Import(retainedSource,mapping,context)
-  legacyFingerprint=planFingerprint({...ordinary,source:{...ordinary.source,options:input} as typeof ordinary.source})
+  if(!policy.enabled)legacyFingerprint=planFingerprint({...ordinary,source:{...ordinary.source,options:input} as typeof ordinary.source})
   // Base's stream partitioner bounds expanded pages at this working-set size.
   // Large files need that same bounded erasure path even below 200 records.
   if(canonicalSize(ordinary)>512*1024)ordinary=undefined

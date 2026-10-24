@@ -1,5 +1,5 @@
 import {proveOperatorPublication} from './operator-request-publication'
-import {proveRedaction} from './redaction-fixture'
+import {proveRedaction,proveCapturedRedaction} from './redaction-fixture'
 import {incomingEmail,proveEmailCapture} from './email-capture-fixture'
 import {draftNetwork} from '../fixtures/ai/draft-network'
 import {providerMessages} from './provider-messages'
@@ -125,6 +125,7 @@ it('[EVID-005] account writes require an owner and context includes transaction-
  const outcome=await json<{id:string}>(call('/api/operator/evidence',{...g.evidenceInput,releaseId:'release'},g.operator),201)
  expect(await env.DB.prepare('SELECT release_id FROM evidence_items WHERE id=?').bind(outcome.id).first('release_id')).toBe('release')
 })
+it('[AI-008] every capture door stores marked excerpts in D1, search and the archive',async()=>{await proveCapturedRedaction(call,fixture,person)})
 it('[AI-008 EVID-010] edits retain wording versions and reject stale authority; explicit owner redaction irreversibly removes sensitive wording',async()=>{
  const g=await fixture(),path=`/api/operator/evidence/${g.evidence.id}`
  const edited=await json<{id:string;versionId:string}>(call(path+'/wording',{wording:'A revised private quotation',expectedVersionId:g.evidence.versionId},g.operator,'PATCH'))

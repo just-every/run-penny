@@ -5,6 +5,7 @@ import {call,json,fixture,path,bindings,sent,network} from './learning-test-runt
 import {learningOutput} from './learning-fixture'
 import {digest} from '@/core/features/auth/native-tokens'
 import {canonical,hash,type exportArchive} from '@/core/features/data/archive'
+import {proveLearningRedaction} from './redaction-learning-door'
 it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, compares no-build and commits an immutable accountable protocol',async()=>{
  const f=await fixture();network.sourceText=canonical({id:'cancellation',subject:'I cancelled because I could not hand off the report.',occurred_at:'2026-10-01T00:00:00.000Z',confidence:'observed'})
  const run=await json<{artifactId:string}>(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie))
@@ -17,6 +18,21 @@ it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact s
  await expect(env.DB.prepare("UPDATE learning_commitments SET snapshot_json='{}'").run()).rejects.toThrow('learning_snapshot_immutable')
  expect((await call(path)).status).toBe(401);expect((await call('/api/public/learning')).status).toBe(404)
  const unchanged=await json<{unchanged:boolean}>(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie));expect(unchanged.unchanged).toBe(true);expect(sent.filter(s=>s.startsWith('POST'))).toHaveLength(1)
+ const rules={enabled:true,kinds:['ssn','card','phone','email','credential'],patterns:[] as string[]}
+ await json(call('/api/operator/settings/redaction',rules,f.cookie,undefined,'PUT'))
+ await proveLearningRedaction((url,body,headers,method)=>call(url,body,headers?.Cookie??'',undefined,method),{Cookie:f.cookie},'Synthetic Penny ticket: SSN 234-56-7890; card 4111 1111 1111 1111; ACCOUNT-1234.')
+ // The edge changes rules after acquisition starts: no stale capture survives.
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:true,choices:[]},f.cookie,undefined,'PUT'))
+ network.sourceText=canonical({id:'cancellation',subject:'A new permitted revision',occurred_at:'2026-10-02T00:00:00Z'})
+ const beforeRace=await env.DB.prepare('SELECT count(*) n FROM learning_observations').first('n'),racing=bindings(),edge=racing.PENNY_LEARNING_EGRESS!
+ racing.PENNY_LEARNING_EGRESS={async send(wire){const response=await edge.send(wire);if(wire.method==='GET')await json(call('/api/operator/settings/redaction',rules,f.cookie,undefined,'PUT'));return response}}
+ expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie,racing)).status).toBe(409)
+ expect(await env.DB.prepare('SELECT count(*) n FROM learning_observations').first('n')).toBe(beforeRace)
+ // A rule change during interpretation also fences the final artifact write.
+ const beforeArtifacts=await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')
+ network.beforeModel=async()=>{await json(call('/api/operator/settings/redaction',rules,f.cookie,undefined,'PUT'))}
+ try{expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(409)}finally{network.beforeModel=undefined}
+ expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(beforeArtifacts)
  const exported=await json<Awaited<ReturnType<typeof exportArchive>>>(call('/api/operator/data/export',undefined,f.cookie)),reordered=structuredClone(exported)
  reordered.archive.tables.learning_observations.reverse();const {sha256:ignored,...archiveBody}=reordered.archive;void ignored;reordered.archive.sha256=await hash(archiveBody)
  await reset();await applyD1Migrations(env.DB,inject('migrations'))

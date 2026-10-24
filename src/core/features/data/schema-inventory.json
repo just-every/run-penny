@@ -3153,5 +3153,38 @@
       "after_json",
       "restored"
     ]
+  },
+  "penny_redaction_content": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "revision"
+    ]
+  },
+  "penny_redaction_runs": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "operator_id",
+      "operator_version",
+      "actor_id",
+      "state",
+      "resume_state",
+      "rules_revision",
+      "content_revision",
+      "place_index",
+      "after_row",
+      "bounds_json",
+      "counts_json",
+      "records",
+      "changes",
+      "changed",
+      "scanned",
+      "step",
+      "plan_hash",
+      "error",
+      "created_at",
+      "updated_at"
+    ]
   }
 }

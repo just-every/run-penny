@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- AI-008 remains partial: saved Canny/UserVoice imports and Orbit/native learning now redact captured text before storage. Rules-on imports retain whole-file digests instead of unredacted originals; learning keeps source-revision and marked-content digests separately. Rules-off bytes, replay, undo, receipts, archive and erasure custody retain their existing paths.
+- Migration 0095 adds owner-accountable redaction previews and bounded Queue/Cron reapplication with per-place counts, stale-plan refusal, irreversible confirmation, resumable progress and count-only audits. Editable evidence and copied request fields no longer stop at 200 versions. Preserved/fingerprinted places are explicitly blocked for DATA-003 erasure/copy resolution or an owner ruling; model detection and CAP-008 transcripts remain open.
+
 ## 0.2.2 — 2026-10-23
 
 **Fix: on RER Managed, GET /app/feedback no longer fails while a workspace export or backup holds the data lock; the pause notice is scoped to feedback and clears when the export is finished or aborted.**

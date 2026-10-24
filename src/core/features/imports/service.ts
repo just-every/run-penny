@@ -16,6 +16,8 @@ import {prepareFeedback} from './planning'
 import {retainBundle,bundleOriginals,sealedContext} from './bundle'
 import {createD1ImportStream,resumeD1ImportStream,readD1ImportStream,undoD1ImportStream} from '../../../../base/modules/import-kit/src/d1/index'
 import {withoutLiveEffects} from '../integrations/effect-suppression'
+import {redactionSettings} from '../redaction/settings'
+import {admitPolicyResume,policyContext} from './redaction-policy'
 
 function forwardContext(context:D1ImportContext,id:string):D1ImportContext {
  const original=context.authorization.predicate
@@ -47,11 +49,12 @@ export async function importContext(runtime:PennyRuntime,principal:ImportPrincip
 }
 export async function previewFeedback(runtime:PennyRuntime,principal:ImportPrincipal,input:SavedFeedbackInput) {
  const {context,actor}=await importContext(runtime,principal,input.namespace)
- return prepareFeedback(input,context,actor)
+ const policy=await redactionSettings(runtime.database.binding)
+ return prepareFeedback(input,policyContext(context,policy.revision),actor,policy)
 }
 export async function applyFeedback(runtime:PennyRuntime,principal:ImportPrincipal,input:SavedFeedbackInput,fingerprint:string) {
- const {context,actor}=await importContext(runtime,principal,input.namespace)
- const prepared=await prepareFeedback(input,context,actor)
+ const admitted=await importContext(runtime,principal,input.namespace),policy=await redactionSettings(runtime.database.binding),context=policyContext(admitted.context,policy.revision),actor=admitted.actor
+ const prepared=await prepareFeedback(input,context,actor,policy)
  if(prepared.counts.rejected||prepared.receipt.unresolved.length||prepared.diagnostics.some(d=>d.severity==='error'))throw new NativeError('feedback_mapping_rejected',422)
  if(prepared.fingerprint!==fingerprint)throw new NativeError('feedback_review_changed',409)
  context.reviewedFingerprint=fingerprint
@@ -84,7 +87,8 @@ export async function feedbackJob(runtime:PennyRuntime,principal:ImportPrincipal
  const scan=await db.prepare('SELECT revision,ordinal,intent FROM feedback_import_reversal_scans WHERE job_id=?').bind(id).first<{revision:number;ordinal:number;intent:'undo'|'rollback'}>()
  const execution=scan&&['resume','undo','rollback'].includes(action)?scan.intent:action
  const reversing=['undo','rollback'].includes(action)||(action==='resume'&&(Boolean(scan)||['undoing','rolling_back'].includes(row.state)))
- const admitted=await importContext(runtime,principal,row.namespace,reversing,row.principal_id);let context=admitted.context
+ const admitted=await importContext(runtime,principal,row.namespace,reversing,row.principal_id),policy=await redactionSettings(db);let context=policyContext(admitted.context,policy.revision)
+ if(action==='resume'&&!reversing)await admitPolicyResume(id,context,policy)
  const stream=await db.prepare('SELECT id FROM ik_d1_streams WHERE id=?').bind(id).first()
  if(stream){context.batchSize=100;if(['resume','undo','rollback'].includes(action))context=sealedContext(context,id)}
  if(reversing){

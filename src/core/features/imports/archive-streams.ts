@@ -2,16 +2,18 @@ import { Buffer } from 'node:buffer'
 import type { Row } from '../data/archive'
 import { canonicalJson,sha256 } from '../../../../base/modules/import-kit/src/d1/index'
 import { layoutHash } from '../../../../base/modules/import-kit/src/d1/stream-snapshot'
+import {redactedArtifacts} from './redaction-policy'
 const refuse=():never=>{throw new Error('FEEDBACK_STREAM_ARCHIVE_CHANGED')}
 export function validateStreamArchive(data:Record<string,Row[]>):void{
  const streams=data.ik_d1_streams??[],bundles=data.feedback_import_bundles??[],pages=data.ik_d1_stream_pages??[],origins=data.ik_d1_stream_origins??[]
  for(const bundle of bundles){
   const stream=streams.find(row=>row.id===bundle.id);if(!stream||bundle.fingerprint!==stream.fingerprint||bundle.sealed!==1)refuse()
   if(bundle.originals_state==='withdrawn'){if(bundle.originals_json!=='[]'||bundle.receipt_json!=='{}'||(data.feedback_import_original_chunks??[]).some(row=>row.bundle_id===bundle.id))refuse();continue}
-  const artifacts=JSON.parse(String(bundle.originals_json)) as {name:string;size:number;sha256:string;chunks:number}[]
+  const artifacts=JSON.parse(String(bundle.originals_json)) as {name:string;size:number;sha256:string;chunks:number;original?:{status:string;reason?:string}}[]
   let count=0
   for(const [index,artifact]of artifacts.entries()){
    const chunks=(data.feedback_import_original_chunks??[]).filter(row=>row.bundle_id===bundle.id&&row.artifact===index).sort((a,b)=>Number(a.ordinal)-Number(b.ordinal));count+=chunks.length
+   if(artifact.original?.status==='unavailable'){if(chunks.length||artifact.chunks!==0||!redactedArtifacts(artifacts)||artifact.original.reason!=='not-supplied')refuse();continue}
    const base64=chunks.map(row=>row.bytes).join(''),bytes=Buffer.from(base64,'base64')
    if(chunks.length!==artifact.chunks||chunks.some((row,index)=>row.ordinal!==index)||bytes.toString('base64')!==base64||bytes.length!==artifact.size||sha256(bytes)!==artifact.sha256)refuse()
   }

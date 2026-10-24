@@ -13,6 +13,8 @@ import {citationRanges,observationOriginal} from './source-content'
 import {canonical} from '../data/archive'
 import {learningRunJournalGuard} from './journal'
 import {learningAudit,systemLearningAudit,type LearningActor} from './audit'
+import {redactionSettings,redactionFence} from '../redaction/settings'
+import {redactLearningValue} from './redaction'
 
 /** The event key is supplied by the initiating HTTP event or scheduled window;
  * the durable claim is never retried after an ambiguous paid call. */
@@ -42,7 +44,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   const model=await selected(runtime,db,'learning')
   reservation=await reserve(db,'learning',model.provider,model.id,i.max_run_cost_micros,sourceCost)
   if(sourceCost>0)paid=true
-  const records=await acquire(runtime,db,i,s);let observations=await retain(db,i,s,records)
+  const rules=await redactionSettings(db),records=await acquire(runtime,db,i,s,rules);let observations=await retain(db,i,s,records)
   const corrections=(await db.prepare('SELECT id,correction FROM learning_corrections WHERE investigation_id=? ORDER BY created_at,id').bind(id).all()).results
   // A repeated input after a correction is a new interpretation, never a revival
   // of the invalidated immutable artifact or its committed snapshot.
@@ -55,11 +57,11 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   await assertScope(native,i,s)
   // This db read also rechecks native session and erasure journal before paid work.
   await db.prepare('SELECT 1').first()
-  const generated=await interpret(runtime,db,{question:i.question,purpose:i.purpose,observations:observations.map(o=>({id:o.id,wording:o.wording,citableRanges:citationRanges(o),observedAt:o.observed_at,requesterId:o.requester_id,accountId:o.account_id})),corrections,budgetMicros:i.budget_micros-i.spent_micros},i.max_run_cost_micros-sourceCost,async()=>{await db.prepare('SELECT 1').first();paid=true},reservation)
+  const generated=await interpret(runtime,db,{...redactLearningValue({question:i.question,purpose:i.purpose,corrections},rules),observations:observations.map(o=>({id:o.id,wording:o.wording,citableRanges:citationRanges(o),observedAt:o.observed_at,requesterId:o.requester_id,accountId:o.account_id})),budgetMicros:i.budget_micros-i.spent_micros},i.max_run_cost_micros-sourceCost,async()=>{await db.prepare('SELECT 1').first();paid=true},reservation)
   generated.costMicros+=sourceCost
-  const body=validateLearning(generated.output,observations,i.budget_micros-i.spent_micros),artifactId=crypto.randomUUID()
+  const body=validateLearning(redactLearningValue(generated.output,rules),observations,i.budget_micros-i.spent_micros),artifactId=crypto.randomUUID(),fence=redactionFence(db,rules.revision)
   const guards=records.flatMap(record=>record.nativeGuard?[db.prepare(`INSERT INTO penny_integration_guards(id,allowed) VALUES(?,(${record.nativeGuard.sql}))`).bind(crypto.randomUUID(),...record.nativeGuard.params)]:[])
-  await db.batch([...guards,
+  await db.batch([fence.before,...guards,
    db.prepare("UPDATE learning_artifacts SET state='superseded' WHERE investigation_id=? AND state='current'").bind(id),
    db.prepare("INSERT INTO learning_artifacts(id,investigation_id,version,input_hash,body_json,state,created_at) SELECT ?,?,COALESCE(MAX(version),0)+1,?,?,'current',? FROM learning_artifacts WHERE investigation_id=?").bind(artifactId,id,inputHash,JSON.stringify(body),new Date().toISOString(),id),
    ...observations.map(o=>db.prepare('INSERT INTO learning_contributions(artifact_id,observation_id) VALUES(?,?)').bind(artifactId,o.id)),
@@ -67,6 +69,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
    db.prepare("UPDATE learning_investigations SET spent_micros=spent_micros-?+?,last_reason=? WHERE id=?").bind(i.max_run_cost_micros,generated.costMicros,'material_learning',id),
    learningAudit(db,execution.actor,'learning_investigation',id,'learning.run_completed',{runId,interpretationId:artifactId,unchanged:false}),
    db.prepare('DELETE FROM penny_integration_guards'),
+   fence.after,
   ])
   return {runId,artifactId,unchanged:false}
  }catch(error){

@@ -4,6 +4,7 @@ import type { D1ImportContext, ImportPlan, SourceArtifact } from '../../../../ba
 import { canonicalJson,sha256 } from '../../../../base/modules/import-kit/src/d1/index'
 import { atomic } from '../../../../base/modules/import-kit/src/d1/database'
 import type { FeedbackReceipt } from './receipt'
+import {redactedArtifacts} from './redaction-policy'
 
 export interface BundleRow {id:string;fingerprint:string;receipt_json:string;originals_json:string;sealed:number;originals_state?:'retained'|'withdrawn'}
 const chunkSize=48*1024
@@ -33,6 +34,10 @@ export async function bundleOriginals(id:string,context:D1ImportContext,requireS
  const originals=artifacts.map((artifact,index)=>{
   const chunks=results.filter(row=>row.artifact===index);count+=chunks.length
   if(chunks.length!==artifact.chunks||chunks.some((row,i)=>row.ordinal!==i))throw new Error('FEEDBACK_ORIGINAL_CHANGED')
+  if(artifact.original?.status==='unavailable'){
+   if(chunks.length||!redactedArtifacts(artifacts)||artifact.original.reason!=='not-supplied')throw new Error('FEEDBACK_ORIGINAL_CHANGED')
+   return {jobId:id,kind:'artifact',key:artifact.name,name:artifact.name,sha256:artifact.sha256,size:artifact.size,original:artifact.original}
+  }
   const base64=chunks.map(row=>row.bytes).join(''),bytes=Buffer.from(base64,'base64')
   if(bytes.toString('base64')!==base64||bytes.length!==artifact.size||sha256(bytes)!==artifact.sha256)throw new Error('FEEDBACK_ORIGINAL_CHANGED')
   return {jobId:id,kind:'artifact',key:artifact.name,name:artifact.name,sha256:artifact.sha256,size:artifact.size,original:{status:'retained',base64}}

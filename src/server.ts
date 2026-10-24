@@ -1,4 +1,5 @@
 import {captureEmail} from './core/features/evidence/email-capture'
+import {advanceRedactionWork,isRedactionWork,runRedactionQueue} from './core/features/redaction/background'
 import { withDemo } from '../base/modules/demo/index.mjs'
 import {isDeclaredSessionlessPath} from './core/app/public-paths'
 import {admitPublicRequest} from './core/app/public-rate'
@@ -25,6 +26,7 @@ import { seedDemo, withDemoBindings } from './demo'
 export default withDemo({
   email: captureEmail,
   async queue(batch: MessageBatch<unknown>, bindings: AppBindings): Promise<void> {
+    if (batch.messages.every(message => isRedactionWork(message.body))) return runRedactionQueue(batch, withDemoBindings(bindings))
     // Confirmed erasures, restores and saved imports continue here, off the tab.
     if (batch.messages.every(message => isDataWork(message.body))) return runDataQueue(batch, withDemoBindings(bindings))
     try { await runNotificationQueue(batch, withDemoBindings(bindings)) } catch (error) {
@@ -33,6 +35,7 @@ export default withDemo({
     }
   },
   async scheduled(controller: ScheduledController, bindings: AppBindings): Promise<void> {
+    await advanceRedactionWork(withDemoBindings(bindings))
     try { await runNotificationSchedule(controller, withDemoBindings(bindings)) } catch (error) {
       // The failed invocation stays visible; its log and error carry no values.
       console.error('Penny scheduled work failed', JSON.stringify(failureSummary(error)))

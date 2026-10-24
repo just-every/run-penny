@@ -538,18 +538,41 @@ sending. An erased requester's address selects attributed email evidence and its
 versions/files for erasure. Original Message-IDs and full raw MIME are not stored.
 
 
-### Sensitive evidence rules (migration 0090)
+### Sensitive evidence rules (migrations 0090 and 0095)
 
-Redaction policy is a portable product record, with no provider/model credential.
-Restoring policy and already-redacted text does not run reapplication or send
-anything. Erasure removes custom patterns that literally repeat the person's
-address or words and advances policy revision. Ordinary edits retain version
-history; explicit owner-confirmed reapplication irreversibly replaces matched
-wording in evidence versions and records only changed counts in the audit.
-Preview and commit check the policy revision and the exact current text; changed
-inputs require a fresh preview. This bounded flow currently supports at most
-200 evidence versions and does not rewrite saved-import originals, learning
-source envelopes or every copied transcript. Those are AI-008's explicit gaps.
-Search reads the current D1 wording directly; there is no separate materialized
-full-text index retaining the original. Binary attachments retain their original
-bytes and are outside rule-only rewriting.
+Redaction policy is portable product data and contains no provider credential.
+Rules mark captured text before operator evidence, email capture, portal
+submission, saved Canny/UserVoice import and Orbit/native learning acquisition
+store it. With rules enabled, import originals remain in the owner's export
+file: Penny retains only their whole-file digests and sizes, plus marked
+normalized records. Original-file reads and receipts report that the bytes were
+withheld. Rules disabled preserves the previous byte-exact source custody.
+Learning verifies Orbit's whole-source revision before redacting the retained
+envelope and stores a separate digest for that marked representation. Source
+revision changes remain distinguishable even when both redact to the same text.
+
+In Settings, the owner previews counts for every stored-text place, then confirms
+irreversible reapplication. Editable evidence versions and copied request,
+submission, comment/edit, note, appeal and internal roadmap wording use bounded
+Queue/Cron pages. A changed rule or stored input invalidates the preview. Each
+page and its cursor commit together, so interrupted work resumes without applying
+a page twice. Settings shows previewing, running, completed or failed work and
+allows the owner to resume. Run state and freshness counters are installation
+records; portable audits retain the actor, outcome and per-place counts, without
+source wording. Restoring an archive starts no redaction run and sends nothing.
+
+Preserved or fingerprinted places are counted explicitly as blocked: saved-import
+custody and its owned native rows, learning originals/derived history, decision
+and publication/status/notification history, pending verification payloads,
+signed/outbound/tracker envelopes, audit reason copies and archive/restore
+staging. Their existing DATA-003 erasure/copy-resolution doors remain available;
+rule-based historical rewriting needs an owner ruling. This is an explicit
+AI-008 Gap, alongside optional model detection. Binary originals keep exact-byte
+custody. There is no transcript store yet; CAP-008 inherits that redaction work.
+Search reads current D1 wording directly and has no separate retained text index.
+
+Erasure removes custom patterns that literally repeat the person's address or
+words and advances policy revision. Ordinary evidence edits retain versions;
+explicit reapplication replaces their matched wording permanently. Previously
+exported files remain in the owner's custody and need the latest erasure journal
+when restored.

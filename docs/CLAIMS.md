@@ -25,24 +25,29 @@ WIDGET-008 inherit: on an SSO-required portal only WIDGET-008 applies; current
 Penny has no such portal state. ROLE-002's status is unchanged.
 
 
-AI-008 is partial. Deterministic rules cover operator evidence, email capture,
-wording edits and requester submissions (including held submissions), through
-one shared text-redaction function. Rule-only detection passed the versioned
-redaction-v1 synthetic set; this is not a guarantee for arbitrary real data.
-There is no model detection. Binary attachments are not rewritten.
+AI-008 is partial. Deterministic rules cover operator evidence, captured email,
+wording edits, native portal submissions, saved Canny/UserVoice imports and
+Orbit/native learning acquisition before storage. Rules-on imports retain
+whole-file digests rather than original bytes. Learning preserves verified
+source-revision identity with a separate marked retained envelope. Rules-off
+source custody remains unchanged. The versioned 210-excerpt redaction-v1 set
+measures rule-only detection; no model detection is built.
 
-Open coverage: saved-import originals and learning source envelopes retain their
-source identity/citation custody and are not redacted by this feature. Explicit
-reapplication currently covers at most 200 stored evidence wording versions,
-not every copied excerpt, transcript or larger store. AI-008 retains the full
-contract and remains partial until those gaps close. AI-011 remains missing and
-inherits extending the minimal set loader/metrics runner.
+Owner-confirmed reapplication previews every stored-text place and processes
+editable wording/copies in bounded Queue/Cron pages. Stored-input or rules changes
+invalidate the plan. Interrupted runs resume from committed cursors, with visible
+progress and a count-only audit. Preserved/fingerprinted history is explicitly
+blocked in preview: import custody and owned native rows, learning history,
+decision/publication/status/notification history, pending verification payloads,
+signed/outbound/tracker envelopes, audit reason copies and archive/restore staging.
+Those places require DATA-003 erasure/copy resolution or an owner ruling; they
+remain in the Gap. Binary originals are not rewritten. CAP-008 inherits the
+unbuilt transcript store and its redaction. AI-011 inherits extending the minimal
+evaluation runner.
 
-EVID-010's ordinary edits still create versions and retain earlier versions.
-Explicit AI-008 privacy reapplication permanently replaces matched wording in
-those retained versions; version and evidence IDs stay stable, counts are
-previewed, and an owner must confirm. This privacy operation is audited and
-cannot recover the original text from Penny.
+EVID-010 ordinary edits retain wording versions. Explicit AI-008 reapplication
+permanently removes matches from editable versions while preserving their IDs.
+It does not publish, vote, notify or send anything.
 
 ## Evidence reconciliation · 22 October 2026
 
@@ -75,7 +80,7 @@ CAP-009 is done against provider-edge fixtures (22 October 2026). Direct or BCC 
 | ROAD-006 | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` — approved-only columns and counts, mapped request, published release on card and detail at 1440/390 |
 | REQ-039 | done | Provider-edge acceptance; live consent/client/redirects NOT RUN. |
 | CAP-009 | done | Provider-edge capture, provenance, structured forwards, archive and erasure. Hosted mail NOT RUN. |
-| AI-008 | partial | Deterministic redaction only; existing storage/reapplication gaps remain. |
+| AI-008 | partial | Deterministic before-storage rules and paged editable-copy reapplication; model detection, blocked historical custody and CAP-008 transcripts remain open. |
 | AI-011 | missing | Model selection, complete evaluation receipts/sets and table-driven quality bars remain. |
 | NOTIFY-010 | partial | `tests/base/weekly-summary-flow.ts` — proveWeeklySummary in `tests/base/notifications.test.ts` (public event intent is atomic; fixed windows and weekly summaries retain public-only consent, push Verify base shards): populated upgrade, owner-off default, verified explicit and disclosed vote consent, fixed-week once-only delivery, public status/reply/approved-comment/release content, private and unfollowed exclusions, quiet hours, unchanged immediate intent membership, empty week, one-click unsubscribe and revoked choice, request mute and address suppression; `tests/base/weekly-summary-portability.ts` — held export/restore and requester erasure in the same registration; `tests/browser/weekly-summary-choice.mjs` via `tests/browser/workspace-clock.mjs`, push Verify workspace-clock: owner setting and one shared requester choice on activity/updates, persisted opt-in and owner-off opt-out at 1440/390. Mail-edge fixture only; no hosted mailbox receipt. Gap: No hosted mailbox receipt; real-provider mailbox proof pending for live digest delivery and unsubscribe. |
 | TRIAGE-005 | partial | `tests/base/ownership.test.ts` with `tests/base/request-batches.ts` proves one audited tag/assignment batch across 200 native requests, exact undo, refusal without partial writes, later-edit preservation, populated upgrade and held archive/erasure custody; `tests/browser/ownership-journey.mjs` with `tests/browser/triage-bulk.mjs` proves selection, review, summary and undo at 1440/390. Gap: Inbox-item batches, move board, set status, link, mark reviewed, REQ-038 bulk removal with one reason and propose merge remain unimplemented. Default ADOPTED: Owner/Admin only; the operator role policy awaits ct. |

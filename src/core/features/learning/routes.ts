@@ -13,6 +13,8 @@ import {learningAudit} from './audit'
 import {learningConfiguration} from './configuration'
 import {observationView} from './presentation'
 import type {Observation} from './schema'
+import {redactionSettings,redactionFence} from '../redaction/settings'
+import {redactLearningValue} from './redaction'
 const root='/api/operator/learning'
 export function registerLearningRoutes(app:Hono<OperatorMutationEnvironment>){
  registerLearningControls(app)
@@ -25,16 +27,19 @@ export function registerLearningRoutes(app:Hono<OperatorMutationEnvironment>){
  app.post(root+'/investigations/:id/correct',async c=>{
   const {db,actor}=await integrationOperator(c.get('runtime'),c.req.raw),input=await parseMutationBody(c,z.object({interpretationId:z.string(),correction:z.string().trim().min(1).max(4000)}).strict());if(!input)return c.json({error:'validation_failed'},400)
   const id=c.req.param('id')!,correctionId=crypto.randomUUID(),guard=crypto.randomUUID()
+  const rules=await redactionSettings(db),fence=redactionFence(db,rules.revision),correction=redactLearningValue({correction:input.correction},rules).correction
   if(!await db.prepare("SELECT id FROM learning_artifacts WHERE id=? AND investigation_id=? AND state='current'").bind(input.interpretationId,id).first())throw new NativeError('learning_interpretation_stale',409)
   const result=await db.batch([
+   fence.before,
    db.prepare("INSERT INTO penny_integration_guards(id,allowed) VALUES(?,EXISTS(SELECT 1 FROM learning_artifacts WHERE id=? AND investigation_id=? AND state='current'))").bind(guard,input.interpretationId,id),
    db.prepare("UPDATE learning_artifacts SET state='contested' WHERE id=? AND investigation_id=? AND state='current' RETURNING id").bind(input.interpretationId,id),
-   db.prepare('INSERT INTO learning_corrections(id,investigation_id,artifact_id,correction,actor_id,created_at) SELECT ?,?,?,?,?,? WHERE changes()=1').bind(correctionId,id,input.interpretationId,input.correction,actor.id,new Date().toISOString()),
+   db.prepare('INSERT INTO learning_corrections(id,investigation_id,artifact_id,correction,actor_id,created_at) SELECT ?,?,?,?,?,? WHERE changes()=1').bind(correctionId,id,input.interpretationId,correction,actor.id,new Date().toISOString()),
    db.prepare("UPDATE learning_investigations SET version=version+1,last_reason='operator_correction',next_run_at=? WHERE id=? AND EXISTS(SELECT 1 FROM learning_corrections WHERE id=?)").bind(new Date().toISOString(),id,correctionId),
    learningAudit(db,{operatorId:actor.id},'learning_investigation',id,'learning.corrected',{interpretationId:input.interpretationId,correctionId}),
    db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(guard),
+   fence.after,
   ])
-  if(!result[1].results.length)throw new NativeError('learning_interpretation_stale',409)
+  if(!result[2].results.length)throw new NativeError('learning_interpretation_stale',409)
   return c.json({ok:true})
  })
  app.post(root+'/artifacts/:id/defer',async c=>{

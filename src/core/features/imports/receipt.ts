@@ -2,6 +2,7 @@ import type { ImportPlan, SourceRecord } from '../../../../base/modules/import-k
 import type { NativeImportValue } from './types'
 import { asObject } from './mapping-support'
 import { uservoiceAccumulator,type UserVoiceReceipt } from './uservoice-receipt'
+import {redactedArtifacts} from './redaction-policy'
 
 export interface FeedbackReceipt {
  phase:string
@@ -24,9 +25,11 @@ export function receiptAccumulator(phase='preview',committed=new Map<string,{own
  const sources=new Map<string,FeedbackReceipt['sources'][number]>(),destinations=new Map<string,FeedbackReceipt['destinations'][number]>(),omissions=new Map<string,FeedbackReceipt['omissions'][number]>(),aggregates=new Map<string,FeedbackReceipt['aggregates'][number]>(),unresolved:FeedbackReceipt['unresolved']=[]
  const history=uservoiceAccumulator(),parents=new Map<string,string>(),votes:{request:string;requester:string;owned:boolean;reversed:boolean}[]=[]
  const importanceCounts=new Map<string,NonNullable<FeedbackReceipt['voteImportance']>[number]>()
+ let originalsRetained=true
  const sourceKind=(kind:string)=>{const source=sources.get(kind)??{kind,read:0,generated:0,eligible:0,applied:0,reused:0,skipped:[]};sources.set(kind,source);return source}
  const skipped=(source:FeedbackReceipt['sources'][number],reason:string)=>{const prior=source.skipped.find(item=>item.reason===reason);if(prior)prior.count++;else source.skipped.push({reason,count:1})}
  const add=(plan:ImportPlan)=>{
+  originalsRetained&&=!redactedArtifacts(plan.source.artifacts)
   for(const issue of plan.diagnostics.filter(d=>d.code==='UNRESOLVED_REFERENCE'))unresolved.push({kind:issue.kind!,sourceId:issue.sourceId!,field:issue.field!,target:issue.message})
   const key=(record:SourceRecord)=>JSON.stringify([record.kind,record.sourceId]),entries=new Map(plan.entries.map(entry=>[key(entry.source),entry])),seen=new Set<string>()
   // Base keeps every original source record while deduplicating applied entries.
@@ -62,7 +65,7 @@ export function receiptAccumulator(phase='preview',committed=new Map<string,{own
  const plannedVotes=new Set<string>(),createdVotes=new Set<string>(),retainedVotes=new Set<string>()
  for(const vote of votes){let request=vote.request;const visited=new Set<string>();while(parents.has(request)&&!visited.has(request)){visited.add(request);request=parents.get(request)!}const key=request+':'+vote.requester;plannedVotes.add(key);if(vote.owned){createdVotes.add(key);if(!vote.reversed)retainedVotes.add(key)}}
  if(votes.length)destinations.set('request_votes',{table:'request_votes',planned:plannedVotes.size,created:createdVotes.size,removed:createdVotes.size-retainedVotes.size,retained:retainedVotes.size})
- return {phase,sources:[...sources.values()],destinations:[...destinations.values()],omissions:[...omissions.values()],aggregates:[...aggregates.values()],unresolved,identities:[...sources.keys()].map(kind=>({kind,treatment:kind==='users'?'Historical, non-authorizing contributors only: no login, verified identity, consent or outreach audience.':'Historical evidence only: no login, verified identity, consent, outreach audience or commercial authority.'})),effects:{mail:0,notifications:0},originalsRetained:true,conflicts:[],...(uservoice?{uservoice}:{}),...(importanceCounts.size?{voteImportance:[...importanceCounts.values()]}:{})}
+ return {phase,sources:[...sources.values()],destinations:[...destinations.values()],omissions:[...omissions.values()],aggregates:[...aggregates.values()],unresolved,identities:[...sources.keys()].map(kind=>({kind,treatment:kind==='users'?'Historical, non-authorizing contributors only: no login, verified identity, consent or outreach audience.':'Historical evidence only: no login, verified identity, consent, outreach audience or commercial authority.'})),effects:{mail:0,notifications:0},originalsRetained,conflicts:[],...(uservoice?{uservoice}:{}),...(importanceCounts.size?{voteImportance:[...importanceCounts.values()]}:{})}
  };return {add,finish}
 }
 function aggregateRecord(record:SourceRecord,result:Map<string,FeedbackReceipt['aggregates'][number]>):void {

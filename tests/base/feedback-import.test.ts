@@ -57,7 +57,7 @@ it('[IMP-001][IMP-002] previews classic CSV omissions and retains multiline Unic
  expect(reversed.phase).toBe('undone');expect(reversed.sources).toEqual(receipt.sources);expect(reversed.aggregates).toEqual(receipt.aggregates);expect(reversed.omissions).toEqual(receipt.omissions)
 })
 
-it('[IMP-002][BASE-ACCESS-002] rejects late mapping errors, unreviewed apply and unauthenticated/foreign-origin requests before product writes',async()=>{
+it('[IMP-002][BASE-ACCESS-002] refuses invalid, incomplete, unreviewed and unauthorized saved imports before product writes',async()=>{
  const operator=await owner(),source=feedbackFixture(),file=source.files.find(f=>f.kind==='posts')!,body=JSON.parse(Buffer.from(file.base64,'base64').toString())
  body.posts.at(-1).status='unsupported-status';file.base64=Buffer.from(JSON.stringify(body)).toString('base64')
  const plan=await preview(source,operator);expect(plan.counts.rejected).toBe(1)
@@ -71,10 +71,8 @@ it('[IMP-002][BASE-ACCESS-002] rejects late mapping errors, unreviewed apply and
  expect((await counts()).requests).toBe(0)
  const unsupported=feedbackFixture();unsupported.files[0].version='v2'
  expect((await call(importPath+'/preview',unsupported,operator)).status).toBe(422)
-})
-
-it('[IMP-002] refuses incomplete API merge history and unmapped CSV tags before creating a job',async()=>{
- const operator=await owner(),source=feedbackFixture(),file=source.files.find(f=>f.kind==='posts')!
+ {
+ const source=feedbackFixture(),file=source.files.find(f=>f.kind==='posts')!
  const body=JSON.parse(Buffer.from(file.base64,'base64').toString())
  // The API history summary cannot stand in for the missing complete post.
  body.posts=body.posts.filter((post:{id:string})=>post.id!=='post-2')
@@ -84,6 +82,7 @@ it('[IMP-002] refuses incomplete API merge history and unmapped CSV tags before 
  expect((await call(importPath+'/preview',exported,operator)).status).toBe(409)
  expect((await counts()).requests).toBe(0)
  expect((await env.DB.prepare('SELECT COUNT(*) n FROM ik_jobs').first<{n:number}>())!.n).toBe(0)
+ }
 })
 
 it('[IMP-006][IMP-007] previews, applies, replays and reverses explicit Ideas mappings and duplicate rows with supplied author each configured input',async()=>{

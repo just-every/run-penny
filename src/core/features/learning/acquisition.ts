@@ -6,8 +6,10 @@ import type {Investigation,Source,Observation} from './schema'
 import {readOrbit,type SourceRecord} from './ports'
 import {assertScope} from './authority'
 import {contentIdentity,decodeOriginal,observationOriginal} from './source-content'
-export interface Captured extends SourceRecord {requesterId:string|null;accountId:string|null;evidenceId:string|null;requestId:string|null;nativeGuard?:{sql:string;params:(string|number|null)[]}}
-export async function acquire(runtime:PennyRuntime,db:D1Database,i:Investigation,s:Source):Promise<Captured[]>{
+import {redactionFence,redactionSettings} from '../redaction/settings'
+import {redactLearningCapture,type CaptureRules} from './redaction'
+export interface Captured extends SourceRecord {requesterId:string|null;accountId:string|null;evidenceId:string|null;requestId:string|null;redactionRevision?:number;nativeGuard?:{sql:string;params:(string|number|null)[]}}
+export async function acquire(runtime:PennyRuntime,db:D1Database,i:Investigation,s:Source,rules?:CaptureRules):Promise<Captured[]>{
  const result:Captured[]=[]
  for(const id of JSON.parse(i.native_evidence_ids_json) as string[]){
   const row=await db.prepare('SELECT e.*,v.id version_id,v.wording FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id WHERE e.id=? ORDER BY v.version_number DESC LIMIT 1').bind(id).first<Record<string,string|null>>()
@@ -25,7 +27,8 @@ export async function acquire(runtime:PennyRuntime,db:D1Database,i:Investigation
   result.push({...await readOrbit(runtime,target,s.installation_id),requesterId:null,accountId:null,evidenceId:null,requestId:null})
  }
  if(!result.length)throw new NativeError('learning_evidence_required',409)
- return result
+ const captureRules=rules??await redactionSettings(db)
+ return Promise.all(result.map(record=>redactLearningCapture(record,captureRules)))
 }
 export async function retain(db:D1Database,i:Investigation,s:Source,records:Captured[],preferLegacy=true):Promise<Observation[]>{
  const observations:Observation[]=[]
@@ -35,13 +38,14 @@ export async function retain(db:D1Database,i:Investigation,s:Source,records:Capt
   if(erased)throw new NativeError('learning_source_erased',409)
   const contentHash=await contentIdentity(record.wording,record.original),now=new Date().toISOString(),id=crypto.randomUUID(),decoded=decodeOriginal(record.original)
   const previous=(await db.prepare('SELECT * FROM learning_observations WHERE investigation_id=? AND event_key=?').bind(i.id,record.eventKey).all<Observation>()).results
-  const sameRevision=(o:Observation)=>{const old=observationOriginal(o);return !!decoded&&!!old&&old.envelope.revision===decoded.envelope.revision&&old.envelope.text===decoded.envelope.text}
+  const sameRevision=(o:Observation)=>{const old=observationOriginal(o);return !!decoded&&!!old&&!decoded.retainedRevision&&!old.retainedRevision&&old.envelope.revision===decoded.envelope.revision&&old.envelope.text===decoded.envelope.text}
   // Keep an unchanged current legacy input quiet. Only a needed interpretation
   // materializes its new representation; existing originals never change.
   const existing=previous.find(o=>o.content_hash===contentHash)??(preferLegacy&&decoded?previous.find(o=>!observationOriginal(o)?.normalized&&sameRevision(o)):undefined)
   const changed=previous.filter(o=>o.content_hash!==contentHash&&!sameRevision(o)).map(o=>o.id)
   const guards=record.nativeGuard?[db.prepare(`INSERT INTO penny_integration_guards(id,allowed) VALUES(?,(${record.nativeGuard.sql}))`).bind(id,...record.nativeGuard.params)]:[]
-  await db.batch([...guards,db.prepare("UPDATE learning_artifacts SET state='contested' WHERE id IN(SELECT c.artifact_id FROM learning_contributions c JOIN learning_observations o ON o.id=c.observation_id WHERE o.id IN(SELECT value FROM json_each(?)))").bind(JSON.stringify(changed)),...(!existing?[db.prepare(`INSERT OR IGNORE INTO learning_observations(id,investigation_id,source_id,event_key,content_hash,wording,original_json,observed_at,source_person_id,requester_id,account_id,evidence_id,request_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,i.id,s.id,record.eventKey,contentHash,record.wording,canonical(record.original),record.observedAt,record.people[0]??null,record.requesterId,record.accountId,record.evidenceId,record.requestId,now)]:[]),...record.people.map(person=>db.prepare('INSERT OR IGNORE INTO learning_source_people(observation_id,source_person_id) SELECT id,? FROM learning_observations WHERE investigation_id=? AND event_key=? AND content_hash=?').bind(person,i.id,record.eventKey,existing?.content_hash??contentHash)),...(record.nativeGuard?[db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(id)]:[])])
+  const fence=record.redactionRevision===undefined?undefined:redactionFence(db,record.redactionRevision)
+  await db.batch([...(fence?[fence.before]:[]),...guards,db.prepare("UPDATE learning_artifacts SET state='contested' WHERE id IN(SELECT c.artifact_id FROM learning_contributions c JOIN learning_observations o ON o.id=c.observation_id WHERE o.id IN(SELECT value FROM json_each(?)))").bind(JSON.stringify(changed)),...(!existing?[db.prepare(`INSERT OR IGNORE INTO learning_observations(id,investigation_id,source_id,event_key,content_hash,wording,original_json,observed_at,source_person_id,requester_id,account_id,evidence_id,request_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(id,i.id,s.id,record.eventKey,contentHash,record.wording,canonical(record.original),record.observedAt,record.people[0]??null,record.requesterId,record.accountId,record.evidenceId,record.requestId,now)]:[]),...record.people.map(person=>db.prepare('INSERT OR IGNORE INTO learning_source_people(observation_id,source_person_id) SELECT id,? FROM learning_observations WHERE investigation_id=? AND event_key=? AND content_hash=?').bind(person,i.id,record.eventKey,existing?.content_hash??contentHash)),...(record.nativeGuard?[db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(id)]:[]),...(fence?[fence.after]:[])])
   const saved=existing??(await db.prepare('SELECT * FROM learning_observations WHERE investigation_id=? AND event_key=? AND content_hash=?').bind(i.id,record.eventKey,contentHash).first<Observation>())!
   observations.push(saved)
  }
