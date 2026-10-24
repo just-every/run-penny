@@ -90,6 +90,18 @@ export async function proveRedaction(call:Call,fixture:()=>Promise<{operator:Rec
  const second=await settle(await read<Run>(call('/api/operator/settings/redaction/reapply',{planHash:again.planHash,confirmIrreversible:true},g.operator),202),'complete');expect(second.changed).toBe(0)
  expect(await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='redaction.reapplied'").first('n')).toBe(2)
  expect(JSON.parse((await env.DB.prepare("SELECT details_json FROM audit_entries WHERE action='redaction.reapplied' AND entity_id=?").bind(running.id).first<string>('details_json'))!)).toMatchObject({changed:preview.changes})
+ // A policy change stops confirmed work visibly; another delivery cannot
+ // restart it or apply a stale page. A fresh preview is required.
+ const failurePlan=await makePreview()
+ const willFail=await read<Run>(call('/api/operator/settings/redaction/reapply',{planHash:failurePlan.planHash,confirmIrreversible:true},g.operator),202)
+ await read(call('/api/operator/settings/redaction',{...rules,enabled:false},g.operator,'PUT'))
+ await tick()
+ expect(await status(willFail.id)).toMatchObject({state:'failed',changed:0,error:'redaction_rules_changed'})
+ expect(await read(call('/api/operator/settings/redaction',undefined,g.operator))).toMatchObject({latestRun:{id:willFail.id,state:'failed'}})
+ expect((await call('/api/operator/settings/redaction/runs/'+willFail.id+'/resume',{},g.operator)).status).toBe(409)
+ expect((await call('/api/operator/settings/redaction/runs/'+willFail.id,undefined,peer)).status).toBe(403)
+ await tick();expect(await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='redaction.failed' AND entity_id=?").bind(willFail.id).first('n')).toBe(1)
+ await read(call('/api/operator/settings/redaction',rules,g.operator,'PUT'))
  const ruleEmail='synthetic-penny-rule@example.test'
  await read(call('/api/public/identity/email',{email:ruleEmail,displayName:'Synthetic rule subject'}),202)
  const sent=(await providerMessages().list()).find(row=>row.message.to.includes(ruleEmail))!,token=new URL(sent.message.text!.match(/https?:\/\/\S+/)![0]).hash.slice(7)
@@ -150,4 +162,3 @@ export async function proveCapturedRedaction(call:Call,fixture:()=>Promise<{oper
  for(const table of ['evidence_versions:import-owned','requests:import-owned','learning_observations','learning_artifacts','learning_commitments'])expect(planned.places.find(p=>p.table===table)).toMatchObject({blocked:true,records:expect.any(Number)})
  expect(planned.places.find(p=>p.table==='evidence_versions:import-owned')!.records).toBeGreaterThan(0)
 }
-

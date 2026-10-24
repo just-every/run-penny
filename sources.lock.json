@@ -5304,7 +5304,7 @@
       "executable": false
     },
     "src/core/features/imports/redaction-policy.ts": {
-      "sha256": "c52804e58062c6fb8b988879cf8dfdbef0927de7fb0e122f5f83e971eff1019f",
+      "sha256": "91d1dcd6cc72c0665c665ae0a4b02e33dac512ec1c753af4ddc8104fcf147911",
       "executable": false
     },
     "src/core/features/imports/redaction-source.ts": {
@@ -6096,7 +6096,7 @@
       "executable": false
     },
     "src/core/features/redaction/places.ts": {
-      "sha256": "6a1bfce85e39b556a94a77766a7300a63db08831cbe5a859a89dc6bfe038c8e1",
+      "sha256": "4c52c3f918e5c565651f9df28f3eedb9d62a3c6731dc8b111c7cebfd003ec131",
       "executable": false
     },
     "src/core/features/redaction/routes.ts": {
@@ -6108,7 +6108,7 @@
       "executable": false
     },
     "src/core/features/redaction/settings-ui.tsx": {
-      "sha256": "d401e192c3b4c096690a6e467d873f8f9867d5b4a3be44b7335c8e0bcb8df5b9",
+      "sha256": "ed6b6f5947941b62e93c2fde5c75ecab8fc26ba420c194de0e66da475a2db41e",
       "executable": false
     },
     "src/core/features/redaction/settings.ts": {
@@ -7620,7 +7620,7 @@
       "executable": false
     },
     "tests/base/redaction-fixture.ts": {
-      "sha256": "54fd17fad7b9728ec20b0d14b6b85d555f0e0a00178f53b06e6b8577db0ce0c8",
+      "sha256": "5b522b8539b4b50d92475bbcd9da70a65e5bc10ae174a7f4dc3c08c5dd40707b",
       "executable": false
     },
     "tests/base/redaction-import-door.ts": {
@@ -8020,7 +8020,7 @@
       "executable": false
     },
     "tests/browser/redaction-journey.mjs": {
-      "sha256": "a53d9c7ff139dc29ffbfb1bf465e7b25635a988cb94be05aab7426dca4c25d7c",
+      "sha256": "1ec2aa9e23de4be65d4a4fd6d8b233c4efb5675f0baba054aef4487c22ab2cd3",
       "executable": false
     },
     "tests/browser/release-planning.mjs": {

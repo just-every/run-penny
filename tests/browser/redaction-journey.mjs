@@ -1,18 +1,35 @@
 import assert from 'node:assert/strict'
-export async function reviewRedaction({page,runtime,goto,capture}){
+import {resolve,join} from 'node:path'
+export async function reviewRedaction({page,runtime,goto,capture:capturePage}){
+ async function capture(label,target=page){
+  await target.evaluate(()=>window.scrollTo(0,0))
+  await capturePage(label,target)
+  if(!label.includes('item')){const clip=await target.locator('section[aria-labelledby=evidence-redaction]').boundingBox();assert.ok(clip);await target.screenshot({fullPage:true,clip,path:join(resolve(process.env.PENNY_EVIDENCE??'../evidence/decision-loop-resume'),`${label}-card-${target.viewportSize().width}.png`)})}
+ }
  const origin=runtime.origin,root='/api/operator/settings/redaction',records=count=>`${count} record${count===1?'':'s'}`
  const old=await page.request.post(origin+'/api/operator/evidence',{headers:{Origin:origin},data:{sourceType:'free_text',sourceLabel:'Synthetic prior capture',wording:'Prior captured account ACCOUNT-1234.',observedAt:'2026-10-22T09:00:00Z'}})
  assert.equal(old.status(),201)
  await goto('/app/settings')
  const panel=page.locator('section[aria-labelledby=evidence-redaction]'),patterns=panel.getByLabel('Custom patterns',{exact:true})
+ const enabled=page.waitForResponse(r=>r.url().endsWith(root)&&r.request().method()==='PUT')
  await panel.getByLabel('Enable redaction for new captures',{exact:true}).check()
- // A real validation refusal preserves the owner's input for correction.
- await patterns.fill('(unsupported)')
- const refused=page.waitForResponse(r=>r.url().endsWith(root)&&r.request().method()==='PUT')
- await patterns.press('Tab');assert.equal((await refused).status(),422)
- await panel.getByRole('button',{name:'Retry saving',exact:true}).waitFor()
- assert.equal(await patterns.inputValue(),'(unsupported)')
- await capture('AI-008-rules-save-failed')
+ assert.equal((await enabled).status(),200)
+ await panel.getByText('Saved',{exact:true}).waitFor()
+ // The expected 422 is isolated from the positive journey's console checks.
+ // This page still rejects every unexpected page/console error.
+ const validation=await page.context().newPage(),validationErrors=[]
+ validation.on('pageerror',error=>validationErrors.push(error.message))
+ validation.on('console',message=>{if(message.type()!=='error')return;const location=message.location().url;if(location&&new URL(location).pathname===root&&/status of 422/.test(message.text()))return;validationErrors.push(message.text())})
+ try{
+  await validation.goto(origin+'/app/settings')
+  const validationPanel=validation.locator('section[aria-labelledby=evidence-redaction]'),invalid=validationPanel.getByLabel('Custom patterns',{exact:true})
+  await invalid.fill('(unsupported)')
+  const [refused]=await Promise.all([validation.waitForResponse(r=>r.url().endsWith(root)&&r.request().method()==='PUT'),invalid.press('Tab')]);assert.equal(refused.status(),422)
+  await validationPanel.getByRole('button',{name:'Retry saving',exact:true}).waitFor()
+  assert.equal(await invalid.inputValue(),'(unsupported)')
+  await capture('AI-008-rules-save-failed',validation)
+  assert.deepEqual(validationErrors,[])
+ }finally{await validation.close()}
  await patterns.fill('ACCOUNT-[0-9]{4}')
  const saved=page.waitForResponse(r=>r.url().endsWith(root)&&r.request().method()==='PUT')
  await patterns.press('Tab');assert.equal((await saved).status(),200)

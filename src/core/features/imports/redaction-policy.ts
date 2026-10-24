@@ -21,7 +21,7 @@ export function policyContext(context:D1ImportContext,revision:number):D1ImportC
 /** Resume uses the policy that prepared the persisted source. Historical jobs
  * have no marker and may continue only with rules off. */
 export async function admitPolicyResume(id:string,context:D1ImportContext,policy:ImportRedactionPolicy):Promise<void>{
- const rows=(await context.storage.database.prepare('SELECT DISTINCT name,sha256,size FROM ik_originals WHERE job_id IN (SELECT job_id FROM ik_d1_stream_pages WHERE stream_id=? UNION SELECT ?) AND name GLOB ?').bind(id,id,prefix+'*').all<{name:string;sha256:string;size:number}>()).results
+ const rows=(await context.storage.database.prepare('SELECT DISTINCT name,sha256,size FROM ik_originals WHERE job_id IN (SELECT job_id FROM ik_d1_stream_pages WHERE stream_id=? UNION SELECT ?) AND name GLOB ?').bind(id,id,prefix+'*').all<{name:string;sha256:string;size:number}>()).results.filter(row=>redactedArtifacts([row]))
  const expected=policyArtifact(policy.revision)
  if(policy.enabled?(rows.length!==1||rows[0].name!==expected.name||rows[0].sha256!==expected.sha256||rows[0].size!==expected.size):rows.length!==0)throw new NativeError('feedback_redaction_policy_changed',409,'Redaction rules changed since this import was reviewed. Its stored source cannot be resumed under different rules; undo it or review a new import.')
 }

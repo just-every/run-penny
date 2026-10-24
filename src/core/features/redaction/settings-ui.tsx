@@ -1,4 +1,5 @@
 import {useEffect,useRef,useState} from 'react'
+import {useHydrated} from '@/core/app/ui/hydrated'
 import {useOperatorResource} from '@/core/app/ui/operator-resource'
 import {SectionCard} from '@/core/ui/app/SectionCard'
 import {operatorMutation} from '../requests/ui/operator-client'
@@ -18,6 +19,7 @@ const message=(error:unknown,fallback:string)=>error instanceof Error?error.mess
 const records=(count:number)=>`${count} record${count===1?'':'s'}`
 
 function RulesForm({initial,disabled,onChange,onSaving}:{initial:Rules;disabled:boolean;onChange:(rules:Rules)=>void;onSaving:(saving:boolean)=>void}){
+ const hydrated=useHydrated()
  const [rules,setRules]=useState<Rules>(()=>({enabled:initial.enabled,kinds:initial.kinds,patterns:initial.patterns})),[patterns,setPatterns]=useState(initial.patterns.join('\n')),[status,setStatus]=useState(''),[failed,setFailed]=useState(false)
  const pending=useRef<Rules|null>(null),saving=useRef(false),current=useRef(rules),saved=useRef(rules)
  async function save(next:Rules){
@@ -32,18 +34,19 @@ function RulesForm({initial,disabled,onChange,onSaving}:{initial:Rules;disabled:
  }
  function update(next:Rules){current.current=next;setRules(next);onChange(next);void save(next)}
  return <form className="space-y-4" onSubmit={event=>event.preventDefault()}>
-  <fieldset disabled={disabled} className="space-y-4">
+  <fieldset disabled={disabled||!hydrated} className="space-y-4">
    <label className="flex min-h-11 items-center gap-2"><input name="enabled" type="checkbox" checked={rules.enabled} onChange={event=>update({...current.current,enabled:event.target.checked})}/>Enable redaction for new captures</label>
    <fieldset className="space-y-2"><legend className="font-bold">Default kinds</legend>{kinds.map(kind=><label key={kind} className="flex min-h-11 items-center gap-2"><input name="kinds" value={kind} type="checkbox" checked={rules.kinds.includes(kind)} onChange={event=>update({...current.current,kinds:event.target.checked?[...current.current.kinds,kind]:current.current.kinds.filter(value=>value!==kind)})}/>{labels[kind]}</label>)}</fieldset>
-   <label className={fieldLabelClass}>Custom patterns<textarea name="patterns" className={fieldClass} rows={3} value={patterns} onChange={event=>{setPatterns(event.target.value);current.current={...current.current,patterns:event.target.value.split(/\r?\n/).filter(Boolean)};setStatus('Unsaved changes');onSaving(true);onChange(current.current)}} onBlur={()=>{if(JSON.stringify(current.current)!==JSON.stringify(saved.current))update(current.current);else if(!saving.current){setStatus('');setFailed(false);onSaving(false)}}}/></label>
+   <label className={fieldLabelClass}>Custom patterns<textarea aria-label="Custom patterns" name="patterns" className={fieldClass} rows={3} value={patterns} onChange={event=>{setPatterns(event.target.value);current.current={...current.current,patterns:event.target.value.split(/\r?\n/).filter(Boolean)};setStatus('Unsaved changes');onSaving(true);onChange(current.current)}} onBlur={()=>{if(JSON.stringify(current.current)!==JSON.stringify(saved.current))update(current.current);else if(!saving.current){setStatus('');setFailed(false);onSaving(false)}}}/></label>
    <details className="text-sm"><summary className="cursor-pointer">Pattern help</summary><p className="mt-2">Use one pattern per line, up to ten. Literals, character classes and fixed repetitions such as ACCOUNT-[0-9]{4} are supported. Groups, variable repetition, lookarounds and backreferences are refused.</p></details>
   </fieldset>
   <div role="status" className="text-sm text-penny-muted">{status}</div>
-  {failed?<button type="button" className={buttonClass} disabled={disabled} onClick={()=>update({...current.current,patterns:patterns.split(/\r?\n/).filter(Boolean)})}>Retry saving</button>:null}
+  {failed?<button type="button" className={buttonClass} disabled={disabled||!hydrated} onClick={()=>update({...current.current,patterns:patterns.split(/\r?\n/).filter(Boolean)})}>Retry saving</button>:null}
  </form>
 }
 
 function StoredRedaction({run,setRun,enabled,saving}:{run:Run|null;setRun:(run:Run)=>void;enabled:boolean;saving:boolean}){
+ const hydrated=useHydrated()
  const [busy,setBusy]=useState(false),[error,setError]=useState(''),[confirmedPlan,setConfirmedPlan]=useState<string|null>(null),[refresh,setRefresh]=useState(0)
  const runId=run?.id,runState=run?.state,confirmed=!!run?.planHash&&confirmedPlan===run.planHash
  const places=run?.places??[],populated=places.filter(place=>place.records>0),empty=places.filter(place=>place.records===0)
@@ -64,7 +67,7 @@ function StoredRedaction({run,setRun,enabled,saving}:{run:Run|null;setRun:(run:R
  return <div className="mt-6 space-y-4">
   <h3 className="font-bold">Stored captures</h3>
   <p>Preview stored text by place before permanently removing matches. Binary attachments keep their original bytes.</p>
-  <button type="button" className={buttonClass} disabled={busy||saving||!enabled||active(run)} onClick={()=>void start('/preview',{})}>Preview stored evidence redaction</button>
+  <button type="button" className={buttonClass} disabled={busy||saving||!enabled||active(run)||!hydrated} onClick={()=>void start('/preview',{})}>Preview stored evidence redaction</button>
   {run?<div className="space-y-4" aria-label="Stored redaction progress">
    <p role="status">{run.state==='previewing'?`Previewing stored text: ${records(run.scanned)} scanned.`:run.state==='ready'?`${records(run.records)} checked; ${run.changes} will change.`:run.state==='running'?`Redacting stored text: ${records(run.changed)} changed; ${run.scanned} scanned.`:run.state==='complete'?`Redaction complete: ${records(run.changed)} changed.`:'Redaction stopped. Progress is saved.'}</p>
    {active(run)?<progress className="w-full" aria-label={run.state==='previewing'?'Preview progress':'Redaction progress'} max={Math.max(1,run.records)} value={run.scanned} />:null}
@@ -73,9 +76,9 @@ function StoredRedaction({run,setRun,enabled,saving}:{run:Run|null;setRun:(run:R
    {run.state==='ready'&&run.planHash?<form className="space-y-3" onSubmit={event=>{event.preventDefault();if(confirmed)void start('/reapply',{planHash:run.planHash,confirmIrreversible:true})}}>
     <p>Matched wording is permanently removed from the listed editable records, including their stored copies. Preserved history stays unchanged.</p>
     <label className="flex min-h-11 items-center gap-2"><input type="checkbox" required checked={confirmed} onChange={event=>setConfirmedPlan(event.target.checked?run.planHash:null)}/>I understand this permanently removes the matched wording.</label>
-    <button className={buttonClass} disabled={busy||saving||!confirmed||run.changes===0}>Redact stored evidence permanently</button>
+    <button className={buttonClass} disabled={busy||saving||!confirmed||run.changes===0||!hydrated}>Redact stored evidence permanently</button>
    </form>:null}
-   {run.state==='failed'||error?<><p role="alert">{error||(run.error==='redaction_rules_changed'?'Rules changed. Start a new preview.':run.error==='redaction_preview_stale'?'Stored text changed. Start a new preview.':'Redaction could not finish. Progress is saved; the owner can resume.')}</p>{run.state==='failed'?<button type="button" className={buttonClass} disabled={busy||saving} onClick={()=>void start(`/runs/${run.id}/resume`,{})}>Resume redaction</button>:active(run)?<button type="button" className={buttonClass} onClick={()=>{setError('');setRefresh(value=>value+1)}}>Refresh progress</button>:null}</>:null}
+   {run.state==='failed'||error?<><p role="alert">{error||(run.error==='redaction_rules_changed'?'Rules changed. Start a new preview.':run.error==='redaction_preview_stale'?'Stored text changed. Start a new preview.':'Redaction could not finish. Progress is saved; the owner can resume.')}</p>{run.state==='failed'?<button type="button" className={buttonClass} disabled={busy||saving||!hydrated} onClick={()=>void start(`/runs/${run.id}/resume`,{})}>Resume redaction</button>:active(run)?<button type="button" className={buttonClass} onClick={()=>{setError('');setRefresh(value=>value+1)}}>Refresh progress</button>:null}</>:null}
   </div>:null}
   {!run&&error?<p role="alert">{error}</p>:null}
  </div>

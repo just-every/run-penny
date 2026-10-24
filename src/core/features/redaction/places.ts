@@ -6,8 +6,8 @@ export interface Place {table:string;label:string;columns:string[];reason?:strin
 const imported=(table:string)=>"t.id IN (SELECT json_extract(k.value,'$.keys.id') FROM feedback_import_records f,json_each(f.row_keys_json) k WHERE json_extract(k.value,'$.table')='"+table+"' AND json_extract(k.value,'$.keys.id') IS NOT NULL)"
 const mutable=(table:string,label:string,columns:string):Place=>({table,label,columns:columns.split(','),where:'NOT ('+imported(table)+')'})
 const held=(table:string,label:string,reason:string):Place=>({table,label,columns:[],reason})
-const history='Preserved history requires the DATA-003 erasure/copy-resolution path. Rule-based rewriting needs an owner ruling.'
-const sealed='Sealed or fingerprinted custody requires its DATA-003 erasure path. Rule-based rewriting needs an owner ruling.'
+const history='Preserved history cannot be rewritten here. Review its source in Data.'
+const sealed='Sealed copies cannot be rewritten here. Review their source in Data.'
 export const places:Place[]=[
  mutable('evidence_versions','Evidence wording versions','wording'),
  mutable('evidence_items','Evidence labels and review notes','source_label,named_speaker,review_reason'),
@@ -62,11 +62,11 @@ export const places:Place[]=[
  held('feedback_import_records','Saved-import source identity and row custody',sealed),
  held('feedback_import_receipt_notes','Saved-import reversal receipt notes',sealed),
  held('penny_import_roadmaps','Saved-import roadmap before/after copies',sealed),
- held('request_attachment_uploads','Pending request original files','Binary originals keep exact-byte custody; use DATA-003 erasure.'),
- held('evidence_attachment_uploads','Pending evidence original files','Binary originals keep exact-byte custody; use DATA-003 erasure.'),
+ held('request_attachment_uploads','Pending request original files','Original files keep their exact bytes. Review their source in Data.'),
+ held('evidence_attachment_uploads','Pending evidence original files','Original files keep their exact bytes. Review their source in Data.'),
  held('data_operations','Archive and restore operation payloads',sealed),
- held('attachments','R2 evidence originals and filenames','Binary originals keep exact-byte custody; use DATA-003 erasure.'),
- held('release_attachments','R2 release originals and filenames','Binary originals keep exact-byte custody; use DATA-003 erasure.'),
+ held('attachments','R2 evidence originals and filenames','Original files keep their exact bytes. Review their source in Data.'),
+ held('release_attachments','R2 release originals and filenames','Original files keep their exact bytes. Review their source in Data.'),
 ]
 // An imported native row must keep matching its sealed undo/replay witness.
 places.push(...places.filter(p=>!p.reason).map(p=>({...p,key:p.table+':import-owned',label:p.label+' (saved-import custody)',columns:[],where:imported(p.table),reason:sealed})))
