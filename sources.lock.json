@@ -3011,12 +3011,16 @@
       "sha256": "22b8d14a8407bd727e54f7b96e760be6dfba65045564f8c91bd80a440558ece8",
       "executable": false
     },
+    "docs/GETTING-STARTED.md": {
+      "sha256": "d3faf3f11aedb57ef3da5762f6d008d41fcab99908d7e9ec667aac90557efe60",
+      "executable": false
+    },
     "docs/HOST-IDENTITY.md": {
       "sha256": "08d02b014fc68f5022dd6f34632b0fbfa6497e5f590b8422e338a4013a4bbe61",
       "executable": false
     },
     "docs/INSTALL.md": {
-      "sha256": "878345ef7caa18e8fb59d392e95529b741f70c205f1233f6f8744a61dde81fd6",
+      "sha256": "549276a0951722c253f4f7870b0b0d75c5b99b06bd8ec49c85ef3125b962c7be",
       "executable": false
     },
     "docs/INTEGRATIONS.md": {
@@ -3064,7 +3068,7 @@
       "executable": false
     },
     "docs/site.json": {
-      "sha256": "4a53fbded299d2f576263dafbda7a9bc9d25dabdbb62e52d2729b9e093b21daa",
+      "sha256": "376aada9adf5d452aaef36d01c0814e03dd654cd5a7e0493b609d7ddbac8cb13",
       "executable": false
     },
     "docs/SOURCE-PROVENANCE.md": {

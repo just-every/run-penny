@@ -4,19 +4,19 @@ This page takes you from the Penny source to a running copy: first on your own c
 
 ## What you need
 
-- **Nothing to install first.** The one line below needs Node 22 or later; without Node, the installer on [run-penny.com/run](https://run-penny.com/run) (`curl -fsSL https://runeditrun.com/install.sh | sh -s -- dev just-every/run-penny`) brings its own. `rer` fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
+- **Git.** Git is required; rer brings Node and pnpm. `rer` fetches the exact Node (22.20.0) and pnpm (10.12.4) Penny pins into its own cache, so you never install pnpm and your global tools are not changed.
 - **`rer`**, installed for you by the one line below.
 - **For your own Cloudflare account:** a Cloudflare account and an API token for it. For email, choose SendGrid or Resend with a verified sender, or set it up later. Managed Penny gets email from RER without a provider account or key entry. Running locally needs none of these.
 
 ## Run it on your computer
 
 ```bash
-npx -y @runeditrun/rer dev just-every/run-penny
+curl -fsSL https://runeditrun.com/install.sh | sh -s -- dev just-every/run-penny
 ```
 
-To start it again later, run `cd run-penny && rer dev`.
+Already have Node 22 or later? `npx -y @runeditrun/rer dev just-every/run-penny` does the same. If the installer prints a line that puts `rer` on your PATH, run that line too. To start it again later, run the same line from the same folder, or `cd run-penny && rer dev`.
 
-`rer dev` installs the locked dependencies, sets up a default local owner (a `.test` address that never receives mail) with an empty workspace and no sample records, and starts Penny on the first free port from 8787. In a terminal it stays in the foreground; from a script it returns once Penny is ready and keeps it running until `rer dev --stop`. To be the owner under your own address, fetch the checkout without starting it (`npx -y @runeditrun/rer install just-every/run-penny`), then run `rer setup --owner-email you@example.com` once from the `run-penny` folder before the first `rer dev`. To set Penny up without starting it, use `npx -y @runeditrun/rer setup just-every/run-penny`.
+`rer dev` installs the locked dependencies, sets up a default local owner (a `.test` address that never receives mail) with an empty workspace and no sample records, and starts Penny on the first free port from 8787. In a terminal it stays in the foreground; from a script it returns once Penny is ready and keeps it running until `rer dev --stop`. To be the owner under your own address, fetch the checkout without starting it (`npx -y @runeditrun/rer install just-every/run-penny`), then run `rer setup --owner-email you@example.com` once from the `run-penny` folder before the first `rer dev`. To set Penny up without starting it, use `setup` in place of `dev`.
 
 A few things to know about setup:
 
@@ -61,6 +61,8 @@ Local mode needs no provider and sends no email at all: there is no outbox and n
 **Free and Assisted hosting keep SendGrid, Resend and set up later.** With your own provider, verify a sender address and supply its API key as `MAIL_API_KEY`. Choosing `later` leaves email actions unavailable and public reading available. [Email and notifications](/docs/email) covers the configuration and limits.
 
 ## Deploy to Cloudflare
+
+**Or let Run Edit Run host it.** [Run Edit Run](https://app.runeditrun.com/?product=penny&plan=assisted) can set Penny up on your own Cloudflare account and keep it updated; sign-ups are by request for now.
 
 The commands below deploy a workers.dev installation in your own Cloudflare account. It creates a Worker, a D1 database, an R2 bucket and a queue, and serves Penny at a `workers.dev` address. It does not deploy on a push, and it does not support a custom domain yet. Local checks cover the application itself. Mail delivery and the one-minute schedule on a live Cloudflare deployment are things to confirm yourself after you deploy.
 
