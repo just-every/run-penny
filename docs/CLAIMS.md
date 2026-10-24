@@ -39,7 +39,7 @@ invalidate the plan. Interrupted runs resume from committed cursors, with visibl
 progress and a count-only audit. Preserved/fingerprinted history is explicitly
 blocked in preview: import custody and owned native rows, learning history,
 decision/publication/status/notification history, pending verification payloads,
-signed/outbound/tracker envelopes, audit reason copies and archive/restore staging.
+canonical request addresses, signed/outbound/tracker envelopes, audit reason copies and archive/restore staging.
 Those places require DATA-003 erasure/copy resolution or an owner ruling; they
 remain in the Gap. Binary originals are not rewritten. CAP-008 inherits the
 unbuilt transcript store and its redaction. AI-011 inherits extending the minimal

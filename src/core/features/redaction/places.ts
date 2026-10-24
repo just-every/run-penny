@@ -12,6 +12,7 @@ export const places:Place[]=[
  mutable('evidence_versions','Evidence wording versions','wording'),
  mutable('evidence_items','Evidence labels and review notes','source_label,named_speaker,review_reason'),
  mutable('requests','Request wording and approved copies','title,description,proposed_solution,impact_statement,public_title,public_description,declined_reason'),
+ {...held('requests','Request canonical addresses','Canonical addresses cannot be rewritten here. Review their source in Data.'),key:'requests:addresses'},
  mutable('request_content_submissions','Request submissions and edits','title,description,proposed_solution,impact_statement,rejection_reason'),
  mutable('request_comments','Comments','body,rejection_reason'),
  mutable('request_comment_edits','Comment edit submissions','body,rejection_reason'),

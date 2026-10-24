@@ -564,7 +564,7 @@ source wording. Restoring an archive starts no redaction run and sends nothing.
 Preserved or fingerprinted places are counted explicitly as blocked: saved-import
 custody and its owned native rows, learning originals/derived history, decision
 and publication/status/notification history, pending verification payloads,
-signed/outbound/tracker envelopes, audit reason copies and archive/restore
+canonical request addresses, signed/outbound/tracker envelopes, audit reason copies and archive/restore
 staging. Their existing DATA-003 erasure/copy-resolution doors remain available;
 rule-based historical rewriting needs an owner ruling. This is an explicit
 AI-008 Gap, alongside optional model detection. Binary originals keep exact-byte

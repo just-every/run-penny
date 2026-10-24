@@ -68,6 +68,8 @@ export async function proveRedaction(call:Call,fixture:()=>Promise<{operator:Rec
  const preview=await makePreview()
  expect(preview.records).toBeGreaterThan(200);expect(preview.changes).toBeGreaterThan(200)
  for(const table of copyTables)expect(preview.places.find(p=>p.table===table)?.changes).toBeGreaterThan(0)
+ expect(preview.places.find(p=>p.table==='requests:addresses')).toMatchObject({blocked:true,changes:null,records:expect.any(Number)})
+ const addresses=(await env.DB.prepare('SELECT id,slug FROM requests ORDER BY id').all()).results
  expect(preview.places.find(p=>p.table==='decisions')).toMatchObject({blocked:true,changes:null})
  expect((await call('/api/operator/settings/redaction/reapply',{planHash:preview.planHash,confirmIrreversible:true},peer)).status).toBe(403)
  expect((await call('/api/operator/settings/redaction/reapply',{planHash:preview.planHash},g.operator)).status).toBe(400)
@@ -81,6 +83,7 @@ export async function proveRedaction(call:Call,fixture:()=>Promise<{operator:Rec
  // No tab/worker holds a page open. Another invocation resumes the committed cursor.
  const resumed=await read<Run>(call('/api/operator/settings/redaction/runs/'+running.id+'/resume',{},g.operator),202)
  const applied=await settle(resumed,'complete');expect(applied.changed).toBe(preview.changes)
+ expect((await env.DB.prepare('SELECT id,slug FROM requests ORDER BY id').all()).results).toEqual(addresses)
  expect(await effects()).toEqual(beforeEffects);expect((await providerMessages().list()).length).toBe(beforeMessages)
  const copies=(await env.DB.batch(copyTables.map(table=>env.DB.prepare('SELECT * FROM '+table)))).map(r=>r.results)
  expect(JSON.stringify(copies)).not.toContain('ACCOUNT-1234');expect(JSON.stringify(copies)).toContain('[REDACTED:custom]')
