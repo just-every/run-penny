@@ -1,40 +1,63 @@
 import assert from 'node:assert/strict'
 import {resolve,join} from 'node:path'
+import {checkRedactionStates} from './redaction-states.mjs'
+
 export async function reviewRedaction({page,runtime,goto,capture:capturePage}){
  async function capture(label,target=page){
   await target.evaluate(()=>window.scrollTo(0,0))
   await capturePage(label,target)
-  if(!label.includes('item')){const clip=await target.locator('section[aria-labelledby=evidence-redaction]').boundingBox();assert.ok(clip);await target.screenshot({fullPage:true,clip,path:join(resolve(process.env.PENNY_EVIDENCE??'../evidence/decision-loop-resume'),`${label}-card-${target.viewportSize().width}.png`)})}
+  if(!label.includes('item'))await target.locator('section[aria-labelledby=evidence-redaction]').screenshot({path:join(resolve(process.env.PENNY_EVIDENCE??'../evidence/decision-loop-resume'),`${label}-card-${target.viewportSize().width}.png`)})
  }
- const origin=runtime.origin,root='/api/operator/settings/redaction',records=count=>`${count} record${count===1?'':'s'}`
+ const origin=runtime.origin,root='/api/operator/settings/redaction'
  const old=await page.request.post(origin+'/api/operator/evidence',{headers:{Origin:origin},data:{sourceType:'free_text',sourceLabel:'Synthetic prior capture',wording:'Prior captured account ACCOUNT-1234.',observedAt:'2026-10-22T09:00:00Z'}})
  assert.equal(old.status(),201)
  await goto('/app/settings')
  const panel=page.locator('section[aria-labelledby=evidence-redaction]'),patterns=panel.getByLabel('Custom patterns',{exact:true})
+ await capture('AI-008-empty')
  const enabled=page.waitForResponse(r=>r.url().endsWith(root)&&r.request().method()==='PUT')
  await panel.getByLabel('Enable redaction for new captures',{exact:true}).check()
  assert.equal((await enabled).status(),200)
- await panel.getByText('Saved',{exact:true}).waitFor()
- // The expected 422 is isolated from the positive journey's console checks.
- // This page still rejects every unexpected page/console error.
- const validation=await page.context().newPage(),validationErrors=[]
- validation.on('pageerror',error=>validationErrors.push(error.message))
- validation.on('console',message=>{if(message.type()!=='error')return;const location=message.location().url;if(location&&new URL(location).pathname===root&&/status of 422/.test(message.text()))return;validationErrors.push(message.text())})
- try{
-  await validation.goto(origin+'/app/settings')
-  const validationPanel=validation.locator('section[aria-labelledby=evidence-redaction]'),invalid=validationPanel.getByLabel('Custom patterns',{exact:true})
-  await invalid.fill('(unsupported)')
-  const [refused]=await Promise.all([validation.waitForResponse(r=>r.url().endsWith(root)&&r.request().method()==='PUT'),invalid.press('Tab')]);assert.equal(refused.status(),422)
-  await validationPanel.getByRole('button',{name:'Retry saving',exact:true}).waitFor()
-  assert.equal(await invalid.inputValue(),'(unsupported)')
-  await capture('AI-008-rules-save-failed',validation)
-  assert.deepEqual(validationErrors,[])
- }finally{await validation.close()}
+ await panel.locator('[data-save-state="saved"]').waitFor()
+ // An incomplete pattern cannot be saved, but its draft survives every way of leaving.
+ await patterns.fill('ACCOUNT-[0-9]{')
+ await page.reload();await panel.locator('[data-save-state="failed"]').waitFor()
+ assert.equal(await patterns.inputValue(),'ACCOUNT-[0-9]{')
+ await goto('/app/feedback');await page.goBack();await panel.locator('[data-save-state="failed"]').waitFor()
+ assert.equal(await patterns.inputValue(),'ACCOUNT-[0-9]{')
+ const draftPage=await page.context().newPage()
+ await draftPage.goto(origin+'/app/settings');await draftPage.locator('[data-save-state="failed"]').waitFor()
+ const draftPattern=draftPage.getByLabel('Custom patterns',{exact:true})
+ assert.equal(await draftPattern.inputValue(),'ACCOUNT-[0-9]{')
+ await draftPattern.fill('(unsupported)');await draftPage.close()
+ await page.reload();await panel.locator('[data-save-state="failed"]').waitFor();assert.equal(await patterns.inputValue(),'(unsupported)')
+ assert.equal(await panel.getByRole('alert').count(),1)
+ const savedRules=await (await page.request.get(origin+root)).json()
+ assert.deepEqual(savedRules.patterns,[])
+ const refused=await page.request.put(origin+root,{headers:{Origin:origin},data:{...pickRules(savedRules),patterns:['(unsupported)']}})
+ assert.equal(refused.status(),422,'unsafe patterns remain refused by the real route')
+ await capture('AI-008-rules-save-failed')
  await patterns.fill('ACCOUNT-[0-9]{4}')
- const saved=page.waitForResponse(r=>r.url().endsWith(root)&&r.request().method()==='PUT')
- await patterns.press('Tab');assert.equal((await saved).status(),200)
- await panel.getByText('Saved',{exact:true}).waitFor()
- await capture('AI-008-rules-settings')
+ await capture('AI-008-typed-pattern')
+ await panel.locator('[data-save-state="saved"]').waitFor()
+ assert.deepEqual((await (await page.request.get(origin+root)).json()).patterns,['ACCOUNT-[0-9]{4}'])
+ // A network failure keeps the control value and offers a real retry.
+ await page.route('**/api/operator/settings/redaction',route=>route.request().method()==='PUT'?route.abort():route.continue())
+ const savePage=await page.context().newPage(),saveErrors=[]
+ savePage.on('pageerror',error=>saveErrors.push(error.message))
+ await savePage.goto(origin+'/app/settings')
+ const savePanel=savePage.locator('section[aria-labelledby=evidence-redaction]'),email=savePanel.getByLabel('Email addresses',{exact:true})
+ // Apply the failure to this page too; its intentional network error is isolated.
+ await savePage.route('**/api/operator/settings/redaction',route=>route.request().method()==='PUT'?route.abort():route.continue())
+ await email.uncheck();await savePanel.getByRole('button',{name:'Retry saving',exact:true}).waitFor()
+ assert.equal(await email.isChecked(),false)
+ assert.equal((await (await savePage.request.get(origin+root)).json()).kinds.includes('email'),true)
+ await savePage.unrouteAll();const retried=savePage.waitForResponse(r=>r.url().endsWith(root)&&r.request().method()==='PUT')
+ await savePanel.getByRole('button',{name:'Retry saving',exact:true}).click();assert.equal((await retried).status(),200)
+ await savePanel.locator('[data-save-state="saved"]').waitFor()
+ assert.equal((await (await savePage.request.get(origin+root)).json()).kinds.includes('email'),false)
+ assert.deepEqual(saveErrors,[]);await savePage.close();await page.unrouteAll()
+ // Restore the owner's default kinds through the real route.
+ assert.equal((await page.request.put(origin+root,{headers:{Origin:origin},data:{...pickRules(savedRules),patterns:['ACCOUNT-[0-9]{4}']}})).status(),200)
  await goto('/app/feedback')
  const form=page.getByRole('form',{name:'New evidence',exact:true})
  await form.getByLabel('Source',{exact:true}).selectOption('free_text')
@@ -47,60 +70,14 @@ export async function reviewRedaction({page,runtime,goto,capture:capturePage}){
  assert.ok(!(await page.locator('body').innerText()).includes('234-56-7890'))
  await capture('AI-008-redacted-item')
  await goto('/app/settings')
- const patternHelp=panel.locator('details').filter({hasText:'Pattern help'})
- await patternHelp.locator('summary').click()
- const previewed=page.waitForResponse(r=>r.url().endsWith('/redaction/preview')&&r.request().method()==='POST')
- await panel.getByRole('button',{name:'Preview stored evidence redaction',exact:true}).click()
- const previewResponse=await previewed;assert.equal(previewResponse.status(),202)
- const preview=await previewResponse.json();assert.equal(preview.state,'previewing')
- await panel.getByText(/^Previewing stored text:/).waitFor()
- await capture('AI-008-reapply-previewing')
- const readyResponse=page.waitForResponse(async r=>r.url().endsWith(`/redaction/runs/${preview.id}`)&&r.request().method()==='GET'&&(await r.json()).state==='ready')
- await runtime.schedule()
- const ready=await (await readyResponse).json()
- assert.equal(ready.changes,1)
- await panel.getByText(`${records(ready.records)} checked; ${ready.changes} will change.`,{exact:true}).waitFor()
- assert.equal(await patternHelp.getAttribute('open'),'')
- assert.equal(await patterns.inputValue(),'ACCOUNT-[0-9]{4}')
- const wording=ready.places.find(place=>place.table==='evidence_versions')
- assert.ok(wording);assert.equal(wording.records,2);assert.equal(wording.changes,1)
- await panel.locator('[data-redaction-place="evidence_versions"]').getByText('2 records · 1 with matches',{exact:true}).waitFor()
- for(const place of ready.places.filter(place=>place.blocked&&place.records>0)){
-  assert.equal(place.changes,null)
-  const row=panel.locator(`[data-redaction-place="${place.table}"]`)
-  await row.getByText(`${records(place.records)} · Preserved history`,{exact:true}).waitFor()
-  if(place.reason)await row.getByText(place.reason,{exact:true}).waitFor()
- }
- const apply=panel.getByRole('button',{name:'Redact stored evidence permanently',exact:true})
- assert.equal(await apply.isDisabled(),true)
- await capture('AI-008-reapply-counts')
- const empty=ready.places.filter(place=>place.records===0)
- if(empty.length){
-  await panel.locator('summary').filter({hasText:`${empty.length} empty places`}).click()
-  for(const place of empty){
-   const row=panel.locator(`[data-redaction-place="${place.table}"]`)
-   await row.getByText(place.changes===null?'0 records · Preserved history':`0 records · ${place.changes} with matches`,{exact:true}).waitFor()
-  }
-  await capture('AI-008-reapply-empty-places')
-  await panel.locator('summary').filter({hasText:`${empty.length} empty places`}).click()
- }
- await panel.getByLabel('I understand this permanently removes the matched wording.',{exact:true}).check()
- assert.equal(await apply.isEnabled(),true)
- await capture('AI-008-reapply-confirmed')
- const applied=page.waitForResponse(r=>r.url().endsWith('/redaction/reapply')&&r.request().method()==='POST')
- await apply.click()
- const appliedResponse=await applied;assert.equal(appliedResponse.status(),202)
- const running=await appliedResponse.json();assert.equal(running.state,'running')
- await panel.getByText(/^Redacting stored text:/).waitFor()
- await capture('AI-008-reapply-running')
- const completed=page.waitForResponse(async r=>r.url().endsWith(`/redaction/runs/${running.id}`)&&r.request().method()==='GET'&&(await r.json()).state==='complete')
- await runtime.schedule()
- const complete=await (await completed).json();assert.equal(complete.changed,1)
- await panel.getByText('Redaction complete: 1 record changed.',{exact:true}).waitFor()
- assert.equal(await patternHelp.getAttribute('open'),'')
- await capture('AI-008-reapply-complete')
+ const help=panel.getByText('Pattern help',{exact:true})
+ await help.click()
+ assert.equal(await panel.locator('code').innerText(),'ACCOUNT-[0-9]{4}','the fixed repetition example renders literal braces')
+ assert.ok((await help.boundingBox()).height>=44)
+ await checkRedactionStates({page,runtime,goto,capture,panel,patterns,root,oldId:(await old.json()).id})
  await goto('/app/feedback')
  await page.getByText('Prior captured account [REDACTED:custom].',{exact:false}).first().waitFor()
  assert.ok(!(await page.locator('body').innerText()).includes('ACCOUNT-1234'))
  await capture('AI-008-reapplied-item')
 }
+function pickRules(settings){return {enabled:settings.enabled,kinds:settings.kinds,patterns:settings.patterns}}

@@ -57,14 +57,24 @@ export async function proveRedaction(call:Call,fixture:()=>Promise<{operator:Rec
  expect(await env.DB.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=?').bind(newer.id).first('wording')).toBe('New capture [REDACTED:custom]')
  expect(await env.DB.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=?').bind(item.id).first('wording')).toContain('ACCOUNT-1234')
  expect((await call('/api/operator/settings/redaction/preview',{},requester)).status).toBe(401)
- type Run={id:string;state:string;records:number;changes:number;changed:number;scanned:number;planHash:string;places:{table:string;records:number;changes:number|null;blocked:boolean}[]}
+ type Run={id:string;state:string;canResume:boolean;records:number;changes:number;changed:number;scanned:number;planHash:string;places:{table:string;records:number;changes:number|null;blocked:boolean}[]}
  const tick=()=>runRedactionQueue(createMessageBatch('penny-redaction',[{id:crypto.randomUUID(),timestamp:Date.now(),attempts:1,body:{kind:'redaction.advance'}}]),env)
  const status=(id:string)=>read<Run>(call('/api/operator/settings/redaction/runs/'+id,undefined,g.operator))
  const settle=async(run:Run,target:string)=>{for(let page=0;run.state!==target&&run.state!=='failed'&&page<80;page++){await tick();run=await status(run.id)}expect(run.state).toBe(target);return run}
  expect((await call('/api/operator/settings/redaction/runs/invalid',undefined,g.operator)).status).toBe(400)
- const makePreview=async()=>settle(await read<Run>(call('/api/operator/settings/redaction/preview',{},g.operator),202),'ready')
+ const makePreview=async()=>{
+  const starting=await read<Run>(call('/api/operator/settings/redaction/preview',{},g.operator),202)
+  expect(await status(starting.id)).toMatchObject({state:'previewing',canResume:false})
+  expect(await read(call('/api/operator/settings/redaction',undefined,g.operator))).toMatchObject({latestRun:{id:starting.id,state:'previewing',canResume:false}})
+  const ready=await settle(starting,'ready')
+  expect(ready).toMatchObject({state:'ready',canResume:false})
+  expect(await read(call('/api/operator/settings/redaction',undefined,g.operator))).toMatchObject({latestRun:{id:ready.id,state:'ready',canResume:false}})
+  return ready
+ }
  const stale=await makePreview()
  await capture('A capture arriving after preview ACCOUNT-9012')
+ expect(await status(stale.id)).toMatchObject({state:'stale',canResume:false,planHash:null})
+ expect(await read(call('/api/operator/settings/redaction',undefined,g.operator))).toMatchObject({latestRun:{id:stale.id,state:'stale',canResume:false,planHash:null}})
  expect((await call('/api/operator/settings/redaction/reapply',{planHash:stale.planHash,confirmIrreversible:true},g.operator)).status).toBe(409)
  const preview=await makePreview()
  expect(preview.records).toBeGreaterThan(200);expect(preview.changes).toBeGreaterThan(200)
@@ -81,8 +91,21 @@ export async function proveRedaction(call:Call,fixture:()=>Promise<{operator:Rec
  expect(running.state).toBe('running')
  await tick()
  const interrupted=await status(running.id);expect(interrupted.state).toBe('running');expect(interrupted.changed).toBeGreaterThan(0);expect(interrupted.changed).toBeLessThan(preview.changes)
- // No tab/worker holds a page open. Another invocation resumes the committed cursor.
+ // An active cursor can be re-admitted without doing another page in the request.
+ expect(await read<Run>(call('/api/operator/settings/redaction/runs/'+running.id+'/resume',{},g.operator),202)).toMatchObject({state:'running',canResume:false,changed:interrupted.changed,scanned:interrupted.scanned})
+ const cursor=()=>env.DB.prepare('SELECT place_index,after_row,changed,scanned FROM penny_redaction_runs WHERE id=?').bind(running.id).first()
+ const committedCursor=await cursor()
+ // Fail the real worker's authority fence without revoking the active caller.
+ await env.DB.prepare('UPDATE penny_redaction_runs SET operator_version=operator_version-1 WHERE id=?').bind(running.id).run()
+ await tick()
+ expect(await status(running.id)).toMatchObject({state:'failed',canResume:true,changed:interrupted.changed,scanned:interrupted.scanned,error:'integration_authority_changed'})
+ expect(await read(call('/api/operator/settings/redaction',undefined,g.operator))).toMatchObject({latestRun:{id:running.id,state:'failed',canResume:true,changed:interrupted.changed,scanned:interrupted.scanned}})
+ expect(await cursor()).toEqual(committedCursor)
+ // No tab/worker holds a page open. The public route resumes the committed cursor.
  const resumed=await read<Run>(call('/api/operator/settings/redaction/runs/'+running.id+'/resume',{},g.operator),202)
+ expect(resumed).toMatchObject({state:'running',canResume:false,changed:interrupted.changed,scanned:interrupted.scanned,error:null})
+ expect(await status(running.id)).toMatchObject({state:'running',canResume:false,changed:interrupted.changed,scanned:interrupted.scanned})
+ expect(await cursor()).toEqual(committedCursor)
  const applied=await settle(resumed,'complete');expect(applied.changed).toBe(preview.changes)
  expect((await env.DB.prepare('SELECT id,slug FROM requests ORDER BY id').all()).results).toEqual(addresses)
  expect(await effects()).toEqual(beforeEffects);expect((await providerMessages().list()).length).toBe(beforeMessages)
@@ -99,9 +122,12 @@ export async function proveRedaction(call:Call,fixture:()=>Promise<{operator:Rec
  const failurePlan=await makePreview()
  const willFail=await read<Run>(call('/api/operator/settings/redaction/reapply',{planHash:failurePlan.planHash,confirmIrreversible:true},g.operator),202)
  await read(call('/api/operator/settings/redaction',{...rules,enabled:false},g.operator,'PUT'))
+ expect(await status(willFail.id)).toMatchObject({state:'stale',canResume:false,planHash:null})
+ expect(await read(call('/api/operator/settings/redaction',undefined,g.operator))).toMatchObject({latestRun:{id:willFail.id,state:'stale',canResume:false,planHash:null}})
  await tick()
  expect(await status(willFail.id)).toMatchObject({state:'stale',canResume:false,changed:0,error:'redaction_rules_changed'})
  expect(await read(call('/api/operator/settings/redaction',undefined,g.operator))).toMatchObject({latestRun:{id:willFail.id,state:'stale',canResume:false}})
+ expect((await call('/api/operator/settings/redaction/reapply',{planHash:failurePlan.planHash,confirmIrreversible:true},g.operator)).status).toBe(409)
  expect((await call('/api/operator/settings/redaction/runs/'+willFail.id+'/resume',{},g.operator)).status).toBe(409)
  expect((await call('/api/operator/settings/redaction/runs/'+willFail.id,undefined,peer)).status).toBe(403)
  await tick();expect(await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='redaction.failed' AND entity_id=?").bind(willFail.id).first('n')).toBe(1)

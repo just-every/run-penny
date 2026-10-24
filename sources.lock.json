@@ -7632,7 +7632,7 @@
       "executable": false
     },
     "tests/base/redaction-fixture.ts": {
-      "sha256": "ec714ced74450dddb786243b079085af5203421e7d883ac659eb4d2ed9c7d5ea",
+      "sha256": "b2664b8ccc4ff18db5d708fa98c827716d2b16e664d87acd9463558e327bc190",
       "executable": false
     },
     "tests/base/redaction-import-door.ts": {
@@ -8036,7 +8036,11 @@
       "executable": false
     },
     "tests/browser/redaction-journey.mjs": {
-      "sha256": "1ec2aa9e23de4be65d4a4fd6d8b233c4efb5675f0baba054aef4487c22ab2cd3",
+      "sha256": "8ed3c5f4d60a6fc202f01e5ab3461eb3307a08d3b2a98800442e9349621220b3",
+      "executable": false
+    },
+    "tests/browser/redaction-states.mjs": {
+      "sha256": "7c2dc632cdbc5051292fe033c74837ef7db1ac8bb68b1184cedfcaa032078b71",
       "executable": false
     },
     "tests/browser/release-planning.mjs": {
