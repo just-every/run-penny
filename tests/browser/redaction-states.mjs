@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 
-export async function checkRedactionStates({page,runtime,goto,capture,panel,patterns,root,oldId}){
+export async function checkRedactionStates({page,runtime,capture,panel,patterns,root,oldId}){
  const progress=state=>panel.locator(`[data-redaction-state="${state}"]`)
  const read=async id=>{const response=await page.request.get(runtime.origin+root+(id?`/runs/${id}`:''));assert.equal(response.status(),200);return response.json()}
  async function preview(button){

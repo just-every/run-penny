@@ -6104,7 +6104,7 @@
       "executable": false
     },
     "src/core/features/redaction/rules-form.tsx": {
-      "sha256": "d41bcf4ecf922f086b4d224482d8c2eaa119298ad56f367eef57022893a887d7",
+      "sha256": "3215bdba711cf8e611cd536351499bf3dfaf03c55c955d888bbf8e32b10e043d",
       "executable": false
     },
     "src/core/features/redaction/run-view.ts": {
@@ -8040,7 +8040,7 @@
       "executable": false
     },
     "tests/browser/redaction-states.mjs": {
-      "sha256": "7c2dc632cdbc5051292fe033c74837ef7db1ac8bb68b1184cedfcaa032078b71",
+      "sha256": "6f96b74a09a4838f610b1b95866a4c54bbae6f85ba0c54056e48b70c3a8bc7a0",
       "executable": false
     },
     "tests/browser/release-planning.mjs": {

@@ -1,4 +1,4 @@
-import {useEffect,useRef,useState} from 'react'
+import {useEffect,useEffectEvent,useRef,useState} from 'react'
 import {useHydrated} from '@/core/app/ui/hydrated'
 import {buttonClass,fieldClass} from '../auth/client-mutations'
 import {disclosureSummaryClass,fieldLabelClass} from '@/core/ui/app/classes'
@@ -29,10 +29,10 @@ export function RulesForm({initial,draftScope,disabled,onChange,onSaving}:{initi
   if(invalid){setStatus({field:'patterns',kind:'failed',message:invalid});onSaving(true);return}
   pending.current={rules:next,field}
   if(saving.current)return
-  saving.current=true;onSaving(true)
+  saving.current=true;onSaving(true);let savingField=field
   try{
    while(pending.current){
-    const value=pending.current;pending.current=null;setStatus({field:value.field,kind:'saving'})
+    const value=pending.current;pending.current=null;savingField=value.field;setStatus({field:value.field,kind:'saving'})
     const response=await fetch(root,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(value.rules),keepalive:true})
     if(!response.ok){const result=await response.json() as {message?:string};throw new Error(result.message??'Could not save these rules.')}
     saved.current=value.rules
@@ -40,8 +40,8 @@ export function RulesForm({initial,draftScope,disabled,onChange,onSaving}:{initi
     if(same(current.current,saved.current))setStatus({field:value.field,kind:'saved'})
    }
    const dirty=!same(current.current,saved.current);onSaving(dirty)
-   if(dirty)setStatus({field:'patterns',kind:'draft'})
-  }catch(error){pending.current=null;setStatus({field,kind:'failed',message:error instanceof TypeError?"Couldn't save.":errorMessage(error,"Couldn't save.")});onSaving(true)}
+   if(dirty){const invalid=patternError(current.current.patterns);setStatus(invalid?{field:'patterns',kind:'failed',message:invalid}:{field:'patterns',kind:'draft'})}
+  }catch(error){pending.current=null;setStatus({field:savingField,kind:'failed',message:error instanceof TypeError?"Couldn't save.":errorMessage(error,"Couldn't save.")});onSaving(true)}
   finally{saving.current=false}
  }
  function update(next:Rules,field:Field){current.current=next;setRules(next);onChange(next);void save(next,field)}
@@ -52,16 +52,16 @@ export function RulesForm({initial,draftScope,disabled,onChange,onSaving}:{initi
   setStatus(invalid?{field:'patterns',kind:'failed',message:invalid}:{field:'patterns',kind:'draft'})
   if(!invalid)timer.current=setTimeout(()=>void save(current.current,'patterns'),600)
  }
- useEffect(()=>{
+ const restoreDraft=useEffectEvent(()=>{
   try{const draft=localStorage.getItem(draftKey);if(draft!==null&&draft!==text.current)editPatterns(draft)}
   catch{setStorageError('This browser could not read the saved draft.')}
-  return ()=>clearTimeout(timer.current)
- },[draftKey])
+ })
+ useEffect(()=>{restoreDraft();return ()=>clearTimeout(timer.current)},[draftKey])
  function feedback(field:Field){
   if(status?.field!==field)return null
   return <span className="text-sm font-normal" role={status.kind==='failed'?'alert':'status'} aria-label={`${field} save status`} data-save-state={status.kind}>
    {status.kind==='saved'?'Saved':status.kind==='saving'?'Saving…':status.kind==='draft'?'Draft kept':status.message}
-   {status.kind==='failed'&&!patternError(current.current.patterns)?<button type="button" className={buttonClass} disabled={disabled||!hydrated} onClick={()=>void save(current.current,field)}>Retry saving</button>:null}
+   {status.kind==='failed'&&!patternError(rules.patterns)?<button type="button" className={buttonClass} disabled={disabled||!hydrated} onClick={()=>void save(current.current,field)}>Retry saving</button>:null}
   </span>
  }
  return <form className="space-y-4" aria-label="Redaction rules" onSubmit={event=>event.preventDefault()}>
