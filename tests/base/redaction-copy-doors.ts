@@ -4,10 +4,10 @@ type Call=(path:string,body?:unknown,headers?:Record<string,string>,method?:stri
 export async function prepareRedactionCopies(call:Call,operator:Record<string,string>,requester:Record<string,string>){
  const read=async<T>(response:Response|Promise<Response>,status=200):Promise<T>=>{const r=await response;expect(r.status,await r.clone().text()).toBe(status);return r.json() as Promise<T>}
  const phrase='Copied excerpt ACCOUNT-1234',request=await read<{id:string;slug:string}>(call('/api/operator/requests',{title:phrase,description:phrase,boardSlug:'feedback',evidenceIds:[]},operator),201)
- await read(call('/api/operator/moderation/'+request.slug,{verdict:'approved',title:phrase,description:phrase,boardSlug:'feedback',displayName:'Product team'},operator))
+ await read(call('/api/operator/moderation/'+request.slug,{verdict:'approved',title:phrase,description:phrase,boardSlug:'feedback',displayName:phrase},operator))
  await read(call('/api/operator/requests/'+request.slug+'/notes',{body:phrase},operator),201)
  const comment=await read<{id:string}>(call('/api/public/requests/'+request.slug+'/comments',{body:phrase},requester),201)
- await read(call('/api/operator/comments/'+comment.id+'/moderate',{verdict:'approved',publicAuthorDisplayName:'Synthetic commenter'},operator))
+ await read(call('/api/operator/comments/'+comment.id+'/moderate',{verdict:'approved',publicAuthorDisplayName:phrase},operator))
  await read(call('/api/public/comments/'+comment.id,{body:phrase+' edited'},requester,'PATCH'))
  const portal=await env.DB.prepare("SELECT id,slug FROM requests WHERE title='Synthetic portal capture'").first<{id:string;slug:string}>()
  await read(call('/api/operator/moderation/'+portal!.slug,{verdict:'rejected',reason:phrase,notifyAuthor:false},operator))

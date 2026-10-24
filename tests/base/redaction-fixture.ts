@@ -162,6 +162,6 @@ export async function proveCapturedRedaction(call:Call,fixture:()=>Promise<{oper
  let planned=await read<{state:string;places:{table:string;records:number;blocked:boolean}[]}>(call('/api/operator/settings/redaction/runs/'+starting.id,undefined,g.operator))
  for(let page=0;planned.state==='previewing'&&page<40;page++){await runRedactionQueue(createMessageBatch('penny-redaction',[{id:crypto.randomUUID(),timestamp:Date.now(),attempts:1,body:{kind:'redaction.advance'}}]),env);planned=await read(call('/api/operator/settings/redaction/runs/'+starting.id,undefined,g.operator))}
  expect(planned.state).toBe('ready')
- for(const table of ['evidence_versions:import-owned','requests:import-owned','learning_observations','learning_artifacts','learning_commitments'])expect(planned.places.find(p=>p.table===table)).toMatchObject({blocked:true,records:expect.any(Number)})
+ for(const table of ['evidence_versions:import-owned','requests:import-owned','requesters:import-owned','boards:import-owned','learning_observations','learning_artifacts','learning_commitments'])expect(planned.places.find(p=>p.table===table)).toMatchObject({blocked:true,records:expect.any(Number)})
  expect(planned.places.find(p=>p.table==='evidence_versions:import-owned')!.records).toBeGreaterThan(0)
 }

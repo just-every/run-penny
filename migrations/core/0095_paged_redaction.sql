@@ -187,3 +187,15 @@ CREATE TRIGGER penny_redaction_penny_import_roadmaps_delete AFTER DELETE ON "pen
 CREATE TRIGGER penny_redaction_request_attachment_uploads_insert AFTER INSERT ON "request_attachment_uploads" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
 CREATE TRIGGER penny_redaction_request_attachment_uploads_update AFTER UPDATE ON "request_attachment_uploads" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
 CREATE TRIGGER penny_redaction_request_attachment_uploads_delete AFTER DELETE ON "request_attachment_uploads" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_requesters_insert AFTER INSERT ON "requesters" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_requesters_update AFTER UPDATE ON "requesters" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_requesters_delete AFTER DELETE ON "requesters" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_boards_insert AFTER INSERT ON "boards" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_boards_update AFTER UPDATE ON "boards" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_boards_delete AFTER DELETE ON "boards" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_tags_insert AFTER INSERT ON "tags" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_tags_update AFTER UPDATE ON "tags" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_tags_delete AFTER DELETE ON "tags" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_request_internal_statuses_insert AFTER INSERT ON "request_internal_statuses" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_request_internal_statuses_update AFTER UPDATE ON "request_internal_statuses" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;
+CREATE TRIGGER penny_redaction_request_internal_statuses_delete AFTER DELETE ON "request_internal_statuses" BEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;

@@ -3528,7 +3528,7 @@
       "executable": false
     },
     "migrations/core/0095_paged_redaction.sql": {
-      "sha256": "c6604a48c2d7978ba5b1e4534c970be6af9a389d29ea9cc43121e6d8d7c1245f",
+      "sha256": "5e561e78d5bbb8efbb1f7d67be47f86616d6e3b1444c7800c6d50c05751b5684",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -6096,7 +6096,7 @@
       "executable": false
     },
     "src/core/features/redaction/places.ts": {
-      "sha256": "5cde00a648a99cb490aaa4b11b1e21173d1f513bbd728cf5037c0ac250653704",
+      "sha256": "8608fd405a1d30ec37c656bdcaa573638776544ccff62b806913cd78c8ca93ba",
       "executable": false
     },
     "src/core/features/redaction/routes.ts": {
@@ -7616,11 +7616,11 @@
       "executable": false
     },
     "tests/base/redaction-copy-doors.ts": {
-      "sha256": "6a80286421e5dbdbaf9a1a9655f42b1ad631a5b13dadf7aa99fef9cb1ef38bb5",
+      "sha256": "8d6ba039fb267493cf79a5e28f0f803d10506909bc99d609a2134bf302dbc755",
       "executable": false
     },
     "tests/base/redaction-fixture.ts": {
-      "sha256": "5b31e602d9932bc57efb443433e01071a19c790723661654c74e11126e730d37",
+      "sha256": "8e2cbdd5b0c2442d0f4507aaf1afae43e2e62915e34e172ea39fc28579900cbd",
       "executable": false
     },
     "tests/base/redaction-import-door.ts": {
