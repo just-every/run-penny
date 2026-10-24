@@ -8036,7 +8036,7 @@
       "executable": false
     },
     "tests/browser/redaction-journey.mjs": {
-      "sha256": "8ed3c5f4d60a6fc202f01e5ab3461eb3307a08d3b2a98800442e9349621220b3",
+      "sha256": "6ba1c11d23e8d75fd12546385b6bbeb917e8c35bb9a2901a31c4fcf0fd17cec4",
       "executable": false
     },
     "tests/browser/redaction-states.mjs": {

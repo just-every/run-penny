@@ -6,7 +6,7 @@ export async function reviewRedaction({page,runtime,goto,capture:capturePage}){
  async function capture(label,target=page){
   await target.evaluate(()=>window.scrollTo(0,0))
   await capturePage(label,target)
-  if(!label.includes('item'))await target.locator('section[aria-labelledby=evidence-redaction]').screenshot({path:join(resolve(process.env.PENNY_EVIDENCE??'../evidence/decision-loop-resume'),`${label}-card-${target.viewportSize().width}.png`)})
+  if(!label.includes('item')){const clip=await target.locator('section[aria-labelledby=evidence-redaction]').boundingBox();assert.ok(clip);await target.screenshot({fullPage:true,clip,path:join(resolve(process.env.PENNY_EVIDENCE??'../evidence/decision-loop-resume'),`${label}-card-${target.viewportSize().width}.png`)})}
  }
  const origin=runtime.origin,root='/api/operator/settings/redaction'
  const old=await page.request.post(origin+'/api/operator/evidence',{headers:{Origin:origin},data:{sourceType:'free_text',sourceLabel:'Synthetic prior capture',wording:'Prior captured account ACCOUNT-1234.',observedAt:'2026-10-22T09:00:00Z'}})
