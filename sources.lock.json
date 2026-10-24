@@ -6100,19 +6100,31 @@
       "executable": false
     },
     "src/core/features/redaction/routes.ts": {
-      "sha256": "f77e56d9f01d545a08bb7fe1613de26d7e78c4f562cfe6c071dd863f5031c39d",
+      "sha256": "97c06b7fc13bf638af333efbaa155af374175271a1350bee420602eb63e96b37",
+      "executable": false
+    },
+    "src/core/features/redaction/rules-form.tsx": {
+      "sha256": "d41bcf4ecf922f086b4d224482d8c2eaa119298ad56f367eef57022893a887d7",
+      "executable": false
+    },
+    "src/core/features/redaction/run-view.ts": {
+      "sha256": "078582e713c028de47772226b8bd2e486df1ddc59413579972589c6ddfbca871",
       "executable": false
     },
     "src/core/features/redaction/runs.ts": {
-      "sha256": "5df658cf55fe043a0d0eda61d684aea98c447edb753ead5361bbbde2b3e65d47",
+      "sha256": "78006e7c2945cb8e24d3a6b39faa504bb0f0ff4f673044f179ea1b002591e37a",
       "executable": false
     },
     "src/core/features/redaction/settings-ui.tsx": {
-      "sha256": "ed6b6f5947941b62e93c2fde5c75ecab8fc26ba420c194de0e66da475a2db41e",
+      "sha256": "a93b0848c13d6e5ca140fb51036574ffec29d31bdc43de6c5403f1d5c07cd47c",
       "executable": false
     },
     "src/core/features/redaction/settings.ts": {
       "sha256": "3faa9e11a5f67845ceb8e720b6bea0b070a3b52449f2204347531a307fe1f76d",
+      "executable": false
+    },
+    "src/core/features/redaction/stored-redaction.tsx": {
+      "sha256": "3f2f700baaf8d13efe74fe1a540753556c6301be75aa486ed78abfff16cd4d47",
       "executable": false
     },
     "src/core/features/releases/attachments.ts": {
@@ -7620,7 +7632,7 @@
       "executable": false
     },
     "tests/base/redaction-fixture.ts": {
-      "sha256": "e3b9cd2488fc2dfb1c0f3519ad810f50db38d67011d5b2d8733a9e34a4734a54",
+      "sha256": "ec714ced74450dddb786243b079085af5203421e7d883ac659eb4d2ed9c7d5ea",
       "executable": false
     },
     "tests/base/redaction-import-door.ts": {
@@ -7984,7 +7996,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-hosted-data.mjs": {
-      "sha256": "e89e5efe619a02db6a3bd72dd4c2b46686bc3515575b1f7f31db3267984e6c4b",
+      "sha256": "cb632618ee51b44e20dd05b3ba759f5bdd6f3e703acb263cb132f903360ba870",
       "executable": false
     },
     "tests/browser/operator-pages-status.mjs": {
@@ -7996,7 +8008,11 @@
       "executable": false
     },
     "tests/browser/operator-roadmap-record.mjs": {
-      "sha256": "92c483fa4f7105c0df9c4f3b28eb056b6aa0e9b2f749f745890dfee0a418c3be",
+      "sha256": "88b9c7aee3725239760a4d82ff19ebc5f23179e81e6cd4fdf4d128280ed72bd6",
+      "executable": false
+    },
+    "tests/browser/operator-step-diagnostics.mjs": {
+      "sha256": "6d188493ea1b448449481757cc26c75161e2a749433a609626ce82f925780457",
       "executable": false
     },
     "tests/browser/ownership-journey.mjs": {

@@ -8,7 +8,7 @@ import {audit} from '../decisions/write-support'
 import {parseInput} from '../auth/native-routes'
 import {NativeError} from '../auth/native-tokens'
 import {redactionSettings,rulesInput,validateRules} from './settings'
-import {confirmRun,dto,latestRun,readRun,resumeRun,startPreview} from './runs'
+import {confirmRun,runView,latestRun,readRun,resumeRun,startPreview} from './runs'
 import {wakeRedaction} from './background'
 async function owner(runtime:Parameters<typeof integrationOperator>[0],request:Request){
  const {session,actor}=await integrationOperator(runtime,request)
@@ -18,7 +18,7 @@ async function owner(runtime:Parameters<typeof integrationOperator>[0],request:R
 }
 const runId=(value:string)=>{const result=z.string().uuid().safeParse(value);if(!result.success)throw new NativeError('redaction_run_invalid',400);return result.data}
 export function registerRedactionRoutes(app:Hono<OperatorMutationEnvironment>){
- app.get('/api/operator/settings/redaction',async c=>{const {db,session}=await integrationOperator(c.get('runtime'),c.req.raw);if(session.operator.role!=='owner')return c.json({canConfigure:false});const run=await latestRun(db);return c.json({canConfigure:true,...await redactionSettings(db),latestRun:run?dto(run):null})})
+ app.get('/api/operator/settings/redaction',async c=>{const {db,session}=await integrationOperator(c.get('runtime'),c.req.raw);if(session.operator.role!=='owner')return c.json({canConfigure:false});const run=await latestRun(db);return c.json({canConfigure:true,...await redactionSettings(db),draftScope:session.operatorId,latestRun:run?await runView(db,run):null})})
  app.put('/api/operator/settings/redaction',async c=>{
   const {db,actor}=await owner(c.get('runtime'),c.req.raw),input=validateRules(await parseInput(c.req.raw,rulesInput)),now=new Date().toISOString()
   await db.batch([db.prepare('INSERT INTO penny_redaction_settings(singleton,enabled,kinds_json,patterns_json,revision) VALUES(1,?,?,?,1) ON CONFLICT(singleton) DO UPDATE SET enabled=excluded.enabled,kinds_json=excluded.kinds_json,patterns_json=excluded.patterns_json,revision=revision+1').bind(input.enabled?1:0,JSON.stringify(input.kinds),JSON.stringify(input.patterns)),audit(db,actor.id,'settings','redaction','redaction.rules_changed',now)])
@@ -26,15 +26,15 @@ export function registerRedactionRoutes(app:Hono<OperatorMutationEnvironment>){
  })
  app.post('/api/operator/settings/redaction/preview',async c=>{
   const runtime=c.get('runtime'),{db,authority}=await owner(runtime,c.req.raw);await parseInput(c.req.raw,z.object({}).strict())
-  const run=await startPreview(db,authority);await wakeRedaction(runtime.bindings.JOBS);return c.json(dto(run),202)
+  const run=await startPreview(db,authority);await wakeRedaction(runtime.bindings.JOBS);return c.json(await runView(db,run),202)
  })
- app.get('/api/operator/settings/redaction/runs/:id',async c=>{const {db}=await owner(c.get('runtime'),c.req.raw),run=await readRun(db,runId(c.req.param('id')));if(!run)throw new NativeError('redaction_run_not_found',404);return c.json(dto(run))})
+ app.get('/api/operator/settings/redaction/runs/:id',async c=>{const {db}=await owner(c.get('runtime'),c.req.raw),run=await readRun(db,runId(c.req.param('id')));if(!run)throw new NativeError('redaction_run_not_found',404);return c.json(await runView(db,run))})
  app.post('/api/operator/settings/redaction/reapply',async c=>{
   const runtime=c.get('runtime'),{db,authority}=await owner(runtime,c.req.raw),input=await parseInput(c.req.raw,z.object({planHash:z.string().regex(/^[a-f0-9]{64}$/),confirmIrreversible:z.literal(true)}).strict()),run=await confirmRun(db,input.planHash,authority)
-  await wakeRedaction(runtime.bindings.JOBS);return c.json(dto(run),202)
+  await wakeRedaction(runtime.bindings.JOBS);return c.json(await runView(db,run),202)
  })
  app.post('/api/operator/settings/redaction/runs/:id/resume',async c=>{
   const runtime=c.get('runtime'),{db,authority}=await owner(runtime,c.req.raw);await parseInput(c.req.raw,z.object({}).strict())
-  const run=await resumeRun(db,runId(c.req.param('id')),authority);await wakeRedaction(runtime.bindings.JOBS);return c.json(dto(run),202)
+  const run=await resumeRun(db,runId(c.req.param('id')),authority);await wakeRedaction(runtime.bindings.JOBS);return c.json(await runView(db,run),202)
  })
 }

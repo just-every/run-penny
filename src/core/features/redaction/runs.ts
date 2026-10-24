@@ -6,7 +6,13 @@ export type RunState='previewing'|'ready'|'running'|'complete'|'failed'
 export interface Run {id:string;operator_id:string;operator_version:number;actor_id:string;state:RunState;resume_state:'previewing'|'running';rules_revision:number;content_revision:number;place_index:number;after_row:number;bounds_json:string;counts_json:string;records:number;changes:number;changed:number;scanned:number;step:number;plan_hash:string|null;error:string|null;created_at:string;updated_at:string}
 export const readRun=(db:D1Database,id:string)=>db.prepare('SELECT * FROM penny_redaction_runs WHERE id=?').bind(id).first<Run>()
 export const latestRun=(db:D1Database)=>db.prepare('SELECT * FROM penny_redaction_runs ORDER BY rowid DESC LIMIT 1').first<Run>()
-export const dto=(run:Run)=>({id:run.id,state:run.state,records:run.records,changes:run.changes,changed:run.changed,scanned:run.scanned,planHash:run.plan_hash,places:JSON.parse(run.counts_json) as PlaceCount[],error:run.error})
+/** Freshness is a read projection: a stale cursor is kept for its history,
+ * but the owner is only offered actions the corresponding route can admit. */
+export async function runView(db:D1Database,run:Run){
+ const settings=await redactionSettings(db)
+ const stale=run.state!=='complete'&&(!settings.enabled||settings.revision!==run.rules_revision||((run.state==='ready'||run.resume_state==='previewing')&&await contentRevision(db)!==run.content_revision))
+ return {id:run.id,state:stale?'stale' as const:run.state,canResume:run.state==='failed'&&!stale,records:run.records,changes:run.changes,changed:run.changed,scanned:run.scanned,planHash:stale?null:run.plan_hash,places:JSON.parse(run.counts_json) as PlaceCount[],error:run.error}
+}
 export const contentRevision=(db:D1Database)=>db.prepare('SELECT revision FROM penny_redaction_content WHERE singleton=1').first<number>('revision')
 export function guard(db:D1Database,sql:string,params:unknown[]){const id=crypto.randomUUID();return {before:db.prepare(`INSERT INTO requester_write_guards(id,permitted) VALUES(?,CASE WHEN ${sql} THEN 1 ELSE 0 END)`).bind(id,...params),after:db.prepare('DELETE FROM requester_write_guards WHERE id=?').bind(id)}}
 export async function startPreview(db:D1Database,authority:{operatorId:string;version:number;actorId:string}){

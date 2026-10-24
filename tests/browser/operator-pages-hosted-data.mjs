@@ -7,6 +7,7 @@ import {tlsIdentity, workerRuntime} from '../data/tls-runtime.mjs'
 import {archiveJournal} from '../../scripts/portability/archive-journal.mjs'
 import {finishFirstRun} from './local-signin.mjs'
 import {monitorLockReads,inspectLockedWorkspace} from './data-lock-reads.mjs'
+import {monitorStepFailures} from './operator-step-diagnostics.mjs'
 
 /** Trust only this test certificate's public key; Node requests use its explicit CA. */
 export async function prepareHostedDataReview() {
@@ -75,7 +76,7 @@ async function observeActiveExport(runtime,cookie,hold,completion=runtime.call('
 
 export async function reviewHostedData({browser,hosted,width,capture}) {
   const directory=join(hosted.directory,`state-${width}`)
-  let runtime,context,exportCompletion,reads
+  let runtime,context,exportCompletion,reads,diagnostics
   const hold=exportReadHold()
   const errors=[],external=[]
   try {
@@ -90,6 +91,7 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
       target.on('request',request=>{if(new URL(request.url()).origin!==origin)external.push(new URL(request.url()).origin)})
     })
     const page=await context.newPage()
+    diagnostics=monitorStepFailures(page)
     await page.goto(origin+'/app/data')
     assert.equal(await finishFirstRun(page,async()=>{}),true,'[BASE-ACCESS-002] native owner finishes the real first-run form')
     const idle=await runtime.call('/api/operator/data/overview',undefined,{Cookie:cookie})
@@ -114,7 +116,7 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     assert.equal((await reserved).status(),201)
     await inspectLockedWorkspace({page:feedback,runtime,reads,capture,label:'DATA-001-feedback-export-locked'})
     const archiveLink=page.getByRole('link',{name:'Download archive',exact:true}),journalLink=page.getByRole('link',{name:'Download erasure journal',exact:true})
-    await archiveLink.waitFor({timeout:120000});await journalLink.waitFor()
+    await diagnostics.run('hosted-download-archive',()=>archiveLink.waitFor({timeout:120000}));await journalLink.waitFor()
     const [archiveDownload]=await Promise.all([page.waitForEvent('download'),archiveLink.click()])
     const [journalDownload]=await Promise.all([page.waitForEvent('download'),journalLink.click()])
     const archiveBytes=await readFile(await archiveDownload.path()),journalBytes=await readFile(await journalDownload.path())
@@ -128,7 +130,7 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     await page.getByRole('heading',{name:'Export ready to download',exact:true}).waitFor()
     assert.equal(await db.prepare('SELECT lock_id FROM data_state').first('lock_id'),savedOperation,'[DATA-001] reload retains the same export')
     await page.getByRole('button',{name:'Resume export',exact:true}).click()
-    await archiveLink.waitFor({timeout:120000})
+    await diagnostics.run('hosted-resumed-download-archive',()=>archiveLink.waitFor({timeout:120000}))
     const [resumedDownload]=await Promise.all([page.waitForEvent('download'),archiveLink.click()])
     assert.deepEqual(await readFile(await resumedDownload.path()),archiveBytes,'[DATA-001] reload resumes the exact verified archive')
     await page.getByRole('button',{name:'Finish export',exact:true}).click()
@@ -174,6 +176,7 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     assert.deepEqual(external,[],'[BASE-SECRET-002] hosted captures make no external browser requests')
     assert.equal(runtime.outboundCalls,0,'[DATA-001] hosted screen capture makes no provider request')
   } finally {
+    diagnostics?.stop()
     hold.release()
     try {await exportCompletion;await reads?.stop()} finally {try{await context?.close()}finally{try{await runtime?.stop()}finally{await rm(directory,{recursive:true,force:true})}}}
   }
