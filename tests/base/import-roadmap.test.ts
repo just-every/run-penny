@@ -58,7 +58,7 @@ it('[ROAD-014 IMP-002 IMP-004] stale approval, private boards and later native r
 it('[ROAD-014 BASE-OPS-002] upgrades populated previous-head imports without changing their records and applies the new roadmap as a reviewed delta',async()=>{
  await reset()
  const migrations=inject('migrations') as {name:string;queries:string[]}[]
- await applyD1Migrations(env.DB,migrations.filter(m=>!m.name.startsWith('0079_')))
+ await applyD1Migrations(env.DB,migrations.filter(m=>!m.name.startsWith('0079_')&&!m.name.startsWith('0095_')))
  const operator=await owner(),input=source('roadmap-upgrade'),previous=structuredClone(input);delete previous.roadmap
  await apply(previous,operator)
  const snapshot=async()=>Promise.all(['boards','requests','evidence_items','evidence_versions'].map(table=>env.DB.prepare(`SELECT * FROM ${table} ORDER BY id`).all().then(result=>result.results)))
