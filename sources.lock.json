@@ -2920,7 +2920,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "fa94870309adb6533a8313ec6a87371969bd19fd48ae7b8992b42f498e2be3cc",
+      "sha256": "40d68d5d705622afba9ead576ec42b577ab14950585f8213ebb0d700363fefce",
       "executable": false
     },
     "DEMO.md": {
@@ -7468,7 +7468,7 @@
       "executable": false
     },
     "tests/base/import-roadmap.test.ts": {
-      "sha256": "630261436fb3a80dc10002d6561eac5bb93460b737f49420ebe4efea0f120286",
+      "sha256": "5f658c0fb948a1eca0b62fc1580c0b7bb114e97c62fdf35ffaae1b41740dede8",
       "executable": false
     },
     "tests/base/import-statuses.test.ts": {
