@@ -6100,7 +6100,7 @@
       "executable": false
     },
     "src/core/features/redaction/routes.ts": {
-      "sha256": "9afd27544ebf05d72fd89b42f433edb74c8d19a2d2e01452b0e443a044aef7ce",
+      "sha256": "f77e56d9f01d545a08bb7fe1613de26d7e78c4f562cfe6c071dd863f5031c39d",
       "executable": false
     },
     "src/core/features/redaction/runs.ts": {
@@ -7620,7 +7620,7 @@
       "executable": false
     },
     "tests/base/redaction-fixture.ts": {
-      "sha256": "8e2cbdd5b0c2442d0f4507aaf1afae43e2e62915e34e172ea39fc28579900cbd",
+      "sha256": "e3b9cd2488fc2dfb1c0f3519ad810f50db38d67011d5b2d8733a9e34a4734a54",
       "executable": false
     },
     "tests/base/redaction-import-door.ts": {

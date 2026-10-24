@@ -61,6 +61,7 @@ export async function proveRedaction(call:Call,fixture:()=>Promise<{operator:Rec
  const tick=()=>runRedactionQueue(createMessageBatch('penny-redaction',[{id:crypto.randomUUID(),timestamp:Date.now(),attempts:1,body:{kind:'redaction.advance'}}]),env)
  const status=(id:string)=>read<Run>(call('/api/operator/settings/redaction/runs/'+id,undefined,g.operator))
  const settle=async(run:Run,target:string)=>{for(let page=0;run.state!==target&&run.state!=='failed'&&page<80;page++){await tick();run=await status(run.id)}expect(run.state).toBe(target);return run}
+ expect((await call('/api/operator/settings/redaction/runs/invalid',undefined,g.operator)).status).toBe(400)
  const makePreview=async()=>settle(await read<Run>(call('/api/operator/settings/redaction/preview',{},g.operator),202),'ready')
  const stale=await makePreview()
  await capture('A capture arriving after preview ACCOUNT-9012')
