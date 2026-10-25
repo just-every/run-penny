@@ -6108,7 +6108,7 @@
       "executable": false
     },
     "src/core/features/prioritisation/scorecard-editor.tsx": {
-      "sha256": "105a442e2b2d5a60af1b8174fe6284c208813cfacd8978f677d961f68373a46d",
+      "sha256": "7ca228bc711ca8462becda55cfbfb85bee25f294b4e27f5dc1ddbc97491209ea",
       "executable": false
     },
     "src/core/features/prioritisation/scorecard-pane.tsx": {
