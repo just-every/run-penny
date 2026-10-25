@@ -1,3 +1,4 @@
+import {ScorecardSettings} from '../../prioritisation/scorecard-editor'
 import {RedactionSettings} from '../../redaction/settings-ui'
 import {RequesterOAuthSettings} from '../../auth/ui/requester-oauth-settings'
 import {ModelSettings} from '../../ai/ui/model-settings'
@@ -43,6 +44,7 @@ export function BoardSettings() {
       <OperatorPageHeader eyebrow="Customer feedback" title="Feedback settings" art={data.kind === 'error' ? null : { note: 'Better feedback builds better products.' }}>Requester submissions, edits and comments are reviewed before publication.</OperatorPageHeader>
       <div className="mt-6 space-y-6 sm:mt-8">
         <OperatorSettings />
+        <ScorecardSettings />
         <ModelSettings />
         <RequesterOAuthSettings />
         <RedactionSettings />

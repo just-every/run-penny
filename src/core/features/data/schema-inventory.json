@@ -3186,5 +3186,45 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_scorecards": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "entity",
+      "revision",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_scorecard_versions": {
+    "classification": "product",
+    "columns": [
+      "card_id",
+      "version",
+      "criteria_json",
+      "created_at"
+    ]
+  },
+  "penny_scorecard_scores": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "card_id",
+      "version",
+      "idea_id",
+      "scorer_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_scorecard_inputs": {
+    "classification": "product",
+    "columns": [
+      "score_id",
+      "criterion_index",
+      "value"
+    ]
   }
 }
