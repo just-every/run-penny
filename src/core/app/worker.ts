@@ -75,7 +75,15 @@ async function serveOperatorWorkspace(context: PennyWorkerContext) {
 
   const operator = await hasOperatorSession(context.get('runtime'), context.req.raw)
   if (!operator) {
-    if(personIdFromPath(new URL(context.req.url).pathname))return context.json({error:'not_found'},404)
+    if(personIdFromPath(new URL(context.req.url).pathname)){
+      const render=context.get('renderDocument')
+      if(!render)throw new Error('Missing TanStack Start document handler.')
+      context.set('renderDocument',request=>{
+        const url=new URL(request.url);url.pathname='/404';url.search=''
+        return render(new Request(url,request))
+      })
+      return renderDocumentWithStatus(context,404)
+    }
     if (context.req.header('Accept')?.includes('text/html')) {
       return context.redirect('/signin', 302)
     }

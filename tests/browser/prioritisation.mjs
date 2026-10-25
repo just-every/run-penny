@@ -70,7 +70,9 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
  criterion=scoreDefinition.getByRole('group',{name:'Criterion 2',exact:true})
  await criterion.getByLabel('Name',{exact:true}).fill('Confidence');await criterion.getByLabel('Scale',{exact:true}).selectOption('10')
  await scoreDefinition.getByRole('button',{name:'Save scorecard',exact:true}).click()
- await scoreDefinition.getByRole('status').waitFor()
+ await settings.getByRole('status').waitFor()
+ assert.equal(await scoreDefinition.isVisible(),false)
+ await settings.locator('details[open]').getByRole('form',{name:'Edit scorecard',exact:true}).waitFor()
  await capture(owner,'scorecard-settings',settings)
  const score=async(page,values)=>{
   await page.goto(origin+'/app/prioritisation',{waitUntil:'networkidle'})
@@ -84,7 +86,8 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
   return idea
  }
  await score(owner,[5,8]);const scored=await score(peer,[2,5])
- await scored.getByText('Weighted result: 4.5',{exact:true}).waitFor()
+ await scored.and(peer.locator('[data-weighted-result="4.5"]')).waitFor()
+ assert.equal(await scored.getAttribute('data-weighted-result'),'4.5')
  assert.equal(await scored.getByRole('list',{name:'Scorer inputs',exact:true}).locator(':scope > li').count(),2)
  await capture(peer,'scorecard-two-scorers',peer.getByRole('region',{name:'Criteria version 1',exact:true}))
  await owner.goto(origin+'/app/settings#settings-scorecards',{waitUntil:'networkidle'})
@@ -98,8 +101,8 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
  assert.equal(latest.revision,2)
  await owner.goto(origin+'/app/prioritisation',{waitUntil:'networkidle'})
  const history=owner.getByRole('region',{name:'Criteria version 1',exact:true}),current=owner.getByRole('region',{name:'Criteria version 2',exact:true})
- await history.getByText('Weighted result: 4.5',{exact:true}).waitFor()
- await current.getByText('Weighted result: Unscored',{exact:true}).first().waitFor()
+ await history.locator('[data-weighted-result="4.5"]').waitFor()
+ await current.locator('[data-score-state="unscored"]').first().waitFor()
  await capture(owner,'scorecard-criteria-history',owner.getByRole('region',{name:'Scorecards',exact:true}))
  assert.equal((await fetch(origin+'/api/operator/prioritisation')).status,401)
  for(const path of ['/api/public/requests','/api/public/roadmap','/api/public/releases']){const body=await(await fetch(origin+path)).text();assert.equal(body.includes('Finance priorities'),false);assert.equal(body.includes('"score"'),false)}
