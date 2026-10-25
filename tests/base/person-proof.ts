@@ -23,9 +23,9 @@ export async function personProof(g:{operator:Record<string,string>;person:Recor
  expect(person.accounts).toContainEqual(expect.objectContaining({revenueCents:12000}))
  expect(person.follows.length).toBeGreaterThan(0);expect(person.permissions.length).toBeGreaterThan(0);expect(person.outcomes.length).toBeGreaterThan(0)
  for(const record of [...person.submitted,...person.votes,...person.comments,...person.evidence,...person.accounts])expect((await call(record.href,undefined,g.operator)).status,record.href).toBe(200)
- for(const headers of [{},g.person])for(const url of [path,'/app/people/'+g.recipient.requesterId])expect((await call(url,undefined,headers)).status).toBe(404)
- for(const url of ['/api/public/boards','/api/public/requests','/api/public/roadmap','/api/public/releases'])expect(await(await call(url)).text()).not.toContain('/people/')
+ for(const headers of [{},g.person])for(const url of [path,'/app/customers/people-'+g.recipient.requesterId])expect((await call(url,undefined,headers)).status).toBe(404)
+ for(const url of ['/api/public/boards','/api/public/requests','/api/public/roadmap','/api/public/releases'])expect(await(await call(url)).text()).not.toContain('/app/customers/people-')
  const issued=await json<{token:string}>('/api/operator/integrations/keys',{name:'synthetic-penny-13',scopes:['requests:read','releases:read']},201)
- for(const url of ['/api/v1/boards','/api/v1/requests','/api/v1/releases'])expect(await(await call(url,undefined,{Authorization:'Bearer '+issued.token})).text()).not.toContain('/people/')
+ for(const url of ['/api/v1/boards','/api/v1/requests','/api/v1/releases'])expect(await(await call(url,undefined,{Authorization:'Bearer '+issued.token})).text()).not.toContain('/app/customers/people-')
  return {second,account,evidence}
 }

@@ -74,7 +74,7 @@ await moderationJourney('requester-blocking',async({runtime,origin,operator,json
  await owner.goto(origin+'/app/customers?directory=requesters&q=Eli',{waitUntil:'networkidle'})
  await card.getByRole('link',{name:'Eli Wong',exact:true}).click()
  await owner.getByRole('heading',{name:'Eli Wong',exact:true}).waitFor()
- const profile='/app/people/'+id
+ const profile='/app/customers/people-'+id
  assert.equal(new URL(owner.url()).pathname,profile)
  assert.equal(await owner.getByRole('region',{name:'Submitted requests',exact:true}).getByRole('link').count(),2)
  assert.equal(await owner.getByRole('region',{name:'Votes',exact:true}).getByRole('link').count(),3)
@@ -97,6 +97,6 @@ await moderationJourney('requester-blocking',async({runtime,origin,operator,json
  await owner.getByRole('link',{name:'Open Eli Wong profile',exact:true}).click()
  await owner.getByRole('heading',{name:'Eli Wong',exact:true}).waitFor();assert.equal(new URL(owner.url()).pathname,profile)
  assert.equal((await visitor.goto(origin+profile)).status(),404)
- for(const path of ['/api/public/requests','/api/public/roadmap','/api/public/releases'])assert.equal(JSON.stringify(await json(path)).includes('/people/'),false)
+ for(const path of ['/api/public/requests','/api/public/roadmap','/api/public/releases'])assert.equal(JSON.stringify(await json(path)).includes('/app/customers/people-'),false)
 
 })
