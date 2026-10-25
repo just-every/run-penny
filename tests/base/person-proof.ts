@@ -1,21 +1,21 @@
 import {expect} from 'vitest'
 import {call,env} from './support'
-export async function personProof(g:{operator:Record<string,string>;person:Record<string,string>;recipient:{requesterId:string}},otherSlug:string){
+export async function personProof(g:{operator:Record<string,string>;person:Record<string,string>;recipient:{requesterId:string}}){
  const json=async<T>(path:string,body?:unknown,status=200)=>{const response=await call(path,body,g.operator);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
  const post=await call('/api/public/requests',{title:'synthetic-penny-5',description:'Second customer post',boardSlug:'regression',idempotencyKey:crypto.randomUUID()},g.person)
  expect(post.status).toBe(201)
  const second=await post.json() as {slug:string;id:string}
+ expect((await call('/api/operator/moderation/'+second.slug,{verdict:'approved',title:'synthetic-penny-5',description:'Second customer post',boardSlug:'regression',displayName:'synthetic-penny-5'},g.operator)).status).toBe(200)
+ expect((await call('/api/public/requests/'+second.slug+'/vote',undefined,g.person,'DELETE')).status).toBe(204)
  const actor=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind('owner@penny.invalid').first<string>('id')
  const account=await json<{id:string;slug:string}>('/api/operator/accounts',{name:'synthetic-penny-6',internalOwnerId:actor,revenueCents:12000},201)
  await env.DB.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(g.recipient.requesterId,account.id,new Date().toISOString()).run()
  const evidence=await json<{id:string}>('/api/operator/evidence',{sourceType:'support_conversation',sourceLabel:'https://harbor.zendesk.com/agent/tickets/738',wording:'synthetic-penny-7',observedAt:new Date().toISOString(),accountId:account.id},201)
- await json('/api/operator/requests/'+otherSlug+'/proxy-votes',{requesterId:g.recipient.requesterId,source:'synthetic-penny-7',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',evidenceId:evidence.id})
- // The existing direct vote is deliberately not replaced by a proxy origin.
- // Capture association uses the evidence's requester field, as an imported contact does.
- await env.DB.prepare('UPDATE evidence_items SET requester_id=? WHERE id=?').bind(g.recipient.requesterId,evidence.id).run()
+ await json('/api/operator/requests/'+second.slug+'/proxy-votes',{requesterId:g.recipient.requesterId,source:'synthetic-penny-7',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',evidenceId:evidence.id})
+
  const path='/api/operator/people/'+g.recipient.requesterId
- const person=await json<{displayName:string;submitted:{href:string}[];votes:{href:string}[];comments:{href:string}[];evidence:{href:string;sourceUrls:string[]}[];accounts:{href:string;revenueCents:number}[];follows:unknown[];permissions:unknown[];outcomes:unknown[]}>(path)
- expect(person.submitted).toHaveLength(2);expect(person.votes).toHaveLength(3);expect(person.comments).toHaveLength(1)
+ const person=await json<{displayName:string;submitted:{href:string}[];votes:{href:string;proxy:number}[];comments:{href:string}[];evidence:{href:string;sourceUrls:string[]}[];accounts:{href:string;revenueCents:number}[];follows:unknown[];permissions:unknown[];outcomes:unknown[]}>(path)
+ expect(person.submitted).toHaveLength(2);expect(person.votes).toHaveLength(3);expect(person.comments).toHaveLength(1);expect(person.votes.some(v=>v.proxy===1)).toBe(true)
  expect(person.evidence).toContainEqual(expect.objectContaining({sourceUrls:['https://harbor.zendesk.com/agent/tickets/738']}))
  expect(person.accounts).toContainEqual(expect.objectContaining({revenueCents:12000}))
  expect(person.follows.length).toBeGreaterThan(0);expect(person.permissions.length).toBeGreaterThan(0);expect(person.outcomes.length).toBeGreaterThan(0)

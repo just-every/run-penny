@@ -1,3 +1,4 @@
+import {scorecardUpgradeProof} from './scorecard-proof'
 import {mcpProof} from './mcp-client'
 import { previousNotificationGraph } from './previous-notification-fixture'
 import {applyD1Migrations,reset} from 'cloudflare:test'
@@ -113,4 +114,5 @@ it('[API-002 BASE-OPS-002 DATA-001] applies each new migration to populated prio
  expect(new Uint8Array(await(await env.FILES.get('api-upgrade-original'))!.arrayBuffer())).toEqual(bytes)
  expect((await request('/api/operator/integrations/keys',undefined,g.operator)).status).toBe(401)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ await scorecardUpgradeProof()
 })

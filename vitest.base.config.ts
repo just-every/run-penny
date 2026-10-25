@@ -23,6 +23,9 @@ export default defineConfig({
   OPERATOR_EMAIL:'owner@penny.invalid',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@example.test',MAIL_API_KEY:'synthetic-provider-test-key',
  }}})],
  test:{
+  // The official MCP client's AJV dependency is CommonJS; bundle its client
+  // entry points so cold multi-file Worker runs get normal ESM interop.
+  deps:{optimizer:{ssr:{enabled:true,include:['@modelcontextprotocol/sdk/client/index.js','@modelcontextprotocol/sdk/client/streamableHttp.js']}}},
   // Limit native Worker/D1 memory bursts on the shared build host; in-test races remain concurrent.
   maxWorkers:1,
   // Native Worker/D1 round trips take far longer than the 5 s default on a loaded shared host.

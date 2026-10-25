@@ -1,3 +1,4 @@
+import {zendeskSidebar} from './zendesk-sdk-edge.mjs'
 import assert from 'node:assert/strict'
 import {moderationJourney} from './moderation-runtime.mjs'
 
@@ -50,6 +51,21 @@ await moderationJourney('requester-blocking',async({runtime,origin,operator,json
  await capture(visitor,'contributions-restored')
  await send(`/api/public/requests/${shared.slug}/follow`,{},identity,'POST',204)
  const second=await json('/api/public/requests',{title:'synthetic-penny-8',description:'A second customer post.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},identity,'POST',201)
+ await json('/api/operator/moderation/'+second.slug,{verdict:'approved',title:'synthetic-penny-8',description:'A second customer post.',boardSlug:'finance',displayName:'Eli Wong'},operator)
+ await send('/api/public/requests/'+second.slug+'/vote',undefined,identity,'DELETE',204)
+ const {token:key}=await json('/api/operator/integrations/keys',{name:'synthetic-penny-11',scopes:['requests:read','votes:write']},operator,'POST',201)
+ const sidebar=await owner.context().newPage();sidebar.setDefaultTimeout(20000)
+ const sdk=await zendeskSidebar({page:sidebar,origin,key,ticket:{'ticket.id':738,'ticket.requester.name':'Eli Wong','ticket.requester.email':'eli@example.test','currentAccount.subdomain':'harbor'}})
+ await sdk.open();await sidebar.getByRole('button',{name:'Find customer',exact:true}).click()
+ await sidebar.getByLabel('Existing customer',{exact:true}).selectOption(id)
+ await sidebar.getByLabel('Find a request',{exact:true}).fill('synthetic-penny-8')
+ await sidebar.getByRole('button',{name:'Search requests',exact:true}).click()
+ await sidebar.getByLabel('Request',{exact:true}).selectOption(second.slug)
+ await sidebar.getByLabel('Source justifying this vote').fill('synthetic-penny-10')
+ await sidebar.getByLabel('I reviewed the customer, request and source.').check()
+ await sidebar.getByRole('button',{name:'Record proxy vote',exact:true}).click()
+ await sidebar.getByRole('status').filter({hasText:'Customer vote recorded.'}).waitFor()
+ assert.deepEqual(sdk.errors,[]);await sidebar.close()
  const actor=await runtime.db.prepare('SELECT id FROM operators WHERE email=?').bind('owner@penny.invalid').first('id')
  const account=await json('/api/operator/accounts',{name:'synthetic-penny-9',internalOwnerId:actor,revenueCents:12000},operator,'POST',201)
  await runtime.db.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(id,account.id,new Date().toISOString()).run()

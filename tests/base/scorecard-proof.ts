@@ -60,3 +60,18 @@ export async function scorecardArchiveProof(bundle:unknown,id:string){
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_scorecard_scores WHERE scorer_id=?').bind(peerId).first('n')).toBe(0)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 }
+
+export async function scorecardUpgradeProof(){
+ const {reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{graph}=await import('./notification-regression-fixture')
+ const migrations=inject('migrations')
+ await reset();await applyD1Migrations(env.DB,migrations.slice(0,-1));const g=await graph(2)
+ await env.DB.prepare('UPDATE oa_sessions SET revoked_at=1').run()
+ const tables=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name<>'d1_migrations' ORDER BY name").all<{name:string}>()).results
+ const read=async()=>(await env.DB.batch(tables.map(t=>env.DB.prepare('SELECT * FROM "'+t.name+'" ORDER BY rowid')))).map(result=>result.results)
+ const before=await read(),bytes=new Uint8Array([1,9,96]);await env.FILES.put('synthetic-penny-12',bytes)
+ await applyD1Migrations(env.DB,migrations.slice(-1));expect(await read()).toEqual(before)
+ await applyD1Migrations(env.DB,migrations);expect(await read()).toEqual(before)
+ expect(new Uint8Array(await(await env.FILES.get('synthetic-penny-12'))!.arrayBuffer())).toEqual(bytes)
+ expect((await call('/api/operator/scorecards',undefined,g.operator)).status).toBe(401)
+ expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+}
