@@ -6100,15 +6100,15 @@
       "executable": false
     },
     "src/core/features/redaction/routes.ts": {
-      "sha256": "97c06b7fc13bf638af333efbaa155af374175271a1350bee420602eb63e96b37",
+      "sha256": "f95e4f057891cc9fd872f8d6ebf90779dc54ae20cad5186b0863d45616b6a215",
       "executable": false
     },
     "src/core/features/redaction/rules-form.tsx": {
-      "sha256": "84f5225481e24d59d15c5bff916f96fa9b9b74a15d7b970c70d74b78ef7d123b",
+      "sha256": "1a9ada8d45375b5ed1e32d777c6906916558e48bd3b13c6fb6af4c66a6c00e49",
       "executable": false
     },
     "src/core/features/redaction/run-view.ts": {
-      "sha256": "078582e713c028de47772226b8bd2e486df1ddc59413579972589c6ddfbca871",
+      "sha256": "813ecda81aa13b129c29a56a5536d6de9122a14d3303b04e5c4446af0b44b992",
       "executable": false
     },
     "src/core/features/redaction/runs.ts": {
@@ -6124,7 +6124,7 @@
       "executable": false
     },
     "src/core/features/redaction/stored-redaction.tsx": {
-      "sha256": "14930359a10ca75a448e0a41c4daed82c6b3761c7240b9c05e1f8abd32f4dd9d",
+      "sha256": "3243f267196772c4508a7cec7c1c0e63f251d7540d7f3cbe4db489b68f76c46b",
       "executable": false
     },
     "src/core/features/releases/attachments.ts": {
@@ -7516,7 +7516,7 @@
       "executable": false
     },
     "tests/base/learning-stage2.test.ts": {
-      "sha256": "0183d27d3755ade6459bbca520898e718f6f8511ce49a5e892803d4de130a9af",
+      "sha256": "2e4d6ae4538cdb47c4fce69f5d612ad012ace1cacd2e3973d00c742fe9b50fdf",
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
@@ -8036,11 +8036,11 @@
       "executable": false
     },
     "tests/browser/redaction-journey.mjs": {
-      "sha256": "6ba1c11d23e8d75fd12546385b6bbeb917e8c35bb9a2901a31c4fcf0fd17cec4",
+      "sha256": "bfb9d5ad9e2b5c0c5f98f47e3bcf2681c0ec1c107b2eb343123d976be9667ade",
       "executable": false
     },
     "tests/browser/redaction-states.mjs": {
-      "sha256": "6f96b74a09a4838f610b1b95866a4c54bbae6f85ba0c54056e48b70c3a8bc7a0",
+      "sha256": "df43f967598689c44ffabd48e36e8d76d6d8e01fc7cadaf41c2c95660b1f15ba",
       "executable": false
     },
     "tests/browser/release-planning.mjs": {

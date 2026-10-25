@@ -22,15 +22,17 @@ it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact s
  await json(call('/api/operator/settings/redaction',rules,f.cookie,undefined,'PUT'))
  await proveLearningRedaction((url,body,headers,method)=>call(url,body,headers?.Cookie??'',undefined,method),{Cookie:f.cookie},'Synthetic Penny ticket: SSN 234-56-7890; card 4111 1111 1111 1111; ACCOUNT-1234.')
  // The edge changes rules after acquisition starts: no stale capture survives.
+ // Each racing save is a real change; saving the stored rules again is a no-op.
+ let raced=0;const changeRules=()=>json(call('/api/operator/settings/redaction',{...rules,patterns:[`RACE-${++raced}`]},f.cookie,undefined,'PUT'))
  await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:true,choices:[]},f.cookie,undefined,'PUT'))
  network.sourceText=canonical({id:'cancellation',subject:'A new permitted revision',occurred_at:'2026-10-02T00:00:00Z'})
  const beforeRace=await env.DB.prepare('SELECT count(*) n FROM learning_observations').first('n'),racing=bindings(),edge=racing.PENNY_LEARNING_EGRESS!
- racing.PENNY_LEARNING_EGRESS={async send(wire){const response=await edge.send(wire);if(wire.method==='GET')await json(call('/api/operator/settings/redaction',rules,f.cookie,undefined,'PUT'));return response}}
+ racing.PENNY_LEARNING_EGRESS={async send(wire){const response=await edge.send(wire);if(wire.method==='GET')await changeRules();return response}}
  expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie,racing)).status).toBe(409)
  expect(await env.DB.prepare('SELECT count(*) n FROM learning_observations').first('n')).toBe(beforeRace)
  // A rule change during interpretation also fences the final artifact write.
  const beforeArtifacts=await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')
- network.beforeModel=async()=>{await json(call('/api/operator/settings/redaction',rules,f.cookie,undefined,'PUT'))}
+ network.beforeModel=async()=>{await changeRules()}
  try{expect((await call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie)).status).toBe(409)}finally{network.beforeModel=undefined}
  expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(beforeArtifacts)
  const exported=await json<Awaited<ReturnType<typeof exportArchive>>>(call('/api/operator/data/export',undefined,f.cookie)),reordered=structuredClone(exported)
