@@ -1,5 +1,5 @@
 import {expect} from 'vitest'
-import {call,env} from './support'
+import {call,env,messages} from './support'
 export async function scorecardProof(owner:Record<string,string>,peer:Record<string,string>,ideaId:string){
  const json=async<T>(path:string,body?:unknown,method?:string,status=200,headers=owner):Promise<T>=>{const response=await call(path,body,headers,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
  const definition={name:'synthetic-penny-4',entity:'requests',criteria:[{name:'Impact',scale:5,weight:2},{name:'Confidence',scale:10,weight:1}]}
@@ -7,8 +7,14 @@ export async function scorecardProof(owner:Record<string,string>,peer:Record<str
  const actor=(await json<{scorerId:string}>('/api/operator/scorecards')).scorerId
  const peerActor=(await json<{scorerId:string}>('/api/operator/scorecards',undefined,'GET',200,peer)).scorerId
  expect((await call('/api/operator/scorecards',definition,peer)).status).toBe(403)
+ const signIn=async()=>{
+  expect((await call('/api/auth/magic-link',{email:'finance-peer@example.test'})).status).toBe(202)
+  const token=new URL(messages.findLast(m=>m.to==='finance-peer@example.test')!.url).searchParams.get('token')
+  const response=await call('/auth/confirm',{token});expect(response.status).toBe(303);peer.Cookie=response.headers.get('Set-Cookie')!.split(';')[0]
+ }
  await env.DB.prepare("UPDATE oa_operators SET role='admin' WHERE email=?").bind('finance-peer@example.test').run()
- try{await json('/api/operator/scorecards',{...definition,name:'synthetic-penny-16'},'POST',201,peer)}finally{await env.DB.prepare("UPDATE oa_operators SET role='member' WHERE email=?").bind('finance-peer@example.test').run()}
+ await signIn()
+ try{await json('/api/operator/scorecards',{...definition,name:'synthetic-penny-16'},'POST',201,peer)}finally{await env.DB.prepare("UPDATE oa_operators SET role='member' WHERE email=?").bind('finance-peer@example.test').run();await signIn()}
  await json(path+'/scores/'+actor,{ideaId,version:1,values:[5,8]},'PUT')
  await json(path+'/scores/'+peerActor,{ideaId,version:1,values:[2,5]},'PUT',200,peer)
  type Result={revision:number;versions:{version:number;criteria:typeof definition.criteria;ideas:{id:string;score:number|null;scorers:{name:string;values:number[];weighted:number}[]}[]}[]}
@@ -34,7 +40,8 @@ export async function scorecardProof(owner:Record<string,string>,peer:Record<str
 export async function scorecardArchiveProof(bundle:unknown,id:string){
  const {reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{owner}=await import('./support')
  const tables=['penny_scorecards','penny_scorecard_versions','penny_scorecard_scores','penny_scorecard_inputs']
- const read=async()=>Promise.all(tables.map(table=>env.DB.prepare('SELECT * FROM '+table+' ORDER BY rowid').all().then(result=>result.results)))
+ const order:Record<string,string>={penny_scorecards:'id',penny_scorecard_versions:'card_id,version',penny_scorecard_scores:'id',penny_scorecard_inputs:'score_id,criterion_index'}
+ const read=async()=>Promise.all(tables.map(table=>env.DB.prepare('SELECT * FROM '+table+' ORDER BY '+order[table]).all().then(result=>result.results)))
  const before=await read(),peerId=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind('finance-peer@example.test').first<string>('id')
  await reset();await applyD1Migrations(env.DB,inject('migrations'));const operator=await owner()
  const result=await call('/api/operator/data/import',bundle,operator)
