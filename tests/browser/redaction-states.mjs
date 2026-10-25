@@ -20,9 +20,13 @@ export async function checkRedactionStates({page,runtime,capture,panel,patterns,
  const first=await preview(panel.getByRole('button',{name:'Preview stored evidence redaction',exact:true}))
  await capture('AI-008-reapply-previewing')
  const stalePlan=await settle(first)
- // A second owner-tab write invalidates the persisted plan; reload must not offer confirm.
- const settings=await read()
- assert.equal((await page.request.put(runtime.origin+root,{headers:{Origin:runtime.origin},data:{enabled:settings.enabled,kinds:settings.kinds,patterns:settings.patterns}})).status(),200)
+ // Saving the stored rules again changes nothing; a second owner-tab change
+ // invalidates the persisted plan, and reload must not offer confirm.
+ const settings=await read(),rules={enabled:settings.enabled,kinds:settings.kinds,patterns:settings.patterns}
+ const put=data=>page.request.put(runtime.origin+root,{headers:{Origin:runtime.origin},data})
+ assert.equal((await put(rules)).status(),200)
+ assert.equal((await read()).revision,settings.revision);assert.equal((await read(first.id)).state,'ready')
+ assert.equal((await put({...rules,kinds:rules.kinds.slice(1)})).status(),200);assert.equal((await put(rules)).status(),200)
  assert.equal((await read(first.id)).state,'stale')
  await page.reload();await progress('stale').getByRole('status').waitFor()
  assert.equal(await panel.getByRole('form',{name:'Confirm stored redaction'}).count(),0)
@@ -53,7 +57,7 @@ export async function checkRedactionStates({page,runtime,capture,panel,patterns,
   if(place.blocked)assert.equal(place.changes,null)
  }
  assert.equal(await fold.locator('[data-redaction-place]').count(),unchanged.length)
- assert.equal(await fold.getByRole('link',{name:'Data',exact:true}).getAttribute('href'),'/app/data')
+ const dataLink=fold.getByRole('link');assert.equal(await dataLink.getAttribute('href'),'/app/data');assert.ok((await dataLink.boundingBox()).height>=44)
  // Open the linked product destination and return without losing the ready plan.
  const data=await page.context().newPage();assert.equal((await data.goto(runtime.origin+'/app/data')).status(),200);await data.getByRole('main').waitFor();await data.close()
  await capture('AI-008-reapply-unchanged-places');await summary.click()

@@ -20,8 +20,10 @@ const runId=(value:string)=>{const result=z.string().uuid().safeParse(value);if(
 export function registerRedactionRoutes(app:Hono<OperatorMutationEnvironment>){
  app.get('/api/operator/settings/redaction',async c=>{const {db,session}=await integrationOperator(c.get('runtime'),c.req.raw);if(session.operator.role!=='owner')return c.json({canConfigure:false});const run=await latestRun(db);return c.json({canConfigure:true,...await redactionSettings(db),draftScope:session.operatorId,latestRun:run?await runView(db,run):null})})
  app.put('/api/operator/settings/redaction',async c=>{
-  const {db,actor}=await owner(c.get('runtime'),c.req.raw),input=validateRules(await parseInput(c.req.raw,rulesInput)),now=new Date().toISOString()
-  await db.batch([db.prepare('INSERT INTO penny_redaction_settings(singleton,enabled,kinds_json,patterns_json,revision) VALUES(1,?,?,?,1) ON CONFLICT(singleton) DO UPDATE SET enabled=excluded.enabled,kinds_json=excluded.kinds_json,patterns_json=excluded.patterns_json,revision=revision+1').bind(input.enabled?1:0,JSON.stringify(input.kinds),JSON.stringify(input.patterns)),audit(db,actor.id,'settings','redaction','redaction.rules_changed',now)])
+  const {db,actor}=await owner(c.get('runtime'),c.req.raw),input=validateRules(await parseInput(c.req.raw,rulesInput)),now=new Date().toISOString(),values=[input.enabled?1:0,JSON.stringify(input.kinds),JSON.stringify(input.patterns)]
+  // Saving the stored rules again is a no-op: no revision or audit row, so no plan or run goes stale.
+  if(await db.prepare('SELECT 1 FROM penny_redaction_settings WHERE singleton=1 AND enabled=? AND kinds_json=? AND patterns_json=?').bind(...values).first())return c.json({saved:true})
+  await db.batch([db.prepare('INSERT INTO penny_redaction_settings(singleton,enabled,kinds_json,patterns_json,revision) VALUES(1,?,?,?,1) ON CONFLICT(singleton) DO UPDATE SET enabled=excluded.enabled,kinds_json=excluded.kinds_json,patterns_json=excluded.patterns_json,revision=revision+1').bind(...values),audit(db,actor.id,'settings','redaction','redaction.rules_changed',now)])
   return c.json({saved:true})
  })
  app.post('/api/operator/settings/redaction/preview',async c=>{
