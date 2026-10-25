@@ -1,4 +1,3 @@
-import {WorkspaceLink} from '../../workspace/ui/workspace-link'
 import {DraftPanel} from '../../ai/ui/draft-panel'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { AccountEditor } from './account-editor'
@@ -43,7 +42,7 @@ function AccountContent({ account, onSaved }: { readonly account: OperatorAccoun
         <AccountLinkedRequests account={account} />
         <AccountEvidence account={account} />
       </div>
-      <aside className="min-w-0"><AccountLinkedRequesters account={account} /><ul aria-label="Person profiles">{account.requesters.map(person=><li key={person.id}><WorkspaceLink className="inline-flex min-h-11 items-center text-sm underline" href={`/app/people/${person.id}`}>Open {person.displayName} profile</WorkspaceLink></li>)}</ul></aside>
+      <aside className="min-w-0"><AccountLinkedRequesters account={account} personLinks /></aside>
     </div>
   </>
 }

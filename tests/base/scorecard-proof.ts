@@ -7,6 +7,8 @@ export async function scorecardProof(owner:Record<string,string>,peer:Record<str
  const actor=(await json<{scorerId:string}>('/api/operator/scorecards')).scorerId
  const peerActor=(await json<{scorerId:string}>('/api/operator/scorecards',undefined,'GET',200,peer)).scorerId
  expect((await call('/api/operator/scorecards',definition,peer)).status).toBe(403)
+ await env.DB.prepare("UPDATE oa_operators SET role='admin' WHERE email=?").bind('finance-peer@example.test').run()
+ try{await json('/api/operator/scorecards',{...definition,name:'synthetic-penny-16'},'POST',201,peer)}finally{await env.DB.prepare("UPDATE oa_operators SET role='member' WHERE email=?").bind('finance-peer@example.test').run()}
  await json(path+'/scores/'+actor,{ideaId,version:1,values:[5,8]},'PUT')
  await json(path+'/scores/'+peerActor,{ideaId,version:1,values:[2,5]},'PUT',200,peer)
  type Result={revision:number;versions:{version:number;criteria:typeof definition.criteria;ideas:{id:string;score:number|null;scorers:{name:string;values:number[];weighted:number}[]}[]}[]}

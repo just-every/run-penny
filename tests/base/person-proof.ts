@@ -13,14 +13,19 @@ export async function personProof(g:{operator:Record<string,string>;person:Recor
  const evidence=await json<{id:string}>('/api/operator/evidence',{sourceType:'support_conversation',sourceLabel:'https://harbor.zendesk.com/agent/tickets/738',wording:'synthetic-penny-7',observedAt:new Date().toISOString(),accountId:account.id},201)
  await json('/api/operator/requests/'+second.slug+'/proxy-votes',{requesterId:g.recipient.requesterId,source:'synthetic-penny-7',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',evidenceId:evidence.id})
 
+ const field=await json<{id:string}>('/api/operator/settings/custom-fields',{entityType:'requester',name:'synthetic-penny-14',fieldType:'text'},201)
+ expect((await call('/api/operator/custom-fields/requester/'+field.id+'/'+g.recipient.requesterId,{value:'synthetic-penny-15'},g.operator,'PUT')).status).toBe(200)
  const path='/api/operator/people/'+g.recipient.requesterId
- const person=await json<{displayName:string;submitted:{href:string}[];votes:{href:string;proxy:number}[];comments:{href:string}[];evidence:{href:string;sourceUrls:string[]}[];accounts:{href:string;revenueCents:number}[];follows:unknown[];permissions:unknown[];outcomes:unknown[]}>(path)
+ const person=await json<{displayName:string;addresses:{verifiedAt:string|null;suppressedAt:string|null}[];customFields:{name:string;value:unknown}[];submitted:{href:string}[];votes:{href:string;proxy:number}[];comments:{href:string}[];evidence:{href:string;sourceUrls:string[]}[];accounts:{href:string;revenueCents:number}[];follows:unknown[];permissions:unknown[];outcomes:unknown[]}>(path)
+ expect(person.addresses.some(a=>a.verifiedAt!==null)).toBe(true);expect(person.customFields).toContainEqual({name:'synthetic-penny-14',value:'synthetic-penny-15'})
  expect(person.submitted).toHaveLength(2);expect(person.votes).toHaveLength(3);expect(person.comments).toHaveLength(1);expect(person.votes.some(v=>v.proxy===1)).toBe(true)
  expect(person.evidence).toContainEqual(expect.objectContaining({sourceUrls:['https://harbor.zendesk.com/agent/tickets/738']}))
  expect(person.accounts).toContainEqual(expect.objectContaining({revenueCents:12000}))
  expect(person.follows.length).toBeGreaterThan(0);expect(person.permissions.length).toBeGreaterThan(0);expect(person.outcomes.length).toBeGreaterThan(0)
  for(const record of [...person.submitted,...person.votes,...person.comments,...person.evidence,...person.accounts])expect((await call(record.href,undefined,g.operator)).status,record.href).toBe(200)
  for(const headers of [{},g.person])for(const url of [path,'/app/people/'+g.recipient.requesterId])expect((await call(url,undefined,headers)).status).toBe(404)
- for(const url of ['/api/public/requests','/api/public/roadmap','/api/public/releases'])expect(await(await call(url)).text()).not.toContain('/people/')
+ for(const url of ['/api/public/boards','/api/public/requests','/api/public/roadmap','/api/public/releases'])expect(await(await call(url)).text()).not.toContain('/people/')
+ const issued=await json<{token:string}>('/api/operator/integrations/keys',{name:'synthetic-penny-13',scopes:['requests:read','releases:read']},201)
+ for(const url of ['/api/v1/boards','/api/v1/requests','/api/v1/releases'])expect(await(await call(url,undefined,{Authorization:'Bearer '+issued.token})).text()).not.toContain('/people/')
  return {second,account,evidence}
 }
