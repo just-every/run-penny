@@ -1,3 +1,4 @@
+import {personProof} from './person-proof'
 import {applyD1Migrations} from 'cloudflare:test'
 import {beforeAll,afterAll,expect,inject,it,vi} from 'vitest'
 import {call,env,requester} from './support'
@@ -52,5 +53,6 @@ it('[REQ-022] blocking refuses every requester action, hides their public conten
  expect(await(await call(`/api/public/requests/${independent.slug}`)).json()).toMatchObject({voteCount:2,comments:[{body:'Blocked person comment'},{body:'Independent comment'}]})
  expect((await call(`/api/public/requests/${independent.slug}/follow`,{},g.person)).status).toBe(204)
  expect((await call(`/api/public/releases/${g.draft.slug}/outcomes`,outcome,g.person,'PUT')).status).toBe(200)
+ await personProof(g,independent.slug)
  expect((await env.DB.prepare("SELECT action FROM audit_entries WHERE entity_id=? AND action IN('requester.blocked','requester.unblocked') ORDER BY rowid").bind(identity).all<{action:string}>()).results.map(row=>row.action)).toEqual(['requester.blocked','requester.unblocked'])
 })

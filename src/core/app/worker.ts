@@ -74,6 +74,7 @@ async function serveOperatorWorkspace(context: PennyWorkerContext) {
 
   const operator = await hasOperatorSession(context.get('runtime'), context.req.raw)
   if (!operator) {
+    if(new URL(context.req.url).pathname.startsWith('/app/people/'))return context.json({error:'not_found'},404)
     if (context.req.header('Accept')?.includes('text/html')) {
       return context.redirect('/signin', 302)
     }
