@@ -14,7 +14,7 @@ import {saveReleaseDraft,releaseDraftSchema} from '../releases/drafts'
 import {publishRelease} from '../releases/publication'
 import {apiAuthority,apiScopes,managedKeys} from './keys'
 const text=z.string().trim().min(1).max(20000),slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(128)
-const create=z.object({title:z.string().trim().min(1).max(280),description:text,boardSlug:slug,evidenceIds:z.array(z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/)).max(100).default([])}).strict()
+export const createRequestSchema=z.object({title:z.string().trim().min(1).max(280),description:text,boardSlug:slug,evidenceIds:z.array(z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/)).max(100).default([])}).strict()
 const comment=z.object({body:text,approve:z.literal(true)}).strict()
 const status=statusPublicationSchema.extend({idempotencyKey:z.string().regex(/^[A-Za-z0-9_-]+$/).min(1).max(128),approve:z.literal(true)}).strict()
 const issue=z.object({name:z.string().trim().min(1).max(200),scopes:z.array(z.enum(apiScopes)).min(1),expiresAt:z.number().int().optional()}).strict()
@@ -55,7 +55,7 @@ export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
   return c.json(result.request[field])
  })
  app.post('/api/v1/requests',async c=>{
-  const auth=await apiAuthority(c.get('runtime'),c.req.raw,'requests:write','requests'),input=await parseInput(c.req.raw,create)
+  const auth=await apiAuthority(c.get('runtime'),c.req.raw,'requests:write','requests'),input=await parseInput(c.req.raw,createRequestSchema)
   if(new Set(input.evidenceIds).size!==input.evidenceIds.length)throw new NativeError('validation_failed',400)
   return c.json(await createOperatorRequest(auth.database,input,auth.actor.id),201)
  })

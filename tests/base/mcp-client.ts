@@ -30,11 +30,16 @@ export async function mcpProof(operator:Record<string,string>,fixtureSlug:string
   await reader.ping()
   const search=await reader.callTool({name:'search_requests',arguments:{q:'Public request'}})
   expect(JSON.stringify(search)).toContain(fixtureSlug)
+  expect(JSON.parse((search.content as {text:string}[])[0].text)).toEqual(await (await http('/api/v1/requests?q=Public%20request',undefined,{Authorization:'Bearer '+read.token})).json())
   const roadmap=await reader.callTool({name:'read_roadmap',arguments:{}})
   expect(JSON.parse((roadmap.content as {text:string}[])[0].text)).toEqual(await (await http('/api/public/roadmap')).json())
   const counts=async()=>({requests:await env.DB.prepare('SELECT count(*) n FROM requests').first('n'),votes:await env.DB.prepare('SELECT count(*) n FROM penny_proxy_votes').first('n'),audits:await env.DB.prepare('SELECT count(*) n FROM audit_entries').first('n')})
   const input={title:'synthetic-penny-2',description:'Private capture context',boardSlug:'regression'}
   const before=await counts()
+  for(const arguments_ of [{...input,title:''},{...input,extra:'refused'}]){
+   expect((await writer.callTool({name:'add_feedback',arguments:arguments_})).isError).toBe(true)
+   expect(await counts()).toEqual(before)
+  }
   await expect(reader.callTool({name:'add_feedback',arguments:input})).rejects.toThrow()
   expect(await counts()).toEqual(before)
   const added=await writer.callTool({name:'add_feedback',arguments:input})

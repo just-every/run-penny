@@ -656,7 +656,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "59bf7c4b14fb3b1fcc6a813f797ed02b10d7d8731ff6a8c92497f1e978e68db4",
+      "sha256": "628afefe5f778e009129f11568ef9172e958deede58ba92236efc471f9f35ad9",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -2920,7 +2920,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "40d68d5d705622afba9ead576ec42b577ab14950585f8213ebb0d700363fefce",
+      "sha256": "78644626723ca5b79b0237bbd46940af6c44f7abeec276bd74f66706a0f3dd2c",
       "executable": false
     },
     "DEMO.md": {
@@ -3544,11 +3544,11 @@
       "executable": false
     },
     "package.json": {
-      "sha256": "7d35a639dd7e86493b7be52df2074e1d7e8f509bb43bf07e584991cd045d1e2d",
+      "sha256": "7b4ac228dd6e8ad5dc895ceaf31875ffda0cb3dc0ba963d42aec83bfa4d7ca5b",
       "executable": false
     },
     "pnpm-lock.yaml": {
-      "sha256": "868f123557384071a8335bafb9eadba4286a6f014a7234d3930001b082260b7f",
+      "sha256": "03dacf0895e0ebd1cde0a24f2db1053cbbc58dcb044285067917f91c13d2adc0",
       "executable": false
     },
     "public/brand/band.svg": {
@@ -4160,7 +4160,7 @@
       "executable": false
     },
     "src/core/app/api.ts": {
-      "sha256": "f626f348698edb693f32b5c303409522ab9fb67c967e5b9fc102feafad94a1ca",
+      "sha256": "13abd81fa5f2039f98cd2da9d5cb3faa18ce644aae798c0283ca145e60f2c602",
       "executable": false
     },
     "src/core/app/extension-config.server.ts": {
@@ -5380,7 +5380,7 @@
       "executable": false
     },
     "src/core/features/integrations/api-routes.ts": {
-      "sha256": "164ea9052aa285633ee121f231169378ba0dae2422541f9bd7482aa545570ae2",
+      "sha256": "41a4d98162a3c15371395286f12c32e490fc02138b9011f18f2b3fda3f0d5c9f",
       "executable": false
     },
     "src/core/features/integrations/delivery-routes.ts": {
@@ -5821,6 +5821,10 @@
     },
     "src/core/features/learning/validation.ts": {
       "sha256": "e618d5bb8f1eb2c6c7f6fc19dbfd61f4666cf5d0de90d73f3911856c321b8853",
+      "executable": false
+    },
+    "src/core/features/mcp/routes.ts": {
+      "sha256": "d71362bfbdf6cc2143d7023966789029f67abdfe900774afa69375629176b169",
       "executable": false
     },
     "src/core/features/notifications/attempt-policy.ts": {
@@ -7492,7 +7496,7 @@
       "executable": false
     },
     "tests/base/integration-api.test.ts": {
-      "sha256": "c9cbe4ec23793185b57f0120a1394eff027085f2614eb8f07f782ccaa4d27606",
+      "sha256": "479d76e50626c87f05d4da0c638fea1855752fd1e506451ef303739af8f713d5",
       "executable": false
     },
     "tests/base/integration-delivery-fixture.ts": {
@@ -7545,6 +7549,10 @@
     },
     "tests/base/mail-identity.test.ts": {
       "sha256": "a2743d85d4feb43e924a15e61f1fc08e0271c7b39aca53a0539d9a7e4aa87eb5",
+      "executable": false
+    },
+    "tests/base/mcp-client.ts": {
+      "sha256": "68deeca15b766164d9198356bcff2598a08e9b8391c4d9801dcab087fe50b8e7",
       "executable": false
     },
     "tests/base/merge-notices.test.ts": {

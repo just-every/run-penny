@@ -1,3 +1,4 @@
+import {registerMcpRoutes} from '@/core/features/mcp/routes'
 import {registerBulkRoutes} from '@/core/features/triage/bulk-routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
 import {registerOAuthSettings} from '../features/auth/oauth-settings'
@@ -113,6 +114,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerHierarchyRoutes(app)
   registerLearningRoutes(app)
   registerIntegrationApi(app)
+  registerMcpRoutes(app)
   registerRequestStatusSettingsRoutes(app)
   registerRedactionRoutes(app)
   registerOAuthSettings(app)
