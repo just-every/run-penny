@@ -8,24 +8,27 @@ import {activeRun,errorMessage,recordCount,type RedactionRun} from './run-view'
 const root='/api/operator/settings/redaction'
 export function StoredRedaction({run,setRun,enabled,saving}:{run:RedactionRun|null;setRun:(run:RedactionRun)=>void;enabled:boolean;saving:boolean}){
  const hydrated=useHydrated()
- const [busy,setBusy]=useState(false),[error,setError]=useState(''),[confirmedPlan,setConfirmedPlan]=useState<string|null>(null),[refresh,setRefresh]=useState(0)
+ const [busy,setBusy]=useState(false),[failure,setFailure]=useState(''),[reconnecting,setReconnecting]=useState(false),[confirmedPlan,setConfirmedPlan]=useState<string|null>(null)
  const runId=run?.id,runState=run?.state,confirmed=!!run?.planHash&&confirmedPlan===run.planHash
  const places=run?.places??[],changing=places.filter(place=>!place.blocked&&Number(place.changes)>0),unchanged=places.filter(place=>place.blocked||!place.changes)
  useEffect(()=>{
   if(!runId||!['previewing','running','ready'].includes(runState??''))return
-  const controller=new AbortController();let timer:ReturnType<typeof setTimeout>
+  // A missed read keeps the last known state and retries with backoff until a read succeeds.
+  const controller=new AbortController();let timer:ReturnType<typeof setTimeout>,misses=0
   async function poll(){
-   try{const response=await fetch(`${root}/runs/${runId}`,{signal:controller.signal});if(!response.ok)throw new Error('Could not refresh redaction progress.');const next=await response.json() as RedactionRun;if(!controller.signal.aborted){setRun(next);setError('');if(activeRun(next)||next.state==='ready')timer=setTimeout(poll,1000)}}
-   catch(cause){if(!controller.signal.aborted)setError(errorMessage(cause,'Could not refresh redaction progress.'))}
+   try{const response=await fetch(`${root}/runs/${runId}`,{signal:controller.signal});if(!response.ok)throw new Error('Could not refresh redaction progress.');const next=await response.json() as RedactionRun;if(!controller.signal.aborted){misses=0;setReconnecting(false);setRun(next);if(activeRun(next)||next.state==='ready')timer=setTimeout(poll,1000)}}
+   catch{if(!controller.signal.aborted){misses++;setReconnecting(true);timer=setTimeout(poll,Math.min(4000,1000*2**misses))}}
   }
   timer=setTimeout(poll,1000)
-  return ()=>{controller.abort();clearTimeout(timer)}
- },[runId,runState,setRun,refresh])
+  return ()=>{controller.abort();clearTimeout(timer);setReconnecting(false)}
+ },[runId,runState,setRun])
+ // An action's failure stays until the owner's next action; polling never clears it.
  async function start(path:string,input:Record<string,unknown>){
-  setBusy(true);setError('')
+  setBusy(true);setFailure('')
   try{setRun(await operatorMutation(root+path,input) as RedactionRun);setConfirmedPlan(null)}catch(cause){
-   setError(errorMessage(cause,'Could not start redaction.'))
-   if(runId){const response=await fetch(`${root}/runs/${runId}`);if(response.ok){const next=await response.json() as RedactionRun;setRun(next);if(next.state==='stale')setError('')}}
+   setFailure(errorMessage(cause,'Could not start redaction.'))
+   // A refusal for a stale plan resolves to the stale state, which offers Preview again.
+   try{if(runId){const response=await fetch(`${root}/runs/${runId}`);if(response.ok){const next=await response.json() as RedactionRun;setRun(next);if(next.state==='stale')setFailure('')}}}catch{/* The poll keeps reading the run. */}
   }finally{setBusy(false)}
  }
  const previewButton=<button type="button" className={buttonClass} disabled={busy||saving||!enabled||activeRun(run)||!hydrated} onClick={()=>void start('/preview',{})}>{run?'Preview again':'Preview stored evidence redaction'}</button>
@@ -49,9 +52,10 @@ export function StoredRedaction({run,setRun,enabled,saving}:{run:RedactionRun|nu
    </>:null}
    {run.state==='stale'||run.state==='complete'||run.state==='ready'||(run.state==='failed'&&!run.canResume)?previewButton:null}
    {run.state==='failed'&&run.canResume?<button type="button" className={buttonClass} disabled={busy||saving||!hydrated} onClick={()=>void start(`/runs/${run.id}/resume`,{})}>Resume redaction</button>:null}
-   {error?<><p role="alert">{error}</p>{activeRun(run)?<button type="button" className={buttonClass} onClick={()=>{setError('');setRefresh(value=>value+1)}}>Refresh progress</button>:null}</>:null}
+   {failure?<p role="alert">{failure}</p>:null}
+   {reconnecting?<p>Reconnecting…</p>:null}
   </div>:null}
-  {!run&&error?<p role="alert">{error}</p>:null}
+  {!run&&failure?<p role="alert">{failure}</p>:null}
  </div>
 }
 
