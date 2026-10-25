@@ -1,3 +1,4 @@
+import {RequesterMergeControl} from '../../requests/ui/requester-merge-control'
 import {WorkspaceLink} from './workspace-link'
 import { CustomFieldsEditor } from '@/core/features/settings/ui/custom-fields-editor'
 import { RequesterBlockControl } from '@/core/features/requests/ui/requester-block-control'
@@ -22,7 +23,7 @@ export function RequesterDirectory() {
             <OperatorCard key={row.id} id={`requesters-${row.id}`} className="min-w-0 p-5">
               <h3 className="break-words text-xl font-bold"><WorkspaceLink className="inline-flex min-h-11 items-center" href={`/app/people/${row.id}`}>{row.displayName}</WorkspaceLink></h3>
               <p className="mt-2 break-all text-penny-muted">{row.email ?? 'No email address'}</p>
-              <RequesterBlockControl requester={row} onSaved={retry} />
+              <RequesterBlockControl requester={row} onSaved={retry} /><RequesterMergeControl id={row.id}/>
               <CustomFieldsEditor entityType="requester" entityId={row.id} />
             </OperatorCard>
           ))}

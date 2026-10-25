@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import {moderationJourney} from './moderation-runtime.mjs'
 
-await moderationJourney('requester-blocking',async({origin,operator,json,send,person,pageFor,capture})=>{
+await moderationJourney('requester-blocking',async({runtime,origin,operator,json,send,person,pageFor,capture})=>{
  const eli=await person('eli@example.test','Eli Wong'),noor=await person('noor@example.test','Noor Ahmed')
  const identity={Authorization:`Bearer ${eli.token}`},independent={Authorization:`Bearer ${noor.token}`}
  const own=await json('/api/public/requests',{title:'Schedule monthly finance exports',description:'Finance needs an export before its monthly review.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},identity,'POST',201)
@@ -49,4 +49,38 @@ await moderationJourney('requester-blocking',async({origin,operator,json,send,pe
  assert.equal((await json(`/api/public/requests/${shared.slug}`)).voteCount,2)
  await capture(visitor,'contributions-restored')
  await send(`/api/public/requests/${shared.slug}/follow`,{},identity,'POST',204)
+ const second=await json('/api/public/requests',{title:'synthetic-penny-8',description:'A second customer post.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},identity,'POST',201)
+ const actor=await runtime.db.prepare('SELECT id FROM operators WHERE email=?').bind('owner@penny.invalid').first('id')
+ const account=await json('/api/operator/accounts',{name:'synthetic-penny-9',internalOwnerId:actor,revenueCents:12000},operator,'POST',201)
+ await runtime.db.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(id,account.id,new Date().toISOString()).run()
+ const evidence=await json('/api/operator/evidence',{sourceType:'support_conversation',sourceLabel:'https://harbor.zendesk.com/agent/tickets/738',wording:'synthetic-penny-10',observedAt:new Date().toISOString(),accountId:account.id},operator,'POST',201)
+ await runtime.db.prepare('UPDATE evidence_items SET requester_id=? WHERE id=?').bind(id,evidence.id).run()
+ await owner.goto(origin+'/app/customers?directory=requesters&q=Eli',{waitUntil:'networkidle'})
+ await card.getByRole('link',{name:'Eli Wong',exact:true}).click()
+ await owner.getByRole('heading',{name:'Eli Wong',exact:true}).waitFor()
+ const profile='/app/people/'+id
+ assert.equal(new URL(owner.url()).pathname,profile)
+ assert.equal(await owner.getByRole('region',{name:'Submitted requests',exact:true}).getByRole('link').count(),2)
+ assert.equal(await owner.getByRole('region',{name:'Votes',exact:true}).getByRole('link').count(),3)
+ await capture(owner,'person-profile')
+ await owner.getByRole('link',{name:'Merge identities',exact:true}).click()
+ await owner.getByRole('region',{name:'Merge identity',exact:true}).waitFor()
+ await capture(owner,'person-merge-door')
+ await owner.goto(origin+'/app/search?entity=requesters&q=Eli',{waitUntil:'networkidle'})
+ await capture(owner,'person-search-entry')
+ await owner.getByRole('link',{name:'Eli Wong',exact:true}).click()
+ await owner.getByRole('heading',{name:'Eli Wong',exact:true}).waitFor();assert.equal(new URL(owner.url()).pathname,profile)
+ await owner.goto(origin+'/app/moderation?item='+await runtime.db.prepare('SELECT id FROM requests WHERE slug=?').bind(shared.slug).first('id'),{waitUntil:'networkidle'})
+ await owner.locator('summary').filter({hasText:/^Supporters \(/}).first().click()
+ await capture(owner,'person-voter-entry')
+ await owner.getByRole('list',{name:'Supporters',exact:true}).getByRole('link',{name:'Eli Wong',exact:true}).click()
+ await owner.getByRole('heading',{name:'Eli Wong',exact:true}).waitFor();assert.equal(new URL(owner.url()).pathname,profile)
+ await owner.goto(origin+'/app/customers/'+account.slug,{waitUntil:'networkidle'})
+ await owner.getByRole('link',{name:'Open Eli Wong profile',exact:true}).waitFor()
+ await capture(owner,'person-account-entry')
+ await owner.getByRole('link',{name:'Open Eli Wong profile',exact:true}).click()
+ await owner.getByRole('heading',{name:'Eli Wong',exact:true}).waitFor();assert.equal(new URL(owner.url()).pathname,profile)
+ assert.equal((await visitor.goto(origin+profile)).status(),404)
+ for(const path of ['/api/public/requests','/api/public/roadmap','/api/public/releases'])assert.equal(JSON.stringify(await json(path)).includes('/people/'),false)
+
 })

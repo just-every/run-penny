@@ -38,6 +38,7 @@ import { Route as AppCustomersIndexRouteImport } from './routes/app.customers.in
 import { Route as AppCustomersAccountSlugRouteImport } from './routes/app.customers.$accountSlug'
 import { Route as AppDecisionsIndexRouteImport } from './routes/app.decisions.index'
 import { Route as AppDecisionsDecisionSlugRouteImport } from './routes/app.decisions.$decisionSlug'
+import { Route as AppPeoplePersonIdRouteImport } from './routes/app.people.$personId'
 import { Route as AppReleasesIndexRouteImport } from './routes/app.releases.index'
 import { Route as AppReleasesReleaseSlugRouteImport } from './routes/app.releases.$releaseSlug'
 import { Route as PortalFeedbackIndexRouteImport } from './routes/portal.feedback.index'
@@ -195,6 +196,11 @@ const AppDecisionsDecisionSlugRoute =
     path: '/$decisionSlug',
     getParentRoute: () => AppDecisionsRoute,
   } as any)
+const AppPeoplePersonIdRoute = AppPeoplePersonIdRouteImport.update({
+  id: '/people/$personId',
+  path: '/people/$personId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReleasesIndexRoute = AppReleasesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -277,6 +283,7 @@ export interface FileRoutesByFullPath {
   '/portal/': typeof PortalIndexRoute
   '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
+  '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
   '/portal/feedback/activity': typeof PortalFeedbackActivityRoute
@@ -310,6 +317,7 @@ export interface FileRoutesByTo {
   '/portal': typeof PortalIndexRoute
   '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
+  '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
   '/portal/feedback/activity': typeof PortalFeedbackActivityRoute
@@ -352,6 +360,7 @@ export interface FileRoutesById {
   '/portal/': typeof PortalIndexRoute
   '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
+  '/app/people/$personId': typeof AppPeoplePersonIdRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
   '/portal/feedback/activity': typeof PortalFeedbackActivityRoute
@@ -395,6 +404,7 @@ export interface FileRouteTypes {
     | '/portal/'
     | '/app/customers/$accountSlug'
     | '/app/decisions/$decisionSlug'
+    | '/app/people/$personId'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
     | '/portal/feedback/activity'
@@ -428,6 +438,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/app/customers/$accountSlug'
     | '/app/decisions/$decisionSlug'
+    | '/app/people/$personId'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
     | '/portal/feedback/activity'
@@ -469,6 +480,7 @@ export interface FileRouteTypes {
     | '/portal/'
     | '/app/customers/$accountSlug'
     | '/app/decisions/$decisionSlug'
+    | '/app/people/$personId'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
     | '/portal/feedback/activity'
@@ -697,6 +709,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDecisionsDecisionSlugRouteImport
       parentRoute: typeof AppDecisionsRoute
     }
+    '/app/people/$personId': {
+      id: '/app/people/$personId'
+      path: '/people/$personId'
+      fullPath: '/app/people/$personId'
+      preLoaderRoute: typeof AppPeoplePersonIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/releases/': {
       id: '/app/releases/'
       path: '/'
@@ -827,6 +846,7 @@ interface AppRouteChildren {
   AppSearchRoute: typeof AppSearchRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppPeoplePersonIdRoute: typeof AppPeoplePersonIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -844,6 +864,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSearchRoute: AppSearchRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppPeoplePersonIdRoute: AppPeoplePersonIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
