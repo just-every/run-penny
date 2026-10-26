@@ -7,6 +7,22 @@ import {fieldClass} from '../auth/client-mutations'
 import {paperCardClass,primaryButtonClass,secondaryButtonClass,disclosureSummaryClass} from '@/core/ui/app/classes'
 import type {Scorecard,ScorecardResult} from './scorecards'
 export interface ScorecardList {cards:Scorecard[];scorerId:string;canConfigure:boolean}
+type Criterion=ScorecardResult['versions'][number]['criteria'][number]
+/** A draft row remembers the position of the saved criterion it started from; rows the person added have none. */
+type DraftCriterion=Criterion&{base?:number}
+interface Base {revision:number;name:string;criteria:Criterion[]}
+const current=(card:ScorecardResult)=>card.versions.find(v=>v.version===card.revision)?.criteria??[]
+/** Fields the person left as the base version had them take the newer version's value at that position; typed fields, added rows and removals stay. */
+function rebase(rows:DraftCriterion[],from:Criterion[],to:Criterion[]):DraftCriterion[]{
+ const kept=rows.flatMap(({base:at,...row}):DraftCriterion[]=>{
+  const was=at===undefined?undefined:from[at]
+  if(at===undefined||!was)return [row]
+  const now=to[at]
+  if(!now)return row.name!==was.name||row.scale!==was.scale||row.weight!==was.weight?[row]:[]
+  return [{name:row.name===was.name?now.name:row.name,scale:row.scale===was.scale?now.scale:row.scale,weight:row.weight===was.weight?now.weight:row.weight,base:at}]
+ })
+ return [...kept,...to.slice(from.length).map((criterion,index)=>({...criterion,base:from.length+index}))]
+}
 export function ScorecardSettings(){
  const [resource,reload]=useOperatorResource<ScorecardList>('/api/operator/scorecards')
  const [createOpen,setCreateOpen]=useState(false),[created,setCreated]=useState(''),[savedId,setSavedId]=useState('')
@@ -21,16 +37,17 @@ function EditScorecard({id,succeeded,onSaved,onSaving}:{id:string;succeeded:bool
  return card.kind==='ready'?<ScorecardEditor key={card.data.id} saved={card.data} succeeded={succeeded} reloading={request.pending} onReload={reload} onSaving={onSaving} onSaved={()=>{reload();onSaved()}}/>:card.kind==='loading'?<p role="status">Loading criteria…</p>:card.kind==='session_expired'?<OperatorSessionExpired/>:<OperatorResourceFailure title="Could not load criteria." onRetry={reload}/>
 }
 function ScorecardEditor({saved,succeeded=false,reloading=false,onReload,onSaved,onSaving}:{saved?:ScorecardResult;succeeded?:boolean;reloading?:boolean;onReload?:()=>void;onSaved:(id:string)=>void;onSaving:()=>void}){
- const initial=saved?.versions.find(v=>v.version===saved.revision)?.criteria??[{name:'Impact',scale:5,weight:1}]
- const [criteria,setCriteria]=useState(initial),[busy,setBusy]=useState(false),[failure,setFailure]=useState<RoundMutationFailure|null>(null)
+ const [base,setBase]=useState<Base|null>(saved?{revision:saved.revision,name:saved.name,criteria:current(saved)}:null)
+ const [criteria,setCriteria]=useState<DraftCriterion[]>(()=>base?base.criteria.map((criterion,index)=>({...criterion,base:index})):[{name:'Impact',scale:5,weight:1}]),[busy,setBusy]=useState(false),[failure,setFailure]=useState<RoundMutationFailure|null>(null)
  const writing=useRef(false),status=useRef<HTMLSpanElement>(null)
  const [name,setName]=useState(saved?.name??''),[entity,setEntity]=useState<Scorecard['entity']>(saved?.entity??'requests')
- // A refresh advances saved.revision while the draft stays owned by this form.
+ // A newer saved version (Reload, or the refresh after a save) is rebased under the draft; the form stays mounted.
+ if(saved&&base&&saved.revision>base.revision){const newer=current(saved);setBase({revision:saved.revision,name:saved.name,criteria:newer});setName(name===base.name?saved.name:name);setCriteria(rebase(criteria,base.criteria,newer))}
  useEffect(()=>{if(succeeded)status.current?.scrollIntoView({block:'nearest'})},[succeeded])
  return <form aria-label={saved?'Edit scorecard':'Create scorecard'} className="mt-4 space-y-4" onSubmit={async event=>{
   event.preventDefault();if(writing.current||reloading)return;writing.current=true;const data=new FormData(event.currentTarget);setBusy(true);setFailure(null);onSaving()
   try{
-   const result=await roundMutation<{id:string}>('/api/operator/scorecards'+(saved?'/'+saved.id:''),{name:data.get('name'),entity:data.get('entity'),criteria,...(saved?{revision:saved.revision}:{})},saved?'PUT':'POST')
+   const result=await roundMutation<{id:string}>('/api/operator/scorecards'+(saved?'/'+saved.id:''),{name:data.get('name'),entity:data.get('entity'),criteria:criteria.map(({name,scale,weight})=>({name,scale,weight})),...(saved?{revision:saved.revision}:{})},saved?'PUT':'POST')
    if(!saved){setName('');setEntity('requests');setCriteria([{name:'Impact',scale:5,weight:1}])}
    onSaved(result.id)
   }catch(error){setFailure(roundMutationFailure(error,"Couldn't save the scorecard."))}finally{writing.current=false;setBusy(false)}
