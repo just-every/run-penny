@@ -6108,11 +6108,11 @@
       "executable": false
     },
     "src/core/features/prioritisation/scorecard-editor.tsx": {
-      "sha256": "7ca228bc711ca8462becda55cfbfb85bee25f294b4e27f5dc1ddbc97491209ea",
+      "sha256": "1849a69d7cd2e82462014f947b99a4b54ed8d2e3fe2f843cc350dcd16a011d79",
       "executable": false
     },
     "src/core/features/prioritisation/scorecard-pane.tsx": {
-      "sha256": "544a52b858b6253dbdb13fcdb51643944ca3b5663034407729377ac917d858d8",
+      "sha256": "7087918975f2964ab1e0d586ec07230d8e9fa816f88326a08d7c511b35b011c5",
       "executable": false
     },
     "src/core/features/prioritisation/scorecard-routes.ts": {
@@ -6436,7 +6436,7 @@
       "executable": false
     },
     "src/core/features/requests/operator-routes.ts": {
-      "sha256": "1676777cb98171e2f26b1ea26a627bae86b5e75dafea6ca5006b30a11d899899",
+      "sha256": "e7b401d69b5a63dbfd53f0b53d47eb6709073b7a8e791e3ac305b66e8bdede90",
       "executable": false
     },
     "src/core/features/requests/pending-actions.ts": {
@@ -6600,7 +6600,11 @@
       "executable": false
     },
     "src/core/features/requests/ui/requester-merge-control.tsx": {
-      "sha256": "461cf30ee42e4caf3bb010a47c493e549c8b8ba1b80257b1e073649d07953d49",
+      "sha256": "0825e01aec46bd7e91d3c2e3d06394369eafe59e77b2bf5d59cf195af6999552",
+      "executable": false
+    },
+    "src/core/features/requests/ui/round-mutation.ts": {
+      "sha256": "cb524f5ff075848fd59931ba79cccfe336fa8bcf203fc3af4ce77cf4b7f7cb84",
       "executable": false
     },
     "src/core/features/requests/ui/settings-anchor.ts": {
@@ -8076,7 +8080,7 @@
       "executable": false
     },
     "tests/browser/prioritisation.mjs": {
-      "sha256": "cb48a71c731ac67ae5ba71d77140e6e6a1883b4ce13de9352206a23a9e5f6b49",
+      "sha256": "4cd2b03dc67b9cb173cf1b9ae69bbe8712761fa753090698c4c4f927f09feaed",
       "executable": false
     },
     "tests/browser/product-hierarchy.mjs": {
