@@ -661,6 +661,10 @@
       "sha256": "912d2c25e04bd3372ee6beff1db967f97bb65d36486de46265505390b39e2601",
       "executable": false
     },
+    ".publish-check/config.json": {
+      "sha256": "4fdc5c97aec5a5290446124668cc1dac50e2ebc6da23949d93ae74e747726278",
+      "executable": false
+    },
     ".publish-check/reviewed.json": {
       "sha256": "be98b2f4166b06a5d0eb5988be82e52c7c275486f72b3b244c17f2e0c7ca00de",
       "executable": false
@@ -8370,7 +8374,7 @@
       "executable": false
     },
     "tests/installer/deploy-dry-run.test.mjs": {
-      "sha256": "4d964b755b1a44fed19db4d1566ac1e68c7e6d1cfcab25771e9d6a8271c56ed8",
+      "sha256": "4c77aef8dfe0166567f74972bac26a967a4bcd8b89bcfdd40be8d57ab1664ff0",
       "executable": false
     },
     "tests/installer/dev-credentials.test.mjs": {
