@@ -662,7 +662,7 @@
       "executable": false
     },
     ".publish-check/reviewed.json": {
-      "sha256": "0a54dc22892f2fa37dbbdc36c63ebf30d81a5ae6aa1cc566bfd2a827aadfa4ac",
+      "sha256": "be98b2f4166b06a5d0eb5988be82e52c7c275486f72b3b244c17f2e0c7ca00de",
       "executable": false
     },
     "ACCEPTANCE.md": {

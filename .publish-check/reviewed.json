@@ -16,6 +16,14 @@
       "reason": "Historical synthetic sender fixture only; current fixture uses a reserved example domain. Retained unpublished commits are not rewritten.",
       "reviewer": "Penny publication review",
       "date": "2026-10-26"
+    },
+    {
+      "rule": "secret.assignment",
+      "path": "base-copies.json",
+      "blob": "c159842c977b29c2462ee57aa20d8f7cebb167cb",
+      "reason": "Reviewed generated provenance digest; no credential value.",
+      "reviewer": "Penny publication review",
+      "date": "2026-10-26"
     }
   ]
 }
