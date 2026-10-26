@@ -50,6 +50,7 @@ async function subject(db: D1Database, id: string): Promise<{ operator: Operator
 
 async function counts(db: D1Database, { operator, native }: { operator: Operator; native: Native }): Promise<Record<string, number>> {
  const queries: [string, D1PreparedStatement][] = [
+  ['penny_scorecard_scores', db.prepare('SELECT count(*) n FROM penny_scorecard_scores WHERE scorer_id=?').bind(operator.id)],
   ['operator_sessions', db.prepare('SELECT count(*) n FROM operator_sessions WHERE operator_id=?').bind(operator.id)],
   ['mail_event_records', db.prepare('SELECT count(*) n FROM mail_event_records WHERE operator_id=?').bind(operator.id)],
   ['native_magic_links', db.prepare('SELECT count(*) n FROM native_magic_links WHERE lower(email)=lower(?)').bind(operator.email)],
@@ -126,6 +127,7 @@ export async function applyOperatorErasure(db: D1Database, operation: string, { 
   const statements: D1PreparedStatement[] = [...applyStart(db, operation),
    guard('EXISTS(SELECT 1 FROM operators WHERE id=? AND email=? AND display_name=?)', operator.id, operator.email, operator.display_name),
    native ? guard("EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND version=? AND status='inactive')", native.id, native.version) : guard('NOT EXISTS(SELECT 1 FROM oa_operators WHERE lower(email)=lower(?))', operator.email),
+   db.prepare('UPDATE penny_scorecard_scores SET scorer_id=NULL WHERE scorer_id=?').bind(operator.id),
    db.prepare('UPDATE operators SET email=?,display_name=?,updated_at=? WHERE id=?').bind(email, LABEL, now, operator.id),
    db.prepare('DELETE FROM operator_sessions WHERE operator_id=?').bind(operator.id),
    db.prepare('DELETE FROM mail_event_records WHERE operator_id=?').bind(operator.id),

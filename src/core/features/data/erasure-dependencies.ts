@@ -6,6 +6,9 @@ import { NativeError } from '@/core/features/auth/native-tokens'
 // history edges introduced/used by the clause work instead of relying on an
 // opaque-ID substring accidentally discovering those children.
 const edges = [
+ ['penny_scorecard_versions','card_id','penny_scorecards'],
+ ['penny_scorecard_scores','card_id','penny_scorecards'],
+ ['penny_scorecard_inputs','score_id','penny_scorecard_scores'],
  ['penny_request_batch_items','request_id','requests'],
  ['penny_request_batch_items','batch_id','penny_request_batches'],
  ['penny_weekly_publications','version_id','release_versions'],

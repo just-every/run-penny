@@ -1,3 +1,4 @@
+import {personHref} from '../../people/paths'
 import { Link } from '@tanstack/react-router'
 import type { OperatorAccountDetail } from '@/core/shared/api/operator'
 import { OperatorCard, OperatorDecisionState } from '@/core/app/ui/operator-primitives'
@@ -53,7 +54,7 @@ export function AccountEvidence({ account }: AccountProps) {
   </section>
 }
 
-export function AccountLinkedRequesters({ account }: AccountProps) {
+export function AccountLinkedRequesters({ account,personLinks=false }: AccountProps&{personLinks?:boolean}) {
   return <OperatorCard className="p-5">
     <h2 className="text-base font-bold text-penny-ink">Linked requesters</h2>
     <CollectionSummary shown={account.requesters.length} total={account.requesterCount} label="linked requesters" href={`/app/customers?directory=requesters&account=${encodeURIComponent(account.slug)}&sort=name`} />
@@ -61,6 +62,7 @@ export function AccountLinkedRequesters({ account }: AccountProps) {
       <ul className="mt-3 divide-y divide-penny-line">{account.requesters.map(requester => <li key={requester.id} className="py-3 first:pt-0 last:pb-0">
         <p className="break-words font-semibold text-penny-ink">{requester.displayName}</p>
         {requester.email ? <p className="mt-1 break-all text-sm text-penny-muted">{requester.email}</p> : null}
+        {personLinks?<WorkspaceLink className={`${textLinkClass} inline-flex min-h-11 items-center text-sm`} href={personHref(requester.id)}>Open {requester.displayName} profile</WorkspaceLink>:null}
         <CustomFieldsEditor entityType="requester" entityId={requester.id} />
       </li>)}</ul>}
     <p className="mt-5 border-t border-penny-line pt-4 text-xs leading-5 text-penny-muted">Requester addresses are visible only in this authenticated operator workspace.</p>

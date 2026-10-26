@@ -1,3 +1,6 @@
+import {registerPeopleRoutes} from '@/core/features/people/routes'
+import {registerScorecardRoutes} from '@/core/features/prioritisation/scorecard-routes'
+import {registerMcpRoutes} from '@/core/features/mcp/routes'
 import {registerBulkRoutes} from '@/core/features/triage/bulk-routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
 import {registerOAuthSettings} from '../features/auth/oauth-settings'
@@ -110,9 +113,12 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerWeeklyRoutes(app)
   registerPlanningRoutes(app)
   registerPrioritisationRoutes(app)
+  registerScorecardRoutes(app)
+  registerPeopleRoutes(app)
   registerHierarchyRoutes(app)
   registerLearningRoutes(app)
   registerIntegrationApi(app)
+  registerMcpRoutes(app)
   registerRequestStatusSettingsRoutes(app)
   registerRedactionRoutes(app)
   registerOAuthSettings(app)

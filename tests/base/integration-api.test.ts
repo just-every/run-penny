@@ -1,3 +1,5 @@
+import {scorecardUpgradeProof} from './scorecard-proof'
+import {mcpProof} from './mcp-client'
 import { previousNotificationGraph } from './previous-notification-fixture'
 import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,afterEach,expect,inject,it,vi} from 'vitest'
@@ -73,6 +75,7 @@ it('[API-002 BASE-ACCESS-002] fences issuance and business writes against native
 })
 it('[API-003 REQ-010 REL-001] composes native public reads, comments, status publication and validation without widening approval or consent',async()=>{
  const g=await graph(),issued=await key(g.operator,['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write'])
+ await mcpProof(g.operator,g.requests[0].slug)
  const slug=g.requests[0].slug
  const snapshot=async()=>({requests:await env.DB.prepare('SELECT count(*) n FROM requests').first('n'),comments:await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n'),updates:await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n'),permissions:await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')})
  const before=await snapshot()
@@ -111,4 +114,5 @@ it('[API-002 BASE-OPS-002 DATA-001] applies each new migration to populated prio
  expect(new Uint8Array(await(await env.FILES.get('api-upgrade-original'))!.arrayBuffer())).toEqual(bytes)
  expect((await request('/api/operator/integrations/keys',undefined,g.operator)).status).toBe(401)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ await scorecardUpgradeProof()
 })

@@ -1,3 +1,4 @@
+import {scorecardProof,scorecardArchiveProof} from './scorecard-proof'
 import {applyD1Migrations} from 'cloudflare:test'
 import {beforeAll,afterAll,expect,inject,it,vi} from 'vitest'
 import {call,env,requester,messages} from './support'
@@ -28,6 +29,7 @@ it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, r
  await json('/api/operator/settings/operators',{email:'finance-peer@example.test'},'POST',202)
  const token=new URL(messages.findLast(message=>message.to==='finance-peer@example.test')!.url).searchParams.get('token')
  const confirmed=await call('/auth/confirm',{token});expect(confirmed.status).toBe(303);const peer={Cookie:confirmed.headers.get('Set-Cookie')!.split(';')[0]}
+ const scored=await scorecardProof(g.operator,peer,g.requests[0].id)
  expect((await json<ViewResult>(path,undefined,'GET',200,peer)).rows).toEqual(view.rows)
  expect((await call(path,{...view.view,revision:view.revision},peer,'PUT')).status).toBe(404)
  await json(path,{...view.view,revision:view.revision,formula:'weighted_sum',weights:{reach:0,importance3:5}},'PUT')
@@ -51,5 +53,6 @@ it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, r
  expect((await call('/api/operator/prioritisation',definition,{...g.operator,Origin:'https://elsewhere.test'})).status).toBe(403)
  for(const url of ['/api/public/requests','/api/public/roadmap','/api/public/releases','/api/operator/decisions']){const text=await(await call(url,undefined,g.operator)).text();expect(text).not.toContain('Finance RICE');expect(text).not.toContain('"score"')}
  const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_priority_views).toHaveLength(2)
+ await scorecardArchiveProof(exported,scored.id)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

@@ -232,8 +232,13 @@ export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironm
     const sourceRequesterId = identifier.safeParse(context.req.param('requesterId'))
     if (!input || !sourceRequesterId.success) return invalid(context)
     return operatorMutation(context, async (operator) => {
-      await new RequestOperatorRepository(context.get('runtime').database).mergeRequesters(sourceRequesterId.data, input.targetRequesterId, operator.id, now())
-      return context.json({ ok: true })
+      try {
+        await new RequestOperatorRepository(context.get('runtime').database).mergeRequesters(sourceRequesterId.data, input.targetRequesterId, operator.id, now())
+        return context.json({ ok: true })
+      } catch (error) {
+        if (error instanceof RequestLifecycleError) return context.json({ error: error.code, message: error.message }, error.status)
+        throw error
+      }
     })
   })
 

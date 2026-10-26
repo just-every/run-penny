@@ -85,6 +85,7 @@
     "@cloudflare/vite-plugin": "1.54.5",
     "@cloudflare/vitest-plugin": "^1.1.2",
     "@cloudflare/workers-types": "^5.20260828.1",
+    "@modelcontextprotocol/sdk": "1.32.2",
     "@playwright/test": "1.63.0",
     "@runeditrun/rer": "0.2.79",
     "@tailwindcss/vite": "^4.3.3",

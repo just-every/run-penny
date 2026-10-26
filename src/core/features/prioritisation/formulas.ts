@@ -105,7 +105,7 @@ export function evaluate(row: FormulaRow, view: ViewInput): EvaluatedRow {
 
 const compareText = (a: string, b: string) => a < b ? -1 : a > b ? 1 : 0;
 
-export function compareRows(a: EvaluatedRow, b: EvaluatedRow): number {
+export function compareRows(a: Pick<EvaluatedRow, 'id' | 'title' | 'score'>, b: Pick<EvaluatedRow, 'id' | 'title' | 'score'>): number {
   if (a.score !== null && b.score === null) return -1;
   if (a.score === null && b.score !== null) return 1;
   if (a.score !== null && b.score !== null && a.score !== b.score) return a.score > b.score ? -1 : 1;

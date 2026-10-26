@@ -1,3 +1,4 @@
+import {personIdFromPath} from '@/core/features/people/paths'
 import { getRequest } from '@tanstack/react-start/server'
 import { redirect } from '@tanstack/react-router'
 import { createPennyApi } from './api'
@@ -77,6 +78,8 @@ export async function operatorResources(href: string): Promise<Resources> {
   const path = operatorUrl.pathname.replace(/\/$/, '')
   const routes: Record<string, string> = { '/app': 'overview', '/app/overview': 'overview', '/app/feedback': 'evidence', '/app/moderation': 'moderation', '/app/decisions': 'decisions', '/app/roadmap': 'roadmap', '/app/releases': 'releases', '/app/customers': operatorUrl.searchParams.get('directory') === 'requesters' ? 'requesters' : 'accounts', '/app/search': 'search', '/app/learning': 'learning' }
   const route = routes[path]
+  const personId=personIdFromPath(path)
+  if(personId)return operatorSnapshot(operatorUrl,'/api/operator/people/'+personId,read)
   if (path === '/app/prioritisation') return operatorSnapshot(operatorUrl,'/api/operator/prioritisation',read)
   if (path === '/app/features') return operatorSnapshot(operatorUrl,'/api/operator/hierarchy',read)
   if (path === '/app/settings') return operatorSnapshot(operatorUrl,'/api/operator/catalog/settings',read)

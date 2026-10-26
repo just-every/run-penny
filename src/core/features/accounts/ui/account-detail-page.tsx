@@ -42,7 +42,7 @@ function AccountContent({ account, onSaved }: { readonly account: OperatorAccoun
         <AccountLinkedRequests account={account} />
         <AccountEvidence account={account} />
       </div>
-      <aside className="min-w-0"><AccountLinkedRequesters account={account} /></aside>
+      <aside className="min-w-0"><AccountLinkedRequesters account={account} personLinks /></aside>
     </div>
   </>
 }

@@ -1,3 +1,4 @@
+import {Scorecards} from './scorecard-pane'
 import {useState} from 'react'
 import {useLocation} from '@tanstack/react-router'
 import {OperatorPageHeader} from '@/core/app/ui/operator-page-header'
@@ -15,7 +16,7 @@ export function PrioritisationPage(){
  return <><OperatorPageHeader eyebrow="Prioritisation" title="Compare demand with every input in view." art={null}>Save a private or shared comparison of requests and features. A formula sorts this view only; decisions and public statuses stay separate.</OperatorPageHeader>
  <div className="space-y-6"><section className={`${paperCardClass} p-5`} aria-label="Saved comparisons"><h2 className="text-xl font-bold">Saved comparisons</h2>{views.kind==='loading'?<OperatorResourceLoading label="Loading comparisons…"/>:views.kind==='session_expired'?<OperatorSessionExpired/>:views.kind!=='ready'?<OperatorResourceFailure title="Could not load comparisons." onRetry={reload}/>:<><ul className="mt-4 space-y-3">{views.data.map(saved=><li key={saved.id} className="break-words"><WorkspaceLink className={textLinkClass} href={`/app/prioritisation?view=${saved.id}`}>{saved.view.name}</WorkspaceLink><span className="ml-2 text-sm text-penny-muted">{saved.view.shared?'Shared':'Private'}{saved.owned?' · Yours':''}</span></li>)}</ul>{!views.data.length?<p className="mt-3 text-penny-muted">No saved comparisons. Create one below.</p>:null}</>}
  <details className="group mt-5"><summary className={disclosureSummaryClass}>Create comparison</summary><div className="mt-3"><ViewEditor onSaved={reload}/></div></details></section>
- {selected?<SelectedView key={selected} id={selected} onSaved={reload}/>:null}</div></>
+ {selected?<SelectedView key={selected} id={selected} onSaved={reload}/>:null}<Scorecards/></div></>
 }
 function SelectedView({id,onSaved}:{id:string;onSaved:()=>void}){
  const [result,reload]=useOperatorResource<ViewResult>(`/api/operator/prioritisation/${id}`),[limit,setLimit]=useState(25)
