@@ -3635,12 +3635,32 @@
       "sha256": "8b5a618b9c2807811a5608aa1eb221252076bd90ec7ef70867b68a72a9f47c6e",
       "executable": false
     },
+    "scripts/ai-eval/duplicates-metrics.mjs": {
+      "sha256": "800991856442ebdc296e695a806d70561f78e0e48e0367a90ca8f2eb74419cb0",
+      "executable": false
+    },
+    "scripts/ai-eval/duplicates-set.mjs": {
+      "sha256": "5ae20b50b92bc10c1e44557f38c275fdd1fbd3a2e8634ebf3959faf7438105c7",
+      "executable": false
+    },
+    "scripts/ai-eval/duplicates.mjs": {
+      "sha256": "cec4ffcac0be1af8b20416fe9239e19f00ea7617b569a9074a893e7b26f69a6b",
+      "executable": false
+    },
+    "scripts/ai-eval/embeddings-transport.mjs": {
+      "sha256": "fd43c693ef6068bffec29900d26fc5767e2d68a7bf16c9d63f48af2d55f1647b",
+      "executable": false
+    },
     "scripts/ai-eval/metrics.mjs": {
       "sha256": "67a04d0d9cd4401090581e5e151acc28ac743748644f5dd316a80a08fd27b138",
       "executable": false
     },
+    "scripts/ai-eval/redaction.mjs": {
+      "sha256": "07363fd1718647c123f4bfe3e02e6ed7593334763ecbdec3e0bba329d5d8d638",
+      "executable": false
+    },
     "scripts/ai-eval/run.mjs": {
-      "sha256": "724bd4d1cb719a288e028b951969defa94cfcb0f87cc21351b13c29b327c1ea1",
+      "sha256": "55f2dd24433d37bd6a42c5f6490c401c90dc84420b3a76d617417b3b0e8b1c34",
       "executable": false
     },
     "scripts/build-delivery-artifact.mjs": {
@@ -4365,6 +4385,10 @@
     },
     "src/core/features/ai/drafts.ts": {
       "sha256": "6090da85d3f297a31a4343e3d731fb15260bb9fd98ad6ad1f6ee447d4067120f",
+      "executable": false
+    },
+    "src/core/features/ai/embeddings.ts": {
+      "sha256": "26c2f30c2140a25d45803c8d98353c8a8cd8693a44b1e883e81b74c26fa71fbc",
       "executable": false
     },
     "src/core/features/ai/learning-policy.ts": {
@@ -8227,6 +8251,14 @@
       "sha256": "38c70a7b62e957c7d9d4abc3121d873287557b4d8ee1cf098d01c71dc7b19f4c",
       "executable": false
     },
+    "tests/fixtures/ai/duplicates-v1/cases.json": {
+      "sha256": "cdf909872d442689d4f0b4b5c051926209242b95447bc86c595d81c6c9aafc32",
+      "executable": false
+    },
+    "tests/fixtures/ai/duplicates-v1/SPEC.md": {
+      "sha256": "520899c55c97ef1d12beaa4bb4497556c74f363feb60baf0224611134d533dc8",
+      "executable": false
+    },
     "tests/fixtures/ai/redaction-v1/cases.json": {
       "sha256": "1cc3bbbd542fdb530f97321d988e09e6e1d0d10937a6a6e03c2054be664024e1",
       "executable": false
@@ -8412,7 +8444,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "70b436485b349bd82a699abc4f38079ef03823a51686c136771deecbb284d23d",
+      "sha256": "63255ea5e7236b7803987d7bd69fe84894dce5bd1fa0ff05db2b80ef4175875b",
       "executable": false
     },
     "visual/01-landing.jpg": {

@@ -41,7 +41,9 @@ mean whole product lexicalTerms with length >=4, not substrings.
 Evaluate pair classification independently for every labeled pair, with the full
 candidate title and description and the query title. Report TP, FP, FN, TN,
 precision, recall and F1 overall and per subset, with zero-denominator handling
-stated. The deterministic lexical baseline predicts duplicate iff overlap >0.
+stated: precision is 1 with no predicted positives, recall is 1 with no labeled
+positives, F1 is 0 if precision plus recall is zero, and recall@5 is null for a
+subset without positives. The deterministic lexical baseline predicts duplicate iff overlap >0.
 This construction deliberately makes that baseline miss every paraphrase and
 accept every hard negative: overlap alone is not semantic equivalence.
 

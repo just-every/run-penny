@@ -13,6 +13,7 @@
         "pnpm run deployment-spec:check",
         "pnpm run typecheck",
         "pnpm run eval:ai -- --set redaction-v1",
+        "pnpm run eval:ai -- --set duplicates-v1",
         "pnpm run lint",
         "pnpm run test:mail-runtime",
         "pnpm run test:data:commands",
