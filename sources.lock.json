@@ -8322,7 +8322,7 @@
       "executable": false
     },
     "tests/fixtures/older-archive/penny.archive": {
-      "sha256": "bfd58dbd9105389935815068194bf80f785c4e73e5d364d722091e6e27787ad9",
+      "sha256": "79b6fd56bd1926442366a40ef385d9492c4a779480c432b9be199d21b3466bc5",
       "executable": false
     },
     "tests/fixtures/older-archive/penny.rer.erasure-journal.json": {
