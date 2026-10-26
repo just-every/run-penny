@@ -1,0 +1,2647 @@
+{
+  "version": "1.0.0",
+  "corpus": [
+    {
+      "id": "synthetic-penny-1",
+      "title": "Recover deleted boards",
+      "description": "Restore accidentally removed feedback collections during a thirty day grace period."
+    },
+    {
+      "id": "synthetic-penny-2",
+      "title": "Scheduled roadmap publication",
+      "description": "Release approved planning updates automatically at a chosen future time."
+    },
+    {
+      "id": "synthetic-penny-3",
+      "title": "Anonymous voting",
+      "description": "Allow visitors to endorse proposals without revealing their identity."
+    },
+    {
+      "id": "synthetic-penny-4",
+      "title": "Merge duplicate requests",
+      "description": "Combine equivalent feature submissions while preserving attached supporters."
+    },
+    {
+      "id": "synthetic-penny-5",
+      "title": "Private internal notes",
+      "description": "Let staff attach confidential commentary hidden from external readers."
+    },
+    {
+      "id": "synthetic-penny-6",
+      "title": "Follow request status",
+      "description": "Notify subscribers whenever a tracked suggestion changes stage."
+    },
+    {
+      "id": "synthetic-penny-7",
+      "title": "Custom feedback categories",
+      "description": "Define organization specific topic groups for incoming suggestions."
+    },
+    {
+      "id": "synthetic-penny-8",
+      "title": "Import spreadsheet feedback",
+      "description": "Load historical suggestions from tabular files with mapped columns."
+    },
+    {
+      "id": "synthetic-penny-9",
+      "title": "Revenue weighted prioritization",
+      "description": "Rank proposals using recurring income associated with interested accounts."
+    },
+    {
+      "id": "synthetic-penny-10",
+      "title": "Public release changelog",
+      "description": "Publish shipped improvements in a customer facing update feed."
+    },
+    {
+      "id": "synthetic-penny-11",
+      "title": "Invoice due reminders",
+      "description": "Send automated nudges before unpaid bills reach their payment deadline."
+    },
+    {
+      "id": "synthetic-penny-12",
+      "title": "Prorated seat charges",
+      "description": "Adjust midcycle bills proportionally when licensed headcount changes."
+    },
+    {
+      "id": "synthetic-penny-13",
+      "title": "Annual billing switch",
+      "description": "Move existing monthly subscriptions onto yearly payment cycles."
+    },
+    {
+      "id": "synthetic-penny-14",
+      "title": "Tax exemption certificates",
+      "description": "Store supporting documents that justify waiving sales levies."
+    },
+    {
+      "id": "synthetic-penny-15",
+      "title": "Refund approval workflow",
+      "description": "Require a second employee to authorize returning customer payments."
+    },
+    {
+      "id": "synthetic-penny-16",
+      "title": "Credit balance history",
+      "description": "Display every adjustment contributing to unused customer funds."
+    },
+    {
+      "id": "synthetic-penny-17",
+      "title": "Usage spending caps",
+      "description": "Stop metered consumption once an account reaches its budget limit."
+    },
+    {
+      "id": "synthetic-penny-18",
+      "title": "Invoice PDF branding",
+      "description": "Apply company colors and logo to downloadable billing documents."
+    },
+    {
+      "id": "synthetic-penny-19",
+      "title": "Failed payment retries",
+      "description": "Attempt collection again after a card transaction is declined."
+    },
+    {
+      "id": "synthetic-penny-20",
+      "title": "Consolidated subscription invoices",
+      "description": "Put charges from several subscriptions onto one customer bill."
+    },
+    {
+      "id": "synthetic-penny-21",
+      "title": "Passkey sign in",
+      "description": "Authenticate accounts using device bound cryptographic credentials instead of passwords."
+    },
+    {
+      "id": "synthetic-penny-22",
+      "title": "Time limited guest access",
+      "description": "Automatically revoke external collaborator permissions after a set duration."
+    },
+    {
+      "id": "synthetic-penny-23",
+      "title": "Session device list",
+      "description": "Show active logins with browser and hardware details."
+    },
+    {
+      "id": "synthetic-penny-24",
+      "title": "Approval for role changes",
+      "description": "Require authorization before modifying a member's permission level."
+    },
+    {
+      "id": "synthetic-penny-25",
+      "title": "Domain based invitations",
+      "description": "Accept new members only when their email suffix matches an allowlist."
+    },
+    {
+      "id": "synthetic-penny-26",
+      "title": "Idle session timeout",
+      "description": "End authenticated sessions after a configurable period without activity."
+    },
+    {
+      "id": "synthetic-penny-27",
+      "title": "Permission preview",
+      "description": "Show an administrator exactly what a selected role can see."
+    },
+    {
+      "id": "synthetic-penny-28",
+      "title": "Recovery code download",
+      "description": "Save one time account rescue codes as a printable file."
+    },
+    {
+      "id": "synthetic-penny-29",
+      "title": "Account ownership transfer",
+      "description": "Hand ultimate administrative control to another existing member."
+    },
+    {
+      "id": "synthetic-penny-30",
+      "title": "Regional login restrictions",
+      "description": "Block authentication attempts originating outside permitted countries."
+    },
+    {
+      "id": "synthetic-penny-31",
+      "title": "Document version restore",
+      "description": "Replace current content with an earlier saved revision."
+    },
+    {
+      "id": "synthetic-penny-32",
+      "title": "Inline comment threads",
+      "description": "Attach discussions directly to selected passages of text."
+    },
+    {
+      "id": "synthetic-penny-33",
+      "title": "Offline draft editing",
+      "description": "Allow writing changes without connectivity then synchronize upon reconnection."
+    },
+    {
+      "id": "synthetic-penny-34",
+      "title": "Rich text paste cleanup",
+      "description": "Strip unwanted formatting when inserting copied styled content."
+    },
+    {
+      "id": "synthetic-penny-35",
+      "title": "Document link expiry",
+      "description": "Make shared reading URLs stop working after a chosen date."
+    },
+    {
+      "id": "synthetic-penny-36",
+      "title": "Nested folder navigation",
+      "description": "Organize files inside hierarchical directories with expandable browsing."
+    },
+    {
+      "id": "synthetic-penny-37",
+      "title": "Content translation workflow",
+      "description": "Assign language adaptation jobs and track their review stages."
+    },
+    {
+      "id": "synthetic-penny-38",
+      "title": "Reusable content blocks",
+      "description": "Maintain shared snippets whose edits propagate across documents."
+    },
+    {
+      "id": "synthetic-penny-39",
+      "title": "Document reading progress",
+      "description": "Remember the last viewed position when reopening long files."
+    },
+    {
+      "id": "synthetic-penny-40",
+      "title": "Accessibility image descriptions",
+      "description": "Require meaningful alternative text before publishing images."
+    },
+    {
+      "id": "synthetic-penny-41",
+      "title": "Meeting timezone display",
+      "description": "Render appointment times in each attendee's local zone."
+    },
+    {
+      "id": "synthetic-penny-42",
+      "title": "Round robin booking",
+      "description": "Distribute incoming appointments evenly among available team members."
+    },
+    {
+      "id": "synthetic-penny-43",
+      "title": "Appointment buffer gaps",
+      "description": "Reserve preparation intervals before and after scheduled visits."
+    },
+    {
+      "id": "synthetic-penny-44",
+      "title": "Recurring event exceptions",
+      "description": "Reschedule one occurrence without altering its repeating series."
+    },
+    {
+      "id": "synthetic-penny-45",
+      "title": "Waitlist slot offers",
+      "description": "Notify queued attendees when a cancelled reservation becomes available."
+    },
+    {
+      "id": "synthetic-penny-46",
+      "title": "Room capacity checks",
+      "description": "Reject reservations whose participant count exceeds a space's occupancy limit."
+    },
+    {
+      "id": "synthetic-penny-47",
+      "title": "Calendar blackout dates",
+      "description": "Prevent new appointments during explicitly unavailable days."
+    },
+    {
+      "id": "synthetic-penny-48",
+      "title": "Appointment deposit collection",
+      "description": "Take a partial payment when confirming a reserved visit."
+    },
+    {
+      "id": "synthetic-penny-49",
+      "title": "Booking reschedule link",
+      "description": "Let invitees move confirmed appointments through a self service URL."
+    },
+    {
+      "id": "synthetic-penny-50",
+      "title": "Attendance check in",
+      "description": "Record arrivals by scanning admission codes at an event entrance."
+    },
+    {
+      "id": "synthetic-penny-51",
+      "title": "Resumable file uploads",
+      "description": "Continue interrupted transfers from their last completed byte."
+    },
+    {
+      "id": "synthetic-penny-52",
+      "title": "Attachment virus scanning",
+      "description": "Inspect incoming files for malware before making them downloadable."
+    },
+    {
+      "id": "synthetic-penny-53",
+      "title": "Storage quota alerts",
+      "description": "Warn administrators before used disk space reaches its allocation."
+    },
+    {
+      "id": "synthetic-penny-54",
+      "title": "Image upload resizing",
+      "description": "Shrink oversized pictures automatically during transfer into the library."
+    },
+    {
+      "id": "synthetic-penny-55",
+      "title": "File checksum verification",
+      "description": "Detect transfer corruption by comparing content digests."
+    },
+    {
+      "id": "synthetic-penny-56",
+      "title": "Expiring download links",
+      "description": "Disable attachment retrieval URLs once their lifetime elapses."
+    },
+    {
+      "id": "synthetic-penny-57",
+      "title": "Bulk file rename",
+      "description": "Apply a naming pattern to many selected attachments together."
+    },
+    {
+      "id": "synthetic-penny-58",
+      "title": "Video transcript search",
+      "description": "Find moments in recordings by matching spoken words."
+    },
+    {
+      "id": "synthetic-penny-59",
+      "title": "Folder permission inheritance",
+      "description": "Pass directory access rules down to contained files automatically."
+    },
+    {
+      "id": "synthetic-penny-60",
+      "title": "File retention expiry",
+      "description": "Remove stored attachments automatically once their preservation deadline passes."
+    },
+    {
+      "id": "synthetic-penny-61",
+      "title": "Low stock notifications",
+      "description": "Alert merchants when inventory falls beneath reorder levels."
+    },
+    {
+      "id": "synthetic-penny-62",
+      "title": "Partial order shipment",
+      "description": "Send available items now while leaving unavailable lines pending."
+    },
+    {
+      "id": "synthetic-penny-63",
+      "title": "Return shipping labels",
+      "description": "Generate prepaid postage documents for customers sending goods back."
+    },
+    {
+      "id": "synthetic-penny-64",
+      "title": "Gift message checkout",
+      "description": "Let buyers include a personal note with a present purchase."
+    },
+    {
+      "id": "synthetic-penny-65",
+      "title": "Discount code stacking",
+      "description": "Apply multiple promotional vouchers to a single purchase."
+    },
+    {
+      "id": "synthetic-penny-66",
+      "title": "Product variant images",
+      "description": "Change the displayed photograph when a shopper selects an option."
+    },
+    {
+      "id": "synthetic-penny-67",
+      "title": "Abandoned cart reminders",
+      "description": "Email shoppers who left purchases unfinished after adding items."
+    },
+    {
+      "id": "synthetic-penny-68",
+      "title": "Address validation checkout",
+      "description": "Reject impossible delivery locations before accepting a purchase."
+    },
+    {
+      "id": "synthetic-penny-69",
+      "title": "Preorder release dates",
+      "description": "Display when unreleased goods are expected to become available."
+    },
+    {
+      "id": "synthetic-penny-70",
+      "title": "Warehouse stock transfers",
+      "description": "Move counted inventory between storage locations with an audit trail."
+    },
+    {
+      "id": "synthetic-penny-71",
+      "title": "Saved analytics filters",
+      "description": "Remember named query criteria for reuse on reporting screens."
+    },
+    {
+      "id": "synthetic-penny-72",
+      "title": "Scheduled report delivery",
+      "description": "Send generated summaries to subscribers at recurring intervals."
+    },
+    {
+      "id": "synthetic-penny-73",
+      "title": "Funnel dropoff analysis",
+      "description": "Show which conversion steps lose the most visitors."
+    },
+    {
+      "id": "synthetic-penny-74",
+      "title": "Metric anomaly detection",
+      "description": "Flag unusual movements in measurements relative to historical patterns."
+    },
+    {
+      "id": "synthetic-penny-75",
+      "title": "Dashboard date comparison",
+      "description": "Place results from two selected time ranges side by side."
+    },
+    {
+      "id": "synthetic-penny-76",
+      "title": "Event data export",
+      "description": "Download raw tracked activity records in a machine readable format."
+    },
+    {
+      "id": "synthetic-penny-77",
+      "title": "Audit log search",
+      "description": "Find administrative actions by actor, operation and occurrence date."
+    },
+    {
+      "id": "synthetic-penny-78",
+      "title": "Webhook signature verification",
+      "description": "Authenticate incoming callback payloads using a shared signing secret."
+    },
+    {
+      "id": "synthetic-penny-79",
+      "title": "Build failure notifications",
+      "description": "Send developers an alert whenever compilation jobs fail."
+    },
+    {
+      "id": "synthetic-penny-80",
+      "title": "Deployment rollback button",
+      "description": "Restore the previously running application release through a single action."
+    }
+  ],
+  "pairs": [
+    {
+      "id": "synthetic-penny-81",
+      "queryTitle": "Bring erased suggestion spaces back within one month",
+      "requestId": "synthetic-penny-1",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-82",
+      "queryTitle": "Recover feedback boards after accidental deletion",
+      "requestId": "synthetic-penny-1",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-83",
+      "queryTitle": "Recover deleted boards permanently after their grace period expires",
+      "requestId": "synthetic-penny-1",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-84",
+      "queryTitle": "Export deleted boards as printable reports",
+      "requestId": "synthetic-penny-1",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-85",
+      "queryTitle": "Make agreed delivery plans visible later without manual intervention",
+      "requestId": "synthetic-penny-2",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-86",
+      "queryTitle": "Schedule roadmap updates for publication next week",
+      "requestId": "synthetic-penny-2",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-87",
+      "queryTitle": "Scheduled roadmap publication should respect each viewer timezone when formatting dates",
+      "requestId": "synthetic-penny-2",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-88",
+      "queryTitle": "Translate roadmap publication text into another language",
+      "requestId": "synthetic-penny-2",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-89",
+      "queryTitle": "Let unnamed guests support ideas privately",
+      "requestId": "synthetic-penny-3",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-90",
+      "queryTitle": "Enable anonymous voting on proposals",
+      "requestId": "synthetic-penny-3",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-91",
+      "queryTitle": "Anonymous voting needs a daily abuse quota per browser",
+      "requestId": "synthetic-penny-3",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-92",
+      "queryTitle": "Show anonymous voting totals as a chart",
+      "requestId": "synthetic-penny-3",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-93",
+      "queryTitle": "Unify repeated product suggestions without losing backers",
+      "requestId": "synthetic-penny-4",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-94",
+      "queryTitle": "Merge matching requests and retain supporters",
+      "requestId": "synthetic-penny-4",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-95",
+      "queryTitle": "Split accidentally merged duplicate requests into separate records",
+      "requestId": "synthetic-penny-4",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-96",
+      "queryTitle": "Detect duplicate requests before submission without merging anything",
+      "requestId": "synthetic-penny-4",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-97",
+      "queryTitle": "Give employees a place for remarks customers cannot see",
+      "requestId": "synthetic-penny-5",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-98",
+      "queryTitle": "Add private notes visible only to staff",
+      "requestId": "synthetic-penny-5",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-99",
+      "queryTitle": "Private internal notes need full text search",
+      "requestId": "synthetic-penny-5",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-100",
+      "queryTitle": "Erase private internal notes after a retention deadline",
+      "requestId": "synthetic-penny-5",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-101",
+      "queryTitle": "Tell watchers when followed ideas move through workflow steps",
+      "requestId": "synthetic-penny-6",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-102",
+      "queryTitle": "Follow requests and receive status notifications",
+      "requestId": "synthetic-penny-6",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-103",
+      "queryTitle": "Follow request status without receiving notifications",
+      "requestId": "synthetic-penny-6",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-104",
+      "queryTitle": "Notify subscribers when a new request is created",
+      "requestId": "synthetic-penny-6",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-105",
+      "queryTitle": "Create tailored buckets that classify submitted ideas",
+      "requestId": "synthetic-penny-7",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-106",
+      "queryTitle": "Add custom categories for feedback",
+      "requestId": "synthetic-penny-7",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-107",
+      "queryTitle": "Sort feedback categories alphabetically",
+      "requestId": "synthetic-penny-7",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-108",
+      "queryTitle": "Restrict which staff can create custom feedback categories",
+      "requestId": "synthetic-penny-7",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-109",
+      "queryTitle": "Bring earlier feature ideas in using uploaded workbook rows",
+      "requestId": "synthetic-penny-8",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-110",
+      "queryTitle": "Import feedback from a spreadsheet using column mapping",
+      "requestId": "synthetic-penny-8",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-111",
+      "queryTitle": "Export feedback to spreadsheet files",
+      "requestId": "synthetic-penny-8",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-112",
+      "queryTitle": "Import spreadsheet feedback should identify duplicate uploads without loading rows",
+      "requestId": "synthetic-penny-8",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-113",
+      "queryTitle": "Order feature ideas by subscription value represented among backers",
+      "requestId": "synthetic-penny-9",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-114",
+      "queryTitle": "Prioritize proposals by weighted account revenue",
+      "requestId": "synthetic-penny-9",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-115",
+      "queryTitle": "Hide revenue weighted prioritization scores from junior staff",
+      "requestId": "synthetic-penny-9",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-116",
+      "queryTitle": "Convert account revenue into another currency",
+      "requestId": "synthetic-penny-9",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-117",
+      "queryTitle": "Share delivered enhancements through an outward announcement journal",
+      "requestId": "synthetic-penny-10",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-118",
+      "queryTitle": "Publish a public changelog of released improvements",
+      "requestId": "synthetic-penny-10",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-119",
+      "queryTitle": "Let customers subscribe to public release changelog notifications",
+      "requestId": "synthetic-penny-10",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-120",
+      "queryTitle": "Search old public release changelog entries",
+      "requestId": "synthetic-penny-10",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-121",
+      "queryTitle": "Prompt debtors ahead of settlement dates",
+      "requestId": "synthetic-penny-11",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-122",
+      "queryTitle": "Remind customers before invoice payments become due",
+      "requestId": "synthetic-penny-11",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-123",
+      "queryTitle": "Send invoice reminders only after the due date",
+      "requestId": "synthetic-penny-11",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-124",
+      "queryTitle": "Add due dates to invoice templates",
+      "requestId": "synthetic-penny-11",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-125",
+      "queryTitle": "Calculate partial period fees whenever users join or leave paid plans",
+      "requestId": "synthetic-penny-12",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-126",
+      "queryTitle": "Prorate charges for seat additions during a billing cycle",
+      "requestId": "synthetic-penny-12",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-127",
+      "queryTitle": "Show seat charges as separate line items on bills",
+      "requestId": "synthetic-penny-12",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-128",
+      "queryTitle": "Cap seat charges when licensed headcount reaches a limit",
+      "requestId": "synthetic-penny-12",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-129",
+      "queryTitle": "Convert current recurring contracts from twelve installments into one upfront charge",
+      "requestId": "synthetic-penny-13",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-130",
+      "queryTitle": "Switch monthly subscriptions to annual billing",
+      "requestId": "synthetic-penny-13",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-131",
+      "queryTitle": "Offer annual billing during first signup only",
+      "requestId": "synthetic-penny-13",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-132",
+      "queryTitle": "Compare annual billing revenue against monthly revenue",
+      "requestId": "synthetic-penny-13",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-133",
+      "queryTitle": "Keep proof explaining why purchasers owe no transaction duties",
+      "requestId": "synthetic-penny-14",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-134",
+      "queryTitle": "Attach tax exemption certificates to customer accounts",
+      "requestId": "synthetic-penny-14",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-135",
+      "queryTitle": "Warn when tax exemption certificates expire",
+      "requestId": "synthetic-penny-14",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-136",
+      "queryTitle": "Calculate sales tax rates from billing addresses",
+      "requestId": "synthetic-penny-14",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-137",
+      "queryTitle": "Get another worker's consent before reimbursing buyers",
+      "requestId": "synthetic-penny-15",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-138",
+      "queryTitle": "Require approval before issuing a refund",
+      "requestId": "synthetic-penny-15",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-139",
+      "queryTitle": "Notify employees after a refund completes",
+      "requestId": "synthetic-penny-15",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-140",
+      "queryTitle": "Show approval workflow duration in a dashboard",
+      "requestId": "synthetic-penny-15",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-141",
+      "queryTitle": "Explain how remaining prepaid money accumulated through an itemized ledger",
+      "requestId": "synthetic-penny-16",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-142",
+      "queryTitle": "Show transaction history behind a credit balance",
+      "requestId": "synthetic-penny-16",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-143",
+      "queryTitle": "Transfer credit balance between customer accounts",
+      "requestId": "synthetic-penny-16",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-144",
+      "queryTitle": "Alert customers when their credit balance runs low",
+      "requestId": "synthetic-penny-16",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-145",
+      "queryTitle": "Block further billable activity after allocated money runs out",
+      "requestId": "synthetic-penny-17",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-146",
+      "queryTitle": "Cap usage spending at an account budget",
+      "requestId": "synthetic-penny-17",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-147",
+      "queryTitle": "Warn about usage spending without blocking consumption",
+      "requestId": "synthetic-penny-17",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-148",
+      "queryTitle": "Raise usage spending caps automatically every month",
+      "requestId": "synthetic-penny-17",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-149",
+      "queryTitle": "Style printable payment statements with business visual identity",
+      "requestId": "synthetic-penny-18",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-150",
+      "queryTitle": "Brand invoice PDF downloads with custom colors",
+      "requestId": "synthetic-penny-18",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-151",
+      "queryTitle": "Add a payment button to invoice PDF files",
+      "requestId": "synthetic-penny-18",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-152",
+      "queryTitle": "Translate invoice PDF text into another language",
+      "requestId": "synthetic-penny-18",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-153",
+      "queryTitle": "Try charging once more following an unsuccessful debit",
+      "requestId": "synthetic-penny-19",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-154",
+      "queryTitle": "Retry failed card payments automatically",
+      "requestId": "synthetic-penny-19",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-155",
+      "queryTitle": "Send customers an alert after failed payment retries",
+      "requestId": "synthetic-penny-19",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-156",
+      "queryTitle": "Let customers choose payment retry dates manually",
+      "requestId": "synthetic-penny-19",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-157",
+      "queryTitle": "Bundle multiple recurring contracts into a single payment statement",
+      "requestId": "synthetic-penny-20",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-158",
+      "queryTitle": "Consolidate subscription charges into one invoice",
+      "requestId": "synthetic-penny-20",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-159",
+      "queryTitle": "Split consolidated subscription invoices by department",
+      "requestId": "synthetic-penny-20",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-160",
+      "queryTitle": "Search subscription invoices by purchase order",
+      "requestId": "synthetic-penny-20",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-161",
+      "queryTitle": "Enter profiles through hardware backed keypairs rather than memorized secrets",
+      "requestId": "synthetic-penny-21",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-162",
+      "queryTitle": "Allow passkey authentication for sign in",
+      "requestId": "synthetic-penny-21",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-163",
+      "queryTitle": "Let users remove a passkey from their account",
+      "requestId": "synthetic-penny-21",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-164",
+      "queryTitle": "Require a passkey before deleting an account",
+      "requestId": "synthetic-penny-21",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-165",
+      "queryTitle": "Expire temporary visitor privileges once their allotted window ends",
+      "requestId": "synthetic-penny-22",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-166",
+      "queryTitle": "Give guests access that expires after a chosen time",
+      "requestId": "synthetic-penny-22",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-167",
+      "queryTitle": "Show guest access expiry dates in the member directory",
+      "requestId": "synthetic-penny-22",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-168",
+      "queryTitle": "Audit guest access activity during their authorized period",
+      "requestId": "synthetic-penny-22",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-169",
+      "queryTitle": "Display where people remain signed on across computers",
+      "requestId": "synthetic-penny-23",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-170",
+      "queryTitle": "List devices for current account sessions",
+      "requestId": "synthetic-penny-23",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-171",
+      "queryTitle": "Remotely terminate a session from the device list",
+      "requestId": "synthetic-penny-23",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-172",
+      "queryTitle": "Rename entries in the session device list",
+      "requestId": "synthetic-penny-23",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-173",
+      "queryTitle": "Get consent prior to altering someone's access tier",
+      "requestId": "synthetic-penny-24",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-174",
+      "queryTitle": "Require approval when changing a member role",
+      "requestId": "synthetic-penny-24",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-175",
+      "queryTitle": "Record role changes in an audit log without approval",
+      "requestId": "synthetic-penny-24",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-176",
+      "queryTitle": "Notify members after approval for role changes is granted",
+      "requestId": "synthetic-penny-24",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-177",
+      "queryTitle": "Admit teammates solely through approved organizational mailbox endings",
+      "requestId": "synthetic-penny-25",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-178",
+      "queryTitle": "Restrict invitations to allowed email domains",
+      "requestId": "synthetic-penny-25",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-179",
+      "queryTitle": "Automatically send invitations to every address in an allowed domain",
+      "requestId": "synthetic-penny-25",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-180",
+      "queryTitle": "Track acceptance rates for domain based invitations",
+      "requestId": "synthetic-penny-25",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-181",
+      "queryTitle": "Log people out when they have stopped interacting too long",
+      "requestId": "synthetic-penny-26",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-182",
+      "queryTitle": "Set an idle timeout for inactive sessions",
+      "requestId": "synthetic-penny-26",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-183",
+      "queryTitle": "Warn users before an idle session timeout",
+      "requestId": "synthetic-penny-26",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-184",
+      "queryTitle": "Keep sessions alive despite an idle timeout",
+      "requestId": "synthetic-penny-26",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-185",
+      "queryTitle": "Let managers inspect screens through another access tier's perspective",
+      "requestId": "synthetic-penny-27",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-186",
+      "queryTitle": "Preview visible content for a permission role",
+      "requestId": "synthetic-penny-27",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-187",
+      "queryTitle": "Export a permission matrix for all roles",
+      "requestId": "synthetic-penny-27",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-188",
+      "queryTitle": "Request additional permission from the preview screen",
+      "requestId": "synthetic-penny-27",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-189",
+      "queryTitle": "Obtain an offline document containing single use login backups",
+      "requestId": "synthetic-penny-28",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-190",
+      "queryTitle": "Download recovery codes for offline storage",
+      "requestId": "synthetic-penny-28",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-191",
+      "queryTitle": "Regenerate recovery codes after losing a download",
+      "requestId": "synthetic-penny-28",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-192",
+      "queryTitle": "Count how many recovery codes remain unused",
+      "requestId": "synthetic-penny-28",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-193",
+      "queryTitle": "Make a different current teammate the principal administrator",
+      "requestId": "synthetic-penny-29",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-194",
+      "queryTitle": "Transfer account ownership to another member",
+      "requestId": "synthetic-penny-29",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-195",
+      "queryTitle": "Require ownership confirmation before account deletion",
+      "requestId": "synthetic-penny-29",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-196",
+      "queryTitle": "Allow shared account ownership among multiple members",
+      "requestId": "synthetic-penny-29",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-197",
+      "queryTitle": "Prevent entry from unapproved nations",
+      "requestId": "synthetic-penny-30",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-198",
+      "queryTitle": "Restrict login by permitted countries",
+      "requestId": "synthetic-penny-30",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-199",
+      "queryTitle": "Show regional login statistics without blocking entry",
+      "requestId": "synthetic-penny-30",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-200",
+      "queryTitle": "Let travellers temporarily bypass regional login restrictions",
+      "requestId": "synthetic-penny-30",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-201",
+      "queryTitle": "Revert a file back to its previous state",
+      "requestId": "synthetic-penny-31",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-202",
+      "queryTitle": "Restore an earlier version of a document",
+      "requestId": "synthetic-penny-31",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-203",
+      "queryTitle": "Compare document versions side by side",
+      "requestId": "synthetic-penny-31",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-204",
+      "queryTitle": "Automatically delete old document versions",
+      "requestId": "synthetic-penny-31",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-205",
+      "queryTitle": "Place conversations alongside highlighted prose",
+      "requestId": "synthetic-penny-32",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-206",
+      "queryTitle": "Add inline comment threads on selected text",
+      "requestId": "synthetic-penny-32",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-207",
+      "queryTitle": "Resolve inline comment threads after discussion ends",
+      "requestId": "synthetic-penny-32",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-208",
+      "queryTitle": "Notify authors when inline comment threads receive replies",
+      "requestId": "synthetic-penny-32",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-209",
+      "queryTitle": "Continue composing while disconnected and reconcile once service returns",
+      "requestId": "synthetic-penny-33",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-210",
+      "queryTitle": "Edit drafts offline and sync changes later",
+      "requestId": "synthetic-penny-33",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-211",
+      "queryTitle": "Show an offline warning while draft editing is unavailable",
+      "requestId": "synthetic-penny-33",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-212",
+      "queryTitle": "Export drafts for offline reading without editing",
+      "requestId": "synthetic-penny-33",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-213",
+      "queryTitle": "Insert clipboard prose while removing foreign visual markup",
+      "requestId": "synthetic-penny-34",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-214",
+      "queryTitle": "Clean rich text formatting on paste",
+      "requestId": "synthetic-penny-34",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-215",
+      "queryTitle": "Preserve every source style during rich text paste",
+      "requestId": "synthetic-penny-34",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-216",
+      "queryTitle": "Detect sensitive information during rich text paste",
+      "requestId": "synthetic-penny-34",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-217",
+      "queryTitle": "Disable distributed file addresses once their access deadline passes",
+      "requestId": "synthetic-penny-35",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-218",
+      "queryTitle": "Set expiry dates for document sharing links",
+      "requestId": "synthetic-penny-35",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-219",
+      "queryTitle": "Renew document links after expiry",
+      "requestId": "synthetic-penny-35",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-220",
+      "queryTitle": "Measure how often document links are opened before expiry",
+      "requestId": "synthetic-penny-35",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-221",
+      "queryTitle": "Browse stored items through trees of containers within containers",
+      "requestId": "synthetic-penny-36",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-222",
+      "queryTitle": "Navigate nested folders in an expandable tree",
+      "requestId": "synthetic-penny-36",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-223",
+      "queryTitle": "Search across nested folder contents",
+      "requestId": "synthetic-penny-36",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-224",
+      "queryTitle": "Limit folder nesting depth during uploads",
+      "requestId": "synthetic-penny-36",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-225",
+      "queryTitle": "Route localization tasks through editors until each locale is ready",
+      "requestId": "synthetic-penny-37",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-226",
+      "queryTitle": "Track translation assignments and review stages for content",
+      "requestId": "synthetic-penny-37",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-227",
+      "queryTitle": "Automatically translate content immediately without a review workflow",
+      "requestId": "synthetic-penny-37",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-228",
+      "queryTitle": "Compare content translation costs across languages",
+      "requestId": "synthetic-penny-37",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-229",
+      "queryTitle": "Update common fragments once so every embedded instance changes",
+      "requestId": "synthetic-penny-38",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-230",
+      "queryTitle": "Create reusable blocks synchronized across content",
+      "requestId": "synthetic-penny-38",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-231",
+      "queryTitle": "Copy content blocks as independent snapshots",
+      "requestId": "synthetic-penny-38",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-232",
+      "queryTitle": "Track how frequently reusable content blocks are viewed",
+      "requestId": "synthetic-penny-38",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-233",
+      "queryTitle": "Resume lengthy written material wherever someone stopped",
+      "requestId": "synthetic-penny-39",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-234",
+      "queryTitle": "Remember reading progress within each document",
+      "requestId": "synthetic-penny-39",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-235",
+      "queryTitle": "Show estimated document reading time",
+      "requestId": "synthetic-penny-39",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-236",
+      "queryTitle": "Count completed document readings per month",
+      "requestId": "synthetic-penny-39",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-237",
+      "queryTitle": "Demand useful written equivalents for pictures prior to release",
+      "requestId": "synthetic-penny-40",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-238",
+      "queryTitle": "Require image descriptions for accessible publishing",
+      "requestId": "synthetic-penny-40",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-239",
+      "queryTitle": "Generate accessibility image descriptions automatically",
+      "requestId": "synthetic-penny-40",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-240",
+      "queryTitle": "Audit existing image descriptions for spelling errors",
+      "requestId": "synthetic-penny-40",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-241",
+      "queryTitle": "Show scheduled gatherings using participants' own regional clocks",
+      "requestId": "synthetic-penny-41",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-242",
+      "queryTitle": "Display meeting times in attendee timezones",
+      "requestId": "synthetic-penny-41",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-243",
+      "queryTitle": "Prevent scheduling a meeting outside working hours",
+      "requestId": "synthetic-penny-41",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-244",
+      "queryTitle": "Track warehouse stock levels",
+      "requestId": "synthetic-penny-41",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-245",
+      "queryTitle": "Rotate new reservations fairly across free colleagues",
+      "requestId": "synthetic-penny-42",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-246",
+      "queryTitle": "Assign bookings to team members using round robin",
+      "requestId": "synthetic-penny-42",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-247",
+      "queryTitle": "Round robin booking should prefer the highest rated member",
+      "requestId": "synthetic-penny-42",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-248",
+      "queryTitle": "Crop profile pictures into circles",
+      "requestId": "synthetic-penny-42",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-249",
+      "queryTitle": "Leave breathing room around each calendar reservation",
+      "requestId": "synthetic-penny-43",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-250",
+      "queryTitle": "Add buffer gaps around appointments",
+      "requestId": "synthetic-penny-43",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-251",
+      "queryTitle": "Allow back to back appointments by removing buffer gaps",
+      "requestId": "synthetic-penny-43",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-252",
+      "queryTitle": "Download yearly tax statements",
+      "requestId": "synthetic-penny-43",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-253",
+      "queryTitle": "Move a single instance while leaving the regular pattern intact",
+      "requestId": "synthetic-penny-44",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-254",
+      "queryTitle": "Change one recurring event occurrence independently",
+      "requestId": "synthetic-penny-44",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-255",
+      "queryTitle": "Delete an entire recurring event series",
+      "requestId": "synthetic-penny-44",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-256",
+      "queryTitle": "Choose application accent colors",
+      "requestId": "synthetic-penny-44",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-257",
+      "queryTitle": "Offer newly freed places to people awaiting admission",
+      "requestId": "synthetic-penny-45",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-258",
+      "queryTitle": "Offer cancelled slots to people on a waitlist",
+      "requestId": "synthetic-penny-45",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-259",
+      "queryTitle": "Show waitlist length on the booking page",
+      "requestId": "synthetic-penny-45",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-260",
+      "queryTitle": "Measure report generation latency",
+      "requestId": "synthetic-penny-45",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-261",
+      "queryTitle": "Refuse bookings where attendees outnumber available places",
+      "requestId": "synthetic-penny-46",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-262",
+      "queryTitle": "Check room capacity before confirming reservations",
+      "requestId": "synthetic-penny-46",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-263",
+      "queryTitle": "Show room capacity without enforcing booking limits",
+      "requestId": "synthetic-penny-46",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-264",
+      "queryTitle": "Combine repeated feature suggestions",
+      "requestId": "synthetic-penny-46",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-265",
+      "queryTitle": "Block fresh reservations throughout designated closed periods",
+      "requestId": "synthetic-penny-47",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-266",
+      "queryTitle": "Set blackout dates on the booking calendar",
+      "requestId": "synthetic-penny-47",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-267",
+      "queryTitle": "Hide blackout dates from the public calendar",
+      "requestId": "synthetic-penny-47",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-268",
+      "queryTitle": "Validate uploaded archive integrity",
+      "requestId": "synthetic-penny-47",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-269",
+      "queryTitle": "Charge an upfront portion upon securing scheduled service",
+      "requestId": "synthetic-penny-48",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-270",
+      "queryTitle": "Collect a deposit when booking an appointment",
+      "requestId": "synthetic-penny-48",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-271",
+      "queryTitle": "Refund the appointment deposit after cancellation",
+      "requestId": "synthetic-penny-48",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-272",
+      "queryTitle": "Color code project milestones",
+      "requestId": "synthetic-penny-48",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-273",
+      "queryTitle": "Give guests an address where they can change reserved times themselves",
+      "requestId": "synthetic-penny-49",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-274",
+      "queryTitle": "Provide a reschedule link for confirmed bookings",
+      "requestId": "synthetic-penny-49",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-275",
+      "queryTitle": "Send a booking cancellation link instead of a reschedule link",
+      "requestId": "synthetic-penny-49",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-276",
+      "queryTitle": "Select preferred measurement units",
+      "requestId": "synthetic-penny-49",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-277",
+      "queryTitle": "Mark participants present through reading entry passes",
+      "requestId": "synthetic-penny-50",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-278",
+      "queryTitle": "Check in attendees by scanning event codes",
+      "requestId": "synthetic-penny-50",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-279",
+      "queryTitle": "Record attendance departures at the exit",
+      "requestId": "synthetic-penny-50",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-280",
+      "queryTitle": "Pin frequently used folders",
+      "requestId": "synthetic-penny-50",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-281",
+      "queryTitle": "Pick up sending attachments where network disruption stopped them",
+      "requestId": "synthetic-penny-51",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-282",
+      "queryTitle": "Resume interrupted file uploads without restarting",
+      "requestId": "synthetic-penny-51",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-283",
+      "queryTitle": "Cancel resumable file uploads from the transfer panel",
+      "requestId": "synthetic-penny-51",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-284",
+      "queryTitle": "Display upcoming staff anniversaries",
+      "requestId": "synthetic-penny-51",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-285",
+      "queryTitle": "Quarantine unsafe submitted binaries prior to retrieval",
+      "requestId": "synthetic-penny-52",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-286",
+      "queryTitle": "Scan attachments for viruses before download access",
+      "requestId": "synthetic-penny-52",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-287",
+      "queryTitle": "Scan attachment text for confidential personal information",
+      "requestId": "synthetic-penny-52",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-288",
+      "queryTitle": "Change invoice numbering prefixes",
+      "requestId": "synthetic-penny-52",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-289",
+      "queryTitle": "Tell managers when saved bytes nearly exhaust available capacity",
+      "requestId": "synthetic-penny-53",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-290",
+      "queryTitle": "Alert admins as storage usage approaches quota",
+      "requestId": "synthetic-penny-53",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-291",
+      "queryTitle": "Automatically increase storage quota when full",
+      "requestId": "synthetic-penny-53",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-292",
+      "queryTitle": "Reorder navigation menu items",
+      "requestId": "synthetic-penny-53",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-293",
+      "queryTitle": "Reduce large photographs' dimensions as they enter storage",
+      "requestId": "synthetic-penny-54",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-294",
+      "queryTitle": "Resize images during upload to limit dimensions",
+      "requestId": "synthetic-penny-54",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-295",
+      "queryTitle": "Compress image file size without changing pixel dimensions",
+      "requestId": "synthetic-penny-54",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-296",
+      "queryTitle": "Limit session duration after inactivity",
+      "requestId": "synthetic-penny-54",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-297",
+      "queryTitle": "Confirm transported bytes remain intact through matching fingerprints",
+      "requestId": "synthetic-penny-55",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-298",
+      "queryTitle": "Verify file checksums after transfer",
+      "requestId": "synthetic-penny-55",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-299",
+      "queryTitle": "Detect duplicate files using checksum matches",
+      "requestId": "synthetic-penny-55",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-300",
+      "queryTitle": "Choose a meeting host randomly",
+      "requestId": "synthetic-penny-55",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-301",
+      "queryTitle": "Make temporary addresses for fetching binaries cease functioning later",
+      "requestId": "synthetic-penny-56",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-302",
+      "queryTitle": "Expire file download links after a set duration",
+      "requestId": "synthetic-penny-56",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-303",
+      "queryTitle": "Limit download link use counts",
+      "requestId": "synthetic-penny-56",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-304",
+      "queryTitle": "Approve account permission changes",
+      "requestId": "synthetic-penny-56",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-305",
+      "queryTitle": "Retitle multiple stored items simultaneously using one rule",
+      "requestId": "synthetic-penny-57",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-306",
+      "queryTitle": "Rename files in bulk with a naming pattern",
+      "requestId": "synthetic-penny-57",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-307",
+      "queryTitle": "Rename the parent folder containing selected files",
+      "requestId": "synthetic-penny-57",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-308",
+      "queryTitle": "Translate published announcements",
+      "requestId": "synthetic-penny-57",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-309",
+      "queryTitle": "Locate footage segments through dialogue queries",
+      "requestId": "synthetic-penny-58",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-310",
+      "queryTitle": "Search video transcripts for spoken phrases",
+      "requestId": "synthetic-penny-58",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-311",
+      "queryTitle": "Download the full video transcript as a text file",
+      "requestId": "synthetic-penny-58",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-312",
+      "queryTitle": "Restrict login countries",
+      "requestId": "synthetic-penny-58",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-313",
+      "queryTitle": "Let nested items receive their container's sharing settings",
+      "requestId": "synthetic-penny-59",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-314",
+      "queryTitle": "Inherit file permissions from their parent folder",
+      "requestId": "synthetic-penny-59",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-315",
+      "queryTitle": "Allow individual files to override folder permission inheritance",
+      "requestId": "synthetic-penny-59",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-316",
+      "queryTitle": "Configure reservation preparation intervals",
+      "requestId": "synthetic-penny-59",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-317",
+      "queryTitle": "Erase saved binaries after the mandated keeping period ends",
+      "requestId": "synthetic-penny-60",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-318",
+      "queryTitle": "Delete files when their retention period expires",
+      "requestId": "synthetic-penny-60",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-319",
+      "queryTitle": "Warn administrators before file retention expiry without deleting anything",
+      "requestId": "synthetic-penny-60",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-320",
+      "queryTitle": "Show recurring subscription value",
+      "requestId": "synthetic-penny-60",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-321",
+      "queryTitle": "Tell sellers as remaining goods approach replenishment thresholds",
+      "requestId": "synthetic-penny-61",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-322",
+      "queryTitle": "Notify merchants when stock drops below a reorder point",
+      "requestId": "synthetic-penny-61",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-323",
+      "queryTitle": "Automatically purchase replacement stock at reorder levels",
+      "requestId": "synthetic-penny-61",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-324",
+      "queryTitle": "Resume reading an unfinished article",
+      "requestId": "synthetic-penny-61",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-325",
+      "queryTitle": "Dispatch ready products separately from backordered merchandise",
+      "requestId": "synthetic-penny-62",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-326",
+      "queryTitle": "Allow partial shipment of an order",
+      "requestId": "synthetic-penny-62",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-327",
+      "queryTitle": "Cancel unavailable items instead of creating a partial shipment",
+      "requestId": "synthetic-penny-62",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-328",
+      "queryTitle": "Expire inactive login sessions",
+      "requestId": "synthetic-penny-62",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-329",
+      "queryTitle": "Create paid carrier stickers enabling buyers to mail unwanted merchandise home",
+      "requestId": "synthetic-penny-63",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-330",
+      "queryTitle": "Generate return labels with prepaid shipping",
+      "requestId": "synthetic-penny-63",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-331",
+      "queryTitle": "Track delivery of parcels using return shipping labels",
+      "requestId": "synthetic-penny-63",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-332",
+      "queryTitle": "Restore an erased workspace",
+      "requestId": "synthetic-penny-63",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-333",
+      "queryTitle": "Allow shoppers to add greetings for recipients while paying",
+      "requestId": "synthetic-penny-64",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-334",
+      "queryTitle": "Add a gift message during checkout",
+      "requestId": "synthetic-penny-64",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-335",
+      "queryTitle": "Charge extra for gift wrapping at checkout",
+      "requestId": "synthetic-penny-64",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-336",
+      "queryTitle": "Monitor disk capacity",
+      "requestId": "synthetic-penny-64",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-337",
+      "queryTitle": "Combine several coupons on one transaction",
+      "requestId": "synthetic-penny-65",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-338",
+      "queryTitle": "Stack discount codes on the same order",
+      "requestId": "synthetic-penny-65",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-339",
+      "queryTitle": "Choose the best discount code instead of stacking codes",
+      "requestId": "synthetic-penny-65",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-340",
+      "queryTitle": "Schedule content localization reviews",
+      "requestId": "synthetic-penny-65",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-341",
+      "queryTitle": "Show different pictures as buyers choose item configurations",
+      "requestId": "synthetic-penny-66",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-342",
+      "queryTitle": "Show images matching the selected product variant",
+      "requestId": "synthetic-penny-66",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-343",
+      "queryTitle": "Display variant stock availability next to product images",
+      "requestId": "synthetic-penny-66",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-344",
+      "queryTitle": "Track passage discussion replies",
+      "requestId": "synthetic-penny-66",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-345",
+      "queryTitle": "Nudge buyers back toward uncompleted baskets through electronic messages",
+      "requestId": "synthetic-penny-67",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-346",
+      "queryTitle": "Send reminders for abandoned shopping carts",
+      "requestId": "synthetic-penny-67",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-347",
+      "queryTitle": "Delete abandoned carts after a retention period",
+      "requestId": "synthetic-penny-67",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-348",
+      "queryTitle": "Restrict invited mailbox suffixes",
+      "requestId": "synthetic-penny-67",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-349",
+      "queryTitle": "Check shipping destinations for validity prior to taking orders",
+      "requestId": "synthetic-penny-68",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-350",
+      "queryTitle": "Validate delivery addresses during checkout",
+      "requestId": "synthetic-penny-68",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-351",
+      "queryTitle": "Save multiple delivery addresses for future checkout",
+      "requestId": "synthetic-penny-68",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-352",
+      "queryTitle": "Assign document ownership",
+      "requestId": "synthetic-penny-68",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-353",
+      "queryTitle": "Tell buyers anticipated availability of merchandise sold ahead of launch",
+      "requestId": "synthetic-penny-69",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-354",
+      "queryTitle": "Show expected release dates for preorder products",
+      "requestId": "synthetic-penny-69",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-355",
+      "queryTitle": "Charge preorder payments only on release dates",
+      "requestId": "synthetic-penny-69",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-356",
+      "queryTitle": "Scan admission passes at entry",
+      "requestId": "synthetic-penny-69",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-357",
+      "queryTitle": "Track goods relocated across depots through recorded movements",
+      "requestId": "synthetic-penny-70",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-358",
+      "queryTitle": "Transfer stock between warehouses and record movements",
+      "requestId": "synthetic-penny-70",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-359",
+      "queryTitle": "Forecast stock demand for each warehouse",
+      "requestId": "synthetic-penny-70",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-360",
+      "queryTitle": "Require picture alternative text",
+      "requestId": "synthetic-penny-70",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-361",
+      "queryTitle": "Store chosen dashboard restrictions so people can reapply them later",
+      "requestId": "synthetic-penny-71",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-362",
+      "queryTitle": "Save analytics filters as reusable named views",
+      "requestId": "synthetic-penny-71",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-363",
+      "queryTitle": "Share saved analytics filters with other users",
+      "requestId": "synthetic-penny-71",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-364",
+      "queryTitle": "Collect booking deposits",
+      "requestId": "synthetic-penny-71",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-365",
+      "queryTitle": "Distribute compiled overviews automatically on a regular cadence",
+      "requestId": "synthetic-penny-72",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-366",
+      "queryTitle": "Deliver reports on a recurring schedule",
+      "requestId": "synthetic-penny-72",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-367",
+      "queryTitle": "Let subscribers pause scheduled report delivery",
+      "requestId": "synthetic-penny-72",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-368",
+      "queryTitle": "Manage document revision recovery",
+      "requestId": "synthetic-penny-72",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-369",
+      "queryTitle": "Reveal stages where prospects abandon their journey",
+      "requestId": "synthetic-penny-73",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-370",
+      "queryTitle": "Analyze visitor dropoff across funnel steps",
+      "requestId": "synthetic-penny-73",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-371",
+      "queryTitle": "Compare funnel dropoff between audience segments",
+      "requestId": "synthetic-penny-73",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-372",
+      "queryTitle": "Record credits on customer ledgers",
+      "requestId": "synthetic-penny-73",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-373",
+      "queryTitle": "Spot unexpected changes against past numerical behavior",
+      "requestId": "synthetic-penny-74",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-374",
+      "queryTitle": "Detect anomalies in metric trends",
+      "requestId": "synthetic-penny-74",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-375",
+      "queryTitle": "Explain the causes of detected metric anomalies",
+      "requestId": "synthetic-penny-74",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-376",
+      "queryTitle": "Rotate screen appearance at sunset",
+      "requestId": "synthetic-penny-74",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-377",
+      "queryTitle": "Contrast figures across a pair of chosen periods",
+      "requestId": "synthetic-penny-75",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-378",
+      "queryTitle": "Compare dashboard results between two date ranges",
+      "requestId": "synthetic-penny-75",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-379",
+      "queryTitle": "Choose a default date range for dashboard loading",
+      "requestId": "synthetic-penny-75",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-380",
+      "queryTitle": "Print backup authentication codes",
+      "requestId": "synthetic-penny-75",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-381",
+      "queryTitle": "Retrieve unaggregated interaction logs as structured files",
+      "requestId": "synthetic-penny-76",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-382",
+      "queryTitle": "Export raw event data for external analysis",
+      "requestId": "synthetic-penny-76",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-383",
+      "queryTitle": "Delete tracked event data after export",
+      "requestId": "synthetic-penny-76",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-384",
+      "queryTitle": "Resize photographs during transfer",
+      "requestId": "synthetic-penny-76",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-385",
+      "queryTitle": "Locate management activity using who did what when",
+      "requestId": "synthetic-penny-77",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-386",
+      "queryTitle": "Search audit logs by actor and date",
+      "requestId": "synthetic-penny-77",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-387",
+      "queryTitle": "Delete old audit log entries automatically",
+      "requestId": "synthetic-penny-77",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-388",
+      "queryTitle": "Show prepaid return postage",
+      "requestId": "synthetic-penny-77",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-389",
+      "queryTitle": "Validate received push messages through keyed cryptographic proofs",
+      "requestId": "synthetic-penny-78",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-390",
+      "queryTitle": "Verify webhook signatures before accepting callbacks",
+      "requestId": "synthetic-penny-78",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-391",
+      "queryTitle": "Rotate webhook signing secrets without disrupting delivery",
+      "requestId": "synthetic-penny-78",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-392",
+      "queryTitle": "Remember previous reading position",
+      "requestId": "synthetic-penny-78",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-393",
+      "queryTitle": "Tell engineers when code packaging tasks break",
+      "requestId": "synthetic-penny-79",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-394",
+      "queryTitle": "Notify developers about failed builds",
+      "requestId": "synthetic-penny-79",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-395",
+      "queryTitle": "Retry build jobs automatically after failure",
+      "requestId": "synthetic-penny-79",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-396",
+      "queryTitle": "Consolidate monthly billing statements",
+      "requestId": "synthetic-penny-79",
+      "duplicate": false,
+      "subset": "easy-negative"
+    },
+    {
+      "id": "synthetic-penny-397",
+      "queryTitle": "Reinstate last live software revision with one click",
+      "requestId": "synthetic-penny-80",
+      "duplicate": true,
+      "subset": "paraphrase-positive"
+    },
+    {
+      "id": "synthetic-penny-398",
+      "queryTitle": "Roll back a deployment to the previous release",
+      "requestId": "synthetic-penny-80",
+      "duplicate": true,
+      "subset": "lexical-positive"
+    },
+    {
+      "id": "synthetic-penny-399",
+      "queryTitle": "Preview differences before a deployment rollback",
+      "requestId": "synthetic-penny-80",
+      "duplicate": false,
+      "subset": "hard-negative"
+    },
+    {
+      "id": "synthetic-penny-400",
+      "queryTitle": "Assign labels to incoming suggestions",
+      "requestId": "synthetic-penny-80",
+      "duplicate": false,
+      "subset": "easy-negative"
+    }
+  ]
+}
