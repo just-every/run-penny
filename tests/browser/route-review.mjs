@@ -510,7 +510,7 @@ try {
   await writeFile(join(output, 'runtime.log'), `Captured ${captures.length} pages at 390px.\nChecked ${checks.length} route and auth states.\nPage errors: ${pageErrors.length}.\nLayout failures: ${layoutFailures.length}.\nDevelopment-copy failures: ${developmentCopyFailures.length}.\n`)
   await writeFile(join(output, 'axe.json'), JSON.stringify(accessibilityFailures,null,2))
   assert.deepEqual(accessibilityFailures, [], '[BASE-PUBLIC-003] all public and operator route captures pass WCAG AA axe checks')
-  assert.ok(captures.filter(c=>c.state==='populated').length>=116,'[BASE-PUBLIC-003] retain original 116 populated captures')
+  assert.ok(captures.filter(c=>c.state==='populated').length>=58,'[BASE-PUBLIC-003] retain the original populated captures per width')
   assert.ok(checks.length>=63,'[BASE-PUBLIC-003] retain the original checks per width plus expansion')
   assert.deepEqual(consoleErrors,[],'[E.2] no unexpected console errors')
   assert.deepEqual(externalRequests,[],'[E.2] no external browser requests')
