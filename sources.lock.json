@@ -6108,11 +6108,11 @@
       "executable": false
     },
     "src/core/features/prioritisation/scorecard-editor.tsx": {
-      "sha256": "061412f29478d8d3d53b8453f377e5db12921eec5682fa0beb484117ff688afc",
+      "sha256": "f9628844ceae76aa996f98d5f6fd8a651ed5339e141cdc3de8f52a5b0389e6b0",
       "executable": false
     },
     "src/core/features/prioritisation/scorecard-pane.tsx": {
-      "sha256": "7087918975f2964ab1e0d586ec07230d8e9fa816f88326a08d7c511b35b011c5",
+      "sha256": "d7a0261f8c786a404eafd168c0883ede0aa0829fa3cc6137d2995bdfad662cd2",
       "executable": false
     },
     "src/core/features/prioritisation/scorecard-routes.ts": {
@@ -6600,15 +6600,15 @@
       "executable": false
     },
     "src/core/features/requests/ui/requester-merge-control.tsx": {
-      "sha256": "0825e01aec46bd7e91d3c2e3d06394369eafe59e77b2bf5d59cf195af6999552",
+      "sha256": "cb9a13b49f0387e9c9d158e46199bacd1c498b79fd1ed7a342a13cc76983b9c9",
       "executable": false
     },
     "src/core/features/requests/ui/round-mutation.ts": {
-      "sha256": "e71de0b7c9d737024ae9b0af2703c7d5ef171fd64778d720cf9f42f7116cf5cc",
+      "sha256": "a95f0d051740d98afdd877dce9181131759118969b95f694c421940548723a7c",
       "executable": false
     },
     "src/core/features/requests/ui/settings-anchor.ts": {
-      "sha256": "5c8c83c62b0c261acbe1d118cb8f590979942b92d0009fbe9c17efac833f1521",
+      "sha256": "3a443953e9ae518db5aa6b7b94e01421e389bcfee7240e332a4b38f90e9918f9",
       "executable": false
     },
     "src/core/features/requests/ui/settings-boards.tsx": {
