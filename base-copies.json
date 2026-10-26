@@ -384,6 +384,7 @@
       "originPath": "modules/import-kit",
       "revision": "11f94fec479228d71ba6d7dd6ea7796c0d42c544",
       "files": {
+        "base/modules/import-kit/src/d1/atomic-prefix.ts": "eb558b7887fd51cf9d84d0f6984e93646ac5c04b67417f9a2002da7737a66b10",
         "base/modules/import-kit/CONTRACT.md": "dc310d9c91e9b8eca857e5b1a3539694ecb43675ceadc44e8233078839d597ce",
         "base/modules/import-kit/extraction.json": "5f14eac5488e1c89a9c5f884b7f4ebc6c3c1e00eda1b64516a54edd91c6d9dcb",
         "base/modules/import-kit/FIXTURES.md": "2f193cf36fce01f7497721f577e4d6aca6dfaeb3cc5615c96be8c847cd6be5f3",
@@ -400,7 +401,6 @@
         "base/modules/import-kit/schema/importer-verification-receipt.schema.json": "710740a418fbd1fda5dd7a9017c247040c2bef98a6eadbec2a59220a5afa0ae7",
         "base/modules/import-kit/schema/importers.schema.json": "70ffac46763ab493388cad8fb0bc40946be819b8e8036274a7bff30cf3b4d9c3",
         "base/modules/import-kit/src/d1/apply.ts": "a5c73e9fc45d03d1fabb02796e7154dc3e0f903d04578ddc7babad4aad66d76a",
-        "base/modules/import-kit/src/d1/atomic-prefix.ts": "eb558b7887fd51cf9d84d0f6984e93646ac5c04b67417f9a2002da7737a66b10",
         "base/modules/import-kit/src/d1/budget.ts": "1c9b901688227f2dddfd341e959f324ad0762c5e9df2154c0a5334bf86b4fab4",
         "base/modules/import-kit/src/d1/compressed-plan.ts": "c99ab903f40fd0a8b1ed722adfa9a072610ca369f21007d86e372fddd15c2812",
         "base/modules/import-kit/src/d1/creation.ts": "022381b439e034cd994d2264711dc9ab45b6303a265c3ab326e1888b040683e7",
@@ -600,6 +600,7 @@
         "base/modules/import-kit/src/types.ts": "ce31b0bae06aca21b3350c86344c981d53022e4fa502f1423e0027cd6bc1bc3c"
       },
       "modes": {
+        "base/modules/import-kit/src/d1/atomic-prefix.ts": "100644",
         "base/modules/import-kit/CONTRACT.md": "100644",
         "base/modules/import-kit/extraction.json": "100644",
         "base/modules/import-kit/FIXTURES.md": "100644",
@@ -616,7 +617,6 @@
         "base/modules/import-kit/schema/importer-verification-receipt.schema.json": "100644",
         "base/modules/import-kit/schema/importers.schema.json": "100644",
         "base/modules/import-kit/src/d1/apply.ts": "100644",
-        "base/modules/import-kit/src/d1/atomic-prefix.ts": "100644",
         "base/modules/import-kit/src/d1/budget.ts": "100644",
         "base/modules/import-kit/src/d1/compressed-plan.ts": "100644",
         "base/modules/import-kit/src/d1/creation.ts": "100644",

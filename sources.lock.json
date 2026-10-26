@@ -661,6 +661,10 @@
       "sha256": "912d2c25e04bd3372ee6beff1db967f97bb65d36486de46265505390b39e2601",
       "executable": false
     },
+    ".publish-check/reviewed.json": {
+      "sha256": "0a54dc22892f2fa37dbbdc36c63ebf30d81a5ae6aa1cc566bfd2a827aadfa4ac",
+      "executable": false
+    },
     "ACCEPTANCE.md": {
       "sha256": "ddfa1f4e780600cd33d583d3964eea6e6b1a2ddf5224bc4c7a3ccc09a30cf93f",
       "executable": false
@@ -674,7 +678,7 @@
       "executable": false
     },
     "base-copies.json": {
-      "sha256": "c8b95f877714542320f6b463b1920f201f65ad751fd68415567a9953ec6e04e7",
+      "sha256": "9b9d0d58db4c05b500c4fe33e82bbf54fccb819598c0f775cd9335ab0693136b",
       "executable": false
     },
     "base/modules/d1-transport/index.d.mts": {
@@ -2950,7 +2954,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "cfc4a4e77e56063191c4ab6d50d4487d7407c7beb2886a9ca889310b9c8b5b77",
+      "sha256": "8f43a2f845653e69ecfd93a66f1ffce6f5de9e852c63cf72c7ff142015a92648",
       "executable": false
     },
     "CLAUDE.md": {
@@ -6166,7 +6170,7 @@
       "executable": false
     },
     "src/core/features/redaction/engine.ts": {
-      "sha256": "3a71a2efa7718eceb6f02aacf026a5fccef98921506a5bd0a8015ccdb935f007",
+      "sha256": "60d3de38328db252f54e8d252666541ec4af42948d31c1980ed6f124cc30aa87",
       "executable": false
     },
     "src/core/features/redaction/places.ts": {
@@ -8366,7 +8370,7 @@
       "executable": false
     },
     "tests/installer/deploy-dry-run.test.mjs": {
-      "sha256": "3b0ce15c082ecf6840c875eca6cf314f28d21693600b86517a8feeb04be5e1ba",
+      "sha256": "4d964b755b1a44fed19db4d1566ac1e68c7e6d1cfcab25771e9d6a8271c56ed8",
       "executable": false
     },
     "tests/installer/dev-credentials.test.mjs": {

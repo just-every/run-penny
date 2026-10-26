@@ -12,7 +12,7 @@ test('[BASE-OPS-001] the public deploy dry run builds the real artifact and read
   const fixture=pathToFileURL(resolve('tests/installer/cloudflare-dry-run-fixture.mjs')).href
   const invoke=(extra={})=>new Promise((done,reject)=>{
    const child=spawn(process.execPath,['node_modules/@runeditrun/rer/global/rer.mjs','deploy','--dry-run','--owner-name','Owner'],{env:{...process.env,
-    CLOUDFLARE_ACCOUNT_ID:'a'.repeat(32),CLOUDFLARE_API_TOKEN:'synthetic-dry-run-token',OPERATOR_EMAIL:'owner@example.com',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'synthetic-penny-1@run-penny.com',MAIL_API_KEY:'synthetic-dry-run-mail-key',
+    CLOUDFLARE_ACCOUNT_ID:'a'.repeat(32),CLOUDFLARE_API_TOKEN:'synthetic-dry-run-token',OPERATOR_EMAIL:'owner@example.com',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'synthetic-penny-1@example.test',MAIL_API_KEY:'synthetic-dry-run-mail-key',
     PENNY_DRY_RUN_REQUESTS:requests,NODE_OPTIONS:`--import=${fixture}`,...extra},stdio:['ignore','pipe','pipe']})
    let output='';for(const stream of [child.stdout,child.stderr])stream.on('data',data=>{output=(output+data).slice(-16000)})
    child.on('error',reject);child.on('close',(code,signal)=>done({code,signal,output}))

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep phone redaction from treating a numeric prefix inside a generated identifier as a phone number, which could refuse learning capture.
+
 - Prepare the hosted listing with rer 0.2.80, refreshed Base source custody, one root packaging policy and a build-derived deployment specification with a freshness check. Deployment documentation labels required mail inputs and private credentials; environment files are ignored.
 - Backup compatibility: rer 0.2.80 exports a complete schema-object inventory. Legacy v2 archives without that inventory are refused; create a fresh backup from the existing installation with this version before retiring it. The retained earlier-schema fixture uses a fresh native export while keeping its rows and original file unchanged.
 

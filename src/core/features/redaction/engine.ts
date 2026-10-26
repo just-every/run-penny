@@ -49,8 +49,8 @@ export function detect(text:string,rules:Rules):Span[]{
  scan('ssn',/\b(?!000|666|9\d\d)\d{3}[- ](?!00)\d{2}[- ](?!0000)\d{4}\b/g)
  scan('ssn',/\b(?:SSN|social security(?: number)?)\s*[:#]?\s*((?!000|666|9\d\d)\d{3}(?!00)\d{2}(?!0000)\d{4})\b/gi,1)
  scan('card',/(?<!\d)\d[\d -]{11,36}\d(?!\d)/g,0,luhn)
- scan('phone',/(?<![\w])(?:\+?1[ .-]?)?(?:\([2-9]\d{2}\)|[2-9]\d{2})[ .-]?[2-9]\d{2}[ .-]?\d{4}(?!\d)/g)
- scan('phone',/(?<![\w])\+[2-9]\d(?:[ .-]?\d){7,13}(?!\d)/g)
+ scan('phone',/(?<![\w])(?:\+?1[ .-]?)?(?:\([2-9]\d{2}\)|[2-9]\d{2})[ .-]?[2-9]\d{2}[ .-]?\d{4}(?!\w)/g)
+ scan('phone',/(?<![\w])\+[2-9]\d(?:[ .-]?\d){7,13}(?!\w)/g)
  scan('email',/\b[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]{1,64}@[A-Za-z0-9](?:[A-Za-z0-9.-]{0,251}[A-Za-z0-9])?\.[A-Za-z]{2,63}\b/g)
  scan('credential',/\b(?:password|secret|api[_-]?key|access[_-]?token|credential)\s*[:=]\s*["']?([^\s;"']{8,})/gi,1)
  let steps=0

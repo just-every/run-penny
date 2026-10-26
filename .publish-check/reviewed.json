@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "findings": [
+    {
+      "rule": "secret.assignment",
+      "path": "base-copies.json",
+      "blob": "806b16db03fb874edb813f4fe76d0d7ec17d93e4",
+      "reason": "Reviewed generated provenance digest; no credential value.",
+      "reviewer": "Penny publication review",
+      "date": "2026-10-26"
+    },
+    {
+      "rule": "hygiene.email",
+      "path": "tests/installer/deploy-dry-run.test.mjs",
+      "blob": "4a6a47e114721043a62d6888226bb80cd6668b0e",
+      "reason": "Historical synthetic sender fixture only; current fixture uses a reserved example domain. Retained unpublished commits are not rewritten.",
+      "reviewer": "Penny publication review",
+      "date": "2026-10-26"
+    }
+  ]
+}
