@@ -3,7 +3,8 @@ export interface RoundMutationFailure {
  action:'retry'|'reload'|null
 }
 class Refusal extends Error {
- constructor(readonly failure:RoundMutationFailure){super(failure.message)}
+ readonly failure:RoundMutationFailure
+ constructor(failure:RoundMutationFailure){super(failure.message);this.failure=failure}
 }
 /** Only the scorecard forms and identity merge door need refusal-specific recovery. */
 export async function roundMutation<T=unknown>(path:string,body:unknown,method='POST'):Promise<T>{
