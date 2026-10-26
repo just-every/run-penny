@@ -14,7 +14,11 @@ function source(namespace:string):SavedFeedbackInput{
 }
 async function json(response:Response,status=200):Promise<any>{expect(response.status,await response.clone().text()).toBe(status);return response.json()}
 it('[PRIO-002 IMP-002 IMP-004] imports reviewed Canny custom statuses once, maps public labels, refuses changed approval and reverses unchanged definitions and requests',async()=>{
- const operator=await owner(),input=source('status-custody'),plan=await preview(input,operator),changed=structuredClone(input)
+ const operator=await owner(),input=source('status-custody')
+ // [PRIO-002] Refuse an unused mapping before applying this history.
+ const invalid=structuredClone(input);invalid.internalStatuses!.Unknown={name:'Unknown',showPublicLabel:false}
+ expect((await call(importPath+'/preview',invalid,operator)).status).toBe(422)
+ const plan=await preview(input,operator),changed=structuredClone(input)
  changed.internalStatuses!.Researching.name='Needs information'
  expect((await call(importPath+'/apply',{source:changed,fingerprint:plan.fingerprint},operator)).status).toBe(409)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM request_internal_statuses').first('n')).toBe(0)
@@ -30,7 +34,7 @@ it('[PRIO-002 IMP-002 IMP-004] imports reviewed Canny custom statuses once, maps
  await complete(await json(await call(`${importPath}/jobs/${job.id}/undo`,{},operator)),operator)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM requests').first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM request_internal_statuses').first('n')).toBe(0)
- await apply(input,operator)
+ const reapplied=await apply(input,operator)
  const boardSlug='import-'+stableFeedbackId(input.namespace,'boards','finance').toLowerCase()
  for(const i of [0,2]){
   const slug='feedback-'+stableFeedbackId(input.namespace,'posts','post-'+i).toLowerCase()
@@ -44,14 +48,10 @@ it('[PRIO-002 IMP-002 IMP-004] imports reviewed Canny custom statuses once, maps
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM requests WHERE internal_status_id=? AND public_state=?').bind(status,'planned').first('n')).toBe(2)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM request_status_updates').first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM notification_intents').first('n')).toBe(0)
-})
-it('[PRIO-002 IMP-004] later native status edits block undo and malformed or unused mappings create nothing',async()=>{
- const operator=await owner(),input=source('status-conflict')
- const invalid=structuredClone(input);invalid.internalStatuses!.Unknown={name:'Unknown',showPublicLabel:false}
- expect((await call(importPath+'/preview',invalid,operator)).status).toBe(422)
- const job=await apply(input,operator),id=stableFeedbackId(input.namespace,'statuses','Researching')
- await json(await call('/api/operator/settings/request-statuses/'+id,{name:'Customer research'},operator,'PATCH'))
- expect((await call(`${importPath}/jobs/${job.id}/undo`,{},operator)).status).toBe(409)
+
+ // [IMP-004] A native edit to the same imported definition prevents undo.
+ await json(await call('/api/operator/settings/request-statuses/'+status,{name:'Customer research'},operator,'PATCH'))
+ expect((await call(`${importPath}/jobs/${reapplied.id}/undo`,{},operator)).status).toBe(409)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM requests').first('n')).toBe(3)
- expect(await env.DB.prepare('SELECT name FROM request_internal_statuses WHERE id=?').bind(id).first('name')).toBe('Customer research')
+ expect(await env.DB.prepare('SELECT name FROM request_internal_statuses WHERE id=?').bind(status).first('name')).toBe('Customer research')
 })

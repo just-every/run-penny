@@ -8,7 +8,13 @@ it('[BASE-ACCESS-004][EDIT-001] returns a short owner-only editor lease with no 
  const bindings={...env,RER_MANAGEMENT_ORIGIN:'https://manage.example.test',RER_INSTALLATION_ID:'penny-native-test'} as AppBindings,api=createPennyApi()
  const request=(headers:Record<string,string>={},method='GET')=>api.fetch(new Request(origin+'/api/editor/config',{method,headers:{Host:'penny.test',Origin:origin,...headers}}),bindings)
  expect((await request()).status).toBe(401);expect((await request({Authorization:'Bearer test-requester'})).status).toBe(401)
- const operator=await owner(),response=await request(operator),grant=await response.json() as {config:{enabled:boolean;managementOrigin:string};expiresAt:number}
+ const operator=await owner()
+ // [EDIT-001 BASE-PUBLIC-002] Refuse unsafe configuration before granting this owner a lease.
+ const configurationRequest=new Request(origin+'/api/editor/config',{headers:{Origin:origin,...operator}})
+ expect((await api.fetch(new Request(configurationRequest.url,{headers:configurationRequest.headers}),env)).status).toBe(503)
+ const unsafeBindings={...env,RER_MANAGEMENT_ORIGIN:'https://user:password@manage.example.test',RER_INSTALLATION_ID:'test-installation'} as AppBindings
+ expect((await api.fetch(new Request(configurationRequest.url,{headers:configurationRequest.headers}),unsafeBindings)).status).toBe(503)
+ const response=await request(operator),grant=await response.json() as {config:{enabled:boolean;managementOrigin:string};expiresAt:number}
  expect(response.status).toBe(200);expect(response.headers.get('Cache-Control')).toContain('no-store');expect(grant.config.enabled).toBe(true)
  expect(grant.config.managementOrigin).toBe(bindings.RER_MANAGEMENT_ORIGIN);expect(grant.expiresAt).toBeGreaterThan(Date.now())
  const serialized=JSON.stringify(grant);expect(serialized).not.toContain(bindings.AUTH_SECRET);expect(serialized).not.toContain(bindings.SETUP_TOKEN)
@@ -23,10 +29,4 @@ it('[BASE-ACCESS-004][EDIT-001] returns a short owner-only editor lease with no 
  expect((await request(operator)).status).toBe(403)
  await env.DB.prepare("UPDATE oa_operators SET status='inactive',version=version+1 WHERE email='owner@penny.invalid'").run()
  expect((await request(operator)).status).toBe(401)
-})
-it('[EDIT-001][BASE-PUBLIC-002] refuses missing or credential-bearing management configuration without accepting request-supplied origins',async()=>{
- const operator=await owner(),api=createPennyApi(),request=new Request(origin+'/api/editor/config',{headers:{Origin:origin,...operator}})
- expect((await api.fetch(new Request(request.url,{headers:request.headers}),env)).status).toBe(503)
- const bindings={...env,RER_MANAGEMENT_ORIGIN:'https://user:password@manage.example.test',RER_INSTALLATION_ID:'test-installation'} as AppBindings
- expect((await api.fetch(new Request(request.url,{headers:request.headers}),bindings)).status).toBe(503)
 })

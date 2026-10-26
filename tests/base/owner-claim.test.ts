@@ -26,8 +26,11 @@ async function fixture(){
  return {request,signed}
 }
 async function authority(){return Object.fromEntries(await Promise.all(['oa_operators','oa_sessions','oa_bootstrap','oa_limits','oc_owner_claims'].map(async table=>[table,await env.DB.prepare('SELECT COUNT(*) n FROM '+table).first('n')])))}
-it('[BASE-ACCESS-004][OWN-001] rejects invalid claim credentials before authority writes and keeps confirmation read-only',async()=>{
- const {request,signed}=await fixture(),before=await authority(),confirmation=await request()
+it('[BASE-ACCESS-004][OWN-001] rejects invalid claims, admits one concurrent owner and refuses replay without changing authority',async()=>{
+ const {request,signed}=await fixture()
+ // [OWN-001] Read-only confirmation and rejected claims precede the successful claim.
+ {
+ const before=await authority(),confirmation=await request()
  const error=confirmation.status===200?undefined:((await confirmation.json()) as {error?:string}).error
  expect(confirmation.status,error).toBe(200);expect(await authority()).toEqual(before)
  for(const fields of [{aud:'https://foreign.example.test'},{iss:'https://foreign.example.test'},{email:'other@example.test'},{installationId:'other-installation'},{iat:1,exp:2}]){
@@ -37,9 +40,9 @@ it('[BASE-ACCESS-004][OWN-001] rejects invalid claim credentials before authorit
  expect((await request({token:parts.join('.')})).status).toBe(403)
  expect((await request({token:valid},{Origin:'https://foreign.example.test'})).status).toBe(403)
  expect(await authority()).toEqual(before)
-})
-it('[OWN-001][BASE-ACCESS-002] admits exactly one concurrent native owner, retains the session and refuses replay or a second claim',async()=>{
- const {request,signed}=await fixture(),token=await signed()
+ }
+ // [OWN-001 BASE-ACCESS-002] The same installation admits one owner and refuses replay.
+ const token=await signed()
  const responses=await Promise.all([request({token,displayName:'Owner',returnTo:'/app'}),request({token,displayName:'Owner',returnTo:'/app'})])
  expect(responses.filter(r=>r.status===303)).toHaveLength(1)
  expect(responses.filter(r=>r.status===409||r.status===503)).toHaveLength(1)
