@@ -70,10 +70,12 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
  criterion=scoreDefinition.getByRole('group',{name:'Criterion 2',exact:true})
  await criterion.getByLabel('Name',{exact:true}).fill('Confidence');await criterion.getByLabel('Scale',{exact:true}).selectOption('10')
  await scoreDefinition.getByRole('button',{name:'Save scorecard',exact:true}).click()
- await settings.getByRole('status').waitFor()
+ await settings.locator('details[open]').getByRole('form',{name:'Edit scorecard',exact:true}).getByRole('status').waitFor()
  assert.equal(await scoreDefinition.isVisible(),false)
  await settings.locator('details[open]').getByRole('form',{name:'Edit scorecard',exact:true}).waitFor()
  await capture(owner,'scorecard-settings',settings)
+ await peer.goto(origin+'/app/settings',{waitUntil:'networkidle'})
+ assert.equal(await peer.getByRole('region',{name:'Scorecard settings',exact:true}).count(),0)
  const score=async(page,values)=>{
   await page.goto(origin+'/app/prioritisation',{waitUntil:'networkidle'})
   const ranking=page.getByRole('list',{name:'Scorecard ranking version 1',exact:true})
