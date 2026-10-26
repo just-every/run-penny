@@ -1,6 +1,6 @@
 # Tests
 
-The seed cap is 246 tests, as justified in `test-budget.json`. Count one framework
+The seed cap is 200 tests, as recorded in `test-budget.json`. Count one framework
 registration per test, including imported registrations and each executable browser
 journey; a data-driven matrix asserting one behavior counts once. Exclude helpers
 and repeated screenshots or viewports. Keep tests through routes, Worker exports, commands and built pages,
@@ -23,3 +23,7 @@ consent, integration authority, exact original files, empty-target restore,
 erasure replay fences, interrupted recovery and populated upgrades.
 
 Run tests explicitly in verification. Build, setup and deploy must not run them.
+
+Clause behavior runs once at 1440px in `moderation-runtime.mjs`;
+`route-review.mjs` keeps the shared 390px smoke for every mounted route in
+empty and populated states, with accessibility and horizontal-overflow checks.

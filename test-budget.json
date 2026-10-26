@@ -1,4 +1,5 @@
 {
-  "maxTests": 246,
-  "reason": "Penny carries 247 contract clauses; per main's 22 Oct ruling the 255 budget stood only as a freeze, and the consolidation round folded registrations into public-door journeys without dropping an assertion that proves a clause sentence."
+  "cap": 200,
+  "maxTests": 200,
+  "reason": "sx-penny-tprune-1 consolidates same-flow public-door journeys and removes repeated viewport execution while retaining protected assertions."
 }

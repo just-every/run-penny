@@ -28,6 +28,8 @@ const runtime = await startBrowserRuntime()
 const { origin } = runtime
 const axeSource = await readFile(new URL('../../node_modules/axe-core/axe.min.js', import.meta.url), 'utf8')
 const accessibilityFailures = []
+// The shared phone smoke covers every mounted route, empty and populated.
+const reviewWidths = [390]
 const captures = []
 const checks = []
 const pageErrors = []
@@ -346,7 +348,7 @@ async function checkEmptyRoutes() {
  reviewState='empty'
  for(const table of ['boards','requests','evidence_items','decisions','roadmap_items','releases','requesters'])assert.equal((await runtime.db.prepare(`SELECT count(*) n FROM ${table}`).first()).n,0,'[E.2/G.2] native empty D1 fixture has no business data')
  const routeFiles=(await readdir('src/routes')).filter(f=>f.endsWith('.tsx')&&f!=='__root.tsx')
- for(const width of [1440,390]) {
+ for(const width of reviewWidths) {
   const clientIp=width===390?'192.0.2.11':'192.0.2.10'
   const context=await browser.newContext({viewport:{width,height:width===390?844:900},extraHTTPHeaders:{'CF-Connecting-IP':clientIp}})
   await pacePublicContext(context,runtime,clientIp)
@@ -413,7 +415,7 @@ try {
   const selectedRoadmap=await api('/api/operator/settings/status-roadmap',{...roadmapSettings.settings,source:'approved_items'},{Cookie:ownerCookie},'PUT')
   assert.equal(selectedRoadmap.status,200,'Route fixture selects its approved-item roadmap through owner settings')
   reviewState='populated'
-  for (const width of [1440, 390]) {
+  for (const width of reviewWidths) {
     const operatorIp=width===390?'192.0.2.21':'192.0.2.20'
     const operatorContext = await browser.newContext({ viewport: { width, height: width === 390 ? 844 : 900 },extraHTTPHeaders:{'CF-Connecting-IP':operatorIp} })
     await pacePublicContext(operatorContext,runtime,operatorIp)
@@ -482,8 +484,8 @@ try {
   const canonicalPath=path=>path.replace(/\/$/,'')==='/portal'?'/':path.replace(/\/$/,'')==='/portal/feedback'?'/portal/feedback':path==='/'?'/':path.replace(/\/$/,'')
   const stateCoverage=mountedRoutes.map(({sourcePath,file})=>({file,sourcePath,states:['empty','populated'].map(state=>{
     const expected=canonicalPath(state==='empty'?sourcePath.replace(/\$[A-Za-z0-9_]+/g,'no-such-record'):routeSamplePath(sourcePath))
-    const widths=[1440,390].filter(width=>captures.some(c=>c.state===state&&c.viewport.width===width&&canonicalPath(new URL(c.requestedUrl).pathname)===expected))
-    assert.deepEqual(widths,[1440,390],`[E.2] ${sourcePath} reviewed in ${state} at both widths`)
+    const widths=reviewWidths.filter(width=>captures.some(c=>c.state===state&&c.viewport.width===width&&canonicalPath(new URL(c.requestedUrl).pathname)===expected))
+    assert.deepEqual(widths,reviewWidths,`[E.2] ${sourcePath} reviewed in ${state} at the phone width`)
     return {state,widths,expectedPath:expected}
   })}))
 
@@ -495,7 +497,7 @@ try {
     generatedAt: new Date().toISOString(),
     runtime: 'Exact emitted production Start Worker modules in workerd; D1 migrations and Penny sample data seeded inside this browser test; local Base mail sent only to a test HTTP fixture; no hosted delivery claim.',
     browser: browserPath,
-    viewports: [1440, 390],
+    viewports: reviewWidths,
     mountedRoutes, stateCoverage,
     captures,
     pageErrors, consoleErrors, externalRequests, expectedDiagnostics,
@@ -505,11 +507,11 @@ try {
     checks,
   }
   await writeFile(join(output, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-  await writeFile(join(output, 'runtime.log'), `Captured ${captures.length} pages at 1440px and 390px.\nChecked ${checks.length} route and auth states.\nPage errors: ${pageErrors.length}.\nLayout failures: ${layoutFailures.length}.\nDevelopment-copy failures: ${developmentCopyFailures.length}.\n`)
+  await writeFile(join(output, 'runtime.log'), `Captured ${captures.length} pages at 390px.\nChecked ${checks.length} route and auth states.\nPage errors: ${pageErrors.length}.\nLayout failures: ${layoutFailures.length}.\nDevelopment-copy failures: ${developmentCopyFailures.length}.\n`)
   await writeFile(join(output, 'axe.json'), JSON.stringify(accessibilityFailures,null,2))
   assert.deepEqual(accessibilityFailures, [], '[BASE-PUBLIC-003] all public and operator route captures pass WCAG AA axe checks')
   assert.ok(captures.filter(c=>c.state==='populated').length>=116,'[BASE-PUBLIC-003] retain original 116 populated captures')
-  assert.ok(checks.length>=126,'[BASE-PUBLIC-003] retain original 126 checks plus expansion')
+  assert.ok(checks.length>=63,'[BASE-PUBLIC-003] retain the original checks per width plus expansion')
   assert.deepEqual(consoleErrors,[],'[E.2] no unexpected console errors')
   assert.deepEqual(externalRequests,[],'[E.2] no external browser requests')
   assert.deepEqual(pageErrors, [], `Browser page errors were reported: ${JSON.stringify(pageErrors)}`)

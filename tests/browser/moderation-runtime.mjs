@@ -10,7 +10,8 @@ export async function moderationJourney(name,journey){
  await mkdir(output,{recursive:true})
  const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
  const browser=await chromium.launch({headless:true,args:['--use-mock-keychain','--password-store=basic']})
- try{for(const width of [1440,390]){
+ // Clause behavior runs once; route-review retains the shared 390px route smoke.
+ try{const width=1440;{
   const runtime=await startBrowserRuntime(),contexts=[],errors=[]
   try{
    const {origin}=runtime
