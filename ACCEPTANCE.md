@@ -142,7 +142,7 @@ unknown schema, missing/untracked files, bounds overflow, interrupted custody or
 stale journal refuse visibly. Local restore keeps destination Base authority.
 Recovery revokes restored credentials/links and does not replay pending effects.
 
-Custody follows edition.json, base/PROVENANCE.json, retained snapshots and
+Custody follows edition.json, base-copies.json, retained snapshots and
 sources.lock.json. Current copied pins are listed in docs/base-adoption.md;
 prospective adoption is not an accepted copy. Verify staged intentional inputs
 with `pnpm source:lock`, `pnpm source:check` and `pnpm verify:base-source`, exact modes/hashes, schema,

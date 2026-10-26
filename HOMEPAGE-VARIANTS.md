@@ -214,6 +214,20 @@ export function sitePages({ styles }: SiteContext): SiteBuild {
 }
 ```
 
+**One header across the site.** `/run`, `/contract` and the not-found page carry
+Base's header, the one Base's own homepage carries. A seed with an approved
+homepage passes that homepage's header as their last argument instead,
+`{ html, styles }` (`HomepageHeader` in `src/base/run-site.ts`): `html` rendered
+from the homepage's own header component in its site variant, marking the current
+page the way it does on the docs, and `styles` the `styles` that `sitePages`
+receives. Base's pages then wear the homepage's header exactly: the same logo
+position, wordmark and links.
+
+```tsx
+const homepageHeader = { html: renderToStaticMarkup(<SiteHeader variant="site" />), styles }
+{ path: '/run', html: runPageHtml(identity, run, contract, homepageHeader) },
+```
+
 The pages must work without JavaScript and load nothing from another origin.
 `rer build --site` refuses a site that breaks any of that and names the problem
 (an instance-only link, a missing file, another origin).

@@ -3,7 +3,7 @@ import {resolve} from 'node:path'
 import {fileURLToPath,pathToFileURL} from 'node:url'
 import {verifyCopies} from './edition-authoring/base-copies.mjs'
 const root=fileURLToPath(new URL('../',import.meta.url))
-export async function verifyBaseSource(directory=root,{base,offline=true,record='base/PROVENANCE.json'}={}){
+export async function verifyBaseSource(directory=root,{base,offline=true,record='base-copies.json'}={}){
  const result=verifyCopies(directory,{record,base,offline})
  if(!result.ok)throw new Error('Base custody: '+[...result.drift.map(item=>item.kind),...(result.unrecordedCopies.length?['unrecordedCopies']:[])].join(','))
  return result

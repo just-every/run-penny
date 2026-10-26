@@ -10,7 +10,7 @@
         "pnpm run verify:base-source",
         "pnpm run feedback:status",
         "pnpm run build",
-        "pnpm run deployment-spec:check",
+        "pnpm run check:deployment-spec",
         "pnpm run typecheck",
         "pnpm run eval:ai -- --set redaction-v1",
         "pnpm run lint",

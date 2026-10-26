@@ -27,6 +27,7 @@ worker-configuration.d.ts
 
 .tanstack
 .dev.vars*
+.env*
 .seed/
 .rer/
 .rer-tools/

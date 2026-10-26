@@ -12,9 +12,9 @@
     "operations": {
       "setup": "node scripts/delivery/setup-build.mjs",
       "build": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && pnpm exec rer build",
-      "verify": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && pnpm exec rer check --profile first-party && pnpm run source:check && pnpm run verify:base-source && pnpm run deployment-spec:check",
+      "verify": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && pnpm exec rer check --profile first-party && pnpm run source:check && pnpm run verify:base-source && pnpm check:deployment-spec",
       "artifact": "export PATH=\"$PWD/.rer-tools/node_modules/.bin:$PATH\" && node scripts/build-delivery-artifact.mjs",
-      "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API/provider/signing keys are excluded from portable archives; reconfigure them explicitly. Imported/restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled."
+      "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API keys, provider credentials and signing keys are excluded from portable archives; reconfigure them explicitly. Imported or restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled."
     },
     "sourceRepository": "https://github.com/just-every/run-penny",
     "verification": {
@@ -32,8 +32,9 @@
         "scripts/delivery/**",
         "rer-setup.json",
         ".github/workflows/rer-managed.yml",
-        "scripts/delivery/deployment-spec.mjs",
-        "management/integration/deployment-spec.json"
+        "scripts/build-deployment-spec.mjs",
+        "management/integration/deployment-spec.json",
+        "packaging.json"
       ],
       "migrationDirectories": [
         "migrations/core"
@@ -93,7 +94,7 @@
         "PORTAL_IDENTITY_SECRET"
       ],
       "healthPath": "/health",
-      "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API/provider/signing keys are excluded from portable archives; reconfigure them explicitly. Imported/restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled.",
+      "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API keys, provider credentials and signing keys are excluded from portable archives; reconfigure them explicitly. Imported or restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled.",
       "providerEffects": [
         "outbound-mail"
       ],
@@ -120,7 +121,9 @@
       },
       "mail": {
         "providers": [
-          "rer"
+          "rer",
+          "sendgrid",
+          "resend"
         ]
       }
     }

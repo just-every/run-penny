@@ -37,8 +37,13 @@ The choices remain **SendGrid**, **Resend** or **set up later**. With your own p
 | Variable | What it does |
 |---|---|
 | `MAIL_PROVIDER` | `sendgrid`, `resend` or `later` (email actions unavailable). `rer deploy` refuses `later`, because the owner could not sign in. |
-| `MAIL_FROM` | The sender address verified with your selected provider; not used with `later`. |
-| `MAIL_API_KEY` | Your SendGrid or Resend API key; required unless `MAIL_PROVIDER=later`. |
+| `MAIL_FROM` | Required with SendGrid or Resend: the sender address verified with your selected provider; not used with `later`. |
+| `MAIL_API_KEY` | Required secret with SendGrid or Resend: your provider's API key; not used with `later`. |
+
+`MAIL_PROVIDER` and `MAIL_FROM` are configuration rather than credentials.
+`MAIL_API_KEY` is private, including the installation credential RER supplies for
+Managed hosting. The matching event-verification setting below is optional for
+sending mail; Resend's webhook secret must also stay private.
 
 Penny sends only through the provider you name, so the key must belong to that provider. `MAIL_API_KEY` is the same name RER uses for Managed mail; older `SENDGRID_API_KEY` and `RESEND_API_KEY` settings are refused, so rename them when you upgrade. Set these as described in [Install and deploy](/docs/install). If the provider, key or sender is missing, deployed sign-in and requester verification say that email delivery is unavailable. Visitors can still read your public pages.
 

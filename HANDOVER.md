@@ -34,7 +34,7 @@ Penny's state-placement refusal and credential-free install live in its seed
 adapter (`scripts/installer/placement.mjs`), which `rer` loads before any verb
 acts. The retained Base copies (native modules under `base/`, the delivery
 producer, schema, authoring tools and the first-run runtime `src/base/`) record
-their own revisions in `base/PROVENANCE.json`; the vendored modules are refreshed together from Base `1ee378e` (rer 0.2.24).
+their own revisions in `base-copies.json`; the vendored modules are refreshed together from Base `11f94fec479228d71ba6d7dd6ea7796c0d42c544` (rer 0.2.80).
 Shared tests and fixtures stay in Base; Penny keeps its product and adapter
 checks. `edition.json`, the per-copy hashes and modes, the comparison archives and
 `sources.lock.json` identify the shipped source; public readers can verify the

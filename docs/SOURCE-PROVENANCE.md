@@ -1,9 +1,9 @@
 # Source provenance
 
 Penny's public source is `https://github.com/just-every/run-penny`, and the README
-clone command names it. The current version is 0.0.0; the first release is the
-annotated tag `v0.0.0` on the repository's first commit, a parentless export of
-the verified private tree.
+clone command names it. The original public export is the annotated tag
+`v0.0.0` on the repository's first commit, a parentless export of the verified
+private tree.
 
 ## What the shipped records establish
 
@@ -11,16 +11,16 @@ the verified private tree.
 paths and local mappings. `sources.lock.json` binds current tracked file bytes,
 executable modes, the authoring tool and the selected `.edition/sources/`
 comparison archives. Those archives retain upstream comparison bytes and modes.
-`base/PROVENANCE.json` records the byte-exact copies individually; its root
-revision is the common revision of those entries, not a replacement for their
-per-file hashes and origin paths.
+`base-copies.json` records the byte-exact copies individually; each entry names its immutable Base revision, file hashes and origin paths.
 
-All active Base selections use
-`eca838d6659f47f99338b8e638345bfe9191f3ba`. That revision and repository name
-record historical origin. Base is private: these records do not promise public
-access to that commit, nor claim it exists in Penny's public history. Earlier
-revisions in dated evidence are historical receipts. A clean first-public tree
-has its own commit identity and does not expose private source ancestry.
+The byte-exact copies now select Base tag `rer-v0.2.80`, commit
+`11f94fec479228d71ba6d7dd6ea7796c0d42c544`. Adapted components retain their
+immutable upstream origins and comparison archives in `edition.json`; the
+maintained delivery export retains its comparison at that same tag. These
+records describe source custody, without claiming a release or deployment.
+The import kit's atomic prefix has a type-only public return interface so
+Penny's declaration build can expose it. Its upstream baseline and accepted
+local bytes are recorded alongside the retained component comparison.
 
 From an unchanged checkout, verify the shipped records without private Base
 access or installed dependencies:
@@ -33,7 +33,7 @@ node scripts/verify-base-source.mjs
 The package aliases are `pnpm source:check` and `pnpm verify:base-source`.
 The first checks the selected retained archives and source lock; the second
 checks copied files and modes against their shipped record. These establish
-internal byte identity, not an independent attestation of private origins.
+internal byte identity, not an independent attestation of upstream origins.
 Do not run `source:lock` to accept an unexplained difference. An author stages
 reviewed intentional changes before refreshing that lock.
 
@@ -43,7 +43,7 @@ copies:
 
 ```sh
 node scripts/edition-authoring/cli.mjs verify-base \
-  --record base/PROVENANCE.json --base /absolute/path/to/base
+  --base /absolute/path/to/base
 ```
 
 This additional comparison is separate from the public offline check. A missing

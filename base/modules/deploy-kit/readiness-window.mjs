@@ -3,11 +3,11 @@ import { assert } from './validation.mjs';
 
 // A single, in-memory deadline travels with this upload. It is deliberately not
 // persisted: an old receipt is not evidence of a fresh propagation window.
-export function readinessWindow({ totalMs = 90000, clock = () => performance.now(), sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) } = {}) {
+export function readinessWindow({ totalMs = 90000, clock = () => performance.now(), sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), timeout = ms => AbortSignal.timeout(ms) } = {}) {
  assert(Number.isFinite(totalMs) && totalMs > 0 && totalMs <= 90000, 'invalid-health-bound');
  let start;
  return {
-  clock, sleep,
+  clock, sleep, timeout,
   get active() { return start !== undefined; },
   start() { start ??= clock(); },
   remaining() { return start === undefined ? totalMs : Math.max(0, totalMs - (clock() - start)); },
@@ -26,7 +26,7 @@ export function readinessAPI(api, window, failure = 'deployment-readiness-timeou
  return {...api, request(path, options = {}) {
   const remaining = window.remaining();
   assert(remaining > 0, failure);
-  const deadline = AbortSignal.timeout(Math.max(1, Math.ceil(remaining)));
+  const deadline = window.timeout(Math.max(1, Math.ceil(remaining)));
   return api.request(path, {...options, signal:options.signal ? AbortSignal.any([options.signal,deadline]) : deadline});
  }};
 }

@@ -68,7 +68,7 @@ export async function main(argv = process.argv.slice(2), env = process.env, {fet
     if (!requestWindow?.active) return undefined;
     const remaining = requestWindow.remaining();
     assert(remaining > 0, 'deployment-readiness-timeout');
-    return AbortSignal.timeout(Math.max(1, Math.ceil(remaining)));
+    return requestWindow.timeout(Math.max(1, Math.ceil(remaining)));
   };
   fetch = (input, init = {}) => {
     const deadline = requestSignal();

@@ -35,7 +35,7 @@ workflow files, use the same maintained runtime:
 
 ```sh
 node scripts/delivery/base/cli.mjs package \
-  --config scripts/delivery/base/packaging.json --output rer-package
+  --config packaging.json --output rer-package
 ```
 
 Review those generated files before updating their committed copies. A changed
@@ -90,7 +90,7 @@ admission is implied by the bundle receipt.
 
 ## Source admission checks
 
-The product-owned `scripts/delivery/base/packaging.json` declares the source
+The product-owned `packaging.json` declares the source
 verification policy emitted in `rer-project.json`. Its security-sensitive paths
 cover native auth, integrations, data, saved imports and owner-editor
 implementation under `src/core/features/`, all `migrations/core/**` SQL,

@@ -198,7 +198,7 @@ permission, Cron execution, inbox delivery or a real hostname.
 ## Source custody
 
 `edition.json` is the selection and comparison authority.
-`base/PROVENANCE.json` records full copied-byte, executable-mode and pin custody.
+`base-copies.json` records full copied-byte, executable-mode and pin custody.
 Each retained Base copy records its own revision there (the import kit is Base
 `38aa7ef`, rer 0.2.20), and `pnpm verify:base-source` is a thin alias to the shared verifier.
 The `rer` command itself is the pinned `@runeditrun/rer` package, not a copy.
@@ -321,7 +321,7 @@ The minute scheduled handler admits up to ten due investigations, reserves each 
 
 Penny publishes `management/integration/deployment-spec.json` at the same revision as `rer-project.json` and its bound `rer-setup.json`. RER Managed reads these files without a pasted specification. The app surface assigns `APP_ORIGIN`; owner email starts from the account email. The hidden generated setup token and signed owner-claim step use Penny's existing native owner authority. Direct owner-account `rer deploy` returns the token deployed by its custom hook to rer for `POST /auth/bootstrap`, which claims once (303) and preserves an initialized owner (409 `already_initialized`). “Set up later” needs no mail secret; choosing SendGrid or Resend requires its own key and verified sender.
 
-After changing deployment inputs or setup, run `rer build`, then `pnpm deployment-spec:write`, and commit the generated specification, setup digest and workflow. Verify runs `pnpm deployment-spec:check` against the emitted Worker configuration and migration bytes. Build and deployment never invoke test suites.
+After changing deployment inputs or setup, run `rer build`, then `pnpm delivery:spec`, and commit the generated specification, setup digest and workflow. Verify runs `pnpm check:deployment-spec` against the emitted Worker configuration and migration bytes. Build and deployment never invoke test suites.
 
 ## Direct request status upgrade
 

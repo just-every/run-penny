@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {execFile} from 'node:child_process'
 import {promisify} from 'node:util'
-import {mkdtemp, mkdir, cp, symlink, rm, stat, chmod, readFile} from 'node:fs/promises'
+import {mkdtemp, mkdir, cp, symlink, rm, stat, chmod, readFile, rename} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join, resolve} from 'node:path'
 import {fileURLToPath} from 'node:url'
@@ -40,6 +40,7 @@ test('[DATA-001 DATA-003] import before setup restores an older backup with eith
     }
     await symlink(join(source, 'node_modules'), join(root, 'node_modules'), 'dir')
     await cp(join(source, 'tests/fixtures/older-archive'), join(root, 'exports'), {recursive: true})
+    await rename(join(root, 'exports/penny.archive'), join(root, 'exports/penny.rer'))
     for (const suffix of ['', '.erasure-journal.json']) await chmod(join(root, 'exports/penny.rer') + suffix, 0o600)
     const options = {configPath: resolve(root, 'wrangler.jsonc'), persist: {path: join(root, '.wrangler/state/v3')}, remoteBindings: false}
     // A native destination is empty; import prepares its schema with Wrangler.

@@ -154,18 +154,9 @@
       ]
     },
     {
-      "id": "local-data-and-health",
-      "description": "Migrate and import the curated D1 sample idempotently through feature services, and report health only when D1, R2, and Queue bindings are reachable.",
-      "clauses": [
-        "BASE-OPS-001"
-      ]
-    },
-    {
       "id": "bounded-local-data-ownership",
       "description": "Authenticated current-schema product archive over hosted HTTPS or loopback HTTP, with original request/evidence attachment bytes and explicit installation-authority exclusions. Guarded empty-store restore and supported-root erasure have an authenticated hosted API/CLI source path; hosted verification is source-only, local TLS. Restored pending requester and decision-review mail is held. Limits, operator holds and latest-journal continuity gaps remain explicit; universal data clauses and live hosted acceptance remain open.",
       "clauses": [
-        "BASE-DATA-001",
-        "BASE-DATA-003",
         "DATA-001",
         "DATA-003"
       ]

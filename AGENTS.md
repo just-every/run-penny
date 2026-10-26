@@ -62,7 +62,8 @@ must not be represented as shipped merely because related tables exist.
 
 Read CONTRACT.md, BASELINE.md, ACCEPTANCE.md, HANDOVER.md, OPERATIONS.md and the
 package scripts before changing behavior. The public source repository is
-https://github.com/just-every/run-penny, version 0.2.2 (tag `v0.2.2`). Keep source
+https://github.com/just-every/run-penny. Version 0.2.2 is prepared for a later
+native release; listing pre-flight creates no tag. Keep source
 custody records truthful and preserve all repository history and existing tags.
 
 ## Runtime and trust boundaries
@@ -113,7 +114,7 @@ for the installation. Dependencies/build must not receive provider credentials:
 environment for every install, including the first one a global `rer` runs on a
 fresh clone before Penny's adapter exists.
 
-`edition.json`, `base/PROVENANCE.json`, retained source snapshots and
+`edition.json`, `base-copies.json`, retained source snapshots and
 `sources.lock.json` record adopted source custody. Run `pnpm source:lock` only
 for staged intentional inputs, then `pnpm source:check` and
 `pnpm verify:base-source`. Do not edit copied module bytes while claiming exact

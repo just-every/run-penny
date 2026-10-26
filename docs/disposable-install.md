@@ -6,11 +6,11 @@ The commands here preserve the separate disposable artifact/controller protocol.
 Managed Penny gets mail from RER without a provider account or key entry
 ([email guide](EMAIL.md)); this controller keeps its own SendGrid/Resend inputs
 and does not issue Managed relay credentials.
-Current copied sources are listed in `edition.json` and `base/PROVENANCE.json`;
+Current copied sources are listed in `edition.json` and `base-copies.json`;
 deploy-kit is pinned at `5885264dd9d04b340a4d7218b31e5ad127d8484a`.
 
 These commands use the actual Base deploy kit copied under `base/modules/deploy-kit`;
-its pin, and the separate operator-auth and mail pins, are in `base/PROVENANCE.json`. `pnpm verify:base-source` verifies every
+its pin, and the separate operator-auth and mail pins, are in `base-copies.json`. `pnpm verify:base-source` verifies every
 copied file against that module-level manifest. `artifact:prepare` packages and
 validates an already built candidate; it creates no Cloudflare resources.
 `artifact:deploy` provisions/reuses declared resources, applies hash-ledger migrations,

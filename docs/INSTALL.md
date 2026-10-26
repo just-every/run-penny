@@ -71,11 +71,16 @@ Set these in the shell you deploy from, and keep them out of files and history:
 | Variable | What it is |
 |---|---|
 | `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID. |
-| `CLOUDFLARE_API_TOKEN` | An API token for that account with Workers Scripts, D1, R2 Storage and Queues edit permissions. |
+| `CLOUDFLARE_API_TOKEN` | Required secret: an API token for that account with Workers Scripts, D1, R2 Storage and Queues edit permissions. |
 | `OPERATOR_EMAIL` | Your operator address. |
-| `MAIL_PROVIDER` | `sendgrid` or `resend`. `rer deploy` refuses a deployment without sign-in email. |
-| `MAIL_FROM` | A sender address verified with that provider. |
-| `MAIL_API_KEY` | That provider's API key. |
+| `MAIL_PROVIDER` | Required input: `sendgrid` or `resend`. `rer deploy` refuses a deployment without sign-in email. |
+| `MAIL_FROM` | Required input: a sender address verified with that provider. |
+| `MAIL_API_KEY` | Required secret: that provider's API key. |
+
+`MAIL_PROVIDER` and `MAIL_FROM` are configuration, not credentials, even though
+`deploy.json` declares them as Worker secret bindings. `MAIL_API_KEY` must stay
+private. Managed hosting supplies these inputs and also requires RER's
+`MAIL_RELAY_URL`; you do not enter a personal provider key for Managed mail.
 
 Optional: `WORKSPACE_TIMEZONE`, an IANA timezone such as Europe/London for requester quiet hours (default UTC). Set it before you deploy and keep it for that workspace.
 
@@ -91,7 +96,7 @@ The dry run builds and validates locally, then reads the target account’s subd
 
 Status and release publications start the Queue mail consumer immediately; they do not wait for the first Cron tick. The minute Cron remains a recovery backstop. The deploy prints a notice after it registers that schedule: Cloudflare may take up to about two hours to start the first scheduled run on some accounts, because a new schedule only starts at the account's next provider refresh. Judge delivery by Penny's own rows, not by Cloudflare's scheduled-analytics (which can list a new Worker as `__unknown__`): `notification_batches` holds each gathered request delivery and its state and any failure reason, whether handled by Queue or Cron.
 
-The first deploy generates `AUTH_SECRET` and `SETUP_TOKEN` once and saves them in `.rer/deploy/production-secrets.json`, mode 0600, with a ledger of what it created under `.rer/deploy/`. Resource names begin with `penny-production`, and the address comes from your account's workers.dev subdomain.
+The first deploy generates the required private `AUTH_SECRET`, `INSTALLATION_KEY` and `SETUP_TOKEN` once and saves them in `.rer/deploy/production-secrets.json`, mode 0600, with a ledger of what it created under `.rer/deploy/`. You do not supply these generated secrets. Resource names begin with `penny-production`, and the address comes from your account's workers.dev subdomain.
 
 > [!WARNING]
 > Deploy changes the Cloudflare account that the token belongs to. Check which account that is first. Do not run remote Wrangler migrations yourself before deploying: Penny keeps its own record of applied migrations and will refuse a history it cannot trust.

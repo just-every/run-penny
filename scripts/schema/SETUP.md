@@ -50,6 +50,25 @@ fields, including developer settings. Audience does not change requiredness,
 defaults, conditions, runtime editability or submitted values. Existing
 manifests without audience keep their current behavior.
 
+Public fields may declare an optional `businessField` hint identifying the
+business profile value represented by the input. The closed vocabulary is
+`owner_email`, `legal_name`, `timezone`, `currency`, `jurisdiction`, `mail_sender`,
+`display_name`, `owner_name`, `brand_color`, `logo_ref`, `entity_type`,
+`state_of_organization`, `fiscal_year_start`, `books_start_date`, `tax_method`,
+`country` and `state`. Unknown hints are refused. Secrets cannot declare the
+hint, including entered, managed and generated secrets. The hint alone does
+not supply an answer, change input validation or alter field visibility.
+
+A hint also requires the input name to be explicitly listed for that Business
+field in [`business-field-inputs.mjs`](business-field-inputs.mjs). That table
+preserves the current corpus mappings and adds named public profile aliases.
+Lookup uppercases the name once; the manifest still requires ASCII upper snake
+case. Separators, prefixes, suffixes and Unicode lookalikes are never folded.
+Unknown names must be added through a Base schema change or renamed to a listed
+input for that field. Each Business field may be claimed by only one input.
+Secret kind, `secret:true` and installer vault bindings remain ineligible even
+for listed names. Inputs without a hint keep their existing behavior.
+
 A field may declare `localDefault`, a value that only the zero-setup local
 launch (`rer dev` on a checkout that is not set up) fills into an empty active
 field. It takes one of three forms: a literal string for a public field, which

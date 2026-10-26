@@ -13,7 +13,7 @@ copy. A later refresh is a version bump: `pnpm add -D -E @runeditrun/rer@X`,
 then `pnpm source:lock`.
 
 Base selections retain immutable comparison origins in `edition.json`; individual
-verbatim copies record their actual revisions in `base/PROVENANCE.json` (51 copy
+verbatim copies record their actual revisions in `base-copies.json` (51 copy
 groups, 542 files: the native modules under `base/`, the delivery producer,
 schema, authoring tools, first-run runtime and three Base documents).
 `sources.lock.json` binds current tracked source and retained comparison

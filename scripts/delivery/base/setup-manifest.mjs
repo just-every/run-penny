@@ -2,10 +2,10 @@ import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {checkedPath, relativePath} from './paths.mjs';
 import {keys} from './bindings.mjs';
-import {parseSetupManifestBytes, validateSetupManifest} from '../../schema/setup-validation.mjs';
+import {parseSetupManifestBytes, validateSetupManifest} from './schema/setup-validation.mjs';
 import {validateMailSetup} from './mail.mjs';
 
-const setupSchemaUrl = new URL('../../schema/SETUP.schema.json', import.meta.url);
+const setupSchemaUrl = new URL('./schema/SETUP.schema.json', import.meta.url);
 const outputPath = 'rer-setup.json';
 
 export function setupSelection(value) {

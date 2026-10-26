@@ -76,7 +76,7 @@ Run from the project root, or use `--cwd PATH`. Every new verb accepts `--help`,
 
 `signin` is rer's own verb, not a seed operation: no seed declares it and `check` does not ask for it. `rer signin [--environment NAME] [--env-file FILE]` gives the hosted owner a one-time sign-in link without mail when the seed uses operator-auth's `accounts/schema/owner-signin.sql` migration. It uses only the Cloudflare credentials that deployed that environment, writes a single-use grant for the recorded owner into the deployment's auth D1, and prints the link once to the terminal (never to a log or receipt). The link expires within 15 minutes and its use is recorded in the owner's audit log. Those seeds document `rer signin` in their README as the way into a hosted install whose mail is not working yet; after it, the owner corrects a wrong email in settings (`POST /auth/email`). A seed with native sign-in can declare its browser page with the `commandAdapter` option `signInPath: '/login'` (a same-origin path, not a magic-link API endpoint). When the owner sign-in table is absent, `rer signin` explains that the seed uses its own sign-in flow and points to that page on the recorded environment's origin, or to `/setup` for owner recovery when no page is declared. It exits 4 and issues no link.
 
-`release` is the compatibility exception: preserve its existing parser, required `--repo`/`--output`, JSON receipt and exit codes; do not retrofit the new common flags or infer publishing identities. Root help may list the new commands. Release never pushes or deploys. A refused release prints the underlying message (a malformed `CONTRACT.md` names its file and line) on stderr and exits 2. Source inspection and locking remain edition-authoring commands, not another implementation in `rer`.
+`release` is the compatibility exception: preserve its existing parser, required `--repo`/`--output`, JSON receipt and exit codes; do not retrofit the new common flags or infer publishing identities. Root help may list the new commands. Release never pushes or deploys. A refused release prints the underlying message (a malformed `CONTRACT.md` names its file and line) on stderr and exits 2. Source inspection and locking use the package's edition-authoring implementation. `rer adopt-edition` and `rer refresh-base --ref FULL_COMMIT` are rer-owned source commands, declared through the same bootstrap contract; seeds do not add adapter hooks or OPERATIONS entries for them. See `EDITION-AUTHORING.md` for effects, acquisition, offline refusal and JSON fields.
 
 For GitHub sources, `release` selects its verification workflow in this order:
 `--verify-workflow NAME_OR_FILE`; optional top-level `verifyWorkflow` in the
@@ -89,12 +89,26 @@ through. Multiple conventional files or matching names are refused with the
 candidates and `--verify-workflow` remedy. This optional declaration does not
 change `operations.verify`, the seed's local command.
 
-The selected workflow must have a completed successful `push` or
-`workflow_dispatch` run for the exact source SHA in the same repository, on its
-default branch or the release tag when that tag resolves to the same commit.
+The selected workflow must have a completed successful run whose `head_sha`
+equals the source commit exactly, with both `repository.full_name` and
+`head_repository.full_name` matching the source repository, and its event must
+be `push` or `workflow_dispatch`. Any branch of that repository can qualify.
+These events run that commit's own workflow file on that commit's tree.
+Pull-request runs test a merge ref and cannot serve as exact-SHA evidence, even
+for a same-repository PR. Forks, other events and different SHAs cannot qualify.
+Release-tag runs still require the tag to resolve remotely to that commit. A
+failed tag lookup disqualifies that tag run; a separate qualifying run can still
+authorize release.
+The highest qualifying run ID is chosen deterministically. Failed or unfinished
+duplicates are informational entries in the receipt and do not invalidate a
+qualifying success.
 `gates.verify` in the receipt and site provenance records `workflowFile`,
-`workflowName`, `workflowId`, `runId` and `runUrl`. `--local-verify` explicitly
-runs frozen installation and the seed's local verification targets instead.
+`workflowName`, `workflowId`, `runId`, `runUrl`, branch, event and conclusion.
+When no run qualifies, the refusal names unfinished runs and advises pushing
+the exact commit to any branch of the source repository and waiting for its
+selected Verify workflow to complete successfully. `--local-verify` explicitly
+runs frozen installation and the seed's local verification targets instead,
+only when the source repository's verification policy permits it.
 
 For a tag-first patch release from an already public source, push the branch,
 create `git -c tag.gpgSign=false tag -a --cleanup=verbatim v<version> <exact-source-sha> -m "$release_message"`, push that
@@ -327,7 +341,7 @@ A seed's `CONTRACT.md` says what the product is being built towards and how far 
 - **Status.** Exactly one `## Status` section. Its first line is `` Judged from the code and tests at commit `<sha>` (<date>). `` with a 7 to 40 character hex commit and a date written `16 October 2026` or `2026-10-16` (the sentence may go on after a semicolon). It holds one table with the header `| Clause | Title | Kind | Status | Evidence | Gap |` and exactly one row per defined clause: no row for an undefined clause and no second row. Kind is `published`, `target` or `push-further`; Status is `done`, `partial` or `missing`; the title matches the definition's. Evidence lists the repository paths, each in backticks, that back a `done` or `partial` row (one is required); Gap says what is missing for a `partial` or `missing` row (required).
 - **Summaries.** Optional, and checked against the rows when present: a `| Clauses | Done | Partial | Missing | Total |` table whose rows are labelled `All`, a kind (`Published`, `Target`, `Push further`) or kinds joined by `and`, and sentences such as `88 clauses: 23 done, 38 partial, 27 missing.`
 
-**The /contract page.** `rer build --site` parses a seed's `CONTRACT.md` and passes it to the site entry as `sitePages({ contract })`; a contract that does not parse stops the build with each problem's line, and no site is written. The entry adds `{ path: '/contract', html: contractPageHtml(identity, run, contract) }` (`src/base/contract-page.ts`) and passes `contract` to `runPageHtml`, `siteHomeHtml` and `siteNotFoundHtml`, whose headers then link Contract; a seed's own pages and docs link `/contract` only when `contract` is given. Without a `CONTRACT.md` there is no `contract`, no page and no link. The page reads the seed's theme, and the status tokens in `onboarding/README.md` ("Seed theme") recolour it.
+**The /contract page.** `rer build --site` parses a seed's `CONTRACT.md` and passes it to the site entry as `sitePages({ contract })`; a contract that does not parse stops the build with each problem's line, and no site is written. The entry adds `{ path: '/contract', html: contractPageHtml(identity, run, contract) }` (`src/base/contract-page.ts`) and passes `contract` to `runPageHtml`, `siteHomeHtml` and `siteNotFoundHtml`, whose headers then link Contract; a seed's own pages and docs link `/contract` only when `contract` is given. The site has one header: Base's on its own homepage, `/run`, `/contract` and the not-found page, or, for a seed with an approved homepage, that homepage's header, passed to `runPageHtml`, `contractPageHtml` and `siteNotFoundHtml` as their last argument (`HomepageHeader`, `HOMEPAGE-VARIANTS.md`), with its own links. Without a `CONTRACT.md` there is no `contract`, no page and no link. The page reads the seed's theme, and the status tokens in `onboarding/README.md` ("Seed theme") recolour it.
 
 `rer check` validates a seed's `CONTRACT.md` when it has one: every parse problem is a failing `CONTRACT.status` clause naming its line, and each evidence path that is not in the checkout fails `CONTRACT.evidence.<ID>`, naming the row's line. A seed without `CONTRACT.md` is unaffected. Run `rer check` in the seed after changing the contract.
 

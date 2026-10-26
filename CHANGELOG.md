@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Prepare the hosted listing with rer 0.2.80, refreshed Base source custody, one root packaging policy and a build-derived deployment specification with a freshness check. Deployment documentation labels required mail inputs and private credentials; environment files are ignored.
+- Backup compatibility: rer 0.2.80 exports a complete schema-object inventory. Legacy v2 archives without that inventory are refused; create a fresh backup from the existing installation with this version before retiring it. The retained earlier-schema fixture uses a fresh native export while keeping its rows and original file unchanged.
+
 - Redaction settings keep custom-pattern drafts when leaving the page, show save feedback beside the edited field, and offer a fresh preview for stale plans. Recoverable runs resume their saved cursor; the preview lists matching places first and groups unchanged text.
 - AI-008 remains partial: saved Canny/UserVoice imports and Orbit/native learning now redact captured text before storage. Rules-on imports retain whole-file digests instead of unredacted originals; learning keeps source-revision and marked-content digests separately. Rules-off bytes, replay, undo, receipts, archive and erasure custody retain their existing paths.
 - Migration 0095 adds owner-accountable redaction previews and bounded Queue/Cron reapplication with per-place counts, stale-plan refusal, irreversible confirmation, resumable progress and count-only audits. Editable evidence and copied request fields no longer stop at 200 versions. Preserved/fingerprinted places are explicitly blocked for DATA-003 erasure/copy resolution or an owner ruling; model detection and CAP-008 transcripts remain open.
