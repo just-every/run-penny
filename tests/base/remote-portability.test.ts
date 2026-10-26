@@ -20,6 +20,16 @@ async function complete(id: string, cookie: Record<string, string>) {
 }
 it('exports the hosted Base archive and matching journal, restores the same originals locally, and removes source snapshots', async () => {
  const cookie = await owner(), stamp = new Date().toISOString()
+ // [DATA-001] Refuse unsafe inputs before exporting this installation.
+ await env.DB.exec('CREATE TABLE unclassified_private_data(id TEXT PRIMARY KEY)')
+ expect((await call(base, {}, cookie)).status).toBe(503)
+ expect(await env.DB.prepare('SELECT lock_id FROM data_state').first('lock_id')).toBeNull()
+ await env.DB.exec('DROP TABLE unclassified_private_data')
+ await env.FILES.put('untracked-original', 'private bytes')
+ expect((await call(base, {}, cookie)).ok).toBe(false)
+ expect(await env.DB.prepare('SELECT lock_id FROM data_state').first('lock_id')).toBeNull()
+ expect((await env.DB.prepare("SELECT name FROM sqlite_master WHERE name LIKE 'rer_portability_snap_%'").all()).results).toHaveLength(0)
+ await env.FILES.delete('untracked-original')
  expect((await call('/api/operator/settings/ai',{monthlyBudgetMicros:12345000,includePrivate:false,choices:[]},cookie,bindings,'PUT')).status).toBe(200)
  await env.DB.batch([
   env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('remote-board','remote-board','Remote records','public',0,?,?)").bind(stamp, stamp),
@@ -128,18 +138,6 @@ it('requires a current native owner, exact origin and job ownership, and never m
  expect(await env.DB.prepare('SELECT lock_id FROM data_state').first('lock_id')).toBeNull()
  expect((await env.DB.prepare("SELECT name FROM sqlite_master WHERE name LIKE 'rer_portability_snap_%'").all()).results).toHaveLength(0)
 })
-it('refuses unclassified schema and untracked originals without retaining a maintenance lock', async () => {
- const cookie = await owner()
- await env.DB.exec('CREATE TABLE unclassified_private_data(id TEXT PRIMARY KEY)')
- expect((await call(base, {}, cookie)).status).toBe(503)
- expect(await env.DB.prepare('SELECT lock_id FROM data_state').first('lock_id')).toBeNull()
- await env.DB.exec('DROP TABLE unclassified_private_data')
- await env.FILES.put('untracked-original', 'private bytes')
- expect((await call(base, {}, cookie)).ok).toBe(false)
- expect(await env.DB.prepare('SELECT lock_id FROM data_state').first('lock_id')).toBeNull()
- expect((await env.DB.prepare("SELECT name FROM sqlite_master WHERE name LIKE 'rer_portability_snap_%'").all()).results).toHaveLength(0)
-})
-
 it('recovers an undelivered creation by its durable actor without deleting unrelated snapshots', async () => {
  const cookie = await owner(), journal = await readErasureJournal(env.DB)
  const unrelated = await createPortability({ db: env.DB, buckets: { FILES: env.FILES }, policy: policy(journal) })

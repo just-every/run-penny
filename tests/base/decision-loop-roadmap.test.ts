@@ -31,9 +31,8 @@ describe('Explicit roadmap publication',()=>{
    expect((await env.DB.prepare('SELECT * FROM roadmap_update_targets WHERE version_id=?').bind(result.transitionId).all()).results).toMatchObject([{request_id:r.id,approval_at:p.approved_at}]);expect(await row('decisions',c.d.id)).toEqual(decisionBefore)
    expect((await publication(c.itemId))!.withdrawn_at).toBeNull()
   }
- })
- it('[ROAD-001][ROAD-007] replays identical moves once, rejects changed payloads, and rolls back move on late draft failure',async()=>{
-  const c=await committed();await approve(c.itemId);const key=crypto.randomUUID(),responses=await Promise.all([move(c.itemId,'in_progress',key),move(c.itemId,'in_progress',key)]);expect(responses.map(r=>r.status)).toEqual([200,200]);expect(await responses[0].json()).toEqual(await responses[1].json());expect((await move(c.itemId,'shipped',key)).status).toBe(409)
+  // [ROAD-001 ROAD-007] Replay and failed moves use the same approved item and request.
+  const key=crypto.randomUUID(),responses=await Promise.all([move(c.itemId,'in_progress',key),move(c.itemId,'in_progress',key)]);expect(responses.map(r=>r.status)).toEqual([200,200]);expect(await responses[0].json()).toEqual(await responses[1].json());expect((await move(c.itemId,'shipped',key)).status).toBe(409)
   const before=await row('roadmap_items',c.itemId),transitions=(await env.DB.prepare('SELECT * FROM roadmap_transitions WHERE roadmap_item_id=? ORDER BY id').bind(c.itemId).all()).results
   await env.DB.exec("CREATE TRIGGER fail_draft BEFORE INSERT ON roadmap_update_versions BEGIN SELECT RAISE(ABORT,'late draft failure'); END")
   try{expect((await move(c.itemId,'shipped')).status).toBe(503)}finally{await env.DB.exec('DROP TRIGGER fail_draft')}

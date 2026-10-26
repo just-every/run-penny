@@ -29,6 +29,19 @@ describe('Accountable commitment',()=>{
   await json(request(`/api/operator/evidence/${e.id}/links`,'PUT',{target:'request',targetId:source.id,stance:'supporting'}));await unchanged()
   await json(request(`/api/operator/requests/${source.slug}/merge`,'POST',{targetSlug:target.slug}));await unchanged()
   await json(request(`/api/operator/requests/${source.slug}/unmerge`,'POST',{}));await unchanged()
+  // [DEC-004 DEC-005] Roll back a late failure, retry concurrently, then refuse conflicting commits.
+  {
+  const before=await row('decisions',d.id),auditBefore=(await env.DB.prepare('SELECT * FROM audit_entries WHERE entity_id=? ORDER BY id').bind(d.id).all()).results
+  await env.DB.exec("CREATE TRIGGER test_commit_failure BEFORE INSERT ON audit_entries WHEN NEW.action='decision.committed' BEGIN SELECT RAISE(ABORT,'injected late failure'); END")
+  try{expect((await request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id))).status).toBe(503)}finally{await env.DB.exec('DROP TRIGGER test_commit_failure')}
+  expect(await row('decisions',d.id)).toEqual(before);expect((await env.DB.prepare('SELECT * FROM decision_revisions WHERE decision_id=?').bind(d.id).all()).results).toEqual([]);expect((await env.DB.prepare('SELECT * FROM roadmap_items WHERE decision_id=?').bind(d.id).all()).results).toEqual([]);expect((await env.DB.prepare('SELECT * FROM decision_bet_snapshots WHERE candidate_bet_id IN (?,?)').bind(a.id,(await env.DB.prepare('SELECT id FROM candidate_bets WHERE decision_id=? AND id!=?').bind(d.id,a.id).first<{id:string}>())!.id).all()).results).toEqual([]);expect((await env.DB.prepare('SELECT * FROM audit_entries WHERE entity_id=? ORDER BY id').bind(d.id).all()).results).toEqual(auditBefore)
+  // [DEC-004 DEC-005] Retry the same decision after rollback, then test replay and conflicts.
+  const itemId='declined-'+b.id
+  await env.DB.prepare("INSERT INTO roadmap_items(id,slug,decision_id,candidate_bet_id,title,summary,status,delivery_notes,created_at,updated_at) VALUES(?,?,?,?,?,?,'shipped','Keep every column',?,?)").bind(itemId,itemId,d.id,b.id,'Declined internal','Do not rewrite',stamp,stamp).run();const declined=await row('roadmap_items',itemId)
+  const responses=await Promise.all([request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id)),request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id))]);expect(responses.map(r=>r.status)).toEqual([200,200]);expect(await responses[0].json()).toEqual(await responses[1].json());expect(await row('roadmap_items',itemId)).toEqual(declined)
+  expect((await request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(b.id))).status).toBe(409);expect((await request(`/api/operator/decisions/${d.id}/bets/${a.id}`,'PATCH',{title:'Changed',summary:'Changed'})).status).toBe(409)
+  expect((await env.DB.prepare('SELECT id FROM roadmap_items WHERE candidate_bet_id=?').bind(a.id).all()).results).toHaveLength(1)
+  }
   const result=await json(request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id)))
   expect(await row('decisions',d.id)).toMatchObject({state:'committed',selected_candidate_bet_id:a.id});expect(await row('roadmap_items',result.itemId)).toMatchObject({status:'planned',candidate_bet_id:a.id})
   await unchanged()
@@ -51,18 +64,6 @@ describe('Accountable commitment',()=>{
   const input=commitInput(a.id);const response=await request(`/api/operator/decisions/${d.id}/commit`,'POST',input);expect(response.status).toBe(422);expect(await response.text()).toContain('No viable alternative reason')
   for(const change of [{reviewAt:'2026-02-31'},{selectedCandidateBetId:'foreign'},{ownerOperatorId:'unknown'}])expect((await request(`/api/operator/decisions/${d.id}/commit`,'POST',{...input,noViableAlternativeReason:'Only workable approach',...change})).status).toBe(422)
   await json(request(`/api/operator/decisions/${d.id}/commit`,'POST',{...input,noViableAlternativeReason:'Only workable approach'}))
- })
- it('[DEC-004][DEC-005] failed commitment rolls back fully, then retries once without changing declined items or permitting stale edits',async()=>{
-  const {d,a,b}=await ready(),before=await row('decisions',d.id),auditBefore=(await env.DB.prepare('SELECT * FROM audit_entries WHERE entity_id=? ORDER BY id').bind(d.id).all()).results
-  await env.DB.exec("CREATE TRIGGER test_commit_failure BEFORE INSERT ON audit_entries WHEN NEW.action='decision.committed' BEGIN SELECT RAISE(ABORT,'injected late failure'); END")
-  try{expect((await request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id))).status).toBe(503)}finally{await env.DB.exec('DROP TRIGGER test_commit_failure')}
-  expect(await row('decisions',d.id)).toEqual(before);expect((await env.DB.prepare('SELECT * FROM decision_revisions WHERE decision_id=?').bind(d.id).all()).results).toEqual([]);expect((await env.DB.prepare('SELECT * FROM roadmap_items WHERE decision_id=?').bind(d.id).all()).results).toEqual([]);expect((await env.DB.prepare('SELECT * FROM decision_bet_snapshots WHERE candidate_bet_id IN (?,?)').bind(a.id,(await env.DB.prepare('SELECT id FROM candidate_bets WHERE decision_id=? AND id!=?').bind(d.id,a.id).first<{id:string}>())!.id).all()).results).toEqual([]);expect((await env.DB.prepare('SELECT * FROM audit_entries WHERE entity_id=? ORDER BY id').bind(d.id).all()).results).toEqual(auditBefore)
-  // [DEC-004 DEC-005] Retry the same decision after rollback, then test replay and conflicts.
-  const itemId='declined-'+b.id
-  await env.DB.prepare("INSERT INTO roadmap_items(id,slug,decision_id,candidate_bet_id,title,summary,status,delivery_notes,created_at,updated_at) VALUES(?,?,?,?,?,?,'shipped','Keep every column',?,?)").bind(itemId,itemId,d.id,b.id,'Declined internal','Do not rewrite',stamp,stamp).run();const declined=await row('roadmap_items',itemId)
-  const responses=await Promise.all([request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id)),request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(a.id))]);expect(responses.map(r=>r.status)).toEqual([200,200]);expect(await responses[0].json()).toEqual(await responses[1].json());expect(await row('roadmap_items',itemId)).toEqual(declined)
-  expect((await request(`/api/operator/decisions/${d.id}/commit`,'POST',commitInput(b.id))).status).toBe(409);expect((await request(`/api/operator/decisions/${d.id}/bets/${a.id}`,'PATCH',{title:'Changed',summary:'Changed'})).status).toBe(409)
-  expect((await env.DB.prepare('SELECT id FROM roadmap_items WHERE candidate_bet_id=?').bind(a.id).all()).results).toHaveLength(1)
  })
  it('[DEC-001][DEC-005] concurrent edit and evidence relink produce one coherent stored snapshot',async()=>{
   const {d,a,e}=await ready()

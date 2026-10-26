@@ -807,18 +807,18 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `DEC-001` | States and queue | published | done | `tests/base/decision-loop-commit.test.ts` |  |
 | `DEC-002` | Brief | published | done | `tests/base/decision-loop-dimensions.test.ts` |  |
 | `DEC-003` | Comparable bets | published | done | `tests/base/decision-loop-dimensions.test.ts` |  |
-| `DEC-004` | Commitment | published | done | `tests/base/decision-loop-commit.test.ts` — “[DEC-004][DEC-005] failed commitment rolls back fully, then retries once without changing declined items or permitting stale edits” |  |
+| `DEC-004` | Commitment | published | done | `tests/base/decision-loop-commit.test.ts` — “[DEC-001][DEC-003][DEC-004][DEC-005] derives hand-computable dimensions and immutable current-version snapshots” |  |
 | `DEC-005` | Commitment effects | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `DEC-006` | Revision | published | done | `tests/base/penny-decisions.test.ts` |  |
 | `DEC-007` | Review due | published | done | `tests/base/penny-decisions.test.ts` |  |
 | `DEC-008` | Outcome evidence | published | done | `tests/base/penny-releases.test.ts`; `tests/base/penny-decisions.test.ts` |  |
-| `ROAD-001` | Internal states | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
+| `ROAD-001` | Internal states | published | done | `tests/base/decision-loop-roadmap.test.ts` — “[ROAD-001][ROAD-003][ROAD-007] projects every forward/backward move within five seconds and snapshots exact approval/mapping witnesses atomically” |  |
 | `ROAD-002` | Internal record | published | done | `tests/browser/operator-roadmap-record.mjs` via `tests/browser/operator-pages.mjs` — push Verify shard loop-health |  |
-| `ROAD-003` | Public projection | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
+| `ROAD-003` | Public projection | published | done | `tests/base/decision-loop-roadmap.test.ts` — “[ROAD-001][ROAD-003][ROAD-007] projects every forward/backward move within five seconds and snapshots exact approval/mapping witnesses atomically” |  |
 | `ROAD-004` | Approval is publication | published | done | `tests/base/decision-loop-roadmap.test.ts` (line 9); `tests/base/decision-loop-roadmap.test.ts` (line 17); `tests/base/request-status-workflow.test.ts` (line 7) |  |
 | `ROAD-005` | Commitment mapping | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `ROAD-006` | Public roadmap | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` — approved-only columns and counts, mapped request, published release on card and detail at 1440/390 |  |
-| `ROAD-007` | Status update draft | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` |  |
+| `ROAD-007` | Status update draft | published | done | `tests/base/decision-loop-roadmap.test.ts` — “[ROAD-001][ROAD-003][ROAD-007] projects every forward/backward move within five seconds and snapshots exact approval/mapping witnesses atomically”; `tests/browser/operator-pages-status.mjs` |  |
 | `ROAD-008` | Status update publication | published | done | `tests/base/roadmap-update-publication.ts` — proveRoadmapPublication in `tests/base/board.test.ts` (publication and real scheduled mail, push Verify base shards): both approved mapped histories, unapproved/unmapped controls, one intent per eligible identity/version, muted-follower exclusion, coalesced mail and unchanged repeat; `tests/base/notifications.test.ts` (public event intent is atomic; fixed windows include all approved events, exclude held/internal/voter-only; rechecks each configured input after enqueue); `tests/browser/operator-pages-status.mjs` via `tests/browser/operator-pages.mjs` CORE — publication, both public histories and repeat refusal at 1440/390, push Verify loop-health | — |
 | `ROAD-009` | Roadmap views | target | missing |  | A browser journey switches the three views with the same filters and gets the same items; moving an item records a ROAD-001 transition. |
 | `ROAD-010` | Several and audience roadmaps | target | missing |  | Two public roadmaps each show only their own approved items; an audience roadmap answers 404 to non-members. |
@@ -828,8 +828,8 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `ROAD-014` | Status roadmap | target | done | `tests/base/request-status-workflow.test.ts`; `tests/base/import-roadmap.test.ts`; `tests/browser/import-roadmap.mjs` |  |
 | `REL-001` | Draft and targets | published | done | `tests/browser/loopjourney-release.mjs` |  |
 | `REL-002` | Publication | published | done | `tests/browser/loopjourney-release.mjs` |  |
-| `REL-003` | Published wording | published | done | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |  |
-| `REL-004` | Recipient eligibility and snapshot | published | done | `tests/base/release-custody.test.ts` |  |
+| `REL-003` | Published wording | published | done | `tests/base/penny-releases.test.ts` — “[REL-003 REL-014] clock-advanced scheduled releases and status updates publish once, cancel, notify failures and round-trip; corrections preserve snapshots”; `tests/base/release-custody.test.ts` — “[DATA-001 REL-004/007 BASE-DATA-003] schema-discovered export restores every populated new ownership table exactly” |  |
+| `REL-004` | Recipient eligibility and snapshot | published | done | `tests/base/release-custody.test.ts` — “[DATA-001 REL-004/007 BASE-DATA-003] schema-discovered export restores every populated new ownership table exactly” |  |
 | `REL-005` | Customer-safe delivery | published | done | `tests/browser/loopjourney-release.mjs` |  |
 | `REL-006` | Acceptance and retry | published | done | `tests/base/notifications.test.ts` (line 133); `tests/base/release-custody.test.ts` |  |
 | `REL-007` | Idempotent delivery and provider events | published | partial | `tests/base/release-custody.test.ts` | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression. |
@@ -839,7 +839,7 @@ REQ-022 was completed on 18 October 2026: the private requester directory expose
 | `REL-011` | Bounces and complaints | published | done | `tests/runtime/mail-events-restart.test.mjs` |  |
 | `REL-012` | Update subscription | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-013` | Delivery states | published | done | `tests/base/release-custody.test.ts` |  |
-| `REL-014` | Scheduled publication | target | done | `tests/base/penny-releases.test.ts` (REL-014); `tests/browser/loopjourney-release.mjs` |  |
+| `REL-014` | Scheduled publication | target | done | `tests/base/penny-releases.test.ts` — “[REL-003 REL-014] clock-advanced scheduled releases and status updates publish once, cancel, notify failures and round-trip; corrections preserve snapshots” (REL-014); `tests/browser/loopjourney-release.mjs` |  |
 | `REL-015` | Rich changelog | target | done | `tests/base/rich-changelog.test.ts`; `tests/browser/rich-changelog.mjs` |  |
 | `REL-016` | Changelog distribution | target | partial | `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts` | The feeds validate and list only published versions; a segment send reaches exactly the intersection of consent and segment. |
 | `REL-017` | Release notes from delivered work | target | missing |  | A Linear fixture completion drafts a release containing only approved wording and marked items. |

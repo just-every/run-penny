@@ -29,16 +29,15 @@ async function populated(){
  return g
 }
 it('[DATA-001 REL-004/007 BASE-DATA-003] schema-discovered export restores every populated new ownership table exactly',async()=>{
- await populated();const snapshot=await exportArchive(env.DB,env.FILES)
+ const g=await populated();const snapshot=await exportArchive(env.DB,env.FILES)
  for(const table of tables)expect(snapshot.archive.tables[table].length,table).toBeGreaterThan(0)
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
  expect((await restoreArchive(env.DB,env.FILES,snapshot.archive,snapshot.journal)).status).toBe('complete')
  for(const table of tables)expect(await rows(table),table).toEqual([...snapshot.archive.tables[table]].sort((a,b)=>String(Object.values(a)[0]).localeCompare(String(Object.values(b)[0]))))
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
  const sent=provider();await drainReleaseDeliveries(runtime(),()=>start+7200000);expect(sent).toHaveLength(0)
-})
-it('[DATA-003 REL-004/005 BASE-DATA-003] requester erasure removes headers, context, attempts and Base receipts while retaining published wording',async()=>{
- const g=await populated(),release=await rows('release_versions'),status=await rows('roadmap_update_versions')
+ // [DATA-003 REL-004/005] Erase the same requester after its exact archive round trip.
+ const release=await rows('release_versions'),status=await rows('roadmap_update_versions')
  await env.DB.prepare("INSERT INTO notification_link_epochs(address_id,scope,epoch,created_at,updated_at) VALUES(?,'all',3,?,?)").bind(g.recipient.addressId,time(),time()).run()
  const plan=await planErasure(env.DB,'requesters',g.recipient.requesterId)
  expect(plan.blockedCopies).toEqual([])

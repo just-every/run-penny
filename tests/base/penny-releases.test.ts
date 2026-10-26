@@ -34,7 +34,10 @@ async function addSecondReleaseTarget(g:Awaited<ReturnType<typeof releaseGraph>>
  await json(await call(`/api/operator/releases/${g.draft.slug}`,{...g.input,targetIds:['release-item','second-item']},g.operator,'PATCH'))
 }
 it('[REL-003 REL-014] clock-advanced scheduled releases and status updates publish once, cancel, notify failures and round-trip; corrections preserve snapshots',async()=>{
- const g=await votedReleaseGraph()
+ const g=await votedReleaseGraph(),secret='Confidential billing tag'
+ // [EVID-009 REL-001] Attach a private tag before this release is scheduled.
+ const tag=await json<{id:string}>(await call('/api/operator/catalog/tags',{name:secret},g.operator),201)
+ await json(await call(`/api/operator/releases/${g.draft.slug}`,{...g.input,tagIds:[tag.id]},g.operator,'PATCH'))
  await json(await call('/api/public/updates/subscription',{subscribed:true},g.person,'PATCH'))
  vi.mocked(fetch).mockClear()
  const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key'}
@@ -48,6 +51,11 @@ it('[REL-003 REL-014] clock-advanced scheduled releases and status updates publi
  expect(await capture.list()).toHaveLength(1)
  expect(original.message).toMatchObject({to:[g.recipient.email],subject:g.input.title})
  expect(original.message.text).toContain(g.input.body)
+ // [EVID-009 REL-001] The same delivered release excludes its private tag on every public surface.
+ const mail=original.message
+ const page=await (await call(`/portal/updates/${g.draft.slug}`)).text()
+ expect(mail.text).toContain(g.input.body);expect(page).toContain(g.input.body)
+ for(const surface of [mail.text,mail.html??'',page,await (await call('/portal/updates')).text(),await (await call('/api/public/releases')).text(),await (await call(`/api/public/releases/${g.draft.slug}`)).text()])expect(surface).not.toContain(secret)
  const snapshots=await rows('release_recipient_snapshots'),contexts=await rows('release_recipient_contexts'),targets=await rows('release_target_snapshots')
  const corrected=await json<{versionId:string}>(await correction(g),201)
  const versions=await json<ReleaseVersion[]>(await call(`/api/operator/releases/${g.draft.slug}/versions`,undefined,g.operator))
@@ -112,21 +120,6 @@ it('[REL-003 REL-014] clock-advanced scheduled releases and status updates publi
  expect(await capture.list()).toEqual(captured)
  expect(fetch).toHaveBeenCalledTimes(2)
  await proveScheduledPublications(g,nextDay,clock,cron,capture)
-})
-it('[EVID-009 REL-001] a private tag on a published release stays out of the public updates pages and the customer email',async()=>{
- const g=await votedReleaseGraph(),secret='Confidential billing tag'
- const tag=await json<{id:string}>(await call('/api/operator/catalog/tags',{name:secret},g.operator),201)
- await json(await call(`/api/operator/releases/${g.draft.slug}`,{...g.input,tagIds:[tag.id]},g.operator,'PATCH'))
- await json(await call('/api/public/updates/subscription',{subscribed:true},g.person,'PATCH'))
- const bindings={...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:'sendgrid',MAIL_FROM:'auth@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key'}
- const nextDay=new Date();nextDay.setUTCDate(nextDay.getUTCDate()+1);nextDay.setUTCHours(9,0,0,0)
- vi.spyOn(Date,'now').mockReturnValue(nextDay.getTime())
- await json(await publish(g))
- await runNotificationSchedule(createScheduledController({scheduledTime:Date.now(),cron:'* * * * *'}),bindings)
- const mail=(await providerMessages(createPennyRuntime(bindings))!.list())[0].message
- const page=await (await call(`/portal/updates/${g.draft.slug}`)).text()
- expect(mail.text).toContain(g.input.body);expect(page).toContain(g.input.body)
- for(const surface of [mail.text,mail.html??'',page,await (await call('/portal/updates')).text(),await (await call('/api/public/releases')).text(),await (await call(`/api/public/releases/${g.draft.slug}`)).text()])expect(surface).not.toContain(secret)
 })
 it('[REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows',async()=>{
  const g=await votedReleaseGraph(),subscriber=await requester('Subscriber only'),endpoint='/api/public/updates/subscription'
