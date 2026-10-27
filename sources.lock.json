@@ -8090,7 +8090,7 @@
       "executable": false
     },
     "tests/browser/operator-roadmap-record.mjs": {
-      "sha256": "88b9c7aee3725239760a4d82ff19ebc5f23179e81e6cd4fdf4d128280ed72bd6",
+      "sha256": "dff17ec4537789ec6bd2ace568d9726907ccb71775548af017cfdc3092c0b1ec",
       "executable": false
     },
     "tests/browser/operator-step-diagnostics.mjs": {
