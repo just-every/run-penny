@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import {expect} from '@playwright/test'
 import {monitorStepFailures} from './operator-step-diagnostics.mjs'
 
 export async function reviewRoadmapRecord({page,db,goto,capture}) {
@@ -24,6 +25,9 @@ export async function reviewRoadmapRecord({page,db,goto,capture}) {
  await form.getByRole('button',{name:'Save',exact:true}).click()
  assert.equal((await saved).status(),200,'[ROAD-002] internal record edits use the native route')
  await goto('/app/roadmap')
+ // The first opening above explicitly proves SSR before hydration. On reload,
+ // wait for the editor to be interactive before the native disclosure click.
+ await expect(card.getByRole('form',{name:'Edit internal record',exact:true,includeHidden:true}).getByLabel('Internal title',{exact:true})).toBeEnabled()
  await card.getByText('Edit, approve or move',{exact:true}).click()
  for(const [label,value] of Object.entries(fields)) {
   const actual=label==='Internal title'
