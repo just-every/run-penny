@@ -24,6 +24,14 @@
       "reason": "Reviewed generated provenance digest; no credential value.",
       "reviewer": "Penny publication review",
       "date": "2026-10-26"
+    },
+    {
+      "rule": "secret.assignment",
+      "path": "base-copies.json",
+      "blob": "0026ae1c25c1fd941154636ca678c1114c78d47a",
+      "reason": "Reviewed generated provenance digest; no credential value. The contract-cleanup round added the src/base/contract-docs.mjs Base copy record (Base revision and file SHA-256).",
+      "reviewer": "Penny contract-cleanup round",
+      "date": "2026-10-27"
     }
   ]
 }

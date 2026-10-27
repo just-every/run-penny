@@ -666,7 +666,7 @@
       "executable": false
     },
     ".publish-check/reviewed.json": {
-      "sha256": "be98b2f4166b06a5d0eb5988be82e52c7c275486f72b3b244c17f2e0c7ca00de",
+      "sha256": "65cc3cea07df6dcd01d3f43c0f07c511e3d02c8a1d28167ef8827e05aacb25db",
       "executable": false
     },
     "ACCEPTANCE.md": {
@@ -3017,6 +3017,10 @@
       "sha256": "b5d816ee90acffcc1f62432775001c78d8d2823b3b618252e8ca4c0cb682234e",
       "executable": false
     },
+    "docs/contract-mechanism.md": {
+      "sha256": "366520de6941ed611824803342f39909ea3c49918ca41a68f59f85c311021ec0",
+      "executable": false
+    },
     "docs/contract/COVERAGE.json": {
       "sha256": "f1f8b6fe9be28199ffd5400640934866de0ac178d97cd8510b6b4710f66aae73",
       "executable": false
@@ -3687,6 +3691,10 @@
     },
     "rer-setup.json": {
       "sha256": "0040dc919989fa8f3185a5b848caaa2877df91720d3a4109488c96c98da51fd5",
+      "executable": false
+    },
+    "RULINGS.md": {
+      "sha256": "f399edca1e6f032bb501aa6817ed06e981421a4a2236ed9d17e1798d0f01b460",
       "executable": false
     },
     "RUN-LOCALLY.md": {
