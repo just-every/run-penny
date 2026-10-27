@@ -17,7 +17,7 @@ A claim is done when every clause behind it is done, missing when every one is m
 | 9 | Every quote keeps its source | `EVID-002` done | done |
 | 10 | Compare your options against it, then commit to one and say why: options side by side, one accountable decision. | `DEC-003` done; `DEC-004` done | done |
 | 11 | When the roadmap moves, followers hear about it. | `ROAD-008` done; `NOTIFY-001` partial | partial |
-| 12 | When it ships, the release note goes to every customer who asked — held during your quiet hours. | `REL-002` done; `REL-004` done; `NOTIFY-002` done | done |
+| 12 | When it ships, the release note goes to every customer who asked — held during your quiet hours. | `REL-002` done; `REL-004` partial; `NOTIFY-002` done | partial |
 | 13 | Public roadmap and updates | `ROAD-006` done; `REL-002` done | done |
 | 14 | Release notes in your own words | `REL-001` partial; `REL-003` done | partial |
 | 15 | Account names, revenue, evidence sources and internal notes never reach a public page, an email or a search engine. | `EVID-006` done; `DATA-002` done | done |
@@ -30,4 +30,4 @@ A claim is done when every clause behind it is done, missing when every one is m
 | 22 | One Worker | `OPS-005` partial | partial |
 | 23 | No telemetry | `HOME-002` partial | partial |
 
-Claims: 23; 10 done, 13 partial, 0 missing.
+Claims: 23; 9 done, 14 partial, 0 missing.

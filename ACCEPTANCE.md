@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 96 | 91 | 71 | 258 |
+| Core | 86 | 101 | 71 | 258 |
 | Agent surface | 0 | 0 | 8 | 8 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 96 | 91 | 81 | 268 |
+| Full target | 86 | 101 | 81 | 268 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -494,7 +494,7 @@ Core · published · **done**
 
 #### REQ-017 — Decline
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** An operator can decline a published request. A decline without a public reason is rejected. Declining sets the public status to Declined, adds the reason to the request history as a status update (REQ-015), and refuses new votes and requester comments while leaving existing ones visible and counted. Reversing a decline restores the request's previous public status. Decline and reversal ship through the operator request controls; repeating a decline with another reason preserves the prior direct or mapped status for reversal.
 
@@ -505,7 +505,7 @@ Core · published · **done**
 4. Reversing a repeated decline restores the earlier status.
 
 **Evidence.** `tests/base/request-status-workflow.test.ts`; `tests/browser/request-decline.mjs`
-**Gap.** None.
+**Gap.** The decline reason added to the request history has no passing assertion; refusing a decline without a public reason, setting Declined, refusing new votes and comments while existing ones stay visible and counted, and a reversal restoring the earlier status are asserted.
 
 #### REQ-018 — Boards
 
@@ -601,7 +601,7 @@ Core · published · **partial**
 
 #### REQ-025 — Requester activity
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A verified requester has one view of their own participation and can manage their updates from it.
 
@@ -610,7 +610,7 @@ Core · published · **done**
 2. From that view they can unfollow, mute, or change their update subscription (REL-012).
 
 **Evidence.** `tests/base/penny-releases.test.ts`; `tests/browser/requester-activity.mjs`
-**Gap.** None.
+**Gap.** The current moderation state and public status of the requester's own requests in the view have no passing assertion; the view's counts of their requests, votes, follows and comments including held and rejected ones, and unfollow, mute and subscription changes from it, are asserted.
 
 #### REQ-026 — Demand attribution
 
@@ -716,7 +716,7 @@ Core · published · **done**
 
 #### DEC-002 — Brief
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A candidate bet is one named option a decision could commit to, and a bet has at most one internal roadmap item.
 
@@ -724,7 +724,7 @@ Core · published · **done**
 1. A decision brief holds a question, an accountable owner, its linked evidence and accounts, its candidate bets with the counter-evidence and assumptions for each, a confidence level of low, medium, or high, a review date, and the requesters currently eligible under REL-004 through its mapped requests.
 
 **Evidence.** `tests/base/decision-loop-dimensions.test.ts`
-**Gap.** None.
+**Gap.** Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted.
 
 #### DEC-003 — Comparable bets
 
@@ -805,7 +805,7 @@ Core · published · **done**
 
 #### ROAD-001 — Internal states
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A roadmap item is Exploring, Planned, In progress, Shipped, or Dropped.
 
@@ -814,7 +814,7 @@ Core · published · **done**
 2. Moving backward is allowed and is recorded as a further transition.
 
 **Evidence.** `tests/base/decision-loop-roadmap.test.ts`
-**Gap.** None.
+**Gap.** The activity entry a status change adds to the linked decision has no passing assertion in this clause's evidence; each transition's actor, reason and from and to status, the decision's unchanged state, and backward moves recorded as further transitions are asserted.
 
 #### ROAD-002 — Internal record
 
@@ -830,7 +830,7 @@ Core · published · **done**
 
 #### ROAD-003 — Public projection
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** An approved roadmap item's public status follows its internal status within 5 seconds of a transition: Exploring is shown as Under review; Planned, In progress, and Shipped keep their labels; a Dropped item is withdrawn from the public roadmap.
 
@@ -838,7 +838,7 @@ Core · published · **done**
 1. The projection exposes only the approved title, summary, board, and public status; account names, revenue, internal dates, confidence, rationale, evidence, declined bets, and delivery notes are never projected.
 
 **Evidence.** `tests/base/decision-loop-roadmap.test.ts`
-**Gap.** None.
+**Gap.** The absence of account names, revenue, internal dates, confidence, rationale, evidence, declined bets and delivery notes from the projection has no passing assertion in this clause's evidence, whose check of the public item allows extra fields; the projected public status within 5 seconds and a dropped item's withdrawal are asserted.
 
 #### ROAD-004 — Approval is publication
 
@@ -943,7 +943,7 @@ Core · published · **done**
 
 #### REL-004 — Recipient eligibility and snapshot
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A recipient is eligible when they hold a verified address and a current permission record, and each eligible identity appears exactly once in the snapshot however many target contexts it has.
 
@@ -952,7 +952,7 @@ Core · published · **done**
 2. *Policy: `release.recipient-eligibility.v1`; default: a permission record comes only from following a request (REQ-010), subscribing to updates (REL-012), voting on a board with vote subscriptions on (NOTIFY-008), submitting a request on such a board (NOTIFY-011) or an owner-selected migration carry-over (MIG-007, which makes its address eligible for email without verifying it); voting elsewhere and an operator-entered address grant nothing, and an operator's per-update choice to email captured contacts (NOTIFY-009) adds them to that one snapshot without a permission record.*
 
 **Evidence.** `tests/base/release-custody.test.ts`
-**Gap.** None.
+**Gap.** The snapshot staying unchanged after a later merge, relink or preference change, and the `release.recipient-eligibility.v1` default (which actions grant a permission record, that voting elsewhere and an operator-entered address grant none, and NOTIFY-009's one-snapshot addition) have no passing assertion; export and restore of the snapshot tables, an identity merge fenced while a send is in flight, and follower erasure are asserted.
 
 #### REL-005 — Customer-safe delivery
 
@@ -969,7 +969,7 @@ Core · published · **partial**
 
 #### REL-006 — Acceptance and retry
 
-Core · published · **done** · Cites BASE-MAIL-001, BASE-OPS-004
+Core · published · **partial** · Cites BASE-MAIL-001, BASE-OPS-004
 
 **Requirement.** Publication queues each eligible delivery within 60 seconds of its permitted send time (NOTIFY-002), with the release scheduling and ordering rules in [docs/contract-mechanism.md](docs/contract-mechanism.md#release-scheduling).
 
@@ -980,7 +980,7 @@ Core · published · **done** · Cites BASE-MAIL-001, BASE-OPS-004
 4. The published update stays visible on the portal in every failure state.
 
 **Evidence.** `tests/base/notifications.test.ts`; `tests/base/release-custody.test.ts`
-**Gap.** None.
+**Gap.** The published update staying visible on the portal in every failure state has no passing assertion, and an ambiguous or interrupted send held unknown with no replay (point 3, reconciled with RL-3) is asserted for requester status-update mail but not for a release delivery; bounded retry of known failures ending in failed, and a restored queued release held unknown and inert, are asserted.
 
 #### REL-007 — Idempotent delivery and provider events
 
@@ -1115,7 +1115,7 @@ Core · published · **done**
 
 #### NOTIFY-004 — No mail loops
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Notifications are sent from a no-reply address, and Penny reads no mail at any address it sends from. The only inbound-mail route is CAP-009's dedicated capture address, which accepts mail only from operators and allowlisted senders and never from Penny's own notification addresses.
 
@@ -1127,11 +1127,11 @@ Core · published · **done**
 5. A follower's status notification has its sender, no reply-to and the `Auto-Submitted` header; its reply, posted as a raw message, an Inbound Parse form and a JSON inbound webhook to the provider event route and each plausible capture path, is refused, and no table changes except the per-IP request counters every HTTP request charges.
 
 **Evidence.** `src/core/features/notifications/delivery.ts`; `tests/base/notifications.test.ts`
-**Gap.** None.
+**Gap.** Sign-in and verification mail going out from `MAIL_FROM` or a NOTIFY-013 sender, with `Auto-Submitted: auto-generated` and no reply-to, has no passing assertion; a follower's status notification's sender, header and absent reply-to, and the refusal of its reply at every door, are asserted.
 
 #### NOTIFY-005 — Notification failure
 
-Core · published · **done** · Cites BASE-OPS-004
+Core · published · **partial** · Cites BASE-OPS-004
 
 **Requirement.** Requester status-update email and operator decision-review email each use a durable recipient-and-event key and retry, suppress, and expose failure exactly as REL-006, REL-011, and REL-013 describe.
 
@@ -1139,7 +1139,7 @@ Core · published · **done** · Cites BASE-OPS-004
 1. The in-app or portal record of the same event stays available when the email fails.
 
 **Evidence.** `tests/base/notifications.test.ts`
-**Gap.** None.
+**Gap.** The in-app or portal record of the same event staying available when the email fails has no passing assertion; bounded retry, failed and unknown outcomes and the operator delivery list are asserted.
 
 ### Data
 
@@ -1440,7 +1440,7 @@ Core · published · **done**
 
 #### API-002 — Current custody
 
-Core · published · **done** · Cites BASE-ACCESS-004
+Core · published · **partial** · Cites BASE-ACCESS-004
 
 **Requirement.** Penny's delta on server-side authorisation for scoped keys: revocation, expiry and issuer authority changes fence every API request and its business transaction in the same native database.
 
@@ -1449,7 +1449,7 @@ Core · published · **done** · Cites BASE-ACCESS-004
 2. Credentials are installation custody and are not a portable identity backup.
 
 **Evidence.** `tests/base/integration-api.test.ts`
-**Gap.** None.
+**Gap.** Credentials staying out of portable archives, and a restore honouring none, have no passing assertion; usage metadata written before authority is returned with storage failure refusing, revocation, expiry and issuer removal fencing requests and business writes, and a bearer key refused at export are asserted.
 
 #### API-003 — Native publication
 
