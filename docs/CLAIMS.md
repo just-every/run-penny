@@ -26,5 +26,8 @@ A claim is done when every clause behind it is done, missing when every one is m
 | 18 | No tracking, no cookies on public pages | `REQ-023` done; `HOME-002` partial | partial |
 | 19 | Download an archive of your business data from the operator app | `DATA-001` done | done |
 | 20 | Change anything with your own coding agent | `EDIT-001` done | done |
+| 21 | Customers see only what you publish. | `REQ-003` done; `REQ-005` done; `EVID-006` done | done |
+| 22 | One Worker | `OPS-005` done | done |
+| 23 | No telemetry | `HOME-002` partial | partial |
 
-Claims: 20; 18 done, 2 partial, 0 missing.
+Claims: 23; 20 done, 3 partial, 0 missing.

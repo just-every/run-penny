@@ -16,19 +16,19 @@ Each ruling that shapes a clause in [CONTRACT.md](CONTRACT.md), with its date, w
 
 ### RL-3 — SendGrid delivery keys are correlation only
 
-**Date:** before 2026-10-23 · **Ruled by:** policy decision recorded in the contract · **Clauses governed:** REL-006, REL-007.
+**Date:** 2026-10-08 · **Ruled by:** Penny's build round of 8 October 2026, which recorded it as the "8 October 2026 SendGrid policy decision" in commit `ad7610df` ("Fix requester notification consent and provider suppression review") of Penny's history before the public v0.0.0 release; no owner or ct ruling is on record · **Clauses governed:** REL-006, REL-007.
 
 **SendGrid policy decision (REL-006/REL-007):** the selected SendGrid transport has no provider-side duplicate suppression; its delivery key is correlation only. Ambiguous or interrupted sends stay unknown and are never automatically retried. This explicitly supersedes REL-006's ambiguous retry path for this transport. REL-007's provider-idempotency guarantee remains unsatisfied for SendGrid; local durable claims do not prove provider exactly-once delivery. Resend receives each delivery key as its `Idempotency-Key` and suppresses a duplicate within 24 hours; Penny still never replays an ambiguous send. Signed event receipts are retained without automatic deletion, consistent with BASE-DATA-002.
 
 ### RL-4 — Docs share the landing's header and footer
 
-**Date:** before 2026-10-23 · **Ruled by:** recorded contract decision · **Clauses governed:** DOCS-001, HOME-002.
+**Date:** 2026-10-11 · **Ruled by:** Penny's build round of 11 October 2026, which recorded it in commit `c8e3eedc` ("Run Penny only through the rer path and write its documents for it") of Penny's history before the public v0.0.0 release; no owner or ct ruling is on record · **Clauses governed:** DOCS-001, HOME-002.
 
 **Docs share the landing's header and footer (DOCS-001).** The docs use the landing's header and footer, so `/` and `/docs` read as one site, and the public board link is `/portal` as on the landing. Security consequences: none; the links are to the same public pages and no data or protection changes.
 
 ### RL-5 — Documentation site
 
-**Date:** before 2026-10-23 · **Ruled by:** recorded contract decision · **Clauses governed:** DOCS-001.
+**Date:** 2026-10-09 · **Ruled by:** Penny's build round of 9 October 2026, which added DOCS-001 and recorded this note in commit `3ad106b8` ("Move the public board to /portal/feedback and serve first-party docs at /docs") of Penny's history before the public v0.0.0 release; no owner or ct ruling is on record · **Clauses governed:** DOCS-001.
 
 **Documentation site (DOCS-001).** Operators get the install, portal, decision-loop, email, data and customization guides from the deployment itself rather than from the source repository. Affected IDs: `DOCS-001` and its mirrors in `seed.json` (capability `first-party-docs`, `deploy.publicPaths` and its notes) and `RELEASE.json`. Security consequences: `/docs` and `/docs/` become declared public document paths that serve fixed build-time pages and read no workspace data; no existing protection is relaxed.
 

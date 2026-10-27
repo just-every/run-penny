@@ -35,3 +35,19 @@ Hosted restore and supported-root erasure expose the authenticated API and CLI, 
 ## Release scheduling
 
 **Release scheduling clarification (REL-006, NOTIFY-002):** each published release version creates its own durable recipient commands, outside the request status/comment one-minute coalescing window. Release commands are due immediately outside the requester quiet hours (OPS-008; by default, during 08:00 inclusive to 20:00 exclusive in the workspace timezone); quiet-hour commands become eligible when the quiet period ends, and at once when quiet hours are off. Publication queues an immediate wakeup; the Queue consumer drains eligible commands without waiting for Cron activation. The minute Cron remains a recovery backstop, subject to actual platform scheduling. Quiet deferral consumes no retry attempt. Known pre-acceptance rejections use an initial attempt plus at most five retries at 1, 2, 4, 8 and 16 minutes, bounded by one hour from the first attempted send. Accepted or ambiguous SendGrid outcomes never automatically resend. Correlation keys do not provide SendGrid duplicate suppression.
+
+## Notification wakeups
+
+**NOTIFY-002 wakeups.** Publication enqueues a Queue wakeup; its consumer sends eligible windows after the one-minute coalescing boundary and quiet hours. A minute Cron is the backstop for a missed Queue handoff, with the same durable delivery claims, so a duplicate wakeup or a Cron run after the send never resends.
+
+## Documentation build
+
+**DOCS-001 rendering.** The Markdown that `docs/site.json` publishes is rendered to HTML at build time by a Vite plugin, in a build and in development, and never in the Worker or the browser; each page is its own lazily loaded chunk that the Worker renders per request.
+
+## Release mail sender
+
+**REL-007 delivery keys.** The `mail.sender.v1` sender adapter passes each release delivery key to the provider as its idempotency key and stores the accepted provider message ID against it.
+
+## AI evaluation
+
+**AI-011 evaluation command and sets.** The labeled sets (`duplicates-v1`, `links-v1`, `merges-v1`, `extraction-v1`, `themes-v1`, `spam-v1`, `redaction-v1`) live under `tests/fixtures/ai/`. `pnpm run eval:ai -- --set <name> [--model <id>]` runs a capability over its set through the configured model adapter; AI-001 to AI-005, AI-007 and AI-008 name the set each one's first acceptance point runs (for example `pnpm run eval:ai -- --set merges-v1` for AI-003).

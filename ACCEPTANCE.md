@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 122 | 65 | 70 | 257 |
+| Core | 122 | 65 | 71 | 258 |
 | Agent surface | 0 | 0 | 8 | 8 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 122 | 65 | 80 | 267 |
+| Full target | 122 | 65 | 81 | 268 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -37,7 +37,7 @@ Core · published · **partial**
 
 #### HOME-002 — Public product landing
 
-Core · published · **partial** · Cites BASE-PUBLIC-001
+Core · published · **partial** · Cites BASE-PUBLIC-001, BASE-DATA-005
 
 **Requirement.** Penny's public product page is the run site's home: `/` of run-penny.com, built from `src/site`, not a route of an installation. It is rendered on the server as the finished page, and its copy names only capabilities whose clauses are `done` in the Status table and shows no pricing, testimonials, customer logos, metrics or integrations Penny does not ship; drawn labels use the portal's own status and sort vocabulary.
 
@@ -47,8 +47,8 @@ Core · published · **partial** · Cites BASE-PUBLIC-001
 3. Sections, each with a decorative paper-collage drawing of Penny's own screens, cover the moderated public board, evidence-based decisions, closing the loop with followers, private commercial context, and self-hosted ownership the owner may change with their own agents.
 4. A closing call to action repeats the two links, and the footer repeats the navigation.
 5. The public board, roadmap and updates remain the portal (REQ-001, ROAD-006, REL-010).
-6. The page reads no workspace or operator data, sets no cookie, and loads no resource from another origin: its fonts, styles, script and drawings are served by the site itself.
-7. The optional footer credit, "Powered by Penny · runeditrun.com", is visible by default and `showPoweredByCredit` in `src/ext/config.ts` turns it off; the credit is a plain link that adds no telemetry or phone-home.
+6. The page reads no workspace or operator data, and its fonts, styles, script and drawings are the site's own.
+7. The optional footer credit, "Powered by Penny · runeditrun.com", is visible by default and `showPoweredByCredit` in `src/ext/config.ts` turns it off; the credit is a plain link.
 8. Motion is optional and plays once on load; it never loops, is off under reduced motion, and never hides content: without script, with reduced motion and after motion ends, every section is fully visible.
 
 **Evidence.** `src/site/pages.tsx`
@@ -58,18 +58,18 @@ Core · published · **partial** · Cites BASE-PUBLIC-001
 
 #### DOCS-001 — Public documentation
 
-Core · published · **partial** · Cites BASE-DOCS-001
+Core · published · **partial** · Cites BASE-DOCS-001, BASE-PUBLIC-001
 
 **Requirement.** Penny's delta on Base's on-site docs duty: the public paths `/docs` and `/docs/<slug>` serve Penny's first-party documentation, the install, portal, decision-loop, email, data and customization guides, from the deployment itself. The pages are the Markdown files that `docs/site.json` lists as published, in the sections and order it gives, which is the only navigation.
 
 **Acceptance.**
-1. The Markdown is rendered to HTML at build time by a Vite plugin, in a build and in development, and never in the Worker or the browser; each page is its own lazily loaded chunk that the Worker renders per request.
+1. Pages are served as HTML rendered from the Markdown ahead of time, in a build and in development; no request and no browser renders Markdown, and a page loads only its own content.
 2. A page has its title as its one top-level heading, under the same header as the product landing (HOME-002): Penny's coin mark and name linking to `/`, then links to the docs (marked as the current section), the public board at `/portal`, the source repository and `/signin`, of which a phone keeps the mark, the name and sign-in; the landing's footer repeats them.
 3. A page has a section menu, an on-this-page list, previous and next links, tables in labeled scrollable regions and an Edit-on-GitHub link; after the page loads, moving between docs pages is client-side navigation.
 4. Every Markdown file at the repository root, under `docs/` and as a top-level `<directory>/README.md` is either published or listed in the manifest as GitHub-only with a reason, and an unlisted file fails verification.
 5. A broken internal link or anchor, an image outside `docs/media/` or an absolute build-machine path fails the build.
 6. Raw HTML in the Markdown is shown as text, never rendered.
-7. The documentation reads no workspace record, requester or operator identity or session, sets no cookie and loads only same-origin resources.
+7. The documentation reads no workspace record and no requester or operator identity or session.
 8. An unknown or nested slug answers a `404` with no article.
 
 **Evidence.** `tests/browser/route-review.mjs`; `docs/site.json`
@@ -87,17 +87,16 @@ Core · published · **partial** · Cites BASE-ROLE-001
 | --- | --- |
 | Owner | Everything, including installation configuration, ownership handover (OPS-002), integrations, export and erasure. |
 | Admin | All product work plus settings (including branding, INT-007, and sender identity, NOTIFY-013), boards, integrations, automation rules and the roles below Owner. |
-| Product manager | All product work on evidence, requests, moderation (including editing and removing published content, REQ-038), decisions, roadmap and releases. |
+| Product manager | All product work on evidence, requests, moderation (including editing published content, REQ-038, and removing it, REQ-041), decisions, roadmap and releases. |
 | Contributor | The seat for support, sales and success staff: capture evidence, record proxy votes (CAP-014), comment internally and read product records; no moderation, publication, commitment, settings or commercial fields unless granted (ROLE-001). |
 | Viewer | Read-only. |
 
 **Acceptance.** A base and browser journey signs in one operator per role and attempts every guarded action through its route and its UI:
-1. A Viewer is refused every write with 403.
+1. A Viewer is refused every write.
 2. A Contributor captures evidence, records a proxy vote and comments internally but is refused moderation, publication, commitment, settings and every commercial field.
 3. A Product manager is refused settings, integrations and roles.
 4. An Admin is refused ownership handover, export and erasure.
-5. Each refusal changes nothing.
-6. A role change takes effect on the operator's next request.
+5. A role change takes effect on the operator's next request.
 
 **Evidence.** `tests/base/auth.test.ts`
 **Gap.** Current operators share product access, and workspace clock settings admit Owners and Admins (OPS-008) while other configuration remains owner-only. No journey yet signs in one operator per role: the Viewer, Contributor, Product manager and Admin refusals, unchanged state on refusal and next-request role change lack passing assertions.
@@ -139,7 +138,7 @@ Core · published · **done** · Cites BASE-INSTALL-001
 3. Setup completion is installation state recorded once by the owner under the same-origin and authority checks of the business transaction; it is not portable domain data and does not transfer in an archive.
 4. An installation that already has an active owner is treated as finished.
 5. After `rer setup`, local `rer dev` opens automatically signed in as the owner and returns them to `/setup` until it is finished; local development has no outbox and silently suppresses mail.
-6. Setup cannot finish until the owner has chosen the workspace timezone and seen the requester quiet hours (OPS-008) and entered the company name (INT-007) and the business postal address (NOTIFY-013).
+6. Setup cannot finish until the owner has chosen the workspace timezone and seen the requester quiet hours (OPS-008) and entered the company name (INT-007) and the business postal address (NOTIFY-014).
 
 **Evidence.** `tests/base/first-run.test.ts`; `tests/base/mail-identity.test.ts`; `tests/base/workspace-clock.test.ts`; `tests/browser/workspace-clock.mjs`
 **Gap.** None.
@@ -342,7 +341,7 @@ Core · published · **done**
 **Requirement.** An operator publishes a moderated request by approving its public title, description, board, category (REQ-034), requester display name, and each attachment separately (REQ-011).
 
 **Acceptance.**
-1. The published record contains only the approved fields; after publication an operator edits them under REQ-038.
+1. The published record contains only the approved fields.
 
 **Evidence.** `tests/base/board.test.ts`
 **Gap.** None.
@@ -365,11 +364,10 @@ Core · published · **done**
 
 Core · published · **done**
 
-**Requirement.** Verified requesters and operators can comment on a published request.
+**Requirement.** Verified requesters and operators can comment on a published request. Threaded replies and images in comments are REQ-037.
 
 **Acceptance.**
-1. A requester comment is held under `request.moderation.v1` and becomes public only when an operator approves it, or on submission on an auto-publish board (REQ-033); an operator comment is public when posted.
-2. Threaded replies and images in comments are REQ-037.
+1. A requester comment is held under `request.moderation.v1` and becomes public only when an operator approves it; an operator comment is public when posted.
 
 **Evidence.** `tests/base/notifications.test.ts`
 **Gap.** None.
@@ -434,7 +432,7 @@ Core · published · **partial** · Rules D-3
 
 **Acceptance.**
 1. The first page returns within 500ms.
-2. No result, count, or facet includes an internal board, an unpublished or removed request (REQ-038), or a held or removed comment.
+2. No result, count, or facet includes an internal board, an unpublished or removed request (REQ-041), or a held or removed comment.
 
 **Evidence.** `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-012/`
 **Gap.** Category filtering, newest and recency-weighted last-14-day trending are implemented alongside search, board, status and existing sorts. Gap: the 500 ms first page has no seeded run at the `seed.json` limits (D-3).
@@ -481,7 +479,7 @@ Core · published · **done**
 
 Core · published · **done**
 
-**Requirement.** A published request has exactly one public status: Open, Under review, Planned, In progress, Shipped, or Declined. A declined request is Declined (REQ-017). Otherwise two sources can set it: the direct status an operator sets on the request (REQ-036), including one a migration lands (MIG-001), and the status its approved roadmap mapping projects under ROAD-003. Whichever of the two changed most recently wins: approving a mapping (ROAD-004) and each later transition of the mapped item count as changes of the mapped status at that moment, and a later direct status overrides the mapped one until the mapped item's next transition, the rule DELIV-006 uses for tracker changes. Withdrawing the mapping or dropping its item leaves the direct status, or Open if none was ever set. A request with neither source is Open. The operator request page shows which source the current public status comes from.
+**Requirement.** A published request has exactly one public status: Open, Under review, Planned, In progress, Shipped, or Declined. A declined request is Declined (REQ-017). Otherwise two sources can set it: the direct status an operator sets on the request (REQ-036), including one a migration lands (MIG-008), and the status its approved roadmap mapping projects under ROAD-003. Whichever of the two changed most recently wins: approving a mapping (ROAD-004) and each later transition of the mapped item count as changes of the mapped status at that moment, and a later direct status overrides the mapped one until the mapped item's next transition, the rule DELIV-006 uses for tracker changes. Withdrawing the mapping or dropping its item leaves the direct status, or Open if none was ever set. A request with neither source is Open. The operator request page shows which source the current public status comes from.
 
 **Acceptance.** A base test:
 1. A request with no mapping reads Open, then Planned after a direct set.
@@ -501,7 +499,10 @@ Core · published · **done**
 **Requirement.** An operator can decline a published request. A decline without a public reason is rejected. Declining sets the public status to Declined, adds the reason to the request history as a status update (REQ-015), and refuses new votes and requester comments while leaving existing ones visible and counted. Reversing a decline restores the request's previous public status. Decline and reversal ship through the operator request controls; repeating a decline with another reason preserves the prior direct or mapped status for reversal.
 
 **Acceptance.**
-1. Route tests and the 1440/390 customer and operator journeys in `tests/base/request-status-workflow.test.ts` and `tests/browser/request-decline.mjs` prove the required public reason, Declined status and history, refusal of new votes and comments, retention of existing votes and discussion, and restoration after repeated decline.
+1. Through the routes and the customer and operator screens at 1440 and 390, a decline without a public reason is refused.
+2. A decline sets Declined and adds its reason to the request history.
+3. New votes and comments are refused while existing votes and discussion stay visible and counted.
+4. Reversing a repeated decline restores the earlier status.
 
 **Evidence.** `tests/base/request-status-workflow.test.ts`; `tests/browser/request-decline.mjs`
 **Gap.** None.
@@ -564,8 +565,10 @@ Core · published · **done**
 **Requirement.** An operator can block a requester identity. A blocked identity's submissions, votes, comments, follows, and outcome responses are refused with 403; their published requests and comments are hidden from the portal but kept for operators; and their votes stop counting toward totals. Unblocking restores all of it. Block and unblock ship in the private requester directory, and the server checks existing sessions on each participation write.
 
 **Acceptance.**
-1. `tests/base/requester-blocking.test.ts` and the 1440/390 journey in `tests/browser/requester-blocking.mjs` prove submission, vote, comment, follow and outcome refusal, public hiding and vote-count exclusion with operator records retained, and restored visibility, counts and participation after unblock.
-2. Refusing the audit write rolls back the block or unblock.
+1. Through the routes and the requester and operator screens at 1440 and 390, a blocked identity's submission, vote, comment, follow and outcome response are refused.
+2. Its published requests and comments leave the portal and its votes leave the totals, while operators keep them.
+3. Unblocking restores visibility, counts and participation.
+4. Refusing the audit write rolls back the block or unblock.
 
 **Evidence.** `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs`
 **Gap.** None.
@@ -616,7 +619,7 @@ Core · published · **done**
 **Requirement.** For any request, operators can see every current voter's display name, verified address, and linked account, and the vote total broken down by account. None of it appears in a portal response.
 
 **Acceptance.**
-1. The operator view shows the vote total (proxy votes marked, CAP-014), the linked-evidence count, and the distinct-account count as separate figures beside SEG-007's value figures, and combines them into no score; only a prioritization view an operator builds under PRIO-003 may combine them, with every input shown.
+1. The operator view shows the vote total (proxy votes marked, CAP-014), the linked-evidence count, and the distinct-account count as separate figures, and combines them into no score; only a prioritization view an operator builds under PRIO-003 may combine them, with every input shown.
 2. The private supporter view shows each current voter's display name, vote date, every verified address and linked account, with native and historical UserVoice proxy marks, and per-account vote totals.
 3. The first 50 supporters appear on expansion; Show more reveals 50 more at a time until the complete history is visible, with no 100-person cap.
 4. The operator demand payload holds exactly the three separate figures and no score, and the portal shows none of it.
@@ -628,10 +631,10 @@ Core · published · **done**
 
 Core · published · **done** · Cites BASE-PUBLIC-002
 
-**Requirement.** The portal is an embeddable surface under BASE-PUBLIC-002, with its host origins in `publicOriginAllowlist`.
+**Requirement.** Penny's delta on BASE-PUBLIC-002: the portal is Penny's embeddable surface, and the owner lists its host origins in the `publicOriginAllowlist` setting.
 
 **Acceptance.**
-1. The portal can be embedded in an iframe on the origins in `publicOriginAllowlist`; a request to frame it from any other origin is refused.
+1. The portal's permitted host origins are exactly those in `publicOriginAllowlist`.
 
 **Evidence.** `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts`
 **Gap.** None.
@@ -906,7 +909,7 @@ Core · published · **done**
 
 Core · published · **done**
 
-**Requirement.** A targeted release draft has one or more targets, each linking one roadmap item in any state to its decision and its approved public request mappings, or one published request directly (REL-018); a draft with no target is an announcement (REL-018).
+**Requirement.** A targeted release draft has one or more targets, each linking one roadmap item in any state to its decision and its approved public request mappings, or one published request directly (REL-019); a draft with no target is an announcement (REL-018).
 
 **Acceptance.**
 1. The draft also holds a customer-safe title, a type of New, Improved, or Fixed, one or more subject tags drawn from EVID-009, a body, a publication date, an optional setup or usage link, an author, and, for a targeted release, the wording of the outcome prompt shown with the REL-008 response.
@@ -918,11 +921,10 @@ Core · published · **done**
 
 Core · published · **done**
 
-**Requirement.** An operator can publish a targeted draft only when it has a title, a body, at least one target, and every linked roadmap item at Shipped; publishing with any linked item in another state is rejected.
+**Requirement.** An operator can publish a targeted draft only when it has a title, a body, at least one target, and every linked roadmap item at Shipped; publishing with any linked item in another state is rejected. Announcements publish under REL-018 and request targets under REL-019.
 
 **Acceptance.**
-1. Request targets and announcements publish under REL-018.
-2. Publication makes one versioned update visible on the portal and durably records the complete recipient snapshot (REL-004) before it queues any delivery.
+1. Publication makes one versioned update visible on the portal and durably records the complete recipient snapshot (REL-004) before it queues any delivery.
 
 **Evidence.** `tests/browser/loopjourney-release.mjs`
 **Gap.** None.
@@ -961,7 +963,7 @@ Core · published · **done**
 
 **Acceptance.**
 1. Recipient lists, other requesters, account context, commercial impact, decision rationale, confidence, and declined bets never appear in either.
-2. Release email carries the owner's brand header (INT-007) and sender identity and postal address (NOTIFY-013).
+2. Release email carries the owner's brand header (INT-007), sender identity (NOTIFY-013) and postal address (NOTIFY-014).
 
 **Evidence.** `tests/browser/loopjourney-release.mjs`
 **Gap.** None.
@@ -986,7 +988,7 @@ Core · published · **done** · Cites BASE-MAIL-001, BASE-OPS-004
 
 Core · published · **partial** · Cites BASE-MAIL-001, BASE-DATA-002
 
-**Requirement.** Every release version and recipient has one durable delivery key that `mail.sender.v1` passes to the provider as an idempotency key, and the accepted provider message ID is stored against it.
+**Requirement.** Every release version and recipient has one durable delivery key that Penny passes to the mail provider as an idempotency key, and the accepted provider message ID is stored against it.
 
 **Acceptance.**
 1. Resend receives each delivery key as its `Idempotency-Key` and suppresses a duplicate within 24 hours.
@@ -1094,8 +1096,8 @@ Core · published · **done**
 **Acceptance.**
 1. Every requester notification carries a one-click unsubscribe link that works without signing in.
 2. A requester can mute one request or all requester email; the preference is checked immediately before each send and removes no vote, evidence, or portal access.
-3. Publication enqueues a Queue wakeup; its consumer sends eligible windows after that boundary and quiet hours.
-4. A minute Cron is the backstop for a missed Queue handoff, with the same durable delivery claims.
+3. An eligible notification sends as soon as its window and quiet hours allow, and a wakeup that comes earlier sends nothing.
+4. A missed wakeup is recovered within a minute under the same delivery claims, and a repeated wakeup or recovery run never sends a notification twice.
 
 **Evidence.** `tests/base/notifications.test.ts`
 **Gap.** None.
@@ -1226,12 +1228,11 @@ Core · published · **done**
 
 Core · published · **done**
 
-**Requirement.** An operator selects an option, rationale, confidence and review date.
+**Requirement.** An operator selects an option, rationale, confidence and review date. Commitment is a decision record, not execution or an observed customer outcome.
 
 **Acceptance.**
 1. The immutable snapshot retains the exact interpretation, original evidence, comparable selected/declined options and owner, plus the predeclared cohort, denominator, baseline, window, measure, data source, comparison, limits, stop rule and budget.
 2. Missing protocol fields are explicit nulls and prevent commitment.
-3. Commitment is a decision record, not execution or an observed customer outcome.
 
 **Evidence.** `tests/base/learning-stage3.test.ts`
 **Gap.** None.
@@ -1256,14 +1257,13 @@ Core · published · **done**
 
 Core · published · **done** · Cites BASE-DATA-003
 
-**Requirement.** Person/native contribution erasure deletes dependent interpretations, corrections, commitment snapshots and provenance copies.
+**Requirement.** Person/native contribution erasure deletes dependent interpretations, corrections, commitment snapshots and provenance copies. DATA-003 erasure precedence remains operative.
 
 **Acceptance.**
 1. Same-source external-person erasure covers duplicate connections.
 2. Stable provider/installation/event and person hashes fence replay even under a fresh local source connection.
 3. Source revocation purges copies and derived work; in-flight results cannot survive a changed scope or erasure epoch.
 4. Archives carry this history and opaque fences, never credentials; restored sources/grants remain held and running claims become uncertain.
-5. DATA-003 erasure precedence remains operative.
 
 **Evidence.** `tests/base/learning-stage3.test.ts`
 **Gap.** None.
@@ -1277,7 +1277,6 @@ Core · published · **done** · Register R-10
 **Acceptance.**
 1. Installation-controlled configuration declares a model, token prices/output bound and source read cost.
 2. The run reserves its ceiling before work, refunds known unused cost and separates metered cost from uncertain reservations.
-3. Local paid/network-edge fixtures establish software behavior only.
 
 **Evidence.** `tests/base/upgrade.test.ts`; `tests/base/learning-stage2.test.ts`
 **Gap.** None.
@@ -1421,7 +1420,6 @@ Core · published · **done** · Cites BASE-ACCESS-004
 1. Equal product operators remain equal for product work; this does not grant owner configuration.
 2. Compiled data-only edits apply after the rendered destination hydrates and preserve native navigation/privacy.
 3. The management service independently admits its owner and registered frame origin.
-4. Local editor/compiled-source proof is separate from hosted publication.
 
 **Evidence.** `tests/base/editor-admission.test.ts`
 **Gap.** None.
@@ -1459,11 +1457,10 @@ Core · published · **done** · Cites BASE-ACCESS-004
 
 Core · published · **done**
 
-**Requirement.** API writes reuse native validation, moderation, explicit customer-safe approval, consent, maintenance and immutable snapshots.
+**Requirement.** API writes reuse native validation, moderation, explicit customer-safe approval, consent, maintenance and immutable snapshots. Tracker synchronization follows the Delivery sync clauses (DELIV-001–DELIV-010), never an API side effect.
 
 **Acceptance.**
 1. Imported/restored history creates no new publication or integration effect.
-2. Tracker synchronization follows the Delivery sync clauses (DELIV-001–DELIV-010), never an API side effect.
 
 **Evidence.** `tests/base/integration-api.test.ts`
 **Gap.** None.
@@ -1472,16 +1469,12 @@ Core · published · **done**
 
 Core · published · **partial**
 
-**Requirement.** Operators select approved public
-request/comment/status/release events and immutable destinations.
+**Requirement.** Operators select approved public request/comment/status/release events and immutable destinations.
 
 **Acceptance.**
-1. Native writes
-and event targets commit together.
-2. Imported/restored history cannot create live
-outbound effects.
-3. Product archives carry safe event/attempt/receipt history;
-installation credentials are nonportable.
+1. Native writes and event targets commit together.
+2. Imported/restored history cannot create live outbound effects.
+3. Product archives carry safe event/attempt/receipt history; installation credentials are nonportable.
 
 **Evidence.** `tests/browser/integration-states.mjs`
 **Gap.** Gap: Selected public event kinds, immutable destinations, atomic business-write/event-target capture, held restored history and portable safe integration history with nonportable credentials lack complete passing assertions.
@@ -1494,7 +1487,6 @@ Core · published · **done** · Cites BASE-DATA-004 · Register R-12
 
 **Acceptance.**
 1. Missing transport disables outbound integrations.
-2. Local composition does not establish deployment enforcement or provider acceptance.
 
 **Evidence.** `tests/base/egress-delivery.test.ts`
 **Gap.** None.
@@ -1503,14 +1495,11 @@ Core · published · **done** · Cites BASE-DATA-004 · Register R-12
 
 Core · published · **partial**
 
-**Requirement.** Attempt identity, finite retry, ambiguity and
-explicit reconciliation survive restart.
+**Requirement.** Attempt identity, finite retry, ambiguity and explicit reconciliation survive restart.
 
 **Acceptance.**
-1. An ambiguous effect does not resend
-under another identity.
-2. Revoked configuration and private/blocked content cannot
-start a send.
+1. An ambiguous effect does not resend under another identity.
+2. Revoked configuration and private/blocked content cannot start a send.
 
 **Evidence.** `tests/browser/integration-states.mjs`
 **Gap.** Gap: Durable attempt identity, finite retry, ambiguity/reconciliation and revoked/private/blocked send fencing lack complete passing assertions.
@@ -1594,7 +1583,7 @@ Core · published · **missing** · From INT-007 · Cites BASE-ROLE-001, BASE-DA
 **Requirement.** Only Owners and Admins change the brand, and the brand travels with the installation's data.
 
 **Acceptance.**
-1. A Product manager's and a Viewer's branding writes answer 403 and change nothing; a Contributor is refused the same way.
+1. Product managers, Contributors and Viewers are refused branding writes.
 2. Branding (name, files, colors, theme, link) participates in product archives (DATA-001): an archive export and restore keeps the logo bytes and settings.
 
 **Evidence.** None.
@@ -1656,7 +1645,7 @@ Core · target · **partial** · Cites BASE-SIGNIN-001 · Register R-14
 
 Core · target · **partial** · Cites BASE-AUDIT-001, BASE-OPS-005
 
-**Requirement.** Penny's delta on Base audit: Owners and Admins read, filter (actor, action, subject, date) and export as CSV or JSON an audit log of every privileged action: publication, moderation verdict, edit, removal, restore and permanent delete of published content (REQ-038), branding and sender changes (INT-007, NOTIFY-013), merge and unmerge, commitment, role and member change, integration connect and disconnect, automation rule change, export, erasure and every agent action, with the person or agent responsible.
+**Requirement.** Penny's delta on Base audit: Owners and Admins read, filter (actor, action, subject, date) and export as CSV or JSON an audit log of every privileged action: publication, moderation verdict, edit (REQ-038), removal, restore and permanent delete (REQ-041) of published content, branding and sender changes (INT-007, NOTIFY-013), merge and unmerge, commitment, role and member change, integration connect and disconnect, automation rule change, export, erasure and every agent action, with the person or agent responsible.
 
 **Acceptance.**
 1. Perform each listed action, then read and export the log through the UI and API.
@@ -2139,12 +2128,12 @@ Core · target · **partial** · Rules D-4
 **Requirement.** Alongside EVID-007's lexical suggestions, Penny ranks existing requests by meaning (embeddings over titles, descriptions and linked evidence) for a requester typing a title, for each inbox item and for an operator viewing a request, and names the passages that matched. Requesters see published requests only. When the model is unavailable the lexical suggestions still appear.
 
 **Acceptance.**
-1. `pnpm run eval:ai -- --set duplicates-v1` (AI-011) over the repository's labeled pair set reports, at the suggestion threshold, precision of at least 0.90 and recall of at least 0.85, the true duplicate among the top five suggestions for at least 0.90 of positive pairs, and recall on the paraphrase subset at least 0.15 above the lexical EVID-007 baseline measured on the same set.
+1. The `duplicates-v1` evaluation (AI-011) reports, at the suggestion threshold, precision of at least 0.90 and recall of at least 0.85, the true duplicate among the top five suggestions for at least 0.90 of positive pairs, and recall on the paraphrase subset at least 0.15 above the lexical EVID-007 baseline measured on the same set.
 2. Requester suggestions contain only published requests.
 3. With the model disabled, lexical suggestions still return within EVID-007's limit.
 
 **Evidence.** `src/core/features/requests/suggestions.ts`; `tests/base/penny-evidence.test.ts`
-**Gap.** `eval:ai --set duplicates-v1` meets the AI-001 bars (precision ≥ 0.90, recall ≥ 0.85, top-five ≥ 0.90, paraphrase recall ≥ lexical + 0.15); requester suggestions contain only published requests; with the model disabled, lexical suggestions still return within EVID-007's limit.
+**Gap.** The `duplicates-v1` evaluation meets the AI-001 bars (precision ≥ 0.90, recall ≥ 0.85, top-five ≥ 0.90, paraphrase recall ≥ lexical + 0.15); requester suggestions contain only published requests; with the model disabled, lexical suggestions still return within EVID-007's limit.
 
 #### AI-002 — Auto-link suggestions
 
@@ -2153,21 +2142,21 @@ Core · target · **missing** · Rules D-4
 **Requirement.** Each new inbox item gets up to three suggested requests and one suggested theme, each with a confidence and a reason; the operator accepts or rejects in one action, and a rejected suggestion is not offered again. An owner may enable a rule that links automatically above a confidence threshold for chosen sources; auto-links are marked, reversible, and never publish, vote or notify.
 
 **Acceptance.**
-1. `pnpm run eval:ai -- --set links-v1` (AI-011) reports the labeled request among the three suggestions for at least 0.85 of items that have one, no suggestion above the threshold for at least 0.80 of items labeled none, and auto-link precision of at least 0.97 at the default threshold.
+1. The `links-v1` evaluation (AI-011) reports the labeled request among the three suggestions for at least 0.85 of items that have one, no suggestion above the threshold for at least 0.80 of items labeled none, and auto-link precision of at least 0.97 at the default threshold.
 2. An inbox journey accepts and rejects suggestions.
 3. An auto-link rule on one fixture source links only above its threshold, marks and can undo each link, and changes no public payload.
 
 **Evidence.** None.
-**Gap.** `eval:ai --set links-v1` meets the AI-002 bars; an inbox journey accepts and rejects suggestions; an auto-link rule on one fixture source links only above its threshold, marks and can undo each link, and changes no public payload.
+**Gap.** The `links-v1` evaluation meets the AI-002 bars; an inbox journey accepts and rejects suggestions; an auto-link rule on one fixture source links only above its threshold, marks and can undo each link, and changes no public payload.
 
 #### AI-003 — Duplicate sweep and merge proposals
 
 Core · target · **partial** · Rules D-4
 
-**Requirement.** On demand or weekly, Penny sweeps open requests for likely duplicates and lists merge proposals with a suggested canonical request and the evidence; accepting runs REQ-008's merge. An optional auto-merge rule (*Policy: `request.auto-merge.v1`; default: off*) can be enabled only after a passing evaluation (AI-011), merges only above its threshold and only within one board, logs each merge, and can be undone by REQ-009.
+**Requirement.** On demand or weekly, Penny sweeps open requests for likely duplicates and lists merge proposals with a suggested canonical request and the evidence; accepting runs REQ-008's merge. An optional auto-merge rule (*Policy: `request.auto-merge.v1`; default: off*) can be enabled only after a passing evaluation (AI-012), merges only above its threshold and only within one board, logs each merge, and can be undone by REQ-009.
 
 **Acceptance.**
-1. `pnpm run eval:ai -- --set merges-v1` (AI-011) over a labeled backlog reports sweep proposals covering at least 0.80 of labeled duplicate pairs with precision of at least 0.85.
+1. The `merges-v1` evaluation (AI-011) reports sweep proposals covering at least 0.80 of labeled duplicate pairs with precision of at least 0.85.
 2. On that labelled fixture, `request.auto-merge.v1` at its default threshold makes zero wrongful merges and none across boards; the report publishes the wrongful-merge rate of automatic merges against the 0.5% target, which does not gate.
 3. The auto-merge rule is off on a new installation, and enabling it for a model and prompt version with no passing evaluation is refused with the reason.
 4. A sweep over the fixture backlog lists proposals with a suggested canonical request and the evidence.
@@ -2184,13 +2173,13 @@ Core · target · **partial** · Rules D-4
 **Requirement.** From connected tickets, chats, calls, emails and Slack threads in scope, the extraction agent proposes candidate requests or links: a problem statement, the verbatim spans, the customer and the closest existing request. Proposals land in the inbox as suggestions; an owner may let a source create unpublished requests automatically, and REQ-005 still governs publication.
 
 **Acceptance.**
-1. `pnpm run eval:ai -- --set extraction-v1` (AI-011) reports span-level precision of at least 0.85 and recall of at least 0.80 against labeled request moments.
+1. The `extraction-v1` evaluation (AI-011) reports span-level precision of at least 0.85 and recall of at least 0.80 against labeled request moments.
 2. Fixture conversations yield proposals whose spans match their source byte for byte.
 3. Auto-creation produces unpublished requests only.
 4. Re-running the same conversation creates nothing new.
 
 **Evidence.** `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts`
-**Gap.** Selected Orbit and native evidence produce cited learning options today, not requests. `eval:ai --set extraction-v1` meets the AI-004 bars; fixture conversations yield proposals whose spans match their source byte for byte; auto-creation produces unpublished requests only; re-running the same conversation creates nothing new.
+**Gap.** Selected Orbit and native evidence produce cited learning options today, not requests. The `extraction-v1` evaluation meets the AI-004 bars; fixture conversations yield proposals whose spans match their source byte for byte; auto-creation produces unpublished requests only; re-running the same conversation creates nothing new.
 
 #### AI-005 — Themes and adaptive taxonomy
 
@@ -2199,7 +2188,7 @@ Core · target · **missing** · Rules D-4 · Register R-13
 **Requirement.** Penny keeps a hierarchical taxonomy (area, theme, sub-theme) over all evidence and requests, classifies new feedback continuously, proposes new themes as volume emerges, and lets operators rename, merge, split, pin or retire themes; operator edits win and reclassification keeps history. Themes filter every list and appear in reports (MEAS-004). Each theme can have a default owner applied on capture (TRIAGE-001).
 
 **Acceptance.**
-1. `pnpm run eval:ai -- --set themes-v1` (AI-011) reports agreement with the adjudicated labels of macro-F1 at least 0.80 at area and theme level and at least 0.70 at sub-theme level.
+1. The `themes-v1` evaluation (AI-011) reports agreement with the adjudicated labels of macro-F1 at least 0.80 at area and theme level and at least 0.70 at sub-theme level.
 2. Where the set records the agreement between two human labelers, the report publishes Cohen's kappa against 90% of that agreement.
 3. A fixture corpus gets an initial taxonomy, and new feedback is classified in the next run.
 4. An operator split reclassifies with history.
@@ -2207,7 +2196,7 @@ Core · target · **missing** · Rules D-4 · Register R-13
 6. A captured item on a board with no default owner, classified into a theme that has one, takes the theme's owner (TRIAGE-001).
 
 **Evidence.** None.
-**Gap.** `eval:ai --set themes-v1` meets the AI-005 macro-F1 bars; a fixture corpus gets an initial taxonomy; new feedback is classified in the next run; an operator split reclassifies with history; themes filter the inbox and the request queue; a captured item on a board with no default owner, classified into a theme that has one, takes the theme's owner (TRIAGE-001). Native themes do not exist yet.
+**Gap.** The `themes-v1` evaluation meets the AI-005 macro-F1 bars; a fixture corpus gets an initial taxonomy; new feedback is classified in the next run; an operator split reclassifies with history; themes filter the inbox and the request queue; a captured item on a board with no default owner, classified into a theme that has one, takes the theme's owner (TRIAGE-001). Native themes do not exist yet.
 
 #### AI-006 — Summaries and reply drafts
 
@@ -2231,12 +2220,12 @@ Core · target · **missing** · Rules D-4
 **Requirement.** Portal and widget submissions and comments that look like spam, abuse or exposed personal data are flagged in moderation with a reason; on an auto-publish board (REQ-033) a flag holds the item instead of publishing it. A flag never deletes or publishes anything.
 
 **Acceptance.**
-1. `pnpm run eval:ai -- --set spam-v1` (AI-011) reports precision of at least 0.95 and recall of at least 0.90 for spam and abuse, and recall of at least 0.95 for exposed personal data.
+1. The `spam-v1` evaluation (AI-011) reports precision of at least 0.95 and recall of at least 0.90 for spam and abuse, and recall of at least 0.95 for exposed personal data.
 2. A fixture spam batch is flagged with reasons and stays in moderation.
 3. A false positive is approved normally.
 
 **Evidence.** None.
-**Gap.** `eval:ai --set spam-v1` meets the AI-007 bars; a fixture spam batch is flagged with reasons and stays in moderation (held on an auto-publish board); a false positive is approved normally.
+**Gap.** The `spam-v1` evaluation meets the AI-007 bars; a fixture spam batch is flagged with reasons and stays in moderation (held on an auto-publish board); a false positive is approved normally.
 
 #### AI-008 — Sensitive-data redaction
 
@@ -2245,7 +2234,7 @@ Core · target · **partial** · Rules D-4
 **Requirement.** Owner-configured rules (US Social Security numbers, payment card numbers, phone numbers, email addresses, credential shapes and custom patterns), with optional model detection, redact captured excerpts and transcripts before storage; redactions are marked, and the unredacted original stays only in the source system.
 
 **Acceptance.**
-1. `pnpm run eval:ai -- --set redaction-v1` (AI-011) reports recall of at least 0.99 for Social Security and payment card numbers and at least 0.95 for the other default kinds, with precision of at least 0.90.
+1. The `redaction-v1` evaluation (AI-011) reports recall of at least 0.99 for Social Security and payment card numbers and at least 0.95 for the other default kinds, with precision of at least 0.90.
 2. A fixture ticket containing an SSN and a card number is stored redacted in D1, search and the archive.
 3. A new rule applies to new captures and, on request, re-applies to stored ones.
 
@@ -2283,7 +2272,7 @@ Core · target · **done**
 
 Core · target · **missing**
 
-**Requirement.** Every AI capability that suggests, links, merges, classifies, extracts, flags or redacts is measured against a named, versioned, labeled fixture set held in the repository under `tests/fixtures/ai/`: `duplicates-v1` (at least 300 request pairs, at least 30% of them hard negatives that share key terms but differ in need, and paraphrase positives with no shared terms), `links-v1` (at least 200 inbox items labeled with their request or none, and their theme), `merges-v1` (a backlog of at least 500 requests across at least three boards with labeled duplicate clusters), `extraction-v1` (at least 50 tickets, calls, emails and threads with labeled request spans), `themes-v1` (at least 400 items with a three-level taxonomy, adjudicated), `spam-v1` (at least 300 submissions and comments labeled spam, abuse, personal data or clean) and `redaction-v1` (at least 200 excerpts with labeled sensitive spans). `pnpm run eval:ai -- --set <name> [--model <id>]` runs a capability over its set through the configured model adapter.
+**Requirement.** Every AI capability that suggests, links, merges, classifies, extracts, flags or redacts is measured against a named, versioned, labeled fixture set held in the repository: `duplicates-v1` (at least 300 request pairs, at least 30% of them hard negatives that share key terms but differ in need, and paraphrase positives with no shared terms), `links-v1` (at least 200 inbox items labeled with their request or none, and their theme), `merges-v1` (a backlog of at least 500 requests across at least three boards with labeled duplicate clusters), `extraction-v1` (at least 50 tickets, calls, emails and threads with labeled request spans), `themes-v1` (at least 400 items with a three-level taxonomy, adjudicated), `spam-v1` (at least 300 submissions and comments labeled spam, abuse, personal data or clean) and `redaction-v1` (at least 200 excerpts with labeled sensitive spans). One evaluation command runs a capability over its set through the configured model adapter, with the model chosen per run.
 
 **Acceptance.**
 1. Each named set exists with its documented size and label mix.
@@ -2293,7 +2282,7 @@ Core · target · **missing**
 5. Each model evaluation is recorded as a dated receipt in CHANGELOG.md.
 
 **Evidence.** None.
-**Gap.** Each named set under `tests/fixtures/ai/` exists with its documented size and label mix; the evaluation command reports every figure for each set and exits non-zero on a deliberately degraded fixture model; the lexical baseline run needs no model. Only `redaction-v1` (210 synthetic excerpts) and a minimal runner exist.
+**Gap.** Each named set exists with its documented size and label mix; the evaluation command reports every figure for each set and exits non-zero on a deliberately degraded fixture model; the lexical baseline run needs no model. Only `redaction-v1` (210 synthetic excerpts) and a minimal runner exist.
 
 #### AI-012 — Evaluation gates automatic rules
 
@@ -2410,7 +2399,7 @@ Core · target · **partial**
 
 Core · target · **missing**
 
-**Requirement.** Owners and Admins choose each public board's moderation in settings: hold everything (REQ-003's holding) or auto-publish. On an auto-publish board, a submission (REQ-003), comment (REQ-007) or edit (REQ-020) from a requester verified under REQ-023 or identified through host or SSO identity (REQ-031, WIDGET-002) is public on submission in the requester's own wording, with the public status Open, unless it is held: flagged by AI-007, matched by a hold rule (TRIAGE-003), from a requester an operator set to always-moderate, or carrying a file other than an image within `seed.json` upload limits. A held item enters moderation with its reason and follows REQ-030. Image attachments on an unheld post publish with it; this supersedes REQ-011's separate file approval on auto-publish boards only, and every other file stays held under REQ-011. An operator can take down an auto-published post or comment at any time with a reason; this is REQ-038's removal, which works on every board: it leaves the portal within 5 seconds, its URL answers 404, it counts toward no public total and its author can see the reason. Operators edit auto-published wording under REQ-038. A blocked requester is still refused (REQ-022), duplicate suggestions still appear before submission (REQ-004), and each submission still creates its evidence item (EVID-001). When AI-007 cannot run (AI-010), the board's choice applies: publish and mark the item "not screened" for operator review (default), or hold. New public boards default to auto-publish; boards that exist when this ships keep holding until the owner chooses. *Policy: `request.moderation.v1` reads this setting.*
+**Requirement.** Owners and Admins choose each public board's moderation in settings: hold everything (REQ-003's holding) or auto-publish. On an auto-publish board, a submission (REQ-003), comment (REQ-007) or edit (REQ-020) from a requester verified under REQ-023 or identified through host or SSO identity (REQ-031, WIDGET-002) is public on submission in the requester's own wording, with the public status Open, unless it is held: flagged by AI-007, matched by a hold rule (TRIAGE-003), from a requester an operator set to always-moderate, or carrying a file other than an image within `seed.json` upload limits. A held item enters moderation with its reason and follows REQ-030. Image attachments on an unheld post publish with it; this supersedes REQ-011's separate file approval on auto-publish boards only, and every other file stays held under REQ-011. An operator can take down an auto-published post or comment at any time with a reason; this is REQ-041's removal, which works on every board: it leaves the portal within 5 seconds, its URL answers 404, it counts toward no public total and its author can see the reason. Operators edit auto-published wording under REQ-038. A blocked requester is still refused (REQ-022), duplicate suggestions still appear before submission (REQ-004), and each submission still creates its evidence item (EVID-001). When AI-007 cannot run (AI-010), the board's choice applies: publish and mark the item "not screened" for operator review (default), or hold. New public boards default to auto-publish; boards that exist when this ships keep holding until the owner chooses. *Policy: `request.moderation.v1` reads this setting.*
 
 **Acceptance.** A base and browser journey:
 1. With auto-publish on, a verified requester's post and comment are public on submission and a widget-identified user's post is listed at once.
@@ -2421,13 +2410,13 @@ Core · target · **missing**
 6. With the setting off, REQ-003's holding applies unchanged.
 
 **Evidence.** None.
-**Gap.** With auto-publish on, a verified requester's post and comment are public on submission and a widget-identified user's post is listed at once; an AI-007-flagged post and a hold-rule match are held with their reason; a PDF post is held while an image post publishes with its image; a takedown (REQ-038's removal) removes the post from every public read within 5 seconds and its URL answers 404; with the model unavailable, posts publish marked not screened, or are held when the board chooses hold; with the setting off, REQ-003's holding applies unchanged.
+**Gap.** With auto-publish on, a verified requester's post and comment are public on submission and a widget-identified user's post is listed at once; an AI-007-flagged post and a hold-rule match are held with their reason; a PDF post is held while an image post publishes with its image; a takedown (REQ-041's removal) removes the post from every public read within 5 seconds and its URL answers 404; with the model unavailable, posts publish marked not screened, or are held when the board chooses hold; with the setting off, REQ-003's holding applies unchanged.
 
 #### REQ-034 — Public categories
 
 Core · target · **partial**
 
-**Requirement.** Operators define categories on each board, with one optional level of subcategories, and rename, reorder, merge and archive them. Each board's setting makes a category off, optional or required on submission. A requester picks one category when submitting from the portal, widget or SDK (REQ-003, WIDGET-001, WIDGET-004); an operator can change it when publishing (REQ-005) or later. Categories are public: the portal shows each published request's category, filters by category (REQ-012) and shows per-category counts that include only published requests visible on that board, never unpublished, held, internal, withdrawn or removed (REQ-038) ones. Categories are distinct from operator-only tags (EVID-009) and themes (AI-005), and nothing moves between them implicitly. A merge keeps the canonical request's category (REQ-008). Automation rules can match and set a category (TRIAGE-003), and categories are in the CSV export, the API and the archive (DATA-001, DATA-005, DATA-006). Canny categories and subcategories (MIG-001), Aha! categories (MIG-003) and UserVoice categories (MIG-004) land here.
+**Requirement.** Operators define categories on each board, with one optional level of subcategories, and rename, reorder, merge and archive them. Each board's setting makes a category off, optional or required on submission. A requester picks one category when submitting from the portal, widget or SDK (REQ-003, WIDGET-001, WIDGET-004); an operator can change it when publishing (REQ-005) or later. Categories are public: the portal shows each published request's category, filters by category (REQ-012) and shows per-category counts that include only published requests visible on that board, never unpublished, held, internal, withdrawn or removed (REQ-041) ones. Categories are distinct from operator-only tags (EVID-009) and themes (AI-005), and nothing moves between them implicitly. A merge keeps the canonical request's category (REQ-008). Automation rules can match and set a category (TRIAGE-003), and categories are in the CSV export, the API and the archive (DATA-001, DATA-005, DATA-006). Canny categories and subcategories (MIG-001), Aha! categories (MIG-003) and UserVoice categories (MIG-004) land here.
 
 **Acceptance.** A browser journey at both widths:
 1. A requester picks a category on submit, and a board with categories required refuses a submission without one.
@@ -2443,7 +2432,7 @@ Core · target · **partial**
 
 Core · target · **partial**
 
-**Requirement.** A board's setting can ask each voter how important the request is to them (default labels Nice to have, Important and Must have; the owner may rename them or use four levels). Choosing is optional and can be changed or cleared. Operators see each request's votes broken down by importance, and with SEG-007's value figures (such as the ARR of Must-have voters); prioritization views (PRIO-003) can use the breakdown. The portal shows only the vote total. Proxy votes (CAP-014) record importance as the source states it; Canny's `votePriority` (MIG-001) and Productboard's portal-card importance (MIG-002) import into it. Completion requires SEG-007’s customer-value figures by importance, PRIO-003’s use of the breakdown and MIG-002’s Productboard importance import; this clause is done only when those dependencies and its native and Canny acceptance are complete.
+**Requirement.** A board's setting can ask each voter how important the request is to them (default labels Nice to have, Important and Must have; the owner may rename them or use four levels). Choosing is optional and can be changed or cleared. Operators see each request's votes broken down by importance, and with SEG-007's value figures (such as the ARR of Must-have voters); prioritization views (PRIO-003) can use the breakdown. The portal shows only the vote total. Proxy votes (CAP-014) record importance as the source states it; Canny's `votePriority` (MIG-009) and Productboard's portal-card importance (MIG-002) import into it. Completion requires SEG-007’s customer-value figures by importance, PRIO-003’s use of the breakdown and MIG-002’s Productboard importance import; this clause is done only when those dependencies and its native and Canny acceptance are complete.
 
 **Acceptance.**
 1. A voter picks Must have and later changes it to Important, and the operator breakdown follows.
@@ -2475,7 +2464,7 @@ Core · target · **partial**
 
 Core · target · **missing**
 
-**Requirement.** Portal comments take one level of threaded replies: a verified requester or an operator replies to a published top-level comment, and replies show under it in time order. A requester's reply is moderated like any comment (REQ-007, REQ-030, REQ-033); an operator's reply is a public reply under NOTIFY-001, and a requester's reply, once public, notifies the parent comment's author once when they hold a permission for the request. Comments and replies can carry images within `seed.json` upload limits: on a holding board each image is approved with its comment under REQ-011, and on an auto-publish board an unheld comment's images publish with it (REQ-033). A held, rejected or removed (REQ-038) parent hides its replies from the portal, and a reply to it is refused. Imported replies and comment images (MIG-001, MIG-004, MIG-005) land in the same thread with their original dates under the import's publication choice (IMP-002); Canny internal comments land as internal notes (REQ-032).
+**Requirement.** Portal comments take one level of threaded replies: a verified requester or an operator replies to a published top-level comment, and replies show under it in time order. A requester's reply is moderated like any comment (REQ-007, REQ-030, REQ-033); an operator's reply is a public reply under NOTIFY-001, and a requester's reply, once public, notifies the parent comment's author once when they hold a permission for the request. Comments and replies can carry images within `seed.json` upload limits: on a holding board each image is approved with its comment under REQ-011, and on an auto-publish board an unheld comment's images publish with it (REQ-033). A held, rejected or removed (REQ-041) parent hides its replies from the portal, and a reply to it is refused. Imported replies and comment images (MIG-009, MIG-004, MIG-005) land in the same thread with their original dates under the import's publication choice (IMP-002); Canny internal comments land as internal notes (REQ-032).
 
 **Acceptance.** A browser journey at both widths:
 1. A requester's reply to an operator comment is held, then shown under its parent once approved.
@@ -2530,7 +2519,7 @@ Core · target · **missing** · From REQ-038 · Cites BASE-ROLE-001
 1. None of REQ-038's or REQ-041's actions sends mail, except one author notice for a removal when ticked.
 2. No follower or voter is notified of an edit or a removal, and editing a status update never re-sends it.
 3. Each edit, removal, restore and permanent delete has one audit entry (ROLE-004) with the actor, subject and reason and no customer wording.
-4. A Contributor and a Viewer are refused each action with 403, and nothing changes.
+4. A Contributor and a Viewer are refused each action.
 
 **Evidence.** None.
 **Gap.** No action sends mail except one author notice when ticked; a Contributor is refused each action with 403; each action has one audit entry. None of this exists while edits and removals of published content are unbuilt.
@@ -2820,7 +2809,7 @@ Core · target · **missing**
 
 Core · target · **done**
 
-**Requirement.** Each public roadmap (ROAD-006, ROAD-010) has a source the owner chooses: approved roadmap items (ROAD-006) or request statuses, which is how Canny builds its public roadmap. A status roadmap lists the published requests on the boards the owner selects, in columns by public status (REQ-016): Under review, Planned, In progress and Shipped by default; the owner can hide a column, rename its heading and limit Shipped to the last 30, 90 or 365 days or show all. Each card shows the request's title, board, category (REQ-034), vote total and public ETA (REQ-036) and links to the request. A status change moves the card within 5 seconds. Open and Declined requests, and unpublished, held, internal (REQ-019), withdrawn and removed (REQ-038) requests, never appear, and no count includes them. A request mapped to an approved roadmap item appears once, in the column of its public status. A new installation's first public roadmap uses request statuses; a roadmap that exists when this ships keeps approved items until the owner chooses. A migration rebuilds the source's public roadmap as a status roadmap (MIG-001). The preview binds the settings before and after apply, refuses stale approval, and supports replay and undo of unchanged imported settings; later native edits refuse undo rather than being overwritten.
+**Requirement.** Each public roadmap (ROAD-006, ROAD-010) has a source the owner chooses: approved roadmap items (ROAD-006) or request statuses, which is how Canny builds its public roadmap. A status roadmap lists the published requests on the boards the owner selects, in columns by public status (REQ-016): Under review, Planned, In progress and Shipped by default; the owner can hide a column, rename its heading and limit Shipped to the last 30, 90 or 365 days or show all. Each card shows the request's title, board, category (REQ-034), vote total and public ETA (REQ-036) and links to the request. A status change moves the card within 5 seconds. Open and Declined requests, and unpublished, held, internal (REQ-019), withdrawn and removed (REQ-041) requests, never appear, and no count includes them. A request mapped to an approved roadmap item appears once, in the column of its public status. A new installation's first public roadmap uses request statuses; a roadmap that exists when this ships keeps approved items until the owner chooses. A migration rebuilds the source's public roadmap as a status roadmap (MIG-011). The preview binds the settings before and after apply, refuses stale approval, and supports replay and undo of unchanged imported settings; later native edits refuse undo rather than being overwritten.
 
 **Acceptance.** A browser journey at both widths:
 1. A request set to Planned appears in the Planned column within 5 seconds with its ETA and moves to Shipped when set.
@@ -2888,21 +2877,32 @@ Core · target · **missing**
 **Evidence.** None.
 **Gap.** A Linear fixture completion drafts a release containing only approved wording and marked items.
 
-#### REL-018 — Announcements and request targets
+#### REL-018 — Announcements
 
 Core · target · **missing**
 
-**Requirement.** An operator writes, labels (REL-015) and publishes a changelog entry with no target, as Canny's changelog allows: an announcement, for a fix, a small improvement nobody requested, or a pricing or policy notice. It needs a title, a body, a type or label and a publication date, publishes now or on schedule (REL-014) with no roadmap-state check, and has no outcome prompt (REL-008, REL-009) because it has no target. It appears on the changelog page, its feeds (REL-016) and the changelog widget (WIDGET-003). Its recipient snapshot (REL-004) is the updates subscribers (REL-012), narrowed by any segment send the operator chooses (REL-016); each receives it once under REL-006, REL-007 and NOTIFY-002, and unticking "Notify subscribers" (ticked by default) publishes it with no email. An operator can also link published requests to any release as request targets without a roadmap item: publication requires each linked request to be Shipped (REQ-016), unless the operator ticks "Mark linked requests Shipped", which sets each one through REQ-036 in the same transaction; each linked request's followers, vote-subscribed voters and subscribed author join the snapshot once, with that request as their context, and see its outcome prompt. Corrections follow REL-003. Both announcements and request targets inherit REL-014’s scheduling, cancellation, current-condition checks and durable author failure notices. A release with a roadmap target still enforces REL-002.
+**Requirement.** An operator writes, labels (REL-015) and publishes a changelog entry with no target, as Canny's changelog allows: an announcement, for a fix, a small improvement nobody requested, or a pricing or policy notice. It needs a title, a body, a type or label and a publication date, publishes now or on schedule (REL-014) with no roadmap-state check, and has no outcome prompt (REL-008, REL-009) because it has no target. It appears on the changelog page, its feeds (REL-016) and the changelog widget (WIDGET-003). Its recipient snapshot (REL-004) is the updates subscribers (REL-012), narrowed by any segment send the operator chooses (REL-016); each receives it once under REL-006, REL-007 and NOTIFY-002, and unticking "Notify subscribers" (ticked by default) publishes it with no email. Corrections follow REL-003. Announcements inherit REL-014’s scheduling, cancellation, current-condition checks and durable author failure notices.
 
 **Acceptance.** A base and browser journey:
 1. An entry with no target publishes, appears on the changelog page, both feeds and the widget, and emails each updates subscriber once and nobody else.
 2. With Notify subscribers unticked it emails nobody.
 3. It shows no outcome prompt.
-4. A release whose roadmap target is Planned is still refused.
-5. A release with an Open request target is refused unless Mark linked requests Shipped is ticked, which makes the request Shipped and adds its subscribed voters to the snapshot once each.
 
 **Evidence.** None.
-**Gap.** Today every release needs a roadmap target; REL-014 supplies scheduling for the entry types this clause will add. An entry with no target publishes, appears on the changelog page, both feeds and the widget, and emails each updates subscriber once and nobody else; with Notify subscribers unticked it emails nobody; it shows no outcome prompt; a release whose roadmap target is Planned is still refused; a release with an Open request target is refused unless Mark linked requests Shipped is ticked, which makes the request Shipped and adds its subscribed voters to the snapshot once each.
+**Gap.** Today every release needs a roadmap target; REL-014 supplies scheduling for the entry types this clause will add. An entry with no target publishes, appears on the changelog page, both feeds and the widget, and emails each updates subscriber once and nobody else; with Notify subscribers unticked it emails nobody; it shows no outcome prompt.
+
+#### REL-019 — Request targets on any release
+
+Core · target · **missing** · From REL-018
+
+**Requirement.** An operator can link published requests to any release as request targets without a roadmap item: publication requires each linked request to be Shipped (REQ-016), unless the operator ticks "Mark linked requests Shipped", which sets each one through REQ-036 in the same transaction; each linked request's followers, vote-subscribed voters and subscribed author join the snapshot once, with that request as their context, and see its outcome prompt. Corrections follow REL-003. Request targets inherit REL-014’s scheduling, cancellation, current-condition checks and durable author failure notices. A release with a roadmap target still enforces REL-002.
+
+**Acceptance.** A base and browser journey:
+1. A release whose roadmap target is Planned is still refused.
+2. A release with an Open request target is refused unless Mark linked requests Shipped is ticked, which makes the request Shipped and adds its subscribed voters to the snapshot once each.
+
+**Evidence.** None.
+**Gap.** Today every release needs a roadmap target. A release whose roadmap target is Planned is still refused; a release with an Open request target is refused unless Mark linked requests Shipped is ticked, which makes the request Shipped and adds its subscribed voters to the snapshot once each.
 
 ### Delivery sync
 
@@ -3060,13 +3060,13 @@ Core · target · **missing** · Rules D-2
 2. Nothing is sent until the draft is explicitly sent (D-2).
 
 **Evidence.** None.
-**Gap.** Zendesk and Freshdesk fixtures: a shipped request drafts one reply per linked ticket; nothing is sent until an agent sends it.
+**Gap.** Zendesk and Freshdesk fixtures: a shipped request drafts one reply per linked ticket; nothing is sent until it is explicitly sent (D-2).
 
 #### NOTIFY-008 — Vote subscriptions
 
 Core · target · **partial** · Register R-6
 
-**Requirement.** Owners and Admins turn on, per board in settings, "Voting subscribes to updates", which is how Canny closes the loop with voters. On such a board the vote control tells the voter, before they vote, that voting subscribes them to updates on that request and how to stop; the vote then follows the request (REQ-010) and stores a timestamped permission record with its origin (vote), board and setting version, so status updates (REQ-015, ROAD-008), decline (REQ-017) and the release that ships it (REL-004) reach that voter under NOTIFY-001 and NOTIFY-002. Every such email says why it was sent ("You voted for …") and carries the one-click unsubscribe (NOTIFY-002), which withdraws the permission, and the owner's postal address (NOTIFY-013, CAN-SPAM); the setting cannot be turned on until that address is recorded. Removing the vote withdraws a vote-origin permission unless the voter also followed or ticked "Email me updates". Turning the setting off stops new vote subscriptions and keeps existing ones; the owner may also withdraw every vote-origin permission on that board, with a recorded reason. Proxy votes (CAP-014) and historical imported votes never subscribe (MIG-007 is the only import path). The author's subscription on submission is NOTIFY-011. New boards default to on; boards that exist when this ships keep it off until the owner chooses.
+**Requirement.** Owners and Admins turn on, per board in settings, "Voting subscribes to updates", which is how Canny closes the loop with voters. On such a board the vote control tells the voter, before they vote, that voting subscribes them to updates on that request and how to stop; the vote then follows the request (REQ-010) and stores a timestamped permission record with its origin (vote), board and setting version, so status updates (REQ-015, ROAD-008), decline (REQ-017) and the release that ships it (REL-004) reach that voter under NOTIFY-001 and NOTIFY-002. Every such email says why it was sent ("You voted for …") and carries the one-click unsubscribe (NOTIFY-002), which withdraws the permission, and the owner's postal address (NOTIFY-014, CAN-SPAM); the setting cannot be turned on until that address is recorded. Removing the vote withdraws a vote-origin permission unless the voter also followed or ticked "Email me updates". Turning the setting off stops new vote subscriptions and keeps existing ones; the owner may also withdraw every vote-origin permission on that board, with a recorded reason. Proxy votes (CAP-014) and historical imported votes never subscribe (MIG-007 is the only import path). The author's subscription on submission is NOTIFY-011. New boards default to on; boards that exist when this ships keep it off until the owner chooses.
 
 **Acceptance.** A base and browser journey:
 1. With the setting on, the vote control states the subscription, and a vote creates one permission record with origin vote.
@@ -3083,7 +3083,7 @@ Core · target · **partial** · Register R-6
 
 Core · target · **missing**
 
-**Requirement.** When an operator publishes a status update (REQ-015, ROAD-008), declines a request (REQ-017) or publishes a release (REL-002), they can tick "Also email people linked through captured evidence", as Canny's "Notify users tracked internally" does. Before sending, Penny shows the count and list of contacts with a deliverable address linked to the request through captured evidence (CAP-001–CAP-022) or a proxy vote (CAP-014). Each receives one message per update version, deduplicated with followers and voters; the message says why it was sent, carries only customer-safe wording (REL-005), one-click unsubscribe and the owner's postal address (NOTIFY-013; the box cannot be ticked until it is recorded). Suppression (REL-011), a mute and any earlier unsubscribe from Penny email are respected, and an unsubscribe here stops every later NOTIFY-009 message to that address. Ticking it creates no permission record: each send is the operator's recorded choice, with its recipient count, in the audit log (ROLE-004). A board's setting can make the box ticked by default; it starts unticked.
+**Requirement.** When an operator publishes a status update (REQ-015, ROAD-008), declines a request (REQ-017) or publishes a release (REL-002), they can tick "Also email people linked through captured evidence", as Canny's "Notify users tracked internally" does. Before sending, Penny shows the count and list of contacts with a deliverable address linked to the request through captured evidence (CAP-001–CAP-022) or a proxy vote (CAP-014). Each receives one message per update version, deduplicated with followers and voters; the message says why it was sent, carries only customer-safe wording (REL-005), one-click unsubscribe and the owner's postal address (NOTIFY-014; the box cannot be ticked until it is recorded). Suppression (REL-011), a mute and any earlier unsubscribe from Penny email are respected, and an unsubscribe here stops every later NOTIFY-009 message to that address. Ticking it creates no permission record: each send is the operator's recorded choice, with its recipient count, in the audit log (ROLE-004). A board's setting can make the box ticked by default; it starts unticked.
 
 **Acceptance.** A base test:
 1. With the box ticked, a captured contact linked through Zendesk evidence gets one email, a contact who is also a follower gets one email in total, and a suppressed or previously unsubscribed contact gets none.
@@ -3110,7 +3110,7 @@ Core · target · **partial** · Register R-6
 
 Core · target · **partial** · Register R-6
 
-**Requirement.** Submitting a request records the author's vote on it, as Canny makes a post's author its first supporter; the vote counts in the vote total (REQ-006) once the request is published, and the author can remove it like any vote. On a board with vote subscriptions on (NOTIFY-008), submitting also subscribes the author: the submit form on the portal, widget and SDK (REQ-003, WIDGET-001, WIDGET-004) says before submission that they will get updates on their request and how to stop, and submission stores one timestamped permission record with origin `submission`, its board and the setting version. Through it, the publication of their held request (one "Your request is now public" message), public operator replies, approved comments, status updates (REQ-015, REQ-036, ROAD-008), a decline (REQ-017), a rejection notice an operator chooses to send (REQ-030) and the release that ships it (REL-004) reach them under NOTIFY-001 and NOTIFY-002. Every such email says why it was sent ("You posted …") and carries the one-click unsubscribe, which withdraws the permission, and the owner's postal address (NOTIFY-013). Removing the author's vote keeps the submission permission; withdrawing the request (REQ-021) withdraws it; a blocked author (REQ-022) gets nothing. A submission held for email verification (REQ-023) records the vote and the permission only once the address is verified. On a board with the setting off, the author gets updates only by ticking "Email me updates" (REQ-010). Operator-authored requests (REQ-029) and imported posts record no author vote or permission (MIG-007 is the only import path).
+**Requirement.** Submitting a request records the author's vote on it, as Canny makes a post's author its first supporter; the vote counts in the vote total (REQ-006) once the request is published, and the author can remove it like any vote. On a board with vote subscriptions on (NOTIFY-008), submitting also subscribes the author: the submit form on the portal, widget and SDK (REQ-003, WIDGET-001, WIDGET-004) says before submission that they will get updates on their request and how to stop, and submission stores one timestamped permission record with origin `submission`, its board and the setting version. Through it, the publication of their held request (one "Your request is now public" message), public operator replies, approved comments, status updates (REQ-015, REQ-036, ROAD-008), a decline (REQ-017), a rejection notice an operator chooses to send (REQ-030) and the release that ships it (REL-004) reach them under NOTIFY-001 and NOTIFY-002. Every such email says why it was sent ("You posted …") and carries the one-click unsubscribe, which withdraws the permission, and the owner's postal address (NOTIFY-014). Removing the author's vote keeps the submission permission; withdrawing the request (REQ-021) withdraws it; a blocked author (REQ-022) gets nothing. A submission held for email verification (REQ-023) records the vote and the permission only once the address is verified. On a board with the setting off, the author gets updates only by ticking "Email me updates" (REQ-010). Operator-authored requests (REQ-029) and imported posts record no author vote or permission (MIG-007 is the only import path).
 
 **Acceptance.**
 1. A base and browser journey on a vote-subscription board: the submit form states the subscription.
@@ -3341,7 +3341,7 @@ Core · target · **missing** · From MIG-001 · Rules D-5
 
 Core · target · **partial** · From MIG-001 · Rules D-5
 
-**Requirement.** The Canny migration carries post subscribers and changelog subscribers only under MIG-007, and moves changelog entries with labels, types and publish dates (REL-015), each published as it was in Canny with its original date: an entry with linked posts as a release whose request targets are those posts' requests, one without as an announcement (REL-018), and an unpublished Canny draft as a draft, with an empty recipient snapshot and no outcome prompt for imported releases. Canny's public roadmap is rebuilt as a status roadmap (ROAD-014) over the same boards and statuses.
+**Requirement.** The Canny migration carries post subscribers and changelog subscribers only under MIG-007, and moves changelog entries with labels, types and publish dates (REL-015), each published as it was in Canny with its original date: an entry with linked posts as a release whose request targets (REL-019) are those posts' requests, one without as an announcement (REL-018), and an unpublished Canny draft as a draft, with an empty recipient snapshot and no outcome prompt for imported releases. Canny's public roadmap is rebuilt as a status roadmap (ROAD-014) over the same boards and statuses.
 
 **Acceptance.** From the recorded Canny API fixture:
 1. Subscribers land as MIG-007 records when carry-over is selected and as nothing when it is not.
@@ -3380,13 +3380,13 @@ Core · target · **missing** · Rules D-5 · Register R-9
 
 Core · target · **partial** · Rules D-5 · Register R-9
 
-**Requirement.** Beyond IMP-008's saved CSV exports, which ship today, the UserVoice API moves suggestions, supporters, comments, status updates, forums, categories (REQ-034), internal notes, labels and suggestion subscribers under MIG-007.
+**Requirement.** Beyond IMP-008's saved CSV exports, the UserVoice API moves suggestions, supporters, comments, status updates, forums, categories (REQ-034), internal notes, labels and suggestion subscribers under MIG-007.
 
 **Acceptance.**
 1. A UserVoice API fixture produces the same requests and supporters as IMP-008 for overlapping data and adds the comments and notes.
 
 **Evidence.** `tests/base/feedback-import-uservoice.test.ts`
-**Gap.** A UserVoice API fixture produces the same requests and supporters as IMP-008 for overlapping data and adds the comments and notes.
+**Gap.** IMP-008's saved CSV exports ship today. A UserVoice API fixture produces the same requests and supporters as IMP-008 for overlapping data and adds the comments and notes.
 
 #### MIG-005 — Featurebase
 
@@ -3404,7 +3404,7 @@ Core · target · **missing** · Rules D-5 · Register R-9
 
 Core · target · **partial** · Rules D-5
 
-**Requirement.** Every migration offers a dry run with the IMP-007 receipt, a side-by-side count check, a redirect map from the old portal's post URLs to Penny's request URLs, the widget swap snippet, the owner's choice between subscription carry-over (MIG-007) and a re-consent invitation that only creates permission when a customer accepts it, the vote-subscription and auto-publish settings (NOTIFY-008, REQ-033) set for each imported board to match the source's behavior, and a cutover checklist that shows, before the redirect map goes live, whether the company name, logo and favicon (INT-007), the SSO login URL when the source used SSO (WIDGET-008), and the sender identity and postal address (NOTIFY-013) are set. Reversal follows IMP-004.
+**Requirement.** Every migration offers a dry run with the IMP-007 receipt, a side-by-side count check, a redirect map from the old portal's post URLs to Penny's request URLs, the widget swap snippet, the owner's choice between subscription carry-over (MIG-007) and a re-consent invitation that only creates permission when a customer accepts it, the vote-subscription and auto-publish settings (NOTIFY-008, REQ-033) set for each imported board to match the source's behavior, and a cutover checklist that shows, before the redirect map goes live, whether the company name, logo and favicon (INT-007), the SSO login URL when the source used SSO (WIDGET-008), and the sender identity and postal address (NOTIFY-013, NOTIFY-014) are set. Reversal follows IMP-004.
 
 **Acceptance.**
 1. The dry-run receipt equals the apply receipt.
@@ -3441,7 +3441,7 @@ Core · target · **done** · Cites BASE-ACCESSIBILITY-001
 **Requirement.** Every portal and operator page works at 390 pixels wide with no horizontal scroll and touch-sized controls; every new surface in this contract (inbox, widget, prioritization and roadmap views) joins the same check.
 
 **Acceptance.**
-1. The browser journeys run at 1440 and 390 pixels with axe and layout checks (`tests/browser/acceptance-audit.mjs` viewports), and each new surface is added to them.
+1. Every portal and operator journey runs at 1440 and 390 pixels with axe and layout checks, and each new surface joins them.
 
 **Evidence.** `tests/browser/acceptance-audit.mjs`; `tests/browser/operator-pages.mjs`; `tests/browser/requester-board.mjs`
 **Gap.** None.
@@ -3739,10 +3739,10 @@ Later · target · **missing** · Cites BASE-SIGNIN-001 · Register R-15
 
 **Acceptance.**
 1. Okta and Entra SCIM request fixtures through the public endpoint create, patch and deactivate a user.
-2. The deactivated user's session and API key are refused on their next request, as `tests/base/auth.test.ts` asserts for removal.
+2. The deactivated user's session and API key are refused on their next request, as they are after OPS-002 removal.
 
 **Evidence.** None.
-**Gap.** Okta and Entra SCIM request fixtures through the public endpoint create, patch and deactivate a user; the deactivated user's session and API key are refused on their next request, as `tests/base/auth.test.ts` asserts for removal.
+**Gap.** Okta and Entra SCIM request fixtures through the public endpoint create, patch and deactivate a user; the deactivated user's session and API key are refused on their next request, as they are after OPS-002 removal.
 
 ### Mobile and accessibility
 
