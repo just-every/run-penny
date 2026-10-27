@@ -35,13 +35,18 @@ it('[PRIO-002 IMP-002 IMP-004] imports reviewed Canny custom statuses once, maps
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM requests').first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM request_internal_statuses').first('n')).toBe(0)
  const reapplied=await apply(input,operator)
+ // [IMP-004] A native edit to the same imported definition prevents undo.
+ await json(await call('/api/operator/settings/request-statuses/'+status,{name:'Customer research'},operator,'PATCH'))
+ expect((await call(`${importPath}/jobs/${reapplied.id}/undo`,{},operator)).status).toBe(409)
+ expect(await env.DB.prepare('SELECT COUNT(*) n FROM requests').first('n')).toBe(3)
+ expect(await env.DB.prepare('SELECT name FROM request_internal_statuses WHERE id=?').bind(status).first('name')).toBe('Customer research')
  const boardSlug='import-'+stableFeedbackId(input.namespace,'boards','finance').toLowerCase()
  for(const i of [0,2]){
   const slug='feedback-'+stableFeedbackId(input.namespace,'posts','post-'+i).toLowerCase()
   await json(await call('/api/operator/moderation/'+slug,{verdict:'approved',title:'Finance workflow '+i,description:'Keep every finance export available.',boardSlug,displayName:'Avery Morgan'},operator))
   const detail=await json(await call('/api/public/requests/'+slug))
   expect(detail.status).toBe(i===0?'under_review':'in_progress')
-  expect(JSON.stringify(detail)).not.toContain('Researching')
+  expect(JSON.stringify(detail)).not.toContain('Researching');expect(JSON.stringify(detail)).not.toContain('Customer research')
   if(i===2)expect(detail.statusLabel).toBe('Building')
  }
  await json(await call('/api/operator/settings/request-statuses/'+status,{publicStatus:'planned'},operator,'PATCH'))
@@ -49,9 +54,5 @@ it('[PRIO-002 IMP-002 IMP-004] imports reviewed Canny custom statuses once, maps
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM request_status_updates').first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT COUNT(*) n FROM notification_intents').first('n')).toBe(0)
 
- // [IMP-004] A native edit to the same imported definition prevents undo.
- await json(await call('/api/operator/settings/request-statuses/'+status,{name:'Customer research'},operator,'PATCH'))
- expect((await call(`${importPath}/jobs/${reapplied.id}/undo`,{},operator)).status).toBe(409)
- expect(await env.DB.prepare('SELECT COUNT(*) n FROM requests').first('n')).toBe(3)
- expect(await env.DB.prepare('SELECT name FROM request_internal_statuses WHERE id=?').bind(status).first('name')).toBe('Customer research')
+
 })
