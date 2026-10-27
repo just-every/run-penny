@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 122 | 65 | 71 | 258 |
+| Core | 96 | 91 | 71 | 258 |
 | Agent surface | 0 | 0 | 8 | 8 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 122 | 65 | 81 | 268 |
+| Full target | 96 | 91 | 81 | 268 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -128,7 +128,7 @@ Core · published · **done**
 
 #### OPS-005 — First-run setup
 
-Core · published · **done** · Cites BASE-INSTALL-001
+Core · published · **partial** · Cites BASE-INSTALL-001
 
 **Requirement.** The signed-in owner whose setup is unfinished completes it at `/setup`, and every `/app` document and client-side app navigation sends that owner there first.
 
@@ -141,7 +141,7 @@ Core · published · **done** · Cites BASE-INSTALL-001
 6. Setup cannot finish until the owner has chosen the workspace timezone and seen the requester quiet hours (OPS-008) and entered the company name (INT-007) and the business postal address (NOTIFY-014).
 
 **Evidence.** `tests/base/first-run.test.ts`; `tests/base/mail-identity.test.ts`; `tests/base/workspace-clock.test.ts`; `tests/browser/workspace-clock.mjs`
-**Gap.** None.
+**Gap.** A signed-in operator who is not the owner never being sent to `/setup`, setup completion staying out of archives, an installation with an active owner being treated as finished, and local `rer dev` opening signed in as the owner with mail suppressed have no passing assertion.
 
 #### OPS-004 — Global search
 
@@ -261,7 +261,7 @@ Core · published · **done** · Cites BASE-INPUT-003
 
 #### EVID-009 — Tags
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Operators create, rename, merge, and delete tags and apply them to evidence items and requests.
 
@@ -269,7 +269,7 @@ Core · published · **done**
 1. A tag is operator-only, filterable in every operator list, survives a request merge, and is included in the export.
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** Tags filtering every operator list, surviving a request merge and appearing in the export have no passing assertion; tag privacy is asserted.
 
 #### EVID-010 — Versions
 
@@ -311,7 +311,7 @@ Core · published · **done**
 
 #### REQ-003 — Submission
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A requester submits a title, a problem description, an optional free-text proposed solution, an optional free-text impact statement, a board (REQ-018), a category where the board uses them (REQ-034), and optional attachments; on a board with vote subscriptions on, the form states before submission that the author will get updates (NOTIFY-011).
 
@@ -320,7 +320,7 @@ Core · published · **done**
 2. *Policy: `request.moderation.v1`; default: each board's moderation setting in settings (REQ-033); on a board without auto-publish an operator reviews every requester submission, edit, and comment before it becomes public.*
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** The unreviewed evidence item created in the same transaction as the request, and requester edits held for moderation, have no passing assertion in this clause's evidence; the held submission and comment are asserted.
 
 #### REQ-004 — Duplicate prevention
 
@@ -348,7 +348,7 @@ Core · published · **done**
 
 #### REQ-006 — Voting
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A requester identity has at most one vote on a request and can remove it.
 
@@ -358,7 +358,7 @@ Core · published · **done**
 3. *Policy: `request.vote-eligibility.v1`; default: any verified requester may vote and every vote counts once.*
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted.
 
 #### REQ-007 — Discussion
 
@@ -374,7 +374,7 @@ Core · published · **done**
 
 #### REQ-008 — Merge
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** An operator can merge a duplicate request into the canonical request, which is the one that survives.
 
@@ -383,11 +383,11 @@ Core · published · **done**
 2. Merging a request that is itself a duplicate merges it into the canonical request at the end of its chain.
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted.
 
 #### REQ-009 — Unmerge
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** An operator can reverse a merge.
 
@@ -395,11 +395,11 @@ Core · published · **done**
 1. Penny restores the duplicate request's own content, votes, comments, followers, and evidence links, leaves anything added to the canonical request after the merge on the canonical request, and records the reversal.
 
 **Evidence.** `tests/base/board.test.ts`; `tests/base/notifications.test.ts`
-**Gap.** None.
+**Gap.** Restoring the duplicate's votes, followers and evidence links, leaving post-merge additions on the canonical request and recording the reversal have no passing assertion; the duplicate's comment and status update reappearing are asserted.
 
 #### REQ-010 — Follow and consent
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A verified requester can follow and unfollow a published request.
 
@@ -408,11 +408,11 @@ Core · published · **done**
 2. Following, or ticking that control, stores a timestamped permission record for the verified address, which is what makes the identity eligible under REL-004.
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** The unticked "Email me updates" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion.
 
 #### REQ-011 — Portal attachments
 
-Core · published · **done** · Cites BASE-INPUT-003
+Core · published · **partial** · Cites BASE-INPUT-003
 
 **Requirement.** A file submitted with a request is operator-only until an operator approves that file for publication. Supersedes `BASE-INPUT-003` for published image attachments only: while both the parent request and the file are published, `GET /api/public/attachments/:id` serves an image type in `seed.json → limits.uploadTypes` with an inline disposition so it renders on the request page, instead of the download disposition.
 
@@ -422,7 +422,7 @@ Core · published · **done** · Cites BASE-INPUT-003
 3. In every other state that path returns 404.
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** Rejecting a file with a reason without rejecting the request, and the declared content type and inline disposition of a published image, have no passing assertion; approval, the 404 before it and the served bytes are asserted.
 
 #### REQ-012 — Portal search and browse
 
@@ -439,7 +439,7 @@ Core · published · **partial** · Rules D-3
 
 #### REQ-013 — Submission idempotency
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A public submission accepts an idempotency key.
 
@@ -448,7 +448,7 @@ Core · published · **done**
 2. Keys are retained for 30 days and hold no personal data.
 
 **Evidence.** `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs`
-**Gap.** None.
+**Gap.** No test repeats a submission with its idempotency key to get the original request and evidence result back, sends a changed body under the same key for 409, or checks 30-day key retention and keys holding no personal data.
 
 #### REQ-014 — Identity failure
 
@@ -464,7 +464,7 @@ Core · published · **done**
 
 #### REQ-015 — Status updates
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** An operator can publish a status update on a published request.
 
@@ -473,7 +473,7 @@ Core · published · **done**
 2. Setting a request's status (REQ-036) publishes one.
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** A status update rendered distinctly from comments, pinned above them and notifying followers under NOTIFY-001 has no passing assertion; posting a pinned update and its text on the request are asserted.
 
 #### REQ-016 — Public status
 
@@ -509,7 +509,7 @@ Core · published · **done**
 
 #### REQ-018 — Boards
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Every request belongs to exactly one board.
 
@@ -518,11 +518,11 @@ Core · published · **done**
 2. An archived board leaves portal navigation, keeps its published requests reachable at their URLs, and refuses a new submission with 409.
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** Renaming, reordering and archiving boards, moving a request with its votes, comments, followers and evidence links, and the 409 on submission to an archived board have no passing assertion.
 
 #### REQ-019 — Internal boards
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Each board is public or internal.
 
@@ -531,7 +531,7 @@ Core · published · **done**
 2. Moving a request to an internal board withdraws it from the portal within 5 seconds and its public URL returns 404.
 
 **Evidence.** `tests/base/board.test.ts`
-**Gap.** None.
+**Gap.** Keeping internal-board requests off the public roadmap, out of releases and out of requester notifications has no passing assertion in this clause's evidence; the request and attachment 404s are asserted.
 
 #### REQ-020 — Requester's own content
 
@@ -575,7 +575,7 @@ Core · published · **done**
 
 #### REQ-023 — Email verification
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A requester verifies an email address by following a single-use link sent to it; the link expires 30 minutes after it is sent and fails after one use.
 
@@ -584,11 +584,11 @@ Core · published · **done**
 2. An identity-required action attempted before verification is held for 24 hours, applied on the first verification of that address, and otherwise discarded, and it creates no vote, public record, or notification while held.
 
 **Evidence.** `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs`
-**Gap.** None.
+**Gap.** The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted.
 
 #### REQ-024 — Requester identity merge
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** An operator can merge two requester identities.
 
@@ -597,7 +597,7 @@ Core · published · **done**
 2. A merge creates no new vote and no new permission record.
 
 **Evidence.** `tests/base/notifications.test.ts`
-**Gap.** None.
+**Gap.** The survivor keeping both verified addresses and all requests, comments, follows and permission records, votes collapsing to one, the recorded merge, and no new vote or permission record have no passing assertion; carried mutes and preferences and working old links are asserted.
 
 #### REQ-025 — Requester activity
 
@@ -665,7 +665,7 @@ Core · published · **done**
 
 #### REQ-030 — Moderation verdicts
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** An operator can approve, edit and then approve, or reject with a reason any request or comment awaiting moderation.
 
@@ -674,7 +674,7 @@ Core · published · **done**
 2. This private author-only notice requires current verified request-specific email consent and respects suppression, mute, unsubscribe and quiet hours; it does not publish the rejected content or create follower notifications.
 
 **Evidence.** `tests/base/notifications.test.ts`
-**Gap.** None.
+**Gap.** A rejected item counting toward no public total and staying visible with its reason to its author and operators, and the author notice's consent, suppression, mute and quiet-hours checks, have no passing assertion; the unsubscribe link and the once-only send are asserted.
 
 #### REQ-031 — Host identity claims
 
@@ -690,7 +690,7 @@ Core · published · **done**
 
 #### REQ-032 — Internal notes
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Operators can add a note to any request.
 
@@ -698,7 +698,7 @@ Core · published · **done**
 1. A note is rendered distinctly from an operator comment and never appears in a portal response, page metadata, a release, or a notification.
 
 **Evidence.** `tests/base/penny-evidence.test.ts`
-**Gap.** None.
+**Gap.** A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted.
 
 ### Decisions
 
@@ -907,7 +907,7 @@ Core · published · **done**
 
 #### REL-001 — Draft and targets
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A targeted release draft has one or more targets, each linking one roadmap item in any state to its decision and its approved public request mappings, or one published request directly (REL-019); a draft with no target is an announcement (REL-018).
 
@@ -915,7 +915,7 @@ Core · published · **done**
 1. The draft also holds a customer-safe title, a type of New, Improved, or Fixed, one or more subject tags drawn from EVID-009, a body, a publication date, an optional setup or usage link, an author, and, for a targeted release, the wording of the outcome prompt shown with the REL-008 response.
 
 **Evidence.** `tests/browser/loopjourney-release.mjs`
-**Gap.** None.
+**Gap.** A saved draft holding its publication date, optional setup or usage link and outcome-prompt wording has no passing assertion; the title, type, tag, body, author and target are entered and saved.
 
 #### REL-002 — Publication
 
@@ -957,7 +957,7 @@ Core · published · **done**
 
 #### REL-005 — Customer-safe delivery
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Release email and release portal content carry only the published release fields and the recipient's own request context.
 
@@ -966,7 +966,7 @@ Core · published · **done**
 2. Release email carries the owner's brand header (INT-007), sender identity (NOTIFY-013) and postal address (NOTIFY-014).
 
 **Evidence.** `tests/browser/loopjourney-release.mjs`
-**Gap.** None.
+**Gap.** The owner's brand header (INT-007), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted.
 
 #### REL-006 — Acceptance and retry
 
@@ -1037,7 +1037,7 @@ Core · published · **done**
 
 #### REL-011 — Bounces and complaints
 
-Core · published · **done** · Cites BASE-MAIL-001
+Core · published · **partial** · Cites BASE-MAIL-001
 
 **Requirement.** A hard bounce or a spam complaint suppresses the address: no further Penny email reaches it until the requester verifies it again, and its permission records are marked suppressed rather than deleted.
 
@@ -1046,7 +1046,7 @@ Core · published · **done** · Cites BASE-MAIL-001
 2. Suppression removes no vote, request, comment, or portal access.
 
 **Evidence.** `tests/runtime/mail-events-restart.test.mjs`
-**Gap.** None.
+**Gap.** A soft bounce marking one delivery failed and suppressing nothing, a spam complaint's suppression, and suppression removing no vote, request, comment or portal access have no passing assertion; hard-bounce suppression is asserted.
 
 #### REL-012 — Update subscription
 
@@ -1062,7 +1062,7 @@ Core · published · **done**
 
 #### REL-013 — Delivery states
 
-Core · published · **done** · Cites BASE-MAIL-001
+Core · published · **partial** · Cites BASE-MAIL-001
 
 **Requirement.** A delivery moves through queued, then accepted, then delivered, and can terminate at failed, suppressed, or unknown.
 
@@ -1070,13 +1070,13 @@ Core · published · **done** · Cites BASE-MAIL-001
 1. An out-of-order provider event never moves a delivery backward along that order and never counts a result twice.
 
 **Evidence.** `tests/base/release-custody.test.ts`
-**Gap.** None.
+**Gap.** An out-of-order provider event never moving a delivery backward and never counting a result twice has no passing assertion.
 
 ### Notifications
 
 #### NOTIFY-001 — Requester updates
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A follower of a published request is notified when an operator publishes a status update on it (REQ-015), including a status set under REQ-036, declines it (REQ-017), publishes a status update mapped to it (ROAD-008), posts a public reply on it, approves a requester comment on it (REQ-007) or receives an auto-published one (REQ-033), unless they have muted that request or their address is suppressed.
 
@@ -1085,7 +1085,7 @@ Core · published · **done**
 2. Held or rejected comments, unpublished requests, internal boards, internal notes, and an internal roadmap transition with no published update notify nobody, and republishing the same update version notifies nobody again.
 
 **Evidence.** `tests/base/notifications.test.ts`
-**Gap.** None.
+**Gap.** Notifying voters on vote-subscription boards (NOTIFY-008) as followers has no passing assertion; the subscribed author's notice is asserted.
 
 #### NOTIFY-002 — Preferences, timing, and unsubscribe
 
@@ -1197,7 +1197,7 @@ Core · published · **done**
 
 #### LEARN-001 — Permitted originals
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Equal native operators select native evidence/requests and exact Orbit `rer-delegation/1` evidence targets with a recorded purpose/use basis and all-operator authorization.
 
@@ -1208,11 +1208,11 @@ Core · published · **done**
 4. Model output cannot set identity or grants.
 
 **Evidence.** `tests/base/learning-stage2.test.ts`
-**Gap.** None.
+**Gap.** The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted.
 
 #### LEARN-002 — Contestable learning
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A configured model prepares an evidence comparison, exact validated spans, contradictions, uncertainty, a distinguishing clarification when evidence is thin, and a usable internal implementation brief.
 
@@ -1222,11 +1222,11 @@ Core · published · **done**
 3. There is no automatic ranking, customer contact or publication.
 
 **Evidence.** `tests/base/learning-stage2.test.ts`
-**Gap.** None.
+**Gap.** Every option carrying the DEC-003 dimensions computed from originals, invalidation by native or source corrections with versioned operator contests, and the absence of automatic ranking, customer contact or publication have no passing assertion in this clause's evidence; validated spans, the clarification and the no-build option are asserted.
 
 #### LEARN-003 — Accountable pre-action choice
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** An operator selects an option, rationale, confidence and review date. Commitment is a decision record, not execution or an observed customer outcome.
 
@@ -1235,11 +1235,11 @@ Core · published · **done**
 2. Missing protocol fields are explicit nulls and prevent commitment.
 
 **Evidence.** `tests/base/learning-stage3.test.ts`
-**Gap.** None.
+**Gap.** The committed snapshot retaining the interpretation, original evidence, compared options, owner and full predeclared protocol, and missing protocol fields as explicit nulls that prevent commitment, have no passing assertion in this clause's evidence; commitment and its attributed audit are asserted.
 
 #### LEARN-004 — Bounded recurring work
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Scheduled Worker events refresh selected sources and advance the authorized evidence comparison/internal brief.
 
@@ -1251,7 +1251,7 @@ Core · published · **done**
 5. Interrupted/ambiguous calls retain visible uncertainty and reserved budget rather than automatic retries.
 
 **Evidence.** `tests/base/learning-stage3.test.ts`
-**Gap.** None.
+**Gap.** Expiry, budget, correction-version and erasure-epoch checks before external work and in the result transaction, the absence of any implicit contact, production or publication effect, and interrupted or ambiguous calls keeping their uncertainty and reserved budget without retry have no passing assertion in this clause's evidence; durable runs, unchanged-input deduplication, in-flight pause and revoke, and pause, resume, revoke and disconnect are asserted.
 
 #### LEARN-005 — Privacy closure
 
@@ -1412,7 +1412,7 @@ Core · published · **done** · Cites BASE-ACCESS-004
 
 #### EDIT-001 — Owner editor
 
-Core · published · **done** · Cites BASE-ACCESS-004
+Core · published · **partial** · Cites BASE-ACCESS-004
 
 **Requirement.** The optional maintained editor receives only a short lease and validated management origin/installation ID after current native owner admission.
 
@@ -1422,7 +1422,7 @@ Core · published · **done** · Cites BASE-ACCESS-004
 3. The management service independently admits its owner and registered frame origin.
 
 **Evidence.** `tests/base/editor-admission.test.ts`
-**Gap.** None.
+**Gap.** Compiled data-only edits applying after the destination hydrates with native navigation and privacy preserved, and the management service's own admission of its owner and frame origin, have no passing assertion; the short owner-only lease and the refusal of other operators and foreign origins are asserted.
 
 ### Scoped server integrations
 

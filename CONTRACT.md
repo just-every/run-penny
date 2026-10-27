@@ -3080,9 +3080,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 101 | 14 | 1 | 116 |
+| Published | 75 | 40 | 1 | 116 |
 | Target and push further | 21 | 51 | 80 | 152 |
-| All | 122 | 65 | 81 | 268 |
+| All | 96 | 91 | 81 | 268 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3092,7 +3092,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `OPS-001` | Roles | published | partial | `tests/base/auth.test.ts` | Current operators share product access, and workspace clock settings admit Owners and Admins (OPS-008) while other configuration remains owner-only. No journey yet signs in one operator per role: the Viewer, Contributor, Product manager and Admin refusals, unchanged state on refusal and next-request role change lack passing assertions. |
 | `OPS-002` | Management | published | done | `tests/base/auth.test.ts` |  |
 | `OPS-003` | Overview | published | done | `tests/browser/operator-pages.mjs`; `tests/browser/operator-overview-checks.mjs` |  |
-| `OPS-005` | First-run setup | published | done | `tests/base/first-run.test.ts`; `tests/base/mail-identity.test.ts`; `tests/base/workspace-clock.test.ts`; `tests/browser/workspace-clock.mjs` |  |
+| `OPS-005` | First-run setup | published | partial | `tests/base/first-run.test.ts`; `tests/base/mail-identity.test.ts`; `tests/base/workspace-clock.test.ts`; `tests/browser/workspace-clock.mjs` | A signed-in operator who is not the owner never being sent to `/setup`, setup completion staying out of archives, an installation with an active owner being treated as finished, and local `rer dev` opening signed in as the owner with mail suppressed have no passing assertion. |
 | `OPS-004` | Global search | published | partial | `tests/browser/operator-completeness-requester.mjs` | Search across every other named field ships; product, component and feature names are not yet searched (`src/core/features/workspace/list-repository.ts`), and the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
 | `EVID-001` | Capture | published | done | `tests/base/penny-evidence.test.ts`; `tests/base/no-mail-identity.test.ts` |  |
 | `EVID-002` | Provenance | published | done | `tests/base/penny-evidence.test.ts`; `tests/browser/operator-pages-decisions.mjs` |  |
@@ -3102,40 +3102,40 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `EVID-006` | Private commercial data | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `EVID-007` | Duplicate suggestions | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `EVID-008` | Evidence attachments | published | done | `tests/base/penny-evidence.test.ts` |  |
-| `EVID-009` | Tags | published | done | `tests/base/board.test.ts` |  |
+| `EVID-009` | Tags | published | partial | `tests/base/board.test.ts` | Tags filtering every operator list, surviving a request merge and appearing in the export have no passing assertion; tag privacy is asserted. |
 | `EVID-010` | Versions | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `REQ-001` | Public portal | published | done | `tests/base/board.test.ts`; `tests/base/board-categories.test.ts`; `tests/base/penny-evidence.test.ts`; `tests/browser/requester-blocking.mjs`; `tests/browser/roadmap-public-eta.mjs`; `tests/browser/rich-changelog.mjs` |  |
 | `REQ-002` | Requester identity | published | done | `tests/base/no-mail-identity.test.ts` |  |
-| `REQ-003` | Submission | published | done | `tests/base/board.test.ts` |  |
+| `REQ-003` | Submission | published | partial | `tests/base/board.test.ts` | The unreviewed evidence item created in the same transaction as the request, and requester edits held for moderation, have no passing assertion in this clause's evidence; the held submission and comment are asserted. |
 | `REQ-004` | Duplicate prevention | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `REQ-005` | Publication | published | done | `tests/base/board.test.ts` |  |
-| `REQ-006` | Voting | published | done | `tests/base/board.test.ts` |  |
+| `REQ-006` | Voting | published | partial | `tests/base/board.test.ts` | Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted. |
 | `REQ-007` | Discussion | published | done | `tests/base/notifications.test.ts` |  |
-| `REQ-008` | Merge | published | done | `tests/base/board.test.ts` |  |
-| `REQ-009` | Unmerge | published | done | `tests/base/board.test.ts`; `tests/base/notifications.test.ts` |  |
-| `REQ-010` | Follow and consent | published | done | `tests/base/board.test.ts` |  |
-| `REQ-011` | Portal attachments | published | done | `tests/base/board.test.ts` |  |
+| `REQ-008` | Merge | published | partial | `tests/base/board.test.ts` | Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted. |
+| `REQ-009` | Unmerge | published | partial | `tests/base/board.test.ts`; `tests/base/notifications.test.ts` | Restoring the duplicate's votes, followers and evidence links, leaving post-merge additions on the canonical request and recording the reversal have no passing assertion; the duplicate's comment and status update reappearing are asserted. |
+| `REQ-010` | Follow and consent | published | partial | `tests/base/board.test.ts` | The unticked "Email me updates" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion. |
+| `REQ-011` | Portal attachments | published | partial | `tests/base/board.test.ts` | Rejecting a file with a reason without rejecting the request, and the declared content type and inline disposition of a published image, have no passing assertion; approval, the 404 before it and the served bytes are asserted. |
 | `REQ-012` | Portal search and browse | published | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-012/` | Category filtering, newest and recency-weighted last-14-day trending are implemented alongside search, board, status and existing sorts. Gap: the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
-| `REQ-013` | Submission idempotency | published | done | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` |  |
+| `REQ-013` | Submission idempotency | published | partial | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` | No test repeats a submission with its idempotency key to get the original request and evidence result back, sends a changed body under the same key for 409, or checks 30-day key retention and keys holding no personal data. |
 | `REQ-014` | Identity failure | published | done | `tests/base/host-identity.test.ts` |  |
-| `REQ-015` | Status updates | published | done | `tests/base/board.test.ts` |  |
+| `REQ-015` | Status updates | published | partial | `tests/base/board.test.ts` | A status update rendered distinctly from comments, pinned above them and notifying followers under NOTIFY-001 has no passing assertion; posting a pinned update and its text on the request are asserted. |
 | `REQ-016` | Public status | published | done | `tests/base/request-status-workflow.test.ts`; `tests/base/decision-loop-roadmap.test.ts`; `visual/request-status-workflow/REQ-016/` |  |
 | `REQ-017` | Decline | published | done | `tests/base/request-status-workflow.test.ts`; `tests/browser/request-decline.mjs` |  |
-| `REQ-018` | Boards | published | done | `tests/base/board.test.ts` |  |
-| `REQ-019` | Internal boards | published | done | `tests/base/board.test.ts` |  |
+| `REQ-018` | Boards | published | partial | `tests/base/board.test.ts` | Renaming, reordering and archiving boards, moving a request with its votes, comments, followers and evidence links, and the 409 on submission to an archived board have no passing assertion. |
+| `REQ-019` | Internal boards | published | partial | `tests/base/board.test.ts` | Keeping internal-board requests off the public roadmap, out of releases and out of requester notifications has no passing assertion in this clause's evidence; the request and attachment 404s are asserted. |
 | `REQ-020` | Requester's own content | published | partial | `tests/browser/requester-repair.mjs` | Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions. |
 | `REQ-021` | Requester withdrawal | published | done | `tests/base/request-withdrawal.test.ts`; `tests/browser/request-withdrawal.mjs` |  |
 | `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
-| `REQ-023` | Email verification | published | done | `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs` |  |
-| `REQ-024` | Requester identity merge | published | done | `tests/base/notifications.test.ts` |  |
+| `REQ-023` | Email verification | published | partial | `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs` | The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted. |
+| `REQ-024` | Requester identity merge | published | partial | `tests/base/notifications.test.ts` | The survivor keeping both verified addresses and all requests, comments, follows and permission records, votes collapsing to one, the recorded merge, and no new vote or permission record have no passing assertion; carried mutes and preferences and working old links are asserted. |
 | `REQ-025` | Requester activity | published | done | `tests/base/penny-releases.test.ts`; `tests/browser/requester-activity.mjs` |  |
 | `REQ-026` | Demand attribution | published | done | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` |  |
 | `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` |  |
 | `REQ-028` | Request queue | published | partial | `tests/browser/operator-completeness-read.mjs` | Queue filters and sorts work; the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
 | `REQ-029` | Operator-authored request | published | done | `tests/base/operator-request-publication.ts`; `tests/base/penny-evidence.test.ts`; `tests/browser/operator-evidence-flow.mjs`; `tests/browser/operator-pages.mjs` |  |
-| `REQ-030` | Moderation verdicts | published | done | `tests/base/notifications.test.ts` |  |
+| `REQ-030` | Moderation verdicts | published | partial | `tests/base/notifications.test.ts` | A rejected item counting toward no public total and staying visible with its reason to its author and operators, and the author notice's consent, suppression, mute and quiet-hours checks, have no passing assertion; the unsubscribe link and the once-only send are asserted. |
 | `REQ-031` | Host identity claims | published | done | `tests/base/host-identity.test.ts` |  |
-| `REQ-032` | Internal notes | published | done | `tests/base/penny-evidence.test.ts` |  |
+| `REQ-032` | Internal notes | published | partial | `tests/base/penny-evidence.test.ts` | A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted. |
 | `DEC-001` | States and queue | published | done | `tests/base/decision-loop-commit.test.ts` |  |
 | `DEC-002` | Brief | published | done | `tests/base/decision-loop-dimensions.test.ts` |  |
 | `DEC-003` | Comparable bets | published | done | `tests/base/decision-loop-dimensions.test.ts` |  |
@@ -3152,20 +3152,20 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `ROAD-006` | Public roadmap | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` |  |
 | `ROAD-007` | Status update draft | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` |  |
 | `ROAD-008` | Status update publication | published | done | `tests/base/roadmap-update-publication.ts`; `tests/base/board.test.ts`; `tests/base/notifications.test.ts`; `tests/browser/operator-pages-status.mjs`; `tests/browser/operator-pages.mjs` |  |
-| `REL-001` | Draft and targets | published | done | `tests/browser/loopjourney-release.mjs` |  |
+| `REL-001` | Draft and targets | published | partial | `tests/browser/loopjourney-release.mjs` | A saved draft holding its publication date, optional setup or usage link and outcome-prompt wording has no passing assertion; the title, type, tag, body, author and target are entered and saved. |
 | `REL-002` | Publication | published | done | `tests/browser/loopjourney-release.mjs` |  |
 | `REL-003` | Published wording | published | done | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |  |
 | `REL-004` | Recipient eligibility and snapshot | published | done | `tests/base/release-custody.test.ts` |  |
-| `REL-005` | Customer-safe delivery | published | done | `tests/browser/loopjourney-release.mjs` |  |
+| `REL-005` | Customer-safe delivery | published | partial | `tests/browser/loopjourney-release.mjs` | The owner's brand header (INT-007), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted. |
 | `REL-006` | Acceptance and retry | published | done | `tests/base/notifications.test.ts`; `tests/base/release-custody.test.ts` |  |
 | `REL-007` | Idempotent delivery and provider events | published | partial | `tests/base/release-custody.test.ts` | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression, so its delivery key is correlation only (RL-3). |
 | `REL-008` | Outcome response | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-009` | Outcome coverage | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-010` | Empty feed | published | done | `tests/browser/route-review.mjs` |  |
-| `REL-011` | Bounces and complaints | published | done | `tests/runtime/mail-events-restart.test.mjs` |  |
+| `REL-011` | Bounces and complaints | published | partial | `tests/runtime/mail-events-restart.test.mjs` | A soft bounce marking one delivery failed and suppressing nothing, a spam complaint's suppression, and suppression removing no vote, request, comment or portal access have no passing assertion; hard-bounce suppression is asserted. |
 | `REL-012` | Update subscription | published | done | `tests/base/penny-releases.test.ts` |  |
-| `REL-013` | Delivery states | published | done | `tests/base/release-custody.test.ts` |  |
-| `NOTIFY-001` | Requester updates | published | done | `tests/base/notifications.test.ts` |  |
+| `REL-013` | Delivery states | published | partial | `tests/base/release-custody.test.ts` | An out-of-order provider event never moving a delivery backward and never counting a result twice has no passing assertion. |
+| `NOTIFY-001` | Requester updates | published | partial | `tests/base/notifications.test.ts` | Notifying voters on vote-subscription boards (NOTIFY-008) as followers has no passing assertion; the subscribed author's notice is asserted. |
 | `NOTIFY-002` | Preferences, timing, and unsubscribe | published | done | `tests/base/notifications.test.ts` |  |
 | `NOTIFY-003` | Decision review | published | done | `tests/base/penny-decisions.test.ts` |  |
 | `NOTIFY-004` | No mail loops | published | done | `src/core/features/notifications/delivery.ts`; `tests/base/notifications.test.ts` |  |
@@ -3174,10 +3174,10 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `DATA-002` | Public/private boundary | published | done | `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts` |  |
 | `DATA-003` | Erasure outranks history | published | done | `tests/base/penny-erasure.test.ts` |  |
 | `DATA-004` | Custom fields | published | done | `tests/browser/operator-completeness-fields.mjs`; `tests/browser/operator-pages.mjs` |  |
-| `LEARN-001` | Permitted originals | published | done | `tests/base/learning-stage2.test.ts` |  |
-| `LEARN-002` | Contestable learning | published | done | `tests/base/learning-stage2.test.ts` |  |
-| `LEARN-003` | Accountable pre-action choice | published | done | `tests/base/learning-stage3.test.ts` |  |
-| `LEARN-004` | Bounded recurring work | published | done | `tests/base/learning-stage3.test.ts` |  |
+| `LEARN-001` | Permitted originals | published | partial | `tests/base/learning-stage2.test.ts` | The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted. |
+| `LEARN-002` | Contestable learning | published | partial | `tests/base/learning-stage2.test.ts` | Every option carrying the DEC-003 dimensions computed from originals, invalidation by native or source corrections with versioned operator contests, and the absence of automatic ranking, customer contact or publication have no passing assertion in this clause's evidence; validated spans, the clarification and the no-build option are asserted. |
+| `LEARN-003` | Accountable pre-action choice | published | partial | `tests/base/learning-stage3.test.ts` | The committed snapshot retaining the interpretation, original evidence, compared options, owner and full predeclared protocol, and missing protocol fields as explicit nulls that prevent commitment, have no passing assertion in this clause's evidence; commitment and its attributed audit are asserted. |
+| `LEARN-004` | Bounded recurring work | published | partial | `tests/base/learning-stage3.test.ts` | Expiry, budget, correction-version and erasure-epoch checks before external work and in the result transaction, the absence of any implicit contact, production or publication effect, and interrupted or ambiguous calls keeping their uncertainty and reserved budget without retry have no passing assertion in this clause's evidence; durable runs, unchanged-input deduplication, in-flight pause and revoke, and pause, resume, revoke and disconnect are asserted. |
 | `LEARN-005` | Privacy closure | published | done | `tests/base/learning-stage3.test.ts` |  |
 | `LEARN-006` | Configuration and proof boundary | published | done | `tests/base/upgrade.test.ts`; `tests/base/learning-stage2.test.ts` |  |
 | `IMP-001` | Saved records | published | done | `tests/base/feedback-import.test.ts` |  |
@@ -3189,7 +3189,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `IMP-007` | Move-in receipt | published | done | `tests/base/feedback-import.test.ts`; `tests/base/feedback-import-uservoice.test.ts` |  |
 | `IMP-008` | UserVoice saved source | published | done | `tests/base/feedback-import-uservoice.test.ts` |  |
 | `OWN-001` | Signed first owner | published | done | `tests/base/owner-claim.test.ts` |  |
-| `EDIT-001` | Owner editor | published | done | `tests/base/editor-admission.test.ts` |  |
+| `EDIT-001` | Owner editor | published | partial | `tests/base/editor-admission.test.ts` | Compiled data-only edits applying after the destination hydrates with native navigation and privacy preserved, and the management service's own admission of its owner and frame origin, have no passing assertion; the short owner-only lease and the refusal of other operators and foreign origins are asserted. |
 | `API-001` | Scoped keys | published | done | `tests/base/integration-api.test.ts` |  |
 | `API-002` | Current custody | published | done | `tests/base/integration-api.test.ts` |  |
 | `API-003` | Native publication | published | done | `tests/base/integration-api.test.ts` |  |
