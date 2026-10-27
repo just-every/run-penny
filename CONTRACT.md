@@ -810,7 +810,7 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 **Acceptance.**
 1. Recipient lists, other requesters, account context, commercial impact, decision rationale, confidence, and declined bets never appear in either.
-2. Release email carries the owner's brand header (INT-007), sender identity (NOTIFY-013) and postal address (NOTIFY-014).
+2. Release email carries the owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014).
 
 #### REL-006 — Acceptance and retry
 
@@ -1525,7 +1525,7 @@ commit together.
 
 *Tier:* Core
 
-**Requirement.** A JavaScript snippet and npm package embed Penny in the customer's own product as a launcher, modal or side panel: identified users submit, search, vote, comment and follow without leaving the product, and the current page URL and any metadata the host passes are attached as private context. It loads only from the installation's origin, sets no third-party cookie, follows the board's moderation setting (REQ-003, REQ-033) so an identified user's post on an auto-publish board shows at once, keeps the portal's privacy, and shows the owner's brand (INT-007) in the host's colors or the brand accent, as the owner chooses.
+**Requirement.** A JavaScript snippet and npm package embed Penny in the customer's own product as a launcher, modal or side panel: identified users submit, search, vote, comment and follow without leaving the product, and the current page URL and any metadata the host passes are attached as private context. It loads only from the installation's origin, sets no third-party cookie, follows the board's moderation setting (REQ-003, REQ-033) so an identified user's post on an auto-publish board shows at once, keeps the portal's privacy, and shows the owner's brand (INT-008) in the host's colors or the brand accent, as the owner chooses.
 
 **Acceptance.** A browser test on a fixture host page at both widths:
 1. An identified user submits, votes and follows, and on an auto-publish board sees their post listed at once.
@@ -2083,7 +2083,7 @@ commit together.
 
 **Acceptance.**
 1. A custom status mapped to Under review shows Under review in every public payload and the custom name only to operators, and shows its own name publicly once the owner chooses so.
-2. A Canny fixture's custom status names arrive as internal statuses each mapped to the public status the owner chose in the migration preview (MIG-001).
+2. A Canny fixture's custom status names arrive as internal statuses each mapped to the public status the owner chose in the migration preview (MIG-008).
 
 #### PRIO-003 — Prioritization views and formulas
 
@@ -3156,7 +3156,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REL-002` | Publication | published | done | `tests/browser/loopjourney-release.mjs` |  |
 | `REL-003` | Published wording | published | done | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |  |
 | `REL-004` | Recipient eligibility and snapshot | published | done | `tests/base/release-custody.test.ts` |  |
-| `REL-005` | Customer-safe delivery | published | partial | `tests/browser/loopjourney-release.mjs` | The owner's brand header (INT-007), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted. |
+| `REL-005` | Customer-safe delivery | published | partial | `tests/browser/loopjourney-release.mjs` | The owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted. |
 | `REL-006` | Acceptance and retry | published | done | `tests/base/notifications.test.ts`; `tests/base/release-custody.test.ts` |  |
 | `REL-007` | Idempotent delivery and provider events | published | partial | `tests/base/release-custody.test.ts` | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression, so its delivery key is correlation only (RL-3). |
 | `REL-008` | Outcome response | published | done | `tests/base/penny-releases.test.ts` |  |
