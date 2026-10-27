@@ -327,9 +327,11 @@
       ]
     },
     "WIDGET-008": {
-      "how": "kept",
+      "how": "split",
       "to": [
-        "WIDGET-008"
+        "WIDGET-008",
+        "WIDGET-009",
+        "WIDGET-010"
       ]
     },
     "AI-001": {
@@ -393,9 +395,10 @@
       ]
     },
     "AI-011": {
-      "how": "kept",
+      "how": "split",
       "to": [
-        "AI-011"
+        "AI-011",
+        "AI-012"
       ]
     },
     "SEG-001": {
@@ -663,9 +666,11 @@
       ]
     },
     "REQ-038": {
-      "how": "kept",
+      "how": "split",
       "to": [
-        "REQ-038"
+        "REQ-038",
+        "REQ-041",
+        "REQ-042"
       ]
     },
     "REQ-039": {
@@ -675,9 +680,10 @@
       ]
     },
     "REQ-040": {
-      "how": "kept",
+      "how": "split",
       "to": [
-        "REQ-040"
+        "REQ-040",
+        "REQ-043"
       ]
     },
     "TRIAGE-001": {
@@ -1125,9 +1131,10 @@
       ]
     },
     "NOTIFY-013": {
-      "how": "kept",
+      "how": "split",
       "to": [
-        "NOTIFY-013"
+        "NOTIFY-013",
+        "NOTIFY-014"
       ]
     },
     "MEAS-001": {
@@ -1293,9 +1300,13 @@
       ]
     },
     "MIG-001": {
-      "how": "kept",
+      "how": "split",
       "to": [
-        "MIG-001"
+        "MIG-001",
+        "MIG-008",
+        "MIG-009",
+        "MIG-010",
+        "MIG-011"
       ]
     },
     "MIG-002": {
@@ -1401,9 +1412,11 @@
       ]
     },
     "INT-007": {
-      "how": "kept",
+      "how": "split",
       "to": [
-        "INT-007"
+        "INT-007",
+        "INT-008",
+        "INT-009"
       ]
     },
     "MOB-001": {

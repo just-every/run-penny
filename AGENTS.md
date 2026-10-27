@@ -173,6 +173,17 @@ hosted Cron/inbox delivery, registry admission and public release separate.
 SendGrid REL-007 provider duplicate suppression remains open (Resend receives the
 delivery key as its idempotency key); ambiguous sends are never replayed.
 
+CONTRACT.md is the only acceptance text and status source and follows the RER
+contract standard. ACCEPTANCE.md, docs/CLAIMS.md and the Status summary rows are
+generated from it; never edit them by hand. After any CONTRACT.md change, run the
+generator, then its check, and relock last:
+
+Lander-Regenerate: node src/base/contract-docs.mjs write
+Lander-Regenerate: node scripts/edition-authoring/cli.mjs lock
+
+Rulings go to RULINGS.md, history and run receipts to CHANGELOG.md, and contract
+mechanism to docs/contract-mechanism.md.
+
 Record clause changes, migration/reconfiguration/recovery steps and Unreleased
 changes accurately. Keep the version consistent across package, seed and release metadata. Later
 releases use the maintained Base release tool and a reviewed export; never

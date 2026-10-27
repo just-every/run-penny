@@ -16,10 +16,10 @@
     ]}
   ],
   "githubOnly": [
-    { "source": "docs/CLAIMS.md", "reason": "Bounded implementation claims and published contract wording overrides, for maintainers" },
+    { "source": "docs/CLAIMS.md", "reason": "Homepage claims with their status, generated from CONTRACT.md, for maintainers" },
     { "source": "HOMEPAGE-VARIANTS.md", "reason": "Shared Base installed-home and run-site adoption contract for maintainers" },
     { "source": "RELEASE.md", "reason": "How Penny's versions are released, for maintainers" },
-    { "source": "ACCEPTANCE.md", "reason": "Release acceptance evidence mapped to contract clauses, for maintainers" },
+    { "source": "ACCEPTANCE.md", "reason": "The contract read by tier with its evidence and gaps, generated from CONTRACT.md, for maintainers" },
     { "source": "AGENTS.consumer.md", "reason": "Instructions for coding agents working in an owner's copy of the source" },
     { "source": "AGENTS.md", "reason": "Contributor and coding-agent rules for building Penny as a seed" },
     { "source": "BASELINE.md", "reason": "Shared security, privacy and operations requirement clauses, for maintainers" },
@@ -64,6 +64,9 @@
     { "source": "docs/user-journeys.md", "reason": "Proposed future experience, not current capability" },
     { "source": "visual/README.md", "reason": "Index of recorded UI screenshots used as visual evidence, for maintainers" },
     { "source": "docs/TRIAL.md", "reason": "Reversible local Canny saved-export trial with a private operator comparison worksheet" },
-    { "source": "docs/USERVOICE-TRIAL.md", "reason": "Reversible local UserVoice saved-export trial, identical to OWNER-STEPS.md, with a private operator comparison worksheet" }
+    { "source": "docs/USERVOICE-TRIAL.md", "reason": "Reversible local UserVoice saved-export trial, identical to OWNER-STEPS.md, with a private operator comparison worksheet" },
+    { "source": "RULINGS.md", "reason": "Rulings that shape contract clauses, with their dates and who ruled, for maintainers" },
+    { "source": "docs/contract-mechanism.md", "reason": "Formats, timing and accounting rules behind contract clauses, for maintainers" },
+    { "source": "docs/verify.md", "reason": "The hand-written acceptance record kept from before ACCEPTANCE.md was generated, for maintainers" }
   ]
 }
