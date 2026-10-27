@@ -16,7 +16,16 @@ curl -fsSL https://runeditrun.com/install.sh | sh -s -- dev just-every/run-penny
 
 Already have Node 22 or later? `npx -y @runeditrun/rer dev just-every/run-penny` does the same. If the installer prints a line that puts `rer` on your PATH, run that line too. To start it again later, run the same line from the same folder, or `cd run-penny && rer dev`.
 
-`rer dev` installs the locked dependencies, sets up a default local owner (a `.test` address that never receives mail) with an empty workspace and no sample records, and starts Penny on the first free port from 8787. In a terminal it stays in the foreground; from a script it returns once Penny is ready and keeps it running until `rer dev --stop`. To be the owner under your own address, fetch the checkout without starting it (`npx -y @runeditrun/rer install just-every/run-penny`), then run `rer setup --owner-email you@example.com` once from the `run-penny` folder before the first `rer dev`. To set Penny up without starting it, use `setup` in place of `dev`.
+`rer dev` installs the locked dependencies, sets up a default local owner (a `.test` address that never receives mail) with an empty workspace and no sample records, and starts Penny on the first free port from 8787. In a terminal it stays in the foreground; from a script it returns once Penny is ready and keeps it running until `rer dev --stop`.
+
+From a fresh Git clone, open the `run-penny` folder. With Node 22 or newer, these two commands install everything and start Penny under your own owner address, without a global `rer` command:
+
+```bash
+npx -y @runeditrun/rer setup --owner-email you@example.com
+npx -y @runeditrun/rer dev
+```
+
+Replace the example email with yours. Repeat the same command if setup or start is interrupted; it preserves your saved owner and data. If rer reports a problem obtaining the pinned Node runtime, follow its printed recovery command first. To set up from outside a clone without starting it, use `npx -y @runeditrun/rer setup just-every/run-penny --owner-email you@example.com`.
 
 A few things to know about setup:
 
@@ -92,7 +101,7 @@ rer deploy
 npm run deploy:health
 ```
 
-The dry run builds and validates locally, then reads the target account’s subdomain and Worker secret bindings using your Cloudflare credentials. It reports missing inputs without uploading or changing any provider resource. Deploy builds first, then creates or reuses the Worker, D1 database, R2 bucket and queue, applies the database migrations, uploads the build and checks it. Deploy health reads the deployed Worker's identity and `/health`, which confirms the database, file bucket and queue can be reached; it does not prove that mail is working. Running deploy again reuses the saved resources and secrets and rotates nothing. Use `pnpm run deploy` rather than bare `pnpm deploy`, which is a different built-in pnpm command.
+Without Cloudflare account inputs, the dry run stops before building or making a provider request and lists what each missing input is for. With those inputs, it builds and validates locally, then reads the target account’s subdomain and Worker secret bindings. It never uploads or changes a provider resource. Deploy builds first, then creates or reuses the Worker, D1 database, R2 bucket and queue, applies the database migrations, uploads the build and checks it. Deploy health reads the deployed Worker's identity and `/health`, which confirms the database, file bucket and queue can be reached; it does not prove that mail is working. Running deploy again reuses the saved resources and secrets and rotates nothing. Use `pnpm run deploy` rather than bare `pnpm deploy`, which is a different built-in pnpm command.
 
 Status and release publications start the Queue mail consumer immediately; they do not wait for the first Cron tick. The minute Cron remains a recovery backstop. The deploy prints a notice after it registers that schedule: Cloudflare may take up to about two hours to start the first scheduled run on some accounts, because a new schedule only starts at the account's next provider refresh. Judge delivery by Penny's own rows, not by Cloudflare's scheduled-analytics (which can list a new Worker as `__unknown__`): `notification_batches` holds each gathered request delivery and its state and any failure reason, whether handled by Queue or Cron.
 

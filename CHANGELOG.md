@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Document the fresh-clone setup and start commands without requiring a global rer or an extra install. Refused local data placement now names the recovery command. Hosted preflight lists missing Cloudflare inputs and their purposes before building or contacting the provider; deployment helpers print recovery guidance instead of internal codes. Requester and operator action failures explain blocked access, expired sessions and retry steps without showing API identifiers.
+
 - Keep phone redaction from treating a numeric prefix inside a generated identifier as a phone number, which could refuse learning capture.
 
 - Prepare the hosted listing with rer 0.2.80, refreshed Base source custody, one root packaging policy and a build-derived deployment specification with a freshness check. Deployment documentation labels required mail inputs and private credentials; environment files are ignored.

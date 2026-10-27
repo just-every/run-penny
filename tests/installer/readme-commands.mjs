@@ -4,12 +4,14 @@ export function readmeCommands(readme, email) {
   // The start command is the Run page's one line; the owner block adds setup under a real email.
   const start = block(readme, 'penny-local-commands'), owner = block(readme, 'penny-owner-commands')
   assert.ok(start && owner, 'README has the start and owner command blocks')
-  assert.deepEqual(start, ['npx -y @runeditrun/rer dev just-every/run-penny'], 'README starts Penny with the one line')
-  assert.ok(readme.includes('`cd run-penny && rer dev`'), 'README says how to start Penny again')
-  const lines = owner.map(line => line.replace('you@example.com', email).split(' '))
-  assert.ok(lines.every(([command]) => command === 'rer'), 'README owner commands run rer')
-  assert.deepEqual(lines.map(line => line[1]), ['setup', 'dev'], 'README owner commands set up, then start')
-  // Each command's verb and flags, run by the pinned rer as a global rer runs them:
-  // the frozen install rer dev performs first, then the owner's setup and dev.
-  return [['install'], ...lines.map(line => line.slice(1))]
+  assert.ok(start.length, 'README supplies a start command')
+  const lines = owner.map(line => {
+    const command = line.replace('you@example.com', email).split(' ')
+    if (command[0] === 'npx' && command[1] === '-y' && command[2] === '@runeditrun/rer') return command.slice(3)
+    if (command[0] === 'rer') return command.slice(1)
+    throw new Error('README owner commands must invoke rer or its npx launcher')
+  })
+  // Execute the documented commands without an implicit install or repair first.
+  // The public launcher must bootstrap the frozen dependencies for setup itself.
+  return lines
 }

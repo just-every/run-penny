@@ -22,9 +22,8 @@ export function localState(root, env = process.env) {
   root = resolve(root)
   const state = join(root, '.wrangler/state')
   const sibling = join(dirname(root), `.penny-local-state-${basename(root)}`)
-  if (existsSync(sibling) || (env.PENNY_LOCAL_STATE && resolve(env.PENNY_LOCAL_STATE) !== state)) {
-    throw new Error('Ambiguous Penny state: local data lives only in .wrangler/state, and another store is present. Penny never reads, moves or deletes it; see "Local state placement" in OPERATIONS.md before setup, dev, reset or transfer.')
-  }
+  if (existsSync(sibling)) throw new Error('Penny found another local data store beside this checkout. Both stores were kept. Follow "Local state placement" in OPERATIONS.md to back up and place the store you want to use, then run npx -y @runeditrun/rer setup.')
+  if (env.PENNY_LOCAL_STATE && resolve(env.PENNY_LOCAL_STATE) !== state) throw new Error('Penny cannot start with a local data path outside this checkout. No data was changed. To use this checkout’s local data, run: unset PENNY_LOCAL_STATE && npx -y @runeditrun/rer setup. To keep the other store, first follow "Local state placement" in OPERATIONS.md.')
   return state
 }
 export async function prepareLocal(context) {

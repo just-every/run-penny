@@ -157,6 +157,10 @@ npm run deploy:health -- --environment staging
 Dry runs build and validate the actual declaration and artifact locally, print
 the target resource names and private paths, and read the target account’s
 subdomain and Worker secret bindings using the supplied Cloudflare credentials.
+Without account inputs, Penny stops before the build or provider reads and
+lists the missing inputs and their purposes. The standalone deployment and
+health helpers also explain missing configuration in plain words and name the
+next command, without printing internal failure codes.
 They make no provider write and create no deployment credentials or state. For a real deploy, remove `--dry-run` only
 with authorization to change the chosen account. Health selects the same
 environment and never writes or rotates its saved credentials.

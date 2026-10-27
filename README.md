@@ -65,28 +65,32 @@ npx -y @runeditrun/rer dev just-every/run-penny
 It needs Node 22 or newer. Without Node, the installer on
 [run-penny.com/run](https://run-penny.com/run) brings its own:
 `curl -fsSL https://runeditrun.com/install.sh | sh -s -- dev just-every/run-penny`.
-To set Penny up without starting it, use `npx -y @runeditrun/rer setup just-every/run-penny`.
+To set Penny up without starting it, use `npx -y @runeditrun/rer setup just-every/run-penny --owner-email you@example.com`.
 
 `rer dev` installs the locked dependencies, sets up a local owner
 (the email you gave `rer setup`, or a default `.test` address) with an empty workspace, starts Penny and prints a link
 that opens it signed in. Penny pins `@runeditrun/rer` in `package.json` and its
-lockfile (currently 0.2.37), and the global `rer` always runs that pinned copy. The first start
+lockfile, and the global `rer` always runs that pinned copy. The first start
 takes a few minutes.
 
-To be the owner under your own email address instead, fetch the checkout without
-starting it (`npx -y @runeditrun/rer install just-every/run-penny`), then run setup once
-from the `run-penny` folder before the first `rer dev`:
+From a fresh Git clone, open its `run-penny` folder and run these two commands
+to be the owner under your own email address. They install dependencies, set up
+the workspace and start it; they need Node 22 or newer and do not need a global
+`rer` command. Replace the example email with yours:
 
 <!-- penny-owner-commands -->
 ```bash
-rer setup --owner-email you@example.com
-rer dev
+npx -y @runeditrun/rer setup --owner-email you@example.com
+npx -y @runeditrun/rer dev
 ```
 <!-- /penny-owner-commands -->
 
 `setup` builds, applies every migration, saves private settings (mode 0600),
 claims the owner and exits; a repeat keeps the owner, the data, the saved origin
 and the private settings. Its `--port` (first run only) picks the address.
+If setup or start is interrupted, repeat the same command from this folder.
+If the command reports a problem obtaining the pinned Node runtime, follow its
+printed recovery command first; that runtime is maintained by rer.
 
 `rer dev` serves Penny on the first free port from 8787 and prints `RER_READY`,
 `RER_SIGNED_IN` with the owner's email, and `RER_OPEN`, a link with this

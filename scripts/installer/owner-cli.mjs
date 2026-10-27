@@ -1,7 +1,8 @@
 import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
-import { main as nativeOwner, report } from '@runeditrun/rer/modules/deploy-kit/owner-cli'
+import { main as nativeOwner } from '@runeditrun/rer/modules/deploy-kit/owner-cli'
+import { ownerFailureMessage, deploymentCheckCommand } from './owner-diagnostics.mjs'
 import { ownerSettings } from './owner-settings.mjs'
 import { ownerDeclaration } from './owner-environment.mjs'
 import { createRedaction, credentialValues } from '@runeditrun/rer/redaction'
@@ -46,5 +47,5 @@ export async function main(argv = process.argv.slice(2), env = process.env, { cw
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   try { const { setupToken, ...result } = await main(); console.log(redaction.redact(JSON.stringify(result))) }
-  catch (error) { console.error(redaction.redact(JSON.stringify(error.inputs ? { ok: false, code: error.message, inputs: error.inputs } : report(error)))); process.exitCode = 1 }
+  catch (error) { console.error(redaction.redact(ownerFailureMessage(error, process.argv[2] === 'health' ? 'npm run deploy:health' : deploymentCheckCommand()))); process.exitCode = 1 }
 }

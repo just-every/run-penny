@@ -3,10 +3,13 @@ import { ownerDeclaration } from './owner-environment.mjs'
 import { main as owner } from './owner-cli.mjs'
 import { ownerPlan, localOnlyBinding } from '@runeditrun/rer/modules/deploy-kit/owner'
 import { packageBuild } from '@runeditrun/rer/modules/deploy-kit/prepare'
-import { refuse } from '@runeditrun/rer/errors'
+import { refuse, missing } from '@runeditrun/rer/errors'
+import { missingOwnerInputs, deploymentCheckCommand } from './owner-diagnostics.mjs'
 export async function deployPenny(context) {
   const { commandAdapter } = await import('./local.mjs')
   const target = await ownerDeclaration(context.root, context.options.environment)
+  const absent = ['CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_API_TOKEN'].filter(name => !process.env[name]?.trim())
+  if (absent.length) throw missing(missingOwnerInputs(absent, deploymentCheckCommand(context.options)))
   const local = localOnlyBinding(target.declaration, context.localOnlyKeys)
   if (local) throw refuse(`deploy.json names the local-only key ${local} as a deploy binding or secret. Remove it; local dev keys never reach a deployment.`)
   if (!context.options.dryRun) await ownerConfiguration(context.root, process.env, target.environment)

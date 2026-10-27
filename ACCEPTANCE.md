@@ -2,6 +2,20 @@
 
 CONTRACT.md is the target contract. [Target contract acceptance](#target-contract-acceptance-18-october-2026) at the end lists every clause's acceptance evidence and current status; the sections before it record the first release's bounded receipts.
 
+## Start and refusal guidance
+
+The README's fresh-clone owner path uses npx setup and dev, with no implicit
+install before setup. `tests/installer/readme.test.mjs` exercises that path and
+first-run admission at 1440; its runtime helper first refuses an external local
+data path without creating settings, then continues with the normal checkout.
+`tests/installer/deploy-dry-run.test.mjs` refuses missing Cloudflare inputs
+before building or making provider requests, then retains the real artifact
+and read-only provider-edge journey. `tests/browser/requester-blocking.mjs`
+extends the existing access journey with a blocked customer's mounted action
+and an operator session that ends after confirmation opens. Both refusals name
+the next step instead of showing an API code. These are bounded improvements;
+no clause status or hosted-provider claim changes.
+
 ## First release: what a person can do
 
 1. Install with `rer`, run `rer setup` and `rer dev`, and land signed in as the owner at **Finish setup**.

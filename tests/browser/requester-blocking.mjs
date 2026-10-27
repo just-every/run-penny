@@ -15,6 +15,9 @@ await moderationJourney('requester-blocking',async({origin,operator,json,send,pe
  }
  const people=await json('/api/operator/requesters?q=eli',undefined,operator),id=people.items.find(person=>person.displayName==='Eli Wong').id
  const owner=await pageFor({cookie:operator.Cookie}),visitor=await pageFor()
+ const participating=await pageFor({token:eli.token})
+ await participating.goto(origin+`/portal/feedback/${shared.slug}`,{waitUntil:'networkidle'})
+ await participating.getByRole('button',{name:'Remove vote',exact:true}).waitFor()
  await owner.goto(origin+'/app/customers?directory=requesters&q=Eli',{waitUntil:'networkidle'})
  const card=owner.locator(`#requesters-${id}`)
  await card.getByText('Active',{exact:true}).waitFor()
@@ -27,6 +30,13 @@ await moderationJourney('requester-blocking',async({origin,operator,json,send,pe
  await card.getByRole('button',{name:'Confirm block requester',exact:true}).click()
  await card.getByText('Blocked',{exact:true}).waitFor()
  await capture(owner,'requester-blocked',card)
+ // The requester already has this page open when access is revoked. The real
+ // refused mutation must explain the cause and next step without exposing its code.
+ await participating.getByRole('button',{name:'Remove vote',exact:true}).click()
+ const refusal=participating.getByText(/access is blocked.*contact the workspace owner/i)
+ await refusal.waitFor()
+ assert.doesNotMatch(await participating.locator('body').innerText(),/requester_blocked|requester blocked/)
+ await capture(participating,'requester-action-refused')
  await send(`/api/public/requests/${shared.slug}/vote`,{},identity,'POST',403)
  const missing=await visitor.goto(origin+`/portal/feedback/${own.slug}`,{waitUntil:'networkidle'})
  assert.equal(missing.status(),404)
@@ -49,4 +59,13 @@ await moderationJourney('requester-blocking',async({origin,operator,json,send,pe
  assert.equal((await json(`/api/public/requests/${shared.slug}`)).voteCount,2)
  await capture(visitor,'contributions-restored')
  await send(`/api/public/requests/${shared.slug}/follow`,{},identity,'POST',204)
+ // A session can expire after the confirmation opens. Keep the action refused
+ // and tell the operator to sign in again instead of displaying "Action failed".
+ await owner.reload({waitUntil:'networkidle'})
+ await card.getByRole('button',{name:'Block requester',exact:true}).click()
+ await owner.context().clearCookies()
+ await card.getByRole('button',{name:'Confirm block requester',exact:true}).click()
+ await card.getByRole('alert').filter({hasText:/session.*sign in again/i}).waitFor()
+ await capture(owner,'operator-session-ended',card)
+ await send(`/api/public/requests/${shared.slug}/vote`,{},identity,'POST',204)
 })

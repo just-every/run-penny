@@ -13,7 +13,7 @@ const __rerTestEntryPnpm = (program, args) => {
  return at < 0 ? [process.execPath, launch] : [program, [...args.slice(0, at), process.execPath, ...launch]];
 };
 import assert from 'node:assert/strict'
-import { execFileSync, spawn } from 'node:child_process'
+import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import { chmod, mkdir, open, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { parseEnv } from 'node:util'
@@ -108,11 +108,20 @@ export async function freshLocalRuntime(viewport, output) {
   try {
     const source = resolve(process.env.PENNY_SOURCE_ROOT ?? '.')
     execFileSync('git', ['clone', '--quiet', '--no-local', '--', source, root], { stdio: 'pipe' })
+    for (const field of ['user.name', 'user.email']) {
+      const identity = spawnSync('git', ['config', field], { cwd: source, encoding: 'utf8' })
+      if (identity.status === 0) execFileSync('git', ['config', field, identity.stdout.trim()], { cwd: root })
+    }
     const readme = await readFile(join(root, 'README.md'), 'utf8')
     const literal = readmeCommands(readme, 'owner@penny.invalid')
-    await run(root, rer(literal[0]), env)
     const port = await freshLocalPort()
-    const setupCommand = rer([...literal[1], '--port', String(port)])
+    const setupCommand = rer([...literal[0], '--port', String(port)])
+    const misplaced = spawnSync(process.execPath, setupCommand, { cwd: root, env: { ...env, PENNY_LOCAL_STATE: join(artifacts, 'other-data') }, encoding: 'utf8', timeout: 120000 })
+    assert.equal(misplaced.status, 4, 'Setup refuses an external local data path')
+    assert.match(misplaced.stderr, /No data was changed.*unset PENNY_LOCAL_STATE && npx -y @runeditrun\/rer setup/)
+    assert.doesNotMatch(misplaced.stderr, /\n\s+at /, 'Refusal has no stack trace')
+    assert.equal(await stat(join(root, '.dev.vars')).catch(() => null), null, 'Refusal creates no private settings')
+    // The same public setup command now continues with the normal checkout path.
     const setup = await run(root, setupCommand, env, { diagnosticId: `${viewport.width}-initial` })
     await mkdir(output, { recursive: true })
     await writeFile(join(output, `setup-${viewport.width}.log`), setup, { mode: 0o600 })
@@ -141,7 +150,7 @@ export async function freshLocalRuntime(viewport, output) {
     assert.equal(db.prepare('SELECT count(*) n FROM oa_operators').get().n, 1, '[G.1] setup provisions one Base operator')
     db.close()
     await writeFile(join(output, `empty-store-${viewport.width}.json`), JSON.stringify(counts, null, 2)+'\n')
-    const repeated = await run(root, rer(literal[1]), env, { diagnosticId: `${viewport.width}-repeat` })
+    const repeated = await run(root, rer(literal[0]), env, { diagnosticId: `${viewport.width}-repeat` })
     assert.match(repeated, /RER_SETUP_READY/, '[G.1] setup resumes the existing installation')
     assert.equal(repeated.match(/RER_SETUP_READY (http:\/\/(?:localhost|127\.0\.0\.1):\d+)/)?.[1], origin, '[G.1/G.4] repeat setup retains the selected origin without another port input')
     assert.ok((await readFile(join(root, '.dev.vars'), 'utf8')) === vars, '[G.1] repeat retains byte-identical private settings')
@@ -154,7 +163,7 @@ export async function freshLocalRuntime(viewport, output) {
     await waitForLocalCapacity()
     // Register the generated admission key before the child can emit RER_OPEN.
     const secrets = [...vars.matchAll(/^(?:AUTH_SECRET|SESSION_SECRET|SETUP_TOKEN)=(.+)$/gm)].map(match => match[1]).concat(scope.token, await readDevKey(root))
-    server = spawn('nice', ['-n', '15', process.execPath, ...rer(literal[2])], { cwd: root, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] })
+    server = spawn('nice', ['-n', '15', process.execPath, ...rer(literal[1])], { cwd: root, env, detached: true, stdio: ['ignore', 'pipe', 'pipe'] })
     const save = captureLocalServer(server, { output, secrets, label: `${env.PENNY_LOCAL_STATE ? 'restored' : 'initial'}-${viewport.width}` })
     saveDiagnostics=save
     await observeLocalServer(server, { origin, save, observe: async initial => {
@@ -162,7 +171,7 @@ export async function freshLocalRuntime(viewport, output) {
     } })
     }
     await startServer()
-    return { root, origin, close, saveDiagnostics, stop: stopServer, start: startServer, run: args => run(root,args,env), runNode: args => run(root,args,env,{ stdoutOnly: true }), commands: literal.map((args, index) => ['node', ...(index === 1 ? setupCommand : args)].join(' ')) }
+    return { root, origin, close, saveDiagnostics, stop: stopServer, start: startServer, run: args => run(root,args,env), runNode: args => run(root,args,env,{ stdoutOnly: true }), commands: literal.map((args, index) => ['node', ...(index === 0 ? setupCommand : args)].join(' ')) }
   } catch (error) {
     try { await close() } catch (cleanup) { throw new AggregateError([error,cleanup], 'Fresh local runtime failed and cleanup also failed.') }
     throw error

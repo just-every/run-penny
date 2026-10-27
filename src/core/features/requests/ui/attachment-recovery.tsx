@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { fieldLabelClass, primaryButtonClass } from '@/core/ui/app/classes'
 import { fieldClass } from '@/core/features/auth/client-mutations'
 import { checkboxClass, checkRowClass, subformClass } from './form-classes'
+import { actionMessage } from '@/core/shared/action-message'
 
 export function AttachmentRecovery({upload,onRecovered}:{upload:{id:string;original_filename:string;writing:number};onRecovered:()=>void}) {
  const [busy,setBusy]=useState(false),[message,setMessage]=useState(''),[released,setReleased]=useState(false)
@@ -16,7 +17,7 @@ export function AttachmentRecovery({upload,onRecovered}:{upload:{id:string;origi
     setReleased(true)
    }
    const response=await fetch(`/api/operator/attachment-uploads/${upload.id}/recover`,{method:'POST',...(hasFile?{body:uploadData}:{headers:{'Content-Type':'application/json'},body:'{}'})})
-   if(!response.ok){const result=await response.json() as {error?:string};throw new Error(result.error?.replaceAll('_',' ')??'Recovery failed')}
+   if(!response.ok)throw new Error(actionMessage(await response.json().catch(()=>null),response.status))
    onRecovered()
   }catch(error){setMessage(error instanceof Error?error.message:'Recovery failed')}finally{setBusy(false)}
  }}><p className="font-semibold text-penny-ink">Unfinished upload: {upload.original_filename}</p>

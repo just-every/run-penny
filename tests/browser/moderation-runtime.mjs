@@ -3,13 +3,14 @@ import {mkdir,readFile} from 'node:fs/promises'
 import {resolve,join} from 'node:path'
 import {chromium} from '@playwright/test'
 import {startBrowserRuntime} from './base-runtime.mjs'
+import {browserOptions} from './browser-options.mjs'
 
 export async function moderationJourney(name,journey){
  const output=resolve(process.env.PENNY_EVIDENCE??`../evidence/${name}`)
  assert.ok(!output.startsWith(resolve('.')+'/'))
  await mkdir(output,{recursive:true})
  const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
- const browser=await chromium.launch({headless:true,args:['--use-mock-keychain','--password-store=basic']})
+ const browser=await chromium.launch(browserOptions())
  // Clause behavior runs once; route-review retains the shared 390px route smoke.
  try{const width=1440;{
   const runtime=await startBrowserRuntime(),contexts=[],errors=[]

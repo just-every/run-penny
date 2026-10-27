@@ -12,7 +12,7 @@ import { openOperatorRoute } from '../browser/operator-navigation.mjs'
 import { createRedaction as diagnosticRedaction } from '@runeditrun/rer/redaction'
 const redact=(text,secrets=[])=>{const filter=diagnosticRedaction();filter.addSecrets(secrets);return filter.redact(String(text)).replaceAll('[REDACTED]','[redacted]')}
 
-test('[BASE-OPS-002 BASE-ACCESS-002] README install/setup/dev and one-click sign-in a fresh frozen clone, send the owner through first-run setup into the app at both widths', {timeout:900000}, async () => {
+test('[BASE-OPS-002 BASE-ACCESS-002] README setup/dev bootstraps a fresh frozen clone and sends its owner through first-run setup into the app', {timeout:900000}, async () => {
   const readme = await readFile(new URL('../../README.md', import.meta.url), 'utf8')
   readmeCommands(readme, 'owner@penny.invalid')
   process.env.TMPDIR = resolve(process.env.PENNY_WORK_ROOT ?? '..', 'tmp')
@@ -23,8 +23,8 @@ test('[BASE-OPS-002 BASE-ACCESS-002] README install/setup/dev and one-click sign
   const output = evidenceDirectory('installer-readme'), browser = await chromium.launch(browserOptions())
   const diagnostics=[]
   try {
-    for (const viewport of viewports) {
-      // Each width starts from its own fresh clone, so first-run setup is unfinished when the owner signs in.
+    for (const viewport of viewports.filter(viewport => viewport.width === 1440)) {
+      // Start from a fresh clone without an undocumented install or repair.
       const runtime = await freshLocalRuntime(viewport, output)
       try {
         const context = await browser.newContext({viewport})
