@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 86 | 101 | 71 | 258 |
+| Core | 73 | 114 | 71 | 258 |
 | Agent surface | 0 | 0 | 8 | 8 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 86 | 101 | 81 | 268 |
+| Full target | 73 | 114 | 81 | 268 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -235,7 +235,7 @@ Core · published · **done**
 
 #### EVID-007 — Duplicate suggestions
 
-Core · published · **done** · Rules D-3
+Core · published · **partial** · Rules D-3
 
 **Requirement.** When an operator records evidence or a requester types a request title, Penny returns within 500ms up to 5 existing requests ranked by term overlap between the typed title and stored request titles and descriptions, and names the matched terms for each.
 
@@ -245,7 +245,7 @@ Core · published · **done** · Rules D-3
 3. Penny never links or merges without an explicit operator or requester action, or an auto-link or auto-merge rule an owner enabled (AI-002, AI-003).
 
 **Evidence.** `tests/base/penny-evidence.test.ts`
-**Gap.** None.
+**Gap.** Penny making no link or merge without an explicit operator or requester action or an owner-enabled auto rule has no passing assertion: the cited counts are taken after the suggestion calls and cover requests, evidence and content submissions, never evidence links or merges; published-only suggestions for a requester and deterministic lexical matching with no model configured are asserted.
 
 #### EVID-008 — Evidence attachments
 
@@ -299,7 +299,7 @@ Core · published · **done**
 
 #### REQ-002 — Requester identity
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Submitting, voting, commenting, following, subscribing, and recording an outcome each require either an email address verified under REQ-023 (by emailed link, or by Google or GitHub sign-in under REQ-039) or a host-signed identity under REQ-031 (from a parent frame, the widget, or WIDGET-008's sign-in redirect).
 
@@ -307,7 +307,7 @@ Core · published · **done**
 1. A portal response shows the requester's chosen display name and never their email address or account.
 
 **Evidence.** `tests/base/no-mail-identity.test.ts`
-**Gap.** None.
+**Gap.** The requester's chosen display name in a portal response has no passing assertion, and the check that no email address or account appears reads the public request list while it holds no published request, so it checks an empty list; submissions under a valid host-signed identity, with and without outbound mail, and the refusal of invalid or new host identities without mail are asserted.
 
 #### REQ-003 — Submission
 
@@ -452,7 +452,7 @@ Core · published · **partial**
 
 #### REQ-014 — Identity failure
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A host-signed identity is expired when its signed issue time is more than 24 hours old or more than 5 minutes in the future.
 
@@ -460,7 +460,7 @@ Core · published · **done**
 1. An identity that is expired, or whose signature does not verify, is rejected for every identity-required action, changes no data, and reveals no account or identity match; the visitor is offered email verification (REQ-023) instead.
 
 **Evidence.** `tests/base/host-identity.test.ts`
-**Gap.** None.
+**Gap.** The visitor being offered email verification (REQ-023) after a rejected identity has no passing assertion; the refusal of expired, future-dated and wrongly signed claims at the host-identity exchange with the identity-required error, no writes and no account or identity disclosure is asserted.
 
 #### REQ-015 — Status updates
 
@@ -614,7 +614,7 @@ Core · published · **partial**
 
 #### REQ-026 — Demand attribution
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** For any request, operators can see every current voter's display name, verified address, and linked account, and the vote total broken down by account. None of it appears in a portal response.
 
@@ -625,7 +625,7 @@ Core · published · **done**
 4. The operator demand payload holds exactly the three separate figures and no score, and the portal shows none of it.
 
 **Evidence.** `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs`
-**Gap.** None.
+**Gap.** The vote date in the private supporter view, and the first 50 supporters on expansion with Show more revealing 50 more at a time, have no passing assertion (the browser check clicks Show more until it is gone and counts only the full history); the separate vote, linked-evidence and distinct-account figures with no score, the supporter view's names, addresses, accounts, proxy marks and per-account totals, the complete history with no 100-person cap, and the portal showing none of it are asserted.
 
 #### REQ-027 — Portal embedding
 
@@ -704,7 +704,7 @@ Core · published · **partial**
 
 #### DEC-001 — States and queue
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A decision is draft until its brief has a question, an owner, at least one candidate bet, and at least one linked evidence item, at which point it is ready; committing makes it committed, and DEC-007 makes a committed decision review due. A question that is blank as [docs/contract-mechanism.md](docs/contract-mechanism.md#blank-decision-questions) defines it does not count.
 
@@ -712,7 +712,7 @@ Core · published · **done**
 1. The decision queue lists every decision in each state with its owner, last action, review date, and linked-evidence count, and a decision changes row rather than leaving the queue when its state changes.
 
 **Evidence.** `tests/base/decision-loop-commit.test.ts`
-**Gap.** None.
+**Gap.** The review date in the decision queue has no passing assertion; decisions in every state staying in the queue with their state and owner, and the last action and linked-evidence count, are asserted.
 
 #### DEC-002 — Brief
 
@@ -728,7 +728,7 @@ Core · published · **partial**
 
 #### DEC-003 — Comparable bets
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Every candidate bet in a brief shows the same dimensions: affected requesters and accounts, the count and most recent observed time of its supporting evidence, its contradicting evidence, urgency, delivery shape, and an observable success measure.
 
@@ -736,11 +736,11 @@ Core · published · **done**
 1. Penny stores and displays no combined score and no automatic ranking of the bets.
 
 **Evidence.** `tests/base/decision-loop-dimensions.test.ts`
-**Gap.** None.
+**Gap.** The absence of a stored or displayed combined score and of an automatic ranking has no passing assertion: the bet record and the stored snapshot are checked in a way that allows extra fields, and bets are looked up by id, so their order is unchecked; each bet's metrics holding exactly the five dimension figures is asserted.
 
 #### DEC-004 — Commitment
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Committing requires a selected bet, a rationale, an owner, a confidence level, and a review date, and committing a brief with fewer than two candidate bets additionally requires a recorded reason why no viable alternative exists.
 
@@ -749,7 +749,7 @@ Core · published · **done**
 2. *Policy: `decision.commitment.v1`; default: any operator may commit.*
 
 **Evidence.** `tests/base/decision-loop-commit.test.ts`
-**Gap.** None.
+**Gap.** The `decision.commitment.v1` default that any operator may commit has no passing assertion, since every cited commit runs as the owner; the recorded declined bets and the evidence snapshot of evidence IDs, evidence-version IDs and DEC-003 dimensions, with the evidence itself unchanged, are asserted.
 
 #### DEC-005 — Commitment effects
 
@@ -880,7 +880,7 @@ Core · published · **done**
 
 #### ROAD-007 — Status update draft
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Every status change of a roadmap item that carries an approval under ROAD-004, and every request decline under REQ-017, prepares a draft customer-safe update naming the new public status and the problem it addresses.
 
@@ -888,7 +888,7 @@ Core · published · **done**
 1. The draft carries no internal rationale, commercial context, declined bet, or outcome prompt, and is invisible on the portal until an operator publishes it.
 
 **Evidence.** `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs`
-**Gap.** None.
+**Gap.** The draft's absence of internal rationale, commercial context, declined bets and outcome prompts has no passing assertion in this clause's evidence, whose check of the draft allows extra fields, and no cited case reads the portal before the draft is published; a draft prepared for each approved status change with the safe title, problem and new public status, unpublished until an operator publishes it, and no draft for an unapproved item are asserted.
 
 #### ROAD-008 — Status update publication
 
@@ -1157,7 +1157,7 @@ Core · published · **done** · Cites BASE-DATA-001 · Register R-11
 
 #### DATA-002 — Public/private boundary
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** Operator-only data never travels in a public response, rendered or not.
 
@@ -1165,7 +1165,7 @@ Core · published · **done**
 1. No operator-only field name and no operator-only value appears anywhere in a public response payload, including in fields the portal does not render.
 
 **Evidence.** `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts`
-**Gap.** None.
+**Gap.** The absence of operator-only field names and values from a public payload has no passing assertion over a non-empty response: both cited checks read the public request list while it holds no published request (the non-empty public-surface scan in `tests/base/penny-evidence.test.ts` is not cited here); the refusal of invalid signed claims without writes or identity disclosure is asserted.
 
 #### DATA-003 — Erasure outranks history
 
@@ -1253,7 +1253,7 @@ Core · published · **partial**
 
 #### LEARN-005 — Privacy closure
 
-Core · published · **done** · Cites BASE-DATA-003
+Core · published · **partial** · Cites BASE-DATA-003
 
 **Requirement.** Person/native contribution erasure deletes dependent interpretations, corrections, commitment snapshots and provenance copies. DATA-003 erasure precedence remains operative.
 
@@ -1264,7 +1264,7 @@ Core · published · **done** · Cites BASE-DATA-003
 4. Archives carry this history and opaque fences, never credentials; restored sources/grants remain held and running claims become uncertain.
 
 **Evidence.** `tests/base/learning-stage3.test.ts`
-**Gap.** None.
+**Gap.** Running claims becoming uncertain after a restore has no passing assertion: no run is in flight at export and nothing reads an uncertain claim after the restore; same-source erasure across duplicate connections, hash fences under a fresh connection, revocation purging copies and derived work, and a restore that leaves no investigation active and refuses a restored run with `learning_scope_changed` are asserted.
 
 #### LEARN-006 — Configuration and proof boundary
 
@@ -1426,7 +1426,7 @@ Core · published · **partial** · Cites BASE-ACCESS-004
 
 #### API-001 — Scoped keys
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** A current native operator may issue a named optional-expiry REST key. Its random value is revealed once; only its hash persists. Route-selected scopes are `requests:read`, `requests:write`, `comments:read`, `comments:write`, `status:read`, `status:write`, `releases:read`, `releases:write` and `votes:write`. The first eight admit their documented resource reads and writes; `votes:write` authorizes customer lookup at `GET /api/v1/proxy-vote-contacts` and recording an attributed customer proxy vote at `POST /api/v1/requests/:slug/proxy-votes`, without verification or email permission. Bearers never grant operator HTML, generated-function, export or owner configuration authority.
 
@@ -1436,7 +1436,7 @@ Core · published · **done**
 3. Revocation refuses the next write.
 
 **Evidence.** `tests/base/integration-api.test.ts`
-**Gap.** None.
+**Gap.** Recording a proxy vote with a current `votes:write` token, and refusing that write to a token without the scope with no vote or permission record changed, have no passing assertion in this clause's evidence (`tests/base/proxy-votes.test.ts` asserts both and is not cited here); revocation refusing the next write is asserted.
 
 #### API-002 — Current custody
 
@@ -1453,7 +1453,7 @@ Core · published · **partial** · Cites BASE-ACCESS-004
 
 #### API-003 — Native publication
 
-Core · published · **done**
+Core · published · **partial**
 
 **Requirement.** API writes reuse native validation, moderation, explicit customer-safe approval, consent, maintenance and immutable snapshots. Tracker synchronization follows the Delivery sync clauses (DELIV-001–DELIV-010), never an API side effect.
 
@@ -1461,7 +1461,7 @@ Core · published · **done**
 1. Imported/restored history creates no new publication or integration effect.
 
 **Evidence.** `tests/base/integration-api.test.ts`
-**Gap.** None.
+**Gap.** That imported or restored history creates no new publication or integration effect has no passing assertion: the cited upgrade case snapshots its tables after the import and compares them only across migrations, and no cited case restores an archive; prior history, including imported feedback, staying unchanged across each new migration is asserted.
 
 #### INT-001 — Explicit integration effects
 
@@ -1847,7 +1847,7 @@ Core · target · **missing** · Rules D-1
 
 #### CAP-014 — Proxy votes
 
-Core · target · **done** · Register R-5
+Core · target · **partial** · Register R-5
 
 **Requirement.** An operator records a vote on behalf of a customer (an existing requester, a connector contact, or a new unverified contact) with the source that justifies it.
 
@@ -1859,7 +1859,7 @@ Core · target · **done** · Register R-5
 5. A base test records proxy votes from the inbox, the request page and a Zendesk sidebar fixture: each counts once, collapses with the customer's own later vote, creates no permission record, and appears in the CSV export with its recorder.
 
 **Evidence.** `tests/base/proxy-votes.test.ts`; `tests/browser/proxy-votes.mjs`; `tests/browser/zendesk-proxy-votes.mjs`
-**Gap.** None.
+**Gap.** UserVoice-imported supporters keeping their historical proxy marks (IMP-008) have no passing assertion in this clause's evidence (`tests/base/feedback-import-uservoice.test.ts` asserts them and is not cited here), and the CSV export is checked for the source text and the customer but never the recorder; counting once per customer, the proxy mark with who recorded it, collapse with the customer's own later vote, no verified identity, consent or permission record, public appearance only inside the vote total, and recording from the inbox, the request page and the Zendesk sidebar fixture are asserted.
 
 #### CAP-015 — Automation platforms
 
