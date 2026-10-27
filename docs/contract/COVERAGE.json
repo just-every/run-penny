@@ -1142,6 +1142,14 @@
       "to": "clause",
       "ids": [
         "REL-006"
+      ],
+      "also": [
+        {
+          "to": "rulings",
+          "ids": [
+            "RL-3"
+          ]
+        }
       ]
     },
     {
@@ -2091,6 +2099,14 @@
       "to": "clause",
       "ids": [
         "OPS-008"
+      ],
+      "also": [
+        {
+          "to": "base",
+          "ids": [
+            "BASE-ROLE-001"
+          ]
+        }
       ]
     },
     {
@@ -2684,6 +2700,14 @@
       "to": "clause",
       "ids": [
         "WIDGET-001"
+      ],
+      "also": [
+        {
+          "to": "base",
+          "ids": [
+            "BASE-PUBLIC-001"
+          ]
+        }
       ]
     },
     {
@@ -2701,6 +2725,14 @@
       "to": "clause",
       "ids": [
         "WIDGET-001"
+      ],
+      "also": [
+        {
+          "to": "base",
+          "ids": [
+            "BASE-PUBLIC-001"
+          ]
+        }
       ]
     },
     {

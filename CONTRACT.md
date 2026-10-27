@@ -44,7 +44,7 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 - **D-2.** Drafts never send themselves: an AI-006 draft, including a future connector or mail reply draft (NOTIFY-007, CAP-003, CAP-004, CAP-005, CAP-006, CAP-019, CAP-009), is sent only by a separate, explicit and attributed send of its edited wording, with a fresh private-value check before publication.
 - **D-3.** Response times: capacity and rate limits are in `seed.json → limits`, whose `status` field says whether they have been load-tested; a response time in a clause is the p95 at those limits, measured by a seeded run at those limits on declared CI hardware.
 - **D-4.** AI features: lexical matching (EVID-007) stays the baseline that always works, and meaning-based features run under AI-010's model and cost control. An AI feature suggests, links, classifies, extracts, flags or drafts; its own run publishes nothing, casts no vote, notifies no customer and commits no decision.
-- **D-5.** Migrations: every migration keeps IMP-001–IMP-007's custody: historical identity never becomes verified identity, operator authority or an outreach audience, and a receipt names every omission. The one consent exception is MIG-007: subscriptions the source recorded may be carried over when the owner selects it, as mail-only imported permission records. Every migration lands each imported post's status as the request's direct status (REQ-036) under the public-status mapping the owner approves in the preview, publishes imported changelog entries as they were with their original dates (REL-018), rebuilds a public roadmap the source showed as a status roadmap (ROAD-014), and queues no delivery or notification for any of it. Historical non-authorizing vote attribution is confined to IMP-001, IMP-008 and the MIG clauses.
+- **D-5.** Migrations: every migration keeps IMP-001–IMP-007's custody: historical identity never becomes verified identity, operator authority or an outreach audience, and a receipt names every omission. The one consent exception is MIG-007: subscriptions the source recorded may be carried over when the owner selects it, as mail-only imported permission records. Every migration lands each imported post's status as the request's direct status (REQ-036) under the public-status mapping the owner approves in the preview, publishes imported changelog entries as they were with their original dates (REL-018, REL-019), rebuilds a public roadmap the source showed as a status roadmap (ROAD-014), and queues no delivery or notification for any of it. Historical non-authorizing vote attribution is confined to IMP-001, IMP-008 and the MIG clauses.
 - **D-6.** Penny's own agents: every push-further agent runs under AGENT-009's controls, reads only in-scope records and calls Penny's tool registry as an outside agent does (SURFACE-006), so each decision change, public wording or customer contact it takes is a call with its own class, decided by the company's policy. Customer simulations never count as evidence.
 
 ## Shared duties (Base)
@@ -65,7 +65,7 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 | BASE-DATA-003 | Erasure | DATA-003, LEARN-005, IMP-005 | not run |
 | BASE-DATA-004 | Outbound flows | INT-002 | not run |
 | BASE-DATA-005 | Independence | HOME-002 | not run |
-| BASE-PUBLIC-001 | Privacy | HOME-002, DOCS-001 | not run |
+| BASE-PUBLIC-001 | Privacy | HOME-002, DOCS-001, WIDGET-001 | not run |
 | BASE-PUBLIC-002 | Origins | REQ-027 | not run |
 | BASE-PUBLIC-003 | Accessibility | none | not run |
 | BASE-OPS-001 | Health | none | not run |
@@ -73,7 +73,7 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 | BASE-OPS-003 | Idempotency | none | not run |
 | BASE-OPS-004 | Failure is visible | REL-006, NOTIFY-005 | not run |
 | BASE-OPS-005 | Audit | ROLE-004 | not run |
-| BASE-ROLE-001 | Roles through every door | OPS-001, OPS-002, INT-009, ROLE-001, REQ-042, TRIAGE-005 | not run |
+| BASE-ROLE-001 | Roles through every door | OPS-001, OPS-002, OPS-008, INT-009, ROLE-001, REQ-042, TRIAGE-005 | not run |
 | BASE-AUDIT-001 | Searchable, durable audit | ROLE-004 | not run |
 | BASE-BACKUP-001 | Independent backup, restore and rollback | none | not run |
 | BASE-DATA-006 | Erasure respects retention and legal hold | none | not run |
@@ -752,11 +752,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 #### ROAD-006 — Public roadmap
 
-**Requirement.** A public roadmap whose source is approved roadmap items groups them under Under review, Planned, In progress, and Shipped and links each to its public request or release.
+**Requirement.** A public roadmap whose source is approved roadmap items groups them under Under review, Planned, In progress, and Shipped and links each to its public request or release. A public roadmap whose source is request statuses follows ROAD-014.
 
 **Acceptance.**
 1. It exposes no unapproved item and no count that includes one.
-2. A public roadmap whose source is request statuses follows ROAD-014.
 
 #### ROAD-007 — Status update draft
 
@@ -819,9 +818,8 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 **Acceptance.**
 1. A failure returned before provider acceptance is retried up to 5 times with exponential backoff over 1 hour and then marked failed.
 2. After acceptance Penny never resends automatically.
-3. A result the provider leaves ambiguous is marked unknown and shown to operators; it is retried under its delivery key only where the provider suppresses duplicates for that key (REL-007), and a delivery still unknown after those retries is marked failed for BASE-OPS-004.
-4. With SendGrid, whose delivery key is correlation only, an ambiguous or interrupted send stays unknown and is never retried automatically (RULINGS.md RL-3).
-5. The published update stays visible on the portal in every failure state.
+3. A result the provider leaves ambiguous, or a send interrupted before its outcome is known, is marked unknown and shown to operators, and Penny never replays it automatically with either provider (RULINGS.md RL-3): Resend suppresses a duplicate for its delivery key (REL-007), while SendGrid's delivery key is correlation only.
+4. The published update stays visible on the portal in every failure state.
 
 #### REL-007 — Idempotent delivery and provider events
 
@@ -1164,12 +1162,11 @@ commit together.
 
 #### INT-005 — Deliberate tracker issues
 
-**Requirement.** Operators create or link a selected Linear or Jira issue from a request or decision.
+**Requirement.** Operators create or link a selected Linear or Jira issue from a request or decision. Ongoing state mapping, GitHub, Vector, Azure DevOps, ClickUp and Asana are DELIV-001–DELIV-010.
 
 **Acceptance.**
 1. Only entered wording is sent.
 2. Native durable commands retain uncertain outcomes for explicit known-issue reconciliation and never create a duplicate automatically.
-3. Ongoing state mapping, GitHub, Vector, Azure DevOps, ClickUp and Asana are DELIV-001–DELIV-010.
 
 #### INT-006 — Private tracker receipts
 
@@ -1214,7 +1211,7 @@ commit together.
 
 #### OPS-008 — Workspace timezone and requester quiet hours
 
-*Tier:* Core
+*Tier:* Core · *Cites:* BASE-ROLE-001
 
 **Requirement.** First-run setup (OPS-005) asks the owner for the workspace timezone, an IANA timezone pre-selected from the owner's browser (or from the `WORKSPACE_TIMEZONE` deployment input when it is set), and refuses Finish without one. The choice is stored as installation state that Owners and Admins change later in settings; once stored it is the `workspaceTimezone` every clause uses (NOTIFY-002, DEC-007, REL-014), and no installation that has recorded a choice falls back to a built-in default. An installation that finished setup before this ships shows its owner a one-time prompt, on their next sign-in, to confirm or change the current timezone. Settings also hold the requester quiet hours, shown beside the timezone at setup: off, or a start and an end hour in the workspace timezone (default 20:00 to 08:00). Operator email never has quiet hours (NOTIFY-003). A change applies at the next send check, and turning quiet hours off makes every held requester message due at once. In Admin settings, Owners and Admins set the workspace timezone and requester business hours through the quiet-hours schedule. Changes take effect for clocks and SLAs from the change, including the next queued requester send check and calendar-based decision review check.
 
@@ -1225,7 +1222,7 @@ commit together.
 4. With quiet hours off, an update published at 23:00 Eastern sends within the coalescing window.
 5. Changing the timezone in settings moves the next quiet period.
 6. The confirmation prompt appears once for an installation set up before the change.
-7. An Owner and an Admin each save the timezone and quiet-hours schedule in Admin, an ordinary operator is refused with 403, and changing the timezone changes a calendar review's next due check while turning quiet hours off releases queued requester mail without delaying operator mail.
+7. An Owner and an Admin each save the timezone and quiet-hours schedule in Admin, an ordinary operator is refused, and changing the timezone changes a calendar review's next due check while turning quiet hours off releases queued requester mail without delaying operator mail.
 
 ### Roles, sign-in and governance
 
@@ -1523,15 +1520,14 @@ commit together.
 
 #### WIDGET-001 — In-app feedback widget
 
-*Tier:* Core
+*Tier:* Core · *Cites:* BASE-PUBLIC-001
 
-**Requirement.** A JavaScript snippet and npm package embed Penny in the customer's own product as a launcher, modal or side panel: identified users submit, search, vote, comment and follow without leaving the product, and the current page URL and any metadata the host passes are attached as private context. It loads only from the installation's origin, sets no third-party cookie, follows the board's moderation setting (REQ-003, REQ-033) so an identified user's post on an auto-publish board shows at once, keeps the portal's privacy, and shows the owner's brand (INT-008) in the host's colors or the brand accent, as the owner chooses.
+**Requirement.** A JavaScript snippet and npm package embed Penny in the customer's own product as a launcher, modal or side panel: identified users submit, search, vote, comment and follow without leaving the product, and the current page URL and any metadata the host passes are attached as private context. It follows the board's moderation setting (REQ-003, REQ-033) so an identified user's post on an auto-publish board shows at once, keeps the portal's privacy, and shows the owner's brand (INT-008) in the host's colors or the brand accent, as the owner chooses.
 
 **Acceptance.** A browser test on a fixture host page at both widths:
 1. An identified user submits, votes and follows, and on an auto-publish board sees their post listed at once.
 2. The page URL appears only in private evidence.
 3. The documented CSP directives suffice.
-4. No third-party cookie is set.
 
 #### WIDGET-002 — SSO identify
 
@@ -2200,7 +2196,7 @@ commit together.
 
 *Tier:* Core · *Register:* R-16
 
-**Requirement.** A release (REL-002), an announcement (REL-018) or a status update (ROAD-008) can be scheduled for a time in `workspaceTimezone`. Penny retains the UTC instant and the entered IANA timezone, shows the schedule and lets an operator cancel it before publication. At that time Penny checks the same current publication conditions as Publish now: REL-002's for roadmap targets, ROAD-008's for status updates, and REL-018's for announcements and request targets. If they fail, the entry stays a draft and its author receives a durable in-app failure notice. Scheduled publication is audited and repeated Cron runs publish the version only once.
+**Requirement.** A release (REL-002), an announcement (REL-018) or a status update (ROAD-008) can be scheduled for a time in `workspaceTimezone`. Penny retains the UTC instant and the entered IANA timezone, shows the schedule and lets an operator cancel it before publication. At that time Penny checks the same current publication conditions as Publish now: REL-002's for roadmap targets, ROAD-008's for status updates, REL-018's for announcements and REL-019's for request targets. If they fail, the entry stays a draft and its author receives a durable in-app failure notice. Scheduled publication is audited and repeated Cron runs publish the version only once.
 
 **Acceptance.**
 1. A clock-advanced test publishes a scheduled release and status update once at their times, never before.
@@ -2792,7 +2788,7 @@ In the Risk class column, a single class is always declared, *a or b* means one 
 
 **Resources.** `penny://request/{id}`, `penny://evidence/{id}`, `penny://decision/{id}`, `penny://roadmap-item/{id}`, `penny://release/{id}`, `penny://account/{id}`, `penny://person/{id}`, `penny://board/{id}`.
 
-**Events.** Today's approved public request, comment, status and release webhook events (INT-001), plus `evidence.captured`, `request.merged`, `decision.committed`, `roadmap.item_moved`, `connector.failing`, `promise.at_risk`, `approval.pending`, `approval.decided`, `review.flagged` and `policy.adopted`.
+**Events.** Approved public request, comment, status and release webhook events (INT-001), plus `evidence.captured`, `request.merged`, `decision.committed`, `roadmap.item_moved`, `connector.failing`, `promise.at_risk`, `approval.pending`, `approval.decided`, `review.flagged` and `policy.adopted`.
 
 **Prompts (the feedback triager's jobs).** Weekly inbox triage (CAP-001, TRIAGE-001, TRIAGE-002, AI-002); close the loop on shipped work (REQ-036, REL-002, NOTIFY-009); decision preparation (DEC-002, AGENT-001, AGENT-002); promise check (AGENT-006, ROAD-012); weekly product brief (AGENT-008).
 
