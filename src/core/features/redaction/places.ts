@@ -78,3 +78,9 @@ places.push(...places.filter(p=>!p.reason).map(p=>({...p,key:p.table+':import-ow
 export const quote=(name:string)=>'"'+name+'"'
 export interface PlaceCount {table:string;label:string;records:number;changes:number|null;blocked:boolean;reason?:string}
 export const countFor=(place:Place,records:number):PlaceCount=>({table:place.key??place.table,label:place.label,records,changes:place.reason?null:0,blocked:!!place.reason,...(place.reason?{reason:place.reason}:{})})
+
+// Connector provenance is never an import-kit native row. Its key can be evidence_id.
+places.push(
+ {table:'penny_discord_jobs',label:'Discord capturer names',columns:['capturer_name']},
+ {table:'penny_discord_sources',label:'Discord source attribution',columns:['capturer_name']},
+)

@@ -238,6 +238,16 @@
       "commands": [
         "node --test tests/installer/older-archive.test.mjs"
       ]
+    },
+    {
+      "name": "discord-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/discord-capture.mjs",
+        "node --test tests/installer/discord-relay.test.mjs"
+      ]
     }
   ],
   "nightly": [

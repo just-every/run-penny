@@ -1951,7 +1951,7 @@ Core · target · **missing** · Rules D-1
 **Acceptance.** Signed interaction and gateway fixtures:
 1. The command and the reaction each capture a message once with its jump link, a bad signature is refused, and a message in an unselected channel is never read.
 
-**Evidence.** None.
+**Evidence.** `tests/browser/discord-capture.mjs`; `tests/installer/discord-relay.test.mjs`
 **Gap.** Signed interaction and gateway fixtures: the command and the reaction each capture a message once with its jump link, a bad signature is refused, and a message in an unselected channel is never read.
 
 #### CAP-022 — Survey responses

@@ -5,12 +5,12 @@ import { createUlid } from '@/core/shared/ulid'
 import { audit,exists,refreshReadiness,validObservedTime } from '../decisions/write-support'
 
 export interface RecordEvidence {
- sourceType:'sales_call'|'support_conversation'|'interview'|'email'|'free_text'
+ sourceType:'discord'|'sales_call'|'support_conversation'|'interview'|'email'|'free_text'
  sourceLabel?:string|null;wording:string;observedAt:string;namedSpeaker?:string|null;accountId?:string|null
  boardSlug?:string|null
  requestLinks?:{id:string;stance:'supporting'|'contradicting'}[];betLinks?:{id:string;stance:'supporting'|'contradicting'}[];releaseId?:string|null
 }
-export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:string|null,now:string,messageDigest?:string,admittedSender?:string) {
+export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:string|null,now:string,messageDigest?:string,admittedSender?:string,custody?:{systemActor:string;statements:(id:string,versionId:string)=>D1PreparedStatement[]}) {
  if(!validObservedTime(input.observedAt))throw new MutationError(422,'Observed time must include a valid date, time and timezone offset.')
  if(input.sourceType==='free_text'&&!input.sourceLabel?.trim())throw new MutationError(422,'Source label is required for free text.')
  await exists(db,'accounts',input.accountId)
@@ -24,6 +24,7 @@ export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:st
   db.prepare(`INSERT INTO evidence_items(id,source_type,source_label,named_speaker,account_id,requester_id,recorded_by_operator_id,observed_at,release_id,review_state,created_at,updated_at,admitted_sender) VALUES(?,?,?,?,?,NULL,?,?,?,'unreviewed',?,?,?)`).bind(id,input.sourceType,input.sourceLabel??null,input.namedSpeaker??null,input.accountId??null,actor,input.observedAt,input.releaseId??null,now,now,admittedSender??null),
   ...capturedEvidenceOwner(db,id,input.boardSlug,now),
   db.prepare(`INSERT INTO evidence_versions(id,evidence_id,version_number,wording,edited_by_operator_id,created_at,updated_at) VALUES(?,?,1,?,?,?,?)`).bind(versionId,id,input.wording,actor,now,now),
+  ...(custody?.statements(id,versionId)??[]),
   ...(input.requestLinks??[]).flatMap(link=>[
    db.prepare('INSERT INTO request_evidence_links(request_id,evidence_id,stance,created_at) VALUES(?,?,?,?)').bind(link.id,id,link.stance,now),
    db.prepare('INSERT INTO request_evidence_contributions(request_id,evidence_id,created_at) VALUES(?,?,?)').bind(link.id,id,now),
@@ -31,7 +32,7 @@ export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:st
   ...(input.betLinks??[]).flatMap(link=>[
    db.prepare('INSERT INTO candidate_bet_evidence_links(candidate_bet_id,evidence_id,stance,created_at) VALUES(?,?,?,?)').bind(link.id,id,link.stance,now),refreshReadiness(db,link.id,true),
   ]),
-  actor?audit(db,actor,'evidence',id,'evidence.recorded',now):db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'system','email-capture','evidence.recorded','evidence',?,?,?,?)").bind(createUlid(),id,now,now,now),
+  actor?audit(db,actor,'evidence',id,'evidence.recorded',now):db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'system',?,'evidence.recorded','evidence',?,?,?,?)").bind(createUlid(),custody?.systemActor??'email-capture',id,now,now,now),
  ]) } catch(error) { captureOwnerFailure(error) }
  return {id,versionId}
 }
