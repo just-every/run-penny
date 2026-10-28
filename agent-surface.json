@@ -4,6 +4,19 @@
   "specialist": "Feedback triager",
   "tools": [
     {
+      "name": "penny.duplicates.suggest",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "EVID-007",
+        "AI-001",
+        "SURFACE-001"
+      ]
+    },
+    {
       "name": "penny.search.records",
       "scope": "feedback:read",
       "readOnly": true,
@@ -741,6 +754,19 @@
       ]
     },
     {
+      "name": "penny.publications.clock",
+      "scope": "publication:write",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "REL-014",
+        "OPS-008",
+        "SURFACE-001"
+      ]
+    },
+    {
       "name": "penny.publications.schedule",
       "scope": "publication:write",
       "readOnly": false,
@@ -767,6 +793,19 @@
       ]
     },
     {
+      "name": "penny.deliveries.prepare",
+      "scope": "delivery:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "NOTIFY-001",
+        "NOTIFY-002",
+        "SURFACE-001"
+      ]
+    },
+    {
       "name": "penny.deliveries.dispatch",
       "scope": "delivery:write",
       "readOnly": false,
@@ -779,6 +818,47 @@
         "NOTIFY-009",
         "REL-004",
         "REL-007",
+        "SURFACE-003",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.settings.board",
+      "scope": "settings:write",
+      "readOnly": false,
+      "classes": [
+        "live"
+      ],
+      "clauses": [
+        "REQ-019",
+        "REQ-033",
+        "REQ-040",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.settings.clock",
+      "scope": "settings:write",
+      "readOnly": false,
+      "classes": [
+        "live"
+      ],
+      "clauses": [
+        "OPS-008",
+        "NOTIFY-008",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.integrations.dispatch",
+      "scope": "delivery:write",
+      "readOnly": false,
+      "classes": [
+        "external"
+      ],
+      "clauses": [
+        "INT-001",
+        "INT-003",
         "SURFACE-003",
         "SURFACE-001"
       ]
@@ -1112,7 +1192,10 @@
       "tool": "penny.tags.manage",
       "args": {
         "action": "create",
-        "name": "Agent journey working tag"
+        "name": {
+          "$from": "capture",
+          "pointer": "/id"
+        }
       },
       "expect": [
         {
@@ -1951,6 +2034,109 @@
       ]
     },
     {
+      "id": "dependency-item",
+      "tool": "penny.decisions.update",
+      "args": {
+        "brief": {
+          "question": "Prepare a separate dependency decision",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "confidence": "low",
+          "reviewAt": "2027-03-15"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-bet",
+      "tool": "penny.bets.save",
+      "args": {
+        "decisionId": {
+          "$from": "dependency-item",
+          "pointer": "/id"
+        },
+        "title": "Inspect dependency evidence",
+        "summary": "Keep the dependency as a separate native item."
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-alternative",
+      "tool": "penny.bets.save",
+      "args": {
+        "decisionId": {
+          "$from": "dependency-item",
+          "pointer": "/id"
+        },
+        "title": "Leave the dependency unchanged",
+        "summary": "An explicit alternative to the proposed dependency."
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-evidence",
+      "tool": "penny.evidence.link",
+      "args": {
+        "id": {
+          "$from": "capture",
+          "pointer": "/id"
+        },
+        "target": "bet",
+        "targetId": {
+          "$from": "dependency-bet",
+          "pointer": "/id"
+        },
+        "stance": "supporting"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-commit",
+      "tool": "penny.decisions.commit",
+      "args": {
+        "id": {
+          "$from": "dependency-item",
+          "pointer": "/id"
+        },
+        "decision": {
+          "selectedCandidateBetId": {
+            "$from": "dependency-bet",
+            "pointer": "/id"
+          },
+          "rationale": "Maintain a distinct native dependency",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "confidence": "low",
+          "reviewAt": "2027-03-15"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
       "id": "dependency",
       "tool": "penny.planning.dependency",
       "args": {
@@ -1959,10 +2145,10 @@
           "pointer": "/itemId"
         },
         "dependent": {
-          "$from": "commit",
+          "$from": "dependency-commit",
           "pointer": "/itemId"
         },
-        "linked": false
+        "linked": true
       },
       "expect": [
         {
@@ -2228,15 +2414,73 @@
       ]
     },
     {
+      "id": "schedule-tag",
+      "tool": "penny.tags.manage",
+      "args": {
+        "action": "create",
+        "name": {
+          "$from": "public-request",
+          "pointer": "/slug"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "scheduled-draft",
+      "tool": "penny.releases.draft",
+      "args": {
+        "draft": {
+          "title": "Scheduled delivery note",
+          "body": "A separately saved exact publication draft.",
+          "releaseType": "improved",
+          "publicationDate": "2026-10-28",
+          "targetIds": [
+            {
+              "$from": "commit",
+              "pointer": "/itemId"
+            }
+          ],
+          "tagIds": [
+            {
+              "$from": "schedule-tag",
+              "pointer": "/id"
+            }
+          ]
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "publication-clock",
+      "tool": "penny.publications.clock",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
       "id": "schedule-release",
       "tool": "penny.publications.schedule",
       "args": {
         "kind": "release",
         "id": {
-          "$from": "release",
+          "$from": "scheduled-draft",
           "pointer": "/id"
         },
-        "localTime": "2027-03-10T12:00"
+        "localTime": {
+          "$from": "publication-clock",
+          "pointer": "/localTime"
+        }
       },
       "expect": [
         {
@@ -2260,13 +2504,60 @@
       ]
     },
     {
+      "id": "consenting-customer-request",
+      "tool": "penny.search.records",
+      "args": {
+        "entity": "requests",
+        "q": "Verifier customer delivery consent"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "customer-status",
+      "tool": "penny.requests.set_status",
+      "args": {
+        "slug": {
+          "$from": "consenting-customer-request",
+          "pointer": "/items/0/slug"
+        },
+        "update": {
+          "status": "under_review",
+          "body": "Your delivery history is being reviewed."
+        }
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ]
+    },
+    {
+      "id": "prepare-customer-mail",
+      "tool": "penny.deliveries.prepare",
+      "args": {
+        "slug": {
+          "$from": "consenting-customer-request",
+          "pointer": "/items/0/slug"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
       "id": "dispatch-customer-mail",
       "tool": "penny.deliveries.dispatch",
       "args": {
         "kind": "request",
         "id": {
-          "$from": "read-request",
-          "pointer": "/notificationBatchId"
+          "$from": "prepare-customer-mail",
+          "pointer": "/items/0/id"
         }
       },
       "expect": [
@@ -2276,6 +2567,58 @@
             "counterparty": "known",
             "measure": 1
           }
+        }
+      ]
+    },
+    {
+      "id": "duplicate-suggestions",
+      "tool": "penny.duplicates.suggest",
+      "args": {
+        "title": "delivery history"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "live-board-setting",
+      "tool": "penny.settings.board",
+      "args": {
+        "slug": "agent-public",
+        "showVoteCounts": true
+      },
+      "expect": [
+        {
+          "class": "live"
+        }
+      ]
+    },
+    {
+      "id": "live-clock-setting",
+      "tool": "penny.settings.clock",
+      "args": {
+        "timezone": "UTC",
+        "quietEnabled": false,
+        "quietStart": 22,
+        "quietEnd": 8
+      },
+      "expect": [
+        {
+          "class": "live"
+        }
+      ]
+    },
+    {
+      "id": "retained-webhook-dispatch",
+      "tool": "penny.integrations.dispatch",
+      "args": {
+        "id": "unavailable-until-rpc-fixture:destination"
+      },
+      "expect": [
+        {
+          "class": "external"
         }
       ]
     }

@@ -1,3 +1,5 @@
+import {pennyAgentDoor} from '../agent-door/index'
+import {eventOrigin} from '../agent-door/event-tools'
 import {D1SqlDatabase} from '../../../../base/modules/integrations/core/database.ts'
 import {IntegrationsRepository} from '../../../../base/modules/integrations/core/repository.ts'
 import {DeliveryService} from '../../../../base/modules/integrations/core/delivery.ts'
@@ -41,7 +43,7 @@ export async function drainIntegrations(runtime:PennyRuntime,now:()=>number=Date
  const {results:events}=await db.prepare(`SELECT e.* FROM penny_integration_events e WHERE e.held=0 AND EXISTS(SELECT 1 FROM penny_integration_destinations d WHERE d.kind IN('webhook','slack') AND d.revoked_at IS NULL AND EXISTS(SELECT 1 FROM penny_integration_targets t WHERE t.event_id=e.id AND t.destination_id=d.id) AND NOT EXISTS(SELECT 1 FROM integration_deliveries i WHERE i.namespace='penny-events' AND i.id=e.id||':'||d.id)) ORDER BY e.created_at,e.id LIMIT 1000`).all<ProductEvent>()
  let queued=0
  for(const event of events){
-  const projection=await projectEvent(runtime,event);if(!projection){await db.prepare('UPDATE penny_integration_events SET held=1 WHERE id=?').bind(event.id).run();continue}
+  let projection=await projectEvent(runtime,event);const saved=await db.prepare("SELECT label FROM penny_agent_work WHERE kind='integration-event' AND id=?").bind(event.id).first<{label:string}>();if(projection&&saved)projection={...projection,title:projection.title+' — '+saved.label};if(!projection){await db.prepare('UPDATE penny_integration_events SET held=1 WHERE id=?').bind(event.id).run();continue}
   for(const target of destinations){
    if(!await db.prepare('SELECT id FROM penny_integration_targets WHERE event_id=? AND destination_id=?').bind(event.id,target.id).first())continue
    try{await destination(runtime,target.id)}catch{continue}
@@ -56,6 +58,8 @@ export async function drainIntegrations(runtime:PennyRuntime,now:()=>number=Date
  await repository.recoverExpired(now())
  for(const id of await repository.due(now(),100)){
   const row=await repository.get(id)
+  const saved=await eventOrigin(runtime,id)
+  if(saved){await pennyAgentDoor(runtime).invoke('penny.integrations.dispatch',{id,idempotency_key:'integration:'+id},JSON.parse(saved.principal));continue}
   if(row?.protocol==='webhook')await webhook.dispatch(id)
   else if(row)await slackSend.dispatch(id)
  }

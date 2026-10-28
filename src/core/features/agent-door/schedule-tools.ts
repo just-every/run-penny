@@ -8,6 +8,7 @@ import {publishRoadmapUpdate} from '../roadmap/update-publication'
 import {ToolRefusal} from '../../../../base/modules/agent-door/errors.ts'
 
 export function scheduleTools(runtime:PennyRuntime){return [
+ tool(runtime,{name:'publications.clock',title:'Read the next schedulable native local minute',scope:'publication:write',readOnly:true,clauses:['REL-014','OPS-008'],schema:z.object({}),run:async()=>{const timeZone=(await workspaceClock(runtime)).timezone;const parts=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(Date.now()+90000)).map(p=>[p.type,p.value]));return {localTime:`${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`,timeZone}}}),
  tool(runtime,{name:'publications.schedule',title:'Schedule or cancel a native release or roadmap update',scope:'publication:write',clauses:['REL-014','ROAD-007','ROAD-008'],classes:['external'],schema:z.object({kind:z.enum(['release','roadmap-update']),id,localTime:z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/).optional(),cancel:z.boolean().default(false)}),classify:async()=>external(),run:async(a,n)=>{
  const release=a.kind==='release',column=release?'release_id':'roadmap_update_id',table=release?'releases':'roadmap_update_versions'
  if(a.cancel){await n.db.batch([n.db.prepare(`UPDATE penny_publication_schedules SET state='cancelled',completed_at=?,updated_at=? WHERE ${column}=? AND state='scheduled'`).bind(n.now,n.now,a.id),n.db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'operator',?,'publication.unscheduled','publication_schedule',?,?,?,?)").bind(crypto.randomUUID(),n.actor,a.id,n.now,n.now,n.now)]);return {ok:true}}
@@ -23,8 +24,9 @@ export function scheduleTools(runtime:PennyRuntime){return [
  return {id:key,scheduledAt,timeZone}
  }}),
  tool(runtime,{name:'publications.execute',title:'Admit one due scheduled native publication under current policy',scope:'publication:write',clauses:['REL-014'],classes:['external'],schema:z.object({id}),classify:async()=>external(),run:async(a,n)=>{
- const row=await n.db.prepare("SELECT s.release_id,s.roadmap_update_id,r.slug FROM penny_publication_schedules s LEFT JOIN releases r ON r.id=s.release_id WHERE s.id=? AND s.state='scheduled' AND s.scheduled_at<=?").bind(a.id,n.now).first<{release_id:string|null;roadmap_update_id:string|null;slug:string|null}>()
+ const row=await n.db.prepare("SELECT s.release_id,s.roadmap_update_id,r.slug,s.scheduled_at FROM penny_publication_schedules s LEFT JOIN releases r ON r.id=s.release_id WHERE s.id=? AND s.state='scheduled' ").bind(a.id).first<{release_id:string|null;roadmap_update_id:string|null;slug:string|null;scheduled_at:string}>()
  if(!row)throw new ToolRefusal('publication_not_due')
+ if(row.scheduled_at>n.now)return {id:a.id,state:'waiting',scheduledAt:row.scheduled_at}
  const result=row.release_id?await publishRelease(n.db,row.slug!,n.now,n.actor):await publishRoadmapUpdate(n.db,row.roadmap_update_id!,n.now,n.actor)
  await n.db.prepare("UPDATE penny_publication_schedules SET state='published',completed_at=?,updated_at=? WHERE id=? AND state='scheduled'").bind(n.now,n.now,a.id).run()
  return result

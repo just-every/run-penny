@@ -2035,7 +2035,10 @@
       "body",
       "created_at",
       "updated_at",
-      "parent_note_id"
+      "parent_note_id",
+      "agent_label",
+      "agent_prepared_by",
+      "agent_approvers"
     ]
   },
   "request_notification_mutes": {

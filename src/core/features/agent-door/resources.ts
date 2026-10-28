@@ -1,3 +1,4 @@
+import {safeProjection,recordClasses} from './projection'
 import type { PennyRuntime } from '@/core/app/runtime'
 import type { ResourceDefinition,ResourceContext } from '../../../../base/modules/agent-door/types.ts'
 import { resourceContext } from './native'
@@ -18,12 +19,12 @@ export function resources(runtime:PennyRuntime):ResourceDefinition[]{
   {kind:'person',scope:'feedback:read',read:async(id:string,n:Awaited<ReturnType<typeof resourceContext>>)=>n.db.prepare('SELECT id,display_name AS name,blocked_at AS blockedAt FROM requesters WHERE id=?').bind(id).first()},
   {kind:'board',scope:'feedback:read',read:async(id:string,n:Awaited<ReturnType<typeof resourceContext>>)=>n.db.prepare('SELECT id,slug,name,visibility,archived_at AS archivedAt FROM boards WHERE id=?').bind(id).first()},
  ]
- return definitions.map(({kind,scope,read})=>({uriTemplate:`penny://${kind}/{id}`,name:kind,scope,classes:['standard'],
-  classify:()=>[{class:'standard',facts:{measure:1}}],
+ return definitions.map(({kind,scope,read})=>({uriTemplate:`penny://${kind}/{id}`,name:kind,scope,classes:['standard','sensitive'],
+  classify:record=>recordClasses(record.json??record.text),
   async read(uri:string,ctx:ResourceContext){
    const match=new RegExp(`^penny://${kind}/([^/?#]+)$`).exec(uri)
    if(!match||!ctx.scopes.includes(scope))return null
-   try{const json=await read(decodeURIComponent(match[1]),await resourceContext(runtime,ctx,scope));return json?{json,untrusted:true}:null}catch{return null}
+   try{const json=await read(decodeURIComponent(match[1]),await resourceContext(runtime,ctx,scope));return json?{json:safeProjection(json),untrusted:true}:null}catch{return null}
   },
  }))
 }

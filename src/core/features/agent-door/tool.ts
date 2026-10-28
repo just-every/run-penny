@@ -24,10 +24,10 @@ export function tool<S extends z.ZodType>(runtime:PennyRuntime,o:Options<S>):Too
   classify:async(args,ctx)=>o.classify?o.classify(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope),ctx):[{class:'standard',facts:{measure:1}}],
   async run(args,ctx){try{
    const value=await o.run(parse(args),await nativeContext(runtime,ctx,!!o.readOnly,o.readOnly?undefined:ctx,o.scope),ctx)
-   return {result:JSON.parse(JSON.stringify(value??{ok:true}))}
+   const result=JSON.parse(JSON.stringify(value??{ok:true}));const links=await nativeLinks(runtime,o.name,args,result,ctx,o.scope);return {result,...(links.length?{resources:links}:{})}
   }catch(error){if(error instanceof ToolRefusal)throw error;if(error instanceof NativeError||error instanceof RequestLifecycleError)throw new ToolRefusal(error.code);if(error instanceof MutationError)throw new ToolRefusal(error.status===404?'not_found':error.status===409?'native_conflict':'native_validation_failed',error.message);throw error}},
  }
- if(!o.readOnly)definition.summary=async(args,ctx)=>JSON.parse(JSON.stringify(o.summary?await o.summary(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope),ctx):{items:[o.title],target:{id:typeof args.id==='string'?args.id:typeof args.slug==='string'?args.slug:undefined}}))
+ if(!o.readOnly)definition.summary=async(args,ctx)=>JSON.parse(JSON.stringify(o.summary?await o.summary(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope),ctx):{items:[o.title,JSON.stringify(parse(args))],target:{id:typeof args.id==='string'?args.id:typeof args.slug==='string'?args.slug:undefined}}))
  if(o.revision){definition.revisionType='string';definition.revision=async(args,ctx)=>o.revision!(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope))}
  if(o.authority)definition.authority=o.authority
  return definition
@@ -48,4 +48,15 @@ function doorSchema(value:unknown):unknown{
  const node=Object.fromEntries(Object.entries(value).map(([key,item])=>[key,doorSchema(item)]))
  if(node.propertyNames){const names=node.propertyNames as {type?:string;minLength?:number};if(names.type!=='string'||names.minLength!==1)throw new Error('unsupported_native_record_keys');node.patternProperties={'^.{1,}$':node.additionalProperties};node.additionalProperties=false;delete node.propertyNames}
  return node
+}
+
+/** Link outcomes by current native record IDs, never by an imported URL. */
+async function nativeLinks(runtime:PennyRuntime,name:string,args:Record<string,unknown>,result:Record<string,unknown>,ctx:ToolContext,scope:string){
+ const table=name.startsWith('evidence.')?'evidence_items':name.startsWith('requests.')||name==='moderation.decide'?'requests':name.startsWith('decisions.')?'decisions':name.startsWith('releases.')||name==='outcomes.get'?'releases':null
+ if(!table||!ctx.scopes.includes(table==='requests'?'requests:inspect':'feedback:read'))return []
+ const db=(await nativeContext(runtime,ctx,true,undefined,scope)).db
+ const candidate=typeof args.slug==='string'?await db.prepare(`SELECT id FROM ${table} WHERE slug=?`).bind(args.slug).first<{id:string}>():typeof result.id==='string'?{id:result.id}:typeof args.id==='string'?{id:args.id}:null
+ if(!candidate||!await db.prepare(`SELECT id FROM ${table} WHERE id=?`).bind(candidate.id).first())return []
+ const kind=table==='evidence_items'?'evidence':table==='requests'?'request':table==='decisions'?'decision':'release'
+ return [{uri:`penny://${kind}/${encodeURIComponent(candidate.id)}`,name:kind}]
 }
