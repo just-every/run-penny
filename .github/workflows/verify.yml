@@ -85,6 +85,7 @@ jobs:
       - name: Run this shard
         env:
           SHARD: ${{ matrix.name }}
+          GH_TOKEN: ${{ github.token }}
         run: node scripts/verify-ci.mjs "$SHARD"
       - name: Read redacted dev failure diagnostics
         if: failure()

@@ -24,7 +24,12 @@ export async function createSource(runtime:PennyRuntime,request:Request,input:z.
  return {id}
 }
 export async function createInvestigation(runtime:PennyRuntime,request:Request,input:z.infer<typeof investigationInput>){
- const {db:operatorDb,session,actor}=await integrationOperator(runtime,request),db=await configurationDatabase(operatorDb),id=crypto.randomUUID(),now=new Date().toISOString(),sourceId=input.sourceId??crypto.randomUUID()
+ const {db,session,actor}=await integrationOperator(runtime,request)
+ return createNativeInvestigation({db,nativeId:session.operatorId,version:session.operator.version,actorId:actor.id},input)
+}
+export async function createNativeInvestigation(who:{db:D1Database;nativeId:string;version:number;actorId:string},input:z.infer<typeof investigationInput>){
+ const db=await configurationDatabase(who.db),id=crypto.randomUUID(),now=new Date().toISOString(),sourceId=input.sourceId??crypto.randomUUID(),actor={id:who.actorId}
+
  const rules=await redactionSettings(db),fence=redactionFence(db,rules.revision)
  input={...input,...redactLearningValue({question:input.question,purpose:input.purpose},rules)}
  if(input.expiresAt<=now||input.maxRunCostMicros>input.budgetMicros||(!input.sourceId&&!input.nativeEvidenceIds.length&&!input.nativeRequestIds.length))throw new NativeError('learning_scope_invalid',400)
@@ -32,7 +37,7 @@ export async function createInvestigation(runtime:PennyRuntime,request:Request,i
  if(!input.sourceId)statements.push(db.prepare("INSERT INTO learning_sources(id,name,provider,installation_id,resource_ids_json,use_basis,state,created_at) VALUES(?,'Native feedback','native','native','[]',?,'active',?)").bind(sourceId,input.purpose,now),learningAudit(db,{operatorId:actor.id},'learning_source',sourceId,'learning.source_created',{provider:'native'}))
  else if(!await db.prepare("SELECT 1 FROM learning_sources WHERE id=? AND state='active'").bind(sourceId).first())throw new NativeError('learning_source_unavailable',409)
  for(const [table,ids] of [['evidence_items',input.nativeEvidenceIds],['requests',input.nativeRequestIds]] as const){if(ids.length){const rows=await db.prepare(`SELECT id FROM ${table} WHERE id IN(SELECT value FROM json_each(?))`).bind(JSON.stringify(ids)).all();if(rows.results.length!==new Set(ids).size)throw new NativeError('learning_native_evidence_missing',409)}}
- statements.push(db.prepare(`INSERT INTO learning_investigations(id,source_id,question,purpose,native_evidence_ids_json,native_request_ids_json,state,native_operator_id,operator_version,actor_id,expires_at,budget_micros,max_run_cost_micros,interval_minutes,next_run_at,created_at) VALUES(?,?,?,?,?,?,'active',?,?,?,?,?,?,?,?,?)`).bind(id,sourceId,input.question,input.purpose,JSON.stringify([...new Set(input.nativeEvidenceIds)]),JSON.stringify([...new Set(input.nativeRequestIds)]),session.operatorId,session.operator.version,actor.id,input.expiresAt,input.budgetMicros,input.maxRunCostMicros,input.intervalMinutes,now,now))
+ statements.push(db.prepare(`INSERT INTO learning_investigations(id,source_id,question,purpose,native_evidence_ids_json,native_request_ids_json,state,native_operator_id,operator_version,actor_id,expires_at,budget_micros,max_run_cost_micros,interval_minutes,next_run_at,created_at) VALUES(?,?,?,?,?,?,'active',?,?,?,?,?,?,?,?,?)`).bind(id,sourceId,input.question,input.purpose,JSON.stringify([...new Set(input.nativeEvidenceIds)]),JSON.stringify([...new Set(input.nativeRequestIds)]),who.nativeId,who.version,actor.id,input.expiresAt,input.budgetMicros,input.maxRunCostMicros,input.intervalMinutes,now,now))
  statements.push(learningAudit(db,{operatorId:actor.id},'learning_investigation',id,'learning.grant_created',{sourceId,evidenceCount:new Set(input.nativeEvidenceIds).size,requestCount:new Set(input.nativeRequestIds).size}))
  await db.batch([fence.before,...statements,fence.after]);return {id}
 }

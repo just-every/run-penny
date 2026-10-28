@@ -29,7 +29,7 @@ export async function addInternalNote(db:D1Database,slug:string,actor:string,inp
  return {id}
 }
 export async function mentionNotices(db:D1Database,actor:string){
- return (await db.prepare(`SELECT m.note_id AS noteId,m.created_at AS createdAt,n.body,n.parent_note_id AS parentNoteId,r.slug,r.id AS requestId,r.title,o.display_name AS author,'mention' AS kind,NULL AS href
+ return (await db.prepare(`SELECT m.note_id AS noteId,m.created_at AS createdAt,n.body,n.parent_note_id AS parentNoteId,r.slug,r.id AS requestId,r.title,COALESCE(n.agent_label,o.display_name) AS author,'mention' AS kind,NULL AS href
  FROM penny_note_mentions m JOIN request_notes n ON n.id=m.note_id JOIN requests r ON r.id=n.request_id LEFT JOIN operators o ON o.id=n.operator_id
  WHERE m.operator_id=? AND m.dismissed_at IS NULL
  UNION ALL SELECT s.id AS noteId,s.completed_at AS createdAt,s.last_error AS body,NULL AS parentNoteId,r.slug,COALESCE(r.id,s.roadmap_update_id) AS requestId,COALESCE(v.title,u.title) AS title,'Penny scheduler' AS author,'publication' AS kind,CASE WHEN r.id IS NOT NULL THEN '/app/releases/'||r.slug ELSE '/app/releases' END AS href

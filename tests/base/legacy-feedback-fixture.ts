@@ -9,6 +9,10 @@ import { populateFeedback } from './feedback-import-fixture'
 export async function populateLegacyFeedback(input:SavedFeedbackInput,operator:Record<string,string>,partial=false) {
  const objects=()=>env.DB.prepare("SELECT type,name FROM sqlite_master WHERE type IN ('table','trigger') AND name NOT LIKE 'sqlite_%'").all<{type:string;name:string}>()
  const before=new Set((await objects()).results.map(row=>row.name))
+ // Current trusted importer reads durable actor IDs. Supply their historical
+ // projection only while constructing the pre-upgrade data; it is removed below.
+ await env.DB.prepare('CREATE TABLE IF NOT EXISTS penny_operator_bindings(native_operator_id TEXT PRIMARY KEY,actor_id TEXT NOT NULL UNIQUE)').run()
+ await env.DB.prepare('INSERT OR IGNORE INTO penny_operator_bindings SELECT n.id,p.id FROM oa_operators n JOIN operators p ON p.email=n.email').run()
  await initializeD1ImportStorage(env.DB)
  const job=await populateFeedback(input,operator,partial)
  const added=(await objects()).results.filter(row=>!before.has(row.name))

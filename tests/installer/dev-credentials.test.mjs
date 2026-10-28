@@ -58,6 +58,8 @@ test('[SC-05 API-001] an API key minted in a dev session works only behind the c
     assert.equal(confirmed.status,303)
     const ordinary = cookies(confirmed), ordinaryKey = await mint(ordinary, 'Ordinary key')
 
+    const policy=await fetch(origin+'/agents/api/policy',{method:'PUT',headers:{Origin:origin,Cookie:ordinary,'Content-Type':'application/json'},body:JSON.stringify({document:{schema:'rer-agent-policy/1',catalogue:'rer-agent-classes/1',rules:[{id:'client-journey',class:'*',do:'autonomous'}],spend:{none:true}}})});assert.equal(policy.status,200)
+
     // The dev-minted key answers only with the key: header, gate cookie, or through the proxy carrying either.
     assert.equal(await read(origin, devKey.token, { 'x-rer-dev-key': key }), 200)
     assert.equal(await read(origin, devKey.token, { Cookie: `${gate.name}=${gate.value}` }), 200)
