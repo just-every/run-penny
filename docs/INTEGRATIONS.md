@@ -125,7 +125,7 @@ requester or mail subscriber. Slack Connect maps an
 external author's workspace to an existing account only when Slack confirms the
 channel's shared-team relationship. If the message omits its team, Penny uses
 the author workspace returned by `users.info` and still checks that shared-team
-membership. A missing author, membership or mapping leaves the account empty.
+membership. A missing workspace, membership or mapping leaves the account empty.
 
 `GET /api/operator/integrations/chat` shows scope, last successful work, safe
 failure codes, an `unresolved_failure_count` per connection, and the latest 100
