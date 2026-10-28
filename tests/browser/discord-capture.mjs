@@ -69,6 +69,7 @@ try{
  modes.set(ids[0],'changed');modes.set(ids[1],404);await runtime.db.prepare("UPDATE penny_discord_sources SET next_check='2000-01-01T00:00:00Z'").run();await runtime.schedule();await runtime.schedule()
  assert.equal(await runtime.db.prepare('SELECT source_state FROM penny_discord_sources WHERE message_id=?').bind(ids[0]).first('source_state'),'changed');assert.equal(await runtime.db.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=?').bind(rows[0].evidence_id).first('wording'),rows[0].wording)
  assert.equal(await runtime.db.prepare('SELECT source_state FROM penny_discord_sources WHERE message_id=?').bind(ids[1]).first('source_state'),'purged');assert.equal(await runtime.db.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=?').bind(rows[1].evidence_id).first('wording'),'[Source removed]')
+ assert.equal(await runtime.db.prepare("SELECT count(*) n FROM audit_entries WHERE action='discord.source_purged' AND entity_id=?").bind(rows[1].evidence_id).first('n'),1,'A repeated schedule records the purge audit once')
  await signed(command(ids[5]));const portable=await json('/api/operator/data/export',undefined,operator),archive=portable.archive
  assert.equal(archive.tables.penny_discord_settings[0].enabled,0);assert.equal(archive.tables.penny_discord_jobs.find(job=>job.message_id===ids[5]).state,'held');assert.doesNotMatch(JSON.stringify(archive),new RegExp(config.botToken+'|'+config.gatewaySecret));assert.equal(archive.tables.penny_discord_sources.length,4)
 

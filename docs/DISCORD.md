@@ -83,7 +83,7 @@ Each captured source is rechecked hourly, up to ten per minute. An edit marks it
 **removed**. Removing a channel from the configured scope also marks its existing
 sources removed without another read. When the owner's retention window expires,
 all wording versions on that evidence item are replaced by a source-removed
-marker and its named author is cleared; its provenance and links remain. Due
+marker and its named author is cleared; its provenance and links remain. A wording-free system audit commits with the purge, once even across repeated schedules. A failed purge shows a storage failure on the item and stays due for recovery. Due
 purges continue while capture is paused. Temporary outages keep the source and
 show a check failure. Separately committed decision/publication history is
 preserved history and uses the existing Data copy-resolution/erasure controls.

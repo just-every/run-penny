@@ -1,4 +1,5 @@
 const hints:Record<string,string>={
+ discord_purge_failed:'The excerpt could not be purged. Check the installation database and audit storage; the next schedule will retry.',
  discord_rate_limited:'Discord reached its rate limit. Wait for it to reset, then retry.',
  discord_access_revoked:'Discord refused access. Reconnect the bot and check View Channel and Read Message History permissions.',
  discord_source_removed:'The message was deleted or is no longer available.',

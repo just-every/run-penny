@@ -1,3 +1,4 @@
+import {createUlid} from '@/core/shared/ulid'
 import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
 import {NativeError,digest} from '../auth/native-tokens'
@@ -83,9 +84,13 @@ export async function purgeDiscordSources(runtime:PennyRuntime,clock=Date.now())
  if(!state)return
  const db=guardedDatabase(raw,{sql:"EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?)",params:[state.epoch]}),now=new Date(clock).toISOString()
  const sources=(await db.prepare("SELECT evidence_id FROM penny_discord_sources WHERE source_state='removed' AND purge_at<=? LIMIT 50").bind(now).all<{evidence_id:string}>()).results
- for(const source of sources)await db.batch([
+ for(const source of sources)try{await db.batch([
+  db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,'system','discord-capture','discord.source_purged','evidence',?,?,?,? WHERE EXISTS(SELECT 1 FROM penny_discord_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(createUlid(),source.evidence_id,now,now,now,source.evidence_id,now),
   db.prepare("UPDATE evidence_versions SET wording='[Source removed]',updated_at=? WHERE evidence_id=? AND EXISTS(SELECT 1 FROM penny_discord_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(now,source.evidence_id,source.evidence_id,now),
   db.prepare("UPDATE evidence_items SET named_speaker=NULL,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM penny_discord_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(now,source.evidence_id,source.evidence_id,now),
-  db.prepare("UPDATE penny_discord_sources SET source_state='purged' WHERE evidence_id=? AND source_state='removed' AND purge_at<=?").bind(source.evidence_id,now),
- ])
+  db.prepare("UPDATE penny_discord_sources SET source_state='purged',check_failure=NULL WHERE evidence_id=? AND source_state='removed' AND purge_at<=?").bind(source.evidence_id,now),
+ ])}catch{
+  await db.prepare("UPDATE penny_discord_sources SET check_failure='discord_purge_failed' WHERE evidence_id=? AND source_state='removed'").bind(source.evidence_id).run()
+  throw new NativeError('discord_purge_failed',503)
+ }
 }

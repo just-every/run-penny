@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Record each automatic Discord excerpt purge with one wording-free audit entry in its write transaction; a failed purge remains visible for scheduled recovery.
+
 - Keep the owner-only Discord settings panel readable as an availability notice for other signed-in roles; configuration writes remain owner-guarded.
 
 - Add optional Discord message-command and reaction capture with signature-first admission, exact channel scope, separate capturer/source attribution, redaction before storage and one durable inbox identity per message. Owner settings expose progress, retry and stop; the shipped Gateway relay preserves an acknowledged resume cursor. Source checks retain captured versions on edits and purge removed excerpts on the owner's policy. Migration 0096 is additive; archives disable restored settings and hold unfinished work, and omit deployment credentials. Recorded network-edge journeys cover local behavior; live Discord and hosted transport/Cron proof remain owner-account steps. CAP-021's text, acceptance and status remain unchanged.
