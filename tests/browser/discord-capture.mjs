@@ -42,8 +42,8 @@ try{
  assert.equal((await signed(null,{raw:'{malformed'})).status,400)
  assert.equal((await signed({type:1,application_id:applicationId})).status,200)
  assert.equal((await signed(command(ids[0]),{at:String(Math.floor(Date.now()/1000)-600)})).status,401)
- assert.equal((await signed(reaction(ids[0]),{relay:true})).status,202)
  for(let n=0;n<2;n++){assert.equal((await signed(command(ids[0]))).status,200);assert.equal((await signed(reaction(ids[1]),{relay:true})).status,202)}
+ assert.equal((await signed(reaction(ids[0]),{relay:true})).status,202)
  assert.equal((await signed(reaction(ids[2]),{relay:true,bad:true})).status,401)
  assert.equal((await signed(command(ids[2],other))).status,200);assert.equal((await signed(reaction(ids[2],other),{relay:true})).status,202)
  assert.equal((await signed({...reaction(ids[2]),d:{...reaction(ids[2]).d,emoji:{id:null,name:'👎'}}},{relay:true})).status,202)
@@ -52,7 +52,7 @@ try{
  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_discord_sources').first('n'),2,JSON.stringify(await json('/api/operator/integrations/discord',undefined,operator)))
  assert.deepEqual(reads.sort(),ids.slice(0,2));const rows=(await runtime.db.prepare('SELECT e.*,v.wording,d.* FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id JOIN penny_discord_sources d ON d.evidence_id=e.id ORDER BY d.message_id').all()).results
  for(const row of rows){assert.equal(row.review_state,'unreviewed');assert.equal(row.named_speaker,'Source author '+row.message_id);assert.equal(row.capturer_name,'Trigger member');assert.equal(row.author_id,author);assert.equal(row.requester_id,null);assert.equal(row.jump_url,`https://discord.com/channels/${guild}/${channel}/${row.message_id}`);assert.match(row.wording,/\[REDACTED:email\]/);assert.doesNotMatch(JSON.stringify(row),/source.person@example|OMITTED_|UNTRUSTED_/)}
- assert.ok((await json('/api/operator/integrations/discord',undefined,operator)).jobs.every(job=>job.ownerName==='Maya Patel'));
+ const capturedJobs=(await json('/api/operator/integrations/discord',undefined,operator)).jobs;assert.ok(capturedJobs.every(job=>job.ownerName==='Maya Patel'));assert.equal(capturedJobs.find(job=>job.id.endsWith(ids[0])).trigger_kind,'command');assert.equal(capturedJobs.find(job=>job.id.endsWith(ids[1])).trigger_kind,'reaction');
  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions').first('n'),0);assert.equal(runtime.outbox.length,0)
  // One failed read stays visible across restart until the owner chooses retry.
  modes.set(ids[2],429);await signed(reaction(ids[2]),{relay:true});await runtime.schedule();await runtime.restart();await runtime.schedule()

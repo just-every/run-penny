@@ -7962,7 +7962,7 @@
       "executable": false
     },
     "tests/browser/discord-capture.mjs": {
-      "sha256": "3da9f3debefdf8186eb37cfb90c8f547810deee48c61ffb4545d0c1af8e1b270",
+      "sha256": "9a5f5f07ce0c02391a0faebac0088e9392432cfe5f2dde1e8ac8aac470c7e0ba",
       "executable": false
     },
     "tests/browser/draft-journey.mjs": {
