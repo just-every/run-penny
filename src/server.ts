@@ -1,3 +1,4 @@
+import { handleAgentDoor } from './core/features/agent-door/index'
 import {captureEmail} from './core/features/evidence/email-capture'
 import {advanceRedactionWork,isRedactionWork,runRedactionQueue} from './core/features/redaction/background'
 import { withDemo } from '../base/modules/demo/index.mjs'
@@ -67,6 +68,8 @@ async function respond(request: Request, bindings: AppBindings, execution: Execu
   }
   const operatorDocument = request.method === 'GET' && bindings.RER_DEMO !== '1' && (url.pathname === '/app' || url.pathname.startsWith('/app/')) ? { request } : undefined
   return pennyRequest.run({ bindings, operatorDocument }, async () => {
+    const door=await handleAgentDoor(createPennyRuntime(bindings,requestContext().configuration),request)
+    if(door)return door
     const installation = { DB: bindings.DB, AUTH_ORIGIN: createPennyRuntime(bindings, requestContext().configuration).configuration.appOrigin ?? '' }
     const state = await setupStateResponse(request, installation)
     if (state) return editorDocumentHeaders(state, createPennyRuntime(bindings, requestContext().configuration), url.pathname)

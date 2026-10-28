@@ -3954,7 +3954,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "421150e417cf492b81c4955548d1261c381080392a6909856075b424492cf5fa",
+      "sha256": "88ee547596d417219e62f6db63b5d0059ec3d325c79d666ffb770b6fdc905c6b",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -5002,7 +5002,7 @@
       "executable": false
     },
     "src/core/app/api.ts": {
-      "sha256": "f626f348698edb693f32b5c303409522ab9fb67c967e5b9fc102feafad94a1ca",
+      "sha256": "dfd66ec39401d5ed0258b8416dde214a83c88dba96d3e356285ed456dfdfabc2",
       "executable": false
     },
     "src/core/app/extension-config.server.ts": {
@@ -5322,7 +5322,7 @@
       "executable": false
     },
     "src/core/features/auth/operator.ts": {
-      "sha256": "af493ec3f39ad7b80d8e8798110b4f8e1e7f37f708c28339e85f857be87d1da6",
+      "sha256": "5605b3a85c2649ab6690ee9efb205b08f07a7d4cf763e1723016b00ad5b193b8",
       "executable": false
     },
     "src/core/features/auth/owner-claim.ts": {
@@ -5554,7 +5554,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "ed391c266b9e7dd143c36616b612f7fe3145a08f50b523badc2846ce20f9b627",
+      "sha256": "1ba2f34c1d0a51a12eadd6871e5f318d4d17b01e98acc44c752d8f50addbbf93",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {
@@ -7806,7 +7806,7 @@
       "executable": false
     },
     "src/core/shared/bindings.ts": {
-      "sha256": "87e6c7453aa3de78cb6331e362b123c44ca49ac4de5b557285792c8cfc00c720",
+      "sha256": "9c3df3f84fb3043d77b8dcdbd330f053597e5468dfd7cfd4938a7d2b460bdda8",
       "executable": false
     },
     "src/core/shared/decision-loop-schema.ts": {
@@ -8214,7 +8214,7 @@
       "executable": false
     },
     "src/server.ts": {
-      "sha256": "99efe80bf8787b18f9d323d98d57c2066a08609e1cc5ddfe82b8b09f95352266",
+      "sha256": "ebded81efdbc99cf81f863d1aa8749c3ad69fab1b2d8fb23eb0ea3cf6d4f3ff3",
       "executable": false
     },
     "src/site/pages.tsx": {
@@ -8450,7 +8450,7 @@
       "executable": false
     },
     "tests/base/previous-notification-fixture.ts": {
-      "sha256": "2d37568f7d776a7e1dbe8496b85497ef3eed0ed31f38a9a092243908cddaf09c",
+      "sha256": "47e1162e9d53d4a6d32647c260872c20b757b28ada91dc81ad0af93b4ad901d6",
       "executable": false
     },
     "tests/base/previous-sample-fixture.ts": {
