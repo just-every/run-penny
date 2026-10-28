@@ -40,3 +40,9 @@ async function installCurrentWritePrerequisites(){
 export async function owner({finishSetup=true,timezone='Australia/Brisbane'}={}){await installCurrentWritePrerequisites();const r=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner',returnTo:'/app'});expect(r.status,await r.clone().text()).toBe(303);const cookie={Cookie:r.headers.get('Set-Cookie')!.split(';')[0]};// A store still on a prior schema head has no first-run record yet; the migration marks its existing owner done.
 if(finishSetup&&await env.DB.prepare("SELECT 1 AS present FROM sqlite_master WHERE name='penny_mail_identity'").first()){if(!await env.DB.prepare("SELECT 1 AS present FROM sqlite_master WHERE name='penny_workspace_clock'").first())await applyD1Migrations(env.DB,(inject('migrations') as {name:string}[]).filter(migration=>/^0072_/.test(migration.name)) as never);expect((await finishFirstRun(cookie,timezone)).status).toBe(303)}return cookie}
 export async function requester(displayName='Private display'){const email=`${crypto.randomUUID()}@example.test`;expect((await call('/api/public/identity/email',{email,displayName})).status).toBe(202);const link=messages.findLast(m=>m.to===email)!;expect(link).toBeDefined();const token=new URLSearchParams(new URL(link.url).hash.slice(1)).get('token');const r=await call('/api/public/identity/email/verify',{token});expect(r.status).toBe(200);return {Authorization:`Bearer ${(await r.json() as {token:string}).token}`}}
+
+/** Explicit company choice for retained scoped-client journeys; never a product default. */
+export async function allowAgentCalls(operator:Record<string,string>){
+ const response=await call('/agents/api/policy',{document:{schema:'rer-agent-policy/1',catalogue:'rer-agent-classes/1',rules:[{id:'client-journey',class:'*',do:'autonomous'}],spend:{none:true}}},operator,'PUT')
+ expect(response.status,await response.clone().text()).toBe(200)
+}

@@ -1,6 +1,6 @@
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterAll,expect,inject,it,vi } from 'vitest'
-import { call,env,messages,owner } from './support'
+import { call,env,messages,owner,allowAgentCalls } from './support'
 import { graph } from './notification-regression-fixture'
 beforeEach(async()=>{vi.restoreAllMocks();await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 afterAll(()=>vi.restoreAllMocks())
@@ -86,7 +86,8 @@ it('[CAP-014 API-001 API-002] server-held scoped keys record proxy demand, refus
  const issue=(scopes:string[])=>json<{token:string;credential:{id:string}}>('/api/operator/integrations/keys',{name:'Zendesk sidebar',scopes},g.operator,201)
  const denied=await issue(['requests:read']),allowed=await issue(['requests:read','votes:write'])
  const input={contact:{displayName:'Zendesk customer',email:'zendesk.customer@example.test'},source:'Zendesk ticket 1108',sourceUrl:'https://harbor.zendesk.com/agent/tickets/1108'}
- const endpoint=`/api/v1/requests/${r.slug}/proxy-votes`,key={Authorization:'Bearer '+allowed.token}
+ await allowAgentCalls(g.operator)
+ const endpoint=`/api/v1/requests/${r.slug}/proxy-votes`,key={Authorization:'Bearer '+allowed.token,'Idempotency-Key':crypto.randomUUID()}
  expect((await call(endpoint,input,{Authorization:'Bearer '+denied.token})).status).toBe(401)
  const recorded=await json<{requesterId:string}>(endpoint,input,key)
  expect(await env.DB.prepare('SELECT recorder_operator_id FROM penny_proxy_votes WHERE requester_id=?').bind(recorded.requesterId).first('recorder_operator_id')).toBe(await env.DB.prepare('SELECT id FROM operators').first('id'))

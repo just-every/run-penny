@@ -3670,7 +3670,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "f78d08555719d5cb86e1e2d3dea4ea81ed61bb460b030f8016d31de471cccfc5",
+      "sha256": "e4c2a8948d82db3aae27abb7e4056045f380368c6b4df6790022cc2538e2b84f",
       "executable": false
     },
     "CLAUDE.md": {
@@ -5210,7 +5210,7 @@
       "executable": false
     },
     "src/core/features/agent-door/documentation.ts": {
-      "sha256": "70a5021b89cfafebfafbc21f093b94b47333fed57b5870b1e2839eefcf0c7019",
+      "sha256": "266d45a0c3c4cf901c03405121c7cf1839082337bf6fac16379b3541dbbf94e7",
       "executable": false
     },
     "src/core/features/agent-door/event-tools.ts": {
@@ -6422,7 +6422,7 @@
       "executable": false
     },
     "src/core/features/integrations/ui/api-keys.tsx": {
-      "sha256": "571600d3fa46e1115c4a463b26a99c4dcef4a92e4cad4187690a43e4f5b7fb6a",
+      "sha256": "ec24c7866fd98191c3fc3abf0bdad1ba5c0c4dbfefdf12d3b7b1d1df289bd6c1",
       "executable": false
     },
     "src/core/features/integrations/ui/destinations.tsx": {
@@ -7454,7 +7454,7 @@
       "executable": false
     },
     "src/core/features/requests/ui/operator-request-controls.tsx": {
-      "sha256": "05c03b9659b9b2f07416797900920e358092e234935733e5c6f1b537148677c0",
+      "sha256": "994306009c81fbd1321d8d775e84187bba63e627d490bf5d63469a26beb17ec8",
       "executable": false
     },
     "src/core/features/requests/ui/proxy-vote-form.tsx": {
@@ -8330,7 +8330,7 @@
       "executable": false
     },
     "tests/base/auth.test.ts": {
-      "sha256": "fb5c35b044beef3e656cc43b9f3345354108840e80d642c70f15509bffae656e",
+      "sha256": "e4316f90fd1ea33267bad3c140e555a9c9082a94e62593d608595609d07630a4",
       "executable": false
     },
     "tests/base/board-categories.test.ts": {
@@ -8566,7 +8566,7 @@
       "executable": false
     },
     "tests/base/proxy-votes.test.ts": {
-      "sha256": "3635836933cba3117662f29cc096c5586916b94d2cbb3a7acaf904fd1e7b90e5",
+      "sha256": "ff68c08b20476065e4f7379919db2e50f14cef1b7af9c1c5965025d2fc350efa",
       "executable": false
     },
     "tests/base/redaction-copy-doors.ts": {
@@ -8670,7 +8670,7 @@
       "executable": false
     },
     "tests/base/support.ts": {
-      "sha256": "dc87ded7066096665109c2accc562e9fd91e626978292723a5c8ec1b5b388e38",
+      "sha256": "56cc0e1ac165173de2a337e3847fb2a2e284a2514a1b64da97fa5c8c2245d3c6",
       "executable": false
     },
     "tests/base/triage-aging.test.ts": {
@@ -8798,7 +8798,7 @@
       "executable": false
     },
     "tests/browser/integration-api.mjs": {
-      "sha256": "87f1d7f2b80f84360ba3dfd1a358b4b99b9da76ac187cab09c30bf6b136ab729",
+      "sha256": "6bab008d90bd06d0b7fa8885283dd975fc844392c93ac9e15805c156442a1bb4",
       "executable": false
     },
     "tests/browser/integration-receiver-checks.mjs": {
@@ -9250,7 +9250,7 @@
       "executable": false
     },
     "tests/installer/dev-credentials.test.mjs": {
-      "sha256": "e43ff6a1406709209f6dbe2a444f4901b28661ec42a4ad83d241c55954a1db99",
+      "sha256": "9da36a545f2e2654f01528ba909fecc20d2159e845395933bce305dc604acd9a",
       "executable": false
     },
     "tests/installer/older-archive.test.mjs": {

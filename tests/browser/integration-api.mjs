@@ -10,11 +10,13 @@ const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import
 let browser
 try{
  browser=await chromium.launch(browserOptions())
- for(const width of [1440,390]){
+ // Cloud behavioral assertions use one width; the candidate proof covers both.
+ for(const width of [1440]){
   const runtime=await startBrowserRuntime();let context
   try{
    const bootstrap=await fetch(runtime.origin+'/auth/bootstrap',{method:'POST',redirect:'manual',headers:{Origin:runtime.origin,'Content-Type':'application/json'},body:JSON.stringify({token:'synthetic-base-browser-setup-token-12345',displayName:'Owner',returnTo:'/app'})});assert.equal(bootstrap.status,303)
    const [name,value]=bootstrap.headers.get('set-cookie').split(';')[0].split('=')
+   const setup=await fetch(runtime.origin+'/setup',{method:'POST',redirect:'manual',headers:{Origin:runtime.origin,Cookie:`${name}=${value}`,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({confirm:'yes',companyName:'Harbor Analytics',postalAddress:'14 Market Street',timezone:'UTC',quietStart:'22',quietEnd:'8'})});assert.equal(setup.status,303)
    context=await browser.newContext({viewport:{width,height:width===390?844:900}});await context.addCookies([{name,value,url:runtime.origin}])
    const page=await context.newPage(),errors=[],external=[]
    page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(message.type()==='error')errors.push(message.text())})
@@ -33,6 +35,7 @@ try{
    }
    await capture('created-masked-key')
    const request=(path,body)=>fetch(runtime.origin+path,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+token,...(body?{Origin:runtime.origin,'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})})
+   const policy=await fetch(runtime.origin+'/agents/api/policy',{method:'PUT',headers:{Origin:runtime.origin,Cookie:`${name}=${value}`,'Content-Type':'application/json'},body:JSON.stringify({document:{schema:'rer-agent-policy/1',catalogue:'rer-agent-classes/1',rules:[{id:'client-journey',class:'*',do:'autonomous'}],spend:{none:true}}})});assert.equal(policy.status,200)
    assert.equal((await request('/api/v1/requests')).status,200)
    assert.equal((await request('/api/v1/requests',{title:'Denied write',description:'Body',boardSlug:'feedback'})).status,401)
    assert.equal((await request('/api/operator/data/export')).status,401)

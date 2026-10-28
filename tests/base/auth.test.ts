@@ -7,6 +7,7 @@ import { createDatabaseConnection } from '../../src/core/platform/database'
 import { importPennySample } from '../../src/core/features/sample-data/service'
 import sample from '../../sample-data/penny.v1.json'
 import { call,env,owner,mockMail,messages,origin } from './support'
+import {allowAgentCalls} from './support'
 import { observeD1 } from './review-race-storage'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
@@ -106,6 +107,7 @@ it('[OPS-001/002] equal native invitees operate and manage peers; removal revoke
  const third=await invited(peer.cookie,longEmail)
  expect((await call(`${management}/${third.id}`,{},peer.cookie,'DELETE')).status).toBe(200)
  expect((await call(management,undefined,third.cookie)).status).toBe(401)
+ await allowAgentCalls(first)
  const issued=await call('/api/operator/integrations/keys',{name:'Peer key',scopes:['requests:read']},peer.cookie)
  expect(issued.status).toBe(201);const key=await issued.json() as {token:string}
  expect((await call('/api/v1/requests',undefined,{Authorization:`Bearer ${key.token}`})).status).toBe(200)
@@ -140,6 +142,7 @@ it('[OPS-002] initial owner self-removal requires a verified successor and survi
  expect((await call(management,{email:'pending-owner@example.test'},first)).status).toBe(202)
  expect((await call(`${management}/${initial.id}`,{},first,'DELETE')).status).toBe(409)
  const peer=await invited(first,'successor@example.test')
+ await allowAgentCalls(first)
  const issued=await call('/api/operator/integrations/keys',{name:'Successor key',scopes:['requests:read']},peer.cookie)
  expect(issued.status).toBe(201);const key=await issued.json() as {token:string}
  await call('/api/auth/magic-link',{email:'owner@penny.invalid'})

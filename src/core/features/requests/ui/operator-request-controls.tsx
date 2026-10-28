@@ -43,7 +43,7 @@ export function OperatorRequestControls({ slug }: { slug: string }) {
   return (
     <>
       <OwnerControl entity="requests" value={slug} />
-      {context.kind==='ready'?<><DraftPanel kind="request" id={context.data.requestId}/>{context.data.comments.map(comment=><div key={comment.id} className="mt-4"><p className="text-sm leading-6 text-penny-ink">{comment.body}</p><DraftPanel kind="comment" id={comment.id} onSent={refresh}/></div>)}</>:null}
+      {context.kind==='ready'?<><DraftPanel kind="request" id={context.data.requestId}/>{context.data.comments.map(comment=><div key={comment.id} className="mt-4">{comment.public_author_display_name?<p className="text-sm font-semibold text-penny-ink">{comment.public_author_display_name}</p>:null}<p className="text-sm leading-6 text-penny-ink">{comment.body}</p><DraftPanel kind="comment" id={comment.id} onSent={refresh}/></div>)}</>:null}
       {context.kind==='ready'?<><RequestDemand context={context.data}/><ProxyVoteForm slug={slug} onSaved={()=>{refresh();void router.invalidate()}}/></>:null}
       {context.kind === 'ready' ? (
         <section className="mt-6 border-t border-penny-line pt-5" aria-label="Status update delivery">
