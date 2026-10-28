@@ -674,7 +674,7 @@
       "executable": false
     },
     "agent-surface.json": {
-      "sha256": "e08d65aaf3fa5ffb30a85d4504ba4be85c1d7f96acc2fc1cefa20118c900efeb",
+      "sha256": "69bb1e6ea433a85858ecb05af3622767e83bdb7ce51c1825e6cb0f7d49fd63b4",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -5198,19 +5198,19 @@
       "executable": false
     },
     "src/core/features/agent-door/deferred.ts": {
-      "sha256": "8fce4f9b0be9b893be19e03419be53010d949b0ecb3b37f931735fe8a3facad4",
+      "sha256": "06e090adab28db20aa304903e8cf6f2e4ec258e2cfedf3d7f2d18f15ba2ab451",
       "executable": false
     },
     "src/core/features/agent-door/delivery-tools.ts": {
-      "sha256": "b9184b23fca0ed9b1b7d421e9b5285b0d8f99e90727c272647bdc08796d27176",
+      "sha256": "0db451197f613eaa58a740bb0541b2680986cc236041aebb6386d852df527906",
       "executable": false
     },
     "src/core/features/agent-door/documentation.ts": {
-      "sha256": "2bb64b28c9b09e4d23e5dada4690070479d680bdbd0c6f183a9715e16d313672",
+      "sha256": "70a5021b89cfafebfafbc21f093b94b47333fed57b5870b1e2839eefcf0c7019",
       "executable": false
     },
     "src/core/features/agent-door/event-tools.ts": {
-      "sha256": "86898f2002f7b4b3b2e98d08d73afaac8f6b32ed4757d6fa32d23685a73fd29a",
+      "sha256": "cb34321d35a58e8c4f14c96eb6ab4e79aabbd37237ec546f67fd1d34e16eb210",
       "executable": false
     },
     "src/core/features/agent-door/index.ts": {
@@ -5226,19 +5226,19 @@
       "executable": false
     },
     "src/core/features/agent-door/native.ts": {
-      "sha256": "b5dd11ac477ad7af02949f7ef90e9faacfd077d96e2866baf4826aff6edf1466",
+      "sha256": "92861eb132b2edd98c7a4d38bb054f6ea370e291381afe92bbc0a828b0098140",
       "executable": false
     },
     "src/core/features/agent-door/people.ts": {
-      "sha256": "44feea6b6a6ece2bdc83a25bc7de4c5394075068e773306f63269260ea0b2901",
+      "sha256": "7938cbc02ba64d66a56643e3f1de56d0e7c2b00eb878714b2cfeb3de8b1a7d27",
       "executable": false
     },
     "src/core/features/agent-door/projection.ts": {
-      "sha256": "b44de48e24796215ac6e4822d1e1437ba49aa8dcc8026a2ada846be0dc5b8f80",
+      "sha256": "e0b4c728625c0a770eb7260d4258ba80cf06884db7235758062be69455f577d6",
       "executable": false
     },
     "src/core/features/agent-door/reads.ts": {
-      "sha256": "13c35d8d05370c5c59e32c2aefe66e583679351e240db67d87b80019fd15e5bf",
+      "sha256": "8d9a10f605f2a73c80aa0079a206ffa7706cae471e5d4ab91cd8ac1715579816",
       "executable": false
     },
     "src/core/features/agent-door/release-tools.ts": {
@@ -5254,11 +5254,11 @@
       "executable": false
     },
     "src/core/features/agent-door/rest.ts": {
-      "sha256": "0c33ab420ba02b865cfc86f61e90dc4c9056b56a70d40b73c5ac0b65945ff1f9",
+      "sha256": "19457869a49b5ddb59125dfc5ca991e40ee4e2a373aad103844515b38dc4ba84",
       "executable": false
     },
     "src/core/features/agent-door/schedule-tools.ts": {
-      "sha256": "01854ea68608de2b799f7bd0303d9a4fd710132ef90b95970612b5ad8759bf76",
+      "sha256": "dc4c0972baf2f8cb187239c2e6fd7f753d8055fcf900860786feb53b39c70e98",
       "executable": false
     },
     "src/core/features/agent-door/settings-tools.ts": {
@@ -5266,11 +5266,11 @@
       "executable": false
     },
     "src/core/features/agent-door/tool.ts": {
-      "sha256": "c13be2df072a994522446f714a5a349f3c657370767d15bb72c5c04a54a3eed1",
+      "sha256": "37d2e758ce5a538c82479dbd7194c4a4414fe98889e3dd812bfbad21db6c6e56",
       "executable": false
     },
     "src/core/features/agent-door/triage-tools.ts": {
-      "sha256": "881876dc9b83bc4efaec6bc2f89a5f75d0f5958fb71c69a32f8269940116f8a0",
+      "sha256": "cb4d3dd0ae949b56a7a8b32a92468f98598a4c1fcd6816b35aad45e6fd5a961f",
       "executable": false
     },
     "src/core/features/ai/budget.ts": {
@@ -9099,6 +9099,10 @@
     },
     "tests/data/tls-runtime.mjs": {
       "sha256": "fc5b7fc14e5afb199bc9cf84fd767001499b21d428b92b0692ca4627861d3768",
+      "executable": false
+    },
+    "tests/fixtures/agent-journey.mjs": {
+      "sha256": "dbcb79d8dfcc7448056f600a3b69551ac0074ee18e8a4237ae98f7f7bfdff76e",
       "executable": false
     },
     "tests/fixtures/agent-owner.mjs": {

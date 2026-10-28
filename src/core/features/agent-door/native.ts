@@ -46,3 +46,12 @@ function agentDatabase(db:D1Database,guard:AuthorityGuard,ctx?:ToolContext):D1Da
  return new Proxy(db,{get(target,key){if(key==='prepare')return(sql:string)=>wrap(target.prepare(sql));if(key==='batch')return batch;if(key==='exec'||key==='dump')return()=>{throw new ToolRefusal('unsupported_database_operation')};const value=Reflect.get(target,key,target);return typeof value==='function'?value.bind(target):value}})
 }
 export const resourceContext=(runtime:PennyRuntime,ctx:ResourceContext,scope?:string)=>nativeContext(runtime,ctx,true,undefined,scope)
+
+/** Review Undo is a real person's native action. It has no agent principal or
+ * standing agent consent, and still uses the service's current native guard. */
+export async function nativeUndoContext(runtime:PennyRuntime,personId:string){
+ const db=runtime.database.binding,row=await db.prepare("SELECT o.version,b.actor_id AS actor FROM oa_operators o JOIN penny_operator_bindings b ON b.native_operator_id=o.id WHERE o.id=? AND o.status='active'").bind(personId).first<{version:number;actor:string}>()
+ if(!row)throw new ToolRefusal('sponsor_inactive')
+ const safe=guardedDatabase(db,{sql:"EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND version=? AND status='active') AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle')",params:[personId,row.version]})
+ return {db:safe,database:{binding:safe},actor:row.actor}
+}

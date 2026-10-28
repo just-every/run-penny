@@ -1,6 +1,7 @@
+import {safeProjection} from './projection'
 import { z } from 'zod'
 import type { PennyRuntime } from '@/core/app/runtime'
-import type { ToolDefinition, ToolContext, ClassAndFacts, ApprovalSummary } from '../../../../base/modules/agent-door/types.ts'
+import type { ToolDefinition, ToolContext, ClassAndFacts, ApprovalSummary, UndoContext } from '../../../../base/modules/agent-door/types.ts'
 import { ToolRefusal } from '../../../../base/modules/agent-door/errors.ts'
 import { nativeContext } from './native'
 import { NativeError } from '../auth/native-tokens'
@@ -14,6 +15,7 @@ type Options<S extends z.ZodType>= {
  classify?(args:z.output<S>,native:Native,ctx:ToolContext):Promise<ClassAndFacts[]>;
  summary?(args:z.output<S>,native:Native,ctx:ToolContext):Promise<ApprovalSummary>;
  revision?(args:z.output<S>,native:Native):Promise<string|number|null>;
+ undo?(saved:unknown,ctx:UndoContext):Promise<void>;
  authority?:ToolDefinition['authority'];output?:ToolDefinition['outputSchema'];untrusted?:boolean;
 }
 export function tool<S extends z.ZodType>(runtime:PennyRuntime,o:Options<S>):ToolDefinition{
@@ -24,11 +26,12 @@ export function tool<S extends z.ZodType>(runtime:PennyRuntime,o:Options<S>):Too
   classify:async(args,ctx)=>o.classify?o.classify(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope),ctx):[{class:'standard',facts:{measure:1}}],
   async run(args,ctx){try{
    const value=await o.run(parse(args),await nativeContext(runtime,ctx,!!o.readOnly,o.readOnly?undefined:ctx,o.scope),ctx)
-   const result=JSON.parse(JSON.stringify(value??{ok:true}));const links=await nativeLinks(runtime,o.name,args,result,ctx,o.scope);return {result,...(links.length?{resources:links}:{})}
+   const result=safeProjection(JSON.parse(JSON.stringify(value??{ok:true}))) as Record<string,unknown>;const links=await nativeLinks(runtime,o.name,args,result,ctx,o.scope);return {result,...(links.length?{resources:links}:{}),...(o.undo?{undo:result}:{})}
   }catch(error){if(error instanceof ToolRefusal)throw error;if(error instanceof NativeError||error instanceof RequestLifecycleError)throw new ToolRefusal(error.code);if(error instanceof MutationError)throw new ToolRefusal(error.status===404?'not_found':error.status===409?'native_conflict':'native_validation_failed',error.message);throw error}},
  }
  if(!o.readOnly)definition.summary=async(args,ctx)=>JSON.parse(JSON.stringify(o.summary?await o.summary(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope),ctx):{items:[o.title,JSON.stringify(parse(args))],target:{id:typeof args.id==='string'?args.id:typeof args.slug==='string'?args.slug:undefined}}))
  if(o.revision){definition.revisionType='string';definition.revision=async(args,ctx)=>o.revision!(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope))}
+ if(o.undo)definition.undo=o.undo
  if(o.authority)definition.authority=o.authority
  return definition
 }

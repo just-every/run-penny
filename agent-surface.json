@@ -1015,7 +1015,8 @@
         "INSTALLATION_KEY": "sessionSecret"
       },
       "initializer": "tests/fixtures/agent-owner.mjs"
-    }
+    },
+    "journey": "tests/fixtures/agent-journey.mjs"
   },
   "journey": [
     {

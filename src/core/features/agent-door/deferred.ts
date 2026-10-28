@@ -14,6 +14,7 @@ export async function sameDeliveryOrigin(runtime:PennyRuntime,kind:'request'|'re
  const saved=await deliveryOrigin(runtime,kind,id)
  if(!saved)throw new ToolRefusal('agent_delivery_not_owned')
  const principal=JSON.parse(saved.principal)
+ if(!Array.isArray(principal.scopes)||principal.scopes.some((scope:string)=>!ctx.scopes.includes(scope)))throw new ToolRefusal('insufficient_scope')
  if(principal.person.id!==ctx.person.id||principal.agent.id!==ctx.agent.id||(principal.clientId??null)!==(ctx.clientId??null)||(principal.consent??null)!==(ctx.consent??null))throw new ToolRefusal('agent_delivery_not_owned')
  return saved
 }
