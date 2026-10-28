@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "514c9419465e7e9b75923de1646f4adfdce8602def79126f9a580c3c397d60e7",
+      "sha256": "4781262f22537fde578bcc080ccdc463ec058cb381ebbc3ed22fb03affc60bbd",
       "executable": false
     },
     "CLAUDE.md": {
@@ -5018,7 +5018,7 @@
       "executable": false
     },
     "src/core/features/discord/work.ts": {
-      "sha256": "dfd5e17f1e93a8f9eba787bb9e4b51b00df2c450f0751d3fbd637515eedb5ad0",
+      "sha256": "eb40967683d5b620546caab647bb99d64fd6c78d5b1ddb329383f37ef0adeca3",
       "executable": false
     },
     "src/core/features/discussion/mention-notices.tsx": {
@@ -7962,7 +7962,7 @@
       "executable": false
     },
     "tests/browser/discord-capture.mjs": {
-      "sha256": "96eaeb70a82a00eaef3ccd84591676684fd40852d053bf1448a986826480f49e",
+      "sha256": "45e91a0c5143638e3007c49dfca720b6503222c613e8033aa093004ee7280068",
       "executable": false
     },
     "tests/browser/draft-journey.mjs": {

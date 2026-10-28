@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reapply current redaction rules to pending Discord capturer attribution in the evidence transaction, including rule changes between intake and capture.
+
 - Record each automatic Discord excerpt purge with one wording-free audit entry in its write transaction; a failed purge remains visible for scheduled recovery.
 
 - Keep the owner-only Discord settings panel readable as an availability notice for other signed-in roles; configuration writes remain owner-guarded.

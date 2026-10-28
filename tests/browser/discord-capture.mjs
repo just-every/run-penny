@@ -59,8 +59,13 @@ try{
  let status=await json('/api/operator/integrations/discord',undefined,operator);assert.equal(status.jobs.find(job=>job.id.endsWith(ids[2])).state,'failed');assert.equal(reads.filter(id=>id===ids[2]).length,1)
  modes.delete(ids[2]);await json('/api/operator/integrations/discord/jobs',{id:`${guild}/${channel}/${ids[2]}`,action:'retry'},operator);await runtime.schedule();assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_discord_sources').first('n'),3)
  // Simulate an actual killed claim at its durable checkpoint, then restart the Worker.
- await signed(command(ids[3]));await runtime.db.prepare("UPDATE penny_discord_jobs SET state='running',claim='killed-at-checkpoint',started_at='2000-01-01T00:00:00Z' WHERE message_id=?").bind(ids[3]).run();await runtime.restart();await runtime.schedule()
+ await json('/api/operator/settings/redaction',{enabled:false,kinds:['email'],patterns:[]},operator,'PUT')
+ await signed({...command(ids[3]),member:{user:{id:capturer,username:'trigger.secret@example.test'}}})
+ await json('/api/operator/settings/redaction',{enabled:true,kinds:['email'],patterns:[]},operator,'PUT')
+ await runtime.db.prepare("UPDATE penny_discord_jobs SET state='running',claim='killed-at-checkpoint',started_at='2000-01-01T00:00:00Z' WHERE message_id=?").bind(ids[3]).run();await runtime.restart();await runtime.schedule()
  status=await json('/api/operator/integrations/discord',undefined,operator);assert.equal(status.jobs.find(job=>job.id.endsWith(ids[3])).failure,'interrupted_read_retry_required');assert.ok(!reads.includes(ids[3]));await json('/api/operator/integrations/discord/jobs',{id:`${guild}/${channel}/${ids[3]}`,action:'retry'},operator);await runtime.schedule()
+ assert.equal(await runtime.db.prepare('SELECT capturer_name FROM penny_discord_sources WHERE message_id=?').bind(ids[3]).first('capturer_name'),'[REDACTED:email]')
+ assert.equal(await runtime.db.prepare('SELECT capturer_name FROM penny_discord_jobs WHERE message_id=?').bind(ids[3]).first('capturer_name'),'[REDACTED:email]')
  // A pause during the network read must invalidate the completion transaction.
  await signed(command(ids[4]));onRead=async id=>{if(id===ids[4]){onRead=async()=>{};await json('/api/operator/integrations/discord',{...settings,enabled:false},operator,'PUT')}}
  await runtime.schedule().catch(error=>{assert.match(error.message,/scheduled/)});assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_discord_sources WHERE message_id=?').bind(ids[4]).first('n'),0)
@@ -71,7 +76,7 @@ try{
  assert.equal(await runtime.db.prepare('SELECT source_state FROM penny_discord_sources WHERE message_id=?').bind(ids[1]).first('source_state'),'purged');assert.equal(await runtime.db.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=?').bind(rows[1].evidence_id).first('wording'),'[Source removed]')
  assert.equal(await runtime.db.prepare("SELECT count(*) n FROM audit_entries WHERE action='discord.source_purged' AND entity_id=?").bind(rows[1].evidence_id).first('n'),1,'A repeated schedule records the purge audit once')
  await signed(command(ids[5]));const portable=await json('/api/operator/data/export',undefined,operator),archive=portable.archive
- assert.equal(archive.tables.penny_discord_settings[0].enabled,0);assert.equal(archive.tables.penny_discord_jobs.find(job=>job.message_id===ids[5]).state,'held');assert.doesNotMatch(JSON.stringify(archive),new RegExp(config.botToken+'|'+config.gatewaySecret));assert.equal(archive.tables.penny_discord_sources.length,4)
+ assert.equal(archive.tables.penny_discord_settings[0].enabled,0);assert.equal(archive.tables.penny_discord_jobs.find(job=>job.message_id===ids[5]).state,'held');assert.doesNotMatch(JSON.stringify(archive),new RegExp(config.botToken+'|'+config.gatewaySecret));assert.equal(archive.tables.penny_discord_sources.length,4);assert.ok(!JSON.stringify(archive).includes('trigger.secret@example.test'))
 
  // Restore through the public data door: archived operator IDs never restart a connector.
  const restored=await startBrowserRuntime()

@@ -42,14 +42,14 @@ export async function drainDiscord(runtime:PennyRuntime,clock=Date.now()){
    if(!parsed.success||parsed.data.id!==job.message_id||parsed.data.channel_id!==job.channel_id)throw new NativeError('discord_message_invalid',503)
    const message=parsed.data
    if(!message.content.trim())throw new NativeError('discord_message_content_unavailable',503)
-   const fingerprint=await sourceHash(message),sourceDigest=await digest(job.id),redacted=await redactCaptured(db,{name:message.author?.global_name??message.author?.username??null},['name'])
+   const fingerprint=await sourceHash(message),sourceDigest=await digest(job.id),redacted=await redactCaptured(db,{name:message.author?.global_name??message.author?.username??null,capturerName:job.capturer_name},['name','capturerName'])
    const guard=captureGuard(settings);guard.sql+=" AND EXISTS(SELECT 1 FROM penny_discord_jobs WHERE id=? AND state='running' AND claim=?) AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND epoch=?)";guard.params.push(job.id,claim,state.epoch)
    const commit=guardedDatabase(raw,guard),fence=redactionFence(commit,redacted.revision)
    await recordEvidence(commit,{sourceType:'discord',sourceLabel:'Discord message '+job.message_id,wording:message.content,namedSpeaker:redacted.input.name,observedAt:message.timestamp},null,now,undefined,undefined,{systemActor:'discord-capture',statements:id=>[
     fence.before,fence.after,
     commit.prepare('INSERT INTO penny_discord_receipts(source_digest,created_at) VALUES(?,?)').bind(sourceDigest,now),
-    commit.prepare(`INSERT INTO penny_discord_sources(evidence_id,job_id,guild_id,channel_id,message_id,jump_url,capturer_id,capturer_name,author_id,source_hash,source_state,next_check) VALUES(?,?,?,?,?,?,?,?,?,?,'current',?)`).bind(id,job.id,job.guild_id,job.channel_id,job.message_id,`https://discord.com/channels/${job.guild_id}/${job.channel_id}/${job.message_id}`,job.capturer_id,job.capturer_name,message.author?.id??null,fingerprint,new Date(clock+3600000).toISOString()),
-    commit.prepare("UPDATE penny_discord_jobs SET state='done',failure=NULL,claim=NULL,evidence_id=?,updated_at=? WHERE id=? AND claim=?").bind(id,now,job.id,claim),
+    commit.prepare(`INSERT INTO penny_discord_sources(evidence_id,job_id,guild_id,channel_id,message_id,jump_url,capturer_id,capturer_name,author_id,source_hash,source_state,next_check) VALUES(?,?,?,?,?,?,?,?,?,?,'current',?)`).bind(id,job.id,job.guild_id,job.channel_id,job.message_id,`https://discord.com/channels/${job.guild_id}/${job.channel_id}/${job.message_id}`,job.capturer_id,redacted.input.capturerName,message.author?.id??null,fingerprint,new Date(clock+3600000).toISOString()),
+    commit.prepare("UPDATE penny_discord_jobs SET state='done',failure=NULL,claim=NULL,evidence_id=?,capturer_name=?,updated_at=? WHERE id=? AND claim=?").bind(id,redacted.input.capturerName,now,job.id,claim),
    ]})
   }catch(error){
    // Provider bodies, tokens, names and excerpts never enter failure records.
