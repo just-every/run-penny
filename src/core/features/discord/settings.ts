@@ -13,9 +13,9 @@ export function registerDiscordSettings(app:Hono<OperatorMutationEnvironment>){
  app.use(path+'*',async(c,next)=>{c.header('Cache-Control','private, no-store');await next()})
  app.get(path,async c=>{
   const runtime=c.get('runtime'),{session,db}=await integrationOperator(runtime,c.req.raw)
-  if(session.operator.role!=='owner')throw new NativeError('owner_required',403)
+  if(session.operator.role!=='owner')return c.json({canConfigure:false})
   const settings=await readSettings(db),config=discordConfiguration(runtime),jobs=(await db.prepare('SELECT id,message_id,channel_id,guild_id,trigger_kind,state,attempts,failure,updated_at,(SELECT display_name FROM operators WHERE id=penny_discord_jobs.actor_id) ownerName FROM penny_discord_jobs ORDER BY updated_at DESC LIMIT 20').all()).results
-  return c.json({configured:Boolean(config&&runtime.bindings.PENNY_DISCORD_EGRESS),applicationId:config?.applicationId??null,settings:settings?{guildId:settings.guild_id,channelIds:JSON.parse(settings.channels_json),emoji:settings.emoji,enabled:settings.enabled===1,purgeDays:settings.purge_days}:null,jobs,counts:(await db.prepare('SELECT state,count(*) count FROM penny_discord_jobs GROUP BY state').all()).results,owner:settings?.owner_id??null})
+  return c.json({canConfigure:true,configured:Boolean(config&&runtime.bindings.PENNY_DISCORD_EGRESS),applicationId:config?.applicationId??null,settings:settings?{guildId:settings.guild_id,channelIds:JSON.parse(settings.channels_json),emoji:settings.emoji,enabled:settings.enabled===1,purgeDays:settings.purge_days}:null,jobs,counts:(await db.prepare('SELECT state,count(*) count FROM penny_discord_jobs GROUP BY state').all()).results,owner:settings?.owner_id??null})
  })
  app.put(path,async c=>{
   const runtime=c.get('runtime'),{session,actor}=await integrationOperator(runtime,c.req.raw)

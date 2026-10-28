@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "bd11cfa9f826ed1eb02cb6700634bacd803e339958edfc6d2262d62cc5b23bd3",
+      "sha256": "5382faf6f3358ad29fe639ccd7eaeaba40bf3b02198e62df2afc6457f5af126e",
       "executable": false
     },
     "CLAUDE.md": {
@@ -5006,11 +5006,11 @@
       "executable": false
     },
     "src/core/features/discord/settings-ui.tsx": {
-      "sha256": "a4ab0e67598af22119382d67db0e30f85e0185eba1207f9e9c08c70efee347bf",
+      "sha256": "e3ab01c459912c737a62dafaa4e47d50ae73b5f5bd0953829a91d666ba058ae2",
       "executable": false
     },
     "src/core/features/discord/settings.ts": {
-      "sha256": "e7b9d0c73f0182e169aeed6f290b21f0d1d184148cbf996c7f812e6e4b7f66fc",
+      "sha256": "c057c61417071ad04f138602aeba89111c48028d5b0c92777cc19ffa4af67a83",
       "executable": false
     },
     "src/core/features/discord/signatures.ts": {

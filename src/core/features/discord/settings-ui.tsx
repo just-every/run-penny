@@ -6,13 +6,13 @@ import {operatorMutation} from '../requests/ui/operator-client'
 import {buttonClass,fieldClass} from '../auth/client-mutations'
 import {fieldLabelClass} from '@/core/ui/app/classes'
 interface Settings {guildId:string;channelIds:string[];emoji:string;enabled:boolean;purgeDays:number}
-interface Status {configured:boolean;applicationId:string|null;owner:string|null;settings:Settings|null;counts:{state:string;count:number}[];jobs:{id:string;ownerName:string|null;message_id:string;channel_id:string;guild_id:string;trigger_kind:string;state:string;attempts:number;failure:string|null;updated_at:string}[]}
+interface Status {canConfigure:boolean;configured:boolean;applicationId:string|null;owner:string|null;settings:Settings|null;counts:{state:string;count:number}[];jobs:{id:string;ownerName:string|null;message_id:string;channel_id:string;guild_id:string;trigger_kind:string;state:string;attempts:number;failure:string|null;updated_at:string}[]}
 const path='/api/operator/integrations/discord'
 export function DiscordSettings(){
  const [resource,reload]=useOperatorResource<Status>(path),[message,setMessage]=useState(''),[busy,setBusy]=useState(false)
  async function save(body:unknown,suffix='',method='PUT'){setBusy(true);try{await operatorMutation(path+suffix,body,method);setMessage('Discord settings saved.');reload()}catch(error){setMessage(error instanceof Error?error.message:'Discord settings could not be saved.')}finally{setBusy(false)}}
  return <SectionCard id="discord-capture" icon="evidence" title="Discord capture" description="Capture a community message with Send to Penny or a selected reaction. Only selected channels are read.">
- {resource.kind==='ready'?<div className="space-y-5">
+ {resource.kind==='ready'&&resource.data.canConfigure?<div className="space-y-5">
   <p>{resource.data.configured?'Discord transport configured.':'Discord is unavailable. Configure the application secret and enforcing transport before enabling capture.'}</p>
   <p>Captured authors remain unverified source people. Capture grants no sign-in or email permission. Attachments, embeds and surrounding messages are omitted.</p>
   <form className="space-y-5" key={JSON.stringify(resource.data.settings)} onSubmit={event=>{event.preventDefault();const values=new FormData(event.currentTarget);void save({guildId:String(values.get('guildId')),channelIds:String(values.get('channelIds')).split(/\s+/).filter(Boolean),emoji:String(values.get('emoji')),purgeDays:Number(values.get('purgeDays')),enabled:values.get('enabled')==='on'})}}>

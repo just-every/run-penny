@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep the owner-only Discord settings panel readable as an availability notice for other signed-in roles; configuration writes remain owner-guarded.
+
 - Add optional Discord message-command and reaction capture with signature-first admission, exact channel scope, separate capturer/source attribution, redaction before storage and one durable inbox identity per message. Owner settings expose progress, retry and stop; the shipped Gateway relay preserves an acknowledged resume cursor. Source checks retain captured versions on edits and purge removed excerpts on the owner's policy. Migration 0096 is additive; archives disable restored settings and hold unfinished work, and omit deployment credentials. Recorded network-edge journeys cover local behavior; live Discord and hosted transport/Cron proof remain owner-account steps. CAP-021's text, acceptance and status remain unchanged.
 
 - Contract fix round 3 (28 October 2026), after the third fresh judge: thirteen more clauses whose cited evidence does not assert every acceptance point are now partial, each with a Gap naming the unasserted points and what is asserted (API-001, REQ-002, DATA-002, DEC-004, CAP-014, ROAD-007, EVID-007, DEC-003, DEC-001, REQ-026, REQ-014, API-003 and LEARN-005); no status is promoted and no clause text changes.
