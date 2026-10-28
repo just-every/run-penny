@@ -47,7 +47,7 @@ export async function receive(runtime:PennyRuntime,request:Request,id:string,int
  if(typeof channel!=='string'||!channels(config).includes(channel))return {ignored:true}
  if(!messageTimestamp(stamp)||typeof receipt!=='string'||!receipt.length||receipt.length>300||kind==='capture'&&(typeof capturer!=='string'||!/^[A-Z][A-Z0-9]{1,79}$/.test(capturer)))throw new NativeError('invalid_slack_payload',400)
  const db=guardedDatabase(runtime.database.binding,{sql:"EXISTS(SELECT 1 FROM penny_chat_connections c JOIN oa_operators o ON o.id=c.native_operator_id WHERE c.id=? AND c.state='active' AND o.status='active' AND o.role='owner' AND o.version=c.operator_version) AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle')",params:[id]})
- if(kind!=='capture'&&!await db.prepare('SELECT 1 FROM penny_chat_sources WHERE connection_id=? AND channel_id=? AND message_ts=?').bind(id,channel,stamp).first())return {ignored:true}
+ if(kind!=='capture'&&!await db.prepare('SELECT 1 FROM penny_chat_sources WHERE workspace_id=? AND channel_id=? AND message_ts=?').bind(config.team_id,channel,stamp).first())return {ignored:true}
  const now=Date.now()
  await db.prepare('INSERT INTO penny_chat_jobs(id,connection_id,receipt,channel_id,message_ts,capturer,kind,due_at,created_at) VALUES(?,?,?,?,?,?,?,?,?) ON CONFLICT(connection_id,receipt) DO NOTHING').bind(crypto.randomUUID(),id,await digest(receipt),channel,stamp,capturer??null,kind,now,now).run()
  return {accepted:true}

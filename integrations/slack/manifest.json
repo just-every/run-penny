@@ -21,6 +21,7 @@
   "oauth_config": {
     "scopes": {
       "bot": [
+        "commands",
         "reactions:read",
         "channels:read",
         "groups:read",

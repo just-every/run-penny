@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix Slack capture after replacing a paused connection: selected sources transfer to the verified replacement for signed lifecycle events and hourly checks without another capture, preserving attribution and removal deadlines. Slack Connect account mapping also uses an author's confirmed profile workspace when the message omits it. Status now pages and filters jobs and retains unresolved failures through unrelated successes and retries. The Slack app manifest includes `commands`; existing apps must add that scope and reinstall in Slack to expose the shortcut. No schema migration or clause status change.
+
 - Add owner-configured Slack message-shortcut and selected-reaction capture, with signed ingress, durable Cron work, Connect account mapping, redacted private evidence and thread provenance. Source edits retain the captured version; deletion or lost access purges excerpts after the owner policy window. Migration 0096 is additive; run `rer setup` locally or the hosted migration runner after stopping the old Worker, and retain the expanded schema on source rollback. Bot credentials and pending jobs are installation-only; recreating a connection is required after restore. CAP-010 retains its status and acceptance text: Nook currently lacks public capture events/interactivity and read-capable app tokens.
 
 - Contract fix round 3 (28 October 2026), after the third fresh judge: thirteen more clauses whose cited evidence does not assert every acceptance point are now partial, each with a Gap naming the unasserted points and what is asserted (API-001, REQ-002, DATA-002, DEC-004, CAP-014, ROAD-007, EVID-007, DEC-003, DEC-001, REQ-026, REQ-014, API-003 and LEARN-005); no status is promoted and no clause text changes.

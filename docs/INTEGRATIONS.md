@@ -86,7 +86,12 @@ An owner installs their own Slack app using
 workspace ID, bot token and signing secret in the owner's Slack app settings.
 Invite the bot to each selected public, private or Slack Connect channel. The
 egress service must grant `https://slack.com`; no ordinary-fetch fallback exists.
-The app requests read scopes only and sends no Slack post or customer message.
+The app requests source-read scopes and `commands`, which Slack requires to
+expose the message shortcut. It sends no Slack post or customer message.
+For an existing app, add `commands` in its OAuth scopes and reinstall it into
+the workspace to grant the new permission; saving the manifest alone does not
+update an installation's grants. Then confirm **Send to Penny** appears on a
+selected channel message.
 Slack App Directory publication remains separate field proof (R-8).
 
 Configure through same-origin, native-owner-authenticated
@@ -118,14 +123,21 @@ thread are omitted. Source provenance keeps Slack author and capturer IDs, plus 
 source display name when available; it creates no native operator, verified
 requester or mail subscriber. Slack Connect maps an
 external author's workspace to an existing account only when Slack confirms the
-channel's shared-team relationship. A missing mapping leaves the account empty.
+channel's shared-team relationship. If the message omits its team, Penny uses
+the author workspace returned by `users.info` and still checks that shared-team
+membership. A missing author, membership or mapping leaves the account empty.
 
 `GET /api/operator/integrations/chat` shows scope, last successful work, safe
-failure codes and the latest 100 jobs. Credentials and event envelopes are never
-returned. Jobs have due times, leases, attempts and pending/running/failed/
+failure codes, an `unresolved_failure_count` per connection, and the latest 100
+jobs. Follow `nextCursor` as the `cursor` query parameter for older jobs;
+`limit` accepts 1–100. Filter by `connectionId` and by `state` (pending, running,
+failed, succeeded, stopped or `unresolved`). The unresolved filter includes
+retrying jobs carrying a failure, so newer successful checks cannot hide them.
+Credentials and event envelopes are never returned. Jobs have due times, leases, attempts and pending/running/failed/
 succeeded/stopped states; an interrupted lease is recoverable. Read failures
 retry at most eight times, respecting rate-limit delays. A failure remains
-visible across restarts until successful work or explicit resolution.
+visible across restarts until that job succeeds or the owner explicitly stops
+it. Requesting a retry retains the failure while that attempt is pending.
 `POST /api/operator/integrations/chat/jobs/JOB-ID` with `{"action":"retry"}` or
 `{"action":"stop"}` is the owner's explicit recovery control. The accountable
 owner's removal, role change or authority-version change stops pending work.
@@ -136,7 +148,18 @@ Paused capture admits no new events and resumes pending work when active.
 Revocation deletes Penny's local credentials and stops work; also uninstall the
 app in Slack to revoke its provider token. Slack's signed uninstall/token-revoke
 event performs local revocation too. To change scope, mappings or credentials,
-pause/revoke the old connection and create a new one. Evidence remains.
+pause the old connection and create a new one for the same verified workspace.
+Creation transfers supervision of existing sources in the newly selected
+channels from paused, revoked or missing connections. No recapture is needed:
+the new connection's signed events and hourly checks monitor the stable
+workspace/channel/message identity. Superseded jobs for transferred sources
+stop explicitly. Sources outside the replacement's selected channels keep their
+previous supervisor; leave those connections active if monitoring must continue.
+Another active connection's sources are not taken over. Evidence, capturer,
+captured wording and existing removal deadlines remain intact; the replacement's
+policy applies to future removals. Update both request URLs in Slack to the new
+paths, then revoke the old connection. Revoking before replacing starts the old
+removal policy window, and replacement never cancels or extends that deadline.
 
 Inbox cards link to the original thread and show the Slack capturer and source
 state. Source edit/delete events and bounded hourly rechecks retain the captured

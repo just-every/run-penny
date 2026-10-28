@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "47556ef5422357239655d961bf9dd0f56e541d78196f74a92ebccd726e9aa531",
+      "sha256": "92a176edc9d277f2d3756d884a0760a2b180d97d770df5342dbd791700beeb17",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3086,7 +3086,7 @@
       "executable": false
     },
     "docs/INTEGRATIONS.md": {
-      "sha256": "1d2da6b4776f89901acf3058751d21da66b0c692220db1f823b296c8a7664b71",
+      "sha256": "ebc8b4baf4a98e8c43e31abefea87f166e081879a7ff0f71102163722c6e6ff7",
       "executable": false
     },
     "docs/MOVE-IN.md": {
@@ -3202,7 +3202,7 @@
       "executable": false
     },
     "integrations/slack/manifest.json": {
-      "sha256": "ae1e1e8b7bcef791de4a0d3af45e558214f4490430935e79975ecb1fc5169a3a",
+      "sha256": "83d8e67ea77184102f7ac202a713a3d08d299c7987032856e8c365cbe077e772",
       "executable": false
     },
     "integrations/zendesk/assets/iframe.html": {
@@ -4734,15 +4734,19 @@
       "executable": false
     },
     "src/core/features/chat-capture/configuration.ts": {
-      "sha256": "b5501c60d0f0a06b972a1a25c9e35880772a17103de4fbbc11e1caaec10dad39",
+      "sha256": "b49a2c6f55cc1a2d2002909d7e893aaae1b85da8ba64b42f4e47d125d249ab7c",
       "executable": false
     },
     "src/core/features/chat-capture/ingress.ts": {
-      "sha256": "bb5f68d74154093c608b0c28a3d8945afa9475de183f5a83b4e10e0956268bc3",
+      "sha256": "04baa5b33f5763ea04e13dad679144ea4b6288948154c332c01bdae935e8942f",
+      "executable": false
+    },
+    "src/core/features/chat-capture/job-status.ts": {
+      "sha256": "e6e26b313d6a4d364ab7e3ec39bfa1915a9a419220acdcbefc8e1d3fd43670c5",
       "executable": false
     },
     "src/core/features/chat-capture/routes.ts": {
-      "sha256": "ee9fd0669517da8dd0e01c59466f77749bd02eff2736daa76424e9a91493eb05",
+      "sha256": "4f697c021461a4377d1ce9598558d9909523367c4c2b26d2b5e6741d8db92bc3",
       "executable": false
     },
     "src/core/features/chat-capture/slack.ts": {
@@ -4750,7 +4754,7 @@
       "executable": false
     },
     "src/core/features/chat-capture/worker.ts": {
-      "sha256": "ec6fab862f244c0a31cbc9b34dfd66327eb66ce034e87bd22dd4e2fdd00842a1",
+      "sha256": "68790f6a6ee7fa7ed4f2114b7729db3efecd1af6f3492aa3dd25efa70bdfd917",
       "executable": false
     },
     "src/core/features/data/archive.ts": {
@@ -8258,11 +8262,11 @@
       "executable": false
     },
     "tests/browser/slack-capture.mjs": {
-      "sha256": "26e1a88bbb340cdf58e17e0c0db386211c3213172d704770d11c119fc3ff2800",
+      "sha256": "d182e581425ac81be900030dcf181069cabad28c370f9a43d79f2f5ed92572ee",
       "executable": false
     },
     "tests/browser/slack-edge.mjs": {
-      "sha256": "60b5a404783cc4fe8d243583c02ce6aa7e91d58eed3d005c648b80422214e127",
+      "sha256": "55d7aa7c1084931f6c608025d480a2923c31b7efd2a18ff6c174b6ee9696cbaf",
       "executable": false
     },
     "tests/browser/triage-aging.mjs": {

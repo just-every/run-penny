@@ -7,6 +7,7 @@ import {readDatabase} from '../integrations/read-database'
 import {sessionGuard,sessionReadGuard} from '../integrations/keys'
 import {audit} from '../decisions/write-support'
 import {slack} from './slack'
+import {failureSummary} from './job-status'
 
 const identity=z.string().regex(/^[A-Z][A-Z0-9]{1,79}$/)
 export const connectionInput=z.object({
@@ -36,9 +37,17 @@ export async function connect(runtime:PennyRuntime,request:Request,input:z.infer
  if(new Set(input.channels).size!==input.channels.length||new Set(input.workspaceAccounts.map(row=>row.teamId)).size!==input.workspaceAccounts.length)throw new NativeError('duplicate_capture_scope',422)
  for(const mapping of input.workspaceAccounts)if(!await db.prepare('SELECT id FROM accounts WHERE id=?').bind(mapping.accountId).first())throw new NativeError('account_not_found',422)
  const id=crypto.randomUUID(),now=Date.now()
+ // The owner is replacing installation custody, not recapturing evidence.
+ // Adopt only inactive/missing supervisors in this verified workspace and the
+ // newly selected channels. Existing removal deadlines and attribution stay.
+ const adopt=`workspace_id=? AND channel_id IN(${input.channels.map(()=>'?').join(',')}) AND NOT EXISTS(SELECT 1 FROM penny_chat_connections c JOIN penny_chat_secrets s ON s.connection_id=c.id JOIN oa_operators o ON o.id=c.native_operator_id WHERE c.id=penny_chat_sources.connection_id AND c.state='active' AND o.status='active' AND o.role='owner' AND o.version=c.operator_version)`
+ const scope=[input.teamId,...input.channels]
  await db.batch([
   db.prepare('INSERT INTO penny_chat_connections(id,team_id,app_id,channels_json,mappings_json,reaction,purge_days,native_operator_id,operator_version,actor_id,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)').bind(id,input.teamId,input.appId,JSON.stringify(input.channels),JSON.stringify(input.workspaceAccounts),input.reaction,input.purgeDays,session.operatorId,session.operator.version,actor.id,now),
   db.prepare('INSERT INTO penny_chat_secrets(connection_id,bot_token,signing_secret) VALUES(?,?,?)').bind(id,input.botToken,input.signingSecret),
+  db.prepare(`UPDATE penny_chat_jobs SET state='stopped',failure='capture_supervision_replaced',lease=NULL,lease_until=NULL WHERE state IN('pending','running','failed') AND EXISTS(SELECT 1 FROM penny_chat_sources WHERE ${adopt} AND connection_id=penny_chat_jobs.connection_id AND channel_id=penny_chat_jobs.channel_id AND message_ts=penny_chat_jobs.message_ts)`).bind(...scope),
+  db.prepare(`UPDATE penny_chat_sources SET connection_id=?,check_at=? WHERE ${adopt}`).bind(id,now,...scope),
+  ...((await db.prepare("SELECT id FROM penny_chat_connections WHERE team_id=? AND state='paused'").bind(input.teamId).all<{id:string}>()).results.map(row=>failureSummary(db,row.id))),
   audit(db,actor.id,'settings',id,'slack.capture_connected',new Date(now).toISOString()),
  ])
  return {id,eventsPath:'/api/integrations/chat/'+id+'/events',interactivityPath:'/api/integrations/chat/'+id+'/interactivity'}

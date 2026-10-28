@@ -4,22 +4,23 @@ import {digest} from '../auth/native-tokens'
 import {guardedDatabase} from '../integrations/guarded-database'
 import {channels,connection,type ChatConnection} from './configuration'
 import {slack,SlackFailure,permalink,messageTimestamp} from './slack'
+import {failureSummary} from './job-status'
 
 interface Job {id:string;connection_id:string;channel_id:string;message_ts:string;capturer:string|null;kind:string;attempts:number}
-interface Source {evidence_id:string;state:string;fingerprint:string;purge_at:number|null}
+interface Source {evidence_id:string;connection_id:string;state:string;fingerprint:string;purge_at:number|null}
 async function workDatabase(runtime:PennyRuntime,config:ChatConnection,job:Job,lease:string){
  const state=await runtime.database.binding.prepare("SELECT epoch FROM data_state WHERE singleton=1 AND phase='idle'").first<{epoch:number}>()
- return guardedDatabase(runtime.database.binding,{sql:`EXISTS(SELECT 1 FROM penny_chat_connections c JOIN oa_operators o ON o.id=c.native_operator_id WHERE c.id=? AND c.state='active' AND o.status='active' AND o.role='owner' AND o.version=c.operator_version) AND EXISTS(SELECT 1 FROM penny_chat_jobs WHERE id=? AND state='running' AND lease=? AND lease_until>unixepoch('now')*1000) AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?)`,params:[config.id,job.id,lease,state?.epoch??-1]})
+ return guardedDatabase(runtime.database.binding,{sql:`EXISTS(SELECT 1 FROM penny_chat_connections c JOIN oa_operators o ON o.id=c.native_operator_id WHERE c.id=? AND c.state='active' AND o.status='active' AND o.role='owner' AND o.version=c.operator_version) AND EXISTS(SELECT 1 FROM penny_chat_jobs WHERE id=? AND state='running' AND lease=? AND lease_until>unixepoch('now')*1000) AND NOT EXISTS(SELECT 1 FROM penny_chat_sources WHERE workspace_id=? AND channel_id=? AND message_ts=? AND connection_id<>?) AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?)`,params:[config.id,job.id,lease,config.team_id,job.channel_id,job.message_ts,config.id,state?.epoch??-1]})
 }
 function completed(db:D1Database,config:ChatConnection,job:Job,now:number){
- return [db.prepare("UPDATE penny_chat_jobs SET state='succeeded',failure=NULL,capturer=NULL,lease=NULL,lease_until=NULL WHERE id=?").bind(job.id),db.prepare('UPDATE penny_chat_connections SET last_success_at=?,last_failure=NULL WHERE id=?').bind(now,config.id)]
+ return [db.prepare("UPDATE penny_chat_jobs SET state='succeeded',failure=NULL,capturer=NULL,lease=NULL,lease_until=NULL WHERE id=?").bind(job.id),db.prepare('UPDATE penny_chat_connections SET last_success_at=? WHERE id=?').bind(now,config.id),failureSummary(db,config.id)]
 }
 async function removed(db:D1Database,source:Source,config:ChatConnection,now:number){
  await db.prepare("UPDATE penny_chat_sources SET state='removed',removed_at=?,purge_at=?,check_at=? WHERE evidence_id=? AND state NOT IN('removed','purged')").bind(now,now+config.purge_days*86400000,now+86400000,source.evidence_id).run()
 }
 async function runJob(runtime:PennyRuntime,config:ChatConnection,job:Job,lease:string,now:number){
  const db=await workDatabase(runtime,config,job,lease)
- const source=await db.prepare('SELECT evidence_id,state,fingerprint,purge_at FROM penny_chat_sources WHERE workspace_id=? AND channel_id=? AND message_ts=?').bind(config.team_id,job.channel_id,job.message_ts).first<Source>()
+ const source=await db.prepare('SELECT evidence_id,connection_id,state,fingerprint,purge_at FROM penny_chat_sources WHERE workspace_id=? AND channel_id=? AND message_ts=?').bind(config.team_id,job.channel_id,job.message_ts).first<Source>()
  if(!channels(config).includes(job.channel_id))throw new SlackFailure('capture_channel_out_of_scope')
  // Erasure can remove the provenance while a refresh is pending. Never turn
  // that refresh or a second trigger into a new copy of erased evidence.
@@ -45,10 +46,7 @@ async function runJob(runtime:PennyRuntime,config:ChatConnection,job:Job,lease:s
  // channel's sharing relationship before assigning any customer account.
  const channel=(await slack(runtime,config,'conversations.info',{channel:job.channel_id})).channel
  if(channel?.id!==job.channel_id)throw new SlackFailure('slack_channel_invalid')
- const team=typeof message.team==='string'?message.team:null
- const shared=channel.is_ext_shared===true&&Array.isArray(channel.shared_team_ids)&&team!==config.team_id&&channel.shared_team_ids.includes(team)
- const mappings=JSON.parse(config.mappings_json) as {teamId:string;accountId:string}[]
- const account=shared?mappings.find(row=>row.teamId===team)?.accountId:null
+ let team=typeof message.team==='string'?message.team:null
  const thread=message.thread_ts??message.ts
  const url=permalink((await slack(runtime,config,'chat.getPermalink',{channel:job.channel_id,message_ts:thread})).permalink)
  const speaker=typeof message.user==='string'&&/^[A-Z][A-Z0-9]{1,79}$/.test(message.user)?message.user:null
@@ -56,9 +54,13 @@ async function runJob(runtime:PennyRuntime,config:ChatConnection,job:Job,lease:s
  if(speaker){
   const user=(await slack(runtime,config,'users.info',{user:speaker})).user
   if(user?.id!==speaker)throw new SlackFailure('slack_author_invalid')
+  if(!team&&typeof user.team_id==='string')team=user.team_id
   const label=user.profile?.display_name||user.real_name||user.name
   if(typeof label==='string'&&label.trim()&&label.length<=200)name=label
  }
+ const shared=channel.is_ext_shared===true&&Array.isArray(channel.shared_team_ids)&&team!==config.team_id&&channel.shared_team_ids.includes(team)
+ const mappings=JSON.parse(config.mappings_json) as {teamId:string;accountId:string}[]
+ const account=shared?mappings.find(row=>row.teamId===team)?.accountId:null
  // No source identity is granted a native operator, requester or mail permission.
  await recordEvidence(db,{sourceType:'support_conversation',sourceLabel:'Slack',wording:message.text,observedAt:new Date(Number(message.ts)*1000).toISOString(),namedSpeaker:name,accountId:account},null,new Date(now).toISOString(),undefined,undefined,{
   systemActor:'slack-capture',atomic:id=>[
@@ -72,6 +74,7 @@ async function runJob(runtime:PennyRuntime,config:ChatConnection,job:Job,lease:s
 export async function drainChatCapture(runtime:PennyRuntime,now=Date.now()){
  const raw=runtime.database.binding
  if(!await raw.prepare("SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle'").first())return
+ await raw.prepare(`UPDATE penny_chat_jobs SET state='stopped',failure='capture_supervision_replaced',lease=NULL,lease_until=NULL WHERE state IN('pending','running','failed') AND EXISTS(SELECT 1 FROM penny_chat_sources s JOIN penny_chat_connections c ON c.id=penny_chat_jobs.connection_id WHERE s.workspace_id=c.team_id AND s.channel_id=penny_chat_jobs.channel_id AND s.message_ts=penny_chat_jobs.message_ts AND s.connection_id<>c.id)`).run()
  await raw.prepare(`UPDATE penny_chat_jobs SET state='stopped',failure='capture_authority_removed',lease=NULL,lease_until=NULL WHERE state IN('pending','running','failed') AND NOT EXISTS(SELECT 1 FROM penny_chat_connections c JOIN oa_operators o ON o.id=c.native_operator_id JOIN penny_chat_secrets s ON s.connection_id=c.id WHERE c.id=penny_chat_jobs.connection_id AND c.state IN('active','paused') AND o.status='active' AND o.role='owner' AND o.version=c.operator_version)`).run()
  const due=(await raw.prepare(`SELECT s.connection_id,s.channel_id,s.message_ts FROM penny_chat_sources s JOIN penny_chat_connections c ON c.id=s.connection_id WHERE s.check_at<=? AND s.state IN('captured','changed') AND c.state='active' ORDER BY s.check_at LIMIT 5`).bind(now).all<{connection_id:string;channel_id:string;message_ts:string}>()).results
  for(const source of due){
