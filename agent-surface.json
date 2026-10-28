@@ -1132,6 +1132,45 @@
       ]
     },
     {
+      "id": "move-private-public",
+      "tool": "penny.requests.update",
+      "args": {
+        "slug": {
+          "$from": "private-request",
+          "pointer": "/slug"
+        },
+        "boardSlug": "agent-public"
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ],
+      "inject": {
+        "internal": true,
+        "classes": [
+          "standard"
+        ],
+        "confirmExternal": true
+      }
+    },
+    {
+      "id": "restore-private-board",
+      "tool": "penny.requests.update",
+      "args": {
+        "slug": {
+          "$from": "private-request",
+          "pointer": "/slug"
+        },
+        "boardSlug": "agent-private"
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ]
+    },
+    {
       "id": "move-private",
       "tool": "penny.requests.update",
       "args": {

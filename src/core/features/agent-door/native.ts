@@ -33,7 +33,7 @@ function agentDatabase(db:D1Database,guard:AuthorityGuard,ctx?:ToolContext):D1Da
  async function batch(input:D1PreparedStatement[]){
   const safe=guardedDatabase(db,guard)
   const rows=await safe.batch([
-   db.prepare('INSERT INTO penny_agent_transaction(singleton,native_id,agent,label,approvers,consent,scopes,client_id) VALUES(1,?,?,?,?,?,?,?)').bind(ctx!.person.id,JSON.stringify(ctx!.actor),ctx!.actor.label,JSON.stringify(ctx!.approvers),ctx!.consent??null,JSON.stringify(ctx!.scopes),ctx!.clientId??null),
+   db.prepare('INSERT INTO penny_agent_transaction(singleton,native_id,agent,label,approvers,consent,scopes,client_id) VALUES(1,?,?,?,?,?,?,?)').bind(ctx!.person.id,JSON.stringify({...ctx!.actor,agent:ctx!.agent}),ctx!.actor.label,JSON.stringify(ctx!.approvers),ctx!.consent??null,JSON.stringify(ctx!.scopes),ctx!.clientId??null),
    ...input.map(s=>wrappers.get(s)??s),
    db.prepare('DELETE FROM penny_agent_transaction WHERE singleton=1'),
   ])

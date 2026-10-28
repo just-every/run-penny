@@ -674,7 +674,7 @@
       "executable": false
     },
     "agent-surface.json": {
-      "sha256": "69bb1e6ea433a85858ecb05af3622767e83bdb7ce51c1825e6cb0f7d49fd63b4",
+      "sha256": "2abc002b3eed29ba5e06844fc3c7c7a93f34aa141467ab0521dc29847297e011",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -3946,7 +3946,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "eb09354d08dc8d1fd55d624df840eb09766bbc372153a4c0e2aac7a1ce8ba396",
+      "sha256": "0c8cad16dd4aa01e0ac2537a168d8be699d71ddeefd531003319725cf088e3b3",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -4335,6 +4335,10 @@
     },
     "migrations/core/0102_agent_effect_custody.sql": {
       "sha256": "94788a301542916aca16062eb155240004a950711b3ce5e2667683645f66151a",
+      "executable": false
+    },
+    "migrations/core/0103_agent_learning_custody.sql": {
+      "sha256": "33ea4b407947cdf01b0f1288f9ad88ca12fedffb8680c463bb97d1805e8eb237",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -5217,8 +5221,12 @@
       "sha256": "9de4bc7ea997cd1e673e9c4ac34b4fdd5f44a39ab83d1b298dbcf8288bd2f178",
       "executable": false
     },
+    "src/core/features/agent-door/learning-custody.ts": {
+      "sha256": "8c7c7337755ff242fa77eeb727bf66b1fd3cc5b68815765ac4067056eb2c2a25",
+      "executable": false
+    },
     "src/core/features/agent-door/learning-tools.ts": {
-      "sha256": "4de6a70e21bce8019afce16ca95b2feb369463bc96a6199d9d3db20dbeb69e47",
+      "sha256": "2ce4c3dbdc93030c7718498a55e17a5004d269fa6a7b6e52c8edf25b93ec294c",
       "executable": false
     },
     "src/core/features/agent-door/local-credentials.ts": {
@@ -5226,7 +5234,7 @@
       "executable": false
     },
     "src/core/features/agent-door/native.ts": {
-      "sha256": "92861eb132b2edd98c7a4d38bb054f6ea370e291381afe92bbc0a828b0098140",
+      "sha256": "5072b3d9718cc072c4633b296534aa76bb305cb7fbd7f5bf90983c5c1c253e5c",
       "executable": false
     },
     "src/core/features/agent-door/people.ts": {
@@ -5246,7 +5254,7 @@
       "executable": false
     },
     "src/core/features/agent-door/request-tools.ts": {
-      "sha256": "6f358b6d118512079c4afe555f652c7f03c324abdf55542940f158e1b04f9e35",
+      "sha256": "468655eef7bba89385423ef7ce531f17b756686db256a25497a33d89c4b80449",
       "executable": false
     },
     "src/core/features/agent-door/resources.ts": {
@@ -5270,7 +5278,7 @@
       "executable": false
     },
     "src/core/features/agent-door/triage-tools.ts": {
-      "sha256": "cb4d3dd0ae949b56a7a8b32a92468f98598a4c1fcd6816b35aad45e6fd5a961f",
+      "sha256": "c96267501c27c9e5a9f267687ac8008a6ea74c29b09893aed7a05f7a7d4afe51",
       "executable": false
     },
     "src/core/features/ai/budget.ts": {
@@ -6682,7 +6690,7 @@
       "executable": false
     },
     "src/core/features/learning/scheduled.ts": {
-      "sha256": "32cbf2009d1e03b3307d8ef674782bb030e0989953cd8231acc74486ac3c891f",
+      "sha256": "5c946bdcdd349c3015dd691312b549183fc4de6a14c56c365dab3b389ee2e8c9",
       "executable": false
     },
     "src/core/features/learning/schema.ts": {
