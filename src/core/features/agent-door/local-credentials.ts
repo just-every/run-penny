@@ -6,11 +6,12 @@ import { apiAuthority } from '../integrations/keys'
 /** Legacy credentials retain only their exact native verbs and public reads. */
 const scopes:Record<string,string[]>={
  'requests:read':['requests:public'], 'requests:write':['requests:create'],
- 'comments:read':['comments:public'],'comments:write':['comments:write'],
- 'status:read':['status:public'],'status:write':['status:write'],
- 'releases:read':['releases:public'],'releases:write':['releases:write'],
+ 'comments:read':['comments:public'],'comments:write':['comments:write','delivery:write'],
+ 'status:read':['status:public'],'status:write':['status:write','delivery:write'],
+ 'releases:read':['releases:public'],'releases:write':['releases:write','delivery:write'],
  'votes:write':['votes:write'],
 }
+export const originalScopes=(scope:string)=>Object.entries(scopes).filter(([,mapped])=>mapped.includes(scope)).map(([native])=>native)
 const project=(native:string[])=>[...new Set(native.flatMap(s=>scopes[s]??[]))]
 export function localCredentials(runtime:PennyRuntime){return async(request:Request)=>{
  const header=request.headers.get('Authorization')??''
@@ -24,7 +25,7 @@ export function localCredentials(runtime:PennyRuntime){return async(request:Requ
  return {sponsor:{id:row.native_operator_id},agent:{id:`penny-key:${row.id}`,name:row.name},clientId:row.id,scopes:project(native)}
 }}
 export function currentScopes(runtime:PennyRuntime){return async(principal:Principal)=>{
- if(!principal.clientId)return principal.scopes
+ if(!principal.clientId||principal.agent.id!==`penny-key:${principal.clientId}`)return principal.scopes
  const row=await runtime.database.binding.prepare(`SELECT t.scopes FROM integration_tokens t JOIN penny_api_issuers i ON i.token_id=t.id JOIN oa_operators o ON o.id=i.native_operator_id
  WHERE t.namespace='penny-api' AND t.id=? AND i.native_operator_id=? AND o.status='active' AND o.version=i.operator_version AND t.revoked_at IS NULL AND (t.expires_at IS NULL OR t.expires_at>unixepoch('subsec')*1000)`).bind(principal.clientId,principal.person.id).first<{scopes:string}>()
  return row?project(JSON.parse(row.scopes)):[]

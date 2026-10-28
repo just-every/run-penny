@@ -1,3 +1,6 @@
+import {deliveryTools} from './delivery-tools'
+import {scheduleTools} from './schedule-tools'
+import { learningTools } from './learning-tools'
 import type { PennyRuntime } from '@/core/app/runtime'
 import { createAgentDoor, type Trust } from '../../../../base/modules/agent-door/index.ts'
 import { createBusinessSettings } from '../../../../base/modules/business-settings/index.ts'
@@ -12,7 +15,7 @@ import { decisionTools } from './decision-tools'
 import { releaseTools } from './release-tools'
 import { resources } from './resources'
 
-export function nativeTools(runtime:PennyRuntime){return [...readTools(runtime),...triageTools(runtime),...requestTools(runtime),...decisionTools(runtime),...releaseTools(runtime)]}
+export function nativeTools(runtime:PennyRuntime){return [...readTools(runtime),...triageTools(runtime),...requestTools(runtime),...decisionTools(runtime),...releaseTools(runtime),...learningTools(runtime),...scheduleTools(runtime),...deliveryTools(runtime)]}
 export const notTools=[
  {clauses:['WIDGET-004','MOB-002'],reason:'device' as const},
  {clauses:['HOME-001','REQ-001','REQ-002','REQ-003','REQ-004','REQ-006','REQ-010','REQ-012','REQ-013','REQ-014','REQ-020','REQ-021','REQ-023','REQ-025','REQ-031','REQ-039','REL-008','REL-010','REL-012','NOTIFY-011','WIDGET-001','WIDGET-002','WIDGET-005','WIDGET-007','WIDGET-008','WIDGET-009'],reason:'screen' as const},
@@ -31,6 +34,6 @@ export function isAgentPath(path:string){return path==='/mcp'||path==='/agents'|
 export async function handleAgentDoor(runtime:PennyRuntime,request:Request){
  if(!isAgentPath(new URL(request.url).pathname))return null
  const team=operatorAuth(runtime).businessTeam as TeamAdapter|undefined
- const settings=createBusinessSettings({db:runtime.database.binding,trust:runtime.bindings.RER_BUSINESS_TRUST,business:{settings:1,values:[],team:{roles:{admin:'admin',member:'member'}}},team})
+ const settings=createBusinessSettings({db:runtime.database.binding,trust:runtime.bindings.RER_BUSINESS_TRUST,business:{settings:1,values:['display_name'],team:{roles:{admin:'admin',member:'member'}}},team})
  return await settings.handle(request)??await pennyAgentDoor(runtime).handle(request)
 }

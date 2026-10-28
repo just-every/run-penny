@@ -19,16 +19,16 @@ type Options<S extends z.ZodType>= {
 export function tool<S extends z.ZodType>(runtime:PennyRuntime,o:Options<S>):ToolDefinition{
  const parse=(args:Record<string,unknown>)=>{const p=o.schema.safeParse(args);if(!p.success)throw new ToolRefusal('invalid_arguments');return p.data}
  const definition:ToolDefinition={name:`penny.${o.name}`,title:o.title,description:o.title,scope:o.scope,readOnly:!!o.readOnly,
-  inputSchema:z.toJSONSchema(o.schema,{io:'input',unrepresentable:'any'}) as ToolDefinition['inputSchema'],outputSchema:o.output??{type:['object','array']},
+  inputSchema:doorSchema(z.toJSONSchema(o.schema,{io:'input',unrepresentable:'any'})) as ToolDefinition['inputSchema'],outputSchema:o.output??{type:['object','array']},
   classes:o.classes??['standard'],clauses:[...o.clauses,'SURFACE-001'],untrusted:o.untrusted??true,
-  classify:async(args,ctx)=>o.classify?o.classify(parse(args),await nativeContext(runtime,ctx,true),ctx):[{class:'standard',facts:{measure:1}}],
+  classify:async(args,ctx)=>o.classify?o.classify(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope),ctx):[{class:'standard',facts:{measure:1}}],
   async run(args,ctx){try{
-   const value=await o.run(parse(args),await nativeContext(runtime,ctx,!!o.readOnly,o.readOnly?undefined:ctx),ctx)
-   return {result:value??{ok:true}}
+   const value=await o.run(parse(args),await nativeContext(runtime,ctx,!!o.readOnly,o.readOnly?undefined:ctx,o.scope),ctx)
+   return {result:JSON.parse(JSON.stringify(value??{ok:true}))}
   }catch(error){if(error instanceof ToolRefusal)throw error;if(error instanceof NativeError||error instanceof RequestLifecycleError)throw new ToolRefusal(error.code);if(error instanceof MutationError)throw new ToolRefusal(error.status===404?'not_found':error.status===409?'native_conflict':'native_validation_failed',error.message);throw error}},
  }
- if(!o.readOnly)definition.summary=async(args,ctx)=>o.summary?o.summary(parse(args),await nativeContext(runtime,ctx,true),ctx):{items:[o.title],target:{id:typeof args.id==='string'?args.id:typeof args.slug==='string'?args.slug:undefined}}
- if(o.revision){definition.revisionType='string';definition.revision=async(args,ctx)=>o.revision!(parse(args),await nativeContext(runtime,ctx,true))}
+ if(!o.readOnly)definition.summary=async(args,ctx)=>JSON.parse(JSON.stringify(o.summary?await o.summary(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope),ctx):{items:[o.title],target:{id:typeof args.id==='string'?args.id:typeof args.slug==='string'?args.slug:undefined}}))
+ if(o.revision){definition.revisionType='string';definition.revision=async(args,ctx)=>o.revision!(parse(args),await nativeContext(runtime,ctx,true,undefined,o.scope))}
  if(o.authority)definition.authority=o.authority
  return definition
 }
@@ -40,3 +40,12 @@ export async function revision(db:D1Database,table:string,value:string,column='i
  return row?.revision??null
 }
 export const external=(counterparty:'public'|'known'|'new'='public',measure=1):ClassAndFacts[]=>[{class:'external',facts:{counterparty,measure}}]
+
+/** Base supports patternProperties; preserve Zod's nonempty record keys there. */
+function doorSchema(value:unknown):unknown{
+ if(Array.isArray(value))return value.map(doorSchema)
+ if(!value||typeof value!=='object')return value
+ const node=Object.fromEntries(Object.entries(value).map(([key,item])=>[key,doorSchema(item)]))
+ if(node.propertyNames){const names=node.propertyNames as {type?:string;minLength?:number};if(names.type!=='string'||names.minLength!==1)throw new Error('unsupported_native_record_keys');node.patternProperties={'^.{1,}$':node.additionalProperties};node.additionalProperties=false;delete node.propertyNames}
+ return node
+}

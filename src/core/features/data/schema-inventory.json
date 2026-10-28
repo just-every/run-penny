@@ -3353,5 +3353,14 @@
       "native_operator_id",
       "actor_id"
     ]
+  },
+  "penny_agent_work": {
+    "classification": "installation",
+    "columns": [
+      "kind",
+      "id",
+      "principal",
+      "label"
+    ]
   }
 }

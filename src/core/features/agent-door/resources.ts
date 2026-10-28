@@ -23,7 +23,7 @@ export function resources(runtime:PennyRuntime):ResourceDefinition[]{
   async read(uri:string,ctx:ResourceContext){
    const match=new RegExp(`^penny://${kind}/([^/?#]+)$`).exec(uri)
    if(!match||!ctx.scopes.includes(scope))return null
-   try{const json=await read(decodeURIComponent(match[1]),await resourceContext(runtime,ctx));return json?{json,untrusted:true}:null}catch{return null}
+   try{const json=await read(decodeURIComponent(match[1]),await resourceContext(runtime,ctx,scope));return json?{json,untrusted:true}:null}catch{return null}
   },
  }))
 }

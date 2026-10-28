@@ -7,9 +7,11 @@ import {observeD1} from './review-race-storage'
 import {graph} from './notification-regression-fixture'
 const api=createPennyApi()
 function request(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST',db=env.DB){
- return api.fetch(new Request(origin+path,{method,headers:{Origin:origin,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),{...env,DB:db})
+ return api.fetch(new Request(origin+path,{method,headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID(),...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),{...env,DB:db})
 }
 async function key(operator:Record<string,string>,scopes:string[]){
+ const policy=await request('/agents/api/policy',{document:{schema:'rer-agent-policy/1',catalogue:'rer-agent-classes/1',rules:[{id:'all',class:'*',do:'autonomous'}],spend:{none:true}}},operator,'PUT')
+ expect(policy.status,await policy.clone().text()).toBe(200)
  const response=await request('/api/operator/integrations/keys',{name:'Native integration',scopes},operator)
  expect(response.status,await response.clone().text()).toBe(201)
  const result=await response.json() as {token:string;credential:{id:string}}

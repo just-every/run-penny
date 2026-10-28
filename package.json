@@ -151,7 +151,8 @@
     "verification.json",
     "integrations",
     "packaging.json",
-    "base-copies.json"
+    "base-copies.json",
+    "agent-surface.json"
   ],
   "engines": {
     "node": "22.20.0",
