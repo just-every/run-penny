@@ -77,3 +77,79 @@ escaped content, disabled formatting and disabled link/media unfurls. Its
 incoming-webhook URL stays private. Provider documentation:
 [Slack incoming webhooks](https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/)
 and [section blocks](https://docs.slack.dev/reference/block-kit/blocks/section-block/).
+
+## Capture selected Slack messages
+
+An owner installs their own Slack app using
+[`integrations/slack/manifest.json`](../integrations/slack/manifest.json), replacing
+`YOUR-PENNY` and `CONNECTION-ID` after configuration. Slack supplies the App ID,
+workspace ID, bot token and signing secret in the owner's Slack app settings.
+Invite the bot to each selected public, private or Slack Connect channel. The
+egress service must grant `https://slack.com`; no ordinary-fetch fallback exists.
+The app requests read scopes only and sends no Slack post or customer message.
+Slack App Directory publication remains separate field proof (R-8).
+
+Configure through same-origin, native-owner-authenticated
+`POST /api/operator/integrations/chat` with this JSON shape (use private values
+for the two credentials, never a public script or URL):
+
+```json
+{
+  "teamId": "TWORKSPACE",
+  "appId": "APENNY",
+  "channels": ["CSELECTED"],
+  "reaction": "penny",
+  "purgeDays": 30,
+  "workspaceAccounts": [{"teamId": "TCUSTOMER", "accountId": "EXISTING-PENNY-ACCOUNT-ID"}],
+  "botToken": "YOUR-PRIVATE-BOT-TOKEN",
+  "signingSecret": "YOUR-PRIVATE-SIGNING-SECRET"
+}
+```
+
+The response names the two request paths to paste into Slack's Event
+Subscriptions and Interactivity settings. Slack URL verification also requires a
+valid signature. Use **Send to Penny** on a message or add the chosen emoji. The
+receiver checks the raw-body HMAC, five-minute timestamp, app, workspace and
+selected channel before queuing IDs. It acknowledges before source reads; the
+minute Cron resumes durable work. An excerpt appears once even when either
+trigger replays or both target the same message. Only that message is stored,
+redacted under current owner rules before its write; files and the remaining
+thread are omitted. Source provenance keeps Slack author and capturer IDs, plus the author’s
+source display name when available; it creates no native operator, verified
+requester or mail subscriber. Slack Connect maps an
+external author's workspace to an existing account only when Slack confirms the
+channel's shared-team relationship. A missing mapping leaves the account empty.
+
+`GET /api/operator/integrations/chat` shows scope, last successful work, safe
+failure codes and the latest 100 jobs. Credentials and event envelopes are never
+returned. Jobs have due times, leases, attempts and pending/running/failed/
+succeeded/stopped states; an interrupted lease is recoverable. Read failures
+retry at most eight times, respecting rate-limit delays. A failure remains
+visible across restarts until successful work or explicit resolution.
+`POST /api/operator/integrations/chat/jobs/JOB-ID` with `{"action":"retry"}` or
+`{"action":"stop"}` is the owner's explicit recovery control. The accountable
+owner's removal, role change or authority-version change stops pending work.
+
+`POST /api/operator/integrations/chat/CONNECTION-ID/state` accepts
+`{"state":"paused"}`, `{"state":"active"}` or `{"state":"revoked"}`.
+Paused capture admits no new events and resumes pending work when active.
+Revocation deletes Penny's local credentials and stops work; also uninstall the
+app in Slack to revoke its provider token. Slack's signed uninstall/token-revoke
+event performs local revocation too. To change scope, mappings or credentials,
+pause/revoke the old connection and create a new one. Evidence remains.
+
+Inbox cards link to the original thread and show the Slack capturer and source
+state. Source edit/delete events and bounded hourly rechecks retain the captured
+version while marking changes or removal. Lost source access also marks removal.
+After `purgeDays` from removal, Cron purges every stored excerpt version and its
+source-person attribution. No Slack message is edited or deleted. Configuration,
+secrets and unfinished jobs stay out of archives; source provenance travels
+with evidence and is included in its erasure graph. A restore needs a new
+connection and cannot resume the old installation's jobs.
+
+Nook currently exposes only notification posting, update/delete and permalink
+methods through its Slack-compatible API. Its published API explicitly excludes
+events and interactive messages, and app tokens cannot read messages. Penny does
+not treat it as a Slack capture provider or invent an unsupported endpoint.
+CAP-010's Nook shortcut/reaction journey requires those public capabilities in
+Nook before it can be exercised against a Nook installation.

@@ -1,0 +1,52 @@
+{
+  "display_information": {
+    "name": "Penny capture",
+    "description": "Capture selected channel messages as private feedback evidence",
+    "background_color": "#915336"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Penny",
+      "always_online": false
+    },
+    "shortcuts": [
+      {
+        "name": "Send to Penny",
+        "type": "message",
+        "callback_id": "send_to_penny",
+        "description": "Send this message to your private evidence inbox"
+      }
+    ]
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "reactions:read",
+        "channels:read",
+        "groups:read",
+        "channels:history",
+        "groups:history",
+        "users:read"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "request_url": "https://YOUR-PENNY/api/integrations/chat/CONNECTION-ID/events",
+      "bot_events": [
+        "reaction_added",
+        "message.channels",
+        "message.groups",
+        "app_uninstalled",
+        "tokens_revoked"
+      ]
+    },
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://YOUR-PENNY/api/integrations/chat/CONNECTION-ID/interactivity"
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}

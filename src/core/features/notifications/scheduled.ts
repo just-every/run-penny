@@ -1,4 +1,5 @@
 import {drainScheduledPublications} from '../releases/scheduled'
+import {drainChatCapture} from '../chat-capture/worker'
 import {drainAging} from '../triage/reminders'
 import {advanceDataWork} from '../data/runner/advance'
 import {drainLearning} from '../learning/scheduled'
@@ -18,6 +19,7 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  const runtime=createPennyRuntime(bindings)
  // A confirmed data operation finishes first: the drains below wait for an idle workspace.
  await advanceDataWork(bindings)
+ await drainChatCapture(runtime,_controller.scheduledTime)
  await drainLearning(runtime,_controller.scheduledTime)
  await drainDecisionReviews(runtime)
  await drainAging(runtime.database.binding)

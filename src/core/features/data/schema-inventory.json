@@ -3186,5 +3186,71 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_chat_connections": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "team_id",
+      "app_id",
+      "channels_json",
+      "mappings_json",
+      "reaction",
+      "purge_days",
+      "native_operator_id",
+      "operator_version",
+      "actor_id",
+      "state",
+      "created_at",
+      "last_success_at",
+      "last_failure"
+    ]
+  },
+  "penny_chat_secrets": {
+    "classification": "installation",
+    "columns": [
+      "connection_id",
+      "bot_token",
+      "signing_secret"
+    ]
+  },
+  "penny_chat_jobs": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "connection_id",
+      "receipt",
+      "channel_id",
+      "message_ts",
+      "capturer",
+      "kind",
+      "state",
+      "attempts",
+      "due_at",
+      "lease",
+      "lease_until",
+      "failure",
+      "created_at"
+    ]
+  },
+  "penny_chat_sources": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "connection_id",
+      "workspace_id",
+      "channel_id",
+      "message_ts",
+      "thread_ts",
+      "source_url",
+      "source_author",
+      "capturer",
+      "source_team",
+      "fingerprint",
+      "state",
+      "removed_at",
+      "purge_at",
+      "check_at"
+    ]
   }
 }

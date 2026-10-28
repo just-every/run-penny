@@ -13,6 +13,7 @@ export interface OperatorAccountReference {
 }
 
 export interface OperatorEvidenceCard {
+  readonly chatSource?: {url:string;channel:string;message:string;thread:string;capturer:string|null;author:string|null;state:string}|null
   readonly id: string
   readonly admittedSender?: string | null
   readonly namedSpeaker?: string | null

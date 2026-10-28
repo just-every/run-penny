@@ -1805,7 +1805,7 @@ Core · target · **missing** · Rules D-1 · Register R-8
 1. The shortcut and the reaction each capture a message once, a bad signature is refused, and a Slack Connect channel maps to its account.
 2. The same capture runs against a Nook test installation.
 
-**Evidence.** None.
+**Evidence.** `tests/browser/slack-capture.mjs`
 **Gap.** Signed Slack Events and Interactivity fixtures: the shortcut and the reaction each capture a message once, a bad signature is refused, and a Slack Connect channel maps to its account; the same capture runs against a Nook test installation.
 
 #### CAP-011 — Microsoft Teams

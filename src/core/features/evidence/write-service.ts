@@ -10,7 +10,7 @@ export interface RecordEvidence {
  boardSlug?:string|null
  requestLinks?:{id:string;stance:'supporting'|'contradicting'}[];betLinks?:{id:string;stance:'supporting'|'contradicting'}[];releaseId?:string|null
 }
-export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:string|null,now:string,messageDigest?:string,admittedSender?:string) {
+export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:string|null,now:string,messageDigest?:string,admittedSender?:string,capture?:{atomic:(id:string)=>D1PreparedStatement[];systemActor:string}) {
  if(!validObservedTime(input.observedAt))throw new MutationError(422,'Observed time must include a valid date, time and timezone offset.')
  if(input.sourceType==='free_text'&&!input.sourceLabel?.trim())throw new MutationError(422,'Source label is required for free text.')
  await exists(db,'accounts',input.accountId)
@@ -31,7 +31,8 @@ export async function recordEvidence(db:D1Database,input:RecordEvidence,actor:st
   ...(input.betLinks??[]).flatMap(link=>[
    db.prepare('INSERT INTO candidate_bet_evidence_links(candidate_bet_id,evidence_id,stance,created_at) VALUES(?,?,?,?)').bind(link.id,id,link.stance,now),refreshReadiness(db,link.id,true),
   ]),
-  actor?audit(db,actor,'evidence',id,'evidence.recorded',now):db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'system','email-capture','evidence.recorded','evidence',?,?,?,?)").bind(createUlid(),id,now,now,now),
+  ...(capture?.atomic(id)??[]),
+  actor?audit(db,actor,'evidence',id,'evidence.recorded',now):db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES(?,'system',?,'evidence.recorded','evidence',?,?,?,?)").bind(createUlid(),capture?.systemActor??'email-capture',id,now,now,now),
  ]) } catch(error) { captureOwnerFailure(error) }
  return {id,versionId}
 }

@@ -22,9 +22,14 @@ export function EvidenceCard({ evidence, onSaved }: { readonly evidence: Operato
       </div>
       <p className="mt-4 text-lg leading-snug font-medium break-words whitespace-pre-wrap text-penny-ink sm:text-[22px]">“{evidence.wording}”</p>
       <dl className={`mt-5 border-t border-penny-line pt-4 ${dataRowClass}`}>
-        <DataField label="Source">{sourceLabel(evidence.sourceType, evidence.sourceLabel)}</DataField>
+        <DataField label="Source">{evidence.chatSource?'Slack':sourceLabel(evidence.sourceType, evidence.sourceLabel)}</DataField>
         <DataField label="Account">{evidence.account?.name}</DataField>
       </dl>
+      {evidence.chatSource?<dl className={`mt-4 border-t border-penny-line pt-4 ${dataRowClass}`}>
+        <DataField label="Original message"><a className="break-all underline" href={evidence.chatSource.url} target="_blank" rel="noreferrer">Open Slack thread</a></DataField>
+        <DataField label="Captured by">{evidence.chatSource.capturer}</DataField>
+        <DataField label="Source state">{evidence.chatSource.state==='changed'?'Source changed; captured version retained':evidence.chatSource.state==='removed'?'Source removed; excerpt awaiting policy purge':evidence.chatSource.state==='purged'?'Source removed; excerpt purged':'Captured'}</DataField>
+      </dl>:null}
       {evidence.sourceType==='email'&&evidence.sourceLabel?<p className="mt-3 text-sm leading-6 text-penny-ink">{evidence.sourceLabel}</p>:null}
       {evidence.requester ? <dl className="mt-4"><DataField label="Requester" valueClassName="flex flex-wrap items-center gap-x-2 gap-y-1"><span>{evidence.requester.displayName}</span>{evidence.requester.email ? <span className="break-all text-penny-muted">{evidence.requester.email}</span> : null}</DataField></dl> : null}
       {evidence.admittedSender ? <p className="mt-3 text-base break-all text-penny-ink">Forwarded by {evidence.admittedSender}</p> : null}

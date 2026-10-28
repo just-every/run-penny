@@ -4,6 +4,7 @@ import type { DatabaseConnection } from '@/core/platform/database'
 import { parseTagNamesJson } from '@/core/shared/tag-names'
 
 export interface EvidenceReadRow {
+  readonly chatSourceJson: string | null
   readonly id: string
   readonly wording: string
   readonly admittedSender: string | null
@@ -24,6 +25,7 @@ export interface EvidenceReadRow {
 
 export const evidenceReadSelect = `
   SELECT
+    (SELECT json_object('url',s.source_url,'channel',s.channel_id,'message',s.message_ts,'thread',s.thread_ts,'capturer',s.capturer,'author',s.source_author,'state',s.state) FROM penny_chat_sources s WHERE s.evidence_id=e.id) AS chatSourceJson,
     e.id AS id, ev.wording AS wording, e.named_speaker AS namedSpeaker, e.admitted_sender AS admittedSender, e.source_type AS sourceType, e.source_label AS sourceLabel,
     e.observed_at AS observedAt, e.review_state AS reviewState, e.review_reason AS reviewReason,
     a.id AS accountId, a.slug AS accountSlug, a.name AS accountName,
@@ -59,6 +61,7 @@ export const evidenceReadSelect = `
 
 export function mapEvidenceRead(row: EvidenceReadRow): OperatorEvidenceCard {
   return {
+    chatSource: row.chatSourceJson ? JSON.parse(row.chatSourceJson) : null,
     id: row.id,
     wording: row.wording,
     namedSpeaker: row.namedSpeaker,

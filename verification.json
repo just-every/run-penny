@@ -238,6 +238,15 @@
       "commands": [
         "node --test tests/installer/older-archive.test.mjs"
       ]
+    },
+    {
+      "name": "slack-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/slack-capture.mjs"
+      ]
     }
   ],
   "nightly": [
