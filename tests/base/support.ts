@@ -22,19 +22,22 @@ export function finishFirstRun(cookie:{Cookie:string},timezone='Australia/Brisba
 }
 // The owner signs in with first-run setup finished, so app documents open; pass false to start from an unfinished setup.
 /** Populated-upgrade fixtures use current HTTP admission to create historical
- * product rows. Install its additive auth, integration guard, admission, capture-policy
+ * product rows. Install its additive auth/native-id projection, integration guard, admission, capture-policy
  * and evidence-writer prerequisites first; the product/import schema remains at the chosen head.
  * The upgrade still compares every prior table/column and skips applied SQL. */
 async function installCurrentWritePrerequisites(){
- const tables=new Set((await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('oa_auth_settings','penny_integration_guards','penny_public_admission','penny_redaction_settings')").all<{name:string}>()).results.map(row=>row.name))
+ const tables=new Set((await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('oa_auth_settings','penny_integration_guards','penny_public_admission','penny_redaction_settings','penny_operator_bindings')").all<{name:string}>()).results.map(row=>row.name))
  const evidenceColumns=(await env.DB.prepare('PRAGMA table_info(evidence_items)').all<{name:string}>()).results
  const needsProvenance=evidenceColumns.length>0&&!evidenceColumns.some(column=>column.name==='admitted_sender')
+ const eagerActor=await env.DB.prepare("SELECT 1 AS present FROM sqlite_master WHERE type='trigger' AND name='penny_operator_actor_insert'").first()
  const prerequisites=(inject('migrations') as {name:string}[]).filter(migration=>
   (!tables.has('oa_auth_settings')&&/^004[2-9]_/.test(migration.name))
   ||(!tables.has('penny_integration_guards')&&/^002[01]_/.test(migration.name))
   ||(!tables.has('penny_public_admission')&&/^0055_/.test(migration.name))
   ||(!tables.has('penny_redaction_settings')&&/^0090_/.test(migration.name))
-  ||(needsProvenance&&/^0091_/.test(migration.name)))
+  ||(needsProvenance&&/^0091_/.test(migration.name))
+  ||(!tables.has('penny_operator_bindings')&&/^0101_/.test(migration.name))
+  ||((!tables.has('penny_operator_bindings')||eagerActor)&&/^0103_/.test(migration.name)))
  if(prerequisites.length)await applyD1Migrations(env.DB,prerequisites as never)
 }
 export async function owner({finishSetup=true,timezone='Australia/Brisbane'}={}){await installCurrentWritePrerequisites();const r=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner',returnTo:'/app'});expect(r.status,await r.clone().text()).toBe(303);const cookie={Cookie:r.headers.get('Set-Cookie')!.split(';')[0]};// A store still on a prior schema head has no first-run record yet; the migration marks its existing owner done.

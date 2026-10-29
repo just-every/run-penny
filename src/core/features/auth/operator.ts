@@ -6,6 +6,7 @@ import { authMail } from './mail'
 import { auditedIdentityMail } from './mail-audit'
 import { NativeError } from './native-tokens'
 import branding from '@/branding.json'
+import {operatorActor} from './operator-actor'
 import { operatorDocumentReads } from '@/core/app/request-context.server'
 import { fontDocumentResponse } from '@/base/font-response'
 import { pennyDocumentFonts } from '@/core/ui/brand/font-head'
@@ -52,7 +53,7 @@ export async function authenticateOperator(runtime: PennyRuntime, request: Reque
   if (!request.headers.get('Cookie')) return null
   const session = await operatorSession(runtime, request)
   if (!session) return null
-  const actor = await runtime.database.binding.prepare('SELECT p.id,p.email,p.display_name AS displayName FROM penny_operator_bindings b JOIN operators p ON p.id=b.actor_id WHERE b.native_operator_id=?').bind(session.operatorId).first<AuthenticatedOperator>()
+  const actor = await operatorActor(runtime.database.binding,session.operatorId)
   if (!actor) throw new NativeError('operator_auth_unavailable',503)
   return actor
 }

@@ -1,4 +1,5 @@
 import type { PennyRuntime } from '@/core/app/runtime'
+import {operatorActor} from '../auth/operator-actor'
 import { operatorAuth } from '../auth/operator'
 import { operatorAuthPeople } from '../../../../base/modules/agent-door/operator-people.ts'
 import type { PeopleAdapter, Person } from '../../../../base/modules/agent-door/types.ts'
@@ -9,7 +10,7 @@ export function nativePeople(runtime: PennyRuntime): PeopleAdapter {
  const native=operatorAuthPeople({db,session:request=>operatorAuth(runtime).getSession(request)})
  const admitted=async(id:string):Promise<Person|null>=>{
   const person=await native.person(id)
-  if(!person?.active||!await db.prepare('SELECT 1 FROM penny_operator_bindings WHERE native_operator_id=?').bind(id).first())return null
+  if(!person?.active||!await operatorActor(db,id))return null
   return person
  }
  const setupOwner=()=>db.prepare('SELECT claim_id AS id FROM oa_bootstrap LIMIT 1').first<{id:string}>()

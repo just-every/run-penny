@@ -239,3 +239,14 @@ The retained managed artifact producer rejects `services`, and unconfigured
 local setup cannot resolve that service. These failures remain visible; this
 adoption must not land until the shared service-binding/development contract is
 available. Native applied migrations and fenced capture clauses are unchanged.
+
+Migration `0103_agent_actor_projection.sql` retires the eager native-person
+projection trigger. Existing native-to-product bindings and actor ids stay
+unchanged. Native owner claim and Data recovery no longer create product rows;
+the shared native-id adapter projects a ULID actor at first product use and
+associates an existing legacy actor once from the current native account. A
+product restore may remove its former binding with the product actor; the next
+native action re-establishes attribution without importing authority. Token email
+never selects a native person. Stop older workers before applying 0103 and keep
+the new adapter with the migration; recover by rolling forward this adapter,
+without recreating accounts or rewriting historical actor ids.

@@ -3778,7 +3778,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "8ac4f423c8037fdb2ccf166b7117cde3d15c820145fec59026f8f495b29b4550",
+      "sha256": "635acea4ed12027606d38545bed772c6ae37d38241d0862b9d886ccf34bbcfec",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3826,7 +3826,7 @@
       "executable": false
     },
     "docs/base-adoption.md": {
-      "sha256": "ebf8242842c9843757ecb8105c42bd3777f30f55930c3d4afe34ad0d26047af1",
+      "sha256": "ed483035e6969af00d24a38c57f7cf5752785a7d82b790e6287525b86bc1d39d",
       "executable": false
     },
     "docs/CANNY-MIGRATION.md": {
@@ -4447,6 +4447,10 @@
     },
     "migrations/core/0102_agent_attribution.sql": {
       "sha256": "f2f1c02d618430891edf6a3740dc019a8608a4f46a0bd80282bf391d0aa6f06f",
+      "executable": false
+    },
+    "migrations/core/0103_agent_actor_projection.sql": {
+      "sha256": "622cedce161ce0f6fb9a8b6319c8fcdbac6092c1195873b464cadfe532479587",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -5342,7 +5346,7 @@
       "executable": false
     },
     "src/core/features/agent-door/people.ts": {
-      "sha256": "7938cbc02ba64d66a56643e3f1de56d0e7c2b00eb878714b2cfeb3de8b1a7d27",
+      "sha256": "fa5e4b9f1725309f346bafba6e9e4918a325457f69258e375d07ceb5268ddbaa",
       "executable": false
     },
     "src/core/features/agent-door/projection.ts": {
@@ -5517,6 +5521,10 @@
       "sha256": "4b270c76e3a7d5297ea9fa60b1b985c0575f46f18f448754e84b44e663bb2803",
       "executable": false
     },
+    "src/core/features/auth/operator-actor.ts": {
+      "sha256": "b24c770abd9fa37b86776905e89a8db18cb756862d6a9487ad944a7c721ffca7",
+      "executable": false
+    },
     "src/core/features/auth/operator-management-routes.ts": {
       "sha256": "eaecf1379dcced2ac9213be6049d1f23fde9e2288e08bcbefcea387ef62a8b15",
       "executable": false
@@ -5526,7 +5534,7 @@
       "executable": false
     },
     "src/core/features/auth/operator.ts": {
-      "sha256": "5605b3a85c2649ab6690ee9efb205b08f07a7d4cf763e1723016b00ad5b193b8",
+      "sha256": "ceb578509317b8e81c070b54e6a356706a776b8b7c6a15e728c10e895f73f1ad",
       "executable": false
     },
     "src/core/features/auth/owner-claim.ts": {
@@ -8814,7 +8822,7 @@
       "executable": false
     },
     "tests/base/support.ts": {
-      "sha256": "56cc0e1ac165173de2a337e3847fb2a2e284a2514a1b64da97fa5c8c2245d3c6",
+      "sha256": "0016c07c9df7222492f146bfec7155c8bdeb32a2fe3f07f8d54bc11928dec5ca",
       "executable": false
     },
     "tests/base/triage-aging.test.ts": {
