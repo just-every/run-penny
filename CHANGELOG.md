@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep hosted export controls disabled until their handlers attach, so resuming a saved export immediately after a reload cannot lose the click. The phone browser journey holds scripts during reload, then proves the same archive downloads and the saved snapshot is released. No migration or owner reconfiguration is required.
+
 - Reject invalid or redacted survey email for requester attribution, preserve and redact Pencil source-stated names, and purge those names with removed excerpts. Saving an existing survey configuration now stops source reads until explicit retry. Extend the single public-door survey journey with multiple selected questions, followed response links, nullable identity/account cases, in-flight mapping and stop fences, authenticated deletion races, revoked access and nonzero retention recovery. CAP-022 remains missing with unchanged text, acceptance and counts.
 
 - Keep survey excerpt-purge storage failures visible to the accountable owner until explicit retry, while due privacy purges continue during failed or paused capture. Extend the existing survey journey with a real SQLite abort and scheduled recovery.

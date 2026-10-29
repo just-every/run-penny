@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "6562ccabd2ec65e5b7ef88e41e53da60d3808c02822286a81a326495dcb2eb7e",
+      "sha256": "f03e9ef726af10fbcbdbbe27da63e9e864d5f722f684e998d5cdf0c4dd981fd0",
       "executable": false
     },
     "CLAUDE.md": {
@@ -4894,7 +4894,7 @@
       "executable": false
     },
     "src/core/features/data/ui/hosted-export.tsx": {
-      "sha256": "01e9208f1ff7948d271ef630bd5335ce3890b10540b5c26a11a28b34dc887701",
+      "sha256": "591de47f8852ffcd8c3a37faf609eb470d2b04c7dc16c64f95c87aeeb7187ab3",
       "executable": false
     },
     "src/core/features/data/ui/maintenance-notice.tsx": {
@@ -8298,7 +8298,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-hosted-data.mjs": {
-      "sha256": "cb632618ee51b44e20dd05b3ba759f5bdd6f3e703acb263cb132f903360ba870",
+      "sha256": "327858525dd3ad23ed53df02160ccbed1e56cd72b5d9112e9177519bdbcfdb1c",
       "executable": false
     },
     "tests/browser/operator-pages-status.mjs": {
