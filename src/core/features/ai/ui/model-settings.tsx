@@ -8,6 +8,7 @@ interface Data {canConfigure:boolean;monthlyBudgetMicros:number;includePrivate:b
 const dollars=(micros:number)=>(micros/1000000).toFixed(6)
 export function ModelSettings(){
  const [resource,reload]=useOperatorResource<Data>('/api/operator/settings/ai')
+ if(resource.kind==='ready'&&(!resource.data.transport||!resource.data.catalog.length))return <SectionCard id="ai-models" icon="form" title="AI models and budget" description="Off until your host adds a model key and a secure outbound connection."/>
  return <SectionCard className="[&_h2]:scroll-mt-24" id="ai-models" icon="form" title="AI models and budget" description="Choose a model for each capability. Claude is the default. Provider keys are controlled by the installation and are never shown or stored here.">
  {resource.kind==='ready'?<ModelForm key={JSON.stringify(resource.data)} data={resource.data} reload={reload}/>:<div><p role={resource.kind==='loading'?'status':'alert'}>{resource.kind==='loading'?'Loading AI settings…':'AI settings could not be loaded. Check the installation model configuration.'}</p>{resource.kind!=='loading'?<button className={buttonClass} onClick={reload}>Retry AI settings</button>:null}</div>}
  </SectionCard>
@@ -19,7 +20,6 @@ function ModelForm({data,reload}:{data:Data;reload:()=>void}){
   try{await operatorMutation('/api/operator/settings/ai',{monthlyBudgetMicros:Math.round(Number(form.get('budget'))*1000000),includePrivate:privateContext,choices},'PUT');reload()}catch(error){setMessage(error instanceof Error?error.message:'Could not save AI settings.')}finally{setBusy(false)}
  }}>
  <p className="text-sm">Private notes and commercial fields, including account names, are never sent to a model by default. Enabling private context permits only fields your current role can see.</p>
- {!data.transport||!data.catalog.length?<p role="alert">AI is unavailable until the installation configures a model and enforcing transport. Manual capture, triage and lexical suggestions remain available.</p>:null}
  <fieldset disabled={!data.canConfigure||busy} className="space-y-5 min-w-0">
  <label className={fieldLabelClass}>Monthly AI budget (USD)<input className={fieldClass} type="number" name="budget" min="0" max="100000" step="0.000001" required defaultValue={data.monthlyBudgetMicros/1000000}/></label>
  <label className="flex min-h-11 items-center gap-2"><input type="checkbox" checked={privateContext} onChange={e=>setPrivate(e.target.checked)}/>Allow permitted private context in model prompts</label>

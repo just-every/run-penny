@@ -111,7 +111,7 @@ try {
    await draftJourney({page,context,runtime,width,output,axe,expectedRefusal:value=>{expectedRefusal=value}})
    await page.goto(origin+'/app/learning');await page.waitForLoadState('networkidle')
    await runtime.configure({PENNY_LEARNING:'',PENNY_AI:''});await page.reload();await page.getByText(/^Learning from sales records and AI interpretation are not available on this installation\./).waitFor();assert.equal(await page.getByText('Connect selected Orbit sales evidence',{exact:true}).count(),0,'an unconfigured installation says so plainly instead of showing a disabled form');assert.equal(await page.locator('a[href*="OPERATIONS.md"]').count(),0);await capture('unconfigured-source')
-   await page.goto(origin+'/app/settings#ai-models');await expect(page.getByRole('region',{name:'AI models and budget',exact:true}).getByRole('alert')).toBeVisible();await aiCapture('ai-unconfigured')
+   await page.goto(origin+'/app/settings#ai-models');await expect(page.getByRole('region',{name:'AI models and budget',exact:true})).toContainText('Off until your host adds a model key');assert.equal(await page.getByRole('form',{name:'AI configuration',exact:true}).count(),0);await capture('ai-unconfigured')
    assert.deepEqual(errors,[]);assert.deepEqual(external,[]);checks.push({width,privacy:true,sourceDisconnect:true,nativePersonErasureUsesData:true,orbitPersonErasureAvailable:true,realProtocolCommit:true})
   } finally {await context?.close();await runtime.close()}
  }

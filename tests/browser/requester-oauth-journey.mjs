@@ -54,9 +54,7 @@ export async function reviewRequesterOAuth({page,browser,runtime,width,goto,capt
  await api('/api/operator/settings/requester-oauth',{google:false,github:false},'PUT')
  await runtime.configure({REQUESTER_GOOGLE_CLIENT_SECRET:''})
  await goto('/app/settings')
- await panel.getByLabel('Continue with Google',{exact:true}).check()
- const refused=page.waitForResponse(r=>r.url().endsWith('/api/operator/settings/requester-oauth')&&r.request().method()==='PUT')
- await panel.getByRole('button',{name:'Save social sign-in settings',exact:true}).click();assert.equal((await refused).status(),409)
- await panel.getByText('Google needs its installation client credentials and enforcing egress binding before it can be enabled.',{exact:true}).waitFor()
+ assert.equal(await panel.getByLabel('Continue with Google',{exact:true}).count(),0,'a provider without its installation credentials is not offered')
+ const refused=await page.request.fetch(origin+'/api/operator/settings/requester-oauth',{method:'PUT',headers:{Origin:origin},data:{google:true,github:false}});assert.equal(refused.status(),409)
  await capture('REQ-039-owner-binding-required')
 }
