@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "08cc1a66dcec6e6102476e7ac7f4f14d84b784df24dd5f9d40e9e32d6a0efbfa",
+      "sha256": "cbce5968814feae1fc2033ebc1a79fcf96f00e632ace6b3be448e103416798ef",
       "executable": false
     },
     "CLAUDE.md": {
@@ -8162,7 +8162,7 @@
       "executable": false
     },
     "tests/browser/helpscout-capture.mjs": {
-      "sha256": "070a3036b26aa1b4146614595fb04720506c0f0109d635735a6c2c19c5995eb1",
+      "sha256": "d42f704c570786833823ab4e03ede0293e5fe608c1c34c8578c8a5d1e59b0d46",
       "executable": false
     },
     "tests/browser/host-identity.mjs": {
