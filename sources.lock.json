@@ -8030,7 +8030,7 @@
       "executable": false
     },
     "tests/browser/browser-capture.mjs": {
-      "sha256": "82204c4ddcf12f799c5b0567ee260fa5ff6cc27595fddc07351ada0cd4bf6931",
+      "sha256": "d1f5d7087c330afbde4b6399f6260096f2512ed16d62a8420880fa11f0eb54eb",
       "executable": false
     },
     "tests/browser/browser-options.mjs": {

@@ -25,7 +25,7 @@ try{
  // The production manifest and permissions.request path stay byte-identical;
  // this is native browser consent setup, with no extension API stubs.
  const siteAccess=await context.newPage();await siteAccess.goto('chrome://extensions')
- await siteAccess.evaluate(async({id,origin})=>{await chrome.developerPrivate.addHostPermission(id,origin+'/*')},{id,origin})
+ await siteAccess.evaluate(({id,origin})=>new Promise((resolve,reject)=>{chrome.developerPrivate.addHostPermission(id,origin+'/*',()=>{const error=chrome.runtime.lastError;if(error)reject(new Error(error.message));else resolve()})}),{id,origin})
  await siteAccess.close()
  const source=await context.newPage();await source.goto(sourceUrl);source.setDefaultTimeout(20000)
  async function popup(){
