@@ -70,6 +70,9 @@ try{
  // An ambiguous customer send remains visible after an actual Worker restart.
  await json(`/api/operator/requests/${existing.slug}/status-updates`,{status:'in_progress',body:'Further export improvements are in progress.',idempotencyKey:'fixture-progress'},operator)
  await runtime.schedule();await side.getByRole('button',{name:'Refresh progress and status',exact:true}).click()
+ // Refresh replaces the edited text and clears its approval. Wait for the new
+ // public-status draft before filling/reviewing it, rather than racing that read.
+ await side.locator('#reply-state').filter({hasText:'Draft ready for review.'}).waitFor()
  edge.sendStatus=503
  await side.getByLabel('Edited reply',{exact:true}).fill('We are improving scheduled exports.');await side.getByLabel('I reviewed this exact reply and approve sending it to this customer.').check();await side.getByRole('button',{name:'Send reviewed reply',exact:true}).click()
  await side.getByRole('alert').filter({hasText:'Delivery is uncertain.'}).waitFor()
