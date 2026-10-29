@@ -55,13 +55,14 @@ export async function authenticateOperator(runtime: PennyRuntime, request: Reque
   if (!session) return null
   const { email, displayName } = session.operator
   // Product actor foreign keys keep their existing IDs and historical rows.
-  let actor = await runtime.database.binding.prepare('SELECT id,email,display_name AS displayName FROM operators WHERE email=?').bind(email).first<AuthenticatedOperator>()
+  let actor = await runtime.database.binding.prepare('SELECT p.id,p.email,p.display_name AS displayName FROM penny_agent_people a JOIN operators p ON p.id=a.actor_id WHERE a.native_operator_id=?').bind(session.operator.id).first<AuthenticatedOperator>()
   if (!actor) {
     const now = new Date().toISOString()
     await runtime.database.binding.prepare('INSERT INTO operators(id,email,display_name,created_at,updated_at) VALUES(?,?,?,?,?) ON CONFLICT(email) DO NOTHING').bind(createUlid(),email,displayName,now,now).run()
     actor = await runtime.database.binding.prepare('SELECT id,email,display_name AS displayName FROM operators WHERE email=?').bind(email).first<AuthenticatedOperator>()
   }
   if (!actor) throw new NativeError('operator_auth_unavailable',503)
+  await runtime.database.binding.prepare('INSERT INTO penny_agent_people(native_operator_id,actor_id) VALUES(?,?) ON CONFLICT(native_operator_id) DO NOTHING').bind(session.operator.id,actor.id).run()
   return actor
 }
 export function registerOperatorAuthRoutes(app: Hono<Environment>): void {

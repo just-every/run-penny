@@ -94,6 +94,7 @@
     "@vitejs/plugin-react": "6.1.1",
     "axe-core": "4.10.2",
     "highlight.js": "10.7.3",
+    "miniflare": "5.20260907.0-alpha",
     "oxlint": "^1.79.0",
     "react-markdown": "6.0.3",
     "remark-gfm": "1.0.0",
@@ -151,7 +152,8 @@
     "verification.json",
     "integrations",
     "packaging.json",
-    "base-copies.json"
+    "base-copies.json",
+    "agent-surface.json"
   ],
   "engines": {
     "node": "22.20.0",
