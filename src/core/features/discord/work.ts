@@ -61,21 +61,29 @@ export async function drainDiscord(runtime:PennyRuntime,clock=Date.now()){
 }
 async function refreshDiscordSources(runtime:PennyRuntime,settings:DiscordSettings,epoch:number,clock:number){
  const db=fenced(runtime,settings,epoch),now=new Date(clock).toISOString()
- const sources=(await db.prepare("SELECT * FROM penny_discord_sources WHERE source_state IN('current','changed') AND next_check<=? ORDER BY next_check,evidence_id LIMIT 10").bind(now).all<Source>()).results
+ const sources=(await db.prepare("SELECT * FROM penny_discord_sources WHERE source_state IN('current','changed') AND check_claim IS NULL AND check_failure IS NULL AND next_check<=? ORDER BY next_check,evidence_id LIMIT 10").bind(now).all<Source>()).results
  for(const source of sources){
   if(!selected(settings,source.guild_id,source.channel_id))continue
+  const claim=crypto.randomUUID(),claimed=await db.prepare("UPDATE penny_discord_sources SET check_claim=?,check_started_at=?,check_failure='discord_source_check_in_progress' WHERE evidence_id=? AND source_state IN('current','changed') AND check_claim IS NULL AND check_failure IS NULL AND next_check<=? RETURNING evidence_id").bind(claim,now,source.evidence_id,now).all()
+  if(!claimed.results.length)continue
+  // The persisted claim is checked again in every completion transaction. A
+  // lease recovery, scope change, removal or purge permanently fences this read.
+  const guard=captureGuard(settings);guard.sql+=" AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND epoch=?) AND EXISTS(SELECT 1 FROM penny_discord_sources WHERE evidence_id=? AND check_claim=? AND source_state IN('current','changed'))";guard.params.push(epoch,source.evidence_id,claim)
+  const commit=guardedDatabase(runtime.database.binding,guard)
   try{
    const response=await discordMessage(runtime,source.channel_id,source.message_id)
    if([401,403,404].includes(response.status)){
-    await db.prepare("UPDATE penny_discord_sources SET source_state='removed',removed_at=?,purge_at=?,check_failure=NULL WHERE evidence_id=? AND source_state IN('current','changed')").bind(now,new Date(clock+settings.purge_days*86400000).toISOString(),source.evidence_id).run()
+    await commit.prepare("UPDATE penny_discord_sources SET source_state='removed',removed_at=?,purge_at=?,check_failure=NULL,check_claim=NULL,check_started_at=NULL WHERE evidence_id=?").bind(now,new Date(clock+settings.purge_days*86400000).toISOString(),source.evidence_id).run()
    }else{
     if(response.status!==200)throw new NativeError(response.status===429?'discord_rate_limited':'discord_provider_unavailable',503)
     const parsed=sourceMessage.safeParse(JSON.parse(response.body))
     if(!parsed.success||parsed.data.id!==source.message_id||parsed.data.channel_id!==source.channel_id)throw new NativeError('discord_message_invalid',503)
     const changed=await sourceHash(parsed.data)!==source.source_hash
-    await db.prepare("UPDATE penny_discord_sources SET source_state=CASE WHEN ? THEN 'changed' ELSE source_state END,next_check=?,check_failure=NULL WHERE evidence_id=?").bind(changed?1:0,new Date(clock+3600000).toISOString(),source.evidence_id).run()
+    await commit.prepare("UPDATE penny_discord_sources SET source_state=CASE WHEN ? THEN 'changed' ELSE source_state END,next_check=?,check_failure=NULL,check_claim=NULL,check_started_at=NULL WHERE evidence_id=?").bind(changed?1:0,new Date(clock+3600000).toISOString(),source.evidence_id).run()
    }
-  }catch(error){await db.prepare('UPDATE penny_discord_sources SET check_failure=?,next_check=? WHERE evidence_id=?').bind(failure(error),new Date(clock+3600000).toISOString(),source.evidence_id).run()}
+  }catch(error){
+   await runtime.database.binding.prepare("UPDATE penny_discord_sources SET check_failure=?,check_claim=NULL,check_started_at=NULL WHERE evidence_id=? AND check_claim=? AND source_state IN('current','changed')").bind(failure(error),source.evidence_id,claim).run()
+  }
  }
 }
 /** Purging continues while capture is paused, without a provider read. */
@@ -83,12 +91,14 @@ export async function purgeDiscordSources(runtime:PennyRuntime,clock=Date.now())
  const raw=runtime.database.binding,state=await raw.prepare("SELECT epoch FROM data_state WHERE singleton=1 AND phase='idle'").first<{epoch:number}>()
  if(!state)return
  const db=guardedDatabase(raw,{sql:"EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?)",params:[state.epoch]}),now=new Date(clock).toISOString()
+ // Recovery also runs while paused, so a killed check always becomes visible.
+ await db.prepare("UPDATE penny_discord_sources SET check_failure='interrupted_source_check_retry_required',check_claim=NULL,check_started_at=NULL WHERE check_claim IS NOT NULL AND check_started_at<=? AND source_state IN('current','changed')").bind(new Date(clock-300000).toISOString()).run()
  const sources=(await db.prepare("SELECT evidence_id FROM penny_discord_sources WHERE source_state='removed' AND purge_at<=? LIMIT 50").bind(now).all<{evidence_id:string}>()).results
  for(const source of sources)try{await db.batch([
   db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,'system','discord-capture','discord.source_purged','evidence',?,?,?,? WHERE EXISTS(SELECT 1 FROM penny_discord_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(createUlid(),source.evidence_id,now,now,now,source.evidence_id,now),
   db.prepare("UPDATE evidence_versions SET wording='[Source removed]',updated_at=? WHERE evidence_id=? AND EXISTS(SELECT 1 FROM penny_discord_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(now,source.evidence_id,source.evidence_id,now),
   db.prepare("UPDATE evidence_items SET named_speaker=NULL,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM penny_discord_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(now,source.evidence_id,source.evidence_id,now),
-  db.prepare("UPDATE penny_discord_sources SET source_state='purged',check_failure=NULL WHERE evidence_id=? AND source_state='removed' AND purge_at<=?").bind(source.evidence_id,now),
+  db.prepare("UPDATE penny_discord_sources SET source_state='purged',check_failure=NULL,check_claim=NULL,check_started_at=NULL WHERE evidence_id=? AND source_state='removed' AND purge_at<=?").bind(source.evidence_id,now),
  ])}catch{
   await db.prepare("UPDATE penny_discord_sources SET check_failure='discord_purge_failed' WHERE evidence_id=? AND source_state='removed'").bind(source.evidence_id).run()
   throw new NativeError('discord_purge_failed',503)

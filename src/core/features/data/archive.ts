@@ -97,6 +97,7 @@ function limits(data:Record<string,Row[]>):void{
  if(Object.values(data).reduce((n,items)=>n+items.length,0)>DATA_LIMITS.rows||new TextEncoder().encode(canonical(data)).byteLength>DATA_LIMITS.recordBytes)fail('archive_limit',413)
 }
 export const normalize=(name:string,row:Row):Row=>{
+ if(name==='penny_discord_sources'&&row.check_claim!==null&&row.check_claim!==undefined)return {...row,check_claim:null,check_started_at:null,check_failure:'restored_source_check_review_required'}
  if(name==='penny_discord_settings')return {...row,enabled:0}
  if(name==='penny_discord_jobs'&&['pending','running','failed'].includes(String(row.state)))return {...row,state:'held',claim:null,failure:'restored_capture_review_required'}
  if(name==='penny_request_batches')return {...row,held:1}

@@ -1,4 +1,7 @@
 const hints:Record<string,string>={
+ discord_source_check_in_progress:'Checking the Discord source. If interrupted, recovery will show a failure after five minutes.',
+ interrupted_source_check_retry_required:'The source check was interrupted. The owner can review and save Discord capture settings to retry source checks.',
+ restored_source_check_review_required:'The source check was held during restore. The owner can review and save Discord capture settings to retry source checks.',
  discord_purge_failed:'The excerpt could not be purged. Check the installation database and audit storage; the next schedule will retry.',
  discord_rate_limited:'Discord reached its rate limit. Wait for it to reset, then retry.',
  discord_access_revoked:'Discord refused access. Reconnect the bot and check View Channel and Read Message History permissions.',

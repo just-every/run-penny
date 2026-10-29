@@ -3244,7 +3244,9 @@
       "removed_at",
       "purge_at",
       "next_check",
-      "check_failure"
+      "check_failure",
+      "check_claim",
+      "check_started_at"
     ]
   },
   "penny_discord_receipts": {

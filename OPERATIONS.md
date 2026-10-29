@@ -394,4 +394,4 @@ A reply posts only when the operator chooses a linked published public request a
 
 ## Discord capture upgrade
 
-Apply additive migration `0096_discord_capture.sql` through `rer setup` or the existing hosted path. Configure the optional `PENNY_DISCORD` secret, enforcing GET service binding and owner-run Gateway relay only when enabling Discord. See [Discord capture](docs/DISCORD.md) for permissions, cursor recovery, source-removal policy and disconnect. Keep expanded schema on rollback. Restored capture stays disabled/held until deliberately reconfigured; never resume it under archived operator identity.
+Apply additive migrations `0096_discord_capture.sql` and `0097_discord_source_checks.sql` through `rer setup` or the existing hosted path. Configure the optional `PENNY_DISCORD` secret, enforcing GET service binding and owner-run Gateway relay only when enabling Discord. See [Discord capture](docs/DISCORD.md) for permissions, cursor recovery, source-removal policy and disconnect. Keep expanded schema on rollback. Restored capture stays disabled/held until deliberately reconfigured; never resume it under archived operator identity.

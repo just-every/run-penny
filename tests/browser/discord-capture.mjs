@@ -13,8 +13,8 @@ const config={applicationId,publicKey,botToken:'synthetic-discord-bot-token-not-
 const ids=['130000000000000001','130000000000000002','130000000000000003','130000000000000004','130000000000000005','130000000000000006']
 const reads=[],modes=new Map();let onRead=async()=>{}
 const edge={name:'discord-network-edge',modules:true,compatibilityDate:'2026-08-31',script:`import {WorkerEntrypoint} from 'cloudflare:workers';export default class Edge extends WorkerEntrypoint{async send(wire){const response=await fetch(wire.url,{method:wire.method,headers:wire.headers,redirect:'manual'});return {status:response.status,headers:{},body:await response.text()}}fetch(){return new Response('not found',{status:404})}}`,outboundService:async request=>{
- const url=new URL(request.url),id=url.pathname.split('/').at(-1);assert.equal(url.hostname,'discord.com');assert.equal(request.method,'GET');assert.equal(request.headers.get('Authorization'),`Bot ${config.botToken}`);assert.ok(url.pathname.startsWith(`/api/v10/channels/${channel}/messages/`),'Only selected channel message GETs reach the edge');reads.push(id);await onRead(id)
- const mode=modes.get(id);if(typeof mode==='number')return Response.json({message:'Synthetic refusal'},{status:mode})
+ const url=new URL(request.url),id=url.pathname.split('/').at(-1);assert.equal(url.hostname,'discord.com');assert.equal(request.method,'GET');assert.equal(request.headers.get('Authorization'),`Bot ${config.botToken}`);assert.ok(url.pathname.startsWith(`/api/v10/channels/${channel}/messages/`),'Only selected channel message GETs reach the edge');reads.push(id);const mode=modes.get(id);await onRead(id)
+ if(typeof mode==='number')return Response.json({message:'Synthetic refusal'},{status:mode})
  return Response.json({id,channel_id:channel,content:mode==='changed'?'Edited source wording':`Please add scheduled exports ${id}. Contact source.person@example.test.`,timestamp:'2026-10-28T12:30:00.000+00:00',author:{id:author,username:'Source author '+id},embeds:[{description:'OMITTED_UNSELECTED_EMBED'}],attachments:[{url:'https://unread.example.test/original'}]})
 }}
 const runtime=await startBrowserRuntime({bindings:{PENNY_DISCORD:JSON.stringify(config)},networkWorker:edge,networkBinding:'PENNY_DISCORD_EGRESS'}),browser=await chromium.launch(browserOptions()),contexts=[]
@@ -58,18 +58,69 @@ try{
  modes.set(ids[2],429);await signed(reaction(ids[2]),{relay:true});await runtime.schedule();await runtime.restart();await runtime.schedule()
  let status=await json('/api/operator/integrations/discord',undefined,operator);assert.equal(status.jobs.find(job=>job.id.endsWith(ids[2])).state,'failed');assert.equal(reads.filter(id=>id===ids[2]).length,1)
  modes.delete(ids[2]);await json('/api/operator/integrations/discord/jobs',{id:`${guild}/${channel}/${ids[2]}`,action:'retry'},operator);await runtime.schedule();assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_discord_sources').first('n'),3)
- // Simulate an actual killed claim at its durable checkpoint, then restart the Worker.
+ // Kill the emitted Worker during a capture GET, then recover its durable checkpoint.
  await json('/api/operator/settings/redaction',{enabled:false,kinds:['email'],patterns:[]},operator,'PUT')
  await signed({...command(ids[3]),member:{user:{id:capturer,username:'trigger.secret@example.test'}}})
  await json('/api/operator/settings/redaction',{enabled:true,kinds:['email'],patterns:[]},operator,'PUT')
- await runtime.db.prepare("UPDATE penny_discord_jobs SET state='running',claim='killed-at-checkpoint',started_at='2000-01-01T00:00:00Z' WHERE message_id=?").bind(ids[3]).run();await runtime.restart();await runtime.schedule()
- status=await json('/api/operator/integrations/discord',undefined,operator);assert.equal(status.jobs.find(job=>job.id.endsWith(ids[3])).failure,'interrupted_read_retry_required');assert.ok(!reads.includes(ids[3]));await json('/api/operator/integrations/discord/jobs',{id:`${guild}/${channel}/${ids[3]}`,action:'retry'},operator);await runtime.schedule()
+ const captureClock=Date.now(),captureHold=holdRead(ids[3]),pendingCapture=runtime.schedule(captureClock);pendingCapture.catch(()=>{})
+ await captureHold.entered
+ try{await runtime.restart()}finally{captureHold.release()}
+ await settled(pendingCapture);await runtime.schedule(captureClock+300001)
+ status=await json('/api/operator/integrations/discord',undefined,operator);assert.equal(status.jobs.find(job=>job.id.endsWith(ids[3])).failure,'interrupted_read_retry_required');assert.equal(reads.filter(id=>id===ids[3]).length,1,'Recovery never retries a killed read automatically');await json('/api/operator/integrations/discord/jobs',{id:`${guild}/${channel}/${ids[3]}`,action:'retry'},operator);await runtime.schedule()
  assert.equal(await runtime.db.prepare('SELECT capturer_name FROM penny_discord_sources WHERE message_id=?').bind(ids[3]).first('capturer_name'),'[REDACTED:email]')
  assert.equal(await runtime.db.prepare('SELECT capturer_name FROM penny_discord_jobs WHERE message_id=?').bind(ids[3]).first('capturer_name'),'[REDACTED:email]')
  // A pause during the network read must invalidate the completion transaction.
  await signed(command(ids[4]));onRead=async id=>{if(id===ids[4]){onRead=async()=>{};await json('/api/operator/integrations/discord',{...settings,enabled:false},operator,'PUT')}}
  await runtime.schedule().catch(error=>{assert.match(error.message,/scheduled/)});assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_discord_sources WHERE message_id=?').bind(ids[4]).first('n'),0)
  await json('/api/operator/integrations/discord',settings,operator,'PUT');await json('/api/operator/integrations/discord/jobs',{id:`${guild}/${channel}/${ids[4]}`,action:'stop'},operator)
+ // Source checks run through real Cron events, with only the Discord GET held
+ // at the network edge. Overlap, lease recovery and owner retry cannot let an
+ // older successful response resurrect removed or already-purged evidence.
+ let checkClock=Date.now()+3600001
+ const sourceCard=async id=>(await json('/api/operator/evidence',undefined,operator)).items.find(item=>item.sourceLabel==='Discord message '+id)
+ function holdRead(id){
+  console.log('Discord recovery: awaiting source read',id)
+  let enter,release;const entered=new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Source check never reached the Discord edge: '+id)),20000);enter=()=>{clearTimeout(timer);console.log('Discord recovery: source read held',id);resolve()}}),held=new Promise(resolve=>{const timer=setTimeout(resolve,25000);release=()=>{clearTimeout(timer);resolve()}})
+  onRead=async chosen=>{if(chosen===id){onRead=async()=>{};enter();await held}}
+  return {entered,release}
+ }
+ async function settled(promise){await promise.catch(error=>assert.match(error.message,/scheduled|disposed|aborted|disconnect|fetch failed/i))}
+ for(const [id,purgeBeforeRelease] of [[ids[2],false],[ids[3],true]]){
+  modes.set(id,'changed');const held=holdRead(id),pending=runtime.schedule(checkClock);pending.catch(()=>{})
+  await held.entered
+  const count=reads.filter(chosen=>chosen===id).length
+  console.log('Discord recovery: overlapping schedule',id);await runtime.schedule(checkClock+1000)
+  assert.equal(reads.filter(chosen=>chosen===id).length,count,'Concurrent schedules share one durable source check')
+  await runtime.schedule(checkClock+300001)
+  assert.equal((await sourceCard(id)).discord.checkFailure,'interrupted_source_check_retry_required')
+  await json('/api/operator/integrations/discord',{...settings,purgeDays:purgeBeforeRelease?0:1},operator,'PUT')
+  modes.set(id,404);await runtime.schedule(checkClock+301000)
+  assert.equal((await sourceCard(id)).discord.sourceState,'removed')
+  if(purgeBeforeRelease)await runtime.schedule(checkClock+302000)
+  held.release();await settled(pending)
+  assert.equal((await sourceCard(id)).discord.sourceState,purgeBeforeRelease?'purged':'removed','A stale 200 cannot reverse removal or purge')
+  await runtime.schedule(checkClock+86400000+303000)
+  assert.equal((await sourceCard(id)).discord.sourceState,'purged')
+  checkClock+=86400000+303000+3600001
+ }
+ // Restart the emitted Worker while its provider GET is outstanding. No SQL
+ // creates the claim or interruption: the schedule must checkpoint both.
+ await json('/api/operator/integrations/discord',settings,operator,'PUT')
+ modes.set(ids[0],'changed');const interrupted=holdRead(ids[0]),pendingCheck=runtime.schedule(checkClock);pendingCheck.catch(()=>{})
+ await interrupted.entered
+ const runningArchive=(await json('/api/operator/data/export',undefined,operator)).archive.tables.penny_discord_sources.find(source=>source.message_id===ids[0])
+ assert.equal(runningArchive.check_claim,null);assert.equal(runningArchive.check_started_at,null);assert.equal(runningArchive.check_failure,'restored_source_check_review_required')
+ console.log('Discord recovery: restarting Worker during read');try{await runtime.restart()}finally{interrupted.release()}
+ await settled(pendingCheck);await runtime.schedule(checkClock+300001)
+ assert.equal((await sourceCard(ids[0])).discord.checkFailure,'interrupted_source_check_retry_required')
+ await page.goto(origin+'/app/feedback',{waitUntil:'networkidle'})
+ await page.locator(`#evidence-${rows[0].evidence_id}`).getByRole('status').filter({hasText:'The source check was interrupted.'}).waitFor()
+ const interruptedReads=reads.filter(id=>id===ids[0]).length
+ await runtime.restart();await runtime.schedule(checkClock+301000)
+ assert.equal(reads.filter(id=>id===ids[0]).length,interruptedReads,'Interruption stays visible across restart until owner retry')
+ await json('/api/operator/integrations/discord',settings,operator,'PUT');await runtime.schedule(checkClock+302000)
+ assert.equal((await sourceCard(ids[0])).discord.checkFailure,null)
+ assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_discord_sources').first('n'),4,'Recovery never creates another capture')
  // Source edits never replace the captured version; removal purges all versions.
  modes.set(ids[0],'changed');modes.set(ids[1],404);await runtime.db.prepare("UPDATE penny_discord_sources SET next_check='2000-01-01T00:00:00Z'").run();await runtime.schedule();await runtime.schedule()
  assert.equal(await runtime.db.prepare('SELECT source_state FROM penny_discord_sources WHERE message_id=?').bind(ids[0]).first('source_state'),'changed');assert.equal(await runtime.db.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=?').bind(rows[0].evidence_id).first('wording'),rows[0].wording)
@@ -112,5 +163,5 @@ try{
  assert.equal(erased.status,'complete');await signed(command(ids[0]));await signed(reaction(ids[0]),{relay:true});await runtime.schedule()
  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM evidence_items WHERE id=?').bind(rows[0].evidence_id).first('n'),0);assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_discord_jobs WHERE message_id=?').bind(ids[0]).first('n'),0)
  const visitor=await browser.newPage();await visitor.goto(origin+'/portal/feedback',{waitUntil:'networkidle'});assert.doesNotMatch(await visitor.content(),/Trigger member|Source author|discord.com\/channels|Please add scheduled exports/);await visitor.close();await send('/api/operator/integrations/discord',undefined,{},'GET',401);assert.deepEqual(errors,[])
- console.log('Discord capture journey passed: signed command/reaction, scope, redaction, replay/restart, retry/stop, source authority, archive holds and 1440/390 UI')
+ console.log('Discord capture journey passed: signed command/reaction, scope, redaction, replay/restart, retry/stop, overlapping and killed source checks, source authority, archive holds and 1440/390 UI')
 }finally{for(const context of contexts)await context.close();await browser.close();await runtime.close()}

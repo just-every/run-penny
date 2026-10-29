@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "4781262f22537fde578bcc080ccdc463ec058cb381ebbc3ed22fb03affc60bbd",
+      "sha256": "8475b4c9bdcff45f9dbfa8db75e0a41fe0f66c5ce975eba229cb26552baf8c2d",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3058,7 +3058,7 @@
       "executable": false
     },
     "docs/DISCORD.md": {
-      "sha256": "b3bde4bcdea3bf93f5f5b911d985dd77c1fe6c5e8fa0072e671d997ba442ceca",
+      "sha256": "847630f7492107df928abff60cd330acf858ad1e45ec591aeb8e7787b6752b72",
       "executable": false
     },
     "docs/disposable-install.md": {
@@ -3238,7 +3238,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "95787385148441cf141ca38f185ef277cf6590041642a6d55f0aaa1b59dfb6df",
+      "sha256": "927b6771d3a203adb83a83d0bbd416b0f0f000b1b966fad837b1ec245d22773e",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -3605,12 +3605,16 @@
       "sha256": "e4afe52a0bb0ad2f9639b06fb454e2701a5677827b6e0892725077ccec1c57d5",
       "executable": false
     },
+    "migrations/core/0097_discord_source_checks.sql": {
+      "sha256": "0580ba2ae20a304e6950580e2c95343043ed9fd80fbf32b76b542ae760528a16",
+      "executable": false
+    },
     "OPERATIONS.json": {
       "sha256": "9c38e14d22b4ff12a1cb89f95f302da25048fc76a21e05cb94c84556002a171d",
       "executable": false
     },
     "OPERATIONS.md": {
-      "sha256": "0fc566ec80391f39f8ab399c8a706d1a7d626ca690fa54ab514c988ce4b238b9",
+      "sha256": "4fd4ab086f29d67e210526b927ecd1e4a680ebd636f6bc9cff14f2e6f5884acf",
       "executable": false
     },
     "OWNER-STEPS.md": {
@@ -3894,7 +3898,7 @@
       "executable": false
     },
     "scripts/discord/relay.mjs": {
-      "sha256": "7f4cdae8c603f2f3b69f0b165e139cb5fad541f771627bc549dd58c482c0b41d",
+      "sha256": "20c0780bcfce873c89aa153037d2f770d76a19e2ec60720b54ecb7d1ba984f1c",
       "executable": false
     },
     "scripts/edition-authoring/adopt.mjs": {
@@ -4742,7 +4746,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "a8e074e91f8fb0f6f881befdf504fdeeacfd2b2068fdcc34b8e47e37209ec04d",
+      "sha256": "0bcc61d6044cfb590b133fb60cebb565d28f44bcf07bd7d6bcab9782b0c68de1",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -4842,7 +4846,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "6c49ac97699db643d0cdc7f414a5c1d275101c409861805162e43806528d5e9f",
+      "sha256": "be5221566c1f457320dac3303d4b3d1d1495803245562b9271e6fa286ec41b3e",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {
@@ -4986,7 +4990,7 @@
       "executable": false
     },
     "src/core/features/discord/archive.ts": {
-      "sha256": "ef55c55e4b197db62751ef08c6adbadad376f392da6e401c6dacb252577a5d45",
+      "sha256": "f59397b2fb57fa1ed065c6b78c8437b210bbf919477bc786e52fe7529366a12c",
       "executable": false
     },
     "src/core/features/discord/configuration.ts": {
@@ -4994,7 +4998,7 @@
       "executable": false
     },
     "src/core/features/discord/failure-hint.ts": {
-      "sha256": "cb12780a7605e59199bc60f188b1f8553c42e209ae858823cd5366aa050de0b3",
+      "sha256": "c5cb67d3da5471ad5e838e4cf9bc33d8e49a7cf8cb022d28d32112e2dbe1eca9",
       "executable": false
     },
     "src/core/features/discord/intake.ts": {
@@ -5006,11 +5010,11 @@
       "executable": false
     },
     "src/core/features/discord/settings-ui.tsx": {
-      "sha256": "e3ab01c459912c737a62dafaa4e47d50ae73b5f5bd0953829a91d666ba058ae2",
+      "sha256": "393ca05981cac277452cd2e66bd29825fb0852b5405f5136f13ed5dd8acf3ed2",
       "executable": false
     },
     "src/core/features/discord/settings.ts": {
-      "sha256": "c057c61417071ad04f138602aeba89111c48028d5b0c92777cc19ffa4af67a83",
+      "sha256": "a712d1df4ed6955e7ec97ff3a7040f3d24b38f78ac239045f9c4bf891c2ca0c2",
       "executable": false
     },
     "src/core/features/discord/signatures.ts": {
@@ -5018,7 +5022,7 @@
       "executable": false
     },
     "src/core/features/discord/work.ts": {
-      "sha256": "eb40967683d5b620546caab647bb99d64fd6c78d5b1ddb329383f37ef0adeca3",
+      "sha256": "df0a697b1cb82fa725a8cef273e9d38e8e6940b59e75134e27ac346b911daf88",
       "executable": false
     },
     "src/core/features/discussion/mention-notices.tsx": {
@@ -7906,7 +7910,7 @@
       "executable": false
     },
     "tests/base/upgrade.test.ts": {
-      "sha256": "c485a40e027f75301607d18e07485adbf24a8bf3ea0f98b0dfe9527a546888ab",
+      "sha256": "bcb65cef9e3bf115b636992df28bb4a787c7cbcad22961ea9754ec6ba20a1fdd",
       "executable": false
     },
     "tests/base/uservoice-fixture.ts": {
@@ -7946,7 +7950,7 @@
       "executable": false
     },
     "tests/browser/base-runtime.mjs": {
-      "sha256": "9c87c3f3a771c584dd580e024232dc05dc6b69f74e13b31107ca735d865bf9c5",
+      "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9",
       "executable": false
     },
     "tests/browser/browser-options.mjs": {
@@ -7962,7 +7966,7 @@
       "executable": false
     },
     "tests/browser/discord-capture.mjs": {
-      "sha256": "45e91a0c5143638e3007c49dfca720b6503222c613e8033aa093004ee7280068",
+      "sha256": "b72ec0f4fdd65a41697403061abc3b78ea3dd6cb186b0342edab8bd72added02",
       "executable": false
     },
     "tests/browser/draft-journey.mjs": {
@@ -8354,7 +8358,7 @@
       "executable": false
     },
     "tests/fixtures/discord/gateway-edge.mjs": {
-      "sha256": "43a46742d7e0abaae0460e017f891f30d0ce2386e22040d60cfeaa9ba3e77357",
+      "sha256": "66532a8a18685c518ac68444f852d3764691ca4f69f8ac96898b96da0940fb14",
       "executable": false
     },
     "tests/fixtures/imports/boards.json": {
@@ -8478,7 +8482,7 @@
       "executable": false
     },
     "tests/installer/discord-relay.test.mjs": {
-      "sha256": "7238ddf7e0c3547eaab8c7707b1c828b0e0c6ed9e72503b05c29ccc092422d0e",
+      "sha256": "70dbd813ffd846a86bdbdddf7e5aa489a93fa0fb9b7de1f2bcfab0cbb037b9ab",
       "executable": false
     },
     "tests/installer/older-archive.test.mjs": {

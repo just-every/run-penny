@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.
+
+- Checkpoint source-check claims before Discord reads, prevent overlapping or superseded completions from changing removed/purged sources, and show interrupted checks until an owner deliberately retries them by saving the connector settings. Add migration 0097 without changing applied SQL; restored running checks are held. Extend the two existing public-door sanity journeys with session-expiry, overlapping removal/purge and actual Worker restart recovery. CAP-021 remains missing with unchanged acceptance and counts.
+
 - Reapply current redaction rules to pending Discord capturer attribution in the evidence transaction, including rule changes between intake and capture.
 
 - Record each automatic Discord excerpt purge with one wording-free audit entry in its write transaction; a failed purge remains visible for scheduled recovery.

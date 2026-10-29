@@ -22,8 +22,8 @@ try{
  const gateway=gatewayUrl((await meta.json()).url)
  let failures=0
  while(!stopping){
-  let acknowledged=true,chain=Promise.resolve(),failed=false,queued=0
-  await new Promise((resolve,reject)=>{
+  let acknowledged=true,chain=Promise.resolve(),failed=false,queued=0,resetSession=false,fatalError
+  await new Promise(resolve=>{
    finish=resolve;const client=new WebSocket(state.resumeUrl?gatewayUrl(state.resumeUrl):gateway);socket=client
    const send=body=>{if(client.readyState===WebSocket.OPEN)client.send(JSON.stringify(body))}
    const heartbeat=()=>{if(!acknowledged){failed=true;client.close(4000);return}acknowledged=false;send({op:1,d:state.sequence})}
@@ -39,7 +39,7 @@ try{
     }else if(packet.op===11)acknowledged=true
     else if(packet.op===1)heartbeat()
     else if(packet.op===7)client.close(4000)
-    else if(packet.op===9){if(packet.d!==true){state={sequence:null,sessionId:null,resumeUrl:null};await save()}client.close(4000)}
+    else if(packet.op===9){resetSession=packet.d!==true;client.close(4000)}
     else if(packet.op===0){
      if(!Number.isSafeInteger(packet.s)||packet.s<0)throw Error('Gateway sequence invalid')
      if(state.sequence!==null&&packet.s<=state.sequence)return
@@ -60,10 +60,15 @@ try{
      state.sequence=packet.s;await save()
     }
    }).catch(()=>{failed=true;client.close(4000)}).finally(()=>{queued--})})
-   client.addEventListener('close',event=>{clearInterval(timer);if([4004,4010,4011,4012,4013,4014].includes(event.code)){reject(Error('Discord Gateway authentication/intents refused; fix configuration before restart'));return}if([4007,4009].includes(event.code))state={sequence:null,sessionId:null,resumeUrl:null};resolve()})
+   client.addEventListener('close',event=>{clearInterval(timer);if([4004,4010,4011,4012,4013,4014].includes(event.code))fatalError=Error('Discord Gateway authentication/intents refused; fix configuration before restart');if([4007,4009].includes(event.code))resetSession=true;resolve()})
    client.addEventListener('error',()=>{failed=true;clearInterval(timer);client.close();resolve()})
   })
   active=chain;await active;clearInterval(timer)
+  // Close callbacks never mutate the cursor under an outstanding delivery.
+  // Settle every queued packet before discarding an expired session, and persist
+  // that reset before identifying again (including after a supervisor restart).
+  if(resetSession){state={sequence:null,sessionId:null,resumeUrl:null};await save()}
+  if(fatalError)throw fatalError
   if(stopping)break
   if(failed)console.error('Discord relay interrupted; resuming from the last accepted cursor')
   if(++failures>5)throw Error('Discord relay stopped after five connection failures; inspect and restart explicitly')

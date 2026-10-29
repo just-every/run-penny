@@ -70,7 +70,7 @@ change during a read prevents its completion.
 The relay persists its Gateway session and sequence only after Penny accepts the
 event. A crash before the save replays the same identity. Gateway reconnects are
 bounded to five failures, with heartbeat acknowledgement and resume; invalid
-sessions clear their cursor. Discord authentication or privileged-intent refusals
+sessions clear and persist their cursor only after pending deliveries settle, before a new session identifies. Discord authentication or privileged-intent refusals
 stop visibly. Inspect the supervisor's exit state and Penny's failed jobs before
 restarting. If an unclean exit left `<private-state.json>.lock`, first confirm
 that the old process is dead, then remove that lock. Never run two relays with
@@ -85,7 +85,13 @@ sources removed without another read. When the owner's retention window expires,
 all wording versions on that evidence item are replaced by a source-removed
 marker and its named author is cleared; its provenance and links remain. A wording-free system audit commits with the purge, once even across repeated schedules. A failed purge shows a storage failure on the item and stays due for recovery. Due
 purges continue while capture is paused. Temporary outages keep the source and
-show a check failure. Separately committed decision/publication history is
+show a check failure. Each source check checkpoints a durable claim before its
+GET; concurrent schedules share that claim, and old completions cannot reverse
+removal or purge. A check interrupted for five minutes becomes visibly failed in
+the inbox, including after a Worker restart. Failed checks stay held until the
+owner reviews and saves **Discord capture** settings with capture enabled; this
+retries source checks without recapturing evidence. Pausing or changing scope
+invalidates outstanding reads. Separately committed decision/publication history is
 preserved history and uses the existing Data copy-resolution/erasure controls.
 
 To disconnect, pause in Penny, stop the relay, remove the installation secret and
@@ -95,12 +101,13 @@ The app has no Discord account-revocation API substitute.
 
 ## Archives and upgrade
 
-Apply additive migration `0096_discord_capture.sql` through `rer setup` or the
+Apply additive migrations `0096_discord_capture.sql` and
+`0097_discord_source_checks.sql` through `rer setup` or the
 existing deployment path. Prior data and applied SQL remain unchanged. Keep the
 expanded schema when rolling back source. The settings, job receipts and source
 provenance are portable product records. Credentials and the relay's private
 cursor are installation custody and are never included in a Penny archive.
 Restored settings are disabled and unfinished work is held until a current owner
-reconfigures the connection and deliberately retries it. Evidence erasure also
+reconfigures the connection and deliberately retries it. Restored running source checks lose their old claim and remain visibly held until that owner saves the new connection. Evidence erasure also
 removes its Discord source and job attribution. A hash-only replay receipt remains, preventing a replay from resurrecting the erased evidence. No capture creates a
 request, sends an email or publishes wording automatically.

@@ -1,7 +1,7 @@
 import { applyD1Migrations,type D1Migration } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { expect,inject,it } from 'vitest'
-it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive Discord capture upgrades and repeat',async()=>{
+it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive Discord capture and source-check upgrades and repeat',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
  const {populatePreviousPennySample}=await import('./previous-sample-fixture')
  const sample=(await import('../../sample-data/penny.v1.json')).default
@@ -27,16 +27,16 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const releasedTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const released=await Promise.all(releasedTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
  const releasedRows=await env.DB.batch(released.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
- await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0096'))
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name>='0096'&&m.name<'0097'))
  const upgradedRows=await env.DB.batch(released.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
  expect(upgradedRows.map(result=>result.results)).toEqual(releasedRows.map(result=>result.results))
  expect((await env.DB.prepare('SELECT * FROM penny_publication_schedules').all()).results).toEqual([])
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0097'))
  expect((await env.DB.batch(released.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)).toEqual(upgradedRows.map(result=>result.results))
  const after=await env.DB.batch(historical.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))
  expect(after.map(result=>result.results)).toEqual(before.map(result=>result.results))
  const applied=(await env.DB.prepare('SELECT name FROM d1_migrations ORDER BY name').all<{name:string}>()).results.map(row=>row.name)
- expect(applied).toEqual(migrations.map(migration=>migration.name).sort())
+ expect(applied).toEqual(migrations.filter(m=>m.name<'0097').map(migration=>migration.name).sort())
  const addedColumns=[
   {table:'notification_attempts',name:'recipient_email',type:'TEXT',notnull:0,dflt_value:null},
   {table:'notification_attempts',name:'event_message_id',type:'TEXT',notnull:0,dflt_value:null},
@@ -55,4 +55,21 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  expect((await env.DB.prepare('SELECT * FROM oa_sessions').all()).results).toEqual([])
  expect((await env.DB.prepare('SELECT id,email,status FROM oa_operators ORDER BY id').all()).results).toEqual(historicOperators.map(o=>({...o,status:'active'})))
  expect(await env.DB.prepare('SELECT COUNT(*) AS count FROM oa_operators').first()).toEqual(await env.DB.prepare('SELECT COUNT(*) AS count FROM operators').first())
+ // Populate the previous Discord head before the source-check claim upgrade.
+ const evidenceId=await env.DB.prepare('SELECT id FROM evidence_items ORDER BY id LIMIT 1').first<string>('id')
+ const jobId='120000000000000001/120000000000000002/130000000000000001'
+ await env.DB.prepare("UPDATE evidence_items SET source_type='discord' WHERE id=?").bind(evidenceId).run()
+ await env.DB.prepare("INSERT INTO penny_discord_jobs(id,guild_id,channel_id,message_id,capturer_id,trigger_kind,owner_id,owner_version,actor_id,revision,state,evidence_id,created_at,updated_at) VALUES(?,'120000000000000001','120000000000000002','130000000000000001','120000000000000005','command',?,1,?,1,'done',?,?,?)").bind(jobId,legacyOwner,legacyOwner,evidenceId,stamp,stamp).run()
+ await env.DB.prepare("INSERT INTO penny_discord_sources(evidence_id,job_id,guild_id,channel_id,message_id,jump_url,capturer_id,source_hash,source_state,next_check) VALUES(?,?,'120000000000000001','120000000000000002','130000000000000001','https://discord.com/channels/120000000000000001/120000000000000002/130000000000000001','120000000000000005',?,'current',?)").bind(evidenceId,jobId,'a'.repeat(64),stamp).run()
+ const {digest}=await import('@/core/features/auth/native-tokens')
+ await env.DB.prepare('INSERT INTO penny_discord_receipts(source_digest,created_at) VALUES(?,?)').bind(await digest(jobId),stamp).run()
+ const priorTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const prior=await Promise.all(priorTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
+ const snapshot=async()=> (await env.DB.batch(prior.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const discordBefore=await snapshot()
+ await applyD1Migrations(env.DB,migrations)
+ expect(await snapshot()).toEqual(discordBefore)
+ await applyD1Migrations(env.DB,migrations)
+ expect(await snapshot()).toEqual(discordBefore)
+ expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
