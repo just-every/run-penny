@@ -579,7 +579,7 @@ when restored.
 
 ## Company-agent retained evidence
 
-Migrations 0099–0104 add installation-owned policy, native person binding,
+Migrations 0099–0105 add installation-owned policy, native person binding,
 approval, audit and replay stores. They are classified in the inventory and
 excluded from portable archives. Native product activity retains agent/preparer,
 sponsor and approver identifiers as historical attribution.
@@ -591,3 +591,5 @@ agent evidence, native erasure refuses before mutation with
 same fence. Do not erase retained evidence or retry keys manually. Export still
 works under its existing owner authority. This is an explicit custody limit,
 not a promise that native record deletion removes an agent's retained copies.
+
+Archive restore also refuses once agent decision evidence is retained, so it cannot displace a stable sponsor binding. A pristine destination can replace its bootstrap actor before any agent is admitted.

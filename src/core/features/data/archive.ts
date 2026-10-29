@@ -248,6 +248,7 @@ export async function startRestore(db:D1Database,bucket:R2Bucket,value:unknown,j
  if(resumeId&&(!existing||existing.kind!=='restore'))fail('invalid_data_operation',400)
  if(existing?.status==='complete')return existing.id
  if(existing?.status==='aborted')fail('data_operation_aborted')
+ await assertAgentCustodyClear(db)
  const {archive,journal,tables}=await validated(db,value,journalValue)
  validateReferences(tables,archive.tables)
  const payload={archiveHash:archive.sha256,journalHash:journal.sha256,keys:archive.files.map(file=>file.key)}
