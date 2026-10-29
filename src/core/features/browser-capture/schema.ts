@@ -4,12 +4,12 @@ export const pageUrl=z.string().max(4096).refine(value=>{
 })
 const id=z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/u)
 export const captureInput=z.object({
- id:z.uuid(),pageUrl,wording:z.string().trim().max(20000),observedAt:z.iso.datetime({offset:true}),
+ id:z.uuid(),pageUrl,wording:z.string().max(20000),observedAt:z.iso.datetime({offset:true}),
  namedSpeaker:z.string().trim().max(200).optional(),requestId:id.optional(),requesterId:id.optional(),
  proxyVote:z.boolean(),purgeDays:z.number().int().min(0).max(365),
  screenshot:z.object({hash:z.string().regex(/^[a-f0-9]{64}$/),bytes:z.number().int().positive().max(10485760)}).strict().optional(),
-}).strict().refine(value=>Boolean(value.wording||value.screenshot),'Select text or include a screenshot.')
- .refine(value=>!value.proxyVote||Boolean(value.requestId&&value.requesterId&&value.wording),'A proxy vote needs a customer, request and source excerpt.')
+}).strict().refine(value=>Boolean(value.wording.trim()||value.screenshot),'Select text or include a screenshot.')
+ .refine(value=>!value.proxyVote||Boolean(value.requestId&&value.requesterId&&value.wording.trim()),'A proxy vote needs a customer, request and source excerpt.')
 export type CaptureInput=z.infer<typeof captureInput>
 export interface Capture {
  requester_name?:string;request_title?:string;owner_name?:string;
@@ -21,4 +21,4 @@ export interface Capture {
 export async function digest(value:string|ArrayBuffer){
  return [...new Uint8Array(await crypto.subtle.digest('SHA-256',typeof value==='string'?new TextEncoder().encode(value):value))].map(byte=>byte.toString(16).padStart(2,'0')).join('')
 }
-export const sourceFingerprint=(wording:string,screenshotHash?:string)=>digest(wording.trim()||screenshotHash||'')
+export const sourceFingerprint=(wording:string,screenshotHash?:string)=>digest(wording||screenshotHash||'')

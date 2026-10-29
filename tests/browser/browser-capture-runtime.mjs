@@ -7,12 +7,12 @@ export async function captureRuntime(){
  let sourceState='current'
  const source=createServer((request,response)=>{
   reads.push({method:request.method,url:request.url})
-  const removed=sourceState==='removed',quote=sourceState==='changed'?'Please add weekly exports for our finance team.':'Please add monthly exports. Contact source.person@example.test.'
+  const removed=sourceState==='removed',quote=sourceState==='changed'?'Please add weekly exports for our finance team.':' \tPlease add monthly exports. Contact source.person@example.test. \n'
   response.writeHead(removed?404:200,{'Content-Type':'text/html; charset=utf-8'})
-  response.end(`<!doctype html><html lang="en"><head><title>Customer source</title><link rel="icon" href="data:,"></head><body><main><h1>Customer conversation</h1><p id="quote">${quote}</p><p>UNSELECTED_PRIVATE_RECORD</p><label>Password<input type="password" value="UNSELECTED_PASSWORD"></label></main></body></html>`)
+  response.end(`<!doctype html><html lang="en"><head><title>Customer source</title><link rel="icon" href="data:,"></head><body><main><h1>Customer conversation</h1><p id="quote" style="white-space:pre-wrap">${quote}</p><p>UNSELECTED_PRIVATE_RECORD</p><label>Password<input type="password" value="UNSELECTED_PASSWORD"></label></main></body></html>`)
  })
  await new Promise(resolve=>source.listen(0,'127.0.0.1',resolve))
- const sourceUrl=`http://127.0.0.1:${source.address().port}/records/42?view=feedback#request`
+ const sourceUrl=`http://127.0.0.1:${source.address().port}/records/42?contact=source.person@example.test&view=feedback#request`
  async function send(path,body,headers={},method=body===undefined?'GET':'POST',expected=200){
   const response=await fetch(origin+path,{method,redirect:'manual',headers:{Origin:origin,Connection:'close',...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})})
   assert.equal(response.status,expected,`${method} ${path}: ${await response.clone().text()}`);return response

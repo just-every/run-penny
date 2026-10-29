@@ -47,8 +47,12 @@ try{
  await page.getByRole('button',{name:'Save to inbox',exact:true}).click();await page.getByRole('status').filter({hasText:'Completion is queued'}).waitFor()
  const jobs=await json('/api/operator/browser-captures',undefined,operator),job=jobs.find(row=>row.id===draft.id)
  assert.equal(job.state,'pending');assert.equal(job.page_url,sourceUrl);assert.equal(job.proxy_vote,1);assert.equal(job.owner_name,'Maya Patel')
+ const selected=original.replace('source.person@example.test','[REDACTED:email]')
+ assert.equal((await json('/api/operator/browser-captures?url='+encodeURIComponent(sourceUrl),undefined,operator)).some(row=>row.id===job.id),true)
  const evidence=(await json('/api/operator/evidence?item='+job.evidence_id,undefined,operator)).items[0]
  assert.equal(evidence.reviewState,'unreviewed');assert.equal(evidence.requester.id,customer.requesterId);assert.match(evidence.wording,/\[REDACTED:email\]/);assert.doesNotMatch(evidence.wording,/UNSELECTED_|source.person@example/);assert.match(evidence.namedSpeaker,/\[REDACTED:email\]/)
+ assert.equal(evidence.wording,selected)
+ assert.equal((await json('/api/operator/evidence/'+job.evidence_id+'/versions',undefined,operator))[0].wording,selected)
  const attachments=await json(`/api/operator/evidence/${job.evidence_id}/attachments`,undefined,operator)
  assert.equal(attachments.files.length,1)
  const file=await send('/api/operator/evidence-attachments/'+attachments.files[0].id,undefined,operator),bytes=Buffer.from(await file.arrayBuffer())
@@ -65,10 +69,24 @@ try{
  await page.getByRole('status').filter({hasText:'Saved choices: Nina Rao · Monthly finance exports'}).waitFor()
  assert.equal(await page.getByLabel('Source time (ISO date, time and timezone)').inputValue(),'2026-10-27T14:00:00Z')
  assert.equal(await page.getByLabel('Days to keep the excerpt after source removal').inputValue(),'0')
- assert.match(await page.getByLabel('Selected excerpt',{exact:true}).inputValue(),/\[REDACTED:email\]/)
+ assert.equal(await page.getByLabel('Selected excerpt',{exact:true}).inputValue(),selected)
  const votes=await runtime.db.prepare('SELECT COUNT(*) n FROM request_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first('n');assert.equal(votes,1)
  const proxy=await runtime.db.prepare('SELECT source,source_url,evidence_id,recorder_operator_id FROM penny_proxy_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first()
- assert.equal(proxy.source_url,sourceUrl);assert.equal(proxy.evidence_id,job.evidence_id);assert.match(proxy.source,/\[REDACTED:email\]/);assert.match(proxy.source,/\[REDACTED:custom\]/);assert.ok(proxy.recorder_operator_id)
+ assert.equal(proxy.source_url,sourceUrl);assert.equal(proxy.evidence_id,job.evidence_id);assert.match(proxy.source,/\[REDACTED:email\]/);assert.match(proxy.source,/\[REDACTED:custom\]/);assert.ok(proxy.recorder_operator_id);assert.equal(proxy.source,selected.replace('monthly','[REDACTED:custom]'))
+ // Reapplying rules may redact wording, but never rewrites an address into a
+ // different source. Preview reports canonical locators as preserved custody.
+ await json('/api/operator/settings/redaction',{enabled:true,kinds:['email'],patterns:['records']},operator,'PUT')
+ const redactionRoot='/api/operator/settings/redaction'
+ let reapply=await json(redactionRoot+'/preview',{},operator,'POST',202)
+ for(let step=0;step<80&&reapply.state==='previewing';step++){await runtime.schedule();reapply=await json(redactionRoot+'/runs/'+reapply.id,undefined,operator)}
+ assert.equal(reapply.state,'ready');assert.equal(reapply.places.find(place=>place.table==='penny_browser_captures').blocked,true)
+ reapply=await json(redactionRoot+'/reapply',{planHash:reapply.planHash,confirmIrreversible:true},operator,'POST',202)
+ for(let step=0;step<80&&reapply.state==='running';step++){await runtime.schedule();reapply=await json(redactionRoot+'/runs/'+reapply.id,undefined,operator)}
+ assert.equal(reapply.state,'complete')
+ assert.equal((await json('/api/operator/browser-captures/'+job.id,undefined,operator)).page_url,sourceUrl)
+ assert.equal((await json('/api/operator/browser-captures?url='+encodeURIComponent(sourceUrl),undefined,operator)).some(row=>row.id===job.id),true)
+ assert.equal((await json('/api/operator/browser-captures/'+job.id+'/check',{pageUrl:sourceUrl,wording:original,status:200},operator)).source_state,'current')
+ assert.equal((await json('/api/operator/browser-captures/'+job.id+'/check',{pageUrl:sourceUrl,wording:original+' ',status:200},operator)).source_state,'changed')
  await json('/api/operator/settings/redaction',{enabled:true,kinds:['email'],patterns:[]},operator,'PUT')
  assert.equal(await runtime.db.prepare('SELECT verified_at FROM requester_addresses WHERE requester_id=?').bind(customer.requesterId).first('verified_at'),null)
  assert.equal(await runtime.db.prepare('SELECT COUNT(*) n FROM requester_update_permissions WHERE requester_id=?').bind(customer.requesterId).first('n'),0)
@@ -78,6 +96,7 @@ try{
   await page.setViewportSize({width,height:width===390?844:1000});await page.goto(origin+`/app/feedback?item=${job.evidence_id}`,{waitUntil:'networkidle'})
   await page.getByRole('link',{name:'Open captured page',exact:true}).waitFor();if(width===1440)assert.equal(await page.getByRole('link',{name:'Open captured page',exact:true}).getAttribute('href'),sourceUrl)
   await proof(`inbox-${width}`)
+  if(width===1440){const opened=context.waitForEvent('page');await page.getByRole('link',{name:'Open captured page',exact:true}).click();const linked=await opened;await linked.waitForLoadState();assert.equal(linked.url(),sourceUrl);assert.equal(await linked.locator('#quote').textContent(),original);await linked.close()}
  }
  const base={id:crypto.randomUUID(),pageUrl:sourceUrl,wording:'A separate selected passage.',observedAt:draft.observedAt,proxyVote:false,purgeDays:0}
  await send('/api/operator/browser-captures',base,{},'POST',401)
@@ -119,6 +138,8 @@ try{
  const held=await json('/api/operator/browser-captures',{...base,id:crypto.randomUUID()},operator,'POST',201),portable=await json('/api/operator/data/export',undefined,operator)
  assert.equal(portable.archive.tables.penny_browser_captures.find(row=>row.id===held.id).state,'held')
  assert.equal(portable.archive.tables.penny_browser_authority,undefined)
+ assert.equal(portable.archive.tables.penny_browser_captures.find(row=>row.id===held.id).page_url,sourceUrl)
+ assert.equal(portable.archive.tables.evidence_versions.find(row=>row.evidence_id===interrupted.evidence_id).wording,base.wording)
  assert.ok(portable.archive.tables.attachments.some(file=>file.id===job.id))
  const restored=await startBrowserRuntime()
  try{

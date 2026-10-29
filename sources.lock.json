@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "d9b4256100154885cf74bd4cd989e5222d05d5700c28a4d6ecd8b515f9c46dba",
+      "sha256": "08cc1a66dcec6e6102476e7ac7f4f14d84b784df24dd5f9d40e9e32d6a0efbfa",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3010,7 +3010,7 @@
       "executable": false
     },
     "docs/BROWSER-CAPTURE.md": {
-      "sha256": "a7f8aa051700a6174f6d875f48385ab512f5b67706336345f2f64361c6a48c0e",
+      "sha256": "0b227393bff3a898a819bcb14e0b4bf124a7a9b078f61b01c4db4886d30992f8",
       "executable": false
     },
     "docs/CANNY-MIGRATION.md": {
@@ -4738,11 +4738,11 @@
       "executable": false
     },
     "src/core/features/browser-capture/schema.ts": {
-      "sha256": "cbbc4b6b02a7f57e3267383ecb34d286f069d8a053adaba99dd58467942da7fe",
+      "sha256": "8fdd7dbc5f9e1d6b3290314ed1028f5654d89a1a3dcd404293415c7a995242f6",
       "executable": false
     },
     "src/core/features/browser-capture/service.ts": {
-      "sha256": "27dc32c7587cd874f0da78eaa02472f3d1042e30d3f1dbfaa3d33c16d3167077",
+      "sha256": "52b2c7a6f5ede6b4367be90281fddb8392c0c01df28180a1aa175d38369801d0",
       "executable": false
     },
     "src/core/features/browser-capture/ui/capture-page.tsx": {
@@ -4758,7 +4758,7 @@
       "executable": false
     },
     "src/core/features/browser-capture/work.ts": {
-      "sha256": "819b61474c2929271f2e803db6a846db97c831f2f84bc63558b646b6c43b27a8",
+      "sha256": "65d171aed7a3d3fcbf1abf5aa11b63ca8557be8ad6124d27b947eb571d2a4900",
       "executable": false
     },
     "src/core/features/catalog/repository.ts": {
@@ -6394,7 +6394,7 @@
       "executable": false
     },
     "src/core/features/redaction/places.ts": {
-      "sha256": "d5c815ec8568397bc7fcf493bd18f5a858c8cafcb982f66e597cc479e7a108be",
+      "sha256": "bbfe3b1615a4d266b4c9e87252857c4396605473b5c23b8da27536387b0a7abc",
       "executable": false
     },
     "src/core/features/redaction/routes.ts": {
@@ -8086,15 +8086,15 @@
       "executable": false
     },
     "tests/browser/browser-capture-review.mjs": {
-      "sha256": "fd77c9e4480a2a3f0cd29c9ef1b5d07d8225d807cb3ed9da2137fe4ccbd2a9b9",
+      "sha256": "1526b4d96bd5157014e8a4de2bcea74e329d9538de0542b00b74f3777b3fbce8",
       "executable": false
     },
     "tests/browser/browser-capture-runtime.mjs": {
-      "sha256": "572931de607a0b13b077e543aafbb393bbbc77bec4e21c385a245e250b7c3f8b",
+      "sha256": "1b3a05630038821f5be844a85d8656e67f1d2606d855d7931868f9a92be78079",
       "executable": false
     },
     "tests/browser/browser-capture.mjs": {
-      "sha256": "c5f6570aac5cf632f582df159ce8ca094cd4c7ea40254b3317136628eb689c1c",
+      "sha256": "5ad6556488865197e6050f9e11fd62204281f14c0145f300e0e1d8106bb8a01c",
       "executable": false
     },
     "tests/browser/browser-options.mjs": {
