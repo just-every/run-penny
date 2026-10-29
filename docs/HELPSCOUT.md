@@ -52,7 +52,8 @@ automatic background capture additionally requires the chosen tag. Minute Cron
 reads at most ten captures/checks per run. Penny rechecks the source mailbox and
 current tag before reading customer threads automatically. It stores only the
 first available customer-thread excerpt from the bounded response, its source
-time, customer attribution, account mapping and a deep link. It omits private
+time, the selected thread's named customer author (nullable), the conversation's
+primary-customer attribution, account mapping and a deep link. It omits private
 notes, attachments, previews, company descriptions and other custom fields.
 Redaction runs before wording, names and new company names are saved. Customer
 email is used only for identity attribution and remains private, unverified and

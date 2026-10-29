@@ -6,7 +6,8 @@ import {createUlid} from '@/core/shared/ulid'
 import {sourceId,provider,providerFailure,type Connection} from './configuration'
 const customer=z.object({id:sourceId,email:z.email().max(254).nullable().optional(),firstName:z.string().max(160).optional(),lastName:z.string().max(160).optional()})
 export const conversation=z.object({id:sourceId,mailboxId:sourceId,tags:z.array(z.object({tag:z.string().max(100)})).max(100),primaryCustomer:customer})
-const thread=z.object({id:sourceId,type:z.string(),body:z.string().max(20000).optional(),createdAt:z.iso.datetime({offset:true})})
+const threadPerson=z.object({id:sourceId,first:z.string().max(160).optional(),last:z.string().max(160).optional()})
+const thread=z.object({id:sourceId,type:z.string(),body:z.string().max(20000).optional(),createdAt:z.iso.datetime({offset:true}),customer:threadPerson.nullable().optional()})
 export async function readSource(runtime:PennyRuntime,c:Connection,id:number,requireTag=true){
  const r=await provider(runtime,c,`/conversations/${id}`)
  if([403,404,410].includes(r.status))return null
@@ -22,7 +23,7 @@ export async function readSource(runtime:PennyRuntime,c:Connection,id:number,req
  // as HTML; attachments, private notes and surrounding threads are discarded.
  const wording=selected.body.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi,'').replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi,'').replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&').trim()
  if(!wording)throw new NativeError('helpscout_excerpt_unavailable',503)
- return {source,wording,observedAt:selected.createdAt,hash:await digest(JSON.stringify({thread:selected.id,body:selected.body,createdAt:selected.createdAt}))}
+ return {source,wording,author:selected.customer?[selected.customer.first,selected.customer.last].filter(Boolean).join(' ')||null:null,observedAt:selected.createdAt,hash:await digest(JSON.stringify({thread:selected.id,body:selected.body,createdAt:selected.createdAt,author:selected.customer??null}))}
 }
 /** Identity mapping is attribution only: no verification, session or consent. */
 export async function mapCustomer(runtime:PennyRuntime,c:Connection,db:D1Database,person:z.infer<typeof customer>,now:string){

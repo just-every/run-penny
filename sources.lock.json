@@ -3082,7 +3082,7 @@
       "executable": false
     },
     "docs/HELPSCOUT.md": {
-      "sha256": "26941e6e2d815b94a9b75e343c67742343e82b261f645b764c62d4dd5d1a8b07",
+      "sha256": "1e0578a22068cc4331b025b8ba4e8f54c0e3b4c091d59a411584b137048cb479",
       "executable": false
     },
     "docs/HOST-IDENTITY.md": {
@@ -5362,11 +5362,11 @@
       "executable": false
     },
     "src/core/features/helpscout/source.ts": {
-      "sha256": "eb43efd569b0f58573a69a0fe1f9f89397b8abc3ddedcd1f673e62846c0c8ee0",
+      "sha256": "d5573d6145e820be78f5dea8f25ea1cc28efdab9b78d408eae655c2c040f6926",
       "executable": false
     },
     "src/core/features/helpscout/work.ts": {
-      "sha256": "457dfa5c2a605a45cc9f47011558785023d80cfe6049344b0bbd22bae52e44c8",
+      "sha256": "00549724f2bc7df5e0c40768c18fa2bcbe2368c5efecc6c622c82d10dd3053f4",
       "executable": false
     },
     "src/core/features/hierarchy/page.tsx": {
@@ -8078,7 +8078,7 @@
       "executable": false
     },
     "tests/browser/helpscout-capture.mjs": {
-      "sha256": "2d50361360a3ac2976b5d92b6dd1bce4e18189cb118ad3a38f74ff2f1e85bee5",
+      "sha256": "a30c1677359987d8e364a10d4ebac0ba8eb15855ce98da99d412a06a2ce67d1c",
       "executable": false
     },
     "tests/browser/host-identity.mjs": {
@@ -8426,7 +8426,7 @@
       "executable": false
     },
     "tests/fixtures/helpscout/edge.mjs": {
-      "sha256": "b4e317544745443100bd5af38c4e1d6e76359af362216f56594f5b9d15f3837d",
+      "sha256": "7fe1ac6a45924dbb323d14183f6bb15ddba3a84cdd9299cd0fc48c89d2a1b9e8",
       "executable": false
     },
     "tests/fixtures/imports/boards.json": {

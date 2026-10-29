@@ -1,6 +1,7 @@
 import type {PennyRuntime} from '@/core/app/runtime'
 import {NativeError,digest} from '../auth/native-tokens'
 import {guardedDatabase} from '../integrations/guarded-database'
+import {redactCaptured,redactionFence} from '../redaction/settings'
 import {recordEvidence} from '../evidence/write-service'
 import {connectionDb,readConnection,type Connection} from './configuration'
 import {readSource,mapCustomer} from './source'
@@ -45,8 +46,9 @@ export async function drainHelpScout(runtime:PennyRuntime,clock=Date.now()){
     await commit.prepare("UPDATE penny_helpscout_captures SET state=CASE WHEN evidence_id IS NULL THEN 'stopped' ELSE 'done' END,source_state='removed',removed_at=?,purge_at=?,claim=NULL,failure='source_removed',updated_at=? WHERE connection_id=? AND conversation_id=?").bind(now,new Date(clock+c.purge_days*86400000).toISOString(),now,c.id,row.conversation_id).run();continue
    }
    if(!row.evidence_id){
-    const person=await mapCustomer(runtime,c,commit,value.source.primaryCustomer,now),awaitDigest=await sourceDigest(c,row.conversation_id)
-    await recordEvidence(commit,{sourceType:'support_conversation',sourceLabel:'Help Scout conversation '+row.conversation_id,wording:value.wording,namedSpeaker:person.name,observedAt:value.observedAt,accountId:person.accountId},c.actor_id,now,undefined,undefined,{systemActor:'helpscout-capture',statements:id=>[
+    const person=await mapCustomer(runtime,c,commit,value.source.primaryCustomer,now),awaitDigest=await sourceDigest(c,row.conversation_id),speaker=await redactCaptured(commit,{name:value.author},['name']),speakerFence=redactionFence(commit,speaker.revision)
+    await recordEvidence(commit,{sourceType:'support_conversation',sourceLabel:'Help Scout conversation '+row.conversation_id,wording:value.wording,namedSpeaker:speaker.input.name,observedAt:value.observedAt,accountId:person.accountId},c.actor_id,now,undefined,undefined,{systemActor:'helpscout-capture',statements:id=>[
+     speakerFence.before,speakerFence.after,
      commit.prepare('UPDATE evidence_items SET requester_id=? WHERE id=?').bind(person.requesterId,id),
      commit.prepare('INSERT INTO penny_helpscout_receipts(source_digest) VALUES(?)').bind(awaitDigest),
      commit.prepare("UPDATE penny_helpscout_captures SET state='done',claim=NULL,evidence_id=?,customer_id=?,source_hash=?,next_check=?,failure=NULL,updated_at=? WHERE connection_id=? AND conversation_id=?").bind(id,value.source.primaryCustomer.id,value.hash,new Date(clock+3600000).toISOString(),now,c.id,row.conversation_id),

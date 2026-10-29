@@ -40,7 +40,7 @@ try{
  assert.equal(edge.calls.filter(c=>c.path==='/v2/conversations/101').length,1)
  assert.equal(edge.calls.some(c=>/999|998/.test(c.path)),false)
  const first=(await json('/api/operator/evidence',undefined,operator)).items.find(e=>e.sourceLabel==='Help Scout conversation 101');assert.ok(first)
- assert.match(first.wording,/\[REDACTED:email\]/);assert.equal(first.requester.displayName,'Riley Chen');assert.equal(first.account.name,'Harbor customer company');assert.equal(first.reviewState,'unreviewed');assert.equal(first.helpScout.sourceState,'current')
+ assert.match(first.wording,/\[REDACTED:email\]/);assert.equal(first.namedSpeaker,'Morgan Lopez');assert.equal(first.requester.displayName,'Riley Chen');assert.equal(first.account.name,'Harbor customer company');assert.equal(first.reviewState,'unreviewed');assert.equal(first.helpScout.sourceState,'current')
  const a=await sidebar(101),side=await context.newPage();side.on('pageerror',e=>errors.push(e.message));await side.goto(a.url,{waitUntil:'networkidle'})
  await side.getByLabel('Find a request',{exact:true}).fill('Scheduled CSV');await side.getByRole('button',{name:'Search requests',exact:true}).click();await side.getByLabel('Request to link',{exact:true}).selectOption(existing.id);await side.getByRole('button',{name:'Link conversation',exact:true}).click();await side.locator('#linked').filter({hasText:'Scheduled CSV exports · open'}).waitFor()
  await act(a.token,{action:'link',requestId:existing.id})
@@ -90,7 +90,7 @@ try{
  // Source change keeps captured wording; removal purges all versions at the policy window.
  edge.modes.set(101,'changed');await runtime.schedule(Date.now()+3600001);assert.equal((await act(next.token,{action:'view'})).capture.sourceState,'changed');assert.match((await json('/api/operator/evidence',undefined,operator)).items.find(e=>e.id===first.id).wording,/scheduled CSV/)
  edge.modes.set(101,404);await runtime.schedule(Date.now()+7200002);await runtime.schedule(Date.now()+7200003);assert.equal((await json('/api/operator/evidence',undefined,operator)).items.find(e=>e.id===first.id).wording,'[Source removed]')
- const publicBytes=JSON.stringify(await json('/api/public/requests/'+existing.slug));for(const value of ['customer@example.test','Riley Chen','Harbor customer company','secure.helpscout.net'])assert.equal(publicBytes.includes(value),false)
+ const publicBytes=JSON.stringify(await json('/api/public/requests/'+existing.slug));for(const value of ['customer@example.test','Riley Chen','Morgan Lopez','Harbor customer company','secure.helpscout.net'])assert.equal(publicBytes.includes(value),false)
  // Visual proof uses the same final screens once at each requested width.
  const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
  await side.goto(next.url,{waitUntil:'networkidle'});await side.reload({waitUntil:'networkidle'})
