@@ -63,7 +63,11 @@ try{
  assert.equal((await signed(null,{authorization:null,raw:'{malformed'})).status,401,'Unsigned request refused before parsing')
  assert.equal((await signed(null,{raw:'{malformed'})).status,400)
  for(const authorization of ['Bearer '+token({exp:1}), 'Bearer '+token({nbf:Math.floor(Date.now()/1000)+600}),'Bearer '+token({aud:team}),'Bearer '+token({iss:'https://forged.test'}),'Bearer '+token({}, {alg:'none'}),'Bearer '+token().slice(0,-10)+'invalidxxx'])assert.equal((await signed(action(ids[0]),{authorization})).status,401)
- endorsements=['other-channel'];assert.equal((await signed(action(ids[0]))).status,401);endorsements=['msteams']
+ for(const supplied of [[],['other-channel']]){endorsements=supplied;assert.equal((await signed(action(ids[0]))).status,401,'A supplied endorsement list must authorize msteams')}
+ assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_teams_jobs').first('n'),0,'Rejected tokens create no capture work')
+ assert.deepEqual(reads,[],'Rejected tokens never read Graph')
+ endorsements=undefined;assert.equal((await signed(action(ids[0]))).status,200,'Provider keys may omit endorsements')
+ endorsements=['msteams']
  assert.equal((await signed({...action(ids[0]),serviceUrl:'https://evil.test/'})).status,403)
  const wrongTenant=action(ids[0]);wrongTenant.channelData.tenant.id=team;assert.equal((await signed(wrongTenant)).status,403)
  assert.equal((await signed({type:'conversationUpdate',channelId:'msteams',serviceUrl,channelData:{tenant:{id:config.tenantId}}})).status,200)

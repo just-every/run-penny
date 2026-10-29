@@ -26,7 +26,11 @@ export async function drainTeamsNotifications(runtime:PennyRuntime,clock=Date.no
  if(!config?.notificationUrl||!runtime.bindings.PENNY_TEAMS_EGRESS)return
  if(!validNotificationUrl(config.notificationUrl))return
  const {timezone}=await workspaceClock(runtime)
- const rows=(await db.prepare(`SELECT e.* FROM penny_teams_events e JOIN penny_teams_preferences p ON p.operator_id=e.operator_id AND p.revision=e.revision AND p.enabled=1 JOIN operators o ON o.id=p.operator_id JOIN oa_operators n ON n.email=o.email AND n.status='active' WHERE e.delivery_id IS NULL ORDER BY e.created_at,e.id LIMIT 200`).all<Event>()).results
+ // Filter open calendar periods before bounding discovery. A quiet weekly
+ // backlog must never hide an immediate event behind the discovery limit.
+ const dailyBoundary=periodStart(period(now,timezone,false),timezone,false)
+ const weeklyBoundary=periodStart(period(now,timezone,true),timezone,true)
+ const rows=(await db.prepare(`SELECT e.* FROM penny_teams_events e JOIN penny_teams_preferences p ON p.operator_id=e.operator_id AND p.revision=e.revision AND p.enabled=1 JOIN operators o ON o.id=p.operator_id JOIN oa_operators n ON n.email=o.email AND n.status='active' WHERE e.delivery_id IS NULL AND (e.cadence='immediate' OR (e.cadence='daily' AND e.created_at<?) OR (e.cadence='weekly' AND e.created_at<?)) ORDER BY e.created_at,e.id LIMIT 200`).bind(dailyBoundary,weeklyBoundary).all<Event>()).results
  const groups=new Map<string,Event[]>()
  for(const row of rows){
   const bucket=row.cadence==='immediate'?row.id:period(row.created_at,timezone,row.cadence==='weekly')

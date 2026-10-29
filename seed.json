@@ -362,6 +362,32 @@
       "adapters": [
         "penny.discord.v1"
       ]
+    },
+    {
+      "id": "microsoft-teams",
+      "required": false,
+      "why": "Optional installation-owned Teams transport PENNY_TEAMS_EGRESS validates Bot Framework tokens against Microsoft's public metadata/signing keys, obtains an Entra application token and reads only selected Teams messages through Microsoft Graph. No direct fetch fallback or provider discovery is permitted.",
+      "data": [
+        "Bot Framework metadata and signing-key requests contain no user data",
+        "configured tenant ID, application ID and client secret sent only to login.microsoftonline.com for Graph application authentication",
+        "Graph bearer token and exact selected group, channel, root-message and reply identifiers sent only to graph.microsoft.com"
+      ],
+      "adapters": [
+        "penny.teams-egress.v1"
+      ]
+    },
+    {
+      "id": "teams-workflow-notifications",
+      "required": false,
+      "why": "Each opted-in active operator receives wording-free event counts at the installation-selected Microsoft Teams Workflow endpoint through PENNY_TEAMS_EGRESS. The endpoint and its query signature are installation secrets; the transport enforces the exact HTTPS destination and refuses redirects.",
+      "data": [
+        "selected event kinds and aggregate counts",
+        "installation app link",
+        "configured workflow endpoint signature used only at the selected destination"
+      ],
+      "adapters": [
+        "penny.teams-egress.v1"
+      ]
     }
   ],
   "env": [
@@ -436,6 +462,12 @@
       "required": false,
       "secret": true,
       "why": "Optional Discord applicationId, Ed25519 publicKey, botToken and gatewaySecret JSON. Installation custody only. Requires PENNY_DISCORD_EGRESS and an owner-run Gateway relay; disabled when absent."
+    },
+    {
+      "name": "PENNY_TEAMS",
+      "required": false,
+      "secret": true,
+      "why": "Optional Microsoft Entra applicationId, tenantId and clientSecret JSON, with a private notificationUrl for Teams Workflows when desired. Installation custody only; requires PENNY_TEAMS_EGRESS and explicit native capture/notification choices. No transport or live account is provisioned automatically."
     }
   ],
   "deploy": {
@@ -480,7 +512,8 @@
       "/api/public/mail/events",
       "/auth/owner-claim",
       "/api/integrations/discord/interactions",
-      "/api/integrations/discord/gateway"
+      "/api/integrations/discord/gateway",
+      "/api/integrations/teams/messages"
     ],
     "notes": "Operator credentials use maintained Base operator-auth; requester email is sent through the selected Base SendGrid or Resend transport. GET /auth/confirm previews a link without consuming it; same-origin POST confirms it. Private Hono and Start functions authenticate independently. Production has no local outbox switch. 0009 revokes prior synthetic credentials. Test-only predecessor fixtures are separate from production Base tests. Setup packages clean production artifacts; deploy targets the rer-seedproof-penny workers.dev prefix via Base. Hosted/provider proof remains separate from local verification. Required requester mail and minute-Cron notification drain are declared in OPERATIONS.json. Provider credentials, verified sender, hosted Cron execution and inbox delivery need independent proof. The public feedback board's canonical address is /portal/feedback, and /portal redirects there (9 October 2026). /docs and everything under /docs/ are public build-time documentation pages (DOCS-001) that read no workspace record and set no cookie; an unknown docs page is a 404."
   },
@@ -542,7 +575,8 @@
       "portal.request.detail.after.v1"
     ],
     "adapters": [
-      "mail.sender.v1"
+      "mail.sender.v1",
+      "penny.teams-egress.v1"
     ]
   },
   "limits": {

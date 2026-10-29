@@ -92,7 +92,7 @@ Workflow authentication and any Microsoft licensing remain owner prerequisites.
 
 Each operator independently enables Teams and selects off, immediate, daily or
 weekly for inbox items on their owned boards, mentions, assignments, aging,
-decision reviews, Teams connector failures, published releases and their chosen
+decision reviews, connector failures, published releases and their chosen
 vote-demand threshold. Mentions, assignments and reviews are the only initial
 selections; outbound delivery stays disabled until the operator opts in.
 Native in-app mention notices remain enabled. Other NOTIFY-006 channels keep
@@ -103,6 +103,14 @@ app. They contain no customer identity, source text, private title, account
 value or internal note. Daily digests close the previous local calendar day;
 weekly digests close Monday-to-Monday in the workspace timezone, including DST.
 A digest claims its entire closed period atomically, across paged discovery.
+Open digest periods do not delay immediate events.
+
+Connector alerts use one durable episode per connection, shared by capture and
+source-check failures. Retrying a failed capture does not resolve the episode:
+all outstanding faults must succeed or be explicitly stopped or erased. A later
+failure after recovery starts a new episode. The same custody covers Discord,
+outbound Slack/webhook and tracker work, and Orbit source-read failures. Episode
+and fault records contain no captured wording and never travel in archives.
 
 Accepted posts never replay. Definite rejections are visible and may be retried
 deliberately while the same preferences remain enabled. Ambiguous or interrupted
@@ -113,10 +121,13 @@ and send custody are installation-owned and excluded from portable archives.
 
 ## Upgrade and proof boundary
 
-Apply additive migrations `0098_teams_capture.sql` and
-`0099_teams_notifications.sql` through `rer setup` or the documented hosted
+Apply additive migrations `0098_teams_capture.sql`,
+`0099_teams_notifications.sql` and `0100_teams_notification_episodes.sql` through `rer setup` or the documented hosted
 deployment path. Keep the expanded schema on source rollback. Existing records,
-authority, snapshots, receipts and original files remain intact.
+authority, snapshots, receipts and original files remain intact. Migration 0100
+replaces notification triggers, adds installation-only episode/fault custody and
+seeds existing Teams/Discord failures without replaying historical alerts. No
+owner reconfiguration is needed.
 
 `tests/browser/teams-capture.mjs` and `tests/browser/teams-notifications.mjs`
 exercise the built Worker through public HTTP routes, browser UI and actual

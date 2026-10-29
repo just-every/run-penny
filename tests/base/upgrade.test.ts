@@ -75,12 +75,23 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const previous=await Promise.all(previousTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
  const previousSnapshot=async()=> (await env.DB.batch(previous.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const teamsBefore=await previousSnapshot()
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0100'))
  expect(await snapshot()).toEqual(discordBefore)
  expect(await previousSnapshot()).toEqual(teamsBefore)
+ // Populate the exact writer-head Teams schema before the episode correction.
+ // Its unresolved job and accepted notification receipt must survive upgrade.
+ const teamsJob='11111111-1111-4111-8111-111111111111/19:feedback/1700000000010'
+ await env.DB.prepare("INSERT INTO penny_teams_settings(singleton,team_id,channels_json,owner_id,owner_version,actor_id,enabled,revision,purge_days,updated_at) VALUES(1,'11111111-1111-4111-8111-111111111111','[\"19:feedback\"]',?,1,?,1,1,7,?)").bind(legacyOwner,legacyOwner,stamp).run()
+ await env.DB.prepare("INSERT INTO penny_teams_jobs(id,team_id,channel_id,message_id,capturer_id,trigger_kind,owner_id,owner_version,actor_id,revision,state,failure,created_at,updated_at) VALUES(?,'11111111-1111-4111-8111-111111111111','19:feedback','1700000000010','capturing-member','action',?,1,?,1,'failed','teams_rate_limited',?,?)").bind(teamsJob,legacyOwner,legacyOwner,stamp,stamp).run()
+ await env.DB.prepare("INSERT INTO penny_teams_deliveries(id,operator_id,revision,state,event_count,created_at,updated_at) VALUES('previous-accepted',?,1,'accepted',1,?,?)").bind(legacyOwner,stamp,stamp).run()
+ const writerTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const writer=await Promise.all(writerTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
+ const writerSnapshot=async()=> (await env.DB.batch(writer.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const writerBefore=await writerSnapshot()
  await applyD1Migrations(env.DB,migrations)
- expect(await snapshot()).toEqual(discordBefore)
- expect(await previousSnapshot()).toEqual(teamsBefore)
+ expect(await writerSnapshot()).toEqual(writerBefore)
+ await applyD1Migrations(env.DB,migrations)
+ expect(await writerSnapshot()).toEqual(writerBefore)
  expect(new Uint8Array(await (await env.FILES.get('upgrade-preserved-bytes'))!.arrayBuffer())).toEqual(bytes)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

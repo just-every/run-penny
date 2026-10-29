@@ -3362,5 +3362,25 @@
       "created_at",
       "updated_at"
     ]
+  },
+  "penny_connector_episodes": {
+    "classification": "installation",
+    "columns": [
+      "connector_key",
+      "episode_id",
+      "operator_id",
+      "state",
+      "opened_at",
+      "resolved_at"
+    ]
+  },
+  "penny_connector_faults": {
+    "classification": "installation",
+    "columns": [
+      "connector_key",
+      "work_key",
+      "operator_id",
+      "created_at"
+    ]
   }
 }

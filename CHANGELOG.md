@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Correct Teams token admission when a provider key supplies an empty channel-endorsement list; supplied endorsements must include msteams.
+- Emit one Teams inbox notification per portal submission and one per independent capture, with no new inbox event from assigning existing evidence. Closed-period discovery no longer lets an open weekly backlog block immediate work.
+- Migration 0100 adds durable connector failure episodes shared by capture and source checks, with one preference-selected alert until outstanding work recovers or is explicitly stopped. Discord, existing outbound integrations/trackers and Orbit source failures use the same episode custody. Archives exclude this installation state; apply with setup and retain expanded schema on rollback.
+- Declare Microsoft's token/key, selected Graph read and private Workflow notification flows and data disclosures in seed.json. CAP-011 status, requirement and acceptance remain unchanged; the two existing built-Worker journeys cover the fixes through native routes.
+
 - Add optional Microsoft Teams message-action capture with Bot Framework JWT admission, selected team/channel Graph reads, distinct source/capturer attribution, redaction, durable replay custody, explicit retry/stop and source edit/removal retention. Add additive migrations 0098 and 0099, an app-package generator and owner setup guide. Teams operator preferences select immediate/daily/weekly event-count notifications; ambiguous or interrupted posts are never replayed. Two public-door sanity journeys cover built Worker behavior, actual restarts, archives/erasure and both browser widths. Live Microsoft tenant consent, app admission and hosted delivery remain owner-account proof. CAP-011 retains its text, acceptance and missing status; only its evidence paths are added.
 
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.

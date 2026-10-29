@@ -29,7 +29,7 @@ export async function verifyTeamsToken(runtime:PennyRuntime,request:Request):Pro
  if(response.status!==200)throw new NativeError('teams_keys_unavailable',503)
  try{
   const keys=z.object({keys:z.array(jwk).max(100)}).parse(JSON.parse(response.body)).keys
-  const key=keys.find(key=>key.kid===head.kid&&(!key.endorsements?.length||key.endorsements.includes('msteams')))
+  const key=keys.find(key=>key.kid===head.kid&&(key.endorsements===undefined||key.endorsements.includes('msteams')))
   if(!key)throw Error()
   const imported=await crypto.subtle.importKey('jwk',{kty:key.kty,n:key.n,e:key.e},{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['verify'])
   if(!await crypto.subtle.verify('RSASSA-PKCS1-v1_5',imported,bytes(parts[2]),new TextEncoder().encode(parts[0]+'.'+parts[1])))throw Error()
