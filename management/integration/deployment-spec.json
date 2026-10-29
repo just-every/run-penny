@@ -584,6 +584,18 @@
       "name": "0099_review_outreach_exclusion.sql",
       "sha256": "77a241426aee660b116e12674d0600062913fd8e12cd7f39982c0fb84a4a378c",
       "sql": "-- Explicit per-status choice and snapshot. No permission or historical audience\n-- is inferred. Retain expanded schema on rollback; stop newer mail workers first.\nALTER TABLE request_status_updates ADD COLUMN notify_captured_contacts INTEGER NOT NULL DEFAULT 0 CHECK(notify_captured_contacts IN(0,1));\nALTER TABLE notification_intents ADD COLUMN captured_contact INTEGER NOT NULL DEFAULT 0 CHECK(captured_contact IN(0,1));\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0100_review_source_date.sql",
+      "sha256": "f4a5995fe5ebcec26b3ff087946a6ca7c899beba5898ac90095371a8d2f4ca4a",
+      "sql": "-- Keep calendar-only provenance distinct from the evidence ordering instant.\n-- Prior captures retain their recorded observed_at; do not invent lost precision.\nALTER TABLE penny_review_sources ADD COLUMN source_date TEXT;\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0101_review_capture_scope.sql",
+      "sha256": "c71ce4c3590b003dd140db91fa3a0429d186f5ae209ea57c6db4e1d43941dbf0",
+      "sql": "-- The configured listing may change after capture; historical provenance must\n-- remain exportable. Older captures have no reconstructible scope snapshot.\nALTER TABLE penny_review_sources ADD COLUMN source_public_url TEXT;\n"
     }
   ],
   "compatibilityDate": "2026-08-31",

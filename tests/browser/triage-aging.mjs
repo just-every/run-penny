@@ -86,7 +86,7 @@ try{
    await follow.getByRole('heading',{name:'Untriaged inbox (1)',exact:true}).waitFor()
    await json(`/api/operator/requests/${request.slug}/status-updates`,{status:'in_progress'},cookie)
    await follow.getByRole('button',{name:'Refresh follow-up',exact:true}).click()
-   await follow.getByRole('heading',{name:'Stale status (0)',exact:true}).waitFor()
+   await follow.getByRole('heading',{name:/^Stale status/}).waitFor({state:'detached'})
    await audit(page,'status-change-clears-stale',follow)
    assert.deepEqual(errors,[])
   }finally{await context?.close();await runtime.close()}

@@ -10,7 +10,7 @@ import { CurrencyField } from './learning-protocol'
 export function LearningCapture({home,onSaved}:{home:LearningHome;onSaved:()=>void}) {
  const [evidence,reload]=useOperatorResource<OperatorPage<OperatorEvidenceCard>>('/api/operator/evidence')
  const saved=()=>{reload();onSaved()}
- return <section className="capture" aria-labelledby="capture-heading"><h2 id="capture-heading" tabIndex={-1}>Capture deliberately. Give Penny a narrow remit.</h2>
+ return <section className="capture" aria-labelledby="capture-heading"><h2 id="capture-heading" tabIndex={-1}>Add evidence</h2>
  <p className="quiet">Use original customer feedback already recorded in Penny, or explicitly selected sales records. Sources stay private to your operators.</p>
  <details><summary>Record native feedback</summary><EvidenceRecorder onSaved={saved}/></details>
 {/* Sales records and interpretation reach other services through a deployment
@@ -21,7 +21,7 @@ export function LearningCapture({home,onSaved}:{home:LearningHome;onSaved:()=>vo
  <Field name="name" label="Source name" required/><Field name="resourceIds" label="Orbit records to share (one per line: the ID shown on each record in Orbit)" required type="textarea"/><Field name="useBasis" label="Permission and permitted use" required type="textarea"/>
  <label><input name="authorized" type="checkbox" required/> All Penny operators may inspect these selected records and their derived learning.</label>
  <p>Reading and internal interpretation only. This does not authorize contacting customers, publishing, or changing production.</p></LoopForm></details></>:null}
- {home.configuration.model?<> <details><summary>Start a bounded investigation</summary>
+ {home.configuration.model?<> <details><summary>Start an investigation</summary>
  <LoopForm title="Authorize learning" action={`${api}/investigations`} submit="Start learning" onSaved={onSaved} disabled={evidence.kind!=='ready'} transform={d=>({...(d.get('sourceId')?{sourceId:d.get('sourceId')}:{}),question:d.get('question'),nativeEvidenceIds:d.getAll('nativeEvidenceIds'),nativeRequestIds:[],purpose:d.get('purpose'),expiresAt:new Date(String(d.get('expiresAt'))).toISOString(),budgetMicros:Math.round(Number(d.get('budget'))*1e6),maxRunCostMicros:Math.round(Number(d.get('maxRunCost'))*1e6),intervalMinutes:Number(d.get('intervalMinutes'))})}>
  <Field name="question" label="Question to resolve (optional: Penny proposes one)"/>
  <Field name="sourceId" label="Connected source (optional)" choices={home.sources.filter(s=>s.state==='active').map(s=>({id:s.id,label:s.name}))}/>

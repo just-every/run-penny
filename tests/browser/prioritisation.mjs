@@ -17,7 +17,7 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
  }
  const owner=await pageFor({cookie:operator.Cookie});await owner.goto(origin+'/app/prioritisation',{waitUntil:'networkidle'})
  await capture(owner,'empty-comparisons')
- await owner.locator('summary').filter({hasText:/^Create comparison$/}).click()
+ assert.ok(await owner.locator('summary').filter({hasText:/^Create comparison$/}).evaluate(el=>el.parentElement.open),'an empty list opens the create form')
  const form=owner.getByRole('form',{name:'Create comparison',exact:true})
  await form.getByLabel('View name',{exact:true}).fill('Finance priorities')
  await form.getByLabel('Compare',{exact:true}).selectOption('features')

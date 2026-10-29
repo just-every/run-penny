@@ -70,9 +70,10 @@ try {
 
    await page.goto(origin + '/app/feedback')
    const mine = page.getByRole('region', { name: 'My queue', exact: true })
-   // The recorder and board choices are server-rendered. The queue's loaded
-   // contents prove the page has hydrated before we fill or submit the form.
-   await mine.getByRole('heading', { name: 'Evidence (0)', exact: true }).waitFor()
+   // The recorder and board choices are server-rendered; an empty queue draws nothing,
+   // so the page settling stands in for hydration before we fill or submit the form.
+   await page.waitForLoadState('networkidle')
+   assert.equal(await mine.count(), 0, 'nothing assigned: no queue card')
    const recorder = page.getByRole('form', { name: 'New evidence', exact: true })
    await recorder.getByLabel('Source', { exact: true }).selectOption('interview')
    await recorder.getByLabel('Original wording', { exact: true }).fill('Harbor Analytics needs scheduled CSV exports for its monthly finance review. Maya will follow up with the finance team.')
@@ -96,7 +97,7 @@ try {
 
    await evidence.getByRole('combobox', { name: 'Accountable owner' }).selectOption(peer.id)
    await evidence.getByRole('button', { name: 'Save owner', exact: true }).click()
-   await mine.getByRole('heading', { name: 'Evidence (0)', exact: true }).waitFor()
+   await mine.waitFor({ state: 'detached' })
    const peerContext = await signedContext(peerCookie), peerPage = await peerContext.newPage()
    await peerPage.goto(origin + '/app/feedback')
    const peerQueue = peerPage.getByRole('region', { name: 'My queue', exact: true })
@@ -122,7 +123,7 @@ try {
    await peerQueue.getByRole('heading', { name: 'Requester comments (1)', exact: true }).waitFor()
    await audit(peerPage, 'requester-comment-awaiting', { detail: peerQueue })
    await peerQueue.getByRole('button', { name: 'Mark handled', exact: true }).click()
-   await peerQueue.getByRole('heading', { name: 'Requester comments (0)', exact: true }).waitFor()
+   await peerQueue.getByRole('heading', { name: /^Requester comments/ }).waitFor({ state: 'detached' })
    await audit(peerPage, 'requester-comment-handled', { detail: peerQueue })
 
    const publicRequest = await json(`/api/public/requests/${request.slug}`)
@@ -131,7 +132,7 @@ try {
    await page.locator(`#evidence-${evidenceId}`).getByRole('combobox', { name: 'Accountable owner' }).selectOption('')
    await page.locator(`#evidence-${evidenceId}`).getByRole('button', { name: 'Save owner', exact: true }).click()
    await page.locator(`#evidence-${evidenceId}`).getByRole('status').filter({ hasText: 'Owner saved.' }).waitFor()
-   await peerPage.reload(); await peerQueue.getByRole('heading', { name: 'Evidence (0)', exact: true }).waitFor()
+   await peerPage.reload(); await peerQueue.waitFor({ state: 'detached' })
    await audit(peerPage, 'unassigned-leaves-own-queue', { detail: peerQueue })
    await proveBulkActions({ page, runtime, viewport: width, inspect: audit })
    assert.deepEqual(errors, []); assert.deepEqual(external, [])
