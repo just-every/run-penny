@@ -1177,7 +1177,7 @@ Core · published · **partial** · Cites BASE-DATA-003 · Register R-11
 1. Unmerging (REQ-009) and revision history never recreate erased data.
 
 **Evidence.** `tests/base/penny-erasure.test.ts`; `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
-**Gap.** Native erasure retains its prior proof for installations without agent evidence. Base has no client-scoped retained-evidence erasure/fence contract; native erasure now refuses before mutation while agent outcomes/audit/approvals exist, with a transactional reservation fence.
+**Gap.** Native erasure retains its prior proof for installations without agent evidence. Base has no client-scoped retained-evidence erasure/fence contract; native erasure and restore now refuse before mutation while agent outcomes/audit/approvals exist, with transactional reservation fences preserving native sponsor bindings.
 
 #### DATA-004 — Custom fields
 
