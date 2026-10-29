@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { ToolRefusal, type ToolContext, type ToolDefinition, type ClassAndFacts, type ClassId } from '../../../../base/modules/agent-door/index.ts'
 import { MutationError } from '../../app/operator-mutations'
+import { RequestLifecycleError } from '../requests/lifecycle-types'
 import { NativeError } from '../auth/native-tokens'
 import { inputSchema } from './schema'
 import { nativeAudit, nativeContext } from './context'
@@ -33,6 +34,7 @@ export function nativeTool<T extends z.ZodObject>(definition: Definition<T>): To
     try { return await action() } catch (error) {
       if (error instanceof ToolRefusal) throw error
       if (error instanceof MutationError) throw new ToolRefusal(error.status === 404 ? 'resource_unavailable' : error.status === 409 ? 'revision_conflict' : 'invalid_arguments')
+      if (error instanceof RequestLifecycleError) throw new ToolRefusal(error.status === 404 ? 'resource_unavailable' : error.code)
       if (error instanceof NativeError) throw new ToolRefusal(error.status === 404 ? 'resource_unavailable' : error.code)
       if (error instanceof z.ZodError) throw new ToolRefusal('invalid_arguments')
       throw error

@@ -579,7 +579,7 @@ when restored.
 
 ## Company-agent retained evidence
 
-Migrations 0099–0103 add installation-owned policy, native person binding,
+Migrations 0099–0104 add installation-owned policy, native person binding,
 approval, audit and replay stores. They are classified in the inventory and
 excluded from portable archives. Native product activity retains agent/preparer,
 sponsor and approver identifiers as historical attribution.

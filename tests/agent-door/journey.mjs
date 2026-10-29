@@ -2,8 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const code = answer => answer.result?._meta?.['com.runeditrun/error']?.code;
-const assert = (ok, message) => { if (!ok) throw Error(message); };
+const code = answer => answer.result?._meta?.['com.runeditrun/error']?.code ?? answer.message?.error?.data?._meta?.['com.runeditrun/error']?.code ?? answer.message?.error?.data?.code;
+const assert = (ok, message) => { if (!ok) { console.error('Native journey assertion: ' + message); throw Error(message); } };
 export default async function () { console.log('Native journey: conflict, stale version, original key ceiling, native attribution and retained-evidence erasure refusal checked.'); }
 export async function afterStep({ phase, step, args, result, tool, request, origin, cookie, database }) {
  if (phase === 'autonomous' && step.id === 'capture') {
@@ -21,14 +21,18 @@ export async function afterStep({ phase, step, args, result, tool, request, orig
   const erasure = await request(origin + '/api/operator/data/erasure/preview', { method: 'POST', headers: { Cookie: cookie, Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ table: 'evidence_items', id: result.id }) });
   assert(erasure.status === 409 && (await erasure.json()).error === 'agent_retained_evidence_requires_review', 'Retained agent evidence must keep native erasure closed');
  }
+ if (phase === 'autonomous' && step.id === 'note') {
+  const response = await request(origin + '/api/operator/requests/' + args.slug + '/context', { headers: { Cookie: cookie } });
+  assert(response.ok && (await response.json()).notes.some(note => note.id === result.id && note.operator_display_name.includes(' for ')), 'The native note projection must name agent for person');
+ }
  if (phase === 'held' && step.id === 'public-board') {
   const db = await database('DB');
   const activity = await db.prepare("SELECT approvers_json,prepared_by FROM audit_entries WHERE action='agent.tool' AND entity_id=?").bind(result.id).first();
   assert(activity && JSON.parse(activity.approvers_json).some(person => person.id && person.name) && activity.prepared_by.includes(' for '), 'The real approver and agent preparer must remain distinct');
-  if (process.env.PENNY_AGENT_EVIDENCE) await browserProof({ request, origin, cookie, tool, args });
+  if (process.env.PENNY_AGENT_EVIDENCE) await browserProof({ request, origin, cookie, tool });
  }
 }
-async function browserProof({ request, origin, cookie, tool, args }) {
+async function browserProof({ request, origin, cookie, tool }) {
  const pending = await tool('penny.boards.create', { slug: 'review-' + randomUUID().replaceAll('-', ''), name: 'Customer research feedback', visibility: 'public', idempotency_key: randomUUID() });
  const approval = pending.result?._meta?.['com.runeditrun/approval'];
  assert(approval?.id, 'Browser proof needs a real pending approval');
@@ -42,7 +46,7 @@ async function browserProof({ request, origin, cookie, tool, args }) {
   await context.route('**/*', async route => {
    const incoming = route.request(), url = new URL(incoming.url());
    if (url.origin !== origin) return route.abort();
-   const headers = { ...incoming.headers(), Cookie: cookie };
+   const headers = new Headers(incoming.headers()); headers.set('Cookie', cookie);
    const response = await request(url.href, { method: incoming.method(), headers, ...(incoming.postDataBuffer() ? { body: incoming.postDataBuffer() } : {}) });
    const output = Object.fromEntries(response.headers); delete output['content-encoding']; delete output['transfer-encoding']; delete output['content-length'];
    await route.fulfill({ status: response.status, headers: output, body: Buffer.from(await response.arrayBuffer()) });
@@ -52,7 +56,11 @@ async function browserProof({ request, origin, cookie, tool, args }) {
    for (const width of [1440,390]) {
     await page.setViewportSize({ width, height: 1000 });
     await page.goto(origin + path, { waitUntil: 'networkidle' });
-    if (width === 1440) assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Agent page overflow');
+    assert(!await page.getByText('Sign in to see agent work.').isVisible(), 'Browser proof must have the native person session');
+    if (width === 1440) {
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Agent page overflow');
+      assert(await page.locator('button,input,select').evaluateAll(elements => elements.filter(element => element.getBoundingClientRect().width > 0).every(element => element.getBoundingClientRect().height >= 44)), 'Agent controls must be at least 44px');
+    }
     await page.screenshot({ path: join(directory, label + '-' + width + '.png') });
    }
   };

@@ -70,10 +70,14 @@ async function respond(request: Request, bindings: AppBindings, execution: Execu
   const operatorDocument = request.method === 'GET' && bindings.RER_DEMO !== '1' && (url.pathname === '/app' || url.pathname.startsWith('/app/')) ? { request } : undefined
   return pennyRequest.run({ bindings, operatorDocument }, async () => {
     const runtime = createPennyRuntime(bindings, requestContext().configuration)
-    const business = await pennyBusiness(runtime).handle(request)
-    if (business) return business
-    const agent = await pennyAgentDoor(runtime).handle(request)
-    if (agent) return agent
+    if (['/api/rer/business-settings','/rer-business-logo','/rer-business.css'].includes(url.pathname)) {
+      const business = await pennyBusiness(runtime).handle(request)
+      if (business) return business
+    }
+    if (['/mcp','/agents','/api/rer/agent-policy','/.well-known/oauth-protected-resource','/.well-known/oauth-protected-resource/mcp'].includes(url.pathname) || url.pathname.startsWith('/agents/')) {
+      const agent = await pennyAgentDoor(runtime).handle(request)
+      if (agent) return agent
+    }
     const installation = { DB: bindings.DB, AUTH_ORIGIN: createPennyRuntime(bindings, requestContext().configuration).configuration.appOrigin ?? '' }
     const state = await setupStateResponse(request, installation)
     if (state) return editorDocumentHeaders(state, createPennyRuntime(bindings, requestContext().configuration), url.pathname)

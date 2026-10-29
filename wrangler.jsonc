@@ -17,5 +17,5 @@
   "assets": { "binding": "ASSETS", "run_worker_first": true },
   "triggers": { "crons": ["* * * * *"] },
   // Public hosted defaults; explicit local .dev.vars supplies the local mode.
-  "vars": { "PENNY_ENVIRONMENT": "production", "WORKSPACE_TIMEZONE": "UTC", "MAIL_FROM": "" }
+  "vars": { "PENNY_ENVIRONMENT": "production", "WORKSPACE_TIMEZONE": "UTC", "MAIL_PROVIDER": "", "MAIL_FROM": "", "MAIL_RELAY_URL": "" }
 }

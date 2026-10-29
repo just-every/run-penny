@@ -72,8 +72,12 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0098'))
  expect(await snapshot()).toEqual(discordBefore)
  // Snapshot the populated immediate predecessor before the additive Help Scout migration.
- const previousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
- const currentSnapshot=async()=> (await env.DB.batch(previousTables.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const previousTables=await Promise.all((await env.DB.prepare(tableQuery).all<{name:string}>()).results.map(async table=>({
+  name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name),
+ })))
+ // Additive agent attribution adds columns. Compare every pre-upgrade column
+ // and row, as above, without treating an expanded schema as changed history.
+ const currentSnapshot=async()=> (await env.DB.batch(previousTables.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const previousRows=await currentSnapshot()
  await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0099'))
  expect(await currentSnapshot()).toEqual(previousRows)
