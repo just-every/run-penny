@@ -808,7 +808,8 @@
         "module": "tests/fixtures/agent-learning-rpc.mjs",
         "entrypoint": "LearningEgress"
       }
-    }
+    },
+    "journey": "tests/fixtures/agent-native-journey.mjs"
   },
   "journey": [
     {

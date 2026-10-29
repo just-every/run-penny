@@ -670,11 +670,11 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "e845ffa1d5220f078f99512435cc80feef55881b11e15cda5203ea580239d739",
+      "sha256": "e717eb61dde57234ea34b0d9a4bc627988027790e1fb412ccc9b51906445ffcf",
       "executable": false
     },
     "agent-surface.json": {
-      "sha256": "e0136795a0c9aa37695ad5d7e1eac046447e1c9ca512304889a9f70ab4ec7cfa",
+      "sha256": "346e6e672693767ca11913407253d750d2d6b71bec320943d7379b61c87df878",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -3778,7 +3778,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "bf0e247e059b515972b707d17ee29c84e5461ca7fab557744e983ba76e0ced25",
+      "sha256": "8ac4f423c8037fdb2ccf166b7117cde3d15c820145fec59026f8f495b29b4550",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3790,7 +3790,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "d4d9f450e1b229940120b78b1281bc16f8b984620666a11c434fa4d434e614a3",
+      "sha256": "31e810538bb95a35c54496947445ed9e58427d46d5a1c31c52db2c81b3e4c514",
       "executable": false
     },
     "DEMO.md": {
@@ -3826,7 +3826,7 @@
       "executable": false
     },
     "docs/base-adoption.md": {
-      "sha256": "be078dc7b1ee9492355426f849d2fec4dfa30e300b7edb1535d55ea39d8e65dd",
+      "sha256": "ebf8242842c9843757ecb8105c42bd3777f30f55930c3d4afe34ad0d26047af1",
       "executable": false
     },
     "docs/CANNY-MIGRATION.md": {
@@ -9263,6 +9263,10 @@
     },
     "tests/fixtures/agent-learning-rpc.mjs": {
       "sha256": "6656c30498309592b4ecc5411b3e91dd161fe6242d4885e28a4404b2c0918539",
+      "executable": false
+    },
+    "tests/fixtures/agent-native-journey.mjs": {
+      "sha256": "1cf8de959ab6903682814daf5a7a0010e221aa7b11d9278bf80b838e99ef271c",
       "executable": false
     },
     "tests/fixtures/agent-owner.mjs": {

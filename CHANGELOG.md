@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Adopt rer 0.2.88 and the recorded agent-door/Business-settings runtime from Base 114ef7a6. Declare only tools, policy, pause, audit and idempotency; omitted events, resources, prompts and subscriptions are typed-refused. Keep mandatory identity, scopes, consent and current native authority. No applied SQL changes.
+- Prove immediate native AI drafting with an isolated test-only RPC provider, synthetic per-run configuration and the real owner settings flow. Production keeps its enforcing service requirement; missing provider configuration or transport is unavailable. Native Worker tests keep their existing paid-edge fixtures. The managed artifact producer still rejects native service bindings, so this candidate is blocked from landing until that shared contract is supported.
+
 - Keep Zendesk proxy votes compatible with the core door: send an explicit idempotency key, retain it across uncertain retries, and show pending company approval as pending instead of claiming a recorded vote. The existing native sidebar journey now has the owner choose company policy before its scoped calls; its SDK network edge forwards the real idempotency header.
 
 - Attribute immediate AI drafts to their actual native preparer. The shared native service sends the preparer label to the configured model, returns it with the private draft and records native activity after current-authority/citation checks. Agent calls retain the door’s agent-for-sponsor label; native person calls retain that person. Extend the existing AI-006 public-door case with model/request/activity agreement while preserving privacy, no-send and revocation checks.

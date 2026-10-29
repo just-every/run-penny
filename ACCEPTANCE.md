@@ -9,9 +9,9 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Core | 73 | 114 | 71 | 258 |
-| Agent surface | 0 | 8 | 13 | 21 |
+| Agent surface | 0 | 21 | 0 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 73 | 122 | 86 | 281 |
+| Full target | 73 | 135 | 73 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -3482,7 +3482,7 @@ Core · push-further · **partial** · Rules D-6
 2. Rejecting an explanation keeps its evidence and history.
 
 **Evidence.** `src/core/features/learning/schema.ts`; `tests/base/learning-stage2.test.ts`
-**Gap.** LEARN-002's competing options and contradictions over selected sources ship today. A fixture problem with planted disconfirming evidence: both explanations cite real spans, the planted counter-evidence is surfaced, and rejecting an explanation keeps its evidence and history.
+**Gap.** LEARN-002's competing options and contradictions over selected sources ship today. A fixture problem with planted disconfirming evidence: both explanations cite real spans, the planted counter-evidence is surfaced, and rejecting an explanation keeps its evidence and history. Gap (2026-10-29): dual host and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent execution through those families is deferred.
 
 #### AGENT-002 — Disconfirming evidence search
 
@@ -3496,7 +3496,7 @@ Core · push-further · **partial** · Rules D-6
 3. Crossing the threshold raises one review suggestion.
 
 **Evidence.** `src/core/features/learning/run.ts`; `tests/base/learning-stage2.test.ts`
-**Gap.** Contradictions within selected sources ship today. With contradicting fixture tickets, proposals attach with spans; accepting links them as contradicting (EVID-004); crossing the threshold raises one review suggestion.
+**Gap.** Contradictions within selected sources ship today. With contradicting fixture tickets, proposals attach with spans; accepting links them as contradicting (EVID-004); crossing the threshold raises one review suggestion. Gap (2026-10-29): dual host and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent execution through those families is deferred.
 
 #### AGENT-003 — Next learning action
 
@@ -3510,7 +3510,7 @@ Core · push-further · **partial** · Rules D-6
 3. Poll answers return as evidence linked to the explanation.
 
 **Evidence.** `src/core/features/learning/schema.ts`; `tests/base/learning-stage2.test.ts`
-**Gap.** LEARN-002's distinguishing clarification ships today. The proposal lists only consenting contacts; under the held policy approval sends exactly the approved messages; poll answers return as evidence linked to the explanation.
+**Gap.** LEARN-002's distinguishing clarification ships today. The proposal lists only consenting contacts; under the held policy approval sends exactly the approved messages; poll answers return as evidence linked to the explanation. Gap (2026-10-29): mail edges and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent execution through those families is deferred.
 
 #### AGENT-004 — Quiet and lost segments
 
@@ -3523,7 +3523,7 @@ Core · push-further · **partial** · Rules D-6
 2. Under the held policy, no contact happens before approval.
 
 **Evidence.** `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts`
-**Gap.** Selected Orbit cancellation evidence ships today. A fixture where loud small-business voters differ from silent Enterprise renewals: the report names the gap with cited records and, under the held policy, no contact happens before approval.
+**Gap.** Selected Orbit cancellation evidence ships today. A fixture where loud small-business voters differ from silent Enterprise renewals: the report names the gap with cited records and, under the held policy, no contact happens before approval. Gap (2026-10-29): multi-sponsor and dual host are undeclared (declared-subset door, rer 0.2.87+); agent execution through those families is deferred.
 
 #### AGENT-005 — Bet review after release
 
@@ -3536,7 +3536,7 @@ Core · push-further · **partial** · Rules D-6
 2. Missing usage produces unknown.
 
 **Evidence.** `src/core/features/decisions/reviews.ts`; `tests/base/penny-decisions.test.ts`; `tests/base/learning-stage3.test.ts`
-**Gap.** Review-due decisions, measurement protocols and outcome responses ship today. Three fixture outcomes (adopted, shipped but unused, negative follow-up) produce keep, change and reverse recommendations citing their data; missing usage produces unknown.
+**Gap.** Review-due decisions, measurement protocols and outcome responses ship today. Three fixture outcomes (adopted, shipped but unused, negative follow-up) produce keep, change and reverse recommendations citing their data; missing usage produces unknown. Gap (2026-10-29): timed lifecycle and dual host are undeclared (declared-subset door, rer 0.2.87+); agent execution through those families is deferred.
 
 #### AGENT-006 — Promise keeper
 
@@ -3550,7 +3550,7 @@ Core · push-further · **partial** · Rules D-6
 3. Under the held policy, nothing is published before approval.
 
 **Evidence.** `src/core/features/roadmap/update-drafts.ts`; `tests/browser/operator-pages-status.mjs`
-**Gap.** Status-update drafts from approved roadmap moves ship today. A fixture slipped issue with a public ETA yields one draft and one owner reminder; dismissal records its reason; under the held policy nothing is published before approval. The remaining promise-detection kinds (a Planned reply on a dropped item, a ticket told "soon" whose issue slipped) and their corrections and reminders are not built.
+**Gap.** Status-update drafts from approved roadmap moves ship today. A fixture slipped issue with a public ETA yields one draft and one owner reminder; dismissal records its reason; under the held policy nothing is published before approval. The remaining promise-detection kinds (a Planned reply on a dropped item, a ticket told "soon" whose issue slipped) and their corrections and reminders are not built. Gap (2026-10-29): events and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent execution through those families is deferred.
 
 #### AGENT-007 — Sales and renewal brief
 
@@ -3576,7 +3576,7 @@ Core · push-further · **partial** · Rules D-6
 2. An unchanged week produces none and no model call.
 
 **Evidence.** `src/core/features/learning/scheduled.ts`; `tests/base/learning-stage3.test.ts`
-**Gap.** Scheduled bounded learning runs ship today. A scheduled run over a fixture week produces one brief per subscriber with resolvable citations; an unchanged week produces none and no model call.
+**Gap.** Scheduled bounded learning runs ship today. A scheduled run over a fixture week produces one brief per subscriber with resolvable citations; an unchanged week produces none and no model call. Gap (2026-10-29): timed lifecycle and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent execution through those families is deferred.
 
 #### AGENT-009 — Agent controls
 
@@ -3590,7 +3590,7 @@ Core · push-further · **partial** · Cites BASE-AGENT-007, BASE-AGENT-009 · R
 3. The audit log shows each action.
 
 **Evidence.** `src/core/features/learning/audit.ts`; `tests/base/learning-stage3.test.ts`
-**Gap.** Learning runs meet this today. For each agent, revoking mid-run stops further reads and model calls, erasure removes its derived work, and the audit log shows each action.
+**Gap.** Learning runs meet this today. For each agent, revoking mid-run stops further reads and model calls, erasure removes its derived work, and the audit log shows each action. Gap (2026-10-29): dual host and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent execution through those families is deferred.
 
 ## Agent surface
 
@@ -3598,7 +3598,7 @@ Core · push-further · **partial** · Cites BASE-AGENT-007, BASE-AGENT-009 · R
 
 #### BASE-AGENT-001 — One MCP door per seed
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every seed, hosted or self-hosted, serves one remote MCP endpoint at `/mcp` over Streamable HTTP. It speaks the current revision (2026-07-28) and accepts 2025-11-25 clients through the twelve-month deprecation window. It implements `server / discover`, tools, resources and prompts. Lists are deterministic and carry `ttlMs` and `cacheScope: "private"`. Roots, Sampling and Logging are not served.
 
@@ -3610,12 +3610,12 @@ Agent surface · target · **missing**
 5. A foreign Origin returns 403, and a header and body method mismatch returns `HeaderMismatch`.
 6. An oversized body returns 413 with no effect.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): The full target includes undeclared prompts and resources; the core transport and typed refusals pass. Required normal Verify remains blocked by the native RPC service declaration in the managed artifact producer.
 
 #### BASE-AGENT-002 — The seed's jobs are tools, through the UI's own actions
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Each Core job a person does in the product is a tool. Where one is not, the Agent surface says why: it runs on a device, it is a person's interactive screen, it belongs to a connector or the import door, or it is an installation fact. Risk is never the reason: a risky job is a tool with its class (BASE-AGENT-006). Tools are named `<seed>.<area>.<verb>` and declare input and output schemas and truthful annotations. Each calls the same server action as the UI, so validation and authorization are written once, and the seed's embedded agents use the same registry. A business refusal returns `isError` with the seed's stable error code.
 
@@ -3627,12 +3627,12 @@ Agent surface · target · **missing**
 5. The UI action and its tool, on the same fixture, give the same record state and the same audit event type.
 6. The seed's embedded agents appear in the audit as calls to the same tools.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): The target-only registry and UI parity are incomplete; embedded and queued lifecycle work is deferred (declared-subset door, rer 0.2.87+).
 
 #### BASE-AGENT-003 — Records are resources
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Each primary record type has a URI template, and tools return `resource_link`s to the records they touch. A read returns exactly the fields the caller's role sees in the UI. File bytes count against any byte budget on the grant. A record the caller cannot open reads as not found, identical to a missing id. Text from customers, imports or files carries an untrusted marker in `_meta`.
 
@@ -3644,12 +3644,12 @@ Agent surface · target · **missing**
 5. Bytes over budget return `budget_exhausted` and no partial content.
 6. Customer-sourced text carries the untrusted marker.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Public resources and resource refresh are undeclared (declared-subset door, rer 0.2.87+); only internal visibility adapters are retained.
 
 #### BASE-AGENT-004 — Business identity and short-lived, audience-bound tokens
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** The door is an OAuth 2.1 resource server. Its RFC 9728 metadata names the authorization servers this installation trusts. That is the paired Business when Business provisioned it, verified with the owner-claim trust the installation already holds for its import door; otherwise it is the seed's own sign-in. Access tokens are RFC 9068 JWTs with `aud` set to the seed's canonical MCP URI, `sub` the sponsoring person, `act` the agent (RFC 8693) with its specialist, scopes per tool family, and a lifetime of 15 minutes or less (5 by default). The policy scopes rules on the sponsor, agent and specialist the token names. The consent behind the tokens can last longer and is revocable. Tokens travel only in the Authorization header, and there is no passthrough.
 
@@ -3662,12 +3662,12 @@ Agent surface · target · **missing**
 6. Revoking consent in the seed or in Business refuses the next call within 60 seconds.
 7. After unpairing, Business tokens are refused and the seed's own sign-in still works.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Multi-sponsor lifecycle remains undeclared (declared-subset door, rer 0.2.87+); full native roster/email-change and suspension proof is not claimed.
 
 #### BASE-AGENT-005 — An agent acts as a person in a role, never more
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every call is authorized as the sponsoring person's current role and access (BASE-ACCESS-004), intersected with the grant's resources, actions and budget. A grant only narrows. No call widens the calling agent's own authority. A call that would widen its own grant or its sponsor's role, or change the company policy or Pause, is refused with `self_escalation`, whatever the policy says; narrowing its own grant is allowed. Other access and security changes are ordinary actions in the access and security classes. An agent never acts after its sponsor is suspended. Anything an agent reads (records, files, emails, imports, other seeds' results) is data and cannot change its scope, its targets or a call's class.
 
@@ -3678,12 +3678,12 @@ Agent surface · target · **missing**
 4. Calls that widen the agent's own grant or its sponsor's role, or change the policy or Pause, return `self_escalation` and change nothing, even under a policy with every class autonomous; dropping a scope from its own grant runs.
 5. An injection fixture yields no out-of-grant call and no change of class: record text asking for a wider action, or claiming that a recipient is internal.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Owner-native administration is undeclared (declared-subset door, rer 0.2.87+); full role parity, grant escalation and narrowing target acceptance remains unproved.
 
 #### BASE-AGENT-006 — Every action declares its risk class
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Classes come from the fleet list in RISK-POLICY.md: standard, external, money, commitment, accounts, gated, access, security, destructive, sensitive and live. In the registry, each tool declares the classes it can carry and a server-side classifier that decides them per call from the arguments, current records and, for gated, the provider's answer. The classifier also supplies each class's facts: the measure (items, recipients, amount and currency, people or records), the counterparty (internal, known, new or public), the direction for access, the provider and step for gated, and the data kind for sensitive. A classifier never reads a flag, label or claim supplied by the agent or by record text. A seed cannot add a class; it proposes one for the fleet list.
 
@@ -3695,12 +3695,12 @@ Agent surface · target · **missing**
 5. No tool in `tools / list` declares a class outside the fleet list, and `rer check` fails on one.
 6. A refused call's audit row still records its computed classes.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): The declared native core classes pass their journey; target-only access/security, outside accounts and money capabilities are not implemented.
 
 #### BASE-AGENT-007 — The company's policy decides, at one chokepoint
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every agent door calls one decision function: MCP, the integration API with agent tokens, and the seed's embedded agents. It evaluates the call's classes against the company's policy, as above. The seed ships no dispositions and fills no gap with one: agent access opens only under a complete policy that setup has asked for (RISK-POLICY.md), and before then every agent call returns `policy_unset` with the setup link and changes nothing. *Autonomous* runs the call. *Review* runs it and adds it to the review feed. *Approval* saves a pending action with server-computed facts and returns `input_required`, with a URL-mode elicitation to the seed's approval page and a pending handle. Each person the rule names approves the exact saved revision in a signed-in browser, and changed inputs need a new approval. The retried call returns the result and a receipt. A rejection returns `approval_rejected`, and a lapse past the wait the rule sets returns `approval_expired`. *Blocked* returns `policy_blocked`, naming the class, rule and revision.
 
@@ -3714,12 +3714,12 @@ Agent surface · target · **missing**
 7. A policy change applies to the next call within 60 seconds, and the audit cites the new revision.
 8. A policy document with a bad signature or another Business's id is rejected, and the door keeps the last valid revision.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Dual host, timed lifecycle and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); embedded parity is deferred.
 
 #### BASE-AGENT-008 — Truthful attribution
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every agent act is recorded and shown as `"<agent> for <person>"`, and mail and messages an agent sends outside name it that way as their sender. An approval, a review mark, a confirmation (a warning dialog, a typed-field confirmation, a delivery confirmation), a decision or a signature attributed to a person comes only from that person's signed-in session. When an agent does the equivalent act, the record names the agent, and the act carries its own class; a binding decision or a signature is commitment. Agent doors ignore arguments that stand for a person's confirmation. No tool solves a bot check, or enters a person's own password or 2FA code at an outside service. A provider step that demands a person goes to a person, whatever the policy says; the gated class marks such steps before they run.
 
@@ -3732,12 +3732,12 @@ Agent surface · target · **missing**
 6. Activity and exports at 1440 and 390 show `"<agent> for <person>"` for every agent act.
 7. Mail an agent sends to an outside address names `"<agent> for <person>"` as its sender.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Mail edges and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); outside sender attribution and every target export path remain unproved.
 
 #### BASE-AGENT-009 — Every agent action is audited with its class and decision
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Extending BASE-OPS-005, each call that reads private data or changes anything records the agent client, name and specialist, and the run or task id (`traceparent` when sent); the sponsoring person, the grant, the tool and the targets; the classes and their facts, and the policy revision and rule; the decision (autonomous, review, approval, blocked, unset or self_escalation) and the outcome (done, refused, pending or failed); the approval or review id and person, and the idempotency key. For a period, the seed's Agents page shows actions by class and decision with the notable ones, the review feed (Mark reviewed, Flag, and Undo where reversible), pending approvals, steps waiting for a person and setup questions. Business shows the same across seeds.
 
@@ -3750,12 +3750,12 @@ Agent surface · target · **missing**
 6. Removing the agent keeps its rows and its name.
 7. The Agents page works at 1440 and 390 with no serious or critical axe findings.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Core audit agreement passes; owner-native administration is undeclared (declared-subset door, rer 0.2.87+), and complete browser/export/agent-removal target acceptance is not claimed.
 
 #### BASE-AGENT-010 — Agents can follow changes
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** The seed emits a typed event for every record change and for every approval, review and policy decision. Each event carries a stable id, a type, the record URI, the actor (a person, or an agent acting for a person) and a time. Events never carry secrets or more than the subscriber may read. Agents can read events three ways: `subscriptions / listen`, an `events.list` tool with a cursor, and signed webhooks from Base `integrations` using the same ids. Every channel delivers at least once and filters by access at delivery.
 
@@ -3767,12 +3767,12 @@ Agent surface · target · **missing**
 5. A failed webhook is visible and replays without duplicate effects.
 6. `approval.pending`, `approval.decided`, `review.flagged` and `policy.adopted` carry the class and decision and nothing the subscriber may not read.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Events and subscriptions are undeclared (declared-subset door, rer 0.2.87+); their discovery is absent and calls are typed-refused in rer 0.2.88.
 
 #### BASE-AGENT-011 — Limits are policy, and Pause stops everything
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Business limits are rules in the company's policy: per-call and per-day thresholds on any class's measure, such as money moved, outside recipients or items destroyed; spend caps on provider cost (models, SMS, email) per seed, specialist or agent, which setup asks with the classes; "no cap" is an answer. Tools with provider cost declare an estimate before they run, and an exhausted cap returns `budget_exhausted` before any partial effect. The seed's capacity limits (request rate, body and byte sizes) protect the installation: they bound rate and size, never daily business volume, are documented and are not policy. A grant carries budgets only when the person granting it sets them. A **Pause agents** control in the seed, and Pause all agents in Business when paired, refuses every agent token within 60 seconds until a person resumes; browser sessions and devices keep working.
 
@@ -3785,12 +3785,12 @@ Agent surface · target · **missing**
 6. Pause and Pause all agents each stop the next call within 60 seconds, and resume restores access.
 7. An agent token cannot resume.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Core Pause passes; shared provider spend reservation and the complete usage-view target are not implemented. No cost capability is registered.
 
 #### BASE-AGENT-012 — Writes are idempotent and conflict-safe
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every mutating tool requires an idempotency key and takes an optional expected revision. The same key with the same arguments returns the first outcome for at least 24 hours; the same key with different arguments returns `idempotency_conflict`; a stale revision returns `revision_conflict` with the current revision. Long work returns a job handle and a status tool, with no dependence on the Tasks extension.
 
@@ -3801,12 +3801,12 @@ Agent surface · target · **missing**
 4. A stale revision returns a conflict naming the current revision.
 5. A job handle used by another person's token reads as not found.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): Native core replay and revision conflicts pass; queued lifecycle is undeclared (declared-subset door, rer 0.2.87+), so long-job/continuation custody is deferred.
 
 #### BASE-AGENT-013 — Manifest, docs and the conformance journey
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** `server / discover` instructions and an on-site `/docs/agents` page are generated from the action registry. The page lists tools by job, with each tool's classes, the test that adds each computed class, its scopes, resource templates, event types, capacity limits and error codes, and the specialist role. `prompts / list` carries the specialist's jobs. Base ships the conformance journey, a harness that `rer verify` runs against `rer dev` and seeds run in CI. It is an MCP client; a signed-in test person takes a person's steps (setup answers, approvals, review marks, resume) through the URLs the door returns, and the same browser leg runs the UI-parity actions and the page checks at 1440 and 390. It runs every acceptance point of BASE-AGENT-001 to 012 and of the seed's SURFACE clauses under two company policies: *all autonomous* (`*`), and *held* (standard review, every other class the seed declares approval, which the test person grants), plus the single-class variants a point names. A point that names no disposition passes under both.
 
@@ -3817,8 +3817,8 @@ Agent surface · target · **missing**
 4. Every acceptance point runs under both policies, every decision matches the policy in force, and under all autonomous no call waits for a person or is refused by policy.
 5. A stranger agent given only the seed URL completes the specialist journey through MCP.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `tests/fixtures/`
+**Gap.** Released rer 0.2.88 focused conformance passed 5702/5702 points through Penny’s production Worker on 29 October 2026. Gap (2026-10-29): The declared core journey passes; events, public resources, prompts and subscriptions are undeclared (declared-subset door, rer 0.2.87+). Normal Verify and complete specialist-week acceptance remain blocked/unproved.
 
 ### Agent surface
 
@@ -3850,7 +3850,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-001, BASE
 6. The Base harness passes on Penny's fixtures in CI under both of its policies, all autonomous and held.
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** The native core registry and generated /docs/agents share the production factory, schemas, classes and clause references. Gap: events, subscriptions and resource refresh are undeclared (declared-subset door, rer 0.2.87+); the complete target table and UI/REST/embedded-agent parity remain incomplete. The rer 0.2.88 declared core door omits events.list and public resource/prompt discovery.
+**Gap.** The native core registry and generated /docs/agents share the production factory, schemas, classes and clause references. Gap (2026-10-29): events, subscriptions and resource refresh are undeclared (declared-subset door, rer 0.2.87+); the complete target table and UI/REST/embedded-agent parity remain incomplete. The rer 0.2.88 declared core door omits events.list and public resource/prompt discovery.
 
 #### SURFACE-002 — Triage through the door
 
@@ -3866,7 +3866,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-003, BASE
 5. Evidence wording, requester comments and imported posts carry the untrusted marker, and wording that asks for a wider action or claims a recipient is internal changes neither the call nor its class.
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** Native evidence, request, decision and primary-record readers use current native admission and narrow scopes; resource readers return one missing/restricted result and untrusted content. Gap: resource refresh and multi-sponsor private-record conformance are undeclared (declared-subset door, rer 0.2.87+); target-only triage verbs and sentence-complete acceptance remain unproved.
+**Gap.** Native evidence, request, decision and primary-record readers use current native admission and narrow scopes; resource readers return one missing/restricted result and untrusted content. Gap (2026-10-29): resource refresh and multi-sponsor private-record conformance are undeclared (declared-subset door, rer 0.2.87+); target-only triage verbs and sentence-complete acceptance remain unproved.
 
 #### SURFACE-003 — Customer-facing calls are external
 
@@ -3883,7 +3883,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-006, BASE
 6. An outreach message (AGENT-003) computes external with counterparty known and its recipient count, and its email names "<agent> for <person>".
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** Immediate native exposure computes external from current records. Gap: mail edges and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent moderation/publication, replies, status sends, customer delivery and webhook dispatch are deferred. Provider-backed draft generation keeps the enforcing PENNY_LEARNING_EGRESS RPC port; rer 0.2.88 supports a test-only native RPC provider edge.
+**Gap.** Immediate native exposure computes external from current records. Gap (2026-10-29): mail edges and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent moderation/publication, replies, status sends, customer delivery and webhook dispatch are deferred. Provider-backed draft generation keeps the enforcing PENNY_LEARNING_EGRESS RPC port; rer 0.2.88 supports a test-only native RPC provider edge.
 
 #### SURFACE-004 — Destructive and sensitive calls
 
@@ -3899,7 +3899,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-006
 5. A refused destructive call's audit row still records its computed classes.
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** Native identity merging and tag loss compute destructive; protected free-text mutations compute sensitive on the server. Tool projections redact credentials and the effect witness returns only digests. Gap: native export/erasure with retained door artifacts and the complete target acceptance remain unproved; owner-native administration is undeclared (declared-subset door, rer 0.2.87+).
+**Gap.** Native identity merging and tag loss compute destructive; protected free-text mutations compute sensitive on the server. Tool projections redact credentials and the effect witness returns only digests. Gap (2026-10-29): native export/erasure with retained door artifacts and the complete target acceptance remain unproved; owner-native administration is undeclared (declared-subset door, rer 0.2.87+).
 
 #### SURFACE-005 — Access, security, live and gated calls
 
@@ -3916,7 +3916,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-005, BASE
 6. A call that widens the calling agent's own key or its sponsor's role returns `self_escalation` and changes nothing, under any policy.
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** Board participation and workspace clock updates compute live, and clock writes recheck the native Owner/Admin role in the write transaction. Gap: owner-native administration is undeclared (declared-subset door, rer 0.2.87+); credential/access changes, self-escalation and narrowing tools are deferred to that family. Public board visibility changes are outside this core adapter.
+**Gap.** Board participation and workspace clock updates compute live, and clock writes recheck the native Owner/Admin role in the write transaction. Gap (2026-10-29): owner-native administration is undeclared (declared-subset door, rer 0.2.87+); credential/access changes, self-escalation and narrowing tools are deferred to that family. Public board visibility changes are outside this core adapter.
 
 #### SURFACE-006 — Penny's own agents use the same door
 
@@ -3931,7 +3931,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-002, BASE
 4. Pause agents stops embedded and outside agents alike on their next call within 60 seconds.
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** The external core tools enter the shared production policy, pause, audit and idempotency pipeline. Gap: timed lifecycle, dual host and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); scheduled investigations and embedded agent continuations are deferred. No seed-side continuation or scheduled publication adapter is registered.
+**Gap.** The external core tools enter the shared production policy, pause, audit and idempotency pipeline. Gap (2026-10-29): timed lifecycle, dual host and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); scheduled investigations and embedded agent continuations are deferred. No seed-side continuation or scheduled publication adapter is registered.
 
 #### SURFACE-007 — The feedback triager's week
 
@@ -3947,7 +3947,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-007, BASE
 5. Pause agents stops the agent on its next call within 60 seconds, and resume restores it.
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** The core conformance journey drives real native records and witnesses mutation digests. Gap: multi-sponsor, events, subscriptions, mail edges, resource refresh, timed lifecycle, dual host, queued lifecycle and owner-native administration are undeclared (declared-subset door, rer 0.2.87+); the full customer-facing week is deferred with those families.
+**Gap.** The core conformance journey drives real native records and witnesses mutation digests. Gap (2026-10-29): multi-sponsor, events, subscriptions, mail edges, resource refresh, timed lifecycle, dual host, queued lifecycle and owner-native administration are undeclared (declared-subset door, rer 0.2.87+); the full customer-facing week is deferred with those families.
 
 ## Later
 
