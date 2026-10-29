@@ -10,13 +10,15 @@ import {captureRuntime} from './browser-capture-runtime.mjs'
 // operates the real popup and preserves Chrome's activeTab consent grant.
 process.env.PW_CHROMIUM_ATTACH_TO_OTHER='1'
 
-// Full Chromium is required: headless-shell has no extension runtime. Local
+// Use the real toolbar in headed Chromium (Xvfb on Linux CI). Keep the context
+// viewport native: applying tab viewport emulation to extension popup targets
+// crashes Chromium. Only the source tab is resized for the width proofs. Local
 // system Chromium may forbid unpacked extensions by administrator policy; that
 // refusal is an explicit failed check, never a simulated extension success.
 const fixture=await captureRuntime(),{runtime,origin,sourceUrl,operator,json}=fixture,profile=await mkdtemp(join(tmpdir(),'penny-extension-'))
 const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/browser-capture');assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const extension=resolve('integrations/browser-extension'),context=await chromium.launchPersistentContext(profile,{
- executablePath:process.env.PENNY_BROWSER_EXECUTABLE??chromium.executablePath(),headless:true,viewport:{width:1440,height:1000},
+ executablePath:process.env.PENNY_BROWSER_EXECUTABLE??chromium.executablePath(),headless:false,viewport:null,
  ignoreDefaultArgs:['--disable-extensions'],args:['--no-sandbox','--disable-gpu','--enable-unsafe-extension-debugging',`--disable-extensions-except=${extension}`,`--load-extension=${extension}`],
 })
 try{
@@ -32,8 +34,11 @@ try{
  const siteAccess=await context.newPage();await siteAccess.goto('chrome://extensions')
  await siteAccess.evaluate(({id,origin})=>new Promise((resolve,reject)=>{chrome.developerPrivate.addHostPermission(id,origin+'/*',()=>{const error=chrome.runtime.lastError;if(error)reject(new Error(error.message));else resolve()})}),{id,origin})
  await siteAccess.close()
- const source=await context.newPage();await source.goto(sourceUrl);source.setDefaultTimeout(20000)
+ const source=await context.newPage();await source.setViewportSize({width:1440,height:1000});await source.goto(sourceUrl);source.setDefaultTimeout(20000)
  async function popup(){
+  // Playwright focus emulation can keep a prior native popup target alive.
+  // Close it before the next toolbar action so we never drive a stale popup.
+  for(const page of context.pages().filter(page=>page.url()===`chrome-extension://${id}/popup.html`))await page.close()
   await source.bringToFront()
   const {targetInfos}=await cdp.send('Target.getTargets',{filter:[{type:'tab',exclude:false}]})
   const targetInfo=targetInfos.find(target=>target.type==='tab'&&target.url===source.url());assert.ok(targetInfo,'The extension action needs the browser tab target, not its renderer page target.')
@@ -48,7 +53,9 @@ try{
  }
  async function openReview(panel,button){
   const before=new Set(context.pages());let clickError
-  try{await panel.getByRole('button',{name:button,exact:true}).click()}catch(error){clickError=error}
+  // Native toolbar popups clamp their height and scroll independently of a
+  // tab's viewport. Activate their focused button with a real keyboard event.
+  try{await panel.getByRole('button',{name:button,exact:true}).press('Enter')}catch(error){clickError=error}
   for(let attempt=0;attempt<200;attempt++){
    const page=context.pages().find(page=>!before.has(page)&&page.url().startsWith(origin))
    if(page){page.setDefaultTimeout(20000);return page}
@@ -59,8 +66,8 @@ try{
  async function select(){await source.locator('#quote').evaluate(element=>{const range=document.createRange();range.selectNodeContents(element);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range)})}
  await select()
  let panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check()
- await panel.screenshot({path:join(output,'extension-popup-1440.png'),fullPage:true})
- await source.setViewportSize({width:390,height:844});panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check();await panel.screenshot({path:join(output,'extension-popup-390.png'),fullPage:true})
+ await panel.screenshot({path:join(output,'extension-popup-1440.png')})
+ await source.setViewportSize({width:390,height:844});panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check();await panel.screenshot({path:join(output,'extension-popup-390.png')})
  await source.setViewportSize({width:1440,height:1000});panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check()
  const review=await openReview(panel,'Review capture')
  await review.getByLabel('Selected excerpt',{exact:true}).waitFor()

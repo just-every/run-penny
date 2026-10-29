@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "89b47ce710ebf3055acf9bb2054c46031b44d6daa4b51f2a9c6ab4a5303a17e2",
+      "sha256": "d9b4256100154885cf74bd4cd989e5222d05d5700c28a4d6ecd8b515f9c46dba",
       "executable": false
     },
     "CLAUDE.md": {
@@ -8094,7 +8094,7 @@
       "executable": false
     },
     "tests/browser/browser-capture.mjs": {
-      "sha256": "7d032de73ca7e2970fb73d3cc9137805d6ed86e04bf94682b0cbba0e50cda702",
+      "sha256": "c5f6570aac5cf632f582df159ce8ca094cd4c7ea40254b3317136628eb689c1c",
       "executable": false
     },
     "tests/browser/browser-options.mjs": {
@@ -8390,7 +8390,7 @@
       "executable": false
     },
     "tests/browser/requester-auth.mjs": {
-      "sha256": "93c77d33435e5f44dbb17bc93b101b00bbce2b47f890587b45c13cc9966510ba",
+      "sha256": "281bdfaba3956b25472aa015c1a0af7b2aa4e4cda7ea3c72d3356c89b49b2905",
       "executable": false
     },
     "tests/browser/requester-blocking.mjs": {
@@ -8414,7 +8414,7 @@
       "executable": false
     },
     "tests/browser/requester-repair.mjs": {
-      "sha256": "843a68112ab61dddb56217f328ef64229bddf023aed140df54c8943ae414744f",
+      "sha256": "d3fe982de9219c249398a70de25e8929a1386efa1c63c031acddd8bf836ed797",
       "executable": false
     },
     "tests/browser/rich-changelog.mjs": {
@@ -8694,7 +8694,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "ce42622f2262fb8d478932fb125aa99846ea1cb1cd88009d1b832cfb77029801",
+      "sha256": "df6232c273fd948c17f2451df48f8763501f3f7a347180782a3a9efc70957418",
       "executable": false
     },
     "visual/01-landing.jpg": {
