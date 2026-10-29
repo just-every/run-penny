@@ -265,7 +265,7 @@
       "commands": [
         "pnpm run build",
         "node tests/browser/browser-capture-review.mjs",
-        "node tests/browser/browser-capture.mjs"
+        "xvfb-run -a node tests/browser/browser-capture.mjs"
       ]
     }
   ],

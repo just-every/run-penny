@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict'
 import { chromium } from '@playwright/test'
+import {browserOptions} from './browser-options.mjs'
 import { shot,manifest,openRequestControls } from './requester-evidence.mjs'
 import { requesterAuth } from './requester-auth.mjs'
-const browser=await chromium.launch({headless:true,args:['--use-mock-keychain','--password-store=basic']}),errors=[],checks=[]
+const browser=await chromium.launch(browserOptions()),errors=[],checks=[]
 let runtime
 try {
  const harness=await requesterAuth(browser);runtime=harness.runtime

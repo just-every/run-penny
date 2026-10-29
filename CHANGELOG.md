@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Make the browser-capture journey attach to Chromium's native extension popup targets, so the real Manifest V3 action and active-tab grant are exercised before the signed-in review and signed-out refusal. Keep the two existing public-door sanity journeys and CAP-012's status and acceptance unchanged.
+- Run browser-capture verification through Chromium's real toolbar under Xvfb, attach its native popup targets without tab viewport emulation, and close prior popup targets before another action. Keep the two existing public-door sanity journeys, the actual Manifest V3 action/active-tab grant and CAP-012's status and acceptance unchanged. The requester repair journey uses the maintained browser launcher; requester sign-in waits for its ready form and checks the HTTP acknowledgement before reading the confirmation.
 
 - Keep numeric UUID prefixes out of built-in card redaction while preserving owner custom rules and real card detection. This prevents generated learning references from randomly refusing redaction-guarded work. The Help Scout network-edge journey captures a UUID beside a card and proves the identifier survives while the card is removed before storage and export.
 

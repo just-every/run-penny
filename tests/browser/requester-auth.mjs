@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import {expect} from '@playwright/test'
 import { startBrowserRuntime } from './base-runtime.mjs'
 import { finishFirstRun } from './local-signin.mjs'
 
@@ -50,9 +51,16 @@ export async function requesterAuth(browser) {
   observe(page)
   try {
    await page.goto(origin+'/portal/feedback/new')
+   // Wait for the capability-backed form before filling its SSR fields. A
+   // slow initial hydration must not replace values entered before it is ready.
+   const submit=page.getByRole('button',{name:'Send verification link',exact:true})
+   await expect(submit).toBeEnabled()
    await page.getByLabel('Display name',{exact:true}).fill('Review requester')
    await page.getByLabel('Email',{exact:true}).fill(email)
-   await page.getByRole('button',{name:'Send verification link',exact:true}).click()
+   const requested=page.waitForResponse(response=>response.url()===origin+'/api/public/identity/email'&&response.request().method()==='POST')
+   await submit.click()
+   const response=await requested
+   assert.equal(response.status(),202,await response.text())
    await page.getByText('Check your email for a verification link; it expires after 30 minutes.',{exact:true}).waitFor()
    const message=runtime.outbox.findLast(message=>message.email===email)
    assert.ok(message,'synthetic mail edge received the requester verification link')
