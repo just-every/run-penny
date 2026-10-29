@@ -1,3 +1,4 @@
+import {proveEvidenceResources} from './agent-resources'
 import {proveOperatorPublication} from './operator-request-publication'
 import {proveRedaction,proveCapturedRedaction} from './redaction-fixture'
 import {incomingEmail,proveEmailCapture} from './email-capture-fixture'
@@ -241,6 +242,7 @@ it('[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps 
  await complete('/api/operator/data/erasure',{table:'requesters',id:forwarderId,planHash:forwardPreview.planHash})
  expect(await env.DB.prepare('SELECT count(*) n FROM evidence_items WHERE admitted_sender=?').bind(forwarder).first('n')).toBe(0)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_email_capture_messages').first('n')).toBe(4)
+ await proveEvidenceResources()
 })
 it('[AI-006 EVID-006] resolves cited summaries and editable reply drafts while keeping private records out of publication and requester mail',async()=>{
  const g=await fixture();await publish(g)

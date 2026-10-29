@@ -3645,7 +3645,7 @@ Agent surface · target · **partial**
 6. Customer-sourced text carries the untrusted marker.
 
 **Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
-**Gap.** Evidence capture/update return resource links; evidence:read and current native authority gate the native evidence projection and untrusted wording history (tests/base/agent-resources.test.ts: evidence resource readback). Other primary record resources, role-specific projections and byte-budget proof remain incomplete.
+**Gap.** Evidence capture/update return resource links; evidence:read and current native authority gate the native evidence projection and untrusted wording history (tests/base/penny-evidence.test.ts: captures source provenance (agent-resources.ts readback helper)). Other primary record resources, role-specific projections and byte-budget proof remain incomplete.
 
 #### BASE-AGENT-004 — Business identity and short-lived, audience-bound tokens
 

@@ -1,12 +1,12 @@
 import { applyD1Migrations, reset } from 'cloudflare:test'
-import { expect, inject, it } from 'vitest'
+import { expect, inject } from 'vitest'
 import { env, owner, origin, call } from './support'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { pennyAgentDoor } from '@/core/features/agent-door'
 import { pennyBusiness } from '@/core/features/agent-door/business'
 import { accessToken, autonomousPolicy, policyEnvelope, signJws } from './agent-signing'
 
-it('[BASE-AGENT-003 SURFACE-002] evidence resource readback uses native projection and current caller authority', async () => {
+export async function proveEvidenceResources() {
   await reset(); await applyD1Migrations(env.DB, inject('migrations'))
   const cookie = await owner()
   const pair = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify'])
@@ -57,4 +57,4 @@ it('[BASE-AGENT-003 SURFACE-002] evidence resource readback uses native projecti
   const revoked = await rpc('resources/read', { uri: link.uri })
   expect(revoked.status).toBe(401)
   expect(revoked.result).toBeUndefined()
-})
+}
