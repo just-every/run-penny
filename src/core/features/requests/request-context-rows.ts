@@ -19,7 +19,7 @@ export function requestContextRowsSql(requestIdsSql: string) {
       EXISTS(SELECT 1 FROM evidence_items e JOIN request_evidence_links l ON l.evidence_id=e.id WHERE e.account_id=a.id AND l.request_id=requested.id)
       OR EXISTS(SELECT 1 FROM requester_account_links l JOIN request_votes v ON v.requester_id=l.requester_id JOIN requesters voter ON voter.id=v.requester_id AND voter.blocked_at IS NULL WHERE l.account_id=a.id AND v.request_id=requested.id)
       WHERE requested.id IN (${requestIdsSql}) ORDER BY a.name`,
-    notes: `SELECT n.request_id AS contextRequestId,n.*,o.display_name AS operator_display_name,d.name AS receiver_name FROM request_notes n
+    notes: `SELECT n.request_id AS contextRequestId,n.*,COALESCE((SELECT json_extract(a.details_json,'$.preparedBy.label') FROM audit_entries a WHERE a.action='agent.tool' AND a.entity_id=n.id ORDER BY a.occurred_at DESC,a.id DESC LIMIT 1),o.display_name) AS operator_display_name,d.name AS receiver_name FROM request_notes n
       LEFT JOIN operators o ON o.id=n.operator_id LEFT JOIN penny_integration_receipts r ON r.note_id=n.id
       LEFT JOIN penny_integration_destinations d ON r.namespace='penny-inbound:'||d.id
       WHERE n.request_id IN (${requestIdsSql}) ORDER BY n.created_at,n.id`,

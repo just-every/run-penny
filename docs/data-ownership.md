@@ -576,3 +576,20 @@ words and advances policy revision. Ordinary evidence edits retain versions;
 explicit reapplication replaces their matched wording permanently. Previously
 exported files remain in the owner's custody and need the latest erasure journal
 when restored.
+
+## Company-agent retained evidence
+
+Migrations 0099–0105 add installation-owned policy, native person binding,
+approval, audit and replay stores. They are classified in the inventory and
+excluded from portable archives. Native product activity retains agent/preparer,
+sponsor and approver identifiers as historical attribution.
+
+Base does not yet supply client-scoped erasure across retained agent outcomes,
+arguments, approval summaries and decision evidence. Once those stores contain
+agent evidence, native erasure refuses before mutation with
+`agent_retained_evidence_requires_review`; its reservation transaction has the
+same fence. Do not erase retained evidence or retry keys manually. Export still
+works under its existing owner authority. This is an explicit custody limit,
+not a promise that native record deletion removes an agent's retained copies.
+
+Archive restore also refuses once agent decision evidence is retained, so it cannot displace a stable sponsor binding. A pristine destination can replace its bootstrap actor before any agent is admitted.

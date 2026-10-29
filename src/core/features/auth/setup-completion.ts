@@ -1,6 +1,6 @@
 import {workspaceClockInput,saveWorkspaceClock} from '../settings/workspace-clock'
 import type {PennyRuntime} from '@/core/app/runtime'
-import {operatorAuth} from './operator'
+import {operatorAuth,authenticateOperator} from './operator'
 import {businessInput} from '../settings/mail-identity'
 import {sessionGuard} from '../integrations/keys'
 import {guardedDatabase} from '../integrations/guarded-database'
@@ -21,6 +21,7 @@ export async function completeProductSetup(request:Request,runtime:PennyRuntime)
  if(!input.success)return failure('company_name_and_postal_address_required',400)
  const clock=workspaceClockInput.safeParse({timezone:form.get('timezone'),quietEnabled:form.get('quietEnabled')==='yes',quietStart:Number(form.get('quietStart')??'NaN'),quietEnd:Number(form.get('quietEnd')??'NaN')})
  if(!clock.success)return failure('workspace_timezone_and_quiet_hours_required',400)
+ await authenticateOperator(runtime,request)
  const guard=sessionGuard(session);guard.sql+=" AND EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND role='owner')";guard.params.push(session.operatorId)
  const db=guardedDatabase(runtime.database.binding,guard)
  await db.batch([
