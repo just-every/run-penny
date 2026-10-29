@@ -13,7 +13,7 @@ export function PublicRequestCardView({ request }: { readonly request: PublicReq
         {request.category?<span className="text-xs text-penny-muted">{request.category.parent?`${request.category.parent.name} / `:''}{request.category.name}</span>:null}
       </div>
       <h2 className="mt-3 break-words text-lg font-bold tracking-[-0.015em] text-penny-ink sm:text-xl">
-        <Link to="/portal/feedback/$requestSlug" params={{ requestSlug: request.slug }} className="rounded-sm hover:underline hover:decoration-penny-copper hover:underline-offset-4 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-penny-accent">{request.title}</Link>
+        <Link to="/portal/feedback/$requestSlug" params={{ requestSlug: request.slug }} className="rounded-sm max-sm:block max-sm:min-h-11 max-sm:content-center hover:underline hover:decoration-penny-copper hover:underline-offset-4 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-penny-accent">{request.title}</Link>
       </h2>
       <p className="mt-2 break-words line-clamp-3 text-sm leading-6 text-penny-muted">{request.description}</p>
       <footer className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-penny-line pt-3 text-sm text-penny-muted">
