@@ -12,10 +12,10 @@ export async function capture(runtime:PennyRuntime,c:Connection,epoch:number,r:R
  if(existing){if(existing.source_hash!==fingerprint&&['current','changed'].includes(existing.source_state))await db.prepare("UPDATE penny_review_sources SET source_state='changed' WHERE evidence_id=?").bind(existing.evidence_id).run();return}
  if(await db.prepare('SELECT 1 FROM penny_review_receipts WHERE source_digest=?').bind(receipt).first())return
  const redacted=await redactCaptured(db,{...r},['author','title','text','version','country']),safe=validateReview(c,redacted.input),fence=redactionFence(db,redacted.revision)
- await recordEvidence(db,{sourceType:'review',sourceLabel:siteLabels[c.site]+' review',wording:safe.text,namedSpeaker:safe.author,observedAt:r.date},null,now,undefined,undefined,{systemActor:'review-capture',statements:id=>[
+ await recordEvidence(db,{sourceType:'review',sourceLabel:siteLabels[c.site]+' review',wording:safe.text,namedSpeaker:safe.author,observedAt:r.date.length===10?r.date+'T00:00:00Z':r.date},null,now,undefined,undefined,{systemActor:'review-capture',statements:id=>[
   fence.before,fence.after,
   db.prepare('INSERT INTO penny_review_receipts(source_digest,created_at) VALUES(?,?)').bind(receipt,now),
-  db.prepare(`INSERT INTO penny_review_sources(evidence_id,connection_id,site,review_id,review_url,rating,title,app_version,country,source_hash,source_state,captured_at,next_check,ai_state) VALUES(?,?,?,?,?,?,?,?,?,?,'current',?,?,?)`).bind(id,c.id,c.site,r.id,r.url,safe.rating,safe.title,safe.version,safe.country,fingerprint,now,new Date(clock+86400000).toISOString(),c.extract?'pending':'stopped'),
+  db.prepare(`INSERT INTO penny_review_sources(evidence_id,connection_id,site,review_id,review_url,source_date,rating,title,app_version,country,source_hash,source_state,captured_at,next_check,ai_state) VALUES(?,?,?,?,?,?,?,?,?,?,?,'current',?,?,?)`).bind(id,c.id,c.site,r.id,r.url,r.date,safe.rating,safe.title,safe.version,safe.country,fingerprint,now,new Date(clock+86400000).toISOString(),c.extract?'pending':'stopped'),
   db.prepare('UPDATE penny_review_connections SET captured=captured+1 WHERE id=?').bind(c.id),
  ]})
 }

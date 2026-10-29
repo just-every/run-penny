@@ -21,7 +21,7 @@ export async function validateReviewArchive(data:Record<string,Row[]>){
    if(!c||!e||!v||c.site!==s.site||e.source_type!=='review'||e.requester_id!==null||e.admitted_sender!==null||!receipts.has(await digest(s.site+'/'+s.review_id)))throw Error()
    site.parse(s.site);z.string().regex(/^[a-f0-9]{64}$/).parse(s.source_hash)
    if(!['current','changed','removed','purged'].includes(String(s.source_state))||!['pending','running','failed','done','stopped'].includes(String(s.ai_state)))throw Error()
-   validateReview(c as unknown as Connection,{id:s.review_id,author:e.named_speaker,rating:s.rating,title:s.title,text:v.wording,date:e.observed_at,version:s.app_version,country:s.country,url:s.review_url})
+   validateReview(c as unknown as Connection,{id:s.review_id,author:e.named_speaker,rating:s.rating,title:s.title,text:v.wording,date:s.source_date??e.observed_at,version:s.app_version,country:s.country,url:s.review_url})
    if(s.source_state==='purged'&&(e.named_speaker!==null||s.title!==null||[...versions.values()].some(v=>v.evidence_id===s.evidence_id&&v.wording!=='[Source removed]')))throw Error()
   }
   for(const p of data.penny_review_proposals??[]){

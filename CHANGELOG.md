@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Retain calendar-only review dates alongside the evidence ordering instant, and
+  display their supplied day without implying a midnight source timestamp.
+  Migration 0100 adds nullable source-date custody without rewriting older rows;
+  archives retain it, and older captures use their existing observed time.
+
 - Preserve review timestamp precision and Google Play nanos; bind review links to
   the selected listing and reject malformed or scope-changing cursors. Check
   Product Hunt’s comment resource and public-page review identity rather than

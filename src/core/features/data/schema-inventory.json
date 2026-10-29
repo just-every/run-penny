@@ -3317,7 +3317,8 @@
       "ai_state",
       "ai_claim",
       "ai_started_at",
-      "ai_failure"
+      "ai_failure",
+      "source_date"
     ]
   },
   "penny_review_proposals": {

@@ -29,7 +29,7 @@ export const evidenceReadSelect = `
   SELECT
     e.id AS id, ev.wording AS wording, e.named_speaker AS namedSpeaker, e.admitted_sender AS admittedSender, e.source_type AS sourceType, e.source_label AS sourceLabel,
     (SELECT json_object('jumpUrl',d.jump_url,'capturer',COALESCE(d.capturer_name,d.capturer_id),'sourceState',d.source_state,'checkFailure',d.check_failure) FROM penny_discord_sources d WHERE d.evidence_id=e.id) AS discordJson,
-    (SELECT json_object('site',s.site,'reviewId',s.review_id,'url',s.review_url,'rating',s.rating,'title',s.title,'version',s.app_version,'country',s.country,'sourceState',s.source_state,'aiState',s.ai_state,'aiFailure',s.ai_failure,'checkFailure',s.check_failure) FROM penny_review_sources s WHERE s.evidence_id=e.id) AS reviewJson,
+    (SELECT json_object('sourceDate',COALESCE(s.source_date,e.observed_at),'site',s.site,'reviewId',s.review_id,'url',s.review_url,'rating',s.rating,'title',s.title,'version',s.app_version,'country',s.country,'sourceState',s.source_state,'aiState',s.ai_state,'aiFailure',s.ai_failure,'checkFailure',s.check_failure) FROM penny_review_sources s WHERE s.evidence_id=e.id) AS reviewJson,
     (SELECT json_object('sourceUrl','https://secure.helpscout.net/conversation/'||h.conversation_id||'/','sourceState',h.source_state,'conversationId',h.conversation_id) FROM penny_helpscout_captures h WHERE h.evidence_id=e.id) AS helpScoutJson,
     e.observed_at AS observedAt, e.review_state AS reviewState, e.review_reason AS reviewReason,
     a.id AS accountId, a.slug AS accountSlug, a.name AS accountName,

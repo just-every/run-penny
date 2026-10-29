@@ -86,7 +86,7 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const reviewHead=await Promise.all(reviewHeadTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
  const reviewSnapshot=async()=> (await env.DB.batch(reviewHead.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const reviewBefore=await reviewSnapshot()
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0100'))
  expect(await reviewSnapshot()).toEqual(reviewBefore)
  await applyD1Migrations(env.DB,migrations)
  expect(await reviewSnapshot()).toEqual(reviewBefore)

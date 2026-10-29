@@ -5,13 +5,13 @@ import {NativeError} from '../auth/native-tokens'
 import {wire,publicListing,type Connection} from './configuration'
 import {reviewLink} from './review-link'
 import {sourcePresent} from './source-check'
-import {validObservedTime} from '../decisions/write-support'
+import {validObservedTime,validDate} from '../decisions/write-support'
 export {sourcePresent}
-const review=z.object({id:z.string().min(1).max(300),author:z.string().max(200).nullable(),rating:z.number().min(0).max(100).nullable(),title:z.string().max(1000).nullable(),text:z.string().min(1).max(20000),date:z.string().datetime({offset:true}),version:z.string().max(100).nullable(),country:z.string().max(100).nullable(),url:z.string().url().max(2000)})
+const review=z.object({id:z.string().min(1).max(300),author:z.string().max(200).nullable(),rating:z.number().min(0).max(100).nullable(),title:z.string().max(1000).nullable(),text:z.string().min(1).max(20000),date:z.string().refine(v=>validObservedTime(v)||/^\d{4}-\d{2}-\d{2}$/.test(v)&&validDate(v)),version:z.string().max(100).nullable(),country:z.string().max(100).nullable(),url:z.string().url().max(2000)})
 export type Review=z.infer<typeof review>
 const nullable=(v:unknown)=>typeof v==='string'&&v.trim()?v:null
 const numeric=(v:unknown)=>v===null||v===undefined?null:Number(v)
-function date(v:unknown){if(typeof v!=='string'||!validObservedTime(v))throw new NativeError('reviews_date_invalid',503);return v}
+function date(v:unknown){if(typeof v!=='string'||!(validObservedTime(v)||/^\d{4}-\d{2}-\d{2}$/.test(v)&&validDate(v)))throw new NativeError('reviews_date_invalid',503);return v}
 function googleDate(v:{seconds:unknown;nanos?:unknown}){
  const seconds=Number(v.seconds),nanos=v.nanos
  if(!Number.isSafeInteger(seconds)||nanos!==undefined&&(!Number.isInteger(nanos)||Number(nanos)<0||Number(nanos)>999999999))throw new NativeError('reviews_date_invalid',503)

@@ -16,11 +16,12 @@ import { Chip } from '@/core/ui/app/Chip'
 import { DataField, dataRowClass } from '@/core/ui/app/DataField'
 
 export function EvidenceCard({ evidence, onSaved }: { readonly evidence: OperatorEvidenceCard; readonly onSaved?: () => void }) {
+  const sourceDate=evidence.review?.sourceDate??evidence.observedAt
   return (
     <OperatorCard id={`evidence-${evidence.id}`} className="p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Chip tone={evidence.reviewState === 'unreviewed' ? 'copper' : 'moss'}>{evidence.reviewState === 'unreviewed' ? 'Unreviewed' : 'Reviewed'}</Chip>
-        <time className="text-sm text-penny-ink tabular-nums sm:text-base" dateTime={evidence.observedAt}>{formatObservedAt(evidence.observedAt)}</time>
+        <time className="text-sm text-penny-ink tabular-nums sm:text-base" dateTime={sourceDate} title={sourceDate}>{/^\d{4}-\d{2}-\d{2}$/.test(sourceDate)?sourceDate:formatObservedAt(evidence.observedAt)}</time>
       </div>
       <p className="mt-4 text-lg leading-snug font-medium break-words whitespace-pre-wrap text-penny-ink sm:text-[22px]">“{evidence.wording}”</p>
       <dl className={`mt-5 border-t border-penny-line pt-4 ${dataRowClass}`}>

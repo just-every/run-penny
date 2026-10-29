@@ -1,2 +1,2 @@
 export const siteLabels={g2:'G2',capterra:'Capterra',trustradius:'TrustRadius',trustpilot:'Trustpilot',producthunt:'Product Hunt',appstore:'Apple App Store',googleplay:'Google Play'} as const
-export interface ReviewMetadata {site:string;reviewId:string;url:string;rating:number|null;title:string|null;version:string|null;country:string|null;sourceState:string;aiState:string;aiFailure:string|null;checkFailure:string|null}
+export interface ReviewMetadata {sourceDate:string;site:string;reviewId:string;url:string;rating:number|null;title:string|null;version:string|null;country:string|null;sourceState:string;aiState:string;aiFailure:string|null;checkFailure:string|null}

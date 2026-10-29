@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "81f0c64b75dd5d771bdeb4a6a6e84339fa8c5c593e83565ffb22738a1dc79552",
+      "sha256": "fe779fbee9703fdbfdd542989423f1bee89cdd67a917585028eea67d53ef4093",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3138,7 +3138,7 @@
       "executable": false
     },
     "docs/REVIEWS.md": {
-      "sha256": "764651f272526f15c515c5b177900d049139002390cd06e52653976fdb0045fe",
+      "sha256": "289f4e7cc7a3a4fe2a413dc107136164281d2ea34fa5141a7a0d86dfb4e504b4",
       "executable": false
     },
     "docs/site.json": {
@@ -3627,6 +3627,10 @@
     },
     "migrations/core/0099_review_outreach_exclusion.sql": {
       "sha256": "77a241426aee660b116e12674d0600062913fd8e12cd7f39982c0fb84a4a378c",
+      "executable": false
+    },
+    "migrations/core/0100_review_source_date.sql": {
+      "sha256": "f4a5995fe5ebcec26b3ff087946a6ca7c899beba5898ac90095371a8d2f4ca4a",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -4866,7 +4870,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "fd66cdf6018c00db6eed68af67f6d3b6159eda5949db4367286e58aaa8b63f9f",
+      "sha256": "99445512b1cd571d8156d3bf98c85b2fc1ae2f21ddf1cac3d80fe69bdee1b425",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {
@@ -5266,7 +5270,7 @@
       "executable": false
     },
     "src/core/features/evidence/read-repository.ts": {
-      "sha256": "f41f71c952d0ecf06e86b70983685ba2b7f02d80a52fc54fc0a02adcff8b8099",
+      "sha256": "509833276c8b760dc202f4c6d9543708a97a7f00bb7e64110ae28ed0a6ba49f9",
       "executable": false
     },
     "src/core/features/evidence/read-snapshot.ts": {
@@ -5294,7 +5298,7 @@
       "executable": false
     },
     "src/core/features/evidence/ui/evidence-card.tsx": {
-      "sha256": "7333caf6bdf076afcf77b599e1dead8ada0a0a12028c2be8770aa4028eb65f62",
+      "sha256": "c8fa39ff832cc5c1708e56fe030a38edf75d7642f4d1bc49f244459900e216aa",
       "executable": false
     },
     "src/core/features/evidence/ui/evidence-history.tsx": {
@@ -6850,15 +6854,15 @@
       "executable": false
     },
     "src/core/features/reviews/adapters.ts": {
-      "sha256": "e3fe0bab5da351777765a1a86656ad89762ba8d952cb721dd7a7df5507b624ff",
+      "sha256": "ec1d19b6399bb42fd3fe04748f879596f6d43babb03d80c02d0379e29ce4746b",
       "executable": false
     },
     "src/core/features/reviews/archive.ts": {
-      "sha256": "ed4b88b848c2a00d52bd943e64aef0945fe0c1d809bf6188a8b0821097513762",
+      "sha256": "acbe585d4f10e66bf444d17ab8dfbe428e17129255eb2647d053cca7787ff392",
       "executable": false
     },
     "src/core/features/reviews/capture.ts": {
-      "sha256": "3e7f7b269baf894dc0581665fa57d80333c76d913a9da3136b032b0619b826eb",
+      "sha256": "97ea12c86b66bf9f8d612e9ad3010c6dd41357d0ea3f1d8b81f8258d5cda7133",
       "executable": false
     },
     "src/core/features/reviews/configuration.ts": {
@@ -6902,7 +6906,7 @@
       "executable": false
     },
     "src/core/features/reviews/types.ts": {
-      "sha256": "763128002e9cc05e9743060ec7262a642ca60be2a1399fe6a3f7475a0edc08d0",
+      "sha256": "ab7c69edd1a1d578e51f3abe0be2d2eeba937f732d400bc4b1d81b554586a278",
       "executable": false
     },
     "src/core/features/reviews/work.ts": {
@@ -8046,7 +8050,7 @@
       "executable": false
     },
     "tests/base/upgrade.test.ts": {
-      "sha256": "8ee49d0cd4e9f8179b04f4b7fd7d082b3eb1b073de51b0b0f62385e31d5cdc51",
+      "sha256": "b8cffee929b4a6d59fd84aff6a1b6787ab86d439ec37f72fd161aaac8ed62538",
       "executable": false
     },
     "tests/base/uservoice-fixture.ts": {
@@ -8410,7 +8414,7 @@
       "executable": false
     },
     "tests/browser/review-capture.mjs": {
-      "sha256": "947d9e7f68aa654e26432f4e60654a7b06119ef6b409ba8fcc063c135f83e9e3",
+      "sha256": "8af61a3dbe8a5646a4640ac243d24fe15df0e998efd6af9f1ae812ab7ab265b7",
       "executable": false
     },
     "tests/browser/rich-changelog.mjs": {
@@ -8594,7 +8598,7 @@
       "executable": false
     },
     "tests/fixtures/reviews/capterra.html": {
-      "sha256": "281f6137cdf72c33e5cf8045008148b4256810e3c138d9dff09b493f08933eaa",
+      "sha256": "0ca57bd75a4352f88724d168eefdff690fcaec4d76b670ad50de1164ab67b543",
       "executable": false
     },
     "tests/fixtures/reviews/destinations.json": {

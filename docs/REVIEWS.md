@@ -7,7 +7,7 @@ subscribe, email, proxy-vote, publish or reply to a reviewer.
 
 ## Installation and vendor scope
 
-Apply `0098_review_capture.sql` and `0099_review_outreach_exclusion.sql` with `rer setup` or the existing hosted migration
+Apply `0098_review_capture.sql`, `0099_review_outreach_exclusion.sql` and `0100_review_source_date.sql` with `rer setup` or the existing hosted migration
 path. It adds tables and guards; applied migrations remain unchanged. Preserve
 expanded schema on source rollback and stop older workers before upgrading.
 There is no separate importer or public ingestion endpoint.
@@ -104,7 +104,7 @@ attachments or neighboring product reviews. Owner redaction rules apply to text
 and source names before the write.
 
 A reread marks a different source fingerprint **changed**, preserving the capture.
-Source timestamps retain the supplied offset and fractional precision (up to nine digits); Google Play seconds and nanos are combined without millisecond truncation.
+Source timestamps retain the supplied offset and fractional precision (up to nine digits); Google Play seconds and nanos are combined without millisecond truncation. A calendar-only source date is retained as a calendar date and displayed without an invented time; the evidence ordering instant uses that day’s UTC start. Migration 0100 adds nullable original-date custody; prior captures retain their existing observed time as the fallback.
 
 Daily source checks mark explicit deletion or lost source access **removed**;
 absence from a rolling feed alone never proves deletion. After the owner's
