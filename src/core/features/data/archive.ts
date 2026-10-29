@@ -1,3 +1,4 @@
+import {validateTeamsArchive} from '../teams/archive'
 import {validateHelpScoutArchive} from '../helpscout/archive'
 import {validateDiscordArchive} from '../discord/archive'
 import {assertOriginalFiles} from './original-files'
@@ -98,8 +99,11 @@ function limits(data:Record<string,Row[]>):void{
  if(Object.values(data).reduce((n,items)=>n+items.length,0)>DATA_LIMITS.rows||new TextEncoder().encode(canonical(data)).byteLength>DATA_LIMITS.recordBytes)fail('archive_limit',413)
 }
 export const normalize=(name:string,row:Row):Row=>{
+ if(name==='penny_teams_sources'&&row.check_claim!==null&&row.check_claim!==undefined)return {...row,check_claim:null,check_started_at:null,check_failure:'restored_source_check_review_required'}
  if(name==='penny_discord_sources'&&row.check_claim!==null&&row.check_claim!==undefined)return {...row,check_claim:null,check_started_at:null,check_failure:'restored_source_check_review_required'}
+ if(name==='penny_teams_settings')return {...row,enabled:0}
  if(name==='penny_discord_settings')return {...row,enabled:0}
+ if(name==='penny_teams_jobs'&&['pending','running','failed'].includes(String(row.state)))return {...row,state:'held',claim:null,failure:'restored_capture_review_required'}
  if(name==='penny_discord_jobs'&&['pending','running','failed'].includes(String(row.state)))return {...row,state:'held',claim:null,failure:'restored_capture_review_required'}
  if(name==='penny_helpscout_connection')return {...row,enabled:0}
  if(name==='penny_helpscout_captures')return {...row,state:row.evidence_id===null?'held':'done',claim:null,started_at:null,failure:'restored_capture_review_required'}
@@ -156,8 +160,8 @@ export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:Dat
  const id=await reserve(db,'export',{},authority)
  try {
   await assertPlatformLedger(db)
-  const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);await validateDiscordArchive(data);await validateHelpScoutArchive(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)
-  if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);await validateDiscordArchive(data);await validateHelpScoutArchive(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
+  const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);await validateTeamsArchive(data);await validateDiscordArchive(data);await validateHelpScoutArchive(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)
+  if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);await validateTeamsArchive(data);await validateDiscordArchive(data);await validateHelpScoutArchive(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
   if(data.request_attachment_uploads?.length||data.evidence_attachment_uploads?.length)fail('unfinished_attachment_uploads')
   const journal=await readErasureJournal(db)
   if(data.release_attachments.some(row=>row.state==='writing'))fail('unfinished_attachment_uploads')
@@ -195,7 +199,7 @@ async function validated(db:D1Database,value:unknown,journalValue:unknown):Promi
  await assertPlatformLedger(db)
  const tables=await schema(db)
  if(await schemaHash(tables)!==archive.schemaHash||canonical(Object.keys(archive.tables).sort())!==canonical(tables.map(table=>table.name).sort()))fail('unsupported_archive_schema')
- limits(archive.tables);validateNativeIdentity(archive.tables);await validateDiscordArchive(archive.tables);await validateHelpScoutArchive(archive.tables);validateCategoryArchive(archive.tables);validateMailIdentityArchive(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
+ limits(archive.tables);validateNativeIdentity(archive.tables);await validateTeamsArchive(archive.tables);await validateDiscordArchive(archive.tables);await validateHelpScoutArchive(archive.tables);validateCategoryArchive(archive.tables);validateMailIdentityArchive(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
  if(archive.tables.request_attachment_uploads.length||archive.tables.evidence_attachment_uploads.length)fail('unfinished_attachment_uploads')
  for(const table of tables){
   const keys=new Set<string>()
