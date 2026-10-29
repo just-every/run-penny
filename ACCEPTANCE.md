@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 73 | 114 | 71 | 258 |
-| Agent surface | 0 | 0 | 21 | 21 |
+| Core | 72 | 115 | 71 | 258 |
+| Agent surface | 0 | 21 | 0 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 73 | 114 | 94 | 281 |
+| Full target | 72 | 136 | 73 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -1169,15 +1169,15 @@ Core · published · **partial**
 
 #### DATA-003 — Erasure outranks history
 
-Core · published · **done** · Cites BASE-DATA-003 · Register R-11
+Core · published · **partial** · Cites BASE-DATA-003 · Register R-11
 
 **Requirement.** Penny's delta on Base erasure: where a clause here says a record is preserved, versioned, immutable, or never overwritten, erasure under BASE-DATA-003 takes precedence: the record is deleted or anonymized and the surviving audit entry keeps an anonymized reference.
 
 **Acceptance.**
 1. Unmerging (REQ-009) and revision history never recreate erased data.
 
-**Evidence.** `tests/base/penny-erasure.test.ts`
-**Gap.** None.
+**Evidence.** `tests/base/penny-erasure.test.ts`; `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Native erasure retains its prior proof for installations without agent evidence. Base has no client-scoped retained-evidence erasure/fence contract; native erasure now refuses before mutation while agent outcomes/audit/approvals exist, with a transactional reservation fence.
 
 #### DATA-004 — Custom fields
 
@@ -3598,7 +3598,7 @@ Core · push-further · **partial** · Cites BASE-AGENT-007, BASE-AGENT-009 · R
 
 #### BASE-AGENT-001 — One MCP door per seed
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every seed, hosted or self-hosted, serves one remote MCP endpoint at `/mcp` over Streamable HTTP. It speaks the current revision (2026-07-28) and accepts 2025-11-25 clients through the twelve-month deprecation window. It implements `server / discover`, tools, resources and prompts. Lists are deterministic and carry `ttlMs` and `cacheScope: "private"`. Roots, Sampling and Logging are not served.
 
@@ -3610,12 +3610,12 @@ Agent surface · target · **missing**
 5. A foreign Origin returns 403, and a header and body method mismatch returns `HeaderMismatch`.
 6. An oversized body returns 413 with no effect.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** CORE tools/policy/pause/audit/idempotency is declared and both supported MCP eras pass. Optional resources, events, prompts and subscriptions are undeclared and typed-refused.
 
 #### BASE-AGENT-002 — The seed's jobs are tools, through the UI's own actions
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Each Core job a person does in the product is a tool. Where one is not, the Agent surface says why: it runs on a device, it is a person's interactive screen, it belongs to a connector or the import door, or it is an installation fact. Risk is never the reason: a risky job is a tool with its class (BASE-AGENT-006). Tools are named `<seed>.<area>.<verb>` and declare input and output schemas and truthful annotations. Each calls the same server action as the UI, so validation and authorization are written once, and the seed's embedded agents use the same registry. A business refusal returns `isError` with the seed's stable error code.
 
@@ -3627,12 +3627,12 @@ Agent surface · target · **missing**
 5. The UI action and its tool, on the same fixture, give the same record state and the same audit event type.
 6. The seed's embedded agents appear in the audit as calls to the same tools.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Declared tools call real native services. Complete Core clause coverage, all native verbs, UI/REST registry unification and embedded-agent use remain incomplete.
 
 #### BASE-AGENT-003 — Records are resources
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Each primary record type has a URI template, and tools return `resource_link`s to the records they touch. A read returns exactly the fields the caller's role sees in the UI. File bytes count against any byte budget on the grant. A record the caller cannot open reads as not found, identical to a missing id. Text from customers, imports or files carries an untrusted marker in `_meta`.
 
@@ -3644,12 +3644,12 @@ Agent surface · target · **missing**
 5. Bytes over budget return `budget_exhausted` and no partial content.
 6. Customer-sourced text carries the untrusted marker.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Optional resources and resource-refresh families are undeclared. Base withholds resource links in CORE mode; record resource/read and link readback are not claimed.
 
 #### BASE-AGENT-004 — Business identity and short-lived, audience-bound tokens
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** The door is an OAuth 2.1 resource server. Its RFC 9728 metadata names the authorization servers this installation trusts. That is the paired Business when Business provisioned it, verified with the owner-claim trust the installation already holds for its import door; otherwise it is the seed's own sign-in. Access tokens are RFC 9068 JWTs with `aud` set to the seed's canonical MCP URI, `sub` the sponsoring person, `act` the agent (RFC 8693) with its specialist, scopes per tool family, and a lifetime of 15 minutes or less (5 by default). The policy scopes rules on the sponsor, agent and specialist the token names. The consent behind the tokens can last longer and is revocable. Tokens travel only in the Authorization header, and there is no passthrough.
 
@@ -3662,12 +3662,12 @@ Agent surface · target · **missing**
 6. Revoking consent in the seed or in Business refuses the next call within 60 seconds.
 7. After unpairing, Business tokens are refused and the seed's own sign-in still works.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Signed owner lifecycle, durable owner/team mapping, unknown and changed-email refusal, scoped native credentials and consent revocation are proved. Inactive/excluded sponsor fixtures and multi-sponsor lifecycle are undeclared; Penny has no native operator allow-list beyond current membership.
 
 #### BASE-AGENT-005 — An agent acts as a person in a role, never more
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every call is authorized as the sponsoring person's current role and access (BASE-ACCESS-004), intersected with the grant's resources, actions and budget. A grant only narrows. No call widens the calling agent's own authority. A call that would widen its own grant or its sponsor's role, or change the company policy or Pause, is refused with `self_escalation`, whatever the policy says; narrowing its own grant is allowed. Other access and security changes are ordinary actions in the access and security classes. An agent never acts after its sponsor is suspended. Anything an agent reads (records, files, emails, imports, other seeds' results) is data and cannot change its scope, its targets or a call's class.
 
@@ -3678,12 +3678,12 @@ Agent surface · target · **missing**
 4. Calls that widen the agent's own grant or its sponsor's role, or change the policy or Pause, return `self_escalation` and change nothing, even under a policy with every class autonomous; dropping a scope from its own grant runs.
 5. An injection fixture yields no out-of-grant call and no change of class: record text asking for a wider action, or claiming that a recipient is internal.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Native current membership, narrow original key scopes and private view ownership are enforced. Access/security tool families are undeclared, so real widening/narrowing and self-escalation fixtures are not claimed.
 
 #### BASE-AGENT-006 — Every action declares its risk class
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Classes come from the fleet list in RISK-POLICY.md: standard, external, money, commitment, accounts, gated, access, security, destructive, sensitive and live. In the registry, each tool declares the classes it can carry and a server-side classifier that decides them per call from the arguments, current records and, for gated, the provider's answer. The classifier also supplies each class's facts: the measure (items, recipients, amount and currency, people or records), the counterparty (internal, known, new or public), the direction for access, the provider and step for gated, and the data kind for sensitive. A classifier never reads a flag, label or claim supplied by the agent or by record text. A seed cannot add a class; it proposes one for the fleet list.
 
@@ -3695,12 +3695,12 @@ Agent surface · target · **missing**
 5. No tool in `tools / list` declares a class outside the fleet list, and `rer check` fails on one.
 6. A refused call's audit row still records its computed classes.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Declared standard/live tool-class pairs pass native journeys and injection checks. The external/money/commitment/accounts/gated/access/security/destructive/sensitive families are not registered or claimed.
 
 #### BASE-AGENT-007 — The company's policy decides, at one chokepoint
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every agent door calls one decision function: MCP, the integration API with agent tokens, and the seed's embedded agents. It evaluates the call's classes against the company's policy, as above. The seed ships no dispositions and fills no gap with one: agent access opens only under a complete policy that setup has asked for (RISK-POLICY.md), and before then every agent call returns `policy_unset` with the setup link and changes nothing. *Autonomous* runs the call. *Review* runs it and adds it to the review feed. *Approval* saves a pending action with server-computed facts and returns `input_required`, with a URL-mode elicitation to the seed's approval page and a pending handle. Each person the rule names approves the exact saved revision in a signed-in browser, and changed inputs need a new approval. The retried call returns the result and a receipt. A rejection returns `approval_rejected`, and a lapse past the wait the rule sets returns `approval_expired`. *Blocked* returns `policy_blocked`, naming the class, rule and revision.
 
@@ -3714,12 +3714,12 @@ Agent surface · target · **missing**
 7. A policy change applies to the next call within 60 seconds, and the audit cites the new revision.
 8. A policy document with a bad signature or another Business's id is rejected, and the door keeps the last valid revision.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** CORE signed policy, held native approval, unset/removed/blocked states and Pause pass normal conformance. Embedded, provider and queued lifecycle families remain unscoped.
 
 #### BASE-AGENT-008 — Truthful attribution
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every agent act is recorded and shown as `"<agent> for <person>"`, and mail and messages an agent sends outside name it that way as their sender. An approval, a review mark, a confirmation (a warning dialog, a typed-field confirmation, a delivery confirmation), a decision or a signature attributed to a person comes only from that person's signed-in session. When an agent does the equivalent act, the record names the agent, and the act carries its own class; a binding decision or a signature is commitment. Agent doors ignore arguments that stand for a person's confirmation. No tool solves a bot check, or enters a person's own password or 2FA code at an outside service. A provider step that demands a person goes to a person, whatever the policy says; the gated class marks such steps before they run.
 
@@ -3732,12 +3732,12 @@ Agent surface · target · **missing**
 6. Activity and exports at 1440 and 390 show `"<agent> for <person>"` for every agent act.
 7. Mail an agent sends to an outside address names `"<agent> for <person>"` as its sender.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Declared effects retain agent-for-person, sponsor and real approver attribution in door and native audit. Outbound content and native Undo are undeclared.
 
 #### BASE-AGENT-009 — Every agent action is audited with its class and decision
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Extending BASE-OPS-005, each call that reads private data or changes anything records the agent client, name and specialist, and the run or task id (`traceparent` when sent); the sponsoring person, the grant, the tool and the targets; the classes and their facts, and the policy revision and rule; the decision (autonomous, review, approval, blocked, unset or self_escalation) and the outcome (done, refused, pending or failed); the approval or review id and person, and the idempotency key. For a period, the seed's Agents page shows actions by class and decision with the notable ones, the review feed (Mark reviewed, Flag, and Undo where reversible), pending approvals, steps waiting for a person and setup questions. Business shows the same across seeds.
 
@@ -3750,12 +3750,12 @@ Agent surface · target · **missing**
 6. Removing the agent keeps its rows and its name.
 7. The Agents page works at 1440 and 390 with no serious or critical axe findings.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Declared calls, private reads, refusals, policy decisions and replay audit pass with differs_from_policy zero. Embedded-agent, provider and queued audit families remain unscoped.
 
 #### BASE-AGENT-010 — Agents can follow changes
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** The seed emits a typed event for every record change and for every approval, review and policy decision. Each event carries a stable id, a type, the record URI, the actor (a person, or an agent acting for a person) and a time. Events never carry secrets or more than the subscriber may read. Agents can read events three ways: `subscriptions / listen`, an `events.list` tool with a cursor, and signed webhooks from Base `integrations` using the same ids. Every channel delivers at least once and filters by access at delivery.
 
@@ -3767,12 +3767,12 @@ Agent surface · target · **missing**
 5. A failed webhook is visible and replays without duplicate effects.
 6. `approval.pending`, `approval.decided`, `review.flagged` and `policy.adopted` carry the class and decision and nothing the subscriber may not read.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Optional events and subscriptions families are undeclared and typed-refused. No retained public event cursor or streaming completion claim is made.
 
 #### BASE-AGENT-011 — Limits are policy, and Pause stops everything
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Business limits are rules in the company's policy: per-call and per-day thresholds on any class's measure, such as money moved, outside recipients or items destroyed; spend caps on provider cost (models, SMS, email) per seed, specialist or agent, which setup asks with the classes; "no cap" is an answer. Tools with provider cost declare an estimate before they run, and an exhausted cap returns `budget_exhausted` before any partial effect. The seed's capacity limits (request rate, body and byte sizes) protect the installation: they bound rate and size, never daily business volume, are documented and are not policy. A grant carries budgets only when the person granting it sets them. A **Pause agents** control in the seed, and Pause all agents in Business when paired, refuses every agent token within 60 seconds until a person resumes; browser sessions and devices keep working.
 
@@ -3785,12 +3785,12 @@ Agent surface · target · **missing**
 6. Pause and Pause all agents each stop the next call within 60 seconds, and resume restores access.
 7. An agent token cannot resume.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** CORE Business/local Pause and consent revocation pass. Spend is none; no cost is registered. Mail edges, timed/dual-host/queued lifecycle, resource refresh and company spend reservation remain unscoped.
 
 #### BASE-AGENT-012 — Writes are idempotent and conflict-safe
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** Every mutating tool requires an idempotency key and takes an optional expected revision. The same key with the same arguments returns the first outcome for at least 24 hours; the same key with different arguments returns `idempotency_conflict`; a stale revision returns `revision_conflict` with the current revision. Long work returns a job handle and a status tool, with no dependence on the Tasks extension.
 
@@ -3801,12 +3801,12 @@ Agent surface · target · **missing**
 4. A stale revision returns a conflict naming the current revision.
 5. A job handle used by another person's token reads as not found.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Declared native write replay, changed-policy/current-scope admission and once-only effect checks pass. Full concurrent/provider/queued lifecycle families remain unscoped; native version guards are retained.
 
 #### BASE-AGENT-013 — Manifest, docs and the conformance journey
 
-Agent surface · target · **missing**
+Agent surface · target · **partial**
 
 **Requirement.** `server / discover` instructions and an on-site `/docs/agents` page are generated from the action registry. The page lists tools by job, with each tool's classes, the test that adds each computed class, its scopes, resource templates, event types, capacity limits and error codes, and the specialist role. `prompts / list` carries the specialist's jobs. Base ships the conformance journey, a harness that `rer verify` runs against `rer dev` and seeds run in CI. It is an MCP client; a signed-in test person takes a person's steps (setup answers, approvals, review marks, resume) through the URLs the door returns, and the same browser leg runs the UI-parity actions and the page checks at 1440 and 390. It runs every acceptance point of BASE-AGENT-001 to 012 and of the seed's SURFACE clauses under two company policies: *all autonomous* (`*`), and *held* (standard review, every other class the seed declares approval, which the test person grants), plus the single-class variants a point names. A point that names no disposition passes under both.
 
@@ -3817,14 +3817,14 @@ Agent surface · target · **missing**
 4. Every acceptance point runs under both policies, every decision matches the policy in force, and under all autonomous no call waits for a person or is refused by policy.
 5. A stranger agent given only the seed URL completes the specialist journey through MCP.
 
-**Evidence.** None.
-**Gap.** Not yet judged through this seed's own doors.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** The declared surface and native journey pass normal rer verify (1993/1993 points); docs are generated from that declaration. Optional resource/event/prompt/subscription and wider specialist-week families remain incomplete.
 
 ### Agent surface
 
 #### DATA-007 — MCP server
 
-Agent surface · target · **missing** · Cites BASE-AGENT-001, BASE-AGENT-002, BASE-AGENT-004, BASE-AGENT-005
+Agent surface · target · **partial** · Cites BASE-AGENT-001, BASE-AGENT-002, BASE-AGENT-004, BASE-AGENT-005
 
 **Requirement.** Penny's delta on the Base agent door: the Model Context Protocol server gives Claude, ChatGPT, Cursor and other MCP clients Penny's search, read and capture tools (search requests and evidence, read the roadmap, add feedback, record a proxy vote), authorized by a scoped key or OAuth and limited to that key's role.
 
@@ -3832,12 +3832,12 @@ Agent surface · target · **missing** · Cites BASE-AGENT-001, BASE-AGENT-002, 
 1. An MCP conformance client lists the tools and runs search and capture.
 2. A call outside the key's scope is refused.
 
-**Evidence.** None.
-**Gap.** An MCP conformance client lists the tools and runs search and capture; a call outside the key's scope is refused.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** The declared MCP subset passes search/capture and scope refusal. Roadmap reads and proxy votes from the wider target remain outside this registry.
 
 #### SURFACE-001 — The registry equals this table
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-001, BASE-AGENT-002, BASE-AGENT-006, BASE-AGENT-013
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-001, BASE-AGENT-002, BASE-AGENT-006, BASE-AGENT-013
 
 **Requirement.** Penny's door serves exactly the tools, resource templates, event types and prompts in this section, generated from one action registry that the operator app, the scoped REST API (API-001), DATA-007's MCP server and Penny's own agents all call. Each tool declares input and output schemas, truthful annotations, the risk classes it can carry and the server-side test that decides them.
 
@@ -3849,12 +3849,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-001, BASE
 5. `/docs/agents` lists every tool with its classes, scopes and error codes, and the test that adds each computed class.
 6. The Base harness passes on Penny's fixtures in CI under both of its policies, all autonomous and held.
 
-**Evidence.** None.
-**Gap.** Penny has no MCP door or tool registry today; the scoped REST API (API-001) covers requests, comments, status, releases and proxy votes. No registry, output schemas, annotations, class declarations, parity test, generated `/docs/agents` or Base harness exist.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Declared subset: 27 native tools with schema, scopes and standard/live classes. The wider target table, UI/REST registry unification, embedded jobs and resource family remain incomplete; no risk-based notTools exemptions are claimed.
 
 #### SURFACE-002 — Triage through the door
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-003, BASE-AGENT-005, BASE-AGENT-006
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-003, BASE-AGENT-005, BASE-AGENT-006
 
 **Requirement.** The feedback triager finds, reads and triages through the read tools and the `penny://` resources. Every read returns exactly what the sponsor's current role shows in the operator app, and a record the sponsor cannot open reads exactly like a missing id. Triage calls inside the business are standard.
 
@@ -3865,12 +3865,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-003, BASE
 4. Capture, link, tag, assign, review, snooze, an internal note and a proxy vote on an unpublished request each compute standard and nothing else.
 5. Evidence wording, requester comments and imported posts carry the untrusted marker, and wording that asks for a wider action or claims a recipient is internal changes neither the call nor its class.
 
-**Evidence.** None.
-**Gap.** No MCP read or triage tools exist; reads through the scoped REST API follow the key's scopes, not the sponsor's role, and carry no untrusted marker.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Declared internal capture, lexical search/suggestions, review/link/assign, notes and tags are native. Resources are undeclared; snooze, proxy votes, all queue filters and future commercial-role restrictions are not fully proved.
 
 #### SURFACE-003 — Customer-facing calls are external
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-006, BASE-AGENT-008
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-006, BASE-AGENT-008
 
 **Requirement.** Penny computes external, with its counterparty and recipient count, for every call that makes wording public or reaches a customer, as "How Penny computes each class" states. Mail an agent's call sends names "<agent> for <person>" as its sender.
 
@@ -3882,12 +3882,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-006, BASE
 5. Rejecting a held item computes standard without the author notice and external with one known recipient when the notice is ticked.
 6. An outreach message (AGENT-003) computes external with counterparty known and its recipient count, and its email names "<agent> for <person>".
 
-**Evidence.** None.
-**Gap.** No call computes a risk class today; external calls, their counterparties and recipient counts are not computed.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** External publication/outreach family is undeclared. No agent mail, customer publication or recipient-count claim is made.
 
 #### SURFACE-004 — Destructive and sensitive calls
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-006
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-006
 
 **Requirement.** Penny computes destructive, with its item count, for what it cannot undo, and sensitive, with the data kinds, for redaction over regulated numbers.
 
@@ -3898,12 +3898,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-006
 4. `penny.redaction.reapply` computes destructive and sensitive, with the kinds and place counts its preview shows.
 5. A refused destructive call's audit row still records its computed classes.
 
-**Evidence.** None.
-**Gap.** No call computes a risk class today; destructive and sensitive calls are not declared.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Destructive/sensitive mutation family is undeclared. Client-scoped erasure of Base retained evidence is unavailable, so native erasure refuses while agent evidence exists.
 
 #### SURFACE-005 — Access, security, live and gated calls
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-005, BASE-AGENT-006, BASE-AGENT-008
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-005, BASE-AGENT-006, BASE-AGENT-008
 
 **Requirement.** Penny computes access with its direction for operators, roles and keys; security for credentials and protective settings; live for settings that change what portal and widget visitors see; and gated for a connector's consent step.
 
@@ -3915,12 +3915,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-005, BASE
 5. Configuring an outbound integration destination computes external and security.
 6. A call that widens the calling agent's own key or its sponsor's role returns `self_escalation` and changes nothing, under any policy.
 
-**Evidence.** None.
-**Gap.** No call computes a risk class today; access, security, live and gated calls are not declared, and there is no `self_escalation` refusal.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Public-board creation computes live and its held approval is proved. Access, security, gated connector and the remaining live settings families are undeclared; no self-escalation callback or fixture is invented.
 
 #### SURFACE-006 — Penny's own agents use the same door
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-002, BASE-AGENT-007, BASE-AGENT-008, BASE-AGENT-011
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-002, BASE-AGENT-007, BASE-AGENT-008, BASE-AGENT-011
 
 **Requirement.** AGENT-001 to AGENT-009 and AI-006's drafting call the registry's tools and the Base decision function, so an embedded agent and an outside one get the same decision for the same call (D-6). A draft never sends itself (D-2).
 
@@ -3930,12 +3930,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-002, BASE
 3. AI-006 drafts produce no send; posting the edited wording is a separate `penny.comments.post` call with its own class and decision.
 4. Pause agents stops embedded and outside agents alike on their next call within 60 seconds.
 
-**Evidence.** None.
-**Gap.** Penny's learning runs and AI drafting call internal services, not a tool registry, and there is no decision function or Pause agents control.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** Embedded learning/drafting and provider/queued lifecycle families are unscoped and still call their existing native services; they have not been moved into this registry. Door Pause applies to declared outside calls only.
 
 #### SURFACE-007 — The feedback triager's week
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-007, BASE-AGENT-009, BASE-AGENT-013
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-007, BASE-AGENT-009, BASE-AGENT-013
 
 **Requirement.** A stranger agent given only the installation's URL runs a seeded week of feedback work through MCP under two company policies: all autonomous, and held. The week triages new inbox items, links duplicates, merges one published pair, sets a request Planned with a comment, publishes a release to the requesters who asked, and erases one requester on request.
 
@@ -3946,8 +3946,8 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-007, BASE
 4. Every call's audit row carries its classes, the rule and the policy revision, and no decision differs from the policy in force.
 5. Pause agents stops the agent on its next call within 60 seconds, and resume restores it.
 
-**Evidence.** None.
-**Gap.** No MCP door, company policy, setup questions or harness exist, so the specialist journey cannot run.
+**Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
+**Gap.** The declared internal triage/decision journey passes autonomous and held policies. The wider week including published merge, status, release and erasure remains undeclared.
 
 ## Later
 
