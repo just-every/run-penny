@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep Zendesk proxy votes compatible with the core door: send an explicit idempotency key, retain it across uncertain retries, and show pending company approval as pending instead of claiming a recorded vote. The existing native sidebar journey now has the owner choose company policy before its scoped calls; its SDK network edge forwards the real idempotency header.
+
 - Attribute immediate AI drafts to their actual native preparer. The shared native service sends the preparer label to the configured model, returns it with the private draft and records native activity after current-authority/citation checks. Agent calls retain the door’s agent-for-sponsor label; native person calls retain that person. Extend the existing AI-006 public-door case with model/request/activity agreement while preserving privacy, no-send and revocation checks.
 
 - Adopt the released CLI’s local `deploy --dry-run` receipt. Update the existing public-door dry-run assertion to prove a real local Worker/migration plan, unmet real-deploy inputs and no provider reads or writes with or without supplied credentials; target readiness is no longer claimed by this command.

@@ -3738,7 +3738,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "e07212c25a2bd1c0a01a975e6b0fc3ed196c1e7c08382e79e4866a2e4c3ee4f0",
+      "sha256": "bf0e247e059b515972b707d17ee29c84e5461ca7fab557744e983ba76e0ced25",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3990,7 +3990,7 @@
       "executable": false
     },
     "integrations/zendesk/assets/penny-api.js": {
-      "sha256": "6d2d925617ba91ce76983c266e6ebc4de955837995ce60a377c54e7d8e3a00f1",
+      "sha256": "891c88c2c971a7d374bb1c531440bf27a6d009dca7e5d0b02c212e6097df2390",
       "executable": false
     },
     "integrations/zendesk/assets/sidebar.css": {
@@ -9182,11 +9182,11 @@
       "executable": false
     },
     "tests/browser/zendesk-proxy-votes.mjs": {
-      "sha256": "6c96947c8443acd2bf496ad3a2e4eb2b28271a8542d5dbb190753299c13fdf6a",
+      "sha256": "7fd356e854b6d2e8e4d13762230f2db988b664c9df85402dd1afbf033369af38",
       "executable": false
     },
     "tests/browser/zendesk-sdk-edge.mjs": {
-      "sha256": "892328ef9733f49073b4ebadc0b1d444d9a5b45424fabcc5250b44e9c4c2d7a8",
+      "sha256": "476845e52b2649c45576982442c9e81c7e47ce9cb685f6c5ffbadf451eab1c35",
       "executable": false
     },
     "tests/data/command-boundaries.test.mjs": {
