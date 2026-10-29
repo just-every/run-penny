@@ -24,8 +24,9 @@ function useVerifiedCustomer(): string | null {
   return name
 }
 
+/** A verified customer's name in the header. A customer who is not verified sees nothing: customers verify by email when they vote or submit, and operators sign in from the footer. */
 export function PortalSignedIn({ className }: { readonly className: string }) {
   const name = useVerifiedCustomer()
-  if (!name) return <Link to="/signin" className={className}>Sign in</Link>
+  if (!name) return null
   return <Link to="/portal/feedback/activity" className={`${className} max-w-full gap-1 break-words`}><span className="text-penny-muted">Signed in as</span> <span className="font-semibold text-penny-ink">{name}</span></Link>
 }

@@ -124,7 +124,7 @@ async function assertLanding(page, route) {
   assert.equal(await page.getByRole('heading', { level: 1 }).count(), 1, `${route} has one page heading`)
   await page.locator('#feedback-heading').waitFor({state:'visible'})
   await page.getByRole('textbox', {name:'Search feedback'}).waitFor({state:'visible'})
-  assert.ok(await page.locator('header a[href="/signin"]').filter({visible:true}).count() > 0)
+  assert.ok(await page.locator('footer a[href="/signin"]').filter({visible:true}).count() > 0, 'operator sign in stays in the footer')
 }
 
 async function visit(page, width, { route, path, auth, contains, finalPath, status = 200, expectPage }) {
