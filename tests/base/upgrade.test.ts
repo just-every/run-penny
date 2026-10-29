@@ -1,7 +1,7 @@
 import { applyD1Migrations,type D1Migration } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { expect,inject,it } from 'vitest'
-it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive Discord and Help Scout upgrades and repeat',async()=>{
+it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive Discord, Help Scout and survey upgrades and repeat',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
  const {populatePreviousPennySample}=await import('./previous-sample-fixture')
  const sample=(await import('../../sample-data/penny.v1.json')).default
@@ -75,9 +75,20 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const previousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const currentSnapshot=async()=> (await env.DB.batch(previousTables.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const previousRows=await currentSnapshot()
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0099'))
  expect(await currentSnapshot()).toEqual(previousRows)
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0099'))
  expect(await currentSnapshot()).toEqual(previousRows)
+ // Preserve the populated immediate predecessor, including Help Scout custody,
+ // when adding survey capture. Repeat must not rewrite any prior row or SQL.
+ await env.DB.prepare("INSERT INTO penny_helpscout_connection(id,mailbox_id,tag,sidebar_user_id,owner_id,owner_version,actor_id,revision,enabled,purge_days,created_at,updated_at) VALUES('upgrade-helpscout',1,'selected',2,?,1,?,1,0,7,?,?)").bind(legacyOwner,legacyOwner,stamp,stamp).run()
+ await env.DB.prepare('INSERT INTO penny_helpscout_receipts(source_digest) VALUES(?)').bind('b'.repeat(64)).run()
+ const surveyPreviousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const surveyPreviousSnapshot=async()=> (await env.DB.batch(surveyPreviousTables.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const surveyPreviousRows=await surveyPreviousSnapshot()
+ await applyD1Migrations(env.DB,migrations)
+ expect(await surveyPreviousSnapshot()).toEqual(surveyPreviousRows)
+ await applyD1Migrations(env.DB,migrations)
+ expect(await surveyPreviousSnapshot()).toEqual(surveyPreviousRows)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

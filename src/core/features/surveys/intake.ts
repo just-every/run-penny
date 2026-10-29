@@ -7,9 +7,9 @@ import {captureGuard,selectResponse,type Form,type ResponseRecord,type SelectedR
 export const responseDigest=(form:Form,id:string)=>digest(form.provider+'/'+form.form_id+'/'+id)
 export async function safeSelection(db:D1Database,value:SelectedResponse){
  if(new TextEncoder().encode(JSON.stringify(value)).length>65536)throw new NativeError('survey_selection_limit',413)
- const fields:Record<string,string|null>={wording:value.wording,email:value.email,account:value.account,...Object.fromEntries(Object.entries(value.attributes).map(([k,v])=>['attribute:'+k,v]))}
+ const fields:Record<string,string|null>={wording:value.wording,email:value.email,account:value.account,speaker:value.speaker??null,...Object.fromEntries(Object.entries(value.attributes).map(([k,v])=>['attribute:'+k,v]))}
  const safe=await redactCaptured(db,fields,Object.keys(fields))
- return {revision:safe.revision,value:{...value,wording:safe.input.wording!,email:safe.input.email,account:safe.input.account,attributes:Object.fromEntries(Object.keys(value.attributes).map(k=>[k,String(safe.input['attribute:'+k])]))}}
+ return {revision:safe.revision,value:{...value,wording:safe.input.wording!,email:safe.input.email===value.email?value.email:null,account:safe.input.account===value.account?value.account:null,...(safe.input.speaker?{speaker:safe.input.speaker}:{}),attributes:Object.fromEntries(Object.keys(value.attributes).map(k=>[k,String(safe.input['attribute:'+k])]))}}
 }
 export async function enqueueSurvey(runtime:PennyRuntime,form:Form,id:string,response?:ResponseRecord){
  const raw=runtime.database.binding,state=await raw.prepare("SELECT epoch FROM data_state WHERE singleton=1 AND phase='idle'").first<{epoch:number}>()

@@ -2,12 +2,16 @@
 
 ## Unreleased
 
+- Reject invalid or redacted survey email for requester attribution, preserve and redact Pencil source-stated names, and purge those names with removed excerpts. Saving an existing survey configuration now stops source reads until explicit retry. Extend the single public-door survey journey with multiple selected questions, followed response links, nullable identity/account cases, in-flight mapping and stop fences, authenticated deletion races, revoked access and nonzero retention recovery. CAP-022 remains missing with unchanged text, acceptance and counts.
+
 - Keep survey excerpt-purge storage failures visible to the accountable owner until explicit retry, while due privacy purges continue during failed or paused capture. Extend the existing survey journey with a real SQLite abort and scheduled recovery.
+
 - Keep numeric UUID prefixes out of built-in card redaction while preserving owner custom rules and real card detection. This prevents generated learning references from randomly refusing redaction-guarded work. The Help Scout network-edge journey captures a UUID beside a card and proves the identifier survives while the card is removed before storage and export.
 
 - Fix Help Scout capture when recent notes fill a thread page, use the provider’s embedded customer emails for unverified attribution, and treat forbidden/deleted thread access or moved conversations as source removal under the existing purge policy. The sidebar keeps sent, held, in-progress and uncertain reply states visible with reconciliation guidance after refresh/restart, including unresolved earlier replies after a new public status. Extend the existing HTTP/browser sanity journey; CAP-006 text, acceptance and status remain unchanged. No migration or reconfiguration is required.
 
 - Add CAP-006 Help Scout capture: owner-delegated Dynamic App sidebar, OAuth client-credentials installation, scoped signed tag intake, replay-safe background evidence, customer/company attribution, native link/create/proxy votes, public status and explicitly reviewed replies. Migration 0098 adds portable source custody and installation-only secrets/capabilities. Restores hold work; disconnect removes local credentials and names the separate provider-app revocation step. The HTTP/browser sanity journey uses network-edge fixtures; live installation and delivery remain unperformed. CAP-006 status and acceptance text remain unchanged.
+
 - Add owner-selected Typeform, SurveyMonkey, Google Forms and Pencil survey capture (CAP-022), with signed webhook admission, bounded scheduled reads, selected evidence/private mappings, non-authorizing respondent contacts and no consent. Owner controls expose durable progress, retry and stop; edits retain the original capture and removed-source excerpts purge at the configured window. Add migration 0099; restored connections stay disabled and unfinished work stays held. See docs/survey-capture.md for installation, provider grants, recovery and rollback. One public-door network-edge journey covers the four providers, privacy and lifecycle; live provider/hosted proof is not claimed. CAP-022's text, acceptance, status and counts remain unchanged.
 
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.

@@ -17,7 +17,7 @@ export async function validateSurveyArchive(data:Record<string,Row[]>){
    const form=forms.find(f=>f.id===job.form_id)
    if(!form||typeof job.id!=='string'||!receipts.has(await responseDigest(form as unknown as Form,String(job.response_id)))||!['pending','running','failed','done','stopped','held'].includes(String(job.state)))throw Error()
    if(job.selected_json!==null){
-    const value=z.object({id:z.string(),time:z.iso.datetime({offset:true}),wording:z.string(),attributes:z.record(z.string(),z.string()),email:z.string().nullable(),account:z.string().nullable()}).strict().parse(JSON.parse(String(job.selected_json)))
+    const value=z.object({id:z.string(),time:z.iso.datetime({offset:true}),wording:z.string(),attributes:z.record(z.string(),z.string()),email:z.string().nullable(),account:z.string().nullable(),speaker:z.string().nullable().optional()}).strict().parse(JSON.parse(String(job.selected_json)))
     if(value.id!==job.response_id)throw Error()
    }
    if(job.state==='done'&&(!job.evidence_id||!sources.some(s=>s.job_id===job.id&&s.evidence_id===job.evidence_id)))throw Error()
