@@ -18,8 +18,9 @@ function googleDate(v:{seconds:unknown;nanos?:unknown}){
  const whole=new Date(seconds*1000).toISOString().replace(/\.000Z$/,'')
  return date(whole+(nanos===undefined?'':'.'+String(nanos).padStart(9,'0'))+'Z')
 }
+export function parseReview(value:unknown):Review{try{return review.parse(value)}catch{throw new NativeError('reviews_payload_invalid',503)}}
 export function validateReview(c:Connection,value:unknown):Review{
- let r:Review;try{r=review.parse(value)}catch{throw new NativeError('reviews_payload_invalid',503)}
+ const r=parseReview(value)
  reviewLink(c,r.id,r.url)
  return r
 }

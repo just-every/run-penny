@@ -3318,7 +3318,8 @@
       "ai_claim",
       "ai_started_at",
       "ai_failure",
-      "source_date"
+      "source_date",
+      "source_public_url"
     ]
   },
   "penny_review_proposals": {

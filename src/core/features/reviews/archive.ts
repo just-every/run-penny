@@ -1,8 +1,9 @@
+import {vendorUrl,listingLink} from './review-link'
 import {z} from 'zod'
 import type {Row} from '../data/archive'
 import {NativeError,digest} from '../auth/native-tokens'
 import {connectionInput,site,publicListing,type Connection} from './configuration'
-import {validateReview,pageCursor} from './adapters'
+import {validateReview,parseReview,pageCursor} from './adapters'
 export async function validateReviewArchive(data:Record<string,Row[]>){
  try{
   const connections=new Map((data.penny_review_connections??[]).map(row=>{
@@ -21,7 +22,16 @@ export async function validateReviewArchive(data:Record<string,Row[]>){
    if(!c||!e||!v||c.site!==s.site||e.source_type!=='review'||e.requester_id!==null||e.admitted_sender!==null||!receipts.has(await digest(s.site+'/'+s.review_id)))throw Error()
    site.parse(s.site);z.string().regex(/^[a-f0-9]{64}$/).parse(s.source_hash)
    if(!['current','changed','removed','purged'].includes(String(s.source_state))||!['pending','running','failed','done','stopped'].includes(String(s.ai_state)))throw Error()
-   validateReview(c as unknown as Connection,{id:s.review_id,author:e.named_speaker,rating:s.rating,title:s.title,text:v.wording,date:s.source_date??e.observed_at,version:s.app_version,country:s.country,url:s.review_url})
+   const input={id:s.review_id,author:e.named_speaker,rating:s.rating,title:s.title,text:v.wording,date:s.source_date??e.observed_at,version:s.app_version,country:s.country,url:s.review_url}
+   const capturedScope=s.source_public_url
+   if(capturedScope!==null&&capturedScope!==undefined&&typeof capturedScope!=='string')throw Error()
+   // Current configuration may have changed since capture. Historical links
+   // without a scope snapshot remain data, never authority for acquisition.
+   if(!capturedScope&&['g2','producthunt','capterra','trustradius'].includes(String(c.site)))vendorUrl(c.site as Connection['site'],parseReview(input).url)
+   else {
+    if(capturedScope)listingLink(c.site as Connection['site'],capturedScope)
+    validateReview({...c,public_url:capturedScope??c.public_url} as unknown as Connection,input)
+   }
    if(s.source_state==='purged'&&(e.named_speaker!==null||s.title!==null||[...versions.values()].some(v=>v.evidence_id===s.evidence_id&&v.wording!=='[Source removed]')))throw Error()
   }
   for(const p of data.penny_review_proposals??[]){

@@ -7,12 +7,17 @@ export function listingLink(site:Site,value:string){
  if(site==='g2'&&!/^\/products\/[^/]+\/reviews\/?$/.test(u.pathname)||site==='producthunt'&&!/^\/posts\/[^/]+$/.test(u.pathname))throw new NativeError('reviews_public_listing_invalid',400)
  return u.href
 }
+/** Structural safety for retained historical links; this grants no read scope. */
+export function vendorUrl(site:Site,value:string){
+ const u=new URL(value)
+ if(u.protocol!=='https:'||u.username||u.password||u.port||!hosts[site].includes(u.hostname)||[...u.searchParams.keys()].some(k=>u.searchParams.getAll(k).length!==1))throw new NativeError('reviews_link_invalid',503)
+ return u
+}
 /** Bind provider permalinks to the selected listing and the returned review ID.
  * G2 and Product Hunt use public slugs distinct from their API IDs; the owner
  * supplies that public listing alongside the scoped vendor ID. */
 export function reviewLink(c:Connection,id:string,value:string){
- const u=new URL(value),i=encodeURIComponent(id)
- if(u.protocol!=='https:'||u.username||u.password||u.port||!hosts[c.site].includes(u.hostname))throw new NativeError('reviews_link_invalid',503)
+ const u=vendorUrl(c.site,value),i=encodeURIComponent(id)
  let valid=false
  switch(c.site){
  case 'g2':{const base=new URL(c.public_url??`https://www.g2.com/products/${encodeURIComponent(c.listing)}/reviews`);valid=u.origin===base.origin&&u.pathname.startsWith(base.pathname.replace(/\/$/,'')+'/')&&u.pathname.split('/').pop()!==''&&!u.search&&!u.hash;break}

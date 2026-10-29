@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Keep the capture-time public listing with review provenance so a later listing
+  rename does not block export or restore. Migration 0101 adds nullable scope
+  custody; older links remain historical data, with no authority to resume work.
+
+- Reuse the existing follower recipient when an explicit captured-contact status
+  choice reaches a customer with more than one verified address. Preview follows
+  the same address preference, and the one publication keeps one mail intent.
+
 - Retain calendar-only review dates alongside the evidence ordering instant, and
   display their supplied day without implying a midnight source timestamp.
   Migration 0100 adds nullable source-date custody without rewriting older rows;

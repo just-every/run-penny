@@ -1,4 +1,5 @@
 const hints:Record<string,string>={
+ reviews_source_scope_changed:'This retained review belongs to an earlier or unconfirmed listing scope. Return to that listing and retry, or wait for the selected feed to confirm the same review. No old public page was read.',
  reviews_link_scope_invalid:'The provider returned a review link outside this listing. Check the selected product ID and public listing URL before reconnecting.',
  reviews_cursor_scope_invalid:'The provider tried to change the selected listing while paging. Check the listing and vendor response before retrying.',
  reviews_cursor_invalid:'The provider returned an invalid page checkpoint. Check the vendor response before reconnecting.',

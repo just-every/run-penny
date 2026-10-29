@@ -14,7 +14,14 @@ export const capturedSafety=`a.suppressed_at IS NULL AND a.verified_at IS NOT NU
 export const capturedSelection=`SELECT person.id AS requesterId,a.id AS addressId,a.email,person.display_name AS displayName
  FROM requests r JOIN requesters person ON person.id IN(${capturedContacts}) JOIN requester_addresses a ON a.requester_id=person.id
  WHERE r.id=? AND ${capturedSafety}
- AND a.id=(SELECT MIN(chosen.id) FROM requester_addresses chosen WHERE chosen.requester_id=person.id AND chosen.verified_at IS NOT NULL AND chosen.suppressed_at IS NULL)`
+ AND a.id=COALESCE((SELECT candidate.id FROM requester_addresses candidate
+  JOIN requester_update_permissions permission ON permission.requester_address_id=candidate.id
+  JOIN request_canonical_roots root ON root.origin_id=permission.request_id
+  WHERE candidate.requester_id=person.id AND candidate.verified_at IS NOT NULL AND candidate.suppressed_at IS NULL
+  AND permission.requester_id=person.id AND permission.revoked_at IS NULL AND permission.suppressed_at IS NULL AND root.canonical_id=r.id
+  AND EXISTS(SELECT 1 FROM request_follows f WHERE f.request_id=r.id AND f.requester_id=person.id AND f.muted_at IS NULL)
+  ORDER BY permission.granted_at,candidate.id LIMIT 1),
+ (SELECT MIN(chosen.id) FROM requester_addresses chosen WHERE chosen.requester_id=person.id AND chosen.verified_at IS NOT NULL AND chosen.suppressed_at IS NULL))`
 export const capturedPostal=`EXISTS(SELECT 1 FROM penny_mail_identity WHERE singleton=1 AND trim(postal_address)<>'')`
 export async function capturedPreview(db:D1Database,slug:string){
  const r=await db.prepare('SELECT id FROM requests WHERE slug=?').bind(slug).first<{id:string}>()
@@ -24,9 +31,9 @@ export async function capturedPreview(db:D1Database,slug:string){
 }
 export function capturedIntents(db:D1Database,requestId:string,updateId:string,selected:boolean,now:string){
  return db.prepare(`INSERT INTO notification_intents(event_id,requester_id,address_id,created_at,updated_at,captured_contact)
- SELECT ?,requesterId,addressId,?,?,1 FROM (${capturedSelection}) WHERE ?=1 AND ${capturedPostal}
+ SELECT ?,requesterId,COALESCE((SELECT prior.address_id FROM notification_intents prior WHERE prior.event_id=? AND prior.requester_id=contacts.requesterId ORDER BY prior.address_id LIMIT 1),addressId),?,?,1 FROM (${capturedSelection}) contacts WHERE ?=1 AND ${capturedPostal}
  AND EXISTS(SELECT 1 FROM request_status_updates WHERE id=? AND notify_captured_contacts=1)
- ON CONFLICT(event_id,address_id) DO UPDATE SET captured_contact=1`).bind(updateId,now,now,requestId,Number(selected),updateId)
+ ON CONFLICT(event_id,address_id) DO UPDATE SET captured_contact=1`).bind(updateId,updateId,now,now,requestId,Number(selected),updateId)
 }
 /** Delivery rechecks the contact relationship, suppression, prior unsubscribe
  * and postal address. The selected per-update intent grants no permission. */

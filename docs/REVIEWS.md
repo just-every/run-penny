@@ -7,7 +7,7 @@ subscribe, email, proxy-vote, publish or reply to a reviewer.
 
 ## Installation and vendor scope
 
-Apply `0098_review_capture.sql`, `0099_review_outreach_exclusion.sql` and `0100_review_source_date.sql` with `rer setup` or the existing hosted migration
+Apply `0098_review_capture.sql`, `0099_review_outreach_exclusion.sql`, `0100_review_source_date.sql` and `0101_review_capture_scope.sql` with `rer setup` or the existing hosted migration
 path. It adds tables and guards; applied migrations remain unchanged. Preserve
 expanded schema on source rollback and stop older workers before upgrading.
 There is no separate importer or public ingestion endpoint.
@@ -104,7 +104,7 @@ attachments or neighboring product reviews. Owner redaction rules apply to text
 and source names before the write.
 
 A reread marks a different source fingerprint **changed**, preserving the capture.
-Source timestamps retain the supplied offset and fractional precision (up to nine digits); Google Play seconds and nanos are combined without millisecond truncation. A calendar-only source date is retained as a calendar date and displayed without an invented time; the evidence ordering instant uses that day’s UTC start. Migration 0100 adds nullable original-date custody; prior captures retain their existing observed time as the fallback.
+Source timestamps retain the supplied offset and fractional precision (up to nine digits); Google Play seconds and nanos are combined without millisecond truncation. A calendar-only source date is retained as a calendar date and displayed without an invented time; the evidence ordering instant uses that day’s UTC start. Migration 0100 adds nullable original-date custody; prior captures retain their existing observed time as the fallback. Migration 0101 records the public listing used at capture. Export and restore validate those historical links against their captured scope, so a later listing rename cannot block backup. Older captures without that snapshot retain structurally safe vendor links as historical data; they grant no acquisition authority and restored connections remain held. Public source checks stop when the selected listing differs from the captured scope. A selected-feed reread can confirm a legacy review’s scope only when its ID and saved URL match; otherwise the failure stays visible without reading an old public listing.
 
 Daily source checks mark explicit deletion or lost source access **removed**;
 absence from a rolling feed alone never proves deletion. After the owner's
@@ -126,7 +126,7 @@ invalidates its derived exact-span proposals.
 
 ## Captured-contact status updates
 
-The operator HTTP interface previews `GET /api/operator/requests/:slug/captured-contacts` and accepts `notifyCapturedContacts: true` on a status-update publication. The preview lists eligible explicit native contacts; review source names are always excluded. The choice and snapshot count are audited with that update. The default is false, a recorded postal address is required, and reusing the publication key cannot send again. Delivery uses the existing durable notification pipeline, suppression and unsubscribe checks. A selected contact receives no permission record and gets the reason for this one update in the mail. The bounded status path supports verified native contact addresses; broader NOTIFY-009 release/decline controls and board defaults remain governed by its unchanged missing status.
+The operator HTTP interface previews `GET /api/operator/requests/:slug/captured-contacts` and accepts `notifyCapturedContacts: true` on a status-update publication. The preview lists eligible explicit native contacts; review source names are always excluded. The choice and snapshot count are audited with that update. The default is false, a recorded postal address is required, and reusing the publication key cannot send again. Delivery uses the existing durable notification pipeline, suppression and unsubscribe checks, reusing an existing follower recipient even when the customer has several verified addresses. A selected contact receives no permission record and gets the reason for this one update in the mail. The bounded status path supports verified native contact addresses; broader NOTIFY-009 release/decline controls and board defaults remain governed by its unchanged missing status.
 
 ## Verification boundary
 

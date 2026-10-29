@@ -1,3 +1,4 @@
+import {NativeError} from '../auth/native-tokens'
 import type {PennyRuntime} from '@/core/app/runtime'
 import {guardedDatabase} from '../integrations/guarded-database'
 import {readPage,sourcePresent} from './adapters'
@@ -32,11 +33,14 @@ export async function drainReviews(runtime:PennyRuntime,clock=Date.now()){
 async function checkSources(runtime:PennyRuntime,epoch:number,clock:number){
  const raw=runtime.database.binding,now=new Date(clock).toISOString(),db=guardedDatabase(raw,{sql:"EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?)",params:[epoch]})
  await db.prepare("UPDATE penny_review_sources SET check_claim=NULL,check_failure='reviews_interrupted_check_retry_required' WHERE check_claim IS NOT NULL AND check_started_at<=?").bind(new Date(clock-300000).toISOString()).run()
- const sources=(await db.prepare("SELECT s.evidence_id,s.review_id,s.review_url,c.* FROM penny_review_sources s JOIN penny_review_connections c ON c.id=s.connection_id JOIN oa_operators o ON o.id=c.owner_id WHERE s.source_state IN('current','changed') AND s.check_claim IS NULL AND s.check_failure IS NULL AND s.next_check<=? AND c.state='scheduled' AND o.status='active' AND o.role='owner' AND o.version=c.owner_version ORDER BY s.next_check LIMIT 10").bind(now).all<Connection&{evidence_id:string;review_id:string;review_url:string}>()).results
+ const sources=(await db.prepare("SELECT s.evidence_id,s.review_id,s.review_url,s.source_public_url AS captured_scope,c.* FROM penny_review_sources s JOIN penny_review_connections c ON c.id=s.connection_id JOIN oa_operators o ON o.id=c.owner_id WHERE s.source_state IN('current','changed') AND s.check_claim IS NULL AND s.check_failure IS NULL AND s.next_check<=? AND c.state='scheduled' AND o.status='active' AND o.role='owner' AND o.version=c.owner_version ORDER BY s.next_check LIMIT 10").bind(now).all<Connection&{evidence_id:string;review_id:string;review_url:string;captured_scope:string|null}>()).results
  for(const c of sources){
   const claim=crypto.randomUUID(),claimed=await db.prepare("UPDATE penny_review_sources SET check_claim=?,check_started_at=? WHERE evidence_id=? AND check_claim IS NULL AND check_failure IS NULL AND source_state IN('current','changed') RETURNING evidence_id").bind(claim,now,c.evidence_id).all();if(!claimed.results.length)continue
   const guarded=guardedDatabase(raw,{sql:`EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?) AND EXISTS(SELECT 1 FROM penny_review_connections c JOIN oa_operators o ON o.id=c.owner_id WHERE c.id=? AND c.revision=? AND c.state='scheduled' AND o.role='owner' AND o.status='active' AND o.version=c.owner_version) AND EXISTS(SELECT 1 FROM penny_review_sources WHERE evidence_id=? AND check_claim=?)`,params:[epoch,c.id,c.revision,c.evidence_id,claim]})
-  try{const present=await sourcePresent(runtime,c,c.review_id,c.review_url)
+  try{
+   if(['capterra','trustradius'].includes(c.site)&&c.captured_scope!==c.public_url)throw new NativeError('reviews_source_scope_changed',409)
+   const checked=['g2','producthunt'].includes(c.site)&&c.captured_scope?{...c,public_url:c.captured_scope}:c
+   const present=await sourcePresent(runtime,checked,c.review_id,c.review_url)
    await guarded.prepare("UPDATE penny_review_sources SET source_state=CASE WHEN ? THEN source_state ELSE 'removed' END,removed_at=CASE WHEN ? THEN removed_at ELSE ? END,purge_at=CASE WHEN ? THEN purge_at ELSE ? END,next_check=?,check_claim=NULL,check_failure=NULL,ai_state=CASE WHEN ? THEN ai_state ELSE 'stopped' END,ai_claim=CASE WHEN ? THEN ai_claim ELSE NULL END WHERE evidence_id=?").bind(present?1:0,present?1:0,now,present?1:0,new Date(clock+c.purge_days*86400000).toISOString(),new Date(clock+86400000).toISOString(),present?1:0,present?1:0,c.evidence_id).run()
   }catch(error){await db.prepare('UPDATE penny_review_sources SET check_failure=?,check_claim=NULL WHERE evidence_id=? AND check_claim=?').bind(errorCode(error),c.evidence_id,claim).run()}
  }

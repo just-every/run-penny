@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import {buildSchema,graphql} from 'graphql'
-import {generateKeyPairSync,verify} from 'node:crypto'
+import {createHash,generateKeyPairSync,verify} from 'node:crypto'
 import {readFile,mkdir} from 'node:fs/promises'
 import {resolve,join} from 'node:path'
 import {chromium} from '@playwright/test'
@@ -36,6 +36,7 @@ const edge={name:'reviews-network-edge',modules:true,compatibilityDate:'2026-08-
    const html=mode==='public-removed'?'<script type="application/ld+json">'+JSON.stringify({'@type':'SoftwareApplication',url:`https://www.${s}.com/products/penny/reviews`,review:[]})+'</script>':destinations.find(d=>d.site===s).html
    return new Response(html,{headers:{'Content-Type':'text/html'}})
   }
+  if(s==='capterra'&&mode==='scope-moved'&&u.pathname==='/products/penny-other/reviews')return new Response('<script type="application/ld+json">'+JSON.stringify({'@type':'SoftwareApplication',url:'https://www.capterra.com/products/penny-other/reviews',review:[]})+'</script>')
   assert.equal(u.pathname,'/products/penny/reviews')
   const page=u.searchParams.get('page');let html=fixtures[s]
   if(mode==='rolling-omission')html=html.replace(/"review": \[.*?\]}/,'"review": []}')
@@ -181,13 +182,22 @@ try{
   await region.scrollIntoViewIfNeeded();await page.evaluate(async()=>document.fonts.ready);if(width===1440){assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await page.evaluate(axe);assert.deepEqual(await region.evaluate(async element=>(await window.axe.run(element)).violations.filter(v=>['serious','critical'].includes(v.impact))),[])}await page.evaluate(()=>scrollTo(0,0));const clip=await region.boundingBox();assert.ok(clip);await page.screenshot({path:join(output,`review-${screen}-${width}.png`),fullPage:true,clip})
  }}
  // Portable archives retain evidence and exact proposals, omit keys and hold restored work.
+ await json(path,{...connection('g2'),publicUrl:'https://www.g2.com/products/penny-renamed/reviews'},operator,'POST',201)
  const portable=await json('/api/operator/data/export',undefined,operator),archive=portable.archive
+ assert.equal(archive.tables.penny_review_sources.find(s=>s.site==='g2').source_public_url,'https://www.g2.com/products/penny/reviews')
+ await json(path,connection('g2'),operator,'POST',201)
  assert.ok(!Object.hasOwn(archive.tables,'penny_review_credentials'));assert.ok(archive.tables.penny_review_connections.every(c=>c.state==='held'));assert.doesNotMatch(JSON.stringify(archive),/synthetic-review-token|synthetic-review-model-key|reviewer@example.test|OMITTED_/)
  const restored=await startBrowserRuntime()
  try{
   const boot=await fetch(restored.origin+'/auth/bootstrap',{method:'POST',redirect:'manual',headers:{Connection:'close',Origin:restored.origin,'Content-Type':'application/json'},body:JSON.stringify({token:'synthetic-base-browser-setup-token-12345',displayName:'Restore owner'})});assert.equal(boot.status,303);const cookie=boot.headers.get('set-cookie').split(';')[0]
   async function post(path,body){const response=await fetch(restored.origin+path,{method:'POST',headers:{Connection:'close',Origin:restored.origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify(body)});assert.ok([200,202].includes(response.status),await response.clone().text());return response.json()}
-  let operation=await post('/api/operator/data/import',portable);for(let step=0;operation.status!=='complete'&&step<100;step++)operation=await post(`/api/operator/data/operations/${operation.operationId}/resume`,{})
+  const changedScope=structuredClone(portable);changedScope.archive.tables.penny_review_sources.find(s=>s.site==='googleplay').review_url+='&id=another.product'
+  const canonical=value=>Array.isArray(value)?'['+value.map(canonical).join(',')+']':value!==null&&typeof value==='object'?'{'+Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>JSON.stringify(k)+':'+canonical(v)).join(',')+'}':JSON.stringify(value)
+  delete changedScope.archive.sha256;changedScope.archive.sha256=createHash('sha256').update(canonical(changedScope.archive)).digest('hex')
+  const refused=await fetch(restored.origin+'/api/operator/data/import',{method:'POST',headers:{Connection:'close',Origin:restored.origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify(changedScope)});assert.equal(refused.status,409,await refused.clone().text());assert.equal((await refused.json()).error,'reviews_archive_invalid')
+  const legacy=structuredClone(portable);legacy.archive.tables.penny_review_sources.find(s=>s.site==='g2').source_public_url=null
+  delete legacy.archive.sha256;legacy.archive.sha256=createHash('sha256').update(canonical(legacy.archive)).digest('hex')
+  let operation=await post('/api/operator/data/import',legacy);for(let step=0;operation.status!=='complete'&&step<100;step++)operation=await post(`/api/operator/data/operations/${operation.operationId}/resume`,{})
   assert.equal(operation.status,'complete');await restored.schedule();assert.equal(await restored.db.prepare('SELECT count(*) n FROM penny_review_credentials').first('n'),0);assert.equal(await restored.db.prepare("SELECT count(*) n FROM penny_review_connections WHERE state='held'").first('n'),7)
  }finally{await restored.close()}
  // Erasure through the data door keeps a wording-free digest that blocks re-import.
@@ -216,25 +226,35 @@ try{
  // Select captured-contact outreach and publish with all seven reviews linked.
  // An ordinary explicit contact is the positive control: the mail path really runs.
  for(const c of new Map((await json('/api/operator/evidence',undefined,operator)).items.filter(c=>c.review).map(c=>[c.review.site,c])).values())await json('/api/operator/evidence/'+c.id+'/links',{target:'request',targetId:manual.id},operator,'PUT')
- await json('/api/operator/requests/'+manual.slug+'/proxy-votes',{contact:{displayName:'Explicit customer',email:'customer@example.test'},source:'An operator-recorded support conversation'},operator,'POST',200)
+ const contactProof=await json('/api/operator/requests/'+manual.slug+'/proxy-votes',{contact:{displayName:'Explicit customer',email:'customer@example.test'},source:'An operator-recorded support conversation'},operator,'POST',200)
  await json('/api/public/identity/email',{email:'customer@example.test',displayName:'Explicit customer'},{},'POST',202)
  const verifyLink=runtime.outbox.findLast(m=>m.email==='customer@example.test').url,verifyToken=new URLSearchParams(new URL(verifyLink).hash.slice(1)).get('token')
  await json('/api/public/identity/email/verify',{token:verifyToken},{})
- const contactMailStart=runtime.outbox.length
  await json('/api/operator/requests/'+manual.slug+'/moderate',{verdict:'approved',title:'Review improvements',description:'An operator-approved public request.'},operator)
+ // A second verified address follows, then native identity merge keeps both addresses.
+ // Captured outreach must reuse that follower's recipient, not add a second mail.
+ await json('/api/public/identity/email',{email:'customer-updates@example.test',displayName:'Explicit customer updates'},{},'POST',202)
+ const alternateLink=runtime.outbox.findLast(m=>m.email==='customer-updates@example.test').url
+ const alternate=await json('/api/public/identity/email/verify',{token:new URLSearchParams(new URL(alternateLink).hash.slice(1)).get('token')},{})
+ await send('/api/public/requests/'+manual.slug+'/follow',{}, {Authorization:'Bearer '+alternate.token},'POST',204)
+ const alternateContact=(await json('/api/operator/proxy-votes/contacts?q=customer-updates',undefined,operator))[0]
+ await json('/api/operator/requesters/'+alternateContact.id+'/merge',{targetRequesterId:contactProof.requesterId},operator)
+ const contactMailStart=runtime.outbox.length,permissionsBefore=await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')
  const audience=await json('/api/operator/requests/'+manual.slug+'/captured-contacts',undefined,operator)
- assert.equal(audience.count,1);assert.equal(audience.contacts[0].email,'customer@example.test');assert.equal(audience.postalAddressRecorded,true)
+ assert.equal(audience.count,1);assert.equal(audience.postalAddressRecorded,true)
  const publication={status:'planned',body:'Exports are planned.',notifyCapturedContacts:true,idempotencyKey:'review-outreach-proof'}
  await json('/api/operator/requests/'+manual.slug+'/status-updates',publication,operator)
  await json('/api/operator/requests/'+manual.slug+'/status-updates',publication,operator)
+ assert.equal(await runtime.db.prepare('SELECT count(*) n FROM notification_intents WHERE event_id=(SELECT id FROM request_status_updates WHERE action_key=?)').bind(publication.idempotencyKey).first('n'),1)
  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM notification_intents WHERE captured_contact=1').first('n'),1)
- assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions').first('n'),0)
+ assert.equal(audience.contacts[0].email,'customer-updates@example.test')
+ assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions').first('n'),permissionsBefore)
  // Mail's one-click unsubscribe requires the installation's HTTPS origin.
  // The outbound edge remains fake; no hosted endpoint is contacted.
  await runtime.configure({APP_ORIGIN:'https://penny.example.test'})
  // First drain assigns a batch; move only this test clock's due boundary.
  await runtime.schedule();await runtime.db.prepare("UPDATE notification_batches SET next_attempt_at='2000-01-01T00:00:00Z',window_end='2000-01-01T00:00:00Z' WHERE state='queued'").run();await runtime.schedule()
- assert.deepEqual(runtime.outbox.slice(contactMailStart).map(m=>m.email),['customer@example.test'])
+ assert.deepEqual(runtime.outbox.slice(contactMailStart).map(m=>m.email),['customer-updates@example.test'])
  await runtime.restart();await runtime.schedule();assert.equal(runtime.outbox.length,contactMailStart+1)
  await runtime.configure({APP_ORIGIN:origin})
  const audit=await runtime.db.prepare("SELECT details_json FROM audit_entries WHERE action='request.status_changed' AND entity_id=? ORDER BY rowid DESC LIMIT 1").bind(manual.id).first('details_json');assert.deepEqual(JSON.parse(audit),{notifyCapturedContacts:1,capturedRecipientCount:1})
@@ -244,6 +264,11 @@ try{
  assert.equal((await json('/api/operator/evidence',undefined,operator)).items.filter(c=>['capterra','trustradius'].includes(c.review?.site)&&c.review.sourceState==='current').length,2)
  mode='markup-unavailable';await runtime.db.prepare("UPDATE penny_review_sources SET next_check='2000-01-01T00:00:00Z' WHERE site='capterra'").run();await runtime.schedule()
  assert.equal((await json('/api/operator/evidence',undefined,operator)).items.find(c=>c.review?.site==='capterra').review.checkFailure,'reviews_public_markup_unavailable')
+ const oldScopeReads=reads.filter(r=>r.site==='capterra'&&r.url.endsWith('/capterra-review-1')).length
+ mode='scope-moved';await json(path,{...connection('capterra'),publicUrl:'https://www.capterra.com/products/penny-other/reviews'},operator,'POST',201)
+ await runtime.db.prepare("UPDATE penny_review_sources SET next_check='2000-01-01T00:00:00Z' WHERE site='capterra'").run();await runtime.schedule()
+ assert.equal((await json('/api/operator/evidence',undefined,operator)).items.find(c=>c.review?.site==='capterra').review.checkFailure,'reviews_source_scope_changed')
+ assert.equal(reads.filter(r=>r.site==='capterra'&&r.url.endsWith('/capterra-review-1')).length,oldScopeReads)
  mode='public-removed';for(const site of ['capterra','trustradius','producthunt'])await json(path,{...connection(site),purgeDays:1},operator,'POST',201)
  await runtime.schedule();await runtime.db.prepare("UPDATE penny_review_sources SET next_check='2000-01-01T00:00:00Z' WHERE site IN('capterra','trustradius','producthunt')").run();await runtime.schedule()
  assert.equal((await json('/api/operator/evidence',undefined,operator)).items.filter(c=>['capterra','trustradius','producthunt'].includes(c.review?.site)&&c.review.sourceState==='removed').length,3)
