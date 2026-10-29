@@ -75,7 +75,7 @@ export function OperatorAppShell() {
       <div aria-hidden="true" className={`pointer-events-none absolute inset-y-0 left-0 z-0 hidden w-60 ${sidebarSurface} lg:block`} />
       <aside className={`fixed left-0 top-0 z-20 hidden h-svh w-60 flex-col overflow-y-auto overscroll-y-contain ${sidebarSurface} px-3 py-5 lg:flex`}>
         <div className="px-2"><Brand /></div>
-        <p className="mt-10 px-3 text-[11px] font-semibold tracking-[0.12em] text-penny-muted uppercase">Operator workspace</p>
+        <p className="mt-10 px-3 text-xs font-semibold tracking-[0.12em] text-penny-muted uppercase">Operator workspace</p>
         <div className="mt-3 shrink-0"><NavigationLinks /></div>
         <div className="mt-4 shrink-0 border-t border-penny-line pt-3"><SignOutButton icon className={`${itemClass} ${restClass} w-full text-left`} /></div>
         <p className="mt-auto shrink-0 px-3 pt-6 text-xs leading-5 text-penny-muted">Customer evidence, accountable decisions, and release outcomes.</p>

@@ -30,7 +30,7 @@ export const eyebrowClass = 'text-[13px] font-bold tracking-[0.14em] text-penny-
 export const ledeClass = 'mt-4 max-w-2xl text-[17px] leading-normal text-penny-soft sm:text-xl'
 
 /** A readable small-caps label over a data value (CONFIDENCE, REVIEW DATE, VOTES). */
-export const dataLabelClass = 'text-[11px] font-semibold tracking-[0.12em] text-penny-muted uppercase sm:text-xs'
+export const dataLabelClass = 'text-xs font-semibold tracking-[0.12em] text-penny-muted uppercase'
 
 /**
  * A text input, select, textarea or file input on paper: a fine ink line, copper when focused. Typed text is always normal

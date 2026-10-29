@@ -21,7 +21,7 @@ export const eyebrowClass = 'text-xs font-semibold tracking-[0.14em] text-penny-
 export const ledeClass = 'mt-4 max-w-2xl text-base leading-7 text-penny-muted'
 
 /** A readable small-caps label over a data value (VOTES, PUBLISHED). */
-export const dataLabelClass = 'text-[11px] font-semibold tracking-[0.09em] text-penny-muted uppercase'
+export const dataLabelClass = 'text-xs font-semibold tracking-[0.09em] text-penny-muted uppercase'
 
 /** A text input, select or textarea on paper: a fine ink line, copper when focused. Callers add the top margin. Its --field-inset is the shared kit's (a select's caret reads it). */
 export const inputClass = 'block min-h-11 w-full min-w-0 rounded-lg border border-penny-line-strong bg-penny-card [--field-inset:0.75rem] px-(--field-inset) py-2 font-normal text-penny-ink placeholder:text-penny-muted transition-colors focus-visible:border-penny-copper focus-visible:ring-3 focus-visible:ring-penny-copper/30 focus-visible:outline-none disabled:opacity-60'

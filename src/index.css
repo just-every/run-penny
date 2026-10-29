@@ -28,6 +28,9 @@
      all-clear (moss on it 5.1:1). */
   --color-penny-danger-wash: #f3dcd6;
   --color-penny-moss-wash: #e3e8dc;
+  /* The smallest text: 13px, never less. Every text-xs in the portal and the operator app reads this size. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.25rem;
   /* A card's lift: a hairline shadow and a soft drop, still paper. */
   --shadow-penny-card: 0 1px 2px rgb(92 62 32 / 0.06), 0 8px 18px -12px rgb(92 62 32 / 0.22);
 }
@@ -64,6 +67,10 @@
 /* The demo's exit link, set beside the wordmark by rer, wraps at word breaks when the header is short of room (it narrows to its
    longest word); the app's break-anywhere rule would split it letter by letter. */
 [data-rer-demo-exit] { overflow-wrap: normal; }
+
+/* The collage drawings' handwritten notes (collage.css floors them at 11px so the landing's drawings stay legible on a phone)
+   read 13px at least inside the app. */
+.penny-brand.penny-app .pl-t { font-size: max(13px, calc(var(--fs) * var(--u))); }
 
 /* The operator workspace (OperatorAppShell's root) works on a plain sheet: no grain, a paper closer to white and cards a
    shade whiter still, so long working screens read as a calm tool. The landing, docs, portal, sign-in and setup keep the

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { dataLabelClass } from './classes'
 
 // The customer pages' label, at the scale the owner approved for them.
-const portalLabelClass = 'text-[11px] font-semibold tracking-[0.09em] text-penny-muted uppercase'
+const portalLabelClass = 'text-xs font-semibold tracking-[0.09em] text-penny-muted uppercase'
 
 /**
  * A small-caps label over its value, for a definition list (<dl>). The one way the app shows a labelled fact; the value is

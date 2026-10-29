@@ -32,9 +32,9 @@
 }
 .penny-learning svg { width: 20px; height: 20px; flex-shrink: 0; }
 .penny-learning .intro { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 28px; align-items: start; }
-.penny-learning .eyebrow { margin: 2px 0 12px; color: var(--learning-copper); font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+.penny-learning .eyebrow { margin: 2px 0 12px; color: var(--learning-copper); font-size: 13px; font-weight: 700; letter-spacing: .08em; }
 .penny-learning .subtitle { max-width: 510px; margin-top: 14px; color: var(--color-penny-soft); font-size: 16px; }
-.penny-learning .small-label { color: var(--color-penny-muted); font-size: 11px; font-weight: 600; letter-spacing: .06em; }
+.penny-learning .small-label { color: var(--color-penny-muted); font-size: 13px; font-weight: 600; letter-spacing: .06em; }
 
 /* Scope, grant and actions share a single quiet control surface. */
 .penny-learning .control-panel { border: 1px solid var(--learning-line); border-radius: 10px; background: #faf7ef; min-width: 0; }
@@ -107,7 +107,7 @@
 .penny-learning .evidence-card.interpretation { background: #f8eee0; }
 .penny-learning .card-top { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
 .penny-learning :is(.evidence-card, .option) h3 { font-size: 17px; }
-.penny-learning .badge { margin-left: auto; padding: 3px 8px; border-radius: 6px; background: #d4e3d3; color: #173c37; font-size: 10px; font-weight: 600; letter-spacing: .04em; }
+.penny-learning .badge { margin-left: auto; padding: 3px 8px; border-radius: 6px; background: #d4e3d3; color: #173c37; font-size: 13px; font-weight: 600; letter-spacing: .04em; }
 .penny-learning .badge.contestable { background: #f7e5d0; color: #803000; }
 .penny-learning ul { list-style: disc; padding-left: 22px; margin: 8px 0; }
 .penny-learning ol { list-style: decimal; padding-left: 22px; margin: 8px 0; }
@@ -126,7 +126,7 @@
 .penny-learning .clarification p { margin-top: 5px; font-size: 14px; }
 .penny-learning .option { border: 1px solid var(--learning-line); background: #faf7ef; }
 .penny-learning .option h3 { margin-bottom: 10px; }
-.penny-learning .chip { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; background: #f4ead8; color: #6e4a27; }
+.penny-learning .chip { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 13px; background: #f4ead8; color: #6e4a27; }
 .penny-learning dl { margin: 14px 0; font-size: 14px; }
 .penny-learning dt { margin-top: 10px; font-weight: 600; }
 .penny-learning dd { margin: 2px 0 0; color: var(--color-penny-soft); }
@@ -143,7 +143,7 @@
 .penny-learning .measurement-grid > :not(:nth-child(3n+1)) { border-left: 1px solid var(--learning-line); padding-left: 18px; }
 .penny-learning .option-measures { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--learning-line); }
 .penny-learning .decision { padding: 24px; border: 1px solid var(--learning-line); border-radius: 10px; background: rgb(250 247 239 / 55%); }
-.penny-learning :is(.decision-kicker, .recommendation-heading) { color: var(--learning-copper); font-size: 12px; font-weight: 600; letter-spacing: .06em; }
+.penny-learning :is(.decision-kicker, .recommendation-heading) { color: var(--learning-copper); font-size: 13px; font-weight: 600; letter-spacing: .06em; }
 .penny-learning .decision h2 { margin-top: 20px; font-size: 28px; }
 .penny-learning .decision-intro { margin-top: 14px; color: var(--color-penny-soft); }
 .penny-learning .recommendation { border-top: 1px solid var(--learning-line); margin-top: 24px; padding-top: 20px; }
