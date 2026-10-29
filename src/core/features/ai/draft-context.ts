@@ -28,7 +28,7 @@ export async function draftContext(db:D1Database,kind:DraftKind,id:string){
  if(kind==='account'){
   const a=await db.prepare('SELECT * FROM accounts WHERE id=?').bind(id).first<{id:string;slug:string;name:string;revenue_cents:number|null;renewal_date:string|null;health:string|null}>()
   if(!a)throw new NativeError('not_found',404)
-  if(includePrivate)add({id:`account:${a.id}`,text:JSON.stringify({name:a.name,revenueCents:a.revenue_cents,renewalDate:a.renewal_date,health:a.health}),label:'Account context',href:`/app/customers/${a.slug}`})
+  if(includePrivate)add({id:`account:${a.id}`,text:JSON.stringify({name:a.name,revenueCents:a.revenue_cents,renewalDate:a.renewal_date,health:a.health}),label:'Account context',href:`/app/accounts/${a.slug}`})
   for(const e of await rows<{id:string}>('SELECT id FROM evidence_items WHERE account_id=? LIMIT 101',id))evidenceIds.add(e.id)
   for(const r of await rows<{id:string}>(`SELECT r.id FROM requests r WHERE r.author_requester_id IN(SELECT requester_id FROM requester_account_links WHERE account_id=?) OR r.id IN(SELECT request_id FROM request_votes WHERE requester_id IN(SELECT requester_id FROM requester_account_links WHERE account_id=?)) OR r.id IN(SELECT request_id FROM request_comments WHERE requester_id IN(SELECT requester_id FROM requester_account_links WHERE account_id=?)) LIMIT 101`,id,id,id))requestIds.add(r.id)
  }

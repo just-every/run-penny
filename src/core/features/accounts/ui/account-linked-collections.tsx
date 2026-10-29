@@ -56,7 +56,7 @@ export function AccountEvidence({ account }: AccountProps) {
 export function AccountLinkedRequesters({ account }: AccountProps) {
   return <OperatorCard className="p-5">
     <h2 className="text-base font-bold text-penny-ink">Linked requesters</h2>
-    <CollectionSummary shown={account.requesters.length} total={account.requesterCount} label="linked requesters" href={`/app/customers?directory=requesters&account=${encodeURIComponent(account.slug)}&sort=name`} />
+    <CollectionSummary shown={account.requesters.length} total={account.requesterCount} label="linked requesters" href={`/app/requesters?account=${encodeURIComponent(account.slug)}&sort=name`} />
     {account.requesters.length === 0 ? <p className="mt-3 text-sm leading-6 text-penny-muted">No requester identity is linked to this account.</p> :
       <ul className="mt-3 divide-y divide-penny-line">{account.requesters.map(requester => <li key={requester.id} className="py-3 first:pt-0 last:pb-0">
         <p className="break-words font-semibold text-penny-ink">{requester.displayName}</p>

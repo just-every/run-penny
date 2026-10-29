@@ -132,7 +132,7 @@ async function visit(page, width, { route, path, auth, contains, finalPath, stat
   requestedPaths.push(new URL(requestedUrl).pathname)
   expectedFailures.clear();observedFailures.clear()
   if(status>=400)expectFailure(requestedUrl,status)
-  if(path.startsWith('/app/')&&(route.includes('missing')||path.includes('no-such-record')))expectFailure(path.replace('/app/customers/','/api/operator/accounts/').replace('/app/','/api/operator/'),404)
+  if(path.startsWith('/app/')&&(route.includes('missing')||path.includes('no-such-record')))expectFailure(path.replace('/app/accounts/','/api/operator/accounts/').replace('/app/','/api/operator/'),404)
   const response = await page.goto(requestedUrl, { waitUntil: 'commit' })
   // Read SSR bytes before hydration can replace a canonicalized document.
   const serverText = response ? await response.text() : ''
@@ -191,10 +191,11 @@ async function checkOperatorRoutes(page, width) {
     { route: 'operator-releases-index', path: '/app/releases/', finalPath: '/app/releases', contains: 'Close the loop with the customers who made the decision possible.' },
     { route: 'operator-release-detail', path: `/app/releases/${routeFixtures.release}`, contains: 'Publication readiness' },
     { route: 'operator-release-missing', path: '/app/releases/no-such-release', contains: 'Release not found' },
-    { route: 'operator-customers', path: '/app/customers', contains: 'See who is represented in a product decision.' },
-    { route: 'operator-customers-index', path: '/app/customers/', finalPath: '/app/customers', contains: 'See who is represented in a product decision.' },
-    { route: 'operator-customer-detail', path: `/app/customers/${routeFixtures.account}`, contains: longCustomerText },
-    { route: 'operator-customer-missing', path: '/app/customers/no-such-account', contains: 'Account not found' },
+    { route: 'operator-customers', path: '/app/accounts', contains: 'See who is represented in a product decision.' },
+    { route: 'operator-customers-index', path: '/app/accounts/', finalPath: '/app/accounts', contains: 'See who is represented in a product decision.' },
+    { route: 'operator-customer-detail', path: `/app/accounts/${routeFixtures.account}`, contains: longCustomerText },
+    { route: 'operator-customer-missing', path: '/app/accounts/no-such-account', contains: 'Account not found' },
+    { route: 'operator-requesters', path: '/app/requesters', contains: 'See who is asking.' },
     { route: 'operator-data', path: '/app/data', contains: 'Workspace data' },
     ...['features','learning','prioritisation','search'].map(name=>({route:`operator-${name}`,path:`/app/${name}`})),
     { route: 'operator-settings', path: '/app/settings', contains: 'Requester email delivery' },

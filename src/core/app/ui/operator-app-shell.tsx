@@ -21,7 +21,7 @@ const navigation = [
   { to: '/app/decisions', label: 'Decisions', icon: 'decisions' },
   { to: '/app/roadmap', label: 'Roadmap', icon: 'roadmap' },
   { to: '/app/releases', label: 'Releases', icon: 'releases' },
-  { to: '/app/customers', label: 'Accounts', icon: 'accounts' },
+  { to: '/app/accounts', label: 'Accounts', icon: 'accounts' },
   { to: '/app/search', label: 'Search', icon: 'search' },
   { to: '/app/settings', label: 'Feedback settings', icon: 'settings' },
   { to: '/app/data', label: 'Data', icon: 'data' },
@@ -37,7 +37,7 @@ const sidebarSurface = 'border-r border-penny-line bg-[color-mix(in_srgb,var(--c
 function activeDestination(pathname: string): string {
   if (pathname.startsWith('/app/decisions')) return '/app/decisions'
   if (pathname.startsWith('/app/releases')) return '/app/releases'
-  if (pathname.startsWith('/app/customers')) return '/app/customers'
+  if (pathname.startsWith('/app/accounts') || pathname.startsWith('/app/requesters')) return '/app/accounts'
   return pathname
 }
 

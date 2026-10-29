@@ -339,7 +339,7 @@ checks and the parts of the contract that remain open.
 | `/app/roadmap` | internal roadmap: edit, approve, withdraw and move | `/api/operator/roadmap`, `/api/operator/roadmap/:id/approve`, `/:id/move` |
 | `/app/releases` and `/:slug` | pending status updates, release drafts, publishing and delivery counts | `/api/operator/releases`, `/api/operator/roadmap-updates` |
 | `/app/moderation` | feedback review, follower notification counts and request controls | `/api/operator/moderation`, `/api/operator/requests/:slug/context` |
-| `/app/customers` and `/:slug` | operator-only account context | `GET /api/operator/accounts`, `GET /api/operator/accounts/:slug` |
+| `/app/accounts` and `/:slug` | operator-only account context | `GET /api/operator/accounts`, `GET /api/operator/accounts/:slug` |
 
 All operator reads and writes require the same valid D1 session, and every write is same-origin and checked for maintenance. Loading, retryable failure, empty, missing-record, and expired-session states are deliberately rendered; no action is simulated with browser state or fixture data.
 

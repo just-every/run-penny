@@ -16,12 +16,12 @@ export function AccountDetailPage({ accountSlug }: { readonly accountSlug: strin
 }
 
 function AccountNotFound() {
-  return <><OperatorDetailBack to="/app/customers">All accounts</OperatorDetailBack><OperatorResourceNotFound title="Account not found">This account may have been removed or its URL is no longer valid.</OperatorResourceNotFound></>
+  return <><OperatorDetailBack to="/app/accounts">All accounts</OperatorDetailBack><OperatorResourceNotFound title="Account not found">This account may have been removed or its URL is no longer valid.</OperatorResourceNotFound></>
 }
 
 function AccountContent({ account, onSaved }: { readonly account: OperatorAccountDetail; onSaved: () => void }) {
   return <>
-    <OperatorDetailBack to="/app/customers">All accounts</OperatorDetailBack>
+    <OperatorDetailBack to="/app/accounts">All accounts</OperatorDetailBack>
     <OperatorPageHeader eyebrow="Account detail" title={account.name} art={{ note: 'Every customer, heard.' }}><span>Customer context is operator-only and stays linked to the decisions and evidence it informs.</span></OperatorPageHeader>
     <AccountEditor account={account} onSaved={onSaved} />
     <DraftPanel kind="account" id={account.id} />

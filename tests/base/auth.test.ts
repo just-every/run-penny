@@ -96,7 +96,7 @@ it('[OPS-001/002] equal native invitees operate and manage peers; removal revoke
  expect(created.status).toBe(201);const account=await created.json() as {slug:string}
  const wire=inject('generatedTransport') as Record<string,string>
  const generated=new URL(wire.loadOperatorResources,origin)
- generated.searchParams.set('payload',JSON.stringify(await toJSONAsync({data:`/app/customers/${account.slug}`})))
+ generated.searchParams.set('payload',JSON.stringify(await toJSONAsync({data:`/app/accounts/${account.slug}`})))
  const generatedPath=generated.pathname+generated.search,generatedHeaders={...peer.cookie,'x-tsr-serverFn':'true',Accept:'application/json','Sec-Fetch-Site':'same-origin'}
  const admitted=await call(generatedPath,undefined,generatedHeaders);expect(admitted.status).toBe(200)
  const admittedBody=await admitted.text();expect(admittedBody).toContain(privateName);expect(admittedBody).toContain(privateHealth)

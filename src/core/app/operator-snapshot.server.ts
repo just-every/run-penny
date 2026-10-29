@@ -19,7 +19,7 @@ export async function operatorSnapshot(url:URL, primary:string|undefined, read:R
   const paths=['/api/operator/notifications','/api/operator/settings/workspace-clock']
   if(path==='/app/feedback')paths.push('/api/operator/data/maintenance')
   if(primary)paths.push(primary)
-  if(['/app/feedback','/app/decisions','/app/roadmap','/app/customers','/app/learning'].includes(path)||path.startsWith('/app/decisions/'))paths.push('/api/operator/loop/options')
+  if(['/app/feedback','/app/decisions','/app/roadmap','/app/accounts','/app/requesters','/app/learning'].includes(path)||path.startsWith('/app/decisions/'))paths.push('/api/operator/loop/options')
   if(path==='/app/learning'||path.startsWith('/app/decisions/'))paths.push('/api/operator/evidence')
   if(path==='/app/roadmap')paths.push('/api/operator/evidence?q=&page=1')
   if(path==='/app/moderation')paths.push('/api/operator/settings/request-statuses','/api/public/boards','/api/auth/capabilities','/api/operator/catalog/settings','/api/operator/integrations/trackers')

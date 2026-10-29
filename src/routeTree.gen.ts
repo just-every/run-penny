@@ -14,7 +14,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as AppIndexRouteImport } from './routes/app.index'
-import { Route as AppCustomersRouteImport } from './routes/app.customers'
+import { Route as AppAccountsRouteImport } from './routes/app.accounts'
 import { Route as AppDataRouteImport } from './routes/app.data'
 import { Route as AppDecisionsRouteImport } from './routes/app.decisions'
 import { Route as AppFeaturesRouteImport } from './routes/app.features'
@@ -24,6 +24,7 @@ import { Route as AppModerationRouteImport } from './routes/app.moderation'
 import { Route as AppOverviewRouteImport } from './routes/app.overview'
 import { Route as AppPrioritisationRouteImport } from './routes/app.prioritisation'
 import { Route as AppReleasesRouteImport } from './routes/app.releases'
+import { Route as AppRequestersRouteImport } from './routes/app.requesters'
 import { Route as AppRoadmapRouteImport } from './routes/app.roadmap'
 import { Route as AppSearchRouteImport } from './routes/app.search'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
@@ -34,8 +35,8 @@ import { Route as PortalFeedbackRouteImport } from './routes/portal.feedback'
 import { Route as PortalRoadmapRouteImport } from './routes/portal.roadmap'
 import { Route as PortalUpdatesRouteImport } from './routes/portal.updates'
 import { Route as PortalVerifyRouteImport } from './routes/portal.verify'
-import { Route as AppCustomersIndexRouteImport } from './routes/app.customers.index'
-import { Route as AppCustomersAccountSlugRouteImport } from './routes/app.customers.$accountSlug'
+import { Route as AppAccountsIndexRouteImport } from './routes/app.accounts.index'
+import { Route as AppAccountsAccountSlugRouteImport } from './routes/app.accounts.$accountSlug'
 import { Route as AppDecisionsIndexRouteImport } from './routes/app.decisions.index'
 import { Route as AppDecisionsDecisionSlugRouteImport } from './routes/app.decisions.$decisionSlug'
 import { Route as AppReleasesIndexRouteImport } from './routes/app.releases.index'
@@ -74,9 +75,9 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
-const AppCustomersRoute = AppCustomersRouteImport.update({
-  id: '/customers',
-  path: '/customers',
+const AppAccountsRoute = AppAccountsRouteImport.update({
+  id: '/accounts',
+  path: '/accounts',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDataRoute = AppDataRouteImport.update({
@@ -122,6 +123,11 @@ const AppPrioritisationRoute = AppPrioritisationRouteImport.update({
 const AppReleasesRoute = AppReleasesRouteImport.update({
   id: '/releases',
   path: '/releases',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRequestersRoute = AppRequestersRouteImport.update({
+  id: '/requesters',
+  path: '/requesters',
   getParentRoute: () => AppRoute,
 } as any)
 const AppRoadmapRoute = AppRoadmapRouteImport.update({
@@ -174,15 +180,15 @@ const PortalVerifyRoute = PortalVerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => PortalRoute,
 } as any)
-const AppCustomersIndexRoute = AppCustomersIndexRouteImport.update({
+const AppAccountsIndexRoute = AppAccountsIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppCustomersRoute,
+  getParentRoute: () => AppAccountsRoute,
 } as any)
-const AppCustomersAccountSlugRoute = AppCustomersAccountSlugRouteImport.update({
+const AppAccountsAccountSlugRoute = AppAccountsAccountSlugRouteImport.update({
   id: '/$accountSlug',
   path: '/$accountSlug',
-  getParentRoute: () => AppCustomersRoute,
+  getParentRoute: () => AppAccountsRoute,
 } as any)
 const AppDecisionsIndexRoute = AppDecisionsIndexRouteImport.update({
   id: '/',
@@ -254,7 +260,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
   '/signin': typeof SigninRoute
-  '/app/customers': typeof AppCustomersRouteWithChildren
+  '/app/accounts': typeof AppAccountsRouteWithChildren
   '/app/data': typeof AppDataRoute
   '/app/decisions': typeof AppDecisionsRouteWithChildren
   '/app/features': typeof AppFeaturesRoute
@@ -264,6 +270,7 @@ export interface FileRoutesByFullPath {
   '/app/overview': typeof AppOverviewRoute
   '/app/prioritisation': typeof AppPrioritisationRoute
   '/app/releases': typeof AppReleasesRouteWithChildren
+  '/app/requesters': typeof AppRequestersRoute
   '/app/roadmap': typeof AppRoadmapRoute
   '/app/search': typeof AppSearchRoute
   '/app/settings': typeof AppSettingsRoute
@@ -275,7 +282,7 @@ export interface FileRoutesByFullPath {
   '/app/': typeof AppIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/portal/': typeof PortalIndexRoute
-  '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
+  '/app/accounts/$accountSlug': typeof AppAccountsAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
@@ -283,7 +290,7 @@ export interface FileRoutesByFullPath {
   '/portal/feedback/new': typeof PortalFeedbackNewRoute
   '/portal/roadmap/$roadmapSlug': typeof PortalRoadmapRoadmapSlugRoute
   '/portal/updates/$releaseSlug': typeof PortalUpdatesReleaseSlugRoute
-  '/app/customers/': typeof AppCustomersIndexRoute
+  '/app/accounts/': typeof AppAccountsIndexRoute
   '/app/decisions/': typeof AppDecisionsIndexRoute
   '/app/releases/': typeof AppReleasesIndexRoute
   '/portal/feedback/': typeof PortalFeedbackIndexRoute
@@ -300,6 +307,7 @@ export interface FileRoutesByTo {
   '/app/moderation': typeof AppModerationRoute
   '/app/overview': typeof AppOverviewRoute
   '/app/prioritisation': typeof AppPrioritisationRoute
+  '/app/requesters': typeof AppRequestersRoute
   '/app/roadmap': typeof AppRoadmapRoute
   '/app/search': typeof AppSearchRoute
   '/app/settings': typeof AppSettingsRoute
@@ -308,7 +316,7 @@ export interface FileRoutesByTo {
   '/app': typeof AppIndexRoute
   '/docs': typeof DocsIndexRoute
   '/portal': typeof PortalIndexRoute
-  '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
+  '/app/accounts/$accountSlug': typeof AppAccountsAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
@@ -316,7 +324,7 @@ export interface FileRoutesByTo {
   '/portal/feedback/new': typeof PortalFeedbackNewRoute
   '/portal/roadmap/$roadmapSlug': typeof PortalRoadmapRoadmapSlugRoute
   '/portal/updates/$releaseSlug': typeof PortalUpdatesReleaseSlugRoute
-  '/app/customers': typeof AppCustomersIndexRoute
+  '/app/accounts': typeof AppAccountsIndexRoute
   '/app/decisions': typeof AppDecisionsIndexRoute
   '/app/releases': typeof AppReleasesIndexRoute
   '/portal/feedback': typeof PortalFeedbackIndexRoute
@@ -329,7 +337,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
   '/signin': typeof SigninRoute
-  '/app/customers': typeof AppCustomersRouteWithChildren
+  '/app/accounts': typeof AppAccountsRouteWithChildren
   '/app/data': typeof AppDataRoute
   '/app/decisions': typeof AppDecisionsRouteWithChildren
   '/app/features': typeof AppFeaturesRoute
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/app/overview': typeof AppOverviewRoute
   '/app/prioritisation': typeof AppPrioritisationRoute
   '/app/releases': typeof AppReleasesRouteWithChildren
+  '/app/requesters': typeof AppRequestersRoute
   '/app/roadmap': typeof AppRoadmapRoute
   '/app/search': typeof AppSearchRoute
   '/app/settings': typeof AppSettingsRoute
@@ -350,7 +359,7 @@ export interface FileRoutesById {
   '/app/': typeof AppIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/portal/': typeof PortalIndexRoute
-  '/app/customers/$accountSlug': typeof AppCustomersAccountSlugRoute
+  '/app/accounts/$accountSlug': typeof AppAccountsAccountSlugRoute
   '/app/decisions/$decisionSlug': typeof AppDecisionsDecisionSlugRoute
   '/app/releases/$releaseSlug': typeof AppReleasesReleaseSlugRoute
   '/portal/feedback/$requestSlug': typeof PortalFeedbackRequestSlugRoute
@@ -358,7 +367,7 @@ export interface FileRoutesById {
   '/portal/feedback/new': typeof PortalFeedbackNewRoute
   '/portal/roadmap/$roadmapSlug': typeof PortalRoadmapRoadmapSlugRoute
   '/portal/updates/$releaseSlug': typeof PortalUpdatesReleaseSlugRoute
-  '/app/customers/': typeof AppCustomersIndexRoute
+  '/app/accounts/': typeof AppAccountsIndexRoute
   '/app/decisions/': typeof AppDecisionsIndexRoute
   '/app/releases/': typeof AppReleasesIndexRoute
   '/portal/feedback/': typeof PortalFeedbackIndexRoute
@@ -372,7 +381,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/portal'
     | '/signin'
-    | '/app/customers'
+    | '/app/accounts'
     | '/app/data'
     | '/app/decisions'
     | '/app/features'
@@ -382,6 +391,7 @@ export interface FileRouteTypes {
     | '/app/overview'
     | '/app/prioritisation'
     | '/app/releases'
+    | '/app/requesters'
     | '/app/roadmap'
     | '/app/search'
     | '/app/settings'
@@ -393,7 +403,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/docs/'
     | '/portal/'
-    | '/app/customers/$accountSlug'
+    | '/app/accounts/$accountSlug'
     | '/app/decisions/$decisionSlug'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
@@ -401,7 +411,7 @@ export interface FileRouteTypes {
     | '/portal/feedback/new'
     | '/portal/roadmap/$roadmapSlug'
     | '/portal/updates/$releaseSlug'
-    | '/app/customers/'
+    | '/app/accounts/'
     | '/app/decisions/'
     | '/app/releases/'
     | '/portal/feedback/'
@@ -418,6 +428,7 @@ export interface FileRouteTypes {
     | '/app/moderation'
     | '/app/overview'
     | '/app/prioritisation'
+    | '/app/requesters'
     | '/app/roadmap'
     | '/app/search'
     | '/app/settings'
@@ -426,7 +437,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/docs'
     | '/portal'
-    | '/app/customers/$accountSlug'
+    | '/app/accounts/$accountSlug'
     | '/app/decisions/$decisionSlug'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
@@ -434,7 +445,7 @@ export interface FileRouteTypes {
     | '/portal/feedback/new'
     | '/portal/roadmap/$roadmapSlug'
     | '/portal/updates/$releaseSlug'
-    | '/app/customers'
+    | '/app/accounts'
     | '/app/decisions'
     | '/app/releases'
     | '/portal/feedback'
@@ -446,7 +457,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/portal'
     | '/signin'
-    | '/app/customers'
+    | '/app/accounts'
     | '/app/data'
     | '/app/decisions'
     | '/app/features'
@@ -456,6 +467,7 @@ export interface FileRouteTypes {
     | '/app/overview'
     | '/app/prioritisation'
     | '/app/releases'
+    | '/app/requesters'
     | '/app/roadmap'
     | '/app/search'
     | '/app/settings'
@@ -467,7 +479,7 @@ export interface FileRouteTypes {
     | '/app/'
     | '/docs/'
     | '/portal/'
-    | '/app/customers/$accountSlug'
+    | '/app/accounts/$accountSlug'
     | '/app/decisions/$decisionSlug'
     | '/app/releases/$releaseSlug'
     | '/portal/feedback/$requestSlug'
@@ -475,7 +487,7 @@ export interface FileRouteTypes {
     | '/portal/feedback/new'
     | '/portal/roadmap/$roadmapSlug'
     | '/portal/updates/$releaseSlug'
-    | '/app/customers/'
+    | '/app/accounts/'
     | '/app/decisions/'
     | '/app/releases/'
     | '/portal/feedback/'
@@ -529,11 +541,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/customers': {
-      id: '/app/customers'
-      path: '/customers'
-      fullPath: '/app/customers'
-      preLoaderRoute: typeof AppCustomersRouteImport
+    '/app/accounts': {
+      id: '/app/accounts'
+      path: '/accounts'
+      fullPath: '/app/accounts'
+      preLoaderRoute: typeof AppAccountsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/data': {
@@ -597,6 +609,13 @@ declare module '@tanstack/react-router' {
       path: '/releases'
       fullPath: '/app/releases'
       preLoaderRoute: typeof AppReleasesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/requesters': {
+      id: '/app/requesters'
+      path: '/requesters'
+      fullPath: '/app/requesters'
+      preLoaderRoute: typeof AppRequestersRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/roadmap': {
@@ -669,19 +688,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalVerifyRouteImport
       parentRoute: typeof PortalRoute
     }
-    '/app/customers/': {
-      id: '/app/customers/'
+    '/app/accounts/': {
+      id: '/app/accounts/'
       path: '/'
-      fullPath: '/app/customers/'
-      preLoaderRoute: typeof AppCustomersIndexRouteImport
-      parentRoute: typeof AppCustomersRoute
+      fullPath: '/app/accounts/'
+      preLoaderRoute: typeof AppAccountsIndexRouteImport
+      parentRoute: typeof AppAccountsRoute
     }
-    '/app/customers/$accountSlug': {
-      id: '/app/customers/$accountSlug'
+    '/app/accounts/$accountSlug': {
+      id: '/app/accounts/$accountSlug'
       path: '/$accountSlug'
-      fullPath: '/app/customers/$accountSlug'
-      preLoaderRoute: typeof AppCustomersAccountSlugRouteImport
-      parentRoute: typeof AppCustomersRoute
+      fullPath: '/app/accounts/$accountSlug'
+      preLoaderRoute: typeof AppAccountsAccountSlugRouteImport
+      parentRoute: typeof AppAccountsRoute
     }
     '/app/decisions/': {
       id: '/app/decisions/'
@@ -770,18 +789,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AppCustomersRouteChildren {
-  AppCustomersAccountSlugRoute: typeof AppCustomersAccountSlugRoute
-  AppCustomersIndexRoute: typeof AppCustomersIndexRoute
+interface AppAccountsRouteChildren {
+  AppAccountsAccountSlugRoute: typeof AppAccountsAccountSlugRoute
+  AppAccountsIndexRoute: typeof AppAccountsIndexRoute
 }
 
-const AppCustomersRouteChildren: AppCustomersRouteChildren = {
-  AppCustomersAccountSlugRoute: AppCustomersAccountSlugRoute,
-  AppCustomersIndexRoute: AppCustomersIndexRoute,
+const AppAccountsRouteChildren: AppAccountsRouteChildren = {
+  AppAccountsAccountSlugRoute: AppAccountsAccountSlugRoute,
+  AppAccountsIndexRoute: AppAccountsIndexRoute,
 }
 
-const AppCustomersRouteWithChildren = AppCustomersRoute._addFileChildren(
-  AppCustomersRouteChildren,
+const AppAccountsRouteWithChildren = AppAccountsRoute._addFileChildren(
+  AppAccountsRouteChildren,
 )
 
 interface AppDecisionsRouteChildren {
@@ -813,7 +832,7 @@ const AppReleasesRouteWithChildren = AppReleasesRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
-  AppCustomersRoute: typeof AppCustomersRouteWithChildren
+  AppAccountsRoute: typeof AppAccountsRouteWithChildren
   AppDataRoute: typeof AppDataRoute
   AppDecisionsRoute: typeof AppDecisionsRouteWithChildren
   AppFeaturesRoute: typeof AppFeaturesRoute
@@ -823,6 +842,7 @@ interface AppRouteChildren {
   AppOverviewRoute: typeof AppOverviewRoute
   AppPrioritisationRoute: typeof AppPrioritisationRoute
   AppReleasesRoute: typeof AppReleasesRouteWithChildren
+  AppRequestersRoute: typeof AppRequestersRoute
   AppRoadmapRoute: typeof AppRoadmapRoute
   AppSearchRoute: typeof AppSearchRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -830,7 +850,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppCustomersRoute: AppCustomersRouteWithChildren,
+  AppAccountsRoute: AppAccountsRouteWithChildren,
   AppDataRoute: AppDataRoute,
   AppDecisionsRoute: AppDecisionsRouteWithChildren,
   AppFeaturesRoute: AppFeaturesRoute,
@@ -840,6 +860,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppOverviewRoute: AppOverviewRoute,
   AppPrioritisationRoute: AppPrioritisationRoute,
   AppReleasesRoute: AppReleasesRouteWithChildren,
+  AppRequestersRoute: AppRequestersRoute,
   AppRoadmapRoute: AppRoadmapRoute,
   AppSearchRoute: AppSearchRoute,
   AppSettingsRoute: AppSettingsRoute,

@@ -4,10 +4,10 @@ import { PAGE_SIZE, type ListEntity, type ListQuery, type OperatorPage } from '.
 export interface SearchResult { id: string; entity: ListEntity; title: string; snippet: string; href: string }
 interface SearchRow { id: string; slug: string; title: string; snippet: string }
 export function recordHref(entity: ListEntity, id: string, slug: string): string {
- const paths: Record<ListEntity,string>={requests:'/app/moderation',evidence:'/app/feedback',decisions:'/app/decisions',roadmap:'/app/roadmap',releases:'/app/releases',accounts:'/app/customers',requesters:'/app/customers'}
+ const paths: Record<ListEntity,string>={requests:'/app/moderation',evidence:'/app/feedback',decisions:'/app/decisions',roadmap:'/app/roadmap',releases:'/app/releases',accounts:'/app/accounts',requesters:'/app/requesters'}
  if(['decisions','releases','accounts'].includes(entity))return `${paths[entity]}/${encodeURIComponent(slug)}`
  const hash=entity==='requests'?`request-${slug}`:`${entity}-${id}`
- return `${paths[entity]}?${entity==='requesters'?'directory=requesters&':''}item=${encodeURIComponent(id)}#${encodeURIComponent(hash)}`
+ return `${paths[entity]}?item=${encodeURIComponent(id)}#${encodeURIComponent(hash)}`
 }
 export async function searchRecords(database: DatabaseConnection,query:ListQuery):Promise<OperatorPage<SearchResult>> {
  const page=query.page??1

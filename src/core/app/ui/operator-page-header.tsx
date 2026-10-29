@@ -30,6 +30,6 @@ export function OperatorPageHeader({ eyebrow, title, children, action, art }: { 
 const backLinkClass = 'inline-flex min-h-11 items-center gap-1.5 text-base font-medium text-penny-ink hover:text-penny-accent focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-penny-accent'
 
 /** The "All releases" style link above an operator detail page. */
-export function OperatorDetailBack({ to, children }: { readonly to: '/app/decisions' | '/app/releases' | '/app/customers'; readonly children: string }) {
+export function OperatorDetailBack({ to, children }: { readonly to: '/app/decisions' | '/app/releases' | '/app/accounts'; readonly children: string }) {
   return <div className="mb-2"><Link to={to} className={backLinkClass}><Icon name="arrow" className="size-4 rotate-180" />{children}</Link></div>
 }

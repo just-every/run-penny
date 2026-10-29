@@ -4,8 +4,8 @@ export const proofId = (kind,index=0) => `01J0000000000000${String(kind).padStar
 export const entities = [
  ['request','requests','/app/moderation',1],['evidence','evidence','/app/feedback',2],
  ['decision','decisions','/app/decisions',3],['roadmapItem','roadmap','/app/roadmap',4],
- ['release','releases','/app/releases',5],['account','accounts','/app/customers',6],
- ['requester','requesters','/app/customers?directory=requesters',7],
+ ['release','releases','/app/releases',5],['account','accounts','/app/accounts',6],
+ ['requester','requesters','/app/requesters',7],
 ]
 export async function seedCompleteness(db) {
  const now='2026-10-12T00:00:00.000Z', pending=[]

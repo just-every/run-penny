@@ -9,7 +9,7 @@ export async function generatedOperatorTransport() {
  const source=await readFile(`${directory}/${resolver}`,'utf8')
  const entry=[...source.matchAll(/"([a-f0-9]{64})":\s*\{\s*functionName: "(\w+)_createServerFn_handler"/g)].find(row=>row[2]==='loadOperatorResources')
  if(!entry)throw new Error('Emitted private loader not found')
- const payload=JSON.stringify(await toJSONAsync({data:'/app/customers/proof-account-00'}))
+ const payload=JSON.stringify(await toJSONAsync({data:'/app/accounts/proof-account-00'}))
  return `/_serverFn/${entry[1]}?${new URLSearchParams({payload})}`
 }
 export function generatedHeaders(origin){return {Origin:origin,'Sec-Fetch-Site':'same-origin','x-tsr-serverFn':'true',Accept:'application/json'}}

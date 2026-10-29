@@ -118,7 +118,7 @@ async function reviewAccountCollections({page,origin,capture}) {
   ['decisions',account.decisions,account.linkedDecisionCount,'linked decisions'],
  ]) {
   if(total===0)continue
-  await page.goto(origin+'/app/customers/proof-account-00')
+  await page.goto(origin+'/app/accounts/proof-account-00')
   const viewAll=page.getByRole('link',{name:`View all ${label}`,exact:true})
   await viewAll.waitFor()
   await viewAll.click()
@@ -139,7 +139,7 @@ async function reviewAccountCollections({page,origin,capture}) {
   assert.ok(preview.every(row=>ids.includes(entity==='decisions'?row.slug:row.id)),'[EVID-005] preview and continuation use the same relationships')
   await capture(`EVID-005-account-${entity}-continuation`,page)
  }
- await page.goto(origin+'/app/customers/proof-account-00')
+ await page.goto(origin+'/app/accounts/proof-account-00')
  await page.getByRole('link',{name:'View evidence, versions and private files',exact:true}).first().click()
  await page.waitForURL(url=>url.searchParams.get('item')===account.evidence[0].id)
  await page.locator(`[id="evidence-${account.evidence[0].id}"]`).waitFor()

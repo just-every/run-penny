@@ -46,8 +46,8 @@ the current port has no native session-issuance or sign-out route.
 | `/app/roadmap` | `GET /api/operator/roadmap` | internal roadmap cards and current public-projection status |
 | `/app/releases` | `GET /api/operator/releases` | draft and published release records |
 | `/app/releases/:slug` | `GET /api/operator/releases/:slug` | release detail and internal targets |
-| `/app/customers` | `GET /api/operator/accounts` | commercial account cards |
-| `/app/customers/:slug` | `GET /api/operator/accounts/:slug` | commercial context, requester addresses, evidence, linked decisions |
+| `/app/accounts` | `GET /api/operator/accounts` | commercial account cards |
+| `/app/accounts/:slug` | `GET /api/operator/accounts/:slug` | commercial context, requester addresses, evidence, linked decisions |
 
 The SQL remains in small feature-owned `read-repository.ts` files. Public
 request, roadmap, and release projections remain with their features; the

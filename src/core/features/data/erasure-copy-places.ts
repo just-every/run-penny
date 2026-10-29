@@ -18,7 +18,7 @@ const lookups: Record<string, Lookup> = {
  roadmap_transitions: { sql: 'SELECT i.title label,i.id FROM roadmap_transitions t JOIN roadmap_items i ON i.id=t.roadmap_item_id WHERE t.id=?', href: row => `/app/roadmap#roadmap-item-${row.id}` },
  evidence_items: { sql: "SELECT COALESCE(source_label,named_speaker,replace(source_type,'_',' ')) label,id FROM evidence_items WHERE id=?", href: row => `/app/feedback#evidence-${row.id}` },
  evidence_versions: { sql: "SELECT COALESCE(e.source_label,e.named_speaker,replace(e.source_type,'_',' ')) label,e.id FROM evidence_versions v JOIN evidence_items e ON e.id=v.evidence_id WHERE v.id=?", href: row => `/app/feedback#evidence-${row.id}` },
- accounts: { sql: 'SELECT name label,slug FROM accounts WHERE id=?', href: row => `/app/customers/${row.slug}` },
+ accounts: { sql: 'SELECT name label,slug FROM accounts WHERE id=?', href: row => `/app/accounts/${row.slug}` },
  releases: { sql: 'SELECT v.title label,r.slug FROM releases r JOIN release_versions v ON v.id=r.current_version_id WHERE r.id=?', href: row => `/app/releases/${row.slug}` },
  release_versions: { sql: 'SELECT v.title label,r.slug FROM release_versions v JOIN releases r ON r.id=v.release_id WHERE v.id=?', href: row => `/app/releases/${row.slug}` },
 }

@@ -227,7 +227,7 @@ try {
       const nav=page.locator('nav[aria-label="Operator workspace"]:visible')
       const icons=await nav.locator('svg path').evaluateAll(paths=>paths.map(path=>path.getAttribute('d')))
       assert.ok(icons.length>0,'[OPS-003] workspace destinations have navigation icons')
-      for(const path of ['/app/overview','/app/feedback','/app/moderation','/app/decisions','/app/roadmap','/app/releases','/app/customers','/app/settings','/app/data','/app/search'])assert.equal(await nav.locator(`a[href="${path}"]`).count(),1,`[OPS-003 OPS-004] navigation reaches ${path}`)
+      for(const path of ['/app/overview','/app/feedback','/app/moderation','/app/decisions','/app/roadmap','/app/releases','/app/accounts','/app/settings','/app/data','/app/search'])assert.equal(await nav.locator(`a[href="${path}"]`).count(),1,`[OPS-003 OPS-004] navigation reaches ${path}`)
       assert.equal(await nav.getByRole('link',{name:'Overview',exact:true}).getAttribute('aria-current'),'page')
       await nav.getByRole('link',{name:'Feedback settings',exact:true}).click()
       await page.getByRole('heading',{name:'Feedback settings',exact:true}).waitFor()

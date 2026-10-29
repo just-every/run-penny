@@ -8,8 +8,6 @@ export function RequesterDirectory() {
   const [state, retry, page] = useOperatorList<OperatorRequesterCard>('/api/operator/requesters')
   return (
     <section aria-label="Requester directory">
-      <h2 className="mt-6 text-2xl font-bold">Requester directory</h2>
-      <p className="mt-2 text-penny-muted">Identity and linked feedback remain private to operators.</p>
       <ListControls entity="requesters" page={page} />
       {state.kind === 'loading' ? <OperatorResourceLoading label="Loading requesters…" /> : null}
       {state.kind === 'session_expired' ? <OperatorSessionExpired /> : null}

@@ -75,13 +75,13 @@ export async function operatorResources(href: string): Promise<Resources> {
   if (setup) throw redirect({ href: '/setup', reloadDocument: true })
   const operatorUrl = new URL(href, 'https://document.invalid')
   const path = operatorUrl.pathname.replace(/\/$/, '')
-  const routes: Record<string, string> = { '/app': 'overview', '/app/overview': 'overview', '/app/feedback': 'evidence', '/app/moderation': 'moderation', '/app/decisions': 'decisions', '/app/roadmap': 'roadmap', '/app/releases': 'releases', '/app/customers': operatorUrl.searchParams.get('directory') === 'requesters' ? 'requesters' : 'accounts', '/app/search': 'search', '/app/learning': 'learning' }
+  const routes: Record<string, string> = { '/app': 'overview', '/app/overview': 'overview', '/app/feedback': 'evidence', '/app/moderation': 'moderation', '/app/decisions': 'decisions', '/app/roadmap': 'roadmap', '/app/releases': 'releases', '/app/accounts': 'accounts', '/app/requesters': 'requesters', '/app/search': 'search', '/app/learning': 'learning' }
   const route = routes[path]
   if (path === '/app/prioritisation') return operatorSnapshot(operatorUrl,'/api/operator/prioritisation',read)
   if (path === '/app/features') return operatorSnapshot(operatorUrl,'/api/operator/hierarchy',read)
   if (path === '/app/settings') return operatorSnapshot(operatorUrl,'/api/operator/catalog/settings',read)
   if (path === '/app/data') return operatorSnapshot(operatorUrl,'/api/operator/data/overview',read)
   if (route) return operatorSnapshot(operatorUrl,`/api/operator/${route}${route==='learning'?'':operatorUrl.search}`,read)
-  const match = /^\/app\/(decisions|releases|customers)\/([a-z0-9-]+)$/.exec(path)
-  return operatorSnapshot(operatorUrl,match ? `/api/operator/${match[1] === 'customers' ? 'accounts' : match[1]}/${match[2]}` : undefined,read)
+  const match = /^\/app\/(decisions|releases|accounts)\/([a-z0-9-]+)$/.exec(path)
+  return operatorSnapshot(operatorUrl,match ? `/api/operator/${match[1]}/${match[2]}` : undefined,read)
 }

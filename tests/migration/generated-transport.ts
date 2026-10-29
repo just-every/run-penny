@@ -9,7 +9,7 @@ export async function generatedTransport() {
   if (!ids.length) throw new Error('No generated functions found in the emitted resolver.')
   const encoded: Record<string, string> = {}
   for (const [, id, name] of ids) {
-    const data = name === 'loadOperatorResources' ? '/app/customers/northstar-health' : '/portal/feedback'
+    const data = name === 'loadOperatorResources' ? '/app/accounts/northstar-health' : '/portal/feedback'
     const payload = JSON.stringify(await toJSONAsync({ data }))
     encoded[name] = `/_serverFn/${id}?${new URLSearchParams({ payload })}`
   }

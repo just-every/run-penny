@@ -28,7 +28,7 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
  await api(`/api/operator/requests/${request.slug}/notes`,{body:'Private renewal conversation: discuss the account commitment internally.'})
  const comment=await api(`/api/operator/requests/${request.slug}/comments`,{body:'Could I choose the start and end date before downloading?'})
  const baseline=(await api(`/api/operator/requests/${request.slug}/context`)).comments.length
- const states=[['request',request.id,`/app/moderation?item=${request.id}`],['decision',decision.id,`/app/decisions/${decision.slug}`],['account',account.id,`/app/customers/${account.slug}`],['inbox',evidence.id,`/app/feedback?item=${evidence.id}`],['comment',comment.id,`/app/moderation?item=${request.id}`]]
+ const states=[['request',request.id,`/app/moderation?item=${request.id}`],['decision',decision.id,`/app/decisions/${decision.slug}`],['account',account.id,`/app/accounts/${account.slug}`],['inbox',evidence.id,`/app/feedback?item=${evidence.id}`],['comment',comment.id,`/app/moderation?item=${request.id}`]]
  for(const [kind,id,path] of states){
   await page.goto(origin+path);await page.waitForLoadState('networkidle')
   const panel=page.locator(`[data-draft-kind="${kind}"][data-draft-id="${id}"]`);await panel.locator('summary').click()

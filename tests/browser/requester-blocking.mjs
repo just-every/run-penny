@@ -18,7 +18,7 @@ await moderationJourney('requester-blocking',async({origin,operator,json,send,pe
  const participating=await pageFor({token:eli.token})
  await participating.goto(origin+`/portal/feedback/${shared.slug}`,{waitUntil:'networkidle'})
  await participating.getByRole('button',{name:'Remove vote',exact:true}).waitFor()
- await owner.goto(origin+'/app/customers?directory=requesters&q=Eli',{waitUntil:'networkidle'})
+ await owner.goto(origin+'/app/requesters?q=Eli',{waitUntil:'networkidle'})
  const card=owner.locator(`#requesters-${id}`)
  await card.getByText('Active',{exact:true}).waitFor()
  await capture(owner,'requester-active',card)
