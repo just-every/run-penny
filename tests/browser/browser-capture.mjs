@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import {mkdtemp,rm} from 'node:fs/promises'
+import {mkdir,mkdtemp,rm} from 'node:fs/promises'
 import {resolve,join} from 'node:path'
 import {tmpdir} from 'node:os'
 import {chromium} from '@playwright/test'
@@ -9,6 +9,7 @@ import {captureRuntime} from './browser-capture-runtime.mjs'
 // system Chromium may forbid unpacked extensions by administrator policy; that
 // refusal is an explicit failed check, never a simulated extension success.
 const fixture=await captureRuntime(),{runtime,origin,sourceUrl,operator,json}=fixture,profile=await mkdtemp(join(tmpdir(),'penny-extension-'))
+const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/browser-capture');assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const extension=resolve('integrations/browser-extension'),context=await chromium.launchPersistentContext(profile,{
  executablePath:process.env.PENNY_BROWSER_EXECUTABLE??chromium.executablePath(),headless:true,viewport:{width:1440,height:1000},
  ignoreDefaultArgs:['--disable-extensions'],args:['--no-sandbox','--disable-gpu','--enable-unsafe-extension-debugging',`--disable-extensions-except=${extension}`,`--load-extension=${extension}`],
@@ -20,21 +21,43 @@ try{
  const {id}=installed.extensions.find(item=>item.path===extension)??await cdp.send('Extensions.loadUnpacked',{path:extension})
  let worker=context.serviceWorkers().find(worker=>worker.url().startsWith(`chrome-extension://${id}/`))
  worker??=await context.waitForEvent('serviceworker',{predicate:worker=>worker.url().startsWith(`chrome-extension://${id}/`)})
+ // Grant this fixture installation through Chrome's own site-access setting.
+ // The production manifest and permissions.request path stay byte-identical;
+ // this is native browser consent setup, with no extension API stubs.
+ const siteAccess=await context.newPage();await siteAccess.goto('chrome://extensions')
+ await siteAccess.evaluate(async({id,origin})=>{await chrome.developerPrivate.addHostPermission(id,origin+'/*')},{id,origin})
+ await siteAccess.close()
  const source=await context.newPage();await source.goto(sourceUrl);source.setDefaultTimeout(20000)
  async function popup(){
   await source.bringToFront()
-  const target=await context.newCDPSession(source),{targetInfo}=await target.send('Target.getTargetInfo');await target.detach()
-  const opened=context.waitForEvent('page',{predicate:page=>page.url().startsWith(`chrome-extension://${id}/`)})
+  const {targetInfos}=await cdp.send('Target.getTargets',{filter:[{type:'tab',exclude:false}]})
+  const targetInfo=targetInfos.find(target=>target.type==='tab'&&target.url===source.url());assert.ok(targetInfo,'The extension action needs the browser tab target, not its renderer page target.')
   await cdp.send('Extensions.triggerAction',{id,targetId:targetInfo.targetId})
-  const page=context.pages().find(page=>page.url()===`chrome-extension://${id}/popup.html`)??await opened
+  let page
+  for(let attempt=0;attempt<200&&!page;attempt++){
+   page=context.pages().find(page=>page.url()===`chrome-extension://${id}/popup.html`)
+   if(!page)await new Promise(resolve=>setTimeout(resolve,100))
+  }
+  assert.ok(page,'The native extension action must open its popup.')
   await page.getByRole('button',{name:'Review capture',exact:true}).waitFor();return page
+ }
+ async function openReview(panel,button){
+  const before=new Set(context.pages());let clickError
+  try{await panel.getByRole('button',{name:button,exact:true}).click()}catch(error){clickError=error}
+  for(let attempt=0;attempt<200;attempt++){
+   const page=context.pages().find(page=>!before.has(page)&&page.url().startsWith(origin))
+   if(page){page.setDefaultTimeout(20000);return page}
+   await new Promise(resolve=>setTimeout(resolve,100))
+  }
+  throw clickError??new Error('The extension did not open a Penny review: '+await panel.locator('#status').textContent().catch(()=> 'popup closed'))
  }
  async function select(){await source.locator('#quote').evaluate(element=>{const range=document.createRange();range.selectNodeContents(element);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range)})}
  await select()
  let panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check()
- const reviewOpened=context.waitForEvent('page',{predicate:page=>page.url().startsWith(origin)})
- await panel.getByRole('button',{name:'Review capture',exact:true}).click()
- const review=await reviewOpened;review.setDefaultTimeout(20000)
+ await panel.screenshot({path:join(output,'extension-popup-1440.png'),fullPage:true})
+ await source.setViewportSize({width:390,height:844});panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check();await panel.screenshot({path:join(output,'extension-popup-390.png'),fullPage:true})
+ await source.setViewportSize({width:1440,height:1000});panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check()
+ const review=await openReview(panel,'Review capture')
  await review.getByLabel('Selected excerpt',{exact:true}).waitFor()
  assert.match(await review.getByLabel('Selected excerpt',{exact:true}).inputValue(),/Please add monthly exports/)
  assert.equal(await review.getByLabel('Original page URL',{exact:true}).inputValue(),sourceUrl)
@@ -49,19 +72,16 @@ try{
  // The source fixture changes behind the same URL. The real extension performs
  // only a HEAD on the explicitly selected page and sends its selected new span.
  fixture.changeSource('changed');await source.reload();await select();panel=await popup()
- let nextReview=context.waitForEvent('page',{predicate:page=>page.url().startsWith(origin)})
- await panel.getByRole('button',{name:'Check a saved source',exact:true}).click();let check=await nextReview
+ let check=await openReview(panel,'Check a saved source')
  await check.getByRole('button',{name:'Check this capture',exact:true}).click();await check.getByRole('status').filter({hasText:'Source: changed'}).waitFor()
- fixture.changeSource('removed');await source.reload();panel=await popup();nextReview=context.waitForEvent('page',{predicate:page=>page.url().startsWith(origin)})
- await panel.getByRole('button',{name:'Check a saved source',exact:true}).click();check=await nextReview
+ fixture.changeSource('removed');await source.reload();panel=await popup();check=await openReview(panel,'Check a saved source')
  await check.getByRole('button',{name:'Check this capture',exact:true}).click();await check.getByRole('status').filter({hasText:'Source: removed'}).waitFor()
  assert.ok(fixture.reads.filter(read=>read.method==='HEAD').length>=2);assert.ok(fixture.reads.filter(read=>read.method==='HEAD').every(read=>read.url.startsWith('/records/42')))
  // Signing out invalidates the actual extension on its next handoff/save. The
  // review draft stays in extension session custody so it can be resumed later.
  await fixture.send('/api/auth/sign-out',{},operator,'POST',204)
  fixture.changeSource('current');await source.reload();await select();panel=await popup();await panel.getByLabel('Include a screenshot of the visible tab').uncheck()
- const signedOut=context.waitForEvent('page',{predicate:page=>page.url().startsWith(origin)})
- await panel.getByRole('button',{name:'Review capture',exact:true}).click();const denied=await signedOut
+ const denied=await openReview(panel,'Review capture')
  await denied.waitForURL(origin+'/signin**')
  assert.equal(await runtime.db.prepare('SELECT COUNT(*) n FROM evidence_items WHERE source_type=?').bind('browser_extension').first('n'),1)
  assert.equal((await fetch(origin+'/api/operator/browser-captures',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:'{}'})).status,401)
@@ -69,4 +89,4 @@ try{
  assert.deepEqual(Object.keys(stored.local),['pennyOrigin']);assert.equal(stored.local.pennyOrigin,origin)
  assert.ok(stored.session.lastReview.draft.wording);assert.ok(!JSON.stringify(stored).includes('oa_session'))
  console.log('Actual Manifest V3 extension journey passed: selected-page text/PNG handoff, inbox and private attachment, explicit source edits/removal and signed-out refusal')
-}finally{await context.close();await rm(profile,{recursive:true,force:true});await fixture.close()}
+}catch(error){console.error('EXTENSION_JOURNEY_FAILURE',error.message);throw error}finally{await context.close();await rm(profile,{recursive:true,force:true});await fixture.close()}

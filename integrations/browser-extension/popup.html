@@ -1,8 +1,8 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Penny Capture</title><link rel="stylesheet" href="popup.css"></head><body><main>
 <p class="brand">Penny <span>Capture</span></p><h1>Keep the words.<br>Keep their context.</h1>
 <p>Send a selected passage or the visible page to your private feedback inbox.</p>
-<form id="capture-form"><label for="origin">Penny workspace URL</label><input id="origin" name="origin" type="url" placeholder="https://penny.example.com" required><p class="hint">Use the workspace where you are signed in as an operator.</p>
+<form id="capture-form"><fieldset disabled><label for="origin">Penny workspace URL</label><input id="origin" name="origin" type="url" placeholder="https://penny.example.com" required><p class="hint">Use the workspace where you are signed in as an operator.</p>
 <label class="check"><input type="checkbox" id="screenshot">Include a screenshot of the visible tab</label><p class="hint">Screenshots may contain private information. Review or remove the image before saving.</p>
-<button type="submit">Review capture</button><button id="check" type="button" class="secondary">Check a saved source</button></form>
-<p role="status" id="status"></p><button type="button" id="resume" class="secondary">Resume last review</button><button type="button" id="disconnect" class="secondary">Disconnect workspace</button>
+<button type="submit">Review capture</button><button id="check" type="button" class="secondary">Check a saved source</button></fieldset></form>
+<p role="status" id="status"></p><button type="button" id="resume" disabled class="secondary">Resume last review</button><button type="button" id="disconnect" disabled class="secondary">Disconnect workspace</button>
 </main><script src="popup.js" type="module"></script></body></html>

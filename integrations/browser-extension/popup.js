@@ -1,6 +1,8 @@
 import {workspaceOrigin} from './workspace.js'
 const form=document.querySelector('form'),origin=document.querySelector('#origin'),status=document.querySelector('#status')
 origin.value=(await chrome.storage.local.get('pennyOrigin')).pennyOrigin??''
+document.querySelector('fieldset').disabled=false
+for(const button of document.querySelectorAll('button'))button.disabled=false
 async function run(mode){
  status.role='status';status.textContent='Preparing your review…';for(const button of document.querySelectorAll('button'))button.disabled=true
  try{

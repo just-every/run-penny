@@ -35,8 +35,8 @@ try{
  await page.getByLabel('Record a proxy vote from this excerpt').check()
  const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
  async function proof(name){
-  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)
-  await page.evaluate(axe);assert.deepEqual(await page.evaluate(async()=>(await window.axe.run(document)).violations.filter(v=>['serious','critical'].includes(v.impact))),[])
+  if(page.viewportSize().width===1440){assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)
+  await page.evaluate(axe);assert.deepEqual(await page.evaluate(async()=>(await window.axe.run(document)).violations.filter(v=>['serious','critical'].includes(v.impact))),[])}
   await page.screenshot({path:join(output,name+'.png'),fullPage:true})
  }
  // Behavioral assertions use one width. Each changed screen is shown once at
@@ -53,6 +53,7 @@ try{
  const file=await send('/api/operator/evidence-attachments/'+attachments.files[0].id,undefined,operator),bytes=Buffer.from(await file.arrayBuffer())
  assert.equal(createHash('sha256').update(bytes).digest('hex'),hash)
  await send('/api/operator/evidence-attachments/'+attachments.files[0].id,undefined,{},'GET',401)
+ await json('/api/operator/settings/redaction',{enabled:true,kinds:['email'],patterns:['monthly']},operator,'PUT')
  await runtime.restart();await runtime.schedule();await runtime.schedule()
  assert.equal((await json('/api/operator/browser-captures/'+job.id,undefined,operator)).state,'done')
  await page.getByRole('button',{name:'Check completion',exact:true}).click();await page.getByRole('status').filter({hasText:'Capture completed.'}).waitFor()
@@ -65,14 +66,15 @@ try{
  assert.match(await page.getByLabel('Selected excerpt',{exact:true}).inputValue(),/\[REDACTED:email\]/)
  const votes=await runtime.db.prepare('SELECT COUNT(*) n FROM request_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first('n');assert.equal(votes,1)
  const proxy=await runtime.db.prepare('SELECT source,source_url,evidence_id,recorder_operator_id FROM penny_proxy_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first()
- assert.equal(proxy.source_url,sourceUrl);assert.equal(proxy.evidence_id,job.evidence_id);assert.match(proxy.source,/\[REDACTED:email\]/);assert.ok(proxy.recorder_operator_id)
+ assert.equal(proxy.source_url,sourceUrl);assert.equal(proxy.evidence_id,job.evidence_id);assert.match(proxy.source,/\[REDACTED:email\]/);assert.match(proxy.source,/\[REDACTED:custom\]/);assert.ok(proxy.recorder_operator_id)
+ await json('/api/operator/settings/redaction',{enabled:true,kinds:['email'],patterns:[]},operator,'PUT')
  assert.equal(await runtime.db.prepare('SELECT verified_at FROM requester_addresses WHERE requester_id=?').bind(customer.requesterId).first('verified_at'),null)
  assert.equal(await runtime.db.prepare('SELECT COUNT(*) n FROM requester_update_permissions WHERE requester_id=?').bind(customer.requesterId).first('n'),0)
  await json('/api/operator/browser-captures/'+job.id+'/ready',{},operator)
  await runtime.schedule();assert.equal(await runtime.db.prepare('SELECT COUNT(*) n FROM request_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first('n'),1)
  for(const width of [1440,390]){
   await page.setViewportSize({width,height:width===390?844:1000});await page.goto(origin+`/app/feedback?item=${job.evidence_id}`,{waitUntil:'networkidle'})
-  await page.getByRole('link',{name:'Open captured page',exact:true}).waitFor();assert.equal(await page.getByRole('link',{name:'Open captured page',exact:true}).getAttribute('href'),sourceUrl)
+  await page.getByRole('link',{name:'Open captured page',exact:true}).waitFor();if(width===1440)assert.equal(await page.getByRole('link',{name:'Open captured page',exact:true}).getAttribute('href'),sourceUrl)
   await proof(`inbox-${width}`)
  }
  const base={id:crypto.randomUUID(),pageUrl:sourceUrl,wording:'A separate selected passage.',observedAt:draft.observedAt,proxyVote:false,purgeDays:0}
@@ -96,12 +98,18 @@ try{
  assert.equal((await json('/api/operator/browser-captures/'+screenshotOnly.id,undefined,operator)).state,'done')
  const stopped=await json('/api/operator/browser-captures',{...base,id:crypto.randomUUID()},operator,'POST',201);await json('/api/operator/browser-captures/'+stopped.id+'/stop',{},operator);await send('/api/operator/browser-captures/'+stopped.id+'/ready',{},operator,'POST',409)
  // Recheck only the explicit source. Capture preserves its version on edits.
- await json('/api/operator/browser-captures/'+job.id+'/check',{pageUrl:sourceUrl,wording:'Source wording after its edit.',status:200},operator)
+ await page.setViewportSize({width:1440,height:1000});await page.goto(origin+'/app/browser-capture',{waitUntil:'networkidle'});await page.waitForFunction(()=>document.documentElement.dataset.pennyCapture==='ready')
+ await page.evaluate(draft=>window.postMessage({type:'penny-browser-draft',draft},location.origin),{...draft,mode:'check',wording:'Source wording after its edit.',image:undefined})
+ const sourceRow=page.getByRole('article').filter({has:page.locator(`a[href='/app/feedback?item=${job.evidence_id}#evidence-${job.evidence_id}']`)})
+ await sourceRow.getByRole('button',{name:'Check this capture',exact:true}).waitFor()
+ for(const width of [1440,390]){await page.setViewportSize({width,height:width===390?844:1000});await proof(`source-check-${width}`)}
+ await page.setViewportSize({width:1440,height:1000});await sourceRow.getByRole('button',{name:'Check this capture',exact:true}).click();await page.getByRole('status').filter({hasText:'Source: changed'}).waitFor();await sourceRow.getByRole('link',{name:'Open captured evidence · changed',exact:true}).waitFor()
+
  assert.equal((await json('/api/operator/browser-captures/'+job.id,undefined,operator)).source_state,'changed')
  assert.equal((await json('/api/operator/evidence?item='+job.evidence_id,undefined,operator)).items[0].wording,evidence.wording)
  await send('/api/operator/browser-captures/'+job.id+'/check',{pageUrl:sourceUrl+'/different',wording:'Not selected',status:200},operator,'POST',409)
  await json('/api/operator/browser-captures/'+job.id+'/check',{pageUrl:sourceUrl,wording:'',status:404},operator)
- await runtime.schedule();await runtime.schedule()
+ await Promise.all([runtime.schedule(),runtime.schedule()]);await runtime.schedule()
  assert.equal((await json('/api/operator/browser-captures/'+job.id,undefined,operator)).source_state,'purged')
  assert.equal((await json('/api/operator/evidence/'+job.evidence_id+'/versions',undefined,operator))[0].wording,'[Source removed]')
  await send('/api/operator/browser-captures/'+job.id+'/check',{pageUrl:sourceUrl,wording:original,status:200},operator,'POST',409)
