@@ -3,6 +3,13 @@ import { entitySource, listPredicate } from './list-repository'
 import { PAGE_SIZE, type ListEntity, type ListQuery, type OperatorPage } from './list-query'
 export interface SearchResult { id: string; entity: ListEntity; title: string; snippet: string; href: string }
 interface SearchRow { id: string; slug: string; title: string; snippet: string }
+/** What the snippet adds to its title: the title itself, or a snippet that only repeats it, leaves nothing. */
+export function snippetBeyondTitle(title: string, snippet: string): string {
+ const t=title.trim().toLowerCase(),s=snippet.trim(),lower=s.toLowerCase()
+ if(!s||t.startsWith(lower))return ''
+ if(!lower.startsWith(t)||(s.length>t.length&&!/\s/.test(s[t.length])))return s
+ return s.slice(t.length).trim()
+}
 export function recordHref(entity: ListEntity, id: string, slug: string): string {
  const paths: Record<ListEntity,string>={requests:'/app/moderation',evidence:'/app/feedback',decisions:'/app/decisions',roadmap:'/app/roadmap',releases:'/app/releases',accounts:'/app/customers',requesters:'/app/customers'}
  if(['decisions','releases','accounts'].includes(entity))return `${paths[entity]}/${encodeURIComponent(slug)}`
@@ -35,6 +42,6 @@ export async function searchRecords(database: DatabaseConnection,query:ListQuery
  }
  const rows=ranges.length?await database.binding.batch<SearchRow>(ranges.map(range=>range.statement)):[]
  return {items:rows.flatMap((result,index)=>result.results.map(row=>({
-  ...row,entity:ranges[index].entity,href:recordHref(ranges[index].entity,row.id,row.slug),
+  ...row,snippet:snippetBeyondTitle(row.title,row.snippet),entity:ranges[index].entity,href:recordHref(ranges[index].entity,row.id,row.slug),
  }))),total,page,pageSize:PAGE_SIZE}
 }
