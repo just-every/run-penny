@@ -22,7 +22,7 @@ export function mailReady(runtime: PennyRuntime): boolean { return authMail(runt
 export function mailTransport(runtime: PennyRuntime): string { return mailReady(runtime) ? runtime.configuration.mailProvider! : 'unavailable' }
 
 /** Mail never leaves a local development session or throwaway demo. */
-function suppressesMail(runtime: PennyRuntime): boolean {
+export function suppressesMail(runtime: PennyRuntime): boolean {
   const { demo, environment, appOrigin } = runtime.configuration
   return demo || environment === 'local' && Boolean(appOrigin && new URL(appOrigin).protocol === 'http:' && ['localhost','127.0.0.1','[::1]'].includes(new URL(appOrigin).hostname))
 }

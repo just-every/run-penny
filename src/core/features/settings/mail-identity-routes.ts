@@ -4,7 +4,7 @@ import type {OperatorMutationEnvironment} from '@/core/app/operator-mutations'
 import {integrationOperator} from '../integrations/destinations'
 import {guardedDatabase} from '../integrations/guarded-database'
 import {sessionGuard} from '../integrations/keys'
-import {authMail,providerMail} from '../auth/mail'
+import {authMail,providerMail,suppressesMail} from '../auth/mail'
 import {NativeError,digest} from '../auth/native-tokens'
 import {parseInput} from '../auth/native-routes'
 import {createUlid} from '@/core/shared/ulid'
@@ -20,7 +20,7 @@ export function registerMailIdentityRoutes(app:Hono<OperatorMutationEnvironment>
  app.get('/api/operator/settings/mail',async c=>{
   const runtime=c.get('runtime'),{session}=await integrationOperator(runtime,c.req.raw),identity=await mailIdentity(runtime)
   const provider=runtime.configuration.mailProvider
-  return c.json({identity:identity?{...identity,fromAddress:identity.fromAddress??runtime.configuration.mailFrom?.match(/<([^<>]+)>$/u)?.[1]??runtime.configuration.mailFrom??''}:{companyName:'',senderName:'',fromAddress:runtime.configuration.mailFrom?.match(/<([^<>]+)>$/u)?.[1]??runtime.configuration.mailFrom??'',replyTo:null,postalAddress:''},owner:session.operator.role==='owner',providerTestAvailable:Boolean(authMail(runtime)&&['sendgrid','resend'].includes(provider??'')&&!runtime.configuration.demo&&runtime.configuration.environment!=='local'),postalAddressRequired:!identity?.postalAddress})
+  return c.json({identity:identity?{...identity,fromAddress:identity.fromAddress??runtime.configuration.mailFrom?.match(/<([^<>]+)>$/u)?.[1]??runtime.configuration.mailFrom??''}:{companyName:'',senderName:'',fromAddress:runtime.configuration.mailFrom?.match(/<([^<>]+)>$/u)?.[1]??runtime.configuration.mailFrom??'',replyTo:null,postalAddress:''},owner:session.operator.role==='owner',mailSuppressed:suppressesMail(runtime),providerTestAvailable:suppressesMail(runtime)||Boolean(authMail(runtime)&&['sendgrid','resend'].includes(provider??'')),postalAddressRequired:!identity?.postalAddress})
  })
  // Recording the postal address remains possible while delivery is unconfigured.
  app.put('/api/operator/settings/business',async c=>{
@@ -31,11 +31,13 @@ export function registerMailIdentityRoutes(app:Hono<OperatorMutationEnvironment>
  app.post('/api/operator/settings/mail/test',async c=>{
   const runtime=c.get('runtime'),input=await parseInput(c.req.raw,mailIdentityInput),{db,session,actor}=await owner(runtime,c.req.raw),sender=providerMail(runtime),provider=runtime.configuration.mailProvider
   // Relay v1 cannot represent reply-to; it cannot verify an arbitrary sender domain.
-  if(!sender||!['sendgrid','resend'].includes(provider??'')||runtime.configuration.demo||runtime.configuration.environment==='local')throw new NativeError('provider_sender_test_unavailable',409,'Configure SendGrid or Resend to test a sender address before saving it.')
+  // Dev and demo mail is suppressed silently, so the sender test passes without a send.
+  const suppressed=suppressesMail(runtime)
+  if(!suppressed&&(!sender||!['sendgrid','resend'].includes(provider??'')))throw new NativeError('provider_sender_test_unavailable',409,'Configure SendGrid or Resend to test a sender address before saving it.')
   const id=createUlid(),hash=await digest(JSON.stringify({input,provider,key:runtime.configuration.mailApiKey})),now=Date.now()
-  await db.prepare('INSERT INTO penny_mail_identity_tests(id,operator_id,operator_version,input_hash,provider,outcome,tested_at) VALUES(?,?,?,?,?,\'unknown\',?)').bind(id,session.operatorId,session.operator.version,hash,provider!,now).run()
-  let result:{status:string;code?:string}={status:'uncertain'}
-  try{result=await sender.send({deliveryId:id,...identityHeaders(input,input.fromAddress),to:[session.operator.email],subject:'Confirm your Penny sender identity',text:`This is a sender identity test for ${input.companyName}.\n\nConfirm receipt in settings before saving.\n\n${input.postalAddress}`,headers:{'Auto-Submitted':'auto-generated'}})}catch{result={status:'uncertain'}}
+  await db.prepare('INSERT INTO penny_mail_identity_tests(id,operator_id,operator_version,input_hash,provider,outcome,tested_at) VALUES(?,?,?,?,?,\'unknown\',?)').bind(id,session.operatorId,session.operator.version,hash,provider??'development',now).run()
+  let result:{status:string;code?:string}={status:suppressed?'accepted':'uncertain'}
+  if(!suppressed&&sender)try{result=await sender.send({deliveryId:id,...identityHeaders(input,input.fromAddress),to:[session.operator.email],subject:'Confirm your Penny sender identity',text:`This is a sender identity test for ${input.companyName}.\n\nConfirm receipt in settings before saving.\n\n${input.postalAddress}`,headers:{'Auto-Submitted':'auto-generated'}})}catch{result={status:'uncertain'}}
   await db.batch([db.prepare('UPDATE penny_mail_identity_tests SET outcome=? WHERE id=?').bind(result.status,id),audit(db,actor.id,'mail.sender_tested',new Date().toISOString())])
   return c.json({testId:id,provider,result:result.status,accepted:result.status==='accepted',message:result.status==='accepted'?'Provider accepted the test. Confirm you received it before saving.':'Provider did not accept the sender. Settings have not been saved.'})
  })

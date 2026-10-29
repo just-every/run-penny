@@ -14,7 +14,7 @@ export function OperatorSettings() {
   async function invite(event:FormEvent<HTMLFormElement>) {
     event.preventDefault();const form=event.currentTarget
     setBusy(true);setMessage('');setError(false)
-    try {await operatorMutation(endpoint,{email:new FormData(form).get('email')});form.reset();setMessage(mailSuppressed?'Invitation recorded. Penny Dev sends no email, so no message was sent; on a deployed copy the operator gets a sign-in email.':'Invitation sent. Ask the operator to open their email and confirm sign-in.');refresh()}
+    try {await operatorMutation(endpoint,{email:new FormData(form).get('email')});form.reset();setMessage(mailSuppressed?'Invited.':'Invitation sent. Ask the operator to open their email and confirm sign-in.');refresh()}
     catch(e){setError(true);setMessage(e instanceof Error?e.message:'Could not invite operator.')}
     finally{setBusy(false)}
   }
