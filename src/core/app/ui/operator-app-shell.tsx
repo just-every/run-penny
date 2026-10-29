@@ -27,9 +27,9 @@ const navigation = [
 ] as const
 
 const itemClass = 'relative flex min-h-11 items-center gap-3.5 rounded-lg px-3 text-base transition-colors lg:text-[17px]'
-// The current item: a soft copper fill with a copper bar at its left edge, its label and icon in the dark accent (5.8:1 on
-// that fill, where the copper text tone would fall under 4.5:1).
-const currentClass = 'bg-penny-copper/12 font-semibold text-penny-accent-dark before:absolute before:inset-y-2 before:left-0 before:w-[3px] before:rounded-full before:bg-penny-copper'
+// The current item: a soft copper fill, its label and icon in the dark accent (5.8:1 on that fill, where the copper text tone
+// would fall under 4.5:1), semibold, with no bar or border on any one edge.
+const currentClass = 'bg-penny-copper/12 font-semibold text-penny-accent-dark'
 const restClass = 'font-[450] text-penny-soft hover:bg-penny-ink/5 hover:text-penny-ink'
 const sidebarSurface = 'border-r border-penny-line bg-[color-mix(in_srgb,var(--color-penny-sand)_45%,var(--color-penny-paper))]'
 
