@@ -19,6 +19,7 @@ async function refresh(){
  $('linked').textContent=data.linked?data.linked.title+' · '+data.linked.status.replaceAll('_',' '):'No published request linked.'
  const draft=data.replies[0];replyId=draft?.id??null;$('reply-text').value=draft?.body??'';$('reply-review').checked=false
  $('reply-state').textContent=!draft?'No reply prepared for the current public status.':draft.state==='unknown'?'Delivery is uncertain. Check this conversation in Help Scout and reconcile it there. Penny will not retry this reply.':draft.state==='sending'?'Delivery is in progress or awaiting confirmation. Check Help Scout before taking further action; Penny will not resend this reply.':draft.state==='sent'?'Reply sent. This reply cannot be sent again.':draft.state==='held'?'Reply held. Ask the owner to review source access, restored work or private wording in Penny before any further action.':'Draft ready for review. Nothing has been sent.'
+ $('reply-warning').textContent=data.deliveryUncertain&&!['unknown','sending'].includes(draft?.state)?'An earlier reply still has uncertain delivery. Check this conversation in Help Scout and reconcile it there before sending another update. Penny will not retry the earlier reply.':''
  $('send').disabled=!draft||draft.state!=='draft'
 }
 $('refresh').onclick=refresh

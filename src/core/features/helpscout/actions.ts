@@ -28,7 +28,10 @@ export async function sidebarAction(runtime:PennyRuntime,token:string,input:z.in
  if(input.action==='view'){
   if(row?.evidence_id)await prepareReplies(runtime,c,now,row.evidence_id)
   const linked=row?.request_id?await db.prepare(approvedSql+' AND r.id=?').bind(row.request_id).first():null
-  return {conversationId,sourceUrl:sourceUrl(conversationId),capture:row?{state:row.state,failure:row.state==='failed'?'Capture failed. Ask the owner to retry in settings.':row.failure,sourceState:row.source_state,evidenceId:row.evidence_id}:null,linked,replies:linked&&row?.evidence_id?(await db.prepare(`SELECT id,body,state FROM penny_helpscout_replies WHERE evidence_id=? AND status_id=(SELECT ${publicRevisionSql} FROM requests r WHERE r.id=?) ORDER BY created_at DESC LIMIT 1`).bind(row.evidence_id,row.request_id).all()).results:[]}
+  // Delivery uncertainty belongs to the conversation, even when a newer
+  // public revision prepares another draft or the linked request is hidden.
+  const deliveryUncertain=Boolean(row?.evidence_id&&await db.prepare("SELECT 1 FROM penny_helpscout_replies WHERE evidence_id=? AND state IN('unknown','sending') LIMIT 1").bind(row.evidence_id).first())
+  return {conversationId,sourceUrl:sourceUrl(conversationId),capture:row?{state:row.state,failure:row.state==='failed'?'Capture failed. Ask the owner to retry in settings.':row.failure,sourceState:row.source_state,evidenceId:row.evidence_id}:null,linked,deliveryUncertain,replies:linked&&row?.evidence_id?(await db.prepare(`SELECT id,body,state FROM penny_helpscout_replies WHERE evidence_id=? AND status_id=(SELECT ${publicRevisionSql} FROM requests r WHERE r.id=?) ORDER BY created_at DESC LIMIT 1`).bind(row.evidence_id,row.request_id).all()).results:[]}
  }
  if(!row?.evidence_id||row.state!=='done'||!['current','changed'].includes(row.source_state))throw new NativeError('helpscout_capture_not_ready',409)
  if(input.action==='send')return sendReply(runtime,c,db,conversationId,input.replyId,input.text)

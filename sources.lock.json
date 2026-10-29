@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "0d1346e462d478e18115a0fe6aff77559c776f6b4809cfd0161b29aac73c2544",
+      "sha256": "df74cec4d40cb02b369a8ced69fff61b6e005ddcaf48c2713cf933b4e3c5e22c",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3082,7 +3082,7 @@
       "executable": false
     },
     "docs/HELPSCOUT.md": {
-      "sha256": "739778b0a12850bde2ad9110c1e215fcc2ec27bc4f29cd75ba7e6ada871f7b24",
+      "sha256": "edf4616cccf928774967e06d7c80b68f9fdf117ea58fbddecfa0984415e82489",
       "executable": false
     },
     "docs/HOST-IDENTITY.md": {
@@ -5318,7 +5318,7 @@
       "executable": false
     },
     "src/core/features/helpscout/actions.ts": {
-      "sha256": "4b5a4ee99f14e5469cf97bd0b7347b8046eec29d911789be6f4c842b85d9dbab",
+      "sha256": "1ed0ba969383a6a47294d8b2b3d7912c5746cb95e39838596f6dfe8d9d97485a",
       "executable": false
     },
     "src/core/features/helpscout/archive.ts": {
@@ -5334,11 +5334,11 @@
       "executable": false
     },
     "src/core/features/helpscout/panel.html": {
-      "sha256": "37e0d3f26f52b2c7b7d74e64d32b64c1383b9c9a4c77f60efdd27596b7e98997",
+      "sha256": "1c2a411dfe3f7c6397f7f8298d1bf9dc12a16acaf93b3e6b4b7c9f8a53b87fde",
       "executable": false
     },
     "src/core/features/helpscout/panel.js": {
-      "sha256": "b97132e218e692dd39ed4df06bd909a9d7e87e4ccd9d3045d41e1ea21853f962",
+      "sha256": "4a3a421233a881bea0fc564f05e195dbf4893f1ac6dda1fa034c80667aef0d21",
       "executable": false
     },
     "src/core/features/helpscout/replies.ts": {
@@ -8078,7 +8078,7 @@
       "executable": false
     },
     "tests/browser/helpscout-capture.mjs": {
-      "sha256": "4f5a18011fd0159c361833996d5c102130394336f9b4f39a2157844bc6dc01d0",
+      "sha256": "cc7abec5e7423650a467ed17cec1dc016e1968402c3a4667b7555d7e828e4f56",
       "executable": false
     },
     "tests/browser/host-identity.mjs": {

@@ -74,7 +74,8 @@ reply** is a separate explicit action with the edited text and an approval
 checkbox. Penny checks current public status and private account values/internal
 notes again before POSTing a reply to the original conversation. Sent or ambiguous
 attempts cannot be replayed. A network failure or non-201 result stays unknown:
-the sidebar keeps this delivery state visible after refresh or restart. Inspect
+the sidebar keeps this delivery state visible after refresh or restart, including
+when a newer public status prepares another draft. Inspect
 the actual Help Scout thread and reconcile there. Penny does not offer a
 blind resend, and restored drafts are held.
 
