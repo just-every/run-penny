@@ -1939,7 +1939,7 @@ Core · target · **missing** · Rules D-1
 2. An edited fixture review shows changed.
 3. AI-004 proposals from a review carry byte-exact spans.
 
-**Evidence.** None.
+**Evidence.** `tests/browser/review-capture.mjs`
 **Gap.** Recorded fixtures from G2, Capterra, TrustRadius, Trustpilot, Product Hunt, the App Store and Google Play produce one inbox item per review however often the feed is re-read, each with its rating, date and a deep link that opens that review; an edited fixture review shows changed;
 
 #### CAP-021 — Discord

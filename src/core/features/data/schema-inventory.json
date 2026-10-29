@@ -3255,5 +3255,88 @@
       "source_digest",
       "created_at"
     ]
+  },
+  "penny_review_connections": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "site",
+      "listing",
+      "public_url",
+      "terms_accepted",
+      "interval_hours",
+      "purge_days",
+      "extract",
+      "owner_id",
+      "owner_version",
+      "actor_id",
+      "revision",
+      "state",
+      "cursor",
+      "claim",
+      "started_at",
+      "next_due",
+      "last_success",
+      "failure",
+      "captured",
+      "attempts",
+      "updated_at"
+    ]
+  },
+  "penny_review_credentials": {
+    "classification": "installation",
+    "columns": [
+      "connection_id",
+      "encrypted_token",
+      "refresh_claim"
+    ]
+  },
+  "penny_review_sources": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "connection_id",
+      "site",
+      "review_id",
+      "review_url",
+      "rating",
+      "title",
+      "app_version",
+      "country",
+      "source_hash",
+      "source_state",
+      "captured_at",
+      "next_check",
+      "removed_at",
+      "purge_at",
+      "check_claim",
+      "check_started_at",
+      "check_failure",
+      "ai_state",
+      "ai_claim",
+      "ai_started_at",
+      "ai_failure"
+    ]
+  },
+  "penny_review_proposals": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "evidence_id",
+      "version_id",
+      "problem",
+      "start_byte",
+      "end_byte",
+      "span",
+      "closest_request_id",
+      "created_at"
+    ]
+  },
+  "penny_review_receipts": {
+    "classification": "product",
+    "columns": [
+      "source_digest",
+      "created_at"
+    ]
   }
 }

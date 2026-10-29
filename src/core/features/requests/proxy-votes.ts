@@ -23,6 +23,7 @@ export async function recordProxyVote(db:D1Database,slug:string,input:ProxyVoteI
  const personId=input.requesterId??createUlid(),now=new Date().toISOString()
  if(input.requesterId&&!await db.prepare('SELECT id FROM requesters WHERE id=? AND blocked_at IS NULL AND NOT EXISTS(SELECT 1 FROM requester_identity_merges WHERE source_requester_id=?)').bind(personId,personId).first())throw new MutationError(409,'Choose an active customer.')
  if(input.contact?.email&&await db.prepare('SELECT id FROM requester_addresses WHERE lower(email)=lower(?)').bind(input.contact.email).first())throw new MutationError(409,'That address already belongs to a customer. Search for and select that customer.')
+ if(input.evidenceId&&await db.prepare("SELECT 1 FROM evidence_items WHERE id=? AND source_type='review'").bind(input.evidenceId).first())throw new MutationError(409,'Reviewers cannot become a proxy-vote contact from review capture.')
  if(input.evidenceId&&!await db.prepare('SELECT id FROM evidence_items WHERE id=?').bind(input.evidenceId).first())throw new MutationError(404,'Source evidence not found.')
  const guard=createUlid(),existing=await db.prepare('SELECT 1 FROM request_votes WHERE request_id=? AND requester_id=?').bind(request.id,personId).first()
  // An existing vote is already this customer's demand. Recording it again adds no origin.
@@ -32,7 +33,7 @@ export async function recordProxyVote(db:D1Database,slug:string,input:ProxyVoteI
    EXISTS(SELECT 1 FROM requests WHERE id=? AND withdrawn_at IS NULL AND merged_into_request_id IS NULL)
    AND NOT EXISTS(SELECT 1 FROM request_votes WHERE request_id=? AND requester_id=?)
    AND (?=1 OR EXISTS(SELECT 1 FROM requesters WHERE id=? AND blocked_at IS NULL AND NOT EXISTS(SELECT 1 FROM requester_identity_merges WHERE source_requester_id=?)))
-   AND (? IS NULL OR EXISTS(SELECT 1 FROM evidence_items WHERE id=?)) AND ${priority.sql} THEN 1 ELSE 0 END)`)
+   AND (? IS NULL OR EXISTS(SELECT 1 FROM evidence_items WHERE id=? AND source_type<>'review')) AND ${priority.sql} THEN 1 ELSE 0 END)`)
    .bind(guard,request.id,request.id,personId,Number(Boolean(input.contact)),personId,personId,input.evidenceId??null,input.evidenceId??null,...priority.values),
   ...(input.contact?[
    db.prepare('INSERT INTO requesters(id,display_name,created_at,updated_at) VALUES(?,?,?,?)').bind(personId,input.contact.displayName,now,now),

@@ -1,0 +1,22 @@
+{
+  "reviews": [
+    {
+      "reviewId": "googleplay-review-1",
+      "authorName": "Casey Reviewer googleplay",
+      "comments": [
+        {
+          "userComment": {
+            "text": "Please add caf\u00e9 exports. Contact reviewer@example.test. Source googleplay.",
+            "lastModified": {
+              "seconds": "1793190600"
+            },
+            "starRating": 4,
+            "appVersionName": "3.2.1",
+            "country": "US",
+            "device": "OMITTED_PROVIDER_FIELD"
+          }
+        }
+      ]
+    }
+  ]
+}

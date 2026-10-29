@@ -68,6 +68,7 @@
     { "source": "RULINGS.md", "reason": "Rulings that shape contract clauses, with their dates and who ruled, for maintainers" },
     { "source": "docs/contract-mechanism.md", "reason": "Formats, timing and accounting rules behind contract clauses, for maintainers" },
     { "source": "docs/verify.md", "reason": "The hand-written acceptance record kept from before ACCEPTANCE.md was generated, for maintainers" },
+    { "source": "docs/REVIEWS.md", "reason": "Review-site credential scope, enforcing transport, source privacy and recovery for installation owners" },
     { "source": "docs/DISCORD.md", "reason": "Discord application, owner-run Gateway relay and enforcing transport setup for installation owners" }
   ]
 }

@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Add CAP-020 review capture for seven selected vendor listings, daily accountable
+  cursor work, one inbox identity per site/review, source-change/removal custody,
+  redaction before storage and exact UTF-8 extraction suggestions. Owner settings
+  expose pause, resume, retry and disconnect; installation-only encrypted tokens
+  are deleted on disconnect and omitted from archives. App Store signing keys,
+  Google service accounts and Trustpilot refresh grants support scheduled renewal,
+  holding ambiguous exchanges for explicit reconnect. Migration 0098 is additive;
+  restored connections are held. Extend the populated upgrade journey and add one
+  emitted-Worker public-door sanity journey with vendor/model network fixtures.
+  CAP-020 text, acceptance and missing status remain unchanged. Live provider
+  account, token issuance/renewal and hosted transport/Cron checks remain owner steps.
+
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.
 
 - Checkpoint source-check claims before Discord reads, prevent overlapping or superseded completions from changing removed/purged sources, and show interrupted checks until an owner deliberately retries them by saving the connector settings. Add migration 0097 without changing applied SQL; restored running checks are held. Extend the two existing public-door sanity journeys with session-expiry, overlapping removal/purge and actual Worker restart recovery. CAP-021 remains missing with unchanged acceptance and counts.

@@ -362,6 +362,20 @@
       "adapters": [
         "penny.discord.v1"
       ]
+    },
+    {
+      "id": "review-sites",
+      "required": false,
+      "why": "Owner-scoped review reads through PENNY_REVIEWS_EGRESS. Vendor credentials are encrypted in installation-only custody; public Capterra and TrustRadius pages require explicit terms confirmation. No reviewer contact or posting.",
+      "data": [
+        "selected listing and review IDs",
+        "vendor authorization",
+        "pagination cursor",
+        "scoped Google service-account assertion or Trustpilot refresh grant for token renewal"
+      ],
+      "adapters": [
+        "penny.reviews.v1"
+      ]
     }
   ],
   "env": [

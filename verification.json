@@ -248,6 +248,15 @@
         "node tests/browser/discord-capture.mjs",
         "node --test tests/installer/discord-relay.test.mjs"
       ]
+    },
+    {
+      "name": "review-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/review-capture.mjs"
+      ]
     }
   ],
   "nightly": [

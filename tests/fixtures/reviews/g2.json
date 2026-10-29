@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "id": "g2-review-1",
+      "type": "survey-responses",
+      "attributes": {
+        "reviewer": {
+          "name": "Casey Reviewer g2"
+        },
+        "star_rating": 4,
+        "title": "Useful, with a g2 request",
+        "body": "Please add caf\u00e9 exports. Contact reviewer@example.test. Source g2.",
+        "submitted_at": "2026-10-28T12:30:00Z",
+        "product_version": "3.2.1",
+        "country": "US",
+        "url": "https://www.g2.com/products/penny/reviews/penny-review-1",
+        "extra_private_field": "OMITTED_PROVIDER_FIELD"
+      }
+    }
+  ],
+  "links": {}
+}

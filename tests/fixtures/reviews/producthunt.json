@@ -1,0 +1,27 @@
+{
+  "data": {
+    "post": {
+      "id": "penny",
+      "comments": {
+        "edges": [
+          {
+            "node": {
+              "id": "producthunt-review-1",
+              "body": "Please add caf\u00e9 exports. Contact reviewer@example.test. Source producthunt.",
+              "createdAt": "2026-10-28T12:30:00Z",
+              "url": "https://www.producthunt.com/posts/penny#comment-producthunt-review-1",
+              "user": {
+                "name": "Casey Reviewer producthunt",
+                "email": "OMITTED_PROVIDER_FIELD"
+              }
+            }
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": null
+        }
+      }
+    }
+  }
+}

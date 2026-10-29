@@ -1,0 +1,20 @@
+const hints:Record<string,string>={
+ reviews_purge_failed:'The removed excerpt could not be purged. Check database and audit storage; the next schedule retries this due purge.',
+ reviews_listing_removed:'The listing is no longer available. Captured excerpts follow the source-removal retention policy. Reconnect after checking the vendor listing.',
+ reviews_rate_limited:'The provider rate limit was reached. Wait for its reset, then retry this saved cursor.',
+ reviews_access_revoked:'Access was refused. Reconnect with a current credential and the required listing scope.',
+ reviews_credentials_missing:'Reconnect this listing with its vendor credential.',
+ reviews_credential_refresh_reconciliation_required:'The provider may have rotated a refresh token before work stopped. Reconnect with a fresh credential from the provider; this refresh is never replayed automatically.',
+ reviews_credential_renewal_failed:'The provider refused credential renewal. Check the service account or reconnect with a current refresh token.',
+ reviews_credentials_unreadable:'The installation key changed. Reconnect with a current vendor credential.',
+ reviews_interrupted_retry_required:'The worker stopped during sync. Its saved cursor and captured items are safe. Retry to continue.',
+ reviews_interrupted_check_retry_required:'A source check was interrupted. Retry sync to check it again.',
+ reviews_extraction_interrupted_reconcile_before_retry:'Extraction stopped after it may have reached the paid provider. Check provider usage before acknowledging a paid retry.',
+ ai_model_unconfigured:'Configure Request extraction and its enforcing transport in AI settings, then retry extraction.',
+ ai_budget_exhausted:'The AI budget cannot admit this extraction. Review the budget in AI settings before retrying.',
+ reviews_owner_unavailable:'The accountable owner is no longer active. A current owner must resume this connector.',
+ reviews_public_markup_unavailable:'The public page does not expose readable review markup. Check the listing and its current terms before reconnecting.',
+ reviews_span_invalid:'The model returned a span that did not match the stored review. No proposal was saved.',
+ reviews_redirect_refused:'The provider redirected the request. Check the supported listing URL and credential; redirects are refused.',
+}
+export function reviewFailureHint(code:string){return hints[code]??'This work could not finish. Check the listing, provider permissions and installation transport, then retry deliberately.'}
