@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
+import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure,OperatorResourceLoading,OperatorResourceNotFound,OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
 import { LearningHeader } from './learning-header'
@@ -37,6 +38,7 @@ export function LearningPage() {
  if(state.kind==='not_found')return <OperatorResourceNotFound title="Learning workspace unavailable">This installation does not have a learning workspace.</OperatorResourceNotFound>
  if(state.kind==='error')return <OperatorResourceFailure title={refreshAttempt===null?"Could not load learning.":"Could not refresh learning."} onRetry={refresh} status={state.status} message={state.message}/>
  if(!home)return null
+ if(!home.configuration.source&&!home.configuration.model&&!home.investigations.length)return <OperatorPageHeader eyebrow="Product lead workspace" title="Learning is off on this installation">It needs an AI model key and a secure outbound connection from your host. Meanwhile, <Link to="/app/feedback" className="font-semibold text-penny-ink underline underline-offset-4">record feedback</Link>: everything else in Penny works.</OperatorPageHeader>
  const source=home.sources.find(s=>s.id===investigation?.sourceId)
  const correct=()=>{if(investigation&&artifact){setTarget({investigationId:investigation.id,id:`learning-correction-${artifact.id}`,kind:'correct'});selectTab('learning')}}
  const disconnect=()=>{if(investigation&&source)setTarget({investigationId:investigation.id,id:`learning-source-${source.id}`,kind:'source'})}
@@ -47,7 +49,7 @@ export function LearningPage() {
  <LearningPanel id="results" selected={tab}>
  <section className="panel" aria-labelledby="results-heading"><header className="section-head"><span className="small-label">RESULTS</span><h2 id="results-heading">What actually happened</h2></header><LearningResults results={home.results.filter(r=>r.investigationId===investigation?.id)}/></section></LearningPanel>
  <LearningPanel id="learning" selected={tab}>
- <section className="panel" aria-labelledby="learning-heading"><header className="section-head"><span className="small-label">LEARNING</span><h2 id="learning-heading">{artifact?'Current question and next check':'A question starts with permitted evidence'}</h2></header><p className="quiet">{artifact?artifact.body.nextCheck:investigation?learningReason(investigation.lastReason):'Record one original feedback item, then give Penny a bounded purpose. It can propose the question and prepare a useful clarification.'}</p>{artifact?.body.work?<details><summary>Inspect prepared investigation work</summary><h3>{artifact.body.work.method}</h3><p>{artifact.body.work.evidenceObtained}</p><ol>{artifact.body.work.implementationBrief.map((step,i)=><li key={i}>{step}</li>)}</ol><p>{artifact.body.work.decisionImpact}</p><p>Prepared internal work; no contact, publication or production change.</p></details>:null}{investigation?<InvestigationControls key={investigation.id} investigation={investigation} onSaved={retry} sources={home.sources}/>:null}</section>
+ <section className="panel" aria-labelledby="learning-heading"><header className="section-head"><span className="small-label">LEARNING</span><h2 id="learning-heading">{artifact?'Current question and next check':'A question starts with permitted evidence'}</h2></header><p className="quiet">{artifact?artifact.body.nextCheck:investigation?learningReason(investigation.lastReason):'Record one original feedback item, then tell Penny what to look into. It can propose the question and prepare a useful clarification.'}</p>{artifact?.body.work?<details><summary>Inspect prepared investigation work</summary><h3>{artifact.body.work.method}</h3><p>{artifact.body.work.evidenceObtained}</p><ol>{artifact.body.work.implementationBrief.map((step,i)=><li key={i}>{step}</li>)}</ol><p>{artifact.body.work.decisionImpact}</p><p>Prepared internal work; no contact, publication or production change.</p></details>:null}{investigation?<InvestigationControls key={investigation.id} investigation={investigation} onSaved={retry} sources={home.sources}/>:null}</section>
  {artifact?<LearningArtifact key={artifact.id} artifact={artifact} onSaved={retry}/>:null}
  </LearningPanel>
  <LearningPanel id="needs-you" selected={tab}>{attention?<DecisionCard key={attention.id} artifact={attention} onSaved={retry}/>:<aside className="decision" id="needs-you"><div className="decision-kicker">NEEDS YOU</div><h2>Nothing needs your decision.</h2><p className="decision-intro">Routine checks and unchanged progress stay quiet. A choice or permission boundary appears here when it matters.</p></aside>}</LearningPanel></div>

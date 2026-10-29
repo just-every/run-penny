@@ -45,7 +45,7 @@ export function RequesterBlockControl({ requester, onSaved }: {
   return (
     <div className="mt-4 space-y-3" role="group" aria-label={`Requester access for ${requester.displayName}`} aria-busy={busy}>
       <div className="flex flex-wrap items-center gap-3">
-        <Chip tone={blocked ? 'muted' : 'moss'}>{blocked ? 'Blocked' : 'Active'}</Chip>
+        {blocked ? <Chip tone="muted">Blocked</Chip> : null}
         <button type="button" className={secondaryButtonClass} disabled={busy} aria-expanded={confirming} aria-controls={confirmationId} onClick={() => { setConfirming(!confirming); setMessage('') }}>{action}</button>
       </div>
         <div id={confirmationId} hidden={!confirming} className={`${insetPanelClass} space-y-3 p-4`}>

@@ -8,7 +8,33 @@ import {browserOptions} from './browser-options.mjs'
 import {helpScoutEdge} from '../fixtures/helpscout/edge.mjs'
 const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/helpscout-capture');assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const config={mailboxId:12,tag:'feedback',sidebarUserId:42,purgeDays:0,clientId:'synthetic-helpscout-client-id',clientSecret:'synthetic-helpscout-client-secret',appSecret:'synthetic-helpscout-app-secret',webhookSecret:'synthetic-helpscout-webhook-secret'}
-const edge=helpScoutEdge(config),runtime=await startBrowserRuntime({networkWorker:edge.worker,networkBinding:'PENNY_HELPSCOUT_EGRESS'}),browser=await chromium.launch(browserOptions()),contexts=[]
+const edge=helpScoutEdge(config)
+// Vary only the provider response boundary; production mapping and capture run unchanged.
+const customerByConversation=new Map([[110,503],[111,504],[112,505],[113,506]])
+const customerProfiles=new Map([
+ [503,{id:503,firstName:'Retired',lastName:'Customer',_embedded:{emails:[{value:'retired@example.test'}]}}],
+ [504,{id:504,firstName:'Riley',lastName:'Chen',organizationId:null,_embedded:{emails:[{value:'customer@example.test'}]}}],
+ [505,{id:505,firstName:'Riley',lastName:'Chen',organizationId:702,_embedded:{emails:[{value:'customer@example.test'}]}}],
+ [506,{id:506}],
+])
+const providerEdge=edge.worker.outboundService
+edge.worker.outboundService=async request=>{
+ const url=new URL(request.url),customer=/^\/v2\/customers\/(\d+)$/.exec(url.pathname)
+ if(customerProfiles.has(Number(customer?.[1]))||url.pathname==='/v2/organizations/702'){
+  assert.equal(request.method,'GET');assert.equal(request.headers.get('Authorization'),'Bearer synthetic-helpscout-access-token')
+  edge.calls.push({path:url.pathname,query:url.search,method:request.method,body:''})
+  return Response.json(customer?customerProfiles.get(Number(customer[1])):{id:702,name:'Harbor customer company'})
+ }
+ const response=await providerEdge(request),conversation=/^\/v2\/conversations\/(\d+)(\/threads)?$/.exec(url.pathname)
+ if(response.status===200&&conversation&&Number(conversation[1])>=109){
+  const body=await response.json()
+  if(!conversation[2]&&customerByConversation.has(Number(conversation[1])))body.primaryCustomer={id:customerByConversation.get(Number(conversation[1]))}
+  if(conversation[2])for(const thread of body._embedded.threads)if(thread.type==='customer'){thread.body=`<p>Please add scheduled CSV summaries for conversation ${conversation[1]}.</p>`;thread.customer=Number(conversation[1])===113?null:{id:502,first:'Source',last:`Customer ${conversation[1]}`}}
+  return Response.json(body)
+ }
+ return response
+}
+const runtime=await startBrowserRuntime({networkWorker:edge.worker,networkBinding:'PENNY_HELPSCOUT_EGRESS'}),browser=await chromium.launch(browserOptions()),contexts=[]
 try{
  const {origin}=runtime;let ip=0
  async function send(path,body,headers={},method=body===undefined?'GET':'POST',status=200){const response=await fetch(origin+path,{method,redirect:'manual',headers:{Origin:origin,'CF-Connecting-IP':`198.18.${Math.floor(ip/250)}.${++ip%250+1}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})});assert.equal(response.status,status,`${method} ${path}: ${await response.clone().text()}`);return response}
@@ -58,8 +84,38 @@ try{
  const person=await runtime.db.prepare("SELECT * FROM requester_addresses WHERE email='customer@example.test'").first();assert.equal(person.verified_at,null);assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions').first('n'),0)
  assert.equal((await json('/api/operator/evidence',undefined,operator)).items.length,before+2)
  assert.equal(edge.calls.filter(c=>c.method==='POST'&&c.path.endsWith('/reply')).length,0,'Drafts never send themselves')
+ // R8: captured attribution must not revive blocked or retired requesters.
+ async function capture(id){assert.equal((await signed('webhook',webhook(id),config.webhookSecret)).status,202);await runtime.schedule();const item=(await json('/api/operator/evidence',undefined,operator)).items.find(e=>e.sourceLabel===`Help Scout conversation ${id}`);assert.ok(item,`Conversation ${id} produces evidence`);assert.equal(item.helpScout.sourceState,'current');return item}
+ await json(`/api/operator/requesters/${person.requester_id}/block`,{},operator)
+ const blocked=await capture(109);assert.equal(blocked.requester,null);assert.equal(blocked.account.id,first.account.id);assert.match(blocked.wording,/scheduled CSV/)
+ const blockedSide=await sidebar(109);await act(blockedSide.token,{action:'link',requestId:existing.id});assert.equal((await act(blockedSide.token,{action:'vote',source:'Blocked customer conversation',reviewed:true},409)).error,'helpscout_customer_unmapped')
+ await send(`/api/operator/requesters/${person.requester_id}/block`,undefined,operator,'DELETE',204)
+ const retired=await json(`/api/operator/requests/${existing.slug}/proxy-votes`,{contact:{displayName:'Retired Customer',email:'retired@example.test'},source:'Prior support conversation'},operator)
+ await json(`/api/operator/requesters/${retired.requesterId}/merge`,{targetRequesterId:person.requester_id},operator)
+ // Retain a legacy address pointing at the retired endpoint as the mapping precondition.
+ // Native merges ordinarily transfer addresses to the survivor.
+ await runtime.db.prepare("UPDATE requester_addresses SET requester_id=? WHERE email='retired@example.test'").bind(retired.requesterId).run()
+ assert.equal(await runtime.db.prepare('SELECT target_requester_id FROM requester_identity_merges WHERE source_requester_id=?').bind(retired.requesterId).first('target_requester_id'),person.requester_id)
+ const retiredCapture=await capture(110);assert.equal(retiredCapture.requester,null);assert.match(retiredCapture.wording,/scheduled CSV/)
+ assert.equal(await runtime.db.prepare("SELECT count(*) n FROM requester_addresses WHERE email='retired@example.test'").first('n'),1,'A retired mapping never creates a replacement identity')
+ const retiredSide=await sidebar(110);await act(retiredSide.token,{action:'link',requestId:existing.id});assert.equal((await act(retiredSide.token,{action:'vote',source:'Retired customer conversation',reviewed:true},409)).error,'helpscout_customer_unmapped')
+ // R9: no company stays absent; matching names never collapse distinct source IDs.
+ const noCompany=await capture(111);assert.equal(noCompany.account,null);assert.equal(noCompany.requester.id,person.requester_id)
+ const otherCompany=await capture(112);assert.equal(otherCompany.account.name,first.account.name);assert.notEqual(otherCompany.account.id,first.account.id);assert.equal(otherCompany.requester.id,person.requester_id)
+ assert.equal(await runtime.db.prepare('SELECT account_id FROM penny_helpscout_companies WHERE organization_id=701').first('account_id'),first.account.id)
+ assert.equal(await runtime.db.prepare('SELECT account_id FROM penny_helpscout_companies WHERE organization_id=702').first('account_id'),otherCompany.account.id)
+ // R22: provider customer ID alone grants neither native identity nor consent;
+ // an excerpt without a source speaker still captures with nullable attribution.
+ const anonymous=await capture(113);assert.equal(anonymous.requester,null);assert.equal(anonymous.account,null);assert.equal(anonymous.namedSpeaker,null);assert.match(anonymous.wording,/scheduled CSV/)
+ const anonymousSide=await sidebar(113);await act(anonymousSide.token,{action:'link',requestId:existing.id});assert.equal((await act(anonymousSide.token,{action:'vote',source:'Unattributed conversation',reviewed:true},409)).error,'helpscout_customer_unmapped')
+ assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions').first('n'),0)
+
+ const staleDraft=(await act(a.token,{action:'view'})).replies[0];assert.equal(staleDraft.state,'draft')
  await json(`/api/operator/requests/${existing.slug}/status-updates`,{status:'shipped',body:'Scheduled exports are available.',idempotencyKey:'fixture-shipped'},operator)
  await runtime.schedule();await side.getByRole('button',{name:'Refresh progress and status',exact:true}).click();await side.locator('#linked').filter({hasText:'Scheduled CSV exports · shipped'}).waitFor();const draft=(await act(a.token,{action:'view'})).replies[0];assert.ok(draft)
+ const beforeStaleSend=edge.calls.length
+ assert.equal((await act(a.token,{action:'send',replyId:staleDraft.id,text:'Exports are still open for feedback.',reviewed:true},409)).error,'helpscout_reply_stale')
+ assert.equal(edge.calls.length,beforeStaleSend,'Stale public wording never reaches the provider')
  await act(a.token,{action:'send',replyId:draft.id,text:'Unreviewed reply',reviewed:false},400)
  await act(a.token,{action:'send',replyId:draft.id,text:'Harbor customer company is our private account name.',reviewed:true},422)
  await side.getByLabel('Edited reply',{exact:true}).fill('Scheduled exports have shipped. Thank you for your feedback.');await side.getByLabel('I reviewed this exact reply and approve sending it to this customer.').check();await side.getByRole('button',{name:'Send reviewed reply',exact:true}).click();await side.getByRole('status').filter({hasText:'Reviewed reply sent.'}).waitFor()
@@ -115,9 +171,9 @@ try{
  // Source change keeps captured wording; removal purges all versions at the policy window.
  edge.modes.set(101,'changed');await runtime.schedule(Date.now()+3600001);assert.equal((await act(next.token,{action:'view'})).capture.sourceState,'changed');assert.match((await json('/api/operator/evidence',undefined,operator)).items.find(e=>e.id===first.id).wording,/scheduled CSV/)
  // All source-loss doors, including a merged conversation, use removal custody.
- for(const id of [107,108]){await signed('webhook',webhook(id),config.webhookSecret)}
+ for(const id of [107,108,114,115]){await signed('webhook',webhook(id),config.webhookSecret)}
  await runtime.schedule()
- const lost=[[101,'threads-403'],[103,'threads-404'],[106,'threads-410'],[107,'threads-301'],[108,301]]
+ const lost=[[101,'threads-403'],[103,'threads-404'],[106,'threads-410'],[107,'threads-301'],[108,301],[114,'wrong-mailbox'],[115,'untagged']]
  const evidenceById=new Map()
  for(const [id] of lost){const selected=await sidebar(id);await act(selected.token,{action:'link',requestId:existing.id});const view=await act(selected.token,{action:'view'});evidenceById.set(id,view.capture.evidenceId);assert.ok(view.replies.length)}
  const removalReadsStart=edge.calls.length
@@ -144,6 +200,35 @@ try{
  for(let step=0;erased.status!=='complete'&&step<100;step++)erased=await erasePost(`/api/operator/data/operations/${erased.operationId}/resume`,{})
  assert.equal(erased.status,'complete');assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_helpscout_captures WHERE evidence_id=?').bind(erasableId).first('n'),0)
  await signed('webhook',webhook(102),config.webhookSecret);await runtime.schedule();assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_helpscout_captures WHERE conversation_id=102').first('n'),0)
- await json(path,undefined,operator,'DELETE');assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_helpscout_secrets').first('n'),0);assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_helpscout_contexts').first('n'),0);await act(next.token,{action:'capture'},409);const count=edge.calls.length;await signed('webhook',webhook(105),config.webhookSecret);await runtime.schedule();assert.equal(edge.calls.length,count)
- assert.deepEqual(errors,[]);console.log('Help Scout: one HTTP/browser journey passed; before=0 after=6 captured conversations; paginated capture, embedded emails, persistent uncertain delivery and source-loss purge; no live provider account used')
+ // Set a real retention window for the later disconnected purge.
+ await json(path,{...config,purgeDays:1},operator)
+ // R11: ownership handover invalidates a reviewed draft's original authority.
+ const management='/api/operator/settings/operators',members=(await json(management,undefined,operator)).operators,ownerId=members.find(o=>o.self).id
+ await json(management,{email:'successor@example.test'},operator,'POST',202)
+ const invitation=runtime.outbox.findLast(m=>m.email==='successor@example.test');assert.ok(invitation)
+ const confirmation=await send('/auth/confirm',{token:new URL(invitation.url).searchParams.get('token')},{},'POST',303),successorCookie=confirmation.headers.get('set-cookie').split(';')[0]
+ const successorId=(await json(management,undefined,{Cookie:successorCookie})).operators.find(o=>o.self).id
+ const authoritySide=await sidebar(113),authorityDraft=(await act(authoritySide.token,{action:'view'})).replies[0];assert.equal(authorityDraft.state,'draft')
+ await json(`${management}/${ownerId}`,{successorId},operator,'DELETE')
+ const beforeRevokedSend=edge.calls.length
+ assert.equal((await act(authoritySide.token,{action:'send',replyId:authorityDraft.id,text:'Additional export controls are planned.',reviewed:true},401)).error,'integration_authority_changed')
+ await runtime.schedule();assert.equal(edge.calls.length,beforeRevokedSend,'Changed owner authority never sends or reads provider data')
+ await send('/api/auth/magic-link',{email:'successor@example.test'},{},'POST',202)
+ const login=runtime.outbox.findLast(m=>m.email==='successor@example.test'),signedIn=await send('/auth/confirm',{token:new URL(login.url).searchParams.get('token')},{},'POST',303),successor={Cookie:signedIn.headers.get('set-cookie').split(';')[0]}
+ // R12/R18: disconnect a still-live excerpt, retain it until the purge drain,
+ // then scrub every version and reply without any remaining provider credential.
+ const retainedBefore=(await json('/api/operator/evidence',undefined,successor)).items.find(e=>e.id===anonymous.id);assert.match(retainedBefore.wording,/scheduled CSV/)
+ await json(path,undefined,successor,'DELETE');assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_helpscout_secrets').first('n'),0);assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_helpscout_contexts').first('n'),0);await act(next.token,{action:'capture'},409);const count=edge.calls.length;await signed('webhook',webhook(105),config.webhookSecret);assert.equal(edge.calls.length,count)
+ const retainedAfter=(await json('/api/operator/evidence',undefined,successor)).items.find(e=>e.id===anonymous.id);assert.equal(retainedAfter.wording,retainedBefore.wording);assert.equal(retainedAfter.helpScout.sourceState,'removed')
+ const disconnectedView=await runtime.db.prepare('SELECT state FROM penny_helpscout_replies WHERE id=?').bind(authorityDraft.id).first('state');assert.equal(disconnectedView,'draft')
+ // A drain before the deadline retains evidence without reconnecting. After
+ // restart, a due drain purges every version and reply with no provider I/O.
+ await runtime.schedule()
+ assert.equal((await json('/api/operator/evidence',undefined,successor)).items.find(e=>e.id===anonymous.id).wording,retainedBefore.wording)
+ await runtime.restart();await runtime.schedule(Date.now()+86401000)
+ const purged=(await json('/api/operator/evidence',undefined,successor)).items.find(e=>e.id===anonymous.id);assert.equal(purged.wording,'[Source removed]');assert.equal(purged.namedSpeaker,null);assert.equal(purged.helpScout.sourceState,'purged')
+ const disconnectedVersions=(await runtime.db.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=?').bind(anonymous.id).all()).results;assert.ok(disconnectedVersions.length);assert.ok(disconnectedVersions.every(v=>v.wording==='[Source removed]'))
+ const disconnectedReplies=(await runtime.db.prepare('SELECT body,edited_body,state FROM penny_helpscout_replies WHERE evidence_id=?').bind(anonymous.id).all()).results;assert.ok(disconnectedReplies.length);assert.ok(disconnectedReplies.every(r=>r.body==='[Source removed]'&&r.edited_body===null&&r.state==='held'))
+ assert.equal(edge.calls.length,count,'Disconnected purge performs no provider I/O')
+ assert.deepEqual(errors,[]);console.log('Help Scout: one HTTP/browser journey passed; before=0 after=13 captured conversations (one later erased); R8 R9 R11 R12 R18 R19 R22 exercised; no new registrations; no live provider account used')
 }finally{for(const c of contexts)await c.close();await browser.close();await runtime.close()}

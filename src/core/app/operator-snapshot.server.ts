@@ -16,7 +16,7 @@ const result=(data:unknown)=>({status:200,data:data as Json})
 export async function operatorSnapshot(url:URL, primary:string|undefined, read:Read):Promise<Resources> {
   const path=url.pathname.replace(/\/$/,'')
   if(path==='/app/session-check')return {}
-  const paths=['/api/operator/notifications']
+  const paths=['/api/operator/notifications','/api/operator/learning/availability']
   if(path==='/app/feedback')paths.push('/api/operator/data/maintenance')
   if(primary)paths.push(primary)
   if(['/app/feedback','/app/decisions','/app/roadmap','/app/customers','/app/learning'].includes(path)||path.startsWith('/app/decisions/'))paths.push('/api/operator/loop/options')
