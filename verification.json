@@ -257,6 +257,15 @@
         "pnpm run build",
         "node tests/browser/helpscout-capture.mjs"
       ]
+    },
+    {
+      "name": "agent-door",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "node scripts/agent-docs.mjs check",
+        "pnpm run build"
+      ]
     }
   ],
   "nightly": [

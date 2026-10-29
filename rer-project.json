@@ -32,7 +32,10 @@
       ".github/workflows/rer-managed.yml",
       "scripts/build-deployment-spec.mjs",
       "management/integration/deployment-spec.json",
-      "packaging.json"
+      "packaging.json",
+      "src/core/features/agent-door/**",
+      "agent-surface.json",
+      "tests/agent-door/**"
     ],
     "migrationDirectories": [
       "migrations/core"
@@ -50,6 +53,6 @@
   },
   "setup": {
     "path": "rer-setup.json",
-    "sha256": "0040dc919989fa8f3185a5b848caaa2877df91720d3a4109488c96c98da51fd5"
+    "sha256": "931af57475770746bea52ff4fc9362aab53db6e0ac07a2be7f89ccce86ca2d11"
   }
 }

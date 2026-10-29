@@ -1,3 +1,4 @@
+import { assertAgentCustodyClear } from '../agent-door/custody'
 import {validateHelpScoutArchive} from '../helpscout/archive'
 import {validateDiscordArchive} from '../discord/archive'
 import {assertOriginalFiles} from './original-files'
@@ -144,7 +145,7 @@ export async function reserve(db:D1Database,kind:'export'|'restore'|'erase',payl
  // A confirmed erasure or restore is server work from here (runner/advance.ts).
  const work=kind==='export'?[]:[registerWork(db,id,'operation',authority,undefined,{sql:'EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)',params:[id]})]
  let result:D1Result[]
- try {result=await dataBatch(db,[db.prepare("UPDATE data_state SET phase='locked',lock_id=? WHERE singleton=1 AND phase='idle' RETURNING 1").bind(id),db.prepare("INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) SELECT ?,?,'pending',?,?,? WHERE EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(id,kind,canonical(payload),now,now,id),...work],authority)}catch(error){if(String(error).includes('attachment_writer_active'))fail('attachment_writer_active');if(String(error).includes('notification_writer_active'))fail('notification_writer_active');throw error}
+ try {result=await dataBatch(db,[db.prepare("UPDATE data_state SET phase='locked',lock_id=? WHERE singleton=1 AND phase='idle' RETURNING 1").bind(id),db.prepare("INSERT INTO data_operations(id,kind,status,payload_json,created_at,updated_at) SELECT ?,?,'pending',?,?,? WHERE EXISTS(SELECT 1 FROM data_state WHERE lock_id=?)").bind(id,kind,canonical(payload),now,now,id),...work],authority)}catch(error){if(String(error).includes('agent_retained_evidence_requires_review'))fail('agent_retained_evidence_requires_review');if(String(error).includes('attachment_writer_active'))fail('attachment_writer_active');if(String(error).includes('notification_writer_active'))fail('notification_writer_active');throw error}
  if(result[0].results.length!==1)fail('data_busy');return id
 }
 export async function finish(db:D1Database,id:string,status:'complete'|'aborted',authority?:DataAuthority):Promise<void>{
@@ -245,6 +246,7 @@ export async function startRestore(db:D1Database,bucket:R2Bucket,value:unknown,j
  if(resumeId&&(!existing||existing.kind!=='restore'))fail('invalid_data_operation',400)
  if(existing?.status==='complete')return existing.id
  if(existing?.status==='aborted')fail('data_operation_aborted')
+ await assertAgentCustodyClear(db)
  const {archive,journal,tables}=await validated(db,value,journalValue)
  validateReferences(tables,archive.tables)
  const payload={archiveHash:archive.sha256,journalHash:journal.sha256,keys:archive.files.map(file=>file.key)}
@@ -338,6 +340,7 @@ async function advancePreview(db:D1Database,saved:CopyCheckpoint<CachedErasure>,
 export function planErasure(db:D1Database,tableName:string,id:string):Promise<ErasurePlan>
 export function planErasure(db:D1Database,tableName:string,id:string,copyScan:CopyScanOptions):Promise<ErasureReview>
 export async function planErasure(db:D1Database,tableName:string,id:string,copyScan?:CopyScanOptions):Promise<ErasurePlan|ErasureReview>{
+ await assertAgentCustodyClear(db)
  if(!roots.has(tableName))fail('unsupported_erasure_entity',400)
  const context=copyScan?{...copyScan,table:tableName,id}:undefined
  if(copyScan?.continuation)return advancePreview(db,await resumeCopyScan<CachedErasure>(db,context!,copyScan.continuation),context!)

@@ -53,7 +53,7 @@ manifests without audience keep their current behavior.
 Public fields may declare an optional `businessField` hint identifying the
 business profile value represented by the input. The closed vocabulary is
 `owner_email`, `legal_name`, `timezone`, `currency`, `jurisdiction`, `mail_sender`,
-`display_name`, `owner_name`, `brand_color`, `logo_ref`, `entity_type`,
+`display_name`, `owner_name`, `brand_color`, `entity_type`,
 `state_of_organization`, `fiscal_year_start`, `books_start_date`, `tax_method`,
 `country` and `state`. Unknown hints are refused. Secrets cannot declare the
 hint, including entered, managed and generated secrets. The hint alone does
@@ -68,6 +68,39 @@ Unknown names must be added through a Base schema change or renamed to a listed
 input for that field. Each Business field may be claimed by only one input.
 Secret kind, `secret:true` and installer vault bindings remain ineligible even
 for listed names. Inputs without a hint keep their existing behavior.
+
+A seed that renders Business settings at request time opts in with the optional
+top-level `business` block:
+
+```json
+"business": {
+  "settings": 1,
+  "values": ["display_name", "owner_name", "brand_color", "logo", "timezone"],
+  "team": {"roles": {"admin": "admin", "member": "member"}}
+}
+```
+
+`settings` and `values` are required when the block is present. `settings` must
+be `1`. `values` is a nonempty, unique subset of `display_name`, `owner_name`,
+`brand_color`, `logo` and `timezone`, and must include `display_name`. These are
+the slots the seed renders from the signed runtime settings document. The
+platform still fills mapped setup inputs on the first build, then excludes
+these slots from subsequent environment profile sync and rebuilds. Adoption
+allows the platform to assign `RER_BUSINESS_TRUST` and deliver documents; the
+seed must integrate the Business settings module and render its declared slots.
+
+The optional `team` block declares multi-user adoption. It requires `roles`
+with exactly `admin` and `member`, mapping Business roles to nonblank seed role
+names. Neither may map to `owner` (including case or surrounding whitespace
+variants). A custom seed adapter must also refuse any native role that grants
+ownership. Business never grants ownership or changes the seed's owner.
+`business`, `team` and `roles` are closed objects: unknown keys are refused.
+Omit `team` for a seed without multi-user accounts; omit `business` to retain
+the existing setup-only behavior.
+
+Logo has only the signed settings document path: `logo_ref` is not a
+`businessField` hint or an entry in `BUSINESS_FIELD_INPUTS`. A logo is not an
+environment input and is served by the seed from its same-origin logo route.
 
 A field may declare `localDefault`, a value that only the zero-setup local
 launch (`rer dev` on a checkout that is not set up) fills into an empty active

@@ -1,3 +1,4 @@
+import { assertAgentCustodyClear } from '../agent-door/custody'
 import { NativeError, digest } from '../auth/native-tokens'
 import { createUlid } from '@/core/shared/ulid'
 import { applyStart, audit, canonical, finish, hash, keyColumns, readErasureJournal, reserve, rowKey, schema, state, ERASURE_LIMITS, type Row } from './archive'
@@ -82,6 +83,7 @@ async function copies(db: D1Database, operator: Operator, native: Native): Promi
 }
 
 export async function planOperatorErasure(db: D1Database, id: string): Promise<OperatorErasurePlan> {
+ await assertAgentCustodyClear(db)
  const found = await subject(db, id), current = (await state(db))!
  const planned = { counts: await counts(db, found), files: [] as string[], blockedCopies: await copies(db, found.operator, found.native) }
  const planHash = await hash({ origin: current.origin, epoch: current.epoch, table: 'operators', id, operator: found.operator, native: found.native, ...planned })
