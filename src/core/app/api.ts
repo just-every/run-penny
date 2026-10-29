@@ -1,3 +1,4 @@
+import {registerHelpScoutRoutes} from '@/core/features/helpscout/routes'
 import {registerDiscordRoutes} from '@/core/features/discord/routes'
 import {registerBulkRoutes} from '@/core/features/triage/bulk-routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
@@ -107,6 +108,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
     context.res = await editorDocumentHeaders(context.res, context.get('runtime'), context.req.path)
   })
 
+  registerHelpScoutRoutes(app)
   registerDiscordRoutes(app)
   registerAiRoutes(app)
   registerWeeklyRoutes(app)
