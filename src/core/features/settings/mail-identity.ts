@@ -1,3 +1,5 @@
+import { pennyTrust } from '../agent-door/trust'
+import { pennyBusiness } from '../agent-door/business'
 import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
 const safeName=(value:string)=>![...value].some(character=>character.charCodeAt(0)<32||character.charCodeAt(0)===127||[0x2028,0x2029].includes(character.charCodeAt(0))||'<>"\\'.includes(character))
@@ -7,7 +9,10 @@ export const mailIdentityInput=businessInput.extend({senderName:z.string().trim(
 export type MailIdentityInput=z.infer<typeof mailIdentityInput>
 export interface MailIdentity {companyName:string;senderName:string;fromAddress:string|null;replyTo:string|null;postalAddress:string}
 export async function mailIdentity(runtime:PennyRuntime):Promise<MailIdentity|null>{
- return runtime.database.binding.prepare('SELECT company_name AS companyName,sender_name AS senderName,from_address AS fromAddress,reply_to AS replyTo,postal_address AS postalAddress FROM penny_mail_identity WHERE singleton=1').first<MailIdentity>()
+ const record = await runtime.database.binding.prepare('SELECT company_name AS companyName,sender_name AS senderName,from_address AS fromAddress,reply_to AS replyTo,postal_address AS postalAddress FROM penny_mail_identity WHERE singleton=1').first<MailIdentity>()
+ if (!record) return null
+ if (!pennyTrust(runtime)) return record
+ return { ...record, companyName: await pennyBusiness(runtime).resolve('display_name', record.companyName) as string }
 }
 export function identityHeaders(identity:MailIdentity|null,from:string){
  const name=identity?.senderName||identity?.companyName,address=identity?.fromAddress??from

@@ -81,7 +81,7 @@ async function saveOwnerSettings(root, env, store, readOnly, environment) {
     await privateDirectory(root, directory)
     await writePrivateFile(join(root, file), JSON.stringify(values, null, 2) + '\n')
   }
-  declaration.vars = { ...declaration.vars, OPERATOR_EMAIL: input.email, WORKSPACE_TIMEZONE: input.timezone }
+  declaration.vars = { ...declaration.vars, OPERATOR_EMAIL: input.email, WORKSPACE_TIMEZONE: input.timezone, MAIL_PROVIDER: input.provider, MAIL_RELAY_URL: input.provider === 'rer' ? input.relayUrl : '' }
   // deploy.json declares every mail input rer's sign-in preflight reads; this
   // installation binds only the ones its selected provider supplies.
   declaration.secrets = declaration.secrets.filter(item => values[item.environment] !== undefined)
