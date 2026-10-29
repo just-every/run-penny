@@ -1,10 +1,10 @@
 import {workspaceOrigin} from './workspace.js'
 
 async function handoff(draft,origin){
- const tab=await chrome.tabs.create({url:origin+'/app/browser-capture'})
  // Session data stays in extension memory/session storage, never a URL, page
  // localStorage or portable product record. No cookie or API token is read.
  await chrome.storage.session.set({lastReview:{draft,origin}})
+ const tab=await chrome.tabs.create({url:origin+'/app/browser-capture'})
  for(let attempt=0;attempt<100;attempt++){
   const current=await chrome.tabs.get(tab.id)
   if(current.status==='complete'){
@@ -41,7 +41,7 @@ async function capture({tabId,mode,screenshot}){
   image=await chrome.tabs.captureVisibleTab(tab.windowId,{format:'png'})
   const after=await chrome.tabs.get(tabId),[stillActive]=await chrome.tabs.query({active:true,windowId:tab.windowId})
   if(stillActive?.id!==tabId||after.url!==tab.url)throw Error('The source tab changed during the screenshot. Nothing was saved.')
-  if(image.length>12582912)throw Error('The screenshot is too large. Select text instead.')
+  if(image.length>8388608)throw Error('The screenshot is too large. Select text instead.')
  }
  if(mode==='capture'&&!snapshot.wording.trim()&&!image)throw Error('Select a passage or choose Include a screenshot before capturing.')
  await handoff({id:crypto.randomUUID(),mode,...snapshot,...(image?{image}:{})},origin)

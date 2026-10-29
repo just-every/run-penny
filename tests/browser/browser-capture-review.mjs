@@ -22,6 +22,7 @@ try{
  // exercised separately by browser-capture.mjs, with the identical review route.
  await page.evaluate(draft=>window.postMessage({type:'penny-browser-draft',draft},location.origin),draft)
  await page.getByLabel('Selected excerpt',{exact:true}).waitFor()
+ await page.getByLabel('Source time (ISO date, time and timezone)').fill('2026-10-27T14:00:00Z')
  await page.getByLabel('Author as named at the source (optional)').fill('Source author source.person@example.test')
  await page.getByLabel('Days to keep the excerpt after source removal').fill('0')
  await page.getByLabel('Find a customer',{exact:true}).fill('Nina')
@@ -55,6 +56,13 @@ try{
  await runtime.restart();await runtime.schedule();await runtime.schedule()
  assert.equal((await json('/api/operator/browser-captures/'+job.id,undefined,operator)).state,'done')
  await page.getByRole('button',{name:'Check completion',exact:true}).click();await page.getByRole('status').filter({hasText:'Capture completed.'}).waitFor()
+ // Reopening the original raw extension draft loads the saved redacted
+ // excerpt and source time, retaining the deliberately selected native people.
+ await page.goto(origin+'/app/browser-capture',{waitUntil:'networkidle'});await page.waitForFunction(()=>document.documentElement.dataset.pennyCapture==='ready')
+ await page.evaluate(draft=>window.postMessage({type:'penny-browser-draft',draft},location.origin),draft)
+ await page.getByRole('status').filter({hasText:'Saved choices: Nina Rao · Monthly finance exports'}).waitFor()
+ assert.equal(await page.getByLabel('Source time (ISO date, time and timezone)').inputValue(),'2026-10-27T14:00:00Z')
+ assert.match(await page.getByLabel('Selected excerpt',{exact:true}).inputValue(),/\[REDACTED:email\]/)
  const votes=await runtime.db.prepare('SELECT COUNT(*) n FROM request_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first('n');assert.equal(votes,1)
  const proxy=await runtime.db.prepare('SELECT source,source_url,evidence_id,recorder_operator_id FROM penny_proxy_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first()
  assert.equal(proxy.source_url,sourceUrl);assert.equal(proxy.evidence_id,job.evidence_id);assert.match(proxy.source,/\[REDACTED:email\]/);assert.ok(proxy.recorder_operator_id)

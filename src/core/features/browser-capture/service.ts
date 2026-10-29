@@ -6,7 +6,7 @@ import {redactCaptured,redactionFence} from '../redaction/settings'
 import {audit} from '../decisions/write-support'
 import {digest,sourceFingerprint,type CaptureInput,type Capture} from './schema'
 
-export const readCapture=(db:D1Database,id:string)=>db.prepare('SELECT b.*,p.display_name AS requester_name,r.title AS request_title,o.display_name AS owner_name FROM penny_browser_captures b LEFT JOIN requesters p ON p.id=b.requester_id LEFT JOIN requests r ON r.id=b.request_id LEFT JOIN operators o ON o.id=b.actor_id WHERE b.id=?').bind(id).first<Capture>()
+export const readCapture=(db:D1Database,id:string)=>db.prepare('SELECT b.*,e.observed_at,e.named_speaker,(SELECT wording FROM evidence_versions v WHERE v.evidence_id=e.id ORDER BY v.version_number DESC LIMIT 1) AS wording,p.display_name AS requester_name,r.title AS request_title,o.display_name AS owner_name FROM penny_browser_captures b JOIN evidence_items e ON e.id=b.evidence_id LEFT JOIN requesters p ON p.id=b.requester_id LEFT JOIN requests r ON r.id=b.request_id LEFT JOIN operators o ON o.id=b.actor_id WHERE b.id=?').bind(id).first<Capture>()
 export async function startCapture(db:D1Database,input:CaptureInput,actor:string,session:Session,now:string){
  if(session.operator.role!=='owner'&&input.purgeDays!==30)throw new NativeError('browser_retention_owner_required',403,'Only the workspace owner can change the default 30-day excerpt-retention window.')
  const hash=await digest(JSON.stringify(input)),receipt=await digest(input.id)

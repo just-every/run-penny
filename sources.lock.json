@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "c17d6dff3e51de91e74c186082530025ffd48f48bb026f2815ae71d992d1491d",
+      "sha256": "8f6b47590a9ef0d4eb830c03ed9467d22fe17e7af0dd24507d87c18a28ae6ee2",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3010,7 +3010,7 @@
       "executable": false
     },
     "docs/BROWSER-CAPTURE.md": {
-      "sha256": "2a3c5acdc7f5850f8fa7a0b2058e010927f76e485744bf8874dc8d3058deb9dc",
+      "sha256": "a7f8aa051700a6174f6d875f48385ab512f5b67706336345f2f64361c6a48c0e",
       "executable": false
     },
     "docs/CANNY-MIGRATION.md": {
@@ -3210,7 +3210,7 @@
       "executable": false
     },
     "integrations/browser-extension/background.js": {
-      "sha256": "adc4f2cb55386a195ef2347e8bcc058ee53e4e8b4b566ec43110b5021d96ebe3",
+      "sha256": "b6d1511fb780055957c7a6687cb7bdcb935b7d6a82135e20a0693e0f2bf4daf7",
       "executable": false
     },
     "integrations/browser-extension/manifest.json": {
@@ -4730,7 +4730,7 @@
       "executable": false
     },
     "src/core/features/browser-capture/service.ts": {
-      "sha256": "e0b9e6771927dc17b97ed240d5f7a1a30b87e07959590c1bcf754697355e6829",
+      "sha256": "27dc32c7587cd874f0da78eaa02472f3d1042e30d3f1dbfaa3d33c16d3167077",
       "executable": false
     },
     "src/core/features/browser-capture/ui/capture-page.tsx": {
@@ -4738,11 +4738,11 @@
       "executable": false
     },
     "src/core/features/browser-capture/ui/capture-review.tsx": {
-      "sha256": "186c58e819e3dc45ccba6f623ea2e58da52dfb2479cdee6af0bd2db203ce788e",
+      "sha256": "cba9433188a8153b532553af4459d79e44394e5b3498df801659c6b890f6a8e3",
       "executable": false
     },
     "src/core/features/browser-capture/ui/client.ts": {
-      "sha256": "6c5aa191b08d45c6c91bbec34209ca2eb20f4a7ba1e1a95a5c4535b2ea8839bb",
+      "sha256": "0aceb02254818c86035720b7b2432d8f0f45caf522e620bf319c298f218f06d8",
       "executable": false
     },
     "src/core/features/browser-capture/work.ts": {
@@ -8022,7 +8022,7 @@
       "executable": false
     },
     "tests/browser/browser-capture-review.mjs": {
-      "sha256": "c686c2e89505e01de6dbc304a97612e5afdba460ecea2b80ff2b2f628f08e4b9",
+      "sha256": "5a52be199b6a9ac2705d7889dc79d3681fb566a7b4f3afebf9e9be6c1ab5fa66",
       "executable": false
     },
     "tests/browser/browser-capture-runtime.mjs": {

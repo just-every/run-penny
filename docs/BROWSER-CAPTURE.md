@@ -23,7 +23,9 @@ For a screenshot, select **Include a screenshot of the visible tab** first. A
 screenshot-only capture is also supported. Browser-internal pages and protected
 browser-store pages cannot be read by an extension; use their ordinary source
 page instead. Only the selected top-frame text and visible tab are captured;
-there is no whole-page crawler, automatic capture or iframe traversal. Form
+there is no whole-page crawler, automatic capture or iframe traversal.
+Screenshots must fit the extension’s bounded browser-session storage (at most
+8 MB encoded); choose a smaller visible area or capture text if it is too large. Form
 fields, including passwords, are never used as selected text.
 
 Penny opens its own signed-in review page. Review the original URL, excerpt,

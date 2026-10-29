@@ -1,5 +1,5 @@
 export interface Draft {id:string;mode:'capture'|'check';pageUrl:string;wording:string;observedAt:string;status:number;image?:string}
-export interface Job {requester_name?:string;request_title?:string;screenshot_hash?:string|null;id:string;evidence_id:string;page_url:string;state:string;failure:string|null;source_state:string;owner_name?:string;request_id?:string|null;requester_id?:string|null;proxy_vote?:number;purge_days?:number}
+export interface Job {wording?:string;observed_at?:string;named_speaker?:string|null;requester_name?:string;request_title?:string;screenshot_hash?:string|null;id:string;evidence_id:string;page_url:string;state:string;failure:string|null;source_state:string;owner_name?:string;request_id?:string|null;requester_id?:string|null;proxy_vote?:number;purge_days?:number}
 export async function api<T>(path:string,body?:unknown):Promise<T>{
  const response=await fetch(path,body===undefined?{cache:'no-store'}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),result=await response.json() as T&{message?:string;error?:string}
  if(!response.ok)throw Error(response.status===401?'Your operator session expired. Sign in to Penny, then resume the review.':result.message??result.error?.replaceAll('_',' ')??'Penny could not confirm this action. Keep the review and retry.')
