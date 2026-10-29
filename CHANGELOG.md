@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add owner-selected Typeform, SurveyMonkey, Google Forms and Pencil survey capture (CAP-022), with signed webhook admission, bounded scheduled reads, selected evidence/private mappings, non-authorizing respondent contacts and no consent. Owner controls expose durable progress, retry and stop; edits retain the original capture and removed-source excerpts purge at the configured window. Add migration 0098; restored connections stay disabled and unfinished work stays held. See docs/survey-capture.md for installation, provider grants, recovery and rollback. One public-door network-edge journey covers the four providers, privacy and lifecycle; live provider/hosted proof is not claimed. CAP-022's text, acceptance, status and counts remain unchanged.
+
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.
 
 - Checkpoint source-check claims before Discord reads, prevent overlapping or superseded completions from changing removed/purged sources, and show interrupted checks until an owner deliberately retries them by saving the connector settings. Add migration 0097 without changing applied SQL; restored running checks are held. Extend the two existing public-door sanity journeys with session-expiry, overlapping removal/purge and actual Worker restart recovery. CAP-021 remains missing with unchanged acceptance and counts.

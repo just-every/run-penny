@@ -566,6 +566,12 @@
       "name": "0097_discord_source_checks.sql",
       "sha256": "0580ba2ae20a304e6950580e2c95343043ed9fd80fbf32b76b542ae760528a16",
       "sql": "-- A source read owns a durable lease; expired or superseded reads cannot commit.\n-- Existing provenance, captured wording and applied migrations remain unchanged.\nALTER TABLE penny_discord_sources ADD COLUMN check_claim TEXT;\nALTER TABLE penny_discord_sources ADD COLUMN check_started_at TEXT;\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0098_survey_capture.sql",
+      "sha256": "a18de3c7ae974d843c2c5d1e273663e5d3380567c0243c095c5b6e7078d1473a",
+      "sql": "-- Credentials remain installation bindings. Only selected, redacted answers\n-- enter durable work; replay hashes outlive erasure.\nCREATE TABLE penny_survey_forms (\n id TEXT PRIMARY KEY, provider TEXT NOT NULL CHECK(provider IN('typeform','surveymonkey','google','pencil')),\n form_id TEXT NOT NULL, mapping_json TEXT NOT NULL, response_url TEXT NOT NULL,\n owner_id TEXT NOT NULL, owner_version INTEGER NOT NULL, actor_id TEXT NOT NULL,\n enabled INTEGER NOT NULL CHECK(enabled IN(0,1)), revision INTEGER NOT NULL,\n purge_days INTEGER NOT NULL CHECK(purge_days BETWEEN 0 AND 365),\n state TEXT NOT NULL CHECK(state IN('idle','running','failed','stopped','held')),\n due_at TEXT NOT NULL, cursor TEXT, claim TEXT, started_at TEXT, failure TEXT,\n attempts INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL,\n UNIQUE(provider,form_id)\n);\nCREATE TABLE penny_survey_jobs (\n id TEXT PRIMARY KEY, form_id TEXT NOT NULL REFERENCES penny_survey_forms(id) ON DELETE CASCADE,\n response_id TEXT NOT NULL, revision INTEGER NOT NULL, selected_json TEXT,\n state TEXT NOT NULL CHECK(state IN('pending','running','failed','done','stopped','held')),\n attempts INTEGER NOT NULL DEFAULT 0, claim TEXT, started_at TEXT, failure TEXT,\n evidence_id TEXT REFERENCES evidence_items(id) ON DELETE CASCADE,\n created_at TEXT NOT NULL, updated_at TEXT NOT NULL, UNIQUE(form_id,response_id)\n);\nCREATE INDEX penny_survey_due ON penny_survey_jobs(state,created_at);\nCREATE TABLE penny_survey_sources (\n evidence_id TEXT PRIMARY KEY REFERENCES evidence_items(id) ON DELETE CASCADE,\n job_id TEXT NOT NULL UNIQUE REFERENCES penny_survey_jobs(id) ON DELETE CASCADE,\n response_url TEXT NOT NULL, attributes_json TEXT NOT NULL, source_email TEXT,\n source_hash TEXT NOT NULL, source_state TEXT NOT NULL CHECK(source_state IN('current','changed','removed','purged')),\n removed_at TEXT, purge_at TEXT\n);\nCREATE TABLE penny_survey_receipts (\n source_digest TEXT PRIMARY KEY CHECK(length(source_digest)=64), created_at TEXT NOT NULL\n);\nCREATE TRIGGER penny_survey_jobs_redaction_insert AFTER INSERT ON penny_survey_jobs\nBEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER penny_survey_jobs_redaction_update AFTER UPDATE ON penny_survey_jobs\nBEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER penny_survey_jobs_redaction_delete AFTER DELETE ON penny_survey_jobs\nBEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER penny_survey_sources_redaction_insert AFTER INSERT ON penny_survey_sources\nBEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER penny_survey_sources_redaction_update AFTER UPDATE ON penny_survey_sources\nBEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;\nCREATE TRIGGER penny_survey_sources_redaction_delete AFTER DELETE ON penny_survey_sources\nBEGIN UPDATE penny_redaction_content SET revision=revision+1 WHERE singleton=1; END;\n"
     }
   ],
   "compatibilityDate": "2026-08-31",
@@ -590,7 +596,8 @@
     "INSTALLATION_KEY_PREVIOUS",
     "MAIL_API_KEY",
     "RESEND_WEBHOOK_SECRET",
-    "PORTAL_IDENTITY_SECRET"
+    "PORTAL_IDENTITY_SECRET",
+    "PENNY_SURVEYS"
   ],
   "schedules": [
     "* * * * *"

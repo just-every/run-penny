@@ -13,6 +13,7 @@ export interface OperatorAccountReference {
 }
 
 export interface OperatorEvidenceCard {
+  readonly survey?: {responseUrl:string;attributes:Record<string,string>;sourceState:string}
   readonly discord?: {jumpUrl:string;capturer:string;sourceState:string;checkFailure:string|null}
   readonly id: string
   readonly admittedSender?: string | null

@@ -1966,7 +1966,7 @@ Core · target · **missing** · Rules D-1
 3. A bad Typeform signature is refused.
 4. An unmapped question's answer is absent from D1 and the archive.
 
-**Evidence.** None.
+**Evidence.** `tests/browser/survey-capture.mjs`
 **Gap.** Typeform, SurveyMonkey, Google Forms and Pencil fixtures produce one inbox item per response with its link and mapped attributes; a replayed webhook creates nothing; a bad Typeform signature is refused; an unmapped question's answer is absent from D1 and the archive.
 
 ### In-app widget and customer identity

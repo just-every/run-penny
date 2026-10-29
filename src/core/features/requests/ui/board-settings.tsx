@@ -1,3 +1,4 @@
+import {SurveySettings} from '../../surveys/settings-ui'
 import {DiscordSettings} from '../../discord/settings-ui'
 import {RedactionSettings} from '../../redaction/settings-ui'
 import {RequesterOAuthSettings} from '../../auth/ui/requester-oauth-settings'
@@ -53,6 +54,7 @@ export function BoardSettings() {
         <IntegrationDestinations />
         <TrackerSettings />
         <DiscordSettings />
+        <SurveySettings />
         <MailIdentitySettings />
         <AgingSettings/><WorkspaceClockSettings />
         <WeeklySummarySetting />
