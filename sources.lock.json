@@ -5338,7 +5338,7 @@
       "executable": false
     },
     "src/core/features/helpscout/panel.js": {
-      "sha256": "658bd144c161c76247864fdd2f0d18a8998ce20f9a69a03c1592c17eebba0482",
+      "sha256": "4ad2c1e31122e79005d7c7f062a3ff85dfa6954305e5d76c40ef7c75355a5b33",
       "executable": false
     },
     "src/core/features/helpscout/replies.ts": {

@@ -15,7 +15,7 @@ async function action(body){
 async function refresh(){
  const data=await action({action:'view'});if(!data)return
  $('conversation').textContent='Help Scout conversation '+data.conversationId
- $('notice').textContent=data.capture?'Capture: '+data.capture.state+' · Source: '+data.capture.sourceState+(data.capture.failure?' · '+data.capture.failure:''):'Not captured yet.'
+ $('notice').textContent=data.capture?'Capture: '+data.capture.state+' · Source: '+data.capture.sourceState+(data.capture.failure?' · '+(data.capture.failure==='source_removed'?'The source is no longer available.':data.capture.failure==='scope_changed'?'The selected capture scope changed.':data.capture.failure):''):'Not captured yet.'
  $('linked').textContent=data.linked?data.linked.title+' · '+data.linked.status.replaceAll('_',' '):'No published request linked.'
  const draft=data.replies[0];replyId=draft?.id??null;$('reply-text').value=draft?.body??'';$('reply-review').checked=false
  $('send').disabled=!draft||draft.state!=='draft'
