@@ -22,9 +22,9 @@ export async function drainBrowserCaptures(runtime:PennyRuntime,clock=Date.now()
    if(row.proxy_vote){
     const source=await db.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=? ORDER BY version_number DESC LIMIT 1').bind(row.evidence_id).first<string>('wording')
     if(!source?.trim())throw new NativeError('browser_proxy_source_missing',409)
-    const safe=await redactCaptured(db,{source,sourceUrl:row.page_url},['source','sourceUrl'])
+    const safe=await redactCaptured(db,{source},['source'])
     const proxyDb=guardedDatabase(db,{sql:'COALESCE((SELECT revision FROM penny_redaction_settings WHERE singleton=1),0)=?',params:[safe.revision]})
-    await recordProxyVote(proxyDb,row.request_id!,{requesterId:row.requester_id!,source:safe.input.source.slice(0,2000),sourceUrl:new URL(safe.input.sourceUrl).href,evidenceId:row.evidence_id},row.actor_id!)
+    await recordProxyVote(proxyDb,row.request_id!,{requesterId:row.requester_id!,source:safe.input.source.slice(0,2000),sourceUrl:row.page_url,evidenceId:row.evidence_id},row.actor_id!)
    }
    await db.batch([db.prepare("UPDATE penny_browser_captures SET state='done',claim=NULL,failure=NULL,updated_at=? WHERE id=? AND claim=?").bind(now,row.id,claim),audit(db,row.actor_id!,'evidence',row.evidence_id,'browser.capture_completed',now)])
   }catch{

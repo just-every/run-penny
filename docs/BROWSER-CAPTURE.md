@@ -31,7 +31,11 @@ fields, including passwords, are never used as selected text.
 Penny opens its own signed-in review page. Review the original URL, excerpt,
 source author and source time (capture time is prefilled when the source time
 is unknown). Remove private URL parameters yourself. Current installation
-redaction rules apply before text is stored. Screenshots keep their original
+redaction rules apply to the selected excerpt and source author before storage;
+unmatched whitespace is retained verbatim. The canonical source URL stays exact
+for link-back and checks, including in proxy attribution and archives. Redaction
+reapplication reports source addresses as preserved; use Data erasure to remove
+their provenance. Screenshots keep their original
 bytes and can contain private information; inspect the preview or remove it.
 
 Optionally search for and explicitly select a customer and a request. Selecting

@@ -65,18 +65,25 @@ try{
  }
  async function select(){await source.locator('#quote').evaluate(element=>{const range=document.createRange();range.selectNodeContents(element);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range)})}
  await select()
+ const selected=await source.evaluate(()=>window.getSelection().toString())
  let panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check()
  await panel.screenshot({path:join(output,'extension-popup-1440.png')})
  await source.setViewportSize({width:390,height:844});panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check();await panel.screenshot({path:join(output,'extension-popup-390.png')})
  await source.setViewportSize({width:1440,height:1000});panel=await popup();await panel.getByLabel('Penny workspace URL',{exact:true}).fill(origin);await panel.getByLabel('Include a screenshot of the visible tab').check()
  const review=await openReview(panel,'Review capture')
  await review.getByLabel('Selected excerpt',{exact:true}).waitFor()
- assert.match(await review.getByLabel('Selected excerpt',{exact:true}).inputValue(),/Please add monthly exports/)
+ assert.equal(await review.getByLabel('Selected excerpt',{exact:true}).inputValue(),selected)
  assert.equal(await review.getByLabel('Original page URL',{exact:true}).inputValue(),sourceUrl)
- assert.ok((await review.getByRole('img',{name:'Visible source tab selected for private attachment'}).getAttribute('src')).startsWith('data:image/png;base64,'))
+ const screenshot=await review.getByRole('img',{name:'Visible source tab selected for private attachment'}).getAttribute('src')
+ assert.ok(screenshot.startsWith('data:image/png;base64,'))
  await review.getByRole('button',{name:'Save to inbox',exact:true}).click();await review.getByRole('status').filter({hasText:'Completion is queued'}).waitFor()
  const rows=await json('/api/operator/browser-captures',undefined,operator),row=rows[0]
- assert.equal(row.page_url,sourceUrl);assert.equal((await json('/api/operator/evidence/'+row.evidence_id+'/attachments',undefined,operator)).files.length,1)
+ assert.equal(row.page_url,sourceUrl)
+ assert.equal((await json('/api/operator/evidence?item='+row.evidence_id,undefined,operator)).items[0].wording,selected.replace('source.person@example.test','[REDACTED:email]'))
+ const attachments=(await json('/api/operator/evidence/'+row.evidence_id+'/attachments',undefined,operator)).files
+ assert.equal(attachments.length,1)
+ const downloaded=await fixture.send('/api/operator/evidence-attachments/'+attachments[0].id,undefined,operator)
+ assert.deepEqual(Buffer.from(await downloaded.arrayBuffer()),Buffer.from(screenshot.split(',')[1],'base64'))
  await runtime.schedule();await runtime.restart();await runtime.schedule()
  assert.equal((await json('/api/operator/browser-captures/'+row.id,undefined,operator)).state,'done')
  assert.equal(await runtime.db.prepare('SELECT COUNT(*) n FROM evidence_items WHERE source_type=?').bind('browser_extension').first('n'),1)

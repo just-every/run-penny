@@ -17,7 +17,10 @@ export async function startCapture(db:D1Database,input:CaptureInput,actor:string
  if(input.requesterId&&!customer)throw new MutationError(409,'Choose an active customer.')
  const request=input.requestId?await db.prepare('SELECT id FROM requests WHERE id=? AND withdrawn_at IS NULL AND merged_into_request_id IS NULL').bind(input.requestId).first():null
  if(input.requestId&&!request)throw new MutationError(409,'Choose a current request.')
- const safe=await redactCaptured(db,{url:input.pageUrl,speaker:input.namedSpeaker||null},['url','speaker']),url=new URL(safe.input.url).href,fence=redactionFence(db,safe.revision)
+ // The canonical locator is provenance, not captured wording. Redacting it
+ // changes the source identity and breaks link-back and explicit source checks.
+ const url=new URL(input.pageUrl).href
+ const safe=await redactCaptured(db,{speaker:input.namedSpeaker||null},['speaker']),fence=redactionFence(db,safe.revision)
  const sourceHash=await sourceFingerprint(input.wording,input.screenshot?.hash)
  try{await recordEvidence(db,{sourceType:'browser_extension',sourceLabel:null,wording:input.wording,namedSpeaker:safe.input.speaker,observedAt:input.observedAt,requestLinks:input.requestId?[{id:input.requestId,stance:'supporting'}]:[]},actor,now,undefined,undefined,{systemActor:'browser-capture',statements:evidence=>[
   fence.before,fence.after,
