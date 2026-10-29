@@ -1,3 +1,4 @@
+import {teamsFailureHint} from '../../teams/failure-hint'
 import {discordFailureHint} from '../../discord/failure-hint'
 import {DraftPanel} from '../../ai/ui/draft-panel'
 import { ProxyVoteForm } from '../../requests/ui/proxy-vote-form'
@@ -26,6 +27,7 @@ export function EvidenceCard({ evidence, onSaved }: { readonly evidence: Operato
         <DataField label="Source">{sourceLabel(evidence.sourceType, evidence.sourceLabel)}</DataField>
         <DataField label="Account">{evidence.account?.name}</DataField>
       </dl>
+      {evidence.teams?<div className="mt-4 space-y-2 break-words"><p>Captured by Teams member {evidence.teams.capturer}</p><a className="inline-flex min-h-11 items-center underline" href={evidence.teams.jumpUrl} target="_blank" rel="noreferrer">Open Teams message</a><p>Source: {evidence.teams.sourceState}</p>{evidence.teams.checkFailure?<p role="status">{teamsFailureHint(evidence.teams.checkFailure)}</p>:null}</div>:null}
       {evidence.discord?<div className="mt-4 space-y-2 break-words"><p>Captured by Discord member {evidence.discord.capturer}</p><a className="inline-flex min-h-11 items-center underline" href={evidence.discord.jumpUrl} target="_blank" rel="noreferrer">Open Discord message</a><p>Source: {evidence.discord.sourceState}</p>{evidence.discord.checkFailure?<p role="status">{discordFailureHint(evidence.discord.checkFailure)}</p>:null}</div>:null}
       {evidence.sourceType==='email'&&evidence.sourceLabel?<p className="mt-3 text-sm leading-6 text-penny-ink">{evidence.sourceLabel}</p>:null}
       {evidence.requester ? <dl className="mt-4"><DataField label="Requester" valueClassName="flex flex-wrap items-center gap-x-2 gap-y-1"><span>{evidence.requester.displayName}</span>{evidence.requester.email ? <span className="break-all text-penny-muted">{evidence.requester.email}</span> : null}</DataField></dl> : null}

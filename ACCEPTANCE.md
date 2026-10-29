@@ -1817,7 +1817,7 @@ Core · target · **missing** · Rules D-1
 **Acceptance.**
 1. Bot Framework fixtures with token validation capture a message once and refuse an unsigned request.
 
-**Evidence.** None.
+**Evidence.** `tests/browser/teams-capture.mjs`; `tests/browser/teams-notifications.mjs`
 **Gap.** Bot Framework fixtures with token validation capture a message once and refuse an unsigned request.
 
 #### CAP-012 — Browser extension

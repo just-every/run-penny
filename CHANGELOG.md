@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add optional Microsoft Teams message-action capture with Bot Framework JWT admission, selected team/channel Graph reads, distinct source/capturer attribution, redaction, durable replay custody, explicit retry/stop and source edit/removal retention. Add additive migrations 0098 and 0099, an app-package generator and owner setup guide. Teams operator preferences select immediate/daily/weekly event-count notifications; ambiguous or interrupted posts are never replayed. Two public-door sanity journeys cover built Worker behavior, actual restarts, archives/erasure and both browser widths. Live Microsoft tenant consent, app admission and hosted delivery remain owner-account proof. CAP-011 retains its text, acceptance and missing status; only its evidence paths are added.
+
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.
 
 - Checkpoint source-check claims before Discord reads, prevent overlapping or superseded completions from changing removed/purged sources, and show interrupted checks until an owner deliberately retries them by saving the connector settings. Add migration 0097 without changing applied SQL; restored running checks are held. Extend the two existing public-door sanity journeys with session-expiry, overlapping removal/purge and actual Worker restart recovery. CAP-021 remains missing with unchanged acceptance and counts.

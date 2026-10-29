@@ -1,7 +1,7 @@
 import { applyD1Migrations,type D1Migration } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { expect,inject,it } from 'vitest'
-it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive Discord capture and source-check upgrades and repeat',async()=>{
+it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive connector capture upgrades and repeat',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
  const {populatePreviousPennySample}=await import('./previous-sample-fixture')
  const sample=(await import('../../sample-data/penny.v1.json')).default
@@ -67,9 +67,20 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const prior=await Promise.all(priorTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
  const snapshot=async()=> (await env.DB.batch(prior.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const discordBefore=await snapshot()
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0098'))
+ expect(await snapshot()).toEqual(discordBefore)
+ // The exact previous main schema is populated, including Discord provenance,
+ // before adding Teams. Preserve every old row/column, authority and original.
+ const previousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const previous=await Promise.all(previousTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
+ const previousSnapshot=async()=> (await env.DB.batch(previous.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const teamsBefore=await previousSnapshot()
  await applyD1Migrations(env.DB,migrations)
  expect(await snapshot()).toEqual(discordBefore)
+ expect(await previousSnapshot()).toEqual(teamsBefore)
  await applyD1Migrations(env.DB,migrations)
  expect(await snapshot()).toEqual(discordBefore)
+ expect(await previousSnapshot()).toEqual(teamsBefore)
+ expect(new Uint8Array(await (await env.FILES.get('upgrade-preserved-bytes'))!.arrayBuffer())).toEqual(bytes)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

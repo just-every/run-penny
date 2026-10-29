@@ -1,3 +1,4 @@
+import {registerTeamsRoutes} from '@/core/features/teams/routes'
 import {registerDiscordRoutes} from '@/core/features/discord/routes'
 import {registerBulkRoutes} from '@/core/features/triage/bulk-routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
@@ -108,6 +109,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   })
 
   registerDiscordRoutes(app)
+  registerTeamsRoutes(app)
   registerAiRoutes(app)
   registerWeeklyRoutes(app)
   registerPlanningRoutes(app)
