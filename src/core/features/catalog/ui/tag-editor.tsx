@@ -32,7 +32,7 @@ export function TagEditor({ label, tagNames, apply, remove, onChanged }: {
       const tag = tags.find(item => item.id === String(new FormData(event.currentTarget).get('tag') ?? ''))
       if (tag) void change(() => apply(tag.id), `Tag ${tag.name} applied.`)
     }}>
-      <label className={`${fieldLabelClass} min-w-0 flex-1`}>Add tag<select name="tag" className={fieldClass} required defaultValue=""><option value="" disabled>Select a private tag</option>{available.map(tag => <option key={tag.id} value={tag.id}>{tag.name}</option>)}</select></label>
+      <label className={`${fieldLabelClass} min-w-0 flex-1 basis-full sm:basis-0`}>Add tag<select name="tag" className={fieldClass} required defaultValue=""><option value="" disabled>Choose a tag</option>{available.map(tag => <option key={tag.id} value={tag.id}>{tag.name}</option>)}</select></label>
       <button className={secondaryButtonClass} disabled={busy}>Apply tag</button>
     </form> : null}
     <p className="text-sm font-semibold text-penny-ink empty:hidden" role="status">{message}</p>
