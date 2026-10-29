@@ -1753,7 +1753,7 @@ Core · target · **missing** · Rules D-1, D-2
 **Acceptance.** Help Scout API fixtures:
 1. Link, create, tag capture and mapping, each once per conversation.
 
-**Evidence.** None.
+**Evidence.** `tests/browser/helpscout-capture.mjs`; `tests/base/upgrade.test.ts`
 **Gap.** Help Scout API fixtures: link, create, tag capture and mapping, each once per conversation.
 
 #### CAP-007 — Gong

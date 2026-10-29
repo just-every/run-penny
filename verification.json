@@ -257,6 +257,15 @@
         "pnpm run build",
         "node tests/browser/survey-capture.mjs"
       ]
+    },
+    {
+      "name": "helpscout-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/helpscout-capture.mjs"
+      ]
     }
   ],
   "nightly": [

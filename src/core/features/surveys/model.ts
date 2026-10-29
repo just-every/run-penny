@@ -19,11 +19,11 @@ export type Mapping=z.infer<typeof mapping>
 export interface Form {id:string;provider:Provider;form_id:string;mapping_json:string;response_url:string;owner_id:string;owner_version:number;actor_id:string;enabled:number;revision:number;purge_days:number;state:string;due_at:string;cursor:string|null;claim:string|null;started_at:string|null;failure:string|null;attempts:number;updated_at:string}
 export const readForm=(db:D1Database,id:string)=>db.prepare('SELECT * FROM penny_survey_forms WHERE id=?').bind(id).first<Form>()
 export function captureGuard(form:Form,epoch:number){return {sql:"EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle' AND epoch=?) AND EXISTS(SELECT 1 FROM penny_survey_forms f JOIN oa_operators o ON o.id=f.owner_id WHERE f.id=? AND f.revision=? AND f.enabled=1 AND o.status='active' AND o.role='owner' AND o.version=f.owner_version)",params:[epoch,form.id,form.revision] as (string|number|null)[]}}
-export interface ResponseRecord {id:string;time:string;answers:Record<string,string>;textQuestions:string[]}
-export interface SelectedResponse {id:string;time:string;wording:string;attributes:Record<string,string>;email:string|null;account:string|null}
+export interface ResponseRecord {id:string;time:string;answers:Record<string,string>;textQuestions:string[];speaker?:string|null}
+export interface SelectedResponse {id:string;time:string;wording:string;attributes:Record<string,string>;email:string|null;account:string|null;speaker?:string|null}
 export function selectResponse(form:Form,response:ResponseRecord):SelectedResponse {
  const m=mapping.parse(JSON.parse(form.mapping_json))
  const get=(key:string|null)=>key?response.answers[key]??null:null
  return {id:response.id,time:response.time,wording:m.evidence.filter(q=>response.textQuestions.includes(q)).map(q=>get(q)).filter(Boolean).join('\n\n'),
- attributes:Object.fromEntries(m.attributes.flatMap(a=>get(a.question)===null?[]:[[a.key,get(a.question)!]])),email:get(m.email),account:get(m.account)}
+ attributes:Object.fromEntries(m.attributes.flatMap(a=>get(a.question)===null?[]:[[a.key,get(a.question)!]])),email:get(m.email),account:get(m.account),...(response.speaker?{speaker:response.speaker}:{})}
 }

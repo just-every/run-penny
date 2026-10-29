@@ -10,7 +10,7 @@ export function typeformResponse(value:unknown,formId:string):ResponseRecord{
 }
 const sm=z.object({id:sourceId,survey_id:sourceId,date_created:time,date_modified:time.optional(),pages:z.array(z.object({questions:z.array(z.object({id:sourceId,answers:z.array(z.object({text:text.optional(),choice_id:sourceId.optional(),row_id:sourceId.optional()})).max(100)})).max(300)})).max(100),custom_variables:z.record(z.string(),scalar).optional()})
 const google=z.object({responseId:sourceId,createTime:time,lastSubmittedTime:time.optional(),respondentEmail:text.optional(),answers:z.record(z.string(),z.object({questionId:sourceId,textAnswers:z.object({answers:z.array(z.object({value:text})).max(100)}).optional()})).optional()})
-const pencil=z.object({id:sourceId,completedAt:time,state:z.literal('released'),answers:z.array(z.object({stepId:sourceId,questionType:z.string(),displayValue:text})).max(300),hiddenFields:z.array(z.object({name:z.string(),value:scalar})).optional(),participant:z.object({email:text.nullable().optional()}).optional()})
+const pencil=z.object({id:sourceId,completedAt:time,state:z.literal('released'),answers:z.array(z.object({stepId:sourceId,questionType:z.string(),displayValue:text})).max(300),hiddenFields:z.array(z.object({name:z.string(),value:scalar})).optional(),participant:z.object({name:text.nullable().optional(),email:text.nullable().optional()}).nullable().optional()})
 export function responseRecord(provider:Provider,value:unknown,formId:string,id:string):ResponseRecord {
  let result:ResponseRecord
  if(provider==='typeform'){
@@ -29,7 +29,7 @@ export function responseRecord(provider:Provider,value:unknown,formId:string,id:
   const page=z.object({flow:z.object({id:sourceId}),responses:z.array(z.unknown()).max(2000)}).parse(value)
   if(page.flow.id!==formId)throw new NativeError('survey_scope_mismatch',403)
   const r=pencil.parse(page.responses.find(row=>typeof row==='object'&&row!==null&&'id' in row&&row.id===id))
-  result={id:r.id,time:r.completedAt,answers:Object.fromEntries([...r.answers.map(a=>[a.stepId,a.displayValue]),...(r.hiddenFields??[]).map(a=>['hidden.'+a.name,String(a.value)]),...(r.participant?.email?[['hidden.email',r.participant.email]]:[])]),textQuestions:r.answers.filter(a=>['short_text','long_text'].includes(a.questionType)).map(a=>a.stepId)}
+  result={id:r.id,time:r.completedAt,speaker:r.participant?.name??null,answers:Object.fromEntries([...r.answers.map(a=>[a.stepId,a.displayValue]),...(r.hiddenFields??[]).map(a=>['hidden.'+a.name,String(a.value)]),...(r.participant?.email?[['hidden.email',r.participant.email]]:[])]),textQuestions:r.answers.filter(a=>['short_text','long_text'].includes(a.questionType)).map(a=>a.stepId)}
  }
  if(result.id!==id)throw new NativeError('survey_response_mismatch',503)
  return result

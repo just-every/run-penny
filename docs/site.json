@@ -16,6 +16,7 @@
     ]}
   ],
   "githubOnly": [
+    { "source": "docs/HELPSCOUT.md", "reason": "Help Scout owner installation, scope and recovery guide" },
     { "source": "docs/CLAIMS.md", "reason": "Homepage claims with their status, generated from CONTRACT.md, for maintainers" },
     { "source": "HOMEPAGE-VARIANTS.md", "reason": "Shared Base installed-home and run-site adoption contract for maintainers" },
     { "source": "RELEASE.md", "reason": "How Penny's versions are released, for maintainers" },

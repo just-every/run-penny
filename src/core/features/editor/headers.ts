@@ -14,8 +14,9 @@ export async function editorDocumentHeaders(response:Response,runtime:PennyRunti
   else directives[frame]+=' '+releaseVideoOrigins.join(' ')
  }
  const ancestors=["'self'",...((pathname==='/'||pathname==='/portal'||pathname.startsWith('/portal/'))?await hostFrameOrigins(runtime):[])].join(' ')
+ const helpScoutPanel=pathname==='/api/integrations/helpscout/panel'
  const frameIndex=directives.findIndex(value=>/^frame-ancestors(?:\s|$)/.test(value))
- if(frameIndex<0)directives.push('frame-ancestors '+ancestors);else directives[frameIndex]='frame-ancestors '+ancestors
+ if(frameIndex<0)directives.push('frame-ancestors '+(helpScoutPanel?"'self' https://secure.helpscout.net https://*.helpscout.com":ancestors));else directives[frameIndex]='frame-ancestors '+(helpScoutPanel?"'self' https://secure.helpscout.net https://*.helpscout.com":ancestors)
  headers.delete('X-Frame-Options')
  headers.set('Content-Security-Policy',directives.join('; '))
  return new Response(response.body,{status:response.status,statusText:response.statusText,headers})

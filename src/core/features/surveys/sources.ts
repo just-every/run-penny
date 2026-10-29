@@ -33,6 +33,7 @@ export async function purgeSurveySources(db:D1Database,now:string){
  for(const row of rows)try{await db.batch([
   db.prepare("INSERT INTO audit_entries(id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) SELECT ?,'system','survey-capture','survey.source_purged','evidence',?,?,?,? WHERE EXISTS(SELECT 1 FROM penny_survey_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(createUlid(),row.evidence_id,now,now,now,row.evidence_id,now),
   db.prepare("UPDATE evidence_versions SET wording='[Source removed]',updated_at=? WHERE evidence_id=? AND EXISTS(SELECT 1 FROM penny_survey_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(now,row.evidence_id,row.evidence_id,now),
+  db.prepare("UPDATE evidence_items SET named_speaker=NULL,updated_at=? WHERE id=? AND EXISTS(SELECT 1 FROM penny_survey_sources WHERE evidence_id=? AND source_state='removed' AND purge_at<=?)").bind(now,row.evidence_id,row.evidence_id,now),
   db.prepare("UPDATE penny_survey_sources SET attributes_json='{}',source_email=NULL,source_state='purged' WHERE evidence_id=? AND source_state='removed' AND purge_at<=?").bind(row.evidence_id,now),
  ])}catch{
   // Keep the failure visible until the owner acknowledges recovery. Purges
