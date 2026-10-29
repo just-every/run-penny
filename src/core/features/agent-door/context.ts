@@ -1,9 +1,9 @@
-import { ToolRefusal, type ToolContext } from '../../../../base/modules/agent-door/index.ts'
+import { ToolRefusal, type ToolContext, type ResourceContext } from '../../../../base/modules/agent-door/index.ts'
 import { guardedDatabase, type AuthorityGuard } from '../integrations/guarded-database'
 import { readDatabase } from '../integrations/read-database'
 
 /** Token claims never choose a product actor. Both identities are persisted native IDs. */
-export async function nativeContext(ctx: ToolContext, write = false) {
+async function nativeAuthority(ctx: Pick<ToolContext, 'db' | 'person' | 'scopes' | 'clientId'>) {
   const person = await ctx.db.prepare(`SELECT n.version,p.id,p.display_name AS displayName FROM oa_operators n
     JOIN penny_agent_people a ON a.native_operator_id=n.id JOIN operators p ON p.id=a.actor_id
     WHERE n.id=? AND n.status='active'`).bind(ctx.person.id).first<{ version: number; id: string; displayName: string }>()
@@ -17,7 +17,17 @@ export async function nativeContext(ctx: ToolContext, write = false) {
     guard.params.push(ctx.clientId.slice('penny-api/'.length), ctx.person.id, person.version, JSON.stringify(ctx.scopes))
   }
   guard.sql += " AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle')"
-  if (!write) return { db: readDatabase(ctx.db, guard), actor: person.id, displayName: person.displayName }
+  return { person, guard }
+}
+
+export async function nativeReadContext(ctx: ToolContext | ResourceContext) {
+  const { person, guard } = await nativeAuthority(ctx)
+  return { db: readDatabase(ctx.db, guard), actor: person.id, displayName: person.displayName }
+}
+
+export async function nativeContext(ctx: ToolContext, write = false) {
+  if (!write) return nativeReadContext(ctx)
+  const { person, guard } = await nativeAuthority(ctx)
   // Fence a policy/consent/Pause change occurring after door classification, in the
   // native service's own transaction, alongside current membership and custody.
   const state = await ctx.db.prepare('SELECT envelope,local_document,local_paused FROM agent_door_state WHERE id=1').first<{ envelope: string | null; local_document: string | null; local_paused: number }>()

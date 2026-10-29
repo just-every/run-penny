@@ -7,7 +7,8 @@
     "policy",
     "pause",
     "audit",
-    "idempotency"
+    "idempotency",
+    "resources"
   ],
   "tools": [
     {
@@ -385,7 +386,9 @@
       "reason": "installation"
     }
   ],
-  "resources": [],
+  "resources": [
+    "penny://evidence/{id}"
+  ],
   "witness": {
     "tool": "penny.audit.list",
     "args": {}
