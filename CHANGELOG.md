@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Keep survey excerpt-purge storage failures visible to the accountable owner until explicit retry, while due privacy purges continue during failed or paused capture. Extend the existing survey journey with a real SQLite abort and scheduled recovery.
 - Keep numeric UUID prefixes out of built-in card redaction while preserving owner custom rules and real card detection. This prevents generated learning references from randomly refusing redaction-guarded work. The Help Scout network-edge journey captures a UUID beside a card and proves the identifier survives while the card is removed before storage and export.
 
 - Fix Help Scout capture when recent notes fill a thread page, use the provider’s embedded customer emails for unverified attribution, and treat forbidden/deleted thread access or moved conversations as source removal under the existing purge policy. The sidebar keeps sent, held, in-progress and uncertain reply states visible with reconciliation guidance after refresh/restart, including unresolved earlier replies after a new public status. Extend the existing HTTP/browser sanity journey; CAP-006 text, acceptance and status remain unchanged. No migration or reconfiguration is required.

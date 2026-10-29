@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "27f1f457fcd381fe3121e30a42823601d63a638f313b9b457692f22b7462350b",
+      "sha256": "872dabee888a69fcbc32c23272e1a90cd959748d31a897ec4e823320dcfdc887",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3154,7 +3154,7 @@
       "executable": false
     },
     "docs/survey-capture.md": {
-      "sha256": "3de206450a06daf480512a8ba8563d868d71980c5013a3c93ca72c63704cbb54",
+      "sha256": "c42f960b21676bc676bb6fe6399329349ef90c8aee38ef655b78a10de43ac6c5",
       "executable": false
     },
     "docs/TRACKERS.md": {
@@ -7094,7 +7094,7 @@
       "executable": false
     },
     "src/core/features/surveys/settings-ui.tsx": {
-      "sha256": "e765573c54dddb2f474081cb1355ffb48acce45fcadc61a76bf07f318f2403b4",
+      "sha256": "d18e98698b21de67975455bc034877240e9014ec5461ae047b9cc99af62fd32b",
       "executable": false
     },
     "src/core/features/surveys/settings.ts": {
@@ -7106,7 +7106,7 @@
       "executable": false
     },
     "src/core/features/surveys/sources.ts": {
-      "sha256": "b8be577f7d853eaef82641ef1e3423e3a2b6066513c5bfc97542539f33c48e74",
+      "sha256": "d5e0492053facdea524cb20fb5235c31c956a566dfc97341b7d0d80d7db4fccc",
       "executable": false
     },
     "src/core/features/surveys/transport.ts": {
@@ -8414,7 +8414,7 @@
       "executable": false
     },
     "tests/browser/survey-capture.mjs": {
-      "sha256": "d0d0bee92c7cfeb93fada8c7713d94bf0ad98e3dcb5ec5878c69a44f1d04230f",
+      "sha256": "24464c8697b98c3f5c0b798fa1e82d97ee95506c89cfab4c745ecd1a02e2f6aa",
       "executable": false
     },
     "tests/browser/triage-aging.mjs": {
