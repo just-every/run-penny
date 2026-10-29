@@ -791,7 +791,10 @@
       "bindings": {
         "APP_ORIGIN": "appOrigin",
         "AUTH_SECRET": "sessionSecret",
-        "INSTALLATION_KEY": "sessionSecret"
+        "INSTALLATION_KEY": "sessionSecret",
+        "PENNY_AI": {
+          "module": "tests/fixtures/agent-ai-binding.mjs"
+        }
       },
       "initializer": "tests/fixtures/agent-owner.mjs"
     },
@@ -799,6 +802,12 @@
       "prepare": [
         "capture"
       ]
+    },
+    "rpc": {
+      "PENNY_LEARNING_EGRESS": {
+        "module": "tests/fixtures/agent-learning-rpc.mjs",
+        "entrypoint": "LearningEgress"
+      }
     }
   },
   "journey": [

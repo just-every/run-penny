@@ -14,6 +14,7 @@
     "producers": [{ "binding": "JOBS", "queue": "feedback-penny-local-jobs" }],
     "consumers": [{ "queue": "feedback-penny-local-jobs", "max_batch_size": 1, "max_retries": 3 }]
   },
+  "services": [{ "binding": "PENNY_LEARNING_EGRESS", "service": "penny-learning-egress" }],
   "assets": { "binding": "ASSETS", "run_worker_first": true },
   "triggers": { "crons": ["* * * * *"] },
   // Public hosted defaults; explicit local .dev.vars supplies the local mode.

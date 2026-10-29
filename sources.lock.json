@@ -674,7 +674,7 @@
       "executable": false
     },
     "agent-surface.json": {
-      "sha256": "322facdd5375f101931e2c37cdbef29ff37851a5491d520f4ddf45b51c0c2d2a",
+      "sha256": "e0136795a0c9aa37695ad5d7e1eac046447e1c9ca512304889a9f70ab4ec7cfa",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -5326,7 +5326,7 @@
       "executable": false
     },
     "src/core/features/agent-door/index.ts": {
-      "sha256": "757a74bd63695609569012d3ce55a2d360075fbc2fa05d1b34faf31ab7b661f4",
+      "sha256": "b10ffee23584c41bc13ba5e0e9d5393a0aa274de10152f7d2b08d3d90e7b775d",
       "executable": false
     },
     "src/core/features/agent-door/learning-tools.ts": {
@@ -9257,8 +9257,16 @@
       "sha256": "fc5b7fc14e5afb199bc9cf84fd767001499b21d428b92b0692ca4627861d3768",
       "executable": false
     },
+    "tests/fixtures/agent-ai-binding.mjs": {
+      "sha256": "339aa235a1ae9b405ab6ab1391224bdceffb8417c22a837cff56d34182dc7c0c",
+      "executable": false
+    },
+    "tests/fixtures/agent-learning-rpc.mjs": {
+      "sha256": "6656c30498309592b4ecc5411b3e91dd161fe6242d4885e28a4404b2c0918539",
+      "executable": false
+    },
     "tests/fixtures/agent-owner.mjs": {
-      "sha256": "02da5478edca04bd04a70d83db0613571802b4e68646644dda607ae3e536ea24",
+      "sha256": "27f6b2369d2156eb1625b15dfa497a02fd894c39c9b3450e9f19f3dd74f4e814",
       "executable": false
     },
     "tests/fixtures/ai/draft-network.ts": {
@@ -10414,11 +10422,11 @@
       "executable": false
     },
     "vitest.base.config.ts": {
-      "sha256": "76ad6675aabcc4cc8d0f831167541de43d34a5426534ca3a440d352f8f8f4b42",
+      "sha256": "40dbfb558736f92652a873a134780b53f01e2b21a3745256f4674b8a622a87da",
       "executable": false
     },
     "wrangler.jsonc": {
-      "sha256": "fe8904d86c7613c6ca4646458d4bd18a929f8745a91476cb12c6c236f0609f4f",
+      "sha256": "360ef9743842124eef28a0d7b6c9812b7be77e8089d63888f556938523a5af65",
       "executable": false
     }
   }

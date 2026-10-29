@@ -12,6 +12,9 @@ const platformLedger = await Promise.all(fullMigrationNames.map(async name=>({na
 // by cloudflare:test instead of racing fixtures' historical mail clocks.
 // Producers stay; the real consumer does not start unless PENNY_TEST_QUEUE_CONSUMERS=1.
 const workerConfig = JSON.parse(await readFile(new URL('./dist/server/wrangler.json', import.meta.url), 'utf8'))
+// Native tests provide this paid RPC port in their existing per-flow fixtures.
+// Never attach the production provider service to a disposable test Worker.
+workerConfig.services = (workerConfig.services ?? []).filter((service:{binding:string}) => service.binding !== 'PENNY_LEARNING_EGRESS')
 if (workerConfig.queues && process.env.PENNY_TEST_QUEUE_CONSUMERS !== '1') workerConfig.queues.consumers = []
 await writeFile(new URL('./dist/server/wrangler.test.json', import.meta.url), JSON.stringify(workerConfig))
 export default defineConfig({
