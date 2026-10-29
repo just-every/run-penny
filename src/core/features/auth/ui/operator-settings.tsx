@@ -52,7 +52,7 @@ export function OperatorSettings() {
               {operator.installationOwner?<span className="rounded-full bg-penny-paper px-2.5 py-1">Installation owner</span>:null}
               {operator.status==='invited'?<span className="rounded-full bg-penny-paper px-2.5 py-1">Pending invitation</span>:null}
             </div>
-            <button type="button" className={`${button} col-span-2 justify-self-end sm:ml-auto`} disabled={busy||!allowed} aria-label={`${operator.status==='invited'?'Cancel invitation for':'Remove'} ${operator.email}`} onClick={()=>{setRemoving(operator.id);setSuccessorId('')}}>{operator.status==='invited'?'Cancel invitation':'Remove'}</button>
+            {operator.self&&!allowed?null:<button type="button" className={`${button} col-span-2 justify-self-end sm:ml-auto`} disabled={busy||!allowed} aria-label={`${operator.status==='invited'?'Cancel invitation for':'Remove'} ${operator.email}`} onClick={()=>{setRemoving(operator.id);setSuccessorId('')}}>{operator.status==='invited'?'Cancel invitation':'Remove'}</button>}
           </div>
           {removing===operator.id?<div className="mt-4 rounded-lg border border-penny-accent/30 p-4" role="group" aria-label={`Confirm removal of ${operator.email}`}>
             <p className="text-sm">{operator.self?'Remove yourself from this workspace?':'Remove this operator?'} Existing sessions, links and API keys will stop working immediately.</p>
@@ -62,6 +62,5 @@ export function OperatorSettings() {
         </li>
       })}
     </ul>:null}
-    <p className="text-sm text-penny-muted">Only the installation owner can leave as owner, by naming another verified operator to take over. Nobody else can remove the owner or take ownership. Branding and editor installation controls stay with the installation owner.</p>
   </section>
 }
