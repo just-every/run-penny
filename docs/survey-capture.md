@@ -77,7 +77,7 @@ envelope or an unmapped answer. Source edits mark the capture changed and retain
 its original version. Source deletion or revoked access marks it removed.
 Minute Cron purges all excerpt versions and private attribute/contact copies
 after the owner-selected retention window, including while capture is paused.
-Purges record a wording-free audit event. No source capture publishes a request,
+Purges record a wording-free audit event. A failed purge remains visible in the connection's progress until the owner retries work; due purges continue while capture is paused or failed. No source capture publishes a request,
 casts a vote, notifies a person or commits a decision.
 
 Migration 0098 is additive. Apply it through the normal `rer setup` or hosted

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep survey excerpt-purge storage failures visible to the accountable owner until explicit retry, while due privacy purges continue during failed or paused capture. Extend the existing survey journey with a real SQLite abort and scheduled recovery.
+
 - Add owner-selected Typeform, SurveyMonkey, Google Forms and Pencil survey capture (CAP-022), with signed webhook admission, bounded scheduled reads, selected evidence/private mappings, non-authorizing respondent contacts and no consent. Owner controls expose durable progress, retry and stop; edits retain the original capture and removed-source excerpts purge at the configured window. Add migration 0098; restored connections stay disabled and unfinished work stays held. See docs/survey-capture.md for installation, provider grants, recovery and rollback. One public-door network-edge journey covers the four providers, privacy and lifecycle; live provider/hosted proof is not claimed. CAP-022's text, acceptance, status and counts remain unchanged.
 
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.
