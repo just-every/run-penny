@@ -18,6 +18,7 @@ async function refresh(){
  $('notice').textContent=data.capture?'Capture: '+data.capture.state+' · Source: '+data.capture.sourceState+(data.capture.failure?' · '+(data.capture.failure==='source_removed'?'The source is no longer available.':data.capture.failure==='scope_changed'?'The selected capture scope changed.':data.capture.failure):''):'Not captured yet.'
  $('linked').textContent=data.linked?data.linked.title+' · '+data.linked.status.replaceAll('_',' '):'No published request linked.'
  const draft=data.replies[0];replyId=draft?.id??null;$('reply-text').value=draft?.body??'';$('reply-review').checked=false
+ $('reply-state').textContent=!draft?'No reply prepared for the current public status.':draft.state==='unknown'?'Delivery is uncertain. Check this conversation in Help Scout and reconcile it there. Penny will not retry this reply.':draft.state==='sending'?'Delivery is in progress or awaiting confirmation. Check Help Scout before taking further action; Penny will not resend this reply.':draft.state==='sent'?'Reply sent. This reply cannot be sent again.':draft.state==='held'?'Reply held. Ask the owner to review source access, restored work or private wording in Penny before any further action.':'Draft ready for review. Nothing has been sent.'
  $('send').disabled=!draft||draft.state!=='draft'
 }
 $('refresh').onclick=refresh
@@ -27,5 +28,5 @@ $('link').onclick=async()=>{if(!$('requests').value)return;if(await action({acti
 $('create').onsubmit=async event=>{event.preventDefault();const result=await action({action:'create',title:$('title').value,description:$('description').value,boardSlug:$('board').value});if(result){await refresh();$('notice').textContent='Request saved for moderation.'}}
 $('vote').onsubmit=async event=>{event.preventDefault();if(await action({action:'vote',reviewed:$('vote-review').checked,source:$('source').value})){$('notice').textContent='Customer vote recorded once. No email subscription was created.';$('vote-review').checked=false}}
 $('reply-text').oninput=()=>{$('reply-review').checked=false}
-$('reply').onsubmit=async event=>{event.preventDefault();if(!replyId)return;if(await action({action:'send',replyId,text:$('reply-text').value,reviewed:$('reply-review').checked})){await refresh();$('notice').textContent='Reviewed reply sent.'}}
+$('reply').onsubmit=async event=>{event.preventDefault();if(!replyId)return;const text=$('reply-text').value,result=await action({action:'send',replyId,text,reviewed:$('reply-review').checked}),message=$('error').textContent;await refresh();if(result)$('notice').textContent='Reviewed reply sent.';else{$('error').textContent=message;$('error').hidden=false;if(!$('send').disabled)$('reply-text').value=text}}
 void refresh()

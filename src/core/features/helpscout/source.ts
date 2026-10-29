@@ -8,17 +8,32 @@ const customer=z.object({id:sourceId,email:z.email().max(254).nullable().optiona
 export const conversation=z.object({id:sourceId,mailboxId:sourceId,tags:z.array(z.object({tag:z.string().max(100)})).max(100),primaryCustomer:customer})
 const threadPerson=z.object({id:sourceId,first:z.string().max(160).optional(),last:z.string().max(160).optional()})
 const thread=z.object({id:sourceId,type:z.string(),body:z.string().max(20000).optional(),createdAt:z.iso.datetime({offset:true}),customer:threadPerson.nullable().optional()})
+const threadPage=z.object({_embedded:z.object({threads:z.array(thread).max(100)}),page:z.object({totalPages:z.number().int().min(0).max(Number.MAX_SAFE_INTEGER)})})
+const sourceUnavailable=(status:number)=>[301,302,303,307,308,403,404,410].includes(status)
+async function selectThread(runtime:PennyRuntime,c:Connection,id:number){
+ // Help Scout returns newest threads first. Notes may fill whole pages; use
+ // only locally constructed page paths, never provider links or redirects.
+ let totalPages=1
+ for(let page=1;page<=Math.min(totalPages,100);page++){
+  const response=await provider(runtime,c,`/conversations/${id}/threads${page===1?'':'?page='+page}`)
+  if(sourceUnavailable(response.status))return null
+  if(response.status!==200)providerFailure(response.status)
+  const parsed=threadPage.parse(JSON.parse(response.body))
+  const selected=parsed._embedded.threads.find(t=>t.type==='customer'&&t.body?.trim())
+  if(selected)return selected
+  totalPages=parsed.page.totalPages
+ }
+ throw new NativeError(totalPages>100?'helpscout_thread_limit_exceeded':'helpscout_excerpt_unavailable',503)
+}
 export async function readSource(runtime:PennyRuntime,c:Connection,id:number,requireTag=true){
  const r=await provider(runtime,c,`/conversations/${id}`)
- if([403,404,410].includes(r.status))return null
+ if(sourceUnavailable(r.status))return null
  if(r.status!==200)providerFailure(r.status)
  const source=conversation.parse(JSON.parse(r.body))
  if(source.id!==id||source.mailboxId!==c.mailbox_id||(requireTag&&!source.tags.some(t=>t.tag===c.tag)))return null
- const threads=await provider(runtime,c,`/conversations/${id}/threads`)
- if(threads.status!==200)providerFailure(threads.status)
- const parsed=z.object({_embedded:z.object({threads:z.array(thread).max(100)})}).parse(JSON.parse(threads.body))
- const selected=parsed._embedded.threads.find(t=>t.type==='customer'&&t.body?.trim())
- if(!selected?.body)throw new NativeError('helpscout_excerpt_unavailable',503)
+ const selected=await selectThread(runtime,c,id)
+ if(!selected)return null
+ if(!selected.body)throw new NativeError('helpscout_excerpt_unavailable',503)
  // Store only one customer excerpt. Markup is inert plain text, never rendered
  // as HTML; attachments, private notes and surrounding threads are discarded.
  const wording=selected.body.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi,'').replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi,'').replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&').trim()
@@ -29,9 +44,9 @@ export async function readSource(runtime:PennyRuntime,c:Connection,id:number,req
 export async function mapCustomer(runtime:PennyRuntime,c:Connection,db:D1Database,person:z.infer<typeof customer>,now:string){
  const r=await provider(runtime,c,`/customers/${person.id}`)
  if(r.status!==200)providerFailure(r.status)
- const full=customer.extend({organizationId:sourceId.nullable().optional(),emails:z.array(z.object({value:z.email()})).max(50).optional()}).parse(JSON.parse(r.body))
+ const full=customer.extend({organizationId:sourceId.nullable().optional(),_embedded:z.object({emails:z.array(z.object({value:z.email()})).max(50).optional()}).optional()}).parse(JSON.parse(r.body))
  if(full.id!==person.id)throw new NativeError('helpscout_customer_mismatch',503)
- const email=(person.email??full.emails?.[0]?.value)?.toLowerCase()??null
+ const email=(person.email??full._embedded?.emails?.[0]?.value)?.toLowerCase()??null
  const safe=await redactCaptured(db,{name:[full.firstName,full.lastName].filter(Boolean).join(' ')||'Help Scout customer'},['name']),fence=redactionFence(db,safe.revision)
  let requesterId=email?await db.prepare('SELECT requester_id FROM requester_addresses WHERE lower(email)=?').bind(email).first<string>('requester_id'):null
  if(requesterId){if(!await db.prepare('SELECT id FROM requesters WHERE id=? AND blocked_at IS NULL AND NOT EXISTS(SELECT 1 FROM requester_identity_merges WHERE source_requester_id=?)').bind(requesterId,requesterId).first())requesterId=null}

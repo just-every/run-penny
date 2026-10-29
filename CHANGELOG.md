@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Fix Help Scout capture when recent notes fill a thread page, use the provider’s embedded customer emails for unverified attribution, and treat forbidden/deleted thread access or moved conversations as source removal under the existing purge policy. The sidebar keeps sent, held, in-progress and uncertain reply states visible with reconciliation guidance after refresh/restart. Extend the existing HTTP/browser sanity journey; CAP-006 text, acceptance and status remain unchanged. No migration or reconfiguration is required.
+
 - Add CAP-006 Help Scout capture: owner-delegated Dynamic App sidebar, OAuth client-credentials installation, scoped signed tag intake, replay-safe background evidence, customer/company attribution, native link/create/proxy votes, public status and explicitly reviewed replies. Migration 0098 adds portable source custody and installation-only secrets/capabilities. Restores hold work; disconnect removes local credentials and names the separate provider-app revocation step. The HTTP/browser sanity journey uses network-edge fixtures; live installation and delivery remain unperformed. CAP-006 status and acceptance text remain unchanged.
 
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.

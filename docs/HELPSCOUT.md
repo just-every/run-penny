@@ -51,13 +51,13 @@ The sidebar can explicitly select one conversation in the chosen mailbox;
 automatic background capture additionally requires the chosen tag. Minute Cron
 reads at most ten captures/checks per run. Penny rechecks the source mailbox and
 current tag before reading customer threads automatically. It stores only the
-first available customer-thread excerpt from the bounded response, its source
-time, the selected thread's named customer author (nullable), the conversation's
+first available customer-thread excerpt across newest-first pages (at most 100
+pages, each with a bounded response), its source time, the selected thread's named customer author (nullable), the conversation's
 primary-customer attribution, account mapping and a deep link. It omits private
 notes, attachments, previews, company descriptions and other custom fields.
 Redaction runs before wording, names and new company names are saved. Customer
-email is used only for identity attribution and remains private, unverified and
-without an email permission record. A blocked or retired requester is not mapped.
+email (from the conversation or the customer’s embedded email list) is used only
+for identity attribution and remains private, unverified and without an email permission record. A blocked or retired requester is not mapped.
 Organization IDs map to private Penny accounts; names alone never merge companies.
 
 A replay or restart cannot create another evidence item for a conversation.
@@ -74,7 +74,8 @@ reply** is a separate explicit action with the edited text and an approval
 checkbox. Penny checks current public status and private account values/internal
 notes again before POSTing a reply to the original conversation. Sent or ambiguous
 attempts cannot be replayed. A network failure or non-201 result stays unknown:
-inspect the actual Help Scout thread and reconcile there. Penny does not offer a
+the sidebar keeps this delivery state visible after refresh or restart. Inspect
+the actual Help Scout thread and reconcile there. Penny does not offer a
 blind resend, and restored drafts are held.
 
 ## Pause, recovery and removal

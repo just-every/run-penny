@@ -19,7 +19,7 @@ export async function activeConnection(runtime:PennyRuntime){const c=await readC
 export async function wire(runtime:PennyRuntime,path:string,method:'GET'|'POST',body:string,headers:Record<string,string>={}){
  const port=runtime.bindings.PENNY_HELPSCOUT_EGRESS
  if(!port)throw new NativeError('helpscout_transport_unconfigured',503)
- if(!/^\/(oauth2\/token|conversations\/[0-9]+(?:\/threads|\/reply)?|customers\/[0-9]+|organizations\/[0-9]+)$/.test(path))throw new NativeError('helpscout_path_refused',400)
+ if(!/^\/(oauth2\/token|conversations\/[0-9]+(?:\/threads(?:\?page=[1-9][0-9]{0,2})?|\/reply)?|customers\/[0-9]+|organizations\/[0-9]+)$/.test(path))throw new NativeError('helpscout_path_refused',400)
  let timer:ReturnType<typeof setTimeout>|undefined
  const response=await Promise.race([port.send({url:'https://api.helpscout.net/v2'+path,method,headers,body}),new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(new NativeError('helpscout_provider_timeout',503)),15000)})]).finally(()=>clearTimeout(timer))
  if(!Number.isInteger(response.status)||response.status<100||response.status>599||typeof response.body!=='string'||new TextEncoder().encode(response.body).length>65536)throw new NativeError('helpscout_response_invalid',503)

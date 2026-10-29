@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "5c93b50f6f7fb633325d5b68282323885e16908378ff65e65deaaaf2d091d17f",
+      "sha256": "0d1346e462d478e18115a0fe6aff77559c776f6b4809cfd0161b29aac73c2544",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3082,7 +3082,7 @@
       "executable": false
     },
     "docs/HELPSCOUT.md": {
-      "sha256": "1e0578a22068cc4331b025b8ba4e8f54c0e3b4c091d59a411584b137048cb479",
+      "sha256": "739778b0a12850bde2ad9110c1e215fcc2ec27bc4f29cd75ba7e6ada871f7b24",
       "executable": false
     },
     "docs/HOST-IDENTITY.md": {
@@ -5326,7 +5326,7 @@
       "executable": false
     },
     "src/core/features/helpscout/configuration.ts": {
-      "sha256": "a38177f1a9f5d9203fadeac26023510a1316aec14ddfb0daf78472ea5b2917cd",
+      "sha256": "ffd91445f9f2e5bfa716ac3f7b841a1af88d913da0ec59d581fb1a5574fd34ff",
       "executable": false
     },
     "src/core/features/helpscout/panel.css": {
@@ -5334,11 +5334,11 @@
       "executable": false
     },
     "src/core/features/helpscout/panel.html": {
-      "sha256": "1276ff29be9735f2ab5c1372a8c9f2d2fe8874651757cb8f2e32421609094d58",
+      "sha256": "37e0d3f26f52b2c7b7d74e64d32b64c1383b9c9a4c77f60efdd27596b7e98997",
       "executable": false
     },
     "src/core/features/helpscout/panel.js": {
-      "sha256": "4ad2c1e31122e79005d7c7f062a3ff85dfa6954305e5d76c40ef7c75355a5b33",
+      "sha256": "b97132e218e692dd39ed4df06bd909a9d7e87e4ccd9d3045d41e1ea21853f962",
       "executable": false
     },
     "src/core/features/helpscout/replies.ts": {
@@ -5362,7 +5362,7 @@
       "executable": false
     },
     "src/core/features/helpscout/source.ts": {
-      "sha256": "d5573d6145e820be78f5dea8f25ea1cc28efdab9b78d408eae655c2c040f6926",
+      "sha256": "5b2aa6b359ebd5eb8e513e93b79c859f948d9f922ff4965e66cc51ee8ae54321",
       "executable": false
     },
     "src/core/features/helpscout/work.ts": {
@@ -8078,7 +8078,7 @@
       "executable": false
     },
     "tests/browser/helpscout-capture.mjs": {
-      "sha256": "a30c1677359987d8e364a10d4ebac0ba8eb15855ce98da99d412a06a2ce67d1c",
+      "sha256": "4f5a18011fd0159c361833996d5c102130394336f9b4f39a2157844bc6dc01d0",
       "executable": false
     },
     "tests/browser/host-identity.mjs": {
@@ -8426,7 +8426,7 @@
       "executable": false
     },
     "tests/fixtures/helpscout/edge.mjs": {
-      "sha256": "7fe1ac6a45924dbb323d14183f6bb15ddba3a84cdd9299cd0fc48c89d2a1b9e8",
+      "sha256": "e4d3e0cafd429fd1cdabbaead930e3ac76e054e2720f4ac18ac11ca54a3e203d",
       "executable": false
     },
     "tests/fixtures/imports/boards.json": {
