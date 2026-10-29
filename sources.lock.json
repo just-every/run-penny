@@ -4006,7 +4006,7 @@
       "executable": false
     },
     "integrations/zendesk/README.md": {
-      "sha256": "bccb00fc4c30022e09368b8488e9d940f0d7f3fe09d18089104cb98696b93749",
+      "sha256": "6e72d0a5e82dbd49cb48dfa25b3cb6ae01f8d0ad70ddd56a3728f36148e9eb5a",
       "executable": false
     },
     "integrations/zendesk/translations/en.json": {

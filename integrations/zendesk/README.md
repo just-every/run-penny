@@ -11,6 +11,8 @@ then record a proxy vote. It does not implement the wider CAP-003 connector.
    `requests:read` and `votes:write`. The key acts as its issuing Penny operator;
    do not share it with agents or put it in source files. Revoke it in Penny
    when removing the app. Removing a Zendesk app does not revoke a Penny key.
+   The native owner must also choose company policy on Penny's Agents page.
+   An unanswered policy, Pause or a revoked issuer refuses the next call.
 2. Replace the manifest’s author name, email and URL with your business contact details. From this directory use Zendesk's ZCLI to validate and package the app:
    `zcli apps:validate` and `zcli apps:package`. Upload the generated ZIP as a
    private app in your Zendesk Admin Center under Apps and integrations →
@@ -38,6 +40,9 @@ the sidebar. Retrying an existing customer's vote adds no second vote. A proxy
 vote grants neither verified identity nor email subscription permission. The
 ticket link is derived from the SDK's current account subdomain and ticket ID;
 the app checks the ticket requester again before writing.
+The sidebar sends an idempotency key for each reviewed mutation and retains it
+when the outcome is uncertain. Pending company approval is not a recorded vote:
+open Penny's Agents page to resolve it, then retry the same action.
 
 ## API contract
 
@@ -52,8 +57,11 @@ All calls use the Zendesk server proxy and a revocable scoped Penny key:
   `source` and the sidebar's `sourceUrl`. Response: `{requesterId, created}`.
   `created: false` means the customer already supports the request. New-contact
   email conflicts require selecting the existing customer instead.
+  `Idempotency-Key` is required. Company policy can instead return a pending
+  approval before any native vote is recorded.
 
-The key's issuing operator is the recorded Penny actor. This small app does not
+The key's issuing operator remains the native sponsor; activity identifies the
+key's client for that person through the shared door. This small app does not
 assert that a Zendesk agent is a Penny operator, grant consent, infer accounts,
 create requests, capture tickets automatically or send replies.
 
@@ -62,7 +70,8 @@ create requests, capture tickets automatically or send replies.
 `tests/browser/zendesk-proxy-votes.mjs` serves these actual assets and replaces
 only the external ZAF SDK/proxy edge. It substitutes the key in Node, forwards
 calls without a browser Origin to the real built Penny Worker, and exercises
-the sidebar at 1440 and 390 pixels through `moderationJourney`. It is bounded
+the sidebar at 1440 pixels through `moderationJourney`. Candidate browser proof
+separately checks the changed screens at 1440 and 390. It is bounded
 local evidence; real Zendesk installation and proxy delivery need their own
 receipt.
 
