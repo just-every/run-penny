@@ -3340,5 +3340,102 @@
       "source_digest",
       "created_at"
     ]
+  },
+  "penny_helpscout_connection": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "mailbox_id",
+      "tag",
+      "sidebar_user_id",
+      "owner_id",
+      "owner_version",
+      "actor_id",
+      "revision",
+      "enabled",
+      "purge_days",
+      "last_success",
+      "failure",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_helpscout_secrets": {
+    "classification": "installation",
+    "columns": [
+      "connection_id",
+      "client_id",
+      "client_secret",
+      "app_secret",
+      "webhook_secret",
+      "access_token",
+      "expires_at"
+    ]
+  },
+  "penny_helpscout_contexts": {
+    "classification": "installation",
+    "columns": [
+      "token_hash",
+      "connection_id",
+      "conversation_id",
+      "user_id",
+      "revision",
+      "expires_at"
+    ]
+  },
+  "penny_helpscout_companies": {
+    "classification": "product",
+    "columns": [
+      "connection_id",
+      "organization_id",
+      "account_id"
+    ]
+  },
+  "penny_helpscout_captures": {
+    "classification": "product",
+    "columns": [
+      "connection_id",
+      "conversation_id",
+      "revision",
+      "trigger_kind",
+      "mailbox_id",
+      "capture_tag",
+      "state",
+      "claim",
+      "started_at",
+      "attempts",
+      "failure",
+      "evidence_id",
+      "request_id",
+      "customer_id",
+      "source_hash",
+      "source_state",
+      "next_check",
+      "removed_at",
+      "purge_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_helpscout_receipts": {
+    "classification": "product",
+    "columns": [
+      "source_digest"
+    ]
+  },
+  "penny_helpscout_replies": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "evidence_id",
+      "request_id",
+      "status_id",
+      "body",
+      "edited_body",
+      "state",
+      "actor_id",
+      "created_at",
+      "updated_at"
+    ]
   }
 }

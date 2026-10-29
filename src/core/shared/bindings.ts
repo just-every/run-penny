@@ -1,5 +1,6 @@
 export interface AppBindings {
   PENNY_REVIEWS_EGRESS?: import('../features/reviews/configuration').ReviewEgress
+  PENNY_HELPSCOUT_EGRESS?: import('../features/helpscout/configuration').HelpScoutEgress
   PENNY_DISCORD?: string
   PENNY_DISCORD_EGRESS?: import('../features/discord/configuration').DiscordEgress
   REQUESTER_GOOGLE_CLIENT_ID?: string
