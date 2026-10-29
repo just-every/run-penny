@@ -157,7 +157,8 @@
       "scope": "feedback:write",
       "readOnly": false,
       "classes": [
-        "standard"
+        "standard",
+        "sensitive"
       ],
       "clauses": [
         "EVID-001",
@@ -225,7 +226,8 @@
       "scope": "feedback:write",
       "readOnly": false,
       "classes": [
-        "standard"
+        "standard",
+        "sensitive"
       ],
       "clauses": [
         "REQ-032",
@@ -297,69 +299,6 @@
       ]
     },
     {
-      "name": "penny.moderation.decide",
-      "scope": "requests:manage",
-      "readOnly": false,
-      "classes": [
-        "standard",
-        "external"
-      ],
-      "clauses": [
-        "REQ-005",
-        "REQ-011",
-        "REQ-030",
-        "REQ-007",
-        "REQ-033",
-        "AI-007",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.requests.merge",
-      "scope": "requests:manage",
-      "readOnly": false,
-      "classes": [
-        "standard",
-        "external"
-      ],
-      "clauses": [
-        "REQ-008",
-        "REQ-009",
-        "AI-003",
-        "NOTIFY-012",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.requests.set_status",
-      "scope": "status:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "REQ-015",
-        "REQ-017",
-        "REQ-036",
-        "NOTIFY-009",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.comments.post",
-      "scope": "comments:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "REQ-007",
-        "REQ-037",
-        "AI-006",
-        "SURFACE-001"
-      ]
-    },
-    {
       "name": "penny.requesters.manage",
       "scope": "feedback:write",
       "readOnly": false,
@@ -391,7 +330,8 @@
       "scope": "feedback:write",
       "readOnly": false,
       "classes": [
-        "standard"
+        "standard",
+        "sensitive"
       ],
       "clauses": [
         "DEC-001",
@@ -406,7 +346,8 @@
       "scope": "feedback:write",
       "readOnly": false,
       "classes": [
-        "standard"
+        "standard",
+        "sensitive"
       ],
       "clauses": [
         "DEC-002",
@@ -448,7 +389,8 @@
       "scope": "feedback:write",
       "readOnly": false,
       "classes": [
-        "standard"
+        "standard",
+        "sensitive"
       ],
       "clauses": [
         "ROAD-001",
@@ -496,19 +438,6 @@
       ],
       "clauses": [
         "ROAD-012",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.roadmap.publish_update",
-      "scope": "status:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "ROAD-007",
-        "ROAD-008",
         "SURFACE-001"
       ]
     },
@@ -579,29 +508,13 @@
       "scope": "releases:write",
       "readOnly": false,
       "classes": [
-        "standard"
+        "standard",
+        "sensitive"
       ],
       "clauses": [
         "REL-001",
         "REL-015",
         "REL-017",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.releases.publish",
-      "scope": "releases:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "REL-002",
-        "REL-003",
-        "REL-016",
-        "REL-018",
-        "REL-019",
-        "WIDGET-003",
         "SURFACE-001"
       ]
     },
@@ -707,122 +620,6 @@
       ]
     },
     {
-      "name": "penny.learning.prepare",
-      "scope": "learning:write",
-      "readOnly": false,
-      "classes": [
-        "standard"
-      ],
-      "clauses": [
-        "LEARN-001",
-        "LEARN-002",
-        "AGENT-001",
-        "AGENT-002",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.learning.execute",
-      "scope": "learning:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "LEARN-001",
-        "LEARN-002",
-        "LEARN-004",
-        "AGENT-004",
-        "AGENT-006",
-        "AGENT-007",
-        "AGENT-008",
-        "AGENT-009",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.learning.control",
-      "scope": "learning:write",
-      "readOnly": false,
-      "classes": [
-        "standard"
-      ],
-      "clauses": [
-        "LEARN-004",
-        "AGENT-004",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.publications.clock",
-      "scope": "publication:write",
-      "readOnly": true,
-      "classes": [
-        "standard"
-      ],
-      "clauses": [
-        "REL-014",
-        "OPS-008",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.publications.schedule",
-      "scope": "publication:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "REL-014",
-        "ROAD-007",
-        "ROAD-008",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.publications.execute",
-      "scope": "publication:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "REL-014",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.deliveries.prepare",
-      "scope": "delivery:write",
-      "readOnly": false,
-      "classes": [
-        "standard"
-      ],
-      "clauses": [
-        "NOTIFY-001",
-        "NOTIFY-002",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.deliveries.dispatch",
-      "scope": "delivery:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "NOTIFY-001",
-        "NOTIFY-002",
-        "NOTIFY-009",
-        "REL-004",
-        "REL-007",
-        "SURFACE-003",
-        "SURFACE-001"
-      ]
-    },
-    {
       "name": "penny.settings.board",
       "scope": "settings:write",
       "readOnly": false,
@@ -846,20 +643,6 @@
       "clauses": [
         "OPS-008",
         "NOTIFY-008",
-        "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.integrations.dispatch",
-      "scope": "delivery:write",
-      "readOnly": false,
-      "classes": [
-        "external"
-      ],
-      "clauses": [
-        "INT-001",
-        "INT-003",
-        "SURFACE-003",
         "SURFACE-001"
       ]
     },
@@ -1016,7 +799,11 @@
       },
       "initializer": "tests/fixtures/agent-owner.mjs"
     },
-    "journey": "tests/fixtures/agent-journey.mjs"
+    "replayAdmission": {
+      "prepare": [
+        "capture"
+      ]
+    }
   },
   "journey": [
     {
@@ -1064,6 +851,36 @@
       }
     },
     {
+      "id": "capture-sensitive",
+      "tool": "penny.evidence.capture",
+      "args": {
+        "sourceType": "free_text",
+        "sourceLabel": "Customer interview",
+        "wording": "Synthetic protected identifier 123-45-6789",
+        "observedAt": "2026-10-28T09:00:00Z"
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
       "id": "read-evidence",
       "tool": "penny.evidence.get",
       "args": {
@@ -1093,7 +910,14 @@
         {
           "class": "standard"
         }
-      ]
+      ],
+      "target": {
+        "kind": "evidence",
+        "id": {
+          "$from": "capture",
+          "pointer": "/id"
+        }
+      }
     },
     {
       "id": "private-request",
@@ -1112,61 +936,6 @@
       "expect": [
         {
           "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "private-moderation",
-      "tool": "penny.moderation.decide",
-      "args": {
-        "slug": {
-          "$from": "private-request",
-          "pointer": "/slug"
-        },
-        "verdict": "approved"
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "move-private-public",
-      "tool": "penny.requests.update",
-      "args": {
-        "slug": {
-          "$from": "private-request",
-          "pointer": "/slug"
-        },
-        "boardSlug": "agent-public"
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ],
-      "inject": {
-        "internal": true,
-        "classes": [
-          "standard"
-        ],
-        "confirmExternal": true
-      }
-    },
-    {
-      "id": "restore-private-board",
-      "tool": "penny.requests.update",
-      "args": {
-        "slug": {
-          "$from": "private-request",
-          "pointer": "/slug"
-        },
-        "boardSlug": "agent-private"
-      },
-      "expect": [
-        {
-          "class": "external"
         }
       ]
     },
@@ -1285,6 +1054,37 @@
       }
     },
     {
+      "id": "note-sensitive",
+      "tool": "penny.notes.add",
+      "args": {
+        "slug": {
+          "$from": "private-request",
+          "pointer": "/slug"
+        },
+        "body": "Synthetic protected identifier 123-45-6789"
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
       "id": "proxy-private",
       "tool": "penny.votes.record_proxy",
       "args": {
@@ -1391,37 +1191,14 @@
     },
     {
       "id": "public-request",
-      "tool": "penny.requests.create",
+      "tool": "penny.search.records",
       "args": {
-        "title": "Show clearer delivery history",
-        "description": "Customer-safe description from the interview.",
-        "boardSlug": "agent-public",
-        "evidenceIds": [
-          {
-            "$from": "capture",
-            "pointer": "/id"
-          }
-        ]
+        "entity": "requests",
+        "q": "Verifier customer delivery consent"
       },
       "expect": [
         {
           "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "approve-public",
-      "tool": "penny.moderation.decide",
-      "args": {
-        "slug": {
-          "$from": "public-request",
-          "pointer": "/slug"
-        },
-        "verdict": "approved"
-      },
-      "expect": [
-        {
-          "class": "external"
         }
       ]
     },
@@ -1431,7 +1208,7 @@
       "args": {
         "slug": {
           "$from": "public-request",
-          "pointer": "/slug"
+          "pointer": "/items/0/slug"
         }
       },
       "expect": [
@@ -1446,7 +1223,7 @@
       "args": {
         "slug": {
           "$from": "public-request",
-          "pointer": "/slug"
+          "pointer": "/items/0/slug"
         }
       },
       "expect": [
@@ -1461,44 +1238,9 @@
       "args": {
         "slug": {
           "$from": "public-request",
-          "pointer": "/slug"
+          "pointer": "/items/0/slug"
         },
         "boardSlug": "agent-public"
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
-      "id": "reply",
-      "tool": "penny.comments.post",
-      "args": {
-        "slug": {
-          "$from": "public-request",
-          "pointer": "/slug"
-        },
-        "body": "We have retained this feedback and are comparing approaches."
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
-      "id": "status",
-      "tool": "penny.requests.set_status",
-      "args": {
-        "slug": {
-          "$from": "public-request",
-          "pointer": "/slug"
-        },
-        "update": {
-          "status": "under_review",
-          "body": "We are reviewing the delivery-history evidence."
-        }
       },
       "expect": [
         {
@@ -1512,7 +1254,7 @@
       "args": {
         "slug": {
           "$from": "public-request",
-          "pointer": "/slug"
+          "pointer": "/items/0/slug"
         },
         "vote": {
           "contact": {
@@ -1563,7 +1305,7 @@
       "args": {
         "slug": {
           "$from": "public-request",
-          "pointer": "/slug"
+          "pointer": "/items/0/slug"
         }
       },
       "expect": [
@@ -1578,7 +1320,7 @@
       "args": {
         "slug": {
           "$from": "public-request",
-          "pointer": "/slug"
+          "pointer": "/items/0/slug"
         }
       },
       "expect": [
@@ -1614,90 +1356,6 @@
       ]
     },
     {
-      "id": "merge-private",
-      "tool": "penny.requests.merge",
-      "args": {
-        "slug": {
-          "$from": "duplicate",
-          "pointer": "/slug"
-        },
-        "targetSlug": {
-          "$from": "private-request",
-          "pointer": "/slug"
-        }
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "unmerge-private",
-      "tool": "penny.requests.merge",
-      "args": {
-        "slug": {
-          "$from": "duplicate",
-          "pointer": "/slug"
-        },
-        "reverse": true
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "public-duplicate",
-      "tool": "penny.requests.create",
-      "args": {
-        "title": "Delivery history duplicate",
-        "description": "Customer-safe duplicate wording",
-        "boardSlug": "agent-public"
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "approve-duplicate",
-      "tool": "penny.moderation.decide",
-      "args": {
-        "slug": {
-          "$from": "public-duplicate",
-          "pointer": "/slug"
-        },
-        "verdict": "approved"
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
-      "id": "merge-public",
-      "tool": "penny.requests.merge",
-      "args": {
-        "slug": {
-          "$from": "public-duplicate",
-          "pointer": "/slug"
-        },
-        "targetSlug": {
-          "$from": "public-request",
-          "pointer": "/slug"
-        }
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
       "id": "decision",
       "tool": "penny.decisions.update",
       "args": {
@@ -1716,6 +1374,41 @@
           "class": "standard"
         }
       ]
+    },
+    {
+      "id": "decision-sensitive",
+      "tool": "penny.decisions.update",
+      "args": {
+        "brief": {
+          "question": "Synthetic protected identifier 123-45-6789",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "confidence": "medium",
+          "reviewAt": "2027-01-15"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
     },
     {
       "id": "read-decision",
@@ -1748,6 +1441,38 @@
           "class": "standard"
         }
       ]
+    },
+    {
+      "id": "bet-sensitive",
+      "tool": "penny.bets.save",
+      "args": {
+        "decisionId": {
+          "$from": "decision",
+          "pointer": "/id"
+        },
+        "title": "Expose delivery history",
+        "summary": "Synthetic protected identifier 123-45-6789"
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
     },
     {
       "id": "alternative",
@@ -1876,6 +1601,64 @@
       ]
     },
     {
+      "id": "roadmap-edit-sensitive",
+      "tool": "penny.roadmap.update",
+      "args": {
+        "id": {
+          "$from": "commit",
+          "pointer": "/itemId"
+        },
+        "item": {
+          "title": "Delivery history",
+          "summary": "Synthetic protected identifier 123-45-6789",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "targetWindow": null,
+          "deliveryNotes": null,
+          "confidence": "medium",
+          "accountImpact": null,
+          "decisionId": {
+            "$from": "decision",
+            "pointer": "/id"
+          },
+          "candidateBetId": {
+            "$from": "bet",
+            "pointer": "/id"
+          },
+          "publicTitle": "Delivery history",
+          "publicSummary": "See the status of your feedback in one place.",
+          "evidenceIds": [
+            {
+              "$from": "capture",
+              "pointer": "/id"
+            }
+          ]
+        }
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
       "id": "move-internal",
       "tool": "penny.roadmap.move",
       "args": {
@@ -1907,12 +1690,7 @@
         "publicTitle": "Delivery history",
         "publicSummary": "See the status of your feedback in one place.",
         "boardSlug": "agent-public",
-        "requestIds": [
-          {
-            "$from": "public-request",
-            "pointer": "/id"
-          }
-        ]
+        "requestIds": []
       },
       "expect": [
         {
@@ -1953,21 +1731,6 @@
         "actionKey": {
           "$from": "alternative",
           "pointer": "/id"
-        }
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
-      "id": "publish-update",
-      "tool": "penny.roadmap.publish_update",
-      "args": {
-        "id": {
-          "$from": "shipped",
-          "pointer": "/transitionId"
         }
       },
       "expect": [
@@ -2034,7 +1797,7 @@
         "kind": "request",
         "targetId": {
           "$from": "public-request",
-          "pointer": "/id"
+          "pointer": "/items/0/id"
         },
         "linked": true
       },
@@ -2248,12 +2011,7 @@
             }
           ],
           "publicationDate": "2026-10-28",
-          "targetIds": [
-            {
-              "$from": "commit",
-              "pointer": "/itemId"
-            }
-          ]
+          "targetIds": []
         }
       },
       "expect": [
@@ -2263,38 +2021,47 @@
       ]
     },
     {
-      "id": "publish-release",
-      "tool": "penny.releases.publish",
+      "id": "release-sensitive",
+      "tool": "penny.releases.draft",
       "args": {
-        "slug": {
-          "$from": "release",
-          "pointer": "/slug"
+        "draft": {
+          "title": "Delivery history is available",
+          "body": "Synthetic protected identifier 123-45-6789",
+          "releaseType": "improved",
+          "tagIds": [
+            {
+              "$from": "tag",
+              "pointer": "/id"
+            }
+          ],
+          "publicationDate": "2026-10-28",
+          "targetIds": []
         }
       },
       "expect": [
         {
-          "class": "external"
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
         }
-      ]
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
     },
     {
       "id": "outcomes",
       "tool": "penny.outcomes.get",
-      "args": {
-        "slug": {
-          "$from": "release",
-          "pointer": "/slug"
-        }
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "public-release",
-      "tool": "penny.releases.public",
       "args": {
         "slug": {
           "$from": "release",
@@ -2346,267 +2113,18 @@
       ]
     },
     {
-      "id": "events",
-      "tool": "penny.events.list",
-      "args": {
-        "limit": 200
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "prepare-learning",
-      "tool": "penny.learning.prepare",
-      "args": {
-        "question": "What should we learn from the delivery-history evidence?",
-        "purpose": "Choose the next bounded improvement.",
-        "nativeEvidenceIds": [
-          {
-            "$from": "capture",
-            "pointer": "/id"
-          }
-        ],
-        "nativeRequestIds": [
-          {
-            "$from": "private-request",
-            "pointer": "/id"
-          }
-        ],
-        "expiresAt": "2027-10-28T09:00:00Z",
-        "budgetMicros": 100000,
-        "maxRunCostMicros": 10000,
-        "intervalMinutes": 60
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "pause-learning",
-      "tool": "penny.learning.control",
-      "args": {
-        "id": {
-          "$from": "prepare-learning",
-          "pointer": "/id"
-        },
-        "action": "pause"
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "resume-learning",
-      "tool": "penny.learning.control",
-      "args": {
-        "id": {
-          "$from": "prepare-learning",
-          "pointer": "/id"
-        },
-        "action": "resume"
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "run-learning",
-      "tool": "penny.learning.execute",
-      "args": {
-        "id": {
-          "$from": "prepare-learning",
-          "pointer": "/id"
-        },
-        "eventKey": {
-          "$from": "capture",
-          "pointer": "/id"
-        }
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
       "id": "draft-reply",
       "tool": "penny.drafts.create",
       "args": {
         "kind": "request",
         "id": {
           "$from": "public-request",
-          "pointer": "/id"
-        }
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
-      "id": "schedule-tag",
-      "tool": "penny.tags.manage",
-      "args": {
-        "action": "create",
-        "name": {
-          "$from": "public-request",
-          "pointer": "/slug"
-        }
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "scheduled-draft",
-      "tool": "penny.releases.draft",
-      "args": {
-        "draft": {
-          "title": "Scheduled delivery note",
-          "body": "A separately saved exact publication draft.",
-          "releaseType": "improved",
-          "publicationDate": "2026-10-28",
-          "targetIds": [
-            {
-              "$from": "commit",
-              "pointer": "/itemId"
-            }
-          ],
-          "tagIds": [
-            {
-              "$from": "schedule-tag",
-              "pointer": "/id"
-            }
-          ]
-        }
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "publication-clock",
-      "tool": "penny.publications.clock",
-      "args": {},
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "schedule-release",
-      "tool": "penny.publications.schedule",
-      "args": {
-        "kind": "release",
-        "id": {
-          "$from": "scheduled-draft",
-          "pointer": "/id"
-        },
-        "localTime": {
-          "$from": "publication-clock",
-          "pointer": "/localTime"
-        }
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
-      "id": "execute-schedule",
-      "tool": "penny.publications.execute",
-      "args": {
-        "id": {
-          "$from": "schedule-release",
-          "pointer": "/id"
-        }
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
-      "id": "consenting-customer-request",
-      "tool": "penny.search.records",
-      "args": {
-        "entity": "requests",
-        "q": "Verifier customer delivery consent"
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "customer-status",
-      "tool": "penny.requests.set_status",
-      "args": {
-        "slug": {
-          "$from": "consenting-customer-request",
-          "pointer": "/items/0/slug"
-        },
-        "update": {
-          "status": "under_review",
-          "body": "Your delivery history is being reviewed."
-        }
-      },
-      "expect": [
-        {
-          "class": "external"
-        }
-      ]
-    },
-    {
-      "id": "prepare-customer-mail",
-      "tool": "penny.deliveries.prepare",
-      "args": {
-        "slug": {
-          "$from": "consenting-customer-request",
-          "pointer": "/items/0/slug"
-        }
-      },
-      "expect": [
-        {
-          "class": "standard"
-        }
-      ]
-    },
-    {
-      "id": "dispatch-customer-mail",
-      "tool": "penny.deliveries.dispatch",
-      "args": {
-        "kind": "request",
-        "id": {
-          "$from": "prepare-customer-mail",
           "pointer": "/items/0/id"
         }
       },
       "expect": [
         {
-          "class": "external",
-          "facts": {
-            "counterparty": "known",
-            "measure": 1
-          }
+          "class": "external"
         }
       ]
     },
@@ -2651,14 +2169,30 @@
       ]
     },
     {
-      "id": "retained-webhook-dispatch",
-      "tool": "penny.integrations.dispatch",
+      "id": "events",
+      "tool": "penny.events.list",
       "args": {
-        "id": "unavailable-until-rpc-fixture:destination"
+        "limit": 200
       },
       "expect": [
         {
-          "class": "external"
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "published-releases",
+      "tool": "penny.releases.public",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
         }
       ]
     }

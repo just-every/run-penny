@@ -1,4 +1,3 @@
-import {deferredDelivery,deliveryOrigin} from '../agent-door/deferred'
 import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
 import { providerMail,mailUnsubscribe } from '../auth/mail'
@@ -22,7 +21,7 @@ export async function drainReleaseDeliveries(runtime:PennyRuntime,clock=Date.now
  if(await requesterQuietHours(runtime,new Date(clock())))return
  const rows=await db.prepare(`SELECT id,requester_id AS requesterId,address_id AS addressId,attempt_count AS attemptCount,first_attempt_at AS firstAttemptAt
  FROM notification_outbox WHERE event_type='release_version' AND release_snapshot_id IS NOT NULL AND delivery_state='queued' AND claim_id IS NULL AND available_at<=? ORDER BY available_at,id LIMIT 50`).bind(now).all<Outbox>()
- for(const row of rows.results)if(!await deferredDelivery(runtime,'release',row.id))await deliver(runtime,row,clock)
+ for(const row of rows.results)await deliver(runtime,row,clock)
 }
 async function deliver(runtime:PennyRuntime,row:Outbox,clock:()=>number){
  const db=runtime.database.binding,now=new Date(clock()).toISOString(),claim=createUlid(),provider=runtime.configuration.mailProvider??'unconfigured'
@@ -57,17 +56,11 @@ async function deliver(runtime:PennyRuntime,row:Outbox,clock:()=>number){
   if(await requesterQuietHours(runtime,new Date(clock()))){await finish('queued','quiet_hours',null,'suppressed',true);return}
   const admission=await admitReleaseDelivery(db,row.id,claim,initial[0].email),contexts=admission.contexts,release=contexts[0]
   if(!admission.owned||!release){await finish('suppressed','eligibility_changed');return}
-  const prepared=await deliveryOrigin(runtime,'release',row.id)
   const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,...mailHeaders,to:[release.email],subject:release.title.replace(/\s+/g,' '),
-   text:`${prepared?prepared.label+'\n\n':''}${release.title}\n${releaseTypeLabel[release.releaseType]} · ${release.publicationDate}\n\n${release.body}\n${release.setupUrl?`${release.setupUrl}\n`:''}\nYour requests:\n${contexts.filter(c=>c.requestSlug).map(c=>`${c.requestTitle}: ${runtime.configuration.appOrigin}/portal/feedback/${c.requestSlug}`).join('\n')}\n\nRead update: ${runtime.configuration.appOrigin}/portal/updates/${release.slug}\nUnsubscribe from all requester email: ${globalLink}${footer}`,
+   text:`${release.title}\n${releaseTypeLabel[release.releaseType]} · ${release.publicationDate}\n\n${release.body}\n${release.setupUrl?`${release.setupUrl}\n`:''}\nYour requests:\n${contexts.filter(c=>c.requestSlug).map(c=>`${c.requestTitle}: ${runtime.configuration.appOrigin}/portal/feedback/${c.requestSlug}`).join('\n')}\n\nRead update: ${runtime.configuration.appOrigin}/portal/updates/${release.slug}\nUnsubscribe from all requester email: ${globalLink}${footer}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){await finish(retryState(row.attemptCount),result.code??result.status,null,result.status);return}
   await finish('unknown',result.code??'provider_outcome_unknown')
  }catch(error){const code=safeValidationCode(error);await finish(code?retryState(row.attemptCount):'unknown',code??'attempt_outcome_unknown_review_required',null,code?'rejected':'unknown')}
-}
-
-export async function dispatchReleaseDelivery(runtime:PennyRuntime,id:string,clock=Date.now){
- const row=await runtime.database.binding.prepare("SELECT id,requester_id AS requesterId,address_id AS addressId,attempt_count AS attemptCount,first_attempt_at AS firstAttemptAt FROM notification_outbox WHERE id=? AND event_type='release_version' AND release_snapshot_id IS NOT NULL AND delivery_state='queued' AND claim_id IS NULL AND available_at<=?").bind(id,new Date(clock()).toISOString()).first<Outbox>()
- if(row)await deliver(runtime,row,clock)
 }

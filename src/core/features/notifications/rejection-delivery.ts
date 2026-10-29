@@ -1,4 +1,3 @@
-import {deferredDelivery,deliveryOrigin} from '../agent-door/deferred'
 import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
 import { providerMail, mailUnsubscribe } from '../auth/mail'
@@ -18,7 +17,7 @@ export async function drainRejectionNotices(runtime:PennyRuntime,clock=Date.now)
  const rows=await db.prepare(`SELECT id,attempt_count AS attemptCount,first_attempt_at AS firstAttemptAt FROM notification_outbox
   WHERE event_type='moderation_rejected' AND delivery_state='queued' AND claim_id IS NULL AND available_at<=?
   ORDER BY available_at,id LIMIT 50`).bind(now).all<RejectionIntent>()
- for(const row of rows.results)if(!await deferredDelivery(runtime,'rejection',row.id))await deliver(runtime,row,clock)
+ for(const row of rows.results)await deliver(runtime,row,clock)
 }
 async function deliver(runtime:PennyRuntime,row:RejectionIntent,clock:()=>number){
  const db=runtime.database.binding,now=new Date(clock()).toISOString(),claim=createUlid(),provider=runtime.configuration.mailProvider??'unconfigured'
@@ -48,7 +47,7 @@ async function deliver(runtime:PennyRuntime,row:RejectionIntent,clock:()=>number
   if(!admission.owned||!recipient?.email){await finish('suppressed',recipient?.suppressionReason??'eligibility_changed');return}
   const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,
    ...mailHeaders,to:[recipient.email],subject:'Your feedback was reviewed',
-   text:`${(await deliveryOrigin(runtime,'rejection',row.id))?.label??'An operator'} reviewed your feedback and did not approve it.\n\nReason:\n${recipient.reason}\n\nThis notice is private to you.\n\nUnsubscribe from all requester email: ${globalLink}${footer}`,
+   text:`An operator reviewed your feedback and did not approve it.\n\nReason:\n${recipient.reason}\n\nThis notice is private to you.\n\nUnsubscribe from all requester email: ${globalLink}${footer}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){await finish(retryState(row.attemptCount),result.code??result.status,null,result.status);return}
@@ -58,5 +57,3 @@ async function deliver(runtime:PennyRuntime,row:RejectionIntent,clock:()=>number
   await finish(code?retryState(row.attemptCount):'unknown',code??'attempt_outcome_unknown_review_required',null,code?'rejected':'unknown')
  }
 }
-
-export async function dispatchRejection(runtime:PennyRuntime,id:string){const row=await runtime.database.binding.prepare("SELECT id,attempt_count AS attemptCount,first_attempt_at AS firstAttemptAt FROM notification_outbox WHERE id=? AND event_type='moderation_rejected' AND delivery_state='queued' AND claim_id IS NULL").bind(id).first<RejectionIntent>();if(row)await deliver(runtime,row,Date.now)}

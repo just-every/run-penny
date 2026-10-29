@@ -5,7 +5,7 @@ import type {ClassAndFacts} from '../../../../base/modules/agent-door/types.ts'
 export function safeProjection(value:unknown):unknown {
  if(typeof value==='string')return redact(value,{enabled:true,kinds:['credential'],patterns:[]}).replace(/\bBearer\s+[A-Za-z0-9_.-]{16,}/gi,'Bearer [REDACTED:credential]').replace(/\b(?:gh[pousr]_|github_pat_|sk_(?:live|test)_|sk-(?:proj-)?|xox[baprs]-|int_)[A-Za-z0-9_-]{16,}/gi,'[REDACTED:credential]')
  if(Array.isArray(value))return value.map(safeProjection)
- if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).filter(([,v])=>v!==undefined).map(([k,v])=>[k,safeProjection(v)]))
+ if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).filter(([k,v])=>v!==undefined&&!/(?:^|_)(?:secret|password|authorization|cookie|ciphertext|bearer|access_?token|refresh_?token|token_?hash|signing_?key|api_?key|private_?key)(?:$|_)/i.test(k)&&!['token','session','sessionCookie','verificationUrl','unsubscribeUrl','accessToken','refreshToken','apiKey','privateKey','signingKey'].includes(k)).map(([k,v])=>[k,safeProjection(v)]))
  return value
 }
 export function recordClasses(record:unknown):ClassAndFacts[]{

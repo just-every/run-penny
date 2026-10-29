@@ -73,7 +73,7 @@ it('[API-002 BASE-ACCESS-002] fences issuance and business writes against native
  expect(await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='integration.key_issued'").first('n')).toBe(1)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_guards').first('n')).toBe(0)
 })
-it('[API-003 REQ-010 REL-001] composes native public reads, comments, status publication and validation without widening approval or consent',async()=>{
+it('[API-003 REQ-010 REL-001] keeps native public reads and draft creation while core-only adoption refuses queued publication without an effect',async()=>{
  const g=await graph(),issued=await key(g.operator,['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write'])
  const slug=g.requests[0].slug
  const snapshot=async()=>({requests:await env.DB.prepare('SELECT count(*) n FROM requests').first('n'),comments:await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n'),updates:await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n'),permissions:await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')})
@@ -82,16 +82,17 @@ it('[API-003 REQ-010 REL-001] composes native public reads, comments, status pub
  expect((await request('/api/v1/requests',{title:'New',description:'Body',boardSlug:'missing'},issued.headers)).status).toBe(404)
  expect((await request('/api/v1/requests',{title:'New',description:'Body',boardSlug:'regression',resource:'releases'},issued.headers)).status).toBe(400)
  expect(await snapshot()).toEqual(before)
- expect((await request('/api/v1/requests/'+slug+'/comments',{body:'Approved safe comment',approve:true},issued.headers)).status).toBe(201)
+ expect((await request('/api/v1/requests/'+slug+'/comments',{body:'Approved safe comment',approve:true},issued.headers)).status).toBe(403)
  const action={status:'under_review',body:'Approved public update',pinned:false,idempotencyKey:'native-api-update',approve:true}
- expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)
- expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)
- expect((await request('/api/v1/requests/'+slug+'/status-updates',{...action,body:'Different'},issued.headers)).status).toBe(409)
- expect(await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n')).toBe(1)
+ expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(403)
+ expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(403)
+ expect((await request('/api/v1/requests/'+slug+'/status-updates',{...action,body:'Different'},issued.headers)).status).toBe(403)
+ expect(await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n')).toBe(0)
+ expect(await snapshot()).toEqual(before)
  expect(await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')).toBe(before.permissions)
  const publicText=await (await request('/api/v1/requests/'+slug,undefined,issued.headers)).text()
- expect(publicText).toContain('Approved safe comment');expect(publicText).toContain('Approved public update');expect(publicText).not.toContain(g.recipient.email)
- expect((await request('/api/v1/releases/missing/publish',{approve:true},issued.headers)).status).toBe(404)
+ expect(publicText).not.toContain('Approved safe comment');expect(publicText).not.toContain('Approved public update');expect(publicText).not.toContain(g.recipient.email)
+ expect((await request('/api/v1/releases/missing/publish',{approve:true},issued.headers)).status).toBe(403)
  const fresh=await request('/api/v1/requests',{title:'Private unreviewed wording',description:'Private context',boardSlug:'regression'},issued.headers)
  expect(fresh.status).toBe(201)
  expect(await (await request('/api/v1/requests',undefined,issued.headers)).text()).not.toContain('Private unreviewed wording')

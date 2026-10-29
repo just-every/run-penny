@@ -9,9 +9,9 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Core | 73 | 114 | 71 | 258 |
-| Agent surface | 0 | 0 | 21 | 21 |
+| Agent surface | 0 | 8 | 13 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 73 | 114 | 94 | 281 |
+| Full target | 73 | 122 | 86 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -1461,7 +1461,7 @@ Core · published · **partial**
 1. Imported/restored history creates no new publication or integration effect.
 
 **Evidence.** `tests/base/integration-api.test.ts`
-**Gap.** That imported or restored history creates no new publication or integration effect has no passing assertion: the cited upgrade case snapshots its tables after the import and compares them only across migrations, and no cited case restores an archive; prior history, including imported feedback, staying unchanged across each new migration is asserted.
+**Gap.** That imported or restored history creates no new publication or integration effect has no passing assertion: the cited upgrade case snapshots its tables after the import and compares them only across migrations, and no cited case restores an archive; prior history, including imported feedback, staying unchanged across each new migration is asserted. Gap: mail edges and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); scoped-client replies, status sends and release publication now refuse without effects, while reads and unpublished draft creation remain.
 
 #### INT-001 — Explicit integration effects
 
@@ -3267,7 +3267,7 @@ Core · target · **partial**
 2. Each webhook's signature verifies and replays are rejected.
 
 **Evidence.** `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts`
-**Gap.** Requests, comments, status and releases are covered today, as are proxy-vote customer lookup and recording under `votes:write`; the remaining record types, full pagination/filter coverage and OpenAPI acceptance remain required. OpenAPI contract tests exercise every resource through the public API; each webhook's signature verifies and replays are rejected.
+**Gap.** Current scoped-client public reads, unpublished request/release drafts and proxy-vote lookup/recording remain. Gap: mail edges, events and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); replies, status publication, release sends and webhook dispatch are deferred. Remaining record types, full pagination/filter coverage, OpenAPI and complete webhook acceptance remain unproved.
 
 ### Migration from each incumbent
 
@@ -3824,7 +3824,7 @@ Agent surface · target · **missing**
 
 #### DATA-007 — MCP server
 
-Agent surface · target · **missing** · Cites BASE-AGENT-001, BASE-AGENT-002, BASE-AGENT-004, BASE-AGENT-005
+Agent surface · target · **partial** · Cites BASE-AGENT-001, BASE-AGENT-002, BASE-AGENT-004, BASE-AGENT-005
 
 **Requirement.** Penny's delta on the Base agent door: the Model Context Protocol server gives Claude, ChatGPT, Cursor and other MCP clients Penny's search, read and capture tools (search requests and evidence, read the roadmap, add feedback, record a proxy vote), authorized by a scoped key or OAuth and limited to that key's role.
 
@@ -3832,12 +3832,12 @@ Agent surface · target · **missing** · Cites BASE-AGENT-001, BASE-AGENT-002, 
 1. An MCP conformance client lists the tools and runs search and capture.
 2. A call outside the key's scope is refused.
 
-**Evidence.** None.
-**Gap.** An MCP conformance client lists the tools and runs search and capture; a call outside the key's scope is refused.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `pnpm exec rer build` (rer 0.2.86, local build passed)
+**Gap.** Native MCP, mapped Business sponsors, scoped local keys and one policy pipeline are wired to the released door. Gap: declared-subset door, rer 0.2.87+; optional events/subscriptions and dual host are undeclared; normal conformance must still test their unscoped Base paths.
 
 #### SURFACE-001 — The registry equals this table
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-001, BASE-AGENT-002, BASE-AGENT-006, BASE-AGENT-013
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-001, BASE-AGENT-002, BASE-AGENT-006, BASE-AGENT-013
 
 **Requirement.** Penny's door serves exactly the tools, resource templates, event types and prompts in this section, generated from one action registry that the operator app, the scoped REST API (API-001), DATA-007's MCP server and Penny's own agents all call. Each tool declares input and output schemas, truthful annotations, the risk classes it can carry and the server-side test that decides them.
 
@@ -3849,12 +3849,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-001, BASE
 5. `/docs/agents` lists every tool with its classes, scopes and error codes, and the test that adds each computed class.
 6. The Base harness passes on Penny's fixtures in CI under both of its policies, all autonomous and held.
 
-**Evidence.** None.
-**Gap.** Penny has no MCP door or tool registry today; the scoped REST API (API-001) covers requests, comments, status, releases and proxy votes. No registry, output schemas, annotations, class declarations, parity test, generated `/docs/agents` or Base harness exist.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `pnpm exec rer build` (rer 0.2.86, local build passed)
+**Gap.** The native core registry and generated /docs/agents share the production factory, schemas, classes and clause references. Gap: events, subscriptions and resource refresh are undeclared (declared-subset door, rer 0.2.87+); the complete target table and UI/REST/embedded-agent parity remain incomplete. The released door still requires its built-in events.list catalogue entry.
 
 #### SURFACE-002 — Triage through the door
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-003, BASE-AGENT-005, BASE-AGENT-006
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-003, BASE-AGENT-005, BASE-AGENT-006
 
 **Requirement.** The feedback triager finds, reads and triages through the read tools and the `penny://` resources. Every read returns exactly what the sponsor's current role shows in the operator app, and a record the sponsor cannot open reads exactly like a missing id. Triage calls inside the business are standard.
 
@@ -3865,12 +3865,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-003, BASE
 4. Capture, link, tag, assign, review, snooze, an internal note and a proxy vote on an unpublished request each compute standard and nothing else.
 5. Evidence wording, requester comments and imported posts carry the untrusted marker, and wording that asks for a wider action or claims a recipient is internal changes neither the call nor its class.
 
-**Evidence.** None.
-**Gap.** No MCP read or triage tools exist; reads through the scoped REST API follow the key's scopes, not the sponsor's role, and carry no untrusted marker.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `pnpm exec rer build` (rer 0.2.86, local build passed)
+**Gap.** Native evidence, request, decision and primary-record readers use current native admission and narrow scopes; resource readers return one missing/restricted result and untrusted content. Gap: resource refresh and multi-sponsor private-record conformance are undeclared (declared-subset door, rer 0.2.87+); target-only triage verbs and sentence-complete acceptance remain unproved.
 
 #### SURFACE-003 — Customer-facing calls are external
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-006, BASE-AGENT-008
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-006, BASE-AGENT-008
 
 **Requirement.** Penny computes external, with its counterparty and recipient count, for every call that makes wording public or reaches a customer, as "How Penny computes each class" states. Mail an agent's call sends names "<agent> for <person>" as its sender.
 
@@ -3882,12 +3882,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-006, BASE
 5. Rejecting a held item computes standard without the author notice and external with one known recipient when the notice is ticked.
 6. An outreach message (AGENT-003) computes external with counterparty known and its recipient count, and its email names "<agent> for <person>".
 
-**Evidence.** None.
-**Gap.** No call computes a risk class today; external calls, their counterparties and recipient counts are not computed.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `pnpm exec rer build` (rer 0.2.86, local build passed)
+**Gap.** Immediate native exposure computes external from current records. Gap: mail edges and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent moderation/publication, replies, status sends, customer delivery and webhook dispatch are deferred. Provider-backed draft generation keeps the enforcing PENNY_LEARNING_EGRESS RPC port; rer 0.2.86 cannot provision it for verification.
 
 #### SURFACE-004 — Destructive and sensitive calls
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-006
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-006
 
 **Requirement.** Penny computes destructive, with its item count, for what it cannot undo, and sensitive, with the data kinds, for redaction over regulated numbers.
 
@@ -3898,12 +3898,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-006
 4. `penny.redaction.reapply` computes destructive and sensitive, with the kinds and place counts its preview shows.
 5. A refused destructive call's audit row still records its computed classes.
 
-**Evidence.** None.
-**Gap.** No call computes a risk class today; destructive and sensitive calls are not declared.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `pnpm exec rer build` (rer 0.2.86, local build passed)
+**Gap.** Native identity merging and tag loss compute destructive; protected free-text mutations compute sensitive on the server. Tool projections redact credentials and the effect witness returns only digests. Gap: native export/erasure with retained door artifacts and the complete target acceptance remain unproved; owner-native administration is undeclared (declared-subset door, rer 0.2.87+).
 
 #### SURFACE-005 — Access, security, live and gated calls
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-005, BASE-AGENT-006, BASE-AGENT-008
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-005, BASE-AGENT-006, BASE-AGENT-008
 
 **Requirement.** Penny computes access with its direction for operators, roles and keys; security for credentials and protective settings; live for settings that change what portal and widget visitors see; and gated for a connector's consent step.
 
@@ -3915,12 +3915,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-005, BASE
 5. Configuring an outbound integration destination computes external and security.
 6. A call that widens the calling agent's own key or its sponsor's role returns `self_escalation` and changes nothing, under any policy.
 
-**Evidence.** None.
-**Gap.** No call computes a risk class today; access, security, live and gated calls are not declared, and there is no `self_escalation` refusal.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `pnpm exec rer build` (rer 0.2.86, local build passed)
+**Gap.** Board participation and workspace clock updates compute live, and clock writes recheck the native Owner/Admin role in the write transaction. Gap: owner-native administration is undeclared (declared-subset door, rer 0.2.87+); credential/access changes, self-escalation and narrowing tools are deferred to that family. Public board visibility changes are outside this core adapter.
 
 #### SURFACE-006 — Penny's own agents use the same door
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-002, BASE-AGENT-007, BASE-AGENT-008, BASE-AGENT-011
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-002, BASE-AGENT-007, BASE-AGENT-008, BASE-AGENT-011
 
 **Requirement.** AGENT-001 to AGENT-009 and AI-006's drafting call the registry's tools and the Base decision function, so an embedded agent and an outside one get the same decision for the same call (D-6). A draft never sends itself (D-2).
 
@@ -3930,12 +3930,12 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-002, BASE
 3. AI-006 drafts produce no send; posting the edited wording is a separate `penny.comments.post` call with its own class and decision.
 4. Pause agents stops embedded and outside agents alike on their next call within 60 seconds.
 
-**Evidence.** None.
-**Gap.** Penny's learning runs and AI drafting call internal services, not a tool registry, and there is no decision function or Pause agents control.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `pnpm exec rer build` (rer 0.2.86, local build passed)
+**Gap.** The external core tools enter the shared production policy, pause, audit and idempotency pipeline. Gap: timed lifecycle, dual host and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); scheduled investigations and embedded agent continuations are deferred. No seed-side continuation or scheduled publication adapter is registered.
 
 #### SURFACE-007 — The feedback triager's week
 
-Agent surface · target · **missing** · From new · Cites BASE-AGENT-007, BASE-AGENT-009, BASE-AGENT-013
+Agent surface · target · **partial** · From new · Cites BASE-AGENT-007, BASE-AGENT-009, BASE-AGENT-013
 
 **Requirement.** A stranger agent given only the installation's URL runs a seeded week of feedback work through MCP under two company policies: all autonomous, and held. The week triages new inbox items, links duplicates, merges one published pair, sets a request Planned with a comment, publishes a release to the requesters who asked, and erases one requester on request.
 
@@ -3946,8 +3946,8 @@ Agent surface · target · **missing** · From new · Cites BASE-AGENT-007, BASE
 4. Every call's audit row carries its classes, the rule and the policy revision, and no decision differs from the policy in force.
 5. Pause agents stops the agent on its next call within 60 seconds, and resume restores it.
 
-**Evidence.** None.
-**Gap.** No MCP door, company policy, setup questions or harness exist, so the specialist journey cannot run.
+**Evidence.** `agent-surface.json`; `src/core/features/agent-door/`; `pnpm exec rer build` (rer 0.2.86, local build passed)
+**Gap.** The core conformance journey drives real native records and witnesses mutation digests. Gap: multi-sponsor, events, subscriptions, mail edges, resource refresh, timed lifecycle, dual host, queued lifecycle and owner-native administration are undeclared (declared-subset door, rer 0.2.87+); the full customer-facing week is deferred with those families.
 
 ## Later
 

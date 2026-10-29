@@ -24,7 +24,7 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  await drainLearning(runtime,_controller.scheduledTime)
  await drainDecisionReviews(runtime)
  await drainAging(runtime.database.binding)
- await drainScheduledPublications(runtime.database.binding,_controller.scheduledTime,runtime)
+ await drainScheduledPublications(runtime.database.binding,_controller.scheduledTime)
  await prepareWeekly(runtime,_controller.scheduledTime)
  await drainRequesterMail(runtime,()=>_controller.scheduledTime)
  await drainIntegrations(runtime)

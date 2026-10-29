@@ -5,11 +5,13 @@ import { ToolRefusal } from '../../../../base/modules/agent-door/errors.ts'
 import { guardedDatabase, type AuthorityGuard } from '../integrations/guarded-database'
 import { readDatabase } from '../integrations/read-database'
 
-export async function nativeContext(runtime:PennyRuntime,ctx:Pick<ToolContext,'person'|'clientId'|'agent'>,readOnly:boolean,attribution?:ToolContext,scope?:string){
+export async function nativeContext(runtime:PennyRuntime,ctx:Pick<ToolContext,'person'|'clientId'|'agent'>,readOnly:boolean,attribution?:ToolContext,scope?:string,roles?:readonly string[]){
  const db=runtime.database.binding
  const row=await db.prepare(`SELECT o.version,b.actor_id AS actor FROM oa_operators o JOIN penny_operator_bindings b ON b.native_operator_id=o.id WHERE o.id=? AND o.status='active'`).bind(ctx.person.id).first<{version:number;actor:string}>()
  if(!row)throw new ToolRefusal('sponsor_inactive')
+ if(roles&&!await db.prepare("SELECT 1 FROM oa_operators WHERE id=? AND role IN (SELECT value FROM json_each(?))").bind(ctx.person.id,JSON.stringify(roles)).first())throw new ToolRefusal('workspace_settings_role_required')
  const guard:AuthorityGuard={sql:`EXISTS(SELECT 1 FROM oa_operators o JOIN penny_operator_bindings b ON b.native_operator_id=o.id WHERE o.id=? AND o.status='active' AND o.version=? AND b.actor_id=?)${readOnly?'':" AND EXISTS(SELECT 1 FROM data_state WHERE singleton=1 AND phase='idle')"}`,params:[ctx.person.id,row.version,row.actor]}
+ if(roles){guard.sql+=' AND EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND role IN (SELECT value FROM json_each(?)))';guard.params.push(ctx.person.id,JSON.stringify(roles))}
  if(ctx.clientId&&ctx.agent.id===`penny-key:${ctx.clientId}`){
   const allowed=originalScopes(scope??'')
   if(!allowed.length)throw new ToolRefusal('insufficient_scope')

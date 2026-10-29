@@ -3357,15 +3357,6 @@
       "actor_id"
     ]
   },
-  "penny_agent_work": {
-    "classification": "installation",
-    "columns": [
-      "kind",
-      "id",
-      "principal",
-      "label"
-    ]
-  },
   "penny_discord_settings": {
     "classification": "product",
     "columns": [

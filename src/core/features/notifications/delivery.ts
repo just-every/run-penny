@@ -1,4 +1,3 @@
-import {deferredDelivery,deliveryOrigin} from '../agent-door/deferred'
 import { activateMergeNoticeStatements } from '../requests/merge-notices'
 import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
@@ -38,7 +37,7 @@ export async function drainNotifications(runtime:PennyRuntime, clock=Date.now):P
  (SELECT MIN(created_at) FROM notification_attempts a WHERE a.batch_id=notification_batches.id
   AND NOT (a.state='suppressed' AND a.failure_reason IS 'quiet_hours')) AS firstAttemptAt
  FROM notification_batches WHERE state='queued' AND next_attempt_at<=? ORDER BY next_attempt_at,id LIMIT 50`).bind(now).all<Batch>()
- for(const batch of rows.results)if(!await deferredDelivery(runtime,'request',batch.id))await deliver(runtime,batch,clock)
+ for(const batch of rows.results)await deliver(runtime,batch,clock)
 }
 async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
  const db=runtime.database.binding,now=new Date(clock()).toISOString(),claim=createUlid(),provider=runtime.configuration.mailProvider??'unconfigured'
@@ -86,9 +85,8 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   const events=JSON.parse(admitted.events) as NotificationEvent[],origin=runtime.configuration.appOrigin
   if(!events.length){await finish('suppressed','no_public_events');return}
   if(!admission.owned){await finish('suppressed','eligibility_changed');return}
-  const prepared=await deliveryOrigin(runtime,'request',batch.id)
   const result=await sender.send({...(provider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:batch.id,...mailHeaders,to:[recipient.email],subject:`Updates: ${admitted.title.replace(/\s+/g,' ')}`,
-   text:`${prepared?prepared.label+'\n\n':''}${admitted.title}\n\n${events.map(e=>`${e.kind==='merge'?'Request merged':e.kind==='status'?'Status update':'Public reply'}\n${e.body}${e.requests?.length?`\n\nYour requests:\n${e.requests.map(r=>`${r.title}: ${origin}/portal/feedback/${r.slug}`).join('\n')}`:''}`).join('\n\n')}\n\nView feedback: ${origin}/portal/feedback/${admitted.slug}\n\nMute this request: ${requestLink}\nUnsubscribe from all requester email: ${globalLink}${footer}`,
+   text:`${admitted.title}\n\n${events.map(e=>`${e.kind==='merge'?'Request merged':e.kind==='status'?'Status update':'Public reply'}\n${e.body}${e.requests?.length?`\n\nYour requests:\n${e.requests.map(r=>`${r.title}: ${origin}/portal/feedback/${r.slug}`).join('\n')}`:''}`).join('\n\n')}\n\nView feedback: ${origin}/portal/feedback/${admitted.slug}\n\nMute this request: ${requestLink}\nUnsubscribe from all requester email: ${globalLink}${footer}`,
    unsubscribe:mailUnsubscribe(runtime,globalLink),headers:{'Auto-Submitted':'auto-generated'}})
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}
   if(result.status==='rejected'||result.status==='rate_limited'){
@@ -105,9 +103,4 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   // Persisted sending ownership still prevents replay if this write also fails.
   await finish('unknown','attempt_outcome_unknown_review_required')
  }
-}
-
-export async function dispatchNotification(runtime:PennyRuntime,id:string,clock=Date.now){
- const row=await runtime.database.binding.prepare("SELECT id,requester_id AS requesterId,address_id AS addressId,request_id AS requestId,attempt_count AS attemptCount,failure_reason AS failureReason,(SELECT MIN(created_at) FROM notification_attempts a WHERE a.batch_id=notification_batches.id AND NOT(a.state='suppressed' AND a.failure_reason IS 'quiet_hours')) AS firstAttemptAt FROM notification_batches WHERE id=? AND state='queued' AND next_attempt_at<=?").bind(id,new Date(clock()).toISOString()).first<Batch>()
- if(row)await deliver(runtime,row,clock)
 }
