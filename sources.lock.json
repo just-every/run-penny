@@ -8126,7 +8126,7 @@
       "executable": false
     },
     "tests/browser/integration-states.mjs": {
-      "sha256": "bccac8ee12125d71bb053dde865b9c8e8d7cd5085687934d7dbf4852f6e007b3",
+      "sha256": "f72e999c0bec5423c72efdb0202e6779d9d6bc3542993c1f7da85d4fe0c9ff51",
       "executable": false
     },
     "tests/browser/integration-tracker-actions.mjs": {

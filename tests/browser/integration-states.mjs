@@ -1,3 +1,4 @@
+import {pacePublicContext} from './public-entry-pacing.mjs'
 import {uncertaintyEdge,checkUncertainty} from './integration-uncertainty.mjs'
 import {trackerCreateEdge} from './integration-tracker-edge.mjs'
 import {checkTrackerActions} from './integration-tracker-actions.mjs'
@@ -35,7 +36,8 @@ try{
    const action=async(path,body)=>{const response=await fetch(runtime.origin+path,{method:'POST',headers,body:JSON.stringify(body)});assert.ok(response.ok,'native setup action admitted');return response.json()}
    await action('/api/operator/boards',{name:'Product feedback',slug:'feedback',visibility:'public'})
    const subject=await action('/api/operator/requests',{title:'Deliberate tracker subject',description:'Private original wording',boardSlug:'feedback'})
-   context=await browser.newContext({viewport:{width,height:width===390?844:900}});await context.addCookies([{name:cookie.slice(0,index),value:cookie.slice(index+1),url:runtime.origin}])
+   const clientIp='192.0.2.40'
+   context=await browser.newContext({viewport:{width,height:width===390?844:900},extraHTTPHeaders:{'CF-Connecting-IP':clientIp}});await pacePublicContext(context,runtime,clientIp);await context.addCookies([{name:cookie.slice(0,index),value:cookie.slice(index+1),url:runtime.origin}])
    const page=await context.newPage(),errors=[],external=[]
    page.on('pageerror',()=>errors.push('pageerror'));page.on('console',message=>{if(message.type()==='error')errors.push({kind:'console.error',message:message.text(),url:message.location().url})});page.on('request',request=>{if(new URL(request.url()).origin!==runtime.origin)external.push(new URL(request.url()).origin)})
    async function capture(label,target){
