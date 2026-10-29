@@ -1,4 +1,6 @@
 export interface AppBindings {
+  PENNY_SURVEYS?: string
+  PENNY_SURVEY_EGRESS?: import('../features/surveys/transport').SurveyEgress
   PENNY_HELPSCOUT_EGRESS?: import('../features/helpscout/configuration').HelpScoutEgress
   PENNY_DISCORD?: string
   PENNY_DISCORD_EGRESS?: import('../features/discord/configuration').DiscordEgress
