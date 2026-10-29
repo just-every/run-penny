@@ -258,6 +258,15 @@
         "node tests/browser/teams-capture.mjs",
         "node tests/browser/teams-notifications.mjs"
       ]
+    },
+    {
+      "name": "helpscout-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/helpscout-capture.mjs"
+      ]
     }
   ],
   "nightly": [

@@ -2,6 +2,7 @@ export interface AppBindings {
   PENNY_TEAMS?: string
   PENNY_TEAMS_EGRESS?: import('../features/teams/configuration').TeamsEgress
 
+  PENNY_HELPSCOUT_EGRESS?: import('../features/helpscout/configuration').HelpScoutEgress
   PENNY_DISCORD?: string
   PENNY_DISCORD_EGRESS?: import('../features/discord/configuration').DiscordEgress
   REQUESTER_GOOGLE_CLIENT_ID?: string

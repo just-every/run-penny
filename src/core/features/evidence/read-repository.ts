@@ -5,6 +5,7 @@ import { parseTagNamesJson } from '@/core/shared/tag-names'
 
 export interface EvidenceReadRow {
   readonly teamsJson: string | null
+  readonly helpScoutJson: string | null
   readonly discordJson: string | null
   readonly id: string
   readonly wording: string
@@ -29,6 +30,7 @@ export const evidenceReadSelect = `
     e.id AS id, ev.wording AS wording, e.named_speaker AS namedSpeaker, e.admitted_sender AS admittedSender, e.source_type AS sourceType, e.source_label AS sourceLabel,
     (SELECT json_object('jumpUrl',d.jump_url,'capturer',COALESCE(d.capturer_name,d.capturer_id),'sourceState',d.source_state,'checkFailure',d.check_failure) FROM penny_teams_sources d WHERE d.evidence_id=e.id) AS teamsJson,
     (SELECT json_object('jumpUrl',d.jump_url,'capturer',COALESCE(d.capturer_name,d.capturer_id),'sourceState',d.source_state,'checkFailure',d.check_failure) FROM penny_discord_sources d WHERE d.evidence_id=e.id) AS discordJson,
+    (SELECT json_object('sourceUrl','https://secure.helpscout.net/conversation/'||h.conversation_id||'/','sourceState',h.source_state,'conversationId',h.conversation_id) FROM penny_helpscout_captures h WHERE h.evidence_id=e.id) AS helpScoutJson,
     e.observed_at AS observedAt, e.review_state AS reviewState, e.review_reason AS reviewReason,
     a.id AS accountId, a.slug AS accountSlug, a.name AS accountName,
     requester.id AS requesterId, requester.display_name AS requesterName,
@@ -65,6 +67,7 @@ export function mapEvidenceRead(row: EvidenceReadRow): OperatorEvidenceCard {
   return {
     id: row.id,
     ...(row.teamsJson?{teams:JSON.parse(row.teamsJson)}:{}),
+    ...(row.helpScoutJson?{helpScout:JSON.parse(row.helpScoutJson)}:{}),
     ...(row.discordJson?{discord:JSON.parse(row.discordJson)}:{}),
     wording: row.wording,
     namedSpeaker: row.namedSpeaker,

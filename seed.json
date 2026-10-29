@@ -388,6 +388,19 @@
       "adapters": [
         "penny.teams-egress.v1"
       ]
+    },
+    {
+      "id": "helpscout",
+      "required": false,
+      "why": "Owner-delegated Help Scout Dynamic App and tag capture through PENNY_HELPSCOUT_EGRESS, with reviewed replies. Live provider installation is owner-run.",
+      "data": [
+        "installation-only OAuth and signing credentials",
+        "selected conversation excerpt, customer email and organization identity",
+        "explicitly approved reply text"
+      ],
+      "adapters": [
+        "penny.helpscout.v1"
+      ]
     }
   ],
   "env": [
@@ -513,7 +526,13 @@
       "/auth/owner-claim",
       "/api/integrations/discord/interactions",
       "/api/integrations/discord/gateway",
-      "/api/integrations/teams/messages"
+      "/api/integrations/teams/messages",
+      "/api/integrations/helpscout/sidebar",
+      "/api/integrations/helpscout/webhook",
+      "/api/integrations/helpscout/action",
+      "/api/integrations/helpscout/panel",
+      "/api/integrations/helpscout/panel.js",
+      "/api/integrations/helpscout/panel.css"
     ],
     "notes": "Operator credentials use maintained Base operator-auth; requester email is sent through the selected Base SendGrid or Resend transport. GET /auth/confirm previews a link without consuming it; same-origin POST confirms it. Private Hono and Start functions authenticate independently. Production has no local outbox switch. 0009 revokes prior synthetic credentials. Test-only predecessor fixtures are separate from production Base tests. Setup packages clean production artifacts; deploy targets the rer-seedproof-penny workers.dev prefix via Base. Hosted/provider proof remains separate from local verification. Required requester mail and minute-Cron notification drain are declared in OPERATIONS.json. Provider credentials, verified sender, hosted Cron execution and inbox delivery need independent proof. The public feedback board's canonical address is /portal/feedback, and /portal redirects there (9 October 2026). /docs and everything under /docs/ are public build-time documentation pages (DOCS-001) that read no workspace record and set no cookie; an unknown docs page is a 404."
   },

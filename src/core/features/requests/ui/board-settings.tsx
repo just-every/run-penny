@@ -1,4 +1,5 @@
 import {TeamsSettings} from '../../teams/settings-ui'
+import {HelpScoutSettings} from '../../helpscout/settings-ui'
 import {DiscordSettings} from '../../discord/settings-ui'
 import {RedactionSettings} from '../../redaction/settings-ui'
 import {RequesterOAuthSettings} from '../../auth/ui/requester-oauth-settings'
@@ -55,6 +56,7 @@ export function BoardSettings() {
         <TrackerSettings />
         <DiscordSettings />
         <TeamsSettings />
+        <HelpScoutSettings />
         <MailIdentitySettings />
         <AgingSettings/><WorkspaceClockSettings />
         <WeeklySummarySetting />

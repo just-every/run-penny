@@ -12,7 +12,7 @@ export async function requestContext(database: DatabaseConnection, slug: string)
   return context
 }
 
-export async function createOperatorRequest(database: DatabaseConnection, input: { title: string; description: string; boardSlug: string; evidenceIds: string[] }, operatorId: string) {
+export async function createOperatorRequest(database: DatabaseConnection, input: { title: string; description: string; boardSlug: string; evidenceIds: string[] }, operatorId: string, custody?: (id:string)=>D1PreparedStatement[]) {
   const db = database.binding
   const board = await db.prepare('SELECT id FROM boards WHERE slug = ? AND archived_at IS NULL').bind(input.boardSlug).first<{ id: string }>()
   if (!board) throw new MutationError(404, 'Board not found.')
@@ -20,6 +20,7 @@ export async function createOperatorRequest(database: DatabaseConnection, input:
   const id = createUlid(); const slug = createRequestSlug(input.title, id); const now = new Date().toISOString()
   await db.batch([
     db.prepare(`INSERT INTO requests (id,slug,board_id,author_requester_id,author_operator_id,title,description,moderation_state,public_state,created_at,updated_at) VALUES (?,?,?,NULL,?,?,?,'awaiting_review','unpublished',?,?)`).bind(id,slug,board.id,operatorId,input.title,input.description,now,now),
+    ...(custody?.(id)??[]),
     ...input.evidenceIds.flatMap(evidenceId => ['request_evidence_links','request_evidence_contributions'].map(table=>db.prepare(`INSERT INTO ${table} (request_id,evidence_id,created_at) VALUES (?,?,?)`).bind(id,evidenceId,now))),
     db.prepare(`INSERT INTO audit_entries (id,actor_type,actor_id,action,entity_type,entity_id,occurred_at,created_at,updated_at) VALUES (?,'operator',?,'request.created','request',?,?,?,?)`).bind(createUlid(),operatorId,id,now,now,now),
   ])

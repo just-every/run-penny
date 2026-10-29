@@ -41,7 +41,10 @@ export function detect(text:string,rules:Rules):Span[]{
  if(!rules.enabled)return []
  if(text.length>200000)throw new Error('redaction_excerpt_limit')
  const found:Span[]=[],existing=[...text.matchAll(/\[REDACTED:(?:ssn|card|phone|email|credential|custom)\]/g)].map(match=>({start:match.index,end:match.index+match[0].length}))
- const push=(start:number,end:number,kind:Span['kind'])=>{if(!existing.some(span=>start>=span.start&&end<=span.end))found.push({start,end,kind})}
+ // A numeric prefix of a UUID can pass Luhn by chance. It is an opaque
+ // identifier, not a card number; owner custom patterns still apply to it.
+ const uuids=[...text.matchAll(/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi)].map(match=>({start:match.index,end:match.index+match[0].length}))
+ const push=(start:number,end:number,kind:Span['kind'])=>{if(!existing.some(span=>start>=span.start&&end<=span.end)&&!(kind==='card'&&uuids.some(span=>start>=span.start&&end<=span.end)))found.push({start,end,kind})}
  const scan=(kind:Kind,pattern:RegExp,group=0,admit=(value:string)=>!!value)=>{
   if(!rules.kinds.includes(kind))return
   for(const match of text.matchAll(pattern)){const value=match[group];if(admit(value)){const start=match.index+(group?match[0].lastIndexOf(value):0);push(start,start+value.length,kind)}}
