@@ -1194,7 +1194,7 @@
       "tool": "penny.search.records",
       "args": {
         "entity": "requests",
-        "q": "Verifier customer delivery consent"
+        "q": "Verifier public delivery evidence"
       },
       "expect": [
         {

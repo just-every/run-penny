@@ -670,11 +670,11 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "0ff4c54fcd3833dcb8d671a31f2a5d4eb6f2859ca13501c694426c8672df56d0",
+      "sha256": "ab53a81feb0d5ab118030603db1837367ef19f0b89c5085cf14d2400c6ddbbb2",
       "executable": false
     },
     "agent-surface.json": {
-      "sha256": "29c303352bc2014df5d442e60d27b0bc7f77f36c4961201a3ddbfcece1d64f01",
+      "sha256": "acb9bcf9ffdb7cefd176dfd8f9793d522c6d05a726ad9b993ba858f4498dbe65",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -3738,7 +3738,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "20688a9e7e0b7aee78edcbd3a7174b47b3ef321c01375c146e639b9d4c67c768",
+      "sha256": "9d2bc30c79b29d1dbb78f35db99ed8ac7f42cb52eb606d180197de82a9420502",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3750,7 +3750,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "786e8d841d8a9b07d2af4cfbf953984356bbde56d88ff9a95ad0ed76c3873991",
+      "sha256": "d5916bb3fd23bf3cfe7b7d7cf4f7e70341d97c0d6995a9890d1a38cf0e753795",
       "executable": false
     },
     "DEMO.md": {
@@ -3766,7 +3766,7 @@
       "executable": false
     },
     "deploy.json": {
-      "sha256": "36b75e5db8838bd21ec0dd6e79a208122612507fe0cbccc585383cd9a4c56a4a",
+      "sha256": "c75ae0c128a80670ae2d0b030cb913904a937e61adc166906c13df1cd97a0c77",
       "executable": false
     },
     "DIVERGENCE.md": {
@@ -9218,7 +9218,7 @@
       "executable": false
     },
     "tests/fixtures/agent-owner.mjs": {
-      "sha256": "198a2221ca118e2f87c68465222aaf3908d1ec5a52b2544e5f911fa409d941f5",
+      "sha256": "02da5478edca04bd04a70d83db0613571802b4e68646644dda607ae3e536ea24",
       "executable": false
     },
     "tests/fixtures/ai/draft-network.ts": {

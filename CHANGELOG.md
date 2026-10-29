@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Keep the hosted mail binding declaration unambiguous for rer 0.2.86: keep provider, sender and relay public as the managed-mail specification requires, and remove their duplicate secret declarations. Contract evidence cells now cite checkout files; commands and external run receipts remain in the fleet report.
+
 - Refresh the agent door, Business settings and native identity dependencies to released rer 0.2.86 (Base f96363bf). Add the canonical Base agent clauses without promoting their judgments; mark Penny's eight Agent surface clauses partial with explicit optional-family gaps. Preserve main's Discord migrations 0096–0097 and place the unpublished door migrations at 0098–0102.
 - Limit the round-three adapters to current core work. Remove scheduled/publication/customer-mail/webhook continuations and native event emission; their verbs remain deferred to undeclared families. Keep existing native screens and scheduled person work. Native agent transactions refuse accidental queued effects atomically. The existing API-003 public-door test now asserts the deliberate queued-verb refusal with unchanged native state; validation, scope and draft assertions remain. Clock settings preserve native Owner/Admin admission; tool/resource projections remove credential fields and the effect witness exposes digests instead of private rows.
 
