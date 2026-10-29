@@ -3833,7 +3833,7 @@ Agent surface · target · **partial** · Cites BASE-AGENT-001, BASE-AGENT-002, 
 2. A call outside the key's scope is refused.
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** Native MCP, mapped Business sponsors, scoped local keys and one policy pipeline are wired to the released door. Gap: declared-subset door, rer 0.2.87+; optional events/subscriptions and dual host are undeclared; normal conformance must still test their unscoped Base paths.
+**Gap.** Native MCP, mapped Business sponsors, scoped local keys and one policy pipeline are wired to the released door. Gap (2026-10-29): events, subscriptions and dual host are undeclared (declared-subset door, rer 0.2.87+); rer 0.2.88 refuses omitted event and subscription doors. The complete target surface remains unproved.
 
 #### SURFACE-001 — The registry equals this table
 
@@ -3850,7 +3850,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-001, BASE
 6. The Base harness passes on Penny's fixtures in CI under both of its policies, all autonomous and held.
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** The native core registry and generated /docs/agents share the production factory, schemas, classes and clause references. Gap: events, subscriptions and resource refresh are undeclared (declared-subset door, rer 0.2.87+); the complete target table and UI/REST/embedded-agent parity remain incomplete. The released door still requires its built-in events.list catalogue entry.
+**Gap.** The native core registry and generated /docs/agents share the production factory, schemas, classes and clause references. Gap: events, subscriptions and resource refresh are undeclared (declared-subset door, rer 0.2.87+); the complete target table and UI/REST/embedded-agent parity remain incomplete. The rer 0.2.88 declared core door omits events.list and public resource/prompt discovery.
 
 #### SURFACE-002 — Triage through the door
 
@@ -3883,7 +3883,7 @@ Agent surface · target · **partial** · From new · Cites BASE-AGENT-006, BASE
 6. An outreach message (AGENT-003) computes external with counterparty known and its recipient count, and its email names "<agent> for <person>".
 
 **Evidence.** `agent-surface.json`; `src/core/features/agent-door/`
-**Gap.** Immediate native exposure computes external from current records. Gap: mail edges and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent moderation/publication, replies, status sends, customer delivery and webhook dispatch are deferred. Provider-backed draft generation keeps the enforcing PENNY_LEARNING_EGRESS RPC port; rer 0.2.86 cannot provision it for verification.
+**Gap.** Immediate native exposure computes external from current records. Gap: mail edges and queued lifecycle are undeclared (declared-subset door, rer 0.2.87+); agent moderation/publication, replies, status sends, customer delivery and webhook dispatch are deferred. Provider-backed draft generation keeps the enforcing PENNY_LEARNING_EGRESS RPC port; rer 0.2.88 supports a test-only native RPC provider edge.
 
 #### SURFACE-004 — Destructive and sensitive calls
 

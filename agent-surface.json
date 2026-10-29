@@ -1,5 +1,12 @@
 {
   "schema": "rer-agent-surface/1",
+  "capabilities": [
+    "tools",
+    "policy",
+    "pause",
+    "audit",
+    "idempotency"
+  ],
   "seed": "penny",
   "specialist": "Feedback triager",
   "tools": [
@@ -644,17 +651,6 @@
         "OPS-008",
         "NOTIFY-008",
         "SURFACE-001"
-      ]
-    },
-    {
-      "name": "penny.events.list",
-      "scope": "events:read",
-      "readOnly": true,
-      "classes": [
-        "standard"
-      ],
-      "clauses": [
-        "BASE-AGENT-010"
       ]
     }
   ],
@@ -2165,21 +2161,6 @@
       "expect": [
         {
           "class": "live"
-        }
-      ]
-    },
-    {
-      "id": "events",
-      "tool": "penny.events.list",
-      "args": {
-        "limit": 200
-      },
-      "expect": [
-        {
-          "class": "standard",
-          "facts": {
-            "measure": 1
-          }
         }
       ]
     },
