@@ -20,5 +20,5 @@ export async function upload(id:string,file:File){
 export function isDraft(value:unknown):value is Draft{
  if(!value||typeof value!=='object')return false
  const d=value as Draft
- return typeof d.id==='string'&&/^[a-f0-9-]{36}$/.test(d.id)&&['capture','check'].includes(d.mode)&&typeof d.pageUrl==='string'&&/^https?:\/\//.test(d.pageUrl)&&d.pageUrl.length<=4096&&typeof d.wording==='string'&&d.wording.length<=20000&&typeof d.observedAt==='string'&&Number.isFinite(Date.parse(d.observedAt))&&typeof d.status==='number'&&(!d.image||typeof d.image==='string'&&d.image.length<=12582912)
+ return typeof d.id==='string'&&/^[a-f0-9-]{36}$/.test(d.id)&&['capture','check'].includes(d.mode)&&typeof d.pageUrl==='string'&&/^https?:\/\//.test(d.pageUrl)&&d.pageUrl.length<=4096&&typeof d.wording==='string'&&d.wording.length<=20000&&typeof d.observedAt==='string'&&Number.isFinite(Date.parse(d.observedAt))&&typeof d.status==='number'&&(!d.image||typeof d.image==='string'&&d.image.startsWith('data:image/png;base64,')&&d.image.length<=12582912)
 }

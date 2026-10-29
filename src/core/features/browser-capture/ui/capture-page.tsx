@@ -8,9 +8,13 @@ export function BrowserCapturePage(){
  const [draft,setDraft]=useState<Draft|null>(null),[jobs,setJobs]=useState<Job[]>([]),[error,setError]=useState('')
  const reload=()=>api<Job[]>('/api/operator/browser-captures').then(setJobs).catch(error=>setError(error.message))
  useEffect(()=>{
-  const receive=(event:MessageEvent)=>{if(event.source===window&&event.origin===location.origin&&event.data?.type==='penny-browser-draft'&&isDraft(event.data.draft)){setDraft(event.data.draft);setError('')}}
-  window.addEventListener('message',receive);document.documentElement.dataset.pennyCapture='ready';void reload()
-  return ()=>{window.removeEventListener('message',receive);delete document.documentElement.dataset.pennyCapture}
+  const receive=(event:Event)=>{
+   const detail=(event as CustomEvent<unknown>).detail
+   if(typeof detail!=='string'||detail.length>13000000)return
+   try{const value:unknown=JSON.parse(detail);if(isDraft(value)){setDraft(value);setError('')}}catch{/* Refuse malformed untrusted browser drafts. */}
+  }
+  document.addEventListener('penny-browser-draft',receive);document.documentElement.dataset.pennyCapture='ready';void reload()
+  return ()=>{document.removeEventListener('penny-browser-draft',receive);delete document.documentElement.dataset.pennyCapture}
  },[])
  return <>
   <OperatorPageHeader eyebrow="Browser capture" title="Keep the words and their context.">Review selected text and optional screenshots before adding private evidence. Captured customers receive no email permission.</OperatorPageHeader>

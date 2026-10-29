@@ -1,5 +1,6 @@
 import {workspaceOrigin} from './workspace.js'
 
+// Isolated worlds keep capture and handoff independent of page scripts and CSP.
 async function handoff(draft,origin){
  // Session data stays in extension memory/session storage, never a URL, page
  // localStorage or portable product record. No cookie or API token is read.
@@ -9,9 +10,9 @@ async function handoff(draft,origin){
   const current=await chrome.tabs.get(tab.id)
   if(current.status==='complete'){
    if(new URL(current.url).origin!==origin||new URL(current.url).pathname!=='/app/browser-capture')throw Error('Sign in as an operator in Penny, then use Resume last review. Nothing was saved.')
-   const [{result}]=await chrome.scripting.executeScript({target:{tabId:tab.id},world:'MAIN',func:payload=>{
+   const [{result}]=await chrome.scripting.executeScript({target:{tabId:tab.id},world:'ISOLATED',func:payload=>{
     if(document.documentElement.dataset.pennyCapture!=='ready')return false
-    window.postMessage({type:'penny-browser-draft',draft:payload},location.origin);return true
+    document.dispatchEvent(new CustomEvent('penny-browser-draft',{detail:JSON.stringify(payload)}));return true
    },args:[draft]})
    if(result)return
   }
@@ -24,7 +25,7 @@ async function capture({tabId,mode,screenshot}){
  if(!await chrome.permissions.contains({origins:[origin+'/*']}))throw Error('Open Penny Capture and grant access to your workspace first.')
  const tab=await chrome.tabs.get(tabId),url=new URL(tab.url)
  if(!['http:','https:'].includes(url.protocol)||url.username||url.password)throw Error('This browser page cannot be captured. Open an ordinary web page.')
- const [{result:snapshot}]=await chrome.scripting.executeScript({target:{tabId},world:'MAIN',func:async check=>{
+ const [{result:snapshot}]=await chrome.scripting.executeScript({target:{tabId},world:'ISOLATED',func:async check=>{
   let status=200
   if(check){try{const response=await fetch(location.href,{method:'HEAD',credentials:'same-origin',redirect:'manual',cache:'no-store'});status=response.status}catch{status=503}}
   const selection=window.getSelection(),element=document.activeElement

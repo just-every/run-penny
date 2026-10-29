@@ -1,7 +1,7 @@
 import { applyD1Migrations,type D1Migration } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { expect,inject,it } from 'vitest'
-it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive capture and source-check upgrades and repeat',async()=>{
+it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive Discord, Help Scout and browser capture upgrades and repeat',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
  const {populatePreviousPennySample}=await import('./previous-sample-fixture')
  const sample=(await import('../../sample-data/penny.v1.json')).default
@@ -69,15 +69,23 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const discordBefore=await snapshot()
  await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0098'))
  expect(await snapshot()).toEqual(discordBefore)
- const previousHeadTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
- const previousHead=await Promise.all(previousHeadTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
- const previousSnapshot=async()=> (await env.DB.batch(previousHead.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
- const previousRows=await previousSnapshot()
- await applyD1Migrations(env.DB,migrations)
- expect(await previousSnapshot()).toEqual(previousRows)
- await applyD1Migrations(env.DB,migrations)
- expect(await previousSnapshot()).toEqual(previousRows)
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0098'))
  expect(await snapshot()).toEqual(discordBefore)
+ // Snapshot the populated immediate predecessor before the additive Help Scout migration.
+ const previousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const currentSnapshot=async()=> (await env.DB.batch(previousTables.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const previousRows=await currentSnapshot()
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0099'))
+ expect(await currentSnapshot()).toEqual(previousRows)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0099'))
+ expect(await currentSnapshot()).toEqual(previousRows)
+ // Preserve every immediate-main table and column when browser capture is appended.
+ const browserPredecessor=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const browserSnapshot=async()=> (await env.DB.batch(browserPredecessor.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const browserBefore=await browserSnapshot()
+ await applyD1Migrations(env.DB,migrations)
+ expect(await browserSnapshot()).toEqual(browserBefore)
+ await applyD1Migrations(env.DB,migrations)
+ expect(await browserSnapshot()).toEqual(browserBefore)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

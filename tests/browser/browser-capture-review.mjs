@@ -18,9 +18,9 @@ try{
  const draft={id:crypto.randomUUID(),mode:'capture',pageUrl:sourceUrl,wording:original,observedAt:'2026-10-28T12:00:00Z',status:200,image}
  const page=await context.newPage();page.setDefaultTimeout(20000);page.on('pageerror',error=>errors.push(error.message))
  await page.goto(origin+'/app/browser-capture',{waitUntil:'networkidle'});await page.waitForFunction(()=>document.documentElement.dataset.pennyCapture==='ready')
- // The untrusted handoff is a real public browser message. Extension APIs are
+ // The untrusted handoff is the real isolated-content-script DOM bridge. Extension APIs are
  // exercised separately by browser-capture.mjs, with the identical review route.
- await page.evaluate(draft=>window.postMessage({type:'penny-browser-draft',draft},location.origin),draft)
+ await page.evaluate(draft=>document.dispatchEvent(new CustomEvent('penny-browser-draft',{detail:JSON.stringify(draft)})),draft)
  await page.getByLabel('Selected excerpt',{exact:true}).waitFor()
  await page.getByLabel('Source time (ISO date, time and timezone)').fill('2026-10-27T14:00:00Z')
  await page.getByLabel('Author as named at the source (optional)').fill('Source author source.person@example.test')
@@ -60,7 +60,7 @@ try{
  // Reopening the original raw extension draft loads the saved redacted
  // excerpt and source time, retaining the deliberately selected native people.
  await page.goto(origin+'/app/browser-capture',{waitUntil:'networkidle'});await page.waitForFunction(()=>document.documentElement.dataset.pennyCapture==='ready')
- await page.evaluate(draft=>window.postMessage({type:'penny-browser-draft',draft},location.origin),draft)
+ await page.evaluate(draft=>document.dispatchEvent(new CustomEvent('penny-browser-draft',{detail:JSON.stringify(draft)})),draft)
  await page.getByRole('status').filter({hasText:'Saved choices: Nina Rao · Monthly finance exports'}).waitFor()
  assert.equal(await page.getByLabel('Source time (ISO date, time and timezone)').inputValue(),'2026-10-27T14:00:00Z')
  assert.match(await page.getByLabel('Selected excerpt',{exact:true}).inputValue(),/\[REDACTED:email\]/)
@@ -99,7 +99,7 @@ try{
  const stopped=await json('/api/operator/browser-captures',{...base,id:crypto.randomUUID()},operator,'POST',201);await json('/api/operator/browser-captures/'+stopped.id+'/stop',{},operator);await send('/api/operator/browser-captures/'+stopped.id+'/ready',{},operator,'POST',409)
  // Recheck only the explicit source. Capture preserves its version on edits.
  await page.setViewportSize({width:1440,height:1000});await page.goto(origin+'/app/browser-capture',{waitUntil:'networkidle'});await page.waitForFunction(()=>document.documentElement.dataset.pennyCapture==='ready')
- await page.evaluate(draft=>window.postMessage({type:'penny-browser-draft',draft},location.origin),{...draft,mode:'check',wording:'Source wording after its edit.',image:undefined})
+ await page.evaluate(draft=>document.dispatchEvent(new CustomEvent('penny-browser-draft',{detail:JSON.stringify(draft)})),{...draft,mode:'check',wording:'Source wording after its edit.',image:undefined})
  const sourceRow=page.getByRole('article').filter({has:page.locator(`a[href='/app/feedback?item=${job.evidence_id}#evidence-${job.evidence_id}']`)})
  await sourceRow.getByRole('button',{name:'Check this capture',exact:true}).waitFor()
  for(const width of [1440,390]){await page.setViewportSize({width,height:width===390?844:1000});await proof(`source-check-${width}`)}

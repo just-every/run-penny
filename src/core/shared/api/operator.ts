@@ -13,6 +13,7 @@ export interface OperatorAccountReference {
 }
 
 export interface OperatorEvidenceCard {
+  readonly helpScout?: {sourceUrl:string;sourceState:string;conversationId:number}
   readonly browser?: {capturer:string|null;captureId:string;pageUrl:string;state:string;sourceState:string;failure:string|null}
   readonly discord?: {jumpUrl:string;capturer:string;sourceState:string;checkFailure:string|null}
   readonly id: string
