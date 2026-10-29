@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Adopt the released CLI’s local `deploy --dry-run` receipt. Update the existing public-door dry-run assertion to prove a real local Worker/migration plan, unmet real-deploy inputs and no provider reads or writes with or without supplied credentials; target readiness is no longer claimed by this command.
+
 - Keep the hosted mail binding declaration unambiguous for rer 0.2.86: keep provider, sender and relay public as the managed-mail specification requires, and remove their duplicate secret declarations. Contract evidence cells now cite checkout files; commands and external run receipts remain in the fleet report.
 
 - Refresh the agent door, Business settings and native identity dependencies to released rer 0.2.86 (Base f96363bf). Add the canonical Base agent clauses without promoting their judgments; mark Penny's eight Agent surface clauses partial with explicit optional-family gaps. Preserve main's Discord migrations 0096–0097 and place the unpublished door migrations at 0098–0102.

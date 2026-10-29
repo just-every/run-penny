@@ -3738,7 +3738,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "9d2bc30c79b29d1dbb78f35db99ed8ac7f42cb52eb606d180197de82a9420502",
+      "sha256": "5fe8a4b9cbcccc36f70993ace844da6a21bc7cbdd210c6abf179809c3e6a8ffc",
       "executable": false
     },
     "CLAUDE.md": {
@@ -4414,7 +4414,7 @@
       "executable": false
     },
     "OPERATIONS.md": {
-      "sha256": "4fd4ab086f29d67e210526b927ecd1e4a680ebd636f6bc9cff14f2e6f5884acf",
+      "sha256": "2b88d1a0c479523fbccb7ff2963b43023e1d055aca78974a06b136c08a070f45",
       "executable": false
     },
     "OWNER-STEPS.md": {
@@ -9354,7 +9354,7 @@
       "executable": false
     },
     "tests/installer/deploy-dry-run.test.mjs": {
-      "sha256": "d0740eec912e707cd604684fd9c9af74ae4e1a48e6f204e472ba3f9573b03f63",
+      "sha256": "4af159b63d93d31f96ceae0fb70899ca5e2ff63ce99d5205d8d4175a53afbf96",
       "executable": false
     },
     "tests/installer/dev-credentials.test.mjs": {
