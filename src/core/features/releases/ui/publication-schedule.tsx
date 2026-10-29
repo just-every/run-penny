@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
 import { operatorMutation } from '@/core/features/requests/ui/operator-client'
+import { formatMoment } from '@/core/app/ui/operator-format'
 import { fieldLabelClass, inputClass, secondaryButtonClass, textLinkClass } from '@/core/ui/app/classes'
 
 interface ScheduleResource {
@@ -51,7 +52,7 @@ export function PublicationSchedule({ path, subject, revision, disabled = false,
     {resource.kind === 'ready' ? <>
       <p className="mt-2 break-words text-sm text-penny-muted">Workspace timezone: {resource.data.timezone}</p>
       {schedule ? <div className="mt-3 text-sm leading-6">
-        <p className="font-semibold text-penny-ink">{schedule.state === 'scheduled' ? 'Scheduled for' : schedule.state === 'failed' ? 'Publication failed for' : schedule.state === 'cancelled' ? 'Cancelled publication for' : schedule.state === 'held' ? 'Publication held for' : 'Published from schedule for'} <time dateTime={schedule.scheduledAt}>{new Intl.DateTimeFormat('en', { timeZone: schedule.timeZone, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }).format(new Date(schedule.scheduledAt))}</time> <span className="break-words">({schedule.timeZone})</span></p>
+        <p className="font-semibold text-penny-ink">{schedule.state === 'scheduled' ? 'Scheduled for' : schedule.state === 'failed' ? 'Publication failed for' : schedule.state === 'cancelled' ? 'Cancelled publication for' : schedule.state === 'held' ? 'Publication held for' : 'Published from schedule for'} <time dateTime={schedule.scheduledAt}>{formatMoment(schedule.scheduledAt, schedule.timeZone)}</time> <span className="break-words">({schedule.timeZone})</span></p>
         {schedule.state === 'failed' || schedule.state === 'held' ? <p role="alert" className="mt-2 break-words text-penny-danger">{schedule.lastError ?? 'The publication checks failed. Review the draft before scheduling it again.'}</p> : null}
       </div> : null}
       {active ? <button type="button" disabled={busy || request.pending || disabled} onClick={() => void act(null)} className={`${secondaryButtonClass} mt-4 w-full sm:w-auto`}>{busy ? 'Cancelling…' : 'Cancel schedule'}</button> : canSchedule && schedule?.state !== 'published' ? <form aria-label={`Schedule ${subject.toLowerCase()}`} className="mt-4 space-y-3" onSubmit={event => {

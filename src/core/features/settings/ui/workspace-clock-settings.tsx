@@ -5,6 +5,7 @@ import {buttonClass,fieldClass} from '../../auth/client-mutations'
 import {fieldLabelClass,textLinkClass} from '@/core/ui/app/classes'
 import {SectionCard} from '@/core/ui/app/SectionCard'
 import {workspaceClockInput,type WorkspaceClock} from '../workspace-clock'
+import {useTimezoneChoices} from './timezone-choices'
 
 export function WorkspaceClockSettings(){
  const [resource,reload]=useOperatorResource<WorkspaceClock&{owner:boolean;canConfigure:boolean}>('/api/operator/settings/workspace-clock')
@@ -13,13 +14,15 @@ export function WorkspaceClockSettings(){
  </SectionCard>
 }
 function ClockForm({clock,reload}:{clock:WorkspaceClock;reload:()=>void}){
- const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),[enabled,setEnabled]=useState(clock.quietEnabled)
+ const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),[enabled,setEnabled]=useState(clock.quietEnabled),[chosen,setTimezone]=useState<string|null>(null)
+ // A workspace that has not confirmed its zone starts from the zone this browser is in, never from the server's UTC.
+ const {browser,zones}=useTimezoneChoices(clock.timezone)
+ const timezone=chosen??(clock.confirmed?clock.timezone:browser)
  return <form className="space-y-5" onSubmit={async event=>{
   event.preventDefault();const data=new FormData(event.currentTarget),input=workspaceClockInput.safeParse({timezone:String(data.get('timezone')),quietEnabled:enabled,quietStart:Number(data.get('quietStart')),quietEnd:Number(data.get('quietEnd'))});if(!input.success){setMessage(input.error.issues[0].message);return}setBusy(true)
   try{await operatorMutation('/api/operator/settings/workspace-clock',input.data,'PUT');setMessage('Workspace time saved.');window.dispatchEvent(new Event('penny-workspace-clock-changed'));reload()}catch(error){setMessage(error instanceof Error?error.message:'Could not save workspace time.')}finally{setBusy(false)}
  }}>
-  <label className={fieldLabelClass}>Workspace timezone<input name="timezone" className={fieldClass} required maxLength={100} defaultValue={clock.timezone} list="workspace-timezones"/></label>
-  <datalist id="workspace-timezones">{Intl.supportedValuesOf('timeZone').map(timezone=><option key={timezone} value={timezone}/>)}</datalist>
+  <label className={fieldLabelClass}>Workspace timezone<select name="timezone" aria-label="Workspace timezone" className={fieldClass} required value={timezone} onChange={event=>setTimezone(event.target.value)}>{[...new Set([clock.timezone,timezone,...zones])].sort().map(zone=><option key={zone} value={zone}>{zone}</option>)}</select></label>
   <label className="flex min-h-11 items-center gap-2"><input type="checkbox" checked={enabled} onChange={event=>setEnabled(event.target.checked)}/>Use requester quiet hours</label>
   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
    <label className={fieldLabelClass}>Quiet hours start (0–23)<input type="number" name="quietStart" min={0} max={23} required className={fieldClass} defaultValue={clock.quietStart}/></label>

@@ -1,22 +1,31 @@
+import { workspaceTimezone } from './workspace-zone'
 import type { OperatorDecisionState, OperatorRoadmapStatus } from '@/core/shared/api/operator'
 
+const dayOnly = /^\d{4}-\d{2}-\d{2}$/
+const dayStyle = { day: 'numeric', month: 'short', year: 'numeric' } as const
+
+/** The one short style on every operator screen: "7 Nov 2026" for a calendar day, "7 Nov 2026, 15:58" for a moment, which is
+ * written in the workspace's time zone (or the zone given). A day with no time (a renewal) is never moved across zones. */
+export function formatMoment(value: string | number, timeZone: string = workspaceTimezone()): string {
+  const isDay = typeof value === 'string' && dayOnly.test(value)
+  const date = new Date(isDay ? `${value}T00:00:00Z` : value)
+  if (Number.isNaN(date.getTime())) return String(value)
+  if (isDay) return new Intl.DateTimeFormat('en-AU', { timeZone: 'UTC', ...dayStyle }).format(date)
+
+  return new Intl.DateTimeFormat('en-AU', { timeZone, ...dayStyle, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date)
+}
+
+/** A date with no time, such as a decision's review day or a snooze, in the workspace's time zone. */
+export function formatDay(value: string, timeZone: string = workspaceTimezone()): string {
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat('en-AU', { timeZone, ...dayStyle }).format(date)
+}
+
 export function formatOperatorDate(value: string | null): string {
-  if (!value) return 'Not scheduled'
-
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-
-  // Entered in the browser's local time; shown in UTC with its zone, so the day never silently shifts.
-  return `${new Intl.DateTimeFormat('en-AU', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date)} UTC`
+  return value ? formatMoment(value) : 'Not scheduled'
 }
 
-export function formatObservedAt(value: string): string {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-
-  // Entered in the browser's local time; shown in UTC with its zone, so the day never silently shifts.
-  return `${new Intl.DateTimeFormat('en-AU', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date)} UTC`
-}
+export const formatObservedAt = formatMoment
 
 export function formatRevenue(value: number | null): string {
   if (value === null) return 'Not recorded'

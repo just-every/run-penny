@@ -1,5 +1,6 @@
 import {MentionNotices} from '@/core/features/discussion/mention-notices'
 import {WorkspaceClockPrompt} from '@/core/features/settings/ui/workspace-clock-settings'
+import {useWorkspaceZoneSync} from '@/core/features/settings/ui/workspace-zone-sync'
 import {PostalAddressPrompt} from '@/core/features/settings/ui/postal-address-prompt'
 import { ReviewNotifications } from '@/core/features/notifications/ui/review-notifications'
 import { useRef } from 'react'
@@ -68,6 +69,7 @@ function Brand({ small = false }: { readonly small?: boolean }) {
 
 export function OperatorAppShell() {
   const menu = useRef<HTMLDetailsElement>(null)
+  useWorkspaceZoneSync()
 
   return (
     <BrandRoot className="penny-workspace relative">

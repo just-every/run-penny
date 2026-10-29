@@ -1,4 +1,5 @@
 import { buttonClass } from '@/core/features/auth/client-mutations'
+import { formatMoment } from '@/core/app/ui/operator-format'
 import { secondaryButtonClass } from '@/core/ui/app/classes'
 import { reasonText, type Overview, type Progress } from './data-actions'
 import { card, heading, lede, note, type DataPageActions } from './data-page-parts'
@@ -39,7 +40,7 @@ export function ProgressCard({ operation, actions, onResume, onCancel }: { opera
 
 /** How the last erasure or restore ended, for a person who closed the tab. */
 export function OutcomeCard({ recent, onSaveJournal, busy }: { recent: NonNullable<Overview['recent']>; onSaveJournal: () => void; busy: boolean }) {
-  const when = new Date(recent.finishedAt).toLocaleString(), erase = recent.kind === 'erase'
+  const when = formatMoment(recent.finishedAt), erase = recent.kind === 'erase'
   const text = recent.result === 'complete'
     ? erase ? `Erasure finished ${when}. The record, its history and original files are gone; records other people share stay without its words. Save the updated erasure journal with your backups.` : `Restore finished ${when}. Records and original files are restored. Earlier sign-in links from the backup are disabled.`
     : recent.reason ? `${erase ? 'The erasure' : 'The restore'} did not run (${when}): ${reasonText(recent.reason)} Nothing was ${erase ? 'removed' : 'restored'}.` : `${erase ? 'The erasure' : 'The restore'} was cancelled ${when}. Nothing was ${erase ? 'removed' : 'restored'}.`

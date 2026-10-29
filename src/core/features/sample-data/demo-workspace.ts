@@ -2,6 +2,9 @@ import type { PennySample } from './schema'
 import { demoContext, demoDate, demoId, demoOwner } from './demo-context'
 import { demoTopics } from './demo-topics'
 
+/** The app's one short date style, "7 Nov 2026". */
+const shortDay = (iso: string) => new Intl.DateTimeFormat('en-AU', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(iso))
+
 export function createDemoWorkspace(now: Date): PennySample {
   const context = demoContext(now)
   const evidence: PennySample['evidence'] = demoTopics.flatMap((topic, index) => topic.signals.map(([account, sourceType, wording], signal) => ({
@@ -61,7 +64,7 @@ export function createDemoWorkspace(now: Date): PennySample {
     roadmapItems: demoTopics.map((topic, index) => ({
       id: demoId(900 + index), slug: topic.slug, decisionId: decisions[index].id, candidateBetId: decisions[index].bets[0].id,
       title: topic.title, summary: topic.summary, ownerOperatorId: demoOwner, status: topic.status,
-      targetWindow: topic.status === 'shipped' ? `Shipped ${demoDate(now, -topic.daysAgo).slice(0, 10)}` : topic.status === 'exploring' ? `Discovery through ${demoDate(now, 14).slice(0, 10)}` : `Week of ${demoDate(now, topic.status === 'in_progress' ? 7 : 21).slice(0, 10)}`,
+      targetWindow: topic.status === 'shipped' ? `Shipped ${shortDay(demoDate(now, -topic.daysAgo))}` : topic.status === 'exploring' ? `Discovery through ${shortDay(demoDate(now, 14))}` : `Week of ${shortDay(demoDate(now, topic.status === 'in_progress' ? 7 : 21))}`,
       deliveryNotes: topic.measure, confidence: topic.state === 'draft' ? 'medium' : 'high',
       transition: { id: demoId(1000 + index), fromStatus: null, toStatus: topic.status, reason: topic.status === 'shipped' ? 'Pilot complete; release approved for customers.' : 'Evidence reviewed in the current planning cycle.', actorOperatorId: demoOwner },
     })),
