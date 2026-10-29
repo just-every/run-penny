@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the Chrome/Edge Manifest V3 browser extension and session-backed capture review: selected excerpts, original page links, private PNG screenshots, explicit customer/request choices and optional attributable proxy votes. Add migration 0098 with durable progress, restart/replay custody, visible retry/stop, source-change checks and policy-window excerpt purge. Archives omit native session custody and hold restored unfinished work. CAP-012 text, acceptance, status and summary counts remain unchanged; browser-store listing is unperformed field proof.
+
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.
 
 - Checkpoint source-check claims before Discord reads, prevent overlapping or superseded completions from changing removed/purged sources, and show interrupted checks until an owner deliberately retries them by saving the connector settings. Add migration 0097 without changing applied SQL; restored running checks are held. Extend the two existing public-door sanity journeys with session-expiry, overlapping removal/purge and actual Worker restart recovery. CAP-021 remains missing with unchanged acceptance and counts.

@@ -1,0 +1,34 @@
+import {useEffect,useState} from 'react'
+import {OperatorPageHeader} from '@/core/app/ui/operator-page-header'
+import {paperCardClass,secondaryButtonClass,inputClass,fieldLabelClass,textLinkClass} from '@/core/ui/app/classes'
+import {api,isDraft,screenshotFile,type Draft,type Job} from './client'
+import {CaptureReview} from './capture-review'
+
+export function BrowserCapturePage(){
+ const [draft,setDraft]=useState<Draft|null>(null),[jobs,setJobs]=useState<Job[]>([]),[error,setError]=useState('')
+ const reload=()=>api<Job[]>('/api/operator/browser-captures').then(setJobs).catch(error=>setError(error.message))
+ useEffect(()=>{
+  const receive=(event:MessageEvent)=>{if(event.source===window&&event.origin===location.origin&&event.data?.type==='penny-browser-draft'&&isDraft(event.data.draft)){setDraft(event.data.draft);setError('')}}
+  window.addEventListener('message',receive);document.documentElement.dataset.pennyCapture='ready';void reload()
+  return ()=>{window.removeEventListener('message',receive);delete document.documentElement.dataset.pennyCapture}
+ },[])
+ return <>
+  <OperatorPageHeader eyebrow="Browser capture" title="Keep the words and their context.">Review selected text and optional screenshots before adding private evidence. Captured customers receive no email permission.</OperatorPageHeader>
+  {error?<p role="alert" className="my-4 break-words">{error}</p>:null}
+  {draft?<CaptureReview key={draft.id} draft={draft} onSaved={()=>void reload()} onDiscard={()=>setDraft(null)}/>:<section className={`${paperCardClass} p-6`}><h2 className="text-xl font-semibold">Ready when you are</h2><p className="mt-3 leading-7">Open a source page in Chrome or Edge, select a passage, then choose Penny Capture → Review capture. You can include the visible tab as a screenshot.</p><p className="mt-3 leading-7">Install the unpacked <code>integrations/browser-extension</code> folder from your Penny source through your browser’s Extensions page. Choose your workspace URL and grant access only to that installation.</p><a className={`${textLinkClass} mt-3 inline-flex min-h-11 items-center`} href="/docs/browser-capture">Installation and privacy guide</a></section>}
+  <section className="mt-8" aria-labelledby="recent-captures"><h2 id="recent-captures" className="text-2xl font-semibold">Recent capture work</h2><p className="mt-2">Interrupted work stays visible. Resume the original extension review to retry its screenshot, or stop the work here.</p><button className={`${secondaryButtonClass} mt-3`} onClick={()=>void reload()}>Refresh progress</button>
+   <div className="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">{jobs.map(job=><article key={job.id} className={`${paperCardClass} space-y-3 break-words p-5`}><h3 className="font-semibold">{job.page_url}</h3><p>Owner: {job.owner_name??'Former operator'} · {job.state} · Source: {job.source_state}</p>{job.failure?<p role="status">{job.failure}</p>:null}<a className={`${textLinkClass} inline-flex min-h-11 items-center`} href={`/app/feedback?item=${job.evidence_id}#evidence-${job.evidence_id}`}>Open captured evidence</a>{!['done','stopped'].includes(job.state)?<button className={secondaryButtonClass} onClick={async()=>{try{await api(`/api/operator/browser-captures/${job.id}/stop`,{});await reload()}catch(error){setError((error as Error).message)}}}>Stop capture</button>:null}</article>)}</div>
+  </section>
+ </>
+}
+
+export function SourceCheck({draft,onSaved}:{draft:Draft;onSaved:()=>void}){
+ const [rows,setRows]=useState<Job[]>([]),[message,setMessage]=useState(''),[busy,setBusy]=useState(false)
+ useEffect(()=>{void api<Job[]>('/api/operator/browser-captures?url='+encodeURIComponent(draft.pageUrl)).then(setRows).catch(error=>setMessage(error.message))},[draft.pageUrl])
+ return <section className={`${paperCardClass} space-y-4 p-6`}><h2 className="text-xl font-semibold">Check the selected source</h2><p className="break-all">{draft.pageUrl}</p><p>Source response: {draft.status}. Select the same passage when checking for edits. A changed source preserves the captured version; unavailable sources purge their captured excerpt after the saved policy window.</p><blockquote className="whitespace-pre-wrap">{draft.wording}</blockquote>{rows.map(row=><div key={row.id} className="border-t border-penny-line pt-3"><a href={`/app/feedback?item=${row.evidence_id}#evidence-${row.evidence_id}`} className={textLinkClass}>Captured {row.id.slice(0,8)} · {row.source_state}</a><button disabled={busy} className={`${secondaryButtonClass} ml-2`} onClick={async()=>{setBusy(true);setMessage('');try{const image=await screenshotFile(draft.image);const result=await api<Job>(`/api/operator/browser-captures/${row.id}/check`,{pageUrl:draft.pageUrl,wording:draft.wording,status:draft.status,...(image?{screenshotHash:image.hash}:{})});setMessage('Source: '+result.source_state);onSaved()}catch(error){setMessage((error as Error).message)}finally{setBusy(false)}}}>Check this capture</button></div>)}{rows.length===0?<p>No captures use this exact URL. Open the original captured page to check it.</p>:null}{message?<p role="status">{message}</p>:null}</section>
+}
+
+export function SearchPicker({kind,value,onChange}:{kind:'customer'|'request';value:string;onChange:(value:string)=>void}){
+ const [text,setText]=useState(''),[rows,setRows]=useState<{id:string;label:string}[]>([]),[error,setError]=useState('')
+ return <div className="space-y-2"><div className="flex flex-wrap items-end gap-2"><label className={`${fieldLabelClass} min-w-0 flex-1`}>Find a {kind}<input className={`${inputClass} mt-2`} value={text} onChange={event=>{setText(event.target.value);onChange('');setRows([])}} maxLength={kind==='request'?280:200}/></label><button type="button" className={secondaryButtonClass} onClick={async()=>{try{setError('');if(kind==='customer'){const people=await api<{id:string;displayName:string;email:string|null}[]>('/api/operator/proxy-votes/contacts?q='+encodeURIComponent(text));setRows(people.map(p=>({id:p.id,label:p.displayName+(p.email?' · '+p.email:'')})))}else{if(!text.trim())throw Error('Enter request wording to search.');const requests=await api<{id:string;title:string}[]>('/api/operator/requests/suggestions?title='+encodeURIComponent(text));setRows(requests.map(r=>({id:r.id,label:r.title})))}}catch(error){setError((error as Error).message)}}}>Search {kind==='customer'?'customers':'requests'}</button></div><label className={fieldLabelClass}>{kind==='customer'?'Customer':'Request'}<select aria-label={kind==='customer'?'Customer':'Request'} className={`${inputClass} mt-2`} value={value} onChange={event=>onChange(event.target.value)}><option value="">{rows.length?'Choose explicitly':'No selection'}</option>{rows.map(row=><option key={row.id} value={row.id}>{row.label}</option>)}</select></label>{error?<p role="alert">{error}</p>:null}</div>
+}

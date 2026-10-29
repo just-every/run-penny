@@ -1830,7 +1830,7 @@ Core · target · **missing** · Rules D-1 · Register R-8
 1. A Playwright extension journey on a fixture page creates an inbox item with the URL, excerpt and screenshot attachment.
 2. A signed-out extension is refused.
 
-**Evidence.** None.
+**Evidence.** `tests/browser/browser-capture-review.mjs`; `tests/browser/browser-capture.mjs`
 **Gap.** A Playwright extension journey on a fixture page creates an inbox item with the URL, excerpt and screenshot attachment; a signed-out extension is refused.
 
 #### CAP-013 — CRM record panels

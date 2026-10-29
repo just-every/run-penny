@@ -1,3 +1,4 @@
+import {drainBrowserCaptures} from '../browser-capture/work'
 import {drainDiscord,purgeDiscordSources} from '../discord/work'
 import {drainScheduledPublications} from '../releases/scheduled'
 import {drainAging} from '../triage/reminders'
@@ -19,6 +20,7 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  const runtime=createPennyRuntime(bindings)
  // A confirmed data operation finishes first: the drains below wait for an idle workspace.
  await advanceDataWork(bindings)
+ await drainBrowserCaptures(runtime,_controller.scheduledTime)
  await purgeDiscordSources(runtime,_controller.scheduledTime)
  await drainDiscord(runtime,_controller.scheduledTime)
  await drainLearning(runtime,_controller.scheduledTime)

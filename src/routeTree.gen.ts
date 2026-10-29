@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppBrowserCaptureRouteImport } from './routes/app.browser-capture'
 import { Route as AppCustomersRouteImport } from './routes/app.customers'
 import { Route as AppDataRouteImport } from './routes/app.data'
 import { Route as AppDecisionsRouteImport } from './routes/app.decisions'
@@ -72,6 +73,11 @@ const SigninRoute = SigninRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBrowserCaptureRoute = AppBrowserCaptureRouteImport.update({
+  id: '/browser-capture',
+  path: '/browser-capture',
   getParentRoute: () => AppRoute,
 } as any)
 const AppCustomersRoute = AppCustomersRouteImport.update({
@@ -254,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
   '/signin': typeof SigninRoute
+  '/app/browser-capture': typeof AppBrowserCaptureRoute
   '/app/customers': typeof AppCustomersRouteWithChildren
   '/app/data': typeof AppDataRoute
   '/app/decisions': typeof AppDecisionsRouteWithChildren
@@ -293,6 +300,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signin': typeof SigninRoute
+  '/app/browser-capture': typeof AppBrowserCaptureRoute
   '/app/data': typeof AppDataRoute
   '/app/features': typeof AppFeaturesRoute
   '/app/feedback': typeof AppFeedbackRoute
@@ -329,6 +337,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
   '/signin': typeof SigninRoute
+  '/app/browser-capture': typeof AppBrowserCaptureRoute
   '/app/customers': typeof AppCustomersRouteWithChildren
   '/app/data': typeof AppDataRoute
   '/app/decisions': typeof AppDecisionsRouteWithChildren
@@ -372,6 +381,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/portal'
     | '/signin'
+    | '/app/browser-capture'
     | '/app/customers'
     | '/app/data'
     | '/app/decisions'
@@ -411,6 +421,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/signin'
+    | '/app/browser-capture'
     | '/app/data'
     | '/app/features'
     | '/app/feedback'
@@ -446,6 +457,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/portal'
     | '/signin'
+    | '/app/browser-capture'
     | '/app/customers'
     | '/app/data'
     | '/app/decisions'
@@ -527,6 +539,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/browser-capture': {
+      id: '/app/browser-capture'
+      path: '/browser-capture'
+      fullPath: '/app/browser-capture'
+      preLoaderRoute: typeof AppBrowserCaptureRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/customers': {
@@ -813,6 +832,7 @@ const AppReleasesRouteWithChildren = AppReleasesRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppBrowserCaptureRoute: typeof AppBrowserCaptureRoute
   AppCustomersRoute: typeof AppCustomersRouteWithChildren
   AppDataRoute: typeof AppDataRoute
   AppDecisionsRoute: typeof AppDecisionsRouteWithChildren
@@ -830,6 +850,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppBrowserCaptureRoute: AppBrowserCaptureRoute,
   AppCustomersRoute: AppCustomersRouteWithChildren,
   AppDataRoute: AppDataRoute,
   AppDecisionsRoute: AppDecisionsRouteWithChildren,

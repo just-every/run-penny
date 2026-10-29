@@ -3255,5 +3255,46 @@
       "source_digest",
       "created_at"
     ]
+  },
+  "penny_browser_captures": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "evidence_id",
+      "page_url",
+      "source_hash",
+      "payload_hash",
+      "source_state",
+      "purge_days",
+      "purge_at",
+      "state",
+      "failure",
+      "started_at",
+      "claim",
+      "screenshot_hash",
+      "screenshot_bytes",
+      "request_id",
+      "requester_id",
+      "proxy_vote",
+      "actor_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_browser_authority": {
+    "classification": "installation",
+    "columns": [
+      "capture_id",
+      "session_id",
+      "owner_id",
+      "owner_version"
+    ]
+  },
+  "penny_browser_receipts": {
+    "classification": "product",
+    "columns": [
+      "capture_digest",
+      "created_at"
+    ]
   }
 }

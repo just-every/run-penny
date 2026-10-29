@@ -8,7 +8,8 @@
     { "title": "Using Penny", "pages": [
       { "slug": "portal", "source": "docs/PORTAL.md", "label": "The public portal" },
       { "slug": "decisions", "source": "docs/DECISIONS.md", "label": "The decision loop" },
-      { "slug": "email", "source": "docs/EMAIL.md", "label": "Email and notifications" }
+      { "slug": "email", "source": "docs/EMAIL.md", "label": "Email and notifications" },
+      { "slug": "browser-capture", "source": "docs/BROWSER-CAPTURE.md", "label": "Browser capture" }
     ]},
     { "title": "Run it", "pages": [
       { "slug": "data", "source": "docs/DATA.md", "label": "Export and restore" },

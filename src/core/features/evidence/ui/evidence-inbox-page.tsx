@@ -19,6 +19,7 @@ export function EvidenceInboxPage() {
     <>
       <DataMaintenanceNotice/>
       <OperatorPageHeader eyebrow="Evidence inbox" title="Review the evidence before it becomes a roadmap promise." art={empty || evidence.kind === 'error' ? null : { note: 'Real feedback builds better products.' }}>Every source remains attributed while the team links it to a decision or records its review reason.</OperatorPageHeader><ListControls page={page} entity="evidence"/>
+      <a href="/app/browser-capture" className="my-3 inline-flex min-h-11 items-center font-semibold underline">Capture from your browser</a>
       <MyQueue />
       <EvidenceRecorder onSaved={saved} />
       <section className="mt-4" aria-labelledby="evidence-list-heading">

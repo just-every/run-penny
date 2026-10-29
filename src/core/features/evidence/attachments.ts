@@ -13,10 +13,10 @@ export async function listEvidenceAttachments(db:D1Database,id:string){
  ])
  return {files:files.results,uploads:uploads.results}
 }
-export async function uploadEvidenceAttachment(db:D1Database,raw:D1Database,blobs:BlobStore,id:string,file:File,now:string){
+export async function uploadEvidenceAttachment(db:D1Database,raw:D1Database,blobs:BlobStore,id:string,file:File,now:string,stableId?:string){
  await exists(db,'evidence_items',id)
  if(!seed.limits.uploadTypes.includes(file.type)||!file.size||file.size>seed.limits.uploadBytesPerFile||file.name.length>255)throw new MutationError(400,'The file does not meet the attachment limits.')
- const uploadId=createUlid(),key=`evidence/${id}/${uploadId}`,hash=await fileDigest(await file.arrayBuffer())
+ const uploadId=stableId??createUlid(),key=`evidence/${id}/${uploadId}`,hash=await fileDigest(await file.arrayBuffer())
  const reserved=await db.prepare(`INSERT INTO evidence_attachment_uploads(id,evidence_id,storage_key,original_filename,content_type,byte_size,sha256,writing,created_at,updated_at)
  SELECT ?,?,?,?,?,?,?,1,?,? WHERE COALESCE((SELECT SUM(byte_size) FROM attachments WHERE evidence_id=?),0)+COALESCE((SELECT SUM(byte_size) FROM evidence_attachment_uploads WHERE evidence_id=?),0)+?<=? RETURNING 1 AS affected`).bind(uploadId,id,key,file.name,file.type,file.size,hash,now,now,id,id,file.size,seed.limits.uploadBytesPerRequest).all()
  if(reserved.results.length!==1)throw new MutationError(400,'The evidence attachment total exceeds the upload limit.')

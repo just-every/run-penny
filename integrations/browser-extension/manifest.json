@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Penny Capture",
+  "version": "0.1.0",
+  "description": "Review selected text and optional screenshots in your own Penny workspace.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "optional_host_permissions": ["https://*/*", "http://localhost/*", "http://127.0.0.1/*"],
+  "background": {"service_worker": "background.js", "type": "module"},
+  "action": {"default_title": "Capture with Penny", "default_popup": "popup.html"},
+  "commands": {"capture-page": {"description": "Review this page in Penny", "suggested_key": {"default": "Alt+Shift+P"}}},
+  "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"}
+}
