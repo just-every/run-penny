@@ -35,6 +35,7 @@ try{
  await page.getByLabel('Record a proxy vote from this excerpt').check()
  const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
  async function proof(name){
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}))
   if(page.viewportSize().width===1440){assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)
   await page.evaluate(axe);assert.deepEqual(await page.evaluate(async()=>(await window.axe.run(document)).violations.filter(v=>['serious','critical'].includes(v.impact))),[])}
   await page.screenshot({path:join(output,name+'.png'),fullPage:true})
@@ -63,6 +64,7 @@ try{
  await page.evaluate(draft=>document.dispatchEvent(new CustomEvent('penny-browser-draft',{detail:JSON.stringify(draft)})),draft)
  await page.getByRole('status').filter({hasText:'Saved choices: Nina Rao · Monthly finance exports'}).waitFor()
  assert.equal(await page.getByLabel('Source time (ISO date, time and timezone)').inputValue(),'2026-10-27T14:00:00Z')
+ assert.equal(await page.getByLabel('Days to keep the excerpt after source removal').inputValue(),'0')
  assert.match(await page.getByLabel('Selected excerpt',{exact:true}).inputValue(),/\[REDACTED:email\]/)
  const votes=await runtime.db.prepare('SELECT COUNT(*) n FROM request_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first('n');assert.equal(votes,1)
  const proxy=await runtime.db.prepare('SELECT source,source_url,evidence_id,recorder_operator_id FROM penny_proxy_votes WHERE request_id=? AND requester_id=?').bind(request.id,customer.requesterId).first()

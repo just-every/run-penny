@@ -12,7 +12,7 @@ export function CaptureReview({draft,onSaved,onDiscard}:{draft:Draft;onSaved:()=
    if(response.status===404)return
    if(!response.ok)throw Error('Penny could not check for an existing capture. Check your session before retrying.')
    const saved=await response.json() as Job
-   if(active){setJob(saved);setLocked(true);setPageUrl(saved.page_url);if(saved.wording!==undefined)setWording(saved.wording);if(saved.observed_at)setObservedAt(saved.observed_at);setSpeaker(saved.named_speaker??'');if(!saved.screenshot_hash)setImage(undefined);setMessage('This capture already has a saved checkpoint. Resume uses its saved customer, request and vote choices.')}
+   if(active){setJob(saved);setLocked(true);setPageUrl(saved.page_url);if(saved.wording!==undefined)setWording(saved.wording);if(saved.observed_at)setObservedAt(saved.observed_at);setSpeaker(saved.named_speaker??'');setPurgeDays(saved.purge_days??30);if(!saved.screenshot_hash)setImage(undefined);setMessage('This capture already has a saved checkpoint. Resume uses its saved customer, request and vote choices.')}
   }).catch(error=>{if(active)setMessage(error.message)})
   return ()=>{active=false}
  },[draft.id,draft.mode])

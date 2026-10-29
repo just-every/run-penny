@@ -4746,7 +4746,7 @@
       "executable": false
     },
     "src/core/features/browser-capture/ui/capture-review.tsx": {
-      "sha256": "cba9433188a8153b532553af4459d79e44394e5b3498df801659c6b890f6a8e3",
+      "sha256": "3d1f03d29c81935940faa482c536cf51ca1793f99d07ec135e6a90f3bf23ecaa",
       "executable": false
     },
     "src/core/features/browser-capture/ui/client.ts": {
@@ -8082,7 +8082,7 @@
       "executable": false
     },
     "tests/browser/browser-capture-review.mjs": {
-      "sha256": "a9558fab371076e839cded3a3101f68e35ec300e852574b625ccfe4d632aad5d",
+      "sha256": "fd77c9e4480a2a3f0cd29c9ef1b5d07d8225d807cb3ed9da2137fe4ccbd2a9b9",
       "executable": false
     },
     "tests/browser/browser-capture-runtime.mjs": {
