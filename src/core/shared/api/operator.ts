@@ -13,6 +13,7 @@ export interface OperatorAccountReference {
 }
 
 export interface OperatorEvidenceCard {
+  readonly discord?: {jumpUrl:string;capturer:string;sourceState:string;checkFailure:string|null}
   readonly id: string
   readonly admittedSender?: string | null
   readonly namedSpeaker?: string | null

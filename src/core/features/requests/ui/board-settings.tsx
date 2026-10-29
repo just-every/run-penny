@@ -1,3 +1,4 @@
+import {DiscordSettings} from '../../discord/settings-ui'
 import {RedactionSettings} from '../../redaction/settings-ui'
 import {RequesterOAuthSettings} from '../../auth/ui/requester-oauth-settings'
 import {ModelSettings} from '../../ai/ui/model-settings'
@@ -51,6 +52,7 @@ export function BoardSettings() {
         <ApiKeys />
         <IntegrationDestinations />
         <TrackerSettings />
+        <DiscordSettings />
         <MailIdentitySettings />
         <AgingSettings/><WorkspaceClockSettings />
         <WeeklySummarySetting />

@@ -49,6 +49,7 @@ export function roadmapStatusLabel(status: OperatorRoadmapStatus): string {
 
 const sourceWords: Record<string, string> = { sales_call: 'Sales call', support_conversation: 'Support conversation', interview: 'Interview', email: 'Email', portal_request: 'Portal request' }
 export function sourceLabel(sourceType: string, sourceLabel: string | null): string {
+  if (sourceType === 'discord') return 'Discord'
   if (sourceType === 'free_text') return sourceLabel ?? 'Recorded note'
 
   return sourceWords[sourceType] ?? sourceType.replace(/_/g, ' ')
