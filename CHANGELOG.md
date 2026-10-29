@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Keep Zendesk proxy votes compatible with the core door: send an explicit idempotency key, retain it across uncertain retries, and show pending company approval as pending instead of claiming a recorded vote. The existing native sidebar journey now has the owner choose company policy before its scoped calls; its SDK network edge forwards the real idempotency header.
+
+- Attribute immediate AI drafts to their actual native preparer. The shared native service sends the preparer label to the configured model, returns it with the private draft and records native activity after current-authority/citation checks. Agent calls retain the door’s agent-for-sponsor label; native person calls retain that person. Extend the existing AI-006 public-door case with model/request/activity agreement while preserving privacy, no-send and revocation checks.
+
+- Adopt the released CLI’s local `deploy --dry-run` receipt. Update the existing public-door dry-run assertion to prove a real local Worker/migration plan, unmet real-deploy inputs and no provider reads or writes with or without supplied credentials; target readiness is no longer claimed by this command.
+
+- Keep the hosted mail binding declaration unambiguous for rer 0.2.86: keep provider, sender and relay public as the managed-mail specification requires, and remove their duplicate secret declarations. Contract evidence cells now cite checkout files; commands and external run receipts remain in the fleet report.
+
+- Refresh the agent door, Business settings and native identity dependencies to released rer 0.2.86 (Base f96363bf). Add the canonical Base agent clauses without promoting their judgments; mark Penny's eight Agent surface clauses partial with explicit optional-family gaps. Preserve main's Discord migrations 0096–0097 and place the unpublished door migrations at 0098–0102.
+- Limit the round-three adapters to current core work. Remove scheduled/publication/customer-mail/webhook continuations and native event emission; their verbs remain deferred to undeclared families. Keep existing native screens and scheduled person work. Native agent transactions refuse accidental queued effects atomically. The existing API-003 public-door test now asserts the deliberate queued-verb refusal with unchanged native state; validation, scope and draft assertions remain. Clock settings preserve native Owner/Admin admission; tool/resource projections remove credential fields and the effect witness exposes digests instead of private rows.
+
+
 - Settle pending Discord Gateway deliveries before persisting a session reset, so an expired session cannot overwrite the next session's sequence or discard its reactions.
 
 - Checkpoint source-check claims before Discord reads, prevent overlapping or superseded completions from changing removed/purged sources, and show interrupted checks until an owner deliberately retries them by saving the connector settings. Add migration 0097 without changing applied SQL; restored running checks are held. Extend the two existing public-door sanity journeys with session-expiry, overlapping removal/purge and actual Worker restart recovery. CAP-021 remains missing with unchanged acceptance and counts.

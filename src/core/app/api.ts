@@ -1,3 +1,4 @@
+import { handleAgentDoor } from '../features/agent-door/index'
 import {registerDiscordRoutes} from '@/core/features/discord/routes'
 import {registerBulkRoutes} from '@/core/features/triage/bulk-routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
@@ -94,6 +95,8 @@ export function createPennyApi(options: PennyAppOptions = {}) {
         return unsubscribePost ? preferenceForbidden() : context.json({ error: 'forbidden_origin' }, 403)
       }
     }
+    const door=await handleAgentDoor(context.get('runtime'),context.req.raw)
+    if(door)return door
     if (!validPathParameters(context)) return context.json({ error: 'validation_failed' }, 400)
     if (context.req.path.startsWith('/api/auth/') || context.req.path.startsWith('/api/public/identity/')) context.header('Cache-Control', 'no-store')
     await next()

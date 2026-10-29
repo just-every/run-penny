@@ -23,12 +23,13 @@ export async function zendeskSidebar({page,origin,key,ticket}){
   assert.equal(options.secure,true)
   assert.equal(options.cors,false)
   assert.equal(options.headers.Authorization,'Bearer {{setting.penny_api_key}}')
+  if(options.type==='POST')assert.match(options.headers['Idempotency-Key'],/^[a-f0-9-]{36}$/i)
   assert.equal(JSON.stringify(options).includes(key),false)
   assert.match(url.pathname,/^\/api\/v1\/(?:requests|proxy-vote-contacts|boards)(?:\/|$)/)
   calls.push(options)
   const response=await fetch(origin+url.pathname+url.search,{
    method:options.type,redirect:'manual',
-   headers:{Authorization:`Bearer ${key}`,...(options.contentType?{'Content-Type':options.contentType}:{})},
+   headers:{Authorization:`Bearer ${key}`,...(options.contentType?{'Content-Type':options.contentType}:{}),...(options.headers['Idempotency-Key']?{'Idempotency-Key':options.headers['Idempotency-Key']}:{})},
    ...(options.data===undefined?{}:{body:options.data})
   })
   return {ok:response.ok,status:response.status,body:await response.json()}

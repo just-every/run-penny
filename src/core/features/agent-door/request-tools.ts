@@ -1,0 +1,12 @@
+import { z } from 'zod'
+import type { PennyRuntime } from '@/core/app/runtime'
+import {tool,id,text,name,revision,external} from './tool'
+import {createOperatorRequest} from '../requests/operator-context'
+import {RequestOperatorRepository} from '../requests/operator-repository'
+
+const isPublic=async(db:D1Database,slug:string)=>!!await db.prepare("SELECT 1 FROM requests r JOIN boards b ON b.id=r.board_id WHERE r.slug=? AND b.visibility='public' AND r.published_at IS NOT NULL AND r.moderation_state='approved' AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL").bind(slug).first()
+export function requestTools(runtime:PennyRuntime){return [
+ tool(runtime,{name:'requests.create',title:'Create an unpublished native request',scope:'requests:create',clauses:['REQ-029'],schema:z.object({title:name,description:text,boardSlug:id,evidenceIds:z.array(id).max(100).default([])}),run:async(a,n)=>{const r=await createOperatorRequest(n.database,a,n.actor);return r}}),
+ tool(runtime,{name:'requests.update',title:'Move a request to a native board',scope:'requests:manage',clauses:['REQ-018','DATA-004'],classes:['standard','external'],schema:z.object({slug:id,boardSlug:id}),revision:(a,n)=>revision(n.db,'requests',a.slug,'slug'),classify:async(a,n)=>await isPublic(n.db,a.slug)||await n.db.prepare("SELECT 1 FROM requests r JOIN boards b ON b.slug=? WHERE r.slug=? AND b.visibility='public' AND r.moderation_state='approved' AND r.published_at IS NOT NULL AND r.withdrawn_at IS NULL AND r.merged_into_request_id IS NULL").bind(a.boardSlug,a.slug).first()?external():[{class:'standard',facts:{measure:1}}],run:async(a,n)=>{await new RequestOperatorRepository(n.database).moveRequest(a.slug,a.boardSlug,n.now,n.actor);return {ok:true}}}),
+ tool(runtime,{name:'requesters.manage',title:'Block, unblock or merge native customer identities',scope:'feedback:write',clauses:['REQ-022','REQ-024'],classes:['standard','destructive'],schema:z.object({id,action:z.enum(['block','unblock','merge']),targetId:id.optional()}),classify:async(a)=>a.action==='merge'?[{class:'destructive',facts:{measure:2}}]:[{class:'standard',facts:{measure:1}}],run:async(a,n)=>{const svc=new RequestOperatorRepository(n.database);if(a.action==='merge')await svc.mergeRequesters(a.id,id.parse(a.targetId),n.actor,n.now);else await svc.setRequesterBlocked(a.id,a.action==='block',n.actor,n.now);return {ok:true,id:a.id}}}),
+]}

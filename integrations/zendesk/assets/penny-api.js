@@ -1,4 +1,5 @@
 export function pennyApi(client, settings) {
+  const mutations = new Map();
   let origin;
   try {
     const url = new URL(settings.penny_origin);
@@ -8,16 +9,22 @@ export function pennyApi(client, settings) {
     throw new Error('Ask your Zendesk admin to set a valid Penny HTTPS origin and matching allowed hostname, without a path or port.');
   }
   return async function request(path, body) {
-    return client.request({
+    const signature = body === undefined ? null : JSON.stringify([path, body]);
+    if (signature !== null && !mutations.has(signature)) mutations.set(signature, crypto.randomUUID());
+    const result = await client.request({
       url: origin + path,
       type: body === undefined ? 'GET' : 'POST',
-      headers: { Authorization: 'Bearer {{setting.penny_api_key}}' },
+      headers: { Authorization: 'Bearer {{setting.penny_api_key}}', ...(signature === null ? {} : { 'Idempotency-Key': mutations.get(signature) }) },
       secure: true,
       cors: false,
       autoRetry: false,
       dataType: 'json',
       ...(body === undefined ? {} : { contentType: 'application/json', data: JSON.stringify(body) })
     });
+    if (result?.pending) throw new Error('Penny needs company approval or input before this action can run. Open Penny’s Agents page, then retry.');
+    // Keep an uncertain attempt's key for retry; a completed click is a new intent.
+    if (signature !== null) mutations.delete(signature);
+    return result;
   };
 }
 

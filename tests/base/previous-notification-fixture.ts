@@ -2,7 +2,7 @@ import { expect } from 'vitest'
 import { projectContributions } from '@/core/features/requests/contributions'
 import { createUlid } from '@/core/shared/ulid'
 import { digest,opaqueToken } from '@/core/features/auth/native-tokens'
-import { authenticateOperator } from '@/core/features/auth/operator'
+import { operatorAuth } from '@/core/features/auth/operator'
 import { call,env,mockMail,origin,owner } from './support'
 import { runtime,time } from './notification-regression-fixture'
 
@@ -15,9 +15,12 @@ export async function previousNotificationGraph(count=1){
  mockMail()
  const operator=await owner(),person=await historicalRequester(),board=createUlid(),createdAt=new Date().toISOString()
  await env.DB.prepare("INSERT INTO boards(id,name,slug,visibility,position,created_at,updated_at) VALUES(?,'Notifications','regression','public',0,?,?)").bind(board,createdAt,createdAt).run()
- const admitted=await authenticateOperator(runtime(),new Request(origin+'/app',{headers:operator}))
+ const admitted=await operatorAuth(runtime()).getSession(new Request(origin+'/app',{headers:operator}))
  expect(admitted).not.toBeNull()
- const actor=admitted!.id
+ // Historical attribution predates durable native-ID bindings. Populate that
+ // historical product row after real native admission, before the upgrade.
+ const actor=createUlid()
+ await env.DB.prepare('INSERT INTO operators(id,email,display_name,created_at,updated_at) VALUES(?,?,?,?,?)').bind(actor,admitted!.operator.email,admitted!.operator.displayName,createdAt,createdAt).run()
  const recipient=(await env.DB.prepare('SELECT requester_id AS requesterId,id AS addressId,email FROM requester_addresses LIMIT 1').first<{requesterId:string;addressId:string;email:string}>())!
  const requests:{id:string;slug:string}[]=[]
  for(let index=0;index<count;index++){

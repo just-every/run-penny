@@ -69,7 +69,8 @@
     "test:browser:learning": "node tests/browser/learning-journey.mjs",
     "test:browser:dev-flows": "node --test --test-concurrency=1 tests/browser/dev-operator-flows.test.mjs",
     "delivery:spec": "node scripts/build-deployment-spec.mjs --write",
-    "check:deployment-spec": "node scripts/build-deployment-spec.mjs --check"
+    "check:deployment-spec": "node scripts/build-deployment-spec.mjs --check",
+    "verify:agent": "node tests/fixtures/run-agent-door.mjs"
   },
   "dependencies": {
     "@tanstack/react-router": "1.170.41",
@@ -86,7 +87,7 @@
     "@cloudflare/vitest-plugin": "^1.1.2",
     "@cloudflare/workers-types": "^5.20260828.1",
     "@playwright/test": "1.63.0",
-    "@runeditrun/rer": "0.2.80",
+    "@runeditrun/rer": "0.2.86",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
@@ -151,7 +152,8 @@
     "verification.json",
     "integrations",
     "packaging.json",
-    "base-copies.json"
+    "base-copies.json",
+    "agent-surface.json"
   ],
   "engines": {
     "node": "22.20.0",

@@ -2035,7 +2035,10 @@
       "body",
       "created_at",
       "updated_at",
-      "parent_note_id"
+      "parent_note_id",
+      "agent_label",
+      "agent_prepared_by",
+      "agent_approvers"
     ]
   },
   "request_notification_mutes": {
@@ -3185,6 +3188,173 @@
       "error",
       "created_at",
       "updated_at"
+    ]
+  },
+  "agent_door_agents": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "name",
+      "specialist",
+      "sponsor",
+      "sponsor_name",
+      "revoked",
+      "window",
+      "requests"
+    ]
+  },
+  "agent_door_approvals": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "state",
+      "saved",
+      "approvals",
+      "result",
+      "version"
+    ]
+  },
+  "agent_door_audit": {
+    "classification": "installation",
+    "columns": [
+      "sequence",
+      "id",
+      "at",
+      "agent",
+      "classes",
+      "row",
+      "evidence"
+    ]
+  },
+  "agent_door_calls": {
+    "classification": "installation",
+    "columns": [
+      "agent",
+      "key",
+      "digest",
+      "decision_id",
+      "created_at",
+      "state",
+      "outcome"
+    ]
+  },
+  "agent_door_events": {
+    "classification": "installation",
+    "columns": [
+      "sequence",
+      "id",
+      "uri",
+      "event"
+    ]
+  },
+  "agent_door_reviews": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "state",
+      "saved",
+      "marked_by",
+      "marked_at"
+    ]
+  },
+  "agent_door_state": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "envelope",
+      "local_document",
+      "local_revision",
+      "local_paused",
+      "decision_lock",
+      "decision_until"
+    ]
+  },
+  "agent_door_usage": {
+    "classification": "installation",
+    "columns": [
+      "decision_id",
+      "at",
+      "seed",
+      "specialist",
+      "agent",
+      "classes"
+    ]
+  },
+  "bs_assert": {
+    "classification": "installation",
+    "columns": [
+      "value"
+    ]
+  },
+  "bs_audit": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "actor",
+      "action",
+      "field",
+      "changed_at"
+    ]
+  },
+  "bs_logo": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "sha256",
+      "type",
+      "bytes"
+    ]
+  },
+  "bs_overrides": {
+    "classification": "installation",
+    "columns": [
+      "field",
+      "value",
+      "actor",
+      "changed_at"
+    ]
+  },
+  "bs_settings": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "rev",
+      "document",
+      "applied_at",
+      "stopped",
+      "token",
+      "owner_id"
+    ]
+  },
+  "bs_team": {
+    "classification": "installation",
+    "columns": [
+      "email",
+      "operator_id",
+      "invite",
+      "state",
+      "business_id",
+      "business_role"
+    ]
+  },
+  "penny_agent_transaction": {
+    "classification": "installation",
+    "columns": [
+      "singleton",
+      "native_id",
+      "agent",
+      "label",
+      "approvers",
+      "consent",
+      "scopes",
+      "client_id"
+    ]
+  },
+  "penny_operator_bindings": {
+    "classification": "installation",
+    "columns": [
+      "native_operator_id",
+      "actor_id"
     ]
   },
   "penny_discord_settings": {

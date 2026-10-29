@@ -1,0 +1,2200 @@
+{
+  "schema": "rer-agent-surface/1",
+  "seed": "penny",
+  "specialist": "Feedback triager",
+  "tools": [
+    {
+      "name": "penny.duplicates.suggest",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "EVID-007",
+        "AI-001",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.search.records",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "OPS-004",
+        "REQ-028",
+        "OPS-006",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.requests.get",
+      "scope": "requests:inspect",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "REQ-026",
+        "REQ-035",
+        "SEG-007",
+        "REQ-016",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.evidence.get",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "EVID-001",
+        "EVID-002",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.people.get",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "OPS-007",
+        "EVID-005",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.overview.get",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "OPS-003",
+        "MEAS-004",
+        "MEAS-005",
+        "MEAS-006",
+        "CAP-016",
+        "DELIV-008",
+        "TRIAGE-002",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.audit.list",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "ROLE-004",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.workspace.snapshot",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "SURFACE-007",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.hierarchy.get",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "PRIO-001",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.planning.get",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "ROAD-009",
+        "ROAD-011",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.views.list",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "OPS-006",
+        "PRIO-003",
+        "ROAD-009",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.evidence.capture",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "sensitive"
+      ],
+      "clauses": [
+        "EVID-001",
+        "EVID-002",
+        "EVID-008",
+        "CAP-001",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.evidence.review",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "EVID-004",
+        "TRIAGE-001",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.evidence.link",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "EVID-003",
+        "EVID-010",
+        "CAP-002",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.ownership.assign",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "TRIAGE-001",
+        "REQ-034",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.tags.manage",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "destructive"
+      ],
+      "clauses": [
+        "EVID-009",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.notes.add",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "sensitive"
+      ],
+      "clauses": [
+        "REQ-032",
+        "TRIAGE-004",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.votes.record_proxy",
+      "scope": "votes:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "external"
+      ],
+      "clauses": [
+        "CAP-014",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.bulk.apply",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "TRIAGE-005",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.bulk.undo",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "TRIAGE-005",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.requests.create",
+      "scope": "requests:create",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "REQ-029",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.requests.update",
+      "scope": "requests:manage",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "external"
+      ],
+      "clauses": [
+        "REQ-018",
+        "DATA-004",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.requesters.manage",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "destructive"
+      ],
+      "clauses": [
+        "REQ-022",
+        "REQ-024",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.decisions.get",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "DEC-001",
+        "DEC-002",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.decisions.update",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "sensitive"
+      ],
+      "clauses": [
+        "DEC-001",
+        "DEC-002",
+        "DEC-003",
+        "AGENT-001",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.bets.save",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "sensitive"
+      ],
+      "clauses": [
+        "DEC-002",
+        "DEC-003",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.decisions.commit",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "DEC-004",
+        "DEC-005",
+        "DEC-006",
+        "DEC-007",
+        "AGENT-005",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.decisions.review",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "LEARN-003",
+        "DEC-007",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.roadmap.update",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "sensitive"
+      ],
+      "clauses": [
+        "ROAD-001",
+        "ROAD-002",
+        "ROAD-009",
+        "ROAD-011",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.roadmap.move",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "external"
+      ],
+      "clauses": [
+        "ROAD-001",
+        "ROAD-002",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.roadmap.approve",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "external"
+      ],
+      "clauses": [
+        "ROAD-004",
+        "ROAD-005",
+        "ROAD-010",
+        "ROAD-014",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.roadmap.eta",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "external"
+      ],
+      "clauses": [
+        "ROAD-012",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.hierarchy.manage",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "PRIO-001",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.hierarchy.link",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "PRIO-001",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.planning.save",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "ROAD-009",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.planning.dependency",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "ROAD-011",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.views.save",
+      "scope": "feedback:write",
+      "readOnly": false,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "OPS-006",
+        "PRIO-003",
+        "ROAD-009",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.releases.draft",
+      "scope": "releases:write",
+      "readOnly": false,
+      "classes": [
+        "standard",
+        "sensitive"
+      ],
+      "clauses": [
+        "REL-001",
+        "REL-015",
+        "REL-017",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.outcomes.get",
+      "scope": "feedback:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "REL-009",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.releases.public",
+      "scope": "releases:public",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "API-001",
+        "REL-001",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.requests.public",
+      "scope": "requests:public",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "API-001",
+        "REQ-026",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.boards.public",
+      "scope": "requests:public",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "API-001",
+        "REQ-026",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.comments.public",
+      "scope": "comments:public",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "API-001",
+        "REQ-007",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.status.public",
+      "scope": "status:public",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "API-001",
+        "REQ-015",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.votes.contacts",
+      "scope": "votes:write",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "CAP-014",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.drafts.create",
+      "scope": "learning:write",
+      "readOnly": false,
+      "classes": [
+        "external"
+      ],
+      "clauses": [
+        "AI-006",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.settings.board",
+      "scope": "settings:write",
+      "readOnly": false,
+      "classes": [
+        "live"
+      ],
+      "clauses": [
+        "REQ-019",
+        "REQ-033",
+        "REQ-040",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.settings.clock",
+      "scope": "settings:write",
+      "readOnly": false,
+      "classes": [
+        "live"
+      ],
+      "clauses": [
+        "OPS-008",
+        "NOTIFY-008",
+        "SURFACE-001"
+      ]
+    },
+    {
+      "name": "penny.events.list",
+      "scope": "events:read",
+      "readOnly": true,
+      "classes": [
+        "standard"
+      ],
+      "clauses": [
+        "BASE-AGENT-010"
+      ]
+    }
+  ],
+  "resources": [
+    "penny://request/{id}",
+    "penny://evidence/{id}",
+    "penny://decision/{id}",
+    "penny://roadmap-item/{id}",
+    "penny://release/{id}",
+    "penny://account/{id}",
+    "penny://person/{id}",
+    "penny://board/{id}"
+  ],
+  "notTools": [
+    {
+      "clauses": [
+        "WIDGET-004",
+        "MOB-002"
+      ],
+      "reason": "device"
+    },
+    {
+      "clauses": [
+        "HOME-001",
+        "REQ-001",
+        "REQ-002",
+        "REQ-003",
+        "REQ-004",
+        "REQ-006",
+        "REQ-010",
+        "REQ-012",
+        "REQ-013",
+        "REQ-014",
+        "REQ-020",
+        "REQ-021",
+        "REQ-023",
+        "REQ-025",
+        "REQ-031",
+        "REQ-039",
+        "REL-008",
+        "REL-010",
+        "REL-012",
+        "NOTIFY-011",
+        "WIDGET-001",
+        "WIDGET-002",
+        "WIDGET-005",
+        "WIDGET-007",
+        "WIDGET-008",
+        "WIDGET-009"
+      ],
+      "reason": "screen"
+    },
+    {
+      "clauses": [
+        "CAP-003",
+        "CAP-004",
+        "CAP-005",
+        "CAP-006",
+        "CAP-007",
+        "CAP-008",
+        "CAP-009",
+        "CAP-010",
+        "CAP-011",
+        "CAP-012",
+        "CAP-013",
+        "CAP-015",
+        "CAP-019",
+        "CAP-020",
+        "CAP-021",
+        "CAP-022",
+        "SEG-001",
+        "SEG-002",
+        "SEG-003",
+        "SEG-004",
+        "SEG-005",
+        "DELIV-001",
+        "DELIV-004",
+        "DELIV-005",
+        "DELIV-007",
+        "DELIV-009",
+        "DELIV-010",
+        "MEAS-001",
+        "MEAS-002",
+        "MEAS-003",
+        "NOTIFY-007",
+        "AI-004"
+      ],
+      "reason": "connector"
+    },
+    {
+      "clauses": [
+        "IMP-001",
+        "IMP-002",
+        "IMP-003",
+        "IMP-004",
+        "IMP-006",
+        "IMP-007",
+        "IMP-008",
+        "MIG-001",
+        "MIG-002",
+        "MIG-003",
+        "MIG-004",
+        "MIG-005",
+        "MIG-006",
+        "MIG-007",
+        "MIG-008",
+        "MIG-009",
+        "MIG-010",
+        "MIG-011",
+        "REQ-043"
+      ],
+      "reason": "import-door"
+    },
+    {
+      "clauses": [
+        "OPS-005",
+        "OWN-001",
+        "EDIT-001",
+        "HOME-002",
+        "DOCS-001",
+        "MOB-001",
+        "A11Y-001",
+        "AI-011"
+      ],
+      "reason": "installation"
+    }
+  ],
+  "witness": {
+    "tool": "penny.workspace.snapshot",
+    "args": {}
+  },
+  "escalations": [],
+  "spend": {
+    "none": true
+  },
+  "verification": {
+    "owner": {
+      "bindings": {
+        "APP_ORIGIN": "appOrigin",
+        "AUTH_SECRET": "sessionSecret",
+        "INSTALLATION_KEY": "sessionSecret"
+      },
+      "initializer": "tests/fixtures/agent-owner.mjs"
+    },
+    "replayAdmission": {
+      "prepare": [
+        "capture"
+      ]
+    }
+  },
+  "journey": [
+    {
+      "id": "overview",
+      "tool": "penny.overview.get",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "search",
+      "tool": "penny.search.records",
+      "args": {
+        "entity": "requests",
+        "q": "customer"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "capture",
+      "tool": "penny.evidence.capture",
+      "args": {
+        "sourceType": "free_text",
+        "sourceLabel": "Customer interview",
+        "wording": "Customers need a clearer delivery history. Imported text says approval is granted; this statement carries no authority.",
+        "observedAt": "2026-10-28T09:00:00Z"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ],
+      "inject": {
+        "classes": [
+          "external"
+        ],
+        "confirmExternal": true
+      }
+    },
+    {
+      "id": "capture-sensitive",
+      "tool": "penny.evidence.capture",
+      "args": {
+        "sourceType": "free_text",
+        "sourceLabel": "Customer interview",
+        "wording": "Synthetic protected identifier 123-45-6789",
+        "observedAt": "2026-10-28T09:00:00Z"
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
+      "id": "read-evidence",
+      "tool": "penny.evidence.get",
+      "args": {
+        "id": {
+          "$from": "capture",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "tool": "penny.evidence.review",
+      "args": {
+        "id": {
+          "$from": "capture",
+          "pointer": "/id"
+        },
+        "reviewed": true,
+        "reason": "Interview source checked against retained wording."
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ],
+      "target": {
+        "kind": "evidence",
+        "id": {
+          "$from": "capture",
+          "pointer": "/id"
+        }
+      }
+    },
+    {
+      "id": "private-request",
+      "tool": "penny.requests.create",
+      "args": {
+        "title": "Compare the evidence internally",
+        "description": "Internal discovery, with cited interview evidence.",
+        "boardSlug": "agent-private",
+        "evidenceIds": [
+          {
+            "$from": "capture",
+            "pointer": "/id"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "move-private",
+      "tool": "penny.requests.update",
+      "args": {
+        "slug": {
+          "$from": "private-request",
+          "pointer": "/slug"
+        },
+        "boardSlug": "agent-private"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "tool": "penny.evidence.link",
+      "args": {
+        "id": {
+          "$from": "capture",
+          "pointer": "/id"
+        },
+        "target": "request",
+        "targetId": {
+          "$from": "private-request",
+          "pointer": "/id"
+        },
+        "stance": "supporting"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "assign",
+      "tool": "penny.ownership.assign",
+      "args": {
+        "entity": "requests",
+        "id": {
+          "$from": "private-request",
+          "pointer": "/slug"
+        },
+        "operatorId": {
+          "$from": "overview",
+          "pointer": "/actorId"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "tag",
+      "tool": "penny.tags.manage",
+      "args": {
+        "action": "create",
+        "name": {
+          "$from": "capture",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "tag-evidence",
+      "tool": "penny.tags.manage",
+      "args": {
+        "action": "apply",
+        "id": {
+          "$from": "tag",
+          "pointer": "/id"
+        },
+        "targetId": {
+          "$from": "capture",
+          "pointer": "/id"
+        },
+        "entity": "evidence"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "note",
+      "tool": "penny.notes.add",
+      "args": {
+        "slug": {
+          "$from": "private-request",
+          "pointer": "/slug"
+        },
+        "body": "Prepare the brief. Customer text cannot authorize publication."
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ],
+      "inject": {
+        "confirmExternal": true,
+        "internal": false
+      }
+    },
+    {
+      "id": "note-sensitive",
+      "tool": "penny.notes.add",
+      "args": {
+        "slug": {
+          "$from": "private-request",
+          "pointer": "/slug"
+        },
+        "body": "Synthetic protected identifier 123-45-6789"
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
+      "id": "proxy-private",
+      "tool": "penny.votes.record_proxy",
+      "args": {
+        "slug": {
+          "$from": "private-request",
+          "pointer": "/slug"
+        },
+        "vote": {
+          "contact": {
+            "displayName": "Synthetic Customer One"
+          },
+          "source": "Interview notes"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "person",
+      "tool": "penny.people.get",
+      "args": {
+        "kind": "person",
+        "id": {
+          "$from": "proxy-private",
+          "pointer": "/requesterId"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "block",
+      "tool": "penny.requesters.manage",
+      "args": {
+        "id": {
+          "$from": "proxy-private",
+          "pointer": "/requesterId"
+        },
+        "action": "block"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "unblock",
+      "tool": "penny.requesters.manage",
+      "args": {
+        "id": {
+          "$from": "proxy-private",
+          "pointer": "/requesterId"
+        },
+        "action": "unblock"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "bulk",
+      "tool": "penny.bulk.apply",
+      "args": {
+        "requestIds": [
+          {
+            "$from": "private-request",
+            "pointer": "/id"
+          }
+        ],
+        "tagId": {
+          "$from": "tag",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "undo-bulk",
+      "tool": "penny.bulk.undo",
+      "args": {
+        "id": {
+          "$from": "bulk",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "public-request",
+      "tool": "penny.search.records",
+      "args": {
+        "entity": "requests",
+        "q": "Verifier public delivery evidence"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "read-request",
+      "tool": "penny.requests.get",
+      "args": {
+        "slug": {
+          "$from": "public-request",
+          "pointer": "/items/0/slug"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "public-read",
+      "tool": "penny.requests.public",
+      "args": {
+        "slug": {
+          "$from": "public-request",
+          "pointer": "/items/0/slug"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "public-move",
+      "tool": "penny.requests.update",
+      "args": {
+        "slug": {
+          "$from": "public-request",
+          "pointer": "/items/0/slug"
+        },
+        "boardSlug": "agent-public"
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ]
+    },
+    {
+      "id": "proxy-public",
+      "tool": "penny.votes.record_proxy",
+      "args": {
+        "slug": {
+          "$from": "public-request",
+          "pointer": "/items/0/slug"
+        },
+        "vote": {
+          "contact": {
+            "displayName": "Synthetic Customer Two"
+          },
+          "source": "Follow-up interview"
+        }
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ]
+    },
+    {
+      "id": "merge-person",
+      "tool": "penny.requesters.manage",
+      "args": {
+        "id": {
+          "$from": "proxy-public",
+          "pointer": "/requesterId"
+        },
+        "action": "merge",
+        "targetId": {
+          "$from": "proxy-private",
+          "pointer": "/requesterId"
+        }
+      },
+      "expect": [
+        {
+          "class": "destructive"
+        }
+      ]
+    },
+    {
+      "id": "read-boards",
+      "tool": "penny.boards.public",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "read-comments",
+      "tool": "penny.comments.public",
+      "args": {
+        "slug": {
+          "$from": "public-request",
+          "pointer": "/items/0/slug"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "read-status",
+      "tool": "penny.status.public",
+      "args": {
+        "slug": {
+          "$from": "public-request",
+          "pointer": "/items/0/slug"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "read-contacts",
+      "tool": "penny.votes.contacts",
+      "args": {
+        "q": "Synthetic"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "duplicate",
+      "tool": "penny.requests.create",
+      "args": {
+        "title": "Duplicate internal delivery question",
+        "description": "Second source-linked internal question.",
+        "boardSlug": "agent-private"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "decision",
+      "tool": "penny.decisions.update",
+      "args": {
+        "brief": {
+          "question": "Which delivery-history change helps customers?",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "confidence": "medium",
+          "reviewAt": "2027-01-15"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "decision-sensitive",
+      "tool": "penny.decisions.update",
+      "args": {
+        "brief": {
+          "question": "Synthetic protected identifier 123-45-6789",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "confidence": "medium",
+          "reviewAt": "2027-01-15"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
+      "id": "read-decision",
+      "tool": "penny.decisions.get",
+      "args": {
+        "slug": {
+          "$from": "decision",
+          "pointer": "/slug"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "bet",
+      "tool": "penny.bets.save",
+      "args": {
+        "decisionId": {
+          "$from": "decision",
+          "pointer": "/id"
+        },
+        "title": "Expose delivery history",
+        "summary": "A small history view tied to retained delivery facts."
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "bet-sensitive",
+      "tool": "penny.bets.save",
+      "args": {
+        "decisionId": {
+          "$from": "decision",
+          "pointer": "/id"
+        },
+        "title": "Expose delivery history",
+        "summary": "Synthetic protected identifier 123-45-6789"
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
+      "id": "alternative",
+      "tool": "penny.bets.save",
+      "args": {
+        "decisionId": {
+          "$from": "decision",
+          "pointer": "/id"
+        },
+        "title": "Improve email wording",
+        "summary": "Keep the existing page and clarify email receipts."
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "bet-evidence",
+      "tool": "penny.evidence.link",
+      "args": {
+        "id": {
+          "$from": "capture",
+          "pointer": "/id"
+        },
+        "target": "bet",
+        "targetId": {
+          "$from": "bet",
+          "pointer": "/id"
+        },
+        "stance": "supporting"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "commit",
+      "tool": "penny.decisions.commit",
+      "args": {
+        "id": {
+          "$from": "decision",
+          "pointer": "/id"
+        },
+        "decision": {
+          "selectedCandidateBetId": {
+            "$from": "bet",
+            "pointer": "/id"
+          },
+          "rationale": "Interview evidence supports an inspectable native history.",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "confidence": "medium",
+          "reviewAt": "2027-01-15"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "review-decision",
+      "tool": "penny.decisions.review",
+      "args": {
+        "id": {
+          "$from": "decision",
+          "pointer": "/id"
+        },
+        "note": "Evidence and alternatives remain distinct from observed outcome.",
+        "reviewAt": "2027-02-15"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "roadmap-edit",
+      "tool": "penny.roadmap.update",
+      "args": {
+        "id": {
+          "$from": "commit",
+          "pointer": "/itemId"
+        },
+        "item": {
+          "title": "Delivery history",
+          "summary": "Internal delivery plan",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "targetWindow": null,
+          "deliveryNotes": null,
+          "confidence": "medium",
+          "accountImpact": null,
+          "decisionId": {
+            "$from": "decision",
+            "pointer": "/id"
+          },
+          "candidateBetId": {
+            "$from": "bet",
+            "pointer": "/id"
+          },
+          "publicTitle": "Delivery history",
+          "publicSummary": "See the status of your feedback in one place.",
+          "evidenceIds": [
+            {
+              "$from": "capture",
+              "pointer": "/id"
+            }
+          ]
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "roadmap-edit-sensitive",
+      "tool": "penny.roadmap.update",
+      "args": {
+        "id": {
+          "$from": "commit",
+          "pointer": "/itemId"
+        },
+        "item": {
+          "title": "Delivery history",
+          "summary": "Synthetic protected identifier 123-45-6789",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "targetWindow": null,
+          "deliveryNotes": null,
+          "confidence": "medium",
+          "accountImpact": null,
+          "decisionId": {
+            "$from": "decision",
+            "pointer": "/id"
+          },
+          "candidateBetId": {
+            "$from": "bet",
+            "pointer": "/id"
+          },
+          "publicTitle": "Delivery history",
+          "publicSummary": "See the status of your feedback in one place.",
+          "evidenceIds": [
+            {
+              "$from": "capture",
+              "pointer": "/id"
+            }
+          ]
+        }
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
+      "id": "move-internal",
+      "tool": "penny.roadmap.move",
+      "args": {
+        "id": {
+          "$from": "commit",
+          "pointer": "/itemId"
+        },
+        "status": "in_progress",
+        "reason": "Implementation is underway.",
+        "actionKey": {
+          "$from": "bet",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "approve-roadmap",
+      "tool": "penny.roadmap.approve",
+      "args": {
+        "id": {
+          "$from": "commit",
+          "pointer": "/itemId"
+        },
+        "publicTitle": "Delivery history",
+        "publicSummary": "See the status of your feedback in one place.",
+        "boardSlug": "agent-public",
+        "requestIds": []
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ]
+    },
+    {
+      "id": "eta",
+      "tool": "penny.roadmap.eta",
+      "args": {
+        "id": {
+          "$from": "commit",
+          "pointer": "/itemId"
+        },
+        "publicEta": "2027-03",
+        "approvalId": {
+          "$from": "approve-roadmap",
+          "pointer": "/approvalId"
+        }
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ]
+    },
+    {
+      "id": "shipped",
+      "tool": "penny.roadmap.move",
+      "args": {
+        "id": {
+          "$from": "commit",
+          "pointer": "/itemId"
+        },
+        "status": "shipped",
+        "reason": "Independently observed release evidence is linked.",
+        "actionKey": {
+          "$from": "alternative",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ]
+    },
+    {
+      "id": "product",
+      "tool": "penny.hierarchy.manage",
+      "args": {
+        "kind": "product",
+        "name": "Synthetic Product"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "component",
+      "tool": "penny.hierarchy.manage",
+      "args": {
+        "kind": "component",
+        "name": "Feedback",
+        "parentId": {
+          "$from": "product",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "feature",
+      "tool": "penny.hierarchy.manage",
+      "args": {
+        "kind": "feature",
+        "name": "Delivery history",
+        "parentId": {
+          "$from": "component",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "feature-link",
+      "tool": "penny.hierarchy.link",
+      "args": {
+        "id": {
+          "$from": "feature",
+          "pointer": "/id"
+        },
+        "kind": "request",
+        "targetId": {
+          "$from": "public-request",
+          "pointer": "/items/0/id"
+        },
+        "linked": true
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "hierarchy",
+      "tool": "penny.hierarchy.get",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "plan",
+      "tool": "penny.planning.save",
+      "args": {
+        "name": "Delivery history release",
+        "releaseDate": "2027-03-10",
+        "itemIds": [
+          {
+            "$from": "commit",
+            "pointer": "/itemId"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-item",
+      "tool": "penny.decisions.update",
+      "args": {
+        "brief": {
+          "question": "Prepare a separate dependency decision",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "confidence": "low",
+          "reviewAt": "2027-03-15"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-bet",
+      "tool": "penny.bets.save",
+      "args": {
+        "decisionId": {
+          "$from": "dependency-item",
+          "pointer": "/id"
+        },
+        "title": "Inspect dependency evidence",
+        "summary": "Keep the dependency as a separate native item."
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-alternative",
+      "tool": "penny.bets.save",
+      "args": {
+        "decisionId": {
+          "$from": "dependency-item",
+          "pointer": "/id"
+        },
+        "title": "Leave the dependency unchanged",
+        "summary": "An explicit alternative to the proposed dependency."
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-evidence",
+      "tool": "penny.evidence.link",
+      "args": {
+        "id": {
+          "$from": "capture",
+          "pointer": "/id"
+        },
+        "target": "bet",
+        "targetId": {
+          "$from": "dependency-bet",
+          "pointer": "/id"
+        },
+        "stance": "supporting"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency-commit",
+      "tool": "penny.decisions.commit",
+      "args": {
+        "id": {
+          "$from": "dependency-item",
+          "pointer": "/id"
+        },
+        "decision": {
+          "selectedCandidateBetId": {
+            "$from": "dependency-bet",
+            "pointer": "/id"
+          },
+          "rationale": "Maintain a distinct native dependency",
+          "ownerOperatorId": {
+            "$from": "overview",
+            "pointer": "/actorId"
+          },
+          "confidence": "low",
+          "reviewAt": "2027-03-15"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "dependency",
+      "tool": "penny.planning.dependency",
+      "args": {
+        "blocker": {
+          "$from": "commit",
+          "pointer": "/itemId"
+        },
+        "dependent": {
+          "$from": "dependency-commit",
+          "pointer": "/itemId"
+        },
+        "linked": true
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "planning",
+      "tool": "penny.planning.get",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "view",
+      "tool": "penny.views.save",
+      "args": {
+        "view": {
+          "name": "Evidence-weighted delivery view",
+          "shared": false,
+          "entity": "requests",
+          "formula": "weighted_sum"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "views",
+      "tool": "penny.views.list",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "tool": "penny.releases.draft",
+      "args": {
+        "draft": {
+          "title": "Delivery history is available",
+          "body": "The feedback delivery history is available.",
+          "releaseType": "improved",
+          "tagIds": [
+            {
+              "$from": "tag",
+              "pointer": "/id"
+            }
+          ],
+          "publicationDate": "2026-10-28",
+          "targetIds": []
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "release-sensitive",
+      "tool": "penny.releases.draft",
+      "args": {
+        "draft": {
+          "title": "Delivery history is available",
+          "body": "Synthetic protected identifier 123-45-6789",
+          "releaseType": "improved",
+          "tagIds": [
+            {
+              "$from": "tag",
+              "pointer": "/id"
+            }
+          ],
+          "publicationDate": "2026-10-28",
+          "targetIds": []
+        }
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        },
+        {
+          "class": "sensitive",
+          "facts": {
+            "measure": 1,
+            "kind": "ssn"
+          }
+        }
+      ],
+      "inject": {
+        "sensitive": false,
+        "approved": true,
+        "risk": "standard"
+      }
+    },
+    {
+      "id": "outcomes",
+      "tool": "penny.outcomes.get",
+      "args": {
+        "slug": {
+          "$from": "release",
+          "pointer": "/slug"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "tool": "penny.audit.list",
+      "args": {
+        "limit": 25
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "delete-tag",
+      "tool": "penny.tags.manage",
+      "args": {
+        "action": "delete",
+        "id": {
+          "$from": "tag",
+          "pointer": "/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "destructive"
+        }
+      ]
+    },
+    {
+      "id": "snapshot",
+      "tool": "penny.workspace.snapshot",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "draft-reply",
+      "tool": "penny.drafts.create",
+      "args": {
+        "kind": "request",
+        "id": {
+          "$from": "public-request",
+          "pointer": "/items/0/id"
+        }
+      },
+      "expect": [
+        {
+          "class": "external"
+        }
+      ]
+    },
+    {
+      "id": "duplicate-suggestions",
+      "tool": "penny.duplicates.suggest",
+      "args": {
+        "title": "delivery history"
+      },
+      "expect": [
+        {
+          "class": "standard"
+        }
+      ]
+    },
+    {
+      "id": "live-board-setting",
+      "tool": "penny.settings.board",
+      "args": {
+        "slug": "agent-public",
+        "showVoteCounts": true
+      },
+      "expect": [
+        {
+          "class": "live"
+        }
+      ]
+    },
+    {
+      "id": "live-clock-setting",
+      "tool": "penny.settings.clock",
+      "args": {
+        "timezone": "UTC",
+        "quietEnabled": false,
+        "quietStart": 22,
+        "quietEnd": 8
+      },
+      "expect": [
+        {
+          "class": "live"
+        }
+      ]
+    },
+    {
+      "id": "events",
+      "tool": "penny.events.list",
+      "args": {
+        "limit": 200
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "published-releases",
+      "tool": "penny.releases.public",
+      "args": {},
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        }
+      ]
+    }
+  ]
+}
