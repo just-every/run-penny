@@ -36,7 +36,7 @@ need separate proof.
 | `rer reset --yes` | Confirmed removal of the printed local inventory only; refuses while anything runs. |
 | `rer export --output FILE`, `import --input FILE --yes` | Local archive of Penny's domain data and original files with a separate latest erasure journal, and its restore into an empty installation. |
 | `node scripts/portability/remote-export.mjs ORIGIN SESSION_FILE OUTPUT_FILE` | From a checkout with dependencies installed, Penny’s existing helper uses a private 0600 raw native-owner cookie file to download hosted D1 records and actual R2 file bytes into the verified archive and paired erasure journal. Local installs use package-mode `rer export` / `rer import`; `rer export` is local-only and refuses a hosted origin, per [Base’s hosted-data rule](https://github.com/runeditrun/base/blob/main/export/RUN-LOCALLY.md#if-hosted-deployment-stops). Restore remains local. See [data ownership](docs/data-ownership.md#maintained-archive-commands) for session-file custody. |
-| `rer deploy [--environment NAME] [--dry-run]` | Owner-account build, reconcile, migrate and health; a dry run builds locally and reads target configuration without a provider write. |
+| `rer deploy [--environment NAME] [--dry-run]` | Owner-account build, reconcile, migrate and health; a dry run builds and plans locally without credentials or provider requests. |
 | `rer doctor`, `describe`, `check`, `release` | Local diagnostics, capability description, structural check and the maintained Base release producer, which needs explicit authorized inputs. |
 | `npm run deploy:health` | Owner-account identity, configuration and health against the private saved state; accepts `--environment NAME`. |
 | `pnpm run artifact:prepare`, `artifact:deploy`, `artifact:health` | The separate disposable controller: credential-free packaging of built committed source, scoped resources with hash-ledger migrations and upload, and its health. |
@@ -154,14 +154,13 @@ rer deploy --environment staging --dry-run
 npm run deploy:health -- --environment staging
 ```
 
-Dry runs build and validate the actual declaration and artifact locally, print
-the target resource names and private paths, and read the target account’s
-subdomain and Worker secret bindings using the supplied Cloudflare credentials.
-Without account inputs, Penny stops before the build or provider reads and
-lists the missing inputs and their purposes. The standalone deployment and
-health helpers also explain missing configuration in plain words and name the
-next command, without printing internal failure codes.
-They make no provider write and create no deployment credentials or state. For a real deploy, remove `--dry-run` only
+Dry runs build and validate the actual declaration and artifact locally and
+print the target resource, binding and migration plan. They need no Cloudflare
+credentials and make no provider request, including reads. Target secrets,
+permissions and readiness are checked by a real deployment. The standalone
+deployment and health helpers explain missing configuration in plain words and
+name the next command, without printing internal failure codes.
+Dry runs create no deployment credentials or state. For a real deploy, remove `--dry-run` only
 with authorization to change the chosen account. Health selects the same
 environment and never writes or rotates its saved credentials.
 

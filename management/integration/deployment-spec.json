@@ -602,6 +602,12 @@
       "name": "0103_agent_custody_fence.sql",
       "sha256": "3cfd10637d70135392d2a776f754f096abe9f84ef1a5ef923bec0c6ced731de4",
       "sql": "-- Admission and retained agent evidence share the erasure reservation transaction.\n-- Native writers already require data_state idle. This closes the opposite race.\nCREATE TRIGGER penny_agent_erasure_fence BEFORE INSERT ON data_operations\n WHEN NEW.kind='erase' AND (\n  EXISTS(SELECT 1 FROM agent_door_audit) OR EXISTS(SELECT 1 FROM agent_door_calls)\n  OR EXISTS(SELECT 1 FROM agent_door_approvals) OR EXISTS(SELECT 1 FROM agent_door_reviews))\n BEGIN SELECT RAISE(ABORT,'agent_retained_evidence_requires_review'); END;\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0104_agent_identity_custody.sql",
+      "sha256": "abc7007d60d4d275ea16a6e94fd50d07aa7c09984e5556f9fbdebc891191e472",
+      "sql": "-- Even catalogue-only agent admission retains sponsor names in native identity.\nCREATE TRIGGER penny_agent_identity_erasure_fence BEFORE INSERT ON data_operations\n WHEN NEW.kind='erase' AND EXISTS(SELECT 1 FROM agent_door_agents)\n BEGIN SELECT RAISE(ABORT,'agent_retained_evidence_requires_review'); END;\n"
     }
   ],
   "compatibilityDate": "2026-08-31",

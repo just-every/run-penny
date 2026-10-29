@@ -24,7 +24,7 @@ No provider cost or spend is registered (spend.none). This declared set reaches 
 
 Base retains exact outcome, approval and audit evidence. Client-scoped erasure of those stores is not yet supported. Native erasure therefore refuses with agent_retained_evidence_requires_review once agent evidence exists, before deleting product data. Do not remove retained evidence or replay receipts manually. Business policy/audit/replay stores and native person bindings are installation data and stay out of portable archives.
 
-Migrations 0099–0103 are additive: apply them with the normal migration runner before starting this version. Keep the expanded schema on source rollback, and preserve pending approvals, signed policy and outcomes. An installation without Business trust uses the shared local person policy controls; it accepts no unsigned Business documents.
+Migrations 0099–0104 are additive: apply them with the normal migration runner before starting this version. Keep the expanded schema on source rollback, and preserve pending approvals, signed policy and outcomes. An installation without native owner-claim trust uses the shared local person policy controls; it accepts no unsigned Business documents.
 `;
 if (process.argv[2] === 'write') await writeFile(path, text);
 else if (process.argv[2] !== 'check' || await readFile(path, 'utf8') !== text) { console.error('Agent docs are stale. Run node scripts/agent-docs.mjs write.'); process.exitCode = 1; }

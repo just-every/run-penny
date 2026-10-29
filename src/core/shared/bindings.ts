@@ -1,5 +1,4 @@
 export interface AppBindings {
-  RER_BUSINESS_TRUST?: string
   PENNY_HELPSCOUT_EGRESS?: import('../features/helpscout/configuration').HelpScoutEgress
   PENNY_DISCORD?: string
   PENNY_DISCORD_EGRESS?: import('../features/discord/configuration').DiscordEgress

@@ -3818,7 +3818,7 @@ Agent surface · target · **partial**
 5. A stranger agent given only the seed URL completes the specialist journey through MCP.
 
 **Evidence.** `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
-**Gap.** The declared surface and native journey pass normal rer verify (1993/1993 points); docs are generated from that declaration. Optional resource/event/prompt/subscription and wider specialist-week families remain incomplete.
+**Gap.** The declared surface and native journey pass normal rer verify (2016/2016 points); docs are generated from that declaration. Optional resource/event/prompt/subscription and wider specialist-week families remain incomplete.
 
 ### Agent surface
 
