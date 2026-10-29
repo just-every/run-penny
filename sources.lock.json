@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "49d282a36bd2cbda6f1f44eff13db253dd24d86f4ab9ef339f1e15382c78b578",
+      "sha256": "6364c6f188f43e2a69aa6e2726b72e86fd56722785ef8f1722b04440f36216f2",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3150,7 +3150,7 @@
       "executable": false
     },
     "docs/TEAMS.md": {
-      "sha256": "5fd154acf58e0f1f731396d2d36abfab805adc97b2c94481c25ceff59d48c184",
+      "sha256": "f2efcf4a2427291c5cc4ee5fd88aa2dd08576b3b79c9205e454a1c6d7b34b201",
       "executable": false
     },
     "docs/TRACKERS.md": {
@@ -3254,7 +3254,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "72a19da16ae8cc60e82aaff9ab3ddb76c016c3c5615b8d1b63cb767403e27900",
+      "sha256": "465cc0a9e2a1efab815ecd77d4886937100f6f094e0f295001be2aea9349d7c6",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -3634,7 +3634,7 @@
       "executable": false
     },
     "migrations/core/0100_teams_notification_episodes.sql": {
-      "sha256": "78a9d73e6b9de22ad769dd3b5d04ea5459a74e4f2330912cfff1c3cf3c14c079",
+      "sha256": "c72c9731592b9c855b64880dc66157f88fa0a1ade870833371448d6cbe9f1aa6",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -4878,7 +4878,7 @@
       "executable": false
     },
     "src/core/features/data/schema-inventory.json": {
-      "sha256": "772fdc683a00d492e733816bd46b08efb59f259103d4a8770db2d79823bb8fe8",
+      "sha256": "c0d8d7b22a5428dff84b8436f7c5c794db2dfd4bbed23fb746d80980bb89f4bc",
       "executable": false
     },
     "src/core/features/data/ui/audit-copy-choices.tsx": {
@@ -6033,6 +6033,10 @@
       "sha256": "390113286852dbd21f30ac9b31027aa82adecd8aa40b011995b8fe4e74487587",
       "executable": false
     },
+    "src/core/features/notifications/connector-episodes.ts": {
+      "sha256": "1a5b6e16256d8b71776027f97c43914f974a3f49d3d5f500fe2d3d21a70aaabb",
+      "executable": false
+    },
     "src/core/features/notifications/content.ts": {
       "sha256": "3230a6146a4e7def842be3b275e79439816d075f8d6024499c15ae49f75435e3",
       "executable": false
@@ -6102,7 +6106,7 @@
       "executable": false
     },
     "src/core/features/notifications/scheduled.ts": {
-      "sha256": "bcd54a0c9d17c6b359192e19cec9c01b3735b332b3a0cf4dc3bd03e9c6612e19",
+      "sha256": "93a9b94cf4c0302f9481a99e47e68fb7b96675662616093688e0c1e0b9055d09",
       "executable": false
     },
     "src/core/features/notifications/ui/review-notifications.tsx": {
@@ -7998,7 +8002,7 @@
       "executable": false
     },
     "tests/base/upgrade.test.ts": {
-      "sha256": "d337e6363b577dad5e45b792532321a54bd2228e7fabed380203d0fdda229dbc",
+      "sha256": "ca654ab67935992d63c1aed91201a8977c66bfe9dba2b111f34fd5d61f7072a7",
       "executable": false
     },
     "tests/base/uservoice-fixture.ts": {

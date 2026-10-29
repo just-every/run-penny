@@ -22,6 +22,7 @@ DROP TRIGGER teams_notice_failure;
 CREATE TABLE penny_connector_episodes (
  connector_key TEXT PRIMARY KEY, episode_id TEXT NOT NULL,
  operator_id TEXT NOT NULL REFERENCES operators(id) ON DELETE CASCADE,
+ announce INTEGER NOT NULL DEFAULT 1 CHECK(announce IN(0,1)),
  state TEXT NOT NULL CHECK(state IN('active','resolved')),
  opened_at TEXT NOT NULL, resolved_at TEXT
 );
@@ -35,7 +36,7 @@ BEGIN
  INSERT INTO penny_connector_episodes(connector_key,episode_id,operator_id,state,opened_at)
  VALUES(NEW.connector_key,lower(hex(randomblob(16))),NEW.operator_id,'active',NEW.created_at)
  ON CONFLICT(connector_key) DO UPDATE SET episode_id=excluded.episode_id,
- operator_id=excluded.operator_id,state='active',opened_at=excluded.opened_at,resolved_at=NULL
+ operator_id=excluded.operator_id,announce=1,state='active',opened_at=excluded.opened_at,resolved_at=NULL
  WHERE penny_connector_episodes.state='resolved';
 END;
 CREATE TRIGGER penny_connector_fault_resolve AFTER DELETE ON penny_connector_faults
@@ -69,14 +70,6 @@ BEGIN
 END;
 CREATE TRIGGER teams_connector_source_forget AFTER DELETE ON penny_teams_sources
 BEGIN DELETE FROM penny_connector_faults WHERE connector_key='teams' AND work_key='source:'||OLD.evidence_id; END;
--- Seed existing unresolved work without replaying historical alerts on upgrade.
-INSERT OR IGNORE INTO penny_connector_faults(connector_key,work_key,operator_id,created_at)
- SELECT 'teams','capture:'||j.id,s.actor_id,j.updated_at
- FROM penny_teams_jobs j JOIN penny_teams_settings s ON s.singleton=1 JOIN operators o ON o.id=s.actor_id WHERE j.state='failed';
-INSERT OR IGNORE INTO penny_connector_faults(connector_key,work_key,operator_id,created_at)
- SELECT 'teams','source:'||j.evidence_id,s.actor_id,s.updated_at
- FROM penny_teams_sources j JOIN penny_teams_settings s ON s.singleton=1 JOIN operators o ON o.id=s.actor_id
- WHERE j.check_failure IS NOT NULL AND j.check_claim IS NULL;
 
 CREATE TRIGGER discord_connector_capture_fault AFTER UPDATE OF state ON penny_discord_jobs
 WHEN (SELECT phase FROM data_state WHERE singleton=1)='idle'
@@ -102,14 +95,6 @@ BEGIN
 END;
 CREATE TRIGGER discord_connector_source_forget AFTER DELETE ON penny_discord_sources
 BEGIN DELETE FROM penny_connector_faults WHERE connector_key='discord' AND work_key='source:'||OLD.evidence_id; END;
--- Seed existing unresolved work without replaying historical alerts on upgrade.
-INSERT OR IGNORE INTO penny_connector_faults(connector_key,work_key,operator_id,created_at)
- SELECT 'discord','capture:'||j.id,s.actor_id,j.updated_at
- FROM penny_discord_jobs j JOIN penny_discord_settings s ON s.singleton=1 JOIN operators o ON o.id=s.actor_id WHERE j.state='failed';
-INSERT OR IGNORE INTO penny_connector_faults(connector_key,work_key,operator_id,created_at)
- SELECT 'discord','source:'||j.evidence_id,s.actor_id,s.updated_at
- FROM penny_discord_sources j JOIN penny_discord_settings s ON s.singleton=1 JOIN operators o ON o.id=s.actor_id
- WHERE j.check_failure IS NOT NULL AND j.check_claim IS NULL;
 
 CREATE TRIGGER integration_connector_fault AFTER UPDATE OF state ON integration_deliveries
 WHEN (SELECT phase FROM data_state WHERE singleton=1)='idle'
@@ -158,7 +143,7 @@ CREATE TRIGGER learning_connector_forgotten AFTER DELETE ON learning_runs
 BEGIN DELETE FROM penny_connector_faults WHERE work_key='learning:'||OLD.id; END;
 
 CREATE TRIGGER teams_notice_connector_episode_insert AFTER INSERT ON penny_connector_episodes
-WHEN NEW.state='active' AND (SELECT phase FROM data_state WHERE singleton=1)='idle'
+WHEN NEW.state='active' AND NEW.announce=1 AND (SELECT phase FROM data_state WHERE singleton=1)='idle'
 BEGIN
  INSERT OR IGNORE INTO penny_teams_events(id,operator_id,event,cadence,revision,created_at)
  SELECT 'failure:'||NEW.episode_id||':'||p.operator_id,p.operator_id,'failure',
@@ -169,7 +154,7 @@ BEGIN
 END;
 
 CREATE TRIGGER teams_notice_connector_episode_update AFTER UPDATE ON penny_connector_episodes
-WHEN NEW.state='active' AND OLD.episode_id<>NEW.episode_id AND (SELECT phase FROM data_state WHERE singleton=1)='idle'
+WHEN NEW.state='active' AND NEW.announce=1 AND OLD.episode_id<>NEW.episode_id AND (SELECT phase FROM data_state WHERE singleton=1)='idle'
 BEGIN
  INSERT OR IGNORE INTO penny_teams_events(id,operator_id,event,cadence,revision,created_at)
  SELECT 'failure:'||NEW.episode_id||':'||p.operator_id,p.operator_id,'failure',

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Keep the episode schema upgrade free of data writes so older backups remain restorable. The first idle Cron reconstructs existing connector failure custody without replaying prior alerts; restore keeps installation effects excluded.
 - Correct Teams token admission when a provider key supplies an empty channel-endorsement list; supplied endorsements must include msteams.
 - Emit one Teams inbox notification per portal submission and one per independent capture, with no new inbox event from assigning existing evidence. Closed-period discovery no longer lets an open weekly backlog block immediate work.
 - Migration 0100 adds durable connector failure episodes shared by capture and source checks, with one preference-selected alert until outstanding work recovers or is explicitly stopped. Discord, existing outbound integrations/trackers and Orbit source failures use the same episode custody. Archives exclude this installation state; apply with setup and retain expanded schema on rollback.

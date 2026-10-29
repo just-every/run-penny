@@ -3369,6 +3369,7 @@
       "connector_key",
       "episode_id",
       "operator_id",
+      "announce",
       "state",
       "opened_at",
       "resolved_at"

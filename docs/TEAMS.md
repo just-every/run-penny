@@ -126,7 +126,8 @@ Apply additive migrations `0098_teams_capture.sql`,
 deployment path. Keep the expanded schema on source rollback. Existing records,
 authority, snapshots, receipts and original files remain intact. Migration 0100
 replaces notification triggers, adds installation-only episode/fault custody and
-seeds existing Teams/Discord failures without replaying historical alerts. No
+leaves every existing row intact. The first idle scheduled run reconstructs
+existing Teams/Discord failure episodes without replaying historical alerts. No
 owner reconfiguration is needed.
 
 `tests/browser/teams-capture.mjs` and `tests/browser/teams-notifications.mjs`

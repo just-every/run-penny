@@ -92,6 +92,15 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  expect(await writerSnapshot()).toEqual(writerBefore)
  await applyD1Migrations(env.DB,migrations)
  expect(await writerSnapshot()).toEqual(writerBefore)
+ // First idle runtime reconstructs existing failure custody, not historical
+ // notification effects. Repeating initialization leaves all old rows intact.
+ const {initializeConnectorEpisodes}=await import('@/core/features/notifications/connector-episodes')
+ const {createPennyRuntime}=await import('@/core/app/runtime')
+ const events=await env.DB.prepare('SELECT count(*) n FROM penny_teams_events').first('n')
+ await initializeConnectorEpisodes(createPennyRuntime(env));await initializeConnectorEpisodes(createPennyRuntime(env))
+ expect(await writerSnapshot()).toEqual(writerBefore)
+ expect(await env.DB.prepare("SELECT announce,state FROM penny_connector_episodes WHERE connector_key='teams'").first()).toEqual({announce:0,state:'active'})
+ expect(await env.DB.prepare('SELECT count(*) n FROM penny_teams_events').first('n')).toBe(events)
  expect(new Uint8Array(await (await env.FILES.get('upgrade-preserved-bytes'))!.arrayBuffer())).toEqual(bytes)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
