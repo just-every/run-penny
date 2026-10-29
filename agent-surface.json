@@ -380,7 +380,7 @@
     },
     {
       "clauses": [
-        "BASE-AGENT-003"
+        "OWN-001"
       ],
       "reason": "installation"
     }
