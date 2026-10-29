@@ -3,6 +3,7 @@ import {WorkspaceClockPrompt} from '@/core/features/settings/ui/workspace-clock-
 import {PostalAddressPrompt} from '@/core/features/settings/ui/postal-address-prompt'
 import { ReviewNotifications } from '@/core/features/notifications/ui/review-notifications'
 import { useRef } from 'react'
+import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { Link, Outlet, useLocation } from '@tanstack/react-router'
 import { publicLandingConfig } from '@/core/app/extension-config'
 import { BrandRoot } from '@/core/ui/app/BrandRoot'
@@ -47,10 +48,13 @@ async function signOut() {
 function NavigationLinks({ onNavigate }: { readonly onNavigate?: () => void }) {
   const location = useLocation()
   const active = activeDestination(location.pathname)
+  // Learning is offered only once this installation can run it.
+  const [learning] = useOperatorResource<{ available: boolean }>('/api/operator/learning/availability')
+  const offered = navigation.filter((item) => item.to !== '/app/learning' || (learning.kind === 'ready' && learning.data.available))
 
   return (
     <nav className="grid gap-1" aria-label="Operator workspace">
-      {navigation.map((item) => {
+      {offered.map((item) => {
         const isActive = active === item.to
         return <Link key={item.to} to={item.to} onClick={onNavigate} className={`${itemClass} ${isActive ? currentClass : restClass}`} aria-current={isActive ? 'page' : undefined}><Icon name={item.icon} className="size-[22px] shrink-0" />{item.label}</Link>
       })}

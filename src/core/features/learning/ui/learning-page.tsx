@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
+import { OperatorPageHeader } from '@/core/app/ui/operator-page-header'
 import { useOperatorResource } from '@/core/app/ui/operator-resource'
 import { OperatorResourceFailure,OperatorResourceLoading,OperatorResourceNotFound,OperatorSessionExpired } from '@/core/app/ui/operator-resource-state'
 import { LearningHeader } from './learning-header'
@@ -37,6 +38,7 @@ export function LearningPage() {
  if(state.kind==='not_found')return <OperatorResourceNotFound title="Learning workspace unavailable">This installation does not have a learning workspace.</OperatorResourceNotFound>
  if(state.kind==='error')return <OperatorResourceFailure title={refreshAttempt===null?"Could not load learning.":"Could not refresh learning."} onRetry={refresh} status={state.status} message={state.message}/>
  if(!home)return null
+ if(!home.configuration.source&&!home.configuration.model&&!home.investigations.length)return <OperatorPageHeader eyebrow="Product lead workspace" title="Learning is off on this installation">It needs an AI model key and a secure outbound connection from your host. Meanwhile, <Link to="/app/feedback" className="font-semibold text-penny-ink underline underline-offset-4">record feedback</Link>: everything else in Penny works.</OperatorPageHeader>
  const source=home.sources.find(s=>s.id===investigation?.sourceId)
  const correct=()=>{if(investigation&&artifact){setTarget({investigationId:investigation.id,id:`learning-correction-${artifact.id}`,kind:'correct'});selectTab('learning')}}
  const disconnect=()=>{if(investigation&&source)setTarget({investigationId:investigation.id,id:`learning-source-${source.id}`,kind:'source'})}
