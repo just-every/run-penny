@@ -61,6 +61,10 @@
   overflow-wrap: anywhere;
 }
 
+/* The demo's exit link, set beside the wordmark by rer, wraps at word breaks when the header is short of room (it narrows to its
+   longest word); the app's break-anywhere rule would split it letter by letter. */
+[data-rer-demo-exit] { overflow-wrap: normal; }
+
 /* The operator workspace (OperatorAppShell's root) works on a plain sheet: no grain, a paper closer to white and cards a
    shade whiter still, so long working screens read as a calm tool. The landing, docs, portal, sign-in and setup keep the
    brand's grained paper. */

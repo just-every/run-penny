@@ -63,7 +63,7 @@ function SignOutButton({ className, icon = false }: { readonly className: string
 }
 
 function Brand({ small = false }: { readonly small?: boolean }) {
-  return <Link to="/app/overview" className="inline-flex min-h-11 items-center rounded-lg focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-penny-accent"><Wordmark name={publicLandingConfig.ownerName} small={small} /></Link>
+  return <Link to="/app/overview" className="inline-flex min-h-11 max-w-full min-w-0 items-center rounded-lg focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-penny-accent"><Wordmark name={publicLandingConfig.ownerName} small={small} /></Link>
 }
 
 export function OperatorAppShell() {
