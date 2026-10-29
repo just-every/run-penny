@@ -8,7 +8,7 @@
           "userComment": {
             "text": "Please add caf\u00e9 exports. Contact reviewer@example.test. Source googleplay.",
             "lastModified": {
-              "seconds": "1793190600"
+              "seconds": "1793190600", "nanos": 123456789
             },
             "starRating": 4,
             "appVersionName": "3.2.1",

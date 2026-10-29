@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Preserve review timestamp precision and Google Play nanos; bind review links to
+  the selected listing and reject malformed or scope-changing cursors. Check
+  Product Hunt’s comment resource and public-page review identity rather than
+  treating any successful page as proof of presence. Extend the single review
+  sanity journey with schema-enforced GraphQL, pagination on all seven sites,
+  independent destination fixtures, removal and captured-contact outreach with
+  an ordinary contact as a mail-edge control. Add a per-status outreach preview,
+  explicit audited selection and one-shot recipient intents that exclude review
+  evidence. Migration 0099 adds default-off columns and restores retain existing
+  mail holds. CAP-020 text/status and all contract totals remain unchanged. Synthetic link
+  destinations prove only the local contract; independent vendor permalink proof
+  remains open, including App Store review-ID targeting.
+
 - Add CAP-020 review capture for seven selected vendor listings, daily accountable
   cursor work, one inbox identity per site/review, source-change/removal custody,
   redaction before storage and exact UTF-8 extraction suggestions. Owner settings

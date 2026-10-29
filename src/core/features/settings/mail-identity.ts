@@ -14,13 +14,13 @@ export function identityHeaders(identity:MailIdentity|null,from:string){
  const mailbox=address.match(/<([^<>]+)>$/u)?.[1]??address
  return {from:name?`${name} <${mailbox}>`:address,...(identity?.replyTo?{replyTo:identity.replyTo}:{})}
 }
-export async function requesterMailFooter(runtime:PennyRuntime,requesterId:string,addressId:string,requestId?:string,requestSlugs:readonly string[]=[]){
+export async function requesterMailFooter(runtime:PennyRuntime,requesterId:string,addressId:string,requestId?:string,requestSlugs:readonly string[]=[],capturedContact=false){
  const identity=await mailIdentity(runtime)
  const permission=await runtime.database.binding.prepare(`SELECT p.grant_origin AS origin FROM requester_update_permissions p
  LEFT JOIN request_canonical_roots root ON root.origin_id=p.request_id WHERE p.requester_id=? AND p.requester_address_id=? AND p.revoked_at IS NULL AND p.suppressed_at IS NULL
  AND ((p.request_id IS NULL AND p.source='subscription' AND ? IS NULL AND json_array_length(?)=0) OR root.canonical_id=? OR root.canonical_id IN(SELECT id FROM requests WHERE slug IN(SELECT value FROM json_each(?))))
  ORDER BY CASE p.grant_origin WHEN 'author_subscription' THEN 0 WHEN 'vote_subscription' THEN 1 ELSE 2 END,p.granted_at LIMIT 1`)
  .bind(requesterId,addressId,requestId??null,JSON.stringify(requestSlugs),requestId??null,JSON.stringify(requestSlugs)).first<{origin:string}>()
- const reason=permission?.origin==='author_subscription'?'You posted a request and subscribed to its updates.':permission?.origin==='vote_subscription'?'You voted for a request and subscribed to its updates.':'You asked to receive these updates.'
+ const reason=capturedContact?'The operator chose to send this update because your contact is linked through captured evidence.':permission?.origin==='author_subscription'?'You posted a request and subscribed to its updates.':permission?.origin==='vote_subscription'?'You voted for a request and subscribed to its updates.':'You asked to receive these updates.'
  return `\n\n${reason}${identity?.postalAddress?`\n${identity.postalAddress}`:''}`
 }

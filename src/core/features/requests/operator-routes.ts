@@ -1,3 +1,4 @@
+import {capturedPreview} from '../notifications/captured-contacts'
 import {publicationFlags} from '../ai/drafts'
 import { registerVoteImportanceSettings } from './vote-importance-settings'
 import { registerProxyVoteRoutes } from './proxy-vote-routes'
@@ -131,6 +132,13 @@ export function registerRequestOperatorRoutes(app: Hono<OperatorMutationEnvironm
       await new RequestOperatorRepository(context.get('runtime').database).moderateCommentEdit({ ...input, editId: editId.data, operatorId: operator.id, now: now() })
       return context.json({ ok: true })
     })
+  })
+
+  app.get('/api/operator/requests/:slug/captured-contacts',async context=>{
+    const {db}=await integrationOperator(context.get('runtime'),context.req.raw)
+    const result=await capturedPreview(db,context.req.param('slug'))
+    context.header('Cache-Control','private, no-store')
+    return result?context.json(result):context.json({error:'not_found'},404)
   })
 
   app.post('/api/operator/requests/:slug/status-updates', async (context) => {

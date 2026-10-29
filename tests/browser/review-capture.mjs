@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import {buildSchema,graphql} from 'graphql'
 import {generateKeyPairSync,verify} from 'node:crypto'
 import {readFile,mkdir} from 'node:fs/promises'
 import {resolve,join} from 'node:path'
@@ -7,6 +8,8 @@ import {startBrowserRuntime} from './base-runtime.mjs'
 import {browserOptions} from './browser-options.mjs'
 const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/review-capture');assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const sites=['g2','capterra','trustradius','trustpilot','producthunt','appstore','googleplay'],fixtures=Object.fromEntries(await Promise.all(sites.map(async s=>[s,await readFile(new URL('../fixtures/reviews/'+s+(['capterra','trustradius'].includes(s)?'.html':'.json'),import.meta.url),'utf8')]))),reads=[],modelReads=[]
+const phSchema=buildSchema(await readFile(new URL('../fixtures/reviews/producthunt-schema.graphql',import.meta.url),'utf8'))
+const destinations=await Promise.all(JSON.parse(await readFile(new URL('../fixtures/reviews/destinations.json',import.meta.url),'utf8')).map(async d=>({...d,html:await readFile(new URL('../fixtures/reviews/destinations/'+d.file,import.meta.url),'utf8')})))
 const apple=generateKeyPairSync('ec',{namedCurve:'prime256v1'}),googleKey=generateKeyPairSync('rsa',{modulusLength:2048}),renewals=[];let trustRefresh='synthetic-trustpilot-refresh-original'
 const appleCredential={kind:'appstore',issuerId:'12345678-1234-4234-8234-123456789012',keyId:'ABCDEF1234',privateKey:apple.privateKey.export({type:'pkcs8',format:'pem'})},googleCredential={kind:'googleplay',clientEmail:'reviews@fixture.iam.gserviceaccount.com',privateKey:googleKey.privateKey.export({type:'pkcs8',format:'pem'})}
 const listing=s=>s==='appstore'?'123456789':s==='googleplay'?'com.example.penny':'penny'
@@ -26,9 +29,30 @@ const edge={name:'reviews-network-edge',modules:true,compatibilityDate:'2026-08-
  }
  const s=u.hostname==='data.g2.com'?'g2':u.hostname==='api.appstoreconnect.apple.com'?'appstore':u.hostname==='androidpublisher.googleapis.com'?'googleplay':u.hostname==='api.trustpilot.com'?'trustpilot':u.hostname==='api.producthunt.com'?'producthunt':u.hostname==='www.capterra.com'?'capterra':u.hostname==='www.trustradius.com'?'trustradius':null
  assert.ok(s,'No request may escape the selected vendor interfaces');reads.push({site:s,url:u.href,method:request.method});await onRead(s)
- if(['capterra','trustradius'].includes(s)){assert.equal(request.headers.get('Authorization'),null);assert.equal(u.pathname,'/products/penny/reviews');return new Response(fixtures[s],{headers:{'Content-Type':'text/html'}})}
+ if(['capterra','trustradius'].includes(s)){
+  assert.equal(request.headers.get('Authorization'),null);assert.equal(request.method,'GET')
+  if(u.pathname.endsWith('/'+s+'-review-1')){
+   if(mode==='markup-unavailable')return new Response('<html>Challenge</html>')
+   const html=mode==='public-removed'?'<script type="application/ld+json">'+JSON.stringify({'@type':'SoftwareApplication',url:`https://www.${s}.com/products/penny/reviews`,review:[]})+'</script>':destinations.find(d=>d.site===s).html
+   return new Response(html,{headers:{'Content-Type':'text/html'}})
+  }
+  assert.equal(u.pathname,'/products/penny/reviews')
+  const page=u.searchParams.get('page');let html=fixtures[s]
+  if(mode==='rolling-omission')html=html.replace(/"review": \[.*?\]}/,'"review": []}')
+  if(!page)html+='<link rel="next" href="?page=2">'
+  else assert.equal(page,'2')
+  return new Response(html,{headers:{'Content-Type':'text/html'}})
+ }
  if(s==='appstore'){const [h,p,signature]=request.headers.get('Authorization').slice(7).split('.'),claims=JSON.parse(Buffer.from(p,'base64url'));assert.equal(claims.iss,appleCredential.issuerId);assert.equal(claims.aud,'appstoreconnect-v1');assert.equal(JSON.parse(Buffer.from(h,'base64url')).kid,appleCredential.keyId);assert.ok(verify('sha256',Buffer.from(h+'.'+p),{key:apple.publicKey,dsaEncoding:'ieee-p1363'},Buffer.from(signature,'base64url')))}else assert.equal(request.headers.get('Authorization'),'Bearer synthetic-review-token-'+s)
- if(s==='producthunt'){const body=await request.json();assert.equal(body.variables.id,listing(s));assert.ok(body.query.includes('comments'));return Response.json(JSON.parse(fixtures[s]))}
+ if(s==='producthunt'){
+  assert.equal(request.method,'POST');const body=await request.json()
+  const result=await graphql({schema:phSchema,source:body.query,variableValues:body.variables,rootValue:{
+   post:({id})=>{assert.equal(id,listing(s));const post=structuredClone(JSON.parse(fixtures[s]).data.post);post.comments=({first,after})=>{assert.equal(first,50);assert.ok(after===null||after==='ph-page-2');const comments=structuredClone(JSON.parse(fixtures[s]).data.post.comments);comments.pageInfo=after?{hasNextPage:false,endCursor:null}:{hasNextPage:true,endCursor:mode==='bad-ph-cursor'?'https://other.test/': 'ph-page-2'};return comments};return post},
+   comment:({id})=>{assert.equal(id,'producthunt-review-1');return mode==='public-removed'?null:JSON.parse(fixtures[s]).data.post.comments.edges[0].node},
+  }})
+  assert.equal(result.errors,undefined,JSON.stringify(result.errors));return Response.json(result)
+ }
+
  const detail=s==='g2'?u.pathname.endsWith('/g2-review-1'):s==='appstore'?u.pathname.endsWith('/customerReviews/appstore-review-1'):s==='googleplay'?u.pathname.endsWith('/reviews/googleplay-review-1'):u.pathname.endsWith('/reviews/trustpilot-review-1')
  if(detail)return Response.json({}, {status:mode==='removed'&&s==='googleplay'?404:200})
  if(s==='g2'&&mode==='revoked')return Response.json({error:'scope revoked'},{status:403})
@@ -37,8 +61,13 @@ const edge={name:'reviews-network-edge',modules:true,compatibilityDate:'2026-08-
  if(s==='googleplay')assert.equal(u.pathname,`/androidpublisher/v3/applications/${listing(s)}/reviews`)
  if(s==='trustpilot')assert.equal(u.pathname,`/v1/private/business-units/${listing(s)}/reviews`)
  const data=JSON.parse(fixtures[s])
- if(s==='appstore'){if(u.searchParams.get('page')==='second')data.data=[];else data.links.next=`https://api.appstoreconnect.apple.com/v1/apps/${listing(s)}/customerReviews?limit=50&page=second`}
+ if(s==='appstore'){if(u.searchParams.get('cursor')==='app-page-2')data.data=[];else data.links.next=`https://api.appstoreconnect.apple.com/v1/apps/${listing(s)}/customerReviews?limit=50&cursor=app-page-2`}
  if(s==='g2'&&['extra-review','budget'].includes(mode)){const number=mode==='budget'?3:2;data.data[0].id='g2-review-'+number;data.data[0].attributes.url='https://www.g2.com/products/penny/reviews/penny-review-'+number}
+ if(s==='g2'&&mode==='wrong-link')data.data[0].attributes.url='https://www.g2.com/products/another-product/reviews/foreign'
+ if(s==='g2'&&mode==='bad-g2-cursor')data.links.next='https://data.g2.com/api/v1/survey-responses?filter[product_id]=another&page[size]=50&page[number]=2'
+ if(s==='g2'&&mode==='normal')data.links.next=u.searchParams.has('page[number]')?null:'https://data.g2.com/api/v1/survey-responses?filter[product_id]=penny&page[size]=50&page[number]=2'
+ if(s==='googleplay'&&!u.searchParams.has('pageToken'))data.tokenPagination={nextPageToken:'google-page-2'}
+ if(s==='trustpilot')data.reviews=u.searchParams.get('page')==='1'?Array(50).fill(data.reviews[0]):[]
  if(s==='g2'&&mode==='changed')data.data[0].attributes.body='Edited source: request already captured.'
  if(s==='googleplay'&&mode==='removed')data.reviews=[]
  return Response.json(data)
@@ -55,7 +84,7 @@ try{
  await json('/api/operator/boards',{slug:'feedback',name:'Feedback',visibility:'public'},operator,'POST',201)
  const closest=await json('/api/operator/requests',{title:'Scheduled exports',description:'An existing unpublished request.',boardSlug:'feedback'},operator,'POST',201)
  const path='/api/operator/integrations/reviews'
- const connection=s=>{if(s==='trustpilot')trustRefresh='synthetic-trustpilot-refresh-original';return {site:s,listing:listing(s),...(['capterra','trustradius'].includes(s)?{publicUrl:`https://www.${s}.com/products/penny/reviews`,termsAccepted:true}:s==='appstore'?{credential:appleCredential}:s==='googleplay'?{credential:googleCredential}:s==='trustpilot'?{credential:{kind:'trustpilot',clientId:'synthetic-client',clientSecret:'synthetic-client-secret',refreshToken:trustRefresh}}:{token:'synthetic-review-token-'+s})}}
+ const connection=s=>{if(s==='trustpilot')trustRefresh='synthetic-trustpilot-refresh-original';return {site:s,listing:listing(s),...(['capterra','trustradius'].includes(s)?{publicUrl:`https://www.${s}.com/products/penny/reviews`,termsAccepted:true}:s==='appstore'?{credential:appleCredential}:s==='googleplay'?{credential:googleCredential}:s==='trustpilot'?{credential:{kind:'trustpilot',clientId:'synthetic-client',clientSecret:'synthetic-client-secret',refreshToken:trustRefresh}}:{token:'synthetic-review-token-'+s,publicUrl:s==='g2'?'https://www.g2.com/products/penny/reviews':'https://www.producthunt.com/posts/penny'})}}
  await send(path,connection('g2'),{},'POST',401);await send(path,connection('g2'),{...operator,Origin:'https://evil.test'},'POST',403)
  await send(path,{...connection('googleplay'),intervalHours:169},operator,'POST',400)
  await send(path,{...connection('capterra'),termsAccepted:false},operator,'POST',400)
@@ -63,14 +92,14 @@ try{
  const context=await browser.newContext({viewport:{width:1440,height:900}});contexts.push(context);await context.addCookies([{name:Cookie.split('=')[0],value:Cookie.slice(Cookie.indexOf('=')+1),url:origin}]);const page=await context.newPage(),errors=[]
  page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>{if(/^https?:/.test(request.url())&&new URL(request.url()).origin!==origin)errors.push('External browser request: '+new URL(request.url()).hostname)})
  await page.goto(origin+'/app/settings#review-capture',{waitUntil:'networkidle'});const panel=page.getByRole('region',{name:'Review capture',exact:true})
- await panel.getByRole('combobox',{name:/^Review site/}).selectOption('g2');await panel.getByLabel('Product listing ID',{exact:true}).fill(listing('g2'));await panel.getByLabel('Vendor access token',{exact:true}).fill('synthetic-review-token-g2');await panel.getByRole('button',{name:'Connect review listing',exact:true}).click();await panel.getByText('Review settings saved.',{exact:true}).waitFor();assert.equal(await panel.getByLabel('Vendor access token',{exact:true}).inputValue(),'')
+ await panel.getByRole('combobox',{name:/^Review site/}).selectOption('g2');await panel.getByLabel('Product listing ID',{exact:true}).fill(listing('g2'));await panel.getByLabel('Public review page URL',{exact:true}).fill('https://www.g2.com/products/penny/reviews');await panel.getByLabel('Vendor access token',{exact:true}).fill('synthetic-review-token-g2');await panel.getByRole('button',{name:'Connect review listing',exact:true}).click();await panel.getByText('Review settings saved.',{exact:true}).waitFor();assert.equal(await panel.getByLabel('Vendor access token',{exact:true}).inputValue(),'')
  for(const s of sites.filter(s=>s!=='g2'))await json(path,connection(s),operator,'POST',201)
  let status=await json(path,undefined,operator);assert.equal(status.connections.length,7);assert.ok(status.connections.every(c=>c.interval_hours===24));assert.ok(status.connections.every(c=>c.ownerName==='Review owner'));assert.ok(!JSON.stringify(status).includes('synthetic-review-token'))
  await runtime.schedule();await runtime.restart();await runtime.schedule()
  let cards=(await json('/api/operator/evidence',undefined,operator)).items;cards=cards.filter(c=>c.review)
  assert.equal(cards.length,7,JSON.stringify(await json(path,undefined,operator)))
  const original=new Map(cards.map(c=>[c.review.site,c])),span='Please add café exports.'
- for(const c of cards){assert.equal(c.sourceType,'review');assert.equal(c.requester,null);assert.equal(c.namedSpeaker,'Casey Reviewer '+c.review.site);assert.match(c.wording,/\[REDACTED:email\]/);assert.ok(Number.isFinite(Date.parse(c.observedAt)));assert.equal(c.review.rating,c.review.site==='producthunt'?null:4);assert.ok(c.review.url.startsWith('https://'));assert.ok(c.review.url.includes(c.review.site==='appstore'?'appstore-review-1':c.review.site+'-review-1')||c.review.site==='g2');const proposals=await json('/api/operator/evidence/'+c.id+'/review-proposals',undefined,operator);assert.equal(proposals.length,1,c.review.site+JSON.stringify(c.review));const p=proposals[0];assert.equal(Buffer.from(c.wording).subarray(p.start_byte,p.end_byte).toString('utf8'),span);assert.equal(p.span,span);assert.equal(p.closest_request_id,closest.id);assert.equal(p.closest_request_slug,closest.slug)}
+ for(const c of cards){assert.equal(c.sourceType,'review');assert.equal(c.requester,null);assert.equal(c.namedSpeaker,'Casey Reviewer '+c.review.site);assert.match(c.wording,/\[REDACTED:email\]/);assert.equal(c.observedAt,['capterra','trustradius'].includes(c.review.site)?'2026-10-28T14:30:00.123456789+02:00':'2026-10-28T12:30:00.123456789Z');assert.equal(c.review.rating,c.review.site==='producthunt'?null:4);assert.ok(c.review.url.startsWith('https://'));assert.ok(c.review.url.includes(c.review.site==='appstore'?'appstore-review-1':c.review.site+'-review-1')||c.review.site==='g2');const proposals=await json('/api/operator/evidence/'+c.id+'/review-proposals',undefined,operator);assert.equal(proposals.length,1,c.review.site+JSON.stringify(c.review));const p=proposals[0];assert.equal(Buffer.from(c.wording).subarray(p.start_byte,p.end_byte).toString('utf8'),span);assert.equal(p.span,span);assert.equal(p.closest_request_id,closest.id);assert.equal(p.closest_request_slug,closest.slug)}
  await send('/api/operator/requests/'+closest.slug+'/proxy-votes',{contact:{displayName:'Review source',email:'not-a-contact@example.test'},source:'Review',evidenceId:original.get('g2').id},operator,'POST',409)
  assert.equal(modelReads.length,7);assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requesters').first('n'),0);assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions').first('n'),0);assert.equal(runtime.outbox.length,0);assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requests').first('n'),1,'Extraction publishes and creates nothing automatically')
  const report=await json('/api/operator/settings/ai',undefined,operator);assert.equal(report.report.meteredMicros,140)
@@ -78,6 +107,20 @@ try{
  await runtime.schedule(tomorrow);await runtime.schedule(tomorrow+1000);await runtime.restart();await runtime.schedule(tomorrow+2000)
  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_review_sources').first('n'),7);assert.equal(modelReads.length,7,'Re-reading a review never repeats extraction');assert.ok(renewals.includes('googleplay'));assert.ok(renewals.filter(s=>s==='trustpilot').length>1,'Rotated refresh credentials survive the next scheduled read')
  assert.ok(reads.every(r=>!r.url.includes('unselected')))
+
+ // Scope-changing provider data/cursors fail without a capture or foreign read.
+ for(const [failureMode,site,reason] of [['wrong-link','g2','reviews_link_scope_invalid'],['bad-g2-cursor','g2','reviews_cursor_scope_invalid'],['bad-ph-cursor','producthunt','reviews_work_failed']]){
+  mode=failureMode;await json(path,connection(site),operator,'POST',201);await runtime.schedule()
+  assert.equal((await json(path,undefined,operator)).connections.find(c=>c.site===site).state,'failed',failureMode);assert.equal((await json(path,undefined,operator)).connections.find(c=>c.site===site).failure,reason)
+  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_review_sources').first('n'),7)
+  mode='normal';await json(path,connection(site),operator,'POST',201);await runtime.schedule();await runtime.schedule()
+ }
+ assert.ok(reads.some(r=>r.site==='g2'&&r.url.includes('page%5Bnumber%5D=2'))||reads.some(r=>r.site==='g2'&&r.url.includes('page[number]=2')))
+ assert.ok(reads.some(r=>r.site==='googleplay'&&r.url.includes('pageToken=google-page-2')))
+ assert.ok(reads.some(r=>r.site==='appstore'&&r.url.includes('cursor=app-page-2')))
+ assert.ok(reads.some(r=>r.site==='trustpilot'&&r.url.includes('page=2')))
+ for(const site of ['capterra','trustradius'])assert.ok(reads.some(r=>r.site===site&&r.url.endsWith('?page=2')))
+ assert.ok(reads.every(r=>!r.url.includes('another')&&!r.url.includes('other.test')))
 
  // Interrupted authorization exchange is durable and never silently replayed.
  await json(path,connection('googleplay'),operator,'POST',201)
@@ -123,9 +166,13 @@ try{
  mode='normal'
 
  // Follow each original-review link against its recorded public-page edge, with no referrer.
- await context.route(/^https:\/\//,async route=>{const wanted=cards.find(c=>{const u=new URL(c.review.url);u.hash='';return u.href===route.request().url()});assert.ok(wanted,'Only an explicitly selected review link may open');assert.equal(route.request().headers().referer,undefined);await route.fulfill({status:200,contentType:'text/html',body:'<!doctype html><h1>Original review '+wanted.review.reviewId+'</h1>'})})
+ await context.route(/^https:\/\//,async route=>{
+  const destination=destinations.find(d=>{const u=new URL(d.url);u.hash='';return u.href===route.request().url()})
+  assert.ok(destination,'Only a fixed independently authored destination fixture may open');assert.equal(route.request().headers().referer,undefined)
+  await route.fulfill({status:200,contentType:'text/html',body:destination.html})
+ })
  await page.goto(origin+'/app/feedback',{waitUntil:'networkidle'})
- for(const c of cards){const popup=page.waitForEvent('popup');await page.locator('#evidence-'+c.id).getByRole('link',{name:'Open original review',exact:true}).click();const opened=await popup;await opened.getByRole('heading',{name:'Original review '+c.review.reviewId,exact:true}).waitFor();await opened.close()}
+ for(const c of cards){const popup=page.waitForEvent('popup');await page.locator('#evidence-'+c.id).getByRole('link',{name:'Open original review',exact:true}).click();const opened=await popup;const expected=destinations.find(d=>d.site===c.review.site);assert.equal(opened.url(),expected.url);await opened.locator('[data-review-id="'+expected.id+'"]').waitFor();assert.equal(c.review.reviewId,expected.id);await opened.close()}
  // Exact-SHA screenshots show each changed screen once at both supported widths.
  const axe=await readFile(new URL('../../node_modules/axe-core/axe.min.js',import.meta.url),'utf8')
  for(const width of [1440,390]){await page.setViewportSize({width,height:width===390?844:900});for(const screen of ['settings','inbox']){
@@ -165,6 +212,44 @@ try{
  const budgetReview=(await json('/api/operator/evidence',undefined,operator)).items.find(c=>c.review?.reviewId==='g2-review-3');assert.ok(budgetReview);assert.equal(budgetReview.review.aiFailure,'ai_budget_exhausted')
  await json('/api/operator/evidence/'+budgetReview.id+'/review',{reviewed:true,reason:'Manual triage remains available without AI.'},operator)
  assert.equal((await json('/api/operator/evidence',undefined,operator)).items.find(c=>c.id===budgetReview.id).reviewState,'reviewed');const manual=await json('/api/operator/evidence/'+budgetReview.id+'/request',{title:'Review improvements',description:'An operator chose this request.',boardSlug:'feedback'},operator,'POST',201);assert.equal(await runtime.db.prepare('SELECT public_state FROM requests WHERE id=?').bind(manual.id).first('public_state'),'unpublished');assert.equal(runtime.outbox.length,0)
+ await json('/api/operator/settings/workspace-clock',{timezone:'UTC',quietEnabled:false,quietStart:20,quietEnd:8},operator,'PUT')
+ // Select captured-contact outreach and publish with all seven reviews linked.
+ // An ordinary explicit contact is the positive control: the mail path really runs.
+ for(const c of new Map((await json('/api/operator/evidence',undefined,operator)).items.filter(c=>c.review).map(c=>[c.review.site,c])).values())await json('/api/operator/evidence/'+c.id+'/links',{target:'request',targetId:manual.id},operator,'PUT')
+ await json('/api/operator/requests/'+manual.slug+'/proxy-votes',{contact:{displayName:'Explicit customer',email:'customer@example.test'},source:'An operator-recorded support conversation'},operator,'POST',200)
+ await json('/api/public/identity/email',{email:'customer@example.test',displayName:'Explicit customer'},{},'POST',202)
+ const verifyLink=runtime.outbox.findLast(m=>m.email==='customer@example.test').url,verifyToken=new URLSearchParams(new URL(verifyLink).hash.slice(1)).get('token')
+ await json('/api/public/identity/email/verify',{token:verifyToken},{})
+ const contactMailStart=runtime.outbox.length
+ await json('/api/operator/requests/'+manual.slug+'/moderate',{verdict:'approved',title:'Review improvements',description:'An operator-approved public request.'},operator)
+ const audience=await json('/api/operator/requests/'+manual.slug+'/captured-contacts',undefined,operator)
+ assert.equal(audience.count,1);assert.equal(audience.contacts[0].email,'customer@example.test');assert.equal(audience.postalAddressRecorded,true)
+ const publication={status:'planned',body:'Exports are planned.',notifyCapturedContacts:true,idempotencyKey:'review-outreach-proof'}
+ await json('/api/operator/requests/'+manual.slug+'/status-updates',publication,operator)
+ await json('/api/operator/requests/'+manual.slug+'/status-updates',publication,operator)
+ assert.equal(await runtime.db.prepare('SELECT count(*) n FROM notification_intents WHERE captured_contact=1').first('n'),1)
+ assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions').first('n'),0)
+ // Mail's one-click unsubscribe requires the installation's HTTPS origin.
+ // The outbound edge remains fake; no hosted endpoint is contacted.
+ await runtime.configure({APP_ORIGIN:'https://penny.example.test'})
+ // First drain assigns a batch; move only this test clock's due boundary.
+ await runtime.schedule();await runtime.db.prepare("UPDATE notification_batches SET next_attempt_at='2000-01-01T00:00:00Z',window_end='2000-01-01T00:00:00Z' WHERE state='queued'").run();await runtime.schedule()
+ assert.deepEqual(runtime.outbox.slice(contactMailStart).map(m=>m.email),['customer@example.test'])
+ await runtime.restart();await runtime.schedule();assert.equal(runtime.outbox.length,contactMailStart+1)
+ await runtime.configure({APP_ORIGIN:origin})
+ const audit=await runtime.db.prepare("SELECT details_json FROM audit_entries WHERE action='request.status_changed' AND entity_id=? ORDER BY rowid DESC LIMIT 1").bind(manual.id).first('details_json');assert.deepEqual(JSON.parse(audit),{notifyCapturedContacts:1,capturedRecipientCount:1})
+ // A 200 rolling listing omission is distinct from a 200 individual tombstone.
+ mode='rolling-omission';for(const site of ['capterra','trustradius'])await json(path+'/actions',{id:site+'/penny',action:'retry'},operator)
+ await runtime.schedule();await runtime.schedule()
+ assert.equal((await json('/api/operator/evidence',undefined,operator)).items.filter(c=>['capterra','trustradius'].includes(c.review?.site)&&c.review.sourceState==='current').length,2)
+ mode='markup-unavailable';await runtime.db.prepare("UPDATE penny_review_sources SET next_check='2000-01-01T00:00:00Z' WHERE site='capterra'").run();await runtime.schedule()
+ assert.equal((await json('/api/operator/evidence',undefined,operator)).items.find(c=>c.review?.site==='capterra').review.checkFailure,'reviews_public_markup_unavailable')
+ mode='public-removed';for(const site of ['capterra','trustradius','producthunt'])await json(path,{...connection(site),purgeDays:1},operator,'POST',201)
+ await runtime.schedule();await runtime.db.prepare("UPDATE penny_review_sources SET next_check='2000-01-01T00:00:00Z' WHERE site IN('capterra','trustradius','producthunt')").run();await runtime.schedule()
+ assert.equal((await json('/api/operator/evidence',undefined,operator)).items.filter(c=>['capterra','trustradius','producthunt'].includes(c.review?.site)&&c.review.sourceState==='removed').length,3)
+ for(const site of ['capterra','trustradius','producthunt'])await json(path+'/actions',{id:site+'/penny',action:'pause'},operator)
+ await runtime.schedule(Date.now()+2*86400000)
+ assert.equal((await json('/api/operator/evidence',undefined,operator)).items.filter(c=>['capterra','trustradius','producthunt'].includes(c.review?.site)&&c.review.sourceState==='purged'&&c.wording==='[Source removed]'&&c.namedSpeaker===null).length,3)
  mode='revoked';await json(path+'/actions',{id:'g2/penny',action:'retry'},operator);await runtime.schedule();assert.equal((await json(path,undefined,operator)).connections.find(c=>c.site==='g2').failure,'reviews_access_revoked');assert.equal(await runtime.db.prepare("SELECT count(*) n FROM penny_review_sources WHERE site='g2' AND source_state<>'purged'").first('n'),0,'Explicit listing access revocation purges every retained excerpt at its policy window')
  const visitor=await browser.newPage();await visitor.goto(origin+'/portal/feedback',{waitUntil:'networkidle'});assert.doesNotMatch(await visitor.content(),/Casey Reviewer|reviewer@example|café exports|g2-review|trustpilot-review/);await visitor.close();await send(path,undefined,{},'GET',401);assert.deepEqual(errors,[])
  console.log('CAP-020 public-door journey passed: seven providers, exact-byte proposals, private replay-safe capture, durable recovery, source changes/removal, responsive UI, archives, restore holds and erasure.')

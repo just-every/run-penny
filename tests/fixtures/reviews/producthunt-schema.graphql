@@ -1,0 +1,14 @@
+# Read-interface excerpt, independently transcribed from Product Hunt v2's
+# published GraphQL reference on 29 Oct 2026 (not inferred from Penny's query):
+# https://api-v2-docs.producthunt.com/query/post/
+# https://api-v2-docs.producthunt.com/query/comment/
+# https://api-v2-docs.producthunt.com/object/post/
+# https://api-v2-docs.producthunt.com/object/comment/
+scalar DateTime
+type Query { post(id: ID, slug: String): Post, comment(id: ID!): Comment }
+type Post { id: ID!, url: String!, comments(first: Int, after: String, last: Int, before: String): CommentConnection! }
+type CommentConnection { edges: [CommentEdge!]!, pageInfo: PageInfo! }
+type CommentEdge { node: Comment! }
+type Comment { id: ID!, body: String!, createdAt: DateTime!, url: String!, user: User! }
+type User { name: String! }
+type PageInfo { hasNextPage: Boolean!, endCursor: String }

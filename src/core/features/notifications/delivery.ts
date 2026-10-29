@@ -72,7 +72,7 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   const sender=providerMail(runtime)
   if(!sender){await finish('failed','mail_configuration_missing');return}
   const mailHeaders=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!)
-  const footer=await requesterMailFooter(runtime,batch.requesterId,batch.addressId,recipient.requestId)
+  const footer=await requesterMailFooter(runtime,batch.requesterId,batch.addressId,recipient.requestId,[],recipient.events.some(e=>Boolean(e.capturedContact)))
   const requestLink=await unsubscribeUrl(runtime,{...batch,email:recipient.email},recipient.requestId)
   const globalLink=await unsubscribeUrl(runtime,{...batch,email:recipient.email},'all')
   // This claim made no provider call: retain its audit and sealed membership,

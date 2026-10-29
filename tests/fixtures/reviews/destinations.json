@@ -1,0 +1,9 @@
+[
+ {"site":"g2","id":"g2-review-1","url":"https://www.g2.com/products/penny/reviews/penny-review-1","file":"g2.html"},
+ {"site":"capterra","id":"capterra-review-1","url":"https://www.capterra.com/products/penny/reviews/capterra-review-1","file":"capterra.html"},
+ {"site":"trustradius","id":"trustradius-review-1","url":"https://www.trustradius.com/products/penny/reviews/trustradius-review-1","file":"trustradius.html"},
+ {"site":"trustpilot","id":"trustpilot-review-1","url":"https://www.trustpilot.com/reviews/trustpilot-review-1","file":"trustpilot.html"},
+ {"site":"producthunt","id":"producthunt-review-1","url":"https://www.producthunt.com/posts/penny#comment-producthunt-review-1","file":"producthunt.html"},
+ {"site":"appstore","id":"appstore-review-1","url":"https://apps.apple.com/app/id123456789?see-all=reviews&reviewId=appstore-review-1","file":"appstore.html"},
+ {"site":"googleplay","id":"googleplay-review-1","url":"https://play.google.com/store/apps/details?id=com.example.penny&reviewId=googleplay-review-1","file":"googleplay.html"}
+]

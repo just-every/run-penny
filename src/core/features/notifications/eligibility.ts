@@ -1,14 +1,17 @@
 /** Aliases: batch n, request r, board b, request author author, address a. */
-export const eligibleRecipient = `a.requester_id=n.requester_id AND a.verified_at IS NOT NULL AND a.suppressed_at IS NULL
+export const recipientSafety = `a.requester_id=n.requester_id AND a.verified_at IS NOT NULL AND a.suppressed_at IS NULL
  AND EXISTS(SELECT 1 FROM requesters person WHERE person.id=n.requester_id AND person.blocked_at IS NULL)
  AND NOT EXISTS(SELECT 1 FROM requester_identity_merges retired WHERE retired.source_requester_id=n.requester_id)
  AND r.moderation_state='approved' AND r.published_at IS NOT NULL AND r.withdrawn_at IS NULL
  AND r.merged_into_request_id IS NULL AND b.visibility='public' AND (author.id IS NULL OR author.blocked_at IS NULL)
- AND EXISTS(SELECT 1 FROM request_follows f WHERE f.request_id=r.id AND f.requester_id=n.requester_id AND f.muted_at IS NULL)
- AND EXISTS(SELECT 1 FROM requester_update_permissions p JOIN request_canonical_roots root ON root.origin_id=p.request_id
-   WHERE p.requester_id=n.requester_id AND p.requester_address_id=a.id AND p.revoked_at IS NULL AND p.suppressed_at IS NULL AND root.canonical_id=r.id)
  AND NOT EXISTS(SELECT 1 FROM requester_notification_preferences p WHERE p.requester_id=n.requester_id AND p.muted_at IS NOT NULL)
  AND NOT EXISTS(SELECT 1 FROM request_notification_mutes m JOIN request_canonical_roots root ON root.origin_id=m.request_id WHERE m.requester_id=n.requester_id AND root.canonical_id=r.id)`
+
+export const subscriptionEligibility=`EXISTS(SELECT 1 FROM request_follows f WHERE f.request_id=r.id AND f.requester_id=n.requester_id AND f.muted_at IS NULL)
+ AND EXISTS(SELECT 1 FROM requester_update_permissions p JOIN request_canonical_roots root ON root.origin_id=p.request_id
+   WHERE p.requester_id=n.requester_id AND p.requester_address_id=a.id AND p.revoked_at IS NULL AND p.suppressed_at IS NULL AND root.canonical_id=r.id)
+`
+export const eligibleRecipient=`${recipientSafety} AND ${subscriptionEligibility}`
 
 export const visibleEvent = `(e.kind='merge' AND EXISTS(SELECT 1 FROM request_merges merge_row
  JOIN penny_merge_notices notice ON notice.merge_id=merge_row.id AND notice.enabled=1

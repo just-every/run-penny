@@ -1,4 +1,9 @@
 const hints:Record<string,string>={
+ reviews_link_scope_invalid:'The provider returned a review link outside this listing. Check the selected product ID and public listing URL before reconnecting.',
+ reviews_cursor_scope_invalid:'The provider tried to change the selected listing while paging. Check the listing and vendor response before retrying.',
+ reviews_cursor_invalid:'The provider returned an invalid page checkpoint. Check the vendor response before reconnecting.',
+ reviews_source_identity_unconfirmed:'The saved link opens a rolling listing without this review. Check the individual review at the provider; listing omission alone cannot prove removal.',
+ reviews_source_check_scope_invalid:'The source response did not match the saved review identity. Check the original review before retrying.',
  reviews_purge_failed:'The removed excerpt could not be purged. Check database and audit storage; the next schedule retries this due purge.',
  reviews_listing_removed:'The listing is no longer available. Captured excerpts follow the source-removal retention policy. Reconnect after checking the vendor listing.',
  reviews_rate_limited:'The provider rate limit was reached. Wait for its reset, then retry this saved cursor.',

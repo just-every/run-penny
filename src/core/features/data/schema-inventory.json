@@ -1187,7 +1187,8 @@
       "created_at",
       "updated_at",
       "coalescing_at",
-      "restoration_hold_at"
+      "restoration_hold_at",
+      "captured_contact"
     ]
   },
   "notification_link_epochs": {
@@ -2066,7 +2067,8 @@
       "internal_status_id",
       "previous_status_source",
       "previous_direct_status_changed_at",
-      "previous_internal_status_id"
+      "previous_internal_status_id",
+      "notify_captured_contacts"
     ]
   },
   "request_submission_keys": {

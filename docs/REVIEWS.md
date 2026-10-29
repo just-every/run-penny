@@ -7,7 +7,7 @@ subscribe, email, proxy-vote, publish or reply to a reviewer.
 
 ## Installation and vendor scope
 
-Apply `0098_review_capture.sql` with `rer setup` or the existing hosted migration
+Apply `0098_review_capture.sql` and `0099_review_outreach_exclusion.sql` with `rer setup` or the existing hosted migration
 path. It adds tables and guards; applied migrations remain unchanged. Preserve
 expanded schema on source rollback and stop older workers before upgrading.
 There is no separate importer or public ingestion endpoint.
@@ -51,6 +51,8 @@ checking the vendor account. Disconnect removes credential, cache and renewal cl
 The enforcing service also needs `oauth2.googleapis.com` for Google token exchange;
 Trustpilot renewal uses its existing API host. These exchanges issue credentials,
 never review replies. No signing key or refresh token reaches the browser again.
+
+G2 and Product Hunt also require the public listing URL in the existing **Public review page URL** field. Their API IDs and public slugs can differ: use the exact G2 `/products/<slug>/reviews` or Product Hunt `/posts/<slug>` URL. Returned review links must remain on that selected listing; Product Hunt comment IDs must also match their anchors. Reconnect earlier installations to supply that scope.
 
 G2 and Product Hunt use the access token issued by their vendor account. A manually
 issued access token can also be used for the other APIs, but its expiry then needs
@@ -102,12 +104,14 @@ attachments or neighboring product reviews. Owner redaction rules apply to text
 and source names before the write.
 
 A reread marks a different source fingerprint **changed**, preserving the capture.
+Source timestamps retain the supplied offset and fractional precision (up to nine digits); Google Play seconds and nanos are combined without millisecond truncation.
+
 Daily source checks mark explicit deletion or lost source access **removed**;
 absence from a rolling feed alone never proves deletion. After the owner's
 retention window (default zero days), all captured wording versions, source name,
 optional wording metadata and derived proposals are purged in an audited
 transaction, including while capture is paused. Missing transport remains a
-visible failure, not evidence that a source was removed.
+visible failure, not evidence that a source was removed. Product Hunt checks its supported GraphQL `comment(id)` resource, including its ID and saved URL. Public source checks parse the individual page’s selected review identity; a successful page without supported markup is a visible failure. Hash-only legacy links cannot prove absence from a rolling listing and require owner reconciliation.
 
 Request extraction uses the owner's AI capability selection, private-data policy,
 monthly budget, reservation and metering. The default budget is zero; capture
@@ -120,6 +124,10 @@ interrupted paid call is held with a visible failure; reconcile provider usage
 before explicitly acknowledging a paid retry. Rewriting a captured version
 invalidates its derived exact-span proposals.
 
+## Captured-contact status updates
+
+The operator HTTP interface previews `GET /api/operator/requests/:slug/captured-contacts` and accepts `notifyCapturedContacts: true` on a status-update publication. The preview lists eligible explicit native contacts; review source names are always excluded. The choice and snapshot count are audited with that update. The default is false, a recorded postal address is required, and reusing the publication key cannot send again. Delivery uses the existing durable notification pipeline, suppression and unsubscribe checks. A selected contact receives no permission record and gets the reason for this one update in the mail. The bounded status path supports verified native contact addresses; broader NOTIFY-009 release/decline controls and board defaults remain governed by its unchanged missing status.
+
 ## Verification boundary
 
 `tests/browser/review-capture.mjs` is one broad public-door journey against the
@@ -129,6 +137,6 @@ recovery after an actual Worker restart, concurrent disconnect, source changes a
 purging, native archive/restore and evidence erasure. Assertions run at 1440;
 changed settings and inbox screens are captured once at 1440 and 390 with layout
 and accessibility checks. The existing populated migration journey also exercises
-the upgrade and repeated no-op. These are local source proofs, not live vendor
+the populated previous-head upgrade and repeated no-op, preserving every preexisting column. Product Hunt queries execute against a separate SDL excerpt transcribed from its vendor reference; every connector traverses a second page. Fixed destination URL/HTML fixtures are independent from captured records and popup responses are never manufactured from Penny’s generated URL or ID. These destination fixtures are synthetic protocol examples, not independent recordings of vendor behavior. They verify the local link contract only. In particular, the App Store web frontend may discard `reviewId` during canonicalization, so its generated link is not proven to open an individual review; a supported vendor permalink or owner ruling is still required for CAP-020’s link acceptance. Do not count the synthetic destination replay as that acceptance proof. These are local source proofs, not live vendor
 recordings, hosted Cron/transport provisioning, vendor entitlement, live token issuance/renewal
 or an owner-account trial. Those account-dependent checks remain unperformed.
