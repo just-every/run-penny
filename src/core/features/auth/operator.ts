@@ -4,9 +4,9 @@ import type { PennyRuntime } from '@/core/app/runtime'
 import type { AppBindings } from '@/core/shared/bindings'
 import { authMail } from './mail'
 import { auditedIdentityMail } from './mail-audit'
-import { createUlid } from '@/core/shared/ulid'
 import { NativeError } from './native-tokens'
 import branding from '@/branding.json'
+import {operatorActor} from './operator-actor'
 import { operatorDocumentReads } from '@/core/app/request-context.server'
 import { fontDocumentResponse } from '@/base/font-response'
 import { pennyDocumentFonts } from '@/core/ui/brand/font-head'
@@ -53,14 +53,7 @@ export async function authenticateOperator(runtime: PennyRuntime, request: Reque
   if (!request.headers.get('Cookie')) return null
   const session = await operatorSession(runtime, request)
   if (!session) return null
-  const { email, displayName } = session.operator
-  // Product actor foreign keys keep their existing IDs and historical rows.
-  let actor = await runtime.database.binding.prepare('SELECT id,email,display_name AS displayName FROM operators WHERE email=?').bind(email).first<AuthenticatedOperator>()
-  if (!actor) {
-    const now = new Date().toISOString()
-    await runtime.database.binding.prepare('INSERT INTO operators(id,email,display_name,created_at,updated_at) VALUES(?,?,?,?,?) ON CONFLICT(email) DO NOTHING').bind(createUlid(),email,displayName,now,now).run()
-    actor = await runtime.database.binding.prepare('SELECT id,email,display_name AS displayName FROM operators WHERE email=?').bind(email).first<AuthenticatedOperator>()
-  }
+  const actor = await operatorActor(runtime.database.binding,session.operatorId)
   if (!actor) throw new NativeError('operator_auth_unavailable',503)
   return actor
 }

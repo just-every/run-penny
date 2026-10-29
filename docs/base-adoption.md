@@ -217,3 +217,36 @@ archives; import originals/journals and opaque erasure fences are classified.
 The consumer also omits `base/modules/import-kit/proof/zendesk/`: nine synthetic
 Lily branch-proof files are Base test evidence, with no Penny runtime caller.
 Retained import-kit runtime bytes and modes stay exact.
+
+## Core agent door, rer 0.2.88
+
+The installed CLI and the recorded agent-door and Business-settings copies use
+rer 0.2.88 / Base `114ef7a61f080da053af783c5fbe06f625d692cc`. Other Base
+copies retain their recorded pins; public Run-page migrations are outside this
+adoption. The seed declares `tools`, `policy`, `pause`, `audit` and `idempotency`
+in `agent-surface.json` and supplies the same list to the runtime factory.
+Events, public resources, prompts and subscriptions are omitted and typed-refused.
+Multi-sponsor, mail edges, resource refresh, timed lifecycle, dual host, queued
+lifecycle and owner-native administration remain unscoped in this release and
+are not claimed. Native visibility readers remain internal.
+
+The test-only `verification.rpc.PENNY_LEARNING_EGRESS` module validates the
+exact Anthropic request and returns its native receipt shape. The disposable
+owner selects models and budget through the real settings API. No provider key,
+production credentials, direct SQL initialization or native authority substitute
+is used. Production still requires an owner-provisioned enforcing RPC service.
+The retained managed artifact producer rejects `services`, and unconfigured
+local setup cannot resolve that service. These failures remain visible; this
+adoption must not land until the shared service-binding/development contract is
+available. Native applied migrations and fenced capture clauses are unchanged.
+
+Migration `0103_agent_actor_projection.sql` retires the eager native-person
+projection trigger. Existing native-to-product bindings and actor ids stay
+unchanged. Native owner claim and Data recovery no longer create product rows;
+the shared native-id adapter projects a ULID actor at first product use and
+associates an existing legacy actor once from the current native account. A
+product restore may remove its former binding with the product actor; the next
+native action re-establishes attribution without importing authority. Token email
+never selects a native person. Stop older workers before applying 0103 and keep
+the new adapter with the migration; recover by rolling forward this adapter,
+without recreating accounts or rewriting historical actor ids.

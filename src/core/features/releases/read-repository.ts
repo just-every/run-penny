@@ -16,7 +16,7 @@ export class ReleasesReadRepository {
       SELECT
         r.id AS id, r.slug AS slug, r.state AS state, rv.title AS title, rv.release_type AS releaseType,
         rv.publication_date AS publicationDate, r.published_at AS publishedAt,
-        author.id AS authorId, CASE WHEN rv.snapshot_sealed_at IS NOT NULL THEN rv.author_name ELSE author.display_name END AS authorName,
+        author.id AS authorId, COALESCE(rv.author_name,author.display_name) AS authorName,
         CASE WHEN rv.snapshot_sealed_at IS NOT NULL THEN rv.tag_names_json ELSE (
           SELECT COALESCE(json_group_array(tag.name), '[]')
           FROM tags tag

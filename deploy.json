@@ -2,26 +2,76 @@
   "version": 1,
   "project": "just-every/penny",
   "compatibilityDate": "2026-08-31",
-  "compatibilityFlags": ["nodejs_compat"],
-  "d1": [{ "binding": "DB" }],
-  "r2": [{ "binding": "FILES" }],
-  "queues": [{ "binding": "JOBS", "consumer": { "batch_size": 1, "max_retries": 3, "max_concurrency": 1 } }],
+  "compatibilityFlags": [
+    "nodejs_compat"
+  ],
+  "d1": [
+    {
+      "binding": "DB"
+    }
+  ],
+  "r2": [
+    {
+      "binding": "FILES"
+    }
+  ],
+  "queues": [
+    {
+      "binding": "JOBS",
+      "consumer": {
+        "batch_size": 1,
+        "max_retries": 3,
+        "max_concurrency": 1
+      }
+    }
+  ],
   "durableObjects": [],
   "secrets": [
-    { "binding": "AUTH_SECRET", "environment": "AUTH_SECRET" },
-    { "binding": "INSTALLATION_KEY", "environment": "INSTALLATION_KEY" },
-    { "binding": "INSTALLATION_KEY_PREVIOUS", "environment": "INSTALLATION_KEY_PREVIOUS", "optional": true },
-    { "binding": "SETUP_TOKEN", "environment": "SETUP_TOKEN" },
-    { "binding": "MAIL_PROVIDER", "environment": "MAIL_PROVIDER", "verifyStandIn": "sendgrid" },
-    { "binding": "MAIL_FROM", "environment": "MAIL_FROM", "verifyStandIn": "penny@example.com" },
-    { "binding": "MAIL_API_KEY", "environment": "MAIL_API_KEY" },
-    { "binding": "MAIL_RELAY_URL", "environment": "MAIL_RELAY_URL", "optional": true },
-    { "binding": "SENDGRID_EVENT_PUBLIC_KEY", "environment": "SENDGRID_EVENT_PUBLIC_KEY", "optional": true },
-    { "binding": "RESEND_WEBHOOK_SECRET", "environment": "RESEND_WEBHOOK_SECRET", "optional": true }
+    {
+      "binding": "AUTH_SECRET",
+      "environment": "AUTH_SECRET"
+    },
+    {
+      "binding": "INSTALLATION_KEY",
+      "environment": "INSTALLATION_KEY"
+    },
+    {
+      "binding": "INSTALLATION_KEY_PREVIOUS",
+      "environment": "INSTALLATION_KEY_PREVIOUS",
+      "optional": true
+    },
+    {
+      "binding": "SETUP_TOKEN",
+      "environment": "SETUP_TOKEN"
+    },
+    {
+      "binding": "MAIL_API_KEY",
+      "environment": "MAIL_API_KEY"
+    },
+    {
+      "binding": "SENDGRID_EVENT_PUBLIC_KEY",
+      "environment": "SENDGRID_EVENT_PUBLIC_KEY",
+      "optional": true
+    },
+    {
+      "binding": "RESEND_WEBHOOK_SECRET",
+      "environment": "RESEND_WEBHOOK_SECRET",
+      "optional": true
+    }
   ],
-  "crons": ["* * * * *"],
-  "vars": { "WORKSPACE_TIMEZONE": "UTC", "OPERATOR_EMAIL": "owner@penny.invalid" },
+  "crons": [
+    "* * * * *"
+  ],
+  "vars": {
+    "WORKSPACE_TIMEZONE": "UTC",
+    "OPERATOR_EMAIL": "owner@penny.invalid"
+  },
   "originVar": "APP_ORIGIN",
-  "platforms": ["workers", "container"],
-  "container": { "engine": "workerd" }
+  "platforms": [
+    "workers",
+    "container"
+  ],
+  "container": {
+    "engine": "workerd"
+  }
 }

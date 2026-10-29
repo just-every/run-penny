@@ -18,11 +18,13 @@ import type { EvidenceVersion,EvidenceAttachments,RequestSuggestion } from '@/co
 import type { OperatorAccountDetail,OperatorDecisionBrief } from '@/core/shared/api/operator'
 const app=createPennyApi(),origin='https://127.0.0.1:8787'
 const devKey='synthetic-evidence-checkout-key-for-local-outbox-tests'
+let modelPreparers:string[]=[]
 let ai=false,onModel:()=>Promise<void>=async()=>{}
 const modelEdge={send:async(wire:{url:string;body:string})=>{
  expect(wire.url).toBe('https://api.anthropic.com/v1/messages')
  const input=JSON.parse(JSON.parse(wire.body).messages[0].content)
  for(const value of ['Secret Acme account','987654321','Private operator request note'])expect(JSON.stringify(input)).not.toContain(value)
+ modelPreparers.push(input.preparedBy)
  await onModel()
  return {status:200,headers:{},body:JSON.stringify({content:[{type:'text',text:JSON.stringify(draftNetwork(input))}],stop_reason:'end_turn',usage:{input_tokens:103,output_tokens:211}})}
 }}
@@ -32,7 +34,7 @@ function call(path:string,body?:unknown,headers:Record<string,string>={},method=
  return app.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'127.0.0.1:8787',Origin:origin,'CF-Connecting-IP':`192.0.2.${++ip}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings())
 }
 async function json<T>(response:Response|Promise<Response>,status=200):Promise<T>{const r=await response;expect(r.status,await r.clone().text()).toBe(status);return r.json() as Promise<T>}
-beforeEach(async()=>{ai=false;onModel=async()=>{};await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
+beforeEach(async()=>{modelPreparers=[];ai=false;onModel=async()=>{};await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
 async function fixture(){
  const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303)
@@ -291,8 +293,10 @@ it('[AI-006 EVID-006] resolves cited summaries and editable reply drafts while k
  const comment=await json<{id:string}>(call(`/api/operator/requests/${g.request.slug}/comments`,{body:'Can reports include a date filter?'},g.operator),201)
  const beforeDraft=await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n')
  const notificationCount=await env.DB.prepare('SELECT count(*) n FROM notification_outbox').first('n')
+ const preparer=await env.DB.prepare('SELECT display_name FROM operators WHERE id=?').bind(g.actor).first<string>('display_name')
  for(const [kind,id] of [['request',g.request.id],['decision',g.decision.id],['account',g.account.id],['comment',comment.id],['inbox',g.evidence.id]]){
-  const result=await json<{text:string;citations:{id:string;href:string}[];flags:string[];notices:string[];costMicros:number}>(call('/api/operator/ai/drafts',{kind,id},g.operator))
+  const result=await json<{preparedBy:string;text:string;citations:{id:string;href:string}[];flags:string[];notices:string[];costMicros:number}>(call('/api/operator/ai/drafts',{kind,id},g.operator))
+  expect(result.preparedBy).toBe(preparer)
   expect(result.citations.length).toBeGreaterThan(0);expect(result.citations.every(c=>c.id!=='evidence:missing-record')).toBe(true)
   expect(result.notices.some(n=>n.includes('unresolvable'))).toBe(true)
   expect(result.costMicros).toBe(116)
@@ -305,6 +309,10 @@ it('[AI-006 EVID-006] resolves cited summaries and editable reply drafts while k
    expect((await call(`/api/operator/requests/${g.request.slug}/comments`,{body:result.text,aiDraft:true},g.operator)).status).toBe(422)
   }
  }
+ expect(modelPreparers).toHaveLength(5);expect(modelPreparers.every(label=>label===preparer)).toBe(true)
+ const draftAudit=(await env.DB.prepare("SELECT actor_id,entity_id,details_json FROM audit_entries WHERE action='ai.draft_prepared'").all<{actor_id:string;entity_id:string;details_json:string}>()).results
+ expect(draftAudit).toHaveLength(5)
+ for(const row of draftAudit){expect(row.actor_id).toBe(g.actor);expect(JSON.parse(row.details_json).actorLabel).toBe(preparer);expect(await env.DB.prepare("SELECT 1 FROM penny_ai_runs WHERE id=? AND state='metered'").bind(row.entity_id).first()).not.toBeNull()}
  expect(await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n')).toBe(beforeDraft)
  expect(await env.DB.prepare('SELECT count(*) n FROM notification_outbox').first('n')).toBe(notificationCount)
  for(const headers of [{},requester])expect((await call('/api/operator/ai/drafts',{kind:'request',id:g.request.id},headers)).status).toBe(401)

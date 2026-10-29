@@ -16,7 +16,8 @@
         "pnpm run lint",
         "pnpm run test:mail-runtime",
         "pnpm run test:data:commands",
-        "node --test tests/installer/deploy-dry-run.test.mjs"
+        "node --test tests/installer/deploy-dry-run.test.mjs",
+        "pnpm run verify:agent"
       ]
     },
     {

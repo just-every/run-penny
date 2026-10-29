@@ -4,6 +4,8 @@ import {moderationJourney} from './moderation-runtime.mjs'
 import {zendeskSidebar} from './zendesk-sdk-edge.mjs'
 
 export async function zendeskProxyVotesJourney({runtime,origin,operator,json,send,person,pageFor,capture}){
+ // Scoped client calls use the company door; the native owner chooses policy.
+ await json('/agents/api/policy',{document:{schema:'rer-agent-policy/1',catalogue:'rer-agent-classes/1',rules:[{id:'zendesk-journey',class:'*',do:'autonomous'}],spend:{none:true}}},operator,'PUT')
  const author=await person('eli@example.test','Eli Wong')
  await person('nina@example.test','Nina Rao')
  const request=await json('/api/public/requests',{title:'Schedule monthly finance exports',description:'Finance needs a monthly CSV for its board review.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},{Authorization:`Bearer ${author.token}`},'POST',201)
