@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Attribute immediate AI drafts to their actual native preparer. The shared native service sends the preparer label to the configured model, returns it with the private draft and records native activity after current-authority/citation checks. Agent calls retain the door’s agent-for-sponsor label; native person calls retain that person. Extend the existing AI-006 public-door case with model/request/activity agreement while preserving privacy, no-send and revocation checks.
+
 - Adopt the released CLI’s local `deploy --dry-run` receipt. Update the existing public-door dry-run assertion to prove a real local Worker/migration plan, unmet real-deploy inputs and no provider reads or writes with or without supplied credentials; target readiness is no longer claimed by this command.
 
 - Keep the hosted mail binding declaration unambiguous for rer 0.2.86: keep provider, sender and relay public as the managed-mail specification requires, and remove their duplicate secret declarations. Contract evidence cells now cite checkout files; commands and external run receipts remain in the fleet report.

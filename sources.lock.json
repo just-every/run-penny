@@ -3738,7 +3738,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "5fe8a4b9cbcccc36f70993ace844da6a21bc7cbdd210c6abf179809c3e6a8ffc",
+      "sha256": "e07212c25a2bd1c0a01a975e6b0fc3ed196c1e7c08382e79e4866a2e4c3ee4f0",
       "executable": false
     },
     "CLAUDE.md": {
@@ -5290,7 +5290,7 @@
       "executable": false
     },
     "src/core/features/agent-door/learning-tools.ts": {
-      "sha256": "a083e9005f15a9fd9b81c1060cf83ac2111c42bca78827d6aeb3de4559c46ba5",
+      "sha256": "d0764a7199f89b1251fb3ab9ad1bda5317184e9a0129d7e9d2846b6d9ef0529d",
       "executable": false
     },
     "src/core/features/agent-door/local-credentials.ts": {
@@ -5366,7 +5366,7 @@
       "executable": false
     },
     "src/core/features/ai/drafts.ts": {
-      "sha256": "c736f280f9f241fd79044ca13678a0630818c9ca309279e1d8adda115c245689",
+      "sha256": "74943e0d37c29cb418e3b2b296b167442033792c98bacc41a52cde133778e3b4",
       "executable": false
     },
     "src/core/features/ai/learning-policy.ts": {
@@ -8642,7 +8642,7 @@
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
-      "sha256": "3c63227e88d2f3928b17f8d202d86272e8964b431fe693b8afb5ce4fb922143f",
+      "sha256": "7df134831108ad93ecbb36e05ad55f6c7876857cbadc4c984af12ac16e8fdcd9",
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
