@@ -5966,7 +5966,7 @@
       "executable": false
     },
     "src/core/features/learning/ui/learning-date.tsx": {
-      "sha256": "17a268db0d8c044f93b254312c4478ee1aa9b834ccca0ea123393338f2fae622",
+      "sha256": "f104413829637b8da1bc32c01249b290307e532fea3bb999f14232e6c0e340fc",
       "executable": false
     },
     "src/core/features/learning/ui/learning-detail.tsx": {
@@ -6998,7 +6998,7 @@
       "executable": false
     },
     "src/core/features/settings/ui/timezone-choices.ts": {
-      "sha256": "d70a464640e0aac998733880bc24e622f7fe0fd4878cfbb42b842f5f81c86573",
+      "sha256": "ae3bdb9a56cb0e03fc2aca39a2f7320a0e29334ebefbe1aa6b89c00e70e3588c",
       "executable": false
     },
     "src/core/features/settings/ui/weekly-summary-setting.tsx": {
@@ -7006,7 +7006,7 @@
       "executable": false
     },
     "src/core/features/settings/ui/workspace-clock-settings.tsx": {
-      "sha256": "b92aa4a039389dbf4f504f90d59dfdcca0fa2e1bfc1e0ca9f995e2c7f8089212",
+      "sha256": "c01e66d09bd82d13c8ed544b973a72167d03942e4f15b2e3c216a5b8580c8cfe",
       "executable": false
     },
     "src/core/features/settings/ui/workspace-zone-sync.ts": {
