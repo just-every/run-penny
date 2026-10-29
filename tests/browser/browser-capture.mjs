@@ -5,6 +5,11 @@ import {tmpdir} from 'node:os'
 import {chromium} from '@playwright/test'
 import {captureRuntime} from './browser-capture-runtime.mjs'
 
+// Native extension action popups are Chromium `other` targets, rather than
+// ordinary tabs. Ask Playwright to attach to those targets so this journey
+// operates the real popup and preserves Chrome's activeTab consent grant.
+process.env.PW_CHROMIUM_ATTACH_TO_OTHER='1'
+
 // Full Chromium is required: headless-shell has no extension runtime. Local
 // system Chromium may forbid unpacked extensions by administrator policy; that
 // refusal is an explicit failed check, never a simulated extension success.
