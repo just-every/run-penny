@@ -16,7 +16,7 @@ export function WorkspaceClockSettings(){
 function ClockForm({clock,reload}:{clock:WorkspaceClock;reload:()=>void}){
  const [message,setMessage]=useState(''),[busy,setBusy]=useState(false),[enabled,setEnabled]=useState(clock.quietEnabled),[chosen,setTimezone]=useState<string|null>(null)
  // A workspace that has not confirmed its zone starts from the zone this browser is in, never from the server's UTC.
- const {browser,zones}=useTimezoneChoices(clock.timezone)
+ const {browser,zones,hydrated}=useTimezoneChoices(clock.timezone)
  const timezone=chosen??(clock.confirmed?clock.timezone:browser)
  return <form className="space-y-5" onSubmit={async event=>{
   event.preventDefault();const data=new FormData(event.currentTarget),input=workspaceClockInput.safeParse({timezone:String(data.get('timezone')),quietEnabled:enabled,quietStart:Number(data.get('quietStart')),quietEnd:Number(data.get('quietEnd'))});if(!input.success){setMessage(input.error.issues[0].message);return}setBusy(true)
@@ -29,7 +29,7 @@ function ClockForm({clock,reload}:{clock:WorkspaceClock;reload:()=>void}){
    <label className={fieldLabelClass}>Quiet hours end (0–23)<input type="number" name="quietEnd" min={0} max={23} required className={fieldClass} defaultValue={clock.quietEnd}/></label>
   </div>
   <p className="text-sm">{enabled?'Customer email waits from the start hour until the end hour in your workspace timezone.':'Quiet hours are off. Queued customer email becomes eligible immediately after its normal coalescing window.'} Operator decision-review email always sends without quiet hours.</p>
-  <button className={buttonClass} disabled={busy}>{busy?'Saving…':'Save workspace time'}</button><p role="status">{message}</p>
+  <button className={buttonClass} disabled={busy||!hydrated}>{busy?'Saving…':'Save workspace time'}</button><p role="status">{message}</p>
  </form>
 }
 export function WorkspaceClockPrompt(){
