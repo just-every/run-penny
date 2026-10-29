@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "293aa18a5110c6771e5e589883d8135b8047b3c88116a67f0a6d87555660219a",
+      "sha256": "602cded8a05b84a63f3c9222184b0d0b824eafaf6394b854d111e63b4caeab57",
       "executable": false
     },
     "CLAUDE.md": {
@@ -7870,7 +7870,7 @@
       "executable": false
     },
     "tests/base/merge-notices.test.ts": {
-      "sha256": "62cee0a1f3a8f64a15294fda5ba606b80bff835f1ab176aefe4fb5ed970420e4",
+      "sha256": "04628a36f514d2c8502c7caefc568c3238ced951c285b8fc461e5d7fe806fc16",
       "executable": false
     },
     "tests/base/no-mail-identity.test.ts": {

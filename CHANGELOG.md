@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Keep the merge-notice upgrade proof on its historical status-row schema and
+  compare every original notification-intent column after additive upgrades.
+  Current publication and delivery remain covered through the HTTP journeys.
+
 - Keep the capture-time public listing with review provenance so a later listing
   rename does not block export or restore. Migration 0101 adds nullable scope
   custody; older links remain historical data, with no authority to resume work.

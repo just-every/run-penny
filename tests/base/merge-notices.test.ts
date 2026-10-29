@@ -62,14 +62,21 @@ it('[NOTIFY-012] migration preserves populated event, intent and delivery custod
  const g=await graph(),source=await g.submit(),target=await g.submit();await g.publish(source)
  await accepted(call('/api/public/requester/notifications',{muted:true},g.author,'PATCH'))
  await accepted(call(`/api/public/requests/${source}/follow`,{},g.voter),204)
- await g.status(source,'planned')
+ // Populate this historical schema with its original status-row shape. The
+ // current publication API requires columns added by later migrations.
+ const stamp=new Date().toISOString()
+ await env.DB.prepare(`INSERT INTO request_status_updates(id,request_id,public_status,body,pinned,operator_id,published_at,created_at,updated_at)
+  SELECT ?,id,'planned','',0,?,?,?,? FROM requests WHERE slug=?`)
+  .bind(crypto.randomUUID(),(await env.DB.prepare('SELECT id FROM operators LIMIT 1').first<{id:string}>())!.id,stamp,stamp,stamp,source).run()
  const {prepareBatches}=await import('@/core/features/notifications/batches');await prepareBatches(env.DB,new Date().toISOString())
  const batches=(await env.DB.prepare('SELECT * FROM notification_batches ORDER BY rowid').all()).results
  const events=(await env.DB.prepare('SELECT * FROM notification_events ORDER BY rowid').all()).results
  const intents=(await env.DB.prepare('SELECT * FROM notification_intents ORDER BY rowid').all()).results
+ expect(intents.length).toBeGreaterThan(0)
+ const intentColumns=Object.keys(intents[0]).map(name=>'"'+name.replaceAll('"','""')+'"').join(',')
  await applyD1Migrations(env.DB,migrations);await applyD1Migrations(env.DB,migrations)
  expect((await env.DB.prepare('SELECT * FROM notification_events ORDER BY rowid').all()).results).toEqual(events)
- expect((await env.DB.prepare('SELECT * FROM notification_intents ORDER BY rowid').all()).results).toEqual(intents)
+ expect((await env.DB.prepare(`SELECT ${intentColumns} FROM notification_intents ORDER BY rowid`).all()).results).toEqual(intents)
  expect((await env.DB.prepare('SELECT * FROM notification_batches ORDER BY rowid').all()).results).toEqual(batches)
  await g.flush();g.sent.length=0
  await accepted(call(`/api/operator/requests/${source}/merge`,{targetSlug:target},g.operator))
