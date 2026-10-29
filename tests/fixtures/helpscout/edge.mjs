@@ -13,7 +13,7 @@ export function helpScoutEdge(config){
    if(match[2]==='/threads'){
     if(/^threads-\d+$/.test(mode))return Response.json({message:'Synthetic thread access loss'},{status:Number(mode.slice(8)),headers:{Location:'https://api.helpscout.net/v2/conversations/999'}})
     if(id===101&&!url.search)return Response.json({_embedded:{threads:Array.from({length:25},(_,n)=>({id:900+n,type:'note',body:'OMITTED_PRIVATE_NOTE',createdAt:'2026-10-28T12:31:00Z'}))},page:{number:1,totalPages:2}})
-    return Response.json({_embedded:{threads:[{id:801,type:'customer',body:mode==='changed'?'<p>Edited source excerpt</p>':'<p>Please add scheduled CSV exports. Contact source.person@example.test.</p>',createdAt:'2026-10-28T12:30:00Z',customer:{id:502,first:'Morgan',last:'Lopez'}},{id:802,type:'note',body:'OMITTED_PRIVATE_NOTE',createdAt:'2026-10-28T12:31:00Z'}]},page:{number:id===101?2:1,totalPages:id===101?2:1}})
+    return Response.json({_embedded:{threads:[{id:801,type:'customer',body:mode==='changed'?'<p>Edited source excerpt</p>':'<p>Please add scheduled CSV exports. Contact source.person@example.test. Reference 65674284-7077-46fe-8d77-244f47cf25c1; card 4111 1111 1111 1111.</p>',createdAt:'2026-10-28T12:30:00Z',customer:{id:502,first:'Morgan',last:'Lopez'}},{id:802,type:'note',body:'OMITTED_PRIVATE_NOTE',createdAt:'2026-10-28T12:31:00Z'}]},page:{number:id===101?2:1,totalPages:id===101?2:1}})
    }
    assert.equal(request.method,'POST');const reply=JSON.parse(body);assert.equal(reply.customer.id,501);assert.equal(reply.user,config.sidebarUserId);assert.equal(reply.draft,false);return Response.json({}, {status:sendStatus})
   }

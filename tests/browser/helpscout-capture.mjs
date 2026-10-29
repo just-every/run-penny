@@ -16,7 +16,7 @@ try{
  const boot=await send('/auth/bootstrap',{token:'synthetic-base-browser-setup-token-12345',displayName:'Maya Patel'},{},'POST',303),Cookie=boot.headers.get('set-cookie').split(';')[0],operator={Cookie}
  const finish=await fetch(origin+'/setup',{method:'POST',redirect:'manual',headers:{Origin:origin,Cookie,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({confirm:'yes',companyName:'Penny fixture business',postalAddress:'14 Market Street, Boston MA 02110',timezone:'UTC',quietEnabled:'yes',quietStart:'20',quietEnd:'8'})});assert.equal(finish.status,303)
  await json('/api/operator/boards',{slug:'feedback',name:'Feedback',visibility:'public'},operator,'POST',201)
- await json('/api/operator/settings/redaction',{enabled:true,kinds:['email'],patterns:[]},operator,'PUT')
+ await json('/api/operator/settings/redaction',{enabled:true,kinds:['email','card'],patterns:[]},operator,'PUT')
  const existing=await json('/api/operator/requests',{title:'Scheduled CSV exports',description:'Support scheduled exports.',boardSlug:'feedback'},operator,'POST',201)
  await json(`/api/operator/requests/${existing.slug}/moderate`,{verdict:'approved',title:'Scheduled CSV exports',description:'Support scheduled exports.',boardSlug:'feedback'},operator)
  await send(path,config,{},'POST',401);await send(path,config,{...operator,Origin:'https://evil.test'},'POST',403)
@@ -42,6 +42,7 @@ try{
  assert.equal(edge.calls.some(c=>/999|998/.test(c.path)),false)
  const first=(await json('/api/operator/evidence',undefined,operator)).items.find(e=>e.sourceLabel==='Help Scout conversation 101');assert.ok(first)
  assert.match(first.wording,/\[REDACTED:email\]/);assert.equal(first.namedSpeaker,'Morgan Lopez');assert.equal(first.requester.displayName,'Riley Chen');assert.equal(first.account.name,'Harbor customer company');assert.equal(first.reviewState,'unreviewed');assert.equal(first.helpScout.sourceState,'current')
+ assert.match(first.wording,/Reference 65674284-7077-46fe-8d77-244f47cf25c1; card \[REDACTED:card\]/)
  const a=await sidebar(101),side=await context.newPage();side.on('pageerror',e=>errors.push(e.message));await side.goto(a.url,{waitUntil:'networkidle'})
  await side.getByLabel('Find a request',{exact:true}).fill('Scheduled CSV');await side.getByRole('button',{name:'Search requests',exact:true}).click();await side.getByLabel('Request to link',{exact:true}).selectOption(existing.id);await side.getByRole('button',{name:'Link conversation',exact:true}).click();await side.locator('#linked').filter({hasText:'Scheduled CSV exports · open'}).waitFor()
  await act(a.token,{action:'link',requestId:existing.id})
@@ -92,7 +93,7 @@ try{
  await act(a.token,{action:'view'},409);await json(path+'/control',{action:'resume'},operator)
  const next=await sidebar(101)
  const exported=await json('/api/operator/data/export',undefined,operator),archive=exported.archive;assert.ok(!Object.hasOwn(archive.tables,'penny_helpscout_secrets'));assert.ok(!Object.hasOwn(archive.tables,'penny_helpscout_contexts'));assert.ok(archive.tables.penny_helpscout_connection.every(c=>c.enabled===0))
- const archiveText=JSON.stringify(archive);for(const value of [config.clientSecret,config.appSecret,config.webhookSecret,'synthetic-helpscout-access-token','OMITTED_PRIVATE_NOTE','OMITTED_PREVIEW','OMITTED_COMPANY_DESCRIPTION','UNTRUSTED_WEBHOOK_WORDING'])assert.equal(archiveText.includes(value),false,value+' stays out of product archive')
+ const archiveText=JSON.stringify(archive);for(const value of [config.clientSecret,config.appSecret,config.webhookSecret,'synthetic-helpscout-access-token','4111 1111 1111 1111','OMITTED_PRIVATE_NOTE','OMITTED_PREVIEW','OMITTED_COMPANY_DESCRIPTION','UNTRUSTED_WEBHOOK_WORDING'])assert.equal(archiveText.includes(value),false,value+' stays out of product archive')
  // A portable restore has source data but no credential or active work.
  const restored=await startBrowserRuntime()
  try{

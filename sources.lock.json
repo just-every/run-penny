@@ -2958,7 +2958,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "df74cec4d40cb02b369a8ced69fff61b6e005ddcaf48c2713cf933b4e3c5e22c",
+      "sha256": "4dfcdbb2bccedc8d763aad4ad649958a5a6eff005e221d0708aca367a5c44dd9",
       "executable": false
     },
     "CLAUDE.md": {
@@ -6322,7 +6322,7 @@
       "executable": false
     },
     "src/core/features/redaction/engine.ts": {
-      "sha256": "60d3de38328db252f54e8d252666541ec4af42948d31c1980ed6f124cc30aa87",
+      "sha256": "222370568b4b5c959119206d1bf32a68ae05794caf20e75a408a2238fa00bcd8",
       "executable": false
     },
     "src/core/features/redaction/places.ts": {
@@ -8078,7 +8078,7 @@
       "executable": false
     },
     "tests/browser/helpscout-capture.mjs": {
-      "sha256": "cc7abec5e7423650a467ed17cec1dc016e1968402c3a4667b7555d7e828e4f56",
+      "sha256": "9c7491932069b90913922cc61be4815585ba22a8a58aea31437a2a1073fda868",
       "executable": false
     },
     "tests/browser/host-identity.mjs": {
@@ -8426,7 +8426,7 @@
       "executable": false
     },
     "tests/fixtures/helpscout/edge.mjs": {
-      "sha256": "e4d3e0cafd429fd1cdabbaead930e3ac76e054e2720f4ac18ac11ca54a3e203d",
+      "sha256": "8a7a0a2a2d369ec1068c8d9d6d5c022e9024e5661c5a7fe9485d5370811e3513",
       "executable": false
     },
     "tests/fixtures/imports/boards.json": {
