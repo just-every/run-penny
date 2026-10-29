@@ -670,11 +670,11 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "9162d2358875ab12b549d4308a69af3d0d4b650f8f25d380e552ff02001c7985",
+      "sha256": "06e5251f5853952a90abab96503e6f285ed52ab81df264da7c61fe62d1964f59",
       "executable": false
     },
     "agent-surface.json": {
-      "sha256": "369448c09b53966fbd5d49550aa530cf864da750cdeb45d3672b2558e7307795",
+      "sha256": "075a976cd19c49b04836c0966c454e7aaf761e4c540572b5aa1fa4891f8b7606",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -3346,7 +3346,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "83054e8ffaa4de8b6a944452b2c3d7ba817e21ca0c1aa81e742faad85c4af3b9",
+      "sha256": "383ac0641623297ecfbe852b214e491cfb4c76ed2d75068703873dadf5df829b",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3358,7 +3358,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "c69258a7ae8933a5ab5602a6db0cbcf56347e59ebc7f63dbf2166eff52abfed2",
+      "sha256": "1397a3269cba0cdfbb37317d7b7b47301bb48b41a60dfc86d6b0bb34ccef9c74",
       "executable": false
     },
     "DEMO.md": {
@@ -3386,7 +3386,7 @@
       "executable": false
     },
     "docs/AGENTS.md": {
-      "sha256": "2d0a2fcf7529c5ed14a0fcd656b66a7768aa7656eb35508102e9483dd74b8a8e",
+      "sha256": "2eb4b5e023e99f0d29464e926e636988a5d3989db8e1899af32841455924b53a",
       "executable": false
     },
     "docs/API.md": {
@@ -4150,7 +4150,7 @@
       "executable": false
     },
     "scripts/agent-docs.mjs": {
-      "sha256": "6e700ebad0aeed532692c077bcc58105709624c91779ca841e974c63bcafd384",
+      "sha256": "0e042c2e4fd3b8137ffcd9d8888d1662ccd2e8b3774d21bacd4291774e8caf10",
       "executable": false
     },
     "scripts/ai-eval/metrics.mjs": {
@@ -4918,7 +4918,7 @@
       "executable": false
     },
     "src/core/features/agent-door/context.ts": {
-      "sha256": "9f2161b8eeb8b3bac070091c72a6cc5ef2483fec1a1be9b66bed5bbbe8f2b9c3",
+      "sha256": "ab1a75b326d502e202c8c6ff0bed1adad898748cc831820a0cacbfc379c0275d",
       "executable": false
     },
     "src/core/features/agent-door/credentials.ts": {
@@ -4930,11 +4930,11 @@
       "executable": false
     },
     "src/core/features/agent-door/definition.ts": {
-      "sha256": "84f7eb5f47c41dcec7fd2c83debb8ca5d98d5538812d0d14639b6af347c3978f",
+      "sha256": "771a9f92f9c6ebd8c472f8796202c604a3aa25509d0c60ce0fd7863c68c97a76",
       "executable": false
     },
     "src/core/features/agent-door/index.ts": {
-      "sha256": "1d2980a3ee2f9d3817f87ea79321a165e7698a1b074db87610a20cb6e4613c63",
+      "sha256": "2698cf22b37e0a24723578948de6d7ad8f3fc0b3b21c36138f79a76596c3d36b",
       "executable": false
     },
     "src/core/features/agent-door/planning-tools.ts": {
@@ -4945,12 +4945,16 @@
       "sha256": "013236de83e67f99b1c9f9445dbdefaddd8d544ab3277e90207d4ecae6c9486e",
       "executable": false
     },
+    "src/core/features/agent-door/resources.ts": {
+      "sha256": "8f3d15c679ba16abde136a437f66371a445efbf565f225f42b61853ad6e15d54",
+      "executable": false
+    },
     "src/core/features/agent-door/schema.ts": {
       "sha256": "9dfe1459b0ed3cb6b5e81df9a250d4e37f24d29255e68f54cdbdd1ebfb35ecb0",
       "executable": false
     },
     "src/core/features/agent-door/triage-tools.ts": {
-      "sha256": "ca541de5b2f8bc079355f6a6adb11af31314431f94b9d2e2274550eb2753f53e",
+      "sha256": "decb67809e00c2dab9cab5dc898f6fd862b1a5cac7ff05ad70eb737629c40545",
       "executable": false
     },
     "src/core/features/agent-door/trust.ts": {
@@ -8103,6 +8107,14 @@
     },
     "tests/agent-door/owner.mjs": {
       "sha256": "49501c5e776b0cf97840b41b20be91e9688a12279c37ca91fee23048f765c428",
+      "executable": false
+    },
+    "tests/base/agent-resources.test.ts": {
+      "sha256": "7a8292606739f6b664ece3b34c7ebe5678c2bf0955755a3e043ff96ca52549ae",
+      "executable": false
+    },
+    "tests/base/agent-signing.ts": {
+      "sha256": "2b648ee5d67a5b3eb8d940a86d90224728d37511e331fa4951923e7bed58029b",
       "executable": false
     },
     "tests/base/auth.test.ts": {

@@ -20,6 +20,7 @@ interface Definition<T extends z.ZodObject> {
   classes?: ClassId[]
   classify?(input: z.output<T>, native: Native): Promise<ClassAndFacts[]>
   output: ToolDefinition['outputSchema']; readOnly?: boolean
+  resources?(input: z.output<T>, result: unknown): Array<{ uri: string; name: string }>
   run(input: z.output<T>, native: Native, ctx: ToolContext): Promise<unknown>
   target?(input: z.output<T>, native: Native): Promise<{ kind: string; id: string } | null>
   revision?(input: z.output<T>, native: Native): Promise<string | number | null>
@@ -50,7 +51,7 @@ export function nativeTool<T extends z.ZodObject>(definition: Definition<T>): To
       const input = parse(args), native = await nativeContext(ctx, !definition.readOnly)
       const result = await definition.run(input, native, ctx)
       if (!definition.readOnly) await nativeAudit(ctx, definition.name, result && typeof result === 'object' && 'id' in result ? String(result.id) : null)
-      return { result }
+      return { result, ...(definition.resources ? { resources: definition.resources(input, result) } : {}) }
     }),
   }
   if (definition.target) tool.target = (args, ctx) => protect(async () => definition.target!(parse(args), await nativeContext(ctx)))
