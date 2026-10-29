@@ -99,7 +99,7 @@ export function PublicFeedbackDetailPage({ content, requestSlug }: { readonly co
     <PublicPortalLayout content={content}>
       <HydrationUnit><section className="mx-auto max-w-3xl" aria-labelledby="feedback-detail-heading">
         <PortalBackLink to="/">All feedback</PortalBackLink>
-        <PageTitle id="feedback-detail-heading" className="mt-3">Feedback detail</PageTitle>
+        <PageTitle id="feedback-detail-heading" className="mt-3">{request.kind === 'ready' ? request.data.title : 'Feedback'}</PageTitle>
         <div className="mt-7">
           {request.kind === 'loading' ? <ResourceLoading label="Loading feedback…" /> : null}
           {request.kind === 'error' ? <ResourceFailure status={request.status} onRetry={retry} /> : null}
@@ -115,8 +115,7 @@ function FeedbackDetail({ request, onChange }: { readonly request: PublicRequest
     <>
       <PublicCard className="p-5 sm:p-7">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2"><PublicStatus status={request.status} label={request.statusLabel} /><span className="text-sm font-medium text-penny-muted">{request.board.name}</span>{request.category?<span className="text-sm text-penny-muted">{request.category.parent?`${request.category.parent.name} / `:''}{request.category.name}</span>:null}</div>
-        <h2 className="mt-4 break-words text-2xl font-extrabold tracking-[-0.02em] text-penny-ink">{request.title}</h2>
-        {request.authorDisplayName ? <p className="mt-1 text-sm text-penny-muted">Submitted by {request.authorDisplayName}</p> : null}
+        {request.authorDisplayName ? <p className="mt-4 text-sm text-penny-muted">Submitted by {request.authorDisplayName}</p> : null}
         <p className="mt-4 break-words whitespace-pre-wrap text-base leading-7 text-penny-ink">{request.description}</p>
         <dl className="mt-7 grid grid-cols-2 gap-4 border-t border-penny-line pt-5 text-sm">
           {request.voteCount!==undefined?<DataField portal label="Votes" valueClassName="text-lg font-bold tabular-nums">{request.voteCount}</DataField>:null}

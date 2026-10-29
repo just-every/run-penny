@@ -2,7 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { LearningPage } from '@/core/features/learning/ui/learning-page'
 import type { LearningTab } from '@/core/features/learning/ui/learning-tabs'
 import { loadOperatorResources } from '@/core/app/loaders'
-export const Route = createFileRoute('/app/learning')({
+import { pageHead } from '@/core/app/page-head'
+export const Route = createFileRoute('/app/learning')({ head: () => pageHead('Learning'),
  loaderDeps: ({search})=>search,
  loader: ({location})=>loadOperatorResources({data:location.href}),
  validateSearch: (search: Record<string, unknown>): { tab?: LearningTab; investigation?: string } => ({

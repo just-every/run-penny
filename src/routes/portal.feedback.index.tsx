@@ -4,9 +4,10 @@ import { loadPublicResources } from '@/core/app/loaders'
 import { createFileRoute } from '@tanstack/react-router'
 import { publicLandingConfig } from '@/core/app/extension-config'
 import { PublicFeedbackHomePage } from '@/core/features/requests/ui/public-feedback-pages'
+import { pageHead } from '@/core/app/page-head'
 
 /** REQ-001 (HOME-001 was superseded by HOME-002 on 9 October 2026). The public feedback board's canonical address. */
-export const Route = createFileRoute('/portal/feedback/')({
+export const Route = createFileRoute('/portal/feedback/')({ head: () => pageHead('Feedback'),
   validateSearch: (search): { q?: string; status?: string; board?: string; category?:string;sort?: 'recent' | 'votes' | 'newest' | 'trending' } => ({
     ...(typeof search.q === 'string' && search.q.trim() ? { q: search.q.trim() } : {}),
     ...(typeof search.status === 'string' && search.status ? { status: search.status } : {}),

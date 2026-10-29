@@ -3,8 +3,9 @@ import { ListQueryRefusal } from '@/core/app/ui/list-query-refusal'
 import { loadOperatorResources } from '@/core/app/loaders'
 import { createFileRoute } from '@tanstack/react-router'
 import { OverviewPage } from '@/core/features/overview'
+import { pageHead } from '@/core/app/page-head'
 
-export const Route = createFileRoute('/app/overview')({
+export const Route = createFileRoute('/app/overview')({ head: () => pageHead('Overview'),
   validateSearch: validateListSearch,
   errorComponent: ListQueryRefusal,
   loaderDeps: ({ search }) => search,
