@@ -1,307 +1,76 @@
 {
   "sections": [
-    {
-      "title": "Start",
-      "pages": [
-        {
-          "slug": "",
-          "source": "docs/OVERVIEW.md",
-          "label": "Overview"
-        },
-        {
-          "slug": "getting-started",
-          "source": "docs/GETTING-STARTED.md",
-          "label": "Getting started"
-        },
-        {
-          "slug": "install",
-          "source": "docs/INSTALL.md",
-          "label": "Install and deploy"
-        }
-      ]
-    },
-    {
-      "title": "Using Penny",
-      "pages": [
-        {
-          "slug": "portal",
-          "source": "docs/PORTAL.md",
-          "label": "The public portal"
-        },
-        {
-          "slug": "decisions",
-          "source": "docs/DECISIONS.md",
-          "label": "The decision loop"
-        },
-        {
-          "slug": "email",
-          "source": "docs/EMAIL.md",
-          "label": "Email and notifications"
-        },
-        {
-          "slug": "browser-capture",
-          "source": "docs/BROWSER-CAPTURE.md",
-          "label": "Browser capture"
-        }
-      ]
-    },
-    {
-      "title": "Run it",
-      "pages": [
-        {
-          "slug": "data",
-          "source": "docs/DATA.md",
-          "label": "Export and restore"
-        },
-        {
-          "slug": "customise",
-          "source": "docs/CUSTOMISE.md",
-          "label": "Make it yours"
-        }
-      ]
-    },
-    {
-      "title": "Using Penny",
-      "pages": [
-        {
-          "slug": "portal",
-          "source": "docs/PORTAL.md",
-          "label": "The public portal"
-        },
-        {
-          "slug": "decisions",
-          "source": "docs/DECISIONS.md",
-          "label": "The decision loop"
-        },
-        {
-          "slug": "email",
-          "source": "docs/EMAIL.md",
-          "label": "Email and notifications"
-        },
-        {
-          "slug": "agents",
-          "source": "docs/AGENTS.md",
-          "label": "Company agents"
-        }
-      ]
-    }
+    { "title": "Start", "pages": [
+      { "slug": "", "source": "docs/OVERVIEW.md", "label": "Overview" },
+      { "slug": "getting-started", "source": "docs/GETTING-STARTED.md", "label": "Getting started" },
+      { "slug": "install", "source": "docs/INSTALL.md", "label": "Install and deploy" }
+    ]},
+    { "title": "Using Penny", "pages": [
+      { "slug": "portal", "source": "docs/PORTAL.md", "label": "The public portal" },
+      { "slug": "decisions", "source": "docs/DECISIONS.md", "label": "The decision loop" },
+      { "slug": "email", "source": "docs/EMAIL.md", "label": "Email and notifications" },
+      { "slug": "browser-capture", "source": "docs/BROWSER-CAPTURE.md", "label": "Browser capture" },
+      { "slug": "agents", "source": "docs/AGENTS.md", "label": "Company agents" }
+    ]},
+    { "title": "Run it", "pages": [
+      { "slug": "data", "source": "docs/DATA.md", "label": "Export and restore" },
+      { "slug": "customise", "source": "docs/CUSTOMISE.md", "label": "Make it yours" }
+    ]}
   ],
   "githubOnly": [
-    {
-      "source": "docs/HELPSCOUT.md",
-      "reason": "Help Scout owner installation, scope and recovery guide"
-    },
-    {
-      "source": "docs/CLAIMS.md",
-      "reason": "Homepage claims with their status, generated from CONTRACT.md, for maintainers"
-    },
-    {
-      "source": "HOMEPAGE-VARIANTS.md",
-      "reason": "Shared Base installed-home and run-site adoption contract for maintainers"
-    },
-    {
-      "source": "RELEASE.md",
-      "reason": "How Penny's versions are released, for maintainers"
-    },
-    {
-      "source": "ACCEPTANCE.md",
-      "reason": "The contract read by tier with its evidence and gaps, generated from CONTRACT.md, for maintainers"
-    },
-    {
-      "source": "AGENTS.consumer.md",
-      "reason": "Instructions for coding agents working in an owner's copy of the source"
-    },
-    {
-      "source": "AGENTS.md",
-      "reason": "Contributor and coding-agent rules for building Penny as a seed"
-    },
-    {
-      "source": "BASELINE.md",
-      "reason": "Shared security, privacy and operations requirement clauses, for maintainers"
-    },
-    {
-      "source": "CHANGELOG.md",
-      "reason": "Release history for maintainers, naming internal requirement records and migrations"
-    },
-    {
-      "source": "DEMO.md",
-      "reason": "How rer demo and the hosted demo run Penny without sending anything, for maintainers"
-    },
-    {
-      "source": "CLAUDE.md",
-      "reason": "A one-line pointer to AGENTS.md for coding agents"
-    },
-    {
-      "source": "CONTRACT.md",
-      "reason": "Product requirement clauses, for maintainers and reviewers"
-    },
-    {
-      "source": "DIVERGENCE.md",
-      "reason": "Historical record of friction with shared seed documents, for maintainers"
-    },
-    {
-      "source": "FLAGSHIP-PLAN.md",
-      "reason": "Proposed future direction beyond the current release, not current capability"
-    },
-    {
-      "source": "HANDOVER.md",
-      "reason": "Maintainer orientation, implementation status and current verification scope"
-    },
-    {
-      "source": "OPERATIONS.md",
-      "reason": "Maintainer description of the operations inspector descriptor and its checks"
-    },
-    {
-      "source": "OWNER-STEPS.md",
-      "reason": "Reversible local UserVoice saved-export trial for the owner, identical to docs/USERVOICE-TRIAL.md; taking the UserVoice exports is an unperformed live owner action"
-    },
-    {
-      "source": "README.md",
-      "reason": "The repository front page with developer commands and the screen map; the docs home is Overview"
-    },
-    {
-      "source": "RUN-LOCALLY.md",
-      "reason": "The shared Base local-run reference copied with the rer CLI; the Install guide covers running Penny locally"
-    },
-    {
-      "source": "SEED-COMMAND-CONTRACT.md",
-      "reason": "The shared Base seed command contract, for maintainers of seeds"
-    },
-    {
-      "source": "docs/API.md",
-      "reason": "Scoped REST API reference for developers integrating with an installation"
-    },
-    {
-      "source": "docs/AUTHORING.md",
-      "reason": "Authoring rules for changing Penny as a seed, for maintainers and coding agents"
-    },
-    {
-      "source": "docs/CANNY-MIGRATION.md",
-      "reason": "Saved Canny file formats and importer limits, for owners preparing a move from Canny"
-    },
-    {
-      "source": "docs/USERVOICE-MIGRATION.md",
-      "reason": "Saved UserVoice export columns, mappings and refusals, for owners preparing a move from UserVoice"
-    },
-    {
-      "source": "docs/HOST-IDENTITY.md",
-      "reason": "Host application sign-in signing reference, for developers embedding the portal"
-    },
-    {
-      "source": "docs/INTEGRATIONS.md",
-      "reason": "Signed receiver and outbound event reference, for developers connecting other systems"
-    },
-    {
-      "source": "docs/MOVE-IN.md",
-      "reason": "Saved feedback import command reference, for owners moving history into Penny"
-    },
-    {
-      "source": "docs/SOURCE-PROVENANCE.md",
-      "reason": "Source provenance and publication boundary, for maintainers"
-    },
-    {
-      "source": "docs/TRACKERS.md",
-      "reason": "Linear and Jira tracker link and receipt reference, for developers connecting trackers"
-    },
-    {
-      "source": "docs/acceptance-history.md",
-      "reason": "Historical acceptance records for earlier candidates, for maintainers"
-    },
-    {
-      "source": "docs/base-adoption.md",
-      "reason": "Inventory of adopted shared Base sources and their proof boundary, for maintainers"
-    },
-    {
-      "source": "docs/data-foundation.md",
-      "reason": "Design record of the first D1 migration and data foundation, for maintainers"
-    },
-    {
-      "source": "docs/data-ownership.md",
-      "reason": "Archive custody and recovery implementation notes with test evidence; the operator guide is Export and restore"
-    },
-    {
-      "source": "docs/decision-loop-acceptance.md",
-      "reason": "Acceptance record for the decision loop change, for maintainers"
-    },
-    {
-      "source": "docs/delivery-preparation.md",
-      "reason": "Managed delivery packaging notes, for maintainers"
-    },
-    {
-      "source": "docs/disposable-install.md",
-      "reason": "Maintainer notes for disposable workers.dev proof installations"
-    },
-    {
-      "source": "docs/flagship-acceptance.md",
-      "reason": "Planning stage gates for proposed future direction, not current acceptance"
-    },
-    {
-      "source": "docs/frontier-extension.md",
-      "reason": "Proposed extension beyond the current release, not current capability"
-    },
-    {
-      "source": "docs/native-feedback.md",
-      "reason": "Dated milestone record for native feedback, for maintainers"
-    },
-    {
-      "source": "docs/read-spine.md",
-      "reason": "Historical record of the read-only UI and data spine, for maintainers"
-    },
-    {
-      "source": "docs/requester-activity-identity-repair.md",
-      "reason": "Dated repair record for requester activity and identity, for maintainers"
-    },
-    {
-      "source": "docs/requester-board-repair.md",
-      "reason": "Dated repair record for the requester board, for maintainers"
-    },
-    {
-      "source": "docs/requester-board.md",
-      "reason": "Reconciliation record for the requester board integration, for maintainers"
-    },
-    {
-      "source": "docs/requester-final-repair.md",
-      "reason": "Dated repair record for requester identity and file custody, for maintainers"
-    },
-    {
-      "source": "docs/start-migration.md",
-      "reason": "Runtime conversion and source reconciliation record, for maintainers"
-    },
-    {
-      "source": "docs/status-release-acceptance.md",
-      "reason": "Acceptance record for status updates and releases, for maintainers"
-    },
-    {
-      "source": "docs/user-journeys.md",
-      "reason": "Proposed future experience, not current capability"
-    },
-    {
-      "source": "visual/README.md",
-      "reason": "Index of recorded UI screenshots used as visual evidence, for maintainers"
-    },
-    {
-      "source": "docs/TRIAL.md",
-      "reason": "Reversible local Canny saved-export trial with a private operator comparison worksheet"
-    },
-    {
-      "source": "docs/USERVOICE-TRIAL.md",
-      "reason": "Reversible local UserVoice saved-export trial, identical to OWNER-STEPS.md, with a private operator comparison worksheet"
-    },
-    {
-      "source": "RULINGS.md",
-      "reason": "Rulings that shape contract clauses, with their dates and who ruled, for maintainers"
-    },
-    {
-      "source": "docs/contract-mechanism.md",
-      "reason": "Formats, timing and accounting rules behind contract clauses, for maintainers"
-    },
-    {
-      "source": "docs/verify.md",
-      "reason": "The hand-written acceptance record kept from before ACCEPTANCE.md was generated, for maintainers"
-    },
-    {
-      "source": "docs/DISCORD.md",
-      "reason": "Discord application, owner-run Gateway relay and enforcing transport setup for installation owners"
-    }
+    { "source": "docs/HELPSCOUT.md", "reason": "Help Scout owner installation, scope and recovery guide" },
+    { "source": "docs/CLAIMS.md", "reason": "Homepage claims with their status, generated from CONTRACT.md, for maintainers" },
+    { "source": "HOMEPAGE-VARIANTS.md", "reason": "Shared Base installed-home and run-site adoption contract for maintainers" },
+    { "source": "RELEASE.md", "reason": "How Penny's versions are released, for maintainers" },
+    { "source": "ACCEPTANCE.md", "reason": "The contract read by tier with its evidence and gaps, generated from CONTRACT.md, for maintainers" },
+    { "source": "AGENTS.consumer.md", "reason": "Instructions for coding agents working in an owner's copy of the source" },
+    { "source": "AGENTS.md", "reason": "Contributor and coding-agent rules for building Penny as a seed" },
+    { "source": "BASELINE.md", "reason": "Shared security, privacy and operations requirement clauses, for maintainers" },
+    { "source": "CHANGELOG.md", "reason": "Release history for maintainers, naming internal requirement records and migrations" },
+    { "source": "DEMO.md", "reason": "How rer demo and the hosted demo run Penny without sending anything, for maintainers" },
+    { "source": "CLAUDE.md", "reason": "A one-line pointer to AGENTS.md for coding agents" },
+    { "source": "CONTRACT.md", "reason": "Product requirement clauses, for maintainers and reviewers" },
+    { "source": "DIVERGENCE.md", "reason": "Historical record of friction with shared seed documents, for maintainers" },
+    { "source": "FLAGSHIP-PLAN.md", "reason": "Proposed future direction beyond the current release, not current capability" },
+    { "source": "HANDOVER.md", "reason": "Maintainer orientation, implementation status and current verification scope" },
+    { "source": "OPERATIONS.md", "reason": "Maintainer description of the operations inspector descriptor and its checks" },
+    { "source": "OWNER-STEPS.md", "reason": "Reversible local UserVoice saved-export trial for the owner, identical to docs/USERVOICE-TRIAL.md; taking the UserVoice exports is an unperformed live owner action" },
+    { "source": "README.md", "reason": "The repository front page with developer commands and the screen map; the docs home is Overview" },
+    { "source": "RUN-LOCALLY.md", "reason": "The shared Base local-run reference copied with the rer CLI; the Install guide covers running Penny locally" },
+    { "source": "SEED-COMMAND-CONTRACT.md", "reason": "The shared Base seed command contract, for maintainers of seeds" },
+    { "source": "docs/API.md", "reason": "Scoped REST API reference for developers integrating with an installation" },
+    { "source": "docs/AUTHORING.md", "reason": "Authoring rules for changing Penny as a seed, for maintainers and coding agents" },
+    { "source": "docs/CANNY-MIGRATION.md", "reason": "Saved Canny file formats and importer limits, for owners preparing a move from Canny" },
+    { "source": "docs/USERVOICE-MIGRATION.md", "reason": "Saved UserVoice export columns, mappings and refusals, for owners preparing a move from UserVoice" },
+    { "source": "docs/HOST-IDENTITY.md", "reason": "Host application sign-in signing reference, for developers embedding the portal" },
+    { "source": "docs/INTEGRATIONS.md", "reason": "Signed receiver and outbound event reference, for developers connecting other systems" },
+    { "source": "docs/MOVE-IN.md", "reason": "Saved feedback import command reference, for owners moving history into Penny" },
+    { "source": "docs/SOURCE-PROVENANCE.md", "reason": "Source provenance and publication boundary, for maintainers" },
+    { "source": "docs/TRACKERS.md", "reason": "Linear and Jira tracker link and receipt reference, for developers connecting trackers" },
+    { "source": "docs/acceptance-history.md", "reason": "Historical acceptance records for earlier candidates, for maintainers" },
+    { "source": "docs/base-adoption.md", "reason": "Inventory of adopted shared Base sources and their proof boundary, for maintainers" },
+    { "source": "docs/data-foundation.md", "reason": "Design record of the first D1 migration and data foundation, for maintainers" },
+    { "source": "docs/data-ownership.md", "reason": "Archive custody and recovery implementation notes with test evidence; the operator guide is Export and restore" },
+    { "source": "docs/decision-loop-acceptance.md", "reason": "Acceptance record for the decision loop change, for maintainers" },
+    { "source": "docs/delivery-preparation.md", "reason": "Managed delivery packaging notes, for maintainers" },
+    { "source": "docs/disposable-install.md", "reason": "Maintainer notes for disposable workers.dev proof installations" },
+    { "source": "docs/flagship-acceptance.md", "reason": "Planning stage gates for proposed future direction, not current acceptance" },
+    { "source": "docs/frontier-extension.md", "reason": "Proposed extension beyond the current release, not current capability" },
+    { "source": "docs/native-feedback.md", "reason": "Dated milestone record for native feedback, for maintainers" },
+    { "source": "docs/read-spine.md", "reason": "Historical record of the read-only UI and data spine, for maintainers" },
+    { "source": "docs/requester-activity-identity-repair.md", "reason": "Dated repair record for requester activity and identity, for maintainers" },
+    { "source": "docs/requester-board-repair.md", "reason": "Dated repair record for the requester board, for maintainers" },
+    { "source": "docs/requester-board.md", "reason": "Reconciliation record for the requester board integration, for maintainers" },
+    { "source": "docs/requester-final-repair.md", "reason": "Dated repair record for requester identity and file custody, for maintainers" },
+    { "source": "docs/start-migration.md", "reason": "Runtime conversion and source reconciliation record, for maintainers" },
+    { "source": "docs/status-release-acceptance.md", "reason": "Acceptance record for status updates and releases, for maintainers" },
+    { "source": "docs/user-journeys.md", "reason": "Proposed future experience, not current capability" },
+    { "source": "visual/README.md", "reason": "Index of recorded UI screenshots used as visual evidence, for maintainers" },
+    { "source": "docs/TRIAL.md", "reason": "Reversible local Canny saved-export trial with a private operator comparison worksheet" },
+    { "source": "docs/USERVOICE-TRIAL.md", "reason": "Reversible local UserVoice saved-export trial, identical to OWNER-STEPS.md, with a private operator comparison worksheet" },
+    { "source": "RULINGS.md", "reason": "Rulings that shape contract clauses, with their dates and who ruled, for maintainers" },
+    { "source": "docs/contract-mechanism.md", "reason": "Formats, timing and accounting rules behind contract clauses, for maintainers" },
+    { "source": "docs/verify.md", "reason": "The hand-written acceptance record kept from before ACCEPTANCE.md was generated, for maintainers" },
+    { "source": "docs/DISCORD.md", "reason": "Discord application, owner-run Gateway relay and enforcing transport setup for installation owners" }
   ]
 }
