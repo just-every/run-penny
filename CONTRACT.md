@@ -3072,13 +3072,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026).
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026); LEARN-004 rechecked at code and test commit `6a2fa01e6e97a7f7e43aa8bfdf53420dd87fb4f1` (30 October 2026).
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 53 | 62 | 1 | 116 |
+| Published | 54 | 61 | 1 | 116 |
 | Target and push further | 20 | 53 | 79 | 152 |
-| All | 73 | 115 | 80 | 268 |
+| All | 74 | 114 | 80 | 268 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3173,7 +3173,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `LEARN-001` | Permitted originals | published | partial | `tests/base/learning-stage2.test.ts` | The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted. |
 | `LEARN-002` | Contestable learning | published | partial | `tests/base/learning-stage2.test.ts` | Every option carrying the DEC-003 dimensions computed from originals, invalidation by native or source corrections with versioned operator contests, and the absence of automatic ranking, customer contact or publication have no passing assertion in this clause's evidence; validated spans, the clarification and the no-build option are asserted. |
 | `LEARN-003` | Accountable pre-action choice | published | partial | `tests/base/learning-stage3.test.ts` | The committed snapshot retaining the interpretation, original evidence, compared options, owner and full predeclared protocol, and missing protocol fields as explicit nulls that prevent commitment, have no passing assertion in this clause's evidence; commitment and its attributed audit are asserted. |
-| `LEARN-004` | Bounded recurring work | published | partial | `tests/base/learning-stage3.test.ts` | Expiry, budget, correction-version and erasure-epoch checks before external work and in the result transaction, the absence of any implicit contact, production or publication effect, and interrupted or ambiguous calls keeping their uncertainty and reserved budget without retry have no passing assertion in this clause's evidence; durable runs, unchanged-input deduplication, in-flight pause and revoke, and pause, resume, revoke and disconnect are asserted. |
+| `LEARN-004` | Bounded recurring work | published | done | `tests/base/learning-stage3.test.ts` — "[LEARN-003 LEARN-004] bounded scheduled work accounts for interrupted spend, fences changed authority and supports native operator controls" (all five acceptance points; scheduled events, learning routes and native controls). |  |
 | `LEARN-005` | Privacy closure | published | partial | `tests/base/learning-stage3.test.ts` | Running claims becoming uncertain after a restore has no passing assertion: no run is in flight at export and nothing reads an uncertain claim after the restore; same-source erasure across duplicate connections, hash fences under a fresh connection, revocation purging copies and derived work, and a restore that leaves no investigation active and refuses a restored run with `learning_scope_changed` are asserted. |
 | `LEARN-006` | Configuration and proof boundary | published | done | `tests/base/upgrade.test.ts`; `tests/base/learning-stage2.test.ts` |  |
 | `IMP-001` | Saved records | published | done | `tests/base/feedback-import.test.ts` |  |

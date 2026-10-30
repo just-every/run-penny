@@ -8,12 +8,12 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 73 | 115 | 70 | 258 |
+| Core | 74 | 114 | 70 | 258 |
 | Agent surface | 0 | 0 | 8 | 8 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 73 | 115 | 80 | 268 |
+| Full target | 74 | 114 | 80 | 268 |
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026); LEARN-004 rechecked at code and test commit `6a2fa01e6e97a7f7e43aa8bfdf53420dd87fb4f1` (30 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
 ## Core
 
@@ -1237,7 +1237,7 @@ Core · published · **partial**
 
 #### LEARN-004 — Bounded recurring work
 
-Core · published · **partial**
+Core · published · **done**
 
 **Requirement.** Scheduled Worker events refresh selected sources and advance the authorized evidence comparison/internal brief.
 
@@ -1248,8 +1248,8 @@ Core · published · **partial**
 4. Pause one/all, resume within a valid grant, revoke and disconnect are native operator controls.
 5. Interrupted/ambiguous calls retain visible uncertainty and reserved budget rather than automatic retries.
 
-**Evidence.** `tests/base/learning-stage3.test.ts`
-**Gap.** Expiry, budget, correction-version and erasure-epoch checks before external work and in the result transaction, the absence of any implicit contact, production or publication effect, and interrupted or ambiguous calls keeping their uncertainty and reserved budget without retry have no passing assertion in this clause's evidence; durable runs, unchanged-input deduplication, in-flight pause and revoke, and pause, resume, revoke and disconnect are asserted.
+**Evidence.** `tests/base/learning-stage3.test.ts` — "[LEARN-003 LEARN-004] bounded scheduled work accounts for interrupted spend, fences changed authority and supports native operator controls" (all five acceptance points; scheduled events, learning routes and native controls).
+**Gap.** None.
 
 #### LEARN-005 — Privacy closure
 
