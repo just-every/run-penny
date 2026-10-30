@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin rer 0.2.94 and refresh the declared company-agent door and business-settings source to its published immutable revision. Preserve the declared subset, native authority assertions and retained-evidence erasure/restore fence; unrelated source pins and Run-site data remain unchanged.
+
 - Wait for the refreshed Help Scout reply draft before editing and approving the ambiguous-send scenario. This keeps the existing journey from racing the refresh that resets its approval checkbox; uncertain-delivery and no-replay assertions stay intact.
 
 - Preserve canonical browser source URLs through capture, proxy completion and redaction reapplication so email-bearing addresses remain usable for link-back and explicit edit/removal checks. Retain selected excerpt whitespace before mandatory redaction and include it in source-change fingerprints. Extend the two existing public-door journeys with sensitive URL parameters and verbatim whitespace coverage. CAP-012 text, acceptance and status remain unchanged.
