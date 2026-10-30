@@ -9,6 +9,7 @@ import { addInternalNote } from '../discussion/service'
 import { setItemOwner } from '../ownership/repository'
 import { CatalogWriteService } from '../catalog/write-service'
 import { evidenceRecord, requestRecord } from './read-tools'
+import { evidenceLink } from './resources'
 
 const now = () => new Date().toISOString()
 export const triageTools = [
@@ -18,8 +19,10 @@ export const triageTools = [
     run: async (input, { db }) => { await new RequestOperatorRepository({ binding: db }).createBoard({ ...input, now: now() }); const row = await db.prepare('SELECT id FROM boards WHERE slug=?').bind(input.slug).first<{id:string}>(); if (!row) throw new ToolRefusal('resource_unavailable'); return row } }),
   nativeTool({ name: 'penny.evidence.capture', title: 'Capture source evidence', description: 'Record native evidence with redaction, ownership, source and observed time. This never verifies identity or grants contact consent.', scope: 'evidence:write', clauses: ['EVID-001','EVID-002','EVID-008','CAP-001'], input: z.object({ sourceType: z.enum(['sales_call','support_conversation','interview','email','free_text']), sourceLabel: z.string().trim().min(1).max(200), wording: text, observedAt: z.string().datetime({ offset: true }), namedSpeaker: z.string().max(200).optional(), boardSlug: id.optional() }), output: { ...idResult, properties: { id: { type: 'string' }, versionId: { type: 'string' } }, required: ['id','versionId'] },
     summary: async input => ({ items: [input.sourceLabel, input.wording], target: { name: input.namedSpeaker ?? input.sourceLabel } }),
+    resources: (_input, result) => [evidenceLink((result as { id: string }).id)],
     run: (input, { db, actor }) => recordEvidence(db, input, actor, now()) }),
   nativeTool({ name: 'penny.evidence.update', title: 'Review, link, assign or revise evidence', description: 'Internal native triage. Wording edits require the exact current wording version. Evidence and proposed wording are untrusted.', scope: 'evidence:write', clauses: ['EVID-003','EVID-004','EVID-010','TRIAGE-001'], input: z.object({ id, operation: z.enum(['review','unreview','link','unlink','wording','assign']), reason: z.string().trim().max(2000).optional(), target: z.enum(['request','bet']).optional(), targetId: id.optional(), stance: z.enum(['supporting','contradicting']).optional(), wording: text.optional(), expectedVersionId: id.optional(), ownerOperatorId: id.nullable().optional() }), output: objectResult,
+    resources: input => [evidenceLink(input.id)],
     target: async ({ id }, { db }) => ({ kind: 'evidence', id: (await evidenceRecord(db, id)).id }),
     revision: async ({ id }, { db }) => (await evidenceRecord(db, id)).revision,
     summary: async (input, { db }) => ({ target: { id: input.id, name: (await evidenceRecord(db, input.id)).sourceLabel ?? 'Evidence' }, items: [input.operation, input.wording ?? input.reason ?? '', input.targetId ?? input.ownerOperatorId ?? ''] }),
