@@ -6,7 +6,8 @@ import {drainLearning} from '@/core/features/learning/scheduled'
 import { exportArchive,planErasure,normalize } from '@/core/features/data/archive'
 import { eraseEntity } from '@/core/features/data/operations'
 import {canonical} from '@/core/features/data/archive'
-import {call,json,fixture,path,bindings,sent,network} from './learning-test-runtime'
+import {call,json,fixture,path,bindings,sent,network,resetLearning} from './learning-test-runtime'
+import {runNotificationSchedule} from '@/core/features/notifications/scheduled'
 import {explicitConsentBoard} from './explicit-consent-board'
 it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke',async()=>{
  const f=await fixture(),runtime=createPennyRuntime(bindings()),url=path+`/investigations/${f.investigation.id}`
@@ -57,6 +58,7 @@ it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged w
  expect((await restoreArchive(env.DB,env.FILES,latest.archive,latest.journal)).status).toBe('complete')
  expect(await env.DB.prepare('SELECT state FROM learning_investigations WHERE id=?').bind(a.id).first('state')).toBe('revoked')
  expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
+ await proveBoundedSchedule()
 })
 it('[LEARN-004] contribution erasure removes every dependent version/snapshot, preserves unrelated native records and refuses replay and active restored grants',async()=>{
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}`
@@ -171,3 +173,46 @@ it('[LEARN-003] learning actions retain the acting peer and roll back with their
  const rows=await audits(),ids=new Set(rows.map(row=>row.id))
  expect({checks,differentActors:peerId!==creatorId,rollbackFailed:!failed!.ok,rollback:afterRollback,historyRetained:retained.every(id=>ids.has(id)),safe:!/(Private audit|Private grant|Private commitment|Private additional|Private source|audit-source-person|network-edge)/.test(JSON.stringify(rows)),refusals:!stale.ok&&!unauthorized.ok&&refusalsUnchanged,scheduled:rows.some(row=>row.actor_type==='system'&&row.actor_id==='learning.scheduler'&&row.action==='learning.run_completed')}).toEqual({checks:expected.map(action=>({action,attributed:true,entity:true})),differentActors:true,rollbackFailed:true,rollback:beforeRollback,historyRetained:true,safe:true,refusals:true,scheduled:true})
 })
+
+/** One scheduled-work journey: real D1 custody, operator routes and only a
+ * provider-edge fake. Faults move authority while the paid edge is in flight. */
+async function proveBoundedSchedule(){
+ await resetLearning()
+ const f=await fixture(),url=path+`/investigations/${f.investigation.id}`
+ const tick=(custom=bindings())=>runNotificationSchedule({scheduledTime:Date.now()+1000,cron:'* * * * *',noRetry(){}} as ScheduledController,custom)
+ const due=(id=f.investigation.id)=>env.DB.prepare("UPDATE learning_investigations SET next_run_at='2000-01-01T00:00:00.000Z' WHERE id=?").bind(id).run()
+ const effects=async()=>{
+  const tables=['notification_intents','notification_outbox','penny_tracker_commands','penny_integration_events','learning_commitments','roadmap_publications','releases','candidate_bets']
+  return Promise.all(tables.map(async table=>({table,rows:(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()).results})))
+ }
+ const beforeEffects=await effects()
+ await tick()
+ const first=await env.DB.prepare('SELECT * FROM learning_runs WHERE investigation_id=?').bind(f.investigation.id).first<{id:string;event_key:string;claim:string;state:string;reserved_micros:number;actual_micros:number;cursor_json:string}>()
+ expect(first).toMatchObject({state:'complete',reserved_micros:100000,actual_micros:1100})
+ expect(first!.event_key).toMatch(/^scheduled:/);expect(first!.claim).toBeTruthy()
+ const cursor=JSON.parse(first!.cursor_json)
+ expect(cursor).toHaveLength(2);expect(cursor).toEqual(expect.arrayContaining([expect.objectContaining({eventKey:'orbit:fixture-orbit:signals/cancellation',contentHash:expect.stringMatching(/^[a-f0-9]{64}$/)})]))
+ const cards=await json<{needsYou:unknown[]}>(call(path,undefined,f.cookie));expect(cards.needsYou).toHaveLength(1)
+ await due();await tick()
+ const unchanged=await env.DB.prepare("SELECT cursor_json FROM learning_runs WHERE investigation_id=? AND reason='unchanged'").bind(f.investigation.id).first<string>('cursor_json')
+ expect.soft(JSON.parse(unchanged!),'unchanged runs retain the acquired revision cursor').toEqual(cursor)
+ expect(sent.filter(s=>s.startsWith('POST'))).toHaveLength(1)
+ expect((await json<{needsYou:unknown[]}>(call(path,undefined,f.cookie))).needsYou).toEqual(cards.needsYou)
+ expect(await effects()).toEqual(beforeEffects)
+ await json(call(url+'/control',{action:'pause'},f.cookie))
+
+ // A manual transport failure is still recurring work: a later Cron must not
+ // turn its unknown charge into an automatic retry, even with budget left.
+ const unknown=await json<{id:string}>(call(path+'/investigations',{sourceId:f.source.id,nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Bound one ambiguous check',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:300000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ const uncertainUrl=path+`/investigations/${unknown.id}`,broken=bindings(),edge=broken.PENNY_LEARNING_EGRESS!
+ broken.PENNY_LEARNING_EGRESS={async send(wire){if(wire.method==='POST'){sent.push(wire.method+' '+wire.url);throw new Error('synthetic-penny-1')}return edge.send(wire)}}
+ expect((await call(uncertainUrl+'/run',{},f.cookie,broken)).status).toBe(409)
+ const detail=await json<{investigation:{spentMicros:number};runs:{state:string;reserved_micros:number;actual_micros:number|null}[]}>(call(uncertainUrl,undefined,f.cookie))
+ expect(detail.runs).toEqual([expect.objectContaining({state:'uncertain',reserved_micros:100000,actual_micros:null})]);expect(detail.investigation.spentMicros).toBe(100000)
+ const count=sent.length
+ await due(unknown.id);await tick();await tick()
+ expect.soft(sent.length,'Cron never retries an ambiguous manual call').toBe(count)
+ const home=await json<{investigations:{id:string;reservedCostMicros:number;spentMicros:number;state:string}[]}>(call(path,undefined,f.cookie))
+ expect.soft(home.investigations.find(i=>i.id===unknown.id)).toMatchObject({state:'paused',reservedCostMicros:100000,spentMicros:100000})
+ expect(await effects()).toEqual(beforeEffects)
+}

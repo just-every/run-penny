@@ -35,7 +35,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   db.prepare('DELETE FROM penny_integration_guards WHERE id=?').bind(claim),
  ])
  }catch(error){if(String(error).includes('UNIQUE'))return {replayed:true,reason:'already_claimed'};throw error}
- let paid=false,reservation:Reservation|undefined
+ let paid=false,reservation:Reservation|undefined,cursor='[]'
  try{
   const config=learningConfiguration(runtime)
   if(!runtime.bindings.PENNY_AI||!runtime.bindings.PENNY_LEARNING_EGRESS)throw new NativeError('learning_model_unconfigured',503)
@@ -45,6 +45,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   reservation=await reserve(db,'learning',model.provider,model.id,i.max_run_cost_micros,sourceCost)
   if(sourceCost>0)paid=true
   const rules=await redactionSettings(db),records=await acquire(runtime,db,i,s,rules);let observations=await retain(db,i,s,records)
+  cursor=JSON.stringify(observations.map(o=>({eventKey:o.event_key,contentHash:o.content_hash})))
   const corrections=(await db.prepare('SELECT id,correction FROM learning_corrections WHERE investigation_id=? ORDER BY created_at,id').bind(id).all()).results
   // A repeated input after a correction is a new interpretation, never a revival
   // of the invalidated immutable artifact or its committed snapshot.
@@ -52,11 +53,11 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   const hashInput=()=>digest(canonical({observations:observations.map(o=>[o.id,o.content_hash]),corrections,predecessor}));let inputHash=await hashInput()
   const known=await db.prepare("SELECT id FROM learning_artifacts WHERE investigation_id=? AND input_hash=? AND state='current'").bind(id,inputHash).first<{id:string}>()
   if(known){await finish(sourceCost,'unchanged');return {runId,unchanged:true,artifactId:known.id}}
-  if(observations.some(o=>observationOriginal(o)?.normalized===false)){observations=await retain(db,i,s,records,false);inputHash=await hashInput()}
+  if(observations.some(o=>observationOriginal(o)?.normalized===false)){observations=await retain(db,i,s,records,false);inputHash=await hashInput();cursor=JSON.stringify(observations.map(o=>({eventKey:o.event_key,contentHash:o.content_hash})))}
   if(!observations.some(o=>citationRanges(o).length))throw new NativeError('learning_source_content_missing',409)
   await assertScope(native,i,s)
   // This db read also rechecks native session and erasure journal before paid work.
-  await db.prepare('SELECT 1').first()
+  await db.prepare("UPDATE learning_runs SET cursor_json=? WHERE id=? AND claim=? AND state='running'").bind(cursor,runId,claim).run()
   const generated=await interpret(runtime,db,{...redactLearningValue({question:i.question,purpose:i.purpose,corrections},rules),observations:observations.map(o=>({id:o.id,wording:o.wording,citableRanges:citationRanges(o),observedAt:o.observed_at,requesterId:o.requester_id,accountId:o.account_id})),budgetMicros:i.budget_micros-i.spent_micros},i.max_run_cost_micros-sourceCost,async()=>{await db.prepare('SELECT 1').first();paid=true},reservation)
   generated.costMicros+=sourceCost
   const body=validateLearning(redactLearningValue(generated.output,rules),observations,i.budget_micros-i.spent_micros),artifactId=crypto.randomUUID(),fence=redactionFence(db,rules.revision)
@@ -84,5 +85,5 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   }
   throw error instanceof NativeError?error:new NativeError(reason,409)
  }
- async function finish(cost:number,reason:string){if(reservation)await settle(native,reservation,cost);await db.batch([db.prepare("UPDATE learning_runs SET state='complete',actual_micros=?,reason=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(cost,reason,new Date().toISOString(),runId,claim),db.prepare('UPDATE learning_investigations SET spent_micros=spent_micros-?+?,last_reason=? WHERE id=?').bind(i.max_run_cost_micros,cost,reason,id),learningAudit(db,execution.actor,'learning_investigation',id,'learning.run_completed',{runId,unchanged:true})])}
+ async function finish(cost:number,reason:string){if(reservation)await settle(native,reservation,cost);await db.batch([db.prepare("UPDATE learning_runs SET state='complete',actual_micros=?,reason=?,cursor_json=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(cost,reason,cursor,new Date().toISOString(),runId,claim),db.prepare('UPDATE learning_investigations SET spent_micros=spent_micros-?+?,last_reason=? WHERE id=?').bind(i.max_run_cost_micros,cost,reason,id),learningAudit(db,execution.actor,'learning_investigation',id,'learning.run_completed',{runId,unchanged:true})])}
 }
