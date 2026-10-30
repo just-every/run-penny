@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 72 | 115 | 71 | 258 |
+| Core | 73 | 114 | 71 | 258 |
 | Agent surface | 0 | 17 | 4 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 72 | 132 | 77 | 281 |
+| Full target | 73 | 131 | 77 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -1169,15 +1169,15 @@ Core · published · **partial**
 
 #### DATA-003 — Erasure outranks history
 
-Core · published · **partial** · Cites BASE-DATA-003 · Register R-11
+Core · published · **done** · Cites BASE-DATA-003 · Register R-11
 
 **Requirement.** Penny's delta on Base erasure: where a clause here says a record is preserved, versioned, immutable, or never overwritten, erasure under BASE-DATA-003 takes precedence: the record is deleted or anonymized and the surviving audit entry keeps an anonymized reference.
 
 **Acceptance.**
 1. Unmerging (REQ-009) and revision history never recreate erased data.
 
-**Evidence.** `tests/base/penny-erasure.test.ts`; `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs`
-**Gap.** Native erasure retains its prior proof for installations without agent evidence. Base has no client-scoped retained-evidence erasure/fence contract; native erasure and restore now refuse before mutation while agent outcomes/audit/approvals exist, with transactional reservation fences preserving native sponsor bindings.
+**Evidence.** `tests/base/penny-erasure.test.ts`
+**Gap.** None.
 
 #### DATA-004 — Custom fields
 

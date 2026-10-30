@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Declare evidence capture and review resource fixtures with expected native written state so rer 0.2.94 verifies each write through its returned MCP resource link under autonomous and held policies. Preserve main’s existing DATA-003 judgment and the installation’s retained-agent-evidence erasure/restore refusal.
+
 - Pin rer 0.2.94 and refresh the declared company-agent door and business-settings source to its published immutable revision. Preserve the declared subset, native authority assertions and retained-evidence erasure/restore fence; unrelated source pins and Run-site data remain unchanged.
 
 - Wait for the refreshed Help Scout reply draft before editing and approving the ambiguous-send scenario. This keeps the existing journey from racing the refresh that resets its approval checkbox; uncertain-delivery and no-replay assertions stay intact.
