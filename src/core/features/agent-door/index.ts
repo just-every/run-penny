@@ -12,7 +12,7 @@ export const notTools = [
   { clauses: ['CAP-003','CAP-010','CAP-012','CAP-015','WIDGET-004'], reason: 'device' },
   { clauses: ['CAP-016','CAP-017','INT-005','INT-006','DELIV-002'], reason: 'connector' },
   { clauses: ['DATA-001','IMP-001','MIG-001'], reason: 'import-door' },
-  { clauses: ['BASE-AGENT-003'], reason: 'installation' },
+  { clauses: ['OWN-001'], reason: 'installation' },
 ] as const
 export function pennyAgentDoor(runtime: PennyRuntime) {
   return createAgentDoor({ seed: 'penny', name: 'Penny', specialist: 'feedback-triager', version: '0.2.2', db: runtime.database.binding, origin: runtime.configuration.appOrigin!, trust: pennyTrust(runtime), capabilities,
