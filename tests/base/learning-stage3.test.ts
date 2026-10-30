@@ -170,7 +170,8 @@ async function learningEffects(){
 }
 it('[LEARN-003 LEARN-004] bounded scheduled work accounts for interrupted spend, fences changed authority and supports native operator controls',async()=>{
  // Budget periods stay in one UTC month even when the host crosses midnight.
- vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-10-30T12:00:00.000Z'))
+ const clock=Date.now()
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(clock)
  try{
   await scheduledAccounting();await resetLearningRuntime()
   await scheduledAuthority()
