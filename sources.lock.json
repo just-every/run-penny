@@ -5978,11 +5978,11 @@
       "executable": false
     },
     "src/core/features/learning/routes.ts": {
-      "sha256": "de28fc315f616e2846e2a58c662cd5758a63cdef3f20c25078b14f5367b96d2f",
+      "sha256": "243b76f41c0cb0b2d1c16958624347bbfc233065194f80532d1e1e60ac036ddd",
       "executable": false
     },
     "src/core/features/learning/run.ts": {
-      "sha256": "5c8b28ad36e0f0baf39d26e77cc6c7e98086b21ffb5ed97cca813a0e85cd3135",
+      "sha256": "a59e71714c94b70a9978fe89c59407f7838d1ae528227d2c2ea90c3c78c88971",
       "executable": false
     },
     "src/core/features/learning/scheduled.ts": {
@@ -5994,7 +5994,7 @@
       "executable": false
     },
     "src/core/features/learning/service.ts": {
-      "sha256": "e45a4c59a7e2bc287e117412cfe1471bcc0745856f5254dd319a91576fd8f715",
+      "sha256": "ab6d3edad642e0798e050ee43fdea242a6828c80a5b6c20cc2857b4da993d6b0",
       "executable": false
     },
     "src/core/features/learning/source-content.ts": {
@@ -7758,11 +7758,11 @@
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
-      "sha256": "4904ce11300a4df6975a99f7c62cf6d90f3cc959c1d8b4b774e4b36971b6390e",
+      "sha256": "47acff94eb1845c667140cd88b844377a9f88346fb269e524569940b07b4807e",
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {
-      "sha256": "c8f88f3783892214c8926c08f256a23f779e72c847c4036991ac2c9222a0b080",
+      "sha256": "d4b67f3e55f6f9ed57ee47439fef2f2b78f065c1475c9b7568612dffbba7bd50",
       "executable": false
     },
     "tests/base/legacy-feedback-fixture.ts": {

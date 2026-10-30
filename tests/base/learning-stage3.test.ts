@@ -8,6 +8,143 @@ import { eraseEntity } from '@/core/features/data/operations'
 import {canonical} from '@/core/features/data/archive'
 import {call,json,fixture,path,bindings,sent,network} from './learning-test-runtime'
 import {explicitConsentBoard} from './explicit-consent-board'
+
+it('[LEARN-004] scheduled accounting preserves cursors, deduplicates events and holds ambiguous spend without implicit effects',async()=>{
+ const f=await fixture(),url=path+`/investigations/${f.investigation.id}`,runtime=createPennyRuntime(bindings())
+ await seedLearningDraft()
+ const effects=await learningEffects()
+ await env.DB.prepare('UPDATE learning_investigations SET budget_micros=101100 WHERE id=?').bind(f.investigation.id).run()
+ await drainLearning(runtime,Date.now()+1000)
+ const first=await json<LearningRunDetail>(call(url,undefined,f.cookie))
+ expect(first.runs).toMatchObject([{state:'complete',reserved_micros:100000,actual_micros:1100,reason:'material_learning'}])
+ expect(first.runs[0].event_key).toMatch(/^scheduled:/);expect(first.runs[0].claim).toBeTruthy()
+ const cursor=JSON.parse(first.runs[0].cursor_json)
+ expect(cursor).toHaveLength(2)
+ expect(cursor).toEqual(expect.arrayContaining(first.observations.map(o=>({eventKey:o.event_key,contentHash:o.content_hash}))))
+ expect(first.artifacts).toHaveLength(1)
+ expect(await env.DB.prepare('SELECT spent_micros FROM learning_investigations WHERE id=?').bind(f.investigation.id).first('spent_micros')).toBe(1100)
+ await dueLearning(f.investigation.id)
+ await drainLearning(runtime,Date.now()+1000)
+ const unchanged=await json<LearningRunDetail>(call(url,undefined,f.cookie))
+ expect(unchanged.runs).toHaveLength(2)
+ expect(JSON.parse(unchanged.runs.find(r=>r.reason==='unchanged')!.cursor_json)).toEqual(cursor)
+ expect(unchanged.artifacts).toEqual(first.artifacts);expect(sent.filter(s=>s.startsWith('POST'))).toHaveLength(1)
+ const afterUnchanged=sent.length
+ // Redelivering the same scheduled event does not acquire or reserve twice.
+ await dueLearning(f.investigation.id);await drainLearning(runtime,Date.now()+1000)
+ expect(sent).toHaveLength(afterUnchanged)
+ expect((await json<LearningRunDetail>(call(url,undefined,f.cookie))).runs).toHaveLength(2)
+ await dueLearning(f.investigation.id,'2000-01-02T00:00:00.000Z')
+ network.sourceText=canonical({id:'cancellation',subject:'A revised handoff needs another comparison.',occurred_at:'2026-10-02T00:00:00Z'})
+ network.beforeModel=async()=>{throw Error('synthetic-penny-1')}
+ await drainLearning(runtime,Date.now()+1000);network.beforeModel=undefined
+ const uncertain=await json<LearningRunDetail>(call(url,undefined,f.cookie))
+ expect(uncertain.runs.find(r=>r.state==='uncertain')).toMatchObject({actual_micros:null,reserved_micros:100000,reason:'learning_transport_failed'})
+ expect(uncertain.investigation).toMatchObject({state:'paused',spentMicros:101100,reservedCostMicros:100000,actualCostMicros:1100})
+ const home=await json<{investigations:Record<string,unknown>[]}>(call(path,undefined,f.cookie))
+ expect(home.investigations.find(i=>i.id===f.investigation.id)).toMatchObject({reservedCostMicros:100000,actualCostMicros:1100})
+ expect((await env.DB.prepare("SELECT state,actual_micros,reserved_micros FROM penny_ai_runs WHERE state='uncertain'").all()).results).toEqual([{state:'uncertain',actual_micros:null,reserved_micros:100000}])
+ const noRetry=sent.length
+ await dueLearning(f.investigation.id,'2000-01-03T00:00:00.000Z');await drainLearning(runtime,Date.now()+1000)
+ expect((await call(url+'/control',{action:'resume'},f.cookie)).status).toBe(409)
+ expect((await call(url+'/run',{},f.cookie)).ok).toBe(false)
+ expect(sent).toHaveLength(noRetry)
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:101100,includePrivate:true,choices:[]},f.cookie,undefined,'PUT'))
+ const sibling=await json<{id:string}>(call(path+'/investigations',{nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Independent bounded comparison',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:100000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ const refused=await call(path+`/investigations/${sibling.id}/run`,{},f.cookie)
+ expect(refused.status).toBe(409);expect(await refused.json()).toMatchObject({error:'ai_budget_exhausted'})
+ expect(await env.DB.prepare('SELECT spent_micros FROM learning_investigations WHERE id=?').bind(sibling.id).first('spent_micros')).toBe(0)
+ expect(sent).toHaveLength(noRetry)
+ expect((await json<LearningRunDetail>(call(url,undefined,f.cookie))).artifacts).toEqual(first.artifacts.map(a=>({...a,state:'contested'})))
+ expect(await learningEffects()).toEqual(effects)
+ expect(sent.every(s=>s.startsWith('GET https://orbit.example.com/api/delegation/v1/evidence?')||s.startsWith('POST https://api.anthropic.com/v1/messages')||s.startsWith('POST https://api.openai.com/v1/chat/completions'))).toBe(true)
+})
+
+it('[LEARN-004] scheduled authority fences refuse stale grants before paid work and discard results after authority changes',async()=>{
+ const f=await fixture(),runtime=createPennyRuntime(bindings())
+ await json(call(path+`/investigations/${f.investigation.id}/control`,{action:'pause'},f.cookie))
+ await seedLearningDraft();const effects=await learningEffects()
+ for(const phase of ['before-source','before-model','result'] as const){
+  for(const gate of ['source','purpose','native authority','expiry','budget','correction','erasure'] as const){
+   // Purpose changes and corrections are valid new grants before acquisition;
+   // the dangerous case is a version that moves while a run is in flight.
+   if(phase==='before-source'&&['purpose','correction','erasure'].includes(gate))continue
+   const label=`${phase}: ${gate}`
+   const target='synthetic-penny-'+crypto.randomUUID()
+   const source=await json<{id:string}>(call(path+'/sources',{name:'Selected synthetic evidence',provider:'orbit',resourceIds:[`signals/${target}`],useBasis:'Bounded internal comparison',allOperatorsAuthorized:true},f.cookie),201)
+   const evidence=await json<{id:string;versionId:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Independent comparison note',wording:'A handoff needs a clearer report.',observedAt:'2026-10-01T00:00:00Z'},f.cookie),201)
+   const erased=gate==='erasure'?await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Independent erasure target',wording:'Remove this unrelated private contribution.',observedAt:'2026-10-01T00:00:00Z'},f.cookie),201):null
+   let grantCookie=f.cookie,nativeId=''
+   if(gate==='native authority'){
+    const email=['synthetic-penny-'+crypto.randomUUID(),'example.test'].join('@')
+    mockMail()
+    try{
+     await json(call('/api/operator/settings/operators',{email},f.cookie),202)
+     const response=await call('/auth/confirm',{token:new URL(messages.findLast(m=>m.to===email)!.url).searchParams.get('token')})
+     expect(response.status).toBe(303);grantCookie=response.headers.get('set-cookie')!.split(';')[0]
+    }finally{vi.restoreAllMocks()}
+    nativeId=(await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind(email).first<string>('id'))!
+   }
+   const grant=await json<{id:string}>(call(path+'/investigations',{sourceId:source.id,nativeEvidenceIds:[evidence.id],nativeRequestIds:[],purpose:'Bounded internal comparison',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},grantCookie),201)
+   const url=path+`/investigations/${grant.id}`
+   network.sourceText=canonical({id:target,subject:'Original permitted handoff evidence.',contact_id:source.id,occurred_at:'2026-10-01T00:00:00Z'})
+   const first=await json<{artifactId:string}>(call(url+'/run',{},grantCookie))
+   const artifacts=await env.DB.prepare('SELECT count(*) n FROM learning_artifacts WHERE investigation_id=?').bind(grant.id).first<number>('n')
+   const change=async()=>{
+    if(gate==='source')await json(call(path+`/sources/${source.id}/disconnect`,{},f.cookie))
+    if(gate==='purpose')await env.DB.prepare("UPDATE learning_investigations SET purpose='A different purpose' WHERE id=?").bind(grant.id).run()
+    if(gate==='native authority')await json(call(`/api/operator/settings/operators/${nativeId}`,{},f.cookie,undefined,'DELETE'))
+    // Fixed past expiry avoids a wall-clock race while exercising D1's clock.
+    if(gate==='expiry')await env.DB.prepare("UPDATE learning_investigations SET expires_at='2000-01-01T00:00:00.000Z' WHERE id=?").bind(grant.id).run()
+    if(gate==='budget')await env.DB.prepare('UPDATE learning_investigations SET budget_micros=1100 WHERE id=?').bind(grant.id).run()
+    if(gate==='correction'){
+     if(phase==='result')await json(call(`/api/operator/evidence/${evidence.id}/wording`,{wording:'Corrected native contribution.',expectedVersionId:evidence.versionId},f.cookie,undefined,'PATCH'))
+     else await json(call(url+'/correct',{interpretationId:first.artifactId,correction:'Reassess this interpretation before using it.'},f.cookie))
+    }
+    if(gate==='erasure'){
+     const target={table:'evidence_items',id:erased!.id},preview=await json<{planHash:string}>(call('/api/operator/data/erasure/preview',target,f.cookie))
+     await json(call('/api/operator/data/erasure',{...target,planHash:preview.planHash},f.cookie))
+    }
+   }
+   network.sourceText=canonical({id:target,subject:'An in-flight revision must not escape its original grant.',contact_id:source.id,occurred_at:'2026-10-02T00:00:00Z'})
+   await dueLearning(grant.id)
+   const before=sent.length,modelCalls=sent.filter(s=>s.startsWith('POST')).length
+   if(phase==='before-source')await change()
+   if(phase==='before-model')network.beforeSource=change
+   if(phase==='result')network.beforeModel=change
+   try{await drainLearning(runtime,Date.now()+1000)}finally{network.beforeSource=undefined;network.beforeModel=undefined}
+   expect(sent.filter(s=>s.startsWith('POST')).length,label).toBe(modelCalls+(phase==='result'?1:0))
+   if(phase==='before-source')expect(sent.length,label).toBe(before)
+   expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts WHERE investigation_id=?').bind(grant.id).first('n'),label).toBe(gate==='source'?0:artifacts)
+   expect(await env.DB.prepare("SELECT count(*) n FROM learning_runs WHERE investigation_id=? AND event_key LIKE 'scheduled:%' AND state='complete'").bind(grant.id).first('n'),label).toBe(0)
+   if(phase==='before-model'&&gate!=='source'){
+    const runs=(await json<LearningRunDetail>(call(url,undefined,f.cookie))).runs
+    expect(runs.find(r=>r.reason!=='material_learning'),label).toMatchObject({state:'refused',actual_micros:0})
+    expect(await env.DB.prepare('SELECT spent_micros FROM learning_investigations WHERE id=?').bind(grant.id).first('spent_micros'),label).toBe(1100)
+   }
+   // A changed version can remain due; isolate it from the next scenario.
+   await env.DB.prepare("UPDATE learning_investigations SET state='paused' WHERE id=? AND state='active'").bind(grant.id).run()
+  }
+ }
+ expect(await learningEffects()).toEqual(effects)
+},120000)
+
+interface LearningRunDetail {
+ investigation:Record<string,unknown>
+ observations:{event_key:string;content_hash:string}[]
+ artifacts:Record<string,unknown>[]
+ runs:{state:string;event_key:string;claim:string;reason:string;cursor_json:string;actual_micros:number|null;reserved_micros:number}[]
+}
+async function dueLearning(id:string,at='2000-01-01T00:00:00.000Z'){
+ await env.DB.prepare('UPDATE learning_investigations SET next_run_at=? WHERE id=?').bind(at,id).run()
+}
+async function seedLearningDraft(){
+ await env.DB.prepare("INSERT INTO roadmap_items(id,slug,title,summary,status,created_at,updated_at) VALUES('synthetic-penny-1','synthetic-penny-1','Handoff improvement','Keep production unchanged','planned','2026-10-01','2026-10-01')").run()
+}
+async function learningEffects(){
+ const tables=['roadmap_items','roadmap_publications','releases','release_versions','notification_outbox','integration_deliveries','penny_integration_events','penny_tracker_commands','learning_commitments']
+ return Promise.all(tables.map(async table=>({table,rows:(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY id`).all()).results})))
+}
 it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke',async()=>{
  const f=await fixture(),runtime=createPennyRuntime(bindings()),url=path+`/investigations/${f.investigation.id}`
  await drainLearning(runtime,Date.now()+1000)
