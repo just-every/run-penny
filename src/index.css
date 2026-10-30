@@ -18,6 +18,9 @@
   --color-penny-sand: var(--sand);
   /* A card: paper a shade lighter than the page, so it reads as a sheet without a heavy shadow. */
   --color-penny-card: #fdfbf6;
+  /* The operator app's main content column: pure white whatever the canvas tone (owner, 30 Oct); the sidebar and the phone
+     header keep the paper, and anything inside the column set apart by the canvas tone uses paper as its sunk tone or a hairline. */
+  --color-penny-column: #ffffff;
   /* Control borders and outlined chips: 3.5:1 on paper, so an empty input's edge is visible. */
   --color-penny-line-strong: #8f8270;
   --color-penny-accent-dark: #8c3a17;
