@@ -169,8 +169,13 @@ async function learningEffects(){
  return Promise.all(tables.map(async table=>({table,rows:(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY id`).all()).results})))
 }
 it('[LEARN-003 LEARN-004] bounded scheduled work accounts for interrupted spend, fences changed authority and supports native operator controls',async()=>{
- await scheduledAccounting();await resetLearningRuntime()
- await scheduledAuthority();await resetLearningRuntime()
+ // Budget periods stay in one UTC month even when the host crosses midnight.
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-10-30T12:00:00.000Z'))
+ try{
+  await scheduledAccounting();await resetLearningRuntime()
+  await scheduledAuthority()
+ }finally{vi.useRealTimers()}
+ await resetLearningRuntime()
  const f=await fixture(),runtime=createPennyRuntime(bindings()),url=path+`/investigations/${f.investigation.id}`
  await drainLearning(runtime,Date.now()+1000)
  const first=await env.DB.prepare('SELECT id FROM learning_artifacts').first<string>('id');expect(first).toBeTruthy()
