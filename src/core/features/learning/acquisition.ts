@@ -9,7 +9,7 @@ import {contentIdentity,decodeOriginal,observationOriginal} from './source-conte
 import {redactionFence,redactionSettings} from '../redaction/settings'
 import {redactLearningCapture,type CaptureRules} from './redaction'
 export interface Captured extends SourceRecord {requesterId:string|null;accountId:string|null;evidenceId:string|null;requestId:string|null;redactionRevision?:number;nativeGuard?:{sql:string;params:(string|number|null)[]}}
-export async function acquire(runtime:PennyRuntime,db:D1Database,i:Investigation,s:Source,rules?:CaptureRules):Promise<Captured[]>{
+export async function acquire(runtime:PennyRuntime,db:D1Database,i:Investigation,s:Source,rules?:CaptureRules,onSourceSend=async()=>{}):Promise<Captured[]>{
  const result:Captured[]=[]
  for(const id of JSON.parse(i.native_evidence_ids_json) as string[]){
   const row=await db.prepare('SELECT e.*,v.id version_id,v.wording FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id WHERE e.id=? ORDER BY v.version_number DESC LIMIT 1').bind(id).first<Record<string,string|null>>()
@@ -24,7 +24,7 @@ export async function acquire(runtime:PennyRuntime,db:D1Database,i:Investigation
  if(s.provider==='orbit')for(const target of JSON.parse(s.resource_ids_json) as string[]){
   await assertScope(runtime.database.binding,i,s)
   await assertSourceTargets(db,s.provider,s.installation_id,[target])
-  result.push({...await readOrbit(runtime,target,s.installation_id),requesterId:null,accountId:null,evidenceId:null,requestId:null})
+  result.push({...await readOrbit(runtime,target,s.installation_id,onSourceSend),requesterId:null,accountId:null,evidenceId:null,requestId:null})
  }
  if(!result.length)throw new NativeError('learning_evidence_required',409)
  const captureRules=rules??await redactionSettings(db)
