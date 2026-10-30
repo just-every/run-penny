@@ -6,10 +6,10 @@ import {drainLearning} from '@/core/features/learning/scheduled'
 import { exportArchive,planErasure,normalize } from '@/core/features/data/archive'
 import { eraseEntity } from '@/core/features/data/operations'
 import {canonical} from '@/core/features/data/archive'
-import {call,json,fixture,path,bindings,sent,network} from './learning-test-runtime'
+import {call,json,fixture,path,bindings,sent,network,resetLearningRuntime} from './learning-test-runtime'
 import {explicitConsentBoard} from './explicit-consent-board'
 
-it('[LEARN-004] scheduled accounting preserves cursors, deduplicates events and holds ambiguous spend without implicit effects',async()=>{
+async function scheduledAccounting(){
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}`,runtime=createPennyRuntime(bindings())
  await seedLearningDraft()
  const effects=await learningEffects()
@@ -56,11 +56,34 @@ it('[LEARN-004] scheduled accounting preserves cursors, deduplicates events and 
  expect(await env.DB.prepare('SELECT spent_micros FROM learning_investigations WHERE id=?').bind(sibling.id).first('spent_micros')).toBe(0)
  expect(sent).toHaveLength(noRetry)
  expect((await json<LearningRunDetail>(call(url,undefined,f.cookie))).artifacts).toEqual(first.artifacts.map(a=>({...a,state:'contested'})))
+
+ // A different Worker may find a durable running claim at the next due window.
+ // It must hold that interrupted attempt, including a late provider response.
+ await json(call(path+`/investigations/${sibling.id}/control`,{action:'pause'},f.cookie))
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:true,choices:[]},f.cookie,undefined,'PUT'))
+ const interrupted=await json<{id:string}>(call(path+'/investigations',{nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Interrupted bounded comparison',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:100000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ let entered!:()=>void,release!:()=>void
+ const reached=new Promise<void>(resolve=>{entered=resolve}),held=new Promise<void>(resolve=>{release=resolve})
+ network.beforeModel=async()=>{entered();await held}
+ const pending=drainLearning(runtime,Date.now()+1000)
+ try{
+  await reached;const transmitted=sent.length
+  await dueLearning(interrupted.id);await drainLearning(runtime,Date.now()+1000)
+  expect(sent).toHaveLength(transmitted)
+  const detail=await json<LearningRunDetail>(call(path+`/investigations/${interrupted.id}`,undefined,f.cookie))
+  expect(detail.investigation).toMatchObject({state:'paused',spentMicros:100000,reservedCostMicros:100000})
+  expect(detail.runs).toMatchObject([{state:'uncertain',actual_micros:null,reserved_micros:100000,reason:'learning_interrupted'}])
+  expect(JSON.parse(detail.runs[0].cursor_json)).toHaveLength(1)
+  expect((await env.DB.prepare("SELECT actor_type,actor_id FROM audit_entries WHERE action='learning.schedule_paused' AND entity_id=? AND json_extract(details_json,'$.reason')='learning_interrupted'").bind(interrupted.id).all()).results).toEqual([{actor_type:'system',actor_id:'learning.scheduler'}])
+ }finally{release();await pending;network.beforeModel=undefined}
+ const late=await json<LearningRunDetail>(call(path+`/investigations/${interrupted.id}`,undefined,f.cookie))
+ expect(late.artifacts).toEqual([]);expect(late.runs).toMatchObject([{state:'uncertain',actual_micros:null,reserved_micros:100000}])
+ const noLateRetry=sent.length;await dueLearning(interrupted.id);await drainLearning(runtime,Date.now()+1000);expect(sent).toHaveLength(noLateRetry)
  expect(await learningEffects()).toEqual(effects)
  expect(sent.every(s=>s.startsWith('GET https://orbit.example.com/api/delegation/v1/evidence?')||s.startsWith('POST https://api.anthropic.com/v1/messages')||s.startsWith('POST https://api.openai.com/v1/chat/completions'))).toBe(true)
-})
+}
 
-it('[LEARN-004] scheduled authority fences refuse stale grants before paid work and discard results after authority changes',async()=>{
+async function scheduledAuthority(){
  const f=await fixture(),runtime=createPennyRuntime(bindings())
  await json(call(path+`/investigations/${f.investigation.id}/control`,{action:'pause'},f.cookie))
  await seedLearningDraft();const effects=await learningEffects()
@@ -127,7 +150,7 @@ it('[LEARN-004] scheduled authority fences refuse stale grants before paid work 
   }
  }
  expect(await learningEffects()).toEqual(effects)
-},120000)
+}
 
 interface LearningRunDetail {
  investigation:Record<string,unknown>
@@ -145,7 +168,9 @@ async function learningEffects(){
  const tables=['roadmap_items','roadmap_publications','releases','release_versions','notification_outbox','integration_deliveries','penny_integration_events','penny_tracker_commands','learning_commitments']
  return Promise.all(tables.map(async table=>({table,rows:(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY id`).all()).results})))
 }
-it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke',async()=>{
+it('[LEARN-003 LEARN-004] bounded scheduled work accounts for interrupted spend, fences changed authority and supports native operator controls',async()=>{
+ await scheduledAccounting();await resetLearningRuntime()
+ await scheduledAuthority();await resetLearningRuntime()
  const f=await fixture(),runtime=createPennyRuntime(bindings()),url=path+`/investigations/${f.investigation.id}`
  await drainLearning(runtime,Date.now()+1000)
  const first=await env.DB.prepare('SELECT id FROM learning_artifacts').first<string>('id');expect(first).toBeTruthy()
@@ -194,7 +219,7 @@ it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged w
  expect((await restoreArchive(env.DB,env.FILES,latest.archive,latest.journal)).status).toBe('complete')
  expect(await env.DB.prepare('SELECT state FROM learning_investigations WHERE id=?').bind(a.id).first('state')).toBe('revoked')
  expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
-})
+},120000)
 it('[LEARN-004] contribution erasure removes every dependent version/snapshot, preserves unrelated native records and refuses replay and active restored grants',async()=>{
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}`
  const privatePurpose='Customer cancelled after the report handoff failed.'
