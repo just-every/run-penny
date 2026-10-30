@@ -674,7 +674,7 @@
       "executable": false
     },
     "agent-surface.json": {
-      "sha256": "075a976cd19c49b04836c0966c454e7aaf761e4c540572b5aa1fa4891f8b7606",
+      "sha256": "4c4cc77bff6454060f32c872cd106ec903879005669232abfafb4fcff04b2d2b",
       "executable": false
     },
     "AGENTS.consumer.md": {
@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "e419d57e079dcb792897bdde10be206d77474c8e036c4b1162cc598d2edb5933",
+      "sha256": "a9989e3603377038b7240b95e00946e95c8d6b9f97cb79287036feae65311d31",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "c29279b8021dd4714ebb0501c3f2f37787a219af8b106dbdad6e8f2848a52a15",
+      "sha256": "703eafde754b5823b6709654dd313f07e6eff584d78842bca4c45d6810be469a",
       "executable": false
     },
     "DEMO.md": {

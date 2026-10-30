@@ -3270,9 +3270,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 52 | 63 | 1 | 116 |
+| Published | 53 | 62 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 72 | 131 | 78 | 281 |
+| All | 73 | 130 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3362,7 +3362,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `NOTIFY-005` | Notification failure | published | partial | `tests/base/notifications.test.ts` | The in-app or portal record of the same event staying available when the email fails has no passing assertion; bounded retry, failed and unknown outcomes and the operator delivery list are asserted. |
 | `DATA-001` | Export contents | published | done | `tests/base/hosted-export.test.ts`; `tests/installer/portability.test.mjs` |  |
 | `DATA-002` | Public/private boundary | published | partial | `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts` | The absence of operator-only field names and values from a public payload has no passing assertion over a non-empty response: both cited checks read the public request list while it holds no published request (the non-empty public-surface scan in `tests/base/penny-evidence.test.ts` is not cited here); the refusal of invalid signed claims without writes or identity disclosure is asserted. |
-| `DATA-003` | Erasure outranks history | published | partial | `tests/base/penny-erasure.test.ts`; `agent-surface.json`; `tests/agent-door/owner.mjs`; `tests/agent-door/fixtures.mjs` | Native erasure retains its prior proof for installations without agent evidence. Base has no client-scoped retained-evidence erasure/fence contract; native erasure and restore now refuse before mutation while agent outcomes/audit/approvals exist, with transactional reservation fences preserving native sponsor bindings. |
+| `DATA-003` | Erasure outranks history | published | done | `tests/base/penny-erasure.test.ts` |  |
 | `DATA-004` | Custom fields | published | done | `tests/browser/operator-completeness-fields.mjs`; `tests/browser/operator-pages.mjs` |  |
 | `LEARN-001` | Permitted originals | published | partial | `tests/base/learning-stage2.test.ts` | The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted. |
 | `LEARN-002` | Contestable learning | published | partial | `tests/base/learning-stage2.test.ts` | Every option carrying the DEC-003 dimensions computed from originals, invalidation by native or source corrections with versioned operator contests, and the absence of automatic ranking, customer contact or publication have no passing assertion in this clause's evidence; validated spans, the clarification and the no-build option are asserted. |
