@@ -11,14 +11,14 @@ export interface SourceRecord {eventKey:string;wording:string;original:unknown;o
 export function configuration(runtime:PennyRuntime){const c=learningConfiguration(runtime);return {source:!!(c?.orbit&&runtime.bindings.PENNY_LEARNING_EGRESS),model:!!(runtime.bindings.PENNY_AI&&runtime.bindings.PENNY_LEARNING_EGRESS)}}
 /** Exact-target read from Orbit's existing rer-delegation/1 protocol. No discovery,
  * cookies, fallback identity, provider writes or broad CRM synchronization. */
-export async function readOrbit(runtime:PennyRuntime,target:string,installationId:string|null):Promise<SourceRecord>{
+export async function readOrbit(runtime:PennyRuntime,target:string,installationId:string|null,onSend=async()=>{}):Promise<SourceRecord>{
  const c=learningConfiguration(runtime).orbit
  if(!c||!runtime.bindings.PENNY_LEARNING_EGRESS)throw new NativeError('learning_source_unconfigured',503)
  if(!installationId||installationId!==c.installationId)throw new NativeError('learning_source_regrant_required',409)
  const url=new URL(c.origin)
  if(url.protocol!=='https:'||url.pathname!=='/'||url.search||url.hash||url.username||url.password||!c.token||!c.installationId||!c.audiencePrincipalIds.length)throw new NativeError('learning_source_configuration_invalid',503)
  url.pathname='/api/delegation/v1/evidence';url.searchParams.set('target',target)
- const response=await send(runtime,{url:url.href,method:'GET',headers:{Authorization:`Bearer ${c.token}`,Accept:'application/json'},body:''})
+ const response=await send(runtime,{url:url.href,method:'GET',headers:{Authorization:`Bearer ${c.token}`,Accept:'application/json'},body:''},onSend)
  if(response.status!==200)throw new NativeError(response.status===401||response.status===403?'learning_provider_revoked':'learning_provider_unavailable',409)
  const data=payload(()=>orbitEnvelope.parse(JSON.parse(response.body)),'learning_source_payload_invalid')
  if(data.target!==target||data.installationId!==c.installationId||c.audiencePrincipalIds.some(id=>!data.audience.principalIds.includes(id)))throw new NativeError('learning_source_audience_denied',409)

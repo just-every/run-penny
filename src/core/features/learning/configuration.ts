@@ -13,12 +13,13 @@ export function learningConfiguration(runtime:PennyRuntime):LearningConfiguratio
  if(!runtime.bindings.PENNY_LEARNING)return {}
  try{return config.parse(JSON.parse(runtime.bindings.PENNY_LEARNING))}catch{throw new NativeError('learning_configuration_invalid',503)}
 }
-export async function send(runtime:PennyRuntime,wire:LearningWire){
+export async function send(runtime:PennyRuntime,wire:LearningWire,onSend=async()=>{}){
  const port=runtime.bindings.PENNY_LEARNING_EGRESS
  if(!port)throw new NativeError('learning_transport_unconfigured',503)
  validateDestination(wire.url)
  if(new TextEncoder().encode(wire.body).length>512*1024)throw new NativeError('learning_request_limit',413)
  let response:Awaited<ReturnType<LearningEgress['send']>>
+ await onSend()
  try{response=await (wire.method==='GET'||!runtime.configuration.demo?port.send(wire):(await import('../../../../base/modules/demo/index.mjs')).demoEffect(()=>port.send(wire),()=>demoLearningSuccess(wire)))}catch{throw new NativeError('learning_transport_failed',409)}
  if(!response||!Number.isInteger(response.status)||response.status<100||response.status>599||typeof response.body!=='string'||new TextEncoder().encode(response.body).length>512*1024)throw new NativeError('learning_response_limit',413)
  return response

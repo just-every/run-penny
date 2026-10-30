@@ -43,8 +43,7 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   if(sourceCost>=i.max_run_cost_micros)throw new NativeError('learning_call_budget_exceeded',409)
   const model=await selected(runtime,db,'learning')
   reservation=await reserve(db,'learning',model.provider,model.id,i.max_run_cost_micros,sourceCost)
-  if(sourceCost>0)paid=true
-  const rules=await redactionSettings(db),records=await acquire(runtime,db,i,s,rules);let observations=await retain(db,i,s,records)
+  const rules=await redactionSettings(db),records=await acquire(runtime,db,i,s,rules,async()=>{await db.prepare('SELECT 1').first();if(sourceCost>0)paid=true});let observations=await retain(db,i,s,records)
   cursor=JSON.stringify(observations.map(o=>({eventKey:o.event_key,contentHash:o.content_hash})))
   const corrections=(await db.prepare('SELECT id,correction FROM learning_corrections WHERE investigation_id=? ORDER BY created_at,id').bind(id).all()).results
   // A repeated input after a correction is a new interpretation, never a revival
@@ -78,7 +77,13 @@ export async function runInvestigation(runtime:PennyRuntime,id:string,eventKey:s
   if(reservation)await failReservation(native,reservation,paid)
   // Record uncertainty without retaining model/provider exception strings. A
   // revoke/erase may have removed the run, in which case this writes nothing.
-  await native.batch([native.prepare("UPDATE learning_runs SET state=?,reason=?,actual_micros=?,finished_at=? WHERE id=? AND claim=? AND state='running'").bind(paid?'uncertain':'refused',reason,paid?null:0,new Date().toISOString(),runId,claim),systemLearningAudit(native,'learning.run','learning_investigation',id,'learning.run_failed',{runId,reason},true),native.prepare('UPDATE learning_investigations SET last_reason=?,spent_micros=spent_micros-? WHERE id=? AND version=?').bind(reason,paid?0:i.max_run_cost_micros,id,i.version)])
+  await native.batch([
+   native.prepare("UPDATE learning_runs SET state=?,reason=?,actual_micros=?,finished_at=? WHERE id=? AND claim=? AND state IN('running','uncertain')").bind(paid?'uncertain':'refused',reason,paid?null:0,new Date().toISOString(),runId,claim),
+   // Releasing an unspent reservation follows the claim transition, even if
+   // a correction changed its grant version. A removed claim releases nothing.
+   native.prepare('UPDATE learning_investigations SET last_reason=CASE WHEN version=? THEN ? ELSE last_reason END,spent_micros=spent_micros-? WHERE id=? AND changes()>0').bind(i.version,reason,paid?0:i.max_run_cost_micros,id),
+   systemLearningAudit(native,'learning.run','learning_investigation',id,'learning.run_failed',{runId,reason},true),
+  ])
   if(reason==='learning_provider_revoked'){
    const revoked=(await native.prepare("SELECT id FROM learning_sources WHERE provider='orbit' AND installation_id IS ? AND state='active'").bind(s.installation_id).all<{id:string}>()).results
    for(const source of revoked)await purge(native,source.id,{actor:{system:'learning.provider_revocation'},action:'learning.provider_revoked'})

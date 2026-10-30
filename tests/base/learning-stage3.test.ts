@@ -6,7 +6,7 @@ import {drainLearning} from '@/core/features/learning/scheduled'
 import { exportArchive,planErasure,normalize } from '@/core/features/data/archive'
 import { eraseEntity } from '@/core/features/data/operations'
 import {canonical} from '@/core/features/data/archive'
-import {call,json,fixture,path,bindings,sent,network,resetLearning} from './learning-test-runtime'
+import {call,json,fixture,path,bindings,sent,network,resetLearning,config} from './learning-test-runtime'
 import {runNotificationSchedule} from '@/core/features/notifications/scheduled'
 import {explicitConsentBoard} from './explicit-consent-board'
 it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke',async()=>{
@@ -58,7 +58,8 @@ it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged w
  expect((await restoreArchive(env.DB,env.FILES,latest.archive,latest.journal)).status).toBe('complete')
  expect(await env.DB.prepare('SELECT state FROM learning_investigations WHERE id=?').bind(a.id).first('state')).toBe('revoked')
  expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
- await proveBoundedSchedule()
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-10-30T12:00:00Z'))
+ try{await proveBoundedSchedule();await proveScopeFences();await proveNativeFences()}finally{vi.useRealTimers()}
 })
 it('[LEARN-004] contribution erasure removes every dependent version/snapshot, preserves unrelated native records and refuses replay and active restored grants',async()=>{
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}`
@@ -182,22 +183,29 @@ async function proveBoundedSchedule(){
  const tick=(custom=bindings())=>runNotificationSchedule({scheduledTime:Date.now()+1000,cron:'* * * * *',noRetry(){}} as ScheduledController,custom)
  const due=(id=f.investigation.id)=>env.DB.prepare("UPDATE learning_investigations SET next_run_at='2000-01-01T00:00:00.000Z' WHERE id=?").bind(id).run()
  const effects=async()=>{
-  const tables=['notification_intents','notification_outbox','penny_tracker_commands','penny_integration_events','learning_commitments','roadmap_publications','releases','candidate_bets']
+  const tables=['notification_intents','notification_outbox','penny_tracker_commands','penny_integration_events','learning_commitments','roadmap_publications','roadmap_update_versions','releases','release_versions','decisions','candidate_bets']
   return Promise.all(tables.map(async table=>({table,rows:(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()).results})))
  }
+ const decision=await json<{id:string}>(call(`/api/operator/evidence/${f.evidence.id}/decision`,{question:'Should the existing plan change?',betTitle:'Existing manual plan',approach:'Await a separately authorized decision'},f.cookie),201)
+ expect(decision.id).toBeTruthy()
  const beforeEffects=await effects()
+ expect(beforeEffects.find(e=>e.table==='candidate_bets')!.rows).toHaveLength(1)
  await tick()
  const first=await env.DB.prepare('SELECT * FROM learning_runs WHERE investigation_id=?').bind(f.investigation.id).first<{id:string;event_key:string;claim:string;state:string;reserved_micros:number;actual_micros:number;cursor_json:string}>()
  expect(first).toMatchObject({state:'complete',reserved_micros:100000,actual_micros:1100})
  expect(first!.event_key).toMatch(/^scheduled:/);expect(first!.claim).toBeTruthy()
  const cursor=JSON.parse(first!.cursor_json)
- expect(cursor).toHaveLength(2);expect(cursor).toEqual(expect.arrayContaining([expect.objectContaining({eventKey:'orbit:fixture-orbit:signals/cancellation',contentHash:expect.stringMatching(/^[a-f0-9]{64}$/)})]))
+ expect(cursor).toHaveLength(2);expect(cursor).toEqual(expect.arrayContaining([expect.objectContaining({eventKey:'orbit:fixture-orbit:'+['signals','cancellation'].join('/'),contentHash:expect.stringMatching(/^[a-f0-9]{64}$/)})]))
  const cards=await json<{needsYou:unknown[]}>(call(path,undefined,f.cookie));expect(cards.needsYou).toHaveLength(1)
  await due();await tick()
  const unchanged=await env.DB.prepare("SELECT cursor_json FROM learning_runs WHERE investigation_id=? AND reason='unchanged'").bind(f.investigation.id).first<string>('cursor_json')
  expect.soft(JSON.parse(unchanged!),'unchanged runs retain the acquired revision cursor').toEqual(cursor)
  expect(sent.filter(s=>s.startsWith('POST'))).toHaveLength(1)
  expect((await json<{needsYou:unknown[]}>(call(path,undefined,f.cookie))).needsYou).toEqual(cards.needsYou)
+ const replayCalls=sent.length,replayRuns=(await env.DB.prepare('SELECT * FROM learning_runs WHERE investigation_id=? ORDER BY id').bind(f.investigation.id).all()).results
+ await due();await tick()
+ expect(sent).toHaveLength(replayCalls)
+ expect((await env.DB.prepare('SELECT * FROM learning_runs WHERE investigation_id=? ORDER BY id').bind(f.investigation.id).all()).results).toEqual(replayRuns)
  expect(await effects()).toEqual(beforeEffects)
  await json(call(url+'/control',{action:'pause'},f.cookie))
 
@@ -215,4 +223,127 @@ async function proveBoundedSchedule(){
  const home=await json<{investigations:{id:string;reservedCostMicros:number;spentMicros:number;state:string}[]}>(call(path,undefined,f.cookie))
  expect.soft(home.investigations.find(i=>i.id===unknown.id)).toMatchObject({state:'paused',reservedCostMicros:100000,spentMicros:100000})
  expect(await effects()).toEqual(beforeEffects)
+ const report=await json<{report:{meteredMicros:number;reservedMicros:number}}>(call('/api/operator/settings/ai',undefined,f.cookie))
+ expect(report.report).toMatchObject({meteredMicros:1100,reservedMicros:100000})
+ // The retained charge consumes the installation cap, including for a different
+ // grant. Denial must release that second grant's unspent reservation.
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:101100,includePrivate:true,choices:[]},f.cookie,undefined,'PUT'))
+ const second=await json<{id:string}>(call(path+'/investigations',{sourceId:f.source.id,nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Another bounded check',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:100000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ expect(await json(call(path+`/investigations/${second.id}/run`,{},f.cookie),409)).toMatchObject({error:'ai_budget_exhausted'})
+ expect(sent).toHaveLength(count)
+ expect(await env.DB.prepare('SELECT spent_micros FROM learning_investigations WHERE id=?').bind(second.id).first('spent_micros')).toBe(0)
+ await env.DB.prepare('UPDATE learning_investigations SET budget_micros=100000 WHERE id=?').bind(unknown.id).run()
+ expect(await json(call(uncertainUrl+'/control',{action:'resume'},f.cookie),409)).toMatchObject({error:'learning_resume_requires_new_grant'})
+ expect(sent).toHaveLength(count)
+ await json(call(path+`/investigations/${second.id}/control`,{action:'pause'},f.cookie))
+
+ // A storage interruption after transmission leaves a running durable claim.
+ // The next window exposes uncertainty, retains its cursor and never resends.
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:true,choices:[]},f.cookie,undefined,'PUT'))
+ const crash=await json<{id:string}>(call(path+'/investigations',{sourceId:f.source.id,nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Keep an interrupted check accountable',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:300000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ network.beforeModel=async()=>{await env.DB.prepare("CREATE TRIGGER synthetic_learning_interruption BEFORE UPDATE ON penny_ai_runs BEGIN SELECT RAISE(ABORT,'synthetic-penny-2'); END").run()}
+ try{expect((await call(path+`/investigations/${crash.id}/run`,{},f.cookie)).ok).toBe(false)}finally{network.beforeModel=undefined;await env.DB.prepare('DROP TRIGGER synthetic_learning_interruption').run()}
+ expect(await env.DB.prepare('SELECT state FROM learning_runs WHERE investigation_id=?').bind(crash.id).first('state')).toBe('running')
+ const transmitted=sent.length
+ await due(crash.id);await tick();await tick()
+ expect(sent).toHaveLength(transmitted)
+ const interrupted=await json<{investigation:{spentMicros:number;state:string};runs:{state:string;actual_micros:null;reserved_micros:number;cursor_json:string}[]}>(call(path+`/investigations/${crash.id}`,undefined,f.cookie))
+ expect(interrupted.investigation).toMatchObject({spentMicros:100000,state:'paused'})
+ expect(interrupted.runs).toEqual([expect.objectContaining({state:'uncertain',actual_micros:null,reserved_micros:100000})])
+ expect(JSON.parse(interrupted.runs[0].cursor_json)).toHaveLength(2)
+ expect((await json<{report:{reservedMicros:number}}>(call('/api/operator/settings/ai',undefined,f.cookie))).report.reservedMicros).toBe(200000)
+ expect(await effects()).toEqual(beforeEffects)
+ const refused=await json<{id:string}>(call(path+'/investigations',{sourceId:f.source.id,nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Do not charge a refused source',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:100000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ const mismatched=bindings();mismatched.PENNY_LEARNING=JSON.stringify({orbit:{...config.orbit,installationId:'synthetic-penny-3',readCostMicros:10}})
+ expect(await json(call(path+`/investigations/${refused.id}/run`,{},f.cookie,mismatched),409)).toMatchObject({error:'learning_source_regrant_required'})
+ expect(sent).toHaveLength(transmitted)
+ expect.soft(await env.DB.prepare('SELECT state,actual_micros FROM learning_runs WHERE investigation_id=?').bind(refused.id).first()).toEqual({state:'refused',actual_micros:0})
+ expect.soft(await env.DB.prepare('SELECT spent_micros FROM learning_investigations WHERE id=?').bind(refused.id).first('spent_micros')).toBe(0)
+ const paidRead=bindings();paidRead.PENNY_LEARNING=JSON.stringify({orbit:{...config.orbit,readCostMicros:10}})
+ paidRead.PENNY_LEARNING_EGRESS={async send(wire){sent.push(wire.method+' '+wire.url);throw new Error('synthetic-penny-4')}}
+ expect(await json(call(path+`/investigations/${refused.id}/run`,{},f.cookie,paidRead),409)).toMatchObject({error:'learning_transport_failed'})
+ expect(sent.slice(transmitted)).toEqual(['GET https://orbit.example.com/api/delegation/v1/evidence?target=signals%2Fcancellation'])
+ expect(await env.DB.prepare("SELECT state,actual_micros,reserved_micros FROM learning_runs WHERE investigation_id=? AND state='uncertain'").bind(refused.id).first()).toEqual({state:'uncertain',actual_micros:null,reserved_micros:100000})
+ expect(await env.DB.prepare('SELECT spent_micros FROM learning_investigations WHERE id=?').bind(refused.id).first('spent_micros')).toBe(100000)
+ expect((await call(path+`/investigations/${refused.id}/run`,{},f.cookie)).ok).toBe(false)
+ await due(refused.id);await tick();expect(sent).toHaveLength(transmitted+1)
+ expect(await effects()).toEqual(beforeEffects)
+
+}
+
+async function proveScopeFences(){
+ await resetLearning()
+ const f=await fixture()
+ await json(call(path+`/investigations/${f.investigation.id}/control`,{action:'pause'},f.cookie))
+ const operator=await env.DB.prepare('SELECT id,version FROM oa_operators LIMIT 1').first<{id:string;version:number}>()
+ for(const stage of ['claim','source','model'] as const){
+  for(const field of ['source','purpose','authority','expiry','budget','correction','erasure'] as const){
+   const investigation=await json<{id:string}>(call(path+'/investigations',{sourceId:f.source.id,nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Only the current grant may finish',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+   const id=investigation.id,url=path+`/investigations/${id}`
+   const changes={
+    source:`UPDATE learning_sources SET version=version+1 WHERE id='${f.source.id}'`,
+    purpose:`UPDATE learning_investigations SET purpose='Changed purpose' WHERE id='${id}'`,
+    authority:`UPDATE oa_operators SET version=version+1 WHERE id='${operator!.id}'`,
+    expiry:`UPDATE learning_investigations SET expires_at='2000-01-01T00:00:00.000Z' WHERE id='${id}'`,
+    budget:`UPDATE learning_investigations SET budget_micros=0 WHERE id='${id}'`,
+    correction:`UPDATE learning_investigations SET version=version+1 WHERE id='${id}'`,
+    erasure:'UPDATE data_state SET epoch=epoch+1 WHERE singleton=1',
+   }
+   const custom=bindings(),edge=custom.PENNY_LEARNING_EGRESS!,calls:string[]=[],label=`${field} at ${stage}`
+   // A trigger changes real stored authority immediately after the durable
+   // claim. Other cases change it at the source or model network boundary.
+   if(stage==='claim')await env.DB.prepare(`CREATE TRIGGER synthetic_learning_fence AFTER INSERT ON learning_runs WHEN NEW.investigation_id='${id}' BEGIN ${changes[field]}; END`).run()
+   custom.PENNY_LEARNING_EGRESS={async send(wire){calls.push(wire.method);const response=await edge.send(wire);if(wire.method===(stage==='source'?'GET':stage==='model'?'POST':''))await env.DB.prepare(changes[field]).run();return response}}
+   try{await runNotificationSchedule({scheduledTime:Date.now()+1000,cron:'* * * * *',noRetry(){}} as ScheduledController,custom)}finally{
+    if(stage==='claim')await env.DB.prepare('DROP TRIGGER synthetic_learning_fence').run()
+    if(field==='authority')await env.DB.prepare('UPDATE oa_operators SET version=? WHERE id=?').bind(operator!.version,operator!.id).run()
+   }
+   expect.soft(calls,label).toEqual(stage==='claim'?[]:stage==='source'?['GET']:['GET','POST'])
+   const detail=await json<{investigation:{spentMicros:number};artifacts:unknown[];runs:{state:string;actual_micros:number|null;reserved_micros:number}[]}>(call(url,undefined,f.cookie))
+   expect.soft(detail.artifacts,label).toEqual([])
+   expect.soft(detail.runs,label).toEqual([expect.objectContaining({state:stage==='model'?'uncertain':'refused',actual_micros:stage==='model'?null:0,reserved_micros:100000})])
+   expect.soft(detail.investigation.spentMicros,label+' reservation').toBe(stage==='model'?100000:0)
+   const home=await json<{needsYou:{investigationId:string}[];learning:{investigationId:string}[]}>(call(path,undefined,f.cookie))
+   expect.soft([...home.needsYou,...home.learning].filter(a=>a.investigationId===id),label+' cards').toEqual([])
+   expect.soft(await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE entity_id=? AND action='learning.run_completed'").bind(id).first('n'),label+' completion').toBe(0)
+   await json(call(url+'/control',{action:'pause'},f.cookie))
+  }
+ }
+}
+
+async function proveNativeFences(){
+ await resetLearning()
+ const f=await fixture(),url=path+`/investigations/${f.investigation.id}`
+ const first=await json<{artifactId:string}>(call(url+'/run',{},f.cookie))
+ const correction=bindings(),edge=correction.PENNY_LEARNING_EGRESS!
+ correction.PENNY_LEARNING_EGRESS={async send(wire){const response=await edge.send(wire);if(wire.method==='GET')await json(call(url+'/correct',{interpretationId:first.artifactId,correction:'Native correction supersedes the captured grant version.'},f.cookie));return response}}
+ const before=sent.length
+ expect((await call(url+'/run',{},f.cookie,correction)).ok).toBe(false)
+ expect(sent.slice(before).map(s=>s.split(' ')[0])).toEqual(['GET'])
+ expect(await env.DB.prepare('SELECT spent_micros FROM learning_investigations WHERE id=?').bind(f.investigation.id).first('spent_micros')).toBe(1100)
+ expect(await env.DB.prepare('SELECT state FROM learning_artifacts WHERE id=?').bind(first.artifactId).first('state')).toBe('contested')
+ expect(await env.DB.prepare('SELECT count(*) n FROM learning_corrections WHERE investigation_id=?').bind(f.investigation.id).first('n')).toBe(1)
+
+ // Correct a native original through its route while the model is reading the
+ // old version. Only the evidence correction commits; the stale result cannot.
+ const version=await env.DB.prepare('SELECT id FROM evidence_versions WHERE evidence_id=? ORDER BY version_number DESC LIMIT 1').bind(f.evidence.id).first<string>('id')
+ network.beforeModel=async()=>{await json(call(`/api/operator/evidence/${f.evidence.id}/wording`,{wording:'The original handoff account has been corrected.',expectedVersionId:version},f.cookie,undefined,'PATCH'))}
+ try{expect((await call(url+'/run',{},f.cookie)).ok).toBe(false)}finally{network.beforeModel=undefined}
+ expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts WHERE investigation_id=?').bind(f.investigation.id).first('n')).toBe(1)
+ expect(await env.DB.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=? ORDER BY version_number DESC LIMIT 1').bind(f.evidence.id).first('wording')).toBe('The original handoff account has been corrected.')
+ expect((await json<{needsYou:unknown[]}>(call(path,undefined,f.cookie))).needsYou).toEqual([])
+
+ // Erase through the native data door during another paid call. Its late
+ // response cannot restore observations, cards or the erased wording.
+ network.beforeModel=async()=>{
+  const target={table:'evidence_items',id:f.evidence.id},plan=await json<{planHash:string}>(call('/api/operator/data/erasure/preview',target,f.cookie))
+  expect((await json<{status:string}>(call('/api/operator/data/erasure',{...target,planHash:plan.planHash},f.cookie))).status).toBe('complete')
+ }
+ try{expect((await call(url+'/run',{},f.cookie)).ok).toBe(false)}finally{network.beforeModel=undefined}
+ const erased=await json<{artifacts:unknown[];observations:{evidence_id:string|null}[];investigation:{spentMicros:number}}>(call(url,undefined,f.cookie))
+ expect(erased.artifacts).toEqual([]);expect(erased.observations.some(o=>o.evidence_id===f.evidence.id)).toBe(false)
+ expect(JSON.stringify(erased)).not.toContain('The original handoff account has been corrected.')
+ expect(await env.DB.prepare('SELECT id FROM evidence_items WHERE id=?').bind(f.evidence.id).first()).toBeNull()
+ const calls=sent.length;expect((await call(url+'/run',{},f.cookie)).ok).toBe(false);expect(sent).toHaveLength(calls)
+ expect(erased.investigation.spentMicros).toBe(201100)
 }
