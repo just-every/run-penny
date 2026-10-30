@@ -8298,7 +8298,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-hosted-data.mjs": {
-      "sha256": "327858525dd3ad23ed53df02160ccbed1e56cd72b5d9112e9177519bdbcfdb1c",
+      "sha256": "9cc87cca7d0810b28f422012d38e2b80448e7ecb06225b5f682681f86d22c340",
       "executable": false
     },
     "tests/browser/operator-pages-status.mjs": {
