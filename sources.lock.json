@@ -3358,7 +3358,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "f370bb4a9359db965a740d9e78a2718cad39d2ce925206703c56e6c2d1dcbe79",
+      "sha256": "c29279b8021dd4714ebb0501c3f2f37787a219af8b106dbdad6e8f2848a52a15",
       "executable": false
     },
     "DEMO.md": {
@@ -8177,8 +8177,8 @@
       "sha256": "49501c5e776b0cf97840b41b20be91e9688a12279c37ca91fee23048f765c428",
       "executable": false
     },
-    "tests/base/agent-resources.test.ts": {
-      "sha256": "7a8292606739f6b664ece3b34c7ebe5678c2bf0955755a3e043ff96ca52549ae",
+    "tests/base/agent-resources.ts": {
+      "sha256": "8e612fdc8cacfc0577e4d3bde0486c205e5df8015c7f1d4d55650ac132da4b80",
       "executable": false
     },
     "tests/base/agent-signing.ts": {
@@ -8394,7 +8394,7 @@
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
-      "sha256": "3c63227e88d2f3928b17f8d202d86272e8964b431fe693b8afb5ce4fb922143f",
+      "sha256": "5ce85ccc5d72f71491f2628f59f2f918fc6ee3239cc6e54b5e8cf49638b61f86",
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
