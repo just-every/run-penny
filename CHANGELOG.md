@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Replay the company-agent adoption above the browser-capture schema as migrations 0100–0106, preserving applied 0099 bytes and proving populated previous-main columns and original files through upgrade and repeat. Retain main's DATA-007 missing judgment; bounded MCP proof does not accept the wider target.
+
 - Declare evidence capture and review resource fixtures with expected native written state so rer 0.2.94 verifies each write through its returned MCP resource link under autonomous and held policies. Preserve main’s existing DATA-003 judgment and the installation’s retained-agent-evidence erasure/restore refusal.
 
 - Pin rer 0.2.94 and refresh the declared company-agent door and business-settings source to its published immutable revision. Preserve the declared subset, native authority assertions and retained-evidence erasure/restore fence; unrelated source pins and Run-site data remain unchanged.
@@ -18,7 +20,7 @@
 
 - Align the owner deployment declaration with the public mail-provider and relay-URL setup fields; credentials remain secret. The same native owner settings supply those public values.
 
-- Adopt the rer 0.2.91 shared company-agent door with signed owner-bound Business identity, policy, native approvals, Pause, attribution, audit and idempotency. The declared subset supports native internal feedback/decision/prioritization work and classifies public-board creation as live. Original API keys retain narrow scopes and the public read projection. Native actor creation binds once to its admitted operator; ordinary sign-in and populated upgrades retain their original lifecycle. Add migrations 0099–0105; apply them before starting this version and retain the expanded schema on rollback. Agent policy, binding, approval, audit and replay stores are installation data, excluded from portable archives. Native erasure and archive restore refuse while agent decision evidence is retained, pending client-scoped custody support; other record resource types, events, prompts, subscriptions, outbound jobs and embedded learning integration remain explicit contract gaps.
+- Adopt the rer 0.2.91 shared company-agent door with signed owner-bound Business identity, policy, native approvals, Pause, attribution, audit and idempotency. The declared subset supports native internal feedback/decision/prioritization work and classifies public-board creation as live. Original API keys retain narrow scopes and the public read projection. Native actor creation binds once to its admitted operator; ordinary sign-in and populated upgrades retain their original lifecycle. Add migrations 0100–0106; apply them before starting this version and retain the expanded schema on rollback. Agent policy, binding, approval, audit and replay stores are installation data, excluded from portable archives. Native erasure and archive restore refuse while agent decision evidence is retained, pending client-scoped custody support; other record resource types, events, prompts, subscriptions, outbound jobs and embedded learning integration remain explicit contract gaps.
 
 - Keep numeric UUID prefixes out of built-in card redaction while preserving owner custom rules and real card detection. This prevents generated learning references from randomly refusing redaction-guarded work. The Help Scout network-edge journey captures a UUID beside a card and proves the identifier survives while the card is removed before storage and export.
 

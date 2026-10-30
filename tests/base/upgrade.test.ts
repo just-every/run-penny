@@ -87,9 +87,21 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const browserPredecessor=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const browserSnapshot=async()=> (await env.DB.batch(browserPredecessor.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const browserBefore=await browserSnapshot()
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0100'))
  expect(await browserSnapshot()).toEqual(browserBefore)
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0100'))
  expect(await browserSnapshot()).toEqual(browserBefore)
+ // Agent attribution expands existing rows. Preserve all predecessor columns
+ // and originals across the appended agent migrations and a repeated no-op.
+ const agentPredecessor=await Promise.all((await env.DB.prepare(tableQuery).all<{name:string}>()).results.map(async table=>({
+  name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name),
+ })))
+ const agentSnapshot=async()=> (await env.DB.batch(agentPredecessor.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const agentBefore=await agentSnapshot()
+ await applyD1Migrations(env.DB,migrations)
+ expect(await agentSnapshot()).toEqual(agentBefore)
+ await applyD1Migrations(env.DB,migrations)
+ expect(await agentSnapshot()).toEqual(agentBefore)
+ expect(new Uint8Array(await (await env.FILES.get('upgrade-preserved-bytes'))!.arrayBuffer())).toEqual(bytes)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

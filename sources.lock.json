@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "a9989e3603377038b7240b95e00946e95c8d6b9f97cb79287036feae65311d31",
+      "sha256": "552151656ad8e972456bf29de233417718dc189266725e43f5d3d85ad1c50e32",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3394,7 +3394,7 @@
       "executable": false
     },
     "docs/AGENTS.md": {
-      "sha256": "2eb4b5e023e99f0d29464e926e636988a5d3989db8e1899af32841455924b53a",
+      "sha256": "0a980b2a60730e6b3e3f5e7f290767e1582c72dd7c5bbae3b3e30d64dd741f81",
       "executable": false
     },
     "docs/API.md": {
@@ -3442,7 +3442,7 @@
       "executable": false
     },
     "docs/data-ownership.md": {
-      "sha256": "698dbfe7b4c344126222b25e7237aa8f867f79a74783d316d86da487d3c03640",
+      "sha256": "75129473f671412f1e40bb258539c5109758a52cb2549bd877351cc75fa3407f",
       "executable": false
     },
     "docs/DATA.md": {
@@ -3670,7 +3670,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "c5826d511153207b4b3d00f5b3df1ccd3a73f2f750bb903941bdccd2fbcece9b",
+      "sha256": "278b17886dd14bd2f78eead21466ed931839b7ad8c799f7d71eb17b51064fbae",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -4190,7 +4190,7 @@
       "executable": false
     },
     "scripts/agent-docs.mjs": {
-      "sha256": "0e042c2e4fd3b8137ffcd9d8888d1662ccd2e8b3774d21bacd4291774e8caf10",
+      "sha256": "cfc13540200aabb818ae56be4bd21974050eb62e4bb17238ed9751de23eb44b6",
       "executable": false
     },
     "scripts/ai-eval/metrics.mjs": {
@@ -8542,7 +8542,7 @@
       "executable": false
     },
     "tests/base/upgrade.test.ts": {
-      "sha256": "f829b46bc4ca00657df38e20afa1996462aea7ad69a3851511267adda5675047",
+      "sha256": "113e2ba4810438958de7d7ef739cc5581ce9f4b7d637a15da5cce183b7227391",
       "executable": false
     },
     "tests/base/uservoice-fixture.ts": {
