@@ -4394,7 +4394,7 @@
       "executable": false
     },
     "src/core/app/ui/operator-app-shell.tsx": {
-      "sha256": "81a8668db00154cd5b812ae6df8b367f76aa8679b73fadf3e4856f7e93da841d",
+      "sha256": "07e163f8e4346e562913ea5cfe193224c41bd2feb15e07e68cbfb0ba2f2a00da",
       "executable": false
     },
     "src/core/app/ui/operator-format.ts": {
@@ -7434,7 +7434,7 @@
       "executable": false
     },
     "src/index.css": {
-      "sha256": "5b636bc15f62a53de66a2c446510e9fed1c2a71be5f70e88e2576aeb7794d36f",
+      "sha256": "5fc81a362fbd7a8460bc053084012639681265a00b9c3139698d1d44aa8ab9f9",
       "executable": false
     },
     "src/routes/__root.tsx": {
