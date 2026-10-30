@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 const code = answer => answer.result?._meta?.['com.runeditrun/error']?.code ?? answer.message?.error?.data?._meta?.['com.runeditrun/error']?.code ?? answer.message?.error?.data?.code;
 const assert = (ok, message) => { if (!ok) { console.error('Native journey assertion: ' + message); throw Error(message); } };
-export default async function () { console.log('Native journey: conflict, stale version, original key ceiling, native attribution and retained-evidence erasure refusal checked.'); }
+export default async function () { console.log('Native journey: conflict, stale version, original key ceiling, native attribution and retained-evidence erasure/restore refusals checked.'); }
 export async function afterStep({ phase, step, args, result, tool, request, origin, cookie, database }) {
  if (phase === 'autonomous' && step.id === 'capture') {
   const changed = await tool(step.tool, { ...args, wording: 'A different proposed capture under the same key.' });
@@ -20,6 +20,12 @@ export async function afterStep({ phase, step, args, result, tool, request, orig
   assert(activity?.agent_id && activity.prepared_by.includes(' for ') && activity.sponsor_native_id === activity.native_operator_id && activity.door_operation_id, 'Native activity must retain the real agent and sponsor');
   const erasure = await request(origin + '/api/operator/data/erasure/preview', { method: 'POST', headers: { Cookie: cookie, Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ table: 'evidence_items', id: result.id }) });
   assert(erasure.status === 409 && (await erasure.json()).error === 'agent_retained_evidence_requires_review', 'Retained agent evidence must keep native erasure closed');
+  const bindingBefore = (await db.prepare('SELECT native_operator_id,actor_id FROM penny_agent_people ORDER BY native_operator_id').all()).results;
+  const backup = await request(origin + '/api/operator/data/export', { headers: { Cookie: cookie } });
+  assert(backup.ok, 'Native export remains available with retained agent evidence');
+  const restore = await request(origin + '/api/operator/data/import', { method: 'POST', headers: { Cookie: cookie, Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify(await backup.json()) });
+  assert(restore.status === 409 && (await restore.json()).error === 'agent_retained_evidence_requires_review', 'Restore cannot displace an admitted sponsor binding');
+  assert(JSON.stringify((await db.prepare('SELECT native_operator_id,actor_id FROM penny_agent_people ORDER BY native_operator_id').all()).results) === JSON.stringify(bindingBefore), 'Refused restore must preserve native actor bindings');
  }
  if (phase === 'autonomous' && step.id === 'note') {
   const response = await request(origin + '/api/operator/requests/' + args.slug + '/context', { headers: { Cookie: cookie } });

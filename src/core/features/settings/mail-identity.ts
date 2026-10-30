@@ -1,3 +1,4 @@
+import { pennyTrust } from '../agent-door/trust'
 import { pennyBusiness } from '../agent-door/business'
 import {z} from 'zod'
 import type {PennyRuntime} from '@/core/app/runtime'
@@ -10,6 +11,7 @@ export interface MailIdentity {companyName:string;senderName:string;fromAddress:
 export async function mailIdentity(runtime:PennyRuntime):Promise<MailIdentity|null>{
  const record = await runtime.database.binding.prepare('SELECT company_name AS companyName,sender_name AS senderName,from_address AS fromAddress,reply_to AS replyTo,postal_address AS postalAddress FROM penny_mail_identity WHERE singleton=1').first<MailIdentity>()
  if (!record) return null
+ if (!pennyTrust(runtime)) return record
  return { ...record, companyName: await pennyBusiness(runtime).resolve('display_name', record.companyName) as string }
 }
 export function identityHeaders(identity:MailIdentity|null,from:string){

@@ -16,7 +16,9 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
  const people=(await env.DB.prepare('SELECT id FROM requesters ORDER BY id').all<{id:string}>()).results
  for(let i=0;i<people.length;i++)await env.DB.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(people[i].id,accounts[i].id,new Date().toISOString()).run()
  const tables=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' ORDER BY name").all<{name:string}>()).results
- const read=()=>env.DB.batch(tables.map(t=>env.DB.prepare(`SELECT * FROM "${t.name}" ORDER BY rowid`)))
+ // An additive migration may add columns; preserve every previous cell and row.
+ const previous=await Promise.all(tables.map(async t=>({...t,columns:(await env.DB.prepare(`PRAGMA table_info("${t.name}")`).all<{name:string}>()).results.map(c=>'"'+c.name+'"')})))
+ const read=()=>env.DB.batch(previous.map(t=>env.DB.prepare(`SELECT ${t.columns.join(',')} FROM "${t.name}" ORDER BY rowid`)))
  const before=(await read()).map(r=>r.results)
  await applyD1Migrations(env.DB,inject('migrations'));expect((await read()).map(r=>r.results)).toEqual(before)
  await applyD1Migrations(env.DB,inject('migrations'));expect((await read()).map(r=>r.results)).toEqual(before)

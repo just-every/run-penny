@@ -614,6 +614,12 @@
       "name": "0105_agent_identity_custody.sql",
       "sha256": "abc7007d60d4d275ea16a6e94fd50d07aa7c09984e5556f9fbdebc891191e472",
       "sql": "-- Even catalogue-only agent admission retains sponsor names in native identity.\nCREATE TRIGGER penny_agent_identity_erasure_fence BEFORE INSERT ON data_operations\n WHEN NEW.kind='erase' AND EXISTS(SELECT 1 FROM agent_door_agents)\n BEGIN SELECT RAISE(ABORT,'agent_retained_evidence_requires_review'); END;\n"
+    },
+    {
+      "binding": "DB",
+      "name": "0106_agent_native_actor_binding.sql",
+      "sha256": "544ed1f639ab172e16bfb61877b49ef4b93d36d88380f44c64ea710ca9e6f576",
+      "sql": "-- Product actor creation remains the native session's existing lifecycle.\n-- Bind its native OA id once; an address change cannot move an existing binding.\nCREATE TRIGGER penny_agent_bind_product_actor AFTER INSERT ON operators\n BEGIN\n INSERT INTO penny_agent_people(native_operator_id,actor_id)\n SELECT n.id,NEW.id FROM oa_operators n WHERE n.email=NEW.email AND n.status='active'\n ON CONFLICT(native_operator_id) DO NOTHING;\n END;\n\n-- A pristine restore may replace its bootstrap actor. Once any company agent\n-- has been admitted, the stable binding and decision evidence remain in custody.\nCREATE TRIGGER penny_agent_restore_custody BEFORE INSERT ON data_operations\n WHEN NEW.kind='restore' AND (EXISTS(SELECT 1 FROM agent_door_agents)\n OR EXISTS(SELECT 1 FROM agent_door_audit) OR EXISTS(SELECT 1 FROM agent_door_calls)\n OR EXISTS(SELECT 1 FROM agent_door_approvals) OR EXISTS(SELECT 1 FROM agent_door_reviews))\n BEGIN SELECT RAISE(ABORT,'agent_retained_evidence_requires_review'); END;\nCREATE TRIGGER penny_agent_release_bootstrap_binding BEFORE DELETE ON operators\n BEGIN\n SELECT CASE WHEN EXISTS(SELECT 1 FROM agent_door_agents)\n OR EXISTS(SELECT 1 FROM agent_door_audit) OR EXISTS(SELECT 1 FROM agent_door_calls)\n OR EXISTS(SELECT 1 FROM agent_door_approvals) OR EXISTS(SELECT 1 FROM agent_door_reviews)\n THEN RAISE(ABORT,'agent_retained_evidence_requires_review') END;\n DELETE FROM penny_agent_people WHERE actor_id=OLD.id;\n END;\n"
     }
   ],
   "compatibilityDate": "2026-08-31",
