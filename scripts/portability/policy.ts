@@ -1,5 +1,6 @@
 import {validateHelpScoutArchive} from '../../src/core/features/helpscout/archive'
 import {validateDiscordArchive} from '../../src/core/features/discord/archive'
+import {validateChatArchive} from '../../src/core/features/chat-capture/archive'
 import { validateCategoryArchive } from '../../src/core/features/categories/archive'
 import { validateMailIdentityArchive } from '../../src/core/features/settings/mail-identity-archive'
 import { validateLearningArchive } from '../../src/core/features/learning/archive'
@@ -40,7 +41,7 @@ export function policy(journal: ErasureJournal): ArchivePolicy {
       for (const name of expected) data[name] = (await read(name)).map(productRow)
       const records = product.flatMap(name => data[name])
       if (records.length > LOCAL_DATA_LIMITS.rows || new TextEncoder().encode(canonical(records)).byteLength > LOCAL_DATA_LIMITS.recordBytes) refuse('archive_limit')
-      validateNativeIdentity(data);await validateDiscordArchive(data);await validateHelpScoutArchive(data);validateCategoryArchive(data); validateMailIdentityArchive(data); validateFeedbackArchive(data); await validateLearningArchive(data)
+      validateNativeIdentity(data);validateChatArchive(data);await validateDiscordArchive(data);await validateHelpScoutArchive(data);validateCategoryArchive(data); validateMailIdentityArchive(data); validateFeedbackArchive(data); await validateLearningArchive(data)
       if (data.request_attachment_uploads.length || data.evidence_attachment_uploads.length) refuse('unfinished_attachment_uploads')
       if(data.release_attachments.some(row=>row.state==='writing'))refuse('unfinished_attachment_uploads')
       const attachments=[...data.attachments,...data.release_attachments]

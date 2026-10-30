@@ -2,6 +2,7 @@ import {registerHelpScoutRoutes} from '@/core/features/helpscout/routes'
 import {registerBrowserCaptureRoutes} from '@/core/features/browser-capture/routes'
 import {registerDiscordRoutes} from '@/core/features/discord/routes'
 import {registerBulkRoutes} from '@/core/features/triage/bulk-routes'
+import {registerChatCapture} from '@/core/features/chat-capture/routes'
 import {registerRedactionRoutes} from '../features/redaction/routes'
 import {registerOAuthSettings} from '../features/auth/oauth-settings'
 import {registerOAuthRoutes} from '../features/auth/oauth-routes'
@@ -113,6 +114,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerBrowserCaptureRoutes(app)
   registerDiscordRoutes(app)
   registerAiRoutes(app)
+  registerChatCapture(app)
   registerWeeklyRoutes(app)
   registerPlanningRoutes(app)
   registerPrioritisationRoutes(app)

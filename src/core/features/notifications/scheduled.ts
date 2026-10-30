@@ -2,6 +2,7 @@ import {drainHelpScout} from '../helpscout/work'
 import {drainBrowserCaptures} from '../browser-capture/work'
 import {drainDiscord,purgeDiscordSources} from '../discord/work'
 import {drainScheduledPublications} from '../releases/scheduled'
+import {drainChatCapture} from '../chat-capture/worker'
 import {drainAging} from '../triage/reminders'
 import {advanceDataWork} from '../data/runner/advance'
 import {drainLearning} from '../learning/scheduled'
@@ -25,6 +26,7 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  await purgeDiscordSources(runtime,_controller.scheduledTime)
  await drainDiscord(runtime,_controller.scheduledTime)
  await drainHelpScout(runtime,_controller.scheduledTime)
+ await drainChatCapture(runtime,_controller.scheduledTime)
  await drainLearning(runtime,_controller.scheduledTime)
  await drainDecisionReviews(runtime)
  await drainAging(runtime.database.binding)

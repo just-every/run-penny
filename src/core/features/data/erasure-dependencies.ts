@@ -18,6 +18,7 @@ const edges = [
  ['penny_discord_sources','job_id','penny_discord_jobs'],
  ['penny_discord_jobs','evidence_id','evidence_items'],
  ['penny_discord_sources','evidence_id','evidence_items'],
+ ['penny_chat_sources','evidence_id','evidence_items'],
  ['penny_request_batch_items','request_id','requests'],
  ['penny_request_batch_items','batch_id','penny_request_batches'],
  ['penny_weekly_publications','version_id','release_versions'],

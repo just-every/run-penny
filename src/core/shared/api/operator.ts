@@ -16,6 +16,7 @@ export interface OperatorEvidenceCard {
   readonly helpScout?: {sourceUrl:string;sourceState:string;conversationId:number}
   readonly browser?: {capturer:string|null;captureId:string;pageUrl:string;state:string;sourceState:string;failure:string|null}
   readonly discord?: {jumpUrl:string;capturer:string;sourceState:string;checkFailure:string|null}
+  readonly chatSource?: {url:string;channel:string;message:string;thread:string;capturer:string|null;author:string|null;state:string}|null
   readonly id: string
   readonly admittedSender?: string | null
   readonly namedSpeaker?: string | null

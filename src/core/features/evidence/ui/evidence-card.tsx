@@ -23,12 +23,17 @@ export function EvidenceCard({ evidence, onSaved }: { readonly evidence: Operato
       </div>
       <p className="mt-4 text-lg leading-snug font-medium break-words whitespace-pre-wrap text-penny-ink sm:text-[22px]">{evidence.wording?`“${evidence.wording}”`:'Screenshot capture'}</p>
       <dl className={`mt-5 border-t border-penny-line pt-4 ${dataRowClass}`}>
-        <DataField label="Source">{sourceLabel(evidence.sourceType, evidence.sourceLabel)}</DataField>
+        <DataField label="Source">{evidence.chatSource?'Slack':sourceLabel(evidence.sourceType, evidence.sourceLabel)}</DataField>
         <DataField label="Account">{evidence.account?.name}</DataField>
       </dl>
       {evidence.helpScout?<div className="mt-4 space-y-2"><a className="inline-flex min-h-11 items-center underline" href={evidence.helpScout.sourceUrl} target="_blank" rel="noreferrer">Open Help Scout conversation {evidence.helpScout.conversationId}</a><p>Source: {evidence.helpScout.sourceState}</p></div>:null}
       {evidence.browser?<div className="mt-4 space-y-2 break-words"><p>Captured by {evidence.browser.capturer??'Former operator'}</p><a className="inline-flex min-h-11 items-center underline" href={evidence.browser.pageUrl} target="_blank" rel="noreferrer">Open captured page</a><p>Browser capture: {evidence.browser.state} · Source: {evidence.browser.sourceState}</p>{evidence.browser.failure?<p role="status">{evidence.browser.failure}</p>:null}<a className="inline-flex min-h-11 items-center underline" href="/app/browser-capture">Review capture progress</a></div>:null}
       {evidence.discord?<div className="mt-4 space-y-2 break-words"><p>Captured by Discord member {evidence.discord.capturer}</p><a className="inline-flex min-h-11 items-center underline" href={evidence.discord.jumpUrl} target="_blank" rel="noreferrer">Open Discord message</a><p>Source: {evidence.discord.sourceState}</p>{evidence.discord.checkFailure?<p role="status">{discordFailureHint(evidence.discord.checkFailure)}</p>:null}</div>:null}
+      {evidence.chatSource?<dl className={`mt-4 border-t border-penny-line pt-4 ${dataRowClass}`}>
+        <DataField label="Original message"><a className="break-all underline" href={evidence.chatSource.url} target="_blank" rel="noreferrer">Open Slack thread</a></DataField>
+        <DataField label="Captured by">{evidence.chatSource.capturer}</DataField>
+        <DataField label="Source state">{evidence.chatSource.state==='changed'?'Source changed; captured version retained':evidence.chatSource.state==='removed'?'Source removed; excerpt awaiting policy purge':evidence.chatSource.state==='purged'?'Source removed; excerpt purged':'Captured'}</DataField>
+      </dl>:null}
       {evidence.sourceType==='email'&&evidence.sourceLabel?<p className="mt-3 text-sm leading-6 text-penny-ink">{evidence.sourceLabel}</p>:null}
       {evidence.requester ? <dl className="mt-4"><DataField label="Requester" valueClassName="flex flex-wrap items-center gap-x-2 gap-y-1"><span>{evidence.requester.displayName}</span>{evidence.requester.email ? <span className="break-all text-penny-muted">{evidence.requester.email}</span> : null}</DataField></dl> : null}
       {evidence.admittedSender ? <p className="mt-3 text-base break-all text-penny-ink">Forwarded by {evidence.admittedSender}</p> : null}
