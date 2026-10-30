@@ -69,6 +69,9 @@ importers:
       highlight.js:
         specifier: 10.7.3
         version: 10.7.3
+      miniflare:
+        specifier: 5.20260907.0-alpha
+        version: 5.20260907.0-alpha
       oxlint:
         specifier: ^1.79.0
         version: 1.87.0

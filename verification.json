@@ -267,6 +267,15 @@
         "node tests/browser/browser-capture-review.mjs",
         "xvfb-run -a node tests/browser/browser-capture.mjs"
       ]
+    },
+    {
+      "name": "agent-door",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "node scripts/agent-docs.mjs check",
+        "pnpm run build"
+      ]
     }
   ],
   "nightly": [
