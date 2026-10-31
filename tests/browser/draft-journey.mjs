@@ -56,7 +56,8 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
  // AI-009 extends the same public-door journey; no new registered case.
  await mkdir(join(output,'ai-ask'),{recursive:true})
  await runtime.configure({}, {worker:askProvider})
- await runtime.db.prepare("UPDATE oa_operators SET role='member'").run()
+ await runtime.db.prepare("INSERT INTO oa_operators(id,email,display_name,role,status,created_at) VALUES(?,'synthetic-penny-owner@example.test','Fixture owner','owner','active',?)").bind(crypto.randomUUID(),Date.now()).run()
+ await runtime.db.prepare("UPDATE oa_operators SET role='member' WHERE email='owner@penny.invalid'").run()
  await page.goto(origin+'/app/ask');await page.waitForLoadState('networkidle')
  const ask=page.getByRole('region',{name:'Ask Penny',exact:true})
  await capture('ai-ask/empty',ask)

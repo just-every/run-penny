@@ -1,6 +1,6 @@
 /** Deterministic fake only at the model/Slack network edge. */
 export function askNetwork(input:{sources:{id:string;text:string}[]}){
- return {paragraphs:[{text:'The stored report export evidence describes friction with CSV reporting. It supports reviewing date filters, without committing a delivery date.',citationIds:[...input.sources.map(s=>s.id),'evidence:missing-record']}]}
+ return {paragraphs:[{text:'The stored report export evidence describes friction with CSV reporting. It supports reviewing date filters, without committing a delivery date.',citationIds:[...input.sources.map(s=>s.id),'evidence:missing-record']},{text:'Revenue $9,876,543.21; account health Private renewal risk.',citationIds:input.sources.filter(s=>s.id.startsWith('account:')).map(s=>s.id)}]}
 }
 export const askProvider={name:'ask-network',modules:true,compatibilityDate:'2026-08-31',script:`
 import {WorkerEntrypoint} from 'cloudflare:workers';

@@ -325,7 +325,8 @@ it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost 
  const askEvidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'synthetic-penny-4',wording:'Report exports need a date filter for CSV reporting.',observedAt:'2026-10-21T10:00:00Z',accountId:g.account.id},g.operator),201)
  await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:1000000,includePrivate:true,choices:[]},g.operator,'PUT'))
  // A native member is the current no-commercial role; custom roles inherit ROLE-001.
- await env.DB.prepare("UPDATE oa_operators SET role='member'").run()
+ await env.DB.prepare("INSERT INTO oa_operators(id,email,display_name,role,status,created_at) VALUES(?,'synthetic-penny-owner@example.test','Fixture owner','owner','active',?)").bind(crypto.randomUUID(),Date.now()).run()
+ await env.DB.prepare("UPDATE oa_operators SET role='member' WHERE email='owner@penny.invalid'").run()
  const answer=await json<{id:string;text:string;paragraphs:{text:string;citationIds:string[]}[];citations:{id:string;href:string}[];notices:string[];costMicros:number}>(call('/api/operator/ai/ask',{question},g.operator))
  const commercial=['987654321','9876543.21','9,876,543.21','Private renewal risk','revenueCents','renewalDate','health']
  for(const value of commercial){expect(JSON.stringify(answer)).not.toContain(value);expect(JSON.stringify(askPrompts)).not.toContain(value)}
@@ -370,8 +371,9 @@ it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost 
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
  const restored=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'})
  const restoreOperator={Cookie:restored.headers.get('set-cookie')!.split(';')[0]}
- let imported=await json<{status:string;operationId:string}>(call('/api/operator/data/import',portableAnswer,restoreOperator),200)
- for(let step=0;imported.status!=='complete'&&step<50;step++)imported=await json(call(`/api/operator/data/operations/${imported.operationId}/resume`,{},restoreOperator))
+ const complete=async(path:string,body:unknown)=>{const response=await call(path,body,restoreOperator);expect([200,202],await response.clone().text()).toContain(response.status);return response.json() as Promise<{status:string;operationId:string}>}
+ let imported=await complete('/api/operator/data/import',portableAnswer)
+ for(let step=0;imported.status!=='complete'&&step<50;step++)imported=await complete(`/api/operator/data/operations/${imported.operationId}/resume`,{})
  expect(imported.status).toBe('complete')
  expect((await env.DB.prepare('SELECT * FROM penny_ai_answers').all()).results).toEqual(portableAnswer.archive.tables.penny_ai_answers)
  expect(slackPosts).toHaveLength(1)
