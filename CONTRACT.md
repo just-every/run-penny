@@ -3266,13 +3266,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026).
+Judged from the code and tests at commit `b4d089564ddc42e52d0750512f461f98c8065c0c` (31 October 2026).
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 53 | 62 | 1 | 116 |
-| Target and push further | 20 | 68 | 77 | 165 |
-| All | 73 | 130 | 78 | 281 |
+| Target and push further | 21 | 68 | 76 | 165 |
+| All | 74 | 130 | 77 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3439,7 +3439,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `AI-006` | Summaries and reply drafts | target | done | `tests/base/penny-evidence.test.ts`; `tests/browser/learning-journey.mjs`; `tests/browser/draft-journey.mjs` |  |
 | `AI-007` | Spam and abuse flags | target | missing |  | The `spam-v1` evaluation meets the AI-007 bars; a fixture spam batch is flagged with reasons and stays in moderation (held on an auto-publish board); a false positive is approved normally. |
 | `AI-008` | Sensitive-data redaction | target | partial | `tests/base/penny-evidence.test.ts`; `tests/browser/redaction-journey.mjs`; `tests/browser/operator-pages.mjs`; `scripts/ai-eval/run.mjs`; `tests/fixtures/ai/redaction-v1` | Deterministic owner rules cover operator evidence, CAP-009 email capture, native portal submissions, saved Canny/UserVoice imports and Orbit/native learning acquisition before storage, and owner-confirmed reapplication rewrites editable wording and copies; AI-010 is not used for redaction, and AI-011 still inherits the minimal runner. Gap: Optional model detection is not built. Rule reapplication does not rewrite the preserved or fingerprinted places explicitly counted as blocked in preview: saved-import plans/originals/provenance and their owned native rows; learning scope/originals/interpretations/corrections/commitments; decision and approved/published/status/notification history; pending verification payloads; canonical request addresses; signed/outbound/tracker envelopes; audit reason copies; archive/restore staging. These require DATA-003 erasure/copy resolution or an owner ruling. Binary attachment originals are not rewritten. No transcript store exists; CAP-008 inherits transcript capture and redaction. |
-| `AI-009` | Ask Penny | target | missing |  | A question over a fixture corpus returns an answer whose every citation resolves; a role without commercial permission receives no revenue figures; a Slack answer posts only where the asker chose. |
+| `AI-009` | Ask Penny | target | done | `tests/base/penny-evidence.test.ts` (`[AI-009 AI-006 EVID-006]` cited answers, role privacy, cost, revocation, chosen Slack delivery and archive/erasure); `tests/browser/draft-journey.mjs` (Ask states at 1440 and 390); `visual/ai-ask/`. ROLE-001 custom roles and AI-011 measured quality are inherited. Live receipt 2026-10-31, AI-009: `claude-haiku-5-5`, 1 call, 927 input / 471 output tokens, US$0.0003282 from usage. | Slack-originated asking waits on CAP-010; Teams is not shipped (no tenant). |
 | `AI-010` | Model configuration and cost | target | done | `src/core/features/ai/`; `tests/base/learning-stage2.test.ts`; `tests/base/upgrade.test.ts`; `tests/browser/learning-journey.mjs`; `visual/ai-models/` |  |
 | `AI-011` | Measured AI quality | target | missing |  | Each named set exists with its documented size and label mix; the evaluation command reports every figure for each set and exits non-zero on a deliberately degraded fixture model; the lexical baseline run needs no model. Only `redaction-v1` (210 synthetic excerpts) and a minimal runner exist. |
 | `AI-012` | Evaluation gates automatic rules | target | missing |  | Settings show no evaluation, and no automatic rule is gated on a passing evaluation; enabling auto-merge for a model with no passing evaluation must be refused with the reason, a passing evaluation must allow it, and accept and reject decisions must export as a private labeled set. |
