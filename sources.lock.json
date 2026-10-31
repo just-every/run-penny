@@ -7806,7 +7806,7 @@
       "executable": false
     },
     "tests/base/integration-durable.ts": {
-      "sha256": "fabbe2eb18753cf023328e2f7d4c50701f64385ddd086cee264bc4da82f64dde",
+      "sha256": "2806d72c3e231269e63450b37466d1ca3d17c2ad6a76b2779e9524d45e499fb4",
       "executable": false
     },
     "tests/base/integration-effects.ts": {
@@ -7826,7 +7826,7 @@
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
-      "sha256": "f8f036470d21cdeef3f427a556155d499d31c2e9ea5b857ed3f43f1c67f7f53f",
+      "sha256": "7a3c48c289fe69c7610bf70d90e4b49d00df99ed5448947bda467f920c4891f5",
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {
@@ -8022,7 +8022,7 @@
       "executable": false
     },
     "tests/base/roadmap-update-publication.ts": {
-      "sha256": "cba2478218294068c9bfe14ff97bb88c6569c9d4760b17c84ee827d52d35785c",
+      "sha256": "1d31b11531ba58ad9f9d478bf67eea0674abd2a6604364aac0de18d9b49a8600",
       "executable": false
     },
     "tests/base/scheduled-publication-fixture.ts": {
