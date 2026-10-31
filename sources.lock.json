@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "2415cae5a14a3b19a573e1816e1a3e91615b29e56d1a2d2223d6c2be4c858ae0",
+      "sha256": "afc004ab6aad15a8a38977c5eab3a22ffdba0cf0fcf1c42f7e90e06bd94ecf9f",
       "executable": false
     },
     "CLAUDE.md": {
@@ -8598,7 +8598,7 @@
       "executable": false
     },
     "tests/base/upgrade.test.ts": {
-      "sha256": "27b194bd37119e36de94170bba6c020243aba49e245b5c79cb8892c919aa28f3",
+      "sha256": "f8b12c27c769bb9ba2382cdc0e539c3539551ee09a8dc635a0173c4f3fe31104",
       "executable": false
     },
     "tests/base/uservoice-fixture.ts": {
@@ -8878,7 +8878,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-hosted-data.mjs": {
-      "sha256": "327858525dd3ad23ed53df02160ccbed1e56cd72b5d9112e9177519bdbcfdb1c",
+      "sha256": "9cc87cca7d0810b28f422012d38e2b80448e7ecb06225b5f682681f86d22c340",
       "executable": false
     },
     "tests/browser/operator-pages-status.mjs": {
