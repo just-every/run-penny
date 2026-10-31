@@ -56,8 +56,13 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
  // AI-009 extends the same public-door journey; no new registered case.
  await mkdir(join(output,'ai-ask'),{recursive:true})
  await runtime.configure({}, {worker:askProvider})
- await runtime.db.prepare("INSERT INTO oa_operators(id,email,display_name,role,status,created_at) VALUES(?,'synthetic-penny-owner@example.test','Fixture owner','owner','active',?)").bind(crypto.randomUUID(),Date.now()).run()
- await runtime.db.prepare("UPDATE oa_operators SET role='member' WHERE email='owner@penny.invalid'").run()
+ await runtime.db.prepare("INSERT INTO oa_operators(id,email,display_name,role,status,created_at) VALUES(?,'synthetic-penny-member@example.test','Fixture member','member','active',?)").bind(crypto.randomUUID(),Date.now()).run()
+ async function signInAs(email){
+  const magic=await context.request.post(origin+'/api/auth/magic-link',{headers:{Origin:origin},data:{email,returnTo:'/app/ask'}});assert.equal(magic.status(),202)
+  const token=new URL(runtime.outbox.findLast(m=>m.email===email).url).searchParams.get('token')
+  const signed=await context.request.post(origin+'/auth/confirm',{headers:{Origin:origin},data:{token},maxRedirects:0});assert.equal(signed.status(),303)
+ }
+ await signInAs('synthetic-penny-member@example.test')
  await page.goto(origin+'/app/ask');await page.waitForLoadState('networkidle')
  const ask=page.getByRole('region',{name:'Ask Penny',exact:true})
  await capture('ai-ask/empty',ask)
@@ -72,7 +77,6 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
  await capture('ai-ask/answer',ask)
  await page.reload();await expect(ask.getByRole('article',{name:'Penny’s answer',exact:true})).toBeVisible()
  await capture('ai-ask/saved',ask)
- await runtime.db.prepare("UPDATE oa_operators SET role='owner'").run()
  await runtime.configure({}, {worker:askProvider,binding:'PENNY_EGRESS'})
  const destinations=[]
  for(const [name,endpoint] of [['Product feedback','https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3'],['Customer success','https://hooks.slack.com/services/synthetic-penny-4/synthetic-penny-5/synthetic-penny-6']])destinations.push(await api('/api/operator/integrations/destinations',{name,kind:'slack',endpoint,events:['status.published']}))
@@ -87,6 +91,7 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
  assert.deepEqual(deliveries,[{destination_id:destinations[0].id,state:'accepted'}])
  await capture('ai-ask/posted',ask)
  await runtime.configure({}, {worker:askProvider,binding:'PENNY_LEARNING_EGRESS'})
+ await signInAs('owner@penny.invalid')
  await api('/api/operator/settings/ai',{monthlyBudgetMicros:0,includePrivate:false,choices:[]},'PUT')
  expectedRefusal(true);await ask.getByRole('button',{name:'Ask Penny',exact:true}).click()
  await expect(ask.getByRole('alert')).toContainText('monthly AI budget')

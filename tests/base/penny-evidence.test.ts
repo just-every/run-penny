@@ -325,9 +325,13 @@ it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost 
  const askEvidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'synthetic-penny-4',wording:'Report exports need a date filter for CSV reporting.',observedAt:'2026-10-21T10:00:00Z',accountId:g.account.id},g.operator),201)
  await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:1000000,includePrivate:true,choices:[]},g.operator,'PUT'))
  // A native member is the current no-commercial role; custom roles inherit ROLE-001.
- await env.DB.prepare("INSERT INTO oa_operators(id,email,display_name,role,status,created_at) VALUES(?,'synthetic-penny-owner@example.test','Fixture owner','owner','active',?)").bind(crypto.randomUUID(),Date.now()).run()
- await env.DB.prepare("UPDATE oa_operators SET role='member' WHERE email='owner@penny.invalid'").run()
- const answer=await json<{id:string;text:string;paragraphs:{text:string;citationIds:string[]}[];citations:{id:string;href:string}[];notices:string[];costMicros:number}>(call('/api/operator/ai/ask',{question},g.operator))
+ await env.DB.prepare("INSERT INTO oa_operators(id,email,display_name,role,status,created_at) VALUES(?,'synthetic-penny-member@example.test','Fixture member','member','active',?)").bind(crypto.randomUUID(),Date.now()).run()
+ await json(call('/api/auth/magic-link',{email:'synthetic-penny-member@example.test',returnTo:'/app/ask'}),202)
+ const memberMail=(await providerMessages().list()).map(row=>row.message).findLast(m=>m.to.includes('synthetic-penny-member@example.test'))!
+ const memberToken=new URL(memberMail.text.match(/https?:\/\/\S+/)![0]).searchParams.get('token')
+ const memberSignIn=await call('/auth/confirm',{token:memberToken});expect(memberSignIn.status).toBe(303)
+ const member={Cookie:memberSignIn.headers.get('set-cookie')!.split(';')[0]}
+ const answer=await json<{id:string;text:string;paragraphs:{text:string;citationIds:string[]}[];citations:{id:string;href:string}[];notices:string[];costMicros:number}>(call('/api/operator/ai/ask',{question},member))
  const commercial=['987654321','9876543.21','9,876,543.21','Private renewal risk','revenueCents','renewalDate','health']
  for(const value of commercial){expect(JSON.stringify(answer)).not.toContain(value);expect(JSON.stringify(askPrompts)).not.toContain(value)}
  expect(answer.citations.some(c=>c.id.startsWith('account:'))).toBe(true)
@@ -344,13 +348,13 @@ it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost 
  expect(slackPosts).toHaveLength(0)
  expect(await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n')).toBe(Number(beforeDraft)+1)
  expect(await env.DB.prepare('SELECT count(*) n FROM notification_outbox').first('n')).toBe(notificationCount)
- await env.DB.prepare("UPDATE oa_operators SET role='owner'").run()
+ expect((await call(`/api/operator/ai/ask/${answer.id}`,undefined,g.operator)).status).toBe(404)
  const destinations=[]
  for(const endpoint of ['https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3','https://hooks.slack.com/services/synthetic-penny-4/synthetic-penny-5/synthetic-penny-6'])destinations.push(await json<{id:string}>(call('/api/operator/integrations/destinations',{name:destinations.length?'Other team':'Product feedback',kind:'slack',endpoint,events:['status.published']},g.operator),201))
  expect((await json<{destinations:unknown[]}>(call('/api/operator/ai/ask/destinations',undefined,g.operator))).destinations).toHaveLength(2)
- expect((await json<{state:string}>(call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[0].id},g.operator))).state).toBe('accepted')
- expect((await json<{state:string}>(call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[0].id},g.operator))).state).toBe('accepted')
- expect((await call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[1].id},g.operator)).status).toBe(409)
+ expect((await json<{state:string}>(call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[0].id},member))).state).toBe('accepted')
+ expect((await json<{state:string}>(call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[0].id},member))).state).toBe('accepted')
+ expect((await call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[1].id},member)).status).toBe(409)
  expect(slackPosts).toHaveLength(1);expect(slackPosts[0].url).toBe('https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3')
  const portableAnswer=await json<{archive:Archive;journal:ErasureJournal}>(call('/api/operator/data/export',undefined,g.operator))
  expect(portableAnswer.archive.tables.penny_ai_answers.some(row=>row.id===answer.id)).toBe(true)
