@@ -2248,8 +2248,8 @@ Core · target · **missing** · Rules D-4
 2. A role without commercial permission receives no revenue figures.
 3. A Slack answer posts only where the asker chose.
 
-**Evidence.** None.
-**Gap.** A question over a fixture corpus returns an answer whose every citation resolves; a role without commercial permission receives no revenue figures; a Slack answer posts only where the asker chose.
+**Evidence.** `tests/base/penny-evidence.test.ts`; `tests/browser/draft-journey.mjs`; `migrations/core/0108_ai_answers.sql`
+**Gap.** Main’s missing judgment is retained pending acceptance of the replayed cited-answer, commercial-permission and chosen-Slack assertions. A question over a fixture corpus returns an answer whose every citation resolves; a role without commercial permission receives no revenue figures; a Slack answer posts only where the asker chose.
 
 #### AI-010 — Model configuration and cost
 
