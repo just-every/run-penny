@@ -9,15 +9,16 @@ const output=resolve(process.env.PENNY_EVIDENCE??'../evidence/survey-capture')
 assert.ok(!output.startsWith(resolve('.')+'/'));await mkdir(output,{recursive:true})
 const providers=['typeform','surveymonkey','google','pencil'],formId='selected-form'
 const secrets=Object.fromEntries(providers.map(id=>[id,{token:'synthetic-'+id+'-read-token',webhookSecret:'synthetic-'+id+'-webhook-secret-123456',...(id==='surveymonkey'?{clientId:'synthetic-sm-client'}:{}),...(id==='pencil'?{origin:'https://pencil.example.test',cookie:'pencil_session=synthetic-session-cookie'}:{})}]))
-const time='2026-10-28T12:30:00.000Z',reads=[],modes=new Map()
+const time='2026-10-28T12:30:00.000Z',reads=[],modes=new Map(),sourceFixtures=new Map()
 let onRead=async()=>{},googlePageCount=0
-function fixture(provider,id='response-'+provider,changed=false){
+function baseFixture(provider,id='response-'+provider,changed=false){
  const wording=changed?'Edited source answer':'Please add scheduled exports for '+id+'. SSN 123-45-6789.'
- if(provider==='typeform')return {token:id,form_id:formId,submitted_at:time,answers:[{field:{id:'feedback'},type:'text',text:wording},{field:{id:'plan'},type:'choice',choice:{label:'Enterprise'}},{field:{id:'unmapped'},type:'text',text:'UNMAPPED_SECRET_TYPEFORM'}],hidden:{email:'survey.person@example.test',account:'survey-account',unused:'UNMAPPED_HIDDEN_TYPEFORM'}}
- if(provider==='surveymonkey')return {id,survey_id:formId,date_created:time,pages:[{questions:[{id:'feedback',answers:[{text:wording}]},{id:'plan',answers:[{text:'Enterprise'}]},{id:'unmapped',answers:[{text:'UNMAPPED_SECRET_SURVEYMONKEY'}]}]}],custom_variables:{email:'survey.person@example.test',account:'survey-account',unused:'UNMAPPED_HIDDEN_SM'}}
- if(provider==='google')return {responseId:id,createTime:time,lastSubmittedTime:time,respondentEmail:'survey.person@example.test',answers:{feedback:{questionId:'feedback',textAnswers:{answers:[{value:wording}]}},plan:{questionId:'plan',textAnswers:{answers:[{value:'Enterprise'}]}},unmapped:{questionId:'unmapped',textAnswers:{answers:[{value:'UNMAPPED_SECRET_GOOGLE'}]}}}}
- return {id,completedAt:time,state:'released',answers:[{stepId:'feedback',questionType:'long_text',displayValue:wording},{stepId:'plan',questionType:'multiple_choice',displayValue:'Enterprise'},{stepId:'unmapped',questionType:'long_text',displayValue:'UNMAPPED_SECRET_PENCIL'}],hiddenFields:[{name:'unused',value:'UNMAPPED_HIDDEN_PENCIL'}]}
+ if(provider==='typeform')return {token:id,form_id:formId,submitted_at:time,answers:[{field:{id:'feedback'},type:'text',text:wording},{field:{id:'more'},type:'text',text:'Also make exports resumable.'},{field:{id:'plan'},type:'choice',choice:{label:'Enterprise'}},{field:{id:'unmapped'},type:'text',text:'UNMAPPED_SECRET_TYPEFORM'}],hidden:{email:'123-45-6789@example.test',account:'survey-account',unused:'UNMAPPED_HIDDEN_TYPEFORM'}}
+ if(provider==='surveymonkey')return {id,survey_id:formId,date_created:time,pages:[{questions:[{id:'feedback',answers:[{text:wording}]},{id:'more',answers:[{text:'Also make exports resumable.'}]},{id:'plan',answers:[{text:'Enterprise'}]},{id:'unmapped',answers:[{text:'UNMAPPED_SECRET_SURVEYMONKEY'}]}]}],custom_variables:{email:'survey.person@example.test',account:'survey-account',unused:'UNMAPPED_HIDDEN_SM'}}
+ if(provider==='google')return {responseId:id,createTime:time,lastSubmittedTime:time,respondentEmail:'survey.person@example.test',answers:{feedback:{questionId:'feedback',textAnswers:{answers:[{value:wording}]}},more:{questionId:'more',textAnswers:{answers:[{value:'Also make exports resumable.'}]}},plan:{questionId:'plan',textAnswers:{answers:[{value:'Enterprise'}]}},unmapped:{questionId:'unmapped',textAnswers:{answers:[{value:'UNMAPPED_SECRET_GOOGLE'}]}}}}
+ return {id,completedAt:time,state:'released',participant:{name:'Dr Pat Survey',email:null},answers:[{stepId:'feedback',questionType:'long_text',displayValue:wording},{stepId:'more',questionType:'short_text',displayValue:'Also make exports resumable.'},{stepId:'plan',questionType:'multiple_choice',displayValue:'Enterprise'},{stepId:'unmapped',questionType:'long_text',displayValue:'UNMAPPED_SECRET_PENCIL'}],hiddenFields:[{name:'unused',value:'UNMAPPED_HIDDEN_PENCIL'}]}
 }
+const fixture=(provider,id='response-'+provider,changed=false)=>sourceFixtures.get(provider+':'+id)??baseFixture(provider,id,changed)
 const edge={name:'survey-network-edge',modules:true,compatibilityDate:'2026-08-31',script:`import {WorkerEntrypoint} from 'cloudflare:workers';export default class Edge extends WorkerEntrypoint{async send(wire){const r=await fetch(wire.url,{headers:wire.headers,redirect:'manual'});return {status:r.status,headers:{},body:await r.text()}}}`,outboundService:async request=>{
  const u=new URL(request.url),provider=u.hostname==='api.typeform.com'?'typeform':u.hostname==='api.surveymonkey.com'?'surveymonkey':u.hostname==='forms.googleapis.com'?'google':u.hostname==='pencil.example.test'?'pencil':null
  assert.ok(provider,'Only declared survey providers are read');assert.equal(request.method,'GET');assert.ok(u.pathname.includes('/'+formId+'/'),'No request for an unselected form')
@@ -30,7 +31,7 @@ const edge={name:'survey-network-edge',modules:true,compatibilityDate:'2026-08-3
   return Response.json(u.searchParams.has('pageToken')?{responses:[]}:{responses:[fixture(provider)],nextPageToken:'page-2'})
  }
  if(provider==='typeform'){const value=fixture(provider,id,mode==='changed');delete value.form_id;return Response.json({items:[value]})}
- if(provider==='pencil')return Response.json({flow:{id:formId},total:2,responses:u.searchParams.has('offset')?[fixture(provider,id,mode==='changed')]:[{id:'older-response'}]})
+ if(provider==='pencil'){const extra=[...sourceFixtures].filter(([key])=>key.startsWith('pencil:')).map(([,value])=>value);return Response.json({flow:{id:formId},total:2+extra.length,responses:u.searchParams.has('offset')?[fixture(provider,id,mode==='changed'),...extra]:[{id:'older-response'}]})}
  return Response.json(fixture(provider,id,mode==='changed'))
 }}
 const runtime=await startBrowserRuntime({bindings:{PENNY_SURVEYS:JSON.stringify(secrets)},networkWorker:edge,networkBinding:'PENNY_SURVEY_EGRESS'}),browser=await chromium.launch(browserOptions())
@@ -47,7 +48,7 @@ try{
  // A populated native account is pre-existing source context, never minted by capture.
  await runtime.db.prepare("INSERT INTO accounts(id,slug,name,created_at,updated_at) VALUES('survey-account','survey-account','Survey account',?,?)").bind(time,time).run()
  await json('/api/operator/settings/redaction',{enabled:true,kinds:['ssn'],patterns:[]},operator,'PUT')
- const settings=p=>({id:p,provider:p,formId,mapping:{evidence:['feedback'],attributes:[{question:'plan',key:'plan'}],email:'hidden.email',account:p==='google'?null:'hidden.account'},responseUrl:`https://${p}.example.test/responses/{responseId}`,enabled:true,purgeDays:0})
+ const settings=p=>({id:p,provider:p,formId,mapping:{evidence:['feedback','more'],attributes:[{question:'plan',key:'plan'}],email:'hidden.email',account:p==='google'?null:'hidden.account'},responseUrl:`https://${p}.example.test/responses/{responseId}`,enabled:true,purgeDays:0})
  await send('/api/operator/integrations/surveys',undefined,{},'GET',401)
  await send('/api/integrations/surveys/missing',{}, {},'POST',404)
  await send('/api/operator/integrations/surveys',settings('typeform'),{},'PUT',401)
@@ -56,13 +57,13 @@ try{
  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url())&&new URL(r.url()).origin!==origin)errors.push('External browser request')})
  await page.goto(origin+'/app/settings#survey-capture',{waitUntil:'networkidle'})
  const panel=page.getByRole('region',{name:'Survey capture',exact:true})
- await panel.getByLabel('Connection name',{exact:true}).fill('typeform');await panel.getByLabel('Selected form ID',{exact:true}).fill(formId);await panel.getByLabel('Open-text question IDs',{exact:true}).fill('feedback');await panel.getByLabel('Private attribute mappings',{exact:true}).fill('plan=plan');await panel.getByLabel('Respondent email question or hidden field',{exact:true}).fill('hidden.email');await panel.getByLabel('Account question or hidden field',{exact:true}).fill('hidden.account');await panel.getByLabel('Response link template',{exact:true}).fill(settings('typeform').responseUrl);await panel.getByLabel('Enable selected form',{exact:true}).check();await panel.getByRole('button',{name:'Save survey capture',exact:true}).click();await panel.getByText('Survey settings saved.',{exact:true}).waitFor()
+ await panel.getByLabel('Connection name',{exact:true}).fill('typeform');await panel.getByLabel('Selected form ID',{exact:true}).fill(formId);await panel.getByLabel('Open-text question IDs',{exact:true}).fill('feedback\nmore');await panel.getByLabel('Private attribute mappings',{exact:true}).fill('plan=plan');await panel.getByLabel('Respondent email question or hidden field',{exact:true}).fill('hidden.email');await panel.getByLabel('Account question or hidden field',{exact:true}).fill('hidden.account');await panel.getByLabel('Response link template',{exact:true}).fill(settings('typeform').responseUrl);await panel.getByLabel('Enable selected form',{exact:true}).check();await panel.getByRole('button',{name:'Save survey capture',exact:true}).click();await panel.getByText('Survey settings saved.',{exact:true}).waitFor()
  for(const provider of providers.slice(1))await json('/api/operator/integrations/surveys',settings(provider),operator,'PUT')
  async function webhook(provider,id='response-'+provider,{bad=false,foreign=false,removed=false}={}){
   const body=provider==='typeform'?{event_type:'form_response',form_response:{...fixture(provider,id),...(foreign?{form_id:'unselected-form'}:{})}}:provider==='surveymonkey'?{event_type:removed?'response_deleted':'response_completed',object_id:id,resources:{survey_id:foreign?'unselected-form':formId}}:{id:'event-'+id,type:removed?'response.deleted':'response.created',formId:foreign?'unselected-form':formId,responseId:id}
   const text=JSON.stringify(body),secret=secrets[provider],mac=createHmac(provider==='surveymonkey'?'sha1':'sha256',provider==='surveymonkey'?secret.clientId+'&'+secret.webhookSecret:secret.webhookSecret).update(text).digest(provider==='pencil'?'hex':'base64')
   const signature=(provider==='surveymonkey'?'':'sha256=')+(bad?'invalid':mac)
-  return fetch(origin+'/api/integrations/surveys/'+provider,{method:'POST',headers:{'Content-Type':'application/json',...(provider==='surveymonkey'?{'Sm-Apikey':secret.clientId,'Sm-Signature':signature}:provider==='typeform'?{'Typeform-Signature':signature}:{'Pencil-Signature':signature})},body:text})
+  return fetch(origin+'/api/integrations/surveys/'+provider,{method:'POST',headers:{'Content-Type':'application/json','CF-Connecting-IP':`198.19.${Math.floor(ip/250)}.${++ip%250+1}`,...(provider==='surveymonkey'?{'Sm-Apikey':secret.clientId,'Sm-Signature':signature}:provider==='typeform'?{'Typeform-Signature':signature}:{'Pencil-Signature':signature})},body:text})
  }
  for(const provider of ['typeform','surveymonkey','pencil']){
   assert.equal((await webhook(provider,undefined,{bad:true})).status,401)
@@ -77,12 +78,27 @@ try{
  let cards=(await json('/api/operator/evidence',undefined,operator)).items.filter(item=>item.survey)
  assert.equal(cards.length,4)
  const before=(await runtime.db.prepare('SELECT e.*,v.wording,s.*,j.form_id FROM evidence_items e JOIN evidence_versions v ON v.evidence_id=e.id JOIN penny_survey_sources s ON s.evidence_id=e.id JOIN penny_survey_jobs j ON j.id=s.job_id ORDER BY j.form_id').all()).results
+ assert.deepEqual({redactedRequester:before.find(r=>r.form_id==='typeform').requester_id,pencilSpeaker:before.find(r=>r.form_id==='pencil').named_speaker},{redactedRequester:null,pencilSpeaker:'Dr Pat Survey'},'Redacted email cannot become identity; Pencil source name must survive')
  for(const row of before){
-  assert.equal(row.review_state,'unreviewed');assert.equal(JSON.parse(row.attributes_json).plan,'Enterprise');assert.match(row.wording,/\[REDACTED:ssn\]/);assert.doesNotMatch(JSON.stringify(row),/123-45-6789|UNMAPPED_/)
+  assert.equal(row.review_state,'unreviewed');assert.equal(row.observed_at,time);assert.ok(row.recorded_by_operator_id);assert.equal(row.wording,`Please add scheduled exports for response-${row.form_id}. SSN [REDACTED:ssn].\n\nAlso make exports resumable.`);assert.equal(JSON.parse(row.attributes_json).plan,'Enterprise');assert.match(row.wording,/\[REDACTED:ssn\]/);assert.doesNotMatch(JSON.stringify(row),/123-45-6789|UNMAPPED_/)
   assert.equal(row.response_url,`https://${row.form_id}.example.test/responses/response-${row.form_id}`)
   if(!['google','pencil'].includes(row.form_id))assert.equal(row.account_id,'survey-account')
-  if(row.form_id==='pencil'){assert.equal(row.requester_id,null);assert.equal(row.account_id,null)}else
+  if(['typeform','pencil'].includes(row.form_id)){assert.equal(row.requester_id,null);if(row.form_id==='pencil')assert.equal(row.account_id,null)}else
   assert.ok(row.requester_id,'The selected respondent email maps to a non-authorizing contact')
+ }
+ // Follow the inbox's rendered response links against a source HTTP fixture.
+ await context.route('https://*.example.test/responses/**',async route=>{
+  const u=new URL(route.request().url()),provider=u.hostname.split('.')[0],id=decodeURIComponent(u.pathname.split('/').at(-1))
+  assert.ok(providers.includes(provider));assert.equal(id,'response-'+provider)
+  const source=fixture(provider,id)
+  await route.fulfill({contentType:'text/html',body:`<main><h1>${provider} response ${id}</h1><p>${JSON.stringify(source)}</p></main>`})
+ })
+ await page.goto(origin+'/app/feedback',{waitUntil:'networkidle'})
+ for(const row of before){
+  const link=page.locator('#evidence-'+row.evidence_id).getByRole('link',{name:'Open survey response',exact:true})
+  if(row.form_id==='pencil')assert.equal(await page.locator('#evidence-'+row.evidence_id).getByText('Named speaker: Dr Pat Survey',{exact:true}).isVisible(),true)
+  const opened=context.waitForEvent('page');await link.click();const source=await opened
+  try{await source.waitForLoadState('domcontentloaded');assert.equal(new URL(source.url()).pathname,'/responses/response-'+row.form_id);assert.match(await source.locator('main').innerText(),new RegExp('response-'+row.form_id))}finally{await source.close()}
  }
  const identity=await runtime.db.prepare("SELECT * FROM requester_addresses WHERE email='survey.person@example.test'").first();assert.ok(identity);assert.equal(identity.verified_at,null)
  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_update_permissions WHERE requester_id=?').bind(identity.requester_id).first('n'),0)
@@ -155,7 +171,7 @@ try{
   await page.setViewportSize({width,height:width===390?844:900})
   for(const screen of ['settings','inbox']){
    await page.goto(origin+(screen==='settings'?'/app/settings#survey-capture':'/app/feedback'),{waitUntil:'networkidle'})
-   const region=screen==='settings'?panel:page.locator('#evidence-'+before.find(r=>r.form_id==='typeform').evidence_id)
+   const region=screen==='settings'?panel:page.locator('#evidence-'+before.find(r=>r.form_id==='pencil').evidence_id)
    await region.scrollIntoViewIfNeeded();await page.evaluate(async()=>document.fonts.ready)
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)
    await page.evaluate(axe);assert.deepEqual(await region.evaluate(async e=>(await window.axe.run(e)).violations.filter(v=>['serious','critical'].includes(v.impact))),[])
@@ -171,6 +187,100 @@ try{
  for(let i=0;operation.status!=='complete'&&i<100;i++)operation=await json('/api/operator/data/operations/'+operation.operationId+'/resume',{},operator,'POST',[200,202])
  assert.equal(operation.status,'complete');assert.equal((await (await webhook('typeform')).json()).duplicate,true,'Erasure retains the independent replay receipt')
  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_survey_sources').first('n'),5)
+ // One continuation of the same public-door journey exercises attribution,
+ // revised work and retained source copies after the original export/erase flow.
+ for(const p of providers)await json('/api/operator/integrations/surveys/work',{id:p,action:'stop'},operator)
+ await json('/api/operator/integrations/surveys',settings('typeform'),operator,'PUT')
+ await json('/api/operator/integrations/surveys/work',{id:'typeform',action:'retry'},operator)
+ const existing=await runtime.db.prepare('SELECT * FROM requester_addresses WHERE email=?').bind('survey.person@example.test').first()
+ await runtime.db.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(existing.requester_id,'survey-account',time).run()
+ await runtime.db.prepare('UPDATE requester_addresses SET verified_at=?,suppressed_at=? WHERE id=?').bind(time,time,existing.id).run()
+ const authorityTables=['requester_addresses','native_requester_sessions','requester_update_permissions','oa_sessions','notification_intents','notification_attempts','notification_outbox']
+ const authorityBefore=Object.fromEntries(await Promise.all(authorityTables.map(async table=>[table,(await runtime.db.prepare('SELECT * FROM '+table+' ORDER BY rowid').all()).results])))
+ async function surveyRow(provider,id){return runtime.db.prepare('SELECT e.*,s.*,j.state job_state,v.wording FROM penny_survey_jobs j JOIN penny_survey_sources s ON s.job_id=j.id JOIN evidence_items e ON e.id=s.evidence_id JOIN evidence_versions v ON v.evidence_id=e.id WHERE j.form_id=? AND j.response_id=?').bind(provider,id).first()}
+ async function configure(provider,patch={}){await json('/api/operator/integrations/surveys',{...settings(provider),...patch},operator,'PUT');await json('/api/operator/integrations/surveys/work',{id:provider,action:'retry'},operator)}
+ const cases=[
+  ['answer-email','answer.person@example.test','survey-account','survey-account'],
+  ['existing-hidden','survey.person@example.test',null,'survey-account'],
+  ['unknown-account','survey.person@example.test','unknown-account',null],
+  ['invalid-email','broken@@example.test',null,null],
+  ['redacted-email','123-45-6789@example.test',null,null],
+  ['missing-email',null,null,null],
+ ]
+ for(const [id,email,account,expectedAccount] of cases){
+  const value=baseFixture('typeform',id)
+  value.answers.push({field:{id:'contact'},type:'email',email:email??''})
+  value.hidden={...value.hidden,email:email??'',account:account??''}
+  sourceFixtures.set('typeform:'+id,value)
+  await configure('typeform',{mapping:{...settings('typeform').mapping,email:id==='answer-email'?'contact':'hidden.email',account:account?'hidden.account':null}})
+  const addressCount=await runtime.db.prepare('SELECT count(*) n FROM requester_addresses').first('n')
+  for(const delivered of await Promise.all([webhook('typeform',id),webhook('typeform',id)]))assert.equal(delivered.status,202,await delivered.clone().text())
+  await runtime.schedule();await runtime.restart();await webhook('typeform',id);await runtime.schedule()
+  const row=await surveyRow('typeform',id);assert.ok(row,JSON.stringify({case:id,progress:await json('/api/operator/integrations/surveys',undefined,operator)}));assert.equal(row.account_id,expectedAccount)
+  assert.equal(await runtime.db.prepare('SELECT count(*) n FROM penny_survey_jobs WHERE form_id=? AND response_id=? AND evidence_id IS NOT NULL').bind('typeform',id).first('n'),1)
+  if(id==='answer-email'){assert.ok(row.requester_id);assert.deepEqual(await runtime.db.prepare('SELECT email,verified_at FROM requester_addresses WHERE requester_id=?').bind(row.requester_id).first(),{email,verified_at:null})}
+  else if(id==='existing-hidden'||id==='unknown-account')assert.equal(row.requester_id,existing.requester_id)
+  else{assert.equal(row.requester_id,null);assert.equal(await runtime.db.prepare('SELECT count(*) n FROM requester_addresses').first('n'),addressCount)}
+ }
+ assert.equal(await runtime.db.prepare('SELECT count(*) n FROM accounts').first('n'),1,'Unknown account identifiers never mint an account')
+ for(const table of authorityTables){
+  const rows=(await runtime.db.prepare('SELECT * FROM '+table+' ORDER BY rowid').all()).results
+  if(table==='requester_addresses')for(const row of authorityBefore[table])assert.deepEqual(rows.find(r=>r.id===row.id),row,'Existing address authority is unchanged')
+  else assert.deepEqual(rows,authorityBefore[table],'Capture creates no session, permission or contact delivery: '+table)
+ }
+ // Revising an enabled mapping in the middle of a selected-source read stops
+ // all work; neither the stale completion nor a later Cron can resume it.
+ await configure('surveymonkey')
+ await webhook('surveymonkey','response-revised')
+ onRead=async(p,id)=>{if(p==='surveymonkey'&&id==='response-revised'){onRead=async()=>{};await json('/api/operator/integrations/surveys',{...settings('surveymonkey'),mapping:{...settings('surveymonkey').mapping,evidence:['more']}},operator,'PUT')}}
+ await runtime.schedule();assert.equal(await surveyRow('surveymonkey','response-revised'),null)
+ assert.equal((await json('/api/operator/integrations/surveys',undefined,operator)).forms.find(f=>f.id==='surveymonkey').state,'stopped')
+ let readMark=reads.filter(r=>r.provider==='surveymonkey').length
+ await runtime.schedule(Date.now()+3600000);assert.equal(reads.filter(r=>r.provider==='surveymonkey').length,readMark)
+ await json('/api/operator/integrations/surveys/work',{id:'surveymonkey',action:'retry'},operator);await runtime.schedule()
+ assert.equal((await surveyRow('surveymonkey','response-revised')).wording,'Also make exports resumable.')
+ await webhook('surveymonkey','response-stopped')
+ onRead=async(p,id)=>{if(p==='surveymonkey'&&id==='response-stopped'){onRead=async()=>{};await json('/api/operator/integrations/surveys/work',{id:'surveymonkey',action:'stop'},operator)}}
+ await runtime.schedule();assert.equal(await surveyRow('surveymonkey','response-stopped'),null)
+ readMark=reads.filter(r=>r.provider==='surveymonkey').length;await runtime.schedule(Date.now()+3600000);assert.equal(reads.filter(r=>r.provider==='surveymonkey').length,readMark)
+ await json('/api/operator/integrations/surveys/work',{id:'surveymonkey',action:'retry'},operator);await runtime.schedule();assert.ok(await surveyRow('surveymonkey','response-stopped'))
+ // Authenticate deletion while a successful source read is still in flight.
+ // The later stale completion cannot reverse removal or purge before its window.
+ await configure('surveymonkey',{purgeDays:2})
+ let removedAt
+ onRead=async(p,id)=>{if(p==='surveymonkey'&&id==='response-surveymonkey'){onRead=async()=>{};const prior=(await surveyRow(p,id)).source_state;assert.equal((await webhook('surveymonkey',id,{bad:true,removed:true})).status,401);assert.equal((await surveyRow(p,id)).source_state,prior);assert.equal((await webhook('surveymonkey',id,{removed:true})).status,202);removedAt=Date.now()}}
+ await runtime.schedule()
+ let removed=await surveyRow('surveymonkey','response-surveymonkey');assert.equal(removed.source_state,'removed');assert.match(removed.wording,/scheduled exports/)
+ await json('/api/operator/integrations/surveys/work',{id:'surveymonkey',action:'stop'},operator)
+ await runtime.schedule(removedAt+86400000);removed=await surveyRow('surveymonkey','response-surveymonkey');assert.equal(removed.source_state,'removed');assert.equal(JSON.parse(removed.attributes_json).plan,'Enterprise')
+ await runtime.db.prepare('INSERT INTO evidence_versions(id,evidence_id,version_number,wording,edited_by_operator_id,created_at,updated_at) SELECT ?,evidence_id,2,wording,edited_by_operator_id,created_at,updated_at FROM evidence_versions WHERE evidence_id=?').bind('survey-extra-version',removed.evidence_id).run()
+ await runtime.db.prepare("CREATE TRIGGER survey_retention_fault BEFORE UPDATE OF wording ON evidence_versions WHEN OLD.evidence_id='"+removed.evidence_id+"' BEGIN SELECT RAISE(ABORT,'synthetic storage interruption'); END").run()
+ await runtime.schedule(removedAt+2*86400000+1000)
+ assert.equal((await json('/api/operator/integrations/surveys',undefined,operator)).forms.find(f=>f.id==='surveymonkey').failure,'survey_purge_failed')
+ await runtime.db.prepare('DROP TRIGGER survey_retention_fault').run();await runtime.schedule(removedAt+2*86400000+2000)
+ removed=await surveyRow('surveymonkey','response-surveymonkey');assert.equal(removed.source_state,'purged');assert.equal(removed.source_email,null);assert.equal(removed.named_speaker,null);assert.equal(removed.attributes_json,'{}')
+ assert.deepEqual((await runtime.db.prepare('SELECT wording FROM evidence_versions WHERE evidence_id=?').bind(removed.evidence_id).all()).results.map(r=>r.wording),['[Source removed]','[Source removed]'])
+ assert.equal((await json('/api/operator/integrations/surveys',undefined,operator)).forms.find(f=>f.id==='surveymonkey').failure,'survey_purge_failed')
+ await json('/api/operator/integrations/surveys/work',{id:'surveymonkey',action:'retry'},operator)
+ assert.equal((await json('/api/operator/integrations/surveys',undefined,operator)).forms.find(f=>f.id==='surveymonkey').failure,null)
+ // Revoked provider access removes all affected source copies. Pencil names
+ // are redacted before storage, remain non-authorizing, and purge with excerpts.
+ await configure('pencil',{purgeDays:1})
+ const named=baseFixture('pencil','response-private-name');named.participant={name:'Dr Pat 123-45-6789',email:null};sourceFixtures.set('pencil:response-private-name',named)
+ await webhook('pencil','response-private-name');await runtime.schedule()
+ const namedRow=await surveyRow('pencil','response-private-name');assert.equal(namedRow.named_speaker,'Dr Pat [REDACTED:ssn]');assert.equal(namedRow.requester_id,null)
+ assert.equal((await webhook('pencil','response-private-name',{removed:true})).status,202)
+ await json('/api/operator/integrations/surveys/work',{id:'pencil',action:'stop'},operator)
+ const future=Date.now()+3*86400000;await runtime.schedule(future)
+ assert.equal((await surveyRow('pencil','response-private-name')).named_speaker,null)
+ await configure('surveymonkey',{purgeDays:1});modes.set('surveymonkey:response-retry',403);await runtime.schedule()
+ const revoked=(await runtime.db.prepare("SELECT s.* FROM penny_survey_sources s JOIN penny_survey_jobs j ON j.id=s.job_id WHERE j.form_id='surveymonkey'").all()).results
+ assert.ok(revoked.every(r=>['removed','purged'].includes(r.source_state)))
+ assert.equal((await json('/api/operator/integrations/surveys',undefined,operator)).forms.find(f=>f.id==='surveymonkey').failure,'survey_access_revoked')
+ for(const table of tableNames)assert.doesNotMatch(JSON.stringify((await runtime.db.prepare('SELECT * FROM "'+table+'"').all()).results),/UNMAPPED_|123-45-6789/,'Selected/redacted content only: '+table)
+ const finalArchive=(await json('/api/operator/data/export',undefined,operator)).archive
+ assert.doesNotMatch(JSON.stringify(finalArchive),/UNMAPPED_|123-45-6789|synthetic-.*(?:token|secret|cookie)/)
+ console.log('Survey boundary continuation passed: selected questions, followed source links, nullable identities/accounts, mapping/stop fences, signed deletion races, nonzero retention and revoked access.')
  const visitor=await browser.newPage();await visitor.goto(origin+'/portal/feedback',{waitUntil:'networkidle'});assert.doesNotMatch(await visitor.content(),/Enterprise|survey.person|scheduled exports|survey\.example/);await visitor.close();assert.deepEqual(errors,[])
  console.log('Survey capture journey passed: four providers, selected mappings, signed replay, scoped reads, non-authorizing identity, interruption/retry/pause, source authority, portable privacy, erasure and 1440/390 UI.')
 }finally{await context?.close();await browser.close();await runtime.close()}

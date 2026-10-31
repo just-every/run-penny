@@ -67,13 +67,16 @@ the URL with HEAD; this returns 200 for a configured selected SurveyMonkey form.
 
 The connection shows its accountable owner, due time, run attempts, failures and
 per-response states. Retry explicitly resumes failed/interrupted work. Stop
-fences unfinished reads. Saving a changed map stops unfinished captures and
-discards their previously selected payload; Retry reads under the new mapping.
+fences unfinished reads. Saving any existing connection stops captures and source
+checks, even when enabled, and discards unfinished selected payloads. Review the
+scope and choose Retry before any further source read under the new mapping.
 Changing the provider/form identity requires a new connection name.
 
 New responses land once as unreviewed evidence, with one source link and private
 attributes. Only selected fields are redacted and persisted, never a provider
-envelope or an unmapped answer. Source edits mark the capture changed and retain
+envelope or an unmapped answer. Pencil’s source-stated participant name is
+redacted before storage, displayed as the named speaker and purged with removed
+excerpts; it never creates requester identity. Source edits mark the capture changed and retain
 its original version. Source deletion or revoked access marks it removed.
 Minute Cron purges all excerpt versions and private attribute/contact copies
 after the owner-selected retention window, including while capture is paused.
