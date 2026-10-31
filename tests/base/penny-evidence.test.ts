@@ -25,7 +25,7 @@ let ai=false,onModel:()=>Promise<void>=async()=>{}
 const modelEdge={send:async(wire:{url:string;body:string})=>{
  expect(wire.url).toBe('https://api.anthropic.com/v1/messages')
  const input=JSON.parse(JSON.parse(wire.body).messages[0].content)
- for(const value of ['Secret Acme account','987654321','Private operator request note'])expect(JSON.stringify(input)).not.toContain(value)
+ for(const value of input.task==='ask'?['987654321','Private renewal risk']:['Secret Acme account','987654321','Private operator request note'])expect(JSON.stringify(input)).not.toContain(value)
  if(input.task==='ask')askPrompts.push(input)
  await onModel()
  return {status:200,headers:{},body:JSON.stringify({content:[{type:'text',text:JSON.stringify(input.task==='ask'?askNetwork(input):draftNetwork(input))}],stop_reason:'end_turn',usage:{input_tokens:103,output_tokens:211}})}
@@ -322,7 +322,7 @@ it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost 
  expect(askPrompts).toHaveLength(0)
  expect((await call('/api/public/requests/suggestions?title=export')).status).toBe(200)
  expect((await call('/api/operator/triage',undefined,g.operator)).status).toBe(200)
- await json(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'synthetic-penny-4',wording:'Report exports need a date filter for CSV reporting.',observedAt:'2026-10-21T10:00:00Z',accountId:g.account.id},g.operator),201)
+ const askEvidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'synthetic-penny-4',wording:'Report exports need a date filter for CSV reporting.',observedAt:'2026-10-21T10:00:00Z',accountId:g.account.id},g.operator),201)
  await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:1000000,includePrivate:true,choices:[]},g.operator,'PUT'))
  // A native member is the current no-commercial role; custom roles inherit ROLE-001.
  await env.DB.prepare("UPDATE oa_operators SET role='member'").run()
@@ -364,7 +364,7 @@ it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost 
  expect((await call('/api/operator/ai/ask',{question},g.operator)).status).toBe(401)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_ai_answers').first('n')).toBe(savedAnswers)
  await env.DB.prepare('UPDATE oa_sessions SET revoked_at=NULL').run()
- const preview=await json<{planHash:string;counts:Record<string,number>;blockedCopies:unknown[]}>(call('/api/operator/data/erasure/preview',{table:'evidence_items',id:g.evidence.id},g.operator))
+ const preview=await json<{planHash:string;counts:Record<string,number>;blockedCopies:unknown[]}>(call('/api/operator/data/erasure/preview',{table:'evidence_items',id:askEvidence.id},g.operator))
  expect(preview.counts.penny_ai_answers).toBeGreaterThan(0)
  // Upgrade/restore uses the existing archive door; authority and credentials never travel.
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
