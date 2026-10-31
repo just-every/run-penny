@@ -3266,7 +3266,7 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `b4d089564ddc42e52d0750512f461f98c8065c0c` (31 October 2026).
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026).
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
@@ -3420,7 +3420,7 @@ Judged from the code and tests at commit `b4d089564ddc42e52d0750512f461f98c8065c
 | `CAP-019` | Freshdesk | target | missing |  | Freshdesk API and webhook fixtures run CAP-003's journey: install, link, create and proxy-vote from the sidebar; tag-triggered capture creates one item per ticket however often the webhook replays; company fields arrive as private attributes; a shipped request drafts one reply on the linked ticket; uninstalling revokes and deletes the API key. |
 | `CAP-020` | Review sites and app stores | target | missing |  | Recorded fixtures from G2, Capterra, TrustRadius, Trustpilot, Product Hunt, the App Store and Google Play produce one inbox item per review however often the feed is re-read, each with its rating, date and a deep link that opens that review; an edited fixture review shows changed; |
 | `CAP-021` | Discord | target | missing | `tests/browser/discord-capture.mjs`; `tests/installer/discord-relay.test.mjs` | Signed interaction and gateway fixtures: the command and the reaction each capture a message once with its jump link, a bad signature is refused, and a message in an unselected channel is never read. |
-| `CAP-022` | Survey responses | target | missing |  | Typeform, SurveyMonkey, Google Forms and Pencil fixtures produce one inbox item per response with its link and mapped attributes; a replayed webhook creates nothing; a bad Typeform signature is refused; an unmapped question's answer is absent from D1 and the archive. |
+| `CAP-022` | Survey responses | target | missing | `tests/browser/survey-capture.mjs` | Typeform, SurveyMonkey, Google Forms and Pencil fixtures produce one inbox item per response with its link and mapped attributes; a replayed webhook creates nothing; a bad Typeform signature is refused; an unmapped question's answer is absent from D1 and the archive. |
 | `WIDGET-001` | In-app feedback widget | target | partial | `src/core/features/settings/frame-settings.ts`; `tests/browser/operator-completeness-security.mjs` | Allow-listed iframe embedding of the portal (REQ-027) ships today. A browser test on a fixture host page at both widths: an identified user submits, votes and follows, and on an auto-publish board sees their post listed at once; the page URL appears only in private evidence; the documented CSP directives suffice; no third-party cookie is set. |
 | `WIDGET-002` | SSO identify | target | partial | `src/core/features/auth/host-identity.ts`; `tests/base/host-identity.test.ts` | REQ-031 host identity ships for the portal today, by `postMessage` from an allow-listed parent frame only. Host-identity tests extended to JWT and to the widget origin: a valid token identifies the user and links the account with private attributes; expired, future-dated and forged tokens are refused and change nothing. |
 | `WIDGET-003` | Changelog widget and announcements | target | missing |  | A browser test: the unread count falls after viewing; a segment-targeted announcement shows only to matching identified users; an unpublished release never appears. |

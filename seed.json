@@ -364,6 +364,18 @@
       ]
     },
     {
+      "id": "surveys",
+      "required": false,
+      "why": "Owner-selected Typeform, SurveyMonkey, Google Forms and Pencil response reads through enforcing PENNY_SURVEY_EGRESS; installation credentials stay outside archives.",
+      "data": [
+        "provider authorization",
+        "selected form and response IDs"
+      ],
+      "adapters": [
+        "penny.surveys.v1"
+      ]
+    },
+    {
       "id": "helpscout",
       "required": false,
       "why": "Owner-delegated Help Scout Dynamic App and tag capture through PENNY_HELPSCOUT_EGRESS, with reviewed replies. Live provider installation is owner-run.",
@@ -494,6 +506,7 @@
       "/auth/owner-claim",
       "/api/integrations/discord/interactions",
       "/api/integrations/discord/gateway",
+      "/api/integrations/surveys/",
       "/api/integrations/helpscout/sidebar",
       "/api/integrations/helpscout/webhook",
       "/api/integrations/helpscout/action",

@@ -1,3 +1,4 @@
+import {expect} from '@playwright/test'
 import assert from 'node:assert/strict'
 import {createHash, X509Certificate} from 'node:crypto'
 import {mkdtemp, rm, readFile} from 'node:fs/promises'
@@ -29,6 +30,8 @@ async function assertHostedPanel(page,overview,cookie) {
   assert.doesNotMatch(await page.locator('main').innerText(),/session file|__Host-operator_session|npm run/,'[DATA-003] hosted data needs no copied session or command')
   const exportButton=page.getByRole('button',{name:'Export workspace',exact:true})
   assert.equal(await exportButton.count(),overview.canExport?1:0,'[DATA-001] only a native owner sees workspace export')
+  // Idle server markup stays disabled until its export handler is attached.
+  if(overview.canExport&&!overview.operation)await expect(exportButton).toBeEnabled({timeout:30000})
   if(overview.canExport)assert.equal(await exportButton.isDisabled(),Boolean(overview.operation),'[DATA-001] maintenance blocks starting another export')
   const text=await page.locator('main').innerText()
   assert.ok(!text.includes(cookie.split('=')[1]),'[BASE-SECRET-002] mounted hosted panel excludes native session material')
@@ -126,8 +129,20 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     const db=await runtime.db()
     const savedOperation=await db.prepare('SELECT lock_id FROM data_state').first('lock_id')
     assert.ok(savedOperation,'[DATA-001] verified downloads remain recoverable until explicit finish')
-    await page.reload()
-    await page.getByRole('heading',{name:'Export ready to download',exact:true}).waitFor()
+    // Keep the phone's server-rendered recovery controls visible before scripts
+    // attach. An early click must wait for the real resume handler.
+    let releaseHydration
+    const hydrationReady=new Promise(resolve=>{releaseHydration=resolve})
+    const holdHydration=async route=>{await hydrationReady;await route.continue()}
+    if(width===390)await page.route('**/assets/*.js',holdHydration)
+    try {
+      await page.reload({waitUntil:width===390?'commit':'load'})
+      await page.getByRole('heading',{name:'Export ready to download',exact:true}).waitFor()
+      if(width===390)assert.equal(await page.getByRole('button',{name:'Resume export',exact:true}).isDisabled(),true,'[DATA-001] saved export recovery waits for hydration')
+    } finally {
+      releaseHydration()
+      if(width===390)await page.unrouteAll({behavior:'wait'})
+    }
     assert.equal(await db.prepare('SELECT lock_id FROM data_state').first('lock_id'),savedOperation,'[DATA-001] reload retains the same export')
     await page.getByRole('button',{name:'Resume export',exact:true}).click()
     await diagnostics.run('hosted-resumed-download-archive',()=>archiveLink.waitFor({timeout:120000}))

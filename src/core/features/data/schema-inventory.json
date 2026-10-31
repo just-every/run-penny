@@ -3262,6 +3262,69 @@
       "created_at"
     ]
   },
+  "penny_survey_forms": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "provider",
+      "form_id",
+      "mapping_json",
+      "response_url",
+      "owner_id",
+      "owner_version",
+      "actor_id",
+      "enabled",
+      "revision",
+      "purge_days",
+      "state",
+      "due_at",
+      "cursor",
+      "claim",
+      "started_at",
+      "failure",
+      "attempts",
+      "updated_at"
+    ]
+  },
+  "penny_survey_jobs": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "form_id",
+      "response_id",
+      "revision",
+      "selected_json",
+      "state",
+      "attempts",
+      "claim",
+      "started_at",
+      "failure",
+      "evidence_id",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_survey_sources": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "job_id",
+      "response_url",
+      "attributes_json",
+      "source_email",
+      "source_hash",
+      "source_state",
+      "removed_at",
+      "purge_at"
+    ]
+  },
+  "penny_survey_receipts": {
+    "classification": "product",
+    "columns": [
+      "source_digest",
+      "created_at"
+    ]
+  },
   "penny_helpscout_connection": {
     "classification": "product",
     "columns": [

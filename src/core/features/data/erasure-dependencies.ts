@@ -6,6 +6,10 @@ import { NativeError } from '@/core/features/auth/native-tokens'
 // history edges introduced/used by the clause work instead of relying on an
 // opaque-ID substring accidentally discovering those children.
 const edges = [
+ ['penny_survey_sources','job_id','penny_survey_jobs'],
+ ['penny_survey_jobs','evidence_id','evidence_items'],
+ ['penny_survey_sources','evidence_id','evidence_items'],
+ ['penny_survey_jobs','form_id','penny_survey_forms'],
  ['penny_helpscout_captures','evidence_id','evidence_items'],
  ['penny_helpscout_captures','request_id','requests'],
  ['penny_helpscout_companies','account_id','accounts'],
@@ -85,6 +89,14 @@ export function checkClauseErasureEdges(tables:{name:string;foreignKeys:{table:s
 
 export function expandClauseErasure(data:Record<string,Row[]>,selected:Record<string,Row[]>):boolean {
  let changed=false
+ const emails=new Set((selected.requester_addresses??[]).map(row=>row.email))
+ for(const job of data.penny_survey_jobs??[]){
+  if(!job.selected_json||selected.penny_survey_jobs.includes(job))continue
+  try{
+   const value=JSON.parse(String(job.selected_json))
+   if(value.email&&emails.has(value.email)){selected.penny_survey_jobs.push(job);changed=true}
+  }catch{throw new NativeError('survey_archive_invalid',409)}
+ }
  const learningScopes=learningErasedScopes(data,selected)
  for(const artifact of data.learning_artifacts??[])if(learningScopes.has(artifact.investigation_id)&&!selected.learning_artifacts.includes(artifact)){selected.learning_artifacts.push(artifact);changed=true}
  for(const contribution of selected.learning_contributions??[]){

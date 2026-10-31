@@ -81,6 +81,8 @@ export const countFor=(place:Place,records:number):PlaceCount=>({table:place.key
 
 // Connector provenance is never an import-kit native row. Its key can be evidence_id.
 places.push(
+ held('penny_survey_jobs','Selected pending survey answers',sealed),
+ held('penny_survey_sources','Private survey attributes and contact',sealed),
  {table:'penny_helpscout_replies',label:'Help Scout reply drafts',columns:['body','edited_body']},
  held('penny_browser_captures','Browser source URLs','Canonical source addresses cannot be rewritten here. Review their source in Data.'),
  {table:'penny_discord_jobs',label:'Discord capturer names',columns:['capturer_name']},

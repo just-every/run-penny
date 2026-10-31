@@ -5,7 +5,7 @@ import { createUlid } from '@/core/shared/ulid'
 import { audit,exists,refreshReadiness,validObservedTime } from '../decisions/write-support'
 
 export interface RecordEvidence {
- sourceType:'browser_extension'|'discord'|'sales_call'|'support_conversation'|'interview'|'email'|'free_text'
+ sourceType:'browser_extension'|'survey'|'discord'|'sales_call'|'support_conversation'|'interview'|'email'|'free_text'
  sourceLabel?:string|null;wording:string;observedAt:string;namedSpeaker?:string|null;accountId?:string|null
  boardSlug?:string|null
  requestLinks?:{id:string;stance:'supporting'|'contradicting'}[];betLinks?:{id:string;stance:'supporting'|'contradicting'}[];releaseId?:string|null
