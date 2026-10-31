@@ -4,6 +4,7 @@ import type { DatabaseConnection } from '@/core/platform/database'
 import { parseTagNamesJson } from '@/core/shared/tag-names'
 
 export interface EvidenceReadRow {
+  readonly surveyJson: string | null
   readonly helpScoutJson: string | null
   readonly browserJson: string | null
   readonly discordJson: string | null
@@ -29,6 +30,7 @@ export const evidenceReadSelect = `
   SELECT
     e.id AS id, ev.wording AS wording, e.named_speaker AS namedSpeaker, e.admitted_sender AS admittedSender, e.source_type AS sourceType, e.source_label AS sourceLabel,
     (SELECT json_object('jumpUrl',d.jump_url,'capturer',COALESCE(d.capturer_name,d.capturer_id),'sourceState',d.source_state,'checkFailure',d.check_failure) FROM penny_discord_sources d WHERE d.evidence_id=e.id) AS discordJson,
+    (SELECT json_object('responseUrl',s.response_url,'attributes',json(s.attributes_json),'sourceState',s.source_state) FROM penny_survey_sources s WHERE s.evidence_id=e.id) AS surveyJson,
     (SELECT json_object('sourceUrl','https://secure.helpscout.net/conversation/'||h.conversation_id||'/','sourceState',h.source_state,'conversationId',h.conversation_id) FROM penny_helpscout_captures h WHERE h.evidence_id=e.id) AS helpScoutJson,
     (SELECT json_object('capturer',(SELECT display_name FROM operators WHERE id=e.recorded_by_operator_id),'captureId',b.id,'pageUrl',b.page_url,'state',b.state,'sourceState',b.source_state,'failure',b.failure) FROM penny_browser_captures b WHERE b.evidence_id=e.id) AS browserJson,
     e.observed_at AS observedAt, e.review_state AS reviewState, e.review_reason AS reviewReason,
@@ -66,6 +68,7 @@ export const evidenceReadSelect = `
 export function mapEvidenceRead(row: EvidenceReadRow): OperatorEvidenceCard {
   return {
     id: row.id,
+    ...(row.surveyJson?{survey:JSON.parse(row.surveyJson)}:{}),
     ...(row.helpScoutJson?{helpScout:JSON.parse(row.helpScoutJson)}:{}),
     ...(row.browserJson?{browser:JSON.parse(row.browserJson)}:{}),
     ...(row.discordJson?{discord:JSON.parse(row.discordJson)}:{}),

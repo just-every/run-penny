@@ -94,7 +94,8 @@
         "INSTALLATION_KEY_PREVIOUS",
         "MAIL_API_KEY",
         "RESEND_WEBHOOK_SECRET",
-        "PORTAL_IDENTITY_SECRET"
+        "PORTAL_IDENTITY_SECRET",
+        "PENNY_SURVEYS"
       ],
       "healthPath": "/health",
       "recovery": "Retain exact source and applied migration history; capture D1 and every R2 byte consistently before changes. The local product archive excludes Base oa_* authority and is not a full installation backup. Restore to separate resources, reissue credentials after 0009, reconcile uncertain notification attempts, then verify identity, public privacy and provider delivery before switching traffic. See docs/data-ownership.md and docs/disposable-install.md. Installation API keys, provider credentials and signing keys are excluded from portable archives; reconfigure them explicitly. Imported or restored integration events and tracker commands stay held; reconcile uncertain effects before enabling enforcing egress. General tracker sync and automatic publication remain disabled.",

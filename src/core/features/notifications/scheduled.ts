@@ -1,3 +1,4 @@
+import {drainSurveys} from '../surveys/work'
 import {drainHelpScout} from '../helpscout/work'
 import {drainBrowserCaptures} from '../browser-capture/work'
 import {drainDiscord,purgeDiscordSources} from '../discord/work'
@@ -24,6 +25,7 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  await drainBrowserCaptures(runtime,_controller.scheduledTime)
  await purgeDiscordSources(runtime,_controller.scheduledTime)
  await drainDiscord(runtime,_controller.scheduledTime)
+ await drainSurveys(runtime,_controller.scheduledTime)
  await drainHelpScout(runtime,_controller.scheduledTime)
  await drainLearning(runtime,_controller.scheduledTime)
  await drainDecisionReviews(runtime)
