@@ -50,7 +50,7 @@ async function graph({betTitle='Better workflow',onRequest}:{betTitle?:string;on
  const decision=await good('/api/operator/decisions',{question:'Which direction?',ownerOperatorId:actor},operator)
  const bet=await good(`/api/operator/decisions/${decision.id}/bets`,{title:betTitle,summary:'Reduce effort'},operator)
  await good(`/api/operator/evidence/${evidence.id}/links`,{target:'bet',targetId:bet.id},operator,'PUT')
- const fields={selectedCandidateBetId:bet.id,rationale:'Commitment reason',ownerOperatorId:actor,confidence:'medium',reviewAt:'2026-11-01',noViableAlternativeReason:'Only viable approach'}
+ const fields={selectedCandidateBetId:bet.id,rationale:'Commitment reason',ownerOperatorId:actor,confidence:'medium',reviewAt:'2098-11-01',noViableAlternativeReason:'Only viable approach'}
  const commitment=await good(`/api/operator/decisions/${decision.id}/commit`,fields,operator)
  // Roadmap approval and its later status draft use independently written copy.
  // Only the sealed release versions below deliberately repeat request wording.

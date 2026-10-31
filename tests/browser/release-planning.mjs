@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import {moderationJourney} from './moderation-runtime.mjs'
 await moderationJourney('release-planning',async({runtime,origin,operator,json,pageFor,capture})=>{
- const clock=new Date(),date=(offset)=>new Date(Date.UTC(clock.getUTCFullYear(),clock.getUTCMonth()+offset,15)).toISOString().slice(0,10),releaseDate=date(1),editedDate=date(2),publicEta=`${releaseDate.slice(0,4)}-Q${Math.ceil(Number(releaseDate.slice(5,7))/3)}`
+ const clock=new Date(),[year,month]=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(clock).split('-').map(Number)
+ const date=(offset)=>new Date(Date.UTC(year,month-1+offset,15)).toISOString().slice(0,10),releaseDate=date(1),editedDate=date(2),publicEta=`${releaseDate.slice(0,4)}-Q${Math.ceil(Number(releaseDate.slice(5,7))/3)}`
  const now=clock.toISOString(),ids=['01J00000000000000000000001','01J00000000000000000000002','01J00000000000000000000003'],titles=['Reporting data model','Scheduled finance reports','Finance launch']
  for(const [index,id] of ids.entries())await runtime.db.prepare("INSERT INTO roadmap_items(id,slug,title,summary,status,target_window,created_at,updated_at) VALUES(?,?,?,'Monthly reporting improvements','planned',?,?,?)").bind(id,id,titles[index],index===0?date(-1).slice(0,7):releaseDate.slice(0,7),now,now).run()
  const actor=await runtime.db.prepare('SELECT id FROM operators').first('id')

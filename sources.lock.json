@@ -8454,7 +8454,7 @@
       "executable": false
     },
     "tests/base/penny-erasure.test.ts": {
-      "sha256": "7d5ea46c8310ca2358c1fb13b6d313367aab5b92e557d22c2b92c15442240ec6",
+      "sha256": "5b21d3e9da172734432d0410a5e742fbaba5d087ab38ba7ea425f11f8e28b0af",
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
@@ -8926,7 +8926,7 @@
       "executable": false
     },
     "tests/browser/release-planning.mjs": {
-      "sha256": "a73a5aeaee6c1f91d090332211ff57cda23640bf5a66c3936e80ddc7b5b9af63",
+      "sha256": "c755c337e3991acaad20413bc7ad0072dcf9c10385db61e4467fbd2e72beed5a",
       "executable": false
     },
     "tests/browser/request-decline.mjs": {
