@@ -126,8 +126,20 @@ export async function reviewHostedData({browser,hosted,width,capture}) {
     const db=await runtime.db()
     const savedOperation=await db.prepare('SELECT lock_id FROM data_state').first('lock_id')
     assert.ok(savedOperation,'[DATA-001] verified downloads remain recoverable until explicit finish')
-    await page.reload()
-    await page.getByRole('heading',{name:'Export ready to download',exact:true}).waitFor()
+    // Keep the phone's server-rendered recovery controls visible before scripts
+    // attach. An early click must wait for the real resume handler.
+    let releaseHydration
+    const hydrationReady=new Promise(resolve=>{releaseHydration=resolve})
+    const holdHydration=async route=>{await hydrationReady;await route.continue()}
+    if(width===390)await page.route('**/assets/*.js',holdHydration)
+    try {
+      await page.reload({waitUntil:width===390?'commit':'load'})
+      await page.getByRole('heading',{name:'Export ready to download',exact:true}).waitFor()
+      if(width===390)assert.equal(await page.getByRole('button',{name:'Resume export',exact:true}).isDisabled(),true,'[DATA-001] saved export recovery waits for hydration')
+    } finally {
+      releaseHydration()
+      if(width===390)await page.unrouteAll({behavior:'wait'})
+    }
     assert.equal(await db.prepare('SELECT lock_id FROM data_state').first('lock_id'),savedOperation,'[DATA-001] reload retains the same export')
     await page.getByRole('button',{name:'Resume export',exact:true}).click()
     await diagnostics.run('hosted-resumed-download-archive',()=>archiveLink.waitFor({timeout:120000}))
