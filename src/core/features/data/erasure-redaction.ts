@@ -22,7 +22,7 @@ export const keptAuthor = (request: Row, selected: Record<string, Row[]>): boole
 // Records an operator wrote and can open in the app.
 const choices = new Set(['release_labels', 'penny_release_plans', 'penny_priority_views', 'penny_products', 'penny_components', 'penny_features', 'requests', 'request_comments', 'request_notes', 'request_status_updates', 'candidate_bets', 'roadmap_items', 'roadmap_publications', 'roadmap_transitions', 'decisions', 'decision_revisions', 'decision_reviews', 'evidence_items', 'evidence_versions', 'accounts', 'release_versions', 'releases', 'boards', 'tags'])
 // Penny's copies of wording made when something was committed, approved, published or sent.
-const copies = new Set(['decision_bet_snapshots', 'release_targets', 'release_draft_mappings', 'roadmap_update_versions', 'roadmap_update_contexts', 'roadmap_update_histories', 'release_recipient_contexts', 'release_target_snapshots', 'notification_events', 'notification_outbox', 'notification_intents', 'notification_batches', 'request_moderation_events', 'native_moderation_events', 'roadmap_mapping_history', 'request_merges'])
+const copies = new Set(['penny_ai_answers','decision_bet_snapshots', 'release_targets', 'release_draft_mappings', 'roadmap_update_versions', 'roadmap_update_contexts', 'roadmap_update_histories', 'release_recipient_contexts', 'release_target_snapshots', 'notification_events', 'notification_outbox', 'notification_intents', 'notification_batches', 'request_moderation_events', 'native_moderation_events', 'roadmap_mapping_history', 'request_merges'])
 
 export type CopyValues = Record<string, { current: string; redacted: string }>
 export type BlockedCopy = { table: string; key: string; columns: string[]; resolvable?: true; values?: CopyValues }

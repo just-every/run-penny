@@ -1,3 +1,4 @@
+import {askNetwork} from '../fixtures/ai/ask-network'
 import {proveEvidenceResources} from './agent-resources'
 import {proveOperatorPublication} from './operator-request-publication'
 import {proveRedaction,proveCapturedRedaction} from './redaction-fixture'
@@ -19,21 +20,23 @@ import type { EvidenceVersion,EvidenceAttachments,RequestSuggestion } from '@/co
 import type { OperatorAccountDetail,OperatorDecisionBrief } from '@/core/shared/api/operator'
 const app=createPennyApi(),origin='https://127.0.0.1:8787'
 const devKey='synthetic-evidence-checkout-key-for-local-outbox-tests'
+let slackPosts:{url:string;body:string}[]=[],askPrompts:unknown[]=[]
 let ai=false,onModel:()=>Promise<void>=async()=>{}
 const modelEdge={send:async(wire:{url:string;body:string})=>{
  expect(wire.url).toBe('https://api.anthropic.com/v1/messages')
  const input=JSON.parse(JSON.parse(wire.body).messages[0].content)
  for(const value of ['Secret Acme account','987654321','Private operator request note'])expect(JSON.stringify(input)).not.toContain(value)
+ if(input.task==='ask')askPrompts.push(input)
  await onModel()
- return {status:200,headers:{},body:JSON.stringify({content:[{type:'text',text:JSON.stringify(draftNetwork(input))}],stop_reason:'end_turn',usage:{input_tokens:103,output_tokens:211}})}
+ return {status:200,headers:{},body:JSON.stringify({content:[{type:'text',text:JSON.stringify(input.task==='ask'?askNetwork(input):draftNetwork(input))}],stop_reason:'end_turn',usage:{input_tokens:103,output_tokens:211}})}
 }}
-const bindings=()=>({...env,...(ai?{PENNY_AI:JSON.stringify({anthropic:{apiKey:'synthetic-draft-network-key',models:[{id:'fixture-claude',inputMicrosPerToken:0.1,outputMicrosPerToken:0.5,maxOutputTokens:600}]}}),PENNY_LEARNING_EGRESS:modelEdge}:{}),RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key',WORKSPACE_TIMEZONE:'UTC'})
+const bindings=()=>({...env,...(ai?{PENNY_AI:JSON.stringify({anthropic:{apiKey:'synthetic-draft-network-key',models:[{id:'fixture-claude',inputMicrosPerToken:0.1,outputMicrosPerToken:0.5,maxOutputTokens:600}]}}),PENNY_LEARNING_EGRESS:modelEdge,PENNY_EGRESS:{send:async(wire:{url:string;body:string})=>{slackPosts.push(wire);return {status:200,headers:{},body:'ok'}}}}:{}),RER_DEV_KEY:devKey,PENNY_ENVIRONMENT:'test',APP_ORIGIN:origin,MAIL_PROVIDER:'sendgrid',MAIL_FROM:'penny@localhost.test',MAIL_API_KEY:'synthetic-provider-test-key',WORKSPACE_TIMEZONE:'UTC'})
 let ip=0
 function call(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST'){
  return app.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'127.0.0.1:8787',Origin:origin,'CF-Connecting-IP':`192.0.2.${++ip}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings())
 }
 async function json<T>(response:Response|Promise<Response>,status=200):Promise<T>{const r=await response;expect(r.status,await r.clone().text()).toBe(status);return r.json() as Promise<T>}
-beforeEach(async()=>{ai=false;onModel=async()=>{};await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
+beforeEach(async()=>{ai=false;slackPosts=[];askPrompts=[];onModel=async()=>{};await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
 async function fixture(){
  const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303)
@@ -244,7 +247,7 @@ it('[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps 
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_email_capture_messages').first('n')).toBe(4)
  await proveEvidenceResources()
 })
-it('[AI-006 EVID-006] resolves cited summaries and editable reply drafts while keeping private records out of publication and requester mail',async()=>{
+it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail',async()=>{
  const g=await fixture();await publish(g)
  const note='Private operator request note',rationale='Private commercial commitment rationale',alternative='Private alternative rejection'
  await json(call(`/api/operator/requests/${g.request.slug}/notes`,{body:note},g.operator),201)
@@ -312,9 +315,67 @@ it('[AI-006 EVID-006] resolves cited summaries and editable reply drafts while k
  for(const headers of [{},requester])expect((await call('/api/operator/ai/drafts',{kind:'request',id:g.request.id},headers)).status).toBe(401)
  await json(call(`/api/operator/requests/${g.request.slug}/comments`,{body:'Thank you. We are reviewing the report export evidence; no delivery date is committed.',aiDraft:true},g.operator),201)
  expect(await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n')).toBe(Number(beforeDraft)+1)
+ // AI-009 money first: refusing a run cannot call the edge or stop manual work.
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:0,includePrivate:false,choices:[]},g.operator,'PUT'))
+ const question='What does the report export evidence say about CSV date filters?'
+ expect((await call('/api/operator/ai/ask',{question},g.operator)).status).toBe(409)
+ expect(askPrompts).toHaveLength(0)
+ expect((await call('/api/public/requests/suggestions?title=export')).status).toBe(200)
+ expect((await call('/api/operator/triage',undefined,g.operator)).status).toBe(200)
+ await json(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'synthetic-penny-4',wording:'Report exports need a date filter for CSV reporting.',observedAt:'2026-10-21T10:00:00Z',accountId:g.account.id},g.operator),201)
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:1000000,includePrivate:true,choices:[]},g.operator,'PUT'))
+ // A native member is the current no-commercial role; custom roles inherit ROLE-001.
+ await env.DB.prepare("UPDATE oa_operators SET role='member'").run()
+ const answer=await json<{id:string;text:string;paragraphs:{text:string;citationIds:string[]}[];citations:{id:string;href:string}[];notices:string[];costMicros:number}>(call('/api/operator/ai/ask',{question},g.operator))
+ const commercial=['987654321','9876543.21','9,876,543.21','Private renewal risk','revenueCents','renewalDate','health']
+ for(const value of commercial){expect(JSON.stringify(answer)).not.toContain(value);expect(JSON.stringify(askPrompts)).not.toContain(value)}
+ expect(answer.citations.some(c=>c.id.startsWith('account:'))).toBe(true)
+ expect(answer.citations.some(c=>c.id.startsWith('request:'))).toBe(true)
+ expect(answer.citations.some(c=>c.id.startsWith('evidence:'))).toBe(true)
+ expect(answer.notices.some(n=>n.includes('unresolvable'))).toBe(true)
+ expect(answer.paragraphs.every(p=>p.citationIds.every(id=>answer.citations.some(c=>c.id===id)))).toBe(true)
+ for(const c of answer.citations){
+  if(c.id.startsWith('evidence:'))expect((await json<{id:string}[]>(call(c.href,undefined,g.operator))).some(v=>'evidence:'+v.id===c.id)).toBe(true)
+  if(c.id.startsWith('request:'))expect((await json<{requestId:string}>(call(`/api/operator/requests/${g.request.slug}/context`,undefined,g.operator))).requestId).toBe(c.id.slice(8))
+  if(c.id.startsWith('account:'))expect((await json<{id:string}>(call('/api/operator/accounts/'+g.account.slug,undefined,g.operator))).id).toBe(c.id.slice(8))
+ }
+ expect(answer.costMicros).toBe(116)
+ expect(slackPosts).toHaveLength(0)
+ expect(await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n')).toBe(Number(beforeDraft)+1)
+ expect(await env.DB.prepare('SELECT count(*) n FROM notification_outbox').first('n')).toBe(notificationCount)
+ await env.DB.prepare("UPDATE oa_operators SET role='owner'").run()
+ const destinations=[]
+ for(const endpoint of ['https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3','https://hooks.slack.com/services/synthetic-penny-4/synthetic-penny-5/synthetic-penny-6'])destinations.push(await json<{id:string}>(call('/api/operator/integrations/destinations',{name:destinations.length?'Other team':'Product feedback',kind:'slack',endpoint,events:['status.published']},g.operator),201))
+ expect((await json<{destinations:unknown[]}>(call('/api/operator/ai/ask/destinations',undefined,g.operator))).destinations).toHaveLength(2)
+ expect((await json<{state:string}>(call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[0].id},g.operator))).state).toBe('accepted')
+ expect((await json<{state:string}>(call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[0].id},g.operator))).state).toBe('accepted')
+ expect((await call(`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[1].id},g.operator)).status).toBe(409)
+ expect(slackPosts).toHaveLength(1);expect(slackPosts[0].url).toBe('https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3')
+ const portableAnswer=await json<{archive:Archive;journal:ErasureJournal}>(call('/api/operator/data/export',undefined,g.operator))
+ expect(portableAnswer.archive.tables.penny_ai_answers.some(row=>row.id===answer.id)).toBe(true)
+ for(const headers of [{},requester])for(const [path,body] of [['/api/operator/ai/ask',{question}],[`/api/operator/ai/ask/${answer.id}/slack`,{destinationId:destinations[0].id}] ] as const)expect((await call(path,body,headers)).status).toBe(401)
+ ai=false;expect((await call('/api/operator/ai/ask',{question},g.operator)).status).toBe(503);ai=true
+ await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:1000000,includePrivate:false,choices:[]},g.operator,'PUT'))
  onModel=async()=>{await env.DB.prepare('UPDATE oa_sessions SET revoked_at=?').bind(Date.now()).run()}
  expect((await call('/api/operator/ai/drafts',{kind:'request',id:g.request.id},g.operator)).status).toBe(401)
- expect(await env.DB.prepare("SELECT count(*) n FROM penny_ai_runs WHERE state='metered'").first('n')).toBe(6)
+ expect(await env.DB.prepare("SELECT count(*) n FROM penny_ai_runs WHERE state='metered'").first('n')).toBe(7)
+ await env.DB.prepare('UPDATE oa_sessions SET revoked_at=NULL').run()
+ const savedAnswers=await env.DB.prepare('SELECT count(*) n FROM penny_ai_answers').first('n')
+ expect((await call('/api/operator/ai/ask',{question},g.operator)).status).toBe(401)
+ expect(await env.DB.prepare('SELECT count(*) n FROM penny_ai_answers').first('n')).toBe(savedAnswers)
+ await env.DB.prepare('UPDATE oa_sessions SET revoked_at=NULL').run()
+ const preview=await json<{planHash:string;counts:Record<string,number>;blockedCopies:unknown[]}>(call('/api/operator/data/erasure/preview',{table:'evidence_items',id:g.evidence.id},g.operator))
+ expect(preview.counts.penny_ai_answers).toBeGreaterThan(0)
+ // Upgrade/restore uses the existing archive door; authority and credentials never travel.
+ await reset();await applyD1Migrations(env.DB,inject('migrations'))
+ const restored=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'})
+ const restoreOperator={Cookie:restored.headers.get('set-cookie')!.split(';')[0]}
+ let imported=await json<{status:string;operationId:string}>(call('/api/operator/data/import',portableAnswer,restoreOperator),200)
+ for(let step=0;imported.status!=='complete'&&step<50;step++)imported=await json(call(`/api/operator/data/operations/${imported.operationId}/resume`,{},restoreOperator))
+ expect(imported.status).toBe('complete')
+ expect((await env.DB.prepare('SELECT * FROM penny_ai_answers').all()).results).toEqual(portableAnswer.archive.tables.penny_ai_answers)
+ expect(slackPosts).toHaveLength(1)
+
 
 
 })

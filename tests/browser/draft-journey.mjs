@@ -1,3 +1,5 @@
+import {askProvider} from '../fixtures/ai/ask-network.ts'
+import {mkdir} from 'node:fs/promises'
 import assert from 'node:assert/strict'
 import {join} from 'node:path'
 import {expect} from '@playwright/test'
@@ -51,4 +53,47 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
    await page.screenshot({path:join(output,'draft-public-reply-'+width+'.png'),fullPage:true})
   }
  }
+ // AI-009 extends the same public-door journey; no new registered case.
+ await mkdir(join(output,'ai-ask'),{recursive:true})
+ await runtime.configure({}, {worker:askProvider})
+ await runtime.db.prepare("UPDATE oa_operators SET role='member'").run()
+ await page.goto(origin+'/app/ask');await page.waitForLoadState('networkidle')
+ const ask=page.getByRole('region',{name:'Ask Penny',exact:true})
+ await capture('ai-ask/empty',ask)
+ await ask.getByRole('textbox',{name:'Your question',exact:true}).fill('What does the report export evidence say about CSV date filters?')
+ await ask.getByRole('button',{name:'Ask Penny',exact:true}).click()
+ await expect(ask.getByRole('article',{name:'Penny’s answer',exact:true})).toBeVisible()
+ await expect(ask.getByText(/unresolvable citation/)).toBeVisible()
+ assert.doesNotMatch(await ask.innerText(),/4800000|48,000|Renewal discussion is internal/)
+ assert.equal((await api(`/api/operator/requests/${request.slug}/context`)).comments.length,baseline+1)
+ assert.equal(await runtime.db.prepare("SELECT count(*) n FROM integration_deliveries WHERE namespace='penny-ask'").first('n'),0)
+ const saved=await runtime.db.prepare('SELECT id FROM penny_ai_answers ORDER BY created_at DESC LIMIT 1').first()
+ await capture('ai-ask/answer',ask)
+ await page.reload();await expect(ask.getByRole('article',{name:'Penny’s answer',exact:true})).toBeVisible()
+ await capture('ai-ask/saved',ask)
+ await runtime.db.prepare("UPDATE oa_operators SET role='owner'").run()
+ await runtime.configure({}, {worker:askProvider,binding:'PENNY_EGRESS'})
+ const destinations=[]
+ for(const [name,endpoint] of [['Product feedback','https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3'],['Customer success','https://hooks.slack.com/services/synthetic-penny-4/synthetic-penny-5/synthetic-penny-6']])destinations.push(await api('/api/operator/integrations/destinations',{name,kind:'slack',endpoint,events:['status.published']}))
+ await page.reload();await expect(ask.getByRole('article',{name:'Penny’s answer',exact:true})).toBeVisible()
+ await ask.getByText('Share to Slack',{exact:true}).click()
+ await expect(ask.getByRole('button',{name:'Post answer to Slack',exact:true})).toBeDisabled()
+ await ask.getByLabel('Slack destination',{exact:true}).selectOption(destinations[0].id)
+ await capture('ai-ask/chosen',ask)
+ await ask.getByRole('button',{name:'Post answer to Slack',exact:true}).click()
+ await expect(ask.getByRole('status').filter({hasText:'Posted to Product feedback.'})).toBeVisible()
+ const deliveries=(await runtime.db.prepare("SELECT destination_id,state FROM integration_deliveries WHERE namespace='penny-ask'").all()).results
+ assert.deepEqual(deliveries,[{destination_id:destinations[0].id,state:'accepted'}])
+ await capture('ai-ask/posted',ask)
+ await runtime.configure({}, {worker:askProvider,binding:'PENNY_LEARNING_EGRESS'})
+ await api('/api/operator/settings/ai',{monthlyBudgetMicros:0,includePrivate:false,choices:[]},'PUT')
+ expectedRefusal(true);await ask.getByRole('button',{name:'Ask Penny',exact:true}).click()
+ await expect(ask.getByRole('alert')).toContainText('monthly AI budget')
+ await capture('ai-ask/budget-refused',ask);expectedRefusal(false)
+ await runtime.configure({PENNY_AI:''})
+ expectedRefusal(true);await ask.getByRole('button',{name:'Ask Penny',exact:true}).click()
+ await expect(ask.getByRole('alert')).toContainText('configure')
+ await capture('ai-ask/unconfigured',ask);expectedRefusal(false)
+ assert.ok(saved.id)
+
 }

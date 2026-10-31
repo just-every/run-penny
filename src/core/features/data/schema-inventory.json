@@ -3565,5 +3565,17 @@
       "native_operator_id",
       "actor_id"
     ]
+  },
+  "penny_ai_answers": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "operator_id",
+      "question",
+      "response_json",
+      "context_json",
+      "cost_micros",
+      "created_at"
+    ]
   }
 }
