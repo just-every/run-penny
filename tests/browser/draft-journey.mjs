@@ -3,7 +3,7 @@ import {mkdir} from 'node:fs/promises'
 import assert from 'node:assert/strict'
 import {join} from 'node:path'
 import {expect} from '@playwright/test'
-/** Extends the existing learning journey; no extra browser process or case. */
+/** Cited drafts and Ask Penny extend the existing learning journey; no extra case. */
 export async function draftJourney({page,context,runtime,width,output,axe,expectedRefusal}){
  const origin=runtime.origin
  async function api(path,body,method='POST'){
@@ -87,7 +87,7 @@ export async function draftJourney({page,context,runtime,width,output,axe,expect
  await capture('ai-ask/chosen',ask)
  await ask.getByRole('button',{name:'Post answer to Slack',exact:true}).click()
  await expect(ask.getByRole('status').filter({hasText:'Posted to Product feedback.'})).toBeVisible()
- const deliveries=(await runtime.db.prepare("SELECT destination_id,state FROM integration_deliveries WHERE namespace='penny-ask'").all()).results
+ const deliveries=(await runtime.db.prepare("SELECT json_extract(envelope,'$.destinationId') destination_id,state FROM integration_deliveries WHERE namespace='penny-ask'").all()).results
  assert.deepEqual(deliveries,[{destination_id:destinations[0].id,state:'accepted'}])
  await capture('ai-ask/posted',ask)
  await runtime.configure({}, {worker:askProvider,binding:'PENNY_LEARNING_EGRESS'})
