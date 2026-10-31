@@ -331,7 +331,10 @@ it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost 
  const memberToken=new URL(memberMail.text.match(/https?:\/\/\S+/)![0]).searchParams.get('token')
  const memberSignIn=await call('/auth/confirm',{token:memberToken});expect(memberSignIn.status).toBe(303)
  const member={Cookie:memberSignIn.headers.get('set-cookie')!.split(';')[0]}
+ const businessState=async()=> (await env.DB.batch([env.DB.prepare('SELECT public_state,moderation_state,published_at,public_title,public_description FROM requests ORDER BY id'),...['request_votes','decisions','decision_revisions','roadmap_publications','penny_integration_events'].map(table=>env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`))])).map(r=>r.results)
+ const beforeAnswer=await businessState()
  const answer=await json<{id:string;text:string;paragraphs:{text:string;citationIds:string[]}[];citations:{id:string;href:string}[];notices:string[];costMicros:number}>(call('/api/operator/ai/ask',{question},member))
+ expect(await businessState()).toEqual(beforeAnswer)
  const commercial=['987654321','9876543.21','9,876,543.21','Private renewal risk','revenueCents','renewalDate','health']
  for(const value of commercial){expect(JSON.stringify(answer)).not.toContain(value);expect(JSON.stringify(askPrompts)).not.toContain(value)}
  expect(answer.citations.some(c=>c.id.startsWith('account:'))).toBe(true)
