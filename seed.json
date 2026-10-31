@@ -364,6 +364,32 @@
       ]
     },
     {
+      "id": "microsoft-teams",
+      "required": false,
+      "why": "Optional installation-owned Teams transport PENNY_TEAMS_EGRESS validates Bot Framework tokens against Microsoft's public metadata/signing keys, obtains an Entra application token and reads only selected Teams messages through Microsoft Graph. No direct fetch fallback or provider discovery is permitted.",
+      "data": [
+        "Bot Framework metadata and signing-key requests contain no user data",
+        "configured tenant ID, application ID and client secret sent only to login.microsoftonline.com for Graph application authentication",
+        "Graph bearer token and exact selected group, channel, root-message and reply identifiers sent only to graph.microsoft.com"
+      ],
+      "adapters": [
+        "penny.teams-egress.v1"
+      ]
+    },
+    {
+      "id": "teams-workflow-notifications",
+      "required": false,
+      "why": "Each opted-in active operator receives wording-free event counts at the installation-selected Microsoft Teams Workflow endpoint through PENNY_TEAMS_EGRESS. The endpoint and its query signature are installation secrets; the transport enforces the exact HTTPS destination and refuses redirects.",
+      "data": [
+        "selected event kinds and aggregate counts",
+        "installation app link",
+        "configured workflow endpoint signature used only at the selected destination"
+      ],
+      "adapters": [
+        "penny.teams-egress.v1"
+      ]
+    },
+    {
       "id": "helpscout",
       "required": false,
       "why": "Owner-delegated Help Scout Dynamic App and tag capture through PENNY_HELPSCOUT_EGRESS, with reviewed replies. Live provider installation is owner-run.",
@@ -449,6 +475,12 @@
       "required": false,
       "secret": true,
       "why": "Optional Discord applicationId, Ed25519 publicKey, botToken and gatewaySecret JSON. Installation custody only. Requires PENNY_DISCORD_EGRESS and an owner-run Gateway relay; disabled when absent."
+    },
+    {
+      "name": "PENNY_TEAMS",
+      "required": false,
+      "secret": true,
+      "why": "Optional Microsoft Entra applicationId, tenantId and clientSecret JSON, with a private notificationUrl for Teams Workflows when desired. Installation custody only; requires PENNY_TEAMS_EGRESS and explicit native capture/notification choices. No transport or live account is provisioned automatically."
     }
   ],
   "deploy": {
@@ -494,6 +526,7 @@
       "/auth/owner-claim",
       "/api/integrations/discord/interactions",
       "/api/integrations/discord/gateway",
+      "/api/integrations/teams/messages",
       "/api/integrations/helpscout/sidebar",
       "/api/integrations/helpscout/webhook",
       "/api/integrations/helpscout/action",
@@ -561,7 +594,8 @@
       "portal.request.detail.after.v1"
     ],
     "adapters": [
-      "mail.sender.v1"
+      "mail.sender.v1",
+      "penny.teams-egress.v1"
     ]
   },
   "limits": {

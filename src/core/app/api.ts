@@ -1,3 +1,4 @@
+import {registerTeamsRoutes} from '@/core/features/teams/routes'
 import {registerHelpScoutRoutes} from '@/core/features/helpscout/routes'
 import {registerBrowserCaptureRoutes} from '@/core/features/browser-capture/routes'
 import {registerDiscordRoutes} from '@/core/features/discord/routes'
@@ -112,6 +113,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerHelpScoutRoutes(app)
   registerBrowserCaptureRoutes(app)
   registerDiscordRoutes(app)
+  registerTeamsRoutes(app)
   registerAiRoutes(app)
   registerWeeklyRoutes(app)
   registerPlanningRoutes(app)
