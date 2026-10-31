@@ -93,7 +93,7 @@ export function PublicFeedbackHomePage({ content }: { readonly content: PublicPo
 
 export function PublicFeedbackDetailPage({ content, requestSlug }: { readonly content: PublicPortalContent; readonly requestSlug: string }) {
   const [request, retry] = usePublicResource<PublicRequestDetail>(`/api/public/requests/${encodeURIComponent(requestSlug)}`)
-  useEffect(()=>{const timer=window.setInterval(retry,4000);return()=>window.clearInterval(timer)},[retry])
+  useEffect(()=>{if(request.kind==='error'&&(request.status===404||request.status===410))return;const timer=window.setInterval(retry,4000);return()=>window.clearInterval(timer)},[request,retry])
 
   return (
     <PublicPortalLayout content={content}>

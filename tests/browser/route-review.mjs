@@ -178,6 +178,7 @@ async function checkOperatorRoutes(page, width) {
     { route: 'operator-app', path: '/app', contains: 'Make the next roadmap call defensible.' },
     { route: 'operator-app-slash', path: '/app/', finalPath: '/app', contains: 'Make the next roadmap call defensible.' },
     { route: 'operator-overview', path: '/app/overview', contains: 'Make the next roadmap call defensible.' },
+    { route: 'operator-ask', path: '/app/ask', contains: 'Ask Penny' },
     { route: 'operator-unknown-route', path: '/app/no-such-page', status: 404, contains: 'Check the address or return to your workspace overview.' },
     { route: 'operator-browser-capture', path: '/app/browser-capture', contains: 'Ready when you are' },
     { route: 'operator-feedback', path: '/app/feedback', contains: 'Review the evidence before it becomes a roadmap promise.' },
