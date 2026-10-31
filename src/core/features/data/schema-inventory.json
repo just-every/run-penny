@@ -3262,6 +3262,134 @@
       "created_at"
     ]
   },
+  "penny_teams_settings": {
+    "classification": "product",
+    "columns": [
+      "singleton",
+      "team_id",
+      "channels_json",
+      "owner_id",
+      "owner_version",
+      "actor_id",
+      "enabled",
+      "revision",
+      "purge_days",
+      "updated_at"
+    ]
+  },
+  "penny_teams_jobs": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "team_id",
+      "channel_id",
+      "message_id",
+      "parent_message_id",
+      "capturer_id",
+      "capturer_name",
+      "trigger_kind",
+      "owner_id",
+      "owner_version",
+      "actor_id",
+      "revision",
+      "state",
+      "evidence_id",
+      "attempts",
+      "claim",
+      "started_at",
+      "failure",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_teams_sources": {
+    "classification": "product",
+    "columns": [
+      "evidence_id",
+      "job_id",
+      "team_id",
+      "channel_id",
+      "message_id",
+      "parent_message_id",
+      "jump_url",
+      "capturer_id",
+      "capturer_name",
+      "author_id",
+      "source_hash",
+      "source_state",
+      "removed_at",
+      "purge_at",
+      "next_check",
+      "check_failure",
+      "check_claim",
+      "check_started_at"
+    ]
+  },
+  "penny_teams_receipts": {
+    "classification": "product",
+    "columns": [
+      "source_digest",
+      "created_at"
+    ]
+  },
+  "penny_teams_preferences": {
+    "classification": "installation",
+    "columns": [
+      "operator_id",
+      "events_json",
+      "demand_threshold",
+      "enabled",
+      "revision",
+      "updated_at"
+    ]
+  },
+  "penny_teams_events": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "operator_id",
+      "event",
+      "cadence",
+      "revision",
+      "created_at",
+      "delivery_id"
+    ]
+  },
+  "penny_teams_deliveries": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "operator_id",
+      "revision",
+      "state",
+      "claim",
+      "failure",
+      "event_count",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "penny_connector_episodes": {
+    "classification": "installation",
+    "columns": [
+      "connector_key",
+      "episode_id",
+      "operator_id",
+      "announce",
+      "state",
+      "opened_at",
+      "resolved_at"
+    ]
+  },
+  "penny_connector_faults": {
+    "classification": "installation",
+    "columns": [
+      "connector_key",
+      "work_key",
+      "operator_id",
+      "created_at"
+    ]
+  },
   "penny_helpscout_connection": {
     "classification": "product",
     "columns": [

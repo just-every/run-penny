@@ -1,7 +1,7 @@
 import { applyD1Migrations,type D1Migration } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { expect,inject,it } from 'vitest'
-it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive Discord, Help Scout and browser capture upgrades and repeat',async()=>{
+it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive browser and Teams connector upgrades and repeat',async()=>{
  const {reset}=await import('cloudflare:test');await reset()
  const {populatePreviousPennySample}=await import('./previous-sample-fixture')
  const sample=(await import('../../sample-data/penny.v1.json')).default
@@ -98,10 +98,46 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  })))
  const agentSnapshot=async()=> (await env.DB.batch(agentPredecessor.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const agentBefore=await agentSnapshot()
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0107'))
  expect(await agentSnapshot()).toEqual(agentBefore)
- await applyD1Migrations(env.DB,migrations)
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0107'))
  expect(await agentSnapshot()).toEqual(agentBefore)
+ expect(await snapshot()).toEqual(discordBefore)
+ // The exact previous main schema is populated, including Discord provenance,
+ // before adding Teams. Preserve every old row/column, authority and original.
+ const teamsPredecessor=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const previous=await Promise.all(teamsPredecessor.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
+ const previousSnapshot=async()=> (await env.DB.batch(previous.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const teamsBefore=await previousSnapshot()
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0109'))
+ expect(await snapshot()).toEqual(discordBefore)
+ expect(await previousSnapshot()).toEqual(teamsBefore)
+ // Populate the exact writer-head Teams schema before the episode correction.
+ // Its unresolved job and accepted notification receipt must survive upgrade.
+ const teamsJob='11111111-1111-4111-8111-111111111111/19:feedback/1700000000010'
+ await env.DB.prepare("INSERT INTO penny_teams_settings(singleton,team_id,channels_json,owner_id,owner_version,actor_id,enabled,revision,purge_days,updated_at) VALUES(1,'11111111-1111-4111-8111-111111111111','[\"19:feedback\"]',?,1,?,1,1,7,?)").bind(legacyOwner,legacyOwner,stamp).run()
+ await env.DB.prepare("INSERT INTO penny_teams_jobs(id,team_id,channel_id,message_id,capturer_id,trigger_kind,owner_id,owner_version,actor_id,revision,state,failure,created_at,updated_at) VALUES(?,'11111111-1111-4111-8111-111111111111','19:feedback','1700000000010','capturing-member','action',?,1,?,1,'failed','teams_rate_limited',?,?)").bind(teamsJob,legacyOwner,legacyOwner,stamp,stamp).run()
+ await env.DB.prepare("INSERT INTO penny_teams_deliveries(id,operator_id,revision,state,event_count,created_at,updated_at) VALUES('previous-accepted',?,1,'accepted',1,?,?)").bind(legacyOwner,stamp,stamp).run()
+ const writerTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const writer=await Promise.all(writerTables.map(async table=>({name:table.name,columns:(await env.DB.prepare(`PRAGMA table_info(${quote(table.name)})`).all<{name:string}>()).results.map(column=>column.name)})))
+ const writerSnapshot=async()=> (await env.DB.batch(writer.map(table=>env.DB.prepare(`SELECT ${table.columns.map(quote).join(',')} FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const writerBefore=await writerSnapshot()
+ const preEpisodeRows=await currentSnapshot()
+ await applyD1Migrations(env.DB,migrations)
+ expect(await writerSnapshot()).toEqual(writerBefore)
+ expect(await currentSnapshot()).toEqual(preEpisodeRows)
+ await applyD1Migrations(env.DB,migrations)
+ expect(await writerSnapshot()).toEqual(writerBefore)
+ expect(await currentSnapshot()).toEqual(preEpisodeRows)
+ // First idle runtime reconstructs existing failure custody, not historical
+ // notification effects. Repeating initialization leaves all old rows intact.
+ const {initializeConnectorEpisodes}=await import('@/core/features/notifications/connector-episodes')
+ const {createPennyRuntime}=await import('@/core/app/runtime')
+ const events=await env.DB.prepare('SELECT count(*) n FROM penny_teams_events').first('n')
+ await initializeConnectorEpisodes(createPennyRuntime(env));await initializeConnectorEpisodes(createPennyRuntime(env))
+ expect(await writerSnapshot()).toEqual(writerBefore)
+ expect(await currentSnapshot()).toEqual(preEpisodeRows)
+ expect(await env.DB.prepare('SELECT count(*) n FROM penny_teams_events').first('n')).toBe(events)
  expect(new Uint8Array(await (await env.FILES.get('upgrade-preserved-bytes'))!.arrayBuffer())).toEqual(bytes)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
