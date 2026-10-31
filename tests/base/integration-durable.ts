@@ -9,7 +9,8 @@ import type {WireRequest} from '../../base/modules/integrations/core/types'
 export async function proveDurableIntegration(migrations:Parameters<typeof applyD1Migrations>[1]){
  for(const kind of ['webhook','slack'] as const){
  await reset();await applyD1Migrations(env.DB,migrations)
- vi.setSystemTime(new Date('2026-10-23T09:00:00Z'))
+ // Retry advances start on today's date so D1 sees current session authority.
+ vi.setSystemTime(new Date(vi.getRealSystemTime()).setUTCHours(9,0,0,0))
  try{
  const endpoint=kind==='webhook'?'https://events.example.com/penny':'https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3'
  const identity=(wire:WireRequest)=>wire.headers['webhook-id']??wire.headers['penny-delivery-id']

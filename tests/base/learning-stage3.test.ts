@@ -58,7 +58,8 @@ it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged w
  expect((await restoreArchive(env.DB,env.FILES,latest.archive,latest.journal)).status).toBe('complete')
  expect(await env.DB.prepare('SELECT state FROM learning_investigations WHERE id=?').bind(a.id).first('state')).toBe('revoked')
  expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
- vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-10-30T12:00:00Z'))
+ // Freeze within today's UTC day; newly issued sessions must also satisfy D1's clock.
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date(vi.getRealSystemTime()).setUTCHours(12,0,0,0))
  try{await proveBoundedSchedule();await proveScopeFences();await proveNativeFences()}finally{vi.useRealTimers()}
 })
 it('[LEARN-004] contribution erasure removes every dependent version/snapshot, preserves unrelated native records and refuses replay and active restored grants',async()=>{

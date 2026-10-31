@@ -8,7 +8,8 @@ import {providerMessages} from './provider-messages'
 
 /** The real publication route fans out history and one coalesced follower email. */
 export async function proveRoadmapPublication(){
- vi.setSystemTime(new Date('2026-10-23T09:00:00Z'))
+ // Keep daylight delivery deterministic without aging sessions past D1's real-time fence.
+ vi.setSystemTime(new Date(vi.getRealSystemTime()).setUTCHours(9,0,0,0))
  try{
  const g=await releaseGraph(4),mapped=g.requests.slice(0,2),controls=g.requests.slice(2)
  await env.DB.prepare("UPDATE roadmap_request_mappings SET approved_at=NULL WHERE roadmap_item_id='release-item' AND request_id=?").bind(controls[0].id).run()
