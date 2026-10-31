@@ -384,4 +384,12 @@ it('[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost 
 
 
 
+ const restoredPreview=await json<{planHash:string;counts:Record<string,number>;blockedCopies:unknown[]}>(call('/api/operator/data/erasure/preview',{table:'evidence_items',id:askEvidence.id},restoreOperator))
+ expect(restoredPreview.counts.penny_ai_answers).toBe(1);expect(restoredPreview.blockedCopies).toEqual([])
+ let erased=await complete('/api/operator/data/erasure',{table:'evidence_items',id:askEvidence.id,planHash:restoredPreview.planHash})
+ for(let step=0;erased.status!=='complete'&&step<50;step++)erased=await complete(`/api/operator/data/operations/${erased.operationId}/resume`,{})
+ expect(erased.status).toBe('complete')
+ expect(await env.DB.prepare('SELECT count(*) n FROM penny_ai_answers').first('n')).toBe(0)
+ expect(await env.DB.prepare("SELECT count(*) n FROM integration_deliveries WHERE namespace='penny-ask'").first('n')).toBe(0)
+
 })
