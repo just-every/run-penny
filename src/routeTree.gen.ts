@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAskRouteImport } from './routes/app.ask'
 import { Route as AppBrowserCaptureRouteImport } from './routes/app.browser-capture'
 import { Route as AppCustomersRouteImport } from './routes/app.customers'
 import { Route as AppDataRouteImport } from './routes/app.data'
@@ -73,6 +74,11 @@ const SigninRoute = SigninRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAskRoute = AppAskRouteImport.update({
+  id: '/ask',
+  path: '/ask',
   getParentRoute: () => AppRoute,
 } as any)
 const AppBrowserCaptureRoute = AppBrowserCaptureRouteImport.update({
@@ -260,6 +266,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
   '/signin': typeof SigninRoute
+  '/app/ask': typeof AppAskRoute
   '/app/browser-capture': typeof AppBrowserCaptureRoute
   '/app/customers': typeof AppCustomersRouteWithChildren
   '/app/data': typeof AppDataRoute
@@ -300,6 +307,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signin': typeof SigninRoute
+  '/app/ask': typeof AppAskRoute
   '/app/browser-capture': typeof AppBrowserCaptureRoute
   '/app/data': typeof AppDataRoute
   '/app/features': typeof AppFeaturesRoute
@@ -337,6 +345,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
   '/signin': typeof SigninRoute
+  '/app/ask': typeof AppAskRoute
   '/app/browser-capture': typeof AppBrowserCaptureRoute
   '/app/customers': typeof AppCustomersRouteWithChildren
   '/app/data': typeof AppDataRoute
@@ -381,6 +390,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/portal'
     | '/signin'
+    | '/app/ask'
     | '/app/browser-capture'
     | '/app/customers'
     | '/app/data'
@@ -421,6 +431,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/signin'
+    | '/app/ask'
     | '/app/browser-capture'
     | '/app/data'
     | '/app/features'
@@ -457,6 +468,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/portal'
     | '/signin'
+    | '/app/ask'
     | '/app/browser-capture'
     | '/app/customers'
     | '/app/data'
@@ -539,6 +551,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/ask': {
+      id: '/app/ask'
+      path: '/ask'
+      fullPath: '/app/ask'
+      preLoaderRoute: typeof AppAskRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/browser-capture': {
@@ -832,6 +851,7 @@ const AppReleasesRouteWithChildren = AppReleasesRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAskRoute: typeof AppAskRoute
   AppBrowserCaptureRoute: typeof AppBrowserCaptureRoute
   AppCustomersRoute: typeof AppCustomersRouteWithChildren
   AppDataRoute: typeof AppDataRoute
@@ -850,6 +870,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAskRoute: AppAskRoute,
   AppBrowserCaptureRoute: AppBrowserCaptureRoute,
   AppCustomersRoute: AppCustomersRouteWithChildren,
   AppDataRoute: AppDataRoute,
