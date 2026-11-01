@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.19",
+  "version": "1.0.0",
+  "id": "00000000-0000-4000-8000-000000000000",
+  "developer": {
+    "name": "Penny installation owner",
+    "websiteUrl": "https://installation.example",
+    "privacyUrl": "https://installation.example/docs/portal",
+    "termsOfUseUrl": "https://installation.example/docs"
+  },
+  "name": {
+    "short": "Penny",
+    "full": "Penny feedback capture"
+  },
+  "description": {
+    "short": "Send a selected Teams channel message to your Penny inbox.",
+    "full": "Capture a selected channel message as private, unreviewed evidence in your own Penny installation. Only channels selected by your Penny owner are read. Capture creates no requester sign-in or email permission."
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "accentColor": "#B44E26",
+  "composeExtensions": [
+    {
+      "botId": "00000000-0000-4000-8000-000000000000",
+      "canUpdateConfiguration": false,
+      "commands": [
+        {
+          "id": "sendToPenny",
+          "type": "action",
+          "title": "Send to Penny",
+          "description": "Capture this message in the Penny feedback inbox",
+          "context": [
+            "message"
+          ],
+          "fetchTask": false
+        }
+      ]
+    }
+  ],
+  "validDomains": [
+    "installation.example"
+  ]
+}

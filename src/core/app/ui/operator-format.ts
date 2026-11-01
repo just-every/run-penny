@@ -51,6 +51,7 @@ const sourceWords: Record<string, string> = { sales_call: 'Sales call', support_
 export function sourceLabel(sourceType: string, sourceLabel: string | null): string {
   if (sourceType === 'browser_extension') return 'Browser extension'
   if (sourceType === 'survey') return sourceLabel ?? 'Survey response'
+  if (sourceType === 'teams') return 'Teams'
   if (sourceType === 'discord') return 'Discord'
   if (sourceType === 'free_text') return sourceLabel ?? 'Recorded note'
 

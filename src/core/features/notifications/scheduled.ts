@@ -1,4 +1,7 @@
 import {drainSurveys} from '../surveys/work'
+import {initializeConnectorEpisodes} from './connector-episodes'
+import {drainTeamsNotifications} from '../teams/notifications'
+import {drainTeams,purgeTeamsSources} from '../teams/work'
 import {drainHelpScout} from '../helpscout/work'
 import {drainBrowserCaptures} from '../browser-capture/work'
 import {drainDiscord,purgeDiscordSources} from '../discord/work'
@@ -23,6 +26,9 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  // A confirmed data operation finishes first: the drains below wait for an idle workspace.
  await advanceDataWork(bindings)
  await drainBrowserCaptures(runtime,_controller.scheduledTime)
+ await initializeConnectorEpisodes(runtime)
+ await purgeTeamsSources(runtime,_controller.scheduledTime)
+ await drainTeams(runtime,_controller.scheduledTime)
  await purgeDiscordSources(runtime,_controller.scheduledTime)
  await drainDiscord(runtime,_controller.scheduledTime)
  await drainSurveys(runtime,_controller.scheduledTime)
@@ -35,6 +41,7 @@ export async function runNotificationSchedule(_controller:ScheduledController,bi
  await drainRequesterMail(runtime,()=>_controller.scheduledTime)
  await drainIntegrations(runtime)
  await drainTrackers(runtime)
+ await drainTeamsNotifications(runtime,_controller.scheduledTime)
 }
 
 /** Queue and Cron share this order: status digests precede release notes. */

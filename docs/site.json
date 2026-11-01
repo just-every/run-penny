@@ -10,7 +10,8 @@
       { "slug": "decisions", "source": "docs/DECISIONS.md", "label": "The decision loop" },
       { "slug": "email", "source": "docs/EMAIL.md", "label": "Email and notifications" },
       { "slug": "browser-capture", "source": "docs/BROWSER-CAPTURE.md", "label": "Browser capture" },
-      { "slug": "agents", "source": "docs/AGENTS.md", "label": "Company agents" }
+      { "slug": "agents", "source": "docs/AGENTS.md", "label": "Company agents" },
+      { "slug": "teams", "source": "docs/TEAMS.md", "label": "Microsoft Teams" }
     ]},
     { "title": "Run it", "pages": [
       { "slug": "data", "source": "docs/DATA.md", "label": "Export and restore" },

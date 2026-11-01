@@ -25,7 +25,7 @@ export async function startBrowserRuntime({bindings={},https=false,port,networkW
    return new Response(null,{status:202,headers:{'x-message-id':'synthetic-browser-message'}})
   }),
  }
- const runtimeOptions=()=>{const opts=convertV4MiniflareOptions({...configuration,...(networkWorker?{serviceBindings:{[networkBinding]:networkWorker.name}}:{})});if(networkWorker)opts.workers.push(...convertV4MiniflareOptions(networkWorker).workers);return opts}
+ const runtimeOptions=()=>{const opts=convertV4MiniflareOptions({...configuration,...(networkWorker?{serviceBindings:Object.fromEntries([networkBinding].flat().map(name=>[name,networkWorker.name]))}:{})});if(networkWorker)opts.workers.push(...convertV4MiniflareOptions(networkWorker).workers);return opts}
  let options=runtimeOptions()
  let mf=new Miniflare(options)
  try{
