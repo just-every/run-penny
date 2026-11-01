@@ -67,7 +67,9 @@ async function reviewLoopHealth({page,db,goto,capture}) {
   assert.equal((await fetch(new URL('/api/operator/loop-health?metric=ownership',page.url()))).status,401,'[MEAS-006] loop records require operator authority')
   assert.equal((await read('/api/operator/loop-health?metric=unknown')).status(),400,'[MEAS-006] unknown cohorts are refused')
   assert.equal((await read('/api/operator/loop-health?metric=ownership&page=0')).status(),400,'[MEAS-006] invalid pages are refused')
-  await seedLoopHealth(db)
+  const planning=await read('/api/operator/release-planning')
+  assert.equal(planning.status(),200,'[MEAS-006] fixture uses the workspace planning clock')
+  await seedLoopHealth(db,(await planning.json()).today)
   try {
     await goto('/app/overview')
     const response=await read('/api/operator/overview')

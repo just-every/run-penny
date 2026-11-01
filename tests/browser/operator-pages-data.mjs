@@ -54,8 +54,9 @@ export const loopHealthProof = {
   },
 }
 
-export async function seedLoopHealth(db) {
-  const clock=new Date(),captured=new Date(clock.getTime()-7*86400000).toISOString()
+export async function seedLoopHealth(db, today) {
+  // Anchor fixture months to the injected workspace day used to judge promises.
+  const clock=new Date(today+'T12:00:00Z'),captured=new Date(clock.getTime()-7*86400000).toISOString()
   const pastMonth=new Date(Date.UTC(clock.getUTCFullYear(),clock.getUTCMonth()-1,1)).toISOString().slice(0,7),futureMonth=new Date(Date.UTC(clock.getUTCFullYear(),clock.getUTCMonth()+2,1)).toISOString().slice(0,7)
   const insert=async(table,row)=>{
     const values={created_at:captured,updated_at:captured,...row}

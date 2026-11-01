@@ -8898,7 +8898,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-data.mjs": {
-      "sha256": "548d59cb54739a24adca791b903ab4d1c13b1356b1334cbee28bf12945bc39e5",
+      "sha256": "93fb95260e5eaddcbc18fdd1b93cd221e6186d073856a24d3bff6d5905b0ed01",
       "executable": false
     },
     "tests/browser/operator-pages-decisions.mjs": {
@@ -8914,7 +8914,7 @@
       "executable": false
     },
     "tests/browser/operator-pages.mjs": {
-      "sha256": "1cbbc8d0d7a4c399d5e1fc0410f2ee55e9012ee8a6a30011ef0a6ff7b0082172",
+      "sha256": "ddfc7746e8be560e1a2d18f522702368eebdef6308ab90735c6b2d7cb97c7987",
       "executable": false
     },
     "tests/browser/operator-roadmap-record.mjs": {
