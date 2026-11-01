@@ -61,3 +61,27 @@ NOTIFY-004’s no-handler sentence is superseded by the dedicated-handler wordin
 **Current-main evidence:** CONTRACT.md:449 (clause), :799 (Status row); `48b05271ea2d931922738ae7ca04233e6f3ddc88`.
 
 **Engineering/proof boundary:** Missing inbox batches, board/status/link/review/removal/merge operations remain unimplemented. Preserve the 200-item audited tag/assign journey and complete undo; no status promotion or blanket new role grant.
+
+### RL-102 — MOB-001 states the phone-page check once, at 390 pixels
+
+**Date:** 2026-10-31 · **Ruled by:** ct (MOB-001 authorization 23:37Z) · **Clauses governed:** MOB-001.
+
+**Old acceptance:** “1. Every portal and operator journey runs at 1440 and 390 pixels with axe and layout checks, and each new surface joins them.”
+
+**Adopted acceptance:** “1. At 390 pixels, every portal and operator page passes axe and layout checks, with no horizontal scroll and touch-sized controls, and each new surface in this contract (inbox, widget, prioritization and roadmap views) joins the same check.”
+
+**Reason:** The old sentence prescribed each journey at two widths. The owner's later test rule runs clause journeys at one width and keeps one 390 smoke per seed. The product duty is every portal and operator page at 390 pixels with no horizontal scroll, touch-sized controls, the cited accessibility bar and every named new surface. The Requirement and the BASE-ACCESSIBILITY-001 citation stay. Other clause journeys need not rerun at 390, and A11Y-001 is unchanged. The widget joins the check when it is built.
+
+**Proof boundary:** Reading-only ruling. It does not certify current proof and changes no status, Evidence, Gap or count; MOB-001 keeps its current status and cells, and all existing proof is preserved. ct's read at main `68567b5c16778d8811762e959252daacde832745` found that the existing 390 smoke `tests/browser/route-review.mjs` is omitted from MOB-001's Evidence cell and found no 390 touch-size assertion; both are retained follow-ups for the next planned maintenance evidence round, not work in this ruling.
+
+### RL-103 — MIG-003 states the Aha! API fixture as one acceptance point
+
+**Date:** 2026-10-31 · **Ruled by:** ct (MIG-003 authorization 23:23Z) · **Clauses governed:** MIG-003.
+
+**Old acceptance:** “1. An Aha!” and “2. API fixture migrates with proxy votes marked proxy and portal visibility mapped to boards.”
+
+**Adopted acceptance:** “1. An Aha! API fixture migrates with proxy votes marked proxy and portal visibility mapped to boards.”
+
+**Reason:** One sentence had been split at “Aha!” into two acceptance points. They are joined into the single API-fixture point it always was.
+
+**Proof boundary:** Text only. All migration duties, D-5 and R-9, and MIG-003's status, Evidence, Gap and counts are preserved; no proof is added or re-judged.

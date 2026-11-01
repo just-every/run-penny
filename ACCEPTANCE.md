@@ -3366,8 +3366,7 @@ Core · target · **missing** · Rules D-5 · Register R-9
 **Requirement.** The Aha! API migration moves ideas, categories (REQ-034), statuses (PRIO-002), idea subscribers under MIG-007, votes including proxy votes (CAP-014), comments, idea-portal visibility, scores and the ideas' users and organizations.
 
 **Acceptance.**
-1. An Aha!
-2. API fixture migrates with proxy votes marked proxy and portal visibility mapped to boards.
+1. An Aha! API fixture migrates with proxy votes marked proxy and portal visibility mapped to boards.
 
 **Evidence.** None.
 **Gap.** An Aha! API fixture migrates with proxy votes marked proxy and portal visibility mapped to boards.
@@ -3437,7 +3436,7 @@ Core · target · **done** · Cites BASE-ACCESSIBILITY-001
 **Requirement.** Every portal and operator page works at 390 pixels wide with no horizontal scroll and touch-sized controls; every new surface in this contract (inbox, widget, prioritization and roadmap views) joins the same check.
 
 **Acceptance.**
-1. Every portal and operator journey runs at 1440 and 390 pixels with axe and layout checks, and each new surface joins them.
+1. At 390 pixels, every portal and operator page passes axe and layout checks, with no horizontal scroll and touch-sized controls, and each new surface in this contract (inbox, widget, prioritization and roadmap views) joins the same check.
 
 **Evidence.** `tests/browser/acceptance-audit.mjs`; `tests/browser/operator-pages.mjs`; `tests/browser/requester-board.mjs`
 **Gap.** None.
