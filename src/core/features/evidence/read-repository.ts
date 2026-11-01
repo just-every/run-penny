@@ -8,6 +8,7 @@ export interface EvidenceReadRow {
   readonly helpScoutJson: string | null
   readonly browserJson: string | null
   readonly discordJson: string | null
+  readonly chatSourceJson: string | null
   readonly id: string
   readonly wording: string
   readonly admittedSender: string | null
@@ -28,6 +29,7 @@ export interface EvidenceReadRow {
 
 export const evidenceReadSelect = `
   SELECT
+    (SELECT json_object('url',s.source_url,'channel',s.channel_id,'message',s.message_ts,'thread',s.thread_ts,'capturer',s.capturer,'author',s.source_author,'state',s.state) FROM penny_chat_sources s WHERE s.evidence_id=e.id) AS chatSourceJson,
     e.id AS id, ev.wording AS wording, e.named_speaker AS namedSpeaker, e.admitted_sender AS admittedSender, e.source_type AS sourceType, e.source_label AS sourceLabel,
     (SELECT json_object('jumpUrl',d.jump_url,'capturer',COALESCE(d.capturer_name,d.capturer_id),'sourceState',d.source_state,'checkFailure',d.check_failure) FROM penny_discord_sources d WHERE d.evidence_id=e.id) AS discordJson,
     (SELECT json_object('responseUrl',s.response_url,'attributes',json(s.attributes_json),'sourceState',s.source_state) FROM penny_survey_sources s WHERE s.evidence_id=e.id) AS surveyJson,
@@ -67,6 +69,7 @@ export const evidenceReadSelect = `
 
 export function mapEvidenceRead(row: EvidenceReadRow): OperatorEvidenceCard {
   return {
+    chatSource: row.chatSourceJson ? JSON.parse(row.chatSourceJson) : null,
     id: row.id,
     ...(row.surveyJson?{survey:JSON.parse(row.surveyJson)}:{}),
     ...(row.helpScoutJson?{helpScout:JSON.parse(row.helpScoutJson)}:{}),

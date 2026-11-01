@@ -285,6 +285,15 @@
         "node scripts/agent-docs.mjs check",
         "pnpm run build"
       ]
+    },
+    {
+      "name": "slack-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/slack-capture.mjs"
+      ]
     }
   ],
   "nightly": [
