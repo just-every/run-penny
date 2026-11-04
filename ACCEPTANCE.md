@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 73 | 114 | 71 | 258 |
+| Core | 74 | 113 | 71 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 73 | 130 | 78 | 281 |
+| Full target | 74 | 129 | 78 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -1426,7 +1426,7 @@ Core · published · **partial** · Cites BASE-ACCESS-004
 
 #### API-001 — Scoped keys
 
-Core · published · **partial**
+Core · published · **done**
 
 **Requirement.** A current native operator may issue a named optional-expiry REST key. Its random value is revealed once; only its hash persists. Route-selected scopes are `requests:read`, `requests:write`, `comments:read`, `comments:write`, `status:read`, `status:write`, `releases:read`, `releases:write` and `votes:write`. The first eight admit their documented resource reads and writes; `votes:write` authorizes customer lookup at `GET /api/v1/proxy-vote-contacts` and recording an attributed customer proxy vote at `POST /api/v1/requests/:slug/proxy-votes`, without verification or email permission. Bearers never grant operator HTML, generated-function, export or owner configuration authority.
 
@@ -1435,8 +1435,8 @@ Core · published · **partial**
 2. A token without that scope is refused the same vote write and changes no vote or permission record.
 3. Revocation refuses the next write.
 
-**Evidence.** `tests/base/integration-api.test.ts`
-**Gap.** Recording a proxy vote with a current `votes:write` token, and refusing that write to a token without the scope with no vote or permission record changed, have no passing assertion in this clause's evidence (`tests/base/proxy-votes.test.ts` asserts both and is not cited here); revocation refusing the next write is asserted.
+**Evidence.** `tests/base/proxy-votes.test.ts` — server-held scoped keys record proxy demand, refuse a read-only key and stop on revocation (points 1–3); `tests/base/integration-api.test.ts` — issues a reveal-once hashed key, confines route-selected scopes to the REST namespace and refuses unissued keys without a usage record; expiry, revocation, issuer removal and usage-write failure refuse authority after a fresh runtime
+**Gap.** None.
 
 #### API-002 — Current custody
 
