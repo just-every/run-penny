@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 73 | 114 | 71 | 258 |
+| Core | 74 | 113 | 71 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 73 | 130 | 78 | 281 |
+| Full target | 74 | 129 | 78 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -704,15 +704,15 @@ Core · published · **partial**
 
 #### DEC-001 — States and queue
 
-Core · published · **partial**
+Core · published · **done**
 
 **Requirement.** A decision is draft until its brief has a question, an owner, at least one candidate bet, and at least one linked evidence item, at which point it is ready; committing makes it committed, and DEC-007 makes a committed decision review due. A question that is blank as [docs/contract-mechanism.md](docs/contract-mechanism.md#blank-decision-questions) defines it does not count.
 
 **Acceptance.**
 1. The decision queue lists every decision in each state with its owner, last action, review date, and linked-evidence count, and a decision changes row rather than leaving the queue when its state changes.
 
-**Evidence.** `tests/base/decision-loop-commit.test.ts`
-**Gap.** The review date in the decision queue has no passing assertion; decisions in every state staying in the queue with their state and owner, and the last action and linked-evidence count, are asserted.
+**Evidence.** `tests/base/decision-loop-commit.test.ts` — [DEC-001] queue retains all states with distinct evidence, owner, latest action and edited review dates
+**Gap.** None.
 
 #### DEC-002 — Brief
 
