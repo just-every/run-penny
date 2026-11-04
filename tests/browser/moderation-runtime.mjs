@@ -44,6 +44,7 @@ export async function moderationJourney(name,journey){
     return page
    }
    async function capture(page,label,region){
+    const width=page.viewportSize().width
     await page.evaluate(async()=>{await document.fonts.ready})
     assert.equal(await page.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)>innerWidth),false,`${label} fits ${width}`)
     await page.evaluate(axe)
