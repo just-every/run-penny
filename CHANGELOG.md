@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete ROAD-001’s linked decision activity proof in the same roadmap transition journey: read back actor, time, reason and both states, assert the decision queue’s latest action, and prove replay and failed moves add no duplicate activity. No migration or reconfiguration is required.
+
 - Complete ROAD-003’s public projection privacy proof in the existing roadmap transition journey. Seed private commercial and decision records, require exact approved API payloads, and check anonymous built-Worker API and rendered responses after approval and each transition. Preserve public request and release links, approved ETA, the five-second status bound and Dropped withdrawal. No migration or reconfiguration is required.
 
 - Replay private Ask Penny answers with resolvable citations, current operator commercial-field projection, model budget checks and an explicit chosen Slack destination. Append migration 0108 for private answer artifacts after the survey schema; existing applied migrations remain unchanged. Archive and erasure include answers and their Slack delivery copies. Retain main’s AI-009 missing judgment pending acceptance of the bounded route and browser assertions. No new provider configuration is introduced; existing AI configuration and Slack destinations apply.

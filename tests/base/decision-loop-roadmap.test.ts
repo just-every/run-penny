@@ -71,7 +71,7 @@ describe('Explicit roadmap publication',()=>{
   const c=await committed();for(const requestIds of [['missing'],[r.id,r.id]]){expect([409,422]).toContain((await request(`/api/operator/roadmap/${c.itemId}/approve`,'POST',{publicTitle:'Safe',publicSummary:'Safe',boardSlug:'loop-board',requestIds})).status);expect(await publication(c.itemId)).toBeNull()}
   const privateRequest=await publicRequest();await env.DB.prepare("UPDATE requests SET moderation_state='awaiting_review',published_at=NULL WHERE id=?").bind(privateRequest.id).run();expect((await request(`/api/operator/roadmap/${c.itemId}/approve`,'POST',{publicTitle:'Safe',publicSummary:'Safe',boardSlug:'loop-board',requestIds:[privateRequest.id]})).status).toBe(422);expect(await publication(c.itemId)).toBeNull()
  })
- it('[ROAD-001][ROAD-003][ROAD-007] projects every forward/backward move within five seconds and snapshots exact approval/mapping witnesses atomically',async()=>{
+ it('[ROAD-001][ROAD-003][ROAD-007] projects every forward and backward move within five seconds and snapshots exact approval and mapping witnesses atomically',async()=>{
   const c=await privateRoadmap(),r=await publicRequest();await approve(c.itemId,[r.id])
   await json(request(`/api/operator/roadmap/${c.itemId}/public-eta`,'PUT',{publicEta:'2034-Q4',approvalId:(await publication(c.itemId))!.id}))
   await json(move(c.itemId,'shipped'))
@@ -82,9 +82,17 @@ describe('Explicit roadmap publication',()=>{
   const expected:PublicRoadmapItem={slug:p.public_slug,title:'Safe roadmap title',summary:'Safe roadmap problem',status:'planned',board:{slug:'loop-board',name:'Loop board'},publicEta:'2034-Q4',requests:[{slug:r.slug,title:'Safe request'}],releases:[{slug:release.slug,title:'Safe public release'}]}
   const privateValues=[...Object.values(c.privateValues),c.slug,c.d.id,c.a.id,c.b.id,c.e.id,c.account.id]
   await assertPublicProjection(expected,privateValues)
+  const activity=async()=>(await env.DB.prepare("SELECT actor_type,actor_id,entity_type,entity_id,details_json,occurred_at FROM audit_entries WHERE action='roadmap.moved' AND entity_type='decision' AND entity_id=? ORDER BY rowid").bind(c.d.id).all<{actor_type:string;actor_id:string;entity_type:string;entity_id:string;details_json:string;occurred_at:string}>()).results
+  let activityCount=(await activity()).length
   let prior='planned'
   for(const status of ['exploring','in_progress','shipped','planned','dropped','exploring']){
    const started=Date.now(),result=await json(move(c.itemId,status));const transition=await row('roadmap_transitions',result.transitionId);expect(transition).toMatchObject({from_status:prior,to_status:status,reason:'Measured delivery reason',actor_operator_id:'loop-operator'});prior=status
+   const entries=await activity();expect(entries).toHaveLength(++activityCount)
+   const entry=entries.at(-1)!
+   expect(entry).toMatchObject({actor_type:'operator',actor_id:'loop-operator',entity_type:'decision',entity_id:c.d.id,occurred_at:transition!.created_at})
+   expect(JSON.parse(entry.details_json)).toEqual({transitionId:result.transitionId,from:transition!.from_status,to:status,reason:'Measured delivery reason'})
+   const queue=await json<{items:{id:string;state:string;lastAction:string;lastActionAt:string}[]}>(request('/api/operator/decisions'))
+   expect(queue.items.find(item=>item.id===c.d.id)).toMatchObject({state:decisionBefore!.state,lastAction:'roadmap.moved',lastActionAt:transition!.created_at})
    const publicStatus=status==='exploring'?'under_review':status==='dropped'?'open':status
    expect(await json(request(`/api/public/requests/${r.slug}`))).toMatchObject({status:publicStatus})
    const page=await document(`/portal/feedback/${r.slug}`);expect(page.status).toBe(200);expect(await page.text()).toContain(({under_review:'Under review',planned:'Planned',in_progress:'In progress',shipped:'Shipped',open:'Open'} as Record<string,string>)[publicStatus]);const elapsedMs=Date.now()-started;expect(elapsedMs).toBeLessThan(5000);console.info('[ROAD-003] API and SSR projection',{status,elapsedMs})
@@ -100,11 +108,14 @@ describe('Explicit roadmap publication',()=>{
    expect((await publication(c.itemId))!.withdrawn_at).toBeNull()
   }
   // [ROAD-001 ROAD-007] Replay and failed moves use the same approved item and request.
-  const key=crypto.randomUUID(),responses=await Promise.all([move(c.itemId,'in_progress',key),move(c.itemId,'in_progress',key)]);expect(responses.map(r=>r.status)).toEqual([200,200]);expect(await responses[0].json()).toEqual(await responses[1].json());expect((await move(c.itemId,'shipped',key)).status).toBe(409)
+  const key=crypto.randomUUID(),activityBeforeReplay=await activity(),responses=await Promise.all([move(c.itemId,'in_progress',key),move(c.itemId,'in_progress',key)]);expect(responses.map(r=>r.status)).toEqual([200,200]);expect(await responses[0].json()).toEqual(await responses[1].json());expect((await move(c.itemId,'shipped',key)).status).toBe(409)
+  const activityAfterReplay=await activity();expect(activityAfterReplay).toHaveLength(activityBeforeReplay.length+1);expect(activityAfterReplay.slice(0,-1)).toEqual(activityBeforeReplay)
+  await json(move(c.itemId,'in_progress',key));expect(await activity()).toEqual(activityAfterReplay)
   const before=await row('roadmap_items',c.itemId),transitions=(await env.DB.prepare('SELECT * FROM roadmap_transitions WHERE roadmap_item_id=? ORDER BY id').bind(c.itemId).all()).results
   await env.DB.exec("CREATE TRIGGER fail_draft BEFORE INSERT ON roadmap_update_versions BEGIN SELECT RAISE(ABORT,'late draft failure'); END")
   try{expect((await move(c.itemId,'shipped')).status).toBe(503)}finally{await env.DB.exec('DROP TRIGGER fail_draft')}
   expect(await row('roadmap_items',c.itemId)).toEqual(before);expect((await env.DB.prepare('SELECT * FROM roadmap_transitions WHERE roadmap_item_id=? ORDER BY id').bind(c.itemId).all()).results).toEqual(transitions)
+  expect(await activity()).toEqual(activityAfterReplay)
  })
  it('[DEC-005][ROAD-007] committing an existing approved item records its real prior status and exactly one safe draft',async()=>{
   const {d,a}=await ready(),id='existing-'+a.id;await env.DB.prepare("INSERT INTO roadmap_items(id,slug,decision_id,candidate_bet_id,title,summary,status,created_at,updated_at) VALUES(?,?,?,?,?,?,'exploring',?,?)").bind(id,id,d.id,a.id,'Existing internal title','Internal summary',stamp,stamp).run();await approve(id)

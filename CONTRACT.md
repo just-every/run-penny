@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 54 | 61 | 1 | 116 |
+| Published | 55 | 60 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 74 | 129 | 78 | 281 |
+| All | 75 | 128 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3333,9 +3333,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `DEC-006` | Revision | published | done | `tests/base/penny-decisions.test.ts` |  |
 | `DEC-007` | Review due | published | done | `tests/base/penny-decisions.test.ts` |  |
 | `DEC-008` | Outcome evidence | published | done | `tests/base/penny-releases.test.ts`; `tests/base/penny-decisions.test.ts` |  |
-| `ROAD-001` | Internal states | published | partial | `tests/base/decision-loop-roadmap.test.ts` | The activity entry a status change adds to the linked decision has no passing assertion in this clause's evidence; each transition's actor, reason and from and to status, the decision's unchanged state, and backward moves recorded as further transitions are asserted. |
+| `ROAD-001` | Internal states | published | done | `tests/base/decision-loop-roadmap.test.ts` — “projects every forward and backward move within five seconds and snapshots exact approval and mapping witnesses atomically”: each forward and backward move persists one linked decision activity entry with its actor, time, transition, from and to states and reason; the decision queue reports that activity without changing decision state; concurrent replay adds one entry, later replay and failed moves leave activity unchanged. |  |
 | `ROAD-002` | Internal record | published | done | `tests/browser/operator-roadmap-record.mjs`; `tests/browser/operator-pages.mjs` |  |
-| `ROAD-003` | Public projection | published | done | `tests/base/decision-loop-roadmap.test.ts` — “projects every forward/backward move within five seconds and snapshots exact approval/mapping witnesses atomically”: anonymous built-Worker list and detail payloads match the complete approved projection; nonempty API and SSR responses exclude private account, revenue, internal dates, confidence, rationale, evidence, declined bets and delivery notes while retaining public request and release links and approved ETA; forward and backward statuses meet five seconds, and Dropped removes the card and returns 404. |  |
+| `ROAD-003` | Public projection | published | done | `tests/base/decision-loop-roadmap.test.ts` — “projects every forward and backward move within five seconds and snapshots exact approval and mapping witnesses atomically”: anonymous built-Worker list and detail payloads match the complete approved projection; nonempty API and SSR responses exclude private account, revenue, internal dates, confidence, rationale, evidence, declined bets and delivery notes while retaining public request and release links and approved ETA; forward and backward statuses meet five seconds, and Dropped removes the card and returns 404. |  |
 | `ROAD-004` | Approval is publication | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/base/request-status-workflow.test.ts` |  |
 | `ROAD-005` | Commitment mapping | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `ROAD-006` | Public roadmap | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` |  |
