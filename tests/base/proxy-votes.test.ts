@@ -85,14 +85,44 @@ it('[CAP-014 API-001 API-002] server-held scoped keys record proxy demand, refus
  const g=await graph(),r=g.requests[0]
  const issue=(scopes:string[])=>json<{token:string;credential:{id:string}}>('/api/operator/integrations/keys',{name:'Zendesk sidebar',scopes},g.operator,201)
  const denied=await issue(['requests:read']),allowed=await issue(['requests:read','votes:write'])
- const input={contact:{displayName:'Zendesk customer',email:'zendesk.customer@example.test'},source:'Zendesk ticket 1108',sourceUrl:'https://harbor.zendesk.com/agent/tickets/1108'}
- const endpoint=`/api/v1/requests/${r.slug}/proxy-votes`,key={Authorization:'Bearer '+allowed.token}
- expect((await call(endpoint,input,{Authorization:'Bearer '+denied.token})).status).toBe(401)
- const recorded=await json<{requesterId:string}>(endpoint,input,key)
- expect(await env.DB.prepare('SELECT recorder_operator_id FROM penny_proxy_votes WHERE requester_id=?').bind(recorded.requesterId).first('recorder_operator_id')).toBe(await env.DB.prepare('SELECT id FROM operators').first('id'))
- const contacts=await json<{id:string}[]>('/api/v1/proxy-vote-contacts?q=zendesk.customer',undefined,key)
+ const input={contact:{displayName:'Zendesk customer',email:'synthetic-penny-1'+String.fromCharCode(64)+'example.test'},source:'Zendesk ticket 1108',sourceUrl:'https://harbor.zendesk.com/agent/tickets/1108'}
+ const endpoint=`/api/v1/requests/${r.slug}/proxy-votes`,key={Authorization:'Bearer '+allowed.token},readOnly={Authorization:'Bearer '+denied.token}
+ const snapshot=async()=>({
+  votes:(await env.DB.prepare('SELECT * FROM request_votes ORDER BY request_id,requester_id').all()).results,
+  contributions:(await env.DB.prepare('SELECT * FROM request_vote_contributions ORDER BY request_id,requester_id').all()).results,
+  proxies:(await env.DB.prepare('SELECT * FROM penny_proxy_votes ORDER BY request_id,requester_id').all()).results,
+  permissions:(await env.DB.prepare('SELECT * FROM requester_update_permissions ORDER BY 1,2').all()).results,
+  requesters:(await env.DB.prepare('SELECT * FROM requesters ORDER BY id').all()).results,
+  addresses:(await env.DB.prepare('SELECT * FROM requester_addresses ORDER BY id').all()).results,
+  sessions:(await env.DB.prepare('SELECT * FROM native_requester_sessions ORDER BY id').all()).results,
+ })
+ const before=await snapshot()
+ expect(before.votes).not.toHaveLength(0);expect(before.permissions).not.toHaveLength(0)
+ expect((await call(endpoint,input,readOnly)).status).toBe(401)
+ expect(await snapshot()).toEqual(before)
+ const recorded=await json<{requesterId:string;created:boolean}>(endpoint,input,key)
+ expect(recorded.created).toBe(true)
+ const after=await snapshot(),actor=await env.DB.prepare('SELECT id FROM operators').first('id')
+ expect(after.votes).toHaveLength(before.votes.length+1)
+ expect(after.votes).toContainEqual(expect.objectContaining({request_id:r.id,requester_id:recorded.requesterId}))
+ expect(after.contributions).toHaveLength(before.contributions.length+1)
+ expect(after.contributions).toContainEqual(expect.objectContaining({request_id:r.id,requester_id:recorded.requesterId}))
+ expect(after.proxies).toEqual([expect.objectContaining({request_id:r.id,requester_id:recorded.requesterId,recorder_operator_id:actor,source:input.source,source_url:input.sourceUrl,direct_vote_at:null})])
+ expect(after.addresses.find(row=>row.requester_id===recorded.requesterId)).toMatchObject({email:input.contact.email,verified_at:null})
+ expect(after.permissions).toEqual(before.permissions);expect(after.sessions).toEqual(before.sessions)
+ const context=await json<{voters:{id:string;nativeProxy:number;proxyAttributionsJson:string}[];demand:{voteCount:number}}>(`/api/operator/requests/${r.slug}/context`,undefined,g.operator)
+ expect(context.demand.voteCount).toBe(before.votes.length+1)
+ expect(context.voters.find(person=>person.id===recorded.requesterId)).toMatchObject({nativeProxy:1})
+ expect(context.voters.find(person=>person.id===recorded.requesterId)!.proxyAttributionsJson).toContain(input.source)
+ // Refusal also preserves existing proxy demand and granted update permissions.
+ expect((await call(endpoint,{contact:{displayName:'synthetic-penny-2'},source:'synthetic-penny-2'},readOnly)).status).toBe(401)
+ expect(await snapshot()).toEqual(after)
+ const contacts=await json<{id:string}[]>('/api/v1/proxy-vote-contacts?q=synthetic-penny-1',undefined,key)
  expect(contacts.map(person=>person.id)).toEqual([recorded.requesterId])
  expect((await call(`/api/operator/integrations/keys/${allowed.credential.id}`,undefined,g.operator,'DELETE')).status).toBe(200)
+ const revoked=await snapshot()
  expect((await call(endpoint,{requesterId:recorded.requesterId,source:input.source},key)).status).toBe(401)
+ expect((await call(endpoint,{contact:{displayName:'synthetic-penny-3'},source:'synthetic-penny-3'},key)).status).toBe(401)
+ expect(await snapshot()).toEqual(revoked)
  expect(await total('penny_proxy_votes')).toBe(1)
 })
