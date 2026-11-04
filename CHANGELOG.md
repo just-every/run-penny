@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove dated and undated decisions in the built Worker's decision queue, including exact dates after native edits and commitment, date clearing, stable decision identity and all four states. Extend the existing queue journey without adding tests; close DEC-001's review-date proof gap. No migration or configuration change is required; existing provider, device, account and release holds remain unchanged.
+
 - Replay private Ask Penny answers with resolvable citations, current operator commercial-field projection, model budget checks and an explicit chosen Slack destination. Append migration 0108 for private answer artifacts after the survey schema; existing applied migrations remain unchanged. Archive and erasure include answers and their Slack delivery copies. Retain main’s AI-009 missing judgment pending acceptance of the bounded route and browser assertions. No new provider configuration is introduced; existing AI configuration and Slack destinations apply.
 
 - Replay the company-agent adoption above the browser-capture schema as migrations 0100–0106, preserving applied 0099 bytes and proving populated previous-main columns and original files through upgrade and repeat. Retain main's DATA-007 missing judgment; bounded MCP proof does not accept the wider target.

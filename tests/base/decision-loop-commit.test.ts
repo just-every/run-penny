@@ -2,8 +2,8 @@ import type { OperatorPage } from '../../src/core/features/workspace/list-query'
 import { applyD1Migrations } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeAll,describe,expect,inject,it } from 'vitest'
-import type { OperatorDecisionBrief } from '../../src/core/shared/api/operator'
-import { seedLoop,request,json,evidence,decision,bet,link,row,ready,commitInput,operatorId,stamp,publicRequest } from './decision-loop-fixture'
+import type { OperatorDecisionBrief, OperatorDecisionListItem } from '../../src/core/shared/api/operator'
+import { seedLoop,request,json,evidence,decision,decisionQueue,bet,link,row,ready,commitInput,operatorId,stamp,publicRequest } from './decision-loop-fixture'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop()})
 const snapshots=async(id:string)=>(await env.DB.prepare('SELECT * FROM decision_bet_snapshots WHERE decision_revision_id=? ORDER BY candidate_bet_id').bind(id).all()).results
 describe('Accountable commitment',()=>{
@@ -73,14 +73,41 @@ describe('Accountable commitment',()=>{
  })
 })
 
-it('[DEC-001] queue retains all states with distinct evidence, owner and latest action',async()=>{
- const draft=await decision('Draft without evidence'),r=await ready(),c=await ready(),review=await ready()
- await json(request(`/api/operator/decisions/${c.d.id}/commit`,'POST',commitInput(c.a.id)))
+it('[DEC-001] queue retains all states with distinct evidence, owner, latest action and edited review dates',async()=>{
+ const draft=await decision('Draft without evidence',{reviewAt:'2027-01-10'}),r=await ready(),c=await ready(),review=await ready()
+ const queued=async(d:{id:string;slug:string},state:OperatorDecisionListItem['state'],reviewAt:string|null,evidenceCount:number)=>{
+  const list=await json<OperatorPage<OperatorDecisionListItem>>(decisionQueue())
+  expect(list.items.filter(item=>item.id===d.id)).toEqual([expect.objectContaining({id:d.id,slug:d.slug,state,reviewAt,evidenceCount,owner:{id:operatorId,displayName:'Loop owner'}})])
+ }
+ // Both dated and undated native creations appear in the queue.
+ await queued(draft,'draft','2027-01-10',0)
+ await queued(r.d,'ready',null,1)
+ const edit=async(d:{id:string},question:string,reviewAt:string|null)=>json(request(`/api/operator/decisions/${d.id}`,'PATCH',{question,ownerOperatorId:operatorId,reviewAt}))
+ await edit(draft,'Draft without evidence','2027-02-11')
+ await queued(draft,'draft','2027-02-11',0)
+ await edit(draft,'Draft without evidence',null)
+ await queued(draft,'draft',null,0)
+ await edit(r.d,'Which approach solves the problem?','2027-03-12')
+ await queued(r.d,'ready','2027-03-12',1)
+ await edit(c.d,'Which approach solves the problem?','2027-04-13')
+ await queued(c.d,'ready','2027-04-13',1)
+ await json(request(`/api/operator/decisions/${c.d.id}/commit`,'POST',{...commitInput(c.a.id),reviewAt:'2027-05-14'}))
+ await queued(c.d,'committed','2027-05-14',1)
+ await json(request(`/api/operator/decisions/${review.d.id}/commit`,'POST',{...commitInput(review.a.id),reviewAt:'2027-06-15'}))
+ await queued(review.d,'committed','2027-06-15',1)
+ // Seed the DEC-007-owned due state; its clock and notification journey lives in penny-decisions.test.ts.
  await env.DB.prepare("UPDATE decisions SET state='review_due' WHERE id=?").bind(review.d.id).run()
+ await queued(review.d,'review_due','2027-06-15',1)
  await link(r.e.id,r.b.id)
- const list=await json<OperatorPage<OperatorDecisionBrief>>(request('/api/operator/decisions'))
- for(const [id,state] of [[draft.id,'draft'],[r.d.id,'ready'],[c.d.id,'committed'],[review.d.id,'review_due']])expect(list.items.find(d=>d.id===id)).toMatchObject({state,owner:{id:operatorId}})
+ const list=await json<OperatorPage<OperatorDecisionListItem>>(decisionQueue())
+ for(const [d,state,reviewAt] of [[draft,'draft',null],[r.d,'ready','2027-03-12'],[c.d,'committed','2027-05-14'],[review.d,'review_due','2027-06-15']] as const)expect(list.items.find(item=>item.id===d.id)).toMatchObject({id:d.id,slug:d.slug,state,reviewAt,owner:{id:operatorId}})
  expect(list.items.find(d=>d.id===r.d.id)).toMatchObject({evidenceCount:1,lastAction:'decision.evidence_changed'})
+ // Readiness changes the existing row, retaining the cleared date and its identity.
+ const candidate=await bet(draft.id),source=await evidence()
+ await link(source.id,candidate.id)
+ await queued(draft,'ready',null,1)
+ await link(source.id,candidate.id,'supporting','DELETE')
+ await queued(draft,'draft',null,0)
 })
 
 it('[DEC-001][DEC-004][DEC-005] a concurrent blank-question edit cannot create a committed blank brief',async()=>{
