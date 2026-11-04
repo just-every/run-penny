@@ -4,6 +4,8 @@
 
 - Prove ROAD-001 activity through built Worker roadmap moves: each forward and backward transition retains its operator, time and reason on the linked decision, updates its queue activity and preserves the decision state. Repeated action keys add no duplicate activity, and a late draft failure rolls activity back with the move. Extend the existing journey without adding tests; no migration or reconfiguration is needed.
 
+- Prove ROAD-003 projection privacy in the same journey with seeded private account, revenue, planning, evidence and decision context. Public list and detail payloads remain exact after approval and transitions, rendered pages exclude private fields and values, and approved ETAs and request links remain visible. No provider, deployment, appearance or homepage behavior changes.
+
 - Replay private Ask Penny answers with resolvable citations, current operator commercial-field projection, model budget checks and an explicit chosen Slack destination. Append migration 0108 for private answer artifacts after the survey schema; existing applied migrations remain unchanged. Archive and erasure include answers and their Slack delivery copies. Retain main’s AI-009 missing judgment pending acceptance of the bounded route and browser assertions. No new provider configuration is introduced; existing AI configuration and Slack destinations apply.
 
 - Replay the company-agent adoption above the browser-capture schema as migrations 0100–0106, preserving applied 0099 bytes and proving populated previous-main columns and original files through upgrade and repeat. Retain main's DATA-007 missing judgment; bounded MCP proof does not accept the wider target.
