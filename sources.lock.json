@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "38b090e305021850d387c778621c27f0406adfeb09a944eb6f0fcedd3865b946",
+      "sha256": "21dd0ec5551d84dfa20f535ecd6ee482d007605b39e9d7ca53d87f2e9d139eb5",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "a8d8f1770f5c355e1f08def6470782528cc2cc828ab91dfe628bd5a4d48115b6",
+      "sha256": "99d9162874b7f588c843740c7e799de6df513ada759e944b938301ca44a2c1bd",
       "executable": false
     },
     "DEMO.md": {
@@ -8278,7 +8278,7 @@
       "executable": false
     },
     "tests/base/auth.test.ts": {
-      "sha256": "fb5c35b044beef3e656cc43b9f3345354108840e80d642c70f15509bffae656e",
+      "sha256": "d71259ff7199e987df7b647fe61eb3d2c448b48c8add21ee884dc15b28fde4cf",
       "executable": false
     },
     "tests/base/board-categories.test.ts": {
@@ -8434,7 +8434,7 @@
       "executable": false
     },
     "tests/base/mail-identity.test.ts": {
-      "sha256": "a2743d85d4feb43e924a15e61f1fc08e0271c7b39aca53a0539d9a7e4aa87eb5",
+      "sha256": "f53a4cc68bc4e39acf5c1bca7e64edeea1e8d0a4675825e4f5749f1f430e0ab8",
       "executable": false
     },
     "tests/base/merge-notices.test.ts": {
