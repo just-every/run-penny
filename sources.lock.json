@@ -9246,7 +9246,7 @@
       "executable": false
     },
     "tests/installer/first-run-dev.mjs": {
-      "sha256": "2252ecae961b950f1db01dab3deaa093d35fcadeda3e49903669e4a74529e05a",
+      "sha256": "3512de500221f8df6769921fc2f74a16d0c0af1f52095ab7c5a764ef96b43acf",
       "executable": false
     },
     "tests/installer/older-archive.test.mjs": {

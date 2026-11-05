@@ -41,13 +41,13 @@ export async function proveLocalFirstRun(runtime,output) {
     }
     await capture('local-first-run-setup')
     const email = ['synthetic-penny-silent-reader','example.test'].join('@')
-    for (const [path,data] of [
-      ['/api/auth/magic-link',{email:ownerEmail}],
-      ['/api/public/identity/email',{email,displayName:'Synthetic reader'}],
+    for (const [path,data,accepted] of [
+      ['/api/auth/magic-link',{email:ownerEmail},{status:'accepted'}],
+      ['/api/public/identity/email',{email,displayName:'Synthetic reader'},{accepted:true}],
     ]) {
       const response = await context.request.post(origin+path,{headers:{Origin:origin},data})
       assert.equal(response.status(),202)
-      assert.deepEqual(await response.json(),{status:'accepted'})
+      assert.deepEqual(await response.json(),accepted)
     }
     for (const path of ['/__dev/outbox','/__dev/outbox?message=anything']) {
       assert.equal((await context.request.get(origin+path)).status(),404)
