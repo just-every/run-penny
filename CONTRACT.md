@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 57 | 58 | 1 | 116 |
+| Published | 58 | 57 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 77 | 126 | 78 | 281 |
+| All | 78 | 125 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3315,7 +3315,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-020` | Requester's own content | published | partial | `tests/browser/requester-repair.mjs` | Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions. |
 | `REQ-021` | Requester withdrawal | published | done | `tests/base/request-withdrawal.test.ts`; `tests/browser/request-withdrawal.mjs` |  |
 | `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
-| `REQ-023` | Email verification | published | partial | `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs` | The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted. |
+| `REQ-023` | Email verification | published | done | `tests/base/requester-expiry.test.ts` — "emailed links consume once; requester use renews thirty-day idle sessions and expired credentials change nothing" and "four held actions expire after twenty-four hours, are discarded on fresh verification and never replay on later reads or verification"; `tests/base/no-mail-identity.test.ts` — "delivered verification consumes once and replays its held submission after outbound mail is removed"; `tests/base/auth.test.ts` — "requester OAuth verifies at the provider edge without cookies or operator authority; missing mail fails closed"; `tests/browser/no-mail-journey.mjs` |  |
 | `REQ-024` | Requester identity merge | published | partial | `tests/base/notifications.test.ts` | The survivor keeping both verified addresses and all requests, comments, follows and permission records, votes collapsing to one, the recorded merge, and no new vote or permission record have no passing assertion; carried mutes and preferences and working old links are asserted. |
 | `REQ-025` | Requester activity | published | partial | `tests/base/penny-releases.test.ts`; `tests/browser/requester-activity.mjs` | The current moderation state and public status of the requester's own requests in the view have no passing assertion; the view's counts of their requests, votes, follows and comments including held and rejected ones, and unfollow, mute and subscription changes from it, are asserted. |
 | `REQ-026` | Demand attribution | published | partial | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` | The vote date in the private supporter view, and the first 50 supporters on expansion with Show more revealing 50 more at a time, have no passing assertion (the browser check clicks Show more until it is gone and counts only the full history); the separate vote, linked-evidence and distinct-account figures with no score, the supporter view's names, addresses, accounts, proxy marks and per-account totals, the complete history with no 100-person cap, and the portal showing none of it are asserted. |

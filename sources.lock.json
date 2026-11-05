@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "18343f6e22f90f3d5f20cb079e9dbefb53b60745fd0dfdb247fe6ced2cb3dbb7",
+      "sha256": "54c43fcb1b0b11568c12e56d28b2ba9b929ca2b2be16955e64edb79f63660b89",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "ce573fd505226629fe811135205465cce9251b8e0d553ab19406d913008b5d9b",
+      "sha256": "7570591c85e43747b67e14baf3f709741e82a4d6617044e4c44c1c9c62b8df73",
       "executable": false
     },
     "DEMO.md": {
@@ -8583,6 +8583,10 @@
     },
     "tests/base/requester-blocking.test.ts": {
       "sha256": "b9415d62aa981740915de877d3e1e30cb5a34f591db374cfe3f7ef452627d487",
+      "executable": false
+    },
+    "tests/base/requester-expiry.test.ts": {
+      "sha256": "23b18f670b4412e4e3b2284d2d5a9bf7fc08f3687a477a5e0201f493ab806c6f",
       "executable": false
     },
     "tests/base/requester-oauth-fixture.ts": {
