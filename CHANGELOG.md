@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Prove native tag custody through a request merge and a populated authenticated archive: the canonical request retains the distinct tag union, evidence keeps its original tag identities, and the export preserves exact tag records and assignment relationships. Keep anonymous catalog and export refusal and public tag privacy covered. No runtime, migration or configuration change is required.
+- Complete EVID-009 through the existing populated-archive journey: native tag creation, rename, merge, deletion and assignments; distinct request-merge union and unchanged evidence tag identities; exact exported tag records and relationships; tag filters across every entity list, moderation, status updates, search and overview using matching and unrelated native records. Retain anonymous and revoked-session refusals and public tag privacy. Fold the tag proof into the existing archive test, with no new registration or removed assertion. No runtime, migration or configuration change is required; other clause judgments and field-proof holds remain unchanged.
 
 - Complete REQ-010 consent proof through the existing requester and subscription journeys: mounted submit and vote controls start unchecked, ordinary unticked actions grant nothing, current automatic disclosures lead to author and voter follows, and explicit grants bind the verified address, request, source and controlled time. Unfollow revokes the permission while preserving the vote. Retain automatic-subscription, unsubscribe and withdrawal coverage. No runtime, migration or configuration change is required; separate notification, provider and release obligations remain unchanged.
 

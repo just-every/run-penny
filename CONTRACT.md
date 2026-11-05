@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); EVID-009 additionally proved from code and tests at commit `03f5d8fc1c010c566a4b433db8e769e82afb2f3d` (5 November 2026); other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 59 | 56 | 1 | 116 |
+| Published | 60 | 55 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 79 | 124 | 78 | 281 |
+| All | 80 | 123 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3291,7 +3291,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `EVID-006` | Private commercial data | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `EVID-007` | Duplicate suggestions | published | done | `tests/base/penny-evidence.test.ts` — "[EVID-007][REQ-004] deterministic published-only suggestions rank lexical overlap within 500ms without linking, merging or creating drafts" proves published-only results, lexical determinism without a model, unchanged link and merge graphs, and explicit vote and follow actions; `tests/runtime/duplicate-suggestions-scale.mjs` measures public and operator p95 for exact, partial, absent and Unicode queries at the declared request, board and requester limits (D-3). |  |
 | `EVID-008` | Evidence attachments | published | done | `tests/base/penny-evidence.test.ts` |  |
-| `EVID-009` | Tags | published | partial | `tests/base/board.test.ts` — Base-signed board/tag management preserves private tags; `tests/base/hosted-export.test.ts` — hosted archive includes every classified product table and exact original R2 bytes without installation authority (native tag custody and list filtering via `tests/base/tag-merge-export.ts` and `tests/base/tag-list-filtering.ts`) | Tags filtering every operator list have no passing assertion. |
+| `EVID-009` | Tags | published | done | `tests/base/board.test.ts` — Base-signed board/tag management preserves private tags; `tests/base/hosted-export.test.ts` — hosted archive includes every classified product table and exact original R2 bytes without installation authority: native tag creation, rename, merge, deletion, request and evidence assignments, private and revoked reads, every entity list, moderation, status updates, search and overview filtering, request-merge union and populated export (via `tests/base/tag-merge-export.ts` and `tests/base/tag-list-filtering.ts`) | |
 | `EVID-010` | Versions | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `REQ-001` | Public portal | published | done | `tests/base/board.test.ts`; `tests/base/board-categories.test.ts`; `tests/base/penny-evidence.test.ts`; `tests/browser/requester-blocking.mjs`; `tests/browser/roadmap-public-eta.mjs`; `tests/browser/rich-changelog.mjs` |  |
 | `REQ-002` | Requester identity | published | partial | `tests/base/no-mail-identity.test.ts` | The requester's chosen display name in a portal response has no passing assertion, and the check that no email address or account appears reads the public request list while it holds no published request, so it checks an empty list; submissions under a valid host-signed identity, with and without outbound mail, and the refusal of invalid or new host identities without mail are asserted. |
