@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 56 | 59 | 1 | 116 |
+| Published | 57 | 58 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 76 | 127 | 78 | 281 |
+| All | 77 | 126 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3289,7 +3289,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `EVID-004` | Non-destructive linking | published | done | `tests/base/decision-loop-commit.test.ts` |  |
 | `EVID-005` | Account context | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `EVID-006` | Private commercial data | published | done | `tests/base/penny-evidence.test.ts` |  |
-| `EVID-007` | Duplicate suggestions | published | partial | `tests/base/penny-evidence.test.ts` — "[EVID-007][REQ-004] deterministic published-only suggestions rank lexical overlap within 500ms without linking, merging or creating drafts" proves published-only results, lexical determinism without a model, unchanged link and merge graphs, and explicit vote and follow actions. | D-3 capacity p95 at the declared request, board and requester limits remains unproved; the committed `tests/runtime/duplicate-suggestions-scale.mjs` journey measures both suggestion routes against 500ms. |
+| `EVID-007` | Duplicate suggestions | published | done | `tests/base/penny-evidence.test.ts` — "[EVID-007][REQ-004] deterministic published-only suggestions rank lexical overlap within 500ms without linking, merging or creating drafts" proves published-only results, lexical determinism without a model, unchanged link and merge graphs, and explicit vote and follow actions; `tests/runtime/duplicate-suggestions-scale.mjs` measures public and operator p95 for exact, partial, absent and Unicode queries at the declared request, board and requester limits (D-3). |  |
 | `EVID-008` | Evidence attachments | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `EVID-009` | Tags | published | partial | `tests/base/board.test.ts` | Tags filtering every operator list, surviving a request merge and appearing in the export have no passing assertion; tag privacy is asserted. |
 | `EVID-010` | Versions | published | done | `tests/base/penny-evidence.test.ts` |  |
