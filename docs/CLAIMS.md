@@ -10,7 +10,7 @@ A claim is done when every clause behind it is done, missing when every one is m
 | 2 | Collect requests, decide with real evidence, and tell everyone who asked when it ships. | `REQ-003` partial; `DEC-004` partial; `REL-002` done | partial |
 | 3 | Customers post requests, vote, follow and comment on a public board. | `REQ-003` partial; `REQ-006` partial; `REQ-007` done; `REQ-010` partial | partial |
 | 4 | Nothing goes public until you approve it. | `REQ-005` done; `REQ-030` partial | partial |
-| 5 | Duplicate suggestions before anyone posts | `REQ-004` done; `EVID-007` partial | partial |
+| 5 | Duplicate suggestions before anyone posts | `REQ-004` done; `EVID-007` done | done |
 | 6 | Email-verified votes, one per address | `REQ-006` partial; `REQ-023` partial | partial |
 | 7 | Statuses everyone understands | `REQ-016` done | done |
 | 8 | Record what you hear on sales calls, in support conversations, in interviews and by email. | `EVID-001` done | done |
@@ -30,4 +30,4 @@ A claim is done when every clause behind it is done, missing when every one is m
 | 22 | One Worker | `OPS-005` partial | partial |
 | 23 | No telemetry | `HOME-002` partial | partial |
 
-Claims: 23; 6 done, 17 partial, 0 missing.
+Claims: 23; 7 done, 16 partial, 0 missing.

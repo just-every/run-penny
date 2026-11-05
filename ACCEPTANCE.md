@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 76 | 111 | 71 | 258 |
+| Core | 77 | 110 | 71 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 76 | 127 | 78 | 281 |
+| Full target | 77 | 126 | 78 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -235,7 +235,7 @@ Core · published · **done**
 
 #### EVID-007 — Duplicate suggestions
 
-Core · published · **partial** · Rules D-3
+Core · published · **done** · Rules D-3
 
 **Requirement.** When an operator records evidence or a requester types a request title, Penny returns within 500ms up to 5 existing requests ranked by term overlap between the typed title and stored request titles and descriptions, and names the matched terms for each.
 
@@ -244,8 +244,8 @@ Core · published · **partial** · Rules D-3
 2. Matching is lexical and deterministic and keeps working when no model is configured; AI-001 adds meaning-based suggestions beside it.
 3. Penny never links or merges without an explicit operator or requester action, or an auto-link or auto-merge rule an owner enabled (AI-002, AI-003).
 
-**Evidence.** `tests/base/penny-evidence.test.ts`
-**Gap.** Penny making no link or merge without an explicit operator or requester action or an owner-enabled auto rule has no passing assertion: the cited counts are taken after the suggestion calls and cover requests, evidence and content submissions, never evidence links or merges; published-only suggestions for a requester and deterministic lexical matching with no model configured are asserted.
+**Evidence.** `tests/base/penny-evidence.test.ts` — "[EVID-007][REQ-004] deterministic published-only suggestions rank lexical overlap within 500ms without linking, merging or creating drafts" proves published-only results, lexical determinism without a model, unchanged link and merge graphs, and explicit vote and follow actions; `tests/runtime/duplicate-suggestions-scale.mjs` measures public and operator p95 for exact, partial, absent and Unicode queries at the declared request, board and requester limits (D-3).
+**Gap.** None.
 
 #### EVID-008 — Evidence attachments
 
