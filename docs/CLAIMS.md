@@ -22,7 +22,7 @@ A claim is done when every clause behind it is done, missing when every one is m
 | 14 | Release notes in your own words | `REL-001` partial; `REL-003` done | partial |
 | 15 | Account names, revenue, evidence sources and internal notes never reach a public page, an email or a search engine. | `EVID-006` done; `DATA-002` partial | partial |
 | 16 | Customer-safe wording you approve | `REQ-005` done; `ROAD-004` done | done |
-| 17 | Internal boards and notes | `REQ-019` partial; `REQ-032` partial | partial |
+| 17 | Internal boards and notes | `REQ-019` partial; `REQ-032` done | partial |
 | 18 | No tracking, no cookies on public pages | `REQ-023` partial; `HOME-002` partial | partial |
 | 19 | Download an archive of your business data from the operator app | `DATA-001` done | done |
 | 20 | Change anything with your own coding agent | `EDIT-001` partial | partial |

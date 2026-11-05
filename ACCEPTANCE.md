@@ -8,12 +8,12 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 77 | 110 | 71 | 258 |
+| Core | 78 | 109 | 71 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 77 | 126 | 78 | 281 |
+| Full target | 78 | 125 | 78 | 281 |
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
 ## Core
 
@@ -690,15 +690,15 @@ Core · published · **done**
 
 #### REQ-032 — Internal notes
 
-Core · published · **partial**
+Core · published · **done**
 
 **Requirement.** Operators can add a note to any request.
 
 **Acceptance.**
 1. A note is rendered distinctly from an operator comment and never appears in a portal response, page metadata, a release, or a notification.
 
-**Evidence.** `tests/base/penny-evidence.test.ts`
-**Gap.** A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted.
+**Evidence.** `tests/browser/internal-discussion.mjs` — native note and public comment controls on one approved request, distinct labelled rendering and unchanged identities after reload; `tests/base/penny-evidence.test.ts` — "[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail" checks portal responses, complete page metadata, releases and requester notifications.
+**Gap.** None.
 
 ### Decisions
 
