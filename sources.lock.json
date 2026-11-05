@@ -8409,12 +8409,16 @@
       "sha256": "621112c059562f817c3107facaa19748bc64f3032ded4cbe77e76f72c9b19cdb",
       "executable": false
     },
+    "tests/base/learning-running-restore.ts": {
+      "sha256": "78cf6c044f8f4d746613b033d87667a203b309c841c29445f57c9c773c9d9f64",
+      "executable": false
+    },
     "tests/base/learning-stage2.test.ts": {
       "sha256": "2e4d6ae4538cdb47c4fce69f5d612ad012ace1cacd2e3973d00c742fe9b50fdf",
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
-      "sha256": "7a3c48c289fe69c7610bf70d90e4b49d00df99ed5448947bda467f920c4891f5",
+      "sha256": "38068a4d2b5f65f237827900a9fbcd65ff9f13ba12f785e7a2d21804323df323",
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {

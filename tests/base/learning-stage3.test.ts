@@ -9,6 +9,7 @@ import {canonical} from '@/core/features/data/archive'
 import {call,json,fixture,path,bindings,sent,network,resetLearning,config} from './learning-test-runtime'
 import {runNotificationSchedule} from '@/core/features/notifications/scheduled'
 import {explicitConsentBoard} from './explicit-consent-board'
+import {proveRunningRestore} from './learning-running-restore'
 it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke',async()=>{
  const f=await fixture(),runtime=createPennyRuntime(bindings()),url=path+`/investigations/${f.investigation.id}`
  await drainLearning(runtime,Date.now()+1000)
@@ -136,6 +137,7 @@ it('[LEARN-005] source person erasure covers duplicate connections and fresh-gra
  const {reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{restoreArchive}=await import('@/core/features/data/operations')
  await reset();await applyD1Migrations(env.DB,inject('migrations'));await expect(restoreArchive(env.DB,env.FILES,old.archive,exported.journal)).rejects.toMatchObject({code:'stale_archive'});expect((await restoreArchive(env.DB,env.FILES,exported.archive,exported.journal)).status).toBe('complete');expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
  const {runInvestigation}=await import('@/core/features/learning/run');await expect(runInvestigation(createPennyRuntime(bindings()),a.investigation.id,'restored',{db:env.DB,actor:{system:'learning.scheduler'}})).rejects.toMatchObject({code:'learning_scope_changed'})
+ await proveRunningRestore()
 })
 
 it('[LEARN-005] observed provider credential revocation purges all matching source installations; outage preserves evidence',async()=>{
