@@ -8418,7 +8418,7 @@
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
-      "sha256": "7a3c48c289fe69c7610bf70d90e4b49d00df99ed5448947bda467f920c4891f5",
+      "sha256": "a653f54a524f9be74cd3cea828ed8a164b3df0f6f081da09114f18d71d15ef79",
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {
