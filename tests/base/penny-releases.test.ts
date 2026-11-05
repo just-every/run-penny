@@ -122,7 +122,7 @@ it('[REL-003 REL-014] clock-advanced scheduled releases and status updates publi
  expect(fetch).toHaveBeenCalledTimes(2)
  await proveScheduledPublications(g,nextDay,clock,cron,capture)
 })
-it('[REL-004 REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows',async()=>{
+it('[REL-004 REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes, follows and release snapshots through request merge and roadmap relink',async()=>{
  vi.useFakeTimers({toFake:['Date']});vi.setSystemTime('2026-11-05T12:00:00.000Z')
  const g=await votedReleaseGraph(),subscriber=await requester('Subscriber only'),endpoint='/api/public/updates/subscription'
  expect((await call(endpoint,{subscribed:true},{},'PATCH')).status).toBe(401)
@@ -131,7 +131,7 @@ it('[REL-004 REL-012 REQ-025] request mute retains update subscription and globa
  const permission=(await rows('requester_update_permissions')).filter(p=>p.source==='subscription')
  expect(permission).toHaveLength(1);expect(permission[0].granted_at).toBeTruthy()
  await json(await publish(g));expect(await rows('release_recipient_snapshots')).toHaveLength(2)
- const unchanged=await captureReleaseSnapshots(g)
+ const unchanged=await captureReleaseSnapshots(g,String(permission[0].requester_id))
  const snapshot=(await rows('release_recipient_snapshots')).find(s=>s.requester_id===permission[0].requester_id)!
  const queued=(await rows('notification_outbox')).find(n=>n.release_snapshot_id===snapshot.id)!
  expect(await releaseContent(env.DB,String(queued.id))).toHaveLength(1)
