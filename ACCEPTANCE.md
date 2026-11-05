@@ -964,8 +964,8 @@ Core · published · **partial**
 1. Recipient lists, other requesters, account context, commercial impact, decision rationale, confidence, and declined bets never appear in either.
 2. Release email carries the owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014).
 
-**Evidence.** `tests/browser/loopjourney-release.mjs`
-**Gap.** The owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted.
+**Evidence.** `tests/browser/loopjourney-release.mjs`; `tests/base/mail-identity.test.ts` — setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport; `tests/base/release-mail-identity.ts` — proveReleaseMailIdentity binds the native release delivery to its tested sender name, from address, reply-to, postal footer and signed-out unsubscribe, retaining wording and replay assertions.
+**Gap.** The owner's brand header (INT-008) in release email and the remaining acceptance-point-1 email privacy obligations are unproved; private context staying out of the public updates is asserted. Live verified-domain, reply and inbox qualification remains held in R-6.
 
 #### REL-006 — Acceptance and retry
 
