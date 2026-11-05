@@ -1,3 +1,4 @@
+import {proveNativeTagCustody} from './tag-merge-export'
 import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,expect,inject,it,vi} from 'vitest'
 import {env} from 'cloudflare:workers'
@@ -101,6 +102,9 @@ it('[DATA-001] hosted archive includes every classified product table and exact 
  expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
  await env.FILES.delete('untracked');await env.FILES.delete('original')
  expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
+ // Continue the populated archive journey through native tag, merge and filter doors.
+ await env.FILES.put('original',bytes)
+ try{await proveNativeTagCustody(cookie)}finally{vi.restoreAllMocks()}
 })
 // RER Managed installs with Platform's own ledger and no Wrangler d1_migrations.
 const platformLedgerDdl='CREATE TABLE rer_migrations (name TEXT PRIMARY KEY, sha256 TEXT NOT NULL, applied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)'

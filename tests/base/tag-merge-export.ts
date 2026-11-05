@@ -1,7 +1,7 @@
-import { applyD1Migrations, reset } from 'cloudflare:test'
-import { afterEach, beforeEach, expect, inject, it, vi } from 'vitest'
+import { expect } from 'vitest'
 import type { exportArchive } from '../../src/core/features/data/archive'
-import { call, env, owner } from './support'
+import { call, env } from './support'
+import { proveTagFiltering } from './tag-list-filtering'
 
 type Tag = { id: string; name: string; created_at: string; updated_at: string }
 type Request = { id: string; slug: string }
@@ -13,14 +13,7 @@ async function json<T>(response: Promise<Response>, status = 200): Promise<T> {
   return result.json() as Promise<T>
 }
 
-beforeEach(async () => {
-  await reset()
-  await applyD1Migrations(env.DB, inject('migrations'))
-})
-afterEach(() => vi.restoreAllMocks())
-
-it('[EVID-009] native request merge retains the distinct tag union and evidence identity in a populated authenticated export', async () => {
-  const operator = await owner()
+export async function proveNativeTagCustody(operator: { Cookie: string }) {
   expect((await call('/api/operator/boards', { name: 'Tag custody', slug: 'tag-custody', visibility: 'public' }, operator)).status).toBe(201)
   const names = ['synthetic-penny-1', 'synthetic-penny-2', 'synthetic-penny-3', 'synthetic-penny-4']
   const tags = await Promise.all(names.map(name => json<{ id: string }>(call('/api/operator/catalog/tags', { name }, operator), 201)))
@@ -91,4 +84,34 @@ it('[EVID-009] native request merge retains the distinct tag union and evidence 
   expect(bundle.archive.tables.request_tag_assignments.sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))))
     .toEqual(storedRequests.sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))))
   expect(bundle.archive.tables.requests.find(request => request.id === source.id)?.merged_into_request_id).toBe(canonical.id)
-})
+  await proveTagFiltering(operator, { id: sourceTag.id, name: names[0] }, canonicalTag.id)
+
+  const renamed = await json<{ id: string }>(call('/api/operator/catalog/tags', { name: 'synthetic-penny-5' }, operator), 201)
+  expect((await call(`/api/operator/catalog/tags/${renamed.id}`, { name: 'synthetic-penny-6' }, operator, 'PATCH')).status).toBe(200)
+  const changed = await json<{ tags: Tag[] }>(call('/api/operator/catalog/settings', undefined, operator))
+  expect(changed.tags.find(tag => tag.id === renamed.id)?.name).toBe('synthetic-penny-6')
+  expect(changed.tags.some(tag => tag.name === 'synthetic-penny-5')).toBe(false)
+  for (const path of [`/api/operator/catalog/requests/${canonical.id}/tags/${renamed.id}`, `/api/operator/evidence/${evidence[0].id}/tag`]) {
+    expect((await call(path, path.endsWith('/tag') ? { tagId: renamed.id } : {}, operator, 'PUT')).status).toBe(200)
+  }
+  expect((await call(`/api/operator/catalog/tags/${renamed.id}/merge`, { targetId: sourceTag.id }, operator)).status).toBe(200)
+  expect((await context(canonical)).tags).toEqual(expectedTags([sourceTag.id, canonicalTag.id, sharedTag.id]))
+  expect((await env.DB.prepare('SELECT * FROM evidence_tag_assignments WHERE evidence_id=? ORDER BY evidence_id,tag_id').bind(evidence[0].id).all()).results)
+    .toEqual(evidenceBefore.filter(row => row.evidence_id === evidence[0].id))
+  expect((await json<{ tags: Tag[] }>(call('/api/operator/catalog/settings', undefined, operator))).tags.some(tag => tag.id === renamed.id)).toBe(false)
+
+  const removed = await json<{ id: string }>(call('/api/operator/catalog/tags', { name: 'synthetic-penny-7' }, operator), 201)
+  expect((await call(`/api/operator/catalog/requests/${canonical.id}/tags/${removed.id}`, {}, operator, 'PUT')).status).toBe(200)
+  expect((await call(`/api/operator/evidence/${evidence[1].id}/tag`, { tagId: removed.id }, operator, 'PUT')).status).toBe(200)
+  expect((await call(`/api/operator/catalog/tags/${removed.id}`, undefined, operator, 'DELETE')).status).toBe(204)
+  expect((await context(canonical)).tags).toEqual(expectedTags([sourceTag.id, canonicalTag.id, sharedTag.id]))
+  const afterDelete = await json<{ items: { id: string; tags: string[] }[] }>(call('/api/operator/evidence', undefined, operator))
+  expect(afterDelete.items.find(item => item.id === evidence[1].id)?.tags).toEqual([names[1]])
+  expect((await json<{ tags: Tag[] }>(call('/api/operator/catalog/settings', undefined, operator))).tags.some(tag => tag.id === removed.id)).toBe(false)
+
+  expect((await call('/api/auth/sign-out', {}, operator)).status).toBe(204)
+  expect((await call('/api/operator/data/export', undefined, operator)).status).toBe(401)
+  expect((await call(`/api/operator/catalog/requests/${canonical.id}/tags/${evidenceTag.id}`, {}, operator, 'PUT')).status).toBe(401)
+  expect((await env.DB.prepare('SELECT * FROM request_tag_assignments WHERE request_id=? ORDER BY request_id,tag_id').bind(canonical.id).all()).results)
+    .toEqual(storedRequests.filter(row => row.request_id === canonical.id))
+}
