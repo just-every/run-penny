@@ -1,0 +1,9 @@
+branch=cloud/sd-penny-c-f48
+head=9908e38a8301bd21039306d2efaa02a49e03ae28
+tree=d453a027bcd0ce184fbaa334b1eb70e03ac59fac
+parents=b9760c756087e2666fd708a7f0f62398bbbf48ae f4eb5b2ec26b038c5656fcb027bf28755178c990
+main_at_merge=f4eb5b2ec26b038c5656fcb027bf28755178c990
+9908e38a8301bd21039306d2efaa02a49e03ae28 Prove request-specific release preference snapshot stability
+b9760c756087e2666fd708a7f0f62398bbbf48ae Prove native release preference withdrawal preserves snapshots
+b1d4a1f4747fbaf14652b34b5f356acaca6fd9f6 Complete native release snapshot stability assertions
+43ed7b16d08e1ad0cf4fde5dd609ec38dd94ec9a Preserve native release snapshot stability proof [skip ci]

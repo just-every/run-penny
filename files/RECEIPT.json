@@ -1,0 +1,144 @@
+{
+  "tag": "sd-penny-c-f48",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f48",
+  "head": "9908e38a8301bd21039306d2efaa02a49e03ae28",
+  "tree": "d453a027bcd0ce184fbaa334b1eb70e03ac59fac",
+  "parents": [
+    "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+    "f4eb5b2ec26b038c5656fcb027bf28755178c990"
+  ],
+  "main_at_merge": "f4eb5b2ec26b038c5656fcb027bf28755178c990",
+  "requested_base": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+  "time": "2026-11-05T22:18:33.027583+00:00",
+  "checks": [
+    {
+      "name": "source-lock",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "base-source",
+      "command": [
+        "node",
+        "scripts/verify-base-source.mjs"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "contract-views-inherited",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 1
+    },
+    {
+      "name": "diff-hygiene",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "origin/main...HEAD"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "pnpm",
+        "typecheck"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "first-party structural",
+      "command": [
+        "pnpm",
+        "exec",
+        "rer",
+        "check",
+        "--profile",
+        "first-party"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "contract generation",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "write"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "generated contract check before restoring main views",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "candidate build",
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "build"
+      ],
+      "exit": 0
+    }
+  ],
+  "runtime_tests": {
+    "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/penny-releases.test.ts tests/base/release-custody.test.ts",
+    "log": "release-tests.log",
+    "head": "9908e38a8301bd21039306d2efaa02a49e03ae28",
+    "pending": false,
+    "exit": 0,
+    "passed": 10,
+    "files": 2
+  },
+  "status_counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "status_counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "new_test_registrations": 0,
+  "deleted_test_registrations": 0,
+  "generated_views": "restored whole from origin/main; stale ACCEPTANCE.md expected on product candidate",
+  "migrations": "none",
+  "publication_scan": "not run in cloud; guarded lander duty",
+  "run_site": "main-only guarded lander duty",
+  "provider_qualification": "not claimed",
+  "ui": "no UI changes; browser proof outside selected scope",
+  "node_version": "24.19.0",
+  "pnpm_version": "10.12.4",
+  "ci": {
+    "conclusion": "failure",
+    "event": "push",
+    "head_sha": "9908e38a8301bd21039306d2efaa02a49e03ae28",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42120234931",
+    "id": 42120234931,
+    "status": "completed",
+    "classification": "expected generated-view freshness failure only",
+    "failed_jobs": 29,
+    "product_assertion_failures": 0,
+    "tests_started_in_ci": false,
+    "log_job": 127570442052
+  },
+  "github_invocations": 5,
+  "ready_basis": "Local gates pass and exact-SHA Verify fails only the permitted generated-view check"
+}
