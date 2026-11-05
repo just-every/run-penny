@@ -6,23 +6,24 @@ import {explicitConsentBoard} from './explicit-consent-board'
 export const rejectionTime=new Date(Date.now()+86400000).setUTCHours(9,0,0,0)
 export const rejectionRuntime=(overrides:Partial<AppBindings>={})=>createPennyRuntime({...env,WORKSPACE_TIMEZONE:'UTC',...overrides})
 export const localRejectionBindings=()=>({...env,PENNY_ENVIRONMENT:'test',APP_ORIGIN:'https://127.0.0.1:8787',MAIL_PROVIDER:'sendgrid',WORKSPACE_TIMEZONE:'UTC',MAIL_API_KEY:'synthetic-provider-test-key'})
-export async function rejectionFixture({consent=true,comment=false,operator:existingOperator}:{consent?:boolean;comment?:boolean;operator?:{Cookie:string}}={}){
+export async function rejectionFixture({consent=true,comment=false,operator:existingOperator,reason='Please explain the workflow you need.'}:{consent?:boolean;comment?:boolean;operator?:{Cookie:string};reason?:string}={}){
  const operator=existingOperator??await owner({timezone:'UTC'}),person=await requester(),board=`reject-${crypto.randomUUID()}`
  expect((await call('/api/operator/boards',{name:'Review',slug:board,visibility:'public'},operator)).status).toBe(201)
  await explicitConsentBoard(board,(path,method,body)=>call(path,body,operator,method))
- const response=await call('/api/public/requests',{title:'PRIVATE SUBMITTED TITLE',description:'PRIVATE COMMERCIAL BODY',boardSlug:board,emailUpdates:consent,idempotencyKey:crypto.randomUUID()},person)
+ const title='PRIVATE SUBMITTED TITLE',description='PRIVATE COMMERCIAL BODY',commentBody='PRIVATE HELD COMMENT'
+ const response=await call('/api/public/requests',{title,description,boardSlug:board,emailUpdates:consent,idempotencyKey:crypto.randomUUID()},person)
  expect(response.status,await response.clone().text()).toBe(201)
  const {slug}=await response.json() as {slug:string}
  const recipient=(await env.DB.prepare('SELECT r.id AS requestId,r.author_requester_id AS requesterId,a.id AS addressId,a.email FROM requests r JOIN requester_addresses a ON a.requester_id=r.author_requester_id WHERE r.slug=?').bind(slug).first<{requestId:string;requesterId:string;addressId:string;email:string}>())!
  let path=`/api/operator/moderation/${slug}`,subjectId=recipient.requestId
  if(comment){
   expect((await call(path,{verdict:'approved',title:'Public request',description:'Approved description',boardSlug:board,displayName:'Customer'},operator)).status).toBe(200)
-  const posted=await call(`/api/public/requests/${slug}/comments`,{body:'PRIVATE HELD COMMENT'},person)
+  const posted=await call(`/api/public/requests/${slug}/comments`,{body:commentBody},person)
   expect(posted.status).toBe(201)
   const item=await posted.json() as {id:string};subjectId=item.id;path=`/api/operator/comments/${subjectId}/moderate`
  }
- const reject=(notifyAuthor=true,headers=operator)=>call(path,{verdict:'rejected',reason:'Please explain the workflow you need.',notifyAuthor},headers)
- return {operator,person,board,slug,subjectId,path,reject,...recipient}
+ const reject=(notifyAuthor=true,headers=operator)=>call(path,{verdict:'rejected',reason,notifyAuthor},headers)
+ return {operator,person,board,slug,subjectId,path,reject,title,description,commentBody,reason,...recipient}
 }
 export function captureRejections(status=202){
  const sent:Record<string,unknown>[]=[]

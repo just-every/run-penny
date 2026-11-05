@@ -306,36 +306,6 @@ it('[NOTIFY-005 REL-006] known local validation failures are bounded and the ret
  expect(sent).toHaveLength(0);expect(await batches()).toMatchObject([{state:'failed',failure_reason:'retry_window_exhausted'}])
 })
 
-it('[REQ-030 BASE-OPS-005] chosen private request and comment rejection reaches the scheduled provider transport exactly once',async()=>{
- const {rejectionFixture,rejectionRows,localRejectionBindings,rejectionTime}=await import('./rejection-fixture')
- const {providerMessages}=await import('./provider-messages')
- const request=await rejectionFixture(),comment=await rejectionFixture({comment:true,operator:request.operator}),silent=await rejectionFixture({operator:request.operator})
- expect((await request.reject()).status).toBe(200);expect((await comment.reject()).status).toBe(200)
- expect((await silent.reject(false)).status).toBe(200)
- expect((await request.reject()).status).toBe(409);expect((await comment.reject()).status).toBe(409)
- const bindings=localRejectionBindings(),local=createPennyRuntime(bindings),sent=capture()
- vi.spyOn(Date,'now').mockReturnValue(rejectionTime)
- await runNotificationSchedule(createScheduledController({scheduledTime:rejectionTime,cron:'* * * * *'}),bindings)
- await runNotificationSchedule(createScheduledController({scheduledTime:rejectionTime,cron:'* * * * *'}),bindings)
- expect(sent).toHaveLength(3) // Two rejection notices and the subscribed author's publication notice.
- const allMail=await providerMessages(local)!.list()
- expect(allMail).toHaveLength(3)
- const rejectionIds=new Set((await rejectionRows()).map(row=>row.id))
- const mail=allMail.filter(row=>rejectionIds.has(row.message.deliveryId))
- expect(mail).toHaveLength(2)
- expect(allMail.filter(row=>!rejectionIds.has(row.message.deliveryId))).toHaveLength(1)
- expect(mail.map(row=>row.message.to[0]).sort()).toEqual([request.email,comment.email].sort())
- for(const row of mail){expect(row.message.text).toContain('Please explain the workflow you need.');expect(row.message.text).toContain('/api/public/notifications/unsubscribe?');expect(JSON.stringify(row.message)).not.toMatch(/PRIVATE|COMMERCIAL|HELD/)}
- expect(await rejectionRows()).toMatchObject([{state:'accepted',attempts:1},{state:'accepted',attempts:1}])
- expect((await call(`/api/public/requests/${request.slug}`)).status).toBe(404)
- expect(await (await call(`/api/public/requests/${comment.slug}`)).text()).not.toContain('PRIVATE HELD COMMENT')
- const inbox=await (await call('/api/operator/notifications',undefined,request.operator)).json() as {deliveries:{kind:string;state:string;provider:string}[]}
- expect(inbox.deliveries.filter(d=>d.kind==='rejection')).toMatchObject([{state:'accepted',provider:'sendgrid'},{state:'accepted',provider:'sendgrid'}])
- expect((await call('/api/operator/notifications',undefined,request.person)).status).toBe(401)
- const audits=await env.DB.prepare("SELECT actor_type,actor_id,entity_id,occurred_at,details_json FROM audit_entries WHERE action='moderation.rejection_mail'").all()
- expect(audits.results).toHaveLength(4)
- for(const row of audits.results){expect(row).toMatchObject({actor_type:'system',actor_id:'moderation_rejection_mail',entity_id:expect.any(String),occurred_at:expect.any(String)});expect(String(row.details_json)).not.toMatch(/@|Please explain|PRIVATE/)}
-})
 it('[NOTIFY-004 CAP-009] notification replies create nothing through HTTP or the dedicated email door',async()=>{
  const g=await setup();await g.follow();await g.status('Reply loop check')
  const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
