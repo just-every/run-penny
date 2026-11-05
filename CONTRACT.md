@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 56 | 59 | 1 | 116 |
+| Published | 57 | 58 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 76 | 127 | 78 | 281 |
+| All | 77 | 126 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3341,7 +3341,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `ROAD-006` | Public roadmap | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` |  |
 | `ROAD-007` | Status update draft | published | partial | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` | The draft's absence of internal rationale, commercial context, declined bets and outcome prompts has no passing assertion in this clause's evidence, whose check of the draft allows extra fields, and no cited case reads the portal before the draft is published; a draft prepared for each approved status change with the safe title, problem and new public status, unpublished until an operator publishes it, and no draft for an unapproved item are asserted. |
 | `ROAD-008` | Status update publication | published | done | `tests/base/roadmap-update-publication.ts`; `tests/base/board.test.ts`; `tests/base/notifications.test.ts`; `tests/browser/operator-pages-status.mjs`; `tests/browser/operator-pages.mjs` |  |
-| `REL-001` | Draft and targets | published | partial | `tests/browser/loopjourney-release.mjs` | A saved draft holding its publication date, optional setup or usage link and outcome-prompt wording has no passing assertion; the title, type, tag, body, author and target are entered and saved. |
+| `REL-001` | Draft and targets | published | done | `tests/browser/loopjourney-release.mjs`: scheduledPublicationJourney uses draftAndPublishRelease and expectSavedDraft to read back the saved title, type, tag, body, publication date, optional setup link, author, roadmap and decision target, and outcome prompt through authenticated detail and the reloaded draft page; clearing the optional link persists. | |
 | `REL-002` | Publication | published | done | `tests/browser/loopjourney-release.mjs` |  |
 | `REL-003` | Published wording | published | done | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |  |
 | `REL-004` | Recipient eligibility and snapshot | published | partial | `tests/base/release-custody.test.ts` | The snapshot staying unchanged after a later merge, relink or preference change, and the `release.recipient-eligibility.v1` default (which actions grant a permission record, that voting elsewhere and an operator-entered address grant none, and NOTIFY-009's one-snapshot addition) have no passing assertion; export and restore of the snapshot tables, an identity merge fenced while a send is in flight, and follower erasure are asserted. |

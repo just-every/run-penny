@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete REL-001's existing targeted-release browser journey: enter a deliberate publication date and optional setup link, save and reload, then verify every saved draft field and the persisted outcome prompt through authenticated detail and the rendered editor. Clear the optional link and prove it remains absent after another save and reload. Mark REL-001 done without changing runtime, migrations, configuration, acceptance text or other release and field-proof holds.
+
 - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.
 
 - Complete API-001’s existing built-Worker scoped proxy-vote journey with persisted vote, contribution, attribution and permission snapshots around read-only and revoked-key refusals. Verify the successful vote remains unverified and grants no email permission or requester session, and cite the journey for all three acceptance points. No runtime, migration or configuration change is required; other clause and field-proof holds remain unchanged.

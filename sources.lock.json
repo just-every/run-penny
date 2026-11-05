@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "258230944d85fef5311ecdff8c313dcd6bb6a84fbe23b3bf4f2bdab8888e53ae",
+      "sha256": "47285ccebb8216e0c53e17c53609bd60361bd9fe9109d524e8e2d9dd6c1c501e",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "c94a6c92680071638a2e30062048b59c096db80a067c609febaa96c32579f393",
+      "sha256": "6f2b31b2ce1d62f1429a7076d4851c45b90803309adef2186ce8ac9e15f04bf1",
       "executable": false
     },
     "DEMO.md": {
@@ -8822,7 +8822,7 @@
       "executable": false
     },
     "tests/browser/loopjourney-release.mjs": {
-      "sha256": "58fc25619540679a9ac3766ed09771190ee8216248e48fab46f6a19f88d7acac",
+      "sha256": "366116bad010f49e8855fe2b136b353ec5cc20730b634ae6ddf8d43191ebaa82",
       "executable": false
     },
     "tests/browser/merge-notices.mjs": {

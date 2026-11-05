@@ -53,7 +53,7 @@ const releaseSetupUrl = 'https://example.invalid/synthetic-penny-13'
 const releaseOutcomePrompt = 'Have you adopted this update?'
 
 async function expectSavedDraft(operator, slug, { authorId, tagId, targetId, setupUrl }) {
-  const response = await operator.request.get(`/api/operator/releases/${slug}`)
+  const response = await operator.request.get(new URL(`/api/operator/releases/${slug}`, operator.url()).href)
   assert.equal(response.status(), 200, '[REL-001] authenticated draft detail is readable')
   const draft = await response.json()
   assert.deepEqual({
@@ -71,11 +71,11 @@ async function expectSavedDraft(operator, slug, { authorId, tagId, targetId, set
   assert.equal(draft.targets[0].decisionSlug, 'onboarding-decision')
   const editor = operator.locator('form').filter({ has: operator.getByRole('heading', { name: 'Edit release draft', exact: true }) })
   await expect(editor.getByLabel('Title', { exact: true })).toHaveValue(releaseTitle)
-  await expect(editor.getByLabel('Type', { exact: true })).toHaveValue('new')
+  await expect(editor.locator('select[name="releaseType"]')).toHaveValue('new')
   await expect(editor.getByLabel('Body', { exact: true })).toHaveValue(releaseBody)
   await expect(editor.getByLabel('Publication date', { exact: true })).toHaveValue(releaseDate)
   await expect(editor.getByLabel('Setup or usage URL (optional)', { exact: true })).toHaveValue(setupUrl ?? '')
-  await expect(editor.getByLabel('Author', { exact: true })).toHaveValue(authorId)
+  await expect(editor.locator('select[name="authorOperatorId"]')).toHaveValue(authorId)
   await expect(editor.getByLabel('Onboarding', { exact: true })).toBeChecked()
   await expect(editor.getByLabel(/See onboarding progress/)).toBeChecked()
   await expect(operator.getByRole('heading', { name: 'Requester outcome', exact: true }).locator('..').getByText(releaseOutcomePrompt, { exact: true })).toBeVisible()
@@ -170,7 +170,7 @@ export async function draftAndPublishRelease(operator, origin, audit) {
   await editor.getByLabel('Onboarding', { exact: true }).check()
   await editor.getByLabel(/See onboarding progress/).check()
   const selected = {
-    authorId: await editor.getByLabel('Author', { exact: true }).inputValue(),
+    authorId: await editor.locator('select[name="authorOperatorId"]').inputValue(),
     tagId: await editor.getByLabel('Onboarding', { exact: true }).inputValue(),
     targetId: await editor.getByLabel(/See onboarding progress/).inputValue(),
   }
