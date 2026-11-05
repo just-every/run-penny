@@ -1,0 +1,87 @@
+[
+  {
+    "file": "BASE-SOURCE-CHECK.json",
+    "bytes": 14022,
+    "sha256": "b94168d0f9dad4555638a998f12ac5fbee69317ef1a1009f10cd7833220fcf85"
+  },
+  {
+    "file": "CI-DISCOVERY.json",
+    "bytes": 240,
+    "sha256": "02b47f939c73632801b46ca45f32aded51578fa8e87d63bb5d8fb3d871d109f2"
+  },
+  {
+    "file": "CI-FINAL.json",
+    "bytes": 261,
+    "sha256": "9e235e94176332c01f4e1006a498905f5836e5347795bf48f986e161dc3d9370"
+  },
+  {
+    "file": "CI-GENERATED-VIEW-FAILURE.txt",
+    "bytes": 932,
+    "sha256": "3ab78fd0fa5c126bae40cbd16e1e0de7a5d0c3564b5b382cf6a94d8b8352f293"
+  },
+  {
+    "file": "CI-JOBS.json",
+    "bytes": 74386,
+    "sha256": "f88e05142dd16fcdd24ce68a1959f0050a87227410c94918707973d53c617260"
+  },
+  {
+    "file": "CONTRACT-GENERATION.txt",
+    "bytes": 60,
+    "sha256": "a0dc3e5a57608862eebb5d81291a8613096d4984f76019b102a0ac55b950fe97"
+  },
+  {
+    "file": "FIRST-PARTY-CHECK.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "INITIAL-TOUCHED-TESTS.txt",
+    "bytes": 344,
+    "sha256": "34f2879da0205dd123e8ed00ec7c5b4107b220fa272d6d070d69abc26eadf31e"
+  },
+  {
+    "file": "LINT.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "PLAN.md",
+    "bytes": 2135,
+    "sha256": "bc0546e9d911cd383a5c472d5cbfe99d1596304af0ef4f81fb32234b1ceb2ab2"
+  },
+  {
+    "file": "PRODUCT-PUSH.txt",
+    "bytes": 893,
+    "sha256": "ad0a7ddd2a2bdfe3cbbea21fcff42b7781fa321dd1412b91d8d33777bb579796"
+  },
+  {
+    "file": "RECEIPT.json",
+    "bytes": 5605,
+    "sha256": "6fb094cfe38028ef309dd478021693cb8b6a4f29568a3428975715f9553c76f1"
+  },
+  {
+    "file": "REMOTE-PRODUCT-HEAD.txt",
+    "bytes": 73,
+    "sha256": "5d88560b5d4d9a827c4ef2a94772d0d611b1c4f7af664202ba4e140803c1bf10"
+  },
+  {
+    "file": "REPORT.md",
+    "bytes": 11505,
+    "sha256": "ac3eb6c538cf7f4689b2c32c7ed4bddb9d1afc20ee74f8ed3d136912df8f4ee4"
+  },
+  {
+    "file": "SOURCE-CHECK.txt",
+    "bytes": 426889,
+    "sha256": "42fa8eae970d8530411a4e5ccb6b45f7f2f3ba96f3e89973341cf5c1bb5c2935"
+  },
+  {
+    "file": "TOUCHED-TESTS.txt",
+    "bytes": 344,
+    "sha256": "8bd6f16a721e91aba912897ffb11e18708d4f5892af593a4ea0b6ef18baeaa0f"
+  },
+  {
+    "file": "TYPECHECK.txt",
+    "bytes": 95,
+    "sha256": "7bfb29b27af3e5ed4a87e5fe45ddd94d28bc63ed81709c81b7d38a280d03a0d5"
+  }
+]

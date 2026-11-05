@@ -1,0 +1,187 @@
+{
+  "assertion_lines_retained_from_main": 150,
+  "assertion_lines_retained_from_predecessor": 152,
+  "branch": "cloud/sd-penny-c-f46",
+  "candidate_commits_identity_checked": 3,
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "scope": "fresh clone setup and build; private setup output is not selected"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/penny-releases.test.ts tests/base/release-custody.test.ts",
+      "exit": 0,
+      "head": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+      "node": "22.20.0",
+      "output": "TOUCHED-TESTS.txt",
+      "test_files_passed": 2,
+      "tests_passed": 10
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "head": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+      "node": "22.20.0",
+      "output": "TYPECHECK.txt"
+    },
+    {
+      "command": "pnpm exec rer check --profile first-party",
+      "exit": 0,
+      "head": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+      "output": "FIRST-PARTY-CHECK.txt"
+    },
+    {
+      "command": "pnpm exec oxlint tests/base/penny-releases.test.ts tests/base/release-snapshot-stability.ts tests/base/release-preference-stability.ts",
+      "exit": 0,
+      "head": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+      "output": "LINT.txt"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "output": "CONTRACT-GENERATION.txt"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "output": "CONTRACT-GENERATION.txt",
+      "scope": "after local write, before restoring generated views"
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0,
+      "scope": "generated files not committed"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "scope": "last source lock write before commit"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "head": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+      "output": "SOURCE-CHECK.txt"
+    },
+    {
+      "command": "node scripts/verify-base-source.mjs",
+      "exit": 0,
+      "output": "BASE-SOURCE-CHECK.json"
+    }
+  ],
+  "ci": {
+    "discovery": {
+      "runs": [
+        {
+          "conclusion": null,
+          "event": "push",
+          "head_sha": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+          "html_url": "https://github.com/just-every/run-penny/actions/runs/42114655305",
+          "id": 42114655305,
+          "name": "Verify Penny",
+          "status": "in_progress"
+        }
+      ]
+    },
+    "failed_job_ids": [
+      127551038865,
+      127551038898,
+      127551038900,
+      127551038917,
+      127551038930,
+      127551038935,
+      127551038950,
+      127551038954,
+      127551038960,
+      127551038962,
+      127551038967,
+      127551038972,
+      127551038974,
+      127551038984,
+      127551038995,
+      127551039030,
+      127551039037,
+      127551039051,
+      127551039062,
+      127551039084,
+      127551039085,
+      127551039138,
+      127551039147,
+      127551039167,
+      127551039170,
+      127551039224,
+      127551039255,
+      127551039323,
+      127551039327
+    ],
+    "failure_class": "expected generated-view freshness only",
+    "final": {
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42114655305",
+      "id": 42114655305,
+      "name": "Verify Penny",
+      "status": "completed"
+    },
+    "lander_must_regenerate_views_and_reverify": true,
+    "representative_failure": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+    "representative_job_log": 127551038898,
+    "tests_in_ci": "skipped after generated-view check; no claim of green CI test execution"
+  },
+  "counts_after": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "counts_before": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "excluded_obligations": [
+    "evidence-linked captured-contact snapshot completeness",
+    "complete release.recipient-eligibility.v1 permission-source policy",
+    "MIG-007 carry-over",
+    "voting without subscription",
+    "operator-entered addresses",
+    "NOTIFY-009 one-snapshot captured-contact addition without a permission record"
+  ],
+  "github_calls_used": 4,
+  "handoff": "READY under the explicit generated-view-only exception; no other failing CI step",
+  "head": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+  "known_runtime_failures": [],
+  "migration_ledger": {
+    "exit": 0,
+    "reason": "no migration added or edited",
+    "status": "not applicable"
+  },
+  "parent_status_row_identities_retained": 332,
+  "parent_table_lines_retained": 445,
+  "parents": [
+    "fab3d0e52aae1c7ed640dbdc38791027416e40d3",
+    "b1d4a1f4747fbaf14652b34b5f356acaca6fd9f6"
+  ],
+  "product_push": {
+    "attempts": 1,
+    "exit": 0,
+    "output": "PRODUCT-PUSH.txt"
+  },
+  "publication_scan": {
+    "owner": "guarded Mac lander",
+    "status": "not run in cloud"
+  },
+  "recorded_at": "2026-11-05T21:42:51.361599+00:00",
+  "remote_product_head_verified": true,
+  "repository": "just-every/run-penny",
+  "run_site": {
+    "owner": "guarded Mac lander",
+    "status": "main-only landing duty"
+  },
+  "schema": 1,
+  "status_after": "partial",
+  "status_before": "partial",
+  "tag": "sd-penny-c-f46",
+  "test_registrations_added": 0
+}

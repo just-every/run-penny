@@ -1,0 +1,2589 @@
+{
+  "jobs": [
+    {
+      "conclusion": "success",
+      "id": 127550970067,
+      "name": "plan",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run echo \"matrix=$(node scripts/verify-ci.mjs --matrix \"$TIER\")\" >> \"$GITHUB_OUTPUT\"",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038865,
+      "name": "shards (internal-discussion, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038898,
+      "name": "shards (base-2, false)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038900,
+      "name": "shards (ownership, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038917,
+      "name": "shards (base-1, false)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038930,
+      "name": "shards (request-decline, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038935,
+      "name": "shards (survey-capture, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038950,
+      "name": "shards (requester-board, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038954,
+      "name": "shards (requester-blocking, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038960,
+      "name": "shards (merge-notices, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038962,
+      "name": "shards (release-planning, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038967,
+      "name": "shards (proxy-votes, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038972,
+      "name": "shards (rich-changelog, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038974,
+      "name": "shards (product-hierarchy, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038984,
+      "name": "shards (discord-capture, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551038995,
+      "name": "shards (import-roadmap, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039030,
+      "name": "shards (loop-health, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039037,
+      "name": "shards (prioritisation, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039051,
+      "name": "shards (vote-importance, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039062,
+      "name": "shards (helpscout-capture, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039084,
+      "name": "shards (workspace-clock, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039085,
+      "name": "shards (triage-aging, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039138,
+      "name": "shards (agent-door, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039147,
+      "name": "shards (dev-flows, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039167,
+      "name": "shards (static, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039170,
+      "name": "shards (older-archive, false)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039224,
+      "name": "shards (import-statuses, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039255,
+      "name": "shards (browser-capture, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039323,
+      "name": "shards (roadmap-public-eta, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127551039327,
+      "name": "shards (browser, true)",
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check edition source lock freshness",
+          "status": "completed"
+        },
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run pnpm run deps",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Install Chromium and system libraries",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Run this shard",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed"
+        },
+        {
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "status": "completed"
+        }
+      ]
+    }
+  ]
+}

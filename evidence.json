@@ -1,0 +1,118 @@
+{
+  "files": [
+    {
+      "blob": "ebb23f971045d08a36c86f60770edac74d5f43fa",
+      "bytes": 14022,
+      "path": "BASE-SOURCE-CHECK.json",
+      "sha256": "b94168d0f9dad4555638a998f12ac5fbee69317ef1a1009f10cd7833220fcf85"
+    },
+    {
+      "blob": "3467aafd1cede434ea8f39bc2b78389b401335db",
+      "bytes": 240,
+      "path": "CI-DISCOVERY.json",
+      "sha256": "02b47f939c73632801b46ca45f32aded51578fa8e87d63bb5d8fb3d871d109f2"
+    },
+    {
+      "blob": "7620c00551c52ed4055064b7e09aaae0d4c92371",
+      "bytes": 261,
+      "path": "CI-FINAL.json",
+      "sha256": "9e235e94176332c01f4e1006a498905f5836e5347795bf48f986e161dc3d9370"
+    },
+    {
+      "blob": "ca940fa57a26e4bd7c0e7578e531be9f19f3889f",
+      "bytes": 932,
+      "path": "CI-GENERATED-VIEW-FAILURE.txt",
+      "sha256": "3ab78fd0fa5c126bae40cbd16e1e0de7a5d0c3564b5b382cf6a94d8b8352f293"
+    },
+    {
+      "blob": "aaa0efb6711e8eb2d3c6be1e5223639c9624637c",
+      "bytes": 74386,
+      "path": "CI-JOBS.json",
+      "sha256": "f88e05142dd16fcdd24ce68a1959f0050a87227410c94918707973d53c617260"
+    },
+    {
+      "blob": "0bdf8de6fd75f621dfa1fb2874d4907239559e87",
+      "bytes": 60,
+      "path": "CONTRACT-GENERATION.txt",
+      "sha256": "a0dc3e5a57608862eebb5d81291a8613096d4984f76019b102a0ac55b950fe97"
+    },
+    {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "path": "FIRST-PARTY-CHECK.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "blob": "08f930c8d4e2dfcba9fd44fa02e281cbfc5e324d",
+      "bytes": 344,
+      "path": "INITIAL-TOUCHED-TESTS.txt",
+      "sha256": "34f2879da0205dd123e8ed00ec7c5b4107b220fa272d6d070d69abc26eadf31e"
+    },
+    {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "path": "LINT.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "blob": "71ca10ba96cc9bbd23648aef6e974a5cd283120a",
+      "bytes": 2398,
+      "path": "PACKET-HASHES.json",
+      "sha256": "3969462ae223de569c936d098752d2e99cd902f85f6b8452debd5a657d2d8ebc"
+    },
+    {
+      "blob": "2e5e1d3a32e8e82fc959e74420bcee3494313320",
+      "bytes": 2135,
+      "path": "PLAN.md",
+      "sha256": "bc0546e9d911cd383a5c472d5cbfe99d1596304af0ef4f81fb32234b1ceb2ab2"
+    },
+    {
+      "blob": "96bd8c8638687fb59e2aac01369d681ffba9116b",
+      "bytes": 893,
+      "path": "PRODUCT-PUSH.txt",
+      "sha256": "ad0a7ddd2a2bdfe3cbbea21fcff42b7781fa321dd1412b91d8d33777bb579796"
+    },
+    {
+      "blob": "04623873ad3ecea96579c427b5f3524287a8f40f",
+      "bytes": 5605,
+      "path": "RECEIPT.json",
+      "sha256": "6fb094cfe38028ef309dd478021693cb8b6a4f29568a3428975715f9553c76f1"
+    },
+    {
+      "blob": "765cb41085aa82e17ad8ed03e7c75add0b17c345",
+      "bytes": 73,
+      "path": "REMOTE-PRODUCT-HEAD.txt",
+      "sha256": "5d88560b5d4d9a827c4ef2a94772d0d611b1c4f7af664202ba4e140803c1bf10"
+    },
+    {
+      "blob": "65792b6dd7a975a211d4e88333e1a03bc5bd984d",
+      "bytes": 11505,
+      "path": "REPORT.md",
+      "sha256": "ac3eb6c538cf7f4689b2c32c7ed4bddb9d1afc20ee74f8ed3d136912df8f4ee4"
+    },
+    {
+      "blob": "9f0db9015a6f19e20091bcf080af45346b6a7c8c",
+      "bytes": 426889,
+      "path": "SOURCE-CHECK.txt",
+      "sha256": "42fa8eae970d8530411a4e5ccb6b45f7f2f3ba96f3e89973341cf5c1bb5c2935"
+    },
+    {
+      "blob": "501a4678e797683d8034245c11b7c629640837bb",
+      "bytes": 344,
+      "path": "TOUCHED-TESTS.txt",
+      "sha256": "8bd6f16a721e91aba912897ffb11e18708d4f5892af593a4ea0b6ef18baeaa0f"
+    },
+    {
+      "blob": "56ea641e7e2110f2a455f0000ca29b9d7e186afa",
+      "bytes": 95,
+      "path": "TYPECHECK.txt",
+      "sha256": "7bfb29b27af3e5ed4a87e5fe45ddd94d28bc63ed81709c81b7d38a280d03a0d5"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f46",
+  "product_head": "b9760c756087e2666fd708a7f0f62398bbbf48ae",
+  "ref": "refs/heads/evidence/sd-penny-c-f46",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f46"
+}

@@ -1,0 +1,9 @@
+Command: gh run view 42114655305 --repo just-every/run-penny --job 127551038898 --log-failed
+Log-read exit: 0
+Workflow environment block omitted from public report.
+shards (base-2, false)	Check generated contract documents	﻿2026-11-05T21:40:07.0881652Z ##[group]Run node src/base/contract-docs.mjs check
+shards (base-2, false)	Check generated contract documents	2026-11-05T21:40:07.0881828Z node src/base/contract-docs.mjs check
+shards (base-2, false)	Check generated contract documents	2026-11-05T21:40:07.0903716Z shell: /usr/bin/bash -e {0}
+shards (base-2, false)	Check generated contract documents	2026-11-05T21:40:07.0904297Z ##[endgroup]
+shards (base-2, false)	Check generated contract documents	2026-11-05T21:40:07.2209781Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (base-2, false)	Check generated contract documents	2026-11-05T21:40:07.2269607Z ##[error]Process completed with exit code 1.
