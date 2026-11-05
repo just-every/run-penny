@@ -670,7 +670,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "350c325babbcb4dab428d42d08ecae21d58482311ebe9223f71119c4aeabecbd",
+      "sha256": "d2b32582e1043f438da513cf46cf208493ee30a1c55860be42daaf847785c9b9",
       "executable": false
     },
     "agent-surface.json": {
@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "951c8700df2d173e7f54c2955250b4fd58f7cb710b26d9ecfef156a3ba3e1368",
+      "sha256": "ab9e33a132ef6f3ca698d6ab2ec308671b5439f837edc789af277cebacf77f09",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "331f284881cf392305069fb657c1e89c2bb72bec6511e8db0f4a68fb26266c53",
+      "sha256": "c786998dbc8ec40b4c69376ad7fa39f5e739c8ecfdc4ec0646753efd7342d443",
       "executable": false
     },
     "DEMO.md": {
@@ -8570,7 +8570,7 @@
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
-      "sha256": "cae882aa32101452854f903658629b7747fc43bc6d4469089e0a16a00495fb72",
+      "sha256": "d922b40d1802e7a4427d22a67c8336d94d7d9e86165598897d7d792fda7422c3",
       "executable": false
     },
     "tests/base/previous-notification-fixture.ts": {
@@ -8635,6 +8635,10 @@
     },
     "tests/base/release-planning.test.ts": {
       "sha256": "165bed3a8d37d5e67ce4bc593203cc6dabb784089fa35543043292ddbf0f56c1",
+      "executable": false
+    },
+    "tests/base/release-preference-stability.ts": {
+      "sha256": "c657bedb4a9a01bb1fec85ecd2df306195efdfbcdd5590056ddf83f652dbda9b",
       "executable": false
     },
     "tests/base/release-snapshot-stability.ts": {

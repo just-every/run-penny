@@ -1,6 +1,7 @@
 import { applyD1Migrations,reset,createScheduledController } from 'cloudflare:test'
 import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { call,env,requester } from './support'
+import { proveNativePreferenceWithdrawal } from './release-preference-stability'
 import { proveScheduledPublications,scheduleOriginalRelease } from './scheduled-publication-fixture'
 import { releaseGraph } from './release-fixture'
 import { captureReleaseSnapshots,changeSnapshotSources,provePendingPreferenceWithdrawal } from './release-snapshot-stability'
@@ -170,6 +171,7 @@ it('[REL-004 REL-012 REQ-025] request mute retains update subscription and globa
  expect((await rows('requester_update_permissions')).filter(p=>p.source!=='subscription')).toEqual(permissions.filter(p=>p.source!=='subscription'))
  await unchanged('all requester email withdrawn')
  await provePendingPreferenceWithdrawal(g,subscriber,String(ownDelivery.id),String(queued.id),unchanged)
+ await proveNativePreferenceWithdrawal()
 })
 it('[REL-008 REL-009 DEC-008 DATA-003] original snapshot members retain revisions through identity merges until erasure; outsiders and erased archive restoration are refused',async()=>{
  const g=await releaseGraph(),outsider=await requester('Outside snapshot'),survivor=await requester('Merge survivor'),last=await requester('Final survivor'),subscriber=await requester('Independent subscriber'),follower=await requester('Request-only follower')
