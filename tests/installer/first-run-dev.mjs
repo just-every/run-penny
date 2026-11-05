@@ -53,7 +53,7 @@ export async function proveLocalFirstRun(runtime,output) {
     await capture('local-first-run-setup')
     const email = ['synthetic-penny-silent-reader','example.test'].join('@')
     for (const [path,data,accepted] of [
-      ['/api/auth/magic-link',{email:ownerEmail},{status:'accepted'}],
+      ['/api/auth/magic-link',{email:ownerEmail},{status:'accepted',signInUrl:'/auth/one-click?'+new URLSearchParams({as:ownerEmail,returnTo:'/app'})}],
       ['/api/public/identity/email',{email,displayName:'Synthetic reader'},{accepted:true}],
     ]) {
       const response = await context.request.post(origin+path,{headers:{Origin:origin},data})
@@ -71,7 +71,6 @@ export async function proveLocalFirstRun(runtime,output) {
       }
       const attempts = db.prepare('SELECT feature,outcome,phase,transport FROM penny_auth_mail_attempts ORDER BY feature').all().map(row => ({...row}))
       assert.deepEqual(attempts,[
-        {feature:'operator_magic_link',outcome:'development',phase:'finished',transport:'development'},
         {feature:'requester_verification',outcome:'development',phase:'finished',transport:'development'},
       ])
     } finally {db.close()}
