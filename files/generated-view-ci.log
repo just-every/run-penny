@@ -1,0 +1,7 @@
+Public CI environment block omitted from evidence; failing command and diagnostic retained verbatim.
+shards (base-2, false)	Check generated contract documents	﻿2026-11-05T22:29:40.7154074Z ##[group]Run node src/base/contract-docs.mjs check
+shards (base-2, false)	Check generated contract documents	2026-11-05T22:29:40.7154286Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (base-2, false)	Check generated contract documents	2026-11-05T22:29:40.7175381Z shell: /usr/bin/bash -e {0}
+shards (base-2, false)	Check generated contract documents	2026-11-05T22:29:40.7176054Z ##[endgroup]
+shards (base-2, false)	Check generated contract documents	2026-11-05T22:29:40.8531262Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (base-2, false)	Check generated contract documents	2026-11-05T22:29:40.8590704Z ##[error]Process completed with exit code 1.

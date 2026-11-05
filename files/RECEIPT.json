@@ -118,16 +118,23 @@
   ],
   "external_holds": "All earlier ct, provider, device, account, payments and Base holds remain unchanged. No live qualification claimed.",
   "pr": null,
-  "github_api_calls_so_far": 2,
+  "github_api_calls_so_far": 5,
   "ci": {
+    "conclusion": "failure",
+    "head_sha": "ab6195f4c60ac2ad72fbb13d13222c3b24690e97",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42121900580",
     "id": 42121900580,
+    "status": "completed",
     "event": "push",
-    "head": "ab6195f4c60ac2ad72fbb13d13222c3b24690e97",
-    "status": "in_progress",
-    "conclusion": null,
-    "observed_at": "2026-11-05T22:29:38Z",
-    "url": "https://github.com/just-every/run-penny/actions/runs/42121900580",
-    "note": "Discovery only; no green claim. No re-run or dispatch."
+    "observed_at": "2026-11-05T22:34:40.398350+00:00",
+    "permitted_generated_view_only_failure": true,
+    "jobs_total": 30,
+    "jobs_failed_only_generated_views": 29,
+    "source_lock_success_in_every_shard": true,
+    "test_assertion_failures": 0,
+    "candidate_ci_tests_skipped": true,
+    "sample_job": 127576208599,
+    "no_rerun_or_dispatch": true
   },
   "remote_ref": "ab6195f4c60ac2ad72fbb13d13222c3b24690e97\trefs/heads/cloud/sd-penny-c-f49",
   "main_ci": [
@@ -182,5 +189,13 @@
     "symlinks": 0,
     "provider_sends": false,
     "checkout_clean": true
-  }
+  },
+  "evidence_initial_readback": {
+    "ref": "refs/heads/evidence/sd-penny-c-f49",
+    "head": "fe4d299b7d0ef67909f98591725111ba90a62b52",
+    "files": 79,
+    "status": "restored_and_manifest_verified",
+    "note": "Final publication will add the last CI observation; publication is separate from product readiness."
+  },
+  "ready_basis": "All local touched checks pass; exact-SHA Verify fails only on deliberately restored generated views, the explicit cloud exception. Lander must regenerate and check them, scan full history, require final exact-SHA Verify, then land and require Run site."
 }
