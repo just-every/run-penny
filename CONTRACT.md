@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); REQ-024 additionally proved by its named native identity-merge journey in this revision (5 November 2026); other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 59 | 56 | 1 | 116 |
+| Published | 60 | 55 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 79 | 124 | 78 | 281 |
+| All | 80 | 123 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3316,7 +3316,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-021` | Requester withdrawal | published | done | `tests/base/request-withdrawal.test.ts`; `tests/browser/request-withdrawal.mjs` |  |
 | `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
 | `REQ-023` | Email verification | published | partial | `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs` | The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted. |
-| `REQ-024` | Requester identity merge | published | partial | `tests/base/notifications.test.ts` | The survivor keeping both verified addresses and all requests, comments, follows and permission records, votes collapsing to one, the recorded merge, and no new vote or permission record have no passing assertion; carried mutes and preferences and working old links are asserted. |
+| `REQ-024` | Requester identity merge | published | done | `tests/base/notifications.test.ts`: identity merge preserves global and request mute, accepts old links, and suppresses muted intent; `tests/base/requester-merge-custody.ts`: proveRequesterMergeCustody covers both acceptance points through native verification, participation, operator merge and requester activity routes, with exact custody comparisons and refused unauthorized, failed-audit and retired-identity writes. |  |
 | `REQ-025` | Requester activity | published | partial | `tests/base/penny-releases.test.ts`; `tests/browser/requester-activity.mjs` | The current moderation state and public status of the requester's own requests in the view have no passing assertion; the view's counts of their requests, votes, follows and comments including held and rejected ones, and unfollow, mute and subscription changes from it, are asserted. |
 | `REQ-026` | Demand attribution | published | partial | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` | The vote date in the private supporter view, and the first 50 supporters on expansion with Show more revealing 50 more at a time, have no passing assertion (the browser check clicks Show more until it is gone and counts only the full history); the separate vote, linked-evidence and distinct-account figures with no score, the supporter view's names, addresses, accounts, proxy marks and per-account totals, the complete history with no 100-person cap, and the portal showing none of it are asserted. |
 | `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` |  |

@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "72242b09f75d216de644c29a46a9976c13cabc32fbee50441a3cee42a5fd13b0",
+      "sha256": "9e144a57c505c77926593c5a26c19ca9f10753a1d7ef94d36ed2ec0c32e8f83a",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "b3e1caa180664ffa9781411cfea6ded4cb4f22ae5d62087d28944dfe1fe7d092",
+      "sha256": "8782ac0bd5dcdb1f52c9b547e66283d91d774a6acf4720cda6b97db59551f824",
       "executable": false
     },
     "DEMO.md": {
@@ -8462,7 +8462,7 @@
       "executable": false
     },
     "tests/base/notifications.test.ts": {
-      "sha256": "c74d749c7f952363f659472fe9429171b410b8bebdf43609949df10e82e41f6a",
+      "sha256": "bf75432e6ec7697b2845014be93dec39e356dbbc757c5632939d14d840da543e",
       "executable": false
     },
     "tests/base/operator-request-publication.ts": {
@@ -8587,6 +8587,10 @@
     },
     "tests/base/requester-blocking.test.ts": {
       "sha256": "b9415d62aa981740915de877d3e1e30cb5a34f591db374cfe3f7ef452627d487",
+      "executable": false
+    },
+    "tests/base/requester-merge-custody.ts": {
+      "sha256": "78b6e97d5f96eafc1d607016ae0bfaee45ce32cae3930e06326596119031205b",
       "executable": false
     },
     "tests/base/requester-oauth-fixture.ts": {

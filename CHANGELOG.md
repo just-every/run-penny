@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete REQ-024 native identity-merge custody proof within the existing notification sanity journey. Independently verified requesters retain the exact address, authored-record, comment, vote, follow, permission and suppression union; shared votes collapse once, grant identities and times survive, and the merge creates no extra mail effect. Prove attributed merge history, unchanged custody after unauthorized or failed-audit writes, retired-identity replay refusal, carried mutes and working old links. No runtime, migration or configuration change is required; unrelated provider and release holds remain unchanged.
+
 - Complete REQ-010 consent proof through the existing requester and subscription journeys: mounted submit and vote controls start unchecked, ordinary unticked actions grant nothing, current automatic disclosures lead to author and voter follows, and explicit grants bind the verified address, request, source and controlled time. Unfollow revokes the permission while preserving the vote. Retain automatic-subscription, unsubscribe and withdrawal coverage. No runtime, migration or configuration change is required; separate notification, provider and release obligations remain unchanged.
 
 - Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.

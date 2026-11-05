@@ -1,3 +1,4 @@
+import {proveRequesterMergeCustody} from './requester-merge-custody'
 import {incomingEmail} from './email-capture-fixture'
 import { applyD1Migrations,reset,createScheduledController,createMessageBatch } from 'cloudflare:test'
 import { beforeEach,afterEach,vi,expect,inject,it } from 'vitest'
@@ -263,13 +264,14 @@ it('[REQ-024 NOTIFY-002] identity merge preserves global and request mute, accep
  const target=(await env.DB.prepare('SELECT id FROM requesters WHERE id!=?').bind(g.requesterId).first<{id:string}>())!
  await call('/api/public/requester/notifications',{muted:true},g.person,'PATCH')
  await env.DB.prepare('INSERT INTO request_notification_mutes(requester_id,request_id,created_at,updated_at) VALUES(?,?,?,?)').bind(g.requesterId,g.requestId,time(),time()).run()
- await new RequestOperatorRepository(runtime().database).mergeRequesters(g.requesterId,target.id,g.operatorId,time(100))
+ expect((await call(`/api/operator/requesters/${g.requesterId}/merge`,{targetRequesterId:target.id},g.operator)).status).toBe(200)
  expect(await env.DB.prepare('SELECT muted_at FROM requester_notification_preferences WHERE requester_id=?').bind(target.id).first()).toMatchObject({muted_at:expect.any(String)})
  expect(await env.DB.prepare('SELECT request_id FROM request_notification_mutes WHERE requester_id=?').bind(target.id).first()).toEqual({request_id:g.requestId})
  expect((await call(new URL(oldLink).pathname+new URL(oldLink).search,{},{})).status).toBe(200)
  const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
  expect(sent).toHaveLength(0);expect(await batches()).toMatchObject([{state:'suppressed'}])
  expect((await call('/api/public/requester/activity',undefined,targetSession)).status).toBe(200)
+ await proveRequesterMergeCustody()
 })
 it('[NOTIFY-002 REQ-008/009] request-scoped mute follows canonical resolution and survives unmerge',async()=>{
  const g=await setup();await g.follow()
