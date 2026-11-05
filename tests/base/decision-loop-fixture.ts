@@ -17,6 +17,7 @@ export async function seedLoop() {
  await env.DB.prepare('INSERT OR IGNORE INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES(?,?,?,?,?,?,?)')
   .bind(boardId, 'loop-board', 'Loop board', 'public', 0, stamp, stamp).run()
  cookie = (await owner()).Cookie
+ return { Cookie: cookie }
 }
 
 export async function request(path: string, method = 'GET', body?: unknown, headers: Record<string, string> = {}) {
