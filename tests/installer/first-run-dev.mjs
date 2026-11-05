@@ -3,6 +3,7 @@ import {readFile,mkdir} from 'node:fs/promises'
 import {join,resolve} from 'node:path'
 import {DatabaseSync} from 'node:sqlite'
 import {parseEnv} from 'node:util'
+import {setTimeout as delay} from 'node:timers/promises'
 import {chromium} from '@playwright/test'
 import {browserOptions} from '../browser/browser-options.mjs'
 import {finishFirstRun} from '../browser/local-signin.mjs'
@@ -11,7 +12,17 @@ import {localDatabaseFile} from '../browser/local-database.mjs'
 /** Follow the actual local command's owner entry, then exercise silent identity mail. */
 export async function proveLocalFirstRun(runtime,output) {
   const {root,origin} = runtime
-  const entry = (await readFile(join(root,'.rer/local/open-url'),'utf8')).trim()
+  // The app health route can answer before the command publishes its owner entry.
+  const deadline = Date.now()+60_000
+  let entry
+  while (!entry) {
+    try {entry = (await readFile(join(root,'.rer/local/open-url'),'utf8')).trim()}
+    catch (error) {if (error.code !== 'ENOENT') throw error}
+    if (!entry) {
+      assert.ok(Date.now()<deadline,'rer dev publishes its owner entry after becoming healthy')
+      await delay(100)
+    }
+  }
   assert.equal(new URL(entry).origin,origin)
   const browser = await chromium.launch(browserOptions())
   const context = await browser.newContext({viewport:{width:1440,height:900}})
