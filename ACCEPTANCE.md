@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 74 | 113 | 71 | 258 |
+| Core | 75 | 112 | 71 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 74 | 129 | 78 | 281 |
+| Full target | 75 | 128 | 78 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -494,7 +494,7 @@ Core · published · **done**
 
 #### REQ-017 — Decline
 
-Core · published · **partial**
+Core · published · **done**
 
 **Requirement.** An operator can decline a published request. A decline without a public reason is rejected. Declining sets the public status to Declined, adds the reason to the request history as a status update (REQ-015), and refuses new votes and requester comments while leaving existing ones visible and counted. Reversing a decline restores the request's previous public status. Decline and reversal ship through the operator request controls; repeating a decline with another reason preserves the prior direct or mapped status for reversal.
 
@@ -504,8 +504,8 @@ Core · published · **partial**
 3. New votes and comments are refused while existing votes and discussion stay visible and counted.
 4. Reversing a repeated decline restores the earlier status.
 
-**Evidence.** `tests/base/request-status-workflow.test.ts`; `tests/browser/request-decline.mjs`
-**Gap.** The decline reason added to the request history has no passing assertion; refusing a decline without a public reason, setting Declined, refusing new votes and comments while existing ones stay visible and counted, and a reversal restoring the earlier status are asserted.
+**Evidence.** `tests/base/request-status-workflow.test.ts` — sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards (reason refusal, declined history, closed participation, direct and mapped reversal); `tests/browser/request-decline.mjs` — request-decline (operator controls and customer history, repeated decline and reversal, screens at 1440 and 390)
+**Gap.** None.
 
 #### REQ-018 — Boards
 
