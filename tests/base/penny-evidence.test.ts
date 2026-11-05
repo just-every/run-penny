@@ -143,21 +143,64 @@ it('[AI-008 EVID-010] edits retain wording versions and reject stale authority; 
  expect(await env.DB.prepare('SELECT count(*) n FROM evidence_versions WHERE evidence_id=?').bind(g.evidence.id).first('n')).toBe(2)
  await proveRedaction(call,fixture,person)
 })
-it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical overlap within 500ms and actions create no draft',async()=>{
+it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical overlap within 500ms without linking, merging or creating drafts',async()=>{
  const g=await fixture();await publish(g)
  const board=(await env.DB.prepare("SELECT id FROM boards WHERE slug='feedback'").first<{id:string}>())!.id,now=new Date().toISOString()
  await env.DB.batch(Array.from({length:320},(_,index)=>env.DB.prepare(`INSERT INTO requests(id,slug,board_id,title,description,public_title,public_description,moderation_state,public_state,published_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,'approved','open',?,?,?)`).bind(`extra-${index}`,`extra-${String(index).padStart(3,'0')}`,board,index<6?'Project reports':'Unrelated item',index<6?'CSV exporting workspace':'Other topic',index<6?'Project reports':'Unrelated item',index<6?'CSV exporting workspace':'Other topic',now,now,now)))
  await env.DB.prepare("UPDATE requests SET moderation_state='awaiting_review',public_title='Export project reports',public_description='CSV workspace reports' WHERE id='extra-0'").run()
  await env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,archived_at,created_at,updated_at) VALUES('archived','archived','Archived','public',1,?,?,?)").bind(now,now,now).run()
  await env.DB.prepare("UPDATE requests SET board_id='archived' WHERE id='extra-1'").run()
+ await env.DB.batch([
+  env.DB.prepare("UPDATE requests SET title='PrOjEcT [REPORTS] CSV',public_title='PrOjEcT [REPORTS] CSV',description='Exporting workspaces',public_description='Exporting workspaces' WHERE id='extra-2'"),
+  env.DB.prepare("UPDATE requests SET title='Project reports — CSV',public_title='Project reports — CSV' WHERE id='extra-3'"),
+  env.DB.prepare("UPDATE requests SET title='Projector reporting CSVexport',public_title='Projector reporting CSVexport',description='No exact overlap',public_description='No exact overlap' WHERE id='extra-9'"),
+  env.DB.prepare("UPDATE requests SET title='NAÏVE résumé',public_title='NAÏVE résumé',description='International wording',public_description='International wording' WHERE id='extra-10'"),
+ ])
+ const requester=await person()
+ await json(call('/api/operator/requests/extra-006/merge',{targetSlug:'extra-007',notifySubscribers:false},g.operator))
+ await env.DB.prepare(`INSERT INTO request_content_submissions(id,request_id,requester_id,title,description,moderation_state,created_at,updated_at)
+ VALUES('synthetic-penny-1',?,(SELECT id FROM requesters LIMIT 1),'Synthetic pending edit','Unapproved wording','awaiting_review',?,?)`).bind(g.request.id,now,now).run()
+ const suggestionState=async()=>{
+  const queries={
+   requestLinks:'SELECT * FROM request_evidence_links ORDER BY request_id,evidence_id',
+   requestEvidenceContributions:'SELECT * FROM request_evidence_contributions ORDER BY request_id,evidence_id',
+   betLinks:'SELECT * FROM candidate_bet_evidence_links ORDER BY candidate_bet_id,evidence_id',
+   merges:'SELECT * FROM request_merges ORDER BY id',
+   mergeTargets:'SELECT id,merged_into_request_id,merged_at FROM requests ORDER BY id',
+   requests:'SELECT * FROM requests ORDER BY id',
+   evidence:'SELECT * FROM evidence_items ORDER BY id',
+   wording:'SELECT * FROM evidence_versions ORDER BY evidence_id,version_number',
+   submissions:'SELECT * FROM request_content_submissions ORDER BY id',
+  }
+  const rows=await env.DB.batch(Object.values(queries).map(query=>env.DB.prepare(query)))
+  return Object.fromEntries(Object.keys(queries).map((name,index)=>[name,rows[index].results]))
+ }
+ const beforeSuggestions=await suggestionState(),outboundCalls=vi.mocked(fetch).mock.calls.length
+ expect(beforeSuggestions.requestLinks).toContainEqual(expect.objectContaining({request_id:g.request.id,evidence_id:g.evidence.id}))
+ expect(beforeSuggestions.betLinks).toContainEqual(expect.objectContaining({candidate_bet_id:g.bet.id,evidence_id:g.evidence.id}))
+ expect(beforeSuggestions.merges).toContainEqual(expect.objectContaining({source_request_id:'extra-6',target_request_id:'extra-7',unmerged_at:null}))
+ expect(beforeSuggestions.mergeTargets).toContainEqual(expect.objectContaining({id:'extra-6',merged_into_request_id:'extra-7'}))
+ expect(beforeSuggestions.submissions).toContainEqual(expect.objectContaining({id:'synthetic-penny-1',moderation_state:'awaiting_review'}))
  const start=performance.now(),suggestions=await json<RequestSuggestion[]>(call('/api/public/requests/suggestions?title=export%20project%20reports%20CSV')),elapsed=performance.now()-start
  expect(elapsed).toBeLessThan(500);console.log(`EVID-007: 321 requests, ${elapsed.toFixed(1)}ms`)
  expect(suggestions).toHaveLength(5);expect(suggestions[0]).toMatchObject({slug:g.request.slug,matchedTerms:['export','project','reports','csv']})
  expect(suggestions.some(s=>['extra-000','extra-001'].includes(s.slug))).toBe(false)
  expect(suggestions.slice(1).every(s=>!s.matchedTerms.includes('export'))).toBe(true)
- expect(await json(call('/api/public/requests/suggestions?title=export%20project%20reports%20CSV'))).toEqual(suggestions)
- const internal=await json<RequestSuggestion[]>(call('/api/operator/requests/suggestions?title=project%20reports',undefined,g.operator));expect(internal.every(s=>s.id)).toBe(true)
- const requester=await person(),before=await env.DB.batch(['requests','evidence_items','request_content_submissions'].map(table=>env.DB.prepare(`SELECT count(*) n FROM ${table}`)))
+ expect(suggestions.map(s=>s.slug)).toEqual([g.request.slug,'extra-002','extra-003','extra-004','extra-005'])
+ expect(await suggestionState()).toEqual(beforeSuggestions)
+ expect(await json(call('/api/public/requests/suggestions?title=export%20project%20reports%20CSV',undefined,requester))).toEqual(suggestions)
+ expect(await suggestionState()).toEqual(beforeSuggestions)
+ const internal=await json<RequestSuggestion[]>(call('/api/operator/requests/suggestions?title=project%20reports',undefined,g.operator));expect(internal).toHaveLength(5);expect(internal.every(s=>s.id)).toBe(true)
+ expect(await suggestionState()).toEqual(beforeSuggestions)
+ expect(await json(call('/api/operator/requests/suggestions?title=project%20reports',undefined,g.operator))).toEqual(internal)
+ expect(await suggestionState()).toEqual(beforeSuggestions)
+ for(const [path,headers] of [['/api/public/requests/suggestions',requester],['/api/operator/requests/suggestions',g.operator]] as const){
+  const unicode=await json<RequestSuggestion[]>(call(path+'?title='+encodeURIComponent('naïve résumé'),undefined,headers))
+  expect(unicode).toEqual([expect.objectContaining({slug:'extra-010',matchedTerms:['naïve','résumé']})])
+  expect(await suggestionState()).toEqual(beforeSuggestions)
+ }
+ expect(vi.mocked(fetch)).toHaveBeenCalledTimes(outboundCalls)
+ const before=await env.DB.batch(['requests','evidence_items','request_content_submissions'].map(table=>env.DB.prepare(`SELECT count(*) n FROM ${table}`)))
  expect((await call(`/api/public/requests/${g.request.slug}/vote`,{emailUpdates:false},requester)).status).toBe(204)
  expect((await call(`/api/public/requests/${g.request.slug}/follow`,{},requester)).status).toBe(204)
  const after=await env.DB.batch(['requests','evidence_items','request_content_submissions'].map(table=>env.DB.prepare(`SELECT count(*) n FROM ${table}`)))
