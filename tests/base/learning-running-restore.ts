@@ -83,6 +83,7 @@ export async function proveRunningRestore(){
  for(let tick=1;tick<=3;tick++){
   await runNotificationSchedule({scheduledTime:Date.now()+tick*3_600_000,cron:'* * * * *',noRetry(){}} as ScheduledController,bindings())
   expect(await json(call(url+'/run',{},cookie),409)).toEqual({error:'learning_scope_changed'})
+  expect(await json(call(url+'/control',{action:'resume'},cookie),409)).toEqual({error:'learning_control_requires_new_grant'})
  }
  expect(sent).toEqual(transmitted)
  expect(await json(call(url,undefined,cookie))).toEqual(restored)

@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); LEARN-005 additionally carries running-claim restore proof introduced at commit `ed541f3c24d6eb36ed7104a4ff79f2b75c82e01c` and completed on the current candidate (5 November 2026); other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 58 | 57 | 1 | 116 |
+| Published | 59 | 56 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 78 | 125 | 78 | 281 |
+| All | 79 | 124 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3367,7 +3367,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `LEARN-002` | Contestable learning | published | partial | `tests/base/learning-stage2.test.ts` | Every option carrying the DEC-003 dimensions computed from originals, invalidation by native or source corrections with versioned operator contests, and the absence of automatic ranking, customer contact or publication have no passing assertion in this clause's evidence; validated spans, the clarification and the no-build option are asserted. |
 | `LEARN-003` | Accountable pre-action choice | published | partial | `tests/base/learning-stage3.test.ts` | The committed snapshot retaining the interpretation, original evidence, compared options, owner and full predeclared protocol, and missing protocol fields as explicit nulls that prevent commitment, have no passing assertion in this clause's evidence; commitment and its attributed audit are asserted. |
 | `LEARN-004` | Bounded recurring work | published | partial | `tests/base/learning-stage3.test.ts` | Expiry, budget, correction-version and erasure-epoch checks before external work and in the result transaction, the absence of any implicit contact, production or publication effect, and interrupted or ambiguous calls keeping their uncertainty and reserved budget without retry have no passing assertion in this clause's evidence; durable runs, unchanged-input deduplication, in-flight pause and revoke, and pause, resume, revoke and disconnect are asserted. |
-| `LEARN-005` | Privacy closure | published | partial | `tests/base/learning-stage3.test.ts` | Running claims becoming uncertain after a restore has no passing assertion: no run is in flight at export and nothing reads an uncertain claim after the restore; same-source erasure across duplicate connections, hash fences under a fresh connection, revocation purging copies and derived work, and a restore that leaves no investigation active and refuses a restored run with `learning_scope_changed` are asserted. |
+| `LEARN-005` | Privacy closure | published | done | Points 1–2 and archive history: `tests/base/learning-stage3.test.ts` — "source person erasure covers duplicate connections and fresh-grant replay; actual restore holds all source authority". Point 3: the same file — "observed provider credential revocation purges all matching source installations; outage preserves evidence" and "scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke" (scope and erasure fences). Point 4: the source-person journey calls `tests/base/learning-running-restore.ts` — proveRunningRestore, authenticating export, fresh-destination import and detail readback of the uncertain claim, retained cursor and unresolved cost, held authority and refused replay. | |
 | `LEARN-006` | Configuration and proof boundary | published | done | `tests/base/upgrade.test.ts`; `tests/base/learning-stage2.test.ts` |  |
 | `IMP-001` | Saved records | published | done | `tests/base/feedback-import.test.ts` |  |
 | `IMP-002` | Review and mapping | published | done | `tests/base/feedback-import.test.ts` |  |
