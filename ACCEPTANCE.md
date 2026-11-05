@@ -8,12 +8,12 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 78 | 109 | 71 | 258 |
+| Core | 79 | 108 | 71 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 78 | 125 | 78 | 281 |
+| Full target | 79 | 124 | 78 | 281 |
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
 ## Core
 
@@ -399,7 +399,7 @@ Core · published · **partial**
 
 #### REQ-010 — Follow and consent
 
-Core · published · **partial**
+Core · published · **done**
 
 **Requirement.** A verified requester can follow and unfollow a published request.
 
@@ -407,8 +407,8 @@ Core · published · **partial**
 1. Submitting and voting present an unticked "Email me updates" control and grant no email permission on their own, except that on a board whose owner turned on vote subscriptions (NOTIFY-008) the vote control says that voting subscribes and the vote itself follows, and submitting subscribes the author (NOTIFY-011).
 2. Following, or ticking that control, stores a timestamped permission record for the verified address, which is what makes the identity eligible under REL-004.
 
-**Evidence.** `tests/base/board.test.ts`
-**Gap.** The unticked "Email me updates" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion.
+**Evidence.** `tests/browser/requester-repair.mjs` with `tests/browser/requester-consent.mjs` — mounted explicit and automatic consent; `tests/base/requester-subscriptions.test.ts` — disclosed voting and submission, explicit consent address binding, exact grant time and unfollow revocation (`tests/base/request-consent.ts`)
+**Gap.** None.
 
 #### REQ-011 — Portal attachments
 
