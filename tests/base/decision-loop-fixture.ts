@@ -70,3 +70,29 @@ export function approve(itemId: string, requestIds: string[] = []) {
 export function row(table: string, id: string) {
  return env.DB.prepare(`SELECT * FROM ${table} WHERE id=?`).bind(id).first()
 }
+
+export const draftPrivacyMarkers = {
+ rationale:'synthetic-penny-private-rationale', commercial:'synthetic-penny-private-commercial-context',
+ declinedTitle:'synthetic-penny-private-declined-bet', declinedSummary:'synthetic-penny-private-declined-approach',
+ outcomeMeasure:'synthetic-penny-private-outcome-measure', evidence:'synthetic-penny-private-evidence',
+ internalTitle:'synthetic-penny-private-roadmap-title', internalProblem:'synthetic-penny-private-roadmap-problem',
+ deliveryNotes:'synthetic-penny-private-delivery-notes', revenueCents:91827364,
+}
+
+/** Native writes give the approved wording real private neighbours to exclude. */
+export async function privateDraftGraph() {
+ const m=draftPrivacyMarkers,d=await decision()
+ const account=await json(request('/api/operator/accounts','POST',{name:m.commercial,internalOwnerId:operatorId,revenueCents:m.revenueCents,health:m.commercial}),201)
+ const a=await json(request(`/api/operator/decisions/${d.id}/bets`,'POST',{title:m.internalTitle,summary:m.internalProblem,successMeasure:m.outcomeMeasure}),201)
+ const b=await json(request(`/api/operator/decisions/${d.id}/bets`,'POST',{title:m.declinedTitle,summary:m.declinedSummary}),201)
+ const e=await evidence({accountId:account.id,wording:m.evidence});await link(e.id,a.id)
+ const result=await json<{itemId:string;revisionId:string;slug:string}>(request(`/api/operator/decisions/${d.id}/commit`,'POST',{...commitInput(a.id),rationale:m.rationale}))
+ await json(request(`/api/operator/roadmap/${result.itemId}`,'PATCH',{title:m.internalTitle,summary:m.internalProblem,ownerOperatorId:operatorId,targetWindow:'2027-02-17',deliveryNotes:m.deliveryNotes,confidence:'high',accountImpact:m.commercial,decisionId:d.id,candidateBetId:a.id,publicTitle:null,publicSummary:null,evidenceIds:[e.id]}))
+ return {d,a,b,e,account,...result}
+}
+
+export async function privateOutcomeDraft(itemId:string) {
+ const tag=await json(request('/api/operator/catalog/tags','POST',{name:'synthetic-penny-draft-privacy'}),201)
+ const release=await json(request('/api/operator/releases','POST',{title:'synthetic-penny-private-release',body:'synthetic-penny-private-release-body',releaseType:'improved',tagIds:[tag.id],publicationDate:'2027-02-17',targetIds:[itemId],authorOperatorId:operatorId}),201)
+ return json<{outcomePrompt:string}>(request(`/api/operator/releases/${release.slug}`))
+}

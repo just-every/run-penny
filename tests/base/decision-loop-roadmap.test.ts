@@ -1,7 +1,7 @@
 import { applyD1Migrations } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
 import { beforeAll,describe,expect,inject,it } from 'vitest'
-import { seedLoop,request,json,document,committed,publicRequest,approve,row,ready,commitInput,stamp } from './decision-loop-fixture'
+import { seedLoop,request,json,document,committed,publicRequest,approve,row,ready,commitInput,stamp,privateDraftGraph,privateOutcomeDraft,draftPrivacyMarkers } from './decision-loop-fixture'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop();const settings=await json<any>(request('/api/operator/settings/status-roadmap'));await json(request('/api/operator/settings/status-roadmap','PUT',{...settings.settings,source:'approved_items'}))})
 const publication=(id:string)=>env.DB.prepare('SELECT * FROM roadmap_publications WHERE roadmap_item_id=?').bind(id).first<{id:string;public_slug:string;approved_at:string;updated_at:string;withdrawn_at:string|null}>()
 const move=(id:string,status:string,key=crypto.randomUUID())=>request(`/api/operator/roadmap/${id}/move`,'POST',{status,reason:'Measured delivery reason',idempotencyKey:key})
@@ -19,15 +19,40 @@ describe('Explicit roadmap publication',()=>{
   const c=await committed();for(const requestIds of [['missing'],[r.id,r.id]]){expect([409,422]).toContain((await request(`/api/operator/roadmap/${c.itemId}/approve`,'POST',{publicTitle:'Safe',publicSummary:'Safe',boardSlug:'loop-board',requestIds})).status);expect(await publication(c.itemId)).toBeNull()}
   const privateRequest=await publicRequest();await env.DB.prepare("UPDATE requests SET moderation_state='awaiting_review',published_at=NULL WHERE id=?").bind(privateRequest.id).run();expect((await request(`/api/operator/roadmap/${c.itemId}/approve`,'POST',{publicTitle:'Safe',publicSummary:'Safe',boardSlug:'loop-board',requestIds:[privateRequest.id]})).status).toBe(422);expect(await publication(c.itemId)).toBeNull()
  })
- it('[ROAD-001][ROAD-003][ROAD-007] projects every forward/backward move within five seconds and snapshots exact approval/mapping witnesses atomically',async()=>{
-  const c=await committed(),r=await publicRequest();await approve(c.itemId,[r.id]);const p=(await publication(c.itemId))!,decisionBefore=await row('decisions',c.d.id);let prior='planned'
+ it('[ROAD-001][ROAD-003][ROAD-007] projects every forward and backward move within five seconds and keeps complete safe drafts private with atomic approval witnesses',async()=>{
+  const c=await privateDraftGraph(),r=await publicRequest();await approve(c.itemId,[r.id])
+  const outcome=await privateOutcomeDraft(c.itemId);expect(outcome.outcomePrompt).toBe('Have you adopted this update?')
+  const p=(await publication(c.itemId))!,decisionBefore=await row('decisions',c.d.id)
+  expect(decisionBefore).toMatchObject({rationale:draftPrivacyMarkers.rationale})
+  expect(await row('accounts',c.account.id)).toMatchObject({name:draftPrivacyMarkers.commercial,revenue_cents:draftPrivacyMarkers.revenueCents})
+  expect((await env.DB.prepare("SELECT title,summary FROM decision_bet_snapshots WHERE decision_revision_id=? AND disposition='declined'").bind(c.revisionId).all()).results).toEqual([{title:draftPrivacyMarkers.declinedTitle,summary:draftPrivacyMarkers.declinedSummary}])
+  const beforeHistory=(await json<{statusUpdates:unknown[]}>(request(`/api/public/requests/${r.slug}`))).statusUpdates
+  expect(beforeHistory).toEqual([])
+  let prior='planned',version=0
   for(const status of ['exploring','in_progress','shipped','planned','dropped','exploring']){
    const started=Date.now(),result=await json(move(c.itemId,status));const transition=await row('roadmap_transitions',result.transitionId);expect(transition).toMatchObject({from_status:prior,to_status:status,reason:'Measured delivery reason',actor_operator_id:'loop-operator'});prior=status
    const publicStatus=status==='exploring'?'under_review':status==='dropped'?'open':status
    expect(await json(request(`/api/public/requests/${r.slug}`))).toMatchObject({status:publicStatus})
    const page=await document(`/portal/feedback/${r.slug}`);expect(page.status).toBe(200);expect(await page.text()).toContain(({under_review:'Under review',planned:'Planned',in_progress:'In progress',shipped:'Shipped',open:'Open'} as Record<string,string>)[publicStatus]);const elapsedMs=Date.now()-started;expect(elapsedMs).toBeLessThan(5000);console.info('[ROAD-003] API and SSR projection',{status,elapsedMs})
    const publicItem=await request(`/api/public/roadmap/${p.public_slug}`);expect(publicItem.status).toBe(status==='dropped'?404:200)
-   const draft=await row('roadmap_update_versions',result.transitionId);expect(draft).toMatchObject({title:'Safe roadmap title',problem:'Safe roadmap problem',public_slug:p.public_slug,approval_id:p.id,approval_at:p.approved_at,approval_updated_at:p.updated_at,published_at:null,public_status:status==='dropped'?'withdrawn':publicStatus})
+   const draftStatus=status==='dropped'?'withdrawn':publicStatus
+   const label=({under_review:'Under review',planned:'Planned',in_progress:'In progress',shipped:'Shipped',withdrawn:'Withdrawn'} as Record<string,string>)[draftStatus]
+   const body=`Safe roadmap title: ${label}\n\nSafe roadmap problem`
+   const draft=await row('roadmap_update_versions',result.transitionId)
+   expect(draft).toEqual({id:result.transitionId,transition_id:result.transitionId,roadmap_item_id:c.itemId,author_operator_id:'loop-operator',version_number:++version,title:'Safe roadmap title',problem:'Safe roadmap problem',body,public_slug:p.public_slug,approval_id:p.id,approval_at:p.approved_at,approval_updated_at:p.updated_at,published_at:null,publication_claim:null,snapshot_sealed_at:null,discarded_at:null,public_status:draftStatus,created_at:transition!.created_at,updated_at:transition!.updated_at})
+   const projection=await json<{items:{id:string}[]}>(request(`/api/operator/roadmap-updates?q=${encodeURIComponent(body)}`))
+   const projectedDraft=projection.items.find(item=>item.id===result.transitionId)
+   expect(projectedDraft).toEqual({id:result.transitionId,title:'Safe roadmap title',body,publishedAt:null,publicationState:'ready'})
+   const publicDetail=await json<{status:string;statusUpdates:unknown[]}>(request(`/api/public/requests/${r.slug}`))
+   expect(publicDetail.status).toBe(publicStatus);expect(publicDetail.statusUpdates).toEqual(beforeHistory)
+   const publicHtml=await (await document(`/portal/feedback/${r.slug}`)).text()
+   for(const value of [result.transitionId,body,...Object.values(draftPrivacyMarkers).map(String),outcome.outcomePrompt]){
+    expect(JSON.stringify(publicDetail)).not.toContain(value);expect(publicHtml).not.toContain(value)
+   }
+   for(const value of [...Object.values(draftPrivacyMarkers).map(String),outcome.outcomePrompt])expect(JSON.stringify({draft,projection})).not.toContain(value)
+   for(const field of ['rationale','account_impact','accountImpact','revenue_cents','revenueCents','declined_bets','declinedBets','outcome_prompt','outcomePrompt','success_measure','successMeasure']){
+    expect(draft).not.toHaveProperty(field);expect(projectedDraft).not.toHaveProperty(field)
+   }
    expect((await env.DB.prepare('SELECT * FROM roadmap_update_targets WHERE version_id=?').bind(result.transitionId).all()).results).toMatchObject([{request_id:r.id,approval_at:p.approved_at}]);expect(await row('decisions',c.d.id)).toEqual(decisionBefore)
    expect((await publication(c.itemId))!.withdrawn_at).toBeNull()
   }
