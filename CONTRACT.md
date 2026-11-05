@@ -3270,8 +3270,8 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 57 | 58 | 1 | 116 |
-| Target and push further | 20 | 68 | 77 | 165 |
-| All | 77 | 126 | 78 | 281 |
+| Target and push further | 21 | 67 | 77 | 165 |
+| All | 78 | 125 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3411,7 +3411,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `CAP-011` | Microsoft Teams | target | missing |  | Bot Framework fixtures with token validation capture a message once and refuse an unsigned request. |
 | `CAP-012` | Browser extension | target | missing | `tests/browser/browser-capture-review.mjs`; `tests/browser/browser-capture.mjs` | A Playwright extension journey on a fixture page creates an inbox item with the URL, excerpt and screenshot attachment; a signed-out extension is refused. |
 | `CAP-013` | CRM record panels | target | missing |  | HubSpot and Salesforce fixtures render the panel for a record's company, capture feedback tied to an opportunity amount and attribute a proxy vote to the right customer. |
-| `CAP-014` | Proxy votes | target | partial | `tests/base/proxy-votes.test.ts`; `tests/browser/proxy-votes.mjs`; `tests/browser/zendesk-proxy-votes.mjs` | UserVoice-imported supporters keeping their historical proxy marks (IMP-008) have no passing assertion in this clause's evidence (`tests/base/feedback-import-uservoice.test.ts` asserts them and is not cited here), and the CSV export is checked for the source text and the customer but never the recorder; counting once per customer, the proxy mark with who recorded it, collapse with the customer's own later vote, no verified identity, consent or permission record, public appearance only inside the vote total, and recording from the inbox, the request page and the Zendesk sidebar fixture are asserted. |
+| `CAP-014` | Proxy votes | target | done | Points 1, 2 and 5: `tests/base/proxy-votes.test.ts`, records inbox, request-page and Zendesk customer demand once with its CSV recorder, without verification or consent, and collapses with each customer’s later own vote. Point 3: `tests/browser/proxy-votes.mjs`, proxy-votes; `tests/browser/zendesk-proxy-votes.mjs`, zendeskProxyVotesJourney. Point 4: `tests/base/feedback-import-uservoice.test.ts`, previews, applies, replays and reverses UserVoice ideas with their supporters and a filtered-history warning. CSV recorder readback is also asserted in both browser journeys. | |
 | `CAP-015` | Automation platforms | target | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` | Scoped keys and outbound events ship today; no packaged app exists. A Zapier CLI test against a running installation fires each trigger once per event and runs each action within its key's scopes; an out-of-scope action is refused. |
 | `CAP-016` | Connector health | target | partial | `tests/browser/integration-states.mjs` | Delivery and tracker-receipt states are shown today for outbound integrations only. A clock-advanced fixture with an expired token and a rate limit shows the connector failing with its reason once an hour passes without a successful sync (or after the owner's shorter setting), notifies the owner once, and after reconnect resumes from its cursor without duplicate items. |
 | `CAP-017` | Capture scope, minimization and consent | target | partial | `src/core/features/learning/acquisition.ts`; `tests/base/learning-stage2.test.ts` | Purpose-bound selected-record acquisition ships today for Orbit and native records (LEARN-001). Connector fixtures assert that no request is made for out-of-scope records, that redaction precedes the write, and that captured people hold no permission record (NOTIFY-009 sends create none either). |
