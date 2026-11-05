@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete REQ-015’s native proof: an older pinned status update stays above a newer unpinned update and the approved comment, with distinct labels and stable history identities after reload. The existing notification journey checks its exact public wording reaches the eligible follower once and survives publication replay without another send. Retain direct-status workflow coverage, moderation, consent and replay assertions. No runtime, migration or configuration change is required; wider REQ-036 gaps and field-proof holds remain unchanged.
+
 - Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.
 
 - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.

@@ -57,11 +57,16 @@ try {
    const detail=await (await api(`/api/public/requests/${slug}`)).json()
    return detail.statusUpdates.find(update=>update.body===body)
   }
+  if(width===1440){
+   const before=await (await api(`/api/public/requests/${slug}`)).json()
+   assert.equal(before.status,'open');assert.deepEqual(before.statusUpdates,[])
+  }
   const pinned=await publish('We are reviewing monthly scheduling.',true)
   const newer=await publish('Monthly scheduling now has a delivery outline.',false)
   assert.ok(pinned?.id);assert.ok(newer?.id);assert.notEqual(pinned.id,newer.id)
   assert.ok(pinned.publishedAt<newer.publishedAt,'the pinned update is older than the unpinned update')
   const history=await (await api(`/api/public/requests/${slug}`)).json()
+  if(width===1440)assert.equal(history.status,'under_review','setting the public status publishes the recorded update')
   assert.deepEqual(history.statusUpdates,[{id:pinned.id,status:'under_review',body:'We are reviewing monthly scheduling.',pinned:1,publishedAt:pinned.publishedAt},{id:newer.id,status:'under_review',body:'Monthly scheduling now has a delivery outline.',pinned:0,publishedAt:newer.publishedAt}])
   assert.deepEqual(history.comments.map(({id,body})=>({id,body})),[{id:commentId,body:'Monthly scheduling avoids a manual step.'}])
   for(const visit of ['status-published','status-reloaded']){
