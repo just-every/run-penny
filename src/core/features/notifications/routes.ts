@@ -55,7 +55,15 @@ export function registerNotificationRoutes(app:Hono<Environment>){
    attempt_count AS attemptCount,failure_reason AS failureReason,NULL AS windowStart,NULL AS windowEnd,
    CASE WHEN delivery_state='queued' AND claim_id IS NULL THEN available_at END AS nextAttemptAt,updated_at AS updatedAt
    FROM notification_outbox WHERE event_type='moderation_rejected' ORDER BY created_at DESC,id DESC LIMIT 100`).all()
+  const releases=await runtime.database.binding.prepare(`SELECT n.id,'release' AS kind,r.id AS releaseId,r.slug AS releaseSlug,n.subject_id AS releaseVersionId,
+   CASE WHEN n.delivery_state='queued' AND n.claim_id IS NOT NULL THEN 'sending' ELSE n.delivery_state END AS state,
+   n.provider,n.provider_message_id AS providerMessageId,n.attempt_count AS attemptCount,n.failure_reason AS failureReason,
+   n.claim_id AS attemptId,a.state AS attemptState,
+   CASE WHEN n.delivery_state='queued' AND n.claim_id IS NULL THEN n.available_at END AS nextAttemptAt,n.updated_at AS updatedAt
+   FROM notification_outbox n JOIN release_versions v ON v.id=n.subject_id JOIN releases r ON r.id=v.release_id
+   LEFT JOIN notification_outbox_attempts a ON a.id=n.claim_id AND a.outbox_id=n.id
+   WHERE n.event_type='release_version' AND n.release_snapshot_id IS NOT NULL ORDER BY n.created_at DESC,n.id DESC LIMIT 100`).all()
   c.header('Cache-Control','no-store')
-  return c.json({deliveries:[...rows.results,...rejections.results],reviews:await reviewNotifications(runtime.database.binding,operator.id)})
+  return c.json({deliveries:[...rows.results,...rejections.results,...releases.results],reviews:await reviewNotifications(runtime.database.binding,operator.id)})
  })
 }

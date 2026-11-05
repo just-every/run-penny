@@ -2,6 +2,7 @@ import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { env } from './support'
 import { releaseGraph } from './release-fixture'
+import {proveReleaseFailureVisibility} from './release-failure-visibility'
 import { rows,time,start,runtime,provider } from './notification-regression-fixture'
 import { publishRelease } from '@/core/features/releases/publication'
 import { publishRoadmapUpdate } from '@/core/features/roadmap/update-publication'
@@ -60,13 +61,14 @@ it('[DATA-001/003 REL-007 REQ-023] in-flight release claim fences archive, erasu
  })
  await drainReleaseDeliveries(runtime(),()=>start);expect((await exportArchive(env.DB,env.FILES)).archive).toBeDefined()
 })
-it('[DATA-001 REL-006/007] restored queued release is explicitly unknown and inert',async()=>{
+it('[DATA-001 REL-006] release failures stay visible, uncertain and restored deliveries never replay',async()=>{
  const g=await releaseGraph();await publishRelease(env.DB,g.draft.slug,time());const snapshot=await exportArchive(env.DB,env.FILES)
  const releaseRow=snapshot.archive.tables.notification_outbox.find(r=>r.release_snapshot_id)!
  expect(releaseRow.delivery_state).toBe('unknown');expect(releaseRow.failure_reason).toBe('restored_delivery_review_required')
  await reset();await applyD1Migrations(env.DB,inject('migrations'));await restoreArchive(env.DB,env.FILES,snapshot.archive,snapshot.journal)
  const sent=provider();await drainReleaseDeliveries(runtime(),()=>start+60000);expect(sent).toHaveLength(0)
-})
+ await proveReleaseFailureVisibility()
+},120000)
 it('[DATA-003 REL-003/005] approved public phrase survives requester erasure while private copied wording still refuses',async()=>{
  const g=await releaseGraph(1)
  const {saveReleaseDraft}=await import('@/core/features/releases/drafts')
