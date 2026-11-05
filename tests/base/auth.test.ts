@@ -41,9 +41,10 @@ it('[BASE-ACCESS-001/002] expired links and expired sessions deny access; member
  const cookie=await owner();await call('/api/auth/magic-link',{email:'owner@penny.invalid'})
  const token=new URL(messages[0].url).searchParams.get('token')!
  await env.DB.prepare('UPDATE oa_tokens SET expires_at=1').run();expect((await call('/auth/confirm',{token})).status).toBe(400)
- for (const operatorAllowlist of [[['other','example.test'].join('@')],[env.OPERATOR_EMAIL!]]) {
+ const alternateOwner=['other','example.test'].join('@')
+ for (const operatorAllowlist of [[alternateOwner],[env.OPERATOR_EMAIL!]]) {
   const app=createPennyApi({runtimeConfiguration:{operatorAllowlist,workspaceTimezone:'UTC',publicOriginAllowlist:[origin]}})
-  const response=await app.fetch(new Request(origin+'/api/auth/session',{headers:cookie}),{...env,OPERATOR_EMAIL:'other@example.test'})
+  const response=await app.fetch(new Request(origin+'/api/auth/session',{headers:cookie}),{...env,OPERATOR_EMAIL:alternateOwner})
   expect(response.status).toBe(200)
  }
  await env.DB.prepare('UPDATE oa_sessions SET expires_at=1').run();expect((await call('/api/auth/session',undefined,cookie)).status).toBe(401)

@@ -8282,7 +8282,7 @@
       "executable": false
     },
     "tests/base/auth.test.ts": {
-      "sha256": "913f7d89727e9d0701693e35774ade27dff4287a6cd82f9a57340927d2297d83",
+      "sha256": "eb3b5a38e1984846e3a622a8d4eaecd1f833889c3cf10f12f3f2baed8c4c7e58",
       "executable": false
     },
     "tests/base/board-categories.test.ts": {
@@ -9246,7 +9246,7 @@
       "executable": false
     },
     "tests/installer/first-run-dev.mjs": {
-      "sha256": "5d6903fb09f5db454ad602c2f872c61c3537e4072ee88d8e92ab1084459b1d2f",
+      "sha256": "250fafe92c0c2d93914181b1c86fa7dda05b9fafedf0be2cdde76077bf5bbd48",
       "executable": false
     },
     "tests/installer/older-archive.test.mjs": {

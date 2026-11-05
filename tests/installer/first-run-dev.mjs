@@ -71,6 +71,7 @@ export async function proveLocalFirstRun(runtime,output) {
       }
       const attempts = db.prepare('SELECT feature,outcome,phase,transport FROM penny_auth_mail_attempts ORDER BY feature').all().map(row => ({...row}))
       assert.deepEqual(attempts,[
+        {feature:'operator_magic_link',outcome:'development',phase:'finished',transport:'development'},
         {feature:'requester_verification',outcome:'development',phase:'finished',transport:'development'},
       ])
     } finally {db.close()}
