@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove native tag custody through a request merge and a populated authenticated archive: the canonical request retains the distinct tag union, evidence keeps its original tag identities, and the export preserves exact tag records and assignment relationships. Keep anonymous catalog and export refusal and public tag privacy covered. No runtime, migration or configuration change is required.
+
 - Complete REQ-010 consent proof through the existing requester and subscription journeys: mounted submit and vote controls start unchecked, ordinary unticked actions grant nothing, current automatic disclosures lead to author and voter follows, and explicit grants bind the verified address, request, source and controlled time. Unfollow revokes the permission while preserving the vote. Retain automatic-subscription, unsubscribe and withdrawal coverage. No runtime, migration or configuration change is required; separate notification, provider and release obligations remain unchanged.
 
 - Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.
