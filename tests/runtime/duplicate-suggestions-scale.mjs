@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises'
 import { arch, cpus, platform, totalmem } from 'node:os'
 import { startBrowserRuntime } from '../browser/base-runtime.mjs'
 
-// Outside push Verify: build, then run this journey on the committed candidate.
+// The requester-board Verify shard builds, then runs this capacity journey.
 // The receipt declares its hardware and the populated tables read by suggestions.
 const { limits } = JSON.parse(await readFile('seed.json', 'utf8'))
 const head = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
