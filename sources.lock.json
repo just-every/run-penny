@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "ac4e1945aa2263153daab574e3ede351e3d92f9c05b795ad0e7e207db0db0506",
+      "sha256": "06158140563814c65e08a8028dbdec71002faa8567e0698f744c60e8c7567f19",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "a97e208b2d26e11a414a27f41efda03fe35b2fe428bb1c262e2620ba169dd829",
+      "sha256": "ed5e5b1b2acaff72cbcabd22ceec56fc22a1599d6a2f29db0c15947de7482c2e",
       "executable": false
     },
     "DEMO.md": {
@@ -8282,7 +8282,7 @@
       "executable": false
     },
     "tests/base/auth.test.ts": {
-      "sha256": "fb5c35b044beef3e656cc43b9f3345354108840e80d642c70f15509bffae656e",
+      "sha256": "913f7d89727e9d0701693e35774ade27dff4287a6cd82f9a57340927d2297d83",
       "executable": false
     },
     "tests/base/board-categories.test.ts": {
@@ -8357,8 +8357,16 @@
       "sha256": "0369475885db8ae8bd8a2d30765bb82fdccadc5c1482fbec56705541990809ee",
       "executable": false
     },
+    "tests/base/first-run-custody.test.ts": {
+      "sha256": "ff5702346d4c63500ee70a69839cf92bb3fb430a54e8b9215b39ea12adedc760",
+      "executable": false
+    },
+    "tests/base/first-run-portability.ts": {
+      "sha256": "857a903febe575d20929abc13e1e7c53be1853ddf3bb4c5022393cb17803f9ab",
+      "executable": false
+    },
     "tests/base/first-run.test.ts": {
-      "sha256": "387e11901b55bd34d353a9ed81bbd1aac48bada41e919028b3308beb08359b27",
+      "sha256": "f89980d922fb926844fa5fd79e22a8827911b9ad38b298d931de5b170802d8e5",
       "executable": false
     },
     "tests/base/host-identity.test.ts": {
@@ -8463,6 +8471,10 @@
     },
     "tests/base/notifications.test.ts": {
       "sha256": "c74d749c7f952363f659472fe9429171b410b8bebdf43609949df10e82e41f6a",
+      "executable": false
+    },
+    "tests/base/operator-invitation.ts": {
+      "sha256": "11be3888669afb4030aef1dc9388edc15fe61cc6e3e694c272d27ef3925996d2",
       "executable": false
     },
     "tests/base/operator-request-publication.ts": {
@@ -9226,11 +9238,15 @@
       "executable": false
     },
     "tests/installer/dev-credentials.test.mjs": {
-      "sha256": "e43ff6a1406709209f6dbe2a444f4901b28661ec42a4ad83d241c55954a1db99",
+      "sha256": "8463a8739331afb6517574782c7f59d4ebe6aa7f3134019b348132277659f87c",
       "executable": false
     },
     "tests/installer/discord-relay.test.mjs": {
       "sha256": "70dbd813ffd846a86bdbdddf7e5aa489a93fa0fb9b7de1f2bcfab0cbb037b9ab",
+      "executable": false
+    },
+    "tests/installer/first-run-dev.mjs": {
+      "sha256": "2252ecae961b950f1db01dab3deaa093d35fcadeda3e49903669e4a74529e05a",
       "executable": false
     },
     "tests/installer/older-archive.test.mjs": {

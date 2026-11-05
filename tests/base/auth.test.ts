@@ -8,6 +8,7 @@ import { importPennySample } from '../../src/core/features/sample-data/service'
 import sample from '../../sample-data/penny.v1.json'
 import { call,env,owner,mockMail,messages,origin } from './support'
 import { observeD1 } from './review-race-storage'
+import {invited,management} from './operator-invitation'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()})
 afterEach(()=>vi.restoreAllMocks())
 it('[BASE-ACCESS-001/002/004] Base bootstrap, real cookie, private API and generated Start authorization, sign-out',async()=>{
@@ -40,8 +41,11 @@ it('[BASE-ACCESS-001/002] expired links and expired sessions deny access; member
  const cookie=await owner();await call('/api/auth/magic-link',{email:'owner@penny.invalid'})
  const token=new URL(messages[0].url).searchParams.get('token')!
  await env.DB.prepare('UPDATE oa_tokens SET expires_at=1').run();expect((await call('/auth/confirm',{token})).status).toBe(400)
- const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['other@example.test'],workspaceTimezone:'UTC',publicOriginAllowlist:[origin]}});const response=await app.fetch(new Request(origin+'/api/auth/session',{headers:cookie}),{...env,OPERATOR_EMAIL:'other@example.test'})
- expect(response.status).toBe(200)
+ for (const operatorAllowlist of [[['other','example.test'].join('@')],[env.OPERATOR_EMAIL!]]) {
+  const app=createPennyApi({runtimeConfiguration:{operatorAllowlist,workspaceTimezone:'UTC',publicOriginAllowlist:[origin]}})
+  const response=await app.fetch(new Request(origin+'/api/auth/session',{headers:cookie}),{...env,OPERATOR_EMAIL:'other@example.test'})
+  expect(response.status).toBe(200)
+ }
  await env.DB.prepare('UPDATE oa_sessions SET expires_at=1').run();expect((await call('/api/auth/session',undefined,cookie)).status).toBe(401)
 })
 it('[REQ-039 BASE-ACCESS-001 REQ-023] requester OAuth verifies at the provider edge without cookies or operator authority; missing mail fails closed',async()=>{
@@ -61,27 +65,6 @@ it('[BASE-ACCESS-001 REQ-023] rejected provider sends invalidate both operator a
  expect(await env.DB.prepare('SELECT id FROM native_magic_links').first()).toBeNull()
 })
 
-it('[OPS-001 BASE-ACCESS-001] configuring a bootstrap owner preserves existing explicitly allowlisted operators',async()=>{
- const cookie=await owner()
- const app=createPennyApi({runtimeConfiguration:{operatorAllowlist:['owner@penny.invalid'],workspaceTimezone:'UTC',publicOriginAllowlist:[origin]}})
- const response=await app.fetch(new Request(origin+'/api/auth/session',{headers:cookie}),{...env,OPERATOR_EMAIL:'new-owner@example.test'})
- expect(response.status).toBe(200)
-})
-
-const management='/api/operator/settings/operators'
-async function invited(cookie:Record<string,string>,email:string){
- const response=await call(management,{email},cookie);expect(response.status,await response.clone().text()).toBe(202)
- const message=messages.findLast(m=>m.to===email)!;expect(message).toBeDefined()
- const url=new URL(message.url),token=url.searchParams.get('token')!
- expect((await call(url.pathname+url.search)).status).toBe(200)
- expect((await call(url.pathname+url.search)).status).toBe(200)
- expect((await call('/auth/confirm',{token},{Origin:'https://evil.test'})).status).toBe(403)
- const confirmation=await call('/auth/confirm',{token});expect(confirmation.status).toBe(303)
- const operator={Cookie:confirmation.headers.get('Set-Cookie')!.split(';')[0]}
- const listing=await call(management,undefined,operator);expect(listing.status).toBe(200)
- const operators=(await listing.json() as {operators:{id:string;email:string}[]}).operators
- return {cookie:operator,id:operators.find(o=>o.email===email)!.id,token,operators}
-}
 it('[OPS-001/002] equal native invitees operate and manage peers; removal revokes cookies, links, generated functions and keys with durable audit',async()=>{
  const first=await owner(),peer=await invited(first,'peer@example.test')
  for(const path of ['/api/operator/settings/requester-oauth','/api/operator/settings/redaction']){const read=await call(path,undefined,peer.cookie);expect(read.status).toBe(200);expect(await read.json()).toMatchObject({canConfigure:false});expect((await call(path,{},peer.cookie,'PUT')).status).toBe(403)}

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove first-run setup admission for a native invited member while the owner remains unfinished, including generated navigation and unchanged setup state after refusal. Restore populated native data into an independently owned installation without transferring setup completion, and prove unchanged migration 0027 completes an existing active owner without changing ownership or sessions. Reuse native invitation support and consolidate duplicate membership-configuration coverage. No runtime, migration or configuration change is required.
+
 - Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.
 
 - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.

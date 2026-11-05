@@ -17,6 +17,7 @@ import { evidenceDirectory } from '../browser/acceptance-audit.mjs'
 import { freshLocalRuntime } from '../browser/fresh-local-runtime.mjs'
 import { localDatabaseFile } from '../browser/local-database.mjs'
 import { archiveWithTables } from './archive-with-tables.mjs'
+import {proveLocalFirstRun} from './first-run-dev.mjs'
 
 const cookies = response => response.headers.getSetCookie().map(line => line.split(';')[0]).join('; ')
 // A local reverse proxy rewrites Host to the app's loopback origin, as a tunnel would.
@@ -30,12 +31,13 @@ async function forwardingProxy(origin) {
   return { origin: `http://127.0.0.1:${server.address().port}`, close: () => new Promise(done => server.close(done)) }
 }
 
-test('[SC-05 API-001] an API key minted in a dev session works only behind the checkout key, never leaves in an export and makes an archive refused; a key minted in an ordinary session is unchanged', { timeout: 900000 }, async () => {
+test('[OPS-005 SC-05 API-001] local owner opening and silent mail retain setup gates; an API key minted in a dev session works only behind the checkout key, never leaves in an export and makes an archive refused; a key minted in an ordinary session is unchanged', { timeout: 900000 }, async () => {
   process.env.TMPDIR = resolve(process.env.PENNY_WORK_ROOT ?? '..', 'tmp')
   await mkdir(process.env.TMPDIR, { recursive: true })
   const output = evidenceDirectory('dev-credentials'), runtime = await freshLocalRuntime({ width: 1440, height: 900 }, output)
   const proxy = await forwardingProxy(runtime.origin)
   try {
+    await proveLocalFirstRun(runtime,output)
     const { origin, root } = runtime, key = await readDevKey(root)
     const mint = async (cookie, name) => {
       const response = await fetch(origin + '/api/operator/integrations/keys', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json', Cookie: cookie }, body: JSON.stringify({ name, scopes: ['requests:read'] }) })
