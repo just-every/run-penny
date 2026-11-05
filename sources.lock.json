@@ -8822,7 +8822,7 @@
       "executable": false
     },
     "tests/browser/loopjourney-release.mjs": {
-      "sha256": "d983b82d67cba4689d133884387387ef4efbc4ab214d1c9cde6fbc2fa8ff8144",
+      "sha256": "58fc25619540679a9ac3766ed09771190ee8216248e48fab46f6a19f88d7acac",
       "executable": false
     },
     "tests/browser/merge-notices.mjs": {

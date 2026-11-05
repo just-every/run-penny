@@ -48,6 +48,39 @@ async function save(page, scope, button, path) {
 
 export const releaseTitle = 'Onboarding progress is live'
 const releaseBody = 'You can now see each onboarding step and what needs attention.'
+const releaseDate = '2031-04-17'
+const releaseSetupUrl = 'https://example.invalid/synthetic-penny-13'
+const releaseOutcomePrompt = 'Have you adopted this update?'
+
+async function expectSavedDraft(operator, slug, { authorId, tagId, targetId, setupUrl }) {
+  const response = await operator.request.get(`/api/operator/releases/${slug}`)
+  assert.equal(response.status(), 200, '[REL-001] authenticated draft detail is readable')
+  const draft = await response.json()
+  assert.deepEqual({
+    state: draft.state, title: draft.title, releaseType: draft.releaseType,
+    body: draft.body, publicationDate: draft.publicationDate, setupUrl: draft.setupUrl,
+    outcomePrompt: draft.outcomePrompt, authorId: draft.author.id,
+    tagIds: draft.tagIds, targetIds: draft.targetIds,
+  }, {
+    state: 'draft', title: releaseTitle, releaseType: 'new', body: releaseBody,
+    publicationDate: releaseDate, setupUrl, outcomePrompt: releaseOutcomePrompt,
+    authorId, tagIds: [tagId], targetIds: [targetId],
+  }, '[REL-001] the saved targeted draft retains every entered field and its outcome prompt')
+  assert.equal(draft.targets.length, 1, '[REL-001] the saved draft has its roadmap and decision target')
+  assert.equal(draft.targets[0].roadmapSlug, 'onboarding-progress')
+  assert.equal(draft.targets[0].decisionSlug, 'onboarding-decision')
+  const editor = operator.locator('form').filter({ has: operator.getByRole('heading', { name: 'Edit release draft', exact: true }) })
+  await expect(editor.getByLabel('Title', { exact: true })).toHaveValue(releaseTitle)
+  await expect(editor.getByLabel('Type', { exact: true })).toHaveValue('new')
+  await expect(editor.getByLabel('Body', { exact: true })).toHaveValue(releaseBody)
+  await expect(editor.getByLabel('Publication date', { exact: true })).toHaveValue(releaseDate)
+  await expect(editor.getByLabel('Setup or usage URL (optional)', { exact: true })).toHaveValue(setupUrl ?? '')
+  await expect(editor.getByLabel('Author', { exact: true })).toHaveValue(authorId)
+  await expect(editor.getByLabel('Onboarding', { exact: true })).toBeChecked()
+  await expect(editor.getByLabel(/See onboarding progress/)).toBeChecked()
+  await expect(operator.getByRole('heading', { name: 'Requester outcome', exact: true }).locator('..').getByText(releaseOutcomePrompt, { exact: true })).toBeVisible()
+  return editor
+}
 
 function localMinute(instant, timeZone) {
   const parts = new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(instant))
@@ -131,14 +164,28 @@ export async function draftAndPublishRelease(operator, origin, audit) {
   await editor.getByLabel('Title', { exact: true }).fill(releaseTitle)
   await editor.locator('select[name="releaseType"]').selectOption('new')
   await editor.getByLabel('Body', { exact: true }).fill(releaseBody)
+  await editor.getByLabel('Publication date', { exact: true }).fill(releaseDate)
+  await editor.getByLabel('Setup or usage URL (optional)', { exact: true }).fill(releaseSetupUrl)
   await editor.locator('select[name="authorOperatorId"]').selectOption({ index: 0 })
   await editor.getByLabel('Onboarding', { exact: true }).check()
   await editor.getByLabel(/See onboarding progress/).check()
+  const selected = {
+    authorId: await editor.getByLabel('Author', { exact: true }).inputValue(),
+    tagId: await editor.getByLabel('Onboarding', { exact: true }).inputValue(),
+    targetId: await editor.getByLabel(/See onboarding progress/).inputValue(),
+  }
   await audit(operator, 'E.1-release-draft-form')
   const saved = await save(operator, editor, 'Save draft', '/api/operator/releases')
   assert.ok(saved.slug, '[REL-001] draft has a slug')
   await operator.goto(origin + `/app/releases/${saved.slug}`, { waitUntil: 'networkidle' })
+  await operator.reload({ waitUntil: 'networkidle' })
+  const savedEditor = await expectSavedDraft(operator, saved.slug, { ...selected, setupUrl: releaseSetupUrl })
   await audit(operator, 'E.1-release-draft')
+  await savedEditor.getByLabel('Setup or usage URL (optional)', { exact: true }).fill('')
+  await save(operator, savedEditor, 'Save draft', `/api/operator/releases/${saved.slug}`)
+  await operator.reload({ waitUntil: 'networkidle' })
+  await expectSavedDraft(operator, saved.slug, { ...selected, setupUrl: null })
+  await audit(operator, 'E.1-release-draft-url-cleared')
   await scheduleAndCancel(operator, 'Release', /^\/api\/operator\/releases\/[^/]+\/schedule$/, audit)
   const published = operator.waitForResponse(r => r.url().endsWith(`/api/operator/releases/${saved.slug}/publish`) && r.request().method() === 'POST')
   await operator.getByRole('button', { name: 'Publish release', exact: true }).click()
