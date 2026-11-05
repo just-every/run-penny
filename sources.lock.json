@@ -8478,7 +8478,7 @@
       "executable": false
     },
     "tests/base/ownership.test.ts": {
-      "sha256": "776302556606e26338c76d6be9520284965e66c917ce78f954dfe65b71dd9cc3",
+      "sha256": "566d2f7c114924dc15fbbf3609d2d2e4a456c316e6cb1bfa2b401a0fe296d3e9",
       "executable": false
     },
     "tests/base/penny-decisions.test.ts": {
