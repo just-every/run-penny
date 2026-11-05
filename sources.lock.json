@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "ac74a8d9e9e9327f6ae61ec6e2f5d5e49ccdc9dd679b1ba24ce6420affdc9e62",
+      "sha256": "adfe5122b19c01bdfd87a755f9299b55a3265d4729edf1da06a2e87288a2d233",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "826104b7d3e5d921685443d8e19418f1a4e9e2d5f4733b422d5a2323e6f10fdd",
+      "sha256": "93e5de73e911d1bcec9fdd6a2a82997fc994d6727baa0a40e432cd72e807448a",
       "executable": false
     },
     "DEMO.md": {
@@ -6710,7 +6710,7 @@
       "executable": false
     },
     "src/core/features/notifications/routes.ts": {
-      "sha256": "4ef190aed9754cdf8ab96833ea48f3cc8dbf011fc18fdf07626f27d95b0b4d3d",
+      "sha256": "78f977ee73d54695ab1bc6515f0f11b38517df886c42eb8c2e0b9ba97f5438d4",
       "executable": false
     },
     "src/core/features/notifications/scheduled.ts": {
@@ -8546,7 +8546,11 @@
       "executable": false
     },
     "tests/base/release-custody.test.ts": {
-      "sha256": "da4e975450c54726d09b6b5bec0de51fec4c8990686a9f9aa1bd58ba12bc2353",
+      "sha256": "38a8ab8c017246c13f81e0f99885e8aa259b94afb93388227b59bb0d43896ed9",
+      "executable": false
+    },
+    "tests/base/release-failure-visibility.ts": {
+      "sha256": "9bcdae39780c89794adfb368db4c99819fb3b402a6348306abe4c994c51af8ed",
       "executable": false
     },
     "tests/base/release-fixture.ts": {
