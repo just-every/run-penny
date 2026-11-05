@@ -28,6 +28,9 @@ export async function request(path: string, method = 'GET', body?: unknown, head
 export function document(path: string) {
  return exports.default.fetch(new Request(origin + path, { headers: { Accept: 'text/html', Cookie: cookie } }))
 }
+export function decisionQueue() {
+ return exports.default.fetch(new Request(origin + '/api/operator/decisions', { headers: { Cookie: cookie } }))
+}
 export async function json<T = Record<string, string>>(response: Promise<Response>, status = 200): Promise<T> {
  const result = await response
  if (result.status !== status) throw new Error(`Expected ${status}, got ${result.status}: ${await result.text()}`)
@@ -36,8 +39,8 @@ export async function json<T = Record<string, string>>(response: Promise<Respons
 export function evidence(extra: Record<string, unknown> = {}) {
  return json(request('/api/operator/evidence', 'POST', { sourceType: 'interview', wording: 'Original evidence ' + createUlid(), observedAt: stamp, ...extra }), 201)
 }
-export function decision(question = 'Which approach solves the problem?') {
- return json(request('/api/operator/decisions', 'POST', { question, ownerOperatorId: operatorId }), 201)
+export function decision(question = 'Which approach solves the problem?', extra: { reviewAt?: string | null } = {}) {
+ return json<{ id: string; slug: string }>(request('/api/operator/decisions', 'POST', { question, ownerOperatorId: operatorId, ...extra }), 201)
 }
 export function bet(id: string, title = 'Candidate approach') {
  return json(request(`/api/operator/decisions/${id}/bets`, 'POST', { title, summary: 'A concrete approach', urgency: 'This quarter', deliveryShape: 'Small release', successMeasure: 'Completion time below 30 seconds' }), 201)
