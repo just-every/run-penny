@@ -3,6 +3,7 @@ import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { call,env,requester } from './support'
 import { proveScheduledPublications,scheduleOriginalRelease } from './scheduled-publication-fixture'
 import { releaseGraph } from './release-fixture'
+import { captureReleaseSnapshots,changeSnapshotSources,provePendingPreferenceWithdrawal } from './release-snapshot-stability'
 import { graph,rows,runtime,time } from './notification-regression-fixture'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { createPennyApi } from '@/core/app/api'
@@ -16,7 +17,7 @@ import type { ReleaseVersion } from '@/core/features/releases/versioning'
 import type { ReleaseOutcomeReport,RequesterReleaseOutcomes } from '@/core/features/releases/outcomes'
 import type { DecisionHistory,DecisionPostRelease } from '@/core/features/decisions/history'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
-afterEach(()=>vi.restoreAllMocks())
+afterEach(()=>{vi.useRealTimers();vi.restoreAllMocks()})
 async function json<T>(response:Response,status=200):Promise<T>{expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
 const publish=(g:Awaited<ReturnType<typeof releaseGraph>>)=>call(`/api/operator/releases/${g.draft.slug}/publish`,{},g.operator)
 const correction=(g:Awaited<ReturnType<typeof releaseGraph>>,expectedVersionId=g.draft.versionId)=>call(`/api/operator/releases/${g.draft.slug}/corrections`,{expectedVersionId,title:'Corrected release',body:'Corrected customer wording.',outcomePrompt:'Have you adopted this update?'},g.operator)
@@ -121,7 +122,8 @@ it('[REL-003 REL-014] clock-advanced scheduled releases and status updates publi
  expect(fetch).toHaveBeenCalledTimes(2)
  await proveScheduledPublications(g,nextDay,clock,cron,capture)
 })
-it('[REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows',async()=>{
+it('[REL-004 REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows',async()=>{
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime('2026-11-05T12:00:00.000Z')
  const g=await votedReleaseGraph(),subscriber=await requester('Subscriber only'),endpoint='/api/public/updates/subscription'
  expect((await call(endpoint,{subscribed:true},{},'PATCH')).status).toBe(401)
  await json(await call(endpoint,{subscribed:true},subscriber,'PATCH'))
@@ -129,15 +131,22 @@ it('[REL-012 REQ-025] request mute retains update subscription and global unsubs
  const permission=(await rows('requester_update_permissions')).filter(p=>p.source==='subscription')
  expect(permission).toHaveLength(1);expect(permission[0].granted_at).toBeTruthy()
  await json(await publish(g));expect(await rows('release_recipient_snapshots')).toHaveLength(2)
+ const unchanged=await captureReleaseSnapshots(g)
  const snapshot=(await rows('release_recipient_snapshots')).find(s=>s.requester_id===permission[0].requester_id)!
  const queued=(await rows('notification_outbox')).find(n=>n.release_snapshot_id===snapshot.id)!
  expect(await releaseContent(env.DB,String(queued.id))).toHaveLength(1)
+ vi.setSystemTime(Date.now()+60_000)
  await json(await call(endpoint,{subscribed:false},subscriber,'PATCH'))
  expect(await releaseContent(env.DB,String(queued.id))).toHaveLength(0)
+ await unchanged('updates subscription withdrawn')
+ vi.setSystemTime(Date.now()+60_000)
  await json(await call(endpoint,{subscribed:true},g.person,'PATCH'))
+ await unchanged('updates subscription granted')
+ await changeSnapshotSources(g,unchanged)
  const before=await Promise.all(['requests','request_follows','request_votes'].map(rows))
  for(const records of before)expect(records.length).toBeGreaterThan(0)
  const permissions=await rows('requester_update_permissions')
+ vi.setSystemTime(Date.now()+60_000)
  const url=await unsubscribeUrl(runtime(),g.recipient,g.requests[0].id)
  expect((await call(new URL(url).pathname+new URL(url).search,{})).status).toBe(200)
  expect(await json(await call(endpoint,undefined,g.person))).toMatchObject({subscribed:true})
@@ -145,7 +154,12 @@ it('[REL-012 REQ-025] request mute retains update subscription and global unsubs
  expect(await rows('requester_update_permissions')).toEqual(permissions)
  expect(await rows('request_notification_mutes')).toEqual([expect.objectContaining({requester_id:g.recipient.requesterId,request_id:g.requests[0].id})])
  expect(await Promise.all(['requests','request_follows','request_votes'].map(rows))).toEqual(before)
+ await unchanged('request preference changed')
  const activityBefore=await json(await call('/api/public/requester/activity',undefined,g.person))
+ const ownDelivery=(await rows('notification_outbox')).find(row=>row.requester_id===g.recipient.requesterId)!
+ expect(ownDelivery).toMatchObject({delivery_state:'queued',attempt_count:0})
+ expect((await releaseContent(env.DB,String(ownDelivery.id))).length).toBeGreaterThan(0)
+ vi.setSystemTime(Date.now()+60_000)
  const globalUrl=new URL(await unsubscribeUrl(runtime(),g.recipient,'all'))
  expect((await call(globalUrl.pathname+globalUrl.search,{})).status).toBe(200)
  expect(await json(await call(endpoint,undefined,g.person))).toMatchObject({subscribed:false})
@@ -154,6 +168,8 @@ it('[REL-012 REQ-025] request mute retains update subscription and global unsubs
  expect(await json(await call('/api/public/requester/activity',undefined,g.person))).toEqual(activityBefore)
  expect((await rows('requester_update_permissions')).filter(p=>p.source==='subscription').every(p=>p.revoked_at)).toBe(true)
  expect((await rows('requester_update_permissions')).filter(p=>p.source!=='subscription')).toEqual(permissions.filter(p=>p.source!=='subscription'))
+ await unchanged('all requester email withdrawn')
+ await provePendingPreferenceWithdrawal(g,subscriber,String(ownDelivery.id),String(queued.id),unchanged)
 })
 it('[REL-008 REL-009 DEC-008 DATA-003] original snapshot members retain revisions through identity merges until erasure; outsiders and erased archive restoration are refused',async()=>{
  const g=await releaseGraph(),outsider=await requester('Outside snapshot'),survivor=await requester('Merge survivor'),last=await requester('Final survivor'),subscriber=await requester('Independent subscriber'),follower=await requester('Request-only follower')
