@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "258230944d85fef5311ecdff8c313dcd6bb6a84fbe23b3bf4f2bdab8888e53ae",
+      "sha256": "88e5bbffbcebb783e639bf69be428d625ccc1d6401d4e142b1d95b3e76e90a8d",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "c94a6c92680071638a2e30062048b59c096db80a067c609febaa96c32579f393",
+      "sha256": "ae6ab4750b8d8bcc6a9282f82d7f406557ff5747838d3ffbb25a3f55ef9ad40b",
       "executable": false
     },
     "DEMO.md": {
@@ -8302,7 +8302,7 @@
       "executable": false
     },
     "tests/base/decision-loop-dimensions.test.ts": {
-      "sha256": "1be2d38994dd6504d1c93312a63aa51feb5267740b58f76da4d5c16a83645625",
+      "sha256": "ec446492ae997161bc91816f1aee558bad198127fc7387a7bbc5c825833c3169",
       "executable": false
     },
     "tests/base/decision-loop-fixture.ts": {
@@ -8902,7 +8902,7 @@
       "executable": false
     },
     "tests/browser/operator-pages-decisions.mjs": {
-      "sha256": "da055c593fe750465049b8c0b62c44a9c4c5188ab9677d7c6b5cbcbbda0b5700",
+      "sha256": "de0f9d8b5a50633c070bd177cf1f082419c93af4243b54b9a72574195e8c2015",
       "executable": false
     },
     "tests/browser/operator-pages-hosted-data.mjs": {

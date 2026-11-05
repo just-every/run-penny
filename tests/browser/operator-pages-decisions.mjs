@@ -4,6 +4,7 @@ import {reviewEvidenceFlow} from './operator-evidence-flow.mjs'
 
 /** DOM acceptance for the decision and roadmap findings, on each caller viewport. */
 export async function reviewDecisionPages({page,db,goto,capture,width}) {
+  await reviewComparableBets({page,goto,capture,width})
   for(const state of ['ready','review_due']) {
     await db.prepare('UPDATE decisions SET state=? WHERE id=?').bind(state,'attention-decision').run()
     await goto('/app/decisions/attention-decision')
@@ -99,4 +100,60 @@ export async function reviewDecisionPages({page,db,goto,capture,width}) {
   await reviewEvidenceFlow({page,db,capture})
   await reviewRoadmapRecord({page,db,goto,capture})
   return {width,phase:'negative',diagnostics}
+}
+
+/** A native comparison stays in its original order as demand changes sides. */
+async function reviewComparableBets({page,goto,capture,width}) {
+  const origin=new URL(page.url()).origin
+  const api=async(path,method='GET',data)=>{
+    const response=await page.request.fetch(origin+path,{method,headers:{Origin:origin},...(data===undefined?{}:{data})})
+    assert.equal(response.status(),method==='POST'&&!path.endsWith('/commit')?201:200,`[DEC-003] ${method} ${path}`)
+    return response.json()
+  }
+  const decision=await api('/api/operator/decisions','POST',{question:'Which setup approach helps customers?',ownerOperatorId:'attention-operator'})
+  const base=`/api/operator/decisions/${decision.id}`
+  const createBet=(title,urgency)=>api(base+'/bets','POST',{title,summary:'A concrete setup approach',urgency,deliveryShape:'Small release',successMeasure:'Setup completes in ten seconds'})
+  const a=await createBet('Guided setup','Now'),b=await createBet('Self-service setup','Later')
+  const link=(evidence,bet,method='PUT')=>api(`/api/operator/evidence/${evidence}/links`,method,{target:'bet',targetId:bet,stance:'supporting'})
+  const record=async(index,bet)=>{
+    const name=`synthetic-penny-${index}`
+    const account=await api('/api/operator/accounts','POST',{name,internalOwnerId:'attention-operator'})
+    const evidence=await api('/api/operator/evidence','POST',{sourceType:'interview',wording:name,observedAt:`2026-01-0${index}T00:00:00Z`,accountId:account.id})
+    await link(evidence.id,bet)
+    return evidence
+  }
+  await record(1,a.id)
+  const initial=await api(`/api/operator/decisions/${decision.slug}`),baseline=initial.bets.map(bet=>bet.id)
+  const titles=new Map([[a.id,'Guided setup'],[b.id,'Self-service setup']])
+  const alternatives=page.locator('[aria-labelledby="candidate-bets"]'),cards=alternatives.locator(':scope > div > section')
+  const compare=async(label,expected)=>{
+    const brief=await api(`/api/operator/decisions/${decision.slug}`)
+    await goto(`/app/decisions/${decision.slug}`)
+    await cards.last().getByRole('heading',{name:titles.get(baseline.at(-1)),exact:true}).waitFor()
+    if(width===1440) {
+      assert.deepEqual(brief.bets.map(bet=>bet.id),baseline,'[DEC-003] native bet order survives changed demand and urgency')
+      assert.deepEqual(await cards.locator('h2').allTextContents(),baseline.map(id=>titles.get(id)),'[DEC-003] rendered alternatives retain the same identities and order')
+      assert.doesNotMatch(await cards.allTextContents().then(text=>text.join(' ')),/\b(?:score|rank(?:ing|ed)?|priority points)\b/i,'[DEC-003] no computed score or ranking is displayed')
+      for(const [id,support,accounts,urgency,latest] of expected) {
+        const bet=brief.bets.find(candidate=>candidate.id===id),card=cards.filter({has:page.getByRole('heading',{name:titles.get(id),exact:true})})
+        assert.deepEqual(bet.metrics,{supportingCount:support,contradictingCount:0,affectedAccountCount:accounts,affectedRequesterCount:0,latestSupportAt:latest})
+        assert.deepEqual(Object.keys(bet).sort(),['id','title','summary','urgency','deliveryShape','successMeasure','assumptions','counterEvidence','accounts','evidence','metrics'].sort(),'[DEC-003] native projection has only separate dimensions and source context')
+        assert.ok((await card.innerText()).includes(`${accounts} affected ${accounts===1?'account':'accounts'} · 0 requesters`))
+        assert.equal(await card.getByText(`${support} supporting · 0 contradicting`,{exact:true}).count(),1)
+        assert.equal(await card.locator('time').getAttribute('datetime'),latest)
+        assert.deepEqual(await card.locator('dl dt').allTextContents(),['Urgency','Delivery shape','Success measure','Assumptions','Counter-evidence'])
+        assert.deepEqual(await card.locator('dl dd').allTextContents(),[urgency,'Small release','Setup completes in ten seconds','Not recorded','Not recorded'])
+      }
+    }
+    await capture(label)
+  }
+  // Nonempty support for both options also makes every rendered time check real.
+  await record(2,b.id)
+  const third=await record(3,a.id)
+  await compare('comparable-bets-baseline',[[a.id,2,2,'Now','2026-01-03T00:00:00Z'],[b.id,1,1,'Later','2026-01-02T00:00:00Z']])
+  await link(third.id,a.id,'DELETE');await link(third.id,b.id)
+  await api(base+`/bets/${b.id}`,'PATCH',{title:'Self-service setup',summary:'A concrete setup approach',urgency:'Immediate',deliveryShape:'Small release',successMeasure:'Setup completes in ten seconds'})
+  await compare('comparable-bets-changed-demand',[[a.id,1,1,'Now','2026-01-01T00:00:00Z'],[b.id,2,2,'Immediate','2026-01-03T00:00:00Z']])
+  await api(base+'/commit','POST',{selectedCandidateBetId:a.id,rationale:'Accountable choice despite the larger alternative',ownerOperatorId:'attention-operator',confidence:'medium',reviewAt:'2026-12-01'})
+  await compare('comparable-bets-committed',[[a.id,1,1,'Now','2026-01-01T00:00:00Z'],[b.id,2,2,'Immediate','2026-01-03T00:00:00Z']])
 }

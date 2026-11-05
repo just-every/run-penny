@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 56 | 59 | 1 | 116 |
+| Published | 57 | 58 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 76 | 127 | 78 | 281 |
+| All | 77 | 126 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3327,7 +3327,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-032` | Internal notes | published | partial | `tests/base/penny-evidence.test.ts` | A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted. |
 | `DEC-001` | States and queue | published | partial | `tests/base/decision-loop-commit.test.ts` | The review date in the decision queue has no passing assertion; decisions in every state staying in the queue with their state and owner, and the last action and linked-evidence count, are asserted. |
 | `DEC-002` | Brief | published | partial | `tests/base/decision-loop-dimensions.test.ts` | Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted. |
-| `DEC-003` | Comparable bets | published | partial | `tests/base/decision-loop-dimensions.test.ts` | The absence of a stored or displayed combined score and of an automatic ranking has no passing assertion: the bet record and the stored snapshot are checked in a way that allows extra fields, and bets are looked up by id, so their order is unchecked; each bet's metrics holding exactly the five dimension figures is asserted. |
+| `DEC-003` | Comparable bets | published | done | `tests/base/decision-loop-dimensions.test.ts` — keeps separate dimensions and bet order through evidence changes and commitment; `tests/browser/operator-pages-decisions.mjs` — reviewComparableBets, invoked by reviewDecisionPages in the operator core journey |  |
 | `DEC-004` | Commitment | published | partial | `tests/base/decision-loop-commit.test.ts` | The `decision.commitment.v1` default that any operator may commit has no passing assertion, since every cited commit runs as the owner; the recorded declined bets and the evidence snapshot of evidence IDs, evidence-version IDs and DEC-003 dimensions, with the evidence itself unchanged, are asserted. |
 | `DEC-005` | Commitment effects | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `DEC-006` | Revision | published | done | `tests/base/penny-decisions.test.ts` |  |

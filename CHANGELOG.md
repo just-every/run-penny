@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove DEC-003 with complete stored bet, commitment snapshot and native brief comparisons. Extend the existing route and browser journeys to change supporting evidence, affected accounts and urgency, retain baseline bet order before and after commitment, and show separate dimensions without a combined score or ranking. Mark DEC-003 done; acceptance text and unrelated provider, device, account and release holds are unchanged. No runtime, migration or configuration change is required.
+
 - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.
 
 - Complete API-001’s existing built-Worker scoped proxy-vote journey with persisted vote, contribution, attribution and permission snapshots around read-only and revoked-key refusals. Verify the successful vote remains unverified and grants no email permission or requester session, and cite the journey for all three acceptance points. No runtime, migration or configuration change is required; other clause and field-proof holds remain unchanged.
