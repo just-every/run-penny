@@ -6,6 +6,7 @@ import {learningOutput} from './learning-fixture'
 import {digest} from '@/core/features/auth/native-tokens'
 import {canonical,hash,type exportArchive} from '@/core/features/data/archive'
 import {proveLearningRedaction} from './redaction-learning-door'
+import {proveCommitmentSnapshot} from './learning-commitment-snapshot'
 it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, compares no-build and commits an immutable accountable protocol',async()=>{
  const f=await fixture();network.sourceText=canonical({id:'cancellation',subject:'I cancelled because I could not hand off the report.',occurred_at:'2026-10-01T00:00:00.000Z',confidence:'observed'})
  const run=await json<{artifactId:string}>(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie))
@@ -18,6 +19,7 @@ it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact s
  await expect(env.DB.prepare("UPDATE learning_commitments SET snapshot_json='{}'").run()).rejects.toThrow('learning_snapshot_immutable')
  expect((await call(path)).status).toBe(401);expect((await call('/api/public/learning')).status).toBe(404)
  const unchanged=await json<{unchanged:boolean}>(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie));expect(unchanged.unchanged).toBe(true);expect(sent.filter(s=>s.startsWith('POST'))).toHaveLength(1)
+ await proveCommitmentSnapshot(f,run.artifactId)
  const rules={enabled:true,kinds:['ssn','card','phone','email','credential'],patterns:[] as string[]}
  await json(call('/api/operator/settings/redaction',rules,f.cookie,undefined,'PUT'))
  await proveLearningRedaction((url,body,headers,method)=>call(url,body,headers?.Cookie??'',undefined,method),{Cookie:f.cookie},'Synthetic Penny ticket: SSN 234-56-7890; card 4111 1111 1111 1111; ACCOUNT-1234.')

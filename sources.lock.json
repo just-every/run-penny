@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "ac74a8d9e9e9327f6ae61ec6e2f5d5e49ccdc9dd679b1ba24ce6420affdc9e62",
+      "sha256": "fe0eb9c12849a307217c3748d701de79282a604e557ffb436ab957b0d20a6b7c",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "826104b7d3e5d921685443d8e19418f1a4e9e2d5f4733b422d5a2323e6f10fdd",
+      "sha256": "b05c858350fc7c9b0341babb201d1533079b44d0fba05479a6e9cf482baaef3c",
       "executable": false
     },
     "DEMO.md": {
@@ -8405,16 +8405,20 @@
       "sha256": "8d361651751aaacf8f930a108ce0cf91a7d0d241315a3d9fd0ed0ed238b115c1",
       "executable": false
     },
+    "tests/base/learning-commitment-snapshot.ts": {
+      "sha256": "4454669092239ea6e951fc5034c81538e8f79dfdbc1bfc9c72f9986e4fd8dbea",
+      "executable": false
+    },
     "tests/base/learning-fixture.ts": {
       "sha256": "621112c059562f817c3107facaa19748bc64f3032ded4cbe77e76f72c9b19cdb",
       "executable": false
     },
     "tests/base/learning-stage2.test.ts": {
-      "sha256": "2e4d6ae4538cdb47c4fce69f5d612ad012ace1cacd2e3973d00c742fe9b50fdf",
+      "sha256": "8512501fbecf3a4739ae5ad17885fb5b433976faedb9feea910ee515bec41e1a",
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
-      "sha256": "7a3c48c289fe69c7610bf70d90e4b49d00df99ed5448947bda467f920c4891f5",
+      "sha256": "5cf254f4074f307a3d1a72fdbdf00fcbd218371fef3725b466ebf7eb9b1e996f",
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {
