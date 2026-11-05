@@ -8462,7 +8462,7 @@
       "executable": false
     },
     "tests/base/notifications.test.ts": {
-      "sha256": "c74d749c7f952363f659472fe9429171b410b8bebdf43609949df10e82e41f6a",
+      "sha256": "9fc1a43b86b0447eedf56bb7b5080778b609dbc016675a08d894846649f194d2",
       "executable": false
     },
     "tests/base/operator-request-publication.ts": {
@@ -9002,7 +9002,7 @@
       "executable": false
     },
     "tests/browser/requester-repair.mjs": {
-      "sha256": "d3fe982de9219c249398a70de25e8929a1386efa1c63c031acddd8bf836ed797",
+      "sha256": "2e51f9c29a0843f1b24866052772507f49f5f7a2e8ea1f74fd8d1c7505a5e4b1",
       "executable": false
     },
     "tests/browser/rich-changelog.mjs": {

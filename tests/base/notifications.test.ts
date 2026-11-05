@@ -41,11 +41,28 @@ function capture(status=202,receipt:string|null=null){
  return sent
 }
 async function batches(){return (await env.DB.prepare('SELECT * FROM notification_batches ORDER BY window_start').all()).results}
-it('[NOTIFY-001/002/010 REQ-007] public event intent is atomic; fixed windows and weekly summaries retain public-only consent',async()=>{
+it('[REQ-015 NOTIFY-001 NOTIFY-002 NOTIFY-010 REQ-007] pinned status publication reaches its follower once; atomic windows and weekly summaries retain public-only consent',async()=>{
  const g=await setup()
  expect((await call(`/api/public/requests/${g.slug}/vote`,{},g.person)).status).toBe(204)
  await g.status('No consent');expect((await env.DB.prepare('SELECT count(*) n FROM notification_intents').first<{n:number}>())!.n).toBe(0)
- await g.follow();await g.status('First public status')
+ const earlier=await (await call(`/api/public/requests/${g.slug}`)).json() as PublicRequestDetail
+ await g.follow()
+ const pinned={status:'under_review',body:'First public status',pinned:true,idempotencyKey:crypto.randomUUID()}
+ const publish=()=>call(`/api/operator/requests/${g.slug}/status-updates`,pinned,g.operator)
+ expect((await publish()).status).toBe(200)
+ const history=await (await call(`/api/public/requests/${g.slug}`)).json() as PublicRequestDetail
+ expect(history.status).toBe('under_review')
+ expect(history.statusUpdates).toEqual([{id:expect.any(String),status:pinned.status,body:pinned.body,pinned:1,publishedAt:expect.any(String)},...earlier.statusUpdates])
+ const pinnedId=history.statusUpdates[0].id
+ expect(await env.DB.prepare('SELECT subject_id FROM notification_events WHERE subject_id=?').bind(pinnedId).all()).toMatchObject({results:[{subject_id:pinnedId}]})
+ expect((await publish()).status).toBe(200)
+ expect((await (await call(`/api/public/requests/${g.slug}`)).json() as PublicRequestDetail).statusUpdates).toEqual(history.statusUpdates)
+ expect((await env.DB.prepare('SELECT count(*) n FROM notification_intents').first<{n:number}>())!.n).toBe(1)
+ // Keep the historical mail-window fixture clock without changing the native public history.
+ await env.DB.batch([
+  env.DB.prepare('UPDATE notification_events SET created_at=? WHERE subject_id=?').bind(time(),pinnedId),
+  env.DB.prepare('UPDATE notification_intents SET created_at=?,coalescing_at=NULL WHERE event_id IN (SELECT id FROM notification_events WHERE subject_id=?)').bind(time(),pinnedId),
+ ])
  await prepareBatches(env.DB,time(1000))
  await g.status('Second public status',59999)
  await g.status('Exact boundary separate',60000)
@@ -59,12 +76,20 @@ it('[NOTIFY-001/002/010 REQ-007] public event intent is atomic; fixed windows an
  const sent=capture();await drainNotifications(runtime(),()=>start+59999);expect(sent).toHaveLength(0)
  await drainNotifications(runtime(),()=>start+60000)
  expect(sent).toHaveLength(1)
+ expect(sent[0].body).toMatchObject({personalizations:[{to:[{email:g.email}]}]})
+ const text=(sent[0].body.content as {type:string;value:string}[]).find(part=>part.type==='text/plain')!.value
+ expect(text.split('\n')).toContain(pinned.body)
+ expect(text.split(pinned.body)).toHaveLength(2)
  const body=JSON.stringify(sent[0].body)
  for(const text of ['First public status','Second public status','Approved comment'])expect(body).toContain(text)
  for(const text of ['Exact boundary separate','Held private comment','Private commercial evidence','Private original title'])expect(body).not.toContain(text)
  expect(await batches()).toMatchObject([{state:'accepted',provider_message_id:null},{state:'queued'}])
  await drainNotifications(runtime(),()=>start+120000);expect(sent).toHaveLength(2)
  await drainNotifications(runtime(),()=>start+180000);expect(sent).toHaveLength(2)
+ expect((await publish()).status).toBe(200)
+ await runNotificationQueue(createMessageBatch('feedback-penny-local-jobs',[{id:'replayed-pinned-update',timestamp:Date.now(),attempts:1,body:{kind:'notifications.drain'}}]),env)
+ expect(sent).toHaveLength(2)
+ expect((await (await call(`/api/public/requests/${g.slug}`)).json() as PublicRequestDetail).statusUpdates.find(update=>update.id===pinnedId)).toEqual(history.statusUpdates[0])
  await env.DB.exec("CREATE TRIGGER fail_intent BEFORE INSERT ON notification_intents BEGIN SELECT RAISE(ABORT,'injected atomic intent failure'); END;")
  await expect(g.status('Must roll back',10800000)).rejects.toThrow('injected atomic intent failure')
  expect(await env.DB.prepare("SELECT id FROM request_status_updates WHERE body='Must roll back'").first()).toBeNull()

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { chromium } from '@playwright/test'
+import { chromium,expect } from '@playwright/test'
 import {browserOptions} from './browser-options.mjs'
 import { shot,manifest,openRequestControls } from './requester-evidence.mjs'
 import { requesterAuth } from './requester-auth.mjs'
@@ -37,15 +37,53 @@ try {
   await page.getByRole('button',{name:'Vote',exact:true}).click();await page.getByText('Vote saved.',{exact:true}).waitFor();await shot(page,'voted',width)
   await page.getByRole('button',{name:'Follow',exact:true}).click();await page.getByText('Following with email permission.',{exact:true}).waitFor();await shot(page,'followed',width)
   await page.getByLabel('Add a comment',{exact:true}).fill('Monthly scheduling avoids a manual step.')
-  await page.getByRole('button',{name:'Send comment for review',exact:true}).click();await page.getByText('Your comment is awaiting review.',{exact:true}).waitFor();await shot(page,'comment-held',width)
+  const commentSaved=page.waitForResponse(r=>r.url().endsWith(`/api/public/requests/${slug}/comments`)&&r.request().method()==='POST')
+  await page.getByRole('button',{name:'Send comment for review',exact:true}).click();const commentId=(await (await commentSaved).json()).id
+  await page.getByText('Your comment is awaiting review.',{exact:true}).waitFor();await shot(page,'comment-held',width)
   await review.reload();await openRequestControls(card)
   const comment=card.locator('form').filter({has:review.getByRole('heading',{name:'Comment',exact:true})})
   await shot(review,'comment-approval-ready',width)
   await comment.getByLabel('Approved display name',{exact:true}).fill('Reviewed requester');await comment.getByRole('button',{name:'Approve comment',exact:true}).click();await comment.waitFor({state:'detached'})
   await openRequestControls(card);await shot(review,'comment-approved',width)
   const status=card.locator('form').filter({has:review.getByRole('heading',{name:'Publish status update',exact:true})})
-  await status.locator('select[name=status]').selectOption('under_review');await status.getByRole('textbox',{name:/^Public update\b/}).fill('We are reviewing monthly scheduling.');const statusSaved=review.waitForResponse(r=>r.url().endsWith(`/api/operator/requests/${slug}/status-updates`)&&r.request().method()==='POST');await status.getByRole('button',{name:'Publish status update',exact:true}).click();assert.equal((await statusSaved).status(),200)
-  await page.reload();await page.getByText('We are reviewing monthly scheduling.',{exact:true}).waitFor();await page.getByText('Monthly scheduling avoids a manual step.',{exact:true}).waitFor();await shot(page,'status-published',width)
+  async function publish(body,pinned){
+   await status.locator('select[name=status]').selectOption('under_review')
+   await status.getByRole('textbox',{name:/^Public update\b/}).fill(body)
+   await status.getByRole('checkbox',{name:'Pin above comments',exact:true}).setChecked(pinned)
+   const saved=review.waitForResponse(r=>r.url().endsWith(`/api/operator/requests/${slug}/status-updates`)&&r.request().method()==='POST')
+   await status.getByRole('button',{name:'Publish status update',exact:true}).click();assert.equal((await saved).status(),200)
+   await expect(status.getByRole('button',{name:'Publish status update',exact:true})).toBeEnabled()
+   await openRequestControls(card)
+   const detail=await (await api(`/api/public/requests/${slug}`)).json()
+   return detail.statusUpdates.find(update=>update.body===body)
+  }
+  const pinned=await publish('We are reviewing monthly scheduling.',true)
+  const newer=await publish('Monthly scheduling now has a delivery outline.',false)
+  assert.ok(pinned?.id);assert.ok(newer?.id);assert.notEqual(pinned.id,newer.id)
+  assert.ok(pinned.publishedAt<newer.publishedAt,'the pinned update is older than the unpinned update')
+  const history=await (await api(`/api/public/requests/${slug}`)).json()
+  assert.deepEqual(history.statusUpdates,[{id:pinned.id,status:'under_review',body:'We are reviewing monthly scheduling.',pinned:1,publishedAt:pinned.publishedAt},{id:newer.id,status:'under_review',body:'Monthly scheduling now has a delivery outline.',pinned:0,publishedAt:newer.publishedAt}])
+  assert.deepEqual(history.comments.map(({id,body})=>({id,body})),[{id:commentId,body:'Monthly scheduling avoids a manual step.'}])
+  for(const visit of ['status-published','status-reloaded']){
+   await page.reload();await page.getByText(newer.body,{exact:true}).waitFor();await page.getByText(pinned.body,{exact:true}).waitFor();await page.getByText('Monthly scheduling avoids a manual step.',{exact:true}).waitFor()
+   if(width===1440){
+    const pinnedCard=page.getByText(pinned.body,{exact:true}).locator('..')
+    const newerCard=page.getByText(newer.body,{exact:true}).locator('..')
+    const comments=page.getByRole('region',{name:'Published comments',exact:true})
+    assert.equal(await pinnedCard.count(),1);assert.equal(await newerCard.count(),1)
+    assert.equal(await pinnedCard.getByText('Pinned status update · under review',{exact:true}).count(),1)
+    assert.equal(await newerCard.getByText('Status update · under review',{exact:true}).count(),1)
+    assert.equal(await comments.getByText('Monthly scheduling avoids a manual step.',{exact:true}).count(),1)
+    assert.equal(await comments.getByText(pinned.body,{exact:true}).count(),0);assert.equal(await comments.getByText(newer.body,{exact:true}).count(),0)
+    assert.equal(await pinnedCard.getByText('Monthly scheduling avoids a manual step.',{exact:true}).count(),0)
+    assert.equal(await pinnedCard.evaluate((node,other)=>Boolean(node.compareDocumentPosition(other)&Node.DOCUMENT_POSITION_FOLLOWING),await newerCard.elementHandle()),true)
+    assert.equal(await newerCard.evaluate((node,other)=>Boolean(node.compareDocumentPosition(other)&Node.DOCUMENT_POSITION_FOLLOWING),await comments.elementHandle()),true)
+    const reloaded=await (await api(`/api/public/requests/${slug}`)).json()
+    assert.deepEqual(reloaded.statusUpdates,history.statusUpdates);assert.deepEqual(reloaded.comments,history.comments)
+   }
+   if(visit==='status-reloaded')await shot(page,'status-published',width)
+  }
+  checks.push({width,statusHistory:[pinned.id,newer.id],commentId,pinnedBeforeNewerUpdateAndComments:true,persistentAfterReload:true})
   // A duplicate choice is a vote only, even when the draft itself is complete.
   await api(`/api/public/requests/${slug}/vote`,undefined,auth,'DELETE')
   const before=(await sql('SELECT (SELECT COUNT(*) FROM requests) requests,(SELECT COUNT(*) FROM evidence_items) evidence'))[0]
