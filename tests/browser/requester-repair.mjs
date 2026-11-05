@@ -1,3 +1,4 @@
+import {proveRequesterConsent} from './requester-consent.mjs'
 import assert from 'node:assert/strict'
 import { chromium } from '@playwright/test'
 import {browserOptions} from './browser-options.mjs'
@@ -99,6 +100,7 @@ try {
   await page.goto(origin+'/portal/feedback');await page.getByLabel('Search feedback',{exact:true}).fill('Scheduled exports');await page.locator('select[name=status]').selectOption('under_review');await page.getByRole('button',{name:'Search',exact:true}).click();await page.getByRole('heading',{name:title,exact:true}).waitFor();await shot(page,'search-filter',width)
   await requester.close();await operator.close()
  }
+ checks.push(await proveRequesterConsent(harness))
  harness.assertNoRateLimits()
  await manifest('manifest',errors,checks,origin)
 }catch(error){for(const context of browser.contexts())for(const page of context.pages()){console.error('Failure page: '+await page.locator('body').innerText());await page.screenshot({path:process.env.PENNY_EVIDENCE+'/failure-'+page.viewportSize().width+'-'+browser.contexts().indexOf(context)+'.png',fullPage:true})}throw error}finally{await browser.close();await runtime?.close()}

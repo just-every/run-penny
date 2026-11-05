@@ -1,3 +1,4 @@
+import {proveExplicitConsent} from './request-consent'
 import {applyD1Migrations,reset} from 'cloudflare:test'
 import {beforeEach,afterEach,vi,expect,inject,it} from 'vitest'
 import {mockMail} from './support'
@@ -37,7 +38,7 @@ it('[NOTIFY-008] disclosed voting grants address-bound permission, explicit foll
  expect((await g.rows()).some(row=>row.grant_origin==='author_subscription'&&row.revoked_at===null)).toBe(true)
  expect((await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='board.vote_subscriptions_changed' AND json_extract(details_json,'$.withdrawExisting')=1 AND json_extract(details_json,'$.reason') IS NOT NULL").first('n'))).toBe(1)
 })
-it('[NOTIFY-011] submission records one removable author vote and independent permission, delivers replies and status, and withdrawal revokes it',async()=>{
+it('[NOTIFY-011] submission records one removable author vote and independent permission, delivers replies and status, and explicit consent is address-bound, timestamped and revocable',async()=>{
  const g=await graph(),slug=await g.submit();await g.publish(slug);await g.flush()
  expect(g.sent).toHaveLength(1);await g.flush();expect(g.sent).toHaveLength(1)
  const permissions=(await g.rows()).filter(row=>row.grant_origin==='author_subscription');expect(permissions).toHaveLength(1)
@@ -56,4 +57,5 @@ it('[NOTIFY-011] submission records one removable author vote and independent pe
  const response=await accepted(call('/api/public/requests',{title:'No subscription',description:'Vote still recorded',boardSlug:'subscriptions',idempotencyKey:crypto.randomUUID()},g.author),201),off=(await response.json() as {slug:string}).slug
  await g.publish(off);expect(await (await call(`/api/public/requests/${off}`)).json()).toMatchObject({voteCount:1})
  expect((await g.rows()).filter(row=>row.revoked_at===null)).toHaveLength(0)
+ await proveExplicitConsent()
 })
