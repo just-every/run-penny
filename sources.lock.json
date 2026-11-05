@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "ac74a8d9e9e9327f6ae61ec6e2f5d5e49ccdc9dd679b1ba24ce6420affdc9e62",
+      "sha256": "42ad4fc17bd43f9e12036951484cae7cdf8a6e98ee08017dabb42930a3f808b3",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "826104b7d3e5d921685443d8e19418f1a4e9e2d5f4733b422d5a2323e6f10fdd",
+      "sha256": "9c1ee1dc2715fe6d326e72c225039c2947cd1d6cdf9db3a788289d62b16fa426",
       "executable": false
     },
     "DEMO.md": {
@@ -8494,7 +8494,7 @@
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
-      "sha256": "c3dd7685c687a14a814555310fad20e4ae59f9687b0b966436ee17f775c529bb",
+      "sha256": "374aeb28699f237b9caa64c8c9e369a5402d3645f11deeec1dfe444fac99c9c9",
       "executable": false
     },
     "tests/base/previous-notification-fixture.ts": {
@@ -8559,6 +8559,10 @@
     },
     "tests/base/release-planning.test.ts": {
       "sha256": "165bed3a8d37d5e67ce4bc593203cc6dabb784089fa35543043292ddbf0f56c1",
+      "executable": false
+    },
+    "tests/base/release-snapshot-stability.ts": {
+      "sha256": "9a747d8450ab7b7f3ad72dbc23ed8845cb0041b78b2c45da34e854bd3c3447cc",
       "executable": false
     },
     "tests/base/remote-portability.test.ts": {
