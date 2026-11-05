@@ -18,7 +18,7 @@ async function snapshots(){
   contexts:await read('release_recipient_contexts'),
  }
 }
-export async function captureReleaseSnapshots(g:Graph):Promise<Unchanged>{
+export async function captureReleaseSnapshots(g:Graph,subscriberId:string):Promise<Unchanged>{
  const sealed=await snapshots(),at=new Date().toISOString()
  expect(sealed.targets).toEqual(g.requests.map(request=>({
   version_id:g.draft.versionId,roadmap_item_id:'release-item',decision_id:'release-decision',request_id:request.id,created_at:at,updated_at:at,
@@ -30,7 +30,14 @@ export async function captureReleaseSnapshots(g:Graph):Promise<Unchanged>{
   id:recipient.id,release_version_id:g.draft.versionId,requester_id:g.recipient.requesterId,requester_address_id:g.recipient.addressId,
   request_id:g.requests.map(request=>request.id).sort()[0],evidence_id:null,recipient_email:g.recipient.email,verification_epoch:address!.verification_epoch,created_at:at,updated_at:at,
  })
- expect(sealed.recipients).toHaveLength(2)
+ const subscriber=sealed.recipients.find(row=>row.requester_id===subscriberId)!
+ const subscriberAddress=await env.DB.prepare('SELECT id,email,verification_epoch FROM requester_addresses WHERE requester_id=? AND verified_at IS NOT NULL').bind(subscriberId).first<{id:string;email:string;verification_epoch:number}>()
+ expect(subscriber.id).toEqual(expect.any(String))
+ expect(subscriber).toEqual({
+  id:subscriber.id,release_version_id:g.draft.versionId,requester_id:subscriberId,requester_address_id:subscriberAddress!.id,
+  request_id:null,evidence_id:null,recipient_email:subscriberAddress!.email,verification_epoch:subscriberAddress!.verification_epoch,created_at:at,updated_at:at,
+ })
+ expect(sealed.recipients.map(row=>row.requester_id).sort()).toEqual([g.recipient.requesterId,subscriberId].sort())
  expect(new Set(sealed.recipients.map(row=>row.id)).size).toBe(2)
  expect(sealed.contexts).toEqual(g.requests.map((request,index)=>({
   snapshot_id:recipient.id,request_id:request.id,roadmap_item_id:'release-item',title:'Public request '+index,slug:request.slug,created_at:at,updated_at:at,
@@ -40,6 +47,8 @@ export async function captureReleaseSnapshots(g:Graph):Promise<Unchanged>{
   expect(current.targets,change).toEqual(sealed.targets)
   expect(current.recipients,change).toEqual(sealed.recipients)
   expect(current.contexts,change).toEqual(sealed.contexts)
+  const detail=await (await accepted(await call('/api/operator/releases/'+g.draft.slug,undefined,g.operator))).json()
+  expect(detail,change).toMatchObject({id:g.draft.id,versionId:g.draft.versionId,recipientSnapshotCount:2})
  }
 }
 export async function changeSnapshotSources(g:Graph,unchanged:Unchanged){
@@ -82,6 +91,8 @@ export async function provePendingPreferenceWithdrawal(g:Graph,subscriber:Record
  const sent=provider()
  const worker=exports.default as typeof exports.default&{scheduled(options:{scheduledTime:number;cron:string}):Promise<void>}
  const cron=()=>worker.scheduled({scheduledTime:Date.now(),cron:'* * * * *'})
+ const pending=await rows('notification_outbox')
+ for(const id of [withdrawnId,controlId])expect(pending.find(row=>row.id===id)).toMatchObject({delivery_state:'queued',attempt_count:0})
  await cron()
  expect(sent).toHaveLength(1)
  const mail=sent[0].body as {personalizations:{to:{email:string}[]}[];custom_args:{rer_delivery_id:string}}
@@ -91,6 +102,7 @@ export async function provePendingPreferenceWithdrawal(g:Graph,subscriber:Record
  expect(mail.personalizations[0].to).toEqual([{email:controlSnapshot.recipient_email}])
  expect(controlSnapshot.recipient_email).not.toBe(g.recipient.email)
  const deliveries=await rows('notification_outbox'),attempts=await rows('notification_outbox_attempts')
+ expect(attempts).toHaveLength(2)
  expect(deliveries.find(row=>row.id===withdrawnId)).toMatchObject({delivery_state:'suppressed',failure_reason:'recipient_no_longer_eligible',attempt_count:1})
  expect(deliveries.find(row=>row.id===controlId)).toMatchObject({delivery_state:'accepted',attempt_count:1})
  expect(attempts.find(row=>row.outbox_id===withdrawnId)).toMatchObject({state:'suppressed',recipient_email:null,provider_message_id:null})
