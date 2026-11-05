@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 57 | 58 | 1 | 116 |
+| Published | 58 | 57 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 77 | 126 | 78 | 281 |
+| All | 78 | 125 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3339,7 +3339,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `ROAD-004` | Approval is publication | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/base/request-status-workflow.test.ts` |  |
 | `ROAD-005` | Commitment mapping | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `ROAD-006` | Public roadmap | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` |  |
-| `ROAD-007` | Status update draft | published | partial | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs` | The draft's absence of internal rationale, commercial context, declined bets and outcome prompts has no passing assertion in this clause's evidence, whose check of the draft allows extra fields, and no cited case reads the portal before the draft is published; a draft prepared for each approved status change with the safe title, problem and new public status, unpublished until an operator publishes it, and no draft for an unapproved item are asserted. |
+| `ROAD-007` | Status update draft | published | done | `tests/base/decision-loop-roadmap.test.ts` — Explicit roadmap publication: projects every forward and backward move within five seconds and keeps complete safe drafts private with atomic approval witnesses; committing an existing approved item records its real prior status and exactly one safe draft; concurrent distinct moves form a truthful transition chain, and unapproved items prepare no draft; a move racing reapproval captures one complete approval and its mappings, while withdrawal cannot leave a partially captured draft. `tests/browser/operator-pages-status.mjs` — reviewStatusDrafts, invoked by `tests/browser/operator-pages.mjs`: safe native operator draft readback, public status before publication, absent draft identity and body in mapped public history, and explicit publication reveals that body once. |  |
 | `ROAD-008` | Status update publication | published | done | `tests/base/roadmap-update-publication.ts`; `tests/base/board.test.ts`; `tests/base/notifications.test.ts`; `tests/browser/operator-pages-status.mjs`; `tests/browser/operator-pages.mjs` |  |
 | `REL-001` | Draft and targets | published | partial | `tests/browser/loopjourney-release.mjs` | A saved draft holding its publication date, optional setup or usage link and outcome-prompt wording has no passing assertion; the title, type, tag, body, author and target are entered and saved. |
 | `REL-002` | Publication | published | done | `tests/browser/loopjourney-release.mjs` |  |

@@ -20,14 +20,16 @@ describe('Explicit roadmap publication',()=>{
   const privateRequest=await publicRequest();await env.DB.prepare("UPDATE requests SET moderation_state='awaiting_review',published_at=NULL WHERE id=?").bind(privateRequest.id).run();expect((await request(`/api/operator/roadmap/${c.itemId}/approve`,'POST',{publicTitle:'Safe',publicSummary:'Safe',boardSlug:'loop-board',requestIds:[privateRequest.id]})).status).toBe(422);expect(await publication(c.itemId)).toBeNull()
  })
  it('[ROAD-001][ROAD-003][ROAD-007] projects every forward and backward move within five seconds and keeps complete safe drafts private with atomic approval witnesses',async()=>{
-  const c=await privateDraftGraph(),r=await publicRequest();await approve(c.itemId,[r.id])
-  const outcome=await privateOutcomeDraft(c.itemId);expect(outcome.outcomePrompt).toBe('Have you adopted this update?')
+  const c=await privateDraftGraph(),r=await publicRequest()
+  await json(request(`/api/operator/requests/${r.slug}/status-updates`,'POST',{status:'open',body:'synthetic-penny-existing-public-update'}))
+  await approve(c.itemId,[r.id])
+  const outcome=await privateOutcomeDraft(c.itemId);expect(outcome.outcomePrompt).toEqual(expect.any(String));expect(outcome.outcomePrompt.trim()).not.toBe('')
   const p=(await publication(c.itemId))!,decisionBefore=await row('decisions',c.d.id)
   expect(decisionBefore).toMatchObject({rationale:draftPrivacyMarkers.rationale})
   expect(await row('accounts',c.account.id)).toMatchObject({name:draftPrivacyMarkers.commercial,revenue_cents:draftPrivacyMarkers.revenueCents})
   expect((await env.DB.prepare("SELECT title,summary FROM decision_bet_snapshots WHERE decision_revision_id=? AND disposition='declined'").bind(c.revisionId).all()).results).toEqual([{title:draftPrivacyMarkers.declinedTitle,summary:draftPrivacyMarkers.declinedSummary}])
   const beforeHistory=(await json<{statusUpdates:unknown[]}>(request(`/api/public/requests/${r.slug}`))).statusUpdates
-  expect(beforeHistory).toEqual([])
+  expect(beforeHistory).toMatchObject([{status:'open',body:'synthetic-penny-existing-public-update'}]);expect(beforeHistory).toHaveLength(1)
   let prior='planned',version=0
   for(const status of ['exploring','in_progress','shipped','planned','dropped','exploring']){
    const started=Date.now(),result=await json(move(c.itemId,status));const transition=await row('roadmap_transitions',result.transitionId);expect(transition).toMatchObject({from_status:prior,to_status:status,reason:'Measured delivery reason',actor_operator_id:'loop-operator'});prior=status
@@ -46,6 +48,7 @@ describe('Explicit roadmap publication',()=>{
    const publicDetail=await json<{status:string;statusUpdates:unknown[]}>(request(`/api/public/requests/${r.slug}`))
    expect(publicDetail.status).toBe(publicStatus);expect(publicDetail.statusUpdates).toEqual(beforeHistory)
    const publicHtml=await (await document(`/portal/feedback/${r.slug}`)).text()
+   expect(publicHtml).toContain('synthetic-penny-existing-public-update')
    for(const value of [result.transitionId,body,...Object.values(draftPrivacyMarkers).map(String),outcome.outcomePrompt]){
     expect(JSON.stringify(publicDetail)).not.toContain(value);expect(publicHtml).not.toContain(value)
    }

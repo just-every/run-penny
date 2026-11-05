@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "ce573fd505226629fe811135205465cce9251b8e0d553ab19406d913008b5d9b",
+      "sha256": "4b28f61f07dc52c578d6404e1224ad8bb559c96332e7b1b1ec90164c39361d5f",
       "executable": false
     },
     "DEMO.md": {
@@ -8314,7 +8314,7 @@
       "executable": false
     },
     "tests/base/decision-loop-roadmap.test.ts": {
-      "sha256": "9f841f4a3d7fe0e9b5fc7db0bebcfbb23e2642e422e43a6a545c15defbbf30e2",
+      "sha256": "f48d84c8a87c5c4dfa3635c46e518b7ff9b6c1f8650cd1e47da43d30400829de",
       "executable": false
     },
     "tests/base/editor-admission.test.ts": {
