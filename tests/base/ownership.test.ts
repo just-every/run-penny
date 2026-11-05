@@ -7,6 +7,8 @@ import type { Archive, ErasureJournal } from '../../src/core/features/data/archi
 import type { ItemOwner, OwnershipQueue } from '../../src/core/features/ownership/types'
 import { call, env, mockMail, origin, owner, requester } from './support'
 import { observeD1 } from './review-race-storage'
+import type { PublicRequestCard, PublicRequestDetail } from '../../src/core/shared/api/public'
+import type { RequestContext } from '../../src/core/features/requests/request-context-read'
 import { assign, capture, catalog, good, peer, queue, type Cookie } from './ownership-fixture'
 
 beforeEach(async () => { await reset(); mockMail() })
@@ -73,7 +75,7 @@ it('[TRIAGE-001 TRIAGE-005] upgrades populated records without granting an owner
  await proveRequestBatches()
 })
 
-it('[TRIAGE-001] requester comments follow the request owner, require review before handling and reappear for a new owner', async () => {
+it('[TRIAGE-001 REQ-020] requester comments retain approved public text through own-edit review and follow the request owner', async () => {
  const { cookie, self } = await setup(), other = await peer(cookie)
  await assign('boards', 'owned-feedback', self.id, cookie)
  const { request } = await capture(cookie, 'owned-feedback')
@@ -85,15 +87,57 @@ it('[TRIAGE-001] requester comments follow the request owner, require review bef
  const pending = (await queue(cookie)).comments[0]
  expect((await call(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: pending.updatedAt }, cookie)).status).toBe(409)
  await good(`/api/operator/comments/${comment.id}/moderate`, { verdict: 'approved', publicAuthorDisplayName: 'Customer' }, cookie)
+ const original = await good<PublicRequestDetail>(`/api/public/requests/${request.slug}`)
+ expect(original.comments).toEqual([{ id: comment.id, body: 'Please explain this workflow', author: { displayName: 'Customer', kind: 'requester' }, publishedAt: expect.any(String) }])
+ const originalList = await good<PublicRequestCard[]>(`/api/public/requests?board=owned-feedback`)
+ expect(originalList).toHaveLength(1)
+ expect(originalList[0]).toMatchObject({ slug: request.slug, commentCount: 1 })
+ const proposed = 'An updated workflow question', replacement = 'Please explain the approved replacement workflow'
+ async function publicComment(body: string) {
+  const detail = await good<PublicRequestDetail>(`/api/public/requests/${request.slug}`)
+  expect(detail.comments).toEqual([{ ...original.comments[0], body }])
+  expect({ ...detail, comments: original.comments }).toEqual(original)
+  const list = await good<PublicRequestCard[]>(`/api/public/requests?board=owned-feedback`)
+  expect(list).toEqual(originalList)
+  for (const projection of [list, detail]) {
+   expect(JSON.stringify(projection)).not.toContain(proposed)
+   if (body !== replacement) expect(JSON.stringify(projection)).not.toContain(replacement)
+  }
+  const rendered = await call(`/portal/feedback/${request.slug}`)
+  expect(rendered.status).toBe(200)
+  const html = await rendered.text()
+  expect(html).toContain(body); expect(html).not.toContain(proposed)
+  if (body !== replacement) expect(html).not.toContain(replacement)
+ }
+ const context = () => good<RequestContext>(`/api/operator/requests/${request.slug}/context`, undefined, cookie)
+ type Activity = { comments: { id: string; body: string; moderationState: string }[]; commentEdits: { id: string; body: string; moderationState: string; rejectionReason: string | null }[] }
+ const activity = () => good<Activity>('/api/public/requester/activity', undefined, identity)
+ // Another verified requester cannot create an edit or change comment custody.
+ const stranger = await requester('Another comment author')
+ const custody = async () => Promise.all(['request_comments', 'request_comment_edits', 'request_moderation_events', 'audit_entries', 'requester_update_permissions'].map(async table => (await env.DB.prepare(`SELECT * FROM ${table} ORDER BY id`).all()).results))
+ const beforeRefusal = await custody()
+ const refused = await call(`/api/public/comments/${comment.id}`, { body: 'A different requester must not replace this comment' }, stranger, 'PATCH')
+ expect(refused.status).toBe(404); expect(await refused.json()).toMatchObject({ error: 'not_found' })
+ expect(await custody()).toEqual(beforeRefusal)
+ expect((await good<Activity>('/api/public/requester/activity', undefined, stranger)).commentEdits).toEqual([])
+ await publicComment('Please explain this workflow')
  const approved = (await queue(cookie)).comments[0]
  expect((await call(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: approved.updatedAt }, other.cookie)).status).toBe(409)
  await good(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: approved.updatedAt }, cookie)
  expect((await queue(cookie)).comments).toEqual([])
- await good(`/api/public/comments/${comment.id}`, { body: 'An updated workflow question' }, identity, 'PATCH')
+ expect(await good(`/api/public/comments/${comment.id}`, { body: proposed }, identity, 'PATCH')).toEqual({ moderationState: 'awaiting_review' })
  expect((await queue(cookie)).comments).toMatchObject([{ id: comment.id, moderationState: 'awaiting_review' }])
  expect((await call(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: approved.updatedAt }, cookie)).status).toBe(409)
- const editId = await env.DB.prepare("SELECT id FROM request_comment_edits WHERE comment_id=? AND moderation_state='awaiting_review'").bind(comment.id).first<string>('id')
+ const pendingEdit = (await context()).commentEdits.find(edit => edit.comment_id === comment.id && edit.moderation_state === 'awaiting_review')
+ expect(pendingEdit).toMatchObject({ id: expect.any(String), comment_id: comment.id, body: proposed, moderation_state: 'awaiting_review', rejection_reason: null })
+ const editId = pendingEdit!.id as string
+ expect((await activity()).commentEdits).toEqual([{ id: editId, slug: request.slug, available: 1, body: proposed, moderationState: 'awaiting_review', rejectionReason: null }])
+ expect((await activity()).comments).toMatchObject([{ id: comment.id, body: 'Please explain this workflow', moderationState: 'approved' }])
+ await publicComment('Please explain this workflow')
  await good(`/api/operator/comments/edits/${editId}/moderate`, { verdict: 'rejected', reason: 'Keep the original question' }, cookie)
+ expect((await context()).commentEdits).toMatchObject([{ id: editId, comment_id: comment.id, body: proposed, moderation_state: 'rejected', rejection_reason: 'Keep the original question' }])
+ expect((await activity()).commentEdits).toEqual([{ id: editId, slug: request.slug, available: 1, body: proposed, moderationState: 'rejected', rejectionReason: 'Keep the original question' }])
+ await publicComment('Please explain this workflow')
  expect((await queue(cookie)).comments).toEqual([])
  await assign('requests', request.slug, other.id, cookie)
  expect((await queue(other.cookie)).comments.map(row => row.id)).toEqual([comment.id])
@@ -101,6 +145,25 @@ it('[TRIAGE-001] requester comments follow the request owner, require review bef
  await good(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: approved.updatedAt }, other.cookie)
  const portable = await good<{ archive: Archive }>('/api/operator/data/export', undefined, cookie)
  expect(portable.archive.tables.penny_comment_receipts).toHaveLength(2)
+ // A later approved edit replaces wording without replacing the public comment.
+ expect(await good(`/api/public/comments/${comment.id}`, { body: replacement }, identity, 'PATCH')).toEqual({ moderationState: 'awaiting_review' })
+ const nextEdit = (await context()).commentEdits.find(edit => edit.comment_id === comment.id && edit.moderation_state === 'awaiting_review')
+ expect(nextEdit).toMatchObject({ id: expect.any(String), body: replacement })
+ expect(nextEdit!.id).not.toBe(editId)
+ expect((await activity()).commentEdits.find(edit => edit.id === nextEdit!.id)).toMatchObject({ body: replacement, moderationState: 'awaiting_review' })
+ await publicComment('Please explain this workflow')
+ await good(`/api/operator/comments/edits/${nextEdit!.id}/moderate`, { verdict: 'approved' }, cookie)
+ const reviewed = await context()
+ expect(reviewed.commentEdits).toEqual(expect.arrayContaining([
+  expect.objectContaining({ id: editId, body: proposed, moderation_state: 'rejected' }),
+  expect.objectContaining({ id: nextEdit!.id, comment_id: comment.id, body: replacement, moderation_state: 'approved', rejection_reason: null }),
+ ]))
+ expect(reviewed.commentEdits).toHaveLength(2)
+ const finalActivity = await activity()
+ expect(finalActivity.commentEdits.find(edit => edit.id === nextEdit!.id)).toMatchObject({ body: replacement, moderationState: 'approved', rejectionReason: null })
+ expect(finalActivity.comments).toMatchObject([{ id: comment.id, body: replacement, moderationState: 'approved' }])
+ await publicComment(replacement)
+ expect(JSON.stringify(await good<PublicRequestDetail>(`/api/public/requests/${request.slug}`))).not.toContain('Please explain this workflow')
  await good('/api/operator/boards/owned-feedback', { archived: true }, cookie, 'PATCH')
  expect((await queue(other.cookie)).requests).toEqual([])
  expect((await ownerOf('requests', request.slug, cookie)).owner?.id).toBe(other.id)

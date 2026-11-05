@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "12df5ff36f46e63033d918432416c8b19c1b4858250477e9a87d12693fa2210c",
+      "sha256": "ac74a8d9e9e9327f6ae61ec6e2f5d5e49ccdc9dd679b1ba24ce6420affdc9e62",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "77dd66c1090c2964a116bd78f76ea8c50d8a4905525094363c0a44228ed4af01",
+      "sha256": "826104b7d3e5d921685443d8e19418f1a4e9e2d5f4733b422d5a2323e6f10fdd",
       "executable": false
     },
     "DEMO.md": {
@@ -8478,7 +8478,7 @@
       "executable": false
     },
     "tests/base/ownership.test.ts": {
-      "sha256": "c77d8895854135ae9a79096d4b69a25bb4d366e24cac44d613aaf2aa032b273f",
+      "sha256": "776302556606e26338c76d6be9520284965e66c917ce78f954dfe65b71dd9cc3",
       "executable": false
     },
     "tests/base/penny-decisions.test.ts": {
