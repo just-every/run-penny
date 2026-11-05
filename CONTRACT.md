@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026).
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 57 | 58 | 1 | 116 |
+| Published | 58 | 57 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 77 | 126 | 78 | 281 |
+| All | 78 | 125 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3324,7 +3324,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-029` | Operator-authored request | published | done | `tests/base/operator-request-publication.ts`; `tests/base/penny-evidence.test.ts`; `tests/browser/operator-evidence-flow.mjs`; `tests/browser/operator-pages.mjs` |  |
 | `REQ-030` | Moderation verdicts | published | partial | `tests/base/notifications.test.ts` | A rejected item counting toward no public total and staying visible with its reason to its author and operators, and the author notice's consent, suppression, mute and quiet-hours checks, have no passing assertion; the unsubscribe link and the once-only send are asserted. |
 | `REQ-031` | Host identity claims | published | done | `tests/base/host-identity.test.ts` |  |
-| `REQ-032` | Internal notes | published | partial | `tests/base/penny-evidence.test.ts` | A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted. |
+| `REQ-032` | Internal notes | published | done | `tests/browser/internal-discussion.mjs` — native note and public comment controls on one approved request, distinct labelled rendering and unchanged identities after reload; `tests/base/penny-evidence.test.ts` — "[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail" checks portal responses, complete page metadata, releases and requester notifications. |  |
 | `DEC-001` | States and queue | published | partial | `tests/base/decision-loop-commit.test.ts` | The review date in the decision queue has no passing assertion; decisions in every state staying in the queue with their state and owner, and the last action and linked-evidence count, are asserted. |
 | `DEC-002` | Brief | published | partial | `tests/base/decision-loop-dimensions.test.ts` | Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted. |
 | `DEC-003` | Comparable bets | published | partial | `tests/base/decision-loop-dimensions.test.ts` | The absence of a stored or displayed combined score and of an automatic ranking has no passing assertion: the bet record and the stored snapshot are checked in a way that allows extra fields, and bets are looked up by id, so their order is unchecked; each bet's metrics holding exactly the five dimension figures is asserted. |

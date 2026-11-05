@@ -78,12 +78,17 @@ try{
     return {notes:context.notes,comments:context.comments}
    }
    const savedDiscussion=await distinctDiscussion()
-   const publicRequest=await (await send(`/api/public/requests/${request.slug}`)).json()
-   assert.deepEqual(publicRequest.comments.map(({id,body,author})=>({id,body,kind:author.kind})),[{id:comment.id,body:commentBody,kind:'operator'}])
-   for(const privateText of [noteBody,'Maya confirmed a scheduled monthly CSV would remove the manual reporting step.',note.id])assert.equal(JSON.stringify(publicRequest).includes(privateText),false)
+   async function publishedDiscussion(){
+    const publicRequest=await (await send(`/api/public/requests/${request.slug}`)).json()
+    assert.deepEqual(publicRequest.comments.map(({id,body,author})=>({id,body,kind:author.kind})),[{id:comment.id,body:commentBody,kind:'operator'}])
+    for(const privateText of [noteBody,'Maya confirmed a scheduled monthly CSV would remove the manual reporting step.',note.id])assert.equal(JSON.stringify(publicRequest).includes(privateText),false)
+    return publicRequest.comments
+   }
+   const savedPublicDiscussion=await publishedDiscussion()
    await audit(page,'threaded-internal-notes')
    await page.reload()
    assert.deepEqual(await distinctDiscussion(),savedDiscussion)
+   assert.deepEqual(await publishedDiscussion(),savedPublicDiscussion)
    const mentions=page.getByRole('region',{name:'Your mentions',exact:true})
    await mentions.getByText(noteBody,{exact:true}).waitFor()
    assert.equal(await mentions.getByRole('button',{name:'Dismiss mention',exact:true}).count(),1)
@@ -92,6 +97,7 @@ try{
    await mentions.getByText('No new mentions.',{exact:true}).waitFor()
    await page.reload();await mentions.getByText('No new mentions.',{exact:true}).waitFor()
    assert.deepEqual(await distinctDiscussion(),savedDiscussion)
+   assert.deepEqual(await publishedDiscussion(),savedPublicDiscussion)
    console.log('PROBE REQ-032 point 1: approved request, native note and public comment controls -> distinct labelled note and separate operator comment; identities and wording persist after reload; public read contains only the comment')
   }finally{await context?.close();await runtime.close()}
  }
