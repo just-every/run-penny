@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete REQ-002’s requester-name and identity-privacy proof in the existing native journey: publish host-authored requests through moderation with mail configured and absent, read both nonempty public projections, and check the approved name while excluding stored private address and account fields and values. Retain invalid-identity refusals and no-permission assertions. No runtime, migration or configuration change is required; other clause and field-proof holds remain unchanged.
+
 - Complete API-001’s existing built-Worker scoped proxy-vote journey with persisted vote, contribution, attribution and permission snapshots around read-only and revoked-key refusals. Verify the successful vote remains unverified and grants no email permission or requester session, and cite the journey for all three acceptance points. No runtime, migration or configuration change is required; other clause and field-proof holds remain unchanged.
 
 - Replay private Ask Penny answers with resolvable citations, current operator commercial-field projection, model budget checks and an explicit chosen Slack destination. Append migration 0108 for private answer artifacts after the survey schema; existing applied migrations remain unchanged. Archive and erasure include answers and their Slack delivery copies. Retain main’s AI-009 missing judgment pending acceptance of the bounded route and browser assertions. No new provider configuration is introduced; existing AI configuration and Slack destinations apply.

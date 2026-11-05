@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 54 | 61 | 1 | 116 |
+| Published | 55 | 60 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 74 | 129 | 78 | 281 |
+| All | 75 | 128 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3294,7 +3294,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `EVID-009` | Tags | published | partial | `tests/base/board.test.ts` | Tags filtering every operator list, surviving a request merge and appearing in the export have no passing assertion; tag privacy is asserted. |
 | `EVID-010` | Versions | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `REQ-001` | Public portal | published | done | `tests/base/board.test.ts`; `tests/base/board-categories.test.ts`; `tests/base/penny-evidence.test.ts`; `tests/browser/requester-blocking.mjs`; `tests/browser/roadmap-public-eta.mjs`; `tests/browser/rich-changelog.mjs` |  |
-| `REQ-002` | Requester identity | published | partial | `tests/base/no-mail-identity.test.ts` | The requester's chosen display name in a portal response has no passing assertion, and the check that no email address or account appears reads the public request list while it holds no published request, so it checks an empty list; submissions under a valid host-signed identity, with and without outbound mail, and the refusal of invalid or new host identities without mail are asserted. |
+| `REQ-002` | Requester identity | published | done | `tests/base/no-mail-identity.test.ts` — host identities publish chosen names without private address or account data, with and without outbound mail; invalid trust and first-time provisioning refusals |  |
 | `REQ-003` | Submission | published | partial | `tests/base/board.test.ts` | The unreviewed evidence item created in the same transaction as the request, and requester edits held for moderation, have no passing assertion in this clause's evidence; the held submission and comment are asserted. |
 | `REQ-004` | Duplicate prevention | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `REQ-005` | Publication | published | done | `tests/base/board.test.ts` |  |

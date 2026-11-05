@@ -4,6 +4,8 @@ import { beforeEach, afterEach, expect, inject, it, vi } from 'vitest'
 import { createPennyApi } from '@/core/app/api'
 import { base64urlEncode, sign } from '@/core/features/auth/tokens'
 import { opaqueToken } from '@/core/features/auth/native-tokens'
+import { owner } from './support'
+import type { PublicRequestCard, PublicRequestDetail } from '@/core/shared/api/public'
 const app=createPennyApi(), origin='https://penny.test'
 const full=()=>({...env,PENNY_ENVIRONMENT:'production',PORTAL_IDENTITY_SECRET:'synthetic-host-identity-secret'})
 const noMail=()=>({...full(),MAIL_PROVIDER:undefined,MAIL_FROM:undefined,MAIL_API_KEY:undefined})
@@ -11,24 +13,52 @@ function call(path:string,body:unknown,headers:Record<string,string>={},bindings
  return app.fetch(new Request(origin+path,{method:'POST',headers:{Origin:origin,'Content-Type':'application/json','CF-Connecting-IP':'192.0.2.29',...headers},body:JSON.stringify(body)}),bindings)
 }
 function payload(title:string,emailUpdates=false){return {title,description:'An independently verified customer problem',boardSlug:'feedback',emailUpdates,idempotencyKey:crypto.randomUUID()}}
-async function host(email='host-verified@example.test',issuedAt=new Date().toISOString(),secret=full().PORTAL_IDENTITY_SECRET){
- const encoded=base64urlEncode(new TextEncoder().encode(JSON.stringify({aud:origin,issuedAt,displayName:'Host verified',email,accountId:'private-account',accountName:'Private host account',revenueCents:123456})))
+const hostClaims={displayName:'Synthetic Penny requester',email:['synthetic-penny-1','example.test'].join('@'),accountId:'synthetic-penny-private-account-1',accountName:'Synthetic Penny private account',revenueCents:92345678}
+async function host(email=hostClaims.email,issuedAt=new Date().toISOString(),secret=full().PORTAL_IDENTITY_SECRET){
+ const encoded=base64urlEncode(new TextEncoder().encode(JSON.stringify({...hostClaims,aud:origin,issuedAt,email})))
  return {'X-Penny-Identity':encoded,'X-Penny-Identity-Signature':base64urlEncode(await sign(secret,encoded))}
 }
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));const stamp=new Date().toISOString();await env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('board','feedback','Feedback','public',0,?,?)").bind(stamp,stamp).run()})
 afterEach(()=>vi.restoreAllMocks())
-it('[G.3 REQ-002 REQ-003 REQ-031 DATA-002] valid host identities may submit without outbound mail and retain private commercial claims',async()=>{
- const headers=await host()
- expect((await call('/api/public/requests',payload('Provider configured control'),headers)).status).toBe(201)
- expect((await call('/api/public/requests',payload('Same identity without mail'),headers,noMail())).status).toBe(201)
- for(const invalid of [await host('host-verified@example.test',new Date().toISOString(),'different-authority'),await host('host-verified@example.test',new Date(Date.now()-25*3600000).toISOString())])expect((await call('/api/public/requests',payload('Invalid existing identity'),invalid,noMail())).status).toBe(503)
+it('[G.3 REQ-002 REQ-003 REQ-031 DATA-002] host identities publish chosen names without private address or account data, with and without outbound mail',async()=>{
+ const headers=await host(),operator=await owner(),submitted:{slug:string;title:string}[]=[]
+ for(const [bindings,title] of [[full(),'Provider configured control'],[noMail(),'Same identity without mail']] as const){
+  const response=await call('/api/public/requests',payload(title),headers,bindings)
+  expect(response.status).toBe(201)
+  const {slug}=await response.json() as {slug:string}
+  submitted.push({slug,title})
+  expect((await app.fetch(new Request(origin+`/api/public/requests/${slug}`),bindings)).status).toBe(404)
+  expect((await call(`/api/operator/moderation/${slug}`,{verdict:'approved',title,description:'Approved customer problem',boardSlug:'feedback',displayName:hostClaims.displayName},operator,bindings)).status).toBe(200)
+ }
+ const privateIdentity=await env.DB.prepare(`SELECT a.id AS addressId,a.requester_id AS requesterId,a.email,h.host_account_id AS hostAccountId,h.account_id AS accountId,c.slug AS accountSlug,c.name AS accountName,c.revenue_cents AS revenueCents
+  FROM requester_addresses a JOIN requester_account_links l ON l.requester_id=a.requester_id JOIN accounts c ON c.id=l.account_id JOIN host_identity_accounts h ON h.account_id=c.id`).first<Record<string,string|number>>()
+ expect(privateIdentity).toMatchObject({email:hostClaims.email,hostAccountId:hostClaims.accountId,accountName:hostClaims.accountName,revenueCents:hostClaims.revenueCents})
+ for(const bindings of [full(),noMail()]){
+  const published=await app.fetch(new Request(origin+'/api/public/requests'),bindings)
+  expect(published.status).toBe(200)
+  const list=await published.json() as PublicRequestCard[]
+  expect(list).toHaveLength(2)
+  expect(list.map(({slug,title})=>({slug,title}))).toEqual(expect.arrayContaining(submitted))
+  const payloads:unknown[]=[list]
+  for(const {slug,title} of submitted){
+   const response=await app.fetch(new Request(origin+`/api/public/requests/${slug}`),bindings)
+   expect(response.status).toBe(200)
+   const detail=await response.json() as PublicRequestDetail
+   expect(detail).toMatchObject({slug,title,authorDisplayName:hostClaims.displayName})
+   payloads.push(detail)
+  }
+  for(const publicPayload of payloads){
+   const text=JSON.stringify(publicPayload)
+   for(const field of ['email','emailAddress','verifiedEmail','requesterId','requester_id','addressId','address_id','requester_address_id','account','accountId','account_id','hostAccountId','host_account_id','accountName','account_name','revenueCents','revenue_cents'])expect(text).not.toContain(`"${field}"`)
+   for(const value of Object.values(privateIdentity!))expect(text).not.toContain(String(value))
+  }
+ }
+ for(const invalid of [await host(hostClaims.email,new Date().toISOString(),'different-authority'),await host(hostClaims.email,new Date(Date.now()-25*3600000).toISOString())])expect((await call('/api/public/requests',payload('Invalid existing identity'),invalid,noMail())).status).toBe(503)
  expect((await call('/api/public/requests',payload('New host identity without mail'),await host('new-host@example.test'),noMail())).status).toBe(503)
  expect(await env.DB.prepare('SELECT count(*) n FROM requests').first('n')).toBe(2)
  expect(await env.DB.prepare('SELECT count(*) n FROM evidence_items').first('n')).toBe(2)
  expect(await env.DB.prepare('SELECT count(*) n FROM requester_addresses').first('n')).toBe(1)
  expect(await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')).toBe(0)
- const published=await app.fetch(new Request(origin+'/api/public/requests'),noMail())
- const text=await published.text();for(const privateValue of ['host-verified@example.test','private-account','Private host account','revenueCents','123456'])expect(text).not.toContain(privateValue)
 })
 it('[G.3 REQ-023 REQ-003] delivered verification consumes once and replays its held submission after outbound mail is removed',async()=>{
  let delivered=''

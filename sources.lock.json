@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "38b090e305021850d387c778621c27f0406adfeb09a944eb6f0fcedd3865b946",
+      "sha256": "d0378ab11218cc5bf9b7e936d95bf72bd92337d5f6277e5d6d8d1865c97893d9",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "a8d8f1770f5c355e1f08def6470782528cc2cc828ab91dfe628bd5a4d48115b6",
+      "sha256": "42b9af5a2acc483c431508949419782db8abd244b99c66ffa4839cf2da80f5c6",
       "executable": false
     },
     "DEMO.md": {
@@ -8442,7 +8442,7 @@
       "executable": false
     },
     "tests/base/no-mail-identity.test.ts": {
-      "sha256": "7e423e8f2f894f57d4744c01629a7ce8678b300d8a6dffea53614aefdb928d0d",
+      "sha256": "61c043af7264f7419710e4f132e4989cf768590b7ac45cf56eeebf9537185ea7",
       "executable": false
     },
     "tests/base/notification-custody-fixture.ts": {
