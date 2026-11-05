@@ -8573,6 +8573,10 @@
       "sha256": "724b8a4bdc76915f17834a44f97cf8567cc1ee1cbd8333f3592a3fd83c2557d8",
       "executable": false
     },
+    "tests/base/request-idempotency.test.ts": {
+      "sha256": "bab8c0515baf0648ab210b6d4ae6dc07b6564c00b1d25a46bb219b6bf494c3fb",
+      "executable": false
+    },
     "tests/base/request-status-workflow.test.ts": {
       "sha256": "e674326673b1e9bcd78835a2bccac5ef990c9d65452c41c12e845ce9e929bd8e",
       "executable": false
@@ -8622,7 +8626,7 @@
       "executable": false
     },
     "tests/base/support.ts": {
-      "sha256": "dc87ded7066096665109c2accc562e9fd91e626978292723a5c8ec1b5b388e38",
+      "sha256": "e3019c2302ddd1c738116e59eddaa6afb6595b56c2c7081bc5e0da7a46a1e231",
       "executable": false
     },
     "tests/base/triage-aging.test.ts": {
