@@ -1,9 +1,11 @@
 import type { OperatorPage } from '../../src/core/features/workspace/list-query'
 import { applyD1Migrations } from 'cloudflare:test'
 import { env } from 'cloudflare:workers'
-import { beforeAll,describe,expect,inject,it } from 'vitest'
+import { beforeAll,describe,expect,inject,it,vi } from 'vitest'
 import type { OperatorDecisionBrief } from '../../src/core/shared/api/operator'
-import { seedLoop,request,json,evidence,decision,bet,link,row,ready,commitInput,operatorId,stamp,publicRequest } from './decision-loop-fixture'
+import type { DecisionHistory } from '../../src/core/features/decisions/history'
+import { messages,mockMail } from './support'
+import { seedLoop,request,workerRequest,json,evidence,decision,bet,link,row,ready,commitInput,operatorId,stamp,publicRequest } from './decision-loop-fixture'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop()})
 const snapshots=async(id:string)=>(await env.DB.prepare('SELECT * FROM decision_bet_snapshots WHERE decision_revision_id=? ORDER BY candidate_bet_id').bind(id).all()).results
 describe('Accountable commitment',()=>{
@@ -53,7 +55,7 @@ describe('Accountable commitment',()=>{
   await link(e.id,a.id,'supporting','DELETE');await link(latest.id,b.id,'contradicting');expect(await snapshots(result.revisionId)).toEqual(before);expect(await row('evidence_items',e.id)).toEqual(evidenceBefore);expect(await row('evidence_versions',version)).toEqual(versionBefore);expect(await row('decisions',d.id)).toMatchObject({state:'committed'})
   await env.DB.prepare("UPDATE decisions SET state='review_due' WHERE id=?").bind(d.id).run();await link(counter.id,a.id,'supporting','DELETE');expect(await row('decisions',d.id)).toMatchObject({state:'review_due'})
  })
- it('[DEC-004] validates commitment fields and viable alternatives before changing a decision',async()=>{
+ it('[DEC-004] validates commitments, admits an invited peer and refuses that peer after removal',async()=>{
   for(const [field,label] of [['selectedCandidateBetId','Selected bet'],['rationale','Rationale'],['ownerOperatorId','Owner'],['confidence','Confidence'],['reviewAt','Review date']]){
 
   const {d,a}=await ready(),input:Record<string,unknown>=commitInput(a.id);delete input[field];const before=await row('decisions',d.id);const response=await request(`/api/operator/decisions/${d.id}/commit`,'POST',input);expect(response.status).toBe(422);expect(await response.text()).toContain(label);expect(await row('decisions',d.id)).toEqual(before);expect((await env.DB.prepare('SELECT * FROM decision_revisions WHERE decision_id=?').bind(d.id).all()).results).toEqual([])
@@ -64,6 +66,59 @@ describe('Accountable commitment',()=>{
   const input=commitInput(a.id);const response=await request(`/api/operator/decisions/${d.id}/commit`,'POST',input);expect(response.status).toBe(422);expect(await response.text()).toContain('No viable alternative reason')
   for(const change of [{reviewAt:'2026-02-31'},{selectedCandidateBetId:'foreign'},{ownerOperatorId:'unknown'}])expect((await request(`/api/operator/decisions/${d.id}/commit`,'POST',{...input,noViableAlternativeReason:'Only workable approach',...change})).status).toBe(422)
   await json(request(`/api/operator/decisions/${d.id}/commit`,'POST',{...input,noViableAlternativeReason:'Only workable approach'}))
+
+  mockMail()
+  try {
+   const management='/api/operator/settings/operators',email=['synthetic-penny-21','example.test'].join('@')
+   await json(workerRequest(management,'POST',{email}),202)
+   expect(messages).toHaveLength(1)
+   expect(messages[0].to).toBe(email)
+   const invitation=new URL(messages[0].url),token=invitation.searchParams.get('token')!
+   const confirmation=await workerRequest('/auth/confirm','POST',{token})
+   expect(confirmation.status).toBe(303)
+   const peer={Cookie:confirmation.headers.get('Set-Cookie')!.split(';')[0]}
+   const listing=await json<{operators:{id:string;email:string;installationOwner:boolean;self:boolean;status:string}[]}>(workerRequest(management,'GET',undefined,peer))
+   const member=listing.operators.find(operator=>operator.email===email)!
+   expect(member).toMatchObject({installationOwner:false,self:true,status:'active'})
+   expect(await row('oa_operators',member.id)).toMatchObject({role:'member',status:'active'})
+
+   const prepared=await ready(),commit=commitInput(prepared.a.id)
+   const brief=await json<OperatorDecisionBrief>(workerRequest(`/api/operator/decisions/${prepared.d.slug}`,'GET',undefined,peer))
+   expect(brief).toMatchObject({state:'ready',owner:{id:operatorId}})
+   const actor=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind(email).first<{id:string}>()
+   expect(actor).not.toBeNull();expect(actor!.id).not.toBe(operatorId)
+   const evidenceBefore=await row('evidence_items',prepared.e.id)
+   const versionsBefore=(await env.DB.prepare('SELECT * FROM evidence_versions WHERE evidence_id=? ORDER BY version_number').bind(prepared.e.id).all()).results
+   expect(versionsBefore).toHaveLength(1)
+   const result=await json<{revisionId:string;itemId:string}>(workerRequest(`/api/operator/decisions/${prepared.d.id}/commit`,'POST',commit,peer))
+   expect(await row('decision_revisions',result.revisionId)).toMatchObject({decision_id:prepared.d.id,committed_by_operator_id:actor!.id,owner_operator_id:operatorId,selected_candidate_bet_id:prepared.a.id,rationale:commit.rationale,confidence:commit.confidence,review_at:commit.reviewAt})
+   expect(await row('decisions',prepared.d.id)).toMatchObject({state:'committed',owner_operator_id:operatorId,selected_candidate_bet_id:prepared.a.id})
+   expect(await row('roadmap_items',result.itemId)).toMatchObject({owner_operator_id:operatorId,candidate_bet_id:prepared.a.id,status:'planned'})
+   const audit=(await env.DB.prepare("SELECT actor_type,actor_id,details_json FROM audit_entries WHERE entity_type='decision' AND entity_id=? AND action='decision.committed'").bind(prepared.d.id).all()).results
+   expect(audit).toEqual([{actor_type:'operator',actor_id:actor!.id,details_json:JSON.stringify({revisionId:result.revisionId})}])
+   const history=await json<DecisionHistory>(workerRequest(`/api/operator/decisions/${prepared.d.id}/history`,'GET',undefined,peer))
+   expect(history.revisions).toHaveLength(1)
+   expect(history.revisions[0]).toMatchObject({id:result.revisionId,selectedCandidateBetId:prepared.a.id,ownerOperatorId:operatorId,rationale:commit.rationale,confidence:commit.confidence,reviewAt:commit.reviewAt})
+   expect(history.revisions[0].bets).toEqual(expect.arrayContaining([
+    expect.objectContaining({candidateBetId:prepared.a.id,disposition:'selected',supportingCount:1,contradictingCount:0,affectedAccountCount:0,affectedRequesterCount:0,latestSupportAt:stamp,urgency:'This quarter',deliveryShape:'Small release',successMeasure:'Completion time below 30 seconds'}),
+    expect.objectContaining({candidateBetId:prepared.b.id,disposition:'declined',supportingCount:0,contradictingCount:0,affectedAccountCount:0,affectedRequesterCount:0,latestSupportAt:null}),
+   ]))
+   expect(history.revisions[0].bets).toHaveLength(2)
+   expect(history.revisions[0].evidence).toEqual([{evidenceId:prepared.e.id,evidenceVersionId:versionsBefore[0].id,candidateBetId:prepared.a.id,stance:'supporting',wording:versionsBefore[0].wording,versionNumber:1}])
+   expect(await row('evidence_items',prepared.e.id)).toEqual(evidenceBefore)
+   expect((await env.DB.prepare('SELECT * FROM evidence_versions WHERE evidence_id=? ORDER BY version_number').bind(prepared.e.id).all()).results).toEqual(versionsBefore)
+
+   const next=await ready()
+   await json(workerRequest(`${management}/${member.id}`,'DELETE',{}))
+   const custody=async()=>Promise.all(['decisions','candidate_bets','decision_revisions','decision_bet_snapshots','decision_evidence_snapshots','evidence_items','evidence_versions','candidate_bet_evidence_links','roadmap_items','roadmap_transitions','roadmap_update_versions','roadmap_update_targets','audit_entries'].map(async table=>(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()).results))
+   const before=await custody()
+   for(const [id,fields] of [[next.d.id,commitInput(next.a.id)],[prepared.d.id,commit]] as const){
+    expect((await workerRequest(`/api/operator/decisions/${id}/commit`,'POST',fields,peer)).status).toBe(401)
+    expect(await custody()).toEqual(before)
+   }
+   expect((await workerRequest(`/api/operator/decisions/${prepared.d.id}/history`,'GET',undefined,peer)).status).toBe(401)
+   expect(await json<DecisionHistory>(workerRequest(`/api/operator/decisions/${prepared.d.id}/history`))).toEqual(history)
+  } finally { vi.restoreAllMocks() }
  })
  it('[DEC-001][DEC-005] concurrent edit and evidence relink produce one coherent stored snapshot',async()=>{
   const {d,a,e}=await ready()
