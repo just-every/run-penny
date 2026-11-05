@@ -13,7 +13,7 @@ async function json<T>(response:Response,status=200):Promise<T>{
 
 /** Keep the request and roadmap eligible: only the recipient preference changes. */
 export async function proveNativePreferenceWithdrawal(){
- for(const preference of ['mute','subscription'] as const){
+ for(const preference of ['mute','subscription','request'] as const){
   await reset();await applyD1Migrations(env.DB,inject('migrations'))
   vi.restoreAllMocks();vi.setSystemTime('2026-11-05T14:00:00.000Z')
   const g=await releaseGraph(2),subscriber=await requester('synthetic-penny-9 subscriber')
@@ -28,17 +28,26 @@ export async function proveNativePreferenceWithdrawal(){
   const deliveries=await rows('notification_outbox')
   expect(deliveries).toHaveLength(2)
   for(const delivery of deliveries)expect(delivery).toMatchObject({delivery_state:'queued',attempt_count:0})
-  const withdrawnId=preference==='mute'?g.recipient.requesterId:subscriberId
-  const controlId=preference==='mute'?subscriberId:g.recipient.requesterId
+  const withdrawnId=preference==='subscription'?subscriberId:g.recipient.requesterId
+  const controlId=preference==='subscription'?g.recipient.requesterId:subscriberId
   const refused=deliveries.find(row=>row.requester_id===withdrawnId)!,control=deliveries.find(row=>row.requester_id===controlId)!
 
   vi.setSystemTime(Date.now()+60_000)
   if(preference==='mute'){
    expect(await json(await call(preferences,{muted:true},g.person,'PATCH'))).toEqual({muted:true})
    expect(await json(await call(preferences,undefined,g.person))).toEqual({muted:true})
-  }else{
+  }else if(preference==='subscription'){
    expect(await json(await call(endpoint,{subscribed:false},subscriber,'PATCH'))).toEqual({subscribed:false,grantedAt:null})
    expect(await json(await call(endpoint,undefined,subscriber))).toEqual({subscribed:false,grantedAt:null})
+  }else{
+   const permissions=await rows('requester_update_permissions')
+   for(const request of g.requests){
+    expect((await call('/api/public/requests/'+request.slug+'/follow',{muted:true},g.person,'PATCH')).status).toBe(204)
+    expect((await rows('request_follows')).find(row=>row.request_id===request.id&&row.requester_id===g.recipient.requesterId)).toMatchObject({muted_at:new Date().toISOString()})
+    await unchanged('native request preference changed for '+request.slug)
+   }
+   expect(await rows('requester_update_permissions')).toEqual(permissions)
+   expect(await json(await call(preferences,undefined,g.person))).toEqual({muted:false})
   }
   await unchanged('native '+preference+' preference withdrawn before delivery')
   vi.mocked(fetch).mockClear();const sent=provider()
@@ -62,16 +71,25 @@ export async function proveNativePreferenceWithdrawal(){
   if(preference==='mute'){
    expect(await json(await call(preferences,{muted:false},g.person,'PATCH'))).toEqual({muted:false})
    expect(await json(await call(preferences,undefined,g.person))).toEqual({muted:false})
-  }else{
+  }else if(preference==='subscription'){
    expect(await json<{subscribed:boolean}>(await call(endpoint,{subscribed:true},subscriber,'PATCH'))).toMatchObject({subscribed:true})
    expect(await json<{subscribed:boolean}>(await call(endpoint,undefined,subscriber))).toMatchObject({subscribed:true})
+  }else{
+   for(const request of g.requests){
+    expect((await call('/api/public/requests/'+request.slug+'/follow',{muted:false},g.person,'PATCH')).status).toBe(204)
+    expect((await rows('request_follows')).find(row=>row.request_id===request.id&&row.requester_id===g.recipient.requesterId)).toMatchObject({muted_at:null})
+   }
   }
   await cron();await cron()
   expect(fetch).toHaveBeenCalledTimes(1)
   expect(sent).toHaveLength(1)
   expect(await rows('notification_outbox')).toEqual(after)
   expect(await rows('notification_outbox_attempts')).toEqual(attempts)
-  expect(await Promise.all(['requests','request_follows','roadmap_publications','roadmap_request_mappings'].map(rows))).toEqual(live)
+  const current=await Promise.all(['requests','request_follows','roadmap_publications','roadmap_request_mappings'].map(rows))
+  if(preference==='request'){
+   // Native follow edits advance their timestamp while retaining the original identity.
+   expect(current).toEqual(live.map((table,index)=>index===1?table.map(row=>({...row,updated_at:new Date().toISOString()})):table))
+  }else expect(current).toEqual(live)
   await unchanged('native '+preference+' preference restoration cannot replay suppressed delivery')
  }
 }
