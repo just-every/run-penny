@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "ac74a8d9e9e9327f6ae61ec6e2f5d5e49ccdc9dd679b1ba24ce6420affdc9e62",
+      "sha256": "badb982fae6f88dd06a02996944c456847dc370f98ed7205b252156256e23c24",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "826104b7d3e5d921685443d8e19418f1a4e9e2d5f4733b422d5a2323e6f10fdd",
+      "sha256": "5938d1c7973777f7baac2977d08debe1795ae9be571c67ddebc6cc26defc962e",
       "executable": false
     },
     "DEMO.md": {
@@ -8997,6 +8997,10 @@
       "sha256": "82ac05e4b70fe781510f6c32065d71937f9696a55ec95385aeaf8b87db763e9d",
       "executable": false
     },
+    "tests/browser/requester-comment-edit.mjs": {
+      "sha256": "30b3dd614c761bf69a49c1a63982efbc590b9058e4c4514d856d5f2e2656d67f",
+      "executable": false
+    },
     "tests/browser/requester-consent.mjs": {
       "sha256": "77a9b40aa98295bcd0ee24f1ef70294674a0d6a314126854518183127cc1352c",
       "executable": false
@@ -9014,7 +9018,7 @@
       "executable": false
     },
     "tests/browser/requester-repair.mjs": {
-      "sha256": "83ec29814428da84c773e78b1be44d60fd4271891c8a975931fa146e6eb70110",
+      "sha256": "e2f3461ca9a31681e811c969e9d08e7483b28eec3765ae68f8c01ec5b6c51d17",
       "executable": false
     },
     "tests/browser/rich-changelog.mjs": {
