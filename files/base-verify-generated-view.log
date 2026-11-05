@@ -1,0 +1,7 @@
+Command: gh run view 42107173301 --repo just-every/run-penny --job 127525008444 --log-failed
+Run 42107173301; head 1daa03e4ce03af6a65452b32580aa245e2df5962; push; completed; conclusion=failure.
+Failed step: Check generated contract documents
+Exact command: node src/base/contract-docs.mjs check
+Observed error: ACCEPTANCE.md: generated content differs; run contract-docs write.
+Observed exit: 1
+The job API showed the same failed step in every one of 29 failed shards; no runtime test failure was reported.

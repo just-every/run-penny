@@ -1,0 +1,458 @@
+{
+  "sourceCommit": "1daa03e4ce03af6a65452b32580aa245e2df5962",
+  "dirty": false,
+  "generatedAt": "2026-11-05T21:54:06.657Z",
+  "runtime": {
+    "environment": "emitted local workerd with isolated D1/R2",
+    "capabilities": {
+      "transport": "sendgrid",
+      "testCustomers": false
+    },
+    "providerSends": false,
+    "node": "v22.20.0"
+  },
+  "captures": [
+    {
+      "file": "submitted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/new",
+      "overflow": false,
+      "sha256": "b2594f604aee0c9e536387a2eb2036c3d714e6e2a42d1092db6666a448154c93"
+    },
+    {
+      "file": "approved-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "7e9573728344807f8d3034a7087d75e5c6e56908ec0bd11b86d7c3a9da20a05e"
+    },
+    {
+      "file": "voted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "b5bcfbced4c63f275ac43f42be2f91a3d912f2cd1e724be04ad175fc177aa586"
+    },
+    {
+      "file": "followed-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "d4e064302fad9365b4006b9d5f105db589c3e2986ee45ef9735ff273048ce398"
+    },
+    {
+      "file": "comment-held-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "0f40fd50ca9bc3c694a1e037b972afed30dcb9d0624e6efae76e54d31d46310f"
+    },
+    {
+      "file": "comment-approval-ready-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "d6fb5ff18ca48cb0a6932ed4eccb5d730f2ea3e6838b316db473b5de2e16651c"
+    },
+    {
+      "file": "comment-approved-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "81cb2deb514c973bd1c8c132a2bd3228fd31c6e667cfb773f4225f83accf1ff3"
+    },
+    {
+      "file": "status-published-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "268876bbb24b524782f7b184d56e562a1ac25c736ff9eb3ebb4d948b77c1c60f"
+    },
+    {
+      "file": "duplicate-vote-success-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/new",
+      "overflow": false,
+      "sha256": "629cbf1d21480b631700cbe14c02ed791a0b6f91d5f46f62f0f7c21a269d15ca"
+    },
+    {
+      "file": "appeal-reopened-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "d21619591bbdc8d0791fccdbe71dead2864b9bbe17d9409cfd9558f7f49e80f2"
+    },
+    {
+      "file": "upload-recovery-ready-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "ebcfb51a2fead4b89713bd47f850f055351b46fd348cb1d43aeb5f2e3ea0a1c0"
+    },
+    {
+      "file": "upload-recovered-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "e64e2b423cee0cbb7c7eb26b16ffdd72fdeb449c420f5ce024340b83d2015732"
+    },
+    {
+      "file": "withdrawn-removed-from-moderation-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "94a17884b7be540383410b0efe2f5c1ffae57f4b780b4cc55205968ac3c91a7c"
+    },
+    {
+      "file": "your-feedback-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "1a21ce39368f364ff6257392365bd711fc6a8b1836823917c18790cc9efd0485"
+    },
+    {
+      "file": "search-filter-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/?q=Scheduled+exports&status=under_review",
+      "overflow": false,
+      "sha256": "4af89d4527de335c5fce822ed087e012de9a3ef0b5f5ecb853a0f713145ef3fa"
+    },
+    {
+      "file": "comment-edit-pending-activity-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "ba5aae9221a03b329e29d9e778ae0b34c0834d34844cb3fffd9fc819e9e0bf41"
+    },
+    {
+      "file": "comment-edit-pending-activity-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "9ef0da7f51fe381a3d327093a5d7d145156ad5079b2e72b91fd5b0dec1270c68"
+    },
+    {
+      "file": "comment-edit-pending-public-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "579d043a6155a38e56f514edb4cbd202026374029d1233035ff47550464c6742"
+    },
+    {
+      "file": "comment-edit-pending-public-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "7e9a620f6aa33c06045baaee09ed30c690506b6e59aeb59e002a4ba5771ab9d8"
+    },
+    {
+      "file": "comment-edit-rejected-review-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "f803fc8852159d592f3d805a8483b59bbc27171493b11ebad857a1abde74c097"
+    },
+    {
+      "file": "comment-edit-rejected-review-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "a5613071cb4d5f10ddccdcc9c7740a49102646b179bbe0382ee1a78a8db64d2a"
+    },
+    {
+      "file": "comment-edit-rejected-activity-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "afad35b392eba479546f5dc45fac7c02e1b0424359aff900e7c6abd6f3646422"
+    },
+    {
+      "file": "comment-edit-rejected-activity-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "88ad1b9527087f04998285df3f4fc750caf49ca88c1651309c9127bcae8ee61f"
+    },
+    {
+      "file": "comment-edit-rejected-public-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "579d043a6155a38e56f514edb4cbd202026374029d1233035ff47550464c6742"
+    },
+    {
+      "file": "comment-edit-rejected-public-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "7e9a620f6aa33c06045baaee09ed30c690506b6e59aeb59e002a4ba5771ab9d8"
+    },
+    {
+      "file": "comment-edit-second-pending-public-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "579d043a6155a38e56f514edb4cbd202026374029d1233035ff47550464c6742"
+    },
+    {
+      "file": "comment-edit-second-pending-public-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "7e9a620f6aa33c06045baaee09ed30c690506b6e59aeb59e002a4ba5771ab9d8"
+    },
+    {
+      "file": "comment-edit-approved-review-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "c709114151f41956cabd0f3006a654a0b30b774896a8ba7863bb9ddce52aff90"
+    },
+    {
+      "file": "comment-edit-approved-review-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "a132e898d8f74317e6d8bcee9d4a2529e74e4feaea472235bdf19b7504a0905a"
+    },
+    {
+      "file": "comment-edit-approved-public-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "8fcb43291f1a9ba8c7f29d52e967bfd2f8da367589dea893eb48ffaef9c7eea5"
+    },
+    {
+      "file": "comment-edit-approved-public-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv3mdnf47nktg8wxmjt965",
+      "overflow": false,
+      "sha256": "8cb33399ece888f32118f846108b6be37976765c326232847f32de54759118e8"
+    },
+    {
+      "file": "submitted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/new",
+      "overflow": false,
+      "sha256": "02ca4a0f9ef7ee3980d4951c2c6edfbcb371b94f3b5d5c15795dfb2730567b3e"
+    },
+    {
+      "file": "approved-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "dba453c6e91e2979ca6e096508ef513bbd44f8e472986e74e8184a4e69d75e80"
+    },
+    {
+      "file": "voted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv4x38f5r6n5k6cmw8wsxj",
+      "overflow": false,
+      "sha256": "ff1ed790cff44411883f88235e8d2068b005868bbc16ed50e40db71ee69f870a"
+    },
+    {
+      "file": "followed-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv4x38f5r6n5k6cmw8wsxj",
+      "overflow": false,
+      "sha256": "b3ea01a10ccffda39c2f6b43ff263a85ba7761f0278cd71c6316661695d6e7c5"
+    },
+    {
+      "file": "comment-held-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv4x38f5r6n5k6cmw8wsxj",
+      "overflow": false,
+      "sha256": "c6220203bc0b0d4a2bb53ec02bad313b71fc19fce6e370042ecdc8b1e0a8ba7c"
+    },
+    {
+      "file": "comment-approval-ready-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "d886fe7bb8383301f30dddd33fd06363fe07d6fd87b62c2cca3d5fd621d8bc17"
+    },
+    {
+      "file": "comment-approved-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "092658977c2a3d592a07bbf9300b0a1e8bacd4b4ff2f734b892e2cac0ffd5d46"
+    },
+    {
+      "file": "status-published-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv4x38f5r6n5k6cmw8wsxj",
+      "overflow": false,
+      "sha256": "27f4ea3b975e56184b7e0f1fcdf169474e832f07da60251abde6f7a487c49b7a"
+    },
+    {
+      "file": "duplicate-vote-success-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/new",
+      "overflow": false,
+      "sha256": "e571f01c082f89d58821d2189158920410fceb561a40fb94542ce2d7be5fe092"
+    },
+    {
+      "file": "appeal-reopened-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "0b0d7f8c105bfde3a9d7c3b31cf826fd300eadb0a025c5e945b81748280a5c1a"
+    },
+    {
+      "file": "upload-recovery-ready-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "839088c40b75b139ee4d93f3c7202af690f69f00613e35b124f3343cc2b9ef77"
+    },
+    {
+      "file": "upload-recovered-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "4eb4ca3877b7bf066f978f743a1d7d35abc47712bc49ca4dfb6aac588b56e915"
+    },
+    {
+      "file": "withdrawn-removed-from-moderation-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/app/moderation",
+      "overflow": false,
+      "sha256": "d94aba524520f775e2eab016655a36e13ac01ca3e70dcdc2d130c66b71164d31"
+    },
+    {
+      "file": "your-feedback-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "e751608b4ae43f81b13f2c53e78fc68c77c93fe52344f6d265de340c3b3de693"
+    },
+    {
+      "file": "search-filter-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/?q=Scheduled+exports&status=under_review",
+      "overflow": false,
+      "sha256": "49a4dcc584650841cbf6390f92ac66f11815dc1008ee2fb2a8297a65610e387b"
+    },
+    {
+      "file": "consent-explicit-submission-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/new",
+      "overflow": false,
+      "sha256": "96986a520009a7ce6cac6a8ab239a8dfa95f8452b1d73acdaa5eee41a0364308"
+    },
+    {
+      "file": "consent-explicit-submission-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/new",
+      "overflow": false,
+      "sha256": "f3e1a3dd85c41fcee3f53b2c156d6fe93c30c35bf579e42f936a69d57a7a6761"
+    },
+    {
+      "file": "consent-automatic-submission-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/new",
+      "overflow": false,
+      "sha256": "421b9cd37eb7ed19aa68b7f0579132ec8a721a9adfbb348c2750be7a5ef757ca"
+    },
+    {
+      "file": "consent-automatic-submission-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/new",
+      "overflow": false,
+      "sha256": "6db7086dd50af97a8924b0a3ab7277d14cecf674bfa178d660024a0788601b5b"
+    },
+    {
+      "file": "consent-explicit-vote-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv8mfgetchs4jjc3vww055",
+      "overflow": false,
+      "sha256": "97c77b99e4dc4da8c4f285ff2ec8738976d38de2445114d586576d5a4626cad5"
+    },
+    {
+      "file": "consent-explicit-vote-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv8mfgetchs4jjc3vww055",
+      "overflow": false,
+      "sha256": "09a8999bccabc9977a0c38a200e8327a28afb07f6831e49974d5ed2828b2efbb"
+    },
+    {
+      "file": "consent-automatic-vote-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv8qexmazbhpej4ahxvn1v",
+      "overflow": false,
+      "sha256": "3f593cbfe201a2c24fabb0ba9fdf3be053484600ba646e15941d32ae5466720d"
+    },
+    {
+      "file": "consent-automatic-vote-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45809/portal/feedback/feedback-01m6pv8qexmazbhpej4ahxvn1v",
+      "overflow": false,
+      "sha256": "e2edd311dd07251d8fc39b09c3c47d2f3589232ea8f49592bb01c51b140bdaa3"
+    }
+  ],
+  "pageErrors": [],
+  "checks": [
+    {
+      "width": 1440,
+      "duplicateChoice": "vote",
+      "newRequests": 0,
+      "newEvidence": 0,
+      "falseSubmissionCopy": false
+    },
+    {
+      "width": 1440,
+      "appealReopenedByMountedControl": true
+    },
+    {
+      "width": 1440,
+      "syntheticInterruptedUploadRecoveredByMountedControl": true,
+      "originalBytesPreserved": true
+    },
+    {
+      "width": 1440,
+      "withdrawnPendingNotActionable": true,
+      "initialSubmissionHasNoEditApproval": true
+    },
+    {
+      "commentEditControls": true,
+      "pendingTextPrivate": true,
+      "rejectedTextPrivate": true,
+      "approvedReplacementSameIdentity": true,
+      "commentCountUnchanged": true
+    },
+    {
+      "width": 390,
+      "duplicateChoice": "vote",
+      "newRequests": 0,
+      "newEvidence": 0,
+      "falseSubmissionCopy": false
+    },
+    {
+      "width": 390,
+      "appealReopenedByMountedControl": true
+    },
+    {
+      "width": 390,
+      "syntheticInterruptedUploadRecoveredByMountedControl": true,
+      "originalBytesPreserved": true
+    },
+    {
+      "width": 390,
+      "withdrawnPendingNotActionable": true,
+      "initialSubmissionHasNoEditApproval": true
+    },
+    {
+      "uncheckedSubmission": true,
+      "uncheckedVote": true,
+      "untickedActionsGrantNothing": true,
+      "currentAutomaticDisclosures": true,
+      "checkedSubmission": true,
+      "checkedVote": true,
+      "explicitFollow": true,
+      "automaticAuthorFollow": true,
+      "automaticVoterFollow": true,
+      "unfollowRevokes": true
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "after": "partial",
+  "base": "1daa03e4ce03af6a65452b32580aa245e2df5962",
+  "before": "partial",
+  "blocking_local_failures": [],
+  "candidate_ci": [
+    {
+      "conclusion": null,
+      "event": "push",
+      "head_branch": "cloud/sd-penny-c-f47",
+      "head_sha": "1daa03e4ce03af6a65452b32580aa245e2df5962",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42116887846",
+      "id": 42116887846,
+      "name": "Verify Penny",
+      "status": "in_progress"
+    },
+    {
+      "conclusion": "failure",
+      "event": "push",
+      "head_branch": "cloud/sd-penny-c-f42",
+      "head_sha": "1daa03e4ce03af6a65452b32580aa245e2df5962",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42107173301",
+      "id": 42107173301,
+      "name": "Verify Penny",
+      "status": "completed"
+    }
+  ],
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup (requested fleet owner, non-interactive)",
+      "exit": 0,
+      "name": "setup",
+      "note": "setup completed before fast-forward to the prescribed base; runtime sources are identical"
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0,
+      "log": "build.log",
+      "name": "build"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/ownership.test.ts",
+      "exit": 0,
+      "log": "native.log",
+      "name": "native",
+      "node": "22.20.0",
+      "passed": 4
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "typecheck.log",
+      "name": "typecheck"
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "name": "first-party",
+      "stdout_bytes": 0
+    },
+    {
+      "browser": "/usr/bin/chromium",
+      "captures": 54,
+      "checks": 10,
+      "command": "perl -e 'alarm 1200; exec @ARGV' -- node tests/browser/requester-repair.mjs",
+      "exit": 0,
+      "headless": true,
+      "log": "browser.log",
+      "manifest": "browser/manifest.json",
+      "name": "browser",
+      "no_sandbox": true,
+      "node": "22.20.0"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "name": "contract-write"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "name": "contract-check",
+      "note": "before restoring generated views to origin/main"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "name": "source-lock"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "name": "source-check"
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "name": "base-source"
+    },
+    {
+      "command": null,
+      "exit": 0,
+      "name": "migration-ledger",
+      "note": "no migration changed"
+    }
+  ],
+  "clause": "REQ-020",
+  "counts_after": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "counts_before": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "created_utc": "2026-11-05T21:56:13.621473+00:00",
+  "github_calls": 5,
+  "inherited_candidate_commits": [
+    "1daa03e4ce03af6a65452b32580aa245e2df5962"
+  ],
+  "main_at_handoff": "fab3d0e52aae1c7ed640dbdc38791027416e40d3",
+  "new_product_commits_this_continuation": 0,
+  "pr_url": null,
+  "product_branch": "cloud/sd-penny-c-f47",
+  "product_head": "1daa03e4ce03af6a65452b32580aa245e2df5962",
+  "publication_scan": {
+    "custodian": "Mac lander",
+    "status": "not_run_cloud"
+  },
+  "push": {
+    "attempts": 1,
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f47",
+    "exit": 0,
+    "remote_readback": "1daa03e4ce03af6a65452b32580aa245e2df5962"
+  },
+  "remaining_scope": [
+    "request title and description edit retention",
+    "auto-publish edits retaining earlier wording for operators"
+  ],
+  "repository": "just-every/run-penny",
+  "run_site": {
+    "candidate_status": "main-only lander gate"
+  },
+  "schema": 1,
+  "tag": "sd-penny-c-f47"
+}
