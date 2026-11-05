@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "5c1a648e3788c3bd0f0b450746e5b308a9fa9361c8ef79724f50bb0e65ad9b7d",
+      "sha256": "4ea7dcd0b9efa38c066a6fb907fc0cab89d53f8dcb3ba690430f296d8264ed81",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3674,7 +3674,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "0fd8d835257c99537ccab3909b37c929645db07fcfbd802db22873186e4aae26",
+      "sha256": "a254e3520ca277b02169f041508457220354ea25f7b0a5412927b1e1f7a3ddc7",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -4087,6 +4087,10 @@
     },
     "migrations/core/0108_ai_answers.sql": {
       "sha256": "99873e7be9bb3ac3279cbd7fb2cffa9304be2a0eb5e1377c0bda9e18f8f339e0",
+      "executable": false
+    },
+    "migrations/core/0109_duplicate_suggestion_indexes.sql": {
+      "sha256": "9c5de5b28f9a812419c17beeb5408cc02c9a0cef2bd044ad78a36cfc430d014d",
       "executable": false
     },
     "OPERATIONS.json": {
@@ -7278,7 +7282,7 @@
       "executable": false
     },
     "src/core/features/requests/suggestions.ts": {
-      "sha256": "efefdfb306857d4670245ae0908a4e796d38ac4bb0c563c1ffcce610107ba4e2",
+      "sha256": "3ba53837c3014c33c95fbf538401ab01cdf0d9fa6288f413ed45c7d4d9f79528",
       "executable": false
     },
     "src/core/features/requests/ui/attachment-recovery.tsx": {
@@ -8486,7 +8490,7 @@
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
-      "sha256": "750f9fd99f1ebe82ac03a96afb38876763eaae92449737301f2a05f620e868f0",
+      "sha256": "ec91e0cb54ffce52b207d7333f80ce5e897449720a4ddfa461245bdf4e091a9a",
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
@@ -8626,7 +8630,7 @@
       "executable": false
     },
     "tests/base/upgrade.test.ts": {
-      "sha256": "f8b12c27c769bb9ba2382cdc0e539c3539551ee09a8dc635a0173c4f3fe31104",
+      "sha256": "e5db96bb788cb82eb430545a328191f503dd14cac7a2dbd2622fba3573995f87",
       "executable": false
     },
     "tests/base/uservoice-fixture.ts": {
@@ -9258,7 +9262,7 @@
       "executable": false
     },
     "tests/runtime/duplicate-suggestions-scale.mjs": {
-      "sha256": "baa83777914e3baf3185ed59da8c2aa31ce3f9c5ef61ab9a7e253221204ddb6d",
+      "sha256": "fff26e62dfadcf39991d0f415bda51758dff0b20d3000fde9f4254eabb976274",
       "executable": false
     },
     "tests/runtime/mail-events-restart.test.mjs": {

@@ -6,24 +6,22 @@ export async function requestSuggestions(db:D1Database,title:string,operator=fal
  if(!terms.length)return []
  const titleColumn=operator?'r.title':'r.public_title',descriptionColumn=operator?'r.description':'r.public_description'
 
- const candidates=`SELECT r.id,r.slug,b.show_voters AS showVoters,${titleColumn} AS title,${descriptionColumn} AS description
- FROM requests r JOIN boards b ON b.id=r.board_id LEFT JOIN requesters author ON author.id=r.author_requester_id
+ const candidates=`SELECT r.id,r.slug,r.terms
+ FROM ${operator?'penny_suggestions_operator_rows':'penny_suggestions_public_rows'} r
+ JOIN boards b ON b.id=r.board_id ${operator?'':'LEFT JOIN blocked author ON author.id=r.author_requester_id'}
  WHERE ${operator?'r.merged_into_request_id IS NULL':`${publicRequestPredicate} AND b.archived_at IS NULL AND r.public_state!='unpublished'`}`
- // Rank ASCII wording inside D1 so a large board does not transfer every row.
- // Unicode wording retains the complete lexical matcher below. ASCII wording
- // cannot match a non-ASCII term, so only its ASCII query terms need ranking.
- const asciiTerms=terms.filter(term=>/^[a-z0-9]+$/.test(term)),nonAscii='*[^\u0001-\u007f]*'
- const wording="coalesce(title,'null')||char(10)||coalesce(description,'null')"
- const score=asciiTerms.map(()=>`CASE WHEN matchText GLOB ? THEN 1 ELSE 0 END`).join('+')||'0'
- const query=`WITH visible AS (${candidates}), candidates AS MATERIALIZED (
- SELECT *,(' '||lower(${wording})||' ') AS matchText,(${wording}) GLOB ? AS unicodeWording FROM visible
- ), scored AS MATERIALIZED (
- SELECT id,slug,showVoters,title,description,(${score}) AS matches FROM candidates WHERE unicodeWording=0
- ), ranked AS (
- SELECT id,slug,showVoters,title,description FROM scored WHERE matches>0 ORDER BY matches DESC,slug LIMIT 5
- ) SELECT * FROM ranked
- UNION ALL SELECT id,slug,showVoters,title,description FROM candidates WHERE unicodeWording=1`
- const rows=await db.prepare(query).bind(nonAscii,...asciiTerms.map(term=>`*[^a-z0-9]${term}[^a-z0-9]*`)).all<{id:string;slug:string;showVoters:number;title:string;description:string}>()
+ // Indexed ASCII terms rank inside D1. Other wording retains the complete
+ // matcher below; ASCII wording cannot match a non-ASCII query term.
+ const asciiTerms=terms.filter(term=>/^[a-z0-9]+$/.test(term))
+ const score=asciiTerms.map(()=>`CASE WHEN instr(terms,?)>0 THEN 1 ELSE 0 END`).join('+')||'0'
+ const query=`WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),
+ indexed AS MATERIALIZED (${candidates}), ranked AS (
+ SELECT id,(${score}) AS matches FROM indexed WHERE terms IS NOT NULL ORDER BY matches DESC,slug LIMIT 5
+ ), selected AS (
+ SELECT id FROM ranked WHERE matches>0 UNION ALL SELECT id FROM indexed WHERE terms IS NULL
+ ) SELECT r.id,r.slug,b.show_voters AS showVoters,${titleColumn} AS title,${descriptionColumn} AS description
+ FROM selected JOIN requests r ON r.id=selected.id JOIN boards b ON b.id=r.board_id`
+ const rows=await db.prepare(query).bind(...asciiTerms.map(term=>` ${term} `)).all<{id:string;slug:string;showVoters:number;title:string;description:string}>()
  return rows.results.map(row=>{const words=new Set(lexicalTerms(`${row.title}\n${row.description}`));return {...(operator?{id:row.id}:{showVoters:!!row.showVoters}),slug:row.slug,title:row.title,description:row.description,matchedTerms:terms.filter(term=>words.has(term))}})
  .filter(row=>row.matchedTerms.length).sort((a,b)=>b.matchedTerms.length-a.matchedTerms.length||(a.slug<b.slug?-1:a.slug>b.slug?1:0)).slice(0,5)
 }

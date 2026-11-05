@@ -110,9 +110,16 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const surveyPreviousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const surveyPreviousSnapshot=async()=> (await env.DB.batch(surveyPreviousTables.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const surveyPreviousRows=await surveyPreviousSnapshot()
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0109'))
+ expect(await surveyPreviousSnapshot()).toEqual(surveyPreviousRows)
+ const suggestionPreviousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const suggestionSnapshot=async()=> (await env.DB.batch(suggestionPreviousTables.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const suggestionPreviousRows=await suggestionSnapshot()
  await applyD1Migrations(env.DB,migrations)
  expect(await surveyPreviousSnapshot()).toEqual(surveyPreviousRows)
+ expect(await suggestionSnapshot()).toEqual(suggestionPreviousRows)
  await applyD1Migrations(env.DB,migrations)
  expect(await surveyPreviousSnapshot()).toEqual(surveyPreviousRows)
+ expect(await suggestionSnapshot()).toEqual(suggestionPreviousRows)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
