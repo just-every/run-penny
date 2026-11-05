@@ -41,22 +41,62 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  const actor=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind('owner@penny.invalid').first<{id:string}>();expect(actor!.id).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/)
  expect((await env.DB.prepare('SELECT count(*) AS n FROM operator_sessions').first<{n:number}>())!.n).toBe(0)
 })
-it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total',async()=>{
+it('[REQ-011/018/019 EVID-009] Base-signed board and tag management preserves private tags, separate file approval and the per-request attachment total',async()=>{
  const g=await graph(),slug=await g.submit('With attachment');await g.approve(slug,'Public attachment request')
  const tag=await call('/api/operator/catalog/tags',{name:'Private enterprise context'},g.operator);expect(tag.status).toBe(201)
  const tagId=(await tag.json() as {id:string}).id
  const requestId=(await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(slug).first<{id:string}>())!.id
  expect((await call(`/api/operator/catalog/requests/${requestId}/tags/${tagId}`,{},g.operator,'PUT')).status).toBe(200)
- const attach=(file:File)=>{const form=new FormData();form.set('file',file);return exports.default.fetch(new Request(origin+`/api/public/requests/${slug}/attachments`,{method:'POST',headers:{...g.person,Origin:origin},body:form}))}
- const upload=await attach(new File([new Uint8Array([137,80,78,71])],'diagram.png',{type:'image/png'}));expect(upload.status).toBe(201)
- const file=(await upload.json() as {id:string}).id,{limits}=(await import('../../seed.json')).default,stored=async()=>Number(await env.DB.prepare('SELECT SUM(byte_size) n FROM attachments WHERE request_id=?').bind(requestId).first('n')),pdf=(size:number)=>attach(new File([new Uint8Array(size)],'large.pdf',{type:'application/pdf'}))
- expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
- expect((await call(`/api/operator/attachments/${file}/moderate`,{verdict:'approved'},g.operator)).status).toBe(200)
- expect(new Uint8Array(await (await call(`/api/public/attachments/${file}`)).arrayBuffer())).toEqual(new Uint8Array([137,80,78,71]))
+ const attach=(file:File,parentSlug=slug)=>{const form=new FormData();form.set('file',file);return exports.default.fetch(new Request(origin+`/api/public/requests/${parentSlug}/attachments`,{method:'POST',headers:{...g.person,Origin:origin},body:form}))}
+ const upload=async(bytes:Uint8Array<ArrayBuffer>,name:string,type:string,parentSlug=slug)=>{const response=await attach(new File([bytes],name,{type}),parentSlug);expect(response.status).toBe(201);return (await response.json() as {id:string}).id}
+ const rejected=await upload(new Uint8Array([137,80,78,71]),'synthetic-penny-1.png','image/png')
+ const parent=await (await call(`/api/public/requests/${slug}`)).json()
+ const context=async()=>{const response=await call(`/api/operator/requests/${slug}/context`,undefined,g.operator);expect(response.status).toBe(200);return await response.json() as {attachments:{id:string;public_state:string;rejection_reason:string|null}[]}}
+ expect((await call(`/api/operator/requests/${slug}/context`)).status).toBe(401)
+ expect((await call(`/api/operator/attachments/${rejected}/moderate`,{verdict:'rejected',reason:'Unauthorized verdict'})).status).toBe(401)
+ expect((await call(`/api/operator/attachments/${rejected}/moderate`,{verdict:'rejected'},g.operator)).status).toBe(400)
+ expect((await context()).attachments.find(attachment=>attachment.id===rejected)).toMatchObject({public_state:'operator_only',rejection_reason:null})
+ const reason='This diagram contains private customer details.'
+ expect((await call(`/api/operator/attachments/${rejected}/moderate`,{verdict:'rejected',reason},g.operator)).status).toBe(200)
+ const reviewed=await context()
+ expect(reviewed.attachments.find(attachment=>attachment.id===rejected)).toMatchObject({public_state:'rejected',rejection_reason:reason})
+ expect(await env.DB.prepare('SELECT moderation_state FROM requests WHERE id=?').bind(requestId).first('moderation_state')).toBe('approved')
+ const stillPublic=await call(`/api/public/requests/${slug}`);expect(stillPublic.status).toBe(200);expect(await stillPublic.json()).toEqual(parent)
+ expect((await call(`/api/public/attachments/${rejected}`)).status).toBe(404)
+ const files:string[]=[]
+ for(const [type,name,bytes,disposition] of [
+  ['image/png','synthetic-penny-2.png',new Uint8Array([137,80,78,71]),'inline'],
+  ['image/jpeg','synthetic-penny-3.jpg',new Uint8Array([255,216,255,217]),'inline'],
+  ['image/gif','synthetic-penny-4.gif',new Uint8Array([71,73,70,56]),'inline'],
+  ['application/pdf','synthetic-penny-5.pdf',new Uint8Array([37,80,68,70]),'attachment'],
+ ] as const){
+  const file=await upload(bytes,name,type);files.push(file)
+  expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
+  expect((await call(`/api/operator/attachments/${file}/moderate`,{verdict:'approved'},g.operator)).status).toBe(200)
+  const published=await call(`/api/public/attachments/${file}`)
+  expect(published.status).toBe(200)
+  expect(published.headers.get('Content-Type')).toBe(type)
+  expect(published.headers.get('Content-Disposition')).toBe(`${disposition}; filename*=UTF-8''${name}`)
+  expect(new Uint8Array(await published.arrayBuffer())).toEqual(bytes)
+ }
+ const {limits}=(await import('../../seed.json')).default,stored=async()=>Number(await env.DB.prepare('SELECT SUM(byte_size) n FROM attachments WHERE request_id=?').bind(requestId).first('n')),pdf=(size:number)=>attach(new File([new Uint8Array(size)],'large.pdf',{type:'application/pdf'}))
  for(let room=Math.floor((limits.uploadBytesPerRequest-await stored())/limits.uploadBytesPerFile);room>0;room--)expect((await pdf(limits.uploadBytesPerFile)).status).toBe(201);const left=limits.uploadBytesPerRequest-await stored(),objects=(await env.FILES.list()).objects.length;expect((await Promise.all([pdf(left),pdf(left)])).map(r=>r.status).sort(),'a request keeps its files within the per-request total').toEqual([201,400]);expect(await stored()).toBe(limits.uploadBytesPerRequest);expect((await env.FILES.list()).objects.length).toBe(objects+1)
+ const held=await g.submit('Held attachment parent'),bytes=new Uint8Array([137,80,78,71]),heldFile=await upload(bytes,'synthetic-penny-6.png','image/png',held)
+ expect((await call(`/api/operator/attachments/${heldFile}/moderate`,{verdict:'approved'},g.operator)).status).toBe(200)
+ expect((await call(`/api/public/requests/${held}`)).status).toBe(404)
+ expect((await call(`/api/public/attachments/${heldFile}`)).status).toBe(404)
+ await g.approve(held,'Approved attachment parent')
+ const visible=await call(`/api/public/attachments/${heldFile}`);expect(visible.status).toBe(200);expect(new Uint8Array(await visible.arrayBuffer())).toEqual(bytes)
+ expect((await call(`/api/public/requests/${held}/withdraw`,{},g.person)).status).toBe(204)
+ expect((await call(`/api/public/attachments/${heldFile}`)).status).toBe(404)
+ const rejectedParent=await g.submit('Rejected attachment parent'),rejectedParentFile=await upload(bytes,'synthetic-penny-7.png','image/png',rejectedParent)
+ expect((await call(`/api/operator/attachments/${rejectedParentFile}/moderate`,{verdict:'approved'},g.operator)).status).toBe(200)
+ expect((await call(`/api/operator/moderation/${rejectedParent}`,{verdict:'rejected',reason:'The parent request needs different wording.'},g.operator)).status).toBe(200)
+ expect((await call(`/api/public/attachments/${rejectedParentFile}`)).status).toBe(404)
  expect(await (await call(`/api/public/requests/${slug}`)).text()).not.toContain('Private enterprise context')
  expect((await call('/api/operator/boards/product',{visibility:'internal'},g.operator,'PATCH')).status).toBe(200)
- expect((await call(`/api/public/requests/${slug}`)).status).toBe(404);expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
+ expect((await call(`/api/public/requests/${slug}`)).status).toBe(404)
+ for(const file of files)expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
 })
 
 it('[BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back',async()=>{

@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 56 | 59 | 1 | 116 |
+| Published | 57 | 58 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 76 | 127 | 78 | 281 |
+| All | 77 | 126 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3303,7 +3303,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-008` | Merge | published | partial | `tests/base/board.test.ts` | Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted. |
 | `REQ-009` | Unmerge | published | partial | `tests/base/board.test.ts`; `tests/base/notifications.test.ts` | Restoring the duplicate's votes, followers and evidence links, leaving post-merge additions on the canonical request and recording the reversal have no passing assertion; the duplicate's comment and status update reappearing are asserted. |
 | `REQ-010` | Follow and consent | published | partial | `tests/base/board.test.ts` | The unticked "Email me updates" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion. |
-| `REQ-011` | Portal attachments | published | partial | `tests/base/board.test.ts` | Rejecting a file with a reason without rejecting the request, and the declared content type and inline disposition of a published image, have no passing assertion; approval, the 404 before it and the served bytes are asserted. |
+| `REQ-011` | Portal attachments | published | done | `tests/base/board.test.ts` — "[REQ-011/018/019 EVID-009] Base-signed board and tag management preserves private tags, separate file approval and the per-request attachment total": reasoned file rejection read through authenticated operator context leaves the approved parent public; declared image types, inline disposition and original bytes; PDF download disposition; 404 for held or rejected files, held or rejected or withdrawn parents and internal boards; per-request upload custody. |  |
 | `REQ-012` | Portal search and browse | published | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-012/` | Category filtering, newest and recency-weighted last-14-day trending are implemented alongside search, board, status and existing sorts. Gap: the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
 | `REQ-013` | Submission idempotency | published | partial | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` | No test repeats a submission with its idempotency key to get the original request and evidence result back, sends a changed body under the same key for 409, or checks 30-day key retention and keys holding no personal data. |
 | `REQ-014` | Identity failure | published | partial | `tests/base/host-identity.test.ts` | The visitor being offered email verification (REQ-023) after a rejected identity has no passing assertion; the refusal of expired, future-dated and wrongly signed claims at the host-identity exchange with the identity-required error, no writes and no account or identity disclosure is asserted. |

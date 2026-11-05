@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete REQ-011’s existing native attachment journey: read a rejected file’s reason through authenticated operator context while its approved parent stays public, verify each supported image’s declared type, inline disposition and original bytes, retain PDF download headers, and refuse public files before approval or when their parent is held, rejected, withdrawn or internal. Preserve upload-limit races and private tags. Mark REQ-011 done; no runtime, migration or configuration change is required. Unrelated clauses and field-proof holds remain unchanged.
+
 - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.
 
 - Complete API-001’s existing built-Worker scoped proxy-vote journey with persisted vote, contribution, attribution and permission snapshots around read-only and revoked-key refusals. Verify the successful vote remains unverified and grants no email permission or requester session, and cite the journey for all three acceptance points. No runtime, migration or configuration change is required; other clause and field-proof holds remain unchanged.
