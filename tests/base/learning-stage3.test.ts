@@ -164,6 +164,8 @@ it('[LEARN-003] learning actions retain the acting peer and roll back with their
  const b=await act(path+'/investigations',{nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Private grant purpose',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},['learning.grant_created'],'learning_investigation',201)
  await act(path+`/investigations/${b.id}/source`,{sourceId:f.source.id},['learning.source_attached'])
  const first=await act(url+'/run',{},['learning.run_requested','learning.run_completed'])
+ await json(call(url+'/control',{action:'pause'},f.cookie));await json(call(url+'/control',{action:'resume'},f.cookie))
+ expect(await env.DB.prepare('SELECT actor_id FROM learning_investigations WHERE id=?').bind(f.investigation.id).first('actor_id')).toBe(creatorId)
  const committed=await act(url+'/commit',{interpretationId:first.artifactId,optionId:'assist',rationale:'Private commitment rationale',confidence:'low',reviewAt:'2098-01-01T00:00:00Z'},['learning.committed'],'learning_investigation',201)
  const committedDetail=await json<{commitments:{id:string;actor_id:string;snapshot:{ownerOperatorId:string}}[]}>(call(url,undefined,peer))
  expect(committedDetail.commitments).toEqual([expect.objectContaining({id:committed.id,actor_id:peerId,snapshot:expect.objectContaining({ownerOperatorId:peerId})})])
