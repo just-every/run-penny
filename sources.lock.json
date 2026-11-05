@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "18343f6e22f90f3d5f20cb079e9dbefb53b60745fd0dfdb247fe6ced2cb3dbb7",
+      "sha256": "d46dd774a60f209609d27d6a98a85a1d6d10ac1a83d032809a323a9011025e0b",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "ce573fd505226629fe811135205465cce9251b8e0d553ab19406d913008b5d9b",
+      "sha256": "ab8d453795f1e809a3ea82270a5b253139484adb0069a752b410f1675330c3ae",
       "executable": false
     },
     "DEMO.md": {
@@ -8362,7 +8362,7 @@
       "executable": false
     },
     "tests/base/host-identity.test.ts": {
-      "sha256": "f3b4b01550266f42dbfa1138b7f21c9f3b6a23b86ea55f9aa19a37be0ac0002e",
+      "sha256": "bfe6c92a704ee492e64f192c6028d620c2d155aa9bc59340e301372cbe25cb34",
       "executable": false
     },
     "tests/base/hosted-export.test.ts": {
@@ -8754,7 +8754,7 @@
       "executable": false
     },
     "tests/browser/host-identity.mjs": {
-      "sha256": "71520fdc2ad03bd6a918f1839efee292a72d8f7c8df2a463fe16e8f801ea3c23",
+      "sha256": "7f9f69d71736d057553ca351b499f5c210dbe754088629c7f79effa169a7f382",
       "executable": false
     },
     "tests/browser/import-board-policy.mjs": {
@@ -9294,7 +9294,7 @@
       "executable": false
     },
     "verification.json": {
-      "sha256": "d8db2050dc706da26dfbc5f2e72f190d4721efb76d60d9b66e78f5bf97d13b11",
+      "sha256": "4ab2573335f2de02e5ca3eb2b7ac2476ee2eaf27f63decf4b279beb6311ec553",
       "executable": false
     },
     "visual/01-landing.jpg": {

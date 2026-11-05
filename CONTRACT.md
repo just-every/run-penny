@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 57 | 58 | 1 | 116 |
+| Published | 58 | 57 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 77 | 126 | 78 | 281 |
+| All | 78 | 125 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3306,7 +3306,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-011` | Portal attachments | published | partial | `tests/base/board.test.ts` | Rejecting a file with a reason without rejecting the request, and the declared content type and inline disposition of a published image, have no passing assertion; approval, the 404 before it and the served bytes are asserted. |
 | `REQ-012` | Portal search and browse | published | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-012/` | Category filtering, newest and recency-weighted last-14-day trending are implemented alongside search, board, status and existing sorts. Gap: the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
 | `REQ-013` | Submission idempotency | published | partial | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` | No test repeats a submission with its idempotency key to get the original request and evidence result back, sends a changed body under the same key for 409, or checks 30-day key retention and keys holding no personal data. |
-| `REQ-014` | Identity failure | published | partial | `tests/base/host-identity.test.ts` | The visitor being offered email verification (REQ-023) after a rejected identity has no passing assertion; the refusal of expired, future-dated and wrongly signed claims at the host-identity exchange with the identity-required error, no writes and no account or identity disclosure is asserted. |
+| `REQ-014` | Identity failure | published | done | `tests/base/host-identity.test.ts` — rejects invalid signed claims without writes or identity disclosure; fences conflicting or older claims, erased identities and identity changes at the business transaction. `tests/browser/host-identity.mjs` — host-identity: allowed-parent rejection and email fallback. |  |
 | `REQ-015` | Status updates | published | partial | `tests/base/board.test.ts` | A status update rendered distinctly from comments, pinned above them and notifying followers under NOTIFY-001 has no passing assertion; posting a pinned update and its text on the request are asserted. |
 | `REQ-016` | Public status | published | done | `tests/base/request-status-workflow.test.ts`; `tests/base/decision-loop-roadmap.test.ts`; `visual/request-status-workflow/REQ-016/` |  |
 | `REQ-017` | Decline | published | done | `tests/base/request-status-workflow.test.ts` — sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards (reason refusal, declined history, closed participation, direct and mapped reversal); `tests/browser/request-decline.mjs` — request-decline (operator controls and customer history, repeated decline and reversal, screens at 1440 and 390) |  |

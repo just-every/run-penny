@@ -25,14 +25,17 @@ async function snapshot(){
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 afterEach(()=>vi.restoreAllMocks())
 it('[REQ-014 REQ-031 DATA-002] rejects invalid signed claims without writes or identity disclosure',async()=>{
+ const network=vi.spyOn(globalThis,'fetch').mockImplementation(async()=>{throw new Error('Unexpected network effect')})
  const before=await snapshot()
  for(const claim of [{aud:'https://wrong.example.test'},{issuedAt:new Date(Date.now()-25*3600000).toISOString()},{issuedAt:new Date(Date.now()+10*60000).toISOString()},{accountId:'unpaired'},{revenueCents:2},{accountId:'account',accountName:'Account',renewalDate:'2026-02-31'},{revenueCents:-1}]){
   const response=await host(await credential(claim));expect(response.status).toBe(401)
   expect(await response.json()).toEqual({error:'requester_identity_required'});expect(await snapshot()).toEqual(before)
  }
- expect((await host(await credential({},'wrong-test-key'))).status).toBe(401)
+ const forged=await host(await credential({},'wrong-test-key'));expect(forged.status).toBe(401)
+ expect(await forged.json()).toEqual({error:'requester_identity_required'})
  expect((await host({...await credential(),Origin:'https://wrong.example.test'})).status).toBe(403)
  expect(await snapshot()).toEqual(before)
+ expect(network).not.toHaveBeenCalled()
 })
 it('[REQ-014 REQ-031 EVID-006 BASE-ACCESS-002] accepts supplied account context only privately, with no email permission or operator authority',async()=>{
  const network=vi.spyOn(globalThis,'fetch').mockImplementation(async()=>{throw new Error('Unexpected network effect')})
