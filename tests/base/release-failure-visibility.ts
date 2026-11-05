@@ -18,7 +18,7 @@ async function json<T>(response:Promise<Response>):Promise<T>{
 /** Real publication, scheduler and reads; only the mail HTTP edge is replaced. */
 export async function proveReleaseFailureVisibility(){
  for(const provider of ['sendgrid','resend'] as const){
-  for(const outcome of ['rejected','ambiguous','interrupted','accepted'] as const){
+  for(const outcome of ['rejected','rate_limited','recovered','expired','ambiguous','interrupted','accepted'] as const){
    await reset();await applyD1Migrations(env.DB,inject('migrations'));vi.restoreAllMocks()
    vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-11-05T12:00:00.000Z'))
    try{
@@ -76,7 +76,7 @@ export async function proveReleaseFailureVisibility(){
       // It rejects both completion and the catch path, leaving durable sending custody.
       await env.DB.exec("CREATE TRIGGER synthetic_penny_completion_outage BEFORE UPDATE ON notification_outbox_attempts WHEN OLD.state='sending' BEGIN SELECT RAISE(ABORT,'synthetic-penny-storage-unavailable'); END;")
      }
-     return outcome==='rejected'?new Response(null,{status:429}):outcome==='ambiguous'?new Response(null,{status:503}):provider==='sendgrid'?new Response(null,{status:202,headers:{'x-message-id':'synthetic-penny-1'}}):Response.json({id:'synthetic-penny-1'})
+     return outcome==='rejected'?new Response(null,{status:400}):outcome==='rate_limited'||outcome==='expired'||outcome==='recovered'&&sent.length===1?new Response(null,{status:429}):outcome==='ambiguous'?new Response(null,{status:503}):provider==='sendgrid'?new Response(null,{status:202,headers:{'x-message-id':'synthetic-penny-1'}}):Response.json({id:'synthetic-penny-1'})
     })
     const bindings={...env,WORKSPACE_TIMEZONE:'UTC',MAIL_PROVIDER:provider,MAIL_API_KEY:'synthetic-penny-1'}
     const worker=exports.default as typeof exports.default&{scheduled(options:{scheduledTime:number;cron:string}):Promise<void>}
@@ -96,15 +96,29 @@ export async function proveReleaseFailureVisibility(){
      expect(view).toMatchObject({attemptId:recovered.id,attemptState:'unknown'})
     }else{
      await cron();expect(sent).toHaveLength(1)
-     if(outcome==='rejected'){
+     if(outcome==='rejected'||outcome==='rate_limited'){
+      const reason=outcome==='rejected'?'provider_rejected':provider==='sendgrid'?'provider_rate_limited':'rate_limited'
       for(let retry=0;retry<5;retry++){
        const row=(await rows('notification_outbox'))[0]
        expect(row.available_at).toBe(new Date(Date.now()+60000*2**retry).toISOString())
-       await readDelivery('queued',retry+1,provider==='sendgrid'?'provider_rate_limited':'rate_limited')
+       await readDelivery('queued',retry+1,reason)
        vi.setSystemTime(new Date(Date.parse(String(row.available_at))-1));await cron();expect(sent).toHaveLength(retry+1)
        vi.setSystemTime(new Date(Date.now()+1));await cron();expect(sent).toHaveLength(retry+2)
       }
-      await readDelivery('failed',6,provider==='sendgrid'?'provider_rate_limited':'rate_limited')
+      await readDelivery('failed',6,reason)
+     }else if(outcome==='expired'){
+      await readDelivery('queued',1,provider==='sendgrid'?'provider_rate_limited':'rate_limited')
+      const prior=await rows('notification_outbox_attempts'),firstAttemptAt=(await rows('notification_outbox'))[0].first_attempt_at
+      expect(firstAttemptAt).toBe(new Date().toISOString())
+      vi.setSystemTime(new Date(Date.now()+3600000));await cron()
+      await readDelivery('failed',1,'retry_window_exhausted')
+      expect(sent).toHaveLength(1);expect(await rows('notification_outbox_attempts')).toEqual(prior)
+     }else if(outcome==='recovered'){
+      const queued=(await rows('notification_outbox'))[0]
+      await readDelivery('queued',1,provider==='sendgrid'?'provider_rate_limited':'rate_limited')
+      vi.setSystemTime(new Date(Date.parse(String(queued.available_at))));await cron()
+      await readDelivery('accepted',2,null)
+      expect(sent).toHaveLength(2)
      }else{
       const state=outcome==='accepted'?'accepted':'unknown',reason=outcome==='accepted'?null:provider==='sendgrid'?'provider_uncertain':'unexpected_response'
       const view=await readDelivery(state,1,reason)
@@ -112,9 +126,14 @@ export async function proveReleaseFailureVisibility(){
      }
     }
     const terminal=await rows('notification_outbox'),attempts=await rows('notification_outbox_attempts'),transmissions=[...sent]
-    expect(attempts).toHaveLength(outcome==='rejected'?6:1)
+    expect(attempts).toHaveLength(outcome==='rejected'||outcome==='rate_limited'?6:outcome==='recovered'?2:1)
+    expect(new Set(attempts.map(attempt=>attempt.id)).size).toBe(attempts.length)
+    if(outcome==='accepted'||outcome==='recovered'){
+     expect(terminal[0]).toMatchObject({provider_message_id:'synthetic-penny-1',accepted_at:new Date().toISOString()})
+     expect(attempts.at(-1)).toMatchObject({provider_message_id:'synthetic-penny-1',state:'accepted'})
+    }
     for(const message of sent){expect(message.key).toBe(delivery.id);expect(message.subject).toBe(baseline.title);expect(message.text).toContain(baseline.body)}
-    expect(attempts.every(attempt=>attempt.outbox_id===delivery.id&&attempt.provider===provider&&attempt.state===(outcome==='rejected'?'rate_limited':outcome==='accepted'?'accepted':'unknown'))).toBe(true)
+    expect(attempts.every(attempt=>attempt.outbox_id===delivery.id&&attempt.provider===provider&&attempt.state===(outcome==='rejected'?'rejected':outcome==='rate_limited'||outcome==='expired'?'rate_limited':outcome==='recovered'?(attempt===attempts[0]?'rate_limited':'accepted'):outcome==='accepted'?'accepted':'unknown'))).toBe(true)
     for(const offset of [60000,3600000,86400000]){
      vi.setSystemTime(new Date(Date.now()+offset));await cron()
      expect(sent).toEqual(transmissions)

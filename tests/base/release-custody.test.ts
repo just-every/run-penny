@@ -2,6 +2,7 @@ import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterEach,expect,inject,it,vi } from 'vitest'
 import { env } from './support'
 import { releaseGraph } from './release-fixture'
+import {proveReleaseDeliveryTiming} from './release-delivery-timing'
 import {proveReleaseFailureVisibility} from './release-failure-visibility'
 import { rows,time,start,runtime,provider } from './notification-regression-fixture'
 import { publishRelease } from '@/core/features/releases/publication'
@@ -68,7 +69,8 @@ it('[DATA-001 REL-006] release failures stay visible, uncertain and restored del
  await reset();await applyD1Migrations(env.DB,inject('migrations'));await restoreArchive(env.DB,env.FILES,snapshot.archive,snapshot.journal)
  const sent=provider();await drainReleaseDeliveries(runtime(),()=>start+60000);expect(sent).toHaveLength(0)
  await proveReleaseFailureVisibility()
-},120000)
+ await proveReleaseDeliveryTiming()
+},180000)
 it('[DATA-003 REL-003/005] approved public phrase survives requester erasure while private copied wording still refuses',async()=>{
  const g=await releaseGraph(1)
  const {saveReleaseDraft}=await import('@/core/features/releases/drafts')

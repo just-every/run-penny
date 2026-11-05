@@ -1,6 +1,6 @@
 import {call,env} from './support'
 /** Prepare a real public release through the same operator routes as the workspace. */
-export async function weeklyRelease(operator:Record<string,string>,requestId:string){
+export async function weeklyRelease(operator:Record<string,string>,requestId:string,{publish=true}={}){
  const action=async(path:string,body:unknown,method='POST')=>{
   const response=await call(path,body,operator,method)
   if(!response.ok)throw Error(`Weekly release setup ${path}: ${response.status} ${await response.text()}`)
@@ -17,6 +17,6 @@ export async function weeklyRelease(operator:Record<string,string>,requestId:str
  await action(`/api/operator/roadmap/${item.itemId}/move`,{status:'shipped',reason:'Approved export is available.',idempotencyKey:crypto.randomUUID()})
  const tag=await action('/api/operator/catalog/tags',{name:'Reporting'})
  const release=await action('/api/operator/releases',{title:'Scheduled exports are available',body:'Public weekly release wording',releaseType:'improved',tagIds:[tag.id],publicationDate:new Date().toISOString().slice(0,10),setupUrl:'',targetIds:[item.itemId],authorOperatorId:actor})
- await action(`/api/operator/releases/${release.slug}/publish`,{})
+ if(publish)await action(`/api/operator/releases/${release.slug}/publish`,{})
  return release
 }

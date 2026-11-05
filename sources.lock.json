@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "adfe5122b19c01bdfd87a755f9299b55a3265d4729edf1da06a2e87288a2d233",
+      "sha256": "4ff3fb39b11153121a4272789f1eb8438f1502f0468c84d858815c09b24088ad",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "93e5de73e911d1bcec9fdd6a2a82997fc994d6727baa0a40e432cd72e807448a",
+      "sha256": "4c615444217f7d9335e409466b674b29fb360aee3062e98a861038bb948f57a8",
       "executable": false
     },
     "DEMO.md": {
@@ -8546,11 +8546,15 @@
       "executable": false
     },
     "tests/base/release-custody.test.ts": {
-      "sha256": "38a8ab8c017246c13f81e0f99885e8aa259b94afb93388227b59bb0d43896ed9",
+      "sha256": "ea6a580649aa397f6c7b566b597a123b74faaf9c0122093569bbbe0b230cd7c2",
+      "executable": false
+    },
+    "tests/base/release-delivery-timing.ts": {
+      "sha256": "aa7e98d851ad58881653bb5c0fc12185e404af32a9353e5a911042dac0764efb",
       "executable": false
     },
     "tests/base/release-failure-visibility.ts": {
-      "sha256": "9bcdae39780c89794adfb368db4c99819fb3b402a6348306abe4c994c51af8ed",
+      "sha256": "5c7b448bb1de411a1dd915f9086eca0e6cf383fdb101af47be9a10fdc9f3beec",
       "executable": false
     },
     "tests/base/release-fixture.ts": {
@@ -8666,7 +8670,7 @@
       "executable": false
     },
     "tests/base/weekly-summary-release.ts": {
-      "sha256": "2321b92a63d083f52c769e6311ec3a45c4819daa77e94175065aa42d70ee1d42",
+      "sha256": "508edb6d5dc0ba30ff609eb87b33238a0745122fb36e387b0a588348292e1e4f",
       "executable": false
     },
     "tests/base/worker-environment.d.ts": {
