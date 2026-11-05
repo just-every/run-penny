@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete REQ-009 reversal proof inside the existing native board journey: restore the duplicate’s original content, votes, follows, evidence links, discussion and approved files; retain later canonical additions and overlapping evidence by origin; record one attributed reversal with its audit, refusing unauthorized writes and replay and rolling back when auditing fails. Preserve existing status, mute, proxy and vote-importance assertions. Merge redirects keep their 301 status but are not cached, so the same browser can reopen the restored duplicate; the existing merge browser journey checks it. No new test registration, migration or configuration is required; other contract holds remain unchanged.
+
 - Complete REQ-010 consent proof through the existing requester and subscription journeys: mounted submit and vote controls start unchecked, ordinary unticked actions grant nothing, current automatic disclosures lead to author and voter follows, and explicit grants bind the verified address, request, source and controlled time. Unfollow revokes the permission while preserving the vote. Retain automatic-subscription, unsubscribe and withdrawal coverage. No runtime, migration or configuration change is required; separate notification, provider and release obligations remain unchanged.
 
 - Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.

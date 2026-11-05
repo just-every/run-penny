@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); REQ-009 additionally proved by the current native board journey, custody helper and merge browser journey (5 November 2026); other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 59 | 56 | 1 | 116 |
+| Published | 60 | 55 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 79 | 124 | 78 | 281 |
+| All | 80 | 123 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3301,7 +3301,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-006` | Voting | published | partial | `tests/base/board.test.ts` | Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted. |
 | `REQ-007` | Discussion | published | done | `tests/base/notifications.test.ts` |  |
 | `REQ-008` | Merge | published | partial | `tests/base/board.test.ts` | Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted. |
-| `REQ-009` | Unmerge | published | partial | `tests/base/board.test.ts`; `tests/base/notifications.test.ts` | Restoring the duplicate's votes, followers and evidence links, leaving post-merge additions on the canonical request and recording the reversal have no passing assertion; the duplicate's comment and status update reappearing are asserted. |
+| `REQ-009` | Unmerge | published | done | `tests/base/board.test.ts` Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail, invoking `tests/base/request-unmerge-custody.ts` proveUnmergeCustody: original content and contribution custody, canonical additions, reversal actor and time, audit rollback, authority refusals and replay; `tests/base/notifications.test.ts` request-scoped mute follows canonical resolution and survives unmerge; `tests/browser/merge-notices.mjs` reopens the duplicate in the same browser after reversing its merge |  |
 | `REQ-010` | Follow and consent | published | done | `tests/browser/requester-repair.mjs` with `tests/browser/requester-consent.mjs` — mounted explicit and automatic consent; `tests/base/requester-subscriptions.test.ts` — disclosed voting and submission, explicit consent address binding, exact grant time and unfollow revocation (`tests/base/request-consent.ts`) |  |
 | `REQ-011` | Portal attachments | published | partial | `tests/base/board.test.ts` | Rejecting a file with a reason without rejecting the request, and the declared content type and inline disposition of a published image, have no passing assertion; approval, the 404 before it and the served bytes are asserted. |
 | `REQ-012` | Portal search and browse | published | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-012/` | Category filtering, newest and recency-weighted last-14-day trending are implemented alongside search, board, status and existing sorts. Gap: the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |

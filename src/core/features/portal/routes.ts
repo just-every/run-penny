@@ -31,7 +31,11 @@ export function registerPortalRoutes(app: Hono<PortalRouteEnvironment>): void {
     const slug = publicSlugSchema.safeParse(context.req.param('slug'))
     if (!slug.success) return context.json({ error: 'validation_failed', message: 'Invalid public request slug.' }, 400)
     const result = await portalReadService(context.get('runtime').database).getRequest(slug.data)
-    if (result.kind === 'redirect') return context.redirect(`/api/public/requests/${result.slug}`,301)
+    if (result.kind === 'redirect') {
+      // The redirect must be rechecked because an operator can reverse the merge.
+      context.header('Cache-Control', 'no-store')
+      return context.redirect(`/api/public/requests/${result.slug}`,301)
+    }
     if (result.kind === 'found') return context.json(result.request)
     return result.kind === 'withdrawn' ? context.json({ error: 'withdrawn' }, 410) : context.json({ error: 'not_found' }, 404)
   })

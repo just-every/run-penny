@@ -62,7 +62,11 @@ export async function proveUnmergeCustody(){
  expect(originalSource.request_evidence_links).toHaveLength(3);expect(originalTarget.request_evidence_links).toHaveLength(3)
 
  await json(call(`/api/operator/requests/${source.slug}/merge`,{targetSlug:target.slug,notifySubscribers:false},operator))
- expect((await call(`/api/public/requests/${source.slug}`)).status).toBe(301)
+ for(const path of [`/api/public/requests/${source.slug}`,`/portal/feedback/${source.slug}`]){
+  const redirect=await call(path)
+  expect(redirect.status).toBe(301)
+  expect(redirect.headers.get('Cache-Control')).toBe('no-store')
+ }
  const merged=await json<RequestContext>(call(`/api/operator/requests/${target.slug}/context`,undefined,operator))
  expect(merged.demand.voteCount).toBe(4);expect(merged.demand.evidenceCount).toBe(5)
  expect(merged.comments.map(row=>row.id).sort()).toEqual([sourceComment,targetComment].sort())

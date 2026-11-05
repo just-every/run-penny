@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "72242b09f75d216de644c29a46a9976c13cabc32fbee50441a3cee42a5fd13b0",
+      "sha256": "f77a11bb5e38b66ae53b84f0f4ae4844bcc38715d171394483519dd7b8ea6033",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "b3e1caa180664ffa9781411cfea6ded4cb4f22ae5d62087d28944dfe1fe7d092",
+      "sha256": "930d0a3807cbec5fc8634241cc090a55ab24674069eb26b8008fc303ca235b6e",
       "executable": false
     },
     "DEMO.md": {
@@ -4910,7 +4910,7 @@
       "executable": false
     },
     "src/core/app/worker.ts": {
-      "sha256": "df6fa4d6dac1ae3d45d3346b98514e5bb1a55086959d5484200f428fa30f7b5d",
+      "sha256": "a3ba9bc1cc6a7e2594992e426291dffae5fa6f9a3086382890255c8b05b0baaf",
       "executable": false
     },
     "src/core/features/accounts/index.ts": {
@@ -6826,7 +6826,7 @@
       "executable": false
     },
     "src/core/features/portal/routes.ts": {
-      "sha256": "b2fd01675f02abf11a671693561bdce730936b0fe6a030d5297f00ebdb70fadf",
+      "sha256": "5613018d87b3b340ac13a62adf8aa3e30d8dfc857e724ebd5b656315e87f0447",
       "executable": false
     },
     "src/core/features/portal/service.ts": {
@@ -8582,7 +8582,7 @@
       "executable": false
     },
     "tests/base/request-unmerge-custody.ts": {
-      "sha256": "ba4d6aef8e931514dab25e51b3b4016644464a090e6af62a231951d9f44ef25b",
+      "sha256": "25a2c3bb2366afe90068886b1a9e5d8ffa42124d12a6f6e658c1aa646a533141",
       "executable": false
     },
     "tests/base/request-withdrawal.test.ts": {
@@ -8838,7 +8838,7 @@
       "executable": false
     },
     "tests/browser/merge-notices.mjs": {
-      "sha256": "a2be8a976ce44f1b4a8056c0353f800470c7918a2f5eeae849e96d5b67b0a927",
+      "sha256": "a00776586cf14215ad3ab0b7c1704ab46e43976a4209098addad9f03fd4c3f1f",
       "executable": false
     },
     "tests/browser/moderation-runtime.mjs": {
