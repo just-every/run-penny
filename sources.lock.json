@@ -8518,7 +8518,7 @@
       "executable": false
     },
     "tests/base/proxy-votes.test.ts": {
-      "sha256": "ea347190efa40431effa10143b02ac57618f2128a8fbc91cae099f6ddf1d82b0",
+      "sha256": "b4c994059084df06cdd5e0a830dccefcf653bc9811b87f63c21da207a367d406",
       "executable": false
     },
     "tests/base/redaction-copy-doors.ts": {
@@ -8942,7 +8942,7 @@
       "executable": false
     },
     "tests/browser/proxy-votes.mjs": {
-      "sha256": "4b0f48b6f9f99622b97495aed11857d373fe616c43d35cb1624a8f16bad0b6cc",
+      "sha256": "b701a2594632f8104ee64a938f1d970c8a6845543c33d58347f56b5986c87d02",
       "executable": false
     },
     "tests/browser/public-entry-pacing.mjs": {
@@ -9050,7 +9050,7 @@
       "executable": false
     },
     "tests/browser/zendesk-proxy-votes.mjs": {
-      "sha256": "6c96947c8443acd2bf496ad3a2e4eb2b28271a8542d5dbb190753299c13fdf6a",
+      "sha256": "c5a1f393cfff270cac0503eb58c879afaf4dac8122da451d7df44eb30ad5958a",
       "executable": false
     },
     "tests/browser/zendesk-sdk-edge.mjs": {

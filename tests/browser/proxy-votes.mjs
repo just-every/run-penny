@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
+import {parseFeedbackCsv} from '../../src/core/features/imports/csv.ts'
 import {moderationJourney} from './moderation-runtime.mjs'
 await moderationJourney('proxy-votes',async({runtime,origin,operator,json,send,person,pageFor,capture})=>{
+ const {operator:actor}=await json('/api/auth/session',undefined,operator)
  const customer=await person('eli@example.test','Eli Wong'),auth={Authorization:`Bearer ${customer.token}`}
  const request=await json('/api/public/requests',{title:'Schedule monthly finance exports',description:'Finance needs a monthly CSV for its board review.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},auth,'POST',201)
  await json(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title:'Schedule monthly finance exports',description:'Schedule monthly exports for finance reviews.',boardSlug:'finance',displayName:'Eli Wong'},operator)
@@ -42,5 +44,8 @@ await moderationJourney('proxy-votes',async({runtime,origin,operator,json,send,p
  assert.equal((await visitor.content()).includes('738'),false)
  await capture(visitor,'public-proxy-total')
  const csv=await send('/api/operator/votes/export.csv',undefined,operator)
- assert.match(await csv.text(),/Sam Rivera.*Zendesk ticket 738/)
+ const rows=parseFeedbackCsv(await csv.text())
+ assert.deepEqual(rows.filter(row=>row.customer_id===contact).map(({request,customer_id,customer,source,source_url,recorder_id,recorder,proxy})=>({request,customer_id,customer,source,source_url,recorder_id,recorder,proxy})),[{
+  request:request.slug,customer_id:contact,customer:'Sam Rivera',source:'Zendesk ticket 738: requested during monthly finance review',source_url:'https://harbor.zendesk.com/agent/tickets/738',recorder_id:actor.id,recorder:actor.displayName,proxy:'1',
+ }])
 })

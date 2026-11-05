@@ -2,38 +2,60 @@ import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterAll,expect,inject,it,vi } from 'vitest'
 import { call,env,messages,owner } from './support'
 import { graph } from './notification-regression-fixture'
+import { parseFeedbackCsv } from '@/core/features/imports/csv'
 beforeEach(async()=>{vi.restoreAllMocks();await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 afterAll(()=>vi.restoreAllMocks())
 const json=async<T>(path:string,body:unknown,headers:Record<string,string>,status=200):Promise<T>=>{const response=await call(path,body,headers);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
 const total=async(table:string)=>env.DB.prepare(`SELECT COUNT(*) n FROM ${table}`).first<number>('n')
 
-it('[CAP-014 REQ-026 REQ-010] records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote',async()=>{
+it('[CAP-014 REQ-026 REQ-010] records inbox, request-page and Zendesk customer demand once with its CSV recorder, without verification or consent, and collapses with each customer’s later own vote',async()=>{
  const g=await graph(),r=g.requests[0],before={permissions:await total('requester_update_permissions'),sessions:await total('native_requester_sessions')}
+ const {operator:actor}=await json<{operator:{id:string;displayName:string}}>('/api/auth/session',undefined,g.operator)
  const evidence=await json<{id:string}>('/api/operator/evidence',{sourceType:'support_conversation',wording:'Customer needs monthly exports.',observedAt:new Date().toISOString(),requestLinks:[{id:r.id,stance:'supporting'}]},g.operator,201)
- const input={contact:{displayName:'Casey Bell',email:'casey@example.test'},source:'Zendesk ticket 738: monthly export request',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',evidenceId:evidence.id}
- const vote=await json<{requesterId:string;created:boolean}>(`/api/operator/requests/${r.slug}/proxy-votes`,input,g.operator)
- expect(vote.created).toBe(true)
- expect(await env.DB.prepare('SELECT verified_at FROM requester_addresses WHERE requester_id=?').bind(vote.requesterId).first('verified_at')).toBeNull()
- expect(await total('requester_update_permissions')).toBe(before.permissions);expect(await total('native_requester_sessions')).toBe(before.sessions)
- const repeated=await json<{created:boolean}>(`/api/operator/requests/${r.slug}/proxy-votes`,{requesterId:vote.requesterId,source:input.source},g.operator)
- expect(repeated.created).toBe(false);expect(await total('penny_proxy_votes')).toBe(1)
+ const {token:key}=await json<{token:string}>('/api/operator/integrations/keys',{name:'Zendesk sidebar',scopes:['votes:write']},g.operator,201)
+ const cases=[
+  {door:'inbox',source:'Zendesk ticket 738: monthly export request',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',evidenceId:evidence.id},
+  {door:'request page',source:'Customer said, "monthly exports"\nDuring the request review',sourceUrl:'https://support.example.test/conversations/739'},
+  {door:'Zendesk sidebar',source:'Zendesk ticket 740: monthly export request',sourceUrl:'https://harbor.zendesk.com/agent/tickets/740'},
+ ]
+ const recorded:{id:string;email:string;displayName:string;source:string;sourceUrl:string}[]=[]
+ for(const [index,{door,...source}] of cases.entries()){
+  const displayName=`synthetic-penny-${index+1}`,email=displayName+String.fromCharCode(64)+'example.test'
+  const endpoint=door==='Zendesk sidebar'?`/api/v1/requests/${r.slug}/proxy-votes`:`/api/operator/requests/${r.slug}/proxy-votes`,headers=door==='Zendesk sidebar'?{Authorization:`Bearer ${key}`}:g.operator
+  const vote=await json<{requesterId:string;created:boolean}>(endpoint,{contact:{displayName,email},...source},headers)
+  expect(vote.created).toBe(true)
+  expect(await env.DB.prepare('SELECT verified_at FROM requester_addresses WHERE requester_id=?').bind(vote.requesterId).first('verified_at')).toBeNull()
+  const repeated=await json<{created:boolean}>(endpoint,{requesterId:vote.requesterId,source:source.source},headers)
+  expect(repeated.created).toBe(false);expect(await total('penny_proxy_votes')).toBe(index+1)
+  expect(await total('requester_update_permissions')).toBe(before.permissions);expect(await total('native_requester_sessions')).toBe(before.sessions)
+  recorded.push({id:vote.requesterId,email,displayName,source:source.source,sourceUrl:source.sourceUrl})
+ }
  const context=await json<{voters:{id:string;nativeProxy:number;proxyAttributionsJson:string}[];demand:{voteCount:number}}>(`/api/operator/requests/${r.slug}/context`,undefined,g.operator)
- expect(context.demand.voteCount).toBe(2)
- expect(context.voters.find(v=>v.id===vote.requesterId)).toMatchObject({nativeProxy:1})
- expect(context.voters.find(v=>v.id===vote.requesterId)!.proxyAttributionsJson).toContain('Zendesk ticket 738')
+ expect(context.demand.voteCount).toBe(4)
+ for(const customer of recorded){
+  expect(context.voters.find(v=>v.id===customer.id)).toMatchObject({nativeProxy:1})
+  expect(JSON.parse(context.voters.find(v=>v.id===customer.id)!.proxyAttributionsJson)).toContainEqual(expect.objectContaining({recorderId:actor.id,source:customer.source}))
+ }
  // Opted-in public voter lists still expose proxy customers only in the total.
  expect((await call('/api/operator/boards/regression',{showVoters:true},g.operator,'PATCH')).status).toBe(200)
  const publicBody=await(await call(`/api/public/requests/${r.slug}`)).text()
- for(const secret of ['Casey Bell','casey@example.test','738','recorderId','proxyAttributionsJson'])expect(publicBody).not.toContain(secret)
+ for(const secret of [...recorded.flatMap(customer=>[customer.displayName,customer.email,customer.source]),'recorderId','proxyAttributionsJson'])expect(publicBody).not.toContain(secret)
  const csv=await call('/api/operator/votes/export.csv',undefined,g.operator)
- expect(csv.status).toBe(200);expect(await csv.text()).toContain('Zendesk ticket 738')
- expect((await call('/api/public/identity/email',{email:'casey@example.test',displayName:'Casey Bell'})).status).toBe(202)
- const token=new URLSearchParams(new URL(messages.findLast(m=>m.to==='casey@example.test')!.url).hash.slice(1)).get('token')
- const verified=await json<{token:string}>('/api/public/identity/email/verify',{token},{})
- expect((await call(`/api/public/requests/${r.slug}/vote`,{},{Authorization:`Bearer ${verified.token}`})).status).toBe(204)
- const after=await json<typeof context>(`/api/operator/requests/${r.slug}/context`,undefined,g.operator)
- expect(after.demand.voteCount).toBe(2);expect(after.voters.find(v=>v.id===vote.requesterId)!.nativeProxy).toBe(0)
- expect(await total('requester_update_permissions')).toBe(before.permissions)
+ expect(csv.status).toBe(200)
+ const rows=parseFeedbackCsv(await csv.text())
+ for(const customer of recorded)expect(rows.filter(row=>row.customer_id===customer.id)).toEqual([expect.objectContaining({
+  request:r.slug,customer_id:customer.id,customer:customer.displayName,addresses:customer.email,proxy:'1',
+  recorder_id:actor.id,recorder:actor.displayName,source:customer.source,source_url:customer.sourceUrl,
+ })])
+ for(const customer of recorded){
+  expect((await call('/api/public/identity/email',{email:customer.email,displayName:customer.displayName})).status).toBe(202)
+  const token=new URLSearchParams(new URL(messages.findLast(m=>m.to===customer.email)!.url).hash.slice(1)).get('token')
+  const verified=await json<{token:string}>('/api/public/identity/email/verify',{token},{})
+  expect((await call(`/api/public/requests/${r.slug}/vote`,{},{Authorization:`Bearer ${verified.token}`})).status).toBe(204)
+  const after=await json<typeof context>(`/api/operator/requests/${r.slug}/context`,undefined,g.operator)
+  expect(after.demand.voteCount).toBe(4);expect(after.voters.find(v=>v.id===customer.id)!.nativeProxy).toBe(0)
+  expect(await total('requester_update_permissions')).toBe(before.permissions)
+ }
 })
 
 it('[CAP-014 REQ-035 REQ-008 REQ-009 DATA-001] retains native source attribution and importance through merge, unmerge and the product archive',async()=>{

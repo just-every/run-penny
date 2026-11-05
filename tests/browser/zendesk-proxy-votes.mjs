@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict'
+import {parseFeedbackCsv} from '../../src/core/features/imports/csv.ts'
 import {pathToFileURL} from 'node:url'
 import {moderationJourney} from './moderation-runtime.mjs'
 import {zendeskSidebar} from './zendesk-sdk-edge.mjs'
 
 export async function zendeskProxyVotesJourney({runtime,origin,operator,json,send,person,pageFor,capture}){
+ const {operator:actor}=await json('/api/auth/session',undefined,operator)
  const author=await person('eli@example.test','Eli Wong')
  await person('nina@example.test','Nina Rao')
  const request=await json('/api/public/requests',{title:'Schedule monthly finance exports',description:'Finance needs a monthly CSV for its board review.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},{Authorization:`Bearer ${author.token}`},'POST',201)
@@ -73,9 +75,15 @@ export async function zendeskProxyVotesJourney({runtime,origin,operator,json,sen
  assert.deepEqual(JSON.parse(posts().at(-1).data),{contact:{displayName:'Sam Rivera',email:'sam@example.test'},source:'Sam requested a monthly export in ticket 739.',sourceUrl:'https://harbor.zendesk.com/agent/tickets/739'})
  const attribution=await runtime.db.prepare('SELECT p.source_url,p.recorder_operator_id FROM penny_proxy_votes p WHERE p.requester_id=?').bind(contact.requester_id).first()
  assert.equal(attribution.source_url,'https://harbor.zendesk.com/agent/tickets/739')
- assert.ok(attribution.recorder_operator_id)
+ assert.equal(attribution.recorder_operator_id,actor.id)
  const csv=await (await send('/api/operator/votes/export.csv',undefined,operator)).text()
- assert.ok(csv.includes('Sam Rivera')&&csv.includes('739')&&csv.includes('Maya Patel'))
+ const rows=parseFeedbackCsv(csv)
+ for(const customer of [
+  {id:customerId,name:'Nina Rao',source:'Nina asked for scheduled monthly exports in ticket 738.',url:'https://harbor.zendesk.com/agent/tickets/738'},
+  {id:contact.requester_id,name:'Sam Rivera',source:'Sam requested a monthly export in ticket 739.',url:'https://harbor.zendesk.com/agent/tickets/739'},
+ ])assert.deepEqual(rows.filter(row=>row.customer_id===customer.id).map(({request,customer_id,customer,source,source_url,recorder_id,recorder,proxy})=>({request,customer_id,customer,source,source_url,recorder_id,recorder,proxy})),[{
+  request:request.slug,customer_id:customer.id,customer:customer.name,source:customer.source,source_url:customer.url,recorder_id:actor.id,recorder:actor.displayName,proxy:'1',
+ }])
  const publicRequest=await json('/api/public/requests/'+request.slug)
  const publicBytes=JSON.stringify(publicRequest)
  for(const privateValue of ['Sam Rivera','Nina Rao','sam@example.test','nina@example.test','harbor.zendesk.com'])assert.equal(publicBytes.includes(privateValue),false)
