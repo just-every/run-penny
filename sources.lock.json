@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "18343f6e22f90f3d5f20cb079e9dbefb53b60745fd0dfdb247fe6ced2cb3dbb7",
+      "sha256": "496c275f14bc8729b4e08b8fc0cf249a21d8dcce02701591b446f01708e734c5",
       "executable": false
     },
     "CLAUDE.md": {
@@ -8290,7 +8290,7 @@
       "executable": false
     },
     "tests/base/board.test.ts": {
-      "sha256": "1d8943fead813e292c2717374f43406670f340dc05cb92f658ee6b66f33b737a",
+      "sha256": "2939916970cabe16b76103808637c1703721371c3a7e42dfbe1881f29a2b4424",
       "executable": false
     },
     "tests/base/custody.test.ts": {
@@ -9002,7 +9002,7 @@
       "executable": false
     },
     "tests/browser/requester-repair.mjs": {
-      "sha256": "d3fe982de9219c249398a70de25e8929a1386efa1c63c031acddd8bf836ed797",
+      "sha256": "868670e11e8ee7c59dcc0cf827ab75572e36cd74e66b25360a343cc69e9d3349",
       "executable": false
     },
     "tests/browser/rich-changelog.mjs": {

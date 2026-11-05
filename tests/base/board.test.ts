@@ -14,10 +14,61 @@ async function graph(){
  async function approve(slug:string,title:string){expect((await call(`/api/operator/moderation/${slug}`,{verdict:'approved',title,description:'Approved public wording',boardSlug:'product',displayName:'Public requester'},operator)).status).toBe(200)}
  return {operator,person,submit,approve}
 }
+async function submissionCustody(){
+ const tables=['requests','evidence_items','evidence_versions','request_evidence_links','request_evidence_contributions','request_submission_keys','request_content_submissions','request_vote_contributions','request_votes','request_follow_contributions','request_follows','requester_update_permissions','requester_write_guards','audit_entries']
+ return Object.fromEntries(await Promise.all(tables.map(async table=>[table,(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()).results])))
+}
 it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail',async()=>{
- const g=await graph(),a=await g.submit('Private source'),b=await g.submit('Private target')
+ const g=await graph()
+ const input={title:'Private source',description:'Private first-post wording',proposedSolution:'Schedule a monthly export',impactStatement:'Avoid manual reconciliation',boardSlug:'product',emailUpdates:true,idempotencyKey:crypto.randomUUID()}
+ const submitted=await call('/api/public/requests',input,g.person);expect(submitted.status).toBe(201)
+ const created=await submitted.json() as {slug:string;moderationState:string},a=created.slug
+ expect(created.moderationState).toBe('awaiting_review')
+ const requests=(await env.DB.prepare('SELECT id,slug,author_requester_id,moderation_state,public_state,published_at FROM requests').all<{id:string;slug:string;author_requester_id:string;moderation_state:string;public_state:string;published_at:string|null}>()).results
+ expect(requests).toEqual([{id:expect.any(String),slug:a,author_requester_id:expect.any(String),moderation_state:'awaiting_review',public_state:'unpublished',published_at:null}])
+ const request=requests[0],evidence=(await env.DB.prepare('SELECT id,requester_id,source_type,review_state FROM evidence_items').all<{id:string;requester_id:string;source_type:string;review_state:string}>()).results
+ expect(evidence).toEqual([{id:expect.any(String),requester_id:request.author_requester_id,source_type:'portal_request',review_state:'unreviewed'}])
+ for(const table of ['request_evidence_links','request_evidence_contributions'])expect((await env.DB.prepare(`SELECT request_id,evidence_id FROM ${table}`).all()).results).toEqual([{request_id:request.id,evidence_id:evidence[0].id}])
+ expect((await env.DB.prepare('SELECT evidence_id,version_number,wording FROM evidence_versions').all()).results).toEqual([{evidence_id:evidence[0].id,version_number:1,wording:[input.title,input.description,input.proposedSolution,input.impactStatement].join('\n\n')}])
+ expect((await env.DB.prepare('SELECT request_id,evidence_id FROM request_submission_keys').all()).results).toEqual([{request_id:request.id,evidence_id:evidence[0].id}])
+ expect((await env.DB.prepare('SELECT request_id,requester_id,title,description,proposed_solution,impact_statement,moderation_state,is_initial FROM request_content_submissions').all()).results).toEqual([{request_id:request.id,requester_id:request.author_requester_id,title:input.title,description:input.description,proposed_solution:input.proposedSolution,impact_statement:input.impactStatement,moderation_state:'awaiting_review',is_initial:1}])
+ expect((await call(`/api/operator/requests/${a}/context`,undefined,g.operator)).status).toBe(200)
  expect((await call(`/api/public/requests/${a}`)).status).toBe(404)
+ expect(await (await call('/api/public/requests')).json()).toEqual([])
+ const committed=await submissionCustody()
+ const replay=await call('/api/public/requests',input,g.person);expect(replay.status).toBe(201);expect(await replay.json()).toEqual(created)
+ expect(await submissionCustody()).toEqual(committed)
+ // Fail the final business write after evidence, links, custody and participation.
+ const retryInput={...input,title:'Interrupted submission',idempotencyKey:crypto.randomUUID()}
+ await env.DB.exec("CREATE TRIGGER refuse_submission_audit BEFORE INSERT ON audit_entries WHEN NEW.action='request.submitted' BEGIN SELECT RAISE(ABORT,'submission audit unavailable'); END")
+ try{
+  expect((await call('/api/public/requests',retryInput,g.person)).status).toBe(503)
+  expect(await submissionCustody()).toEqual(committed)
+ }finally{await env.DB.exec('DROP TRIGGER refuse_submission_audit')}
+ const retried=await call('/api/public/requests',retryInput,g.person);expect(retried.status).toBe(201)
+ const b=(await retried.json() as {slug:string}).slug
+ expect((await env.DB.prepare('SELECT id FROM requests').all()).results).toHaveLength(2)
+ expect((await env.DB.prepare('SELECT id FROM evidence_items').all()).results).toHaveLength(2)
+ expect((await call(`/api/public/requests/${b}`)).status).toBe(404)
  await g.approve(a,'Source');await g.approve(b,'Target')
+ const publicBefore=await (await call(`/api/public/requests/${a}`)).json()
+ const editInput={title:'Source clarified',description:'A reviewed monthly summary',proposedSolution:'Include a reconciliation sheet',impactStatement:'Reduce repeated manual work'}
+ const editResponse=await call(`/api/public/requests/${a}`,editInput,g.person,'PATCH')
+ expect(editResponse.status).toBe(200);expect(await editResponse.json()).toEqual({slug:a,moderationState:'awaiting_review'})
+ const context=async()=>{const response=await call(`/api/operator/requests/${a}/context`,undefined,g.operator);expect(response.status).toBe(200);return response.json() as Promise<{edits:{id:string;request_id:string;requester_id:string;title:string;description:string;proposed_solution:string;impact_statement:string;moderation_state:string;approved_at:string|null}[]}>}
+ const pending=await context();expect(pending.edits).toHaveLength(1)
+ const edit=pending.edits[0]
+ expect(edit).toMatchObject({request_id:request.id,requester_id:request.author_requester_id,title:editInput.title,description:editInput.description,proposed_solution:editInput.proposedSolution,impact_statement:editInput.impactStatement,moderation_state:'awaiting_review',approved_at:null})
+ expect(await (await call(`/api/public/requests/${a}`)).json()).toEqual(publicBefore)
+ const publicList=await (await call('/api/public/requests')).json() as {slug:string;title:string;description:string}[]
+ expect(publicList.find(item=>item.slug===a)).toMatchObject({title:'Source',description:'Approved public wording'})
+ const heldGraph=await submissionCustody()
+ expect((await call(`/api/operator/requests/edits/${edit.id}/moderate`,{verdict:'approved'},g.person)).status).toBe(401)
+ expect(await submissionCustody()).toEqual(heldGraph)
+ expect((await call(`/api/operator/requests/edits/${edit.id}/moderate`,{verdict:'approved'},g.operator)).status).toBe(200)
+ expect((await context()).edits).toEqual([expect.objectContaining({...edit,moderation_state:'approved',approved_at:expect.any(String),updated_at:expect.any(String)})])
+ expect(await (await call(`/api/public/requests/${a}`)).json()).toMatchObject({slug:a,title:editInput.title,description:editInput.description})
+ expect((await (await call('/api/public/requests')).json() as {slug:string;title:string;description:string}[]).find(item=>item.slug===a)).toMatchObject({title:editInput.title,description:editInput.description})
  for(const slug of [a,b]){
   expect((await call(`/api/public/requests/${slug}/vote`,{},g.person)).status).toBe(204)
   expect((await call(`/api/public/requests/${slug}/vote`,{},g.person)).status).toBe(204)
