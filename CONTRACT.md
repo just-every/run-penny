@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained. REL-006 additionally proved from code and tests at commit `645764987ec24c08dde9bf291e822bfe68e08379` (5 November 2026); its final candidate keeps those product and journey bytes.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 59 | 56 | 1 | 116 |
+| Published | 60 | 55 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 79 | 124 | 78 | 281 |
+| All | 80 | 123 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3346,7 +3346,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REL-003` | Published wording | published | done | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |  |
 | `REL-004` | Recipient eligibility and snapshot | published | partial | `tests/base/release-custody.test.ts` | The snapshot staying unchanged after a later merge, relink or preference change, and the `release.recipient-eligibility.v1` default (which actions grant a permission record, that voting elsewhere and an operator-entered address grant none, and NOTIFY-009's one-snapshot addition) have no passing assertion; export and restore of the snapshot tables, an identity merge fenced while a send is in flight, and follower erasure are asserted. |
 | `REL-005` | Customer-safe delivery | published | partial | `tests/browser/loopjourney-release.mjs`; `tests/base/mail-identity.test.ts` — setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport; `tests/base/release-mail-identity.ts` — proveReleaseMailIdentity binds the native release delivery to its tested sender name, from address, reply-to, postal footer and signed-out unsubscribe, retaining wording and replay assertions. | The owner's brand header (INT-008) in release email and the remaining acceptance-point-1 email privacy obligations are unproved; private context staying out of the public updates is asserted. Live verified-domain, reply and inbox qualification remains held in R-6. |
-| `REL-006` | Acceptance and retry | published | partial | `tests/base/release-custody.test.ts` — "[DATA-001 REL-006] release failures stay visible, uncertain and restored deliveries never replay" invokes `tests/base/release-failure-visibility.ts` proveReleaseFailureVisibility for points 1 through 4 and `tests/base/release-delivery-timing.ts` proveReleaseDeliveryTiming for permitted send time, scheduling, ordering, quiet hours and overlapping Queue and Cron claims. Both providers use native publication, authenticated delivery and release reads, nonempty public API and rendered wording, and mail HTTP-edge fixtures. | Native acceptance and retry proof passes locally; exact-candidate replay and Verify remain pending. No live provider qualification is claimed. REL-007 SendGrid duplicate suppression remains unsatisfied under RL-3, and R-6 live verified-domain, reply and inbox qualification remains held. |
+| `REL-006` | Acceptance and retry | published | done | `tests/base/release-custody.test.ts` — "[DATA-001 REL-006] release failures stay visible, uncertain and restored deliveries never replay" invokes `tests/base/release-failure-visibility.ts` proveReleaseFailureVisibility for points 1 through 4 and `tests/base/release-delivery-timing.ts` proveReleaseDeliveryTiming for permitted send time, scheduling, ordering, quiet hours and overlapping Queue and Cron claims. Both providers use native publication, authenticated delivery and release reads, nonempty public API and rendered wording, and mail HTTP-edge fixtures. |  |
 | `REL-007` | Idempotent delivery and provider events | published | partial | `tests/base/release-custody.test.ts` | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression, so its delivery key is correlation only (RL-3). |
 | `REL-008` | Outcome response | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-009` | Outcome coverage | published | done | `tests/base/penny-releases.test.ts` |  |
