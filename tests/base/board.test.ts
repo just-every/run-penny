@@ -1,4 +1,5 @@
 import {proveRoadmapPublication} from './roadmap-update-publication'
+import {proveBoardManagement} from './board-management'
 import './custom-field-races'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterEach,vi, expect,inject,it } from 'vitest'
@@ -41,8 +42,9 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  const actor=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind('owner@penny.invalid').first<{id:string}>();expect(actor!.id).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/)
  expect((await env.DB.prepare('SELECT count(*) AS n FROM operator_sessions').first<{n:number}>())!.n).toBe(0)
 })
-it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total',async()=>{
+it('[REQ-011/018/019 EVID-009] Base-signed board management preserves request custody across rename, reorder, move and archive, private tags and separate file approval',async()=>{
  const g=await graph(),slug=await g.submit('With attachment');await g.approve(slug,'Public attachment request')
+ await proveBoardManagement(g.operator,g.person,slug)
  const tag=await call('/api/operator/catalog/tags',{name:'Private enterprise context'},g.operator);expect(tag.status).toBe(201)
  const tagId=(await tag.json() as {id:string}).id
  const requestId=(await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(slug).first<{id:string}>())!.id

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete REQ-018 board lifecycle proof through the existing built-Worker and requester browser journeys: create, rename and reorder boards in Settings, move a populated request with its original votes, comments, follows, permissions and evidence, then archive the board. Verify navigation withdrawal, continued published-request access and a fresh verified submission refused with 409 while request, evidence, version, submission-key, contribution, permission, notification and audit records stay unchanged. Reopening accepts the same input. Capture the existing screens at desktop and phone widths. No runtime, migration or configuration change is required; existing provider, device, account and release holds remain unchanged.
+
 - Complete REQ-010 consent proof through the existing requester and subscription journeys: mounted submit and vote controls start unchecked, ordinary unticked actions grant nothing, current automatic disclosures lead to author and voter follows, and explicit grants bind the verified address, request, source and controlled time. Unfollow revokes the permission while preserving the vote. Retain automatic-subscription, unsubscribe and withdrawal coverage. No runtime, migration or configuration change is required; separate notification, provider and release obligations remain unchanged.
 
 - Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.

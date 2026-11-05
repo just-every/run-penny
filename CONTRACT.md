@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); REQ-018 additionally uses the board lifecycle journeys named in its Status evidence, with candidate provenance recorded in the landing handoff; other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 59 | 56 | 1 | 116 |
+| Published | 60 | 55 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 79 | 124 | 78 | 281 |
+| All | 80 | 123 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3310,7 +3310,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-015` | Status updates | published | partial | `tests/base/board.test.ts` | A status update rendered distinctly from comments, pinned above them and notifying followers under NOTIFY-001 has no passing assertion; posting a pinned update and its text on the request are asserted. |
 | `REQ-016` | Public status | published | done | `tests/base/request-status-workflow.test.ts`; `tests/base/decision-loop-roadmap.test.ts`; `visual/request-status-workflow/REQ-016/` |  |
 | `REQ-017` | Decline | published | done | `tests/base/request-status-workflow.test.ts` — sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards (reason refusal, declined history, closed participation, direct and mapped reversal); `tests/browser/request-decline.mjs` — request-decline (operator controls and customer history, repeated decline and reversal, screens at 1440 and 390) |  |
-| `REQ-018` | Boards | published | partial | `tests/base/board.test.ts` | Renaming, reordering and archiving boards, moving a request with its votes, comments, followers and evidence links, and the 409 on submission to an archived board have no passing assertion. |
+| `REQ-018` | Boards | published | done | `tests/base/board.test.ts` — Base-signed board management preserves request custody across rename, reorder, move and archive, private tags and separate file approval; `tests/base/board-management.ts` — proveBoardManagement (native create, rename, reorder, move, preserved votes, comments, follows and evidence, archived navigation and URL, valid submission refused 409 with unchanged custody); `tests/browser/requester-board.mjs` — proveBoardManagement in `tests/browser/board-management.mjs` (mounted settings and move controls, archived navigation and published request, screens at 1440 and 390) |  |
 | `REQ-019` | Internal boards | published | partial | `tests/base/board.test.ts` | Keeping internal-board requests off the public roadmap, out of releases and out of requester notifications has no passing assertion in this clause's evidence; the request and attachment 404s are asserted. |
 | `REQ-020` | Requester's own content | published | partial | `tests/browser/requester-repair.mjs` | Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions. |
 | `REQ-021` | Requester withdrawal | published | done | `tests/base/request-withdrawal.test.ts`; `tests/browser/request-withdrawal.mjs` |  |

@@ -1,7 +1,9 @@
 import { chromium } from '@playwright/test'
+import {browserOptions} from './browser-options.mjs'
+import {proveBoardManagement} from './board-management.mjs'
 import { shot,manifest,openRequestControls } from './requester-evidence.mjs'
 import { requesterAuth } from './requester-auth.mjs'
-const browser=await chromium.launch({headless:true,args:['--use-mock-keychain','--password-store=basic']})
+const browser=await chromium.launch(browserOptions())
 let runtime
 const errors=[]
 try{
@@ -66,6 +68,7 @@ try{
   await page.goto(origin+'/portal/feedback');await page.getByLabel('Search feedback',{exact:true}).fill('Scheduled exports');await page.locator('select[name=status]').selectOption('under_review');await page.getByRole('button',{name:'Search',exact:true}).click();await page.getByRole('heading',{name:`Scheduled exports ${width} ${unique}`,exact:true}).waitFor();await shot(page,'search-filter',width)
   await requester.close();await operator.close()
  }
+ await proveBoardManagement(harness)
  harness.assertNoRateLimits()
  harness.assertNoBrowserDiagnostics()
  await manifest('manifest',errors,[],origin)
