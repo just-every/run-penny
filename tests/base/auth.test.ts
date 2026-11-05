@@ -25,10 +25,23 @@ it('[BASE-ACCESS-001/002/004] Base bootstrap, real cookie, private API and gener
  const denied=await call(wire.loadOperatorResources,undefined,headers);expect(await denied.text()).not.toContain('Northstar Health')
  expect((await call('/api/operator/moderation',undefined,{Cookie:'penny_operator_session=legacy'})).status).toBe(401)
 })
-it('[BASE-ACCESS-001/003] SendGrid mail uses Base, admission does not enumerate, GET preview cannot consume, confirmation races once',async()=>{
+it('[BASE-ACCESS-001 BASE-ACCESS-003 NOTIFY-004] identity mail uses the deployment sender without reply-to, admission does not enumerate, GET preview cannot consume, confirmation races once',async()=>{
  await owner()
  for(const email of ['unknown@example.test','owner@penny.invalid']){const r=await call('/api/auth/magic-link',{email,returnTo:'/app'});expect(r.status).toBe(202);expect(await r.json()).toEqual({status:'accepted'})}
  expect(messages).toHaveLength(1);const url=new URL(messages[0].url),token=url.searchParams.get('token')!
+ const requesterEmail=['synthetic-penny-1','example.test'].join('@')
+ expect((await call('/api/public/identity/email',{email:requesterEmail,displayName:'Synthetic requester'})).status).toBe(202)
+ expect(messages).toHaveLength(2);expect(messages[1].to).toBe(requesterEmail);expect(new URL(messages[1].url).pathname).toBe('/portal/verify')
+ const envelopes=vi.mocked(fetch).mock.calls.map(([input,init])=>{
+  expect(String(input)).toBe('https://api.sendgrid.com/v3/mail/send');expect(init?.method).toBe('POST')
+  return JSON.parse(String(init?.body))
+ })
+ expect(envelopes).toHaveLength(2)
+ for(const envelope of envelopes){
+  expect(envelope.from.email).toBe(env.MAIL_FROM)
+  expect(envelope.headers).toMatchObject({'Auto-Submitted':'auto-generated'})
+  expect(envelope).not.toHaveProperty('reply_to')
+ }
  expect(url.pathname).toBe('/auth/confirm');expect((await call(url.pathname+url.search)).status).toBe(200)
  expect(await env.DB.prepare('SELECT consumed_at FROM oa_tokens').first()).toEqual({consumed_at:null})
  expect((await call('/auth/confirm',{token},{Origin:'https://evil.test'})).status).toBe(403)

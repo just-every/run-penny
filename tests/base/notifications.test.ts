@@ -1,4 +1,6 @@
 import {incomingEmail} from './email-capture-fixture'
+import {signingIdentity} from './review-mail-fixture'
+import {createPennyApp} from '@/core/app/worker'
 import { applyD1Migrations,reset,createScheduledController,createMessageBatch } from 'cloudflare:test'
 import { beforeEach,afterEach,vi,expect,inject,it } from 'vitest'
 import { exports } from 'cloudflare:workers'
@@ -311,7 +313,7 @@ it('[NOTIFY-004 CAP-009] notification replies create nothing through HTTP or the
  const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
  expect(sent).toHaveLength(1)
  // Without a NOTIFY-013 reply-to, a reply goes to the deployment sender, which Penny never reads.
- const mail=sent[0].body as {from:{email:string};reply_to?:unknown;headers?:Record<string,string>}
+ const mail=sent[0].body as {from:{email:string};reply_to?:unknown;headers?:Record<string,string>;custom_args:Record<string,string>;personalizations:{to:{email:string}[]}[]}
  expect(mail.from.email).toBe(env.MAIL_FROM);expect(mail.reply_to).toBeUndefined()
  expect(mail.headers).toMatchObject({'Auto-Submitted':'auto-generated'})
  // Per-IP request counters are charged for every HTTP request whatever it carries; every other table must stay as it was.
@@ -339,8 +341,27 @@ it('[NOTIFY-004 CAP-009] notification replies create nothing through HTTP or the
   else expect(response.status,label).toBeGreaterThanOrEqual(400)
   await response.body?.cancel()
  }
+ // A configured provider event door must reject the same posted replies after reading the body.
+ const signer=await signingIdentity(),app=createPennyApp(),bindings={...env,SENDGRID_EVENT_PUBLIC_KEY:signer.key}
+ for(const [type,body] of shapes){
+  const label=`configured /api/public/mail/events ${type||'multipart/form-data'}`
+  const response=await app.fetch(new Request('https://penny.test/api/public/mail/events',{method:'POST',headers:{...(type?{'Content-Type':type}:{}),'CF-Connecting-IP':`198.51.100.${++ip}`},body}),bindings)
+  expect(response.status,label).toBe(400)
+  await response.body?.cancel()
+  expect(await rows(),label).toEqual(before)
+ }
+ // Even an authenticated provider batch cannot turn an inbound reply into a product record.
+ expect((await app.fetch(await signer.request([JSON.parse(String(shapes[2][1]))]),bindings)).status).toBe(200)
+ expect(await rows()).toEqual(before)
  for(const from of [String(env.MAIL_FROM),identity.fromAddress,identity.replyTo])await incomingEmail({id:'<synthetic-penny-own-sender@example.test>',from})
  await incomingEmail({id:'<synthetic-penny-notification-reply@example.test>',from:g.email,body:text,headers:{'in-reply-to':`<${g.requestId}@penny.test>`,'auto-submitted':'no'}})
  expect(sent).toHaveLength(sentBefore)
  expect(await rows()).toEqual(before)
+ // The same keyed door still applies delivery events for this journey's own follower notification.
+ const args=mail.custom_args
+ const delivered={...args,event:'delivered',sg_event_id:'synthetic-penny-delivered-1',sg_message_id:'synthetic-penny-message-1',email:mail.personalizations[0].to[0].email,timestamp:Math.floor(Date.now()/1000)}
+ expect(await env.DB.prepare('SELECT state FROM notification_delivery_facts WHERE batch_id=?').bind(args.rer_delivery_id).first()).toBeNull()
+ expect((await app.fetch(await signer.request([delivered]),bindings)).status).toBe(200)
+ expect(await env.DB.prepare('SELECT state,delivered_at FROM notification_delivery_facts WHERE batch_id=?').bind(args.rer_delivery_id).first()).toEqual({state:'delivered',delivered_at:expect.any(String)})
+ expect(await env.DB.prepare('SELECT event_message_id FROM notification_attempts WHERE id=?').bind(args.rer_penny_attempt).first()).toEqual({event_message_id:delivered.sg_message_id})
 })

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the existing NOTIFY-004 reply journey through the configured signed provider-event door: refuse all three posted reply shapes, ignore a signed inbound-reply batch without product writes, and apply the follower notification’s signed delivery event. Carry the sign-in and requester-verification envelope assertions from the held candidate. NOTIFY-004 remains partial and held pending independent review; no runtime, migration or configuration change.
+
 - Complete API-001’s existing built-Worker scoped proxy-vote journey with persisted vote, contribution, attribution and permission snapshots around read-only and revoked-key refusals. Verify the successful vote remains unverified and grants no email permission or requester session, and cite the journey for all three acceptance points. No runtime, migration or configuration change is required; other clause and field-proof holds remain unchanged.
 
 - Replay private Ask Penny answers with resolvable citations, current operator commercial-field projection, model budget checks and an explicit chosen Slack destination. Append migration 0108 for private answer artifacts after the survey schema; existing applied migrations remain unchanged. Archive and erasure include answers and their Slack delivery copies. Retain main’s AI-009 missing judgment pending acceptance of the bounded route and browser assertions. No new provider configuration is introduced; existing AI configuration and Slack destinations apply.
