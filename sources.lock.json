@@ -670,7 +670,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "e4ca260f331c1c6be124151c3cb3e1714a09dd57ff30a3a18be9f96070ab2bff",
+      "sha256": "ac96a1c72fb45daa0a835ab52f9a0ef41a1a036bdebc74298025751b7075f2fe",
       "executable": false
     },
     "agent-surface.json": {
@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "07801fe5c604823ee6954e5121f6a4cdbe3ef0972a8419d285cfa4472cf8343d",
+      "sha256": "a850b6610ead1b8654be8a85bc2786ba952ad0ecb1b99ef5a05d4df31fca5103",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "a682f64cc54584a249a26d5b0e04abb5ac616cc992122e7b25c8bc631d59e662",
+      "sha256": "e788ec85e1c285387301b9384af5c51b94c9711205a57a243ac1a9d3de233ad5",
       "executable": false
     },
     "DEMO.md": {
@@ -8562,7 +8562,7 @@
       "executable": false
     },
     "tests/base/release-preference-stability.ts": {
-      "sha256": "c657bedb4a9a01bb1fec85ecd2df306195efdfbcdd5590056ddf83f652dbda9b",
+      "sha256": "43d0eba0a8eab3eb9dd5fd6e5055235c78baabdd53fd8ede44d58b48b18aeb0d",
       "executable": false
     },
     "tests/base/release-snapshot-stability.ts": {
@@ -9005,6 +9005,10 @@
       "sha256": "82ac05e4b70fe781510f6c32065d71937f9696a55ec95385aeaf8b87db763e9d",
       "executable": false
     },
+    "tests/browser/requester-comment-edit.mjs": {
+      "sha256": "30b3dd614c761bf69a49c1a63982efbc590b9058e4c4514d856d5f2e2656d67f",
+      "executable": false
+    },
     "tests/browser/requester-consent.mjs": {
       "sha256": "77a9b40aa98295bcd0ee24f1ef70294674a0d6a314126854518183127cc1352c",
       "executable": false
@@ -9022,7 +9026,7 @@
       "executable": false
     },
     "tests/browser/requester-repair.mjs": {
-      "sha256": "83ec29814428da84c773e78b1be44d60fd4271891c8a975931fa146e6eb70110",
+      "sha256": "e2f3461ca9a31681e811c969e9d08e7483b28eec3765ae68f8c01ec5b6c51d17",
       "executable": false
     },
     "tests/browser/rich-changelog.mjs": {

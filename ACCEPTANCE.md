@@ -542,7 +542,7 @@ Core · published · **partial**
 **Acceptance.**
 1. An edit to already-public text re-enters moderation under `request.moderation.v1`, and the previously approved text stays public until the edit is approved or rejected; on an auto-publish board (REQ-033) an unflagged edit is public on submission and the earlier text stays in the request's history for operators.
 
-**Evidence.** `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback and unchanged-state refusal); `tests/browser/requester-repair.mjs` — requester repair journey
+**Evidence.** `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback and unchanged-state refusal); `tests/browser/requester-repair.mjs` with `tests/browser/requester-comment-edit.mjs` — mounted own-comment edit and operator rejection and approval, signed-out public wording and identity readback, activity and review screens at 1440 and 390
 **Gap.** Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved.
 
 #### REQ-021 — Requester withdrawal
