@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the existing release consent journey with exact target, recipient and context snapshot comparisons after native request merge, roadmap withdrawal and relink, and preference changes. The scheduler suppresses a pending delivery after withdrawal while an independently subscribed recipient receives the same release once. REL-004 remains partial for captured-contact context completeness and the full permission-source policy. No runtime, migration or configuration change is required.
+
 - Prove the saved sender name, from address, monitored reply-to and postal footer on an actual native release delivery, correlated to its HTTP-edge envelope and durable attempt. Extend the existing mail-identity sanity journey with isolated release setup, publication, unchanged wording, signed-out unsubscribe and repeated-drain no-replay assertions. REL-005 stays partial for the owner brand header and remaining email privacy proof; live sender qualification remains in R-6. No runtime, migration or configuration change is required.
 
 - Complete REQ-010 consent proof through the existing requester and subscription journeys: mounted submit and vote controls start unchecked, ordinary unticked actions grant nothing, current automatic disclosures lead to author and voter follows, and explicit grants bind the verified address, request, source and controlled time. Unfollow revokes the permission while preserving the vote. Retain automatic-subscription, unsubscribe and withdrawal coverage. No runtime, migration or configuration change is required; separate notification, provider and release obligations remain unchanged.
