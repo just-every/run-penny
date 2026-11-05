@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "18343f6e22f90f3d5f20cb079e9dbefb53b60745fd0dfdb247fe6ced2cb3dbb7",
+      "sha256": "b76aa12e770442cbcc7da5032b66ec98fdfe49e8fe3dc426249b18968f3a3754",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "ce573fd505226629fe811135205465cce9251b8e0d553ab19406d913008b5d9b",
+      "sha256": "9827207a74e95173d047a7a481047027fd043a1e5b0120199451f94f8125d029",
       "executable": false
     },
     "DEMO.md": {
@@ -8574,7 +8574,7 @@
       "executable": false
     },
     "tests/base/request-status-workflow.test.ts": {
-      "sha256": "e674326673b1e9bcd78835a2bccac5ef990c9d65452c41c12e845ce9e929bd8e",
+      "sha256": "c7d2e61c5bc198a047d0a77bff46e59b7c5aeb76388f33db366b05f7f8699bf9",
       "executable": false
     },
     "tests/base/request-withdrawal.test.ts": {

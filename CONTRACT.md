@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 57 | 58 | 1 | 116 |
+| Published | 58 | 57 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 77 | 126 | 78 | 281 |
+| All | 78 | 125 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3298,7 +3298,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-003` | Submission | published | partial | `tests/base/board.test.ts` | The unreviewed evidence item created in the same transaction as the request, and requester edits held for moderation, have no passing assertion in this clause's evidence; the held submission and comment are asserted. |
 | `REQ-004` | Duplicate prevention | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `REQ-005` | Publication | published | done | `tests/base/board.test.ts` |  |
-| `REQ-006` | Voting | published | partial | `tests/base/board.test.ts` | Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted. |
+| `REQ-006` | Voting | published | done | `tests/base/request-status-workflow.test.ts` — sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards (active statuses, Shipped and Declined refusal with unchanged participation, reopening and distinct totals); `tests/base/board.test.ts` — Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail (duplicate votes); `tests/base/requester-subscriptions.test.ts` — submission records one removable author vote and independent permission, delivers replies and status, and withdrawal revokes it (NOTIFY-011 author vote) |  |
 | `REQ-007` | Discussion | published | done | `tests/base/notifications.test.ts` |  |
 | `REQ-008` | Merge | published | partial | `tests/base/board.test.ts` | Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted. |
 | `REQ-009` | Unmerge | published | partial | `tests/base/board.test.ts`; `tests/base/notifications.test.ts` | Restoring the duplicate's votes, followers and evidence links, leaving post-merge additions on the canonical request and recording the reversal have no passing assertion; the duplicate's comment and status update reappearing are asserted. |

@@ -4,7 +4,7 @@ import { mockMail,requester } from './support'
 import { env,seedLoop,request,json,publicRequest,committed,approve,row } from './decision-loop-fixture'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations'));await seedLoop();mockMail()})
 
-it('[REQ-017][REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards',async()=>{
+it('[REQ-006][REQ-017][REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards',async()=>{
  const r=await publicRequest(),get=()=>json<{statusUpdates:{id:string;status:string;body:string}[]}>(request(`/api/public/requests/${r.slug}`)),set=(status:string,extra:Record<string,unknown>={})=>request(`/api/operator/requests/${r.slug}/status-updates`,'POST',{status,...extra})
  const declineHistory=async(...reasons:string[])=>{
   const updates=(await get()).statusUpdates.filter(update=>update.status==='declined')
@@ -63,5 +63,42 @@ it('[REQ-017][REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, 
  await env.DB.prepare("UPDATE requests SET public_state='withdrawn',withdrawn_at=? WHERE id=?").bind(new Date().toISOString(),r.id).run()
  expect((await request(`/api/public/requests/${r.slug}`)).status).toBe(410)
  expect(await json(request(`/api/operator/requests/${r.slug}/context`))).toMatchObject({statusDetails:{status:'withdrawn',statusSource:'direct'}})
+ await proveVoteStatusEligibility()
 })
+async function proveVoteStatusEligibility(){
+ const r=await publicRequest(),path=`/api/public/requests/${r.slug}`,get=()=>json(request(path))
+ const set=(status:string)=>json(request(`/api/operator/requests/${r.slug}/status-updates`,'POST',{status,body:status==='declined'?'This request is outside the current plan.':''}))
+ const boards=await json<{slug:string;subscriptionDisclosure:{version:number}}[]>(request('/api/public/boards'))
+ const input={emailUpdates:true,subscriptionVersion:boards.find(board=>board.slug==='loop-board')!.subscriptionDisclosure.version}
+ const vote=(person:Awaited<ReturnType<typeof requester>>)=>request(`${path}/vote`,'POST',input,person)
+ const participation=async()=>{
+  const rows=async(table:string)=>(await env.DB.prepare(`SELECT * FROM ${table} WHERE request_id=? ORDER BY requester_id`).bind(r.id).all<Record<string,unknown>>()).results
+  return {votes:await rows('request_votes'),contributions:await rows('request_vote_contributions'),permissions:await rows('requester_update_permissions'),follows:await rows('request_follow_contributions')}
+ }
+ let total=0
+ for(const status of ['open','under_review','planned','in_progress']){
+  await set(status)
+  const person=await requester('Verified status voter')
+  expect((await vote(person)).status).toBe(204);expect((await vote(person)).status).toBe(204)
+  expect(await get()).toMatchObject({status,voteCount:++total})
+ }
+ const before=await participation()
+ expect(before.votes).toHaveLength(4);expect(before.contributions).toHaveLength(4)
+ expect(before.permissions.filter(row=>row.grant_origin==='explicit')).toHaveLength(4)
+ const waiting=await requester('Verified waiting voter')
+ for(const status of ['declined','shipped']){
+  await set(status);const published=await get()
+  expect(published).toMatchObject({status,voteCount:4})
+  const refused=await vote(waiting)
+  expect(refused.status).toBe(409);expect(await refused.json()).toEqual({error:'voting_closed'})
+  expect(await participation()).toEqual(before);expect(await get()).toEqual(published)
+ }
+ await set('open')
+ expect((await vote(waiting)).status).toBe(204);expect((await vote(waiting)).status).toBe(204)
+ expect(await get()).toMatchObject({status:'open',voteCount:5})
+ const after=await participation()
+ expect(after.votes).toHaveLength(5);expect(after.contributions).toHaveLength(5)
+ expect(new Set(after.votes.map(row=>row.requester_id)).size).toBe(5)
+ expect(after.permissions.filter(row=>row.grant_origin==='explicit')).toHaveLength(5)
+}
 async function publicationSlug(id:string){return (await env.DB.prepare('SELECT public_slug FROM roadmap_publications WHERE roadmap_item_id=?').bind(id).first<{public_slug:string}>())!.public_slug}
