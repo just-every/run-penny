@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "38b090e305021850d387c778621c27f0406adfeb09a944eb6f0fcedd3865b946",
+      "sha256": "5c1a648e3788c3bd0f0b450746e5b308a9fa9361c8ef79724f50bb0e65ad9b7d",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "a8d8f1770f5c355e1f08def6470782528cc2cc828ab91dfe628bd5a4d48115b6",
+      "sha256": "ad57749e00ccfe37ec2567a32840246dac3717223d6453d7752c82136339ff70",
       "executable": false
     },
     "DEMO.md": {
@@ -7278,7 +7278,7 @@
       "executable": false
     },
     "src/core/features/requests/suggestions.ts": {
-      "sha256": "35faf3394fd4d3d5786174f59ea22742555482d0cd1ed87209f70daab30c77b7",
+      "sha256": "efefdfb306857d4670245ae0908a4e796d38ac4bb0c563c1ffcce610107ba4e2",
       "executable": false
     },
     "src/core/features/requests/ui/attachment-recovery.tsx": {
@@ -8486,7 +8486,7 @@
       "executable": false
     },
     "tests/base/penny-evidence.test.ts": {
-      "sha256": "845c008f46e9c9cefb79d70cd0a1f69ffd79d7fb53d9bbf3fcadeff514758880",
+      "sha256": "750f9fd99f1ebe82ac03a96afb38876763eaae92449737301f2a05f620e868f0",
       "executable": false
     },
     "tests/base/penny-releases.test.ts": {
@@ -9255,6 +9255,10 @@
     },
     "tests/README.md": {
       "sha256": "93f45a346657ba39a17da37317a1a83180012f1341a6e178adeb17efdedea09d",
+      "executable": false
+    },
+    "tests/runtime/duplicate-suggestions-scale.mjs": {
+      "sha256": "baa83777914e3baf3185ed59da8c2aa31ce3f9c5ef61ab9a7e253221204ddb6d",
       "executable": false
     },
     "tests/runtime/mail-events-restart.test.mjs": {

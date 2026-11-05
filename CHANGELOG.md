@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove EVID-007 suggestion requests leave existing request and bet evidence links, evidence contributions, merge history, canonical targets, requests, evidence wording and pending submissions unchanged before any explicit action. Retain published-only, deterministic no-model matching and explicit vote and follow assertions, including case, punctuation and Unicode coverage. Rank ASCII candidates inside D1 while preserving the full Unicode matcher; add a manual built-Worker capacity journey and retain the D-3 timing gap until its 500ms p95 check passes. No migration or configuration change is required.
+
 - Complete API-001’s existing built-Worker scoped proxy-vote journey with persisted vote, contribution, attribution and permission snapshots around read-only and revoked-key refusals. Verify the successful vote remains unverified and grants no email permission or requester session, and cite the journey for all three acceptance points. No runtime, migration or configuration change is required; other clause and field-proof holds remain unchanged.
 
 - Replay private Ask Penny answers with resolvable citations, current operator commercial-field projection, model budget checks and an explicit chosen Slack destination. Append migration 0108 for private answer artifacts after the survey schema; existing applied migrations remain unchanged. Archive and erasure include answers and their Slack delivery copies. Retain main’s AI-009 missing judgment pending acceptance of the bounded route and browser assertions. No new provider configuration is introduced; existing AI configuration and Slack destinations apply.
