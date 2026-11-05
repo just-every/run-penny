@@ -155,6 +155,8 @@ it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical ov
   env.DB.prepare("UPDATE requests SET title='Project reports — CSV',public_title='Project reports — CSV' WHERE id='extra-3'"),
   env.DB.prepare("UPDATE requests SET title='Projector reporting CSVexport',public_title='Projector reporting CSVexport',description='No exact overlap',public_description='No exact overlap' WHERE id='extra-9'"),
   env.DB.prepare("UPDATE requests SET title='NAÏVE résumé',public_title='NAÏVE résumé',description='International wording',public_description='International wording' WHERE id='extra-10'"),
+  env.DB.prepare("INSERT INTO requesters(id,display_name,blocked_at,created_at,updated_at) VALUES('synthetic-penny-2','Blocked requester',?,?,?)").bind(now,now,now),
+  env.DB.prepare("UPDATE requests SET author_requester_id='synthetic-penny-2',title='Export project reports CSV',public_title='Export project reports CSV' WHERE id='extra-11'"),
  ])
  const requester=await person()
  await json(call('/api/operator/requests/extra-006/merge',{targetSlug:'extra-007',notifySubscribers:false},g.operator))
@@ -184,9 +186,11 @@ it('[EVID-007][REQ-004] deterministic published-only suggestions rank lexical ov
  const start=performance.now(),suggestions=await json<RequestSuggestion[]>(call('/api/public/requests/suggestions?title=export%20project%20reports%20CSV')),elapsed=performance.now()-start
  expect(elapsed).toBeLessThan(500);console.log(`EVID-007: 321 requests, ${elapsed.toFixed(1)}ms`)
  expect(suggestions).toHaveLength(5);expect(suggestions[0]).toMatchObject({slug:g.request.slug,matchedTerms:['export','project','reports','csv']})
- expect(suggestions.some(s=>['extra-000','extra-001'].includes(s.slug))).toBe(false)
+ expect(suggestions.some(s=>['extra-000','extra-001','extra-011'].includes(s.slug))).toBe(false)
  expect(suggestions.slice(1).every(s=>!s.matchedTerms.includes('export'))).toBe(true)
  expect(suggestions.map(s=>s.slug)).toEqual([g.request.slug,'extra-002','extra-003','extra-004','extra-005'])
+ expect(await suggestionState()).toEqual(beforeSuggestions)
+ expect(await json(call('/api/public/requests/suggestions?title=export%20project%20reports%20CSV'))).toEqual(suggestions)
  expect(await suggestionState()).toEqual(beforeSuggestions)
  expect(await json(call('/api/public/requests/suggestions?title=export%20project%20reports%20CSV',undefined,requester))).toEqual(suggestions)
  expect(await suggestionState()).toEqual(beforeSuggestions)
