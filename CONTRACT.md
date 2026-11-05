@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026). OPS-005 additionally proved from code and tests at commit `eb6e92274971fbff8afe2f7c75b0bc032375a513` (5 November 2026); other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 58 | 57 | 1 | 116 |
+| Published | 59 | 56 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 78 | 125 | 78 | 281 |
+| All | 79 | 124 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3281,7 +3281,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `OPS-001` | Roles | published | partial | `tests/base/auth.test.ts` | Current operators share product access, and workspace clock settings admit Owners and Admins (OPS-008) while other configuration remains owner-only. No journey yet signs in one operator per role: the Viewer, Contributor, Product manager and Admin refusals, unchanged state on refusal and next-request role change lack passing assertions. |
 | `OPS-002` | Management | published | done | `tests/base/auth.test.ts` |  |
 | `OPS-003` | Overview | published | done | `tests/browser/operator-pages.mjs`; `tests/browser/operator-overview-checks.mjs` |  |
-| `OPS-005` | First-run setup | published | partial | `tests/base/first-run.test.ts` — owner completion, invited member document and generated navigation admission, owner-only refusal and populated native restore (`tests/base/first-run-portability.ts`); `tests/base/first-run-custody.test.ts` — migration 0027 active-owner completion with unchanged owner and sessions; `tests/base/mail-identity.test.ts`; `tests/base/workspace-clock.test.ts`; `tests/browser/workspace-clock.mjs` | Point 5: local `rer dev` automatic owner opening and silent mail suppression still need the complete passing command journey. |
+| `OPS-005` | First-run setup | published | done | `tests/base/first-run.test.ts` — FIRST-RUN owner completion, invited-member document and generated navigation admission, owner-only refusal and populated restore (proveFirstRunPortability in `tests/base/first-run-portability.ts`); `tests/base/first-run-custody.test.ts` — migration 0027 active-owner completion with unchanged owner and sessions; `tests/installer/dev-credentials.test.mjs` — OPS-005 local owner opening and silent mail journey (proveLocalFirstRun in `tests/installer/first-run-dev.mjs`); `tests/base/mail-identity.test.ts` — company and postal setup admission; `tests/base/workspace-clock.test.ts` — required timezone; `tests/browser/workspace-clock.mjs` — visible quiet hours and timezone choice |  |
 | `OPS-004` | Global search | published | partial | `tests/browser/operator-completeness-requester.mjs` | Search across every other named field ships; product, component and feature names are not yet searched (`src/core/features/workspace/list-repository.ts`), and the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
 | `EVID-001` | Capture | published | done | `tests/base/penny-evidence.test.ts`; `tests/base/no-mail-identity.test.ts` |  |
 | `EVID-002` | Provenance | published | done | `tests/base/penny-evidence.test.ts`; `tests/browser/operator-pages-decisions.mjs` |  |
