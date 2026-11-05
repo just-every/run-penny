@@ -8518,7 +8518,7 @@
       "executable": false
     },
     "tests/base/proxy-votes.test.ts": {
-      "sha256": "b4c994059084df06cdd5e0a830dccefcf653bc9811b87f63c21da207a367d406",
+      "sha256": "ed5e56f9035fdc342371ebad772a36e2bb03399b1190c5ced67dbdffb8cd3e12",
       "executable": false
     },
     "tests/base/redaction-copy-doors.ts": {

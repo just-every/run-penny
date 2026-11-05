@@ -39,7 +39,7 @@ it('[CAP-014 REQ-026 REQ-010] records inbox, request-page and Zendesk customer d
  // Opted-in public voter lists still expose proxy customers only in the total.
  expect((await call('/api/operator/boards/regression',{showVoters:true},g.operator,'PATCH')).status).toBe(200)
  const publicBody=await(await call(`/api/public/requests/${r.slug}`)).text()
- for(const secret of [...recorded.flatMap(customer=>[customer.displayName,customer.email,customer.source]),'recorderId','proxyAttributionsJson'])expect(publicBody).not.toContain(secret)
+ for(const secret of [...recorded.flatMap(customer=>[customer.displayName,customer.email,customer.source]),'738','recorderId','proxyAttributionsJson'])expect(publicBody).not.toContain(secret)
  const csv=await call('/api/operator/votes/export.csv',undefined,g.operator)
  expect(csv.status).toBe(200)
  const rows=parseFeedbackCsv(await csv.text())
