@@ -38,7 +38,7 @@ try {
   await page.goto(origin+'/portal/feedback/activity')
   const ownRequest=page.getByRole('heading',{name:title,exact:true}).locator('..')
   await ownRequest.getByText('Edit request',{exact:true}).click()
-  await ownRequest.getByLabel('Description',{exact:true}).fill(editedDescription)
+  await ownRequest.locator('textarea[name=description]').fill(editedDescription)
   const editSaved=page.waitForResponse(r=>r.url().endsWith(`/api/public/requests/${slug}`)&&r.request().method()==='PATCH')
   await ownRequest.getByRole('button',{name:'Send edit for review',exact:true}).click()
   assert.equal((await editSaved).status(),200)

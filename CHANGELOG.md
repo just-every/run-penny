@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Extend the existing REQ-003 journeys with exact request and unreviewed evidence custody, idempotent replay, late-write rollback and retry, and requester edits held behind operator approval while approved public wording remains readable. Preserve existing comment moderation and requester repair coverage. No runtime, migration or configuration change is required; REQ-033 auto-publication and existing field-proof holds remain unchanged.
+- Extend the existing REQ-003 journeys with exact request and unreviewed evidence custody, idempotent replay, late-write rollback and concurrent retry, and requester edits held behind operator approval while approved public wording remains readable. Mark REQ-003 done for its native holding-board outcomes and preserve existing comment moderation and requester repair coverage. No runtime, migration or configuration change is required; REQ-033 auto-publication and existing field-proof holds remain unchanged.
 
 - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.
 

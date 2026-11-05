@@ -45,8 +45,10 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
   expect((await call('/api/public/requests',retryInput,g.person)).status).toBe(503)
   expect(await submissionCustody()).toEqual(committed)
  }finally{await env.DB.exec('DROP TRIGGER refuse_submission_audit')}
- const retried=await call('/api/public/requests',retryInput,g.person);expect(retried.status).toBe(201)
- const b=(await retried.json() as {slug:string}).slug
+ const retries=await Promise.all([call('/api/public/requests',retryInput,g.person),call('/api/public/requests',retryInput,g.person)])
+ expect(retries.map(response=>response.status)).toEqual([201,201])
+ const retried=await retries[0].json() as {slug:string},b=retried.slug
+ expect(await retries[1].json()).toEqual(retried)
  expect((await env.DB.prepare('SELECT id FROM requests').all()).results).toHaveLength(2)
  expect((await env.DB.prepare('SELECT id FROM evidence_items').all()).results).toHaveLength(2)
  expect((await call(`/api/public/requests/${b}`)).status).toBe(404)

@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 57 | 58 | 1 | 116 |
+| Published | 58 | 57 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 77 | 126 | 78 | 281 |
+| All | 78 | 125 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3295,7 +3295,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `EVID-010` | Versions | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `REQ-001` | Public portal | published | done | `tests/base/board.test.ts`; `tests/base/board-categories.test.ts`; `tests/base/penny-evidence.test.ts`; `tests/browser/requester-blocking.mjs`; `tests/browser/roadmap-public-eta.mjs`; `tests/browser/rich-changelog.mjs` |  |
 | `REQ-002` | Requester identity | published | partial | `tests/base/no-mail-identity.test.ts` | The requester's chosen display name in a portal response has no passing assertion, and the check that no email address or account appears reads the public request list while it holds no published request, so it checks an empty list; submissions under a valid host-signed identity, with and without outbound mail, and the refusal of invalid or new host identities without mail are asserted. |
-| `REQ-003` | Submission | published | partial | `tests/base/board.test.ts` | The unreviewed evidence item created in the same transaction as the request, and requester edits held for moderation, have no passing assertion in this clause's evidence; the held submission and comment are asserted. |
+| `REQ-003` | Submission | published | done | `tests/base/board.test.ts` — Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail: atomic evidence and request custody, replay, late-write rollback, concurrent retry, held edits and comments, operator approval and public readback; `tests/browser/requester-repair.mjs` — requester repair journey: mounted edit submission and approval with unchanged public wording while held, at both widths. | |
 | `REQ-004` | Duplicate prevention | published | done | `tests/base/penny-evidence.test.ts` |  |
 | `REQ-005` | Publication | published | done | `tests/base/board.test.ts` |  |
 | `REQ-006` | Voting | published | partial | `tests/base/board.test.ts` | Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted. |
