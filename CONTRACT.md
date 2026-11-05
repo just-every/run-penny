@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 55 | 60 | 1 | 116 |
+| Published | 56 | 59 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 75 | 128 | 78 | 281 |
+| All | 76 | 127 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3335,7 +3335,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `DEC-008` | Outcome evidence | published | done | `tests/base/penny-releases.test.ts`; `tests/base/penny-decisions.test.ts` |  |
 | `ROAD-001` | Internal states | published | done | `tests/base/decision-loop-roadmap.test.ts` — Explicit roadmap publication: projects every forward and backward move within five seconds and snapshots exact approval and mapping witnesses atomically; concurrent distinct moves form a truthful transition chain, and unapproved items prepare no draft |  |
 | `ROAD-002` | Internal record | published | done | `tests/browser/operator-roadmap-record.mjs`; `tests/browser/operator-pages.mjs` |  |
-| `ROAD-003` | Public projection | published | partial | `tests/base/decision-loop-roadmap.test.ts` | The absence of account names, revenue, internal dates, confidence, rationale, evidence, declined bets and delivery notes from the projection has no passing assertion in this clause's evidence, whose check of the public item allows extra fields; the projected public status within 5 seconds and a dropped item's withdrawal are asserted. |
+| `ROAD-003` | Public projection | published | done | `tests/base/decision-loop-roadmap.test.ts` — Explicit roadmap publication: projects every forward and backward move within five seconds and snapshots exact approval and mapping witnesses atomically (exact public list and detail payloads, private field and value exclusion from API and rendered pages, approved ETA and request links retained, Dropped withdrawn) |  |
 | `ROAD-004` | Approval is publication | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/base/request-status-workflow.test.ts` |  |
 | `ROAD-005` | Commitment mapping | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |
 | `ROAD-006` | Public roadmap | published | done | `tests/base/decision-loop-roadmap.test.ts`; `tests/browser/roadmap-public-eta.mjs` |  |
