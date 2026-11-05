@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 75 | 112 | 71 | 258 |
+| Core | 76 | 111 | 71 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 75 | 128 | 78 | 281 |
+| Full target | 76 | 127 | 78 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -1131,15 +1131,15 @@ Core · published · **partial**
 
 #### NOTIFY-005 — Notification failure
 
-Core · published · **partial** · Cites BASE-OPS-004
+Core · published · **done** · Cites BASE-OPS-004
 
 **Requirement.** Requester status-update email and operator decision-review email each use a durable recipient-and-event key and retry, suppress, and expose failure exactly as REL-006, REL-011, and REL-013 describe.
 
 **Acceptance.**
 1. The in-app or portal record of the same event stays available when the email fails.
 
-**Evidence.** `tests/base/notifications.test.ts`
-**Gap.** The in-app or portal record of the same event staying available when the email fails has no passing assertion; bounded retry, failed and unknown outcomes and the operator delivery list are asserted.
+**Evidence.** `tests/base/notifications.test.ts`; `tests/base/penny-decisions.test.ts` — "completing a review holds that schedule; reminders stay in app until dismissed even when mail fails" reads the same due decision, review date and notification identity through authenticated operator routes in each failure state and after later drains. Both retain bounded retries, visible failure and unknown-send no-replay assertions.
+**Gap.** None.
 
 ### Data
 

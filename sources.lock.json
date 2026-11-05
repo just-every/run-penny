@@ -670,7 +670,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "5a5e5e2d9f6b5d0abf51fa06b7961f962cf2c09c992d6f9107d8848fe7bf5f88",
+      "sha256": "1c87c33b756064f847c9eb87227ce76d2ec4a1fcd711566757fbcf57b1bde204",
       "executable": false
     },
     "agent-surface.json": {
@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "eabc3bb607558c5ab2071ce3c2899cba27771b5ce1eb4f76c5664c06bbd2c630",
+      "sha256": "258230944d85fef5311ecdff8c313dcd6bb6a84fbe23b3bf4f2bdab8888e53ae",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "9a0e951240b71723dad2549ca9f97aa9d4297858721032b0b2b47382f13005a9",
+      "sha256": "c94a6c92680071638a2e30062048b59c096db80a067c609febaa96c32579f393",
       "executable": false
     },
     "DEMO.md": {
@@ -8458,7 +8458,7 @@
       "executable": false
     },
     "tests/base/notifications.test.ts": {
-      "sha256": "8a52e5b3e321efc43ddabbff6611e05e55621c793f48a8d4a54b0edc972c93cc",
+      "sha256": "c74d749c7f952363f659472fe9429171b410b8bebdf43609949df10e82e41f6a",
       "executable": false
     },
     "tests/base/operator-request-publication.ts": {
@@ -8478,7 +8478,7 @@
       "executable": false
     },
     "tests/base/penny-decisions.test.ts": {
-      "sha256": "68a2b562a9e930115235e078e22e759cf8a288c85d8b7741845eb434e054236d",
+      "sha256": "8fe5d368dca2889420a97bb9a594082ca895bcf4af1dd0c5881820577f3a2f0d",
       "executable": false
     },
     "tests/base/penny-erasure.test.ts": {
