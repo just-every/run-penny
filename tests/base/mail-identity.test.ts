@@ -2,9 +2,10 @@ import {applyD1Migrations,reset} from 'cloudflare:test'
 import {exports} from 'cloudflare:workers'
 import {beforeEach,afterEach,vi,expect,inject,it} from 'vitest'
 import {mockMail,owner,finishFirstRun} from './support'
+import {proveReleaseMailIdentity} from './release-mail-identity'
 import {accepted,body,graph,call,env,origin} from './subscription-fixture'
-beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()});afterEach(()=>vi.restoreAllMocks())
-it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower transport',async()=>{
+beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()});afterEach(()=>{vi.useRealTimers();vi.restoreAllMocks()})
+it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport',async()=>{
  const operator=await owner({finishSetup:false})
  const incomplete=await exports.default.fetch(new Request(origin+'/setup',{method:'POST',headers:{...operator,Origin:origin,'Content-Type':'application/x-www-form-urlencoded'},body:'confirm=yes&companyName=Example'}));expect(incomplete.status).toBe(400)
  expect(await env.DB.prepare('SELECT * FROM oa_first_run').first()).toBeNull()
@@ -26,4 +27,5 @@ it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected se
  expect((await call('/api/operator/boards/subscriptions/vote-subscriptions',{enabled:true,version:g.disclosure.version+1},g.operator,'PUT')).status).toBe(409)
  const before=g.sent.length;await g.status(slug,'planned');await g.flush();expect(g.sent.length).toBeGreaterThan(before)
  expect(g.sent.filter(message=>message.personalizations[0].to[0].email===update.personalizations[0].to[0].email).length).toBeGreaterThan(1)
+ await proveReleaseMailIdentity()
 })

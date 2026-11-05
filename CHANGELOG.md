@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove the saved sender name, from address, monitored reply-to and postal footer on an actual native release delivery, correlated to its HTTP-edge envelope and durable attempt. Extend the existing mail-identity sanity journey with isolated release setup, publication, unchanged wording, signed-out unsubscribe and repeated-drain no-replay assertions. REL-005 stays partial for the owner brand header and remaining email privacy proof; live sender qualification remains in R-6. No runtime, migration or configuration change is required.
+
 - Complete REQ-010 consent proof through the existing requester and subscription journeys: mounted submit and vote controls start unchecked, ordinary unticked actions grant nothing, current automatic disclosures lead to author and voter follows, and explicit grants bind the verified address, request, source and controlled time. Unfollow revokes the permission while preserving the vote. Retain automatic-subscription, unsubscribe and withdrawal coverage. No runtime, migration or configuration change is required; separate notification, provider and release obligations remain unchanged.
 
 - Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.
