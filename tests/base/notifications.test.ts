@@ -14,6 +14,7 @@ import { RequestOperatorRepository } from '@/core/features/requests/operator-rep
 import { loadRuntimeConfiguration } from '@/core/platform/configuration'
 import { authMail } from '@/core/features/auth/mail'
 import type { AppBindings } from '@/core/shared/bindings'
+import type { PublicRequestDetail } from '@/core/shared/api/public'
 import {explicitConsentBoard} from './explicit-consent-board'
 import {proveWeeklySummary} from './weekly-summary-flow'
 const start=Date.parse('2026-10-07T09:00:00.000Z'),time=(offset=0)=>new Date(start+offset).toISOString()
@@ -131,22 +132,51 @@ it('[NOTIFY-002 EVID-006] mixed batch drops a newly held comment and still sends
  expect(sent).toHaveLength(1);expect(JSON.stringify(sent[0])).toContain('Still public');expect(JSON.stringify(sent[0])).not.toContain('No longer public')
 })
 it('[NOTIFY-005 REL-006] bounded exponential known failures, ambiguous outcomes and interrupted attempts require review',async()=>{
- const g=await setup();await g.follow();await g.status('Retry')
+ const g=await setup();await g.follow()
+ const events:PublicRequestDetail['statusUpdates'][number][]=[]
+ const available=async()=>{
+  const response=await call(`/api/public/requests/${g.slug}`)
+  expect(response.status).toBe(200)
+  const request=await response.json() as PublicRequestDetail
+  expect(request.slug).toBe(g.slug);expect(request.status).toBe('under_review')
+  expect(request.statusUpdates).toEqual([...events].reverse())
+ }
+ const publish=async(body:string,offset=0)=>{
+  await g.status(body,offset)
+  const event=await env.DB.prepare('SELECT id FROM request_status_updates WHERE request_id=? AND body=?').bind(g.requestId,body).first<{id:string}>()
+  expect(event).not.toBeNull()
+  events.push({id:event!.id,status:'under_review',body,pinned:0,publishedAt:time(offset)})
+  await available()
+ }
+ await publish('Retry')
  const sent=capture(429);let offset=3600000
  for(let attempt=0;attempt<6;attempt++){
-  await drainNotifications(runtime(),()=>start+offset);expect(sent).toHaveLength(attempt+1)
+  await drainNotifications(runtime(),()=>start+offset);expect(sent).toHaveLength(attempt+1);await available()
   if(attempt<5){const row=(await batches())[0];expect(row.state).toBe('queued');expect(row.next_attempt_at).toBe(time(offset+60000*2**attempt));offset+=60000*2**attempt}
  }
- expect(await batches()).toMatchObject([{state:'failed',attempt_count:6}]);await drainNotifications(runtime(),()=>start+offset+3600000);expect(sent).toHaveLength(6)
- await g.status('Uncertain',offset+1);capture(503);await drainNotifications(runtime(),()=>start+offset+3600001)
- expect(await batches()).toMatchObject([{state:'failed'},{state:'unknown'}])
+ const failed=(await batches())[0]
+ expect(sent.every(message=>JSON.stringify(message.body).includes('Retry'))).toBe(true)
+ for(const message of sent)expect(message.body.custom_args).toMatchObject({rer_delivery_id:failed.id})
+ expect(failed).toMatchObject({state:'failed',attempt_count:6,first_event_id:events[0].id});await drainNotifications(runtime(),()=>start+offset+3600000);expect(sent).toHaveLength(6)
+ await publish('Uncertain',offset+1);const ambiguous=capture(503);await drainNotifications(runtime(),()=>start+offset+3600001);await available()
+ expect(ambiguous).toHaveLength(1);expect(JSON.stringify(ambiguous[0].body)).toContain('Uncertain')
+ expect(ambiguous[0].body.custom_args).toMatchObject({rer_delivery_id:(await batches())[1].id})
+ expect(await batches()).toMatchObject([{state:'failed'},{state:'unknown',first_event_id:events[1].id}])
  const later=capture();await drainNotifications(runtime(),()=>start+offset+7200001);expect(later).toHaveLength(0)
- await g.status('Crash',offset+7200002);await prepareBatches(env.DB,time(offset+7200002))
+ await publish('Crash',offset+7200002);await prepareBatches(env.DB,time(offset+7200002))
  const crash=(await batches())[2].id
  await env.DB.batch([env.DB.prepare("UPDATE notification_batches SET state='sending',claim_id='crash-owner' WHERE id=?").bind(crash),env.DB.prepare("INSERT INTO notification_attempts(id,batch_id,provider,state,created_at,updated_at) VALUES('crash-owner',?,'sendgrid','sending',?,?)").bind(crash,time(),time())])
  await drainNotifications(runtime(),()=>start+offset+10800002)
- expect((await batches())[2]).toMatchObject({state:'unknown',failure_reason:'attempt_interrupted_review_required'});expect(later).toHaveLength(0)
- expect((await call('/api/operator/notifications',undefined,g.operator)).status).toBe(200)
+ expect((await batches())[2]).toMatchObject({state:'unknown',failure_reason:'attempt_interrupted_review_required',first_event_id:events[2].id});expect(later).toHaveLength(0)
+ await available()
+ const deliveryView=await call('/api/operator/notifications',undefined,g.operator)
+ expect(deliveryView.status).toBe(200)
+ const {deliveries}=await deliveryView.json() as {deliveries:{id:string;requestId:string;state:string;failureReason:string|null;attemptCount:number}[]}
+ const terminal=await batches()
+ expect(deliveries).toHaveLength(3)
+ for(const row of terminal)expect(deliveries.find(delivery=>delivery.id===row.id)).toMatchObject({requestId:g.requestId,state:row.state,failureReason:row.failure_reason,attemptCount:row.attempt_count})
+ await drainNotifications(runtime(),()=>start+offset+14400002)
+ expect(await batches()).toEqual(terminal);expect(later).toHaveLength(0);await available()
  expect((await call('/api/operator/notifications')).status).toBe(401)
 })
 it('[NOTIFY-002 REQ-025] signed no-login request/global unsubscribe resists tampering and retains votes, follows and access',async()=>{

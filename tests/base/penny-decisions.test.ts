@@ -7,6 +7,7 @@ import { createPennyRuntime } from '@/core/app/runtime'
 import { providerMessages } from './provider-messages'
 import { runNotificationSchedule } from '@/core/features/notifications/scheduled'
 import type { ReviewNotification } from '@/core/features/notifications/decision-reviews'
+import type { OperatorDecisionBrief } from '@/core/shared/api/operator'
 import type { DecisionHistory,DecisionPostRelease } from '@/core/features/decisions/history'
 const origin='https://127.0.0.1:8787'
 const devKey='synthetic-decisions-checkout-key-for-local-outbox-tests'
@@ -92,7 +93,7 @@ it('[DEC-007] calendar dates expire after the workspace day, explicit timestamps
  expect(await providerMessages(runtime())!.list()).toHaveLength(3);expect(await notices(g)).toHaveLength(3)
  expect(await rows('roadmap_items')).toEqual(roadmap)
 })
-it('[NOTIFY-003] completing a review before Cron holds that schedule; changed dates notify once without quiet hours and stay in app until dismissed',async()=>{
+it('[NOTIFY-003 NOTIFY-005] completing a review holds that schedule; reminders stay in app until dismissed even when mail fails',async()=>{
  const g=await graph(),original=(await rows('decisions'))[0]
  await good(`/api/operator/decisions/${g.decision.id}/reviews`,{note:'Reviewed before the reminder',revision:{...g.fields,rationale:'Reviewed rationale',expectedRevision:1}},g.cookie)
  await Promise.all([cron('2026-10-10T14:00:00Z'),cron('2026-10-10T14:00:00Z')])
@@ -125,6 +126,61 @@ it('[NOTIFY-003] completing a review before Cron holds that schedule; changed da
  expect(await notices(g)).toHaveLength(0)
  await cron('2026-10-12T14:00:00Z');await cron('2026-10-12T14:01:00Z')
  expect(await providerMessages(runtime())!.list()).toHaveLength(2);expect(await notices(g)).toHaveLength(1)
+ // Each later schedule remains the same decision and in-app event through mail failure.
+ for(const outcome of ['failed','ambiguous','interrupted'] as const){
+  const date=outcome==='failed'?'2026-10-13':outcome==='ambiguous'?'2026-10-14':'2026-10-15'
+  await good(`/api/operator/decisions/${g.decision.id}/reviews`,{note:'Schedule the next review',reviewAt:date},g.cookie)
+  const due=Date.parse(date+'T14:00:00Z'),tick=(offset=0)=>cron(new Date(due+offset).toISOString())
+  const deliveries:string[]=[]
+  vi.mocked(fetch).mockImplementation(async(input,init)=>{
+   expect(String(input)).toBe('https://api.sendgrid.com/v3/mail/send')
+   const envelope=JSON.parse(String(init?.body))
+   deliveries.push(envelope.custom_args.rer_delivery_id)
+   expect(envelope.subject).toContain('Which approach?')
+   expect(envelope.content.find((part:{type:string})=>part.type==='text/plain').value).toContain(`/app/decisions/${g.decision.slug}`)
+   return new Response(null,{status:outcome==='failed'?429:outcome==='ambiguous'?503:202})
+  })
+  if(outcome==='interrupted'){
+   // Simulate termination after HTTP: receipt writes fail, leaving durable sending ownership.
+   await env.DB.exec("CREATE TRIGGER interrupt_review_receipt BEFORE UPDATE ON decision_review_notifications WHEN OLD.state='sending' AND NEW.state!='sending' BEGIN SELECT RAISE(ABORT,'synthetic-penny-interrupted-receipt'); END;")
+   await expect(tick()).rejects.toThrow('synthetic-penny-interrupted-receipt')
+   await env.DB.exec('DROP TRIGGER interrupt_review_receipt')
+  }else await tick()
+  const notice=(await notices(g)).find(n=>n.reviewAt===date)!
+  expect(notice).toMatchObject({id:deliveries[0],decisionId:g.decision.id,decisionSlug:g.decision.slug,title:'Which approach?',reviewAt:date,state:outcome==='failed'?'queued':outcome==='ambiguous'?'unknown':'sending'})
+  expect(deliveries).toHaveLength(1)
+  const identity={id:notice.id,decisionId:g.decision.id,decisionSlug:g.decision.slug,title:'Which approach?',reviewAt:date,createdAt:notice.createdAt}
+  const available=async(state:string)=>{
+   const response=await call(`/api/operator/decisions/${g.decision.slug}`,undefined,g.cookie)
+   expect(response.status).toBe(200)
+   const decision=await response.json() as OperatorDecisionBrief
+   expect(decision).toMatchObject({id:g.decision.id,slug:g.decision.slug,title:'Which approach?',state:'review_due',reviewAt:date})
+   const reminders=await notices(g)
+   expect(reminders.filter(n=>n.reviewAt===date)).toHaveLength(1)
+   expect(reminders.find(n=>n.id===notice.id)).toMatchObject({...identity,state})
+  }
+  await available(notice.state)
+  if(outcome==='failed'){
+   let offset=0
+   for(let retry=0;retry<5;retry++){
+    offset+=60000*2**retry
+    await tick(offset)
+    expect(deliveries).toHaveLength(retry+2)
+    expect(deliveries.every(id=>id===notice.id)).toBe(true)
+    await available(retry===4?'failed':'queued')
+   }
+  }else if(outcome==='interrupted')await tick(360000)
+  const state=outcome==='failed'?'failed':'unknown'
+  await available(state)
+  expect((await notices(g)).find(n=>n.id===notice.id)?.failureReason).toBe(outcome==='failed'?'provider_rate_limited':outcome==='ambiguous'?'provider_uncertain':'attempt_interrupted_review_required')
+  const terminal=(await notices(g)).find(n=>n.id===notice.id),attempts=deliveries.length
+  await tick(3600000);await tick(7200000)
+  await available(state)
+  expect((await notices(g)).find(n=>n.id===notice.id)).toEqual(terminal)
+  expect(deliveries).toHaveLength(attempts)
+ }
+ expect((await call('/api/operator/notifications')).status).toBe(401)
+ expect((await call(`/api/operator/decisions/${g.decision.slug}`)).status).toBe(401)
 })
 it('[DEC-008] requester outcome revisions and release-linked evidence appear immediately through original publication links without changing commitment snapshots',async()=>{
  const g=await graph(),snapshot=await history(g)
