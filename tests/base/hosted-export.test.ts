@@ -8,7 +8,13 @@ import inventory from '../../src/core/features/data/schema-inventory.json'
 const origin='https://penny.test',app=createPennyApi()
 const bindings={...env,PENNY_ENVIRONMENT:'production',APP_ORIGIN:origin,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,MAIL_API_KEY:undefined}
 const call=(path:string,body?:unknown,headers:Record<string,string>={})=>app.fetch(new Request(origin+path,{method:body===undefined?'GET':'POST',headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.1',...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),bindings)
-async function owner(){const r=await call('/auth/bootstrap',{token:bindings.SETUP_TOKEN,displayName:'Owner',returnTo:'/app'});expect(r.status).toBe(303);return {Cookie:r.headers.get('Set-Cookie')!.split(';')[0]}}
+async function owner(displayName='Owner'){const r=await call('/auth/bootstrap',{token:bindings.SETUP_TOKEN,displayName,returnTo:'/app'});expect(r.status).toBe(303);return {Cookie:r.headers.get('Set-Cookie')!.split(';')[0]}}
+async function scopedKey(cookie:Record<string,string>){
+ const response=await call('/api/operator/integrations/keys',{name:'synthetic-penny-portability',scopes:['requests:read','requests:write']},cookie)
+ expect(response.status,await response.clone().text()).toBe(201)
+ const issued=await response.json() as {token:string;credential:{id:string}}
+ return {...issued,headers:{Authorization:'Bearer '+issued.token}}
+}
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'))})
 it('[DATA-001 BASE-ACCESS-002] hosted data mutations and recovery require current native operator authority and the configured origin',async()=>{
  const spy=vi.spyOn(globalThis,'fetch').mockImplementation(async()=>{throw new Error('Unexpected provider call')})
@@ -80,13 +86,23 @@ it('[DATA-001 DATA-003] hosted empty-target restore and file erasure preserve pr
  const mismatched=await call('/api/operator/data/import',{archive:archive.archive,journal},cookie)
  expect(mismatched.status).toBe(409);expect(await mismatched.json()).toEqual({error:'stale_archive'})
 })
-it('[DATA-001] hosted archive includes every classified product table and exact original R2 bytes without installation authority',async()=>{
- const cookie=await owner(),stamp=new Date().toISOString(),bytes=new Uint8Array([0,255,31,80,68,70])
- await env.DB.batch([
-  env.DB.prepare("INSERT INTO boards(id,slug,name,visibility,position,created_at,updated_at) VALUES('b','b','Board','public',0,?,?)").bind(stamp,stamp),
-  env.DB.prepare("INSERT INTO requests(id,slug,board_id,title,description,moderation_state,public_state,created_at,updated_at) VALUES('r','r','b','Title','Description','awaiting_review','open',?,?)").bind(stamp,stamp),
-  env.DB.prepare("INSERT INTO attachments(id,request_id,storage_key,original_filename,content_type,byte_size,public_state,created_at,updated_at) VALUES('f','r','original','Original.bin','application/octet-stream',?,'operator_only',?,?)").bind(bytes.length,stamp,stamp),
- ])
+it('[API-002 DATA-001] hosted archive includes every classified product table and exact original R2 bytes without portable credentials',async()=>{
+ const cookie=await owner('Source owner'),stamp=new Date().toISOString(),bytes=new Uint8Array([0,255,31,80,68,70])
+ expect((await call('/api/operator/boards',{name:'Board',slug:'portability',visibility:'public'},cookie)).status).toBe(201)
+ const source=await scopedKey(cookie),sourceOwner=await env.DB.prepare('SELECT id FROM oa_operators').first('id')
+ const created=await call('/api/v1/requests',{title:'Portable request',description:'Portable description',boardSlug:'portability'},source.headers)
+ expect(created.status).toBe(201)
+ const item=await created.json() as {id:string;slug:string}
+ expect((await call('/api/operator/moderation/'+item.slug,{verdict:'approved',title:'Portable request',description:'Portable description',boardSlug:'portability',displayName:'Source owner'},cookie)).status).toBe(200)
+ const sourceRead=await call('/api/v1/requests/'+item.slug,undefined,source.headers)
+ expect(sourceRead.status).toBe(200)
+ const publicRequest=await sourceRead.json()
+ expect(publicRequest).toMatchObject({kind:'found',request:{slug:item.slug,title:'Portable request',description:'Portable description'}})
+ const sourceHash=await env.DB.prepare('SELECT token_hash FROM integration_tokens WHERE id=?').bind(source.credential.id).first<string>('token_hash')
+ expect(sourceHash).toMatch(/^[a-f0-9]{64}$/)
+ expect((await env.DB.prepare('SELECT * FROM penny_api_issuers WHERE token_id=?').bind(source.credential.id).all()).results).toHaveLength(1)
+ expect(await env.DB.prepare('SELECT count(*) n FROM integration_token_usage WHERE token_id=? AND allowed=1').bind(source.credential.id).first('n')).toBeGreaterThan(0)
+ await env.DB.prepare("INSERT INTO attachments(id,request_id,storage_key,original_filename,content_type,byte_size,public_state,created_at,updated_at) VALUES('f',?,'original','Original.bin','application/octet-stream',?,'operator_only',?,?)").bind(item.id,bytes.length,stamp,stamp).run()
  await env.FILES.put('original',bytes)
  const response=await call('/api/operator/data/export',undefined,cookie),snapshot=await response.json() as Awaited<ReturnType<typeof exportArchive>>
  expect(response.status).toBe(200)
@@ -95,12 +111,50 @@ it('[DATA-001] hosted archive includes every classified product table and exact 
  expect(snapshot.archive.tables.requests).toHaveLength(1);expect(snapshot.archive.tables.attachments).toHaveLength(1)
  expect(Uint8Array.from(atob(snapshot.archive.files[0].bytes),c=>c.charCodeAt(0))).toEqual(bytes)
  expect(snapshot.archive.files[0].sha256).toMatch(/^[a-f0-9]{64}$/)
- expect(JSON.stringify(snapshot)).not.toContain(cookie.Cookie.split('=')[1]);expect(JSON.stringify(snapshot)).not.toContain(bindings.AUTH_SECRET)
+ const encoded=JSON.stringify(snapshot)
+ expect(encoded).not.toContain(cookie.Cookie.split('=')[1]);expect(encoded).not.toContain(bindings.AUTH_SECRET)
+ expect(encoded).not.toContain(source.token);expect(encoded).not.toContain(sourceHash)
+ for(const table of ['integration_tokens','integration_token_events','integration_token_usage','penny_api_issuers','penny_api_issuance'])expect(Object.hasOwn(snapshot.archive.tables,table),table).toBe(false)
  expect(await env.DB.prepare('SELECT phase,lock_id FROM data_state').first()).toEqual({phase:'idle',lock_id:null})
  await env.FILES.put('untracked','Untracked original')
  expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
  await env.FILES.delete('untracked');await env.FILES.delete('original')
  expect((await call('/api/operator/data/export',undefined,cookie)).status).toBe(503)
+
+ // The destination may use the same person's address or a different owner.
+ const sourceEmail=bindings.OPERATOR_EMAIL
+ try{for(const destinationEmail of [sourceEmail,'destination-'+sourceEmail]){
+ bindings.OPERATOR_EMAIL=destinationEmail
+ await reset();await applyD1Migrations(env.DB,inject('migrations'))
+ const destinationCookie=await owner('Destination owner'),destination=await scopedKey(destinationCookie)
+ expect(destination.token).not.toBe(source.token)
+ expect((await call('/api/v1/boards',undefined,destination.headers)).status).toBe(200)
+ const credentials=async()=>(await env.DB.batch([env.DB.prepare('SELECT * FROM integration_tokens ORDER BY id'),env.DB.prepare('SELECT i.token_id,i.native_operator_id,i.operator_version,o.email FROM penny_api_issuers i JOIN operators o ON o.id=i.actor_id ORDER BY i.token_id'),env.DB.prepare('SELECT * FROM oa_operators ORDER BY id')])).map(result=>result.results)
+ expect(await env.DB.prepare('SELECT id FROM oa_operators').first('id')).not.toBe(sourceOwner)
+ const keyAudits=async()=>(await env.DB.prepare("SELECT a.id,a.action,a.entity_id,o.email FROM audit_entries a JOIN operators o ON o.id=a.actor_id WHERE action='integration.key_issued' AND entity_id=?").bind(destination.credential.id).all()).results
+ const destinationAuthority=await credentials(),destinationAudits=await keyAudits()
+ expect(destinationAudits).toHaveLength(1)
+ const restored=await call('/api/operator/data/import',snapshot,destinationCookie)
+ expect(restored.status,await restored.clone().text()).toBe(200)
+ expect(await credentials()).toEqual(destinationAuthority)
+ expect(await keyAudits()).toEqual(destinationAudits)
+ expect(new Uint8Array(await (await env.FILES.get('original'))!.arrayBuffer())).toEqual(bytes)
+ const product=async()=>Object.fromEntries(await Promise.all(Object.keys(snapshot.archive.tables).map(async table=>[table,(await env.DB.prepare('SELECT * FROM "'+table+'"').all()).results.map(row=>JSON.stringify(row)).sort()])))
+ const beforeRefusal=await product(),usage=await env.DB.prepare('SELECT count(*) n FROM integration_token_usage').first('n')
+ expect((await call('/api/v1/requests/'+item.slug,undefined,source.headers)).status).toBe(401)
+ expect((await call('/api/v1/requests',{title:'Refused source write',description:'Must not restore authority',boardSlug:'portability'},source.headers)).status).toBe(401)
+ expect(await product()).toEqual(beforeRefusal)
+ expect(await env.DB.prepare('SELECT count(*) n FROM integration_token_usage').first('n')).toBe(usage)
+ expect(await credentials()).toEqual(destinationAuthority)
+ const destinationRead=await call('/api/v1/requests/'+item.slug,undefined,destination.headers)
+ expect(destinationRead.status).toBe(200);expect(await destinationRead.json()).toEqual(publicRequest)
+ const destinationWrite=await call('/api/v1/requests',{title:'Destination key works',description:'Independently authorized',boardSlug:'portability'},destination.headers)
+ expect(destinationWrite.status,await destinationWrite.clone().text()).toBe(201)
+ const written=await destinationWrite.json() as {id:string}
+ expect(await env.DB.prepare('SELECT r.title,r.description,o.email FROM requests r JOIN operators o ON o.id=r.author_operator_id WHERE r.id=?').bind(written.id).first()).toEqual({title:'Destination key works',description:'Independently authorized',email:destinationEmail})
+ expect((await call('/api/operator/integrations/keys',undefined,destinationCookie)).status).toBe(200)
+ }}finally{bindings.OPERATOR_EMAIL=sourceEmail}
+
 })
 // RER Managed installs with Platform's own ledger and no Wrangler d1_migrations.
 const platformLedgerDdl='CREATE TABLE rer_migrations (name TEXT PRIMARY KEY, sha256 TEXT NOT NULL, applied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)'

@@ -25,6 +25,7 @@ import { feedbackRestoreCustody } from '../imports/archive-restore'
 import {eraseArchivedSourceOptions,eraseExportedSourceOptions} from '../imports/archive-source-erasure'
 import { clauseDeletionOrder } from './erasure-dependencies'
 import { parentsFirst } from './restore-order'
+import {businessAuditQuery,restoreKeyCustody} from './restore-keys'
 import { checkCopyResolutions, redactionStatements, type BlockedCopy, type CopyResolution, type Redaction } from './erasure-redaction'
 import {assertPlatformLedger} from './platform-ledger'
 import {excludedTable} from '@runeditrun/rer/modules/portability'
@@ -278,7 +279,7 @@ export async function applyRestore(db:D1Database,bucket:R2Bucket,id:string,autho
  await claimRunner(db,id,'pending','running',authority)
  let ownsR2=saved.r2Owned===true
  try{
-  const occupied=await db.batch(tables.map(table=>db.prepare(`SELECT 1 AS occupied FROM ${ident(table.name)} LIMIT 1`)))
+  const occupied=await db.batch(tables.map(table=>db.prepare(table.name==='audit_entries'?businessAuditQuery:`SELECT 1 AS occupied FROM ${ident(table.name)} LIMIT 1`)))
   if(tables.some((table,index)=>!bootstrapTables.has(table.name)&&occupied[index].results.length))fail('restore_requires_empty_target')
   if(!ownsR2){
    if((await bucket.list({limit:2})).objects.some(object=>!isStaging(object.key)))fail('restore_requires_empty_bucket')
@@ -289,12 +290,13 @@ export async function applyRestore(db:D1Database,bucket:R2Bucket,id:string,autho
   for(let index=0;index<archive.files.length;index++){const file=archive.files[index];await assertDataAuthority(db,authority);await bucket.put(file.key,bytes[index],{httpMetadata:{contentType:file.contentType}})}
   eraseArchivedSourceOptions(archive.tables)
   const importCustody=await feedbackRestoreCustody(db,archive.tables)
+  const keyCustody=await restoreKeyCustody(db,archive.tables.operators)
   const statements=[...applyStart(db,id),...importCustody.before,...tables.map(table=>db.prepare(`DELETE FROM ${ident(table.name)}`))]
   for(const table of tables)for(const original of parentsFirst(table,archive.tables[table.name])){
    const row=normalize(table.name,original),columns=table.columns.map(column=>column.name)
    statements.push(db.prepare(`INSERT INTO ${ident(table.name)}(${columns.map(ident).join(',')}) VALUES(${columns.map(()=>'?').join(',')})`).bind(...columns.map(column=>row[column])))
   }
-  statements.push(...importCustody.after)
+  statements.push(...importCustody.after,...keyCustody)
   // Never delete a destination erasure journal. Validation requires a superset.
   for(const item of journal.tombstones)statements.push(db.prepare('INSERT OR IGNORE INTO data_tombstones(epoch,table_name,key_hash) VALUES(?,?,?)').bind(item.epoch,item.table_name,item.key_hash))
   statements.push(db.prepare('UPDATE data_state SET origin=?,epoch=? WHERE singleton=1 AND lock_id=?').bind(journal.origin,journal.epoch,id),audit(db,'data.restored',id,authority),db.prepare("UPDATE data_operations SET status='complete',payload_json='{}',updated_at=? WHERE id=?").bind(new Date().toISOString(),id),db.prepare('UPDATE data_runner_claims SET finished_at=COALESCE(finished_at,?),updated_at=? WHERE work_id=?').bind(Date.now(),Date.now(),id),db.prepare("UPDATE data_state SET phase='idle',lock_id=NULL WHERE singleton=1 AND lock_id=?").bind(id))

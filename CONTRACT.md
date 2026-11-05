@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 59 | 56 | 1 | 116 |
+| Published | 60 | 55 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 79 | 124 | 78 | 281 |
+| All | 80 | 123 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3380,7 +3380,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `OWN-001` | Signed first owner | published | done | `tests/base/owner-claim.test.ts` |  |
 | `EDIT-001` | Owner editor | published | partial | `tests/base/editor-admission.test.ts` | Compiled data-only edits applying after the destination hydrates with native navigation and privacy preserved, and the management service's own admission of its owner and frame origin, have no passing assertion; the short owner-only lease and the refusal of other operators and foreign origins are asserted. |
 | `API-001` | Scoped keys | published | done | `tests/base/proxy-votes.test.ts` — server-held scoped keys record proxy demand, refuse a read-only key and stop on revocation (points 1–3); `tests/base/integration-api.test.ts` — issues a reveal-once hashed key, confines route-selected scopes to the REST namespace and refuses unissued keys without a usage record; expiry, revocation, issuer removal and usage-write failure refuse authority after a fresh runtime |  |
-| `API-002` | Current custody | published | partial | `tests/base/integration-api.test.ts` | Credentials staying out of portable archives, and a restore honouring none, have no passing assertion; usage metadata written before authority is returned with storage failure refusing, revocation, expiry and issuer removal fencing requests and business writes, and a bearer key refused at export are asserted. |
+| `API-002` | Current custody | published | done | `tests/base/integration-api.test.ts`: expiry, revocation, issuer removal and usage-write failure refuse authority after a fresh runtime; fences issuance and business writes against native revocation in their D1 transaction; `tests/base/hosted-export.test.ts`: hosted archive includes every classified product table and exact original R2 bytes without portable credentials |  |
 | `API-003` | Native publication | published | partial | `tests/base/integration-api.test.ts` | That imported or restored history creates no new publication or integration effect has no passing assertion: the cited upgrade case snapshots its tables after the import and compares them only across migrations, and no cited case restores an archive; prior history, including imported feedback, staying unchanged across each new migration is asserted. |
 | `INT-001` | Explicit integration effects | published | partial | `tests/browser/integration-states.mjs` | Gap: Selected public event kinds, immutable destinations, atomic business-write/event-target capture, held restored history and portable safe integration history with nonportable credentials lack complete passing assertions. |
 | `INT-002` | Enforcing transport | published | done | `tests/base/egress-delivery.test.ts` |  |

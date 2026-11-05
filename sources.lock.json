@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "ac74a8d9e9e9327f6ae61ec6e2f5d5e49ccdc9dd679b1ba24ce6420affdc9e62",
+      "sha256": "1a41603e1d9cda74a47254a3a3398224687efb0ce6f7e7e4c61be42319a0e0a3",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "826104b7d3e5d921685443d8e19418f1a4e9e2d5f4733b422d5a2323e6f10fdd",
+      "sha256": "95340beca10dd08d184c2b79c0c3773e87090588d66dc62fdf2857af3f1bdd2e",
       "executable": false
     },
     "DEMO.md": {
@@ -5338,7 +5338,7 @@
       "executable": false
     },
     "src/core/features/data/archive.ts": {
-      "sha256": "03ef32ed4e636da8d2c43a2258ded3911d81de05e6a3c6dacdf4e3d0337fa704",
+      "sha256": "b609bda9e053985e26e230d334e4aff4eb7ba1e7b3b4f637f3597ca48229eac6",
       "executable": false
     },
     "src/core/features/data/authority.ts": {
@@ -5391,6 +5391,10 @@
     },
     "src/core/features/data/portability.ts": {
       "sha256": "91e0da584112200ea6f17b5582ae9ca6cbcbcf4ea5c93ce9eeb5317bb7480178",
+      "executable": false
+    },
+    "src/core/features/data/restore-keys.ts": {
+      "sha256": "fccc0514ce2ba9c88559d6f2e3797b4c3fdaa03b50a53855e98f8380775572ef",
       "executable": false
     },
     "src/core/features/data/restore-order.ts": {
@@ -8366,7 +8370,7 @@
       "executable": false
     },
     "tests/base/hosted-export.test.ts": {
-      "sha256": "f6e2db55adbaae2baf91dc636a7d2e261c9e60952e90dadeaf40288560d048e9",
+      "sha256": "d3d8b46209f6332ac4a6b4fb1779acf5bf0fb84459e33c6d9e8333bdef6bd07a",
       "executable": false
     },
     "tests/base/import-board-policy.test.ts": {
