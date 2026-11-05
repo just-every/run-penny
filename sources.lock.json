@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "258230944d85fef5311ecdff8c313dcd6bb6a84fbe23b3bf4f2bdab8888e53ae",
+      "sha256": "5abf5941e852e2b23de65a126af271f83e67d869ad199ac91a1c3d0dea3aab7a",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "c94a6c92680071638a2e30062048b59c096db80a067c609febaa96c32579f393",
+      "sha256": "1d73eb5f402fe09ef4e7664958ea26b35b13a2a257ac7591ae03f68cdea44f8b",
       "executable": false
     },
     "DEMO.md": {
@@ -8566,7 +8566,7 @@
       "executable": false
     },
     "tests/base/request-demand.test.ts": {
-      "sha256": "724b8a4bdc76915f17834a44f97cf8567cc1ee1cbd8333f3592a3fd83c2557d8",
+      "sha256": "71a5af4fb810ca08bf80294838d9870b0932d3eed8d5eb456f273bf3e35b122a",
       "executable": false
     },
     "tests/base/request-status-workflow.test.ts": {
@@ -8962,7 +8962,7 @@
       "executable": false
     },
     "tests/browser/request-demand.mjs": {
-      "sha256": "b48af520d415e9baedf66b2abdbfae2a4ae749e42b9b8d9c80aa992b235eb1ed",
+      "sha256": "9d26da313191c8a2472e6a30d154bed8fac578a3411ba83a4f6015ad32ea46a1",
       "executable": false
     },
     "tests/browser/request-withdrawal.mjs": {

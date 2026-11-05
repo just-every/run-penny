@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete REQ-026's existing demand journeys: assert a retained supporter's exact vote timestamp and displayed date, 50 distinct people on expansion, 100 after one Show more action and all 103 after the second, with no remaining control. Preserve grouped verified addresses, linked accounts, proxy marks, separate demand figures and portal privacy. Mark REQ-026 done without changing its acceptance points. No runtime, migration or configuration change is required; unrelated field-proof holds remain unchanged.
+
 - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.
 
 - Complete API-001’s existing built-Worker scoped proxy-vote journey with persisted vote, contribution, attribution and permission snapshots around read-only and revoked-key refusals. Verify the successful vote remains unverified and grants no email permission or requester session, and cite the journey for all three acceptance points. No runtime, migration or configuration change is required; other clause and field-proof holds remain unchanged.

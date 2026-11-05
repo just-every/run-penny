@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 56 | 59 | 1 | 116 |
+| Published | 57 | 58 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 76 | 127 | 78 | 281 |
+| All | 77 | 126 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3318,7 +3318,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-023` | Email verification | published | partial | `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs` | The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted. |
 | `REQ-024` | Requester identity merge | published | partial | `tests/base/notifications.test.ts` | The survivor keeping both verified addresses and all requests, comments, follows and permission records, votes collapsing to one, the recorded merge, and no new vote or permission record have no passing assertion; carried mutes and preferences and working old links are asserted. |
 | `REQ-025` | Requester activity | published | partial | `tests/base/penny-releases.test.ts`; `tests/browser/requester-activity.mjs` | The current moderation state and public status of the requester's own requests in the view have no passing assertion; the view's counts of their requests, votes, follows and comments including held and rejected ones, and unfollow, mute and subscription changes from it, are asserted. |
-| `REQ-026` | Demand attribution | published | partial | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` | The vote date in the private supporter view, and the first 50 supporters on expansion with Show more revealing 50 more at a time, have no passing assertion (the browser check clicks Show more until it is gone and counts only the full history); the separate vote, linked-evidence and distinct-account figures with no score, the supporter view's names, addresses, accounts, proxy marks and per-account totals, the complete history with no 100-person cap, and the portal showing none of it are asserted. |
+| `REQ-026` | Demand attribution | published | done | `tests/base/request-demand.test.ts` — private demand counts people, evidence and accounts separately, preserves every attribution and excludes removed or blocked votes (points 1, 2, 4); `tests/browser/request-demand.mjs` — request-demand journey (points 1–4, including exact retained vote time and date, distinct supporter rows at 50, 100 and 103, grouped addresses and accounts, and portal privacy); `tests/base/proxy-votes.test.ts` — records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote (native proxy marks); `tests/base/feedback-import-uservoice.test.ts` — previews, applies, replays and reverses UserVoice ideas with their supporters and a filtered-history warning (historical proxy marks) |  |
 | `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` |  |
 | `REQ-028` | Request queue | published | partial | `tests/browser/operator-completeness-read.mjs` | Queue filters and sorts work; the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
 | `REQ-029` | Operator-authored request | published | done | `tests/base/operator-request-publication.ts`; `tests/base/penny-evidence.test.ts`; `tests/browser/operator-evidence-flow.mjs`; `tests/browser/operator-pages.mjs` |  |

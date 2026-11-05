@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
+import {expect} from '@playwright/test'
 import {moderationJourney} from './moderation-runtime.mjs'
 
 await moderationJourney('request-demand',async({runtime,origin,operator,json,send,person,pageFor,capture})=>{
- const first=await person('eli@example.test','Eli Wong'),second=await person('morgan@example.test','Morgan Reed')
+ const email=number=>'synthetic-penny-'+number+String.fromCharCode(64)+'example.test',morganEmail=email(2),secondaryEmail=email(3)
+ const first=await person(email(1),'Eli Wong'),second=await person(morganEmail,'Morgan Reed')
  const auth={Authorization:`Bearer ${first.token}`},other={Authorization:`Bearer ${second.token}`}
  const request=await json('/api/public/requests',{title:'Schedule monthly finance exports',description:'Finance needs a monthly CSV for its board review.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},auth,'POST',201)
  await json(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title:'Schedule monthly finance exports',description:'Schedule monthly CSV exports for finance reviews.',boardSlug:'finance',displayName:'Eli Wong'},operator)
@@ -11,8 +13,10 @@ await moderationJourney('request-demand',async({runtime,origin,operator,json,sen
  const accounts=[]
  for(const name of ['Harbor Analytics','Northstar Logistics','Cedar Health'])accounts.push(await json('/api/operator/accounts',{name,internalOwnerId:actor},operator,'POST',201))
  const people=(await db.prepare('SELECT id,display_name FROM requesters').all()).results,eli=people.find(person=>person.display_name==='Eli Wong'),morgan=people.find(person=>person.display_name==='Morgan Reed')
+ const votedAt='2026-08-14T23:15:42.123Z'
+ for(const table of ['request_vote_contributions','request_votes'])await db.prepare(`UPDATE ${table} SET created_at=? WHERE request_id=? AND requester_id=?`).bind(votedAt,requestId,morgan.id).run()
  for(const [person,account] of [[eli,accounts[0]],[morgan,accounts[0]],[morgan,accounts[1]]])await db.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(person.id,account.id,now).run()
- await db.prepare('INSERT INTO requester_addresses(id,requester_id,email,verified_at,created_at,updated_at) VALUES(?,?,?,?,?,?)').bind(crypto.randomUUID(),morgan.id,'morgan.finance@example.test',now,now,now).run()
+ await db.prepare('INSERT INTO requester_addresses(id,requester_id,email,verified_at,created_at,updated_at) VALUES(?,?,?,?,?,?)').bind(crypto.randomUUID(),morgan.id,secondaryEmail,now,now,now).run()
  await json('/api/operator/evidence',{sourceType:'sales_call',wording:'A monthly export prevents manual finance reconciliation.',observedAt:now,accountId:accounts[2].id,requestLinks:[{id:requestId,stance:'supporting'}]},operator,'POST',201)
  // A retained supporter history longer than the old 100-person display cap.
  const given=['Alex','Jamie','Taylor','Jordan','Casey','Avery','Robin','Drew','Blair','Quinn','Cameron'],family=['Adams','Bennett','Chen','Diaz','Evans','Foster','Green','Harris','Ito','Jones']
@@ -32,15 +36,42 @@ await moderationJourney('request-demand',async({runtime,origin,operator,json,sen
  await card.getByText('Votes by account',{exact:true}).first().click()
  assert.match(await card.getByRole('list',{name:'Votes by account',exact:true}).textContent(),/No linked account101 votes/)
  await card.getByText('Supporters (103)',{exact:true}).click()
+ const supporters=card.getByRole('list',{name:'Supporters',exact:true}),rows=supporters.locator(':scope > li')
+ const supporterNames=()=>rows.locator(':scope > div > span').allTextContents()
+ await expect(rows).toHaveCount(50)
+ const firstPage=await supporterNames()
+ assert.equal(new Set(firstPage).size,50)
+ await card.getByRole('button',{name:/Show more supporters/}).click()
+ await expect(rows).toHaveCount(100)
+ const secondPage=await supporterNames()
+ assert.equal(new Set(secondPage).size,100)
+ assert.deepEqual(secondPage.slice(0,50),firstPage)
+ await card.getByRole('button',{name:/Show more supporters/}).click()
+ await expect(rows).toHaveCount(103)
+ const allSupporters=await supporterNames()
+ assert.equal(new Set(allSupporters).size,103)
+ assert.deepEqual(allSupporters.slice(0,100),secondPage)
+ await expect(card.getByRole('button',{name:/Show more supporters/})).toHaveCount(0)
  await demand.evaluate(element=>scrollBy(0,element.getBoundingClientRect().top-100))
  await capture(owner,'demand-overview',demand)
- while(await card.getByRole('button',{name:/Show more supporters/}).count())await card.getByRole('button',{name:/Show more supporters/}).click()
- assert.equal(await card.getByRole('list',{name:'Supporters',exact:true}).locator(':scope > li').count(),103)
- await card.getByText('morgan.finance@example.test',{exact:true}).waitFor()
+ await card.getByText(secondaryEmail,{exact:true}).waitFor()
  await card.getByText('Proxy, entered by a UserVoice admin',{exact:true}).waitFor()
  const morganRow=card.getByRole('list',{name:'Supporters',exact:true}).locator(':scope > li').filter({hasText:'Morgan Reed'})
+ await expect(morganRow.locator('time')).toHaveAttribute('datetime',votedAt)
+ await expect(morganRow.locator('time')).toHaveText('2026-08-14')
+ const context=await json(`/api/operator/requests/${request.slug}/context`,undefined,operator)
+ const morganVotes=context.voters.filter(voter=>voter.id===morgan.id)
+ assert.equal(morganVotes.length,4)
+ assert.deepEqual([...new Set(morganVotes.map(voter=>voter.votedAt))],[votedAt])
+ assert.deepEqual((await morganRow.getByRole('list',{name:'Verified addresses',exact:true}).getByRole('listitem').allTextContents()).sort(),[morganEmail,secondaryEmail].sort())
+ assert.deepEqual(await morganRow.getByRole('list',{name:'Linked accounts',exact:true}).getByRole('link').allTextContents(),['Harbor Analytics','Northstar Logistics'])
  await morganRow.scrollIntoViewIfNeeded()
  await capture(owner,'supporter-attribution',morganRow)
+ // Capture this same seeded view on the phone without repeating the journey.
+ await owner.setViewportSize({width:390,height:844})
+ await morganRow.scrollIntoViewIfNeeded()
+ await capture(owner,'supporter-attribution',morganRow)
+ await owner.setViewportSize({width:1440,height:900})
  await card.getByText('Supporters (103)',{exact:true}).click()
  await json(`/api/operator/requesters/${morgan.id}/block`,{},operator)
  await owner.reload({waitUntil:'networkidle'})
@@ -48,6 +79,6 @@ await moderationJourney('request-demand',async({runtime,origin,operator,json,sen
  await owner.getByRole('region',{name:'Customer demand'}).evaluate(element=>scrollBy(0,element.getBoundingClientRect().top-100))
  await capture(owner,'demand-after-block',owner.getByRole('region',{name:'Customer demand'}))
  await visitor.goto(origin+`/portal/feedback/${request.slug}`,{waitUntil:'networkidle'})
- for(const value of ['morgan@example.test','morgan.finance@example.test','Harbor Analytics','Northstar Logistics','Cedar Health'])assert.equal((await visitor.content()).includes(value),false)
+ for(const value of [morganEmail,secondaryEmail,'Harbor Analytics','Northstar Logistics','Cedar Health'])assert.equal((await visitor.content()).includes(value),false)
  await capture(visitor,'public-demand-privacy')
 })
