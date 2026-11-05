@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "18343f6e22f90f3d5f20cb079e9dbefb53b60745fd0dfdb247fe6ced2cb3dbb7",
+      "sha256": "ac4e1945aa2263153daab574e3ede351e3d92f9c05b795ad0e7e207db0db0506",
       "executable": false
     },
     "CLAUDE.md": {
@@ -8802,7 +8802,7 @@
       "executable": false
     },
     "tests/browser/internal-discussion.mjs": {
-      "sha256": "c4ed618859d574831ea49dd47c9de639de807e33bab1b4e32ea00576e68eb2e6",
+      "sha256": "4259bfd8f0030cbeecfbf6e933df62e99920c5d69cffd24bf55f8c01b49f89ee",
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
