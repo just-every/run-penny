@@ -1,7 +1,7 @@
 import { exports } from 'cloudflare:workers'
 import { createPennyApp } from '../../src/core/app/worker'
 import { createUlid } from '../../src/core/shared/ulid'
-import { env, origin, owner } from './support'
+import { call, env, origin, owner } from './support'
 
 export { env }
 export const stamp = '2026-10-08T00:00:00.000Z'
@@ -24,6 +24,9 @@ export async function request(path: string, method = 'GET', body?: unknown, head
   method, headers: { Cookie: cookie, Origin: origin, 'Content-Type': 'application/json', ...headers },
   ...(body === undefined ? {} : { body: JSON.stringify(body) }),
  }), env)
+}
+export function workerRequest(path: string, method = 'GET', body?: unknown, headers: Record<string, string> = {}) {
+ return call(path, body, { Cookie: cookie, ...headers }, method)
 }
 export function document(path: string) {
  return exports.default.fetch(new Request(origin + path, { headers: { Accept: 'text/html', Cookie: cookie } }))

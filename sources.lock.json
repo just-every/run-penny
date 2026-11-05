@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "ac74a8d9e9e9327f6ae61ec6e2f5d5e49ccdc9dd679b1ba24ce6420affdc9e62",
+      "sha256": "16132e86fdbf65b8d4de3a7fbc4b825062d75c317f4778256e8f83890f0ae1fa",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "826104b7d3e5d921685443d8e19418f1a4e9e2d5f4733b422d5a2323e6f10fdd",
+      "sha256": "8d5b77dec02c03a1cf6f0f56a9951e083a3359f92c0b487c0307728196fddef4",
       "executable": false
     },
     "DEMO.md": {
@@ -8302,7 +8302,7 @@
       "executable": false
     },
     "tests/base/decision-loop-commit.test.ts": {
-      "sha256": "8b18c84edb1cf3c9bf29592b447e9d201438c8d22ba524d19ad99374be33902e",
+      "sha256": "5bb92dd2d5771d4e87b17364102e6df2a94b2ea6c0a77bf67e35dc4bcb7d04c0",
       "executable": false
     },
     "tests/base/decision-loop-dimensions.test.ts": {
@@ -8310,7 +8310,7 @@
       "executable": false
     },
     "tests/base/decision-loop-fixture.ts": {
-      "sha256": "965f0f3ad6c961bbe992820a8335f95f14398ee22cdd0de4db1aa32ecdf74697",
+      "sha256": "a675ebc7c42bd24402e0e9ad0dfe16b6205dd69f233d1b74ca965659dfaa27e7",
       "executable": false
     },
     "tests/base/decision-loop-roadmap.test.ts": {
