@@ -1,3 +1,4 @@
+import {proveUnmergeCustody} from './request-unmerge-custody'
 import {proveRoadmapPublication} from './roadmap-update-publication'
 import './custom-field-races'
 import { applyD1Migrations,reset } from 'cloudflare:test'
@@ -40,6 +41,7 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  const published=await (await call(`/api/public/requests/${a}`)).text();expect(published).toContain('Held comment');expect(published).toContain('Reviewing this request.');expect(published).not.toContain('Private first-post wording')
  const actor=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind('owner@penny.invalid').first<{id:string}>();expect(actor!.id).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/)
  expect((await env.DB.prepare('SELECT count(*) AS n FROM operator_sessions').first<{n:number}>())!.n).toBe(0)
+ await proveUnmergeCustody()
 })
 it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total',async()=>{
  const g=await graph(),slug=await g.submit('With attachment');await g.approve(slug,'Public attachment request')
