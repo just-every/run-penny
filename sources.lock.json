@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "38b090e305021850d387c778621c27f0406adfeb09a944eb6f0fcedd3865b946",
+      "sha256": "895702a451943ad72a2f0dc0cfe9325d4052dba0a2ee399f03a4270f50599781",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "a8d8f1770f5c355e1f08def6470782528cc2cc828ab91dfe628bd5a4d48115b6",
+      "sha256": "9d490ee89e32b98f05976210b59352337d2f05b69e077ccefe09c89006b3e60d",
       "executable": false
     },
     "DEMO.md": {
@@ -8458,7 +8458,7 @@
       "executable": false
     },
     "tests/base/notifications.test.ts": {
-      "sha256": "8a52e5b3e321efc43ddabbff6611e05e55621c793f48a8d4a54b0edc972c93cc",
+      "sha256": "c74d749c7f952363f659472fe9429171b410b8bebdf43609949df10e82e41f6a",
       "executable": false
     },
     "tests/base/operator-request-publication.ts": {
@@ -8478,7 +8478,7 @@
       "executable": false
     },
     "tests/base/penny-decisions.test.ts": {
-      "sha256": "68a2b562a9e930115235e078e22e759cf8a288c85d8b7741845eb434e054236d",
+      "sha256": "8fe5d368dca2889420a97bb9a594082ca895bcf4af1dd0c5881820577f3a2f0d",
       "executable": false
     },
     "tests/base/penny-erasure.test.ts": {
