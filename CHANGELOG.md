@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove native submission idempotency with one built-Worker journey: identical retries retain the original request and linked evidence without duplicate custody, changed content returns 409, a fresh verified session preserves replay until the 30-day boundary, and expired keys create a new graph without changing the original. Check stored reservations exclude raw keys and submitted personal or content markers. Mark REQ-013 done; acceptance text, other clause judgments and field-proof holds remain unchanged. No runtime, migration or configuration change is required.
+
 - Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.
 
 - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.

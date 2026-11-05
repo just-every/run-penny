@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-013 additionally proved from code and tests at commit `baee19a84bb4e061da61d2f0253be23fcf6b7257` (5 November 2026); other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 58 | 57 | 1 | 116 |
+| Published | 59 | 56 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 78 | 125 | 78 | 281 |
+| All | 79 | 124 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3305,7 +3305,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-010` | Follow and consent | published | partial | `tests/base/board.test.ts` | The unticked "Email me updates" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion. |
 | `REQ-011` | Portal attachments | published | partial | `tests/base/board.test.ts` | Rejecting a file with a reason without rejecting the request, and the declared content type and inline disposition of a published image, have no passing assertion; approval, the 404 before it and the served bytes are asserted. |
 | `REQ-012` | Portal search and browse | published | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-012/` | Category filtering, newest and recency-weighted last-14-day trending are implemented alongside search, board, status and existing sorts. Gap: the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
-| `REQ-013` | Submission idempotency | published | partial | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` | No test repeats a submission with its idempotency key to get the original request and evidence result back, sends a changed body under the same key for 409, or checks 30-day key retention and keys holding no personal data. |
+| `REQ-013` | Submission idempotency | published | done | `tests/base/request-idempotency.test.ts` — "[REQ-013] native submission replay preserves its graph, rejects changed bodies and expires private reservations after 30 days": repeated built-Worker submissions retain the original slug, request and linked evidence, with complete submission, version, contribution, permission, notification and submission-audit snapshots unchanged; changed wording returns 409 without graph changes; independently reverified authority replays immediately before the 30-day deadline and creates a new graph at expiry; stored reservations contain neither raw keys nor submitted personal or content markers. |  |
 | `REQ-014` | Identity failure | published | partial | `tests/base/host-identity.test.ts` | The visitor being offered email verification (REQ-023) after a rejected identity has no passing assertion; the refusal of expired, future-dated and wrongly signed claims at the host-identity exchange with the identity-required error, no writes and no account or identity disclosure is asserted. |
 | `REQ-015` | Status updates | published | partial | `tests/base/board.test.ts` | A status update rendered distinctly from comments, pinned above them and notifying followers under NOTIFY-001 has no passing assertion; posting a pinned update and its text on the request are asserted. |
 | `REQ-016` | Public status | published | done | `tests/base/request-status-workflow.test.ts`; `tests/base/decision-loop-roadmap.test.ts`; `visual/request-status-workflow/REQ-016/` |  |
