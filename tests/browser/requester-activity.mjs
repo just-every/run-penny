@@ -1,14 +1,17 @@
 import assert from 'node:assert/strict'
+import {resolve} from 'node:path'
 import {moderationJourney} from './moderation-runtime.mjs'
 
 await moderationJourney('requester-activity',async({origin,operator,json,send,person,pageFor,capture})=>{
- const identity=await person('eli@example.test','Eli Wong'),auth={Authorization:`Bearer ${identity.token}`}
+ const identity=await person(['synthetic-penny-1','example.test'].join('@'),'Eli Wong'),auth={Authorization:`Bearer ${identity.token}`}
  const make=title=>json('/api/public/requests',{title,description:'Our finance team needs this workflow.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},auth,'POST',201)
  const request=await make('Schedule monthly finance exports')
  await json(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title:'Schedule monthly finance exports',description:'Schedule finance exports each month.',boardSlug:'finance',displayName:'Eli Wong'},operator)
- await make('Email the weekly finance summary')
+ const held=await make('Email the weekly finance summary')
  const rejected=await make('Download invoices as a spreadsheet')
  await json(`/api/operator/moderation/${rejected.slug}`,{verdict:'rejected',reason:'Use the existing invoice export.',notifyAuthor:false},operator)
+ const outsider=await person(['synthetic-penny-2','example.test'].join('@'),'Another requester')
+ const outside=await json('/api/public/requests',{title:'Another requester owns this request',description:'Private submitted wording.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},{Authorization:`Bearer ${outsider.token}`},'POST',201)
  await send(`/api/public/requests/${request.slug}/follow`,{},auth,'POST',204)
  for(const [body,verdict] of [['Please keep the reporting timezone.','approved'],['Include our finance team in the preview.','awaiting_review'],['This is already available.','rejected']]){
   const comment=await json(`/api/public/requests/${request.slug}/comments`,{body},auth,'POST',201)
@@ -19,9 +22,40 @@ await moderationJourney('requester-activity',async({origin,operator,json,send,pe
  const updates=customer.locator('section').filter({has:customer.getByRole('heading',{name:'Email product updates',exact:true})}).last()
  const subscribe=updates.getByRole('button',{name:'Subscribe to product updates',exact:true})
  await subscribe.waitFor()
- const activity=await json('/api/public/requester/activity',undefined,auth)
+ let activity=await json('/api/public/requester/activity',undefined,auth)
  assert.equal(activity.requests.length,3);assert.equal(activity.votes.length,3);assert.equal(activity.follows.length,1);assert.equal(activity.comments.length,3)
+ const states=value=>value.requests.map(r=>[r.slug,r.moderationState,r.publicState]).sort((a,b)=>a[0].localeCompare(b[0]))
+ const expected=[[request.slug,'approved','open'],[held.slug,'awaiting_review','unpublished'],[rejected.slug,'rejected','unpublished']].sort((a,b)=>a[0].localeCompare(b[0]))
+ assert.deepEqual(states(activity),expected)
+ assert.deepEqual((await json('/api/public/requester/activity',undefined,{Authorization:`Bearer ${outsider.token}`})).requests.map(r=>r.slug),[outside.slug])
+ const requestRow=title=>customer.locator('section').filter({has:customer.getByRole('heading',{name:title,exact:true})}).last()
+ const visibleStates=[['Schedule monthly finance exports','Published · open'],['Email the weekly finance summary','Awaiting review · unpublished'],['Download invoices as a spreadsheet','Not published · unpublished']]
+ for(const [title,label] of visibleStates)await requestRow(title).getByText(label,{exact:true}).waitFor()
+ for(const [body,state] of [['Please keep the reporting timezone.','approved'],['Include our finance team in the preview.','awaiting_review'],['This is already available.','rejected']]){
+  assert.equal(activity.comments.find(c=>c.body===body)?.moderationState,state)
+  const row=customer.locator('section').filter({has:customer.getByText(body,{exact:true})}).last()
+  await row.getByText(state.replaceAll('_',' '),{exact:true}).waitFor()
+ }
+ const participationLinks=customer.getByRole('link',{name:'Schedule monthly finance exports',exact:true})
+ assert.equal(await participationLinks.count(),2)
+ for(const link of await participationLinks.all())await link.waitFor()
+ assert.equal(await customer.getByText('Feedback you voted on is no longer public',{exact:true}).count(),2)
+ await customer.getByText('Use the existing invoice export.',{exact:false}).waitFor()
  await capture(customer,'activity-unsubscribed')
+ const publishedId=activity.requests.find(r=>r.slug===request.slug).id
+ await json(`/api/operator/requests/${request.slug}/status-updates`,{status:'under_review',body:'We are reviewing monthly exports.'},operator)
+ await customer.reload({waitUntil:'networkidle'})
+ await requestRow('Schedule monthly finance exports').getByText('Published · under review',{exact:true}).waitFor()
+ const refreshed=await json('/api/public/requester/activity',undefined,auth)
+ assert.deepEqual(states(refreshed),expected.map(row=>row[0]===request.slug?[request.slug,'approved','under_review']:row))
+ assert.equal(refreshed.requests.find(r=>r.slug===request.slug).id,publishedId)
+ for(const field of ['votes','follows','comments','edits','commentEdits'])assert.deepEqual(refreshed[field],activity[field])
+ activity=refreshed
+ await capture(customer,'activity-current')
+ // Phone proof of the same state, without repeating the functional journey.
+ await customer.setViewportSize({width:390,height:844})
+ await customer.screenshot({path:resolve(process.env.PENNY_EVIDENCE??'../evidence/requester-activity','activity-current-390.png'),fullPage:true})
+ await customer.setViewportSize({width:1440,height:900})
  await subscribe.click()
  await updates.getByRole('button',{name:'Unsubscribe from product updates',exact:true}).waitFor()
  assert.equal((await json('/api/public/updates/subscription',undefined,auth)).subscribed,true)
@@ -34,6 +68,7 @@ await moderationJourney('requester-activity',async({origin,operator,json,send,pe
  assert.deepEqual(await json('/api/public/requester/activity',undefined,auth),activity)
  await customer.getByRole('button',{name:'Mute updates',exact:true}).click()
  await customer.getByRole('button',{name:'Unmute updates',exact:true}).waitFor()
+ assert.ok((await json('/api/public/requester/activity',undefined,auth)).follows.find(f=>f.slug===request.slug).mutedAt)
  await customer.getByRole('button',{name:'Unfollow',exact:true}).click()
  assert.equal((await json('/api/public/requester/activity',undefined,auth)).follows.length,0)
  await capture(customer,'activity-unfollowed')

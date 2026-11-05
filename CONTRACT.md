@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 54 | 61 | 1 | 116 |
+| Published | 55 | 60 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 74 | 129 | 78 | 281 |
+| All | 75 | 128 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3317,7 +3317,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
 | `REQ-023` | Email verification | published | partial | `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs` | The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted. |
 | `REQ-024` | Requester identity merge | published | partial | `tests/base/notifications.test.ts` | The survivor keeping both verified addresses and all requests, comments, follows and permission records, votes collapsing to one, the recorded merge, and no new vote or permission record have no passing assertion; carried mutes and preferences and working old links are asserted. |
-| `REQ-025` | Requester activity | published | partial | `tests/base/penny-releases.test.ts`; `tests/browser/requester-activity.mjs` | The current moderation state and public status of the requester's own requests in the view have no passing assertion; the view's counts of their requests, votes, follows and comments including held and rejected ones, and unfollow, mute and subscription changes from it, are asserted. |
+| `REQ-025` | Requester activity | published | done | `tests/base/penny-releases.test.ts` — "[REL-012 REQ-025] activity shows current own request states; mute and global unsubscribe preserve participation"; `tests/browser/requester-activity.mjs` — "requester-activity": own request state pairs and refreshed native status, votes, follows, approved and held and rejected comments, unfollow, mute and update subscription changes. |  |
 | `REQ-026` | Demand attribution | published | partial | `tests/base/request-demand.test.ts`; `tests/base/feedback-import-uservoice.test.ts`; `tests/browser/request-demand.mjs` | The vote date in the private supporter view, and the first 50 supporters on expansion with Show more revealing 50 more at a time, have no passing assertion (the browser check clicks Show more until it is gone and counts only the full history); the separate vote, linked-evidence and distinct-account figures with no score, the supporter view's names, addresses, accounts, proxy marks and per-account totals, the complete history with no 100-person cap, and the portal showing none of it are asserted. |
 | `REQ-027` | Portal embedding | published | done | `tests/browser/operator-completeness-security.mjs`; `tests/base/board.test.ts` |  |
 | `REQ-028` | Request queue | published | partial | `tests/browser/operator-completeness-read.mjs` | Queue filters and sorts work; the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |

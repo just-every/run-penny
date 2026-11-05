@@ -121,8 +121,24 @@ it('[REL-003 REL-014] clock-advanced scheduled releases and status updates publi
  expect(fetch).toHaveBeenCalledTimes(2)
  await proveScheduledPublications(g,nextDay,clock,cron,capture)
 })
-it('[REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows',async()=>{
+it('[REL-012 REQ-025] activity shows current own request states; mute and global unsubscribe preserve participation',async()=>{
  const g=await votedReleaseGraph(),subscriber=await requester('Subscriber only'),endpoint='/api/public/updates/subscription'
+ type Activity={requests:{id:string;slug:string;moderationState:string;publicState:string}[]}
+ const activity=async()=>json<Activity>(await call('/api/public/requester/activity',undefined,g.person))
+ const submit=async(title:string,person=g.person)=>json<{slug:string}>(await call('/api/public/requests',{title,description:'Requester activity workflow',boardSlug:'regression',idempotencyKey:crypto.randomUUID()},person),201)
+ const held=await submit('Awaiting a review'),rejected=await submit('Rejected request'),outside=await submit('Another requester owns this',subscriber)
+ await json(await call(`/api/operator/moderation/${rejected.slug}`,{verdict:'rejected',reason:'Use the existing workflow.',notifyAuthor:false},g.operator))
+ expect((await call('/api/public/requester/activity')).status).toBe(401)
+ const initial=await activity()
+ const states=(value:Activity)=>value.requests.map(r=>[r.slug,r.moderationState,r.publicState]).sort((a,b)=>a[0].localeCompare(b[0]))
+ const expected=[...g.requests.map(r=>[r.slug,'approved','shipped']),[held.slug,'awaiting_review','unpublished'],[rejected.slug,'rejected','unpublished']].sort((a,b)=>a[0].localeCompare(b[0]))
+ expect(states(initial)).toEqual(expected)
+ for(const r of g.requests)expect(initial.requests.find(own=>own.slug===r.slug)?.id).toBe(r.id)
+ expect((await json<Activity>(await call('/api/public/requester/activity',undefined,subscriber))).requests.map(r=>r.slug)).toEqual([outside.slug])
+ await json(await call(`/api/operator/requests/${g.requests[0].slug}/status-updates`,{status:'under_review',body:'Reviewing the current request.'},g.operator))
+ const refreshed=await activity()
+ expect(refreshed.requests.find(r=>r.id===g.requests[0].id)).toMatchObject({slug:g.requests[0].slug,moderationState:'approved',publicState:'under_review'})
+ expect(states({requests:refreshed.requests.filter(r=>r.id!==g.requests[0].id)})).toEqual(expected.filter(r=>r[0]!==g.requests[0].slug))
  expect((await call(endpoint,{subscribed:true},{},'PATCH')).status).toBe(401)
  await json(await call(endpoint,{subscribed:true},subscriber,'PATCH'))
  await json(await call(endpoint,{subscribed:true},subscriber,'PATCH'))
