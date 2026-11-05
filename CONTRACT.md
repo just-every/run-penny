@@ -3269,9 +3269,9 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 57 | 58 | 1 | 116 |
+| Published | 58 | 57 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 77 | 126 | 78 | 281 |
+| All | 78 | 125 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3351,7 +3351,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REL-008` | Outcome response | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-009` | Outcome coverage | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-010` | Empty feed | published | done | `tests/browser/route-review.mjs` |  |
-| `REL-011` | Bounces and complaints | published | partial | `tests/runtime/mail-events-restart.test.mjs` | A soft bounce marking one delivery failed and suppressing nothing, a spam complaint's suppression, and suppression removing no vote, request, comment or portal access have no passing assertion; hard-bounce suppression is asserted. |
+| `REL-011` | Bounces and complaints | published | done | `tests/runtime/mail-events-restart.test.mjs` — emitted Worker retains mail custody across restart and enforces Managed relay delivery policy: signed hard bounce and complaint suppression, retained permission records, isolated soft-bounce failure, preserved request, vote, approved comment and requester access, suppressed notification drains and reverification. |  |
 | `REL-012` | Update subscription | published | done | `tests/base/penny-releases.test.ts` |  |
 | `REL-013` | Delivery states | published | partial | `tests/base/release-custody.test.ts` | An out-of-order provider event never moving a delivery backward and never counting a result twice has no passing assertion. |
 | `NOTIFY-001` | Requester updates | published | partial | `tests/base/notifications.test.ts` | Notifying voters on vote-subscription boards (NOTIFY-008) as followers has no passing assertion; the subscribed author's notice is asserted. |

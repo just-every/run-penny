@@ -19,12 +19,12 @@ async function signer(){
   return {method:'POST',body,headers:{'content-type':'application/json','x-twilio-email-event-webhook-timestamp':timestamp,'x-twilio-email-event-webhook-signature':encoded([48,der.length,...der])}}
  }}
 }
-async function managedRelay(mf,configuration,restart){
+async function managedRelay(mf,configuration,restart,identity){
  const relay='https://mail.rer.example/api/managed-mail/send',key='synthetic-managed-mail-key',owner='owner@penny.invalid',setup='synthetic-managed-owner-setup-token-long-enough'
  const requests=[],destinations=[],statuses=[202,401,302,429,202,302]
  const port=await freshLocalPort(),origin=`https://127.0.0.1:${port}`
  const offset=new Date().getUTCHours()-12,timezone=`Etc/GMT${offset<0?offset:`+${offset}`}`
- const options=convertV4MiniflareOptions({...configuration,https:true,host:'127.0.0.1',port,
+ const relayConfiguration={...configuration,https:true,host:'127.0.0.1',port,
   bindings:{...configuration.bindings,APP_ORIGIN:origin,PENNY_ENVIRONMENT:'production',OPERATOR_EMAIL:owner,SETUP_TOKEN:setup,MAIL_PROVIDER:'rer',MAIL_API_KEY:key,MAIL_RELAY_URL:relay,WORKSPACE_TIMEZONE:timezone},
   outboundService:async request=>{
    // Miniflare reconstructs this edge Request without its redirect property.
@@ -38,7 +38,8 @@ async function managedRelay(mf,configuration,restart){
    const status=statuses.shift();assert.ok(status,'unexpected relay submission')
    return new Response(JSON.stringify(status===202?{accepted:true}:{error:'private relay provider detail'}),{status,headers:status===429?{'Retry-After':'60'}:status===302?{Location:'https://must-not-follow.example/'}:{}})
   },
- })
+ }
+ const options=convertV4MiniflareOptions(relayConfiguration)
  await mf.setOptions(options);await mf.ready
  let db=await mf.getD1Database('DB')
  const call=(path,body,cookie)=>mf.dispatchFetch(`${origin}${path}`,{method:body===undefined?'GET':'POST',redirect:'manual',
@@ -110,7 +111,137 @@ async function managedRelay(mf,configuration,restart){
  assert.deepEqual(destinations,Array(6).fill(relay));assert.equal(statuses.length,0)
  assert.equal((await mf.dispatchFetch(link.href,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'List-Unsubscribe=One-Click'})).status,200)
  assert.equal(typeof (await db.prepare("SELECT muted_at FROM requester_notification_preferences WHERE requester_id='relay-person'").first()).muted_at,'string')
+ await suppressionPolicy(mf,relayConfiguration,cookie,identity,restart)
  console.log('Managed relay in emitted Worker/workerd: sign-in POST accepted; 401 and 302 revoke links; no redirect followed; 429 queues and retries across restart; native one-click unsubscribe: PASS')
+}
+async function suppressionPolicy(mf,options,cookie,identity,restart){
+ const origin=options.bindings.APP_ORIGIN,messages=[]
+ const sendgrid=convertV4MiniflareOptions({...options,bindings:{...options.bindings,MAIL_PROVIDER:'sendgrid'},outboundService:async request=>{
+  assert.equal(request.url,'https://api.sendgrid.com/v3/mail/send');assert.equal(request.method,'POST')
+  const body=await request.json();messages.push(body)
+  return new Response(null,{status:202,headers:{'x-message-id':`synthetic-penny-${messages.length}`}})
+ }})
+ await mf.setOptions(sendgrid);await mf.ready
+ let db=await mf.getD1Database('DB'),ip=0
+ const call=(path,body,headers={},method=body===undefined?'GET':'POST')=>mf.dispatchFetch(origin+path,{method,redirect:'manual',
+  headers:{Origin:origin,'CF-Connecting-IP':`198.18.1.${++ip}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})})
+ const json=async(response,status=200)=>{assert.equal(response.status,status,await response.clone().text());return response.json()}
+ const rows=async(table,where='',values=[]) => (await db.prepare(`SELECT * FROM ${table} ${where} ORDER BY rowid`).bind(...values).all()).results
+ const text=message=>message.content.find(part=>part.type==='text/plain').value
+ const recipient=message=>message.personalizations[0].to[0].email
+ const operator={Cookie:cookie}
+ const verify=async(email,displayName)=>{
+  await json(await call('/api/public/identity/email',{email,displayName}),202)
+  const link=new URL(text(messages.at(-1)).match(/https:\/\/[^\s]+/)[0])
+  const session=await json(await call('/api/public/identity/email/verify',{token:new URLSearchParams(link.hash.slice(1)).get('token')}))
+  return {Authorization:`Bearer ${session.token}`}
+ }
+ const email=['synthetic-penny-1','example.test'].join('@'),unaffectedEmail=['synthetic-penny-2','example.test'].join('@')
+ const person=await verify(email,'Complaint requester'),unaffected=await verify(unaffectedEmail,'Unaffected requester')
+ const boards=await json(await call('/api/public/boards')),board=boards.find(row=>row.slug==='b')
+ await json(await call('/api/operator/boards/b/vote-subscriptions',{enabled:false,version:board.subscriptionDisclosure.version},operator,'PUT'))
+ const request=await json(await call('/api/public/requests',{title:'Preserved request',description:'Preserved customer problem',boardSlug:'b',emailUpdates:true,idempotencyKey:crypto.randomUUID()},person),201)
+ await json(await call(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title:'Preserved request',description:'Preserved customer problem',boardSlug:'b',displayName:'Complaint requester'},operator))
+ assert.equal((await call(`/api/public/requests/${request.slug}/vote`,{emailUpdates:true},person)).status,204)
+ assert.equal((await call(`/api/public/requests/${request.slug}/follow`,{},unaffected)).status,204)
+ await json(await call('/api/public/updates/subscription',{subscribed:true},person,'PATCH'))
+ const comment=await json(await call(`/api/public/requests/${request.slug}/comments`,{body:'Preserved approved comment'},person),201)
+ await json(await call(`/api/operator/comments/${comment.id}/moderate`,{verdict:'approved',publicAuthorDisplayName:'Complaint requester'},operator))
+ request.id=(await db.prepare('SELECT id FROM requests WHERE slug=?').bind(request.slug).first()).id
+ const address=await db.prepare('SELECT * FROM requester_addresses WHERE email=?').bind(email).first()
+ const snapshot=async()=>({
+  requests:await rows('requests','WHERE id=?',[request.id]),
+  votes:await rows('request_votes','WHERE request_id=?',[request.id]),
+  contributions:await rows('request_vote_contributions','WHERE request_id=?',[request.id]),
+  comments:await rows('request_comments','WHERE request_id=?',[request.id]),
+  follows:await rows('request_follows','WHERE request_id=?',[request.id]),
+ })
+ const permissions=async()=>rows('requester_update_permissions','WHERE requester_address_id=?',[address.id])
+ const publicRead=()=>call(`/api/public/requests/${request.slug}`).then(json)
+ const activity=()=>call('/api/public/requester/activity',undefined,person).then(json)
+ const wake=async()=>{
+  const result=await (await mf.getWorker()).queue('jobs',[{id:crypto.randomUUID(),timestamp:new Date(),attempts:1,body:{kind:'notifications.drain'}}])
+  assert.equal(result.outcome,'ok');assert.equal(result.ackAll,true)
+ }
+ const publish=async(body,age)=>{
+  await json(await call(`/api/operator/requests/${request.slug}/status-updates`,{status:'under_review',body},operator))
+  const occurred=new Date(Date.now()-age).toISOString()
+  await db.batch([
+   db.prepare('UPDATE notification_events SET created_at=? WHERE request_id=? AND id IN(SELECT event_id FROM notification_intents WHERE batch_id IS NULL)').bind(occurred,request.id),
+   db.prepare('UPDATE notification_intents SET created_at=? WHERE batch_id IS NULL AND event_id IN(SELECT id FROM notification_events WHERE request_id=?)').bind(occurred,request.id),
+  ])
+  const start=messages.length;await wake()
+  return messages.slice(start)
+ }
+ const attempt=()=>db.prepare("SELECT a.*,b.address_id FROM notification_attempts a JOIN notification_batches b ON b.id=a.batch_id WHERE b.address_id=? ORDER BY a.rowid DESC LIMIT 1").bind(address.id).first()
+ const eventFor=(attempt,event,type)=>({event,...(type?{type}:{}),sg_event_id:crypto.randomUUID(),sg_message_id:attempt.provider_message_id,
+  email,timestamp:Math.floor(Date.now()/1000),rer_delivery_id:attempt.batch_id,rer_product:'penny',rer_penny_attempt:attempt.id})
+ const callback=async event=>assert.equal((await mf.dispatchFetch(origin+'/api/public/mail/events',await identity.sign(event))).status,200)
+ const fact=batch=>db.prepare('SELECT * FROM notification_delivery_facts WHERE batch_id=?').bind(batch).first()
+ const kept=await snapshot(),permissionBefore=await permissions()
+ assert.equal(kept.requests.length,1);assert.equal(kept.votes.length,1);assert.equal(kept.comments.length,1)
+ assert.equal(kept.comments[0].moderation_state,'approved');assert.ok(permissionBefore.length>=2)
+ const visible=await publicRead(),initialActivity=await activity()
+ assert.equal(visible.title,'Preserved request');assert.equal(visible.voteCount,1);assert.equal(visible.comments[0].body,'Preserved approved comment')
+ assert.equal(initialActivity.requests[0].id,request.id);assert.equal(initialActivity.votes[0].slug,request.slug);assert.equal(initialActivity.comments[0].id,comment.id)
+ const first=await publish('Before soft bounce',600000)
+ assert.deepEqual(first.map(recipient).sort(),[email,unaffectedEmail].sort())
+ const softBefore=await snapshot(),softAttempt=await attempt(),soft=eventFor(softAttempt,'bounce','blocked')
+ const otherBatches=await rows('notification_batches','WHERE address_id!=?',[address.id])
+ const otherFacts=await rows('notification_delivery_facts')
+ await callback(soft)
+ assert.equal((await fact(softAttempt.batch_id)).state,'failed')
+ assert.deepEqual(await rows('notification_delivery_facts','WHERE batch_id!=?',[softAttempt.batch_id]),otherFacts)
+ assert.deepEqual(await rows('notification_batches','WHERE address_id!=?',[address.id]),otherBatches)
+ assert.deepEqual(await db.prepare('SELECT * FROM requester_addresses WHERE id=?').bind(address.id).first(),address)
+ assert.deepEqual(await permissions(),permissionBefore);assert.deepEqual(await snapshot(),softBefore)
+ const softReceipts=await rows('mail_event_records')
+ mf=await restart(sendgrid);db=await mf.getD1Database('DB')
+ await callback(soft);assert.deepEqual(await rows('mail_event_records'),softReceipts)
+ const second=await publish('After soft bounce',360000)
+ assert.deepEqual(second.map(recipient).sort(),[email,unaffectedEmail].sort())
+ const complaintAttempt=await attempt(),complaint=eventFor(complaintAttempt,'spamreport')
+ const beforeComplaint=await snapshot(),portal=await publicRead(),ownActivity=await activity(),mailCount=messages.length
+ const beforeForgery=await rows('mail_event_records'),forged=await identity.sign(complaint)
+ forged.body=JSON.stringify([{...complaint,sg_event_id:'synthetic-penny-forged-event'}])
+ assert.equal((await mf.dispatchFetch(origin+'/api/public/mail/events',forged)).status,400)
+ assert.deepEqual(await rows('mail_event_records'),beforeForgery);assert.deepEqual(await permissions(),permissionBefore)
+ assert.deepEqual(await snapshot(),beforeComplaint)
+ assert.deepEqual(await db.prepare('SELECT * FROM requester_addresses WHERE id=?').bind(address.id).first(),address)
+ await callback(complaint)
+ const suppressed=await db.prepare('SELECT * FROM requester_addresses WHERE id=?').bind(address.id).first()
+ assert.equal(typeof suppressed.suppressed_at,'string');assert.equal((await fact(complaintAttempt.batch_id)).state,'suppressed')
+ const marked=await permissions()
+ assert.equal(marked.length,permissionBefore.length)
+ for(const permission of marked){
+  assert.equal(permission.suppressed_at,suppressed.suppressed_at)
+  const original=permissionBefore.find(row=>row.id===permission.id);assert.ok(original)
+  assert.deepEqual({...permission,suppressed_at:original.suppressed_at,updated_at:original.updated_at},original)
+ }
+ const afterComplaint=await snapshot();assert.deepEqual(afterComplaint,beforeComplaint)
+ assert.deepEqual(await publicRead(),portal);assert.deepEqual(await activity(),ownActivity)
+ assert.deepEqual(await json(await call('/api/public/identity/session',undefined,person)),{displayName:'Complaint requester'})
+ const complaintReceipts=await rows('mail_event_records')
+ mf=await restart(sendgrid);db=await mf.getD1Database('DB')
+ await callback(complaint)
+ assert.deepEqual(await rows('mail_event_records'),complaintReceipts);assert.deepEqual(await permissions(),marked)
+ assert.deepEqual(await db.prepare('SELECT * FROM requester_addresses WHERE id=?').bind(address.id).first(),suppressed)
+ assert.equal(messages.length,mailCount)
+ const third=await publish('After complaint',240000)
+ assert.deepEqual(third.map(recipient),[unaffectedEmail]);assert.ok(text(third[0]).includes('After complaint'))
+ await wake();assert.equal(messages.length,mailCount+1)
+ assert.deepEqual((await activity()).votes,ownActivity.votes);assert.deepEqual((await activity()).comments,ownActivity.comments)
+ assert.equal((await publicRead()).voteCount,1)
+ // Reverification releases suppression; replay of the old complaint cannot undo it.
+ await verify(email,'Complaint requester')
+ assert.equal((await db.prepare('SELECT suppressed_at FROM requester_addresses WHERE id=?').bind(address.id).first()).suppressed_at,null)
+ for(const permission of await permissions())assert.equal(permission.suppressed_at,null)
+ await callback(complaint)
+ const last=await publish('After reverification',120000)
+ assert.deepEqual(last.map(recipient).sort(),[email,unaffectedEmail].sort())
+ console.log('PROBE REL-011 point 1: signed soft bounce -> one failed delivery; address and permissions unchanged; both recipients receive next update')
+ console.log('PROBE REL-011 requirement: signed hard bounce and complaint -> durable suppression; complaint permissions retained; suppressed recipient skipped; unaffected recipient mailed; reverification resumes mail')
+ console.log('PROBE REL-011 point 2: native public request, activity and session reads -> request, vote, approved comment and portal access preserved across complaint and restart')
 }
 test('[REL-011 BASE-OPS-003 NOTIFY-002] emitted Worker retains mail custody across restart and enforces Managed relay delivery policy',async()=>{
  const state=await mkdtemp(join(tmpdir(),'penny-mail-restart-')),identity=await signer(),modules=[]
@@ -145,6 +276,6 @@ test('[REL-011 BASE-OPS-003 NOTIFY-002] emitted Worker retains mail custody acro
   assert.equal(typeof (await db.prepare("SELECT suppressed_at FROM requester_addresses WHERE id='a'").first()).suppressed_at,'string')
   assert.equal((await mf.dispatchFetch('https://penny.test/api/public/mail/events',await identity.sign({...event,type:'blocked'}))).status,400)
   assert.equal((await db.prepare('SELECT count(*) n FROM requester_write_guards').first()).n,0)
-  await managedRelay(mf,configuration,async next=>{await mf.dispose();mf=new Miniflare(next);await mf.ready;return mf})
+  await managedRelay(mf,configuration,async next=>{await mf.dispose();mf=new Miniflare(next);await mf.ready;return mf},identity)
  }finally{await mf?.dispose();await rm(state,{recursive:true,force:true})}
 })

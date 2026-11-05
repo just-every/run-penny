@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "18343f6e22f90f3d5f20cb079e9dbefb53b60745fd0dfdb247fe6ced2cb3dbb7",
+      "sha256": "519942693497703cbfdb303e391a36c9eafc534cca08e27f693538e79f93fc16",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "ce573fd505226629fe811135205465cce9251b8e0d553ab19406d913008b5d9b",
+      "sha256": "175378cca4a2ef3711d431c2324ae78a995b4fd20d5da296582becf9202dd60d",
       "executable": false
     },
     "DEMO.md": {
@@ -9266,7 +9266,7 @@
       "executable": false
     },
     "tests/runtime/mail-events-restart.test.mjs": {
-      "sha256": "7c49857f9d47c6fcc93b4379fa21a0e626dac6b9d725a700eeaba95e19b2770f",
+      "sha256": "d13bd3860dff7cadce0495181f616d79d910c3b5d6fdbca3cb4b0afdc3ea30ce",
       "executable": false
     },
     "tsconfig.app.json": {
