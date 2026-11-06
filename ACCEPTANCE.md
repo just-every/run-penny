@@ -382,7 +382,7 @@ Core · published · **partial**
 1. The operation atomically moves the duplicate's evidence links, approved attachments, comments, and followers, collapses the combined votes so each identity counts once, keeps the duplicate's title and source as merge history, and answers the duplicate's public URL with a 301 to the canonical request.
 2. Merging a request that is itself a duplicate merges it into the canonical request at the end of its chain.
 
-**Evidence.** `tests/base/board.test.ts` — "Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail" proves exact evidence and follower unions, approved attachment identity, original bytes and retained origin, held-file exclusion, unchanged permission records and final-audit rollback through native merge, authenticated context, requester activity and public attachment routes; retains the 301, moved comments and collapsed votes.
+**Evidence.** `tests/base/board.test.ts` — "Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail" proves exact evidence and follower unions, native evidence-link readback, approved attachment identity, original bytes and retained origin, held-file exclusion and private-byte retention, unchanged permission identities and distinct grant times, earliest follower grants and final-audit rollback through native merge, authenticated context, requester activity and attachment routes; retains the 301, moved comments and collapsed votes.
 **Gap.** Keeping the duplicate's title and source as merge history and merging a duplicate into the end of its chain still lack passing assertions.
 
 #### REQ-009 — Unmerge

@@ -8,7 +8,7 @@ import type { RequestContext } from '@/core/features/requests/operator-context'
 import type { PublicRequestDetail } from '@/core/shared/api/public'
 import { exports } from 'cloudflare:workers'
 import {explicitConsentBoard} from './explicit-consent-board'
-beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()});afterEach(()=>vi.restoreAllMocks())
+beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()});afterEach(()=>{vi.useRealTimers();vi.restoreAllMocks()})
 async function graph(){
  const operator=await owner(),person=await requester()
  expect((await call('/api/operator/boards',{name:'Product feedback',slug:'product',visibility:'public'},operator)).status).toBe(201)
@@ -18,10 +18,15 @@ async function graph(){
  return {operator,person,submit,approve}
 }
 it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail',async()=>{
- const g=await graph(),a=await g.submit('Private source'),b=await g.submit('Private target')
+ const g=await graph()
+ // Native authority uses SQLite's current day; pin the business clock within it.
+ const start=new Date(vi.getRealSystemTime()).setUTCHours(12,0,0,0)
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(start)
+ const a=await g.submit('Private source'),b=await g.submit('Private target')
  expect((await call(`/api/public/requests/${a}`)).status).toBe(404)
  await g.approve(a,'Source');await g.approve(b,'Target')
  for(const slug of [a,b]){
+  vi.setSystemTime(start+(slug===a?0:60_000))
   expect((await call(`/api/public/requests/${slug}/vote`,{},g.person)).status).toBe(204)
   expect((await call(`/api/public/requests/${slug}/vote`,{},g.person)).status).toBe(204)
   expect((await call(`/api/public/requests/${slug}/follow`,{},g.person)).status).toBe(204)
@@ -47,7 +52,10 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
   expect(created.status,await created.clone().text()).toBe(201);evidenceIds.push((await created.json() as {id:string}).id)
  }
  const sourceFollower=await requester('Source follower'),targetFollower=await requester('Canonical follower')
- for(const [slug,person] of [[a,sourceFollower],[b,targetFollower]] as const)expect((await call(`/api/public/requests/${slug}/follow`,{},person)).status).toBe(204)
+ for(const [slug,person,offset] of [[a,sourceFollower,120_000],[b,targetFollower,180_000]] as const){
+  vi.setSystemTime(start+offset)
+  expect((await call(`/api/public/requests/${slug}/follow`,{},person)).status).toBe(204)
+ }
  const followers=(await env.DB.prepare('SELECT id FROM requesters ORDER BY id').all<{id:string}>()).results.map(row=>row.id)
  expect(followers).toHaveLength(3)
  const sourceBytes=new Uint8Array([137,80,78,71,1]),heldBytes=new Uint8Array([137,80,78,71,2]),targetBytes=new Uint8Array([137,80,78,71,3])
@@ -66,7 +74,9 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  }
  expect(beforeMerge.requester_update_permissions).toHaveLength(4)
  for(const permission of beforeMerge.requester_update_permissions){expect(permission.id).toEqual(expect.any(String));expect(Number.isFinite(Date.parse(String(permission.granted_at)))).toBe(true)}
+ expect(beforeMerge.requester_update_permissions.map(row=>row.granted_at).sort()).toEqual([0,60_000,120_000,180_000].map(offset=>new Date(start+offset).toISOString()))
  const objectsBefore=await env.FILES.list()
+ vi.setSystemTime(start+240_000)
  // Fail the final business write: every earlier transfer and projection must roll back with it.
  await env.DB.exec("CREATE TRIGGER refuse_merge_audit BEFORE INSERT ON audit_entries WHEN NEW.action='request.merged' BEGIN SELECT RAISE(ABORT,'merge audit unavailable'); END")
  const refused=await call(`/api/operator/requests/${a}/merge`,{targetSlug:b},g.operator)
@@ -76,7 +86,10 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  expect((await call(`/api/public/requests/${a}`)).status).toBe(200)
  expect(new Uint8Array(await (await call(`/api/public/attachments/${approved}`)).arrayBuffer())).toEqual(sourceBytes)
  expect((await call(`/api/public/attachments/${privateFile}`)).status).toBe(404)
+ const retainedPrivate=await call(`/api/operator/attachments/${privateFile}`,undefined,g.operator)
+ expect(retainedPrivate.status).toBe(200);expect(new Uint8Array(await retainedPrivate.arrayBuffer())).toEqual(heldBytes)
  await env.DB.exec('DROP TRIGGER refuse_merge_audit')
+ vi.setSystemTime(start+300_000)
  expect((await call(`/api/operator/requests/${a}/merge`,{targetSlug:b},g.operator)).status).toBe(200)
  const redirect=await call(`/api/public/requests/${a}`)
  expect(redirect.status).toBe(301);expect(redirect.headers.get('Location')).toBe(`/api/public/requests/${b}`)
@@ -84,7 +97,18 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  const merged=await requestMergeCustody()
  expect(merged.request_evidence_links.map(row=>({requestId:row.request_id,evidenceId:row.evidence_id})).sort((x,y)=>String(x.evidenceId).localeCompare(String(y.evidenceId)))).toEqual(evidenceIds.sort().map(evidenceId=>({requestId:targetId,evidenceId})))
  expect(merged.request_follows.map(row=>({requestId:row.request_id,requesterId:row.requester_id})).sort((x,y)=>String(x.requesterId).localeCompare(String(y.requesterId)))).toEqual(followers.map(requesterId=>({requestId:targetId,requesterId})))
+ for(const follower of followers){
+  const originals=beforeMerge.request_follows.filter(row=>row.requester_id===follower)
+  const grant=originals.map(row=>String(row.permission_granted_at)).sort()[0]
+  expect(merged.request_follows.find(row=>row.requester_id===follower)).toMatchObject({request_id:targetId,permission_granted_at:grant})
+ }
  for(const table of ['request_evidence_contributions','request_follow_contributions','request_vote_contributions','requester_update_permissions','requester_addresses','evidence_items','evidence_versions'])expect(merged[table],table).toEqual(beforeMerge[table])
+ for(const evidenceId of evidenceIds){
+  const response=await call(`/api/operator/evidence/${evidenceId}/links`,undefined,g.operator)
+  expect(response.status).toBe(200)
+  const links=await response.json() as {target:string;targetId:string}[]
+  expect(links.map(({target,targetId})=>({target,targetId}))).toEqual([{target:'request',targetId}])
+ }
  for(const file of beforeFiles)expect(merged.attachments.find(row=>row.id===file.id)).toEqual({...file,request_id:file.id===approved?targetId:file.request_id})
  expect(merged.request_merge_attachment_transfers.map(row=>row.attachment_id)).toEqual([approved])
  const contextResponse=await call(`/api/operator/requests/${b}/context`,undefined,g.operator)
@@ -102,6 +126,8 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  expect(publicDetail.attachments.slice().sort((x,y)=>x.id.localeCompare(y.id))).toEqual([{id:approved,filename:'source.png',contentType:'image/png'},{id:canonicalFile,filename:'canonical.png',contentType:'image/png'}].sort((x,y)=>x.id.localeCompare(y.id)))
  for(const [file,bytes] of [[approved,sourceBytes],[canonicalFile,targetBytes]] as const){const response=await call(`/api/public/attachments/${file}`);expect(response.status).toBe(200);expect(new Uint8Array(await response.arrayBuffer())).toEqual(bytes)}
  expect((await call(`/api/public/attachments/${privateFile}`)).status).toBe(404)
+ const heldOriginal=await call(`/api/operator/attachments/${privateFile}`,undefined,g.operator)
+ expect(heldOriginal.status).toBe(200);expect(new Uint8Array(await heldOriginal.arrayBuffer())).toEqual(heldBytes)
  expect(await env.FILES.list()).toEqual(objectsBefore)
  expect((await call(`/api/operator/requests/${a}/unmerge`,{},g.operator)).status).toBe(200)
  const published=await (await call(`/api/public/requests/${a}`)).text();expect(published).toContain('Held comment');expect(published).toContain('Reviewing this request.');expect(published).not.toContain('Private first-post wording')
