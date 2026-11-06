@@ -1,0 +1,39 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f70",
+  "head": "dedeb95c15fe8e699559ef000a5fcdd552315b4a",
+  "parents": [
+    "3de04bf7072457ee62526bea590307b2987cab34",
+    "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f"
+  ],
+  "base": "3de04bf7072457ee62526bea590307b2987cab34",
+  "main": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "full_history": true,
+  "product_push": {
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f70",
+    "exit": 0,
+    "attempts": 1
+  },
+  "remote_ref": "dedeb95c15fe8e699559ef000a5fcdd552315b4a\trefs/heads/cloud/sd-penny-c-f70",
+  "clean": true,
+  "pr": null,
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "clause": {
+    "id": "API-003",
+    "before": "partial",
+    "after": "partial",
+    "acceptance_changed": false
+  },
+  "at": "2026-11-06T04:51:56.533454+00:00"
+}

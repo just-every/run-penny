@@ -1,0 +1,3 @@
+STATUS_ROWS parent=HEAD rows=281 candidate=281 dropped=0 table_lines=445 candidate_table_lines=445
+STATUS_ROWS parent=e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f rows=281 candidate=281 dropped=0 table_lines=445 candidate_table_lines=445
+STATUS_ROWS main newer judgments preserved; only API-003 metadata differs

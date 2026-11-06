@@ -1,0 +1,34 @@
+{
+  "head": "dedeb95c15fe8e699559ef000a5fcdd552315b4a",
+  "node": "v22.20.0",
+  "checks": [
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/egress-delivery.test.ts",
+      "head": "dedeb95c15fe8e699559ef000a5fcdd552315b4a",
+      "exit": 0,
+      "started_at": "2026-11-06T04:50:26.099888+00:00",
+      "log": "egress-delivery-node22.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "head": "dedeb95c15fe8e699559ef000a5fcdd552315b4a",
+      "exit": 0,
+      "started_at": "2026-11-06T04:50:45.906402+00:00",
+      "log": "typecheck.log"
+    },
+    {
+      "command": "pnpm run check -- --profile first-party",
+      "head": "dedeb95c15fe8e699559ef000a5fcdd552315b4a",
+      "exit": 0,
+      "started_at": "2026-11-06T04:51:17.986280+00:00",
+      "log": "first-party.log"
+    },
+    {
+      "command": "pnpm exec oxlint tests/base/integration-effects.ts tests/base/integration-publications.ts",
+      "head": "dedeb95c15fe8e699559ef000a5fcdd552315b4a",
+      "exit": 0,
+      "started_at": "2026-11-06T04:51:19.157503+00:00",
+      "log": "touched-lint.log"
+    }
+  ]
+}
