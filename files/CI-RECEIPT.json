@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "head": "a8906f92a14aa564ecfe444bdc8f61595b9b5425",
+  "verify_run_id": 42199127314,
+  "event": "push",
+  "status": "completed",
+  "conclusion": "failure",
+  "permitted_generated_view_exception": true,
+  "failed_jobs": 29,
+  "failed_step_names": [
+    "Check generated contract documents"
+  ],
+  "full_suite_ran_on_candidate": false,
+  "local_exact_sha_touched_test_passed": true,
+  "main_verify_failed_run": 42194484496,
+  "main_verify_failed_job": 127814272471,
+  "main_verify_diagnostic": "page.waitForURL: Timeout 30000ms exceeded at reviewPrivateSearch, operator-completeness-read.mjs:70",
+  "main_site_failed_run": 42194484854,
+  "main_site_failed_job": 127814206039,
+  "main_site_diagnostic": "provider-http-503; HTTP 503; no healthy upstream",
+  "main_site_failed_job_rerun_requested_once": true,
+  "main_site_rerun_status": "not polled",
+  "github_call_budget": 10,
+  "github_calls_used": 10,
+  "publication_scan": "not run in cloud; fleet lander required",
+  "landing": "branch only"
+}

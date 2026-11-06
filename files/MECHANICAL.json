@@ -1,0 +1,28 @@
+{
+  "head": "a8906f92a14aa564ecfe444bdc8f61595b9b5425",
+  "checks": [
+    {
+      "name": "source_lock",
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "output_bytes": 429395
+    },
+    {
+      "name": "structural",
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "output_bytes": 67
+    }
+  ],
+  "views": {
+    "write_exit": 0,
+    "check_exit": 0,
+    "restored_from": "origin/main",
+    "committed": false
+  },
+  "ledger": {
+    "command": null,
+    "exit": 0,
+    "reason": "No migration change"
+  }
+}

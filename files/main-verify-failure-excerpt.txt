@@ -1,0 +1,4 @@
+shards (import-statuses, true)	Run this shard	2026-11-06T09:27:43.8917753Z page.waitForURL: Timeout 30000ms exceeded.
+shards (import-statuses, true)	Run this shard	2026-11-06T09:27:43.8919990Z     at reviewPrivateSearch (/home/runner/work/run-penny/run-penny/tests/browser/operator-completeness-read.mjs:70:14)
+shards (import-statuses, true)	Run this shard	2026-11-06T09:27:43.8921113Z     at async reviewOperatorFields (/home/runner/work/run-penny/run-penny/tests/browser/operator-completeness.mjs:36:3)
+shards (import-statuses, true)	Run this shard	2026-11-06T09:27:43.9646084Z ##[error]Process completed with exit code 1.

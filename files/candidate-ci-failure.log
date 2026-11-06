@@ -1,0 +1,5 @@
+shards (triage-aging, true)	Check generated contract documents	﻿2026-11-06T09:59:34.0592484Z ##[group]Run node src/base/contract-docs.mjs check
+shards (triage-aging, true)	Check generated contract documents	2026-11-06T09:59:34.0592895Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (triage-aging, true)	Check generated contract documents	2026-11-06T09:59:34.0606353Z shell: /usr/bin/bash -e {0}
+shards (triage-aging, true)	Check generated contract documents	2026-11-06T09:59:34.1895804Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (triage-aging, true)	Check generated contract documents	2026-11-06T09:59:34.1940216Z ##[error]Process completed with exit code 1.

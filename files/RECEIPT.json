@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f97",
+  "head": "a8906f92a14aa564ecfe444bdc8f61595b9b5425",
+  "built_worker_test": {
+    "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/feedback-volume-report.test.ts",
+    "exit": 0,
+    "assertions": [
+      {
+        "name": "native feedback volume reconciles private JSON and CSV windows without multiplying linked records",
+        "status": "passed"
+      }
+    ],
+    "passed": 1,
+    "failed": 0
+  },
+  "product_push": {
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f97",
+    "exit": 0,
+    "attempts": 1,
+    "remote_ref": "refs/heads/cloud/sd-penny-c-f97",
+    "remote_head": "a8906f92a14aa564ecfe444bdc8f61595b9b5425"
+  },
+  "parent": "0d6f3416c75fe29675323ad1a2ef4bd1f8086756",
+  "contract_counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "contract_counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "clause": "MEAS-004",
+  "before": "PARTIAL",
+  "after": "PARTIAL",
+  "status_rows_parent": 281,
+  "status_rows_candidate": 281,
+  "new_test_registrations": 1,
+  "removed_test_registrations": 0,
+  "tree_clean": true
+}
