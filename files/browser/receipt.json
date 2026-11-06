@@ -1,0 +1,1621 @@
+{
+  "checks": [
+    {
+      "label": "empty-learning",
+      "width": 1440,
+      "buttonColors": []
+    },
+    {
+      "label": "thin-native-learning",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "ai-budget-refusal",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "actionable-learning",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "measurement": {
+        "visible": true,
+        "below": true,
+        "rows": [
+          "Minutes to finish export",
+          "Accounts performing month-end export",
+          "Not established",
+          "Not measured yet",
+          "Next month-end cycle",
+          "Same workflow in a non-cancelling cohort"
+        ],
+        "options": [
+          {
+            "title": "Prepare a month-end checklist",
+            "values": [
+              "Time to complete month-end export",
+              "Same workflow in a non-cancelling cohort"
+            ]
+          },
+          {
+            "title": "Prototype the export workflow",
+            "values": [
+              "Time to complete month-end export",
+              "Same workflow in a non-cancelling cohort"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "refresh": {
+        "pending": true,
+        "pendingStatus": "Refreshing learning…",
+        "methods": [
+          "GET"
+        ],
+        "utilities": [
+          {
+            "width": 209.15625,
+            "height": 48
+          },
+          {
+            "width": 209.171875,
+            "height": 48
+          }
+        ]
+      }
+    },
+    {
+      "width": 1440,
+      "linkage": [
+        {
+          "rows": [
+            {
+              "label": "Mechanism",
+              "value": "Test whether guidance addresses discoverability."
+            },
+            {
+              "label": "Urgency",
+              "value": "Next permitted month-end observation"
+            },
+            {
+              "label": "Delivery",
+              "value": "Prepare an internal export checklist"
+            },
+            {
+              "label": "Success measure",
+              "value": "Time to complete month-end export"
+            },
+            {
+              "label": "Known limits",
+              "value": "Selected evidence cannot establish cancellation causation."
+            },
+            {
+              "label": "Linked requesters",
+              "value": "No requester links recorded"
+            },
+            {
+              "label": "Linked accounts",
+              "value": "No account links recorded"
+            },
+            {
+              "label": "Supporting evidence",
+              "value": "2"
+            },
+            {
+              "label": "Supporting observations without account links",
+              "value": "2 of 2"
+            },
+            {
+              "label": "Last observed",
+              "value": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "label": "Counter-evidence",
+              "value": "1 cited observation"
+            }
+          ],
+          "text": "Prepare a month-end checklistNo build requiredMechanismTest whether guidance addresses discoverability.UrgencyNext permitted month-end observationDeliveryPrepare an internal export checklistSuccess measureTime to complete month-end exportKnown limitsSelected evidence cannot establish cancellation causation.Linked requestersNo requester links recordedLinked accountsNo account links recordedSupporting evidence2Supporting observations without account links2 of 2Last observedOct 14, 2026, 9:00 AMCounter-evidence1 cited observationCounts identify distinct Penny identities linked to supporting observations. These links do not establish the total affected population."
+        },
+        {
+          "rows": [
+            {
+              "label": "Mechanism",
+              "value": "Test whether a capability gap explains the delay."
+            },
+            {
+              "label": "Urgency",
+              "value": "Next permitted month-end observation"
+            },
+            {
+              "label": "Delivery",
+              "value": "A bounded export workflow prototype"
+            },
+            {
+              "label": "Success measure",
+              "value": "Time to complete month-end export"
+            },
+            {
+              "label": "Known limits",
+              "value": "Selected evidence cannot establish cancellation causation."
+            },
+            {
+              "label": "Linked requesters",
+              "value": "No requester links recorded"
+            },
+            {
+              "label": "Linked accounts",
+              "value": "No account links recorded"
+            },
+            {
+              "label": "Supporting evidence",
+              "value": "2"
+            },
+            {
+              "label": "Supporting observations without account links",
+              "value": "2 of 2"
+            },
+            {
+              "label": "Last observed",
+              "value": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "label": "Counter-evidence",
+              "value": "1 cited observation"
+            }
+          ],
+          "text": "Prototype the export workflowProduct changeMechanismTest whether a capability gap explains the delay.UrgencyNext permitted month-end observationDeliveryA bounded export workflow prototypeSuccess measureTime to complete month-end exportKnown limitsSelected evidence cannot establish cancellation causation.Linked requestersNo requester links recordedLinked accountsNo account links recordedSupporting evidence2Supporting observations without account links2 of 2Last observedOct 14, 2026, 9:00 AMCounter-evidence1 cited observationCounts identify distinct Penny identities linked to supporting observations. These links do not establish the total affected population."
+        }
+      ]
+    },
+    {
+      "label": "tab-results",
+      "width": 1440,
+      "buttonColors": []
+    },
+    {
+      "label": "tab-needs-you",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Do this",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(173, 74, 31)"
+        },
+        {
+          "label": "Change it",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        },
+        {
+          "label": "Not now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "tabStates": [
+        {
+          "selected": "results",
+          "url": "results",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "learning",
+          "url": "learning",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "learning",
+          "url": "learning",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "results",
+          "url": "results",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "results",
+          "url": "results",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "learning",
+          "url": "learning",
+          "coherent": true
+        }
+      ]
+    },
+    {
+      "label": "tab-learning",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "citations": [
+        {
+          "label": "Owner-authorized customer interview",
+          "date": "Oct 14, 2026",
+          "href": "/app/feedback?item=01M6Q9DYJRVFJQ0S3FRPSFRZ04#evidence-01M6Q9DYJRVFJQ0S3FRPSFRZ04",
+          "quotes": [
+            "Private native feedback: I cannot find the month-end export."
+          ]
+        },
+        {
+          "label": "Month-end export review",
+          "date": "Oct 14, 2026",
+          "href": "https://orbit.example.com/app/opportunities/close-friction",
+          "quotes": [
+            "Month-end export review"
+          ]
+        },
+        {
+          "label": "Month-end export review",
+          "date": "Oct 14, 2026",
+          "href": "https://orbit.example.com/app/opportunities/close-friction",
+          "quotes": [
+            "Private learning source: month-end export takes too long."
+          ]
+        },
+        {
+          "label": "Month-end export review",
+          "date": "Oct 14, 2026",
+          "href": "https://orbit.example.com/app/opportunities/close-friction",
+          "quotes": [
+            "Private learning source: month-end export takes too long."
+          ]
+        }
+      ]
+    },
+    {
+      "label": "source-drilldown",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "actionable-decision",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Do this",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(173, 74, 31)"
+        },
+        {
+          "label": "Change it",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        },
+        {
+          "label": "Not now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "contested-history",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "editable-pre-action-protocol",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Do this",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(173, 74, 31)"
+        },
+        {
+          "label": "Change it",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        },
+        {
+          "label": "Not now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "typography": {
+        "fonts": [
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif",
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif",
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif",
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif",
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif"
+        ],
+        "weights": [
+          600,
+          600,
+          600
+        ],
+        "gap": 22
+      },
+      "spacing": {
+        "paragraph": 12,
+        "button": 20,
+        "protocol": 16
+      }
+    },
+    {
+      "label": "incomplete-result",
+      "width": 1440,
+      "buttonColors": []
+    },
+    {
+      "width": 1440,
+      "metadata": [
+        {
+          "label": "empty-learning",
+          "dates": []
+        },
+        {
+          "label": "thin-native-learning",
+          "dates": [
+            {
+              "value": "2026-12-06T02:01:00.000Z",
+              "text": "Dec 6, 2026, 2:01 AM",
+              "expected": "Dec 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-07T02:01:32.736Z",
+              "text": "Nov 7, 2026, 2:01 AM",
+              "expected": "Nov 7, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "ai-budget-refusal",
+          "dates": [
+            {
+              "value": "2026-12-06T02:01:00.000Z",
+              "text": "Dec 6, 2026, 2:01 AM",
+              "expected": "Dec 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-07T02:01:32.736Z",
+              "text": "Nov 7, 2026, 2:01 AM",
+              "expected": "Nov 7, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "actionable-learning",
+          "dates": [
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "tab-results",
+          "dates": []
+        },
+        {
+          "label": "tab-needs-you",
+          "dates": []
+        },
+        {
+          "label": "tab-learning",
+          "dates": [
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "source-drilldown",
+          "dates": [
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "actionable-decision",
+          "dates": []
+        },
+        {
+          "label": "contested-history",
+          "dates": [
+            {
+              "value": "2026-12-06T02:01:00.000Z",
+              "text": "Dec 6, 2026, 2:01 AM",
+              "expected": "Dec 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:41.575Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:37.763Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:32.753Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:41.575Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:37.763Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:35.309Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:32.753Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            }
+          ]
+        },
+        {
+          "label": "editable-pre-action-protocol",
+          "dates": []
+        },
+        {
+          "label": "incomplete-result",
+          "dates": [
+            {
+              "value": "2026-11-13T02:01:00.000Z",
+              "text": "Nov 13, 2026, 2:01 AM",
+              "expected": "Nov 13, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:42.760Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            }
+          ]
+        },
+        {
+          "label": "invalidated-result",
+          "dates": [
+            {
+              "value": "2026-11-13T02:01:00.000Z",
+              "text": "Nov 13, 2026, 2:01 AM",
+              "expected": "Nov 13, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-11-06T02:01:42.760Z",
+              "text": "Nov 6, 2026, 2:01 AM",
+              "expected": "Nov 6, 2026, 2:01 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            }
+          ]
+        },
+        {
+          "label": "disconnected-learning",
+          "dates": []
+        },
+        {
+          "label": "unconfigured-source",
+          "dates": []
+        },
+        {
+          "label": "ai-unconfigured",
+          "dates": []
+        }
+      ],
+      "owner": "Owner",
+      "kinds": [
+        "No build required",
+        "Product change"
+      ]
+    },
+    {
+      "label": "invalidated-result",
+      "width": 1440,
+      "buttonColors": []
+    },
+    {
+      "width": 1440,
+      "header": [
+        "Resume",
+        "Disconnect",
+        "Revoke grant",
+        "Correct"
+      ]
+    },
+    {
+      "label": "disconnected-learning",
+      "width": 1440,
+      "buttonColors": []
+    },
+    {
+      "label": "unconfigured-source",
+      "width": 1440,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "ai-unconfigured",
+      "width": 1440,
+      "buttonColors": []
+    },
+    {
+      "width": 1440,
+      "privacy": true,
+      "sourceDisconnect": true,
+      "nativePersonErasureUsesData": true,
+      "orbitPersonErasureAvailable": true,
+      "realProtocolCommit": true
+    },
+    {
+      "label": "empty-learning",
+      "width": 390,
+      "buttonColors": []
+    },
+    {
+      "label": "thin-native-learning",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "ai-budget-refusal",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "actionable-learning",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "measurement": {
+        "visible": true,
+        "below": true,
+        "rows": [
+          "Minutes to finish export",
+          "Accounts performing month-end export",
+          "Not established",
+          "Not measured yet",
+          "Next month-end cycle",
+          "Same workflow in a non-cancelling cohort"
+        ],
+        "options": [
+          {
+            "title": "Prepare a month-end checklist",
+            "values": [
+              "Time to complete month-end export",
+              "Same workflow in a non-cancelling cohort"
+            ]
+          },
+          {
+            "title": "Prototype the export workflow",
+            "values": [
+              "Time to complete month-end export",
+              "Same workflow in a non-cancelling cohort"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "width": 390,
+      "refresh": {
+        "pending": true,
+        "pendingStatus": "Refreshing learning…",
+        "methods": [
+          "GET"
+        ],
+        "utilities": [
+          {
+            "width": 164,
+            "height": 48
+          },
+          {
+            "width": 164,
+            "height": 48
+          }
+        ]
+      }
+    },
+    {
+      "width": 390,
+      "linkage": [
+        {
+          "rows": [
+            {
+              "label": "Mechanism",
+              "value": "Test whether guidance addresses discoverability."
+            },
+            {
+              "label": "Urgency",
+              "value": "Next permitted month-end observation"
+            },
+            {
+              "label": "Delivery",
+              "value": "Prepare an internal export checklist"
+            },
+            {
+              "label": "Success measure",
+              "value": "Time to complete month-end export"
+            },
+            {
+              "label": "Known limits",
+              "value": "Selected evidence cannot establish cancellation causation."
+            },
+            {
+              "label": "Linked requesters",
+              "value": "No requester links recorded"
+            },
+            {
+              "label": "Linked accounts",
+              "value": "No account links recorded"
+            },
+            {
+              "label": "Supporting evidence",
+              "value": "2"
+            },
+            {
+              "label": "Supporting observations without account links",
+              "value": "2 of 2"
+            },
+            {
+              "label": "Last observed",
+              "value": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "label": "Counter-evidence",
+              "value": "1 cited observation"
+            }
+          ],
+          "text": "Prepare a month-end checklistNo build requiredMechanismTest whether guidance addresses discoverability.UrgencyNext permitted month-end observationDeliveryPrepare an internal export checklistSuccess measureTime to complete month-end exportKnown limitsSelected evidence cannot establish cancellation causation.Linked requestersNo requester links recordedLinked accountsNo account links recordedSupporting evidence2Supporting observations without account links2 of 2Last observedOct 14, 2026, 9:00 AMCounter-evidence1 cited observationCounts identify distinct Penny identities linked to supporting observations. These links do not establish the total affected population."
+        },
+        {
+          "rows": [
+            {
+              "label": "Mechanism",
+              "value": "Test whether a capability gap explains the delay."
+            },
+            {
+              "label": "Urgency",
+              "value": "Next permitted month-end observation"
+            },
+            {
+              "label": "Delivery",
+              "value": "A bounded export workflow prototype"
+            },
+            {
+              "label": "Success measure",
+              "value": "Time to complete month-end export"
+            },
+            {
+              "label": "Known limits",
+              "value": "Selected evidence cannot establish cancellation causation."
+            },
+            {
+              "label": "Linked requesters",
+              "value": "No requester links recorded"
+            },
+            {
+              "label": "Linked accounts",
+              "value": "No account links recorded"
+            },
+            {
+              "label": "Supporting evidence",
+              "value": "2"
+            },
+            {
+              "label": "Supporting observations without account links",
+              "value": "2 of 2"
+            },
+            {
+              "label": "Last observed",
+              "value": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "label": "Counter-evidence",
+              "value": "1 cited observation"
+            }
+          ],
+          "text": "Prototype the export workflowProduct changeMechanismTest whether a capability gap explains the delay.UrgencyNext permitted month-end observationDeliveryA bounded export workflow prototypeSuccess measureTime to complete month-end exportKnown limitsSelected evidence cannot establish cancellation causation.Linked requestersNo requester links recordedLinked accountsNo account links recordedSupporting evidence2Supporting observations without account links2 of 2Last observedOct 14, 2026, 9:00 AMCounter-evidence1 cited observationCounts identify distinct Penny identities linked to supporting observations. These links do not establish the total affected population."
+        }
+      ]
+    },
+    {
+      "label": "tab-results",
+      "width": 390,
+      "buttonColors": []
+    },
+    {
+      "label": "tab-needs-you",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Do this",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(173, 74, 31)"
+        },
+        {
+          "label": "Change it",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        },
+        {
+          "label": "Not now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "tabStates": [
+        {
+          "selected": "results",
+          "url": "results",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "learning",
+          "url": "learning",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "learning",
+          "url": "learning",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "results",
+          "url": "results",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "results",
+          "url": "results",
+          "coherent": true
+        },
+        {
+          "selected": "needs-you",
+          "url": "needs-you",
+          "coherent": true
+        },
+        {
+          "selected": "learning",
+          "url": "learning",
+          "coherent": true
+        }
+      ]
+    },
+    {
+      "label": "tab-learning",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "citations": [
+        {
+          "label": "Owner-authorized customer interview",
+          "date": "Oct 14, 2026",
+          "href": "/app/feedback?item=01M6Q9F09AWJ2DB9F5FB3GC823#evidence-01M6Q9F09AWJ2DB9F5FB3GC823",
+          "quotes": [
+            "Private native feedback: I cannot find the month-end export."
+          ]
+        },
+        {
+          "label": "Month-end export review",
+          "date": "Oct 14, 2026",
+          "href": "https://orbit.example.com/app/opportunities/close-friction",
+          "quotes": [
+            "Month-end export review"
+          ]
+        },
+        {
+          "label": "Month-end export review",
+          "date": "Oct 14, 2026",
+          "href": "https://orbit.example.com/app/opportunities/close-friction",
+          "quotes": [
+            "Private learning source: month-end export takes too long."
+          ]
+        },
+        {
+          "label": "Month-end export review",
+          "date": "Oct 14, 2026",
+          "href": "https://orbit.example.com/app/opportunities/close-friction",
+          "quotes": [
+            "Private learning source: month-end export takes too long."
+          ]
+        }
+      ]
+    },
+    {
+      "label": "source-drilldown",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "actionable-decision",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Do this",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(173, 74, 31)"
+        },
+        {
+          "label": "Change it",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        },
+        {
+          "label": "Not now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "contested-history",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "editable-pre-action-protocol",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Do this",
+          "color": "rgb(255, 255, 255)",
+          "background": "rgb(173, 74, 31)"
+        },
+        {
+          "label": "Change it",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        },
+        {
+          "label": "Not now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "typography": {
+        "fonts": [
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif",
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif",
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif",
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif",
+          "\"Inter Tight\", \"Inter Tight Fallback\", sans-serif"
+        ],
+        "weights": [
+          600,
+          600,
+          600
+        ],
+        "gap": 22
+      },
+      "spacing": {
+        "paragraph": 12,
+        "button": 20,
+        "protocol": 16
+      }
+    },
+    {
+      "label": "incomplete-result",
+      "width": 390,
+      "buttonColors": []
+    },
+    {
+      "width": 390,
+      "metadata": [
+        {
+          "label": "empty-learning",
+          "dates": []
+        },
+        {
+          "label": "thin-native-learning",
+          "dates": [
+            {
+              "value": "2026-12-06T02:02:00.000Z",
+              "text": "Dec 6, 2026, 2:02 AM",
+              "expected": "Dec 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-07T02:02:07.221Z",
+              "text": "Nov 7, 2026, 2:02 AM",
+              "expected": "Nov 7, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "ai-budget-refusal",
+          "dates": [
+            {
+              "value": "2026-12-06T02:02:00.000Z",
+              "text": "Dec 6, 2026, 2:02 AM",
+              "expected": "Dec 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-07T02:02:07.221Z",
+              "text": "Nov 7, 2026, 2:02 AM",
+              "expected": "Nov 7, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "actionable-learning",
+          "dates": [
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "tab-results",
+          "dates": []
+        },
+        {
+          "label": "tab-needs-you",
+          "dates": []
+        },
+        {
+          "label": "tab-learning",
+          "dates": [
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "source-drilldown",
+          "dates": [
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026, 9:00 AM",
+              "expected": "Oct 14, 2026, 9:00 AM"
+            }
+          ]
+        },
+        {
+          "label": "actionable-decision",
+          "dates": []
+        },
+        {
+          "label": "contested-history",
+          "dates": [
+            {
+              "value": "2026-12-06T02:02:00.000Z",
+              "text": "Dec 6, 2026, 2:02 AM",
+              "expected": "Dec 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:15.550Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:11.960Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:07.265Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:15.550Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:11.960Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:09.641Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:07.265Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            }
+          ]
+        },
+        {
+          "label": "editable-pre-action-protocol",
+          "dates": []
+        },
+        {
+          "label": "incomplete-result",
+          "dates": [
+            {
+              "value": "2026-11-13T02:02:00.000Z",
+              "text": "Nov 13, 2026, 2:02 AM",
+              "expected": "Nov 13, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:16.543Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            }
+          ]
+        },
+        {
+          "label": "invalidated-result",
+          "dates": [
+            {
+              "value": "2026-11-13T02:02:00.000Z",
+              "text": "Nov 13, 2026, 2:02 AM",
+              "expected": "Nov 13, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-11-06T02:02:16.543Z",
+              "text": "Nov 6, 2026, 2:02 AM",
+              "expected": "Nov 6, 2026, 2:02 AM"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            },
+            {
+              "value": "2026-10-14T09:00:00.000Z",
+              "text": "Oct 14, 2026",
+              "expected": "Oct 14, 2026"
+            }
+          ]
+        },
+        {
+          "label": "disconnected-learning",
+          "dates": []
+        },
+        {
+          "label": "unconfigured-source",
+          "dates": []
+        },
+        {
+          "label": "ai-unconfigured",
+          "dates": []
+        }
+      ],
+      "owner": "Owner",
+      "kinds": [
+        "No build required",
+        "Product change"
+      ]
+    },
+    {
+      "label": "invalidated-result",
+      "width": 390,
+      "buttonColors": []
+    },
+    {
+      "width": 390,
+      "header": [
+        "Resume",
+        "Disconnect",
+        "Revoke grant",
+        "Correct"
+      ]
+    },
+    {
+      "label": "disconnected-learning",
+      "width": 390,
+      "buttonColors": []
+    },
+    {
+      "label": "unconfigured-source",
+      "width": 390,
+      "buttonColors": [
+        {
+          "label": "Check now",
+          "color": "rgb(32, 33, 31)",
+          "background": "rgb(250, 247, 239)"
+        }
+      ]
+    },
+    {
+      "label": "ai-unconfigured",
+      "width": 390,
+      "buttonColors": []
+    },
+    {
+      "width": 390,
+      "privacy": true,
+      "sourceDisconnect": true,
+      "nativePersonErasureUsesData": true,
+      "orbitPersonErasureAvailable": true,
+      "realProtocolCommit": true
+    }
+  ],
+  "visualAuthority": "/home/agent/rer-consolidation/work/ct-judge-penny-learn005-20261105-1610-sol1/evidence/learning-design.png"
+}

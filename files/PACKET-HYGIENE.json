@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "check": "explicit public evidence packet selection",
+  "status": "pass",
+  "findings": [],
+  "files_checked": 172,
+  "bytes": 30306381,
+  "limitations": "Pattern and filename scan of explicitly selected synthetic reports; not the guarded full-history product publication scan. Does not establish product NEW 0."
+}

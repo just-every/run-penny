@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "tag": "ct-judge-penny-learn005-20261105-1610-sol1",
+  "review_completed_at": "2026-11-06T02:03:31.835844+00:00",
+  "repository": "just-every/run-penny",
+  "head": "50d5e9facdddb75718c92f804b950fdbc0439d94",
+  "tree": "a6258deb2fdf59f051e0957732d2434c0ee61e7b",
+  "branch": "cloud/sd-penny-c-f30",
+  "tracked_diff_exit": 0,
+  "status_porcelain": "",
+  "product_commits": 0,
+  "product_pushes": 0,
+  "pull_requests_created": 0,
+  "ci_calls": 0,
+  "ci_dispatches": 0,
+  "provider_calls": 0,
+  "new_tests": 0,
+  "source_mutations": 0,
+  "subagents": 0,
+  "commands": [
+    {
+      "id": "01",
+      "command": "cloud_run pnpm install --frozen-lockfile",
+      "exit_code": null,
+      "result": "completion log ends Done in 8.3s; terminal exit was not retained by the asynchronous tool session",
+      "log": "01-install.log",
+      "log_bytes": 2481,
+      "log_sha256": "abb6827858ad8114e1ffac456eb5c8d2c647af1e3ced8abdc10a2bf24e745dac"
+    },
+    {
+      "id": "02",
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit_code": 0,
+      "log": "02-setup.log",
+      "log_bytes": 2668799,
+      "log_sha256": "9f8fffe6fd3dc4cddb4cfa7e5d9d7980bec82219ee686dd37c9bb784892a586b"
+    },
+    {
+      "id": "03",
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit_code": 0,
+      "log": "03-build.log",
+      "log_bytes": 42569,
+      "log_sha256": "7656783258c816dbd9f94bce9e922a679f2f30912ca0557d256629f99783e677"
+    },
+    {
+      "id": "04",
+      "command": "node src/base/contract-docs.mjs check",
+      "exit_code": 1,
+      "log": "04-contract-check.log",
+      "result": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+      "log_bytes": 67,
+      "log_sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+    },
+    {
+      "id": "05",
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit_code": 0,
+      "log": "05-lock-check.log",
+      "log_bytes": 426238,
+      "log_sha256": "3e0003e7d280752d80820c0e034d3dfabfd01afd3be711e95c8a8cf0ceff8509"
+    },
+    {
+      "id": "06",
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-stage3.test.ts",
+      "exit_code": 0,
+      "log": "06-stage3.log",
+      "result": "1 test file; 5 passed; 21.27 seconds; started 2026-11-06T02:00:49Z",
+      "log_bytes": 410,
+      "log_sha256": "7cbf7ccc52a0c2ba980e23842a94fa6a5e2dbfa3f482c0fd6b98352c7c4dc191"
+    },
+    {
+      "id": "07",
+      "command": "cloud_run pnpm run typecheck",
+      "exit_code": 0,
+      "log": "07-typecheck.log",
+      "log_bytes": 229,
+      "log_sha256": "c8cce930549819c3bf28e650404c1be99802b923f1e53143c6df73ebe9fb6f68"
+    },
+    {
+      "id": "08",
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=../packet/browser cloud_run node tests/browser/learning-journey.mjs",
+      "exit_code": 0,
+      "log": "08-browser.log",
+      "receipt": "browser/receipt.json",
+      "result": "Learning browser journey passed at 1440 and 390; existing unmodified two-width loop; Linux browser options include --no-sandbox",
+      "log_bytes": 12021,
+      "log_sha256": "8926ea03a8ea391fe3c98c4187ff347f56647d7a3cf59b5d381e3894b8bd646f"
+    }
+  ],
+  "not_run": [
+    {
+      "item": "full and baseline verification suites",
+      "reason": "original brief requires focused journeys only; deliberately not run"
+    },
+    {
+      "item": "mutation probes and new per-point tests",
+      "reason": "read-only original-source judgment prohibits them"
+    },
+    {
+      "item": "CI discovery, polling, rerun and dispatch",
+      "reason": "specific reviewer commission prohibits them; original run metadata is supplied inline"
+    },
+    {
+      "item": "contract regeneration or source lock write",
+      "reason": "product read-only; mechanical lander work remains pending"
+    },
+    {
+      "item": "live Orbit/model accounts, hosted restore, real devices, legal/provider qualification",
+      "reason": "not authorized; field proof remains external and not awarded"
+    },
+    {
+      "item": "full-history publication scan and guarded landing",
+      "reason": "not available on cloud; Mac custodian must execute; shallow clone cannot certify full history"
+    },
+    {
+      "item": "fresh-main status, Gap, Evidence, provenance and newer-assertion reconciliation",
+      "reason": "review inputs restricted to pinned public source and inline documents; no fresh-main integration performed"
+    }
+  ]
+}

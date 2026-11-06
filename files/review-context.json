@@ -1,0 +1,19 @@
+{
+  "tag": "ct-judge-penny-learn005-20261105-1610-sol1",
+  "repository": "just-every/run-penny",
+  "source": "50d5e9facdddb75718c92f804b950fdbc0439d94",
+  "source_branch": "cloud/sd-penny-c-f30",
+  "product_read_only": true,
+  "authorized_model": "gpt-6.1-sol",
+  "reasoning_effort": "xhigh",
+  "ci_api_calls": 0,
+  "original_verify": {
+    "id": 42057943050,
+    "event": "push",
+    "conclusion": "failure",
+    "basis": "supplied inline receipt: generated-view freshness only; runtime proof not green"
+  },
+  "prior_main": "cfb89bb40415b3952c48262d06feee875922e832",
+  "prior_main_verify": 42041054898,
+  "prior_main_run_site": 42041054991
+}

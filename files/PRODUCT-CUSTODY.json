@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-11-06T02:06:43.280842+00:00",
+  "head": "50d5e9facdddb75718c92f804b950fdbc0439d94",
+  "tree": "a6258deb2fdf59f051e0957732d2434c0ee61e7b",
+  "branch": "cloud/sd-penny-c-f30",
+  "status": "",
+  "diff_exit": 0,
+  "tracked_files": 2432,
+  "tracked_byte_manifest_sha256": "d29d411cd7ad85aed5ed52e0662614064222ce8cd1a43d81f64a76aaf10d53ee",
+  "product_commits_created": 0,
+  "product_refs_pushed": [],
+  "pull_requests_created": [],
+  "cleanup": "after evidence publication and verified report transfer, remove only this disposable product clone and its dependencies; preserve the packet",
+  "process_teardown": "all reviewer-started cloud_run commands completed; browser runtime and context finally blocks finished; no reviewer-owned server remains"
+}
