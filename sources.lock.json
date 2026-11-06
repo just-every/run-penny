@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "2727da62fa111b6eba4d0b64d0fa0d85d964f1b2dad35748b84a6028d031478c",
+      "sha256": "41cbad81fbb04d1113ea54f17ed8837b630ea747618fd8ba23fbdb632b0c8967",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "b36712eaec0c6024d5eb148a5dc6db4124b5f769a5efd85166b5dab3c26816ce",
+      "sha256": "5ded96524695379870d1e4a1d2ce631252b2b50b782c633f25b43f3e40a21f36",
       "executable": false
     },
     "DEMO.md": {
@@ -8942,7 +8942,7 @@
       "executable": false
     },
     "tests/browser/prioritisation.mjs": {
-      "sha256": "44679bd890df2cba13c24e7a71c1054e3b9baae351e5dcc3f8d7a52325c47fae",
+      "sha256": "21022d4e6956e00e48d8fc38e570a6faf90a7f153e741bd80335f9958e3a4921",
       "executable": false
     },
     "tests/browser/product-hierarchy.mjs": {

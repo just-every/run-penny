@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove that editing a saved request-title filter through the comparison form persists its next revision and complete result set for both the owner and a second operator after reload. OPS-006 remains partial for the broader saved-view requirements. No migration or configuration change is required.
+
 - Verify the complete visible saved-comparison list for a second native operator, retaining shared title-filter results and refusing private-view reads. OPS-006 remains partial for its broader saved-view requirements. No migration or configuration change is required.
 
 - Save a case-insensitive request-title filter in native prioritisation comparisons and apply it before the existing formula sort. Reopen the saved shared view as its owner and a second operator with the same complete ordered subset; retain private-view exclusion, direct-read refusal, revision, audit and admission checks. OPS-006 moves from missing to partial; other lists, filters, columns and broader sort controls remain open. No migration or reconfiguration is required; older saved definitions default to an empty filter.

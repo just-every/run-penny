@@ -89,6 +89,24 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
   await page.setViewportSize({width:390,height:844});await capture(page,label,region)
   await page.setViewportSize({width:1440,height:900})
  }
+ // Editing a saved filter uses the mounted form and persists for both operators.
+ const filterEdit=requestRegion.getByRole('form',{name:'Edit comparison',exact:true})
+ await filterEdit.getByLabel('Request title contains',{exact:true}).fill('schedule')
+ await filterEdit.getByRole('button',{name:'Save comparison',exact:true}).click()
+ await requestRanked.getByRole('heading',{name:'1. Schedule monthly finance exports',exact:true}).waitFor()
+ for(const page of [owner,peer]){
+  await page.reload({waitUntil:'networkidle'})
+  const edited=page.getByRole('region',{name:'Finance request subset',exact:true}).getByRole('list',{name:'Ranked comparison',exact:true})
+  await edited.getByRole('heading',{name:'1. Schedule monthly finance exports',exact:true}).waitFor()
+  assert.deepEqual(await edited.getByRole('heading').allTextContents(),['1. Schedule monthly finance exports'])
+ }
+ const editedResult=await json(apiPath,undefined,operator)
+ assert.equal(editedResult.view.titleFilter,'schedule')
+ assert.equal(editedResult.revision,ownerResult.revision+1)
+ assert.deepEqual(editedResult.rows.map(row=>row.id),[requests[0].id])
+ assert.deepEqual((await json(apiPath,undefined,{Cookie:peerCookie})).rows,editedResult.rows)
+ await requestRegion.locator('summary').filter({hasText:/^Edit comparison$/}).click()
+ assert.equal(await filterEdit.getByLabel('Request title contains',{exact:true}).inputValue(),'schedule')
  const privateView=await json('/api/operator/prioritisation',{name:'Private finance scenario',entity:'requests',formula:'rice',shared:false},operator,'POST',201)
  assert.equal((await json('/api/operator/prioritisation',undefined,{Cookie:peerCookie})).some(view=>view.id===privateView.id),false)
  await send(`/api/operator/prioritisation/${privateView.id}`,undefined,{Cookie:peerCookie},'GET',404)
