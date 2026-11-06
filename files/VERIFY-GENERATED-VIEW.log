@@ -1,0 +1,7 @@
+shards (rich-changelog, true)	Check generated contract documents	﻿2026-11-06T04:47:37.2257542Z ##[group]Run node src/base/contract-docs.mjs check
+shards (rich-changelog, true)	Check generated contract documents	2026-11-06T04:47:37.2257955Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (rich-changelog, true)	Check generated contract documents	2026-11-06T04:47:37.2272296Z shell: /usr/bin/bash -e {0}
+shards (rich-changelog, true)	Check generated contract documents	2026-11-06T04:47:37.2272570Z env:
+shards (rich-changelog, true)	Check generated contract documents	2026-11-06T04:47:37.2273825Z ##[endgroup]
+shards (rich-changelog, true)	Check generated contract documents	2026-11-06T04:47:37.3569934Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (rich-changelog, true)	Check generated contract documents	2026-11-06T04:47:37.3615892Z ##[error]Process completed with exit code 1.

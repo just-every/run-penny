@@ -1,0 +1,13 @@
+{
+  "initialFailure": {
+    "stage": "Chromium startup before assertions",
+    "error": "FATAL:chrome/browser/process_singleton_posix.cc:313 Socket path too long",
+    "exit": 1
+  },
+  "recovery": {
+    "change": "Set short process TMPDIR=/tmp/penny-f72-review",
+    "sourceChanges": false,
+    "assertionsChanged": false,
+    "subsequentJourneyExit": 0
+  }
+}

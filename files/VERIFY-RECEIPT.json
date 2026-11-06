@@ -1,0 +1,25 @@
+{
+  "head": "7e63a0a1aa6076b4dd789f0773081bbad38ec01a",
+  "runId": 42164545491,
+  "event": "push",
+  "status": "completed",
+  "conclusion": "failure",
+  "expectedGeneratedViewsOnly": true,
+  "failedShards": 29,
+  "successfulPlan": true,
+  "sourceLockCheck": "success in all 29 shards",
+  "failedStep": "Check generated contract documents",
+  "failedCommand": "node src/base/contract-docs.mjs check",
+  "failure": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+  "localExactHeadExit": 1,
+  "representativeLogJob": 127717883174,
+  "logCommand": "gh run view 42164545491 --repo just-every/run-penny --job 127717883174 --log-failed",
+  "logExit": 0,
+  "policy": "Supplied cloud adaptation permits READY when only restored generated views fail. The Mac lander regenerates views and reruns exact-head Verify before landing.",
+  "testSteps": "Skipped after generated-view check; no claim of successful CI test execution",
+  "githubInvocationBudget": {
+    "used": 8,
+    "limit": 10
+  },
+  "observedAt": "2026-11-06T04:54:20.439232+00:00"
+}

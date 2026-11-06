@@ -1,0 +1,4154 @@
+{
+  "sourceCommit": "7e63a0a1aa6076b4dd789f0773081bbad38ec01a",
+  "dirty": false,
+  "generatedAt": "2026-11-06T04:48:29.690Z",
+  "runtime": "Exact emitted production Start Worker modules in workerd; D1 migrations and Penny sample data seeded inside this browser test; local Base mail sent only to a test HTTP fixture; no hosted delivery claim.",
+  "browser": "/usr/bin/chromium",
+  "viewports": [
+    390
+  ],
+  "mountedRoutes": [
+    {
+      "file": "__root.tsx",
+      "sourcePath": "/",
+      "requestedPath": "/"
+    },
+    {
+      "file": "app.ask.tsx",
+      "sourcePath": "/app/ask",
+      "requestedPath": "/app/ask"
+    },
+    {
+      "file": "app.browser-capture.tsx",
+      "sourcePath": "/app/browser-capture",
+      "requestedPath": "/app/browser-capture"
+    },
+    {
+      "file": "app.customers.$accountSlug.tsx",
+      "sourcePath": "/app/customers/$accountSlug",
+      "requestedPath": "/app/customers/northstar-health"
+    },
+    {
+      "file": "app.customers.index.tsx",
+      "sourcePath": "/app/customers/",
+      "requestedPath": "/app/customers/"
+    },
+    {
+      "file": "app.customers.tsx",
+      "sourcePath": "/app/customers",
+      "requestedPath": "/app/customers"
+    },
+    {
+      "file": "app.data.tsx",
+      "sourcePath": "/app/data",
+      "requestedPath": "/app/data"
+    },
+    {
+      "file": "app.decisions.$decisionSlug.tsx",
+      "sourcePath": "/app/decisions/$decisionSlug",
+      "requestedPath": "/app/decisions/decision-scim-q4"
+    },
+    {
+      "file": "app.decisions.index.tsx",
+      "sourcePath": "/app/decisions/",
+      "requestedPath": "/app/decisions/"
+    },
+    {
+      "file": "app.decisions.tsx",
+      "sourcePath": "/app/decisions",
+      "requestedPath": "/app/decisions"
+    },
+    {
+      "file": "app.features.tsx",
+      "sourcePath": "/app/features",
+      "requestedPath": "/app/features"
+    },
+    {
+      "file": "app.feedback.tsx",
+      "sourcePath": "/app/feedback",
+      "requestedPath": "/app/feedback"
+    },
+    {
+      "file": "app.index.tsx",
+      "sourcePath": "/app/",
+      "requestedPath": "/app/"
+    },
+    {
+      "file": "app.learning.tsx",
+      "sourcePath": "/app/learning",
+      "requestedPath": "/app/learning"
+    },
+    {
+      "file": "app.moderation.tsx",
+      "sourcePath": "/app/moderation",
+      "requestedPath": "/app/moderation"
+    },
+    {
+      "file": "app.overview.tsx",
+      "sourcePath": "/app/overview",
+      "requestedPath": "/app/overview"
+    },
+    {
+      "file": "app.prioritisation.tsx",
+      "sourcePath": "/app/prioritisation",
+      "requestedPath": "/app/prioritisation"
+    },
+    {
+      "file": "app.releases.$releaseSlug.tsx",
+      "sourcePath": "/app/releases/$releaseSlug",
+      "requestedPath": "/app/releases/release-scim-provisioning"
+    },
+    {
+      "file": "app.releases.index.tsx",
+      "sourcePath": "/app/releases/",
+      "requestedPath": "/app/releases/"
+    },
+    {
+      "file": "app.releases.tsx",
+      "sourcePath": "/app/releases",
+      "requestedPath": "/app/releases"
+    },
+    {
+      "file": "app.roadmap.tsx",
+      "sourcePath": "/app/roadmap",
+      "requestedPath": "/app/roadmap"
+    },
+    {
+      "file": "app.search.tsx",
+      "sourcePath": "/app/search",
+      "requestedPath": "/app/search"
+    },
+    {
+      "file": "app.settings.tsx",
+      "sourcePath": "/app/settings",
+      "requestedPath": "/app/settings"
+    },
+    {
+      "file": "app.tsx",
+      "sourcePath": "/app",
+      "requestedPath": "/app"
+    },
+    {
+      "file": "docs.$slug.tsx",
+      "sourcePath": "/docs/$slug",
+      "requestedPath": "/docs/install"
+    },
+    {
+      "file": "docs.index.tsx",
+      "sourcePath": "/docs/",
+      "requestedPath": "/docs/"
+    },
+    {
+      "file": "index.tsx",
+      "sourcePath": "/",
+      "requestedPath": "/"
+    },
+    {
+      "file": "portal.feedback.$requestSlug.tsx",
+      "sourcePath": "/portal/feedback/$requestSlug",
+      "requestedPath": "/portal/feedback/scim-provisioning"
+    },
+    {
+      "file": "portal.feedback.activity.tsx",
+      "sourcePath": "/portal/feedback/activity",
+      "requestedPath": "/portal/feedback/activity"
+    },
+    {
+      "file": "portal.feedback.index.tsx",
+      "sourcePath": "/portal/feedback/",
+      "requestedPath": "/portal/feedback/"
+    },
+    {
+      "file": "portal.feedback.new.tsx",
+      "sourcePath": "/portal/feedback/new",
+      "requestedPath": "/portal/feedback/new"
+    },
+    {
+      "file": "portal.feedback.tsx",
+      "sourcePath": "/portal/feedback",
+      "requestedPath": "/portal/feedback"
+    },
+    {
+      "file": "portal.index.tsx",
+      "sourcePath": "/portal/",
+      "requestedPath": "/portal/"
+    },
+    {
+      "file": "portal.roadmap.$roadmapSlug.tsx",
+      "sourcePath": "/portal/roadmap/$roadmapSlug",
+      "requestedPath": "/portal/roadmap/roadmap-e1ede60afbc957e715f68f6b04a1a99b"
+    },
+    {
+      "file": "portal.roadmap.index.tsx",
+      "sourcePath": "/portal/roadmap/",
+      "requestedPath": "/portal/roadmap/"
+    },
+    {
+      "file": "portal.roadmap.tsx",
+      "sourcePath": "/portal/roadmap",
+      "requestedPath": "/portal/roadmap"
+    },
+    {
+      "file": "portal.tsx",
+      "sourcePath": "/portal",
+      "requestedPath": "/portal"
+    },
+    {
+      "file": "portal.updates.$releaseSlug.tsx",
+      "sourcePath": "/portal/updates/$releaseSlug",
+      "requestedPath": "/portal/updates/release-scim-provisioning"
+    },
+    {
+      "file": "portal.updates.index.tsx",
+      "sourcePath": "/portal/updates/",
+      "requestedPath": "/portal/updates/"
+    },
+    {
+      "file": "portal.updates.tsx",
+      "sourcePath": "/portal/updates",
+      "requestedPath": "/portal/updates"
+    },
+    {
+      "file": "portal.verify.tsx",
+      "sourcePath": "/portal/verify",
+      "requestedPath": "/portal/verify"
+    },
+    {
+      "file": "signin.tsx",
+      "sourcePath": "/signin",
+      "requestedPath": "/signin"
+    }
+  ],
+  "stateCoverage": [
+    {
+      "file": "__root.tsx",
+      "sourcePath": "/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/"
+        }
+      ]
+    },
+    {
+      "file": "app.ask.tsx",
+      "sourcePath": "/app/ask",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/ask"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/ask"
+        }
+      ]
+    },
+    {
+      "file": "app.browser-capture.tsx",
+      "sourcePath": "/app/browser-capture",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/browser-capture"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/browser-capture"
+        }
+      ]
+    },
+    {
+      "file": "app.customers.$accountSlug.tsx",
+      "sourcePath": "/app/customers/$accountSlug",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/customers/no-such-record"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/customers/northstar-health"
+        }
+      ]
+    },
+    {
+      "file": "app.customers.index.tsx",
+      "sourcePath": "/app/customers/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/customers"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/customers"
+        }
+      ]
+    },
+    {
+      "file": "app.customers.tsx",
+      "sourcePath": "/app/customers",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/customers"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/customers"
+        }
+      ]
+    },
+    {
+      "file": "app.data.tsx",
+      "sourcePath": "/app/data",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/data"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/data"
+        }
+      ]
+    },
+    {
+      "file": "app.decisions.$decisionSlug.tsx",
+      "sourcePath": "/app/decisions/$decisionSlug",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/decisions/no-such-record"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/decisions/decision-scim-q4"
+        }
+      ]
+    },
+    {
+      "file": "app.decisions.index.tsx",
+      "sourcePath": "/app/decisions/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/decisions"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/decisions"
+        }
+      ]
+    },
+    {
+      "file": "app.decisions.tsx",
+      "sourcePath": "/app/decisions",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/decisions"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/decisions"
+        }
+      ]
+    },
+    {
+      "file": "app.features.tsx",
+      "sourcePath": "/app/features",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/features"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/features"
+        }
+      ]
+    },
+    {
+      "file": "app.feedback.tsx",
+      "sourcePath": "/app/feedback",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/feedback"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/feedback"
+        }
+      ]
+    },
+    {
+      "file": "app.index.tsx",
+      "sourcePath": "/app/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app"
+        }
+      ]
+    },
+    {
+      "file": "app.learning.tsx",
+      "sourcePath": "/app/learning",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/learning"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/learning"
+        }
+      ]
+    },
+    {
+      "file": "app.moderation.tsx",
+      "sourcePath": "/app/moderation",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/moderation"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/moderation"
+        }
+      ]
+    },
+    {
+      "file": "app.overview.tsx",
+      "sourcePath": "/app/overview",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/overview"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/overview"
+        }
+      ]
+    },
+    {
+      "file": "app.prioritisation.tsx",
+      "sourcePath": "/app/prioritisation",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/prioritisation"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/prioritisation"
+        }
+      ]
+    },
+    {
+      "file": "app.releases.$releaseSlug.tsx",
+      "sourcePath": "/app/releases/$releaseSlug",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/releases/no-such-record"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/releases/release-scim-provisioning"
+        }
+      ]
+    },
+    {
+      "file": "app.releases.index.tsx",
+      "sourcePath": "/app/releases/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/releases"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/releases"
+        }
+      ]
+    },
+    {
+      "file": "app.releases.tsx",
+      "sourcePath": "/app/releases",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/releases"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/releases"
+        }
+      ]
+    },
+    {
+      "file": "app.roadmap.tsx",
+      "sourcePath": "/app/roadmap",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/roadmap"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/roadmap"
+        }
+      ]
+    },
+    {
+      "file": "app.search.tsx",
+      "sourcePath": "/app/search",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/search"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/search"
+        }
+      ]
+    },
+    {
+      "file": "app.settings.tsx",
+      "sourcePath": "/app/settings",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/settings"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app/settings"
+        }
+      ]
+    },
+    {
+      "file": "app.tsx",
+      "sourcePath": "/app",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/app"
+        }
+      ]
+    },
+    {
+      "file": "docs.$slug.tsx",
+      "sourcePath": "/docs/$slug",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/docs/no-such-record"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/docs/install"
+        }
+      ]
+    },
+    {
+      "file": "docs.index.tsx",
+      "sourcePath": "/docs/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/docs"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/docs"
+        }
+      ]
+    },
+    {
+      "file": "index.tsx",
+      "sourcePath": "/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/"
+        }
+      ]
+    },
+    {
+      "file": "portal.feedback.$requestSlug.tsx",
+      "sourcePath": "/portal/feedback/$requestSlug",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback/no-such-record"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback/scim-provisioning"
+        }
+      ]
+    },
+    {
+      "file": "portal.feedback.activity.tsx",
+      "sourcePath": "/portal/feedback/activity",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback/activity"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback/activity"
+        }
+      ]
+    },
+    {
+      "file": "portal.feedback.index.tsx",
+      "sourcePath": "/portal/feedback/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback"
+        }
+      ]
+    },
+    {
+      "file": "portal.feedback.new.tsx",
+      "sourcePath": "/portal/feedback/new",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback/new"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback/new"
+        }
+      ]
+    },
+    {
+      "file": "portal.feedback.tsx",
+      "sourcePath": "/portal/feedback",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/feedback"
+        }
+      ]
+    },
+    {
+      "file": "portal.index.tsx",
+      "sourcePath": "/portal/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/"
+        }
+      ]
+    },
+    {
+      "file": "portal.roadmap.$roadmapSlug.tsx",
+      "sourcePath": "/portal/roadmap/$roadmapSlug",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/roadmap/no-such-record"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/roadmap/roadmap-e1ede60afbc957e715f68f6b04a1a99b"
+        }
+      ]
+    },
+    {
+      "file": "portal.roadmap.index.tsx",
+      "sourcePath": "/portal/roadmap/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/roadmap"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/roadmap"
+        }
+      ]
+    },
+    {
+      "file": "portal.roadmap.tsx",
+      "sourcePath": "/portal/roadmap",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/roadmap"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/roadmap"
+        }
+      ]
+    },
+    {
+      "file": "portal.tsx",
+      "sourcePath": "/portal",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/"
+        }
+      ]
+    },
+    {
+      "file": "portal.updates.$releaseSlug.tsx",
+      "sourcePath": "/portal/updates/$releaseSlug",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/updates/no-such-record"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/updates/release-scim-provisioning"
+        }
+      ]
+    },
+    {
+      "file": "portal.updates.index.tsx",
+      "sourcePath": "/portal/updates/",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/updates"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/updates"
+        }
+      ]
+    },
+    {
+      "file": "portal.updates.tsx",
+      "sourcePath": "/portal/updates",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/updates"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/updates"
+        }
+      ]
+    },
+    {
+      "file": "portal.verify.tsx",
+      "sourcePath": "/portal/verify",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/verify"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/portal/verify"
+        }
+      ]
+    },
+    {
+      "file": "signin.tsx",
+      "sourcePath": "/signin",
+      "states": [
+        {
+          "state": "empty",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/signin"
+        },
+        {
+          "state": "populated",
+          "widths": [
+            390
+          ],
+          "expectedPath": "/signin"
+        }
+      ]
+    }
+  ],
+  "docsRefusals": [
+    {
+      "path": "/docs/no-such-page",
+      "width": 390,
+      "status": 404,
+      "ssrProse": false,
+      "hydratedProse": false,
+      "control": "/docs/install",
+      "controlProseLength": 233
+    },
+    {
+      "path": "/docs/install/no-such-page",
+      "width": 390,
+      "status": 404,
+      "ssrProse": false,
+      "hydratedProse": false,
+      "control": "/docs/install",
+      "controlProseLength": 233
+    }
+  ],
+  "captures": [
+    {
+      "state": "empty",
+      "route": "operator-signin",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "url": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-operator-signin-390.jpg",
+      "sha256": "4a1f2193e8d040097fb5dc9ed46ee1499e72c8da313ddd8313b497200db6947a",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "operator-signin-requested",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "url": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-operator-signin-requested-390.jpg",
+      "sha256": "44fd2e23396d97d2312e729e520dffe1be87f99c7b79b20bb376fc7581b05692",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "base-confirm-signin",
+      "requestedUrl": "http://127.0.0.1:46217/auth/confirm?token=%5Bredacted%5D",
+      "url": "http://127.0.0.1:46217/auth/confirm?token=%5Bredacted%5D",
+      "status": 200,
+      "auth": "sign-in-link",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-base-confirm-signin-390.jpg",
+      "sha256": "1bb6e31c9718474e9237917ac9a606f87810f7c4f8397d013f8681935029bce3",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "operator-confirmed",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "url": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-operator-confirmed-390.jpg",
+      "sha256": "843c3dd32faa1e93949900b57a4717c1fe368fde4cbf3896e2d9eb4998bd5ab2",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.ask",
+      "requestedUrl": "http://127.0.0.1:46217/app/ask",
+      "url": "http://127.0.0.1:46217/app/ask",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-ask-390.jpg",
+      "sha256": "8744017ce1701fdf4e96e20975a1440066ddd18f1e698694e4fa81d68eb5a90a",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.browser-capture",
+      "requestedUrl": "http://127.0.0.1:46217/app/browser-capture",
+      "url": "http://127.0.0.1:46217/app/browser-capture",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-browser-capture-390.jpg",
+      "sha256": "72392ff3bbc4fe3aaeecc3af0889da0f9f5f1b7fe43d115bf2b30830fca5f37f",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.customers.$accountSlug",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers/no-such-record",
+      "url": "http://127.0.0.1:46217/app/customers/no-such-record",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-customers-accountSlug-390.jpg",
+      "sha256": "25036a37f6f2ccdf5c4f26dad3ba46906d5e1eec5642549f77309af53ae21231",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.customers.index",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers",
+      "url": "http://127.0.0.1:46217/app/customers",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-customers-index-390.jpg",
+      "sha256": "d71581d1df576c960914b3e0fd28b644ea9469cb04ab9adb08280f77698778c1",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.customers",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers",
+      "url": "http://127.0.0.1:46217/app/customers",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-customers-390.jpg",
+      "sha256": "d71581d1df576c960914b3e0fd28b644ea9469cb04ab9adb08280f77698778c1",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.data",
+      "requestedUrl": "http://127.0.0.1:46217/app/data",
+      "url": "http://127.0.0.1:46217/app/data",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-data-390.jpg",
+      "sha256": "7aa936842fd937b00844ccedfa00b6578c81e13394c8af145763dd2ce54f5cb2",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.decisions.$decisionSlug",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions/no-such-record",
+      "url": "http://127.0.0.1:46217/app/decisions/no-such-record",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-decisions-decisionSlug-390.jpg",
+      "sha256": "607401435dd60a76e87af5dd4c67d67a3d0ed324641e14d8a135c2e7ce02ed04",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.decisions.index",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "url": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-decisions-index-390.jpg",
+      "sha256": "2c4428c308c783301213e58d56180ccabe3a4f4af942654429f4a2cc64246829",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.decisions",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "url": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-decisions-390.jpg",
+      "sha256": "2c4428c308c783301213e58d56180ccabe3a4f4af942654429f4a2cc64246829",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.features",
+      "requestedUrl": "http://127.0.0.1:46217/app/features",
+      "url": "http://127.0.0.1:46217/app/features",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-features-390.jpg",
+      "sha256": "3f164708c4e5273b064ac1097134c7f1356db4aa657b5899de2cd55be40b9e95",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.feedback",
+      "requestedUrl": "http://127.0.0.1:46217/app/feedback",
+      "url": "http://127.0.0.1:46217/app/feedback",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-feedback-390.jpg",
+      "sha256": "678ec2872198e780d153502e2600ca48ea8102f46c51e6a8fc79b6bc4f75870b",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.index",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "url": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-index-390.jpg",
+      "sha256": "843c3dd32faa1e93949900b57a4717c1fe368fde4cbf3896e2d9eb4998bd5ab2",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.learning",
+      "requestedUrl": "http://127.0.0.1:46217/app/learning",
+      "url": "http://127.0.0.1:46217/app/learning",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-learning-390.jpg",
+      "sha256": "1f654d0f2ab31d1f6ac371b7dc74e75ab5e99ed75439ba3d788d6992e9017f38",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.moderation",
+      "requestedUrl": "http://127.0.0.1:46217/app/moderation",
+      "url": "http://127.0.0.1:46217/app/moderation",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-moderation-390.jpg",
+      "sha256": "053f36139fc190f8010cdf1e29a076bbb3efb6a05981186183e2c25de5b42a03",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.overview",
+      "requestedUrl": "http://127.0.0.1:46217/app/overview",
+      "url": "http://127.0.0.1:46217/app/overview",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-overview-390.jpg",
+      "sha256": "843c3dd32faa1e93949900b57a4717c1fe368fde4cbf3896e2d9eb4998bd5ab2",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.prioritisation",
+      "requestedUrl": "http://127.0.0.1:46217/app/prioritisation",
+      "url": "http://127.0.0.1:46217/app/prioritisation",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-prioritisation-390.jpg",
+      "sha256": "78fec22760e889ffd3d24f15077f09936c7005157e9a1083d0a3c262e719ce9a",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.releases.$releaseSlug",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases/no-such-record",
+      "url": "http://127.0.0.1:46217/app/releases/no-such-record",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-releases-releaseSlug-390.jpg",
+      "sha256": "45d744ca35e352db89a14440a9fc6bf94b822a0eb1faaf4652e9570fdc0bf8fe",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.releases.index",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases",
+      "url": "http://127.0.0.1:46217/app/releases",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-releases-index-390.jpg",
+      "sha256": "82604b74e10e82ab63bb93ac0a76882a30eeed87abf0c59de352e0c205c416a7",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.releases",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases",
+      "url": "http://127.0.0.1:46217/app/releases",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-releases-390.jpg",
+      "sha256": "82604b74e10e82ab63bb93ac0a76882a30eeed87abf0c59de352e0c205c416a7",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.roadmap",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap",
+      "url": "http://127.0.0.1:46217/app/roadmap",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-roadmap-390.jpg",
+      "sha256": "0b54405eb66f7c47fbc41e02f85027ca3c58a4ae1ad97ebb734b8eea5a8c6392",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.search",
+      "requestedUrl": "http://127.0.0.1:46217/app/search",
+      "url": "http://127.0.0.1:46217/app/search",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-search-390.jpg",
+      "sha256": "84329b26e350be45446cc6eae42c9bec8a0014c5a490768e2235f537953b1600",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app.settings",
+      "requestedUrl": "http://127.0.0.1:46217/app/settings",
+      "url": "http://127.0.0.1:46217/app/settings",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-settings-390.jpg",
+      "sha256": "8dcfab9513e7ba2e4f58e2863f4e25da9bb93078e7f4220acb3d8fd563b47616",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-app",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "url": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-app-390.jpg",
+      "sha256": "843c3dd32faa1e93949900b57a4717c1fe368fde4cbf3896e2d9eb4998bd5ab2",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-docs.$slug",
+      "requestedUrl": "http://127.0.0.1:46217/docs/no-such-record",
+      "url": "http://127.0.0.1:46217/docs/no-such-record",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-docs-slug-390.jpg",
+      "sha256": "5969ea21708e26dc7d67bd51bfa66e5e560b454b4cf4a44cb5ecff046670771e",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-docs.index",
+      "requestedUrl": "http://127.0.0.1:46217/docs",
+      "url": "http://127.0.0.1:46217/docs",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-docs-index-390.jpg",
+      "sha256": "9025a917038f8f98e2d6ca8790ff90f6829f49e7f40e4bfb6492db749a1a56c0",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-index",
+      "requestedUrl": "http://127.0.0.1:46217/",
+      "url": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-index-390.jpg",
+      "sha256": "f9afe2ce4c64ba8de44f1d4ca53d1f0ef531acf3528c84a9d19ad6e46f05d344",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.feedback.$requestSlug",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/no-such-record",
+      "url": "http://127.0.0.1:46217/portal/feedback/no-such-record",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-feedback-requestSlug-390.jpg",
+      "sha256": "14d1894f19dcd0190d53e47c03fa0bf38702f0d2e296a2049ac6e367e0b35f09",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.feedback.activity",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "url": "http://127.0.0.1:46217/portal/feedback/activity",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-feedback-activity-390.jpg",
+      "sha256": "0deb04a15b45f31807fcc3bdef074195c952f22989256580271d07d934a3b60f",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.feedback.index",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback",
+      "url": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-feedback-index-390.jpg",
+      "sha256": "bbc56988667316e94088bcc048588cca997ba24cccedc419f81b1b7c3aeebbaf",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.feedback.new",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "url": "http://127.0.0.1:46217/portal/feedback/new",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-feedback-new-390.jpg",
+      "sha256": "b052d707a6e3e3bb2496f63c741db67b63b296bf80fe4c32b9a238201067228b",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.feedback",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback",
+      "url": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-feedback-390.jpg",
+      "sha256": "bbc56988667316e94088bcc048588cca997ba24cccedc419f81b1b7c3aeebbaf",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.index",
+      "requestedUrl": "http://127.0.0.1:46217/",
+      "url": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-index-390.jpg",
+      "sha256": "f9afe2ce4c64ba8de44f1d4ca53d1f0ef531acf3528c84a9d19ad6e46f05d344",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.roadmap.$roadmapSlug",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap/no-such-record",
+      "url": "http://127.0.0.1:46217/portal/roadmap/no-such-record",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-roadmap-roadmapSlug-390.jpg",
+      "sha256": "7682aeee98957ec4c4de108f4f82e2a02806d8c2e7f727866d093649fabd688e",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.roadmap.index",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "url": "http://127.0.0.1:46217/portal/roadmap",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-roadmap-index-390.jpg",
+      "sha256": "43693e1b630b1a01d438a8840df7a745c2c8bf782cf0dd209ea434d235cbd23d",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.roadmap",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "url": "http://127.0.0.1:46217/portal/roadmap",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-roadmap-390.jpg",
+      "sha256": "43693e1b630b1a01d438a8840df7a745c2c8bf782cf0dd209ea434d235cbd23d",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal",
+      "requestedUrl": "http://127.0.0.1:46217/",
+      "url": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-390.jpg",
+      "sha256": "f9afe2ce4c64ba8de44f1d4ca53d1f0ef531acf3528c84a9d19ad6e46f05d344",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.updates.$releaseSlug",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates/no-such-record",
+      "url": "http://127.0.0.1:46217/portal/updates/no-such-record",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-updates-releaseSlug-390.jpg",
+      "sha256": "642af31e43e8e934c310ae8f49c3861ba020bea2ec0a9540de7a57d8b568e4a1",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.updates.index",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates",
+      "url": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-updates-index-390.jpg",
+      "sha256": "1ddb618d600f934a119af16901d048d5a8cccb55c2c6132208048eec3979aadc",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.updates",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates",
+      "url": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-updates-390.jpg",
+      "sha256": "1ddb618d600f934a119af16901d048d5a8cccb55c2c6132208048eec3979aadc",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-portal.verify",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify",
+      "url": "http://127.0.0.1:46217/portal/verify",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-portal-verify-390.jpg",
+      "sha256": "2ee67346762469a9acec74f1e1ee01c01a70ff098a380f6a7bb8203e11050c38",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-signin-existing-session",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "url": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-signin-existing-session-390.jpg",
+      "sha256": "6fba8a37e1c11eaaeaae3181f9f50e59e3e26b90e490385f912b446dfb7fbded",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-roadmap-active",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap?active=true",
+      "url": "http://127.0.0.1:46217/app/roadmap?active=true",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-roadmap-active-390.jpg",
+      "sha256": "77af814090d11f9535b903b16c42b6a7b43545356d1a117e670c5e97a6b7e3b9",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-updates-explicit",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates",
+      "url": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-updates-explicit-390.jpg",
+      "sha256": "1ddb618d600f934a119af16901d048d5a8cccb55c2c6132208048eec3979aadc",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-decision-create-form",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "url": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-decision-create-form-390.jpg",
+      "sha256": "2c4428c308c783301213e58d56180ccabe3a4f4af942654429f4a2cc64246829",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-decision-editor",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "url": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-decision-editor-390.jpg",
+      "sha256": "bef8b6400b355ec08de52da0a23d1e1a4c3bd6ae8f5739ff364f0d7ae80cabba",
+      "overflow": false
+    },
+    {
+      "state": "empty",
+      "route": "empty-record-evidence-form",
+      "requestedUrl": "http://127.0.0.1:46217/app/feedback",
+      "url": "http://127.0.0.1:46217/app/feedback",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "empty-empty-record-evidence-form-390.jpg",
+      "sha256": "678ec2872198e780d153502e2600ca48ea8102f46c51e6a8fc79b6bc4f75870b",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-activity-anonymous",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "url": "http://127.0.0.1:46217/portal/feedback/activity",
+      "status": 200,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-activity-anonymous-390.jpg",
+      "sha256": "0deb04a15b45f31807fcc3bdef074195c952f22989256580271d07d934a3b60f",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-protected-redirect",
+      "requestedUrl": "http://127.0.0.1:46217/app/moderation",
+      "url": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-protected-redirect-390.jpg",
+      "sha256": "4a1f2193e8d040097fb5dc9ed46ee1499e72c8da313ddd8313b497200db6947a",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-signin",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "url": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-signin-390.jpg",
+      "sha256": "4a1f2193e8d040097fb5dc9ed46ee1499e72c8da313ddd8313b497200db6947a",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-signin-requested",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "url": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-signin-requested-390.jpg",
+      "sha256": "44fd2e23396d97d2312e729e520dffe1be87f99c7b79b20bb376fc7581b05692",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "base-confirm-signin",
+      "requestedUrl": "http://127.0.0.1:46217/auth/confirm?token=%5Bredacted%5D",
+      "url": "http://127.0.0.1:46217/auth/confirm?token=%5Bredacted%5D",
+      "status": 200,
+      "auth": "sign-in-link",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-base-confirm-signin-390.jpg",
+      "sha256": "1bb6e31c9718474e9237917ac9a606f87810f7c4f8397d013f8681935029bce3",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-confirmed",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "url": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-confirmed-390.jpg",
+      "sha256": "be3ed4de0436bda00aaa770e0d3a6c21f6c2b7008687b5cf9cacc491dd2403a9",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-signin-existing-session",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "url": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-signin-existing-session-390.jpg",
+      "sha256": "6fba8a37e1c11eaaeaae3181f9f50e59e3e26b90e490385f912b446dfb7fbded",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-root",
+      "requestedUrl": "http://127.0.0.1:46217/",
+      "url": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-root-390.jpg",
+      "sha256": "508462befebbaf93da00f1faf09ab487b524ef88c3963d15680622e495995768",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-feedback-home",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback",
+      "url": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-feedback-home-390.jpg",
+      "sha256": "ea89b9e0a77c71bce34b8f7b9120a35ec9afe3e93c7518abf1481914c290244c",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-feedback-filtered",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback?sort=votes&status=shipped&board=enterprise-identity&q=SCIM",
+      "url": "http://127.0.0.1:46217/portal/feedback?sort=votes&status=shipped&board=enterprise-identity&q=SCIM",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-feedback-filtered-390.jpg",
+      "sha256": "fbf27f6e5355096b708b22143367008e73aab25a552b3341bf29015cadd77c47",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-roadmap",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "url": "http://127.0.0.1:46217/portal/roadmap",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-roadmap-390.jpg",
+      "sha256": "082568e0078cae307011c98e09abdf726645460d3a91c4a71ad02419e6db730c",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-roadmap-detail",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap/roadmap-e1ede60afbc957e715f68f6b04a1a99b",
+      "url": "http://127.0.0.1:46217/portal/roadmap/roadmap-e1ede60afbc957e715f68f6b04a1a99b",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-roadmap-detail-390.jpg",
+      "sha256": "22d3a7c08dbd824f11c5e2622231b14a416a1371128a0c38e12d0fab18a5f405",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-roadmap-missing",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap/no-such-roadmap",
+      "url": "http://127.0.0.1:46217/portal/roadmap/no-such-roadmap",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-roadmap-missing-390.jpg",
+      "sha256": "7682aeee98957ec4c4de108f4f82e2a02806d8c2e7f727866d093649fabd688e",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-roadmap-trailing-slash",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap/",
+      "url": "http://127.0.0.1:46217/portal/roadmap",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-roadmap-trailing-slash-390.jpg",
+      "sha256": "082568e0078cae307011c98e09abdf726645460d3a91c4a71ad02419e6db730c",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-updates",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates",
+      "url": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-updates-390.jpg",
+      "sha256": "5c4cbe1c52ea2ba0abe775df70997db4a5507861c198e1351f27abd9cc6f2858",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-updates-index",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates/",
+      "url": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-updates-index-390.jpg",
+      "sha256": "5c4cbe1c52ea2ba0abe775df70997db4a5507861c198e1351f27abd9cc6f2858",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-update-detail",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates/release-scim-provisioning",
+      "url": "http://127.0.0.1:46217/portal/updates/release-scim-provisioning",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-update-detail-390.jpg",
+      "sha256": "27a1df9b59b270db6038049c6b39c6174d2e342a48a4d5494fa3dac65d277cd9",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-update-missing",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates/no-such-release",
+      "url": "http://127.0.0.1:46217/portal/updates/no-such-release",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-update-missing-390.jpg",
+      "sha256": "642af31e43e8e934c310ae8f49c3861ba020bea2ec0a9540de7a57d8b568e4a1",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-feedback-detail",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/scim-provisioning",
+      "url": "http://127.0.0.1:46217/portal/feedback/scim-provisioning",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-feedback-detail-390.jpg",
+      "sha256": "8d02f52ab554ec2f1bb02023ad4da5274f38b01794694d73f4cc900fa83b3bdd",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-feedback-withdrawn",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/withdrawn-feedback",
+      "url": "http://127.0.0.1:46217/portal/feedback/withdrawn-feedback",
+      "status": 410,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-feedback-withdrawn-390.jpg",
+      "sha256": "bc7a4a93864ff4a6746d7e31bac9f4bb61001fbffb1eaac5820fe6582f20a8fc",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-feedback-missing",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/no-such-feedback",
+      "url": "http://127.0.0.1:46217/portal/feedback/no-such-feedback",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-feedback-missing-390.jpg",
+      "sha256": "14d1894f19dcd0190d53e47c03fa0bf38702f0d2e296a2049ac6e367e0b35f09",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-submit",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "url": "http://127.0.0.1:46217/portal/feedback/new",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-submit-390.jpg",
+      "sha256": "7e702e77250b79574741837d3ae6f9584b948825f64a81faf1b191df8c3f437a",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-unknown-route",
+      "requestedUrl": "http://127.0.0.1:46217/portal/no-such-page",
+      "url": "http://127.0.0.1:46217/portal/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-unknown-route-390.jpg",
+      "sha256": "5969ea21708e26dc7d67bd51bfa66e5e560b454b4cf4a44cb5ecff046670771e",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "worker-not-found",
+      "requestedUrl": "http://127.0.0.1:46217/no-such-page",
+      "url": "http://127.0.0.1:46217/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-worker-not-found-390.jpg",
+      "sha256": "5969ea21708e26dc7d67bd51bfa66e5e560b454b4cf4a44cb5ecff046670771e",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs",
+      "requestedUrl": "http://127.0.0.1:46217/docs",
+      "url": "http://127.0.0.1:46217/docs",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-docs-390.jpg",
+      "sha256": "9025a917038f8f98e2d6ca8790ff90f6829f49e7f40e4bfb6492db749a1a56c0",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-index",
+      "requestedUrl": "http://127.0.0.1:46217/docs/",
+      "url": "http://127.0.0.1:46217/docs",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-docs-index-390.jpg",
+      "sha256": "9025a917038f8f98e2d6ca8790ff90f6829f49e7f40e4bfb6492db749a1a56c0",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-page",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install",
+      "url": "http://127.0.0.1:46217/docs/install",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-docs-page-390.jpg",
+      "sha256": "a619a97f4ad42ccb070e8043951dc8d6f0da6e8532c63044715e9ce09a783113",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-missing",
+      "requestedUrl": "http://127.0.0.1:46217/docs/no-such-page",
+      "url": "http://127.0.0.1:46217/docs/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-docs-missing-390.jpg",
+      "sha256": "5969ea21708e26dc7d67bd51bfa66e5e560b454b4cf4a44cb5ecff046670771e",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-nested",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "url": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-docs-nested-390.jpg",
+      "sha256": "5969ea21708e26dc7d67bd51bfa66e5e560b454b4cf4a44cb5ecff046670771e",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-verify-invalid-link",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "url": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "status": 200,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-verify-invalid-link-390.jpg",
+      "sha256": "2ee67346762469a9acec74f1e1ee01c01a70ff098a380f6a7bb8203e11050c38",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-verify-invalid-result",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "url": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "status": 200,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-verify-invalid-result-390.jpg",
+      "sha256": "c33ec24af45bb293b398e96db44bd33279d4e902fa3e516237852fb5c27ef744",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "portal-alias",
+      "requestedUrl": "http://127.0.0.1:46217/portal",
+      "url": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-portal-alias-390.jpg",
+      "sha256": "508462befebbaf93da00f1faf09ab487b524ef88c3963d15680622e495995768",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "portal-trailing-slash",
+      "requestedUrl": "http://127.0.0.1:46217/portal/",
+      "url": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-portal-trailing-slash-390.jpg",
+      "sha256": "508462befebbaf93da00f1faf09ab487b524ef88c3963d15680622e495995768",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "feedback-alias",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback",
+      "url": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-feedback-alias-390.jpg",
+      "sha256": "ea89b9e0a77c71bce34b8f7b9120a35ec9afe3e93c7518abf1481914c290244c",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "feedback-trailing-slash",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/",
+      "url": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-feedback-trailing-slash-390.jpg",
+      "sha256": "ea89b9e0a77c71bce34b8f7b9120a35ec9afe3e93c7518abf1481914c290244c",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-verify-link",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "url": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "status": 200,
+      "auth": "unverified-requester",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-verify-link-390.jpg",
+      "sha256": "2ee67346762469a9acec74f1e1ee01c01a70ff098a380f6a7bb8203e11050c38",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-verify-complete",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify",
+      "url": "http://127.0.0.1:46217/portal/verify",
+      "status": 200,
+      "auth": "requester-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-verify-complete-390.jpg",
+      "sha256": "a4ce6c490e1540bc131440c9a018e11b4448761a733986a8b76b85c992c30a01",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-submission-held",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "url": "http://127.0.0.1:46217/portal/feedback/new",
+      "status": 200,
+      "auth": "requester-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-submission-held-390.jpg",
+      "sha256": "ec22af68b86955daae1d259d445da9b465ee623104bfcd4a37784acbbce3dd39",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-activity",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "url": "http://127.0.0.1:46217/portal/feedback/activity",
+      "status": 200,
+      "auth": "requester-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-activity-390.jpg",
+      "sha256": "b58a7673619b4798cc0a2459906f760711b580aceade4685f6c5c6496004d13f",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-unsubscribe-confirmation",
+      "requestedUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "url": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "status": 200,
+      "auth": "signed-unsubscribe-link",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-unsubscribe-confirmation-390.jpg",
+      "sha256": "da38f23eebf2fe41492533fa896d24388a4665217e56525f797f509a7bfb8e72",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-unsubscribe-applied",
+      "requestedUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "url": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "status": 200,
+      "auth": "signed-unsubscribe-link",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-unsubscribe-applied-390.jpg",
+      "sha256": "6886e56028b7137154fdfa71c4b35aa034d74cb5de01c90f02e1216b1003d599",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "requester-unsubscribe-invalid",
+      "requestedUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "url": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "status": 400,
+      "auth": "anonymous",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-requester-unsubscribe-invalid-390.jpg",
+      "sha256": "a352de64b0cc628cb30d81d9dd2f6938630ff72f681277f269708120061905f0",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-app",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "url": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-app-390.jpg",
+      "sha256": "023c41c91960ce6b84a680c454eb3b749f1067535da50f13660ed0437a027eec",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-app-slash",
+      "requestedUrl": "http://127.0.0.1:46217/app/",
+      "url": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-app-slash-390.jpg",
+      "sha256": "023c41c91960ce6b84a680c454eb3b749f1067535da50f13660ed0437a027eec",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-overview",
+      "requestedUrl": "http://127.0.0.1:46217/app/overview",
+      "url": "http://127.0.0.1:46217/app/overview",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-overview-390.jpg",
+      "sha256": "023c41c91960ce6b84a680c454eb3b749f1067535da50f13660ed0437a027eec",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-ask",
+      "requestedUrl": "http://127.0.0.1:46217/app/ask",
+      "url": "http://127.0.0.1:46217/app/ask",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-ask-390.jpg",
+      "sha256": "8744017ce1701fdf4e96e20975a1440066ddd18f1e698694e4fa81d68eb5a90a",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-unknown-route",
+      "requestedUrl": "http://127.0.0.1:46217/app/no-such-page",
+      "url": "http://127.0.0.1:46217/app/no-such-page",
+      "status": 404,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-unknown-route-390.jpg",
+      "sha256": "e71171fd99343ea9be1b8c8a50fd4cbccb6f80fdaf44530ede91ec06bd518de9",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-browser-capture",
+      "requestedUrl": "http://127.0.0.1:46217/app/browser-capture",
+      "url": "http://127.0.0.1:46217/app/browser-capture",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-browser-capture-390.jpg",
+      "sha256": "72392ff3bbc4fe3aaeecc3af0889da0f9f5f1b7fe43d115bf2b30830fca5f37f",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-feedback",
+      "requestedUrl": "http://127.0.0.1:46217/app/feedback",
+      "url": "http://127.0.0.1:46217/app/feedback",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-feedback-390.jpg",
+      "sha256": "8642ac1c1a5d5fe07d228e228dadd8de916831d788debd4d527b596444ccb4ec",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-moderation",
+      "requestedUrl": "http://127.0.0.1:46217/app/moderation",
+      "url": "http://127.0.0.1:46217/app/moderation",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-moderation-390.jpg",
+      "sha256": "82177f5217445088010253084d466144f1061dcf702456adfc23a774e23f0fd5",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-decisions",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "url": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-decisions-390.jpg",
+      "sha256": "94ad68ba8d5c84f22dcc92f962d834e94cefa42ab33f30fc1b750326057acbcb",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-decisions-index",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions/",
+      "url": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-decisions-index-390.jpg",
+      "sha256": "94ad68ba8d5c84f22dcc92f962d834e94cefa42ab33f30fc1b750326057acbcb",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-decision-detail",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions/decision-scim-q4",
+      "url": "http://127.0.0.1:46217/app/decisions/decision-scim-q4",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-decision-detail-390.jpg",
+      "sha256": "bf14918ccb4f2310869e6ea16b446491f09c757a5d7275eeb97ccfaeecbd265e",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-decision-missing",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions/no-such-decision",
+      "url": "http://127.0.0.1:46217/app/decisions/no-such-decision",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-decision-missing-390.jpg",
+      "sha256": "607401435dd60a76e87af5dd4c67d67a3d0ed324641e14d8a135c2e7ce02ed04",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-roadmap",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap",
+      "url": "http://127.0.0.1:46217/app/roadmap",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-roadmap-390.jpg",
+      "sha256": "62866e1698541858c9f489bd5936d74d273511102baa952b495640d275887355",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-roadmap-active",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap?active=true",
+      "url": "http://127.0.0.1:46217/app/roadmap?active=true",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-roadmap-active-390.jpg",
+      "sha256": "77af814090d11f9535b903b16c42b6a7b43545356d1a117e670c5e97a6b7e3b9",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-releases",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases",
+      "url": "http://127.0.0.1:46217/app/releases",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-releases-390.jpg",
+      "sha256": "906a3879c3c7ff2895bb02bcafefae737f9cde99617e58f1f20f6d040d3ad8ce",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-releases-index",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases/",
+      "url": "http://127.0.0.1:46217/app/releases",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-releases-index-390.jpg",
+      "sha256": "906a3879c3c7ff2895bb02bcafefae737f9cde99617e58f1f20f6d040d3ad8ce",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-release-detail",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases/release-scim-provisioning",
+      "url": "http://127.0.0.1:46217/app/releases/release-scim-provisioning",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-release-detail-390.jpg",
+      "sha256": "8f621a4f0a0fbb6eb90276c876e1eab24b5b0bbc3dd726797d27f38c322d382a",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-release-missing",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases/no-such-release",
+      "url": "http://127.0.0.1:46217/app/releases/no-such-release",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-release-missing-390.jpg",
+      "sha256": "45d744ca35e352db89a14440a9fc6bf94b822a0eb1faaf4652e9570fdc0bf8fe",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-customers",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers",
+      "url": "http://127.0.0.1:46217/app/customers",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-customers-390.jpg",
+      "sha256": "0dbb4f6750cd34eb4f32c8bbc0f3d46c084680cf1ffc10bd6bacc0d3525642d5",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-customers-index",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers/",
+      "url": "http://127.0.0.1:46217/app/customers",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-customers-index-390.jpg",
+      "sha256": "0dbb4f6750cd34eb4f32c8bbc0f3d46c084680cf1ffc10bd6bacc0d3525642d5",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-customer-detail",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers/northstar-health",
+      "url": "http://127.0.0.1:46217/app/customers/northstar-health",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-customer-detail-390.jpg",
+      "sha256": "b774f151a51fbd8e9478f59b369894824e68fd868f4ecce1038dc07fd13dfa62",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-customer-missing",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers/no-such-account",
+      "url": "http://127.0.0.1:46217/app/customers/no-such-account",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-customer-missing-390.jpg",
+      "sha256": "25036a37f6f2ccdf5c4f26dad3ba46906d5e1eec5642549f77309af53ae21231",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-data",
+      "requestedUrl": "http://127.0.0.1:46217/app/data",
+      "url": "http://127.0.0.1:46217/app/data",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-data-390.jpg",
+      "sha256": "7aa936842fd937b00844ccedfa00b6578c81e13394c8af145763dd2ce54f5cb2",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-features",
+      "requestedUrl": "http://127.0.0.1:46217/app/features",
+      "url": "http://127.0.0.1:46217/app/features",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-features-390.jpg",
+      "sha256": "3f164708c4e5273b064ac1097134c7f1356db4aa657b5899de2cd55be40b9e95",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-learning",
+      "requestedUrl": "http://127.0.0.1:46217/app/learning",
+      "url": "http://127.0.0.1:46217/app/learning",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-learning-390.jpg",
+      "sha256": "1f654d0f2ab31d1f6ac371b7dc74e75ab5e99ed75439ba3d788d6992e9017f38",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-prioritisation",
+      "requestedUrl": "http://127.0.0.1:46217/app/prioritisation",
+      "url": "http://127.0.0.1:46217/app/prioritisation",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-prioritisation-390.jpg",
+      "sha256": "78fec22760e889ffd3d24f15077f09936c7005157e9a1083d0a3c262e719ce9a",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-search",
+      "requestedUrl": "http://127.0.0.1:46217/app/search",
+      "url": "http://127.0.0.1:46217/app/search",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-search-390.jpg",
+      "sha256": "84329b26e350be45446cc6eae42c9bec8a0014c5a490768e2235f537953b1600",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-settings",
+      "requestedUrl": "http://127.0.0.1:46217/app/settings",
+      "url": "http://127.0.0.1:46217/app/settings",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-settings-390.jpg",
+      "sha256": "bca3659374eb1a2aee2581847456c8e7ab3a9034d18c6168fde7a8e961401a2d",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-settings-delivery-review",
+      "requestedUrl": "http://127.0.0.1:46217/app/settings",
+      "url": "http://127.0.0.1:46217/app/settings",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-settings-delivery-review-390.jpg",
+      "sha256": "bca3659374eb1a2aee2581847456c8e7ab3a9034d18c6168fde7a8e961401a2d",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "operator-moderation-populated",
+      "requestedUrl": "http://127.0.0.1:46217/app/moderation",
+      "url": "http://127.0.0.1:46217/app/moderation",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-operator-moderation-populated-390.jpg",
+      "sha256": "82177f5217445088010253084d466144f1061dcf702456adfc23a774e23f0fd5",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "populated-record-evidence-form",
+      "requestedUrl": "http://127.0.0.1:46217/app/feedback",
+      "url": "http://127.0.0.1:46217/app/feedback",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-populated-record-evidence-form-390.jpg",
+      "sha256": "8642ac1c1a5d5fe07d228e228dadd8de916831d788debd4d527b596444ccb4ec",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "populated-create-decision-form",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "url": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-populated-create-decision-form-390.jpg",
+      "sha256": "94ad68ba8d5c84f22dcc92f962d834e94cefa42ab33f30fc1b750326057acbcb",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "populated-decision-editor",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "url": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-populated-decision-editor-390.jpg",
+      "sha256": "4408c9ffecfe912b10b416e1a46d8969c00d35a0116cf11fc8106985a083e7db",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "populated-roadmap-editor",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap",
+      "url": "http://127.0.0.1:46217/app/roadmap",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-populated-roadmap-editor-390.jpg",
+      "sha256": "62866e1698541858c9f489bd5936d74d273511102baa952b495640d275887355",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "populated-roadmap-editor-expanded",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap",
+      "url": "http://127.0.0.1:46217/app/roadmap",
+      "status": 200,
+      "auth": "operator-session",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-populated-roadmap-editor-expanded-390.jpg",
+      "sha256": "5796a08128d74b1e6654da8153e454c994c54d8f87c8046199555c99c0abb6f0",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-page",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install",
+      "url": "http://127.0.0.1:46217/docs/install",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "populated-public-docs-page-1440.jpg",
+      "sha256": "5af7c7a9ea129aaefb8a3371df80627bac13f2706952243acd5bfd2f2f981428",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-missing",
+      "requestedUrl": "http://127.0.0.1:46217/docs/no-such-page",
+      "url": "http://127.0.0.1:46217/docs/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "populated-public-docs-missing-1440.jpg",
+      "sha256": "9132f69997dfdfb67dcd3beada9bf8e87e2195b5c4e1dddaf2af4e0cfb1c3899",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-nested",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "url": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "populated-public-docs-nested-1440.jpg",
+      "sha256": "9132f69997dfdfb67dcd3beada9bf8e87e2195b5c4e1dddaf2af4e0cfb1c3899",
+      "overflow": false
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "externalRequests": [],
+  "expectedDiagnostics": [
+    {
+      "path": "/docs/no-such-record",
+      "status": 404
+    },
+    {
+      "path": "/portal/feedback/no-such-record",
+      "status": 404
+    },
+    {
+      "path": "/portal/roadmap/no-such-record",
+      "status": 404
+    },
+    {
+      "path": "/portal/updates/no-such-record",
+      "status": 404
+    },
+    {
+      "path": "/portal/roadmap/no-such-roadmap",
+      "status": 404
+    },
+    {
+      "path": "/portal/updates/no-such-release",
+      "status": 404
+    },
+    {
+      "path": "/portal/feedback/withdrawn-feedback",
+      "status": 410
+    },
+    {
+      "path": "/portal/feedback/no-such-feedback",
+      "status": 404
+    },
+    {
+      "path": "/portal/no-such-page",
+      "status": 404
+    },
+    {
+      "path": "/no-such-page",
+      "status": 404
+    },
+    {
+      "path": "/docs/no-such-page",
+      "status": 404
+    },
+    {
+      "path": "/docs/install/no-such-page",
+      "status": 404
+    },
+    {
+      "path": "/api/public/identity/email/verify",
+      "status": 401
+    },
+    {
+      "path": "/api/public/notifications/unsubscribe",
+      "status": 400
+    },
+    {
+      "path": "/app/no-such-page",
+      "status": 404
+    },
+    {
+      "path": "/docs/no-such-page",
+      "status": 404
+    },
+    {
+      "path": "/docs/install/no-such-page",
+      "status": 404
+    }
+  ],
+  "layoutFailures": [],
+  "developmentCopyFailures": [],
+  "accessibilityFailures": [],
+  "checks": [
+    {
+      "route": "operator-bootstrap",
+      "requestedUrl": "http://127.0.0.1:46217/auth/bootstrap",
+      "finalUrl": "http://127.0.0.1:46217/app",
+      "status": 303,
+      "auth": "setup-token",
+      "contains": "active Base operator created"
+    },
+    {
+      "route": "operator-signin",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "finalUrl": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "contains": "Sign in to Penny"
+    },
+    {
+      "route": "operator-signin-requested",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "finalUrl": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "contains": "If your address is allowed, check your email for a sign-in link."
+    },
+    {
+      "route": "base-confirm-signin",
+      "requestedUrl": "http://127.0.0.1:46217/auth/confirm?token=%5Bredacted%5D",
+      "finalUrl": "http://127.0.0.1:46217/auth/confirm?token=%5Bredacted%5D",
+      "status": 200,
+      "auth": "sign-in-link",
+      "contains": "Confirm sign-in"
+    },
+    {
+      "route": "operator-confirmed",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "finalUrl": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Make the next roadmap call defensible."
+    },
+    {
+      "route": "empty-app.ask",
+      "requestedUrl": "http://127.0.0.1:46217/app/ask",
+      "finalUrl": "http://127.0.0.1:46217/app/ask",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.browser-capture",
+      "requestedUrl": "http://127.0.0.1:46217/app/browser-capture",
+      "finalUrl": "http://127.0.0.1:46217/app/browser-capture",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.customers.$accountSlug",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers/no-such-record",
+      "finalUrl": "http://127.0.0.1:46217/app/customers/no-such-record",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.customers.index",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers",
+      "finalUrl": "http://127.0.0.1:46217/app/customers",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.customers",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers",
+      "finalUrl": "http://127.0.0.1:46217/app/customers",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.data",
+      "requestedUrl": "http://127.0.0.1:46217/app/data",
+      "finalUrl": "http://127.0.0.1:46217/app/data",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.decisions.$decisionSlug",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions/no-such-record",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions/no-such-record",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.decisions.index",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.decisions",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.features",
+      "requestedUrl": "http://127.0.0.1:46217/app/features",
+      "finalUrl": "http://127.0.0.1:46217/app/features",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.feedback",
+      "requestedUrl": "http://127.0.0.1:46217/app/feedback",
+      "finalUrl": "http://127.0.0.1:46217/app/feedback",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.index",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "finalUrl": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.learning",
+      "requestedUrl": "http://127.0.0.1:46217/app/learning",
+      "finalUrl": "http://127.0.0.1:46217/app/learning",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.moderation",
+      "requestedUrl": "http://127.0.0.1:46217/app/moderation",
+      "finalUrl": "http://127.0.0.1:46217/app/moderation",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.overview",
+      "requestedUrl": "http://127.0.0.1:46217/app/overview",
+      "finalUrl": "http://127.0.0.1:46217/app/overview",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.prioritisation",
+      "requestedUrl": "http://127.0.0.1:46217/app/prioritisation",
+      "finalUrl": "http://127.0.0.1:46217/app/prioritisation",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.releases.$releaseSlug",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases/no-such-record",
+      "finalUrl": "http://127.0.0.1:46217/app/releases/no-such-record",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.releases.index",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases",
+      "finalUrl": "http://127.0.0.1:46217/app/releases",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.releases",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases",
+      "finalUrl": "http://127.0.0.1:46217/app/releases",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.roadmap",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap",
+      "finalUrl": "http://127.0.0.1:46217/app/roadmap",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.search",
+      "requestedUrl": "http://127.0.0.1:46217/app/search",
+      "finalUrl": "http://127.0.0.1:46217/app/search",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app.settings",
+      "requestedUrl": "http://127.0.0.1:46217/app/settings",
+      "finalUrl": "http://127.0.0.1:46217/app/settings",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-app",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "finalUrl": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "empty-docs.$slug",
+      "requestedUrl": "http://127.0.0.1:46217/docs/no-such-record",
+      "finalUrl": "http://127.0.0.1:46217/docs/no-such-record",
+      "status": 404,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-docs.index",
+      "requestedUrl": "http://127.0.0.1:46217/docs",
+      "finalUrl": "http://127.0.0.1:46217/docs",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-index",
+      "requestedUrl": "http://127.0.0.1:46217/",
+      "finalUrl": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.feedback.$requestSlug",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/no-such-record",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/no-such-record",
+      "status": 404,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.feedback.activity",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.feedback.index",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.feedback.new",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.feedback",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.index",
+      "requestedUrl": "http://127.0.0.1:46217/",
+      "finalUrl": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.roadmap.$roadmapSlug",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap/no-such-record",
+      "finalUrl": "http://127.0.0.1:46217/portal/roadmap/no-such-record",
+      "status": 404,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.roadmap.index",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "finalUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.roadmap",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "finalUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal",
+      "requestedUrl": "http://127.0.0.1:46217/",
+      "finalUrl": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.updates.$releaseSlug",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates/no-such-record",
+      "finalUrl": "http://127.0.0.1:46217/portal/updates/no-such-record",
+      "status": 404,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.updates.index",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates",
+      "finalUrl": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.updates",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates",
+      "finalUrl": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-portal.verify",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify",
+      "finalUrl": "http://127.0.0.1:46217/portal/verify",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "empty-signin-existing-session",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "finalUrl": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "You are already signed in."
+    },
+    {
+      "route": "empty-roadmap-active",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap?active=true",
+      "finalUrl": "http://127.0.0.1:46217/app/roadmap?active=true",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "No active delivery items."
+    },
+    {
+      "route": "empty-updates-explicit",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates",
+      "finalUrl": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "contains": "There are no updates yet."
+    },
+    {
+      "route": "empty-decision-create-form",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "No decisions have been recorded."
+    },
+    {
+      "route": "empty-record-evidence-form",
+      "requestedUrl": "http://127.0.0.1:46217/app/feedback",
+      "finalUrl": "http://127.0.0.1:46217/app/feedback",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Record evidence"
+    },
+    {
+      "route": "requester-activity-anonymous",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "status": 200,
+      "auth": "anonymous",
+      "contains": "Verify your email to see your feedback."
+    },
+    {
+      "route": "operator-protected-redirect",
+      "requestedUrl": "http://127.0.0.1:46217/app/moderation",
+      "finalUrl": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "contains": "Sign in to Penny"
+    },
+    {
+      "route": "operator-signin",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "finalUrl": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "contains": "Sign in to Penny"
+    },
+    {
+      "route": "operator-signin-requested",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "finalUrl": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "anonymous",
+      "contains": "If your address is allowed, check your email for a sign-in link."
+    },
+    {
+      "route": "base-confirm-signin",
+      "requestedUrl": "http://127.0.0.1:46217/auth/confirm?token=%5Bredacted%5D",
+      "finalUrl": "http://127.0.0.1:46217/auth/confirm?token=%5Bredacted%5D",
+      "status": 200,
+      "auth": "sign-in-link",
+      "contains": "Confirm sign-in"
+    },
+    {
+      "route": "operator-confirmed",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "finalUrl": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Make the next roadmap call defensible."
+    },
+    {
+      "route": "operator-signin-existing-session",
+      "requestedUrl": "http://127.0.0.1:46217/signin",
+      "finalUrl": "http://127.0.0.1:46217/signin",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "You are already signed in."
+    },
+    {
+      "route": "public-root",
+      "requestedUrl": "http://127.0.0.1:46217/",
+      "finalUrl": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "contains": null
+    },
+    {
+      "route": "public-feedback-home",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "contains": "What should we improve?"
+    },
+    {
+      "route": "public-feedback-filtered",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback?sort=votes&status=shipped&board=enterprise-identity&q=SCIM",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback?sort=votes&status=shipped&board=enterprise-identity&q=SCIM",
+      "status": 200,
+      "auth": "public",
+      "contains": "Search feedback"
+    },
+    {
+      "route": "public-roadmap",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "finalUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "status": 200,
+      "auth": "public",
+      "contains": "What we're working toward"
+    },
+    {
+      "route": "public-roadmap-detail",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap/roadmap-e1ede60afbc957e715f68f6b04a1a99b",
+      "finalUrl": "http://127.0.0.1:46217/portal/roadmap/roadmap-e1ede60afbc957e715f68f6b04a1a99b",
+      "status": 200,
+      "auth": "public",
+      "contains": "customer-reference-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "route": "public-roadmap-missing",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap/no-such-roadmap",
+      "finalUrl": "http://127.0.0.1:46217/portal/roadmap/no-such-roadmap",
+      "status": 404,
+      "auth": "public",
+      "contains": "This public record is not available."
+    },
+    {
+      "route": "public-roadmap-trailing-slash",
+      "requestedUrl": "http://127.0.0.1:46217/portal/roadmap/",
+      "finalUrl": "http://127.0.0.1:46217/portal/roadmap",
+      "status": 200,
+      "auth": "public",
+      "contains": "What we're working toward"
+    },
+    {
+      "route": "public-updates",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates",
+      "finalUrl": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "contains": "Product updates"
+    },
+    {
+      "route": "public-updates-index",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates/",
+      "finalUrl": "http://127.0.0.1:46217/portal/updates",
+      "status": 200,
+      "auth": "public",
+      "contains": "Product updates"
+    },
+    {
+      "route": "public-update-detail",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates/release-scim-provisioning",
+      "finalUrl": "http://127.0.0.1:46217/portal/updates/release-scim-provisioning",
+      "status": 200,
+      "auth": "public",
+      "contains": "customer-reference-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "route": "public-update-missing",
+      "requestedUrl": "http://127.0.0.1:46217/portal/updates/no-such-release",
+      "finalUrl": "http://127.0.0.1:46217/portal/updates/no-such-release",
+      "status": 404,
+      "auth": "public",
+      "contains": "This public record is not available."
+    },
+    {
+      "route": "public-feedback-detail",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/scim-provisioning",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/scim-provisioning",
+      "status": 200,
+      "auth": "public",
+      "contains": "customer-reference-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "route": "public-feedback-withdrawn",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/withdrawn-feedback",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/withdrawn-feedback",
+      "status": 410,
+      "auth": "public",
+      "contains": "This feedback has been withdrawn."
+    },
+    {
+      "route": "public-feedback-missing",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/no-such-feedback",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/no-such-feedback",
+      "status": 404,
+      "auth": "public",
+      "contains": "This public record is not available."
+    },
+    {
+      "route": "public-submit",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "status": 200,
+      "auth": "public",
+      "contains": "Submit feedback"
+    },
+    {
+      "route": "public-unknown-route",
+      "requestedUrl": "http://127.0.0.1:46217/portal/no-such-page",
+      "finalUrl": "http://127.0.0.1:46217/portal/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "contains": "That page does not exist."
+    },
+    {
+      "route": "worker-not-found",
+      "requestedUrl": "http://127.0.0.1:46217/no-such-page",
+      "finalUrl": "http://127.0.0.1:46217/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "contains": "That page does not exist."
+    },
+    {
+      "route": "public-docs",
+      "requestedUrl": "http://127.0.0.1:46217/docs",
+      "finalUrl": "http://127.0.0.1:46217/docs",
+      "status": 200,
+      "auth": "public",
+      "contains": "Overview"
+    },
+    {
+      "route": "public-docs-index",
+      "requestedUrl": "http://127.0.0.1:46217/docs/",
+      "finalUrl": "http://127.0.0.1:46217/docs",
+      "status": 200,
+      "auth": "public",
+      "contains": "Overview"
+    },
+    {
+      "route": "public-docs-page",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install",
+      "finalUrl": "http://127.0.0.1:46217/docs/install",
+      "status": 200,
+      "auth": "public",
+      "contains": "Install and deploy"
+    },
+    {
+      "route": "public-docs-missing",
+      "requestedUrl": "http://127.0.0.1:46217/docs/no-such-page",
+      "finalUrl": "http://127.0.0.1:46217/docs/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "contains": "That page does not exist."
+    },
+    {
+      "route": "public-docs-nested",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "finalUrl": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "contains": "That page does not exist."
+    },
+    {
+      "route": "requester-verify-invalid-link",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "finalUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "status": 200,
+      "auth": "anonymous",
+      "contains": "Verify your email"
+    },
+    {
+      "route": "requester-verify-invalid-result",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "finalUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "status": 200,
+      "auth": "anonymous",
+      "contains": "This link has expired or has already been used. Request a new link."
+    },
+    {
+      "route": "requester-verify-invalid-api",
+      "requestedUrl": "http://127.0.0.1:46217/api/public/identity/email/verify",
+      "finalUrl": "http://127.0.0.1:46217/api/public/identity/email/verify",
+      "status": 401,
+      "auth": "anonymous",
+      "contains": "invalid_magic_link"
+    },
+    {
+      "route": "portal-alias",
+      "requestedUrl": "http://127.0.0.1:46217/portal",
+      "finalUrl": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "contains": "What should we improve?"
+    },
+    {
+      "route": "portal-trailing-slash",
+      "requestedUrl": "http://127.0.0.1:46217/portal/",
+      "finalUrl": "http://127.0.0.1:46217/",
+      "status": 200,
+      "auth": "public",
+      "contains": "What should we improve?"
+    },
+    {
+      "route": "feedback-alias",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "contains": "What should we improve?"
+    },
+    {
+      "route": "feedback-trailing-slash",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback",
+      "status": 200,
+      "auth": "public",
+      "contains": "What should we improve?"
+    },
+    {
+      "route": "requester-verification-issued",
+      "requestedUrl": "http://127.0.0.1:46217/api/public/identity/email",
+      "finalUrl": "http://127.0.0.1:46217/api/public/identity/email",
+      "status": 202,
+      "auth": "anonymous",
+      "contains": "accepted"
+    },
+    {
+      "route": "requester-verify-link",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "finalUrl": "http://127.0.0.1:46217/portal/verify#token=[redacted]",
+      "status": 200,
+      "auth": "unverified-requester",
+      "contains": "Verify your email"
+    },
+    {
+      "route": "requester-verify-complete",
+      "requestedUrl": "http://127.0.0.1:46217/portal/verify",
+      "finalUrl": "http://127.0.0.1:46217/portal/verify",
+      "status": 200,
+      "auth": "requester-session",
+      "contains": "Email verified."
+    },
+    {
+      "route": "requester-submission-held",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/new",
+      "status": 200,
+      "auth": "requester-session",
+      "contains": "Feedback is awaiting review"
+    },
+    {
+      "route": "requester-activity",
+      "requestedUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "finalUrl": "http://127.0.0.1:46217/portal/feedback/activity",
+      "status": 200,
+      "auth": "requester-session",
+      "contains": "Route 390 customer-reference-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "route": "requester-unsubscribe-confirmation",
+      "requestedUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "finalUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "status": 200,
+      "auth": "signed-unsubscribe-link",
+      "contains": "Stop updates for this request"
+    },
+    {
+      "route": "requester-unsubscribe-applied",
+      "requestedUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "finalUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "status": 200,
+      "auth": "signed-unsubscribe-link",
+      "contains": "Email updates for this request are muted."
+    },
+    {
+      "route": "requester-unsubscribe-invalid",
+      "requestedUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "finalUrl": "http://127.0.0.1:46217/api/public/notifications/unsubscribe?token=%5Bredacted%5D",
+      "status": 400,
+      "auth": "anonymous",
+      "contains": "This email preference link is invalid or expired."
+    },
+    {
+      "route": "operator-notifications-unauthenticated",
+      "requestedUrl": "http://127.0.0.1:46217/api/operator/notifications",
+      "finalUrl": "http://127.0.0.1:46217/api/operator/notifications",
+      "status": 401,
+      "auth": "anonymous",
+      "contains": null
+    },
+    {
+      "route": "operator-notifications-authenticated",
+      "requestedUrl": "http://127.0.0.1:46217/api/operator/notifications",
+      "finalUrl": "http://127.0.0.1:46217/api/operator/notifications",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "queued, accepted, failed, and unknown delivery records"
+    },
+    {
+      "route": "operator-app",
+      "requestedUrl": "http://127.0.0.1:46217/app",
+      "finalUrl": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Make the next roadmap call defensible."
+    },
+    {
+      "route": "operator-app-slash",
+      "requestedUrl": "http://127.0.0.1:46217/app/",
+      "finalUrl": "http://127.0.0.1:46217/app",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Make the next roadmap call defensible."
+    },
+    {
+      "route": "operator-overview",
+      "requestedUrl": "http://127.0.0.1:46217/app/overview",
+      "finalUrl": "http://127.0.0.1:46217/app/overview",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Make the next roadmap call defensible."
+    },
+    {
+      "route": "operator-ask",
+      "requestedUrl": "http://127.0.0.1:46217/app/ask",
+      "finalUrl": "http://127.0.0.1:46217/app/ask",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Ask Penny"
+    },
+    {
+      "route": "operator-unknown-route",
+      "requestedUrl": "http://127.0.0.1:46217/app/no-such-page",
+      "finalUrl": "http://127.0.0.1:46217/app/no-such-page",
+      "status": 404,
+      "auth": "operator-session",
+      "contains": "Check the address or return to your workspace overview."
+    },
+    {
+      "route": "operator-browser-capture",
+      "requestedUrl": "http://127.0.0.1:46217/app/browser-capture",
+      "finalUrl": "http://127.0.0.1:46217/app/browser-capture",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Ready when you are"
+    },
+    {
+      "route": "operator-feedback",
+      "requestedUrl": "http://127.0.0.1:46217/app/feedback",
+      "finalUrl": "http://127.0.0.1:46217/app/feedback",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Review the evidence before it becomes a roadmap promise."
+    },
+    {
+      "route": "operator-moderation",
+      "requestedUrl": "http://127.0.0.1:46217/app/moderation",
+      "finalUrl": "http://127.0.0.1:46217/app/moderation",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Review feedback before it becomes public."
+    },
+    {
+      "route": "operator-decisions",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Make the trade-off visible before you commit."
+    },
+    {
+      "route": "operator-decisions-index",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions/",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Make the trade-off visible before you commit."
+    },
+    {
+      "route": "operator-decision-detail",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions/decision-scim-q4",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions/decision-scim-q4",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "customer-reference-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "route": "operator-decision-missing",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions/no-such-decision",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions/no-such-decision",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Decision not found"
+    },
+    {
+      "route": "operator-roadmap",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap",
+      "finalUrl": "http://127.0.0.1:46217/app/roadmap",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "SCIM"
+    },
+    {
+      "route": "operator-roadmap-active",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap?active=true",
+      "finalUrl": "http://127.0.0.1:46217/app/roadmap?active=true",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Showing Planned and In progress delivery items."
+    },
+    {
+      "route": "operator-releases",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases",
+      "finalUrl": "http://127.0.0.1:46217/app/releases",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Close the loop with the customers who made the decision possible."
+    },
+    {
+      "route": "operator-releases-index",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases/",
+      "finalUrl": "http://127.0.0.1:46217/app/releases",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Close the loop with the customers who made the decision possible."
+    },
+    {
+      "route": "operator-release-detail",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases/release-scim-provisioning",
+      "finalUrl": "http://127.0.0.1:46217/app/releases/release-scim-provisioning",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Publication readiness"
+    },
+    {
+      "route": "operator-release-missing",
+      "requestedUrl": "http://127.0.0.1:46217/app/releases/no-such-release",
+      "finalUrl": "http://127.0.0.1:46217/app/releases/no-such-release",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Release not found"
+    },
+    {
+      "route": "operator-customers",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers",
+      "finalUrl": "http://127.0.0.1:46217/app/customers",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "See who is represented in a product decision."
+    },
+    {
+      "route": "operator-customers-index",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers/",
+      "finalUrl": "http://127.0.0.1:46217/app/customers",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "See who is represented in a product decision."
+    },
+    {
+      "route": "operator-customer-detail",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers/northstar-health",
+      "finalUrl": "http://127.0.0.1:46217/app/customers/northstar-health",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "customer-reference-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "route": "operator-customer-missing",
+      "requestedUrl": "http://127.0.0.1:46217/app/customers/no-such-account",
+      "finalUrl": "http://127.0.0.1:46217/app/customers/no-such-account",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Account not found"
+    },
+    {
+      "route": "operator-data",
+      "requestedUrl": "http://127.0.0.1:46217/app/data",
+      "finalUrl": "http://127.0.0.1:46217/app/data",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Workspace data"
+    },
+    {
+      "route": "operator-features",
+      "requestedUrl": "http://127.0.0.1:46217/app/features",
+      "finalUrl": "http://127.0.0.1:46217/app/features",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "operator-learning",
+      "requestedUrl": "http://127.0.0.1:46217/app/learning",
+      "finalUrl": "http://127.0.0.1:46217/app/learning",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "operator-prioritisation",
+      "requestedUrl": "http://127.0.0.1:46217/app/prioritisation",
+      "finalUrl": "http://127.0.0.1:46217/app/prioritisation",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "operator-search",
+      "requestedUrl": "http://127.0.0.1:46217/app/search",
+      "finalUrl": "http://127.0.0.1:46217/app/search",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": null
+    },
+    {
+      "route": "operator-settings",
+      "requestedUrl": "http://127.0.0.1:46217/app/settings",
+      "finalUrl": "http://127.0.0.1:46217/app/settings",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Requester email delivery"
+    },
+    {
+      "route": "operator-settings-delivery-review",
+      "requestedUrl": "http://127.0.0.1:46217/app/settings",
+      "finalUrl": "http://127.0.0.1:46217/app/settings",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "unknown and failed delivery details with no retry action"
+    },
+    {
+      "route": "operator-moderation-populated",
+      "requestedUrl": "http://127.0.0.1:46217/app/moderation",
+      "finalUrl": "http://127.0.0.1:46217/app/moderation",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Route 390 customer-reference-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "route": "populated-record-evidence-form",
+      "requestedUrl": "http://127.0.0.1:46217/app/feedback",
+      "finalUrl": "http://127.0.0.1:46217/app/feedback",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Record evidence"
+    },
+    {
+      "route": "populated-create-decision-form",
+      "requestedUrl": "http://127.0.0.1:46217/app/decisions",
+      "finalUrl": "http://127.0.0.1:46217/app/decisions",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Create decision"
+    },
+    {
+      "route": "populated-roadmap-editor",
+      "requestedUrl": "http://127.0.0.1:46217/app/roadmap",
+      "finalUrl": "http://127.0.0.1:46217/app/roadmap",
+      "status": 200,
+      "auth": "operator-session",
+      "contains": "Edit, approve or move"
+    },
+    {
+      "route": "mounted-route-inventory",
+      "requestedUrl": "src/routes/*.tsx",
+      "finalUrl": "src/routes/*.tsx",
+      "status": 200,
+      "auth": "source-inventory",
+      "contains": "42 declared routes covered"
+    }
+  ]
+}

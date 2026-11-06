@@ -1,0 +1,42 @@
+{
+  "tag": "sd-penny-c-f72",
+  "views": {
+    "write": "node src/base/contract-docs.mjs write",
+    "writeExit": 0,
+    "check": "node src/base/contract-docs.mjs check",
+    "checkExit": 0,
+    "restoredFrom": "origin/main",
+    "committedGeneratedFiles": false
+  },
+  "lock": {
+    "write": "node scripts/edition-authoring/cli.mjs lock",
+    "writeExit": 0,
+    "check": "node scripts/edition-authoring/cli.mjs check",
+    "checkExit": 0
+  },
+  "ledger": {
+    "command": null,
+    "exit": 0,
+    "reason": "No migrations added or edited"
+  },
+  "typecheck": {
+    "command": "pnpm run typecheck",
+    "exit": 0
+  },
+  "firstParty": {
+    "command": "pnpm run check -- --profile first-party",
+    "exit": 0
+  },
+  "build": {
+    "command": "npx -y @runeditrun/rer build",
+    "exit": 0
+  },
+  "testRegistrations": {
+    "added": 0,
+    "removed": 0,
+    "weakened": 0,
+    "cap": 200
+  },
+  "head": "7e63a0a1aa6076b4dd789f0773081bbad38ec01a",
+  "sourceLockSha256": "a1558814c7071c744c9dcb792defca3835d384d5ed555f1a9185e221bf1dbabf"
+}

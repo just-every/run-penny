@@ -1,0 +1,125 @@
+{
+  "head": "7e63a0a1aa6076b4dd789f0773081bbad38ec01a",
+  "dirty": false,
+  "exit": 0,
+  "command": "TMPDIR=/tmp/penny-f72-review PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=../evidence/docs-refusal-precommit cloud_run perl -e 'alarm 1800; exec @ARGV' -- node tests/browser/route-review.mjs",
+  "screenshots": 130,
+  "routeChecks": 130,
+  "docsCaptures": [
+    {
+      "state": "populated",
+      "route": "public-docs-page",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install",
+      "url": "http://127.0.0.1:46217/docs/install",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-docs-page-390.jpg",
+      "sha256": "a619a97f4ad42ccb070e8043951dc8d6f0da6e8532c63044715e9ce09a783113",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-missing",
+      "requestedUrl": "http://127.0.0.1:46217/docs/no-such-page",
+      "url": "http://127.0.0.1:46217/docs/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-docs-missing-390.jpg",
+      "sha256": "5969ea21708e26dc7d67bd51bfa66e5e560b454b4cf4a44cb5ecff046670771e",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-nested",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "url": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "file": "populated-public-docs-nested-390.jpg",
+      "sha256": "5969ea21708e26dc7d67bd51bfa66e5e560b454b4cf4a44cb5ecff046670771e",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-page",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install",
+      "url": "http://127.0.0.1:46217/docs/install",
+      "status": 200,
+      "auth": "public",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "populated-public-docs-page-1440.jpg",
+      "sha256": "5af7c7a9ea129aaefb8a3371df80627bac13f2706952243acd5bfd2f2f981428",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-missing",
+      "requestedUrl": "http://127.0.0.1:46217/docs/no-such-page",
+      "url": "http://127.0.0.1:46217/docs/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "populated-public-docs-missing-1440.jpg",
+      "sha256": "9132f69997dfdfb67dcd3beada9bf8e87e2195b5c4e1dddaf2af4e0cfb1c3899",
+      "overflow": false
+    },
+    {
+      "state": "populated",
+      "route": "public-docs-nested",
+      "requestedUrl": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "url": "http://127.0.0.1:46217/docs/install/no-such-page",
+      "status": 404,
+      "auth": "public",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "populated-public-docs-nested-1440.jpg",
+      "sha256": "9132f69997dfdfb67dcd3beada9bf8e87e2195b5c4e1dddaf2af4e0cfb1c3899",
+      "overflow": false
+    }
+  ],
+  "docsRefusals": [
+    {
+      "path": "/docs/no-such-page",
+      "width": 390,
+      "status": 404,
+      "ssrProse": false,
+      "hydratedProse": false,
+      "control": "/docs/install",
+      "controlProseLength": 233
+    },
+    {
+      "path": "/docs/install/no-such-page",
+      "width": 390,
+      "status": 404,
+      "ssrProse": false,
+      "hydratedProse": false,
+      "control": "/docs/install",
+      "controlProseLength": 233
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "externalRequests": [],
+  "layoutFailures": [],
+  "accessibilityFailures": []
+}

@@ -1,0 +1,11 @@
+{
+  "head": "7e63a0a1aa6076b4dd789f0773081bbad38ec01a",
+  "remoteHead": "7e63a0a1aa6076b4dd789f0773081bbad38ec01a",
+  "remoteRef": "refs/heads/cloud/sd-penny-c-f72",
+  "clean": true,
+  "identities": "all three candidate commits use fleet author and committer; no trailers",
+  "parents": [
+    "11be6a4569fc56196e3cfa1e40e04fa085112156",
+    "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f"
+  ]
+}
