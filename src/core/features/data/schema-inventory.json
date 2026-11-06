@@ -3640,5 +3640,36 @@
       "cost_micros",
       "created_at"
     ]
+  },
+  "penny_scorecards": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "created_by",
+      "created_at"
+    ]
+  },
+  "penny_scorecard_versions": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "scorecard_id",
+      "version",
+      "name",
+      "criteria_json",
+      "created_by",
+      "created_at"
+    ]
+  },
+  "penny_scorecard_scores": {
+    "classification": "product",
+    "columns": [
+      "version_id",
+      "request_id",
+      "operator_id",
+      "inputs_json",
+      "created_at",
+      "updated_at"
+    ]
   }
 }

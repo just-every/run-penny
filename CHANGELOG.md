@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add private native request scorecards with immutable criteria versions, attributed operator inputs and explicit normalized weighted rankings. Keep missing inputs absent and earlier versions readable; refuse stale versions and audit failures atomically. Register archive and erasure custody and prove populated upgrade, independently owned restore and former-scorer anonymisation. Apply additive migration 0110 through the existing runner and retain the expanded schema on rollback. PRIO-004 becomes partial; scorecard UI, segment filtering, other idea families and wider role policy remain open.
+
 - Add Owner and Admin audit metadata reads and bounded CSV and JSON exports with actor, action, subject and date filters, stable pagination and existing agent attribution. Exclude private details and recheck current native authority on every page. ROLE-004 remains partial for its audit screen, every-action coverage and wider privacy obligations. No migration or configuration change is required.
 - Serve an offline OpenAPI document at `/docs/openapi.json` for the existing scoped board, request, comment, status, release and proxy-vote operations. Share request validators with native routes and reconcile populated HTTP responses, invalid inputs, missing credentials and insufficient scopes in one built-Worker sanity journey, replacing the overlapping native publication registration with all of its assertions retained. Preserve native admission, explicit approval, held wording and consent boundaries. DATA-006 remains partial for other resource families, full pagination and filters, and lifecycle-webhook proof. No migration or configuration change is required.
 

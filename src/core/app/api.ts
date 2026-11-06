@@ -1,3 +1,4 @@
+import {registerScorecardRoutes} from '@/core/features/scorecards/routes'
 import { registerAuditRoutes } from '@/core/features/audit/routes'
 import { registerOpenApiRoute } from '@/core/features/docs/openapi-route'
 import {registerSurveyRoutes} from '@/core/features/surveys/routes'
@@ -121,6 +122,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   registerWeeklyRoutes(app)
   registerPlanningRoutes(app)
   registerPrioritisationRoutes(app)
+  registerScorecardRoutes(app)
   registerHierarchyRoutes(app)
   registerLearningRoutes(app)
   registerOpenApiRoute(app)

@@ -394,3 +394,14 @@ A reply posts only when the operator chooses a linked published public request a
 ## Discord capture upgrade
 
 Apply additive migrations `0096_discord_capture.sql` and `0097_discord_source_checks.sql` through `rer setup` or the existing hosted path. Configure the optional `PENNY_DISCORD` secret, enforcing GET service binding and owner-run Gateway relay only when enabling Discord. See [Discord capture](docs/DISCORD.md) for permissions, cursor recovery, source-removal policy and disconnect. Keep expanded schema on rollback. Restored capture stays disabled/held until deliberately reconfigured; never resume it under archived operator identity.
+
+
+## Native request scorecard API
+
+Apply additive migration `0110_scorecards.sql` through `rer setup` or the existing hosted deployment path. It preserves prior records and adds private product tables for scorecards, immutable criteria versions and inputs attributed to product operator identities. No provider setup is required. Keep the expanded schema when rolling source back.
+
+`POST /api/operator/scorecards` accepts a name and criteria with distinct keys, names, scales of 5 or 10, and nonnegative weights with a positive total. All active native operators can read and score; only the creator revises the definition with `POST /api/operator/scorecards/:id/versions`, supplying `previousVersionId` and the new `definition`. The old definition is retained. `PUT /api/operator/scorecards/:id/requests/:requestId/scores` replaces only the current operator's inputs in the named current `versionId`. Unknown criteria, out-of-scale values, stale versions and foreign-origin or revoked-session writes are refused. Each successful write and its attributed audit commit together.
+
+`GET /api/operator/scorecards/:id` returns the latest version; `versionId` selects an earlier immutable definition and its original scores. Each criterion reports its supplied scorer count, mean, scale, weight and contribution. The result is the sum of mean divided by scale times weight, divided by total weight, rounded to twelve decimal places. A missing positive-weight criterion leaves the result and rank absent. Equal results share a competition rank, with request identity ordering ties. Inputs are never carried into a new definition version.
+
+Archives retain definitions, scores and opaque scorer attribution, without source sessions or authority. Erasing a request removes its score rows; erasing a removed operator anonymises their existing attribution while retaining the business inputs. Personal wording in a definition follows the existing reviewed-copy erasure policy. Public projections and decision briefs receive no scorecard data. The visible card, segment filtering and prioritisation-view integration remain unimplemented.

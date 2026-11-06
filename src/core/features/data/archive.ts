@@ -1,3 +1,4 @@
+import {validateScorecardArchive} from '../scorecards/archive'
 import { assertAgentCustodyClear } from '../agent-door/custody'
 import {validateSurveyArchive} from '../surveys/archive'
 import {validateHelpScoutArchive} from '../helpscout/archive'
@@ -162,8 +163,8 @@ export async function exportArchive(db:D1Database,bucket:R2Bucket,authority?:Dat
  const id=await reserve(db,'export',{},authority)
  try {
   await assertPlatformLedger(db)
-  const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);await validateBrowserArchive(data);await validateDiscordArchive(data);await validateSurveyArchive(data);await validateHelpScoutArchive(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)
-  if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);await validateBrowserArchive(data);await validateDiscordArchive(data);await validateSurveyArchive(data);await validateHelpScoutArchive(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
+  const tables=await schema(db);let data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateScorecardArchive(data);await validateBrowserArchive(data);await validateDiscordArchive(data);await validateSurveyArchive(data);await validateHelpScoutArchive(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)
+  if(await eraseExportedSourceOptions(db,id,data,authority)){data=await rows(db,tables);limits(data);validateNativeIdentity(data);validateScorecardArchive(data);await validateBrowserArchive(data);await validateDiscordArchive(data);await validateSurveyArchive(data);await validateHelpScoutArchive(data);validateMailIdentityArchive(data);validateFeedbackArchive(data);await validateLearningArchive(data)}
   if(data.request_attachment_uploads?.length||data.evidence_attachment_uploads?.length)fail('unfinished_attachment_uploads')
   const journal=await readErasureJournal(db)
   if(data.release_attachments.some(row=>row.state==='writing'))fail('unfinished_attachment_uploads')
@@ -201,7 +202,7 @@ async function validated(db:D1Database,value:unknown,journalValue:unknown):Promi
  await assertPlatformLedger(db)
  const tables=await schema(db)
  if(await schemaHash(tables)!==archive.schemaHash||canonical(Object.keys(archive.tables).sort())!==canonical(tables.map(table=>table.name).sort()))fail('unsupported_archive_schema')
- limits(archive.tables);validateNativeIdentity(archive.tables);await validateBrowserArchive(archive.tables);await validateDiscordArchive(archive.tables);await validateSurveyArchive(archive.tables);await validateHelpScoutArchive(archive.tables);validateCategoryArchive(archive.tables);validateMailIdentityArchive(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
+ limits(archive.tables);validateNativeIdentity(archive.tables);validateScorecardArchive(archive.tables);await validateBrowserArchive(archive.tables);await validateDiscordArchive(archive.tables);await validateSurveyArchive(archive.tables);await validateHelpScoutArchive(archive.tables);validateCategoryArchive(archive.tables);validateMailIdentityArchive(archive.tables);validateFeedbackArchive(archive.tables);await validateLearningArchive(archive.tables)
  if(archive.tables.request_attachment_uploads.length||archive.tables.evidence_attachment_uploads.length)fail('unfinished_attachment_uploads')
  for(const table of tables){
   const keys=new Set<string>()
