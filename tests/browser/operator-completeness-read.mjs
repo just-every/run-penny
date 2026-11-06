@@ -4,6 +4,12 @@ import { entities,marker,proofId } from './operator-completeness-data.mjs'
 import { api } from './operator-completeness-auth.mjs'
 const fields={requests:['requesttitle','requestdescription'],evidence:['evidencewording'],decisions:['decisionquestion','decisionrationale'],roadmap:['roadmaptitle','roadmapsummary'],releases:['releasetitle','releasebody'],accounts:['accountname'],requesters:['requestername','requesteremail']}
 export async function reviewPrivateSearch({page,peer,origin,capture,checks,width}) {
+ const hierarchy=[]
+ for(const [kind,parent] of [['product',null],['component',0],['feature',1]]) {
+  const name=marker(`${kind}name`),response=await api(page,`/api/operator/hierarchy/${kind}`,{name,...(parent===null?{}:{parentId:hierarchy[parent].id})})
+  assert.equal(response.status(),201,'[OPS-004] native hierarchy creation')
+  hierarchy.push({id:(await response.json()).id,entity:kind==='product'?'products':kind==='component'?'components':'features',name})
+ }
  await page.goto(origin+'/app/search')
  await page.getByLabel('Search Penny',{exact:true}).fill('privateproof')
  const started=performance.now()
@@ -11,6 +17,41 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
  await page.getByRole('link',{name:marker('accountname'),exact:true}).waitFor()
  checks.push({label:'OPS-004-bounded-first-page',width,milliseconds:Math.round(performance.now()-started),scope:'small 392-record fixture; not capacity p95'})
  await capture('OPS-004-global-search',page)
+ if(width===1440) {
+  const mixed=await (await api(page,'/api/operator/search?q=privateproof')).json()
+  assert.equal(mixed.total,10,'[OPS-004] new hierarchy and existing record types share one search')
+  assert.deepEqual(mixed.items.map(row=>row.entity),['accounts','components','decisions','evidence','features','products','releases','requesters','requests','roadmap'],'[OPS-004] unchanged alphabetical entity ranking')
+  for(const record of hierarchy) {
+   assert.deepEqual(mixed.items.filter(row=>row.entity===record.entity).map(({id,title})=>({id,title})),[{id:record.id,title:record.name}])
+   for(const q of [record.name,record.name.slice(7)]) {
+    const result=await (await api(page,'/api/operator/search?'+new URLSearchParams({q,entity:record.entity}))).json()
+    assert.equal(result.total,1)
+    assert.equal(result.items[0].id,record.id)
+    assert.equal(result.items[0].entity,record.entity)
+    assert.equal(result.items[0].href,`/app/features#${record.entity}-${record.id}`)
+   }
+  }
+ }
+ // Capture the real record destinations at both widths; behavioural assertions run at desktop.
+ for(const record of hierarchy) {
+  await page.getByRole('link',{name:record.name,exact:true}).click()
+  await page.waitForURL(url=>url.pathname==='/app/features'&&url.hash===`#${record.entity}-${record.id}`)
+  const target=page.locator(`[id="${record.entity}-${record.id}"]`)
+  await target.getByRole('heading',{name:record.name,exact:true}).waitFor()
+  if(width===1440) {
+   await page.waitForFunction(id=>document.activeElement?.id===id,`${record.entity}-${record.id}`)
+   assert.equal(await target.evaluate(element=>document.activeElement===element),true,'[OPS-004] destination identifies and focuses the exact record')
+   await page.reload()
+   await page.waitForFunction(id=>document.activeElement?.id===id,`${record.entity}-${record.id}`)
+   await target.getByRole('heading',{name:record.name,exact:true}).waitFor()
+   const box=await target.boundingBox()
+   assert.ok(box.y>=0&&box.y<page.viewportSize().height,'[OPS-004] the selected hierarchy record is scrolled into view')
+  }
+  await capture(`OPS-004-${record.entity}-destination`,page)
+  await page.goto(origin+'/app/search?q=privateproof')
+  await page.getByRole('link',{name:record.name,exact:true}).waitFor()
+ }
+
  for(const [entity,names] of Object.entries(fields))for(const name of names) {
   const path='/api/operator/search?q='+marker(name)
   for(const actor of [page,peer]) {

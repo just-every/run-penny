@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Save a case-insensitive request-title filter in native prioritisation comparisons and apply it before the existing formula sort. Reopen the saved shared view as its owner and a second operator with the same complete ordered subset; retain private-view exclusion, direct-read refusal, revision, audit and admission checks. OPS-006 moves from missing to partial; other lists, filters, columns and broader sort controls remain open. No migration or reconfiguration is required; older saved definitions default to an empty filter.
+- Search native products, components and features by full or partial name alongside existing workspace records, retaining global ordering and pagination. Result links identify and focus the particular hierarchy record. Extend the existing native and mounted browser journeys with hierarchy identity, ordering, page boundaries and current authority checks. OPS-004 remains partial for finer record permissions and capacity proof. No migration or configuration change is required.
 
 - Strengthen LEARN-001's existing native model-boundary journey with a selected requester-authored request, account evidence and an existing explicit update permission. Forged root and option fields preserve populated identity, permission, follow and grant custody and create no derived work; valid output derives both requester and account dimensions from originals while retaining run accounting. LEARN-001 remains partial for deployment principal pinning and live qualification. No runtime, migration or configuration change is required.
 

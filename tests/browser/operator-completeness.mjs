@@ -33,6 +33,7 @@ export async function reviewOperatorFields(options) {
  await seedCompleteness(runtime.db)
  const peerState=await invitePeer({...options,origin})
  try {
+  await reviewPrivateSearch({...options,origin,get db(){return runtime.db},peer:peerState.peer})
   await reviewCustomFields({...options,origin,get db(){return runtime.db},peer:peerState.peer})
  } finally {await peerState.close()}
 }

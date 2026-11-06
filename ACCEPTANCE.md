@@ -155,8 +155,8 @@ Core · published · **partial** · Rules D-3
 3. Product, component and feature results pass the same permission filtering as every other searched record: an operator who cannot open one does not see its name.
 4. The first page of results returns within 500ms.
 
-**Evidence.** `tests/browser/operator-completeness-requester.mjs`
-**Gap.** Search across every other named field ships; product, component and feature names are not yet searched (`src/core/features/workspace/list-repository.ts`), and the 500 ms first page has no seeded run at the `seed.json` limits (D-3).
+**Evidence.** `tests/base/product-hierarchy.test.ts` — populated upgrade, linked feature rollups, move custody and private source and archive boundaries; `tests/browser/operator-completeness-read.mjs` — reviewPrivateSearch; `tests/browser/operator-completeness-requester.mjs` — reviewRequesterPrivacy
+**Gap.** Named fields, including product, component and feature names, have native search and record-link proof. Finer record and role-permission completeness remains open with ROLE-001; the 500 ms first page has no seeded capacity p95 run on declared CI hardware at the estimated, untested `seed.json` limits (D-3).
 
 ### Evidence and accounts
 
