@@ -21,3 +21,5 @@ Files include the complete verdict, plan, actual command and setup receipts, san
 
 No real blocker was found for this conditional review. F and G bookkeeping and the final integration guard are retained; no product FIX round or acceptance narrowing was introduced.
 
+
+TRANSPORT.json records the successful first evidence publication and independently fetched, hash-verified 28-file packet. The final evidence publication includes that actual receipt as an additional file; its exact head is reported in the terminal EVIDENCE line.
