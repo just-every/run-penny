@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add public RSS at `/api/public/releases/rss.xml` and Atom at `/api/public/releases/atom.xml`, using the same current published release projection as the native public reads. Keep canonical release identities and publication order through corrections, encode Markdown as literal text, and exclude draft, scheduled, superseded and private wording. Validate both responses offline in the built-Worker release journey, including approved wording surviving requester erasure. Consolidate the existing approved-public-phrase erasure regression into that journey without increasing test registrations. REL-016 remains partial for segment delivery and the existing distribution and qualification prerequisites. No migration or owner reconfiguration is required.
+
 - Strengthen LEARN-001's existing native model-boundary journey with a selected requester-authored request, account evidence and an existing explicit update permission. Forged root and option fields preserve populated identity, permission, follow and grant custody and create no derived work; valid output derives both requester and account dimensions from originals while retaining run accounting. LEARN-001 remains partial for deployment principal pinning and live qualification. No runtime, migration or configuration change is required.
 
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
