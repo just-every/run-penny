@@ -1,0 +1,14 @@
+{
+  "head": "2236f87f4375799c35944caf633d66814b73c610",
+  "files": {
+    "tests/base/board.test.ts": "e2753ab2e34f9b36b6f01479c7d61cd40a12a68f6f4bdc213d52b6e3f84e328b",
+    "tests/base/internal-board-exclusion.ts": "6c5ae2639c61d5931bc49bfa689ab51c18cb5acea235fe8ae0829243085256d9",
+    "tests/base/notifications.test.ts": "1ea1bcf5a08808b65144f7684487ea2f8fffb92fc5d4f24eaa08c665ffa92e61",
+    "tests/base/release-fixture.ts": "c9462d9fda538519f8e534032d7ac39657c481251a7524d0fc2d36eb41780515",
+    "src/core/features/roadmap/public-read-repository.ts": "757067caed93824fa0121cb50f339e57c308f1fb3b4ba8419019542a56aa036f",
+    "src/core/features/releases/publication.ts": "7f5d8c7badcb6baf11cde110f2db86a90fc8ed65c00c41ce0edc39431b5a0aad",
+    "src/core/features/notifications/eligibility.ts": "cef57cd298c944c7728962e4e7a7a69fbfa283fe9448ab697d9df2cbdc86a5c7"
+  },
+  "runtimeChangedFromInitialMain": false,
+  "testRegistrationDelta": 0
+}

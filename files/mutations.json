@@ -1,0 +1,26 @@
+[
+  {
+    "mutation": "roadmap",
+    "file": "src/core/features/roadmap/public-read-repository.ts",
+    "removed": "AND (rp.board_id IS NULL OR (b.visibility='public' AND b.archived_at IS NULL))",
+    "exit": 1,
+    "failure": " FAIL  tests/base/board.test.ts > [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total\nAssertionError: expected [ \u2026(2) ] to deeply equal [ Array(1) ]\n \u276f proveInternalBoardExclusion tests/base/internal-board-exclusion.ts:53:38",
+    "detected": true
+  },
+  {
+    "mutation": "release",
+    "file": "src/core/features/releases/publication.ts",
+    "removed": " OR d.request_id NOT IN(${visibleRequestIds})",
+    "exit": 1,
+    "failure": " FAIL  tests/base/board.test.ts > [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total\nAssertionError: expected 200 to be 409 // Object.is equality\n \u276f proveInternalBoardExclusion tests/base/internal-board-exclusion.ts:76:25",
+    "detected": true
+  },
+  {
+    "mutation": "notification",
+    "file": "src/core/features/notifications/eligibility.ts",
+    "removed": " AND b.visibility='public'",
+    "exit": 1,
+    "failure": " FAIL  tests/base/board.test.ts > [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total\nAssertionError: expected '{\"personalizations\":[{\"to\":[{\"email\":\u2026' not to contain 'feedback-01m6qcxtr235h3n336s19zt0tx'\n \u276f proveInternalBoardExclusion tests/base/internal-board-exclusion.ts:104:153",
+    "detected": true
+  }
+]

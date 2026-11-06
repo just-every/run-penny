@@ -1,0 +1,27 @@
+{
+  "tag": "sd-penny-c-f67",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f67",
+  "base": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "status": {
+    "REQ-019": {
+      "before": "partial",
+      "after": "partial"
+    }
+  },
+  "countsBefore": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "testsAdded": 0,
+  "testsRemoved": 0,
+  "githubCallsUsed": 3,
+  "baselineVerifySuccess": 42138503924,
+  "baselineRunSiteSuccess": 42140171051,
+  "duplicateMainVerifyFailure": 42140171112,
+  "duplicateFailedJob": 127638280568,
+  "duplicateLogCommand": "gh run view 42140171112 --repo just-every/run-penny --job 127638280568 --log-failed",
+  "duplicateLogResult": "exit 0, empty output; not retried"
+}

@@ -1,0 +1,15 @@
+{
+  "parentMain": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "parentStatusRows": 281,
+  "stagedStatusRows": 281,
+  "parentTableRows": 445,
+  "stagedTableRows": 445,
+  "statusRowsRetained": true,
+  "generatedViewsStaged": false,
+  "lockWriteExit": 0,
+  "lockCheckExit": 0,
+  "viewsWriteExit": 0,
+  "viewsCheckExit": 0,
+  "ledger": "none; no migration changes",
+  "resolution": "Contract kept main newer LEARN-001 gap; changelog kept both entries; source lock regenerated last"
+}

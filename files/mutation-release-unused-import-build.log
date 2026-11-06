@@ -1,0 +1,14 @@
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+Using project Node 22.20.0 (current Node 24.19.0).
+Heavy job admitted: Penny build:workflow [0b79fb970d7b]
+Checking pinned pnpm
+10.12.4
+Building your application
+src/core/features/releases/publication.ts(6,27): error TS6133: 'visibleRequestIds' is declared but its value is never read.
+Building your application: exit 2, signal none.
+Installation stopped while building the application. Ask your agent to check the edition's operating command for that step, correct the cause, then select Start again. Your setup answers are saved; you may need to supply credentials again.
+Command: pnpm
+Last output (up to 40 lines):
+src/core/features/releases/publication.ts(6,27): error TS6133: 'visibleRequestIds' is declared but its value is never read.
+Log: [REDACTED]/.seed/installer/commands-3135/install.log
+build: failed (exit 1)

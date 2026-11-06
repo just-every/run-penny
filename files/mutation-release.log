@@ -1,0 +1,38 @@
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f67/run-penny
+
+ ❯ tests/base/board.test.ts (7 tests | 1 failed | 6 skipped) 1740ms
+   × [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total 1739ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/board.test.ts > [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total
+AssertionError: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ proveInternalBoardExclusion tests/base/internal-board-exclusion.ts:76:25
+     74|  expect(before.release_recipient_snapshots).toEqual([])
+     75|  const refused=await call(`/api/operator/releases/${hiddenTarget.draft…
+     76|  expect(refused.status).toBe(409)
+       |                         ^
+     77|  expect(await refused.json()).toMatchObject({message:expect.stringCont…
+     78|  expect(await releaseState()).toEqual(before)
+ ❯ tests/base/board.test.ts:59:2
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  03:02:05
+   Duration  4.91s (transform 1.20s, setup 0ms, import 2.71s, tests 1.74s, environment 0ms)
+

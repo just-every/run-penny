@@ -1,0 +1,40 @@
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f67/run-penny
+
+ ❯ tests/base/board.test.ts (7 tests | 1 failed | 6 skipped) 1463ms
+   × [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total 1462ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/board.test.ts > [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total
+AssertionError: expected [ …(2) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+    "roadmap-01m6qctzy294039jz57d0q3aq4",
++   "roadmap-01m6qctzy2tqye411ccj4nmq3c",
+  ]
+
+ ❯ proveInternalBoardExclusion tests/base/internal-board-exclusion.ts:53:38
+     51|   await source(mode)
+     52|   const cards=await roadmap(),publicSlug=mode==='approved_items'?publi…
+     53|   expect(cards.map(card=>card.slug)).toEqual([publicSlug])
+       |                                      ^
+     54|   expect(cards[0].requests.map(request=>request.slug)).toEqual([contro…
+     55|   const detail=await call(`/api/public/roadmap/${publicSlug}`);expect(…
+ ❯ tests/base/board.test.ts:59:2
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  03:01:01
+   Duration  4.59s (transform 1.17s, setup 0ms, import 2.64s, tests 1.46s, environment 0ms)
+

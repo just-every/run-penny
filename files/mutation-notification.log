@@ -1,0 +1,40 @@
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f67/run-penny
+
+ ❯ tests/base/board.test.ts (7 tests | 1 failed | 6 skipped) 1642ms
+   × [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total 1641ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/board.test.ts > [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total
+AssertionError: expected '{"personalizations":[{"to":[{"email":…' not to contain 'feedback-01m6qcxtr235h3n336s19zt0tx'
+
+- Expected
++ Received
+
+- feedback-01m6qcxtr235h3n336s19zt0tx
++ {"personalizations":[{"to":[{"email":"<redacted-address>"}]}],"from":{"email":"<redacted-address>","name":"Test business"},"subject":"Updates: Public attachment request","content":[{"type":"text/plain","value":"Public attachment request\n\nStatus update\nsynthetic-penny-queued-before-internal\n\nView feedback: https://penny.test/portal/feedback/feedback-01m6qcxtr235h3n336s19zt0tx\n\nMute this request: https://penny.test/api/public/notifications/unsubscribe?token=eyJ2IjoyLCJlcG9jaCI6MCwicmVxdWVzdGVySWQiOiIwMU02UUNYVjUyN1FENVJZS0s5WlMxSkVCVCIsImFkZHJlc3NJZCI6IjAxTTZRQ1hWNTJIMVgxSE1YMDJGWkVYSzVIIiwiZW1haWxIYXNoIjoiczM5UVAzWVhoN0VFdnlZblgybDVBMmRtMzBJM29ZUl9tWVU2Tkg3TXBRdyIsInNjb3BlIjoiMDFNNlFDWFRSMjM1SDNOMzM2UzE5WlQwVFgifQ.4KaYv-9HL16GKhM0ZGqPo5LhB5XujaphWiw9CGqcLgg\nUnsubscribe from all requester email: https://penny.test/api/public/notifications/unsubscribe?token=eyJ2IjoyLCJlcG9jaCI6MCwicmVxdWVzdGVySWQiOiIwMU02UUNYVjUyN1FENVJZS0s5WlMxSkVCVCIsImFkZHJlc3NJZCI6IjAxTTZRQ1hWNTJIMVgxSE1YMDJGWkVYSzVIIiwiZW1haWxIYXNoIjoiczM5UVAzWVhoN0VFdnlZblgybDVBMmRtMzBJM29ZUl9tWVU2Tkg3TXBRdyIsInNjb3BlIjoiYWxsIn0.NMEc5OAh9anfzEzI74HNfXzpYY609afHPwgsF4BIjMw\n\nYou asked to receive these updates.\n1 Test Street"}],"headers":{"Auto-Submitted":"auto-generated","List-Unsubscribe":"<https://penny.test/api/public/notifications/unsubscribe?token=eyJ2IjoyLCJlcG9jaCI6MCwicmVxdWVzdGVySWQiOiIwMU02UUNYVjUyN1FENVJZS0s5WlMxSkVCVCIsImFkZHJlc3NJZCI6IjAxTTZRQ1hWNTJIMVgxSE1YMDJGWkVYSzVIIiwiZW1haWxIYXNoIjoiczM5UVAzWVhoN0VFdnlZblgybDVBMmRtMzBJM29ZUl9tWVU2Tkg3TXBRdyIsInNjb3BlIjoiYWxsIn0.NMEc5OAh9anfzEzI74HNfXzpYY609afHPwgsF4BIjMw>","List-Unsubscribe-Post":"List-Unsubscribe=One-Click"},"custom_args":{"rer_product":"penny","rer_penny_attempt":"01M6QD1GB36H2G874S6V7VBCAS","rer_delivery_id":"01M6QCXV526S6JKD7WKGB2143J"},"tracking_settings":{"click_tracking":{"enable":false,"enable_text":false},"open_tracking":{"enable":false},"ganalytics":{"enable":false}}}
++ {"personalizations":[{"to":[{"email":"<redacted-address>"}]}],"from":{"email":"<redacted-address>","name":"Test business"},"subject":"Updates: synthetic-penny-public-control","content":[{"type":"text/plain","value":"synthetic-penny-public-control\n\nPublic reply\nsynthetic-penny-public-reply\n\nStatus update\nsynthetic-penny-public-status\n\nView feedback: https://penny.test/portal/feedback/feedback-01m6qcxv52299jb9av7jt2rzvd\n\nMute this request: https://penny.test/api/public/notifications/unsubscribe?token=eyJ2IjoyLCJlcG9jaCI6MCwicmVxdWVzdGVySWQiOiIwMU02UUNYVjUyN1FENVJZS0s5WlMxSkVCVCIsImFkZHJlc3NJZCI6IjAxTTZRQ1hWNTJIMVgxSE1YMDJGWkVYSzVIIiwiZW1haWxIYXNoIjoiczM5UVAzWVhoN0VFdnlZblgybDVBMmRtMzBJM29ZUl9tWVU2Tkg3TXBRdyIsInNjb3BlIjoiMDFNNlFDWFY1MjI5OUpCOUFWN0pUMlJaVkQifQ.tD34WWvODte25KDS3C4Mu7v1Lb7DTctaUQGi-xC9Y2Q\nUnsubscribe from all requester email: https://penny.test/api/public/notifications/unsubscribe?token=eyJ2IjoyLCJlcG9jaCI6MCwicmVxdWVzdGVySWQiOiIwMU02UUNYVjUyN1FENVJZS0s5WlMxSkVCVCIsImFkZHJlc3NJZCI6IjAxTTZRQ1hWNTJIMVgxSE1YMDJGWkVYSzVIIiwiZW1haWxIYXNoIjoiczM5UVAzWVhoN0VFdnlZblgybDVBMmRtMzBJM29ZUl9tWVU2Tkg3TXBRdyIsInNjb3BlIjoiYWxsIn0.NMEc5OAh9anfzEzI74HNfXzpYY609afHPwgsF4BIjMw\n\nYou asked to receive these updates.\n1 Test Street"}],"headers":{"Auto-Submitted":"auto-generated","List-Unsubscribe":"<https://penny.test/api/public/notifications/unsubscribe?token=eyJ2IjoyLCJlcG9jaCI6MCwicmVxdWVzdGVySWQiOiIwMU02UUNYVjUyN1FENVJZS0s5WlMxSkVCVCIsImFkZHJlc3NJZCI6IjAxTTZRQ1hWNTJIMVgxSE1YMDJGWkVYSzVIIiwiZW1haWxIYXNoIjoiczM5UVAzWVhoN0VFdnlZblgybDVBMmRtMzBJM29ZUl9tWVU2Tkg3TXBRdyIsInNjb3BlIjoiYWxsIn0.NMEc5OAh9anfzEzI74HNfXzpYY609afHPwgsF4BIjMw>","List-Unsubscribe-Post":"List-Unsubscribe=One-Click"},"custom_args":{"rer_product":"penny","rer_penny_attempt":"01M6QD1GB3Q0W3S6T8KH3ZMDCR","rer_delivery_id":"01M6QD1GB31EQB7JMRZVCG0XNS"},"tracking_settings":{"click_tracking":{"enable":false,"enable_text":false},"open_tracking":{"enable":false},"ganalytics":{"enable":false}}}
++ {"personalizations":[{"to":[{"email":"<redacted-address>"}]}],"from":{"email":"<redacted-address>","name":"Test business"},"subject":"Release for synthetic-penny-public-target","content":[{"type":"text/plain","value":"Release for synthetic-penny-public-target\nImproved · 2026-11-06\n\nReleased improvement for synthetic-penny-public-target.\n\nYour requests:\nsynthetic-penny-public-control: https://penny.test/portal/feedback/feedback-01m6qcxv52299jb9av7jt2rzvd\n\nRead update: https://penny.test/portal/updates/release-01m6qcxv52n5n1mn1vacanwjt6\nUnsubscribe from all requester email: https://penny.test/api/public/notifications/unsubscribe?token=eyJ2IjoyLCJlcG9jaCI6MCwicmVxdWVzdGVySWQiOiIwMU02UUNYVjUyN1FENVJZS0s5WlMxSkVCVCIsImFkZHJlc3NJZCI6IjAxTTZRQ1hWNTJIMVgxSE1YMDJGWkVYSzVIIiwiZW1haWxIYXNoIjoiczM5UVAzWVhoN0VFdnlZblgybDVBMmRtMzBJM29ZUl9tWVU2Tkg3TXBRdyIsInNjb3BlIjoiYWxsIn0.NMEc5OAh9anfzEzI74HNfXzpYY609afHPwgsF4BIjMw\n\nYou asked to receive these updates.\n1 Test Street"}],"headers":{"Auto-Submitted":"auto-generated","List-Unsubscribe":"<https://penny.test/api/public/notifications/unsubscribe?token=eyJ2IjoyLCJlcG9jaCI6MCwicmVxdWVzdGVySWQiOiIwMU02UUNYVjUyN1FENVJZS0s5WlMxSkVCVCIsImFkZHJlc3NJZCI6IjAxTTZRQ1hWNTJIMVgxSE1YMDJGWkVYSzVIIiwiZW1haWxIYXNoIjoiczM5UVAzWVhoN0VFdnlZblgybDVBMmRtMzBJM29ZUl9tWVU2Tkg3TXBRdyIsInNjb3BlIjoiYWxsIn0.NMEc5OAh9anfzEzI74HNfXzpYY609afHPwgsF4BIjMw>","List-Unsubscribe-Post":"List-Unsubscribe=One-Click"},"custom_args":{"rer_product":"penny","rer_penny_attempt":"01M6QD1GB3D6TZEW9K03CPN67Q","rer_delivery_id":"release:01M6QCXV52BS1VE4KRGR93ER9E:01M6QCXV527QD5RYKK9ZS1JEBT"},"tracking_settings":{"click_tracking":{"enable":false,"enable_text":false},"open_tracking":{"enable":false},"ganalytics":{"enable":false}}}
+
+ ❯ proveInternalBoardExclusion tests/base/internal-board-exclusion.ts:104:153
+    102|  expect(envelopes).toContain('synthetic-penny-public-reply')
+    103|  expect(envelopes).toContain(publicTarget.draft.slug)
+    104|  for(const marker of [slug,hiddenTarget.draft.slug,queuedBody,'synthet…
+       |                                                                                                                                                         ^
+    105|  for(const batch of pending.results)expect(await env.DB.prepare('SELEC…
+    106|  const sentCount=sent.length
+ ❯ tests/base/board.test.ts:59:2
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  03:02:34
+   Duration  4.85s (transform 1.25s, setup 0ms, import 2.73s, tests 1.64s, environment 0ms)
+
