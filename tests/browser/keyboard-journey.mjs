@@ -27,6 +27,8 @@ try{
   const operator=await harness.operator(width),page=person.page,review=operator.page
   for(const target of [page,review]){target.setDefaultTimeout(20000);target.on('pageerror',error=>errors.push(error.message))}
   try{
+   const signedIn=await (await api('/api/auth/session',undefined,review.request)).json()
+   assert.equal(signedIn.authenticated,true);assert.ok(signedIn.operator.id)
    // Sign-in and fixture preparation finish before the keyboard measurements begin.
    await page.goto(origin+'/portal/feedback/new')
    await expect(page.getByRole('button',{name:'Send for review',exact:true})).toBeEnabled()
@@ -46,6 +48,9 @@ try{
    assert.equal(held.title,title);assert.equal(held.description,description)
    assert.equal(held.moderationState,'awaiting_review');assert.equal(held.publicState,'unpublished')
    assert.notEqual(held.id,approved.id,'the vote target is separately approved')
+   const submittedContext=await (await api(`/api/operator/requests/${held.slug}/context`,undefined,review.request)).json()
+   const authorVote=submittedContext.voters.filter(voter=>voter.email===email)
+   assert.equal(authorVote.length,1);assert.ok(authorVote[0].id)
    const privateRead=await person.page.request.get(origin+`/api/public/requests/${held.slug}`)
    assert.equal(privateRead.status(),404,'held wording remains private')
    await shot(page,'keyboard-submitted',width)
@@ -68,7 +73,7 @@ try{
    assert.equal(after.slug,approved.slug);assert.equal(after.voteCount,before.voteCount+1)
    assert.deepEqual((await activity(person.token)).votes.map(row=>({slug:row.slug,available:row.available})).sort((a,b)=>a.slug.localeCompare(b.slug)),[{slug:held.slug,available:0},{slug:approved.slug,available:1}].sort((a,b)=>a.slug.localeCompare(b.slug)))
    const persistedVote=(await requestContext()).voters.filter(voter=>voter.email===email)
-   assert.equal(persistedVote.length,1);assert.ok(persistedVote[0].id);assert.ok(persistedVote[0].votedAt)
+   assert.equal(persistedVote.length,1);assert.equal(persistedVote[0].id,authorVote[0].id);assert.ok(persistedVote[0].votedAt)
    await page.reload()
    assert.deepEqual((await requestContext()).voters.filter(voter=>voter.email===email),persistedVote)
    await expect(participation.getByRole('button',{name:'Remove vote',exact:true})).toBeEnabled()
@@ -80,6 +85,8 @@ try{
    const card=review.locator(`#evidence-${evidenceId}`)
    const links=()=>api(`/api/operator/evidence/${evidenceId}/links`,undefined,review.request).then(response=>response.json())
    assert.deepEqual(await links(),[])
+   const audit=()=>api(`/api/operator/audit?subject=${evidenceId}&subjectType=evidence`,undefined,review.request).then(response=>response.json())
+   const earlierEvents=new Set((await audit()).items.map(event=>event.id))
    await card.getByText('Unreviewed',{exact:true}).waitFor()
    keys=await keyboardControls(review)
    await keys.activate(card.getByText('Review and link evidence',{exact:true}),'open evidence controls')
@@ -99,14 +106,13 @@ try{
    assert.equal((await reviewed).status(),200)
    await card.getByText('Reviewed',{exact:true}).waitFor()
    const triageInput=await keys.finish()
-   const audit=()=>api(`/api/operator/audit?subject=${evidenceId}&subjectType=evidence`,undefined,review.request).then(response=>response.json())
-   const events=(await audit()).items.filter(event=>['evidence.linked','evidence.reviewed'].includes(event.action))
-   // The fixture has one link and one review per width; prior events stay intact.
-   const currentEvents=events.slice(0,2)
+   const events=(await audit()).items
+   const currentEvents=events.filter(event=>!earlierEvents.has(event.id))
+   assert.equal(currentEvents.length,2,'this keyboard flow records one new link and one new review')
+   assert.ok([...earlierEvents].every(id=>events.some(event=>event.id===id)),'earlier audit identities remain intact')
    assert.deepEqual(currentEvents.map(event=>event.action).sort(),['evidence.linked','evidence.reviewed'])
    assert.equal(new Set(currentEvents.map(event=>event.id)).size,2)
-   assert.ok(currentEvents.every(event=>event.actor_type==='operator'&&event.actor_id&&event.entity_id===evidenceId&&event.occurred_at))
-   assert.equal(new Set(currentEvents.map(event=>event.actor_id)).size,1)
+   assert.ok(currentEvents.every(event=>event.actor_type==='operator'&&event.actor_id===signedIn.operator.id&&event.entity_type==='evidence'&&event.entity_id===evidenceId&&event.occurred_at))
    const readEvidence=async()=>{
     const items=await (await api('/api/operator/evidence',undefined,review.request)).json()
     const item=items.items.find(item=>item.id===evidenceId)
@@ -124,8 +130,8 @@ try{
    await card.getByRole('form',{name:'Schedule a finance export · supporting',exact:true}).waitFor()
    const reloadInput=await reloadKeys.finish()
    await shot(review,'keyboard-triaged',width)
-   assert.equal((await activity(person.token)).requests.find(request=>request.id===held.id).moderationState,'awaiting_review')
-   checks.push({width,heldRequest:held.id,votedRequest:approved.id,evidence:evidenceId,reason,voter:persistedVote[0].id,linkAudit:currentEvents.find(event=>event.action==='evidence.linked').id,reviewAudit:currentEvents.find(event=>event.action==='evidence.reviewed').id,submissionInput,voteInput,triageInput,reloadInput})
+   assert.deepEqual((await activity(person.token)).requests.find(request=>request.id===held.id),held,'the same held request and wording persist after reload')
+   checks.push({width,heldRequest:held.id,votedRequest:approved.id,evidence:evidenceId,reason,voter:persistedVote[0].id,operator:signedIn.operator.id,linkAudit:currentEvents.find(event=>event.action==='evidence.linked').id,reviewAudit:currentEvents.find(event=>event.action==='evidence.reviewed').id,submissionInput,voteInput,triageInput,reloadInput})
    console.log(`PROBE A11Y-001 point 2 ${width}px: native keyboard submit, vote, link and reasoned review -> held request ${held.id}, approved request ${approved.id}, evidence ${evidenceId}; persisted after reload; zero pointer events and focus calls`)
    // Reset only fixture state between the two independent keyboard journeys.
    await api(`/api/operator/evidence/${evidenceId}/review`,{reviewed:false},review.request)
