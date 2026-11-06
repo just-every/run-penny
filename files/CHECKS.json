@@ -1,0 +1,64 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f108",
+  "head": "980b8e283b68799bbb5419ff7fe3ba6c75e0b29d",
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email <fleet identity> --non-interactive",
+      "exit": 0,
+      "claim": "setup built, migrated and claimed a local owner; no live qualification"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run node node_modules/vitest/vitest.mjs run --config vitest.base.config.ts tests/base/learning-stage3.test.ts",
+      "exit": 0,
+      "tests": 5,
+      "head": "980b8e283b68799bbb5419ff7fe3ba6c75e0b29d",
+      "node": "22.20.0",
+      "receipt": "LEARNING-CANDIDATE.log"
+    },
+    {
+      "command": "cloud_run node node_modules/typescript/bin/tsc -b",
+      "exit": 0,
+      "claim": "typecheck passed on the exact candidate",
+      "head": "980b8e283b68799bbb5419ff7fe3ba6c75e0b29d"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer check --profile first-party --json",
+      "exit": 0,
+      "checks": 1147,
+      "receipt": "FIRST-PARTY.json"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write; node src/base/contract-docs.mjs check",
+      "write_exit": 0,
+      "check_exit": 0,
+      "views_restored_from": "origin/main",
+      "committed_views": false
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock; node scripts/edition-authoring/cli.mjs check",
+      "write_exit": 0,
+      "check_exit": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit": 0
+    },
+    {
+      "command": "temporary removal of the resume expiry predicate; focused scheduled-refresh journey",
+      "exit": 1,
+      "expected_failure": "AssertionError: {\"ok\":true}: expected 200 to be 409",
+      "line": "tests/base/learning-stage3.test.ts:381",
+      "production_source_restored": true,
+      "receipt": "EXPIRY-MUTATION.log"
+    }
+  ],
+  "test_registrations_added": 0,
+  "test_registrations_removed": 0,
+  "migrations_changed": false,
+  "screens_changed": false
+}

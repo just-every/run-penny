@@ -1,0 +1,17 @@
+{
+  "conclusion": "failure",
+  "head_sha": "980b8e283b68799bbb5419ff7fe3ba6c75e0b29d",
+  "html_url": "https://github.com/just-every/run-penny/actions/runs/42217528244",
+  "status": "completed",
+  "run_id": 42217528244,
+  "event": "push",
+  "failed_jobs": 29,
+  "only_failure": "Check generated contract documents: ACCEPTANCE.md generated content differs",
+  "permitted_generated_view_exception": true,
+  "ci_runtime_tests_executed": false,
+  "local_candidate_tests_passed": 5,
+  "github_calls": 5,
+  "failed_job_log_command": "gh run view 42217528244 --repo just-every/run-penny --job 127891207749 --log-failed",
+  "failed_job_log_exit": 0,
+  "no_dispatch_or_rerun": true
+}

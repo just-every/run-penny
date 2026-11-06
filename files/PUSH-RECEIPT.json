@@ -1,0 +1,11 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f108",
+  "head": "980b8e283b68799bbb5419ff7fe3ba6c75e0b29d",
+  "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f108",
+  "exit": 0,
+  "attempt": 1,
+  "status": "PUSH_OK",
+  "identity_and_trailer_audit": "all candidate commits including side parents passed; no co-author trailers",
+  "main_parent": "bd98ed565d1dd6fdebea3df93f7e8fca5cd283ca"
+}

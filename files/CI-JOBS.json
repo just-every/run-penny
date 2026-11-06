@@ -1,0 +1,390 @@
+{
+  "run": 42217528244,
+  "github_calls": 4,
+  "jobs": [
+    {
+      "id": 127891151595,
+      "name": "plan",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 127891207448,
+      "name": "shards (static, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207487,
+      "name": "shards (requester-blocking, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207500,
+      "name": "shards (request-decline, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207547,
+      "name": "shards (triage-aging, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207549,
+      "name": "shards (ownership, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207554,
+      "name": "shards (browser, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207572,
+      "name": "shards (import-roadmap, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207577,
+      "name": "shards (internal-discussion, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207584,
+      "name": "shards (workspace-clock, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207591,
+      "name": "shards (base-2, false)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207611,
+      "name": "shards (dev-flows, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207643,
+      "name": "shards (merge-notices, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207656,
+      "name": "shards (vote-importance, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207700,
+      "name": "shards (import-statuses, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207727,
+      "name": "shards (proxy-votes, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207728,
+      "name": "shards (loop-health, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207749,
+      "name": "shards (base-1, false)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207816,
+      "name": "shards (rich-changelog, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207817,
+      "name": "shards (requester-board, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207819,
+      "name": "shards (prioritisation, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207823,
+      "name": "shards (agent-door, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207826,
+      "name": "shards (release-planning, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207865,
+      "name": "shards (older-archive, false)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207883,
+      "name": "shards (roadmap-public-eta, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207887,
+      "name": "shards (product-hierarchy, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207902,
+      "name": "shards (helpscout-capture, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207913,
+      "name": "shards (survey-capture, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891207983,
+      "name": "shards (discord-capture, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 127891208059,
+      "name": "shards (browser-capture, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "number": 5,
+          "name": "Check generated contract documents",
+          "conclusion": "failure"
+        }
+      ]
+    }
+  ]
+}

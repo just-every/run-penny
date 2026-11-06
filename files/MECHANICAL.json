@@ -1,0 +1,37 @@
+{
+  "head": "980b8e283b68799bbb5419ff7fe3ba6c75e0b29d",
+  "lock": {
+    "command": "node scripts/edition-authoring/cli.mjs check",
+    "exit": 0,
+    "sha256": "e2ec2632554601ec81a3736c15dcc86a2a76dd9bdff7cdc70e3586a8f9d83905"
+  },
+  "views": {
+    "write": "node src/base/contract-docs.mjs write",
+    "write_exit": 0,
+    "check": "node src/base/contract-docs.mjs check",
+    "check_exit": 0,
+    "restored_from": "origin/main",
+    "expected_candidate_staleness": true
+  },
+  "ledger": {
+    "command": "none",
+    "exit": 0,
+    "reason": "no migration edited"
+  },
+  "contract_pipe_rows": {
+    "parent": 445,
+    "candidate": 445
+  },
+  "clause_counts": {
+    "before": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    },
+    "after": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    }
+  }
+}

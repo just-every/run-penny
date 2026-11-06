@@ -1,0 +1,37 @@
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /workspace/run-penny
+
+stderr | tests/base/learning-stage3.test.ts > [LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke
+Penny request failed {"method":"POST","route":"/api/operator/learning/investigations/:id/run","name":"Error","code":"unclassified"}
+
+ ❯ tests/base/learning-stage3.test.ts (5 tests | 1 failed | 4 skipped) 8177ms
+   × [LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke 8177ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/learning-stage3.test.ts > [LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke
+AssertionError: {"ok":true}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ json tests/base/learning-test-runtime.ts:23:176
+
+ ❯ proveResumeWindow tests/base/learning-stage3.test.ts:381:11
+ ❯ proveNativeFences tests/base/learning-stage3.test.ts:316:2
+ ❯ tests/base/learning-stage3.test.ts:63:60
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  12:22:05
+   Duration  13.36s (transform 1.93s, setup 0ms, import 4.51s, tests 8.18s, environment 0ms)
+

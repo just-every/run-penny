@@ -1,0 +1,24 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f108",
+  "head": "980b8e283b68799bbb5419ff7fe3ba6c75e0b29d",
+  "main_parent": "bd98ed565d1dd6fdebea3df93f7e8fca5cd283ca",
+  "files_changed": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "sources.lock.json",
+    "tests/base/learning-stage3.test.ts"
+  ],
+  "blobs": {
+    "CHANGELOG.md": "341ef7adb27d16f6e1afd8ecde7bff0ecaf0f653",
+    "CONTRACT.md": "6335a08823bd5206566fd83beff9e9fc80a7516f",
+    "sources.lock.json": "ad99aeb759731e9930520b49a9b849cacfa75da5",
+    "tests/base/learning-stage3.test.ts": "4b86eb60e98abb8e44509eb1a021d31f26dd469c",
+    "src/core/features/learning/controls.ts": "eb41d219d91170ff6cbe0b515bb00b5e9daac8d6",
+    "tests/base/learning-test-runtime.ts": "b142ee0ca82c7a6ded98d9cd487c3a0fa8da6492"
+  },
+  "status_rows_retained": 281,
+  "status_rows_changed": 0,
+  "clean_checkout": true,
+  "remote_product_ref_confirmed": "980b8e283b68799bbb5419ff7fe3ba6c75e0b29d"
+}
