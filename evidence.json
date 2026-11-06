@@ -1,0 +1,124 @@
+{
+  "files": [
+    {
+      "blob": "d71b7b4be63c03ab063d3aa3eda537bac59b592e",
+      "bytes": 4380,
+      "path": "CHECKS.json",
+      "sha256": "5ad62b916707d27ec0b0d1e9df01194df404cd8f5eeb136d5070cc70bd3da14e"
+    },
+    {
+      "blob": "492f1db558391a33f2de2ccd943ba503bef9fe70",
+      "bytes": 2155,
+      "path": "PLAN.md",
+      "sha256": "3d8ad7716d60d008c09b81fe0e029df3280cbaa8c14bb592077f48192b81ab83"
+    },
+    {
+      "blob": "81853e2e67dd8906162d8492ae186c9f2bb35b11",
+      "bytes": 9330,
+      "path": "REPORT.md",
+      "sha256": "4c9a91696fcb99d9786a5857844682da5c28af416431d1f4bcd81539fb8cee94"
+    },
+    {
+      "blob": "a96c1d5c2cb0565cc86c0a2582952fc63c4389c7",
+      "bytes": 234,
+      "path": "api-recovery-2.log",
+      "sha256": "19fa6f58bf2aa066d8357bd02efd8cfabade43d6f9be1ab4967073f523553ad7"
+    },
+    {
+      "blob": "007adb8118357b5ee7e7a05fb07026ca27e70b33",
+      "bytes": 422,
+      "path": "api-recovery.log",
+      "sha256": "2f790917505359a4397a8849f39070e1e9866253959839b5463fc56103b7defc"
+    },
+    {
+      "blob": "a96c1d5c2cb0565cc86c0a2582952fc63c4389c7",
+      "bytes": 234,
+      "path": "candidate-ci.json",
+      "sha256": "19fa6f58bf2aa066d8357bd02efd8cfabade43d6f9be1ab4967073f523553ad7"
+    },
+    {
+      "blob": "358395649eb5ddb5ae9e84b240f5b6293163d404",
+      "bytes": 5664,
+      "path": "candidate-failed-jobs.json",
+      "sha256": "fa4c924395e304139aae911c7db867b39c7563d1bcb5338a71b5e0a49df83c45"
+    },
+    {
+      "blob": "bfd72d7ea823be1eb8b12eaba0b92bbe8aa182d7",
+      "bytes": 428,
+      "path": "candidate-test.log",
+      "sha256": "84abd9701556a71cb229eaf8946ea2106ade2e59cfea9aea499e9850bfa7b51f"
+    },
+    {
+      "blob": "3b3daed3fc0e0816a1d5110e813597e3e0fc2073",
+      "bytes": 429,
+      "path": "custody-test.log",
+      "sha256": "11199a2e9900a4e6552038a8a1b7e641d1afb20426436d46eabf8de8a7fb9adf"
+    },
+    {
+      "blob": "dbb2b26c4c90e52f4a5babee929a0ea7c77c5965",
+      "bytes": 1601,
+      "path": "github-calls.json",
+      "sha256": "aa39c26e4f6538e098b2878f4c77112b74efe892a2ee54690a9480c814370359"
+    },
+    {
+      "blob": "f04c488393919f9808fbe26ad370c80900d1de3d",
+      "bytes": 126,
+      "path": "identity.txt",
+      "sha256": "c090ce0921a324e0df6e7782781742a515835aceb3b280b540fb975f31ac1f60"
+    },
+    {
+      "blob": "0dad1258301e01359c3b3d64f20819722c4bb760",
+      "bytes": 1157,
+      "path": "main-ci.json",
+      "sha256": "0c08e07d96763c172aaf72036edb9e5c9975fbcd134cc7f7cfbcad7e569b0cf3"
+    },
+    {
+      "blob": "1b80b38c716ef5b2bfb4804ce4cb8547a1ebb1c7",
+      "bytes": 3433,
+      "path": "main-failed-jobs.json",
+      "sha256": "23a6b258ffcd980e5c9d019f8e9f8900748161eeb7eeac0feb6feb2debdd6359"
+    },
+    {
+      "blob": "bec5384aa5d727ddb7e85aac58cae31337221904",
+      "bytes": 278,
+      "path": "main-failure.txt",
+      "sha256": "68f7c6aacbed19755c649ade15762da319f3fbc43c217006f4077d9079e25a45"
+    },
+    {
+      "blob": "3d15d42f61184011d71afe9ee48251cb5602adfd",
+      "bytes": 893,
+      "path": "product-push.log",
+      "sha256": "b2902197048ea39985b6826e1110106f7dd50a4a6ddd22f7d41294320af8b04d"
+    },
+    {
+      "blob": "3e7b09e8875f1ae01999e53aa0243bf1c29e81bd",
+      "bytes": 21749,
+      "path": "product.patch",
+      "sha256": "7121e5ef76152fb3fa2decb7ce0089b20ea80c92df9657b5f0e2f6f8d8ab23db"
+    },
+    {
+      "blob": "7c48495ab31a6a0e6189d61677fb78e8206ea98c",
+      "bytes": 1918,
+      "path": "publication-mutation.log",
+      "sha256": "2746ffba2f3eab868617e171ca3e6f305e388ff3787eec84dd0eb9a4d743bb19"
+    },
+    {
+      "blob": "bc2327062591e03c58d8afccb9085f1bef8d6ba0",
+      "bytes": 1837,
+      "path": "reachability.log",
+      "sha256": "5fb0e88207ab94bca407bd00ba0b34c35b51b86e988126b20c5595c8f9a426bf"
+    },
+    {
+      "blob": "3b5ad218be864648c7bb71afe4896dfd2e96ccc4",
+      "bytes": 56,
+      "path": "typecheck.log",
+      "sha256": "51ec6f17921f18fb7b13db00d117e78dd9c0dee4200604ab30bd7f41183b8014"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f66",
+  "product_head": "3de04bf7072457ee62526bea590307b2987cab34",
+  "ref": "refs/heads/evidence/sd-penny-c-f66",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f66"
+}

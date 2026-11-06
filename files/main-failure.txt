@@ -1,0 +1,4 @@
+Command: gh run view 42140171112 --repo just-every/run-penny --job 127638280568 --log-failed
+Exit: 0
+Output bytes: 0
+The single allowed archive read returned no log content. The failing assertion and cause are unestablished; no flake classification, repair or rerun is claimed.

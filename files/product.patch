@@ -1,0 +1,235 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index aba7837..976c572 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -2,6 +2,8 @@
+ 
+ ## Unreleased
+ 
++- Extend the existing integration custody journey with complete populated publication comparisons around native saved-feedback import and authenticated archive restore. Approved requests, comments, status history, roadmap publications and updates, release versions and sealed target and recipient snapshots retain their identities and content. Imported feedback remains held, portable integration history retains its safety normalization, and repeated drains with fresh credentials send nothing. API-003 stays partial for the wider held scope; no runtime, migration or configuration change is required.
++
+ - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
+ 
+ - Prove native learning refuses otherwise valid model output carrying identity, derived identity, grant or authority fields at root and option boundaries. The existing learning journey reads unchanged native authority and selected scope after each refusal, retains permitted originals without an artifact or commitment, and accepts valid output with native account derivation and metered run accounting. LEARN-001 stays partial for deployment principal pinning and live source and model qualification. No runtime, migration or configuration change is required.
+diff --git a/CONTRACT.md b/CONTRACT.md
+index 83ebc8c..580e9c7 100644
+--- a/CONTRACT.md
++++ b/CONTRACT.md
+@@ -3381,7 +3381,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `EDIT-001` | Owner editor | published | partial | `tests/base/editor-admission.test.ts` | Compiled data-only edits applying after the destination hydrates with native navigation and privacy preserved, and the management service's own admission of its owner and frame origin, have no passing assertion; the short owner-only lease and the refusal of other operators and foreign origins are asserted. |
+ | `API-001` | Scoped keys | published | done | `tests/base/proxy-votes.test.ts` — server-held scoped keys record proxy demand, refuse a read-only key and stop on revocation (points 1–3); `tests/base/integration-api.test.ts` — issues a reveal-once hashed key, confines route-selected scopes to the REST namespace and refuses unissued keys without a usage record; expiry, revocation, issuer removal and usage-write failure refuse authority after a fresh runtime |  |
+ | `API-002` | Current custody | published | partial | `tests/base/integration-api.test.ts` | Credentials staying out of portable archives, and a restore honouring none, have no passing assertion; usage metadata written before authority is returned with storage failure refusing, revocation, expiry and issuer removal fencing requests and business writes, and a bearer key refused at export are asserted. |
+-| `API-003` | Native publication | published | partial | `tests/base/integration-api.test.ts` | That imported or restored history creates no new publication or integration effect has no passing assertion: the cited upgrade case snapshots its tables after the import and compares them only across migrations, and no cited case restores an archive; prior history, including imported feedback, staying unchanged across each new migration is asserted. |
++| `API-003` | Native publication | published | partial | `tests/base/integration-api.test.ts`; `tests/base/egress-delivery.test.ts` — selected public effects and durable receipts preserve custody across restart, with `tests/base/integration-effects.ts` | Native saved-history and archive publication custody are asserted with complete approved records, sealed snapshots, public readback and unchanged integration identities. Broader API coverage and installation-authority portability remain unproved by this publication-only journey. Provider, device, account and cross-seed or Base prerequisites, earlier ct and payments holds and release requirements remain unchanged. Prior history, including imported feedback, staying unchanged across each new migration remains asserted. |
+ | `INT-001` | Explicit integration effects | published | partial | `tests/browser/integration-states.mjs` | Gap: Selected public event kinds, immutable destinations, atomic business-write/event-target capture, held restored history and portable safe integration history with nonportable credentials lack complete passing assertions. |
+ | `INT-002` | Enforcing transport | published | done | `tests/base/egress-delivery.test.ts` |  |
+ | `INT-003` | Durable uncertainty | published | partial | `tests/browser/integration-states.mjs` | Gap: Durable attempt identity, finite retry, ambiguity/reconciliation and revoked/private/blocked send fencing lack complete passing assertions. |
+diff --git a/sources.lock.json b/sources.lock.json
+index f247f9d..c3066a4 100644
+--- a/sources.lock.json
++++ b/sources.lock.json
+@@ -3354,7 +3354,7 @@
+       "executable": false
+     },
+     "CHANGELOG.md": {
+-      "sha256": "5d6114d1e1c793d905d7cc97ec481db776b5cb555837da79b84e9c2a71bb3060",
++      "sha256": "f4a8ac5f3a1ce09cb3e0eaa9b72b379bb57227a0b40f424e3da735a66120a9d0",
+       "executable": false
+     },
+     "CLAUDE.md": {
+@@ -3366,7 +3366,7 @@
+       "executable": false
+     },
+     "CONTRACT.md": {
+-      "sha256": "af1656b681438d35f82dbe0d18022925eb26fac02b36c4c6af6ace7b88a763fb",
++      "sha256": "f2143f1121052fe53369d031d53b81c4c71fc8615a1c2a4ae41c5d8a4a201cee",
+       "executable": false
+     },
+     "DEMO.md": {
+@@ -8322,7 +8322,7 @@
+       "executable": false
+     },
+     "tests/base/egress-delivery.test.ts": {
+-      "sha256": "febc2de61da981b293199298484f07792ba7b567d13e6cb13ec87d6c92248a40",
++      "sha256": "9e29feb5f65a01b1560e1c7e4abd2b7ae95d5a6f76f0ab224344f42972c9a5bf",
+       "executable": false
+     },
+     "tests/base/email-capture-fixture.ts": {
+@@ -8390,7 +8390,7 @@
+       "executable": false
+     },
+     "tests/base/integration-delivery-fixture.ts": {
+-      "sha256": "921326f550280ceca6642aec390cd9bde49a7514ab8d425d7a33e17c3dfbfe5b",
++      "sha256": "33eae77a288abf30216b3531415bd65ed27e75b927e92c432d12c746f16f062f",
+       "executable": false
+     },
+     "tests/base/integration-durable.ts": {
+@@ -8398,7 +8398,7 @@
+       "executable": false
+     },
+     "tests/base/integration-effects.ts": {
+-      "sha256": "a514826c75f35b44dbda4ca6031b2d791f425dcc644777ad03d3141e678943c4",
++      "sha256": "90bd00707554e8ac75cbe5f003201fc65062c469f69e18193b52eef4ba154f2c",
+       "executable": false
+     },
+     "tests/base/internal-discussion.test.ts": {
+diff --git a/tests/base/egress-delivery.test.ts b/tests/base/egress-delivery.test.ts
+index 48d28a8..5416267 100644
+--- a/tests/base/egress-delivery.test.ts
++++ b/tests/base/egress-delivery.test.ts
+@@ -34,7 +34,7 @@ async function deliverThroughCron(port:EnforcingEgress){
+  return {state:delivery.state,outcome:JSON.parse(attempt!.outcome) as {kind:string;code:string;status?:number}}
+ }
+ 
+-it('[INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart',async()=>{
++it('[API-003 INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart',async()=>{
+  const g=await graph()
+  // Without the relay nothing outbound is saved: the page says why instead of "saved".
+  const target={name:'Public target',kind:'webhook',endpoint:'https://events.example.com/penny',events:['status.published']}
+diff --git a/tests/base/integration-delivery-fixture.ts b/tests/base/integration-delivery-fixture.ts
+index b8c1137..2d4009b 100644
+--- a/tests/base/integration-delivery-fixture.ts
++++ b/tests/base/integration-delivery-fixture.ts
+@@ -3,6 +3,7 @@ import {createPennyApi} from '@/core/app/api'
+ import {env,origin} from './support'
+ import {createPennyRuntime} from '@/core/app/runtime'
+ import type {EnforcingEgress} from '@/core/features/integrations/transport'
++import type {Row} from '@/core/features/data/archive'
+ export const api=createPennyApi()
+ export const request=(path:string,body:unknown,headers:Record<string,string>,method='POST',db=env.DB,relay?:EnforcingEgress)=>api.fetch(new Request(origin+path,{method,headers:{Origin:origin,...headers,'Content-Type':'application/json'},...(method==='GET'?{}:{body:JSON.stringify(body)})}),{...env,DB:db,...(relay?{PENNY_EGRESS:relay}:{})})
+ /** An outbound connection is saved only where the installation can send it: pass its relay. */
+@@ -13,3 +14,15 @@ export async function connection(operator:Record<string,string>,kind='webhook',e
+ }
+ export function runtime(port?:EnforcingEgress,db=env.DB){return createPennyRuntime({...env,DB:db,...(port?{PENNY_EGRESS:port}:{})})}
+ export const count=(table:string)=>env.DB.prepare('SELECT count(*) n FROM '+table).first<number>('n')
++
++// Compare complete portable records, including composite snapshot identities.
++export const orderedRows=(rows:Row[])=>[...rows].sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)))
++export async function publicationCustody():Promise<Record<string,Row[]>>{
++ const selections:Record<string,string>={requests:"WHERE moderation_state='approved'",request_comments:"WHERE moderation_state='approved'",
++  request_status_updates:'',roadmap_publications:'',roadmap_update_versions:'',roadmap_update_targets:'',roadmap_update_histories:'',roadmap_update_contexts:'',
++  releases:'',release_versions:'',release_targets:'',release_target_snapshots:'',release_recipient_snapshots:'',release_recipient_contexts:''}
++ return Object.fromEntries(await Promise.all(Object.entries(selections).map(async([table,where])=>[table,orderedRows((await env.DB.prepare('SELECT * FROM '+table+' '+where).all<Row>()).results)])))
++}
++export async function integrationCustody():Promise<Record<string,Row[]>>{
++ return Object.fromEntries(await Promise.all(['penny_integration_events','penny_integration_targets','penny_tracker_commands','integration_deliveries','integration_attempts'].map(async table=>[table,orderedRows((await env.DB.prepare('SELECT * FROM '+table).all<Row>()).results)])))
++}
+diff --git a/tests/base/integration-effects.ts b/tests/base/integration-effects.ts
+index 42f6282..7472dc2 100644
+--- a/tests/base/integration-effects.ts
++++ b/tests/base/integration-effects.ts
+@@ -3,12 +3,13 @@ import {applyD1Migrations,reset,createScheduledController} from 'cloudflare:test
+ import {env,origin,owner} from './support'
+ import {graph} from './notification-regression-fixture'
+ import {releaseGraph} from './release-fixture'
+-import {request,connection} from './integration-delivery-fixture'
++import {request,connection,publicationCustody,integrationCustody,orderedRows} from './integration-delivery-fixture'
+ import {apply,feedbackFixture} from './feedback-import-fixture'
+ import {createWebhookProtocol} from '../../base/modules/integrations/core/webhook'
+ import {runNotificationSchedule} from '@/core/features/notifications/scheduled'
+ import type {Archive,ErasureJournal} from '@/core/features/data/archive'
+ import type {WireRequest} from '../../base/modules/integrations/core/types'
++import {stableFeedbackId} from '@/core/features/imports/mapping-support'
+ 
+ /** Selected effects and their portable custody, through native HTTP doors. */
+ export async function proveExplicitIntegration(migrations:Parameters<typeof applyD1Migrations>[1]){
+@@ -28,6 +29,11 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
+  const publish=(body:string,status='under_review')=>call('/api/operator/requests/'+subject.slug+'/status-updates',{status,body,idempotencyKey:crypto.randomUUID()})
+  expect((await publish('synthetic-penny-approved-status')).status).toBe(200)
+  const release=await releaseGraph(1,false,g)
++ const settings=await json<{settings:Record<string,unknown>}>('/api/operator/settings/status-roadmap')
++ await json('/api/operator/settings/status-roadmap',{...settings.settings,source:'approved_items'},200,'PUT')
++ const update=await json<{transitionId:string}>('/api/operator/roadmap/release-item/move',{status:'in_progress',reason:'synthetic-penny-publication-custody',idempotencyKey:crypto.randomUUID()})
++ await json('/api/operator/roadmap-updates/'+update.transitionId+'/publish',{})
++ await json('/api/operator/roadmap/release-item/move',{status:'shipped',reason:'synthetic-penny-release-ready',idempotencyKey:crypto.randomUUID()})
+  await json('/api/operator/releases/'+release.draft.slug+'/publish',{})
+  const targets=async()=>(await env.DB.prepare('SELECT e.event,t.event_id,t.destination_id FROM penny_integration_targets t JOIN penny_integration_events e ON e.id=t.event_id ORDER BY t.id').all<{event:string;event_id:string;destination_id:string}>()).results
+  const captured=await targets()
+@@ -49,9 +55,48 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
+  for(const wire of calls){expect(wire.url).toBe('https://events.example.com/penny');expect(wire.body).not.toContain('synthetic-penny-private')}
+  const completed=(await env.DB.prepare('SELECT * FROM integration_attempts ORDER BY id').all()).results
+  expect(completed).toHaveLength(captured.length)
+- // Saved history cannot manufacture a live event or outbound call.
+- await apply(feedbackFixture('synthetic-penny-integration-history'),operator)
++ // A populated publication baseline makes accidental republishing observable.
++ const publications=await publicationCustody(),effects=await integrationCustody()
++ for(const [table,rows] of Object.entries(publications))expect(rows.length,table).toBeGreaterThan(0)
++ expect(publications.requests.find(row=>row.id===subject.id)).toMatchObject({public_title:'synthetic-penny-approved-request',public_description:'synthetic-penny-approved-description'})
++ expect(publications.request_comments).toMatchObject([{request_id:subject.id,body:'synthetic-penny-approved-reply',moderation_state:'approved'}])
++ expect(publications.request_status_updates).toMatchObject([{request_id:subject.id,body:'synthetic-penny-approved-status'}])
++ expect(publications.roadmap_update_versions.find(row=>row.id===update.transitionId)).toMatchObject({title:'Approved improvement',problem:'Approved problem',public_status:'in_progress',published_at:expect.any(String),snapshot_sealed_at:expect.any(String)})
++ expect(publications.release_versions).toMatchObject([{title:release.input.title,body:release.input.body,snapshot_sealed_at:expect.any(String)}])
++ const readPublic=async<T>(path:string)=>{
++  const response=await request(path,undefined,{},'GET',env.DB,edge)
++  expect(response.status,await response.clone().text()).toBe(200)
++  return response.json() as Promise<T>
++ }
++ const publicReadback=async()=>({
++  requests:await readPublic<unknown[]>('/api/public/requests'),
++  details:await Promise.all([subject,...g.requests].map(row=>readPublic<Record<string,unknown>>('/api/public/requests/'+row.slug))),
++  roadmap:await readPublic<unknown[]>('/api/public/roadmap'),
++  roadmapDetail:await readPublic<Record<string,unknown>>('/api/public/roadmap/safe-roadmap-token'),
++  releases:await readPublic<unknown[]>('/api/public/releases'),
++  releaseDetail:await readPublic<Record<string,unknown>>('/api/public/releases/'+release.draft.slug),
++ })
++ const visible=await publicReadback()
++ expect(visible.requests).toHaveLength(2);expect(visible.roadmap).toHaveLength(1);expect(visible.releases).toHaveLength(1)
++ expect(JSON.stringify(visible.details)).toContain('synthetic-penny-approved-reply')
++ expect(JSON.stringify(visible.details)).toContain('synthetic-penny-approved-status')
++ expect(JSON.stringify(visible.details)).toContain('Approved improvement')
++ const history=feedbackFixture('synthetic-penny-integration-history')
++ const heldHistory=async()=>{
++  const requests=(await env.DB.prepare("SELECT id,title,description,moderation_state,public_title,public_description,published_at FROM requests WHERE id IN (SELECT target_id FROM feedback_import_records WHERE target_kind='posts') ORDER BY id").all()).results
++  const expected=[['post-0','Readable labels','A supplied customer quote.'],['post-1','Duplicate labels','The same problem on mobile.'],['post-2','Older duplicate','Original older request.'],['post-3','Private account problem','Private strategy and customer context.']].map(([id,title,description])=>({id:stableFeedbackId(history.namespace,'posts',id),title,description,moderation_state:'awaiting_review',public_title:null,public_description:null,published_at:null})).sort((a,b)=>a.id.localeCompare(b.id))
++  expect(requests).toEqual(expected)
++  const comments=(await env.DB.prepare("SELECT id,body,moderation_state,published_at FROM request_comments WHERE moderation_state='awaiting_review' ORDER BY id").all()).results
++  expect(comments).toEqual([['comment-0','A multiline supplied comment.\nUnicode café.'],['comment-1','Private renewal conversation.']].map(([id,body])=>({id:stableFeedbackId(history.namespace,'comments',id),body,moderation_state:'awaiting_review',published_at:null})).sort((a,b)=>a.id.localeCompare(b.id)))
++  for(const row of expected)expect((await request('/api/public/requests/feedback-'+row.id.toLowerCase(),undefined,{},'GET',env.DB,edge)).status).toBe(404)
++ }
++ // Native preview and apply add held history without changing any publication.
++ await apply(history,operator)
++ await heldHistory()
++ expect(await publicationCustody()).toEqual(publications);expect(await integrationCustody()).toEqual(effects)
++ expect(await publicReadback()).toEqual(visible)
+  await cron();expect(calls).toHaveLength(captured.length);expect(await targets()).toEqual(captured)
++ expect(await publicationCustody()).toEqual(publications);expect(await integrationCustody()).toEqual(effects)
+  // A signed receiver contributes an actual retained receipt, never a fabricated row.
+  const receiver=await connection(operator,'receiver',[],edge)
+  const protocol=createWebhookProtocol({resolveDestination:async()=>origin,signingKey:async()=>Uint8Array.from(receiver.signingKey.match(/../g)!,value=>parseInt(value,16))})
+@@ -64,6 +109,12 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
+  const slackEndpoint='https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3'
+  await json('/api/operator/integrations/destinations',{name:'synthetic-penny-portable-slack',kind:'slack',endpoint:slackEndpoint,events:['status.published']},201)
+  const bundle=await json<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export')
++ for(const [table,rows] of Object.entries(publications)){
++  const portable=bundle.archive.tables[table].filter(row=>!['requests','request_comments'].includes(table)||row.moderation_state==='approved')
++  expect(orderedRows(portable),table).toEqual(rows)
++ }
++ const portableEffects=Object.fromEntries(Object.entries(effects).map(([table,rows])=>[table,orderedRows(rows.map(row=>table==='penny_integration_events'?{...row,held:1}:table==='penny_tracker_commands'?{...row,held:1}:table==='integration_deliveries'&&['queued','sending'].includes(String(row.state))?{...row,state:'uncertain',claim:null,claim_until:null}:row))]))
++ for(const [table,rows] of Object.entries(portableEffects))expect(orderedRows(bundle.archive.tables[table]),table).toEqual(rows)
+  expect(bundle.archive.tables.penny_integration_targets).toEqual((await env.DB.prepare('SELECT * FROM penny_integration_targets ORDER BY id').all()).results)
+  expect(bundle.archive.tables.integration_attempts).toEqual(completed)
+  expect(bundle.archive.tables.penny_integration_receipts).toEqual(receipts)
+@@ -71,7 +122,12 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
+  for(const value of [receiver.signingKey,slackEndpoint,'https://events.example.com/penny','https://events.example.com/replacement'])expect(JSON.stringify(bundle)).not.toContain(value)
+  expect(bundle.archive.tables.penny_integration_credentials).toBeUndefined()
+  await reset();await applyD1Migrations(env.DB,migrations);operator=await owner({timezone:'UTC'})
++ for(const rows of Object.values(await publicationCustody()))expect(rows).toEqual([])
+  await json('/api/operator/data/import',bundle)
++ await heldHistory()
++ expect(await publicationCustody()).toEqual(publications)
++ expect(await integrationCustody()).toEqual(portableEffects)
++ expect(await publicReadback()).toEqual(visible)
+  expect((await env.DB.prepare('SELECT * FROM integration_attempts ORDER BY id').all()).results).toEqual(completed)
+  expect((await env.DB.prepare('SELECT * FROM penny_integration_receipts ORDER BY id').all()).results).toEqual(receipts)
+  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_credentials').first('n')).toBe(0)
+@@ -81,5 +137,10 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
+  await cron()
+  // Even newly entered credentials do not acquire restored historical targets.
+  await connection(operator,'webhook',events,edge);await cron()
++ await cron()
+  expect(calls).toHaveLength(sent)
++ expect(await publicationCustody()).toEqual(publications)
++ expect(await integrationCustody()).toEqual(portableEffects)
++ expect(await publicReadback()).toEqual(visible)
++ console.info('PROBE API-003 point 1: native preview and apply, authenticated export and import and public readback preserve populated publications and effect identities; repeated drains add 0 outbound calls')
+ }

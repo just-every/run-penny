@@ -1,0 +1,45 @@
+
+> penny@0.2.2 test:base /workspace/run-penny
+> vitest run --config vitest.base.config.ts tests/base/egress-delivery.test.ts
+
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /workspace/run-penny
+
+stderr | tests/base/egress-delivery.test.ts > [API-003 INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart
+Penny request failed {"method":"POST","route":"/api/operator/requests/:slug/status-updates","name":"Error","code":"unclassified"}
+
+ ❯ tests/base/egress-delivery.test.ts (1 test | 1 failed) 9094ms
+   × [API-003 INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart 9092ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/egress-delivery.test.ts > [API-003 INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart
+AssertionError: expected [ { …(12) }, { …(12) } ] to have a length of 99 but got 2
+
+- Expected
++ Received
+
+- 99
++ 2
+
+ ❯ proveExplicitIntegration tests/base/integration-effects.ts:80:27
+     78|  })
+     79|  const visible=await publicReadback()
+     80|  expect(visible.requests).toHaveLength(99);expect(visible.roadmap).toH…
+       |                           ^
+     81|  expect(JSON.stringify(visible.details)).toContain('synthetic-penny-ap…
+     82|  expect(JSON.stringify(visible.details)).toContain('synthetic-penny-ap…
+ ❯ tests/base/egress-delivery.test.ts:61:2
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  02:54:54
+   Duration  17.16s (transform 2.96s, setup 0ms, import 7.06s, tests 9.09s, environment 0ms)
+
+ ELIFECYCLE  Command failed with exit code 1.

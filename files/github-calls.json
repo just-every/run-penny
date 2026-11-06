@@ -1,0 +1,60 @@
+[
+  {
+    "time": 1793933750.639371,
+    "args": [
+      "api",
+      "repos/just-every/run-penny/actions/runs?head_sha=84bad894d12e7f969f567177a126cb544a3237b1&per_page=100",
+      "--jq",
+      "[.workflow_runs[]|{id,name,event,status,conclusion,head_sha,html_url}]"
+    ]
+  },
+  {
+    "time": 1793933962.2622383,
+    "args": [
+      "api",
+      "repos/just-every/run-penny/actions/runs?head_sha=3de04bf7072457ee62526bea590307b2987cab34&per_page=100",
+      "--jq",
+      "[.workflow_runs[]|{id,name,event,status,conclusion,head_sha,html_url}]"
+    ]
+  },
+  {
+    "time": 1793934023.3745978,
+    "args": [
+      "api",
+      "repos/just-every/run-penny/actions/runs?head_sha=3de04bf7072457ee62526bea590307b2987cab34&per_page=100",
+      "--jq",
+      "[.workflow_runs[]|{id,name,event,status,conclusion,head_sha,html_url}]"
+    ]
+  },
+  {
+    "time": 1793934073.786303,
+    "args": [
+      "api",
+      "repos/just-every/run-penny/actions/runs/42140171112/jobs",
+      "--jq",
+      "[.jobs[]|{id,name,status,conclusion,steps:[.steps[]|select(.conclusion==\"failure\")|{name,number,conclusion}]}]"
+    ]
+  },
+  {
+    "time": 1793934324.4118483,
+    "args": [
+      "api",
+      "repos/just-every/run-penny/actions/runs/42153656699/jobs",
+      "--jq",
+      "[.jobs[]|{id,name,status,conclusion,steps:[.steps[]|select(.conclusion==\"failure\")|{name,number,conclusion}]}]"
+    ]
+  },
+  {
+    "time": 1793934374.8205094,
+    "args": [
+      "run",
+      "view",
+      "42140171112",
+      "--repo",
+      "just-every/run-penny",
+      "--job",
+      "127638280568",
+      "--log-failed"
+    ]
+  }
+]

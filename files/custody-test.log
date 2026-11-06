@@ -1,0 +1,16 @@
+
+> penny@0.2.2 test:base /workspace/run-penny
+> vitest run --config vitest.base.config.ts tests/base/egress-delivery.test.ts
+
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /workspace/run-penny
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  02:56:41
+   Duration  26.78s (transform 4.55s, setup 0ms, import 10.88s, tests 14.19s, environment 0ms)
+
