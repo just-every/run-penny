@@ -3,6 +3,10 @@ import { execFileSync } from 'node:child_process'
 import { readFile } from 'node:fs/promises'
 import { arch, cpus, platform, totalmem } from 'node:os'
 import { startBrowserRuntime } from '../browser/base-runtime.mjs'
+import { proveAiEvaluationCommand } from './ai-eval-command.mjs'
+
+// The existing lexical journey also proves its public evaluation command.
+await proveAiEvaluationCommand()
 
 // The requester-board Verify shard builds, then runs this capacity journey.
 // The receipt declares its hardware and the populated tables read by suggestions.

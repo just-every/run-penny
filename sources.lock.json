@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "a824f29d1041fed5c9acbf127a7074aed0dba305c9827456b8cc9ebff931f807",
+      "sha256": "924dc91feac46c160e3e468034c3db901e10d020ffc641cd4dd1b192d74c81a1",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "3d18d182aaf931d2752b8ce1db6a951214db230c3f0f675cc1ddc2f2b96fe68b",
+      "sha256": "84333d166d0927d5ec4534e741c61af3addba929eee3d5cd8e897a5c51fe5a24",
       "executable": false
     },
     "DEMO.md": {
@@ -9081,10 +9081,6 @@
       "sha256": "892328ef9733f49073b4ebadc0b1d444d9a5b45424fabcc5250b44e9c4c2d7a8",
       "executable": false
     },
-    "tests/data/ai-eval.test.mjs": {
-      "sha256": "ac64b309e91e130ff4544ed0da6584b59bf51fbf1b4651c7d235ca18584676df",
-      "executable": false
-    },
     "tests/data/command-boundaries.test.mjs": {
       "sha256": "6c152249c897adf872c09fbe166c04c2e062ee13492a538ef43e817ac5350c66",
       "executable": false
@@ -9297,8 +9293,12 @@
       "sha256": "93f45a346657ba39a17da37317a1a83180012f1341a6e178adeb17efdedea09d",
       "executable": false
     },
+    "tests/runtime/ai-eval-command.mjs": {
+      "sha256": "58310bfba8df495dd97611f114855eccef68d1bdaa9f59248ac4fb84d9709e06",
+      "executable": false
+    },
     "tests/runtime/duplicate-suggestions-scale.mjs": {
-      "sha256": "6904df4818ae7b19d6662de854f353ae86390b4402d30361737703c605d073cb",
+      "sha256": "4cdf8aa94c3f46ce7f58b912567e71a73976335185d907632f3e69885ed7ee46",
       "executable": false
     },
     "tests/runtime/mail-events-restart.test.mjs": {

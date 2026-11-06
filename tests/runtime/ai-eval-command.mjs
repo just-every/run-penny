@@ -1,4 +1,3 @@
-import test from 'node:test'
 import assert from 'node:assert/strict'
 import {spawn} from 'node:child_process'
 import {createHash} from 'node:crypto'
@@ -17,7 +16,7 @@ async function command(args) {
  return {exit, stdout:Buffer.concat(stdout).toString(), stderr:Buffer.concat(stderr).toString()}
 }
 
-test('[AI-011] evaluation command measures the native no-model lexical floor and retains redaction evaluation', {timeout:120000}, async () => {
+export async function proveAiEvaluationCommand() {
  const directory = await mkdtemp(join(tmpdir(),'penny-ai-command-'))
  try {
   const path=join(directory,'report.json'), corpusPath='tests/fixtures/ai/duplicates-v1/cases.json'
@@ -76,4 +75,4 @@ test('[AI-011] evaluation command measures the native no-model lexical floor and
   assert.deepEqual(previous.failed,[])
   assert.ok(previous.labeledSpans>0)
  } finally {await rm(directory,{recursive:true,force:true})}
-})
+}
