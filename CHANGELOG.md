@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add Owner and Admin audit metadata reads and bounded CSV and JSON exports with actor, action, subject and date filters, stable pagination and existing agent attribution. Exclude private details and recheck current native authority on every page. ROLE-004 remains partial for its audit screen, every-action coverage and wider privacy obligations. No migration or configuration change is required.
+- Serve an offline OpenAPI document at `/docs/openapi.json` for the existing scoped board, request, comment, status, release and proxy-vote operations. Share request validators with native routes and reconcile populated HTTP responses, invalid inputs, missing credentials and insufficient scopes in one built-Worker sanity journey, replacing the overlapping native publication registration with all of its assertions retained. Preserve native admission, explicit approval, held wording and consent boundaries. DATA-006 remains partial for other resource families, full pagination and filters, and lifecycle-webhook proof. No migration or configuration change is required.
 
 - Prove full and partial hierarchy-name search without a type filter, exact destinations across mixed paginated results, and independent destinations for equal-name products after navigation and reload. OPS-004 remains partial with its finer permissions and capacity proof open. No migration or configuration change.
 
