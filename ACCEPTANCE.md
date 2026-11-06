@@ -72,8 +72,8 @@ Core · published · **partial** · Cites BASE-DOCS-001, BASE-PUBLIC-001
 7. The documentation reads no workspace record and no requester or operator identity or session.
 8. An unknown or nested slug answers a `404` with no article.
 
-**Evidence.** `tests/browser/route-review.mjs`; `docs/site.json`
-**Gap.** Gap: manifest navigation order; build/development rendering and rejection of unlisted Markdown, broken links and forbidden image paths; full header/footer and page-navigation semantics; client navigation and HTML escaping; nested-unknown-slug 404/article exclusion; and workspace/session/cookie isolation lack sentence-complete running assertions.
+**Evidence.** `tests/browser/route-review.mjs` — checkDocsRefusal: nonempty published docs control and single and nested unknown slug HTTP 404 with prose and article exclusion in SSR and hydrated documents; `docs/site.json`
+**Gap.** Gap: manifest navigation order; rendering in builds and development and rejection of unlisted Markdown, broken links and forbidden image paths; full header and footer and page-navigation semantics; client navigation and HTML escaping; and workspace, session and cookie isolation lack sentence-complete running assertions.
 
 ### Operators
 

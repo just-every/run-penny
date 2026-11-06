@@ -670,7 +670,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "fcaf107aaed1369271aa218caf2d2ad2ac0aadbc91a81192be35793020d52740",
+      "sha256": "7ab2237e00de7d19be5f1edafd709ef655c3a1ab9df8bdb988122f28c9e3aab4",
       "executable": false
     },
     "agent-surface.json": {
@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "cf5de9fa2e51571e96a962f577fa342a2d13f95c1c94bd3371b682516af27a4f",
+      "sha256": "fd252580ee9cbc061f7bc74a38cca692d99e1cd96dc640db7fdc22ef47bd0e52",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "3a93b84b7882c9cb222b948fa0914465a84fe49e49cf548faa76dd2aa2f62436",
+      "sha256": "9ce27d7b5d35dc3bf5af77268c4eaa7abbab436b952bc93bf35180910bc7d3e1",
       "executable": false
     },
     "DEMO.md": {
@@ -9118,7 +9118,7 @@
       "executable": false
     },
     "tests/browser/route-review.mjs": {
-      "sha256": "7ab09d7224a45f3211d0810f679607a7ad727f06457d54d7608aa553d65c1411",
+      "sha256": "bf37f82752031ddc0a29a8d6ec491a4b367f015cc793e179105c9e1214be671b",
       "executable": false
     },
     "tests/browser/signin.test.mjs": {
