@@ -1,0 +1,81 @@
+{
+  "clauses": [
+    "REQ-014",
+    "REQ-031",
+    "BASE-ACCESS-002"
+  ],
+  "checks": [
+    {
+      "width": 1440,
+      "label": "host-signed-in"
+    },
+    {
+      "width": 1440,
+      "label": "host-submitted"
+    },
+    {
+      "width": 1440,
+      "label": "host-activity"
+    },
+    {
+      "width": 1440,
+      "label": "host-email-fallback"
+    },
+    {
+      "width": 1440,
+      "label": "expired",
+      "exchange": 401,
+      "fallback": "email form",
+      "identity": "cleared",
+      "writes": 0,
+      "mail": 0
+    },
+    {
+      "width": 1440,
+      "label": "future-dated",
+      "exchange": 401,
+      "fallback": "email form",
+      "identity": "cleared",
+      "writes": 0,
+      "mail": 0
+    },
+    {
+      "width": 1440,
+      "label": "wrong-signature",
+      "exchange": 401,
+      "fallback": "email form",
+      "identity": "cleared",
+      "writes": 0,
+      "mail": 0
+    },
+    {
+      "width": 390,
+      "label": "host-signed-in"
+    },
+    {
+      "width": 390,
+      "label": "host-submitted"
+    },
+    {
+      "width": 390,
+      "label": "host-activity"
+    },
+    {
+      "width": 390,
+      "label": "host-email-fallback"
+    },
+    {
+      "width": 390,
+      "label": "expired",
+      "exchange": 401,
+      "fallback": "email form",
+      "identity": "cleared",
+      "writes": 0,
+      "mail": 0
+    }
+  ],
+  "unexpectedErrors": 0,
+  "externalRequests": 0,
+  "providerCalls": 0,
+  "teardown": "fulfilled"
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/edition-authoring/cli.mjs",
+      "check"
+    ],
+    "started_utc": "2026-11-06T02:02:19.100749+00:00",
+    "exit": 0,
+    "log": "source-check.log"
+  },
+  {
+    "command": [
+      "node",
+      "src/base/contract-docs.mjs",
+      "check"
+    ],
+    "started_utc": "2026-11-06T02:02:19.542442+00:00",
+    "exit": 1,
+    "log": "contract-check.log"
+  },
+  {
+    "command": [
+      "pnpm",
+      "run",
+      "typecheck"
+    ],
+    "started_utc": "2026-11-06T02:02:19.703528+00:00",
+    "exit": 0,
+    "log": "typecheck.log"
+  }
+]

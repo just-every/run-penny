@@ -1,0 +1,67 @@
+[
+  {
+    "path": "src/core/features/auth/host-claims.ts",
+    "bytes": 1968,
+    "sha256": "7576f49123ea7daf183cd8a57561dbb2ecde785a055f2e23b103563e5f5eac96"
+  },
+  {
+    "path": "src/core/features/auth/requester.ts",
+    "bytes": 5168,
+    "sha256": "e444bd2101d63ccb33418ec45ef1ad555152bc1def7df23302f3dd99ae8c8e74"
+  },
+  {
+    "path": "src/core/features/auth/native-routes.ts",
+    "bytes": 4394,
+    "sha256": "327521adcceec36ab5a407dc5876a72541c3b39457fa8a56a977e9c28bb600ea"
+  },
+  {
+    "path": "src/core/features/requests/native-routes.ts",
+    "bytes": 4058,
+    "sha256": "2fda1df4bac1d1ec71423fb9f26d185b7b2b6cddafb46f4f95c58a2918d04590"
+  },
+  {
+    "path": "src/core/features/auth/host-client.ts",
+    "bytes": 1358,
+    "sha256": "05bcb7fe0b1d994aca5fe08c106de30aa92965969e4cc4652d55d1798e0e7e8c"
+  },
+  {
+    "path": "src/core/features/auth/ui/host-identity-bridge.tsx",
+    "bytes": 1848,
+    "sha256": "665e72e6abd4a84ec329e971db4a43568f0328a2b1eb17b41885055d9420ec23"
+  },
+  {
+    "path": "tests/base/host-identity.test.ts",
+    "bytes": 16829,
+    "sha256": "bfe6c92a704ee492e64f192c6028d620c2d155aa9bc59340e301372cbe25cb34"
+  },
+  {
+    "path": "tests/base/no-mail-identity.test.ts",
+    "bytes": 8087,
+    "sha256": "7e423e8f2f894f57d4744c01629a7ce8678b300d8a6dffea53614aefdb928d0d"
+  },
+  {
+    "path": "tests/browser/host-identity.mjs",
+    "bytes": 11227,
+    "sha256": "7f9f69d71736d057553ca351b499f5c210dbe754088629c7f79effa169a7f382"
+  },
+  {
+    "path": "examples/host-identity/server.mjs",
+    "bytes": 4048,
+    "sha256": "29d1a5ce522776b2434142cba96ec5da3d159c8a902183fc16e51ee247ec6da4"
+  },
+  {
+    "path": "examples/host-identity/sign.mjs",
+    "bytes": 770,
+    "sha256": "9a22a0f3f6b4f27f9a0bbb0a61a1f2c6a573ae3893ca2e2b79c77fdc9da62cab"
+  },
+  {
+    "path": "examples/host-identity/embed.js",
+    "bytes": 515,
+    "sha256": "a81e5846cf7a45b8394ea6b458aee400c8da307af3610f8b79c83492332393d8"
+  },
+  {
+    "path": "tests/browser/base-runtime.mjs",
+    "bytes": 4455,
+    "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9"
+  }
+]

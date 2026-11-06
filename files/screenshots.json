@@ -1,0 +1,50 @@
+[
+  {
+    "path": "browser/host-activity-1440.png",
+    "sha256": "a3ceaabc3cff55ecbbc31d7719df348c552900cddd611fcc0efd69978402eb0b",
+    "bytes": 278965,
+    "review": "INSPECTED individually; functional screen state only; no visual-design judgment"
+  },
+  {
+    "path": "browser/host-activity-390.png",
+    "sha256": "f1f185eb2aa803cef1d33de4c373361c120a35012ec246c60a71847ccad53a55",
+    "bytes": 154588,
+    "review": "INSPECTED individually; functional screen state only; no visual-design judgment"
+  },
+  {
+    "path": "browser/host-email-fallback-1440.png",
+    "sha256": "89c702b0a688bf7b3774db9df1f352fd5ea09ee674d5031f8613df2967ad336e",
+    "bytes": 274579,
+    "review": "INSPECTED individually; functional screen state only; no visual-design judgment"
+  },
+  {
+    "path": "browser/host-email-fallback-390.png",
+    "sha256": "dca9e6a6cfd126a6eccdad74c71f53de0906ce96f8ac8c13b27d41b7ddb714e4",
+    "bytes": 146641,
+    "review": "INSPECTED individually; functional screen state only; no visual-design judgment"
+  },
+  {
+    "path": "browser/host-signed-in-1440.png",
+    "sha256": "d52a9f3651addc2547ad332edbeb8b7c77d4f5f659295745c6a3b97008fcc6d5",
+    "bytes": 265221,
+    "review": "INSPECTED individually; functional screen state only; no visual-design judgment"
+  },
+  {
+    "path": "browser/host-signed-in-390.png",
+    "sha256": "a2e88c5945bb59ce7edf7d541e47e55d54dab742f9b67ec759448c5223d27614",
+    "bytes": 144918,
+    "review": "INSPECTED individually; functional screen state only; no visual-design judgment"
+  },
+  {
+    "path": "browser/host-submitted-1440.png",
+    "sha256": "420b662b8ed1d92762e3b3228aa32d2e9cf86c01a9749ff967b2a08b08094749",
+    "bytes": 275795,
+    "review": "INSPECTED individually; functional screen state only; no visual-design judgment"
+  },
+  {
+    "path": "browser/host-submitted-390.png",
+    "sha256": "3eb61f2c96a7b74739d91a9eb8d02e5ff60e2c4ec488b2c7bf6e0a3c5fcab8c7",
+    "bytes": 171463,
+    "review": "INSPECTED individually; functional screen state only; no visual-design judgment"
+  }
+]

@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "tag": "ct-judge-penny-req014-20261105-1430-sol1",
+  "repository": "just-every/run-penny",
+  "source_sha": "c74fc1d24e1632a6136e2768e129a78d177d416d",
+  "source_branch": "cloud/sd-penny-c-f22",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "xhigh",
+  "recorded_utc": "2026-11-06T02:07:35.454560+00:00",
+  "commands": [
+    {
+      "command": "git clone --depth 1 --filter=blob:none --branch cloud/sd-penny-c-f22 https://github.com/just-every/run-penny.git <disposable source>",
+      "exit": 0,
+      "result": "HEAD c74fc1d24e1632a6136e2768e129a78d177d416d"
+    },
+    {
+      "command": "cloud_run pnpm install --frozen-lockfile",
+      "exit": 0,
+      "log": "dependencies.log",
+      "result": "282 packages, frozen lockfile"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "log": "build.log",
+      "result": "emitted production Worker and client; dispatcher selected Node 22.20.0"
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/host-identity.test.ts",
+      "exit": 0,
+      "log": "native.log",
+      "tests": 6,
+      "result": "6 passed; once"
+    },
+    {
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=../packet/browser cloud_run node tests/browser/host-identity.mjs",
+      "exit": 0,
+      "log": "browser.log",
+      "checks": 12,
+      "result": "12 checks passed; once; 8 screenshots; teardown fulfilled"
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/no-mail-identity.test.ts",
+      "exit": 0,
+      "log": "no-mail-native.log",
+      "tests": 4,
+      "result": "4 passed; once; retained 503 behavior conflicts with literal generic-401 frozen item"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "started_utc": "2026-11-06T02:02:19.100749+00:00",
+      "exit": 0,
+      "log": "source-check.log"
+    },
+    {
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "started_utc": "2026-11-06T02:02:19.542442+00:00",
+      "exit": 1,
+      "log": "contract-check.log"
+    },
+    {
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "started_utc": "2026-11-06T02:02:19.703528+00:00",
+      "exit": 0,
+      "log": "typecheck.log"
+    }
+  ],
+  "tracked_diff_bytes": 0,
+  "status_porcelain": "",
+  "provider_operations": 0,
+  "github_actions_calls": 0,
+  "product_commits": 0,
+  "product_pushes": 0,
+  "pr_created": false,
+  "verdict": "REQ-014 STAYS PARTIAL",
+  "rubric": {
+    "R1": "UNMET: generic401 mismatch at no-mail submission",
+    "R2": "MET"
+  },
+  "substantive_blockers": [
+    "B1: no-mail invalid host submission returns 503 instead of frozen generic401"
+  ],
+  "original_counts": {
+    "done": 77,
+    "partial": 126,
+    "missing": 78,
+    "total": 281
+  },
+  "candidate_counts": {
+    "done": 78,
+    "partial": 125,
+    "missing": 78,
+    "total": 281
+  },
+  "awarded_delta": {
+    "done": 0,
+    "partial": 0,
+    "missing": 0
+  },
+  "ci_run": {
+    "id": 42037370154,
+    "event": "push",
+    "conclusion": "failure",
+    "provenance": "supplied brief; not queried",
+    "runtime_shards_executed": false
+  },
+  "not_run": [
+    "full suite",
+    "baseline suite",
+    "provider operations",
+    "private held-outs",
+    "CI calls",
+    "generator write",
+    "source-lock write",
+    "full-history publication scan",
+    "main integration and landing",
+    "Run site"
+  ]
+}

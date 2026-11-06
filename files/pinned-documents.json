@@ -1,0 +1,34 @@
+[
+  {
+    "path": "CONTRACT.md",
+    "url": "https://raw.githubusercontent.com/just-every/run-penny/c74fc1d24e1632a6136e2768e129a78d177d416d/CONTRACT.md",
+    "http": 200,
+    "bytes": 351295,
+    "sha256": "ab8d453795f1e809a3ea82270a5b253139484adb0069a752b410f1675330c3ae",
+    "matches_checkout": true
+  },
+  {
+    "path": "ACCEPTANCE.md",
+    "url": "https://raw.githubusercontent.com/just-every/run-penny/c74fc1d24e1632a6136e2768e129a78d177d416d/ACCEPTANCE.md",
+    "http": 200,
+    "bytes": 309987,
+    "sha256": "a1892ab4b7e449b40e22e11ee344bbf07d2e625d63a1bf79d9900d8e46e03378",
+    "matches_checkout": true
+  },
+  {
+    "path": "AGENTS.md",
+    "url": "https://raw.githubusercontent.com/just-every/run-penny/c74fc1d24e1632a6136e2768e129a78d177d416d/AGENTS.md",
+    "http": 200,
+    "bytes": 11191,
+    "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968",
+    "matches_checkout": true
+  },
+  {
+    "path": "RULINGS.md",
+    "url": "https://raw.githubusercontent.com/just-every/run-penny/c74fc1d24e1632a6136e2768e129a78d177d416d/RULINGS.md",
+    "http": 200,
+    "bytes": 10219,
+    "sha256": "d7a6d055f345370be57062ca0daf40d1b491a94da3fcb690fa3d442f8e98f868",
+    "matches_checkout": true
+  }
+]
