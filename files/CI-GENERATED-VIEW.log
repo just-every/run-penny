@@ -1,0 +1,13 @@
+Command: gh run view 42171694429 --repo just-every/run-penny --job 127740839755 --log-failed
+Exit: 0
+shards (requester-board, true)	Check generated contract documents	﻿2026-11-06T06:00:28.0242106Z ##[group]Run node src/base/contract-docs.mjs check
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.0242283Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.0262225Z shell: /usr/bin/bash -e {0}
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.0262470Z env:
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.0262559Z   CI: true
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.0262668Z   WRANGLER_SEND_METRICS: false
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.0262788Z   CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV: false
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.0262891Z   PLAYWRIGHT_SKIP_BROWSER_GC: 1
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.0262972Z ##[endgroup]
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.1598343Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (requester-board, true)	Check generated contract documents	2026-11-06T06:00:28.1657143Z ##[error]Process completed with exit code 1.

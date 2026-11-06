@@ -1,0 +1,38 @@
+{
+  "head": "c0c7df9f0d9e8f4ff5a0257c316ae415b139ca25",
+  "product_branch": "cloud/sd-penny-c-f80",
+  "candidate_commits": [
+    "c0c7df9f0d9e8f4ff5a0257c316ae415b139ca25",
+    "deb58910282c1fe67bac87d531f6bb192487084f"
+  ],
+  "identity_and_trailers": "pass",
+  "parent_status_rows_retained": "pass",
+  "changed_email_findings": [],
+  "publication_scan": {
+    "status": "not-run-in-cloud",
+    "reason": "Guarded Mac lander owns the complete full-history publication scan"
+  },
+  "generated_views_committed": false,
+  "files": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "scripts/ai-eval/duplicates.mjs",
+    "scripts/ai-eval/lexical-runtime.mjs",
+    "scripts/ai-eval/run.mjs",
+    "sources.lock.json",
+    "tests/fixtures/ai/duplicates-v1/SPEC.md",
+    "tests/fixtures/ai/duplicates-v1/cases.json",
+    "tests/runtime/ai-eval-command.mjs",
+    "tests/runtime/duplicate-suggestions-scale.mjs"
+  ],
+  "remote_head": "c0c7df9f0d9e8f4ff5a0257c316ae415b139ca25",
+  "remote_verified": true,
+  "verify": {
+    "id": 42171694429,
+    "event": "push",
+    "conclusion": "failure",
+    "only_failure": "generated contract document freshness",
+    "permitted_exception": true
+  },
+  "github_calls": 5
+}

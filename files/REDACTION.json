@@ -1,0 +1,65 @@
+{
+  "set": "redaction-v1",
+  "version": "1.0.0",
+  "sha256": "1cc3bbbd542fdb530f97321d988e09e6e1d0d10937a6a6e03c2054be664024e1",
+  "excerpts": 210,
+  "labeledSpans": 170,
+  "byKind": {
+    "ssn": {
+      "tp": 40,
+      "fp": 0,
+      "fn": 0,
+      "tn": 170,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "card": {
+      "tp": 40,
+      "fp": 0,
+      "fn": 0,
+      "tn": 170,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "phone": {
+      "tp": 30,
+      "fp": 0,
+      "fn": 0,
+      "tn": 180,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "email": {
+      "tp": 30,
+      "fp": 0,
+      "fn": 0,
+      "tn": 180,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "credential": {
+      "tp": 30,
+      "fp": 0,
+      "fn": 0,
+      "tn": 180,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    }
+  },
+  "micro": {
+    "tp": 170,
+    "fp": 0,
+    "fn": 0,
+    "tn": 880,
+    "precision": 1,
+    "recall": 1,
+    "f1": 1
+  },
+  "passed": true,
+  "failed": []
+}

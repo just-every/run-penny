@@ -1,0 +1,10 @@
+{
+  "baseline_head": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "head": "c0c7df9f0d9e8f4ff5a0257c316ae415b139ca25",
+  "direct_entry_registrations_before": 201,
+  "direct_entry_registrations_after": 201,
+  "note": "Pre-existing direct entry count exceeds the stated cap. Existing imported helper registrations and assert journeys are not counted by this diagnostic. This change adds no registration or Verify entry; all new proof runs inside the existing duplicate suggestion journey.",
+  "removed_existing_assertions": false,
+  "skipped_assertions": false,
+  "narrowed_assertions": false
+}

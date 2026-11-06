@@ -1,0 +1,89 @@
+{
+  "head": "c0c7df9f0d9e8f4ff5a0257c316ae415b139ca25",
+  "checks": [
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "summary": "Wrote 1 contract documents.\n"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "summary": "Contract documents are current.\n"
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0,
+      "summary": ""
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "summary": "source lock command completed"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "summary": "source lock command completed"
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "summary": ""
+    },
+    {
+      "command": "git diff --exit-code",
+      "exit": 0,
+      "summary": ""
+    }
+  ],
+  "build": {
+    "command": "cloud_run npx -y @runeditrun/rer build",
+    "exit": 0
+  },
+  "typecheck": {
+    "command": "Node 22.20.0 node_modules/typescript/bin/tsc -b",
+    "exit": 0
+  },
+  "lint": {
+    "command": "pnpm exec oxlint scripts/ai-eval tests/runtime/ai-eval-command.mjs tests/runtime/duplicate-suggestions-scale.mjs",
+    "exit": 0
+  },
+  "command_proof": {
+    "command": "Node 22.20.0 proveAiEvaluationCommand()",
+    "exit": 0,
+    "provider_credentials": "absent"
+  },
+  "duplicates": {
+    "command": "Node 22.20.0 scripts/ai-eval/run.mjs --set duplicates-v1 --output DUPLICATES.json",
+    "exit": 0,
+    "provider_credentials": "absent"
+  },
+  "redaction": {
+    "command": "Node 22.20.0 scripts/ai-eval/run.mjs --set redaction-v1 --output REDACTION.json",
+    "exit": 0,
+    "provider_credentials": "absent"
+  },
+  "ledger": {
+    "command": null,
+    "exit": null,
+    "reason": "No migration was added or edited"
+  },
+  "receipt_collection_correction": {
+    "command": "node node_modules/@runeditrun/rer/internal/global/rer.mjs check --profile first-party",
+    "exit": 1,
+    "failure": "MODULE_NOT_FOUND: used a package export name as a filesystem path; rerun through the supported npx dispatcher passed; product code was unchanged"
+  },
+  "restored_view_check": {
+    "command": "node src/base/contract-docs.mjs check",
+    "exit": 1,
+    "failure": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+    "expected": true,
+    "reason": "Required restoration of generated views from main; lander regenerates them"
+  },
+  "packet_preflight": {
+    "regular_files": true,
+    "symlinks": false,
+    "credential_pattern_findings": 0
+  }
+}
