@@ -29,12 +29,44 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
     assert.equal(result.items[0].id,record.id)
     assert.equal(result.items[0].entity,record.entity)
     assert.equal(result.items[0].href,`/app/features#${record.entity}-${record.id}`)
+    const global=await (await api(page,'/api/operator/search?'+new URLSearchParams({q}))).json()
+    assert.equal(global.total,1,'[OPS-004] full and partial names work without a type filter')
+    assert.deepEqual(global.items.map(({id,entity,title,href})=>({id,entity,title,href})),[{id:record.id,entity:record.entity,title:record.name,href:`/app/features#${record.entity}-${record.id}`}])
+    const peerResult=await api(peer,'/api/operator/search?'+new URLSearchParams({q}))
+    assert.equal(peerResult.status(),200,'[OPS-004] active peer keeps native hierarchy search admission')
+    assert.deepEqual((await peerResult.json()).items,global.items)
+    assert.equal((await api(peer,global.items[0].href)).status(),200,'[OPS-004] peer can open each returned hierarchy record')
+    await page.getByLabel('Search Penny',{exact:true}).fill(q)
+    await page.getByRole('button',{name:'Search',exact:true}).click()
+    await page.waitForURL(url=>url.searchParams.get('q')===q)
+    await page.getByRole('link',{name:record.name,exact:true}).waitFor()
+    assert.equal(await page.getByRole('link',{name:record.name,exact:true}).getAttribute('href'),global.items[0].href,'[OPS-004] full and partial name form results retain the record destination')
    }
+   const typeLabel=record.entity[0].toUpperCase()+record.entity.slice(1)
+   await page.getByRole('navigation',{name:'Search record types'}).getByRole('link',{name:typeLabel,exact:true}).click()
+   await page.waitForURL(url=>url.searchParams.get('entity')===record.entity)
+   assert.equal(new URL(page.url()).searchParams.get('q'),record.name.slice(7),'[OPS-004] hierarchy type selection retains the search wording')
+   assert.equal(await page.getByRole('navigation',{name:'Search record types'}).getByRole('link',{name:typeLabel,exact:true}).getAttribute('aria-current'),'page')
+   await page.getByRole('link',{name:record.name,exact:true}).waitFor()
+   await page.getByRole('navigation',{name:'Search record types'}).getByRole('link',{name:'All',exact:true}).click()
+   await page.waitForURL(url=>!url.searchParams.has('entity'))
   }
  }
+ // Equal names are separate records; opening either result must preserve its identity.
+ const duplicateResponse=await api(page,'/api/operator/hierarchy/product',{name:hierarchy[0].name})
+ assert.equal(duplicateResponse.status(),201,'[OPS-004] native duplicate-name product creation')
+ const duplicate={...hierarchy[0],id:(await duplicateResponse.json()).id,duplicate:true}
+ if(width===1440) {
+  const sameName=await (await api(page,'/api/operator/search?'+new URLSearchParams({q:duplicate.name}))).json()
+  assert.equal(sameName.total,2,'[OPS-004] search retains both equal-name records')
+  assert.deepEqual(sameName.items.map(({id,entity,title,href})=>({id,entity,title,href})),[hierarchy[0],duplicate].sort((a,b)=>a.id.localeCompare(b.id)).map(record=>({id:record.id,entity:record.entity,title:record.name,href:`/app/features#${record.entity}-${record.id}`})))
+ }
+ hierarchy.push(duplicate)
+ await page.goto(origin+'/app/search?q=privateproof')
  // Capture the real record destinations at both widths; behavioural assertions run at desktop.
  for(const record of hierarchy) {
-  await page.getByRole('link',{name:record.name,exact:true}).click()
+  const destination=`/app/features#${record.entity}-${record.id}`
+  await page.getByRole('link',{name:record.name,exact:true}).and(page.locator(`a[href="${destination}"]`)).click()
   await page.waitForURL(url=>url.pathname==='/app/features'&&url.hash===`#${record.entity}-${record.id}`)
   const target=page.locator(`[id="${record.entity}-${record.id}"]`)
   await target.getByRole('heading',{name:record.name,exact:true}).waitFor()
@@ -47,9 +79,56 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
    const box=await target.boundingBox()
    assert.ok(box.y>=0&&box.y<page.viewportSize().height,'[OPS-004] the selected hierarchy record is scrolled into view')
   }
-  await capture(`OPS-004-${record.entity}-destination`,page)
+  await capture(`OPS-004-${record.entity}${record.duplicate?'-same-name':''}-destination`,page)
   await page.goto(origin+'/app/search?q=privateproof')
-  await page.getByRole('link',{name:record.name,exact:true}).waitFor()
+  await page.getByRole('link',{name:record.name,exact:true}).and(page.locator(`a[href="${destination}"]`)).waitFor()
+ }
+
+ // Cross the shared page boundary with native hierarchy records, then open a later result.
+ const paged=[]
+ for(let index=0;index<22;index++) {
+  const name=marker(`pagedproduct${String(index).padStart(2,'0')}`)
+  const response=await api(page,'/api/operator/hierarchy/product',{name})
+  assert.equal(response.status(),201,'[OPS-004] native records populate mixed search pages')
+  paged.push({id:(await response.json()).id,entity:'products',name})
+ }
+ await page.reload()
+ if(width===1440) {
+  const existing=[['accounts',6],['decisions',3],['evidence',2],['releases',5],['requesters',7],['requests',1],['roadmap',4]].map(([entity,kind])=>({entity,id:proofId(kind)}))
+  const expected=[existing[0],hierarchy[1],existing[1],existing[2],hierarchy[2],...paged,...[hierarchy[0],duplicate].sort((a,b)=>a.id.localeCompare(b.id)),...existing.slice(3)]
+  const seen=[]
+  for(let number=1;number<=2;number++) {
+   const response=await api(page,`/api/operator/search?q=privateproof&page=${number}`)
+   assert.equal(response.status(),200)
+   const result=await response.json(),slice=expected.slice((number-1)*25,number*25)
+   assert.equal(result.total,33,'[OPS-004] total includes hierarchy and every existing record type')
+   assert.deepEqual(result.items.map(({entity,id})=>({entity,id})),slice.map(({entity,id})=>({entity,id})),'[OPS-004] global ordering survives a page boundary inside products')
+   await page.getByRole('navigation',{name:'List pages'}).getByRole('status').filter({hasText:`Page ${number} of 2`}).waitFor()
+   const links=page.locator('main h2 a')
+   assert.deepEqual(await links.evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href'))),result.items.map(row=>row.href),'[OPS-004] rendered order and destinations match the mixed page')
+   seen.push(...result.items.map(row=>row.id))
+   if(number===1) {
+    await page.getByRole('link',{name:'Next page',exact:true}).click()
+    await page.waitForURL(url=>url.searchParams.get('page')==='2'&&url.searchParams.get('q')==='privateproof')
+   }
+  }
+  assert.equal(new Set(seen).size,33,'[OPS-004] adjacent mixed pages have no missing or repeated identities')
+ } else {
+  await page.getByRole('link',{name:'Next page',exact:true}).click()
+  await page.waitForURL(url=>url.searchParams.get('page')==='2')
+ }
+ await page.getByRole('link',{name:paged[21].name,exact:true}).waitFor()
+ await capture('OPS-004-mixed-second-page',page)
+ await page.getByRole('link',{name:paged[21].name,exact:true}).click()
+ await page.locator(`[id="products-${paged[21].id}"]`).getByRole('heading',{name:paged[21].name,exact:true}).waitFor()
+ if(width===1440)await page.waitForFunction(id=>document.activeElement?.id===id,`products-${paged[21].id}`)
+ await capture('OPS-004-second-page-destination',page)
+ await page.goto(origin+'/app/search?q=privateproof&page=2')
+ await page.getByRole('navigation',{name:'Search record types'}).getByRole('link',{name:'Products',exact:true}).click()
+ await page.waitForURL(url=>url.searchParams.get('entity')==='products'&&!url.searchParams.has('page'))
+ if(width===1440) {
+  await page.getByRole('link',{name:paged[0].name,exact:true}).waitFor()
+  assert.equal(await page.locator('main h2 a').count(),24,'[OPS-004] switching type resets the shared page and retains every matching product')
  }
 
  for(const [entity,names] of Object.entries(fields))for(const name of names) {
