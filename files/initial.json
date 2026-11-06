@@ -1,0 +1,12 @@
+{
+  "tag": "sd-penny-c-f62",
+  "base": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+  "main": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "clause": "REQ-008",
+  "status": "partial"
+}

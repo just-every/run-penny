@@ -1,0 +1,59 @@
+{
+  "head": "f9dd8964d39d76ffa0ee85eb35594745480cea85",
+  "branch": "cloud/sd-penny-c-f62",
+  "main_at_integration": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "merge_base": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "history_is_shallow": "false",
+  "commits": [
+    {
+      "sha": "f9dd8964d39d76ffa0ee85eb35594745480cea85",
+      "subject": "test: verify request merge rollback through native reads",
+      "identity": "Run Edit Run fleet <fleet@runeditrun.com>\nRun Edit Run fleet <fleet@runeditrun.com>",
+      "trailers": "",
+      "parent_status_checks": [
+        {
+          "parent": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+          "before": 281,
+          "after": 281,
+          "lost": []
+        }
+      ]
+    },
+    {
+      "sha": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+      "subject": "test: strengthen request merge custody readback",
+      "identity": "Run Edit Run fleet <fleet@runeditrun.com>\nRun Edit Run fleet <fleet@runeditrun.com>",
+      "trailers": "",
+      "parent_status_checks": [
+        {
+          "parent": "5131e0e386a3551a7e32425eea680d1be931dcf3",
+          "before": 281,
+          "after": 281,
+          "lost": []
+        }
+      ]
+    },
+    {
+      "sha": "5131e0e386a3551a7e32425eea680d1be931dcf3",
+      "subject": "test: prove native request merge custody [skip ci]",
+      "identity": "Run Edit Run fleet <fleet@runeditrun.com>\nRun Edit Run fleet <fleet@runeditrun.com>",
+      "trailers": "",
+      "parent_status_checks": [
+        {
+          "parent": "84bad894d12e7f969f567177a126cb544a3237b1",
+          "before": 281,
+          "after": 281,
+          "lost": []
+        }
+      ]
+    }
+  ],
+  "working_tree_clean": true,
+  "runtime_delta_since_supplied_base": "",
+  "proof_blobs": {
+    "tests/base/board.test.ts": "3d053cdc9089a0b2ce0fa2c3d9d9b5562fa12a11",
+    "tests/base/support.ts": "7a4a5d2587c459f6dd8c77b8f0eccaf340a63ffe",
+    "src/core/features/requests/merge-repository.ts": "0a29765cdafea3ac5f7f3022c5c13582cb79f791",
+    "src/core/features/requests/contributions.ts": "92e055f135d7baf15c4c1673b759812dcef38c76"
+  }
+}

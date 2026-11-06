@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f62",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f62",
+  "head": "f9dd8964d39d76ffa0ee85eb35594745480cea85",
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "result": "RER_SETUP_READY; no server left running",
+      "scope": "local development setup; private settings excluded from packet"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts --reporter=verbose",
+      "exit": 0,
+      "head": "f9dd8964d39d76ffa0ee85eb35594745480cea85",
+      "node": "v22.20.0",
+      "tests": 7,
+      "files": 1,
+      "log": "board.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "head": "f9dd8964d39d76ffa0ee85eb35594745480cea85",
+      "node": "v22.20.0",
+      "log": "typecheck.log"
+    },
+    {
+      "command": "pnpm exec rer check --profile first-party",
+      "exit": 0,
+      "log": "first-party.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "log": "views-write.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "log": "views-check.log",
+      "result": "Contract documents are current before restoring generated files"
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0,
+      "result": "No generated view committed"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "log": "lock.log"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "ok": true,
+      "log": "lock-check.log"
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "log": "base-source.log"
+    },
+    {
+      "command": "migration ledger check",
+      "exit": 0,
+      "result": "Not applicable; no migration change"
+    },
+    {
+      "command": "guarded product push",
+      "exit": 0,
+      "head": "f9dd8964d39d76ffa0ee85eb35594745480cea85",
+      "log": "product-push.log",
+      "result": "PUSH_OK branch=cloud/sd-penny-c-f62"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check on final candidate with mandated main views",
+      "head": "f9dd8964d39d76ffa0ee85eb35594745480cea85",
+      "exit": 1,
+      "log": "candidate-stale-views.log",
+      "classification": "expected generated-view mismatch; lander regenerates; no repair attempted"
+    }
+  ],
+  "tests_added": 0,
+  "tests_removed": 0,
+  "tests_weakened": 0,
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "clause": {
+    "id": "REQ-008",
+    "before": "partial",
+    "after": "partial"
+  },
+  "source_bytes_changed": false,
+  "ui_changed": false,
+  "provider_qualification_claimed": false,
+  "publication_scan": {
+    "status": "not run in cloud",
+    "custodian": "fleet lander"
+  },
+  "landing": {
+    "status": "not performed",
+    "custodian": "fleet lander"
+  },
+  "exact_sha_ci": {
+    "run_id": 42150690774,
+    "event": "push",
+    "conclusion": "failure",
+    "head_sha": "f9dd8964d39d76ffa0ee85eb35594745480cea85",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42150690774",
+    "status": "completed",
+    "failed_job_count": 29,
+    "only_failed_step": "Check generated contract documents",
+    "handoff_classification": "permitted generated-view exception; tests not reached in this Verify"
+  },
+  "github_api_calls_used": 6,
+  "ci_archive_read": {
+    "command": "gh run view 42150690774 --repo just-every/run-penny --job 127673007479 --log-failed",
+    "exit": 0,
+    "selected_excerpt": "ci-generated-view-excerpt.log",
+    "environment_block": "omitted from selected excerpt",
+    "failure": "ACCEPTANCE.md: generated content differs; run contract-docs write."
+  }
+}
