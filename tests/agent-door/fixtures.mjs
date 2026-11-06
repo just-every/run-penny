@@ -13,7 +13,9 @@ export default async function ({ phase, request, origin, cookie }) {
  await native('/api/operator/boards', { slug: publicBoard, name: 'Customer feedback ' + phase, visibility: 'public' });
  const published = await native('/api/operator/requests', { title: 'Customer feedback fixture', description: 'Public customer-safe wording.', boardSlug: publicBoard, evidenceIds: [] });
  await native('/api/operator/requests/' + published.slug + '/moderate', { verdict: 'approved' });
+ const captureSnooze = () => native('/api/operator/evidence', { sourceType: 'free_text', sourceLabel: 'Synthetic triage ' + phase, wording: 'Evidence waiting for follow-up.', observedAt: new Date().toISOString() });
+ const snooze = { id: (await captureSnooze()).id, httpId: (await captureSnooze()).id, until: new Date(Date.now() + 7 * 86400000).toISOString() };
  const issued = await native('/api/operator/integrations/keys', { name: 'Synthetic scoped capture', scopes: ['requests:write'] });
- return { values: { board: { slug: board }, actor: { id: actor.id }, tag: { name: 'Triage ' + randomUUID() }, internalBoard: { slug: slug() }, publicBoard: { slug: slug() }, published },
+ return { values: { snooze, board: { slug: board }, actor: { id: actor.id }, tag: { name: 'Triage ' + randomUUID() }, internalBoard: { slug: slug() }, publicBoard: { slug: slug() }, published },
   clients: { local: { token: issued.token, clientId: 'penny-api/' + issued.credential.id, agent: { id: 'penny-key-' + issued.credential.id, name: issued.credential.name, specialist: 'feedback-triager' } } } };
 }

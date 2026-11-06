@@ -23,7 +23,7 @@ Business owner_id and team ids bind to current native operator ids. The real own
 | `penny.duplicates.suggest` | `workspace:read` | Read | standard | EVID-007, AI-001, SURFACE-002 |
 | `penny.evidence.capture` | `evidence:write` | Write | standard | EVID-001, EVID-002, EVID-008, CAP-001 |
 | `penny.evidence.get` | `evidence:read` | Read | standard | EVID-001, EVID-002, EVID-003, SURFACE-002 |
-| `penny.evidence.update` | `evidence:write` | Write | standard | EVID-003, EVID-004, EVID-010, TRIAGE-001 |
+| `penny.evidence.update` | `evidence:write` | Write | standard | EVID-003, EVID-004, EVID-010, TRIAGE-001, TRIAGE-002, SURFACE-002 |
 | `penny.hierarchy.get` | `workspace:read` | Read | standard | PRIO-001 |
 | `penny.hierarchy.link` | `hierarchy:write` | Write | standard | PRIO-001 |
 | `penny.hierarchy.manage` | `hierarchy:write` | Write | standard | PRIO-001 |

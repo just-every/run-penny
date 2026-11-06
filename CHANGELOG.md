@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Share native evidence snooze and clear transactions between the existing triage HTTP route and `penny.evidence.update`, under its existing evidence scope and standard class. Prove exact date readback, native agent and sponsor attribution, approval, once-only replay and unchanged-state validation and authority refusals. SURFACE-002 remains partial with its other verbs, filters, role projections, grant equivalence and untrusted-content coverage still open. No migration or configuration change is required.
+
 - Add Owner and Admin audit metadata reads and bounded CSV and JSON exports with actor, action, subject and date filters, stable pagination and existing agent attribution. Exclude private details and recheck current native authority on every page. ROLE-004 remains partial for its audit screen, every-action coverage and wider privacy obligations. No migration or configuration change is required.
 - Serve an offline OpenAPI document at `/docs/openapi.json` for the existing scoped board, request, comment, status, release and proxy-vote operations. Share request validators with native routes and reconcile populated HTTP responses, invalid inputs, missing credentials and insufficient scopes in one built-Worker sanity journey, replacing the overlapping native publication registration with all of its assertions retained. Preserve native admission, explicit approval, held wording and consent boundaries. DATA-006 remains partial for other resource families, full pagination and filters, and lifecycle-webhook proof. No migration or configuration change is required.
 
