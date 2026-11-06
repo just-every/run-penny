@@ -1,0 +1,64 @@
+browser-runtime: waiting for workerd
+browser-runtime: ready
+browser-runtime: D1 ready
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+browser-runtime: migration 0001_initial_data_foundation.sql
+browser-runtime: migration 0002_native_feedback_baseline.sql
+browser-runtime: migration 0003_opaque_native_request_slugs.sql
+browser-runtime: migration 0004_archive_erasure_fences.sql
+browser-runtime: migration 0005_requester_board.sql
+browser-runtime: migration 0006_request_contribution_provenance.sql
+browser-runtime: migration 0007_requester_board_maintenance.sql
+browser-runtime: migration 0008_requester_write_and_upload_custody.sql
+browser-runtime: migration 0009_base_operator_auth.sql
+browser-runtime: migration 0010_request_notifications.sql
+browser-runtime: migration 0011_notification_delivery_events.sql
+browser-runtime: migration 0012_base_local_auth.sql
+browser-runtime: migration 0013_decision_loop.sql
+browser-runtime: migration 0014_release_delivery.sql
+browser-runtime: migration 0015_publication_seals.sql
+browser-runtime: migration 0016_restored_notification_hold.sql
+browser-runtime: migration 0017_saved_feedback_import.sql
+browser-runtime: migration 0018_owner_claim.sql
+browser-runtime: migration 0019_host_identity_custody.sql
+browser-runtime: migration 0020_base_integrations.sql
+browser-runtime: migration 0021_integration_authority.sql
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+TypeError: fetch failed
+    at Object.processResponse (/home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/run-penny/node_modules/.pnpm/undici@7.29.1/node_modules/undici/lib/web/fetch/index.js:237:16)
+    at /home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/run-penny/node_modules/.pnpm/undici@7.29.1/node_modules/undici/lib/web/fetch/index.js:1081:19
+    at node:internal/process/task_queues:151:7
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at AsyncResource.runMicrotask (node:internal/process/task_queues:148:8)
+    at /home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/run-penny/node_modules/.pnpm/undici@7.29.1/node_modules/undici/index.js:157:7
+    at async fetch4 (/home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/run-penny/node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@24.19.2/node_modules/miniflare/dist/src/index.js:90260:20)
+    at async ProxyClientBridge.dispatchFetch (/home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/run-penny/node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@24.19.2/node_modules/miniflare/dist/src/index.js:134947:22)
+    at async #parseAsyncResponse (/home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/run-penny/node_modules/.pnpm/miniflare@5.20261006.1-alpha_@types+node@24.19.2/node_modules/miniflare/dist/src/index.js:120281:17)
+    at async startBrowserRuntime (/home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/run-penny/tests/browser/base-runtime.mjs:34:135)
+    at async <anonymous> (/home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/packet/operator-unicode-probe.mjs:11:17) {
+  [cause]: SocketError: other side closed
+      at Socket.onHttpSocketEnd (/home/agent/rer-consolidation/work/sd-penny-main-unicode-triage-1/run-penny/node_modules/.pnpm/undici@7.29.1/node_modules/undici/lib/dispatcher/client-h1.js:959:22)
+      at Socket.emit (node:events:531:35)
+      at Socket.emit (node:domain:489:12)
+      at endReadableNT (node:internal/streams/readable:1698:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+    code: 'UND_ERR_SOCKET',
+    socket: {
+      localAddress: '127.0.0.1',
+      localPort: 51532,
+      remoteAddress: undefined,
+      remotePort: undefined,
+      remoteFamily: undefined,
+      timeout: undefined,
+      bytesWritten: 17155,
+      bytesRead: 58594
+    }
+  }
+}
+
+Node.js v22.20.0

@@ -1,0 +1,83 @@
+{
+  "tag": "sd-penny-main-unicode-triage-1",
+  "observed_at": "2026-11-06T15:11:26.143176+00:00",
+  "repository": "just-every/run-penny",
+  "product_branch_local_only": "cloud/sd-penny-main-unicode-triage-1",
+  "product_head": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "fresh_main": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "failed_head": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "source_checks": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968",
+      "unchanged": true
+    },
+    {
+      "path": "tests/runtime/duplicate-suggestions-scale.mjs",
+      "sha256": "6904df4818ae7b19d6662de854f353ae86390b4402d30361737703c605d073cb",
+      "unchanged": true
+    },
+    {
+      "path": "tests/browser/base-runtime.mjs",
+      "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/requests/suggestions.ts",
+      "sha256": "3ba53837c3014c33c95fbf538401ab01cdf0d9fa6288f413ed45c7d4d9f79528",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/requests/publication-predicate.ts",
+      "sha256": "a56d2a1102939ab13660a3fe7dc1055a747feb11db217e50889b0b167416a3ca",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/evidence/detail-routes.ts",
+      "sha256": "26610afa2d87b5ea4da317b4d0606a30ef0cbede5e68260b5707a2d7fd25606a",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/evidence/admission.ts",
+      "sha256": "455fddaffbb9ed2ad893d3f5009bddfc92f1113b15f2e44de320fb0e953b6242",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/core/0109_duplicate_suggestion_indexes.sql",
+      "sha256": "9c5de5b28f9a812419c17beeb5408cc02c9a0cef2bd044ad78a36cfc430d014d",
+      "unchanged": true
+    },
+    {
+      "path": ".github/workflows/verify.yml",
+      "sha256": "4baf892a475f3f47d8d5cb726360b27f85cff4c6f475ba4e7d388a5d8786428a",
+      "unchanged": true
+    }
+  ],
+  "git_status_porcelain": "",
+  "candidate_identity_range_empty": true,
+  "product_commits": 0,
+  "product_pushes": 0,
+  "ci_api_calls": 0,
+  "ci_watcher": false,
+  "pr": null,
+  "contract_changes": [],
+  "endpoint_attempts": 3,
+  "completed_endpoint_measurements": 2,
+  "full_journey_exit": 1,
+  "repeat_2_exit": 1,
+  "repeat_3_exit": 1,
+  "repeat_3_final_timing_assertion": "NOT RUN after diagnostics failed; numerical p95 under cap",
+  "query_plan_exit": 0,
+  "counts_before": {
+    "requests": 100000,
+    "boards": 100,
+    "requesters": 250000
+  },
+  "counts_after": {
+    "requests": 100000,
+    "boards": 100,
+    "requesters": 250000
+  },
+  "owned_runtime_close": "finally awaits runtime.close; startup failure path disposes Miniflare; no browser started",
+  "cleanup": "owned clone and dependencies will be removed after evidence publication; packet retained outside clone"
+}

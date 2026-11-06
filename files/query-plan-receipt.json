@@ -1,0 +1,6 @@
+{
+  "command": "cloud_run node ../packet/query-plan-only.mjs --trace",
+  "exit": 0,
+  "ended_epoch": 1793977774.172196,
+  "scope": "D1 EXPLAIN and bounded source-query probes only; same full corpus; zero endpoint timing samples"
+}

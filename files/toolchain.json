@@ -1,0 +1,17 @@
+{
+  "node": "v22.20.0",
+  "versions": {
+    "@runeditrun/rer": "0.2.94",
+    "@cloudflare/vitest-plugin": "1.4.0",
+    "miniflare": "5.20260907.0-alpha",
+    "wrangler": "4.129.1",
+    "tsx": "4.23.15",
+    "runtime-miniflare": "5.20261006.1-alpha"
+  },
+  "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+  "memory_bytes": 18882662400,
+  "logical_cpus": 5,
+  "platform": "linux",
+  "arch": "x64",
+  "release": "6.18.57"
+}

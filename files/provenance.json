@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-11-06T15:00:45.742244+00:00",
+  "repository": "just-every/run-penny",
+  "failed_head": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "fresh_main": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "local_branch": "cloud/sd-penny-main-unicode-triage-1",
+  "clone": "git clone --depth 1 --filter=blob:none https://github.com/just-every/run-penny.git <owned-clone>",
+  "same_revision": true,
+  "runner": {
+    "system": "Linux",
+    "release": "6.18.57",
+    "machine": "x86_64",
+    "cpu_count": 5
+  },
+  "ci_calls": 0,
+  "provided_failure": {
+    "run_id": 42218054922,
+    "job_id": 127892981073,
+    "operator_unicode_p95_ms": 1062.746,
+    "provenance": "user-supplied recovered CI observation; not re-read or independently verified"
+  }
+}

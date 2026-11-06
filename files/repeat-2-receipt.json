@@ -1,0 +1,9 @@
+{
+  "started_epoch": 1793977608.1596172,
+  "command": "cloud_run node --import ./node_modules/tsx/dist/loader.mjs ../packet/operator-unicode-probe.mjs --trace",
+  "measurement": "operator Unicode only; unchanged fixture/sample count/assertions; source-derived query plan trace after timing",
+  "loadavg": "1.02 1.05 0.55 1/139 1399",
+  "exit": 1,
+  "ended_epoch": 1793977664.165449,
+  "loadavg_end": "1.00 1.05 0.58 1/139 1454"
+}
