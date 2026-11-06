@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Save a case-insensitive request-title filter in native prioritisation comparisons and apply it before the existing formula sort. Reopen the saved shared view as its owner and a second operator with the same complete ordered subset; retain private-view exclusion, direct-read refusal, revision, audit and admission checks. OPS-006 moves from missing to partial; other lists, filters, columns and broader sort controls remain open. No migration or reconfiguration is required; older saved definitions default to an empty filter.
+
 - Strengthen LEARN-001's existing native model-boundary journey with a selected requester-authored request, account evidence and an existing explicit update permission. Forged root and option fields preserve populated identity, permission, follow and grant custody and create no derived work; valid output derives both requester and account dimensions from originals while retaining run accounting. LEARN-001 remains partial for deployment principal pinning and live qualification. No runtime, migration or configuration change is required.
 
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.

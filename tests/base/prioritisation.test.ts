@@ -6,9 +6,9 @@ import type {ViewResult,SavedView} from '@/core/features/prioritisation/reposito
 import type {ViewInput} from '@/core/features/prioritisation/formulas'
 beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations').filter(m=>m.name<'0083'))})
 afterAll(()=>vi.restoreAllMocks())
-it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free',async()=>{
+it('[OPS-006 PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free',async()=>{
  const g=await graph(2),second=await requester('Morgan Reed')
- const json=async<T>(path:string,body?:unknown,method?:string,status=200,headers=g.operator):Promise<T>=>{const response=await call(path,body,headers,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
+ const json=async<T>(path:string,body?:unknown,method?:string,status=200,headers:Record<string,string>=g.operator):Promise<T>=>{const response=await call(path,body,headers,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
  const pre=(await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results
  await applyD1Migrations(env.DB,inject('migrations'));await applyD1Migrations(env.DB,inject('migrations'));expect((await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results).toEqual(pre)
  await json('/api/operator/boards/regression/vote-importance',{enabled:true,labels:['Nice to have','Important','Must have']},'PUT')
@@ -30,12 +30,33 @@ it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, r
  const confirmed=await call('/auth/confirm',{token});expect(confirmed.status).toBe(303);const peer={Cookie:confirmed.headers.get('Set-Cookie')!.split(';')[0]}
  expect((await json<ViewResult>(path,undefined,'GET',200,peer)).rows).toEqual(view.rows)
  expect((await call(path,{...view.view,revision:view.revision},peer,'PUT')).status).toBe(404)
+ // Save a nonempty proper subset from three eligible native requests.
+ const control=await json<{slug:string}>('/api/public/requests',{title:'Excluded control',description:'A separate workflow',boardSlug:'regression',idempotencyKey:crypto.randomUUID()},'POST',201,g.person)
+ await json(`/api/operator/moderation/${control.slug}`,{verdict:'approved',title:'Excluded control',description:'A separate workflow',boardSlug:'regression',displayName:'Requester'},'POST')
+ const controlId=(await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(control.slug).first<{id:string}>())!.id
+ const filtered=await json<{id:string}>('/api/operator/prioritisation',{name:'Selected requests',entity:'requests',shared:true,titleFilter:'  REQUEST  ',formula:'weighted_sum',weights:{reach:-1}},'POST',201)
+ const filteredPath=`/api/operator/prioritisation/${filtered.id}`
+ let selected=await json<ViewResult>(filteredPath)
+ expect(selected.view.titleFilter).toBe('REQUEST')
+ expect(selected.rows.map(row=>row.id)).toEqual([g.requests[1].id,g.requests[0].id])
+ expect((await json<ViewResult>(filteredPath,undefined,'GET',200,peer)).rows).toEqual(selected.rows)
+ expect((await json<SavedView[]>('/api/operator/prioritisation',undefined,'GET',200,peer)).find(saved=>saved.id===filtered.id)?.view.titleFilter).toBe('REQUEST')
+ await json(filteredPath,{...selected.view,revision:selected.revision,titleFilter:'no matching title'},'PUT')
+ selected=await json<ViewResult>(filteredPath);expect(selected.rows).toEqual([])
+ await json(filteredPath,{...selected.view,revision:selected.revision,titleFilter:'   '},'PUT')
+ selected=await json<ViewResult>(filteredPath)
+ expect(selected.view.titleFilter).toBe('')
+ expect(selected.rows.map(row=>row.id)).toEqual([controlId,g.requests[1].id,g.requests[0].id])
+ await json(filteredPath,{...selected.view,revision:selected.revision,titleFilter:'Request'},'PUT')
+ selected=await json<ViewResult>(filteredPath)
+ expect(selected.rows.map(row=>row.id)).toEqual([g.requests[1].id,g.requests[0].id])
+ expect((await json<ViewResult>(filteredPath,undefined,'GET',200,peer)).rows).toEqual(selected.rows)
  await json(path,{...view.view,revision:view.revision,formula:'weighted_sum',weights:{reach:0,importance3:5}},'PUT')
  expect((await call(path,{...view.view,revision:view.revision},g.operator,'PUT')).status).toBe(409)
  view=await json<ViewResult>(path);expect(view.rows.map(r=>r.id)).toEqual([features[0],features[1]]);expect(view.rows[0].score).toBe(5);expect(view.rows[0].weights.importance3).toBe(5)
  const privateView=await json<{id:string}>('/api/operator/prioritisation',{name:'Private scenario',entity:'requests',shared:false,formula:'rice'},'POST',201)
  expect((await call(`/api/operator/prioritisation/${privateView.id}`,undefined,peer)).status).toBe(404)
- expect((await json<SavedView[]>('/api/operator/prioritisation',undefined,'GET',200,peer)).map(v=>v.id)).toEqual([created.id])
+ expect((await json<SavedView[]>('/api/operator/prioritisation',undefined,'GET',200,peer)).map(v=>v.id)).toEqual([created.id,filtered.id])
  const missing=await json<ViewResult>(`/api/operator/prioritisation/${privateView.id}`)
  expect(missing.rows.every(r=>r.score===null&&r.missing.includes('effort'))).toBe(true)
  // Other presets require stated values; zero is valid value, never invented effort.
@@ -50,6 +71,6 @@ it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, r
  expect((await call('/api/operator/prioritisation')).status).toBe(401)
  expect((await call('/api/operator/prioritisation',definition,{...g.operator,Origin:'https://elsewhere.test'})).status).toBe(403)
  for(const url of ['/api/public/requests','/api/public/roadmap','/api/public/releases','/api/operator/decisions']){const text=await(await call(url,undefined,g.operator)).text();expect(text).not.toContain('Finance RICE');expect(text).not.toContain('"score"')}
- const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_priority_views).toHaveLength(2)
+ const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_priority_views).toHaveLength(3)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })

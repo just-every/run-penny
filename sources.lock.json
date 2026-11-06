@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "1050feea764dafb5d9934be0bcfd3b5e5d00f5ce7045dad188d95016da22a997",
+      "sha256": "35a205810e4f085aa6084f54b1399d95d3463d62c4e8ceb5a2ae4a5273fa5852",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "d3f67f3e51c4474b79f3c6ce70a2639a61ceb6150a2d11922420320df6a73163",
+      "sha256": "358d4f116113262255cbaab7df5030ccf23cb0fb4c27d952f0de3d5fe1ffa334",
       "executable": false
     },
     "DEMO.md": {
@@ -6874,7 +6874,7 @@
       "executable": false
     },
     "src/core/features/prioritisation/formulas.ts": {
-      "sha256": "5da61c3f8cdda78c6283409793e41b0ea35c1f29b5221adbac2ee6ce71a90374",
+      "sha256": "26342792bf5f521df154cf812f40e8c4ed0c753c446a5ad93e288e970e828e71",
       "executable": false
     },
     "src/core/features/prioritisation/labels.ts": {
@@ -6886,7 +6886,7 @@
       "executable": false
     },
     "src/core/features/prioritisation/repository.ts": {
-      "sha256": "4c7b02b1ad31acdfac295da3500871c59254d7f1e8bda4c6b7a6085f0b54324b",
+      "sha256": "f3a0527345f4113b053cba9846585e0ebb0b079e9b9b37cf7928c07d28a2bef5",
       "executable": false
     },
     "src/core/features/prioritisation/routes.ts": {
@@ -6898,7 +6898,7 @@
       "executable": false
     },
     "src/core/features/prioritisation/view-editor.tsx": {
-      "sha256": "0e2d162768f04a5978decf1d80bb14579ab0aa3e1146af1137cd56c7cd7c2531",
+      "sha256": "297a3a4af700e591115ab53591f3b4facf0ed7ab1f7f710a3e4666f00f6db832",
       "executable": false
     },
     "src/core/features/redaction/background.ts": {
@@ -8506,7 +8506,7 @@
       "executable": false
     },
     "tests/base/prioritisation.test.ts": {
-      "sha256": "ec25c6fbd038711246e6d6ddca26c2b152da720f08e89d25478b10751d7fb761",
+      "sha256": "ea63e50afd43b0e1e6e7ec66d1de3d28cf6308ea5bc56093cdd15c5628eee6a2",
       "executable": false
     },
     "tests/base/product-hierarchy.test.ts": {
@@ -8942,7 +8942,7 @@
       "executable": false
     },
     "tests/browser/prioritisation.mjs": {
-      "sha256": "487d560a208062f1dc7c635fb8b7c902f4bc9053f3c6f86a50d74d4b9701fefb",
+      "sha256": "69c17ca5afd2527aad892e513e4485e9af314420ef77311abcc58de5a281ced8",
       "executable": false
     },
     "tests/browser/product-hierarchy.mjs": {

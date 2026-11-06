@@ -27,6 +27,7 @@ export const viewInput = z.object({
   name: z.string().trim().min(1).max(120),
   shared: z.boolean().default(false),
   entity: z.enum(['requests', 'features']).default('requests'),
+  titleFilter: z.string().trim().max(280).default(''),
   formula: z.enum(['none', 'rice', 'value_over_effort', 'weighted_segment_demand', 'weighted_sum']).default('none'),
   weights: weights.default(() => weights.parse({})),
   manualInputs: z.record(z.string().min(1), manualInput).default({}),

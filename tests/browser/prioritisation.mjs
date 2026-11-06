@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import {moderationJourney} from './moderation-runtime.mjs'
 await moderationJourney('prioritisation',async({runtime,origin,operator,json,send,person,pageFor,capture})=>{
  const customer=await person('eli@example.test','Eli Wong'),auth={Authorization:`Bearer ${customer.token}`},requests=[]
- for(const title of ['Schedule monthly finance exports','Send department summaries','Export invoices']){
+ for(const title of ['Schedule monthly finance exports','Department finance summaries','Export invoices']){
   const request=await json('/api/public/requests',{title,description:'Finance needs reliable reports for its monthly account reviews.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},auth,'POST',201)
   await json(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title,description:'Reliable monthly reports for finance.',boardSlug:'finance',displayName:'Eli Wong'},operator)
   requests.push({...request,id:await runtime.db.prepare('SELECT id FROM requests WHERE slug=?').bind(request.slug).first('id')})
@@ -51,7 +51,47 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
  await edit.getByRole('button',{name:'Save comparison',exact:true}).click()
  await ranked.getByRole('heading',{name:'1. Scheduled reporting',exact:true}).waitFor()
  await capture(owner,'importance-resorted',region)
+ // Save a filtered request comparison through the mounted form, then reopen it.
+ await owner.goto(origin+'/app/prioritisation',{waitUntil:'networkidle'})
+ await owner.locator('summary').filter({hasText:/^Create comparison$/}).click()
+ const requestForm=owner.getByRole('form',{name:'Create comparison',exact:true})
+ await requestForm.getByLabel('View name',{exact:true}).fill('Finance request subset')
+ await requestForm.getByLabel('Request title contains',{exact:true}).fill('  FINANCE  ')
+ await requestForm.getByLabel('Sorting formula',{exact:true}).selectOption('weighted_sum')
+ await requestForm.getByLabel('Share with all operators (only you can edit)').check()
+ await requestForm.locator('summary').filter({hasText:'Formula weights'}).click()
+ await requestForm.getByLabel('Reach weight',{exact:true}).fill('-1')
+ await requestForm.getByRole('button',{name:'Save comparison',exact:true}).click()
+ await requestForm.getByRole('status').waitFor()
+ await owner.getByRole('link',{name:'Finance request subset',exact:true}).click()
+ const requestViews=await json('/api/operator/prioritisation',undefined,operator),requestView=requestViews.find(v=>v.view.name==='Finance request subset')
+ const requestPath=`/app/prioritisation?view=${requestView.id}`,apiPath=`/api/operator/prioritisation/${requestView.id}`
+ const ownerResult=await json(apiPath,undefined,operator)
+ assert.equal(ownerResult.view.titleFilter,'FINANCE')
+ assert.deepEqual(ownerResult.rows.map(row=>row.id),[requests[1].id,requests[0].id])
+ await owner.reload({waitUntil:'networkidle'})
+ const requestRegion=owner.getByRole('region',{name:'Finance request subset',exact:true}),requestRanked=requestRegion.getByRole('list',{name:'Ranked comparison',exact:true})
+ const expectedHeadings=['1. Department finance summaries','2. Schedule monthly finance exports']
+ await requestRanked.getByRole('heading',{name:expectedHeadings[0],exact:true}).waitFor()
+ assert.deepEqual(await requestRanked.getByRole('heading').allTextContents(),expectedHeadings)
+ await requestRegion.locator('summary').filter({hasText:/^Edit comparison$/}).click()
+ assert.equal(await requestRegion.getByLabel('Request title contains',{exact:true}).inputValue(),'FINANCE')
+ await capture(owner,'filtered-request-owner',requestRegion)
+ await peer.goto(origin+requestPath,{waitUntil:'networkidle'})
+ const peerRegion=peer.getByRole('region',{name:'Finance request subset',exact:true}),peerRanked=peerRegion.getByRole('list',{name:'Ranked comparison',exact:true})
+ await peerRanked.getByRole('heading',{name:expectedHeadings[0],exact:true}).waitFor()
+ assert.deepEqual(await peerRanked.getByRole('heading').allTextContents(),expectedHeadings)
+ assert.deepEqual((await json(apiPath,undefined,{Cookie:peerCookie})).rows,ownerResult.rows)
+ assert.equal(await peerRegion.locator('summary').filter({hasText:/^Edit comparison$/}).count(),0)
+ await capture(peer,'filtered-request-peer',peerRegion)
+ // Phone proof reuses this saved state; behavioral assertions run once at 1440.
+ for(const [page,label,region] of [[owner,'filtered-request-owner',requestRegion],[peer,'filtered-request-peer',peerRegion]]){
+  await page.setViewportSize({width:390,height:844});await capture(page,label,region)
+  await page.setViewportSize({width:1440,height:900})
+ }
  const privateView=await json('/api/operator/prioritisation',{name:'Private finance scenario',entity:'requests',formula:'rice',shared:false},operator,'POST',201)
+ assert.equal((await json('/api/operator/prioritisation',undefined,{Cookie:peerCookie})).some(view=>view.id===privateView.id),false)
+ await send(`/api/operator/prioritisation/${privateView.id}`,undefined,{Cookie:peerCookie},'GET',404)
  await peer.goto(origin+`/app/prioritisation?view=${privateView.id}`,{waitUntil:'networkidle'})
  await peer.getByRole('heading',{name:'Comparison unavailable',exact:true}).waitFor();assert.equal((await peer.content()).includes('Private finance scenario'),false)
  await capture(peer,'private-view-refused')

@@ -15,7 +15,10 @@ export async function readView(db:D1Database,id:string,actor:string):Promise<Vie
  const row=await db.prepare('SELECT id,owner_id,revision,definition_json FROM penny_priority_views WHERE id=? AND (owner_id=? OR shared=1)').bind(id,actor).first<Stored>()
  if(!row)throw new MutationError(404,'View not found.')
  const saved=decode(row,actor)
- return {...saved,rows:sortRows(await comparisonRows(db,saved.view.entity),saved.view)}
+ const rows=await comparisonRows(db,saved.view.entity)
+ const title=saved.view.titleFilter.toLowerCase()
+ const filtered=saved.view.entity==='requests'?rows.filter(row=>row.title.toLowerCase().includes(title)):rows
+ return {...saved,rows:sortRows(filtered,saved.view)}
 }
 export async function saveView(db:D1Database,id:string|null,view:ViewInput,actor:string,now:string,revision?:number){
  const key=id??createUlid()
