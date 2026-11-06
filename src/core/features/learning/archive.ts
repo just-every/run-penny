@@ -43,4 +43,8 @@ export async function validateLearningArchive(data:Record<string,Row[]>){
   const snapshot=JSON.parse(String(commitment.snapshot_json)),interpreted=JSON.parse(String(artifact.body_json))
   if(snapshot.interpretationId!==artifact.id||snapshot.interpretationVersion!==artifact.version||canonical({...snapshot.interpretation,protocol:interpreted.protocol})!==canonical(interpreted)||canonical(snapshot.interpretation?.protocol)!==canonical(snapshot.protocol)||!Array.isArray(snapshot.observations)||snapshot.observations.some((o:Observation)=>!observations.some(row=>row.id===o.id&&canonical(row)===canonical(o))))throw new NativeError('learning_archive_commitment_invalid',400)
  }
+ for(const review of data.learning_option_reviews??[]){
+  const artifact=data.learning_artifacts?.find(a=>a.id===review.artifact_id)
+  if(!artifact||artifact.investigation_id!==review.investigation_id||artifact.version!==review.artifact_version||typeof review.reason!=='string'||!review.reason.trim()||review.reason.length>4000||!JSON.parse(String(artifact.body_json)).options.some((option:{id:string})=>option.id===review.option_id))throw new NativeError('learning_archive_option_review_invalid',400)
+ }
 }

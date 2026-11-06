@@ -45,6 +45,7 @@ export const places:Place[]=[
  held('learning_observations','Immutable learning originals',sealed),
  held('learning_artifacts','Immutable learning interpretations',sealed),
  held('learning_corrections','Learning correction history',history),
+ held('learning_option_reviews','Learning explanation rejection history',history),
  held('learning_commitments','Immutable learning commitments',sealed),
  held('ik_jobs','Saved-import plans',sealed),
  held('ik_d1_plan_chunks','Saved-import plan chunks',sealed),

@@ -55,6 +55,7 @@ export async function commit(runtime:PennyRuntime,request:Request,id:string,inpu
  return {id:commitmentId}
 }
 export const investigationDto=(row:Record<string,unknown>)=>({id:row.id,sourceId:row.source_id,question:row.question,purpose:row.purpose,state:row.state,expiresAt:row.expires_at,budgetMicros:row.budget_micros,spentMicros:row.spent_micros,actualCostMicros:row.actual_cost_micros??0,reservedCostMicros:row.reserved_cost_micros??0,maxRunCostMicros:row.max_run_cost_micros,intervalMinutes:row.interval_minutes,nextRunAt:row.next_run_at,lastReason:row.last_reason,version:row.version})
+export const optionReviewDto=(row:Record<string,unknown>)=>({id:row.id,investigationId:row.investigation_id,interpretationId:row.artifact_id,interpretationVersion:row.artifact_version,optionId:row.option_id,decision:'rejected',reason:row.reason,actorId:row.actor_id,createdAt:row.created_at})
 export function artifactDto(row:Record<string,unknown>,observations:Observation[]=[],configured?:ReturnType<typeof learningConfiguration>['orbit']){const body=JSON.parse(String(row.body_json));return {id:row.id,investigationId:row.investigation_id,version:row.version,kind:'interpretation',state:row.state,createdAt:row.created_at,body,presentation:artifactPresentation(body,observations,configured)}}
 function commitmentDto(row:Record<string,unknown>,configured?:ReturnType<typeof learningConfiguration>['orbit']){
  const body=JSON.parse(String(row.snapshot_json)),shown=artifactPresentation(body.interpretation,body.observations as Observation[],configured)

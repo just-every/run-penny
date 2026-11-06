@@ -57,6 +57,8 @@ const edges = [
  ['learning_contributions','artifact_id','learning_artifacts'],
  ['learning_commitments','artifact_id','learning_artifacts'],
  ['learning_corrections','artifact_id','learning_artifacts'],
+ ['learning_option_reviews','artifact_id','learning_artifacts'],
+ ['learning_option_reviews','investigation_id','learning_investigations'],
  ['learning_source_people','observation_id','learning_observations'],
  ['requester_identity_merges', 'source_requester_id', 'requesters'],
  ['requester_identity_merges', 'target_requester_id', 'requesters'],
@@ -82,7 +84,7 @@ const edges = [
 export function checkClauseErasureEdges(tables:{name:string;foreignKeys:{table:string;from:string;to:string}[]}[]):void {
  // Operator attribution is retained under the existing operator hold. Every
  // other FK on these newly introduced history tables must have a declared edge.
- for(const table of tables.filter(table=>['requester_identity_merges','evidence_attachment_uploads','decision_reviews','decision_review_notifications'].includes(table.name))){
+ for(const table of tables.filter(table=>['requester_identity_merges','evidence_attachment_uploads','decision_reviews','decision_review_notifications','learning_option_reviews'].includes(table.name))){
   for(const key of table.foreignKeys)if(key.table!=='operators'&&!edges.some(([child,column,parent])=>child===table.name&&column===key.from&&parent===key.table&&key.to==='id'))throw new NativeError('undeclared_erasure_dependency',503)
  }
 }

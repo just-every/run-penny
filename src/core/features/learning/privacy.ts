@@ -13,6 +13,7 @@ function redactScopes(db:D1Database,investigations:string[],sources:string[],evi
  return [
   db.prepare("UPDATE learning_sources SET name='Redacted source',use_basis='Contribution erased; review source use',version=version+1 WHERE id IN(SELECT value FROM json_each(?))").bind(JSON.stringify(sources)),
   db.prepare("UPDATE learning_investigations SET version=version+1,state='paused',question='',purpose='Contribution erased; review investigation purpose',last_reason='contribution_erased',native_evidence_ids_json=(SELECT COALESCE(json_group_array(value),'[]') FROM json_each(native_evidence_ids_json) WHERE value NOT IN(SELECT value FROM json_each(?))),native_request_ids_json=(SELECT COALESCE(json_group_array(value),'[]') FROM json_each(native_request_ids_json) WHERE value NOT IN(SELECT value FROM json_each(?))) WHERE id IN(SELECT value FROM json_each(?))").bind(JSON.stringify(evidence),JSON.stringify(requests),ids),
+  db.prepare('DELETE FROM learning_option_reviews WHERE investigation_id IN(SELECT value FROM json_each(?))').bind(ids),
   db.prepare('DELETE FROM learning_artifacts WHERE investigation_id IN(SELECT value FROM json_each(?))').bind(ids),
   db.prepare("UPDATE learning_runs SET cursor_json='{}',state=CASE WHEN state='running' THEN 'uncertain' ELSE state END,reason='source_data_removed' WHERE investigation_id IN(SELECT value FROM json_each(?))").bind(ids),
  ]

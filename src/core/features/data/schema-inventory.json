@@ -3640,5 +3640,18 @@
       "cost_micros",
       "created_at"
     ]
+  },
+  "learning_option_reviews": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "investigation_id",
+      "artifact_id",
+      "artifact_version",
+      "option_id",
+      "reason",
+      "actor_id",
+      "created_at"
+    ]
   }
 }

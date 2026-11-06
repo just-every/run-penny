@@ -62,7 +62,13 @@ it('[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged w
  vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date(vi.getRealSystemTime()).setUTCHours(12,0,0,0))
  try{await proveBoundedSchedule();await proveScopeFences();await proveNativeFences()}finally{vi.useRealTimers()}
 })
-it('[LEARN-004] contribution erasure removes every dependent version/snapshot, preserves unrelated native records and refuses replay and active restored grants',async()=>{
+it('[LEARN-004 LEARN-005] erases native and source contributions, preserves independent originals and fences replay and restored authority',async()=>{
+ await proveNativeContributionErasure()
+ await resetLearning();await proveSourcePersonErasure()
+ await resetLearning();await proveProviderRevocation()
+})
+
+async function proveNativeContributionErasure(){
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}`
  const privatePurpose='Customer cancelled after the report handoff failed.'
  const pending=await json<{id:string}>(call(path+'/investigations',{question:privatePurpose,nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:privatePurpose,expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
@@ -120,8 +126,9 @@ it('[LEARN-004] contribution erasure removes every dependent version/snapshot, p
  expect(await env.DB.prepare('SELECT id FROM evidence_items WHERE id=?').bind(original.id).first()).toEqual({id:original.id})
  expect(await env.DB.prepare('SELECT count(*) n FROM learning_observations WHERE investigation_id=?').bind(disconnect.id).first('n')).toBe(0)
  expect((await call(path+`/investigations/${disconnect.id}/run`,{},f.cookie)).status).toBe(409)
-})
-it('[LEARN-005] source person erasure covers duplicate connections and fresh-grant replay; actual restore holds all source authority',async()=>{
+}
+
+async function proveSourcePersonErasure(){
  const f=await fixture();await json(call('/api/operator/settings/redaction',{enabled:true,kinds:['email'],patterns:[]},f.cookie,undefined,'PUT'));network.sourceText=canonical({id:'person-1',name:'Private source contributor',email:'private-contributor@example.com',updated_at:'2026-10-01T00:00:00Z'})
  const create=async()=>{const source=await json<{id:string}>(call(path+'/sources',{name:'Private source contributor contacts',provider:'orbit',resourceIds:['contacts/person-1'],useBasis:'Private source contributor permitted this context',allOperatorsAuthorized:true},f.cookie),201);const investigation=await json<{id:string}>(call(path+'/investigations',{sourceId:source.id,question:'Why did Private source contributor cancel?',nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Investigate Private source contributor cancellation',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201);return {source,investigation}}
  const a=await create(),b=await create(),pending=await create();for(const item of [a,b]){const run=await json<{artifactId:string}>(call(path+`/investigations/${item.investigation.id}/run`,{},f.cookie));if(item===a){const url=path+`/investigations/${a.investigation.id}`;await json(call(url+'/commit',{interpretationId:run.artifactId,optionId:'assist',rationale:'Private source contributor review',confidence:'low',reviewAt:'2098-01-01T00:00:00Z'},f.cookie),201);await json(call(url+'/correct',{interpretationId:run.artifactId,correction:'Private source contributor clarification'},f.cookie))}}
@@ -136,13 +143,13 @@ it('[LEARN-005] source person erasure covers duplicate connections and fresh-gra
  const {reset,applyD1Migrations}=await import('cloudflare:test'),{inject}=await import('vitest'),{restoreArchive}=await import('@/core/features/data/operations')
  await reset();await applyD1Migrations(env.DB,inject('migrations'));await expect(restoreArchive(env.DB,env.FILES,old.archive,exported.journal)).rejects.toMatchObject({code:'stale_archive'});expect((await restoreArchive(env.DB,env.FILES,exported.archive,exported.journal)).status).toBe('complete');expect(await env.DB.prepare("SELECT count(*) n FROM learning_investigations WHERE state='active'").first('n')).toBe(0)
  const {runInvestigation}=await import('@/core/features/learning/run');await expect(runInvestigation(createPennyRuntime(bindings()),a.investigation.id,'restored',{db:env.DB,actor:{system:'learning.scheduler'}})).rejects.toMatchObject({code:'learning_scope_changed'})
-})
+}
 
-it('[LEARN-005] observed provider credential revocation purges all matching source installations; outage preserves evidence',async()=>{
+async function proveProviderRevocation(){
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}/run`;await json(call(url,{},f.cookie))
  network.sourceStatus=503;expect((await call(url,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare("SELECT count(*) n FROM learning_artifacts WHERE state='current'").first('n')).toBe(1)
  network.sourceStatus=401;expect((await call(url,{},f.cookie)).status).toBe(409);expect(await env.DB.prepare('SELECT count(*) n FROM learning_artifacts').first('n')).toBe(0);expect(await env.DB.prepare('SELECT count(*) n FROM learning_observations').first('n')).toBe(0);expect(await env.DB.prepare('SELECT state FROM learning_sources WHERE id=?').bind(f.source.id).first('state')).toBe('disconnected')
-})
+}
 
 it('[LEARN-003] learning actions retain the acting peer and roll back with their audit',async()=>{
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}`,email='learning-peer@example.test';let peer=''

@@ -115,11 +115,17 @@ it('[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data a
  const suggestionPreviousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
  const suggestionSnapshot=async()=> (await env.DB.batch(suggestionPreviousTables.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
  const suggestionPreviousRows=await suggestionSnapshot()
+ await applyD1Migrations(env.DB,migrations.filter(m=>m.name<'0110'))
+ const reviewPreviousTables=(await env.DB.prepare(tableQuery).all<{name:string}>()).results
+ const reviewPreviousSnapshot=async()=> (await env.DB.batch(reviewPreviousTables.map(table=>env.DB.prepare(`SELECT * FROM ${quote(table.name)} ORDER BY rowid`)))).map(result=>result.results)
+ const reviewPreviousRows=await reviewPreviousSnapshot()
  await applyD1Migrations(env.DB,migrations)
+ expect(await reviewPreviousSnapshot()).toEqual(reviewPreviousRows)
  expect(await surveyPreviousSnapshot()).toEqual(surveyPreviousRows)
  expect(await suggestionSnapshot()).toEqual(suggestionPreviousRows)
  await applyD1Migrations(env.DB,migrations)
  expect(await surveyPreviousSnapshot()).toEqual(surveyPreviousRows)
  expect(await suggestionSnapshot()).toEqual(suggestionPreviousRows)
+ expect(await reviewPreviousSnapshot()).toEqual(reviewPreviousRows)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
