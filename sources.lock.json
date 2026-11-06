@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "071a89b8aae3b308e153195b04f7deabfe41e924714c88a324ffe9296c2dece8",
+      "sha256": "d4f48db1b4a2f3e466891c016364b064dba54f2cce201146c5251d7e24f3ece4",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "9c0670d3ad2f785958dfb9bbc53eaa7dd44de49d43dc4fc7ba7f27a325fbded9",
+      "sha256": "76a5b98f87c5ea5933049b17c2769c7fc9462067f01429491273b54de9fc1596",
       "executable": false
     },
     "DEMO.md": {
@@ -3398,7 +3398,7 @@
       "executable": false
     },
     "docs/API.md": {
-      "sha256": "ae4bc7488e6cc9fb02175676a3cb4c8a901f74fbc6362d93d6258bb1fa2fc710",
+      "sha256": "c9fbd3957434d42b728b197bcb4f379dd77c139ba6fbf5220f89ef3435051a82",
       "executable": false
     },
     "docs/audit-api.md": {
@@ -8401,6 +8401,18 @@
       "sha256": "387e11901b55bd34d353a9ed81bbd1aac48bada41e919028b3308beb08359b27",
       "executable": false
     },
+    "tests/base/fixtures/openapi-3.1-LICENSE.txt": {
+      "sha256": "62fba93fcec47137bc7b09ec256d98c7496b3b9b7cb32e4e2e7f5b7dd507f6fd",
+      "executable": false
+    },
+    "tests/base/fixtures/openapi-3.1-NOTICE.txt": {
+      "sha256": "ebef1907c88ad340f3eb34d91903c7c37fa94b3c0b0fb823d6fc49650d5827a5",
+      "executable": false
+    },
+    "tests/base/fixtures/openapi-3.1-schema.json": {
+      "sha256": "da01ba28852cac0de53893797cb8d1942bc3b05084f526dcc216717dec314ed0",
+      "executable": false
+    },
     "tests/base/host-identity.test.ts": {
       "sha256": "f3b4b01550266f42dbfa1138b7f21c9f3b6a23b86ea55f9aa19a37be0ac0002e",
       "executable": false
@@ -8442,7 +8454,7 @@
       "executable": false
     },
     "tests/base/integration-openapi.test.ts": {
-      "sha256": "8153d091c107b6150ffc96ed0b703bcbe584cc2968f74ab21c1d6d73b9608531",
+      "sha256": "1666edb62dc955dd3dcc51e085a65de3c8a790a287a8241992ce579fcf619e48",
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {

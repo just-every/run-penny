@@ -1,8 +1,10 @@
 import { applyD1Migrations, reset } from 'cloudflare:test'
+import { exports } from 'cloudflare:workers'
 import { afterEach, expect, inject, it, vi } from 'vitest'
 import { Validator, type Schema as JsonSchema } from '@cfworker/json-schema'
 import { call, env } from './support'
 import { releaseGraph } from './release-fixture'
+import openApiSchema from './fixtures/openapi-3.1-schema.json'
 
 type Schema = Record<string, unknown>
 type Operation = {
@@ -26,6 +28,10 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
   expect(documentResponse.headers.get('Content-Type')).toContain('application/json')
   expect(documentResponse.headers.get('Set-Cookie')).toBeNull()
   const document = await documentResponse.json() as Document
+  // The official OpenAPI structural schema is retained locally; validation and
+  // operation execution need no schema download or hosted installation.
+  const structure = new Validator(openApiSchema as JsonSchema, '2020-12', false).validate(document)
+  expect(structure.valid, JSON.stringify(structure.errors)).toBe(true)
   expect(document.openapi).toMatch(/^3\.1\./)
   expect(document.servers).toEqual([{ url: '/' }])
   const schemaFor = (ref: string) => {
@@ -70,6 +76,10 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
   const scopes = [...new Set(Object.values(document.paths).flatMap(methods => Object.values(methods).flatMap(op => op['x-required-scopes'])))]
   const active = await issue(scopes), allowed = active.headers
   const readOnly = (await issue(['requests:read'])).headers, releaseOnly = (await issue(['releases:read'])).headers
+  const nativeHttp = (url: string, method: string, headers: Record<string, string>, body?: string) =>
+    exports.default.fetch(new Request('https://penny.test' + url, {
+      method, headers: { Host: 'penny.test', ...headers }, ...(body === undefined ? {} : { body }),
+    }))
   const snapshot = async () => (await env.DB.batch([
     'requests', 'request_comments', 'request_status_updates', 'request_vote_contributions', 'request_votes',
     'penny_proxy_votes', 'requesters', 'requester_addresses', 'requester_update_permissions',
@@ -105,6 +115,8 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
     const input = cases[operation.operationId](), url = path.replace('{slug}', input.slug ?? '') + (input.query ?? '')
     const securityName = Object.keys(operation.security[0])[0]
     expect(document.components.securitySchemes[securityName]).toMatchObject({ type: 'http', scheme: 'bearer' })
+    // An all-scope key would hide a declaration that names the wrong scope.
+    const leastPrivilege = (await issue(operation['x-required-scopes'])).headers
     const wrongScope = operation['x-required-scopes'][0] === 'requests:read' ? releaseOnly : readOnly
     const before = await snapshot()
     for (const headers of [{}, { Authorization: 'Bearer synthetic-penny-invalid' }, wrongScope]) {
@@ -134,7 +146,27 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
       const schema = schemaFor(operation.requestBody.content['application/json'].schema.$ref)
       validates(schema, input.body); validates(schema, {}, false)
     }
-    const response = await call(url, input.body, allowed, method)
+    if (operation.requestBody) {
+      const json = JSON.stringify(input.body)
+      const refusals: { headers: Record<string, string>; body: string; status: number }[] = [
+        { headers: { 'Content-Type': 'application/json', Origin: 'https://other.test' }, body: json, status: 403 },
+        { headers: { 'Content-Type': 'application/json', 'Sec-Fetch-Site': 'cross-site' }, body: json, status: 403 },
+        { headers: { 'Content-Type': 'text/plain' }, body: json, status: 400 },
+        { headers: { 'Content-Type': 'application/json' }, body: '{', status: 400 },
+        { headers: { 'Content-Type': 'application/json' }, body: json + ' '.repeat(32769), status: 400 },
+      ]
+      for (const refused of refusals) {
+        const response = await nativeHttp(url, method, { ...leastPrivilege, ...refused.headers }, refused.body)
+        expect(response.status, operation.operationId + ' HTTP admission').toBe(refused.status)
+        validates(schemaFor(operation.responses[String(response.status)].content['application/json'].schema.$ref), await response.json())
+        expect(await snapshot()).toEqual(before)
+      }
+    }
+    // Native server clients omit Origin. Success must require only the scope
+    // advertised by this operation, including read-only credentials for reads.
+    const response = await nativeHttp(url, method, {
+      ...leastPrivilege, ...(input.body === undefined ? {} : { 'Content-Type': 'application/json' }),
+    }, input.body === undefined ? undefined : JSON.stringify(input.body))
     expect(response.status, operation.operationId + ': ' + await response.clone().text()).toBe(method === 'POST' && ['createRequest', 'createComment', 'createRelease'].includes(operation.operationId) ? 201 : 200)
     expect(response.headers.get('Cache-Control')).toContain('no-store')
     const result = await response.json() as Record<string, unknown>
