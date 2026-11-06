@@ -1649,8 +1649,8 @@ Core · target · **partial** · Cites BASE-AUDIT-001, BASE-OPS-005
 2. Entries contain no customer wording or commercial values.
 3. Erase an operator and see their entries anonymized while the events remain (DATA-003).
 
-**Evidence.** `tests/base/board.test.ts`
-**Gap.** Durable actor audits are recorded and archived today; there is no audit screen or export. Perform each listed action (including REQ-038 and REQ-041 edits, removals, restores and permanent deletes and INT-007 and NOTIFY-013 changes), then read and export the log through the UI and API; erase an operator and see their entries anonymized while the events remain.
+**Evidence.** `tests/base/board.test.ts`; `tests/base/board.test.ts`: catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back (`tests/base/audit-read-export.ts` helper)
+**Gap.** Native Owner and Admin metadata API reads and bounded CSV and JSON exports prove actor, action, subject and date filters, stable event pagination, existing agent attribution and private-detail exclusion. The audit UI and every-action coverage remain incomplete, including REQ-038 and REQ-041 edits, removals, restores and permanent deletes and INT-007 and NOTIFY-013 changes. Point 2 certification outside this metadata projection remains open. Point 3 operator-erasure custody already exists but its audit UI readback remains unproved; this slice changes no erasure or agent policy.
 
 #### OPS-006 — Saved views and filters
 
