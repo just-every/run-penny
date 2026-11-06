@@ -1,0 +1,23 @@
+[
+  {
+    "ref": "origin/main",
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  {
+    "ref": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+    "done": 79,
+    "partial": 125,
+    "missing": 77,
+    "total": 281
+  },
+  {
+    "ref": "HEAD",
+    "done": 79,
+    "partial": 125,
+    "missing": 77,
+    "total": 281
+  }
+]

@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f90",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f90",
+  "head": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+  "main": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+  "requested_base": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+  "recorded_at": "2026-11-06T07:57:38.141711+00:00",
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "head": "3bb0fe6f354f2a69c33730dd5371b32879314319"
+    },
+    {
+      "check": "route",
+      "head": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+      "exit": 0
+    },
+    {
+      "check": "typecheck",
+      "head": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+      "exit": 0
+    },
+    {
+      "check": "browser",
+      "head": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+      "exit": 0
+    },
+    {
+      "check": "first-party",
+      "head": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+      "exit": 0
+    }
+  ],
+  "views_write": 0,
+  "views_check_after_write": 0,
+  "committed_views_check": 1,
+  "committed_views_expected_stale": true,
+  "source_lock_check": 0,
+  "migration_changed": false,
+  "status": {
+    "OPS-006": {
+      "before": "partial",
+      "after": "partial",
+      "done_claim": false
+    }
+  },
+  "counts": [
+    {
+      "ref": "origin/main",
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    },
+    {
+      "ref": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+      "done": 79,
+      "partial": 125,
+      "missing": 77,
+      "total": 281
+    },
+    {
+      "ref": "HEAD",
+      "done": 79,
+      "partial": 125,
+      "missing": 77,
+      "total": 281
+    }
+  ],
+  "ci_observations": [
+    {
+      "conclusion": null,
+      "event": "push",
+      "head_sha": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183951324",
+      "id": 42183951324,
+      "name": "Verify Penny",
+      "status": "in_progress"
+    }
+  ],
+  "main_ci_observations": [
+    {
+      "conclusion": "success",
+      "event": "push",
+      "head_sha": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42176843779",
+      "id": 42176843779,
+      "name": "Verify Penny",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "event": "push",
+      "head_sha": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42176843655",
+      "id": 42176843655,
+      "name": "Run site",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "event": "dynamic",
+      "head_sha": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42176843875",
+      "id": 42176843875,
+      "name": "Push on main",
+      "status": "completed"
+    },
+    {
+      "conclusion": "skipped",
+      "event": "push",
+      "head_sha": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42176843599",
+      "id": 42176843599,
+      "name": "Run demo",
+      "status": "completed"
+    },
+    {
+      "conclusion": "success",
+      "event": "push",
+      "head_sha": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42175255412",
+      "id": 42175255412,
+      "name": "Verify Penny",
+      "status": "completed"
+    }
+  ],
+  "publication_scan": "NOT RUN: fleet cloud adaptation",
+  "product_pushed": true,
+  "product_push_attempts": 1,
+  "no_new_test_registrations": true,
+  "assertions_removed": false,
+  "screenshots_widths": [
+    1440,
+    390
+  ],
+  "blockers": []
+}

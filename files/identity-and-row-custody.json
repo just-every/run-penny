@@ -1,0 +1,38 @@
+{
+  "head": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+  "candidate_commits": [
+    {
+      "head": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+      "author": "Run Edit Run fleet",
+      "author_email": "fleet@runeditrun.com",
+      "committer": "Run Edit Run fleet",
+      "committer_email": "fleet@runeditrun.com",
+      "trailers": ""
+    },
+    {
+      "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+      "author": "Run Edit Run fleet",
+      "author_email": "fleet@runeditrun.com",
+      "committer": "Run Edit Run fleet",
+      "committer_email": "fleet@runeditrun.com",
+      "trailers": ""
+    },
+    {
+      "head": "44516243b5cda49e56d7278ccc3691007a42f32c",
+      "author": "Run Edit Run fleet",
+      "author_email": "fleet@runeditrun.com",
+      "committer": "Run Edit Run fleet",
+      "committer_email": "fleet@runeditrun.com",
+      "trailers": ""
+    },
+    {
+      "head": "4588e84551ad74f779976225a3e78b04f318db63",
+      "author": "Run Edit Run fleet",
+      "author_email": "fleet@runeditrun.com",
+      "committer": "Run Edit Run fleet",
+      "committer_email": "fleet@runeditrun.com",
+      "trailers": ""
+    }
+  ],
+  "all_parent_status_rows_retained": true
+}

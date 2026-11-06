@@ -1,0 +1,296 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index db189f6..da523ad 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -2,6 +2,11 @@
+ 
+ ## Unreleased
+ 
++- Prove that editing a saved request-title filter through the comparison form persists its next revision and complete result set for both the owner and a second operator after reload. OPS-006 remains partial for the broader saved-view requirements. No migration or configuration change is required.
++
++- Verify the complete visible saved-comparison list for a second native operator, retaining shared title-filter results and refusing private-view reads. OPS-006 remains partial for its broader saved-view requirements. No migration or configuration change is required.
++
++- Save a case-insensitive request-title filter in native prioritisation comparisons and apply it before the existing formula sort. Reopen the saved shared view as its owner and a second operator with the same complete ordered subset; retain private-view exclusion, direct-read refusal, revision, audit and admission checks. OPS-006 moves from missing to partial; other lists, filters, columns and broader sort controls remain open. No migration or reconfiguration is required; older saved definitions default to an empty filter.
+ - Prove full and partial hierarchy-name search without a type filter, exact destinations across mixed paginated results, and independent destinations for equal-name products after navigation and reload. OPS-004 remains partial with its finer permissions and capacity proof open. No migration or configuration change.
+ 
+ - Search native products, components and features by full or partial name alongside existing workspace records, retaining global ordering and pagination. Result links identify and focus the particular hierarchy record. Extend the existing native and mounted browser journeys with hierarchy identity, ordering, page boundaries and current authority checks. OPS-004 remains partial for finer record permissions and capacity proof. No migration or configuration change is required.
+diff --git a/CONTRACT.md b/CONTRACT.md
+index f1ae94f..36b634b 100644
+--- a/CONTRACT.md
++++ b/CONTRACT.md
+@@ -3270,8 +3270,8 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | Clauses | Done | Partial | Missing | Total |
+ | --- | ---: | ---: | ---: | ---: |
+ | Published | 59 | 56 | 1 | 116 |
+-| Target and push further | 20 | 68 | 77 | 165 |
+-| All | 79 | 124 | 78 | 281 |
++| Target and push further | 20 | 69 | 76 | 165 |
++| All | 79 | 125 | 77 | 281 |
+ 
+ | Clause | Title | Kind | Status | Evidence | Gap |
+ | --- | --- | --- | --- | --- | --- |
+@@ -3396,7 +3396,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `ROLE-002` | Operator single sign-on | target | partial | `src/core/features/auth/dependencies.ts` | Today only the optional `IDENTITY_PROVIDER` dependency is declared; sign-in remains email links. A browser journey against SAML and OIDC test identity providers at the network edge: a first sign-in creates a Contributor, a group claim maps another user to Admin, an enforced domain refuses an email link, and an IdP-side deactivation ends access at the next session check. |
+ | `ROLE-003` | SCIM provisioning | target | missing |  | Okta and Entra SCIM request fixtures through the public endpoint create, patch and deactivate a user; the deactivated user's session and API key are refused on their next request, as they are after OPS-002 removal. |
+ | `ROLE-004` | Audit log | target | partial | `tests/base/board.test.ts` | Durable actor audits are recorded and archived today; there is no audit screen or export. Perform each listed action (including REQ-038 and REQ-041 edits, removals, restores and permanent deletes and INT-007 and NOTIFY-013 changes), then read and export the log through the UI and API; erase an operator and see their entries anonymized while the events remain. |
+-| `OPS-006` | Saved views and filters | target | missing |  | A browser test saves a filtered, sorted view, then a second operator opens the shared view and gets the same result set; a private view is not listed for them. |
++| `OPS-006` | Saved views and filters | target | partial | `tests/base/prioritisation.test.ts` — saves and shares transparent native-demand comparisons; `tests/browser/prioritisation.mjs` — prioritisation, including mounted filter edits and reload, the complete visible peer saved-comparison list and private-view refusal | Native request prioritisation saves a title filter before existing formula sorting; a second operator reads the same complete ordered nonempty subset, while private views stay unlisted and unreadable. Remaining: saved views across the inbox, request queue, features, evidence, accounts, roadmap and releases; other field, custom-field, tag, theme, segment, owner and date filters; selectable columns and broader sort controls. Provider, device, account and cross-seed or Base prerequisites and earlier release holds remain unproved. |
+ | `OPS-007` | Person view | target | partial | `src/core/features/requests/operator-context.ts`; `src/core/features/accounts/read-context.ts` | Voter lists and account requesters ship today; no per-person page exists. A fixture requester with two posts, three votes, a comment, captured Zendesk evidence and an account: the profile lists each with a link to its record; a role without commercial permission sees no ARR or MRR; the profile path answers 404 to a portal visitor and appears in no public payload. |
+ | `CAP-001` | Feedback inbox | target | partial | `src/core/features/evidence/repository.ts`; `tests/browser/operator-pages.mjs` | Today the unreviewed evidence list does this for portal and manually recorded evidence only. A browser journey at 1440 and 390 pixels: items from three connector fixtures arrive, are triaged by keyboard (link, create, dismiss with reason, snooze), each linked request shows the item with its source link, and the overview counts match the inbox. |
+ | `CAP-002` | Source provenance and link-back | target | partial | `src/core/features/evidence/write-service.ts`; `tests/browser/operator-pages-decisions.mjs` | EVID-002 provenance ships today for manually recorded sources without deep links or source sync. A connector fixture test captures a record, edits it at the source and deletes it at the source: Penny shows changed and removed states, purges the excerpt at the window, and the deep link opens the original record. |
+diff --git a/sources.lock.json b/sources.lock.json
+index efb5939..212e572 100644
+--- a/sources.lock.json
++++ b/sources.lock.json
+@@ -3354,7 +3354,7 @@
+       "executable": false
+     },
+     "CHANGELOG.md": {
+-      "sha256": "6fd3787551928b3b57e08f5835ab5e3470423c10eb2ff46489848db1bbbec168",
++      "sha256": "41cbad81fbb04d1113ea54f17ed8837b630ea747618fd8ba23fbdb632b0c8967",
+       "executable": false
+     },
+     "CLAUDE.md": {
+@@ -3366,7 +3366,7 @@
+       "executable": false
+     },
+     "CONTRACT.md": {
+-      "sha256": "0983c330e03425bd5b3dd2168918ea3b94121d55282dc8906ac89ccef27ac50a",
++      "sha256": "5ded96524695379870d1e4a1d2ce631252b2b50b782c633f25b43f3e40a21f36",
+       "executable": false
+     },
+     "DEMO.md": {
+@@ -6874,7 +6874,7 @@
+       "executable": false
+     },
+     "src/core/features/prioritisation/formulas.ts": {
+-      "sha256": "5da61c3f8cdda78c6283409793e41b0ea35c1f29b5221adbac2ee6ce71a90374",
++      "sha256": "26342792bf5f521df154cf812f40e8c4ed0c753c446a5ad93e288e970e828e71",
+       "executable": false
+     },
+     "src/core/features/prioritisation/labels.ts": {
+@@ -6886,7 +6886,7 @@
+       "executable": false
+     },
+     "src/core/features/prioritisation/repository.ts": {
+-      "sha256": "4c7b02b1ad31acdfac295da3500871c59254d7f1e8bda4c6b7a6085f0b54324b",
++      "sha256": "f3a0527345f4113b053cba9846585e0ebb0b079e9b9b37cf7928c07d28a2bef5",
+       "executable": false
+     },
+     "src/core/features/prioritisation/routes.ts": {
+@@ -6898,7 +6898,7 @@
+       "executable": false
+     },
+     "src/core/features/prioritisation/view-editor.tsx": {
+-      "sha256": "0e2d162768f04a5978decf1d80bb14579ab0aa3e1146af1137cd56c7cd7c2531",
++      "sha256": "297a3a4af700e591115ab53591f3b4facf0ed7ab1f7f710a3e4666f00f6db832",
+       "executable": false
+     },
+     "src/core/features/redaction/background.ts": {
+@@ -8506,7 +8506,7 @@
+       "executable": false
+     },
+     "tests/base/prioritisation.test.ts": {
+-      "sha256": "ec25c6fbd038711246e6d6ddca26c2b152da720f08e89d25478b10751d7fb761",
++      "sha256": "ea63e50afd43b0e1e6e7ec66d1de3d28cf6308ea5bc56093cdd15c5628eee6a2",
+       "executable": false
+     },
+     "tests/base/product-hierarchy.test.ts": {
+@@ -8942,7 +8942,7 @@
+       "executable": false
+     },
+     "tests/browser/prioritisation.mjs": {
+-      "sha256": "487d560a208062f1dc7c635fb8b7c902f4bc9053f3c6f86a50d74d4b9701fefb",
++      "sha256": "21022d4e6956e00e48d8fc38e570a6faf90a7f153e741bd80335f9958e3a4921",
+       "executable": false
+     },
+     "tests/browser/product-hierarchy.mjs": {
+diff --git a/src/core/features/prioritisation/formulas.ts b/src/core/features/prioritisation/formulas.ts
+index 35dd8f2..437f6a8 100644
+--- a/src/core/features/prioritisation/formulas.ts
++++ b/src/core/features/prioritisation/formulas.ts
+@@ -27,6 +27,7 @@ export const viewInput = z.object({
+   name: z.string().trim().min(1).max(120),
+   shared: z.boolean().default(false),
+   entity: z.enum(['requests', 'features']).default('requests'),
++  titleFilter: z.string().trim().max(280).default(''),
+   formula: z.enum(['none', 'rice', 'value_over_effort', 'weighted_segment_demand', 'weighted_sum']).default('none'),
+   weights: weights.default(() => weights.parse({})),
+   manualInputs: z.record(z.string().min(1), manualInput).default({}),
+diff --git a/src/core/features/prioritisation/repository.ts b/src/core/features/prioritisation/repository.ts
+index 6a08c19..9189be5 100644
+--- a/src/core/features/prioritisation/repository.ts
++++ b/src/core/features/prioritisation/repository.ts
+@@ -15,7 +15,10 @@ export async function readView(db:D1Database,id:string,actor:string):Promise<Vie
+  const row=await db.prepare('SELECT id,owner_id,revision,definition_json FROM penny_priority_views WHERE id=? AND (owner_id=? OR shared=1)').bind(id,actor).first<Stored>()
+  if(!row)throw new MutationError(404,'View not found.')
+  const saved=decode(row,actor)
+- return {...saved,rows:sortRows(await comparisonRows(db,saved.view.entity),saved.view)}
++ const rows=await comparisonRows(db,saved.view.entity)
++ const title=saved.view.titleFilter.toLowerCase()
++ const filtered=saved.view.entity==='requests'?rows.filter(row=>row.title.toLowerCase().includes(title)):rows
++ return {...saved,rows:sortRows(filtered,saved.view)}
+ }
+ export async function saveView(db:D1Database,id:string|null,view:ViewInput,actor:string,now:string,revision?:number){
+  const key=id??createUlid()
+diff --git a/src/core/features/prioritisation/view-editor.tsx b/src/core/features/prioritisation/view-editor.tsx
+index d5eeca0..c688fec 100644
+--- a/src/core/features/prioritisation/view-editor.tsx
++++ b/src/core/features/prioritisation/view-editor.tsx
+@@ -18,11 +18,12 @@ export function ViewEditor({saved,onSaved}:{saved?:SavedView;onSaved:()=>void}){
+    for(const key of Object.keys(manualLabels)){const input=form.get(`manual.${row.id}.${key}`);if(typeof input==='string'&&input.trim())values[key]=Number(input)}
+    if(Object.keys(values).length)manualInputs[row.id]=values;else delete manualInputs[row.id]
+   }
+-  return {name:form.get('name'),shared:form.get('shared')==='on',entity,formula:form.get('formula'),weights:Object.fromEntries(Object.keys(weightLabels).map(key=>[key,Number(form.get(`weight.${key}`))])),manualInputs,...(saved?{revision:saved.revision}:{})}
++  return {name:form.get('name'),shared:form.get('shared')==='on',entity,titleFilter:entity==='requests'?form.get('titleFilter')??'':'',formula:form.get('formula'),weights:Object.fromEntries(Object.keys(weightLabels).map(key=>[key,Number(form.get(`weight.${key}`))])),manualInputs,...(saved?{revision:saved.revision}:{})}
+  }
+  return <LoopForm title={saved?'Edit comparison':'Create comparison'} action={`/api/operator/prioritisation${saved?`/${saved.id}`:''}`} method={saved?'PUT':'POST'} submit="Save comparison" disabled={rows.kind!=='ready'} transform={transform} onSaved={onSaved}>
+  <Field name="name" label="View name" value={definition.name} required/>
+  <label className={fieldLabelClass}><span id={compareId}>Compare</span><select aria-labelledby={compareId} className={controlClass} value={entity} onChange={e=>{setEntity(e.target.value as ViewInput['entity']);setLimit(25)}}><option value="requests">Requests</option><option value="features">Features</option></select></label>
++ {entity==='requests'?<Field name="titleFilter" label="Request title contains" value={definition.titleFilter}/>:null}
+  <Field name="formula" label="Sorting formula" value={definition.formula} required choices={[{id:'none',label:'No formula (title order)'},{id:'rice',label:'RICE: voters × impact × confidence / effort'},{id:'value_over_effort',label:'Manual value / manual effort'},{id:'weighted_segment_demand',label:'Manual segment demand × reach weight'},{id:'weighted_sum',label:'Custom weighted sum'}]}/>
+  <label className="flex min-h-11 items-center gap-3 text-sm"><input name="shared" type="checkbox" defaultChecked={definition.shared}/>Share with all operators (only you can edit)</label>
+  <details className="group"><summary className={disclosureSummaryClass}>Formula weights</summary><p className="my-3 text-sm text-penny-muted">Custom sums multiply each input by its weight. RICE uses its fixed formula, with confidence divided by 100. Zero weights omit an input from a custom sum.</p><div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(weightLabels).map(([key,label])=><label className={fieldLabelClass} key={key}>{label} weight<input className={controlClass} type="number" step="any" min="-100" max="100" name={`weight.${key}`} defaultValue={definition.weights[key as keyof typeof definition.weights]} required/></label>)}</div></details>
+diff --git a/tests/base/prioritisation.test.ts b/tests/base/prioritisation.test.ts
+index 801cb83..079b87f 100644
+--- a/tests/base/prioritisation.test.ts
++++ b/tests/base/prioritisation.test.ts
+@@ -6,9 +6,9 @@ import type {ViewResult,SavedView} from '@/core/features/prioritisation/reposito
+ import type {ViewInput} from '@/core/features/prioritisation/formulas'
+ beforeAll(async()=>{await applyD1Migrations(env.DB,inject('migrations').filter(m=>m.name<'0083'))})
+ afterAll(()=>vi.restoreAllMocks())
+-it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free',async()=>{
++it('[OPS-006 PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free',async()=>{
+  const g=await graph(2),second=await requester('Morgan Reed')
+- const json=async<T>(path:string,body?:unknown,method?:string,status=200,headers=g.operator):Promise<T>=>{const response=await call(path,body,headers,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
++ const json=async<T>(path:string,body?:unknown,method?:string,status=200,headers:Record<string,string>=g.operator):Promise<T>=>{const response=await call(path,body,headers,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
+  const pre=(await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results
+  await applyD1Migrations(env.DB,inject('migrations'));await applyD1Migrations(env.DB,inject('migrations'));expect((await env.DB.prepare('SELECT * FROM requests ORDER BY id').all()).results).toEqual(pre)
+  await json('/api/operator/boards/regression/vote-importance',{enabled:true,labels:['Nice to have','Important','Must have']},'PUT')
+@@ -30,12 +30,33 @@ it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, r
+  const confirmed=await call('/auth/confirm',{token});expect(confirmed.status).toBe(303);const peer={Cookie:confirmed.headers.get('Set-Cookie')!.split(';')[0]}
+  expect((await json<ViewResult>(path,undefined,'GET',200,peer)).rows).toEqual(view.rows)
+  expect((await call(path,{...view.view,revision:view.revision},peer,'PUT')).status).toBe(404)
++ // Save a nonempty proper subset from three eligible native requests.
++ const control=await json<{slug:string}>('/api/public/requests',{title:'Excluded control',description:'A separate workflow',boardSlug:'regression',idempotencyKey:crypto.randomUUID()},'POST',201,g.person)
++ await json(`/api/operator/moderation/${control.slug}`,{verdict:'approved',title:'Excluded control',description:'A separate workflow',boardSlug:'regression',displayName:'Requester'},'POST')
++ const controlId=(await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(control.slug).first<{id:string}>())!.id
++ const filtered=await json<{id:string}>('/api/operator/prioritisation',{name:'Selected requests',entity:'requests',shared:true,titleFilter:'  REQUEST  ',formula:'weighted_sum',weights:{reach:-1}},'POST',201)
++ const filteredPath=`/api/operator/prioritisation/${filtered.id}`
++ let selected=await json<ViewResult>(filteredPath)
++ expect(selected.view.titleFilter).toBe('REQUEST')
++ expect(selected.rows.map(row=>row.id)).toEqual([g.requests[1].id,g.requests[0].id])
++ expect((await json<ViewResult>(filteredPath,undefined,'GET',200,peer)).rows).toEqual(selected.rows)
++ expect((await json<SavedView[]>('/api/operator/prioritisation',undefined,'GET',200,peer)).find(saved=>saved.id===filtered.id)?.view.titleFilter).toBe('REQUEST')
++ await json(filteredPath,{...selected.view,revision:selected.revision,titleFilter:'no matching title'},'PUT')
++ selected=await json<ViewResult>(filteredPath);expect(selected.rows).toEqual([])
++ await json(filteredPath,{...selected.view,revision:selected.revision,titleFilter:'   '},'PUT')
++ selected=await json<ViewResult>(filteredPath)
++ expect(selected.view.titleFilter).toBe('')
++ expect(selected.rows.map(row=>row.id)).toEqual([controlId,g.requests[1].id,g.requests[0].id])
++ await json(filteredPath,{...selected.view,revision:selected.revision,titleFilter:'Request'},'PUT')
++ selected=await json<ViewResult>(filteredPath)
++ expect(selected.rows.map(row=>row.id)).toEqual([g.requests[1].id,g.requests[0].id])
++ expect((await json<ViewResult>(filteredPath,undefined,'GET',200,peer)).rows).toEqual(selected.rows)
+  await json(path,{...view.view,revision:view.revision,formula:'weighted_sum',weights:{reach:0,importance3:5}},'PUT')
+  expect((await call(path,{...view.view,revision:view.revision},g.operator,'PUT')).status).toBe(409)
+  view=await json<ViewResult>(path);expect(view.rows.map(r=>r.id)).toEqual([features[0],features[1]]);expect(view.rows[0].score).toBe(5);expect(view.rows[0].weights.importance3).toBe(5)
+  const privateView=await json<{id:string}>('/api/operator/prioritisation',{name:'Private scenario',entity:'requests',shared:false,formula:'rice'},'POST',201)
+  expect((await call(`/api/operator/prioritisation/${privateView.id}`,undefined,peer)).status).toBe(404)
+- expect((await json<SavedView[]>('/api/operator/prioritisation',undefined,'GET',200,peer)).map(v=>v.id)).toEqual([created.id])
++ expect((await json<SavedView[]>('/api/operator/prioritisation',undefined,'GET',200,peer)).map(v=>v.id)).toEqual([created.id,filtered.id])
+  const missing=await json<ViewResult>(`/api/operator/prioritisation/${privateView.id}`)
+  expect(missing.rows.every(r=>r.score===null&&r.missing.includes('effort'))).toBe(true)
+  // Other presets require stated values; zero is valid value, never invented effort.
+@@ -50,6 +71,6 @@ it('[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, r
+  expect((await call('/api/operator/prioritisation')).status).toBe(401)
+  expect((await call('/api/operator/prioritisation',definition,{...g.operator,Origin:'https://elsewhere.test'})).status).toBe(403)
+  for(const url of ['/api/public/requests','/api/public/roadmap','/api/public/releases','/api/operator/decisions']){const text=await(await call(url,undefined,g.operator)).text();expect(text).not.toContain('Finance RICE');expect(text).not.toContain('"score"')}
+- const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_priority_views).toHaveLength(2)
++ const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_priority_views).toHaveLength(3)
+  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
+ })
+diff --git a/tests/browser/prioritisation.mjs b/tests/browser/prioritisation.mjs
+index c57109c..4fdc690 100644
+--- a/tests/browser/prioritisation.mjs
++++ b/tests/browser/prioritisation.mjs
+@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
+ import {moderationJourney} from './moderation-runtime.mjs'
+ await moderationJourney('prioritisation',async({runtime,origin,operator,json,send,person,pageFor,capture})=>{
+  const customer=await person('eli@example.test','Eli Wong'),auth={Authorization:`Bearer ${customer.token}`},requests=[]
+- for(const title of ['Schedule monthly finance exports','Send department summaries','Export invoices']){
++ for(const title of ['Schedule monthly finance exports','Department finance summaries','Export invoices']){
+   const request=await json('/api/public/requests',{title,description:'Finance needs reliable reports for its monthly account reviews.',boardSlug:'finance',idempotencyKey:crypto.randomUUID()},auth,'POST',201)
+   await json(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title,description:'Reliable monthly reports for finance.',boardSlug:'finance',displayName:'Eli Wong'},operator)
+   requests.push({...request,id:await runtime.db.prepare('SELECT id FROM requests WHERE slug=?').bind(request.slug).first('id')})
+@@ -51,9 +51,70 @@ await moderationJourney('prioritisation',async({runtime,origin,operator,json,sen
+  await edit.getByRole('button',{name:'Save comparison',exact:true}).click()
+  await ranked.getByRole('heading',{name:'1. Scheduled reporting',exact:true}).waitFor()
+  await capture(owner,'importance-resorted',region)
++ // Save a filtered request comparison through the mounted form, then reopen it.
++ await owner.goto(origin+'/app/prioritisation',{waitUntil:'networkidle'})
++ await owner.locator('summary').filter({hasText:/^Create comparison$/}).click()
++ const requestForm=owner.getByRole('form',{name:'Create comparison',exact:true})
++ await requestForm.getByLabel('View name',{exact:true}).fill('Finance request subset')
++ await requestForm.getByLabel('Request title contains',{exact:true}).fill('  FINANCE  ')
++ await requestForm.getByLabel('Sorting formula',{exact:true}).selectOption('weighted_sum')
++ await requestForm.getByLabel('Share with all operators (only you can edit)').check()
++ await requestForm.locator('summary').filter({hasText:'Formula weights'}).click()
++ await requestForm.getByLabel('Reach weight',{exact:true}).fill('-1')
++ await requestForm.getByRole('button',{name:'Save comparison',exact:true}).click()
++ await requestForm.getByRole('status').waitFor()
++ await owner.getByRole('link',{name:'Finance request subset',exact:true}).click()
++ const requestViews=await json('/api/operator/prioritisation',undefined,operator),requestView=requestViews.find(v=>v.view.name==='Finance request subset')
++ const requestPath=`/app/prioritisation?view=${requestView.id}`,apiPath=`/api/operator/prioritisation/${requestView.id}`
++ const ownerResult=await json(apiPath,undefined,operator)
++ assert.equal(ownerResult.view.titleFilter,'FINANCE')
++ assert.deepEqual(ownerResult.rows.map(row=>row.id),[requests[1].id,requests[0].id])
++ await owner.reload({waitUntil:'networkidle'})
++ const requestRegion=owner.getByRole('region',{name:'Finance request subset',exact:true}),requestRanked=requestRegion.getByRole('list',{name:'Ranked comparison',exact:true})
++ const expectedHeadings=['1. Department finance summaries','2. Schedule monthly finance exports']
++ await requestRanked.getByRole('heading',{name:expectedHeadings[0],exact:true}).waitFor()
++ assert.deepEqual(await requestRanked.getByRole('heading').allTextContents(),expectedHeadings)
++ await requestRegion.locator('summary').filter({hasText:/^Edit comparison$/}).click()
++ assert.equal(await requestRegion.getByLabel('Request title contains',{exact:true}).inputValue(),'FINANCE')
++ await capture(owner,'filtered-request-owner',requestRegion)
++ await peer.goto(origin+requestPath,{waitUntil:'networkidle'})
++ const peerRegion=peer.getByRole('region',{name:'Finance request subset',exact:true}),peerRanked=peerRegion.getByRole('list',{name:'Ranked comparison',exact:true})
++ await peerRanked.getByRole('heading',{name:expectedHeadings[0],exact:true}).waitFor()
++ assert.deepEqual(await peerRanked.getByRole('heading').allTextContents(),expectedHeadings)
++ assert.deepEqual((await json(apiPath,undefined,{Cookie:peerCookie})).rows,ownerResult.rows)
++ assert.equal(await peerRegion.locator('summary').filter({hasText:/^Edit comparison$/}).count(),0)
++ await capture(peer,'filtered-request-peer',peerRegion)
++ // Phone proof reuses this saved state; behavioral assertions run once at 1440.
++ for(const [page,label,region] of [[owner,'filtered-request-owner',requestRegion],[peer,'filtered-request-peer',peerRegion]]){
++  await page.setViewportSize({width:390,height:844});await capture(page,label,region)
++  await page.setViewportSize({width:1440,height:900})
++ }
++ // Editing a saved filter uses the mounted form and persists for both operators.
++ const filterEdit=requestRegion.getByRole('form',{name:'Edit comparison',exact:true})
++ await filterEdit.getByLabel('Request title contains',{exact:true}).fill('schedule')
++ await filterEdit.getByRole('button',{name:'Save comparison',exact:true}).click()
++ await requestRanked.getByRole('heading',{name:'1. Schedule monthly finance exports',exact:true}).waitFor()
++ for(const page of [owner,peer]){
++  await page.reload({waitUntil:'networkidle'})
++  const edited=page.getByRole('region',{name:'Finance request subset',exact:true}).getByRole('list',{name:'Ranked comparison',exact:true})
++  await edited.getByRole('heading',{name:'1. Schedule monthly finance exports',exact:true}).waitFor()
++  assert.deepEqual(await edited.getByRole('heading').allTextContents(),['1. Schedule monthly finance exports'])
++ }
++ const editedResult=await json(apiPath,undefined,operator)
++ assert.equal(editedResult.view.titleFilter,'schedule')
++ assert.equal(editedResult.revision,ownerResult.revision+1)
++ assert.deepEqual(editedResult.rows.map(row=>row.id),[requests[0].id])
++ assert.deepEqual((await json(apiPath,undefined,{Cookie:peerCookie})).rows,editedResult.rows)
++ await requestRegion.locator('summary').filter({hasText:/^Edit comparison$/}).click()
++ assert.equal(await filterEdit.getByLabel('Request title contains',{exact:true}).inputValue(),'schedule')
+  const privateView=await json('/api/operator/prioritisation',{name:'Private finance scenario',entity:'requests',formula:'rice',shared:false},operator,'POST',201)
++ assert.equal((await json('/api/operator/prioritisation',undefined,{Cookie:peerCookie})).some(view=>view.id===privateView.id),false)
++ await send(`/api/operator/prioritisation/${privateView.id}`,undefined,{Cookie:peerCookie},'GET',404)
+  await peer.goto(origin+`/app/prioritisation?view=${privateView.id}`,{waitUntil:'networkidle'})
+  await peer.getByRole('heading',{name:'Comparison unavailable',exact:true}).waitFor();assert.equal((await peer.content()).includes('Private finance scenario'),false)
++ const peerList=peer.getByRole('region',{name:'Saved comparisons',exact:true})
++ await peerList.getByRole('link',{name:'Finance request subset',exact:true}).waitFor()
++ assert.deepEqual(await peerList.getByRole('link').allTextContents(),['Finance priorities','Finance request subset'])
+  await capture(peer,'private-view-refused')
+  await owner.goto(origin+`/app/prioritisation?view=${privateView.id}`,{waitUntil:'networkidle'})
+  await owner.getByText('Missing: Impact (0–10), Confidence (%), Manual effort',{exact:true}).first().waitFor()

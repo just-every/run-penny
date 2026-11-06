@@ -1,0 +1,3 @@
+head=3bb0fe6f354f2a69c33730dd5371b32879314319
+MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock and check exit=0; views=node src/base/contract-docs.mjs write and check exit=0; ledger=none exit=0
+Generated views restored whole from origin/main. No migration changed. Source lock regenerated last; committed tree clean.

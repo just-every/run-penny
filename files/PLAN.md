@@ -1,0 +1,10 @@
+# sd-penny-c-f90 plan
+
+Repository: just-every/run-penny. Product branch: cloud/sd-penny-c-f90.
+
+1. Read the full OPS-006 requirement, acceptance points, Status row, provided rulings and DONE riders. Map the selected native request-title filter slice to the existing route and browser journeys. Keep every explicitly omitted broader requirement in the Gap and keep the status partial.
+2. Retain the requested f85 base and all main judgments. Validate saved title filtering before formula sorting, a nonempty proper subset with two matches and one excluded request, independent native operator access, private-list exclusion and direct-read refusal. Extend the existing mounted journey to prove editing the saved filter updates the persisted revision and the exact owner and peer results after reload. Add no test registrations or new interface.
+3. Run setup, build, the touched native test, typecheck, the mounted browser journey with assertions at 1440 and screenshots at 1440 and 390, and the first-party check. Prove contract generation with write and check, restore generated views from main, regenerate the source lock last and check it. Preserve all parent Status rows.
+4. Integrate current main without rewriting published base commits, inspect all candidate authors, committers and trailers, and push only the named cloud branch with the fleet guard. Discover exact-head Verify and report its real state within the REST budget. Publish the explicit non-secret evidence packet separately, preserve receipts, and hand product custody to the fleet without claiming landing or DONE.
+
+Scope: selected acceptance point 1 request-title filtering and retained point 2 isolation only. Other operator lists, feature filtering, other field and custom-field filters, tags, themes, segments, owners, dates, columns and broader sorting remain explicitly omitted. Provider and prior release holds remain in force. No new policy ruling or inherited duty is adopted; RL-101 concerns bulk actions and is unrelated.
