@@ -1,0 +1,22 @@
+{
+  "cap": 200,
+  "scope": "changed integration and transport files; no new registration or generated registration loop",
+  "files": [
+    {
+      "path": "tests/base/agent-snooze.test.ts",
+      "before": 1,
+      "after": 1
+    },
+    {
+      "path": "tests/agent-door/fixtures.mjs",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "path": "tests/agent-door/journey.mjs",
+      "before": 0,
+      "after": 0
+    }
+  ],
+  "delta": 0
+}

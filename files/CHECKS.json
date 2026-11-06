@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f101",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f101",
+  "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+  "base": "d1d45bf94c51f3645445ad7611c9507eb2f67187",
+  "integrated_main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "checks": [
+    {
+      "name": "native",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/agent-snooze.test.ts",
+        "tests/base/triage-aging.test.ts"
+      ],
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+      "exit": 0,
+      "log": "native-checks.log",
+      "sha256": "a02565d0b7dfd1fd05c58a03d3d5193a0f58289524c5421d15bcc029542ed622",
+      "passed": 3
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+      "exit": 0,
+      "log": "typecheck.log",
+      "sha256": "87ab5913ea4b33495a4dd1b294238bc1883db378eea8e49aa72b938d0fcc0215",
+      "passed": null
+    },
+    {
+      "name": "first_party",
+      "command": [
+        "pnpm",
+        "exec",
+        "rer",
+        "check",
+        "--profile",
+        "first-party"
+      ],
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+      "exit": 0,
+      "log": "first-party.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": null
+    },
+    {
+      "name": "lint",
+      "command": [
+        "pnpm",
+        "exec",
+        "oxlint",
+        "tests/base/agent-snooze.test.ts",
+        "tests/agent-door/fixtures.mjs",
+        "tests/agent-door/journey.mjs"
+      ],
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+      "exit": 0,
+      "log": "lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "passed": null
+    },
+    {
+      "name": "base_custody",
+      "command": [
+        "node",
+        "scripts/verify-base-source.mjs"
+      ],
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+      "exit": 0,
+      "log": "base-source.log",
+      "sha256": "b94168d0f9dad4555638a998f12ac5fbee69317ef1a1009f10cd7833220fcf85",
+      "passed": null
+    },
+    {
+      "name": "agent_docs",
+      "command": [
+        "node",
+        "scripts/agent-docs.mjs",
+        "check"
+      ],
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+      "exit": 0,
+      "log": "agent-docs.log",
+      "sha256": "8c00cebd811a677161bf3aad2cd06a4bcbdf0827ac473b2b34f35a7e70c6aedf",
+      "passed": null
+    },
+    {
+      "name": "agent_transport",
+      "command": [
+        "perl",
+        "-e",
+        "alarm 1200; exec @ARGV",
+        "--",
+        "node",
+        "node_modules/@runeditrun/rer/cli/agent-door.mjs",
+        "."
+      ],
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+      "exit": 0,
+      "log": "agent-door.log",
+      "sha256": "a83cfce2f0685a46572bb7deac4fea6c369b73fb55bcadda607a0346331479c9",
+      "passed": 2295
+    }
+  ],
+  "mechanical": "mechanical.json",
+  "row_retention": "row-retention.json",
+  "new_test_registrations": 0,
+  "removed_assertions": 0,
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "status_before": "partial",
+  "status_after": "partial",
+  "ui_changed": false,
+  "provider_calls": "mail HTTP edge fixture only; no live provider proof",
+  "publication_scan": "pending fleet lander; unavailable in this cloud",
+  "candidate_ci": {
+    "conclusion": "failure",
+    "event": "push",
+    "head_sha": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42204122187",
+    "id": 42204122187,
+    "name": "Verify Penny",
+    "status": "completed"
+  },
+  "ci_exception": {
+    "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+    "run": 42204122187,
+    "total_jobs": 30,
+    "failed_jobs": 29,
+    "only_failure": "Check generated contract documents",
+    "source_lock_passed_in_every_failed_job": true,
+    "exception": "generated views retained from main by cloud publication contract",
+    "github_calls": 4,
+    "failed_assertion_jobs": 0
+  }
+}

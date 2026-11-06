@@ -1,0 +1,11 @@
+{
+  "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+  "run": 42204122187,
+  "total_jobs": 30,
+  "failed_jobs": 29,
+  "only_failure": "Check generated contract documents",
+  "source_lock_passed_in_every_failed_job": true,
+  "exception": "generated views retained from main by cloud publication contract",
+  "github_calls": 4,
+  "failed_assertion_jobs": 0
+}

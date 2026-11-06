@@ -1,0 +1,14 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f101",
+  "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+  "remote_head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+  "tree": "13d53e5e61ac0aa90503fdb64dfeff00fa2980a4",
+  "parents": [
+    "d1d45bf94c51f3645445ad7611c9507eb2f67187",
+    "6c1eb018f6391de17e04fc8868c0c74f8732abd8"
+  ],
+  "clean": true,
+  "full_history": true,
+  "integrated_main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8"
+}

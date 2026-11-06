@@ -1,0 +1,50 @@
+{
+  "head": "f88e5ab2a4011c542e4f36c77197b482d011621f",
+  "checks": [
+    {
+      "name": "candidate_views",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 1,
+      "log": "candidate-view-check.log",
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f"
+    },
+    {
+      "name": "views_write",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "write"
+      ],
+      "exit": 0,
+      "log": "views-write.log",
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f"
+    },
+    {
+      "name": "views_check",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 0,
+      "log": "views-check.log",
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f"
+    },
+    {
+      "name": "lock_check",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "exit": 0,
+      "log": "lock-check.log",
+      "head": "f88e5ab2a4011c542e4f36c77197b482d011621f"
+    }
+  ],
+  "migration_ledger": "not applicable: no migration changes"
+}
