@@ -1,0 +1,1 @@
+{"total_count":1,"workflow_runs":[{"conclusion":"failure","created_at":"2026-11-06T12:09:24Z","event":"push","head_sha":"1a239ac5af69af56b76fc0ea1484a40c91901553","html_url":"https://github.com/just-every/run-penny/actions/runs/42215504858","id":42215504858,"name":"Verify Penny","status":"completed","updated_at":"2026-11-06T12:09:51Z"}]}

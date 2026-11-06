@@ -1,0 +1,33 @@
+{
+  "head": "1a239ac5af69af56b76fc0ea1484a40c91901553",
+  "lock": {
+    "command": "node scripts/edition-authoring/cli.mjs lock; node scripts/edition-authoring/cli.mjs check",
+    "exit": 0
+  },
+  "views": {
+    "command": "node src/base/contract-docs.mjs write; node src/base/contract-docs.mjs check",
+    "exit": 0,
+    "restored": [
+      "ACCEPTANCE.md",
+      "docs/CLAIMS.md"
+    ],
+    "restored_view_check_exit": 1
+  },
+  "ledger": {
+    "command": "scripts/portability/ledger.mjs via Node fork with IPC",
+    "exit": 0,
+    "result": {
+      "nativeApply": false
+    }
+  },
+  "deployment_spec": {
+    "write": "node scripts/build-deployment-spec.mjs --write",
+    "check": "node scripts/build-deployment-spec.mjs --check",
+    "exit": 0
+  },
+  "migration_proof": {
+    "file": "tests/base/segments.test.ts",
+    "lines": "45-57",
+    "outcome": "populated upgrade preserves every prior cell and ledger prefix; repeated application is a no-op"
+  }
+}

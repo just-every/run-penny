@@ -1,0 +1,19 @@
+{
+  "history": [
+    {
+      "commit": "1a239ac5af69af56b76fc0ea1484a40c91901553",
+      "parent": "78a324bad429b853ed70d93486cd995a32625c47",
+      "parent_status_rows": 281,
+      "candidate_status_rows": 281,
+      "dropped": []
+    },
+    {
+      "commit": "78a324bad429b853ed70d93486cd995a32625c47",
+      "parent": "bd98ed565d1dd6fdebea3df93f7e8fca5cd283ca",
+      "parent_status_rows": 281,
+      "candidate_status_rows": 281,
+      "dropped": []
+    }
+  ],
+  "all_parents_retained": true
+}

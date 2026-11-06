@@ -1,0 +1,139 @@
+{
+  "tag": "sd-penny-c-f107",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f107",
+  "head": "1a239ac5af69af56b76fc0ea1484a40c91901553",
+  "remote_head": "1a239ac5af69af56b76fc0ea1484a40c91901553",
+  "requested_base": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+  "integrated_main": "bd98ed565d1dd6fdebea3df93f7e8fca5cd283ca",
+  "product_commits": [
+    "78a324bad429b853ed70d93486cd995a32625c47",
+    "1a239ac5af69af56b76fc0ea1484a40c91901553"
+  ],
+  "working_tree_clean": true,
+  "clause": "SEG-006",
+  "pinned_base_status": "partial",
+  "candidate_status": "partial",
+  "integrated_main_status": "missing",
+  "counts": {
+    "pinned_base": {
+      "partial": 125,
+      "done": 79,
+      "missing": 77
+    },
+    "integrated_main": {
+      "partial": 124,
+      "done": 79,
+      "missing": 78
+    },
+    "candidate": {
+      "partial": 125,
+      "done": 79,
+      "missing": 77
+    }
+  },
+  "checks": [
+    {
+      "name": "build",
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "receipt": "build.log",
+      "relevant_runtime_bytes_unchanged_since_build": true
+    },
+    {
+      "name": "touched_journeys_on_candidate",
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/segments.test.ts tests/base/feedback-volume-report.test.ts --reporter=default --reporter=json --outputFile=../packet/touched-tests.json",
+      "exit": 0,
+      "tests": 3,
+      "passed": 3,
+      "receipt": "touched-tests.json"
+    },
+    {
+      "name": "typecheck",
+      "command": "cloud_run pnpm run typecheck",
+      "exit": 0,
+      "receipt": "typecheck.log"
+    },
+    {
+      "name": "first_party",
+      "command": "cloud_run pnpm exec rer check --profile first-party --json",
+      "exit": 0,
+      "checks": 1148,
+      "receipt": "first-party-check.log"
+    },
+    {
+      "name": "source_lock",
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "receipt": "lock-check.log"
+    },
+    {
+      "name": "deployment_spec",
+      "command": "node scripts/build-deployment-spec.mjs --write; node scripts/build-deployment-spec.mjs --check",
+      "exit": 0,
+      "receipt": "deployment-spec-check.log"
+    },
+    {
+      "name": "migration_ledger",
+      "command": "scripts/portability/ledger.mjs via Node fork with IPC",
+      "exit": 0,
+      "receipt": "migration-ledger.log"
+    },
+    {
+      "name": "generated_views_before_restore",
+      "command": "node src/base/contract-docs.mjs write; node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "receipt": "views-check.log"
+    },
+    {
+      "name": "expected_generated_views_after_restore",
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "receipt": "expected-stale-views.log",
+      "expected": true
+    },
+    {
+      "name": "status_row_history",
+      "receipt": "status-row-check.json",
+      "all_parent_status_rows_retained": true,
+      "rows": 281
+    }
+  ],
+  "test_registrations_added_in_f107": 0,
+  "test_registrations_removed_in_f107": 0,
+  "existing_assertions_weakened": false,
+  "ui_files_changed": false,
+  "publication_scan": {
+    "status": "not_run_cloud",
+    "owner": "fleet guarded lander",
+    "findings": null,
+    "historyScanned": null,
+    "complete": false
+  },
+  "run_site": {
+    "status": "pending_fleet_landing"
+  },
+  "ci": {
+    "total_count": 1,
+    "workflow_runs": [
+      {
+        "conclusion": "failure",
+        "created_at": "2026-11-06T12:09:24Z",
+        "event": "push",
+        "head_sha": "1a239ac5af69af56b76fc0ea1484a40c91901553",
+        "html_url": "https://github.com/just-every/run-penny/actions/runs/42215504858",
+        "id": 42215504858,
+        "name": "Verify Penny",
+        "status": "completed",
+        "updated_at": "2026-11-06T12:09:51Z"
+      }
+    ],
+    "failed_job_count": 29,
+    "classification": "Only expected generated-view freshness failure; permitted cloud exception",
+    "job_receipt": "ci-jobs.json",
+    "github_api_calls_used": 2,
+    "dispatched": false,
+    "rerun": false
+  },
+  "timestamp_utc": "2026-11-06T12:12:17.346425+00:00"
+}

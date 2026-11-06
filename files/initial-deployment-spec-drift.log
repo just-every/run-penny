@@ -1,0 +1,8 @@
+file:///home/agent/rer-consolidation/work/sd-penny-c-f107/run-penny/scripts/build-deployment-spec.mjs:37
+  if (published !== bytes) throw new Error(`${path} drift: run pnpm delivery:spec after rer build and commit the result.`)
+                                 ^
+
+Error: management/integration/deployment-spec.json drift: run pnpm delivery:spec after rer build and commit the result.
+    at file:///home/agent/rer-consolidation/work/sd-penny-c-f107/run-penny/scripts/build-deployment-spec.mjs:37:34
+
+Node.js v24.19.0

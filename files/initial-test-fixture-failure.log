@@ -1,0 +1,37 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f107/run-penny
+
+ ❯ tests/base/segments.test.ts (2 tests | 1 failed) 6747ms
+   × [SEG-006 DATA-001 DATA-003] native archives restore rules and membership while operator erasure removes targeted rules and fences replay 4356ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/segments.test.ts > [SEG-006 DATA-001 DATA-003] native archives restore rules and membership while operator erasure removes targeted rules and fences replay
+AssertionError: {"error":"validation_failed"}: expected 400 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 400
+
+ ❯ json tests/base/segments.test.ts:13:57
+     11| async function json<T>(path: string, cookie: Cookie, body?: unknown, m…
+     12|  const response = await call(path, body, cookie, method)
+     13|  expect(response.status, await response.clone().text()).toBe(status)
+       |                                                         ^
+     14|  if (path.startsWith('/api/operator/segments')) expect(response.header…
+     15|  return response.json() as Promise<T>
+ ❯ tests/base/segments.test.ts:187:2
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 2 passed (3)
+   Start at  12:04:10
+   Duration  11.03s (transform 128ms, setup 0ms, import 1.03s, tests 8.43s, environment 0ms)
+
