@@ -71,15 +71,17 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
   const {id}=await json<{id:string}>('/api/operator/hierarchy/product',{name:title},'POST',201)
   paging.push({id,entity:'products',title,href:`/app/features#products-${id}`})
  }
- const expected=[{id:accounts[0].id,entity:'accounts',title:'Harbor Analytics'},searched[1],searched[2],...paging,searched[0]].map(({id,entity,title})=>({id,entity,title}))
+ const duplicateId=(await json<{id:string}>('/api/operator/hierarchy/product',{name:paging[21].title},'POST',201)).id
+ const duplicate={id:duplicateId,entity:'products',title:paging[21].title,href:`/app/features#products-${duplicateId}`}
+ const expected=[{id:accounts[0].id,entity:'accounts',title:'Harbor Analytics'},searched[1],searched[2],...paging.slice(0,22),duplicate,...paging.slice(22),searched[0]].map(({id,entity,title})=>({id,entity,title}))
  const found=[]
  for(let page=1;page<=3;page++){
   const result=await json<{total:number;page:number;pageSize:number;items:typeof searched}>(`/api/operator/search?q=hArBoR&page=${page}`)
-  expect({total:result.total,page:result.page,pageSize:result.pageSize}).toEqual({total:30,page,pageSize:25})
+  expect({total:result.total,page:result.page,pageSize:result.pageSize}).toEqual({total:31,page,pageSize:25})
   expect(result.items.map(({id,entity,title})=>({id,entity,title}))).toEqual(expected.slice((page-1)*25,page*25))
   found.push(...result.items.map(row=>row.id))
  }
- expect(new Set(found).size).toBe(30)
+ expect(new Set(found).size).toBe(31)
  expect((await json<{total:number}>('/api/operator/search?q=Harbor&entity=products&tag=missing-tag')).total).toBe(0)
  expect((await call('/api/operator/search?q=Harbor&entity=product',undefined,g.operator)).status).toBe(400)
  for(const headers of [{},second]){

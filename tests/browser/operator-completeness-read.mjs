@@ -41,6 +41,9 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
   if(width===1440) {
    await page.waitForFunction(id=>document.activeElement?.id===id,`${record.entity}-${record.id}`)
    assert.equal(await target.evaluate(element=>document.activeElement===element),true,'[OPS-004] destination identifies and focuses the exact record')
+   await page.reload()
+   await page.waitForFunction(id=>document.activeElement?.id===id,`${record.entity}-${record.id}`)
+   await target.getByRole('heading',{name:record.name,exact:true}).waitFor()
    const box=await target.boundingBox()
    assert.ok(box.y>=0&&box.y<page.viewportSize().height,'[OPS-004] the selected hierarchy record is scrolled into view')
   }
