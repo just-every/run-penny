@@ -1,0 +1,43 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /workspace/run-penny-sd-penny-c-f50
+
+ ❯ tests/base/decision-loop-dimensions.test.ts (2 tests | 1 failed) 2158ms
+   × [DEC-001][DEC-002] retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness 152ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/decision-loop-dimensions.test.ts > [DEC-001][DEC-002] retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness
+AssertionError: expected { …(16) } to match object { …(8) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -2,11 +2,11 @@
+    "bets": [
+      {
+        "id": "01M6Q3EY43EY38K3CRQYHAMDD0",
+      },
+    ],
+-   "confidence": "high",
++   "confidence": "medium",
+    "evidenceCount": 1,
+    "id": "01M6Q3EY2HD14H4A4Q1AJ2K2RX",
+    "owner": {
+      "id": "loop-operator",
+    },
+
+ ❯ tests/base/decision-loop-dimensions.test.ts:19:90
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  00:17:01
+   Duration  12.43s (transform 4.20s, setup 0ms, import 8.89s, tests 2.16s, environment 0ms)
+

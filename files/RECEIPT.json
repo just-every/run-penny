@@ -1,0 +1,157 @@
+{
+  "branch": "cloud/sd-penny-c-f50",
+  "browser": {
+    "reason": "No screen or runtime change; visual work excluded by selected POINTS",
+    "status": "not applicable"
+  },
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "result": "Frozen install, build, all migrations and local owner setup completed; private settings and setup output excluded from packet."
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/decision-loop-dimensions.test.ts",
+      "exit": 0,
+      "log": "touched-tests.log",
+      "passed": 2,
+      "tests": 2
+    },
+    {
+      "command": "cloud_run pnpm run typecheck",
+      "exit": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "log": "first-party-check.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "log": "views-write.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "log": "views-check.log"
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0,
+      "result": "Generated views restored and excluded from commit."
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "log": "lock-write.json"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "log": "lock-check.json"
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit": 0
+    },
+    {
+      "command": "python3 /tmp/fleet-validate-candidate.py",
+      "exit": 0,
+      "result": "One candidate commit, all parents inspected; fleet author and committer; no trailers."
+    },
+    {
+      "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f50",
+      "exit": 0,
+      "result": "Push succeeded on attempt 1; branch head independently read back with git ls-remote."
+    }
+  ],
+  "ci": [
+    {
+      "conclusion": null,
+      "event": "push",
+      "head_sha": "e914abb719264d8021f974ab61b75127d06268a5",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42136232517",
+      "id": 42136232517,
+      "name": "Verify Penny",
+      "status": "in_progress"
+    }
+  ],
+  "clause_after": "partial",
+  "clause_before": "partial",
+  "counts_after": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124,
+    "total": 281
+  },
+  "counts_before": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124,
+    "total": 281
+  },
+  "github_api_calls": 3,
+  "head": "e914abb719264d8021f974ab61b75127d06268a5",
+  "migration_ledger": {
+    "command": null,
+    "exit": 0,
+    "reason": "No migration added or changed"
+  },
+  "mutations": [
+    {
+      "assertion": "tests/base/decision-loop-dimensions.test.ts:19",
+      "change": "Return medium when the stored confidence is high in DecisionsReadRepository.find",
+      "exit": 1,
+      "failure": "Expected confidence high; received medium",
+      "id": "M1",
+      "log": "probe-confidence-fault.log",
+      "outcome": "High confidence readback",
+      "restored": true
+    },
+    {
+      "assertion": "tests/base/decision-loop-dimensions.test.ts:14",
+      "change": "Preserve the existing non-null review_at during editDecision",
+      "exit": 1,
+      "failure": "Expected reviewAt 2026-12-03; received 2026-11-12",
+      "id": "M2",
+      "log": "probe-date-change-fault.log",
+      "outcome": "Changed review date",
+      "restored": true
+    },
+    {
+      "assertion": "tests/base/decision-loop-dimensions.test.ts:22",
+      "change": "Retain review_at when editDecision receives null",
+      "exit": 1,
+      "failure": "Expected reviewAt null; received 2027-01-14",
+      "id": "M3",
+      "log": "probe-date-clear-fault.log",
+      "outcome": "Cleared review date",
+      "restored": true
+    }
+  ],
+  "parent": "1db862912dc18165739d5385fcca0f886c023ca4",
+  "pr": null,
+  "product_pushed": true,
+  "proof_blobs": {
+    "CONTRACT.md": "b27affce658a30ac861401898003de54fb28cc0b",
+    "sources.lock.json": "fa6aca916206d268a1d8550b8ee534aac43cb067",
+    "src/core/features/decisions/read-repository.ts": "6fbe683098a1ffdccfeb9a2ba5ad7766ca758ec6",
+    "src/core/features/decisions/routes.ts": "70d822e1f517771be80ba14af8d73f7721e45fdd",
+    "src/core/features/decisions/write-service.ts": "4aa5720d1a420e0ef46f48b7b945d198a36379cf",
+    "tests/base/decision-loop-dimensions.test.ts": "90a231f03acbb0eda7f683e7f00b125af57b2619",
+    "tests/base/decision-loop-fixture.ts": "e91926585c6c8b2057384a51292df2ca2c83ed83"
+  },
+  "publication_scan": {
+    "custodian": "Mac guarded lander",
+    "status": "not run in cloud"
+  },
+  "repository": "just-every/run-penny",
+  "run_site": {
+    "custodian": "Mac guarded lander",
+    "status": "not run for cloud branch"
+  },
+  "tag": "sd-penny-c-f50",
+  "terminal": "READY handoff with exact-SHA Verify still in progress; no DONE or landing claim"
+}

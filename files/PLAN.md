@@ -1,0 +1,11 @@
+# sd-penny-c-f50 execution plan
+
+Declared write repository: just-every/run-penny. Product branch: cloud/sd-penny-c-f50.
+
+1. Read the shipped campaign extract, builder rules, DONE riders, Penny ruling and current repository instructions. Preserve the current contract, acceptance sentences, source pins and owner-reviewed visual work.
+2. Map DEC-002 acceptance point 1 to current native decision creation, editing and detail projection and its existing two-test dimensions journey. The unproved selected outcomes are low, medium and high confidence and changed and cleared review-date readback with stable decision identity.
+3. Extend the existing readiness journey through POST and PATCH decision routes followed by GET of the original slug. Preserve every readiness, relationship, counter-evidence, dimension and snapshot assertion. Add no test registration or runtime behavior.
+4. Keep DEC-002 partial. Update only its Evidence and Gap cells and the required changelog. Assumptions per bet and currently eligible requesters through mapped requests remain unproved; all unrelated policy, account, provider, device, Base, other-seed and release holds remain unchanged. No follow-on clause is selected by this bounded POINTS brief.
+5. Run the touched journey, typecheck and first-party check. Exercise temporary readback faults to demonstrate the new assertions fail on incorrect output; restore the runtime bytes. Generate contract views, check them, restore main's generated views, regenerate the source lock last and check it. Preserve every parent Status row.
+6. Fetch main and rebase the unpublished candidate or merge after any published save. Repeat generation and lock checks if main changes. Audit all candidate author, committer and trailer identities, then push only the named product branch through the fleet push guard.
+7. Discover exact-SHA Verify through REST within the shared ten-call budget. Respect the cloud handoff contract: no default-branch push or local publication scan; independent lander owns full-history scan, exact-SHA Verify and Run site acceptance. Publish the complete explicitly selected non-secret report and receipts to the separate evidence ref before deleting the successful clone.

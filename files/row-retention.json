@@ -1,0 +1,17 @@
+{
+  "parent_status_rows": 281,
+  "candidate_status_rows": 281,
+  "parent_table_lines": 445,
+  "candidate_table_lines": 445,
+  "acceptance_unchanged": true,
+  "staged_files": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "sources.lock.json",
+    "tests/base/decision-loop-dimensions.test.ts"
+  ],
+  "registrations_before": 2,
+  "registrations_after": 2,
+  "assertions_removed": 0,
+  "runtime_changes": false
+}
