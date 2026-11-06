@@ -1,0 +1,459 @@
+{
+  "tag": "sd-penny-c-f92",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f92",
+  "head": "af27d7f0ab757382e5b5c634d7262e569c89ad2e",
+  "parents": [
+    "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+    "e0d08ded23baf16293d79c3b725bbd2276ad4d1b"
+  ],
+  "main_merged": "e0d08ded23baf16293d79c3b725bbd2276ad4d1b",
+  "status_changes": [
+    {
+      "clause": "AGENT-001",
+      "before": "partial",
+      "after": "partial",
+      "selected_points": [
+        2
+      ]
+    }
+  ],
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "checks": {
+    "setup": {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email <fleet identity> --non-interactive",
+      "exit": 0
+    },
+    "build": {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    "typecheck": {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    "first-party": {
+      "command": "cloud_run pnpm run check -- --profile first-party",
+      "exit": 0
+    },
+    "base-source": {
+      "command": "pnpm run verify:base-source",
+      "exit": 0
+    },
+    "views": {
+      "commands": [
+        "node src/base/contract-docs.mjs write",
+        "node src/base/contract-docs.mjs check"
+      ],
+      "exit": 0,
+      "new_view_bytes_committed": false,
+      "equal_to_main": true
+    },
+    "source-lock": {
+      "commands": [
+        "node scripts/edition-authoring/cli.mjs lock",
+        "node scripts/edition-authoring/cli.mjs check"
+      ],
+      "exit": 0
+    },
+    "affected-tests": {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-option-review.test.ts tests/base/learning-stage3.test.ts tests/base/upgrade.test.ts",
+      "exit": 0,
+      "files": 3,
+      "tests": 5,
+      "exact_head_pending": false,
+      "exact_head": "af27d7f0ab757382e5b5c634d7262e569c89ad2e"
+    },
+    "restored-view-check": {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "failure": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+      "permitted_stale_generated_view": true
+    },
+    "final-review": {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-option-review.test.ts",
+      "exit": 0,
+      "head": "af27d7f0ab757382e5b5c634d7262e569c89ad2e",
+      "files": 1,
+      "tests": 1
+    }
+  },
+  "migration_changes_this_continuation": [],
+  "inherited_migration": "migrations/core/0110_learning_option_reviews.sql",
+  "publication_scan": {
+    "status": "not_run_in_cloud",
+    "custodian": "fleet lander"
+  },
+  "landing": {
+    "status": "branch_only",
+    "custodian": "fleet lander"
+  },
+  "pr": null,
+  "ci": {
+    "runs": [
+      {
+        "conclusion": "failure",
+        "event": "push",
+        "head_sha": "af27d7f0ab757382e5b5c634d7262e569c89ad2e",
+        "html_url": "https://github.com/just-every/run-penny/actions/runs/42188495596",
+        "id": 42188495596,
+        "name": "Verify Penny",
+        "status": "completed"
+      }
+    ],
+    "discovered_at_epoch": 1793954076.8196273,
+    "only_generated_views": true,
+    "failed_jobs": [
+      {
+        "id": 127794513629,
+        "name": "shards (workspace-clock, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513674,
+        "name": "shards (ownership, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513681,
+        "name": "shards (triage-aging, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513685,
+        "name": "shards (request-decline, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513698,
+        "name": "shards (merge-notices, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513699,
+        "name": "shards (dev-flows, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513732,
+        "name": "shards (requester-blocking, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513737,
+        "name": "shards (roadmap-public-eta, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513745,
+        "name": "shards (proxy-votes, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513751,
+        "name": "shards (browser, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513757,
+        "name": "shards (vote-importance, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513759,
+        "name": "shards (requester-board, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513786,
+        "name": "shards (helpscout-capture, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513799,
+        "name": "shards (base-1, false)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513816,
+        "name": "shards (internal-discussion, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513831,
+        "name": "shards (discord-capture, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513851,
+        "name": "shards (rich-changelog, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513865,
+        "name": "shards (static, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513870,
+        "name": "shards (base-2, false)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513903,
+        "name": "shards (agent-door, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513904,
+        "name": "shards (survey-capture, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513908,
+        "name": "shards (loop-health, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513929,
+        "name": "shards (browser-capture, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513932,
+        "name": "shards (product-hierarchy, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513933,
+        "name": "shards (import-statuses, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794513959,
+        "name": "shards (import-roadmap, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794514000,
+        "name": "shards (older-archive, false)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794514037,
+        "name": "shards (release-planning, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      },
+      {
+        "id": 127794514170,
+        "name": "shards (prioritisation, true)",
+        "failed_steps": [
+          {
+            "name": "Check generated contract documents",
+            "number": 5
+          }
+        ]
+      }
+    ],
+    "github_api_calls": 6
+  },
+  "proof": [
+    {
+      "point": "AGENT-001.2",
+      "file": "tests/base/learning-option-review.test.ts",
+      "test": "rejects an explanation with attributed history while retaining originals and commitment custody through restore and erasure",
+      "lines": {
+        "native_invitation_and_actor": [
+          17,
+          34
+        ],
+        "paused_grant_refusal": [
+          48,
+          57
+        ],
+        "reason_actor_immutable_custody": [
+          58,
+          73
+        ],
+        "refusals_and_atomic_rollback": [
+          74,
+          94
+        ],
+        "redaction_refresh_and_history": [
+          95,
+          111
+        ],
+        "removal_revokes_read_and_write": [
+          116,
+          123
+        ],
+        "portability_and_erasure": [
+          128,
+          168
+        ],
+        "native_create_run_commit": [
+          35,
+          47
+        ]
+      }
+    }
+  ],
+  "test_registration_delta_vs_base": 0,
+  "product_push": {
+    "status": "published",
+    "observed_remote_head": "af27d7f0ab757382e5b5c634d7262e569c89ad2e",
+    "observed_epoch": 1793954157.1143122,
+    "guard_attempts": 1
+  }
+}

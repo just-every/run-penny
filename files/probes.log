@@ -1,0 +1,4 @@
+HEAD=af27d7f0ab757382e5b5c634d7262e569c89ad2e
+PROBE AGENT-001 point 2: POST native investigation, run, detail, reject as an invited peer, then GET detail -> one reasoned review with the exact product actor and immutable interpretation version; existing explanation, cited original evidence, observations, contributions and commitment snapshot unchanged.
+PROBE AGENT-001 point 2 authority: pause then reject -> 409 learning_scope_changed, original graph unchanged; resume -> prior work unchanged; remove reviewer then GET detail and reject -> 401 unauthenticated, current owner still sees exact retained history.
+PROBE AGENT-001 point 2 custody: native export, independent restore, detail -> exact review records retained with authority held; requester erasure -> affected reviews and interpretations absent; old archive plus newer journal -> 409 stale_archive without restored reviews.

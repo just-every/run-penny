@@ -1,0 +1,20 @@
+[
+  {
+    "commit": "af27d7f0ab757382e5b5c634d7262e569c89ad2e",
+    "parent": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+    "clauses": 281,
+    "dropped": 0
+  },
+  {
+    "commit": "af27d7f0ab757382e5b5c634d7262e569c89ad2e",
+    "parent": "e0d08ded23baf16293d79c3b725bbd2276ad4d1b",
+    "clauses": 281,
+    "dropped": 0
+  },
+  {
+    "commit": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+    "parent": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+    "clauses": 281,
+    "dropped": 0
+  }
+]

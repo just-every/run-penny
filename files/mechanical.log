@@ -1,0 +1,3 @@
+HEAD=af27d7f0ab757382e5b5c634d7262e569c89ad2e
+MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock then check exit=0; views=node src/base/contract-docs.mjs write then check exit=0, restored from origin/main; ledger=none added or edited in continuation, inherited populated upgrade and repeat test exit=0
+STATUS_ROWS=281 before and after, dropped=0 from either parent; generated views equal origin/main.

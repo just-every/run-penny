@@ -1,0 +1,14 @@
+{
+  "runs": [
+    {
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "af27d7f0ab757382e5b5c634d7262e569c89ad2e",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42188495596",
+      "id": 42188495596,
+      "name": "Verify Penny",
+      "status": "completed"
+    }
+  ],
+  "discovered_at_epoch": 1793954076.8196273
+}

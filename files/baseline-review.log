@@ -1,0 +1,12 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f92/run-penny
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  08:21:07
+   Duration  14.65s (transform 2.43s, setup 0ms, import 5.82s, tests 7.51s, environment 0ms)
+
