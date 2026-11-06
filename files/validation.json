@@ -1,0 +1,25 @@
+{
+  "head": "b6647daf56c00f4738fdc0fbf8a2e68bed2b94d6",
+  "checks": [
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "head": "b6647daf56c00f4738fdc0fbf8a2e68bed2b94d6",
+      "output": "\u2009WARN\u2009 Unsupported engine: wanted: {\"node\":\"22.20.0\"} (current: {\"node\":\"v24.19.0\",\"pnpm\":\"10.12.4\"})\n\n> penny@0.2.2 typecheck /home/agent/rer-consolidation/work/sd-penny-c-f102/run-penny\n> tsc -b\n\nrer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)\n"
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "head": "b6647daf56c00f4738fdc0fbf8a2e68bed2b94d6",
+      "output": "rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)\n"
+    }
+  ],
+  "worker_test_exit": 0,
+  "worker_test_counts": {
+    "numTotalTests": 17,
+    "numPassedTests": 17,
+    "numFailedTests": 0,
+    "success": true
+  },
+  "worker_test_report_sha256": "9f90bc8db702d5a3ec5c0227f4053fe5baf55b6548b810567c29f521935bf3fd"
+}

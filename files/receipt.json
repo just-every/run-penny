@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f102",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f102",
+  "head": "b6647daf56c00f4738fdc0fbf8a2e68bed2b94d6",
+  "base": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "remote_ref_verified": "b6647daf56c00f4738fdc0fbf8a2e68bed2b94d6\trefs/heads/cloud/sd-penny-c-f102",
+  "clean": true,
+  "candidate_commits": 1,
+  "identity_audit": "Run Edit Run fleet <fleet@runeditrun.com>\nRun Edit Run fleet <fleet@runeditrun.com>",
+  "parent_status_rows": 281,
+  "candidate_status_rows": 281,
+  "changed_status_ids": [
+    "SEG-006"
+  ],
+  "status_before": "missing",
+  "status_after": "partial",
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 125,
+    "missing": 77
+  },
+  "changed_files": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "migrations/core/0110_saved_segments.sql",
+    "sources.lock.json",
+    "src/core/app/api.ts",
+    "src/core/features/data/archive.ts",
+    "src/core/features/data/operator-erasure.ts",
+    "src/core/features/data/schema-inventory.json",
+    "src/core/features/segments/archive.ts",
+    "src/core/features/segments/input.ts",
+    "src/core/features/segments/repository.ts",
+    "src/core/features/segments/routes.ts",
+    "tests/base/segments.test.ts"
+  ],
+  "verify": {
+    "id": 42203664331,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "only_failed_step": "Check generated contract documents",
+    "diagnostic": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+    "cloud_generated_view_exception": true
+  },
+  "main_ci": {
+    "head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+    "verify": 42201695865,
+    "verify_conclusion": "success",
+    "run_site": 42201695577,
+    "run_site_conclusion": "success"
+  },
+  "github_budget_invocations": 5,
+  "publication_scan": "not run in cloud; guarded lander required",
+  "pr": null,
+  "timestamp": "2026-11-06T10:38:00.788453+00:00"
+}

@@ -1,0 +1,5 @@
+Failing-step excerpt; workflow environment block omitted.
+shards (base-1, false)	Check generated contract documents	﻿2026-11-06T10:34:35.6170290Z ##[group]Run node src/base/contract-docs.mjs check
+shards (base-1, false)	Check generated contract documents	2026-11-06T10:34:35.6170560Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (base-1, false)	Check generated contract documents	2026-11-06T10:34:35.7249253Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (base-1, false)	Check generated contract documents	2026-11-06T10:34:35.7309952Z ##[error]Process completed with exit code 1.
