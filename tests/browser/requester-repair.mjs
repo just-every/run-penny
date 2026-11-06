@@ -1,4 +1,5 @@
 import {proveRequesterConsent} from './requester-consent.mjs'
+import {proveRequesterCommentEdit} from './requester-comment-edit.mjs'
 import assert from 'node:assert/strict'
 import { chromium } from '@playwright/test'
 import {browserOptions} from './browser-options.mjs'
@@ -98,6 +99,7 @@ try {
   checks.push({width,withdrawnPendingNotActionable:true,initialSubmissionHasNoEditApproval:true})
   await page.goto(origin+'/portal/feedback/activity');await page.getByRole('heading',{name:title,exact:true}).first().waitFor();await shot(page,'your-feedback',width)
   await page.goto(origin+'/portal/feedback');await page.getByLabel('Search feedback',{exact:true}).fill('Scheduled exports');await page.locator('select[name=status]').selectOption('under_review');await page.getByRole('button',{name:'Search',exact:true}).click();await page.getByRole('heading',{name:title,exact:true}).waitFor();await shot(page,'search-filter',width)
+  if(width===1440)checks.push(await proveRequesterCommentEdit({browser,harness,page,review,card,slug,auth}))
   await requester.close();await operator.close()
  }
  checks.push(await proveRequesterConsent(harness))

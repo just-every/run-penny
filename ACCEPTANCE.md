@@ -542,8 +542,8 @@ Core · published · **partial**
 **Acceptance.**
 1. An edit to already-public text re-enters moderation under `request.moderation.v1`, and the previously approved text stays public until the edit is approved or rejected; on an auto-publish board (REQ-033) an unflagged edit is public on submission and the earlier text stays in the request's history for operators.
 
-**Evidence.** `tests/browser/requester-repair.mjs`
-**Gap.** Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions.
+**Evidence.** `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback, unchanged-state refusal and private activity isolation throughout review, and rejected-edit approval replay refusal); `tests/browser/requester-repair.mjs` with `tests/browser/requester-comment-edit.mjs` — mounted own-comment edit and operator rejection and approval, signed-out public wording and identity readback, activity and review screens at 1440 and 390
+**Gap.** Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved.
 
 #### REQ-021 — Requester withdrawal
 
@@ -951,8 +951,8 @@ Core · published · **partial**
 1. At publication Penny snapshots every release target and each recipient's linked request or evidence context, and a later merge, relink, or preference change does not alter that snapshot.
 2. *Policy: `release.recipient-eligibility.v1`; default: a permission record comes only from following a request (REQ-010), subscribing to updates (REL-012), voting on a board with vote subscriptions on (NOTIFY-008), submitting a request on such a board (NOTIFY-011) or an owner-selected migration carry-over (MIG-007, which makes its address eligible for email without verifying it); voting elsewhere and an operator-entered address grant nothing, and an operator's per-update choice to email captured contacts (NOTIFY-009) adds them to that one snapshot without a permission record.*
 
-**Evidence.** `tests/base/release-custody.test.ts`
-**Gap.** The snapshot staying unchanged after a later merge, relink or preference change, and the `release.recipient-eligibility.v1` default (which actions grant a permission record, that voting elsewhere and an operator-entered address grant none, and NOTIFY-009's one-snapshot addition) have no passing assertion; export and restore of the snapshot tables, an identity merge fenced while a send is in flight, and follower erasure are asserted.
+**Evidence.** `tests/base/release-custody.test.ts`; `tests/base/penny-releases.test.ts` — request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows; `tests/base/release-snapshot-stability.ts` — captureReleaseSnapshots, changeSnapshotSources and provePendingPreferenceWithdrawal
+**Gap.** Evidence-linked captured-contact snapshot completeness and the complete `release.recipient-eligibility.v1` permission-source policy remain unproved, including MIG-007 carry-over, voting without subscription, operator-entered addresses and NOTIFY-009's one-snapshot addition without a permission record. Native request targets, recipient identities and contexts stay exactly unchanged after request merge, roadmap withdrawal and relink, and preference changes; current withdrawal prevents a pending delivery. Earlier export, restore, in-flight identity-merge fences and follower-erasure proof are retained.
 
 #### REL-005 — Customer-safe delivery
 
@@ -1205,8 +1205,8 @@ Core · published · **partial**
 3. Requester/account links come only from native records; Orbit identity remains source-local and nullable.
 4. Model output cannot set identity or grants.
 
-**Evidence.** `tests/base/learning-stage2.test.ts`
-**Gap.** The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted.
+**Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 
