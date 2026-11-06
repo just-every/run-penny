@@ -1,0 +1,5 @@
+Failed-step log excerpt; workflow environment preamble omitted.
+shards (requester-board, true)	Check generated contract documents	﻿2026-11-06T07:26:38.2968250Z ##[group]Run node src/base/contract-docs.mjs check
+shards (requester-board, true)	Check generated contract documents	2026-11-06T07:26:38.2968398Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (requester-board, true)	Check generated contract documents	2026-11-06T07:26:38.4030307Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (requester-board, true)	Check generated contract documents	2026-11-06T07:26:38.4081771Z ##[error]Process completed with exit code 1.

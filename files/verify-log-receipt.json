@@ -1,0 +1,7 @@
+{
+  "command": "gh run view 42180864207 --repo just-every/run-penny --job 127769957967 --log-failed",
+  "exit": 0,
+  "job": 127769957967,
+  "run": 42180864207,
+  "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f"
+}

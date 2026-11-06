@@ -1,0 +1,118 @@
+{
+  "files": [
+    {
+      "blob": "cc6ef7902fef2bb93c6038ae791bbd64a3fcd0bd",
+      "bytes": 9701,
+      "path": "REPORT.md",
+      "sha256": "23a41f09bb6e7476e79782475feee0e5fd0cdaa22f068b8ca149d2fee0a6340b"
+    },
+    {
+      "blob": "e8f4ad91c8389d868ae53a62b2fc7a2c3bdbb250",
+      "bytes": 76,
+      "path": "candidate-command.log",
+      "sha256": "0df591182fbd5efccd0ac4754fb1d33f569e9dc7f493d5f8e3301f6245589f69"
+    },
+    {
+      "blob": "55b7100f289df8c1531288fcaf604fc36005c01b",
+      "bytes": 709,
+      "path": "candidate-push.log",
+      "sha256": "312828bec68f364cf3c0c3925f4261ca164194407c2fa303f4cf7d2d28b7f2c5"
+    },
+    {
+      "blob": "3afe4842690f59afe971265488348db3bd657ea0",
+      "bytes": 111816,
+      "path": "ci-jobs.json",
+      "sha256": "d69c864a280f64aede8b5d3f866e476972b61e6508d52c54138b59d587c2ef83"
+    },
+    {
+      "blob": "266a9fd792d88f2c9fef7dc9d4101494fb9ac4d4",
+      "bytes": 12407,
+      "path": "ci-runs.json",
+      "sha256": "bf8eacfe41f163021d14b257f63e2f854014f64fb0a6119e8e11bc9c51dd65a8"
+    },
+    {
+      "blob": "fba560db7c48416c914446f2a1e319a79104d105",
+      "bytes": 67,
+      "path": "committed-views-check.log",
+      "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+    },
+    {
+      "blob": "bc3c5bbbed44690e4ada0fd8e7ce01f99b8e9cdc",
+      "bytes": 96932,
+      "path": "duplicates-v1.json",
+      "sha256": "79b9a509f0194453b0b10729ae7ca18caa67c4672509a268607873eeb8c9b4b8"
+    },
+    {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "path": "first-party.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "path": "lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "blob": "68294c0bf624d961b1b6db2bd61533ef724293e4",
+      "bytes": 2106,
+      "path": "mechanical-receipt.json",
+      "sha256": "0af069b5d5ef5c59355a961e59315d6138cc0c44a9bb986f766dbf9f319e64f5"
+    },
+    {
+      "blob": "049ac8eb9460cbd095b155215509f92c11f57c4b",
+      "bytes": 1049,
+      "path": "redaction-v1.json",
+      "sha256": "70441eac71f2eb40f7bd4bacbcc6dbf5fc8bef86833265f86076496ea3eb6d0e"
+    },
+    {
+      "blob": "c4a0324a26f536caf883eefd011afb0f23e00d2e",
+      "bytes": 893,
+      "path": "save-push.log",
+      "sha256": "999c677773779b7b46d4a3eb614cd2bfe14d2d2252bb3b0c9cb9f5bb0b2a9fbf"
+    },
+    {
+      "blob": "d1c6defc64d5a6ab36d997a58ef7cb3f004aa893",
+      "bytes": 7625,
+      "path": "test-receipt.json",
+      "sha256": "489a7b5ea62077d683d82d583591786a57bed5fcff523d20bd668f5b4e682f56"
+    },
+    {
+      "blob": "aa2495fdf84d2e098002b641749960728a2e3930",
+      "bytes": 162,
+      "path": "typecheck.log",
+      "sha256": "06dc68bd63e5a31247106eca2b338be98e6ca68822e77d55b2d1c343c429719e"
+    },
+    {
+      "blob": "163267aafd80841db95c5782671a3fb94b233377",
+      "bytes": 659,
+      "path": "verify-generated-view-excerpt.log",
+      "sha256": "234fdd0eea7b8aab580959893263b6f9c4a2c801441b3210fbe1b769dbe2887b"
+    },
+    {
+      "blob": "b57c6c8f95179ac8ef1430bb54dbdf4a16747d38",
+      "bytes": 215,
+      "path": "verify-log-receipt.json",
+      "sha256": "4ccd7e788652be01a89b4f239c90f6ab75f72d73e60ccf2c8350a7bfb12e5d16"
+    },
+    {
+      "blob": "ae869b2fafd3acf46a2dc6ce35ec869497ae9cfb",
+      "bytes": 32,
+      "path": "views-check.log",
+      "sha256": "c21aae40192141751d6d5c7a3a1d0eb701a6852f305d592d77b4dcab9c2536ab"
+    },
+    {
+      "blob": "d4d1e60ea7fdc565c576421664992b40e47a816e",
+      "bytes": 28,
+      "path": "views-write.log",
+      "sha256": "df91012bf66fb476e9cd1a30c002829398beb55f869e07cc7be477197fa5a276"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f86",
+  "product_head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+  "ref": "refs/heads/evidence/sd-penny-c-f86",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f86"
+}

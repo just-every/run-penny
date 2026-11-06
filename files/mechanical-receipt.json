@@ -1,0 +1,95 @@
+{
+  "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+  "branch": "cloud/sd-penny-c-f86",
+  "repository": "just-every/run-penny",
+  "at": "2026-11-06T07:27:30.247149+00:00",
+  "checks": [
+    {
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "write"
+      ],
+      "exit": 0,
+      "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+      "log": "views-write.log"
+    },
+    {
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 0,
+      "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+      "log": "views-check.log"
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "origin/main",
+        "--",
+        "ACCEPTANCE.md",
+        "docs/CLAIMS.md"
+      ],
+      "exit": 0,
+      "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+      "log": null
+    },
+    {
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "lock"
+      ],
+      "exit": 0,
+      "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+      "log": null
+    },
+    {
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "exit": 0,
+      "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--exit-code"
+      ],
+      "exit": 0,
+      "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+      "log": null
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--exit-code"
+      ],
+      "exit": 0,
+      "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+      "log": null
+    }
+  ],
+  "ledger": {
+    "command": null,
+    "reason": "No migration added or edited"
+  },
+  "views": "Generator write and check pass before restoring main views; committed view freshness intentionally differs; lander regenerates",
+  "publicationScan": {
+    "status": "not run in cloud",
+    "owner": "fleet guarded lander"
+  },
+  "browser": {
+    "status": "not applicable",
+    "reason": "No UI changes"
+  }
+}

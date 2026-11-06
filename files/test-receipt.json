@@ -1,0 +1,296 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f86",
+  "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+  "integratedMain": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+  "timestamp": "2026-11-06T07:30:04.154825+00:00",
+  "localChecks": [
+    {
+      "command": "node --input-type=module -e \"import {proveAiEvaluationCommand} from './tests/runtime/ai-eval-command.mjs'; await proveAiEvaluationCommand()\"",
+      "exit": 0,
+      "log": "candidate-command.log",
+      "scope": "Real command, isolated emitted Worker routes, ranked control, metrics, invalid label refusal and redaction"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "log": "first-party.log"
+    },
+    {
+      "command": "pnpm exec oxlint tests/runtime/ai-eval-command.mjs scripts/ai-eval",
+      "exit": 0,
+      "log": "lint.log"
+    }
+  ],
+  "node": "24.19.0 for direct command proof; setup selected the project Node 22.20.0; no pin changed",
+  "testRegistrations": {
+    "added": 0,
+    "removed": 0,
+    "note": "Extended existing proveAiEvaluationCommand inside the existing lexical Verify journey; all previous assertions retained"
+  },
+  "corpus": {
+    "version": "1.0.0",
+    "sha256": "d5599bacbe1dc5c2812c3c8028419dc88cb0c9ccfdcd364ecd0d2bbf3f92031d",
+    "counts": {
+      "pairs": 300,
+      "candidates": 100,
+      "positives": 200,
+      "negatives": 100,
+      "hardNegatives": 100,
+      "paraphrasePositives": 100
+    },
+    "confusionMatrix": {
+      "tp": 100,
+      "fp": 100,
+      "fn": 100,
+      "tn": 0
+    },
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1": 0.5,
+    "topFiveRecall": 0.5,
+    "paraphraseRecall": 0,
+    "cost": {
+      "providerCalls": 0,
+      "amount": 0,
+      "currency": "USD"
+    }
+  },
+  "redaction": {
+    "version": "1.0.0",
+    "sha256": "1cc3bbbd542fdb530f97321d988e09e6e1d0d10937a6a6e03c2054be664024e1",
+    "excerpts": 210,
+    "labeledSpans": 170,
+    "passed": true,
+    "failed": []
+  },
+  "ci": {
+    "run": 42180864207,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+    "failedJobs": [
+      {
+        "id": 127769957802,
+        "name": "shards (workspace-clock, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957813,
+        "name": "shards (dev-flows, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957822,
+        "name": "shards (browser, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957834,
+        "name": "shards (internal-discussion, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957841,
+        "name": "shards (ownership, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957850,
+        "name": "shards (import-roadmap, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957851,
+        "name": "shards (base-2, false)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957853,
+        "name": "shards (roadmap-public-eta, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957864,
+        "name": "shards (merge-notices, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957874,
+        "name": "shards (requester-blocking, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957878,
+        "name": "shards (prioritisation, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957883,
+        "name": "shards (import-statuses, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957892,
+        "name": "shards (proxy-votes, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957903,
+        "name": "shards (base-1, false)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957917,
+        "name": "shards (triage-aging, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957919,
+        "name": "shards (static, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957925,
+        "name": "shards (vote-importance, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957935,
+        "name": "shards (older-archive, false)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957967,
+        "name": "shards (requester-board, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957979,
+        "name": "shards (helpscout-capture, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957988,
+        "name": "shards (browser-capture, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957990,
+        "name": "shards (loop-health, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957991,
+        "name": "shards (request-decline, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957992,
+        "name": "shards (agent-door, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769957993,
+        "name": "shards (release-planning, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769958022,
+        "name": "shards (survey-capture, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769958040,
+        "name": "shards (product-hierarchy, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769958042,
+        "name": "shards (rich-changelog, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      },
+      {
+        "id": 127769958043,
+        "name": "shards (discord-capture, true)",
+        "steps": [
+          "Check generated contract documents"
+        ]
+      }
+    ],
+    "classification": "Expected generated-view freshness only; product assertions did not run in CI"
+  },
+  "mainCi": {
+    "head": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+    "verify": 42176843779,
+    "runSite": 42176843655,
+    "conclusion": "success"
+  },
+  "publication": {
+    "product": "pushed",
+    "scan": "Not run in cloud; maintained fleet lander must scan the exact candidate",
+    "landed": false
+  }
+}
