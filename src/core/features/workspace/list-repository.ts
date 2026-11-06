@@ -8,6 +8,9 @@ export const entitySource: Record<ListEntity, { table: string; wording: string; 
  decisions:{table:'decisions',title:'x.title',wording:"x.title || ' ' || x.question || ' ' || COALESCE(x.rationale,'') || ' ' || COALESCE((SELECT group_concat(rationale,' ') FROM decision_revisions WHERE decision_id=x.id),'')"},
  roadmap:{table:'roadmap_items',title:'x.title',wording:"x.title || ' ' || x.summary"},
  releases:{table:'releases',title:"(SELECT title FROM release_versions WHERE id=x.current_version_id)",wording:"(SELECT title || ' ' || body FROM release_versions WHERE id=x.current_version_id)"},
+ products:{table:'penny_products',title:'x.name',wording:'x.name'},
+ components:{table:'penny_components',title:'x.name',wording:'x.name'},
+ features:{table:'penny_features',title:'x.name',wording:'x.name'},
  accounts:{table:'accounts',title:'x.name',wording:'x.name'},
  requesters:{table:'requesters',title:'x.display_name',wording:"x.display_name || ' ' || COALESCE((SELECT group_concat(email,' ') FROM requester_addresses WHERE requester_id=x.id),'')"},
 }
