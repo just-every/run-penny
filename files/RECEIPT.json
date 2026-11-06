@@ -1,0 +1,230 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f84",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f84",
+  "head": "980ecf08f2c0d5ab954b1053561e937bffa2f692",
+  "tree": "8cf82abfd2d5cc2d91b303d92a4c0dfa2114aab3",
+  "parents": [
+    "bc006e93ab58927b5db2d12d8ac35ff0a9341bf0",
+    "c0c7df9f0d9e8f4ff5a0257c316ae415b139ca25"
+  ],
+  "recordedUtc": "2026-11-06T06:50:10.680576+00:00",
+  "worktreeClean": true,
+  "results": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "scope": "fresh local setup; private generated settings excluded from evidence"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "proveAiEvaluationCommand via Node 22.20.0 on committed candidate",
+      "exit": 0,
+      "file": "command-proof.log"
+    },
+    {
+      "command": "pnpm run eval:ai -- --set duplicates-v1 --output <selected packet report>",
+      "exit": 0,
+      "file": "duplicates-report.json",
+      "node": "22.20.0"
+    },
+    {
+      "command": "node scripts/ai-eval/run.mjs --set redaction-v1 --output <selected packet report>",
+      "exit": 0,
+      "file": "redaction-report.json",
+      "node": "22.20.0"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/penny-evidence.test.ts -t 'EVID-007'",
+      "exit": 0,
+      "selectedTests": 1,
+      "filteredTestsUnchanged": 5,
+      "node": "22.20.0",
+      "candidateRelevantBytesUnchanged": true,
+      "file": "suggestion-route-test.log",
+      "executedOnCommittedCandidate": true
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "node": "22.20.0",
+      "file": "typecheck.log"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "file": "first-party-check.log"
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "file": "base-source-check.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write then check",
+      "exit": 0,
+      "generatedViewsRestoredFrom": "bc006e93ab58927b5db2d12d8ac35ff0a9341bf0"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check after required view restoration",
+      "exit": 1,
+      "expected": "stale generated views; not committed",
+      "file": "candidate-views-check.log"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock then check",
+      "exit": 0,
+      "file": "lock-check.json"
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit": 0
+    },
+    {
+      "command": "all candidate identity and trailer inspection including side parents",
+      "exit": 0,
+      "file": "candidate-identities.txt"
+    },
+    {
+      "command": "all candidate commits retain parent Status rows",
+      "exit": 0,
+      "file": "status-row-check.json"
+    },
+    {
+      "command": "cloud-push.py origin cloud/sd-penny-c-f84",
+      "exit": 0,
+      "file": "product-push.log"
+    }
+  ],
+  "publicationScan": {
+    "status": "deferred-to-Mac-lander",
+    "complete": false,
+    "historyScanned": null,
+    "findings": null
+  },
+  "claims": {
+    "AI-011": "partial",
+    "DONE": false,
+    "landed": false,
+    "providerQualified": false
+  },
+  "artifacts": [
+    {
+      "path": "command-proof.log",
+      "bytes": 74,
+      "sha256": "4e2821e2161d6823078d79aee91fa0d07d98f5a4e6dfe3cf0115b882bd227f33"
+    },
+    {
+      "path": "duplicates-report.json",
+      "bytes": 96932,
+      "sha256": "79b9a509f0194453b0b10729ae7ca18caa67c4672509a268607873eeb8c9b4b8"
+    },
+    {
+      "path": "redaction-report.json",
+      "bytes": 1049,
+      "sha256": "70441eac71f2eb40f7bd4bacbcc6dbf5fc8bef86833265f86076496ea3eb6d0e"
+    },
+    {
+      "path": "suggestion-route-test.log",
+      "bytes": 392,
+      "sha256": "f1256acf00524638cfc65defee76c8c7f74a16a8fef179231d23bbbb1905c2d1"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 95,
+      "sha256": "333269afd4e5209e8bc15d8e727c2d251a4ffdb79c38d04282f4ed031cafce04"
+    },
+    {
+      "path": "first-party-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "base-source-check.log",
+      "bytes": 14261,
+      "sha256": "f5334b2195d98b9216b7700815281f3c4bd547e46d1f6619d3be4776e448c981"
+    },
+    {
+      "path": "lock-write.json",
+      "bytes": 427520,
+      "sha256": "b7a79ecc58056fbae966f174569cbfb49bdb9da0056b5d3f2b6d6ecf9e52990e"
+    },
+    {
+      "path": "lock-check.json",
+      "bytes": 427534,
+      "sha256": "af494acf99cd195a01e4e6b67c2dc87321e3b922bcd06661da33664ce97e600f"
+    },
+    {
+      "path": "views-write.json",
+      "bytes": 28,
+      "sha256": "df91012bf66fb476e9cd1a30c002829398beb55f869e07cc7be477197fa5a276"
+    },
+    {
+      "path": "views-check.json",
+      "bytes": 32,
+      "sha256": "c21aae40192141751d6d5c7a3a1d0eb701a6852f305d592d77b4dcab9c2536ab"
+    },
+    {
+      "path": "candidate-views-check.log",
+      "bytes": 67,
+      "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+    },
+    {
+      "path": "status-row-check.json",
+      "bytes": 747,
+      "sha256": "5744e6146e9f8345196c6f4a9ebbd34f7263e7b49d5f6aa8359e93de4abc06a3"
+    },
+    {
+      "path": "candidate-identities.txt",
+      "bytes": 377,
+      "sha256": "0928a5d5c2e088ed2c53e938f3e7e77470ed839082bd3231f624a4fdd35e6f5c"
+    },
+    {
+      "path": "product-push.log",
+      "bytes": 893,
+      "sha256": "871fc1d6120f3105b9d8c38395c1895107e39b13763de84ce4070dc41f5555f9"
+    },
+    {
+      "path": "main-ci.jsonl",
+      "bytes": 1155,
+      "sha256": "9d88c2fb458e783be0dfbe2fbf24283701086ec7a89ba917b48350f647935181"
+    },
+    {
+      "path": "candidate-ci.jsonl",
+      "bytes": 229,
+      "sha256": "ade7487cfe65896491cf8cfa389fa00f4261097d9633bd1bd6225509b98715a6"
+    },
+    {
+      "path": "candidate-ci-final.json",
+      "bytes": 178,
+      "sha256": "b49a1f06c276eab172f4c77416408df1c147438feb4237b88fa0cb14e511b7e4"
+    },
+    {
+      "path": "candidate-jobs.json",
+      "bytes": 5354,
+      "sha256": "7de9ea45e229e525da6002823207536d40f16c38d011652b698a9f737f9dcac5"
+    },
+    {
+      "path": "verify-generated-views.log",
+      "bytes": 772,
+      "sha256": "256ea6422d68e655316c08198c4f02a123d1797d0d2c13cb3b2aba3268f57696"
+    }
+  ],
+  "ci": {
+    "runId": 42176297220,
+    "event": "push",
+    "conclusion": "failure",
+    "head_sha": "980ecf08f2c0d5ab954b1053561e937bffa2f692",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42176297220",
+    "status": "completed",
+    "failureClass": "expected-generated-view-freshness-only",
+    "failedJobs": 29,
+    "repairAttempted": false,
+    "rerunAttempted": false,
+    "ghCalls": 6
+  }
+}
