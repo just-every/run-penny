@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f94",
+  "head": "7652bb6591cb59c1523a72fdaab857977b52e663",
+  "product_push": "success",
+  "utc": "2026-11-06T09:48:53.774595+00:00",
+  "github_calls_used": 8,
+  "runs": [
+    {
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "7652bb6591cb59c1523a72fdaab857977b52e663",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42197797582",
+      "id": 42197797582,
+      "name": "Verify Penny",
+      "status": "completed"
+    }
+  ],
+  "publication_scan": "not run in cloud; fleet lander owns exact-head full-history scan",
+  "landing": "not performed",
+  "pr": null,
+  "remote_advertised_product_refs": {
+    "refs/heads/cloud/sd-penny-c-f94": "7652bb6591cb59c1523a72fdaab857977b52e663",
+    "refs/heads/main": "0d6f3416c75fe29675323ad1a2ef4bd1f8086756"
+  },
+  "verify": {
+    "run_id": 42197797582,
+    "event": "push",
+    "head": "7652bb6591cb59c1523a72fdaab857977b52e663",
+    "status": "completed",
+    "conclusion": "failure",
+    "only_failure": "Check generated contract documents",
+    "failed_shards": 29,
+    "readiness_exception": "Generated views remain on main by instruction; local write and check pass before restoration."
+  }
+}

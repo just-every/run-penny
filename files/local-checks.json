@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "initial_main": "0d6f3416c75fe29675323ad1a2ef4bd1f8086756",
+  "node": "v22.20.0",
+  "checks": [
+    {
+      "name": "touched-tests",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/integration-openapi.test.ts",
+        "tests/base/integration-api.test.ts"
+      ],
+      "exit": 0,
+      "seconds": 18.45,
+      "output_sha256": "17e24383ade17ebe9b4fc3dc92633f83888e41c910ec6221a90a49be94c6c90a"
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "exit": 0,
+      "seconds": 30.79,
+      "output_sha256": "765d93394b873e57b570ab7d5e9fa8fc145b0c290016d123d2a79c324c47104d"
+    },
+    {
+      "name": "first-party",
+      "command": [
+        "pnpm",
+        "exec",
+        "rer",
+        "check",
+        "--profile",
+        "first-party",
+        "--json"
+      ],
+      "exit": 0,
+      "seconds": 1.31,
+      "output_sha256": "d974a53777200862b2b90214c4a67a49f2257c93f542a183f1fd4d3dc61ce03c"
+    },
+    {
+      "name": "source-custody",
+      "command": [
+        "pnpm",
+        "run",
+        "verify:base-source"
+      ],
+      "exit": 0,
+      "seconds": 0.44,
+      "output_sha256": "5d476e6e3a6d81d669d8c3fbb1321945dbc31a584fc43e5e3226b452bf19f9c5"
+    },
+    {
+      "name": "views-write",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "write"
+      ],
+      "exit": 0,
+      "seconds": 0.13,
+      "output_sha256": "df91012bf66fb476e9cd1a30c002829398beb55f869e07cc7be477197fa5a276"
+    },
+    {
+      "name": "views-check",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 0,
+      "seconds": 0.11,
+      "output_sha256": "c21aae40192141751d6d5c7a3a1d0eb701a6852f305d592d77b4dcab9c2536ab"
+    },
+    {
+      "name": "views-restore",
+      "command": [
+        "git",
+        "checkout",
+        "origin/main",
+        "--",
+        "ACCEPTANCE.md",
+        "docs/CLAIMS.md"
+      ],
+      "exit": 0,
+      "seconds": 0.01,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "stage",
+      "command": [
+        "git",
+        "add",
+        "CHANGELOG.md",
+        "CONTRACT.md",
+        "docs/API.md",
+        "tests/base/integration-openapi.test.ts",
+        "tests/base/fixtures/openapi-3.1-schema.json",
+        "tests/base/fixtures/openapi-3.1-NOTICE.txt",
+        "tests/base/fixtures/openapi-3.1-LICENSE.txt"
+      ],
+      "exit": 0,
+      "seconds": 0.01,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "lock",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "lock"
+      ],
+      "exit": 0,
+      "seconds": 0.53,
+      "output_sha256": "89341bda9f3b27c22a0640ae33606669c43015f7bf5371ca4adba0013df7f7b5"
+    },
+    {
+      "name": "lock-check",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "exit": 0,
+      "seconds": 0.51,
+      "output_sha256": "d6fca789418610cc148a89d775bc5ba981a7d89693aa5c724d97e77314e6c5bf"
+    }
+  ],
+  "candidate_head": "7652bb6591cb59c1523a72fdaab857977b52e663",
+  "candidate_branch": "cloud/sd-penny-c-f94",
+  "same_test_and_runtime_bytes_on_candidate": true,
+  "contract_status_rows": {
+    "before": 281,
+    "after": 281,
+    "lost": []
+  },
+  "counts": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "touched_lint": {
+    "command": "pnpm exec oxlint tests/base/integration-openapi.test.ts",
+    "exit": 0
+  }
+}

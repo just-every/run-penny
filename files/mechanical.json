@@ -1,0 +1,24 @@
+{
+  "lock": {
+    "command": "node scripts/edition-authoring/cli.mjs lock; node scripts/edition-authoring/cli.mjs check",
+    "exit": 0,
+    "ok": true,
+    "source_lock_sha256": "79a991dc2d6115aa55c15e2fe679fbdfdf75ac29e05792301192aa793cfaf55b"
+  },
+  "views": {
+    "write": "Wrote 1 contract documents.",
+    "check": "Contract documents are current.",
+    "exit": 0,
+    "restored": [
+      "ACCEPTANCE.md",
+      "docs/CLAIMS.md"
+    ],
+    "after_restore_check_exit": 1,
+    "after_restore_check": "ACCEPTANCE.md: generated content differs; run contract-docs write."
+  },
+  "ledger": {
+    "command": null,
+    "exit": 0,
+    "reason": "No migrations changed"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "command": "git log origin/main..HEAD --format=\"%an <%ae>%n%cn <%ce>%n%(trailers:only,unfold)\"",
+  "candidate_commits": [
+    {
+      "head": "7652bb6591cb59c1523a72fdaab857977b52e663",
+      "author_name": "Run Edit Run fleet",
+      "author_email": "fleet@runeditrun.com",
+      "committer_name": "Run Edit Run fleet",
+      "committer_email": "fleet@runeditrun.com",
+      "trailers": []
+    }
+  ]
+}

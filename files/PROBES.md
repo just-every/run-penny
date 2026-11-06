@@ -1,0 +1,5 @@
+PROBE DATA-006 1: built Worker GET /docs/openapi.json without credentials -> 200 JSON, no cookie, official OpenAPI 3.1 structural validation passed; all fourteen documented operations reconciled with populated native responses using only their advertised scopes and no Origin header. Invalid, missing, insufficient-scope and revoked-key cases returned documented refusals and unchanged business snapshots. Every write refused foreign Origin, cross-site metadata, malformed JSON, unsupported content type and an oversized otherwise-valid JSON body without business changes. Existing unknown API and docs paths remained 404, /docs remained 200, and an integration key remained unable to enter operator routes.
+
+PROBE DATA-006 2: none, lifecycle-webhook signature and replay completion is excluded by the selected POINTS and remains named in the clause Gap.
+
+MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock then check exit=0; views=node src/base/contract-docs.mjs write then check exit=0, generated views restored from origin/main; ledger=none exit=0 (no migration changed).

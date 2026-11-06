@@ -1,0 +1,18 @@
+{
+  "purpose": "One-off validation-tool probe; no permanent test registration",
+  "note": "The initial probe assumed operation responses were mandatory. The official schema permits their omission; the corrected negative case removes the required response description. No product change was needed.",
+  "cases": [
+    {
+      "name": "well-formed minimal document",
+      "valid": true
+    },
+    {
+      "name": "missing info version",
+      "valid": false
+    },
+    {
+      "name": "missing response description",
+      "valid": false
+    }
+  ]
+}
