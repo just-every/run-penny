@@ -1,0 +1,56 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f55",
+  "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+  "source_commit": "93afd32743565cef8306096568a9f45b993378ec",
+  "merged_main": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "base": "e914abb719264d8021f974ab61b75127d06268a5",
+  "changed_paths": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "sources.lock.json",
+    "src/core/features/decisions/read-repository.ts",
+    "src/core/features/decisions/read-requesters.ts",
+    "src/core/features/decisions/routes.ts",
+    "src/core/features/decisions/ui/decision-actions.tsx",
+    "src/core/features/decisions/ui/decision-brief-page.tsx",
+    "src/core/features/decisions/write-service.ts",
+    "src/core/shared/api/operator.ts",
+    "tests/base/decision-loop-dimensions.test.ts",
+    "tests/browser/operator-pages-decisions.mjs",
+    "tests/browser/operator-pages.mjs"
+  ],
+  "proof_files": {
+    "src/core/features/decisions/read-requesters.ts": "550c9a48863d0320b29bf29b2f85478871437b3514f430c873ae17be052df751",
+    "src/core/features/decisions/read-repository.ts": "318871df77a54b4253e4b1cbef3f03c5eba18fced6ed9c0023ab04f751a48045",
+    "src/core/features/decisions/routes.ts": "2186da5f8cf826d71f5342c7ca18a0513732cdcce77624aec878c4d4770f33c9",
+    "src/core/features/decisions/write-service.ts": "5700808adc6b482a55e8ae6e7d9dbb3a77b34b532962b8ed90626f9553aa251b",
+    "src/core/features/decisions/ui/decision-actions.tsx": "a6059bf87545e4be83cd720ad9e85cb943890b0035fe936a5bfd41e709ac9e13",
+    "src/core/features/decisions/ui/decision-brief-page.tsx": "d9cf2d91c6929c138b19a12a4ce7a3e1dc6dfbbcdc513dd6f48a1c2c81068371",
+    "src/core/shared/api/operator.ts": "f9686f781307b6a19a652315c5d79ec68306c25413b76e0353cf7e913c52fc76",
+    "tests/base/decision-loop-dimensions.test.ts": "908a558c26479733d13a8253baad139cb323f85307a730dc4c6c52040cebea5d",
+    "tests/browser/operator-pages-decisions.mjs": "645088ff71fe423ab2c40953dfb736f22eb65de5c7f8046abd98f7f4e7b4daea",
+    "tests/browser/operator-pages.mjs": "013b07bd917996f82ca1980e685a531b5887e83aac26c883c393e224bc7eabe4"
+  },
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 80,
+    "partial": 123,
+    "missing": 78
+  },
+  "clause": {
+    "id": "DEC-002",
+    "before": "partial",
+    "after": "done",
+    "gap": ""
+  },
+  "test_registrations_added": 0,
+  "test_registrations_removed": 0,
+  "pr": null,
+  "full_history": true,
+  "candidate_relevant_source_diff": ""
+}

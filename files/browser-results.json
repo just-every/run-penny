@@ -1,0 +1,1069 @@
+{
+  "clauses": "[MEAS-006 OPS-001 OPS-002 OPS-004 REQ-027 REQ-028 EVID-009 DATA-004 BASE-ACCESS-003 BASE-OPS-005 OPS-003 REQ-014 REQ-030 EVID-003 DEC-001 ROAD-007 ROAD-008 REL-001 DATA-001 DATA-003]",
+  "checks": [
+    {
+      "label": "first-run-setup",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "empty-overview",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "empty-settings",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "created-board-settings",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "board-overview",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-overview",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-ownership",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-response",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-notified",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-promises",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-empty",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "overview-review-due",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "populated-overview",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "plural-overview",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "roadmap-status-publisher",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "sidebar-settings",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "moderation",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "ready-without-evidence",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "review_due-without-evidence",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "negative-commit-required-fields",
+      "width": 1440,
+      "phase": "negative"
+    },
+    {
+      "label": "brief-counts-and-stances",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "brief-requester-count-grammar",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "roadmap-decision-rows",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "recorded-evidence",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "operator-request-published",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "evidence-reviewed-with-links",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "evidence-returned-to-inbox",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "roadmap-complete-internal-record",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "stale-status-drafts",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "discarded-stale-status-draft",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "current-authority-status-draft",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "published-status-draft",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "mapped-status-history-first",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "mapped-status-history-second",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-hosted-idle",
+      "width": 1440,
+      "phase": "positive",
+      "scope": "source-only, local TLS emitted production-mode Worker",
+      "authority": "native bootstrap cookie and first-run form",
+      "tlsTrust": "test-certificate SPKI pin; explicit CA for Node",
+      "api": "/api/operator/data/overview",
+      "providerCalls": 0,
+      "operation": null
+    },
+    {
+      "label": "DATA-001-feedback-export-locked",
+      "width": 1440,
+      "phase": "positive",
+      "lockReads": [
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 56.82511100001284
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 203.7404459999816
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 77.70582800000557
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/overview",
+          "status": 200,
+          "milliseconds": 557.3018759999832
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 89.63009299998521
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 42.060072000022046
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/moderation",
+          "status": 200,
+          "milliseconds": 43.78348299997742
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 79.3240700000024
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/features",
+          "status": 200,
+          "milliseconds": 37.96941499999957
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/prioritisation",
+          "status": 200,
+          "milliseconds": 286.6273440000077
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 451.27158799997414
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 418.0506929999974
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/decisions",
+          "status": 200,
+          "milliseconds": 49.37012899998808
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 308.9609139999957
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/roadmap",
+          "status": 200,
+          "milliseconds": 38.30005799999344
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 101.43710499998997
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/releases",
+          "status": 200,
+          "milliseconds": 84.70257199998014
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/customers",
+          "status": 200,
+          "milliseconds": 31.914436999999452
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 53.86842000001343
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/search",
+          "status": 200,
+          "milliseconds": 66.83172400001786
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/settings",
+          "status": 200,
+          "milliseconds": 74.35846799999126
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 58.075158999999985
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/data",
+          "status": 200,
+          "milliseconds": 37.816468000004534
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 52.657096000009915
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 83.53536700000404
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 1353.9590580000076
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 33.443951000022935
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 45.78192500001751
+        }
+      ]
+    },
+    {
+      "label": "DATA-001-locked-overview",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-moderation",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-features",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-prioritisation",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-decisions",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-roadmap",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-releases",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-customers",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-search",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-settings",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-data",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-hosted-downloads",
+      "width": 1440,
+      "phase": "positive",
+      "scope": "source-only, local TLS emitted production-mode Worker",
+      "authority": "native bootstrap cookie and first-run form",
+      "tlsTrust": "test-certificate SPKI pin; explicit CA for Node",
+      "api": "/api/operator/data/overview",
+      "providerCalls": 0,
+      "format": "runeditrun-portability",
+      "pairedJournal": true,
+      "sourceCleanup": true
+    },
+    {
+      "label": "DATA-001-feedback-backup-locked",
+      "width": 1440,
+      "phase": "positive",
+      "lockReads": [
+        {
+          "label": "Download backup",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 39.63593399999081
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/overview",
+          "status": 200,
+          "milliseconds": 40.19409499998437
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 28.61549099997501
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/moderation",
+          "status": 200,
+          "milliseconds": 31.963424000015948
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/features",
+          "status": 200,
+          "milliseconds": 19.100605999992695
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/prioritisation",
+          "status": 200,
+          "milliseconds": 19.29847000000882
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/decisions",
+          "status": 200,
+          "milliseconds": 24.79962199999136
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/roadmap",
+          "status": 200,
+          "milliseconds": 23.909400000004098
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/releases",
+          "status": 200,
+          "milliseconds": 23.73879100001068
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/customers",
+          "status": 200,
+          "milliseconds": 22.71614900001441
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/search",
+          "status": 200,
+          "milliseconds": 26.32125000000815
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/settings",
+          "status": 200,
+          "milliseconds": 47.98484799999278
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/data",
+          "status": 200,
+          "milliseconds": 35.891081999987364
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 52.2048519999953
+        }
+      ]
+    },
+    {
+      "label": "DATA-001-hosted-active-operation",
+      "width": 1440,
+      "phase": "positive",
+      "scope": "source-only, local TLS emitted production-mode Worker",
+      "authority": "native bootstrap cookie and first-run form",
+      "tlsTrust": "test-certificate SPKI pin; explicit CA for Node",
+      "api": "/api/operator/data/overview",
+      "providerCalls": 0,
+      "operation": {
+        "id": "01M6Q6079YA77BE5B79XPBGNPV",
+        "kind": "export",
+        "status": "pending",
+        "progress": null
+      },
+      "observation": "Real SSR and hydrated panel read the native pending export reservation while its original R2 list transport is held."
+    },
+    {
+      "label": "first-run-setup",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "empty-overview",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "empty-settings",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "created-board-settings",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "board-overview",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-overview",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-ownership",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-response",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-notified",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-promises",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "loop-health-empty",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "overview-review-due",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "populated-overview",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "plural-overview",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "roadmap-status-publisher",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "sidebar-settings",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "moderation",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "ready-without-evidence",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "review_due-without-evidence",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "negative-commit-required-fields",
+      "width": 390,
+      "phase": "negative"
+    },
+    {
+      "label": "brief-counts-and-stances",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "brief-requester-count-grammar",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "roadmap-decision-rows",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "recorded-evidence",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "operator-request-published",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "evidence-reviewed-with-links",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "evidence-returned-to-inbox",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "roadmap-complete-internal-record",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "stale-status-drafts",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "discarded-stale-status-draft",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "current-authority-status-draft",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "published-status-draft",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "mapped-status-history-first",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "mapped-status-history-second",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-hosted-idle",
+      "width": 390,
+      "phase": "positive",
+      "scope": "source-only, local TLS emitted production-mode Worker",
+      "authority": "native bootstrap cookie and first-run form",
+      "tlsTrust": "test-certificate SPKI pin; explicit CA for Node",
+      "api": "/api/operator/data/overview",
+      "providerCalls": 0,
+      "operation": null
+    },
+    {
+      "label": "DATA-001-feedback-export-locked",
+      "width": 390,
+      "phase": "positive",
+      "lockReads": [
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 54.931749999988824
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 60.75921200000448
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/overview",
+          "status": 200,
+          "milliseconds": 656.8719730000012
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 1272.834121999971
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 46.68505199998617
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 47.44151500001317
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/moderation",
+          "status": 200,
+          "milliseconds": 32.91623500001151
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/features",
+          "status": 200,
+          "milliseconds": 24.91189899999881
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/prioritisation",
+          "status": 200,
+          "milliseconds": 25.646706000028644
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/decisions",
+          "status": 200,
+          "milliseconds": 30.407867999980226
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 35.15736499999184
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/roadmap",
+          "status": 200,
+          "milliseconds": 33.826355000026524
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/releases",
+          "status": 200,
+          "milliseconds": 44.806053999986034
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/customers",
+          "status": 200,
+          "milliseconds": 37.09437900001649
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/search",
+          "status": 200,
+          "milliseconds": 24.00084400002379
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 46.5985829999554
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/settings",
+          "status": 200,
+          "milliseconds": 61.13636399997631
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/data",
+          "status": 200,
+          "milliseconds": 31.702963999996427
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 55.26023899996653
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 33.870541999989655
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 51.073239999997895
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 34.169010999961756
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 39.578146999992896
+        },
+        {
+          "label": "Export workspace",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 32.66685400001006
+        }
+      ]
+    },
+    {
+      "label": "DATA-001-locked-overview",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-moderation",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-features",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-prioritisation",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-decisions",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-roadmap",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-releases",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-customers",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-search",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-settings",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-locked-data",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-001-hosted-downloads",
+      "width": 390,
+      "phase": "positive",
+      "scope": "source-only, local TLS emitted production-mode Worker",
+      "authority": "native bootstrap cookie and first-run form",
+      "tlsTrust": "test-certificate SPKI pin; explicit CA for Node",
+      "api": "/api/operator/data/overview",
+      "providerCalls": 0,
+      "format": "runeditrun-portability",
+      "pairedJournal": true,
+      "sourceCleanup": true
+    },
+    {
+      "label": "DATA-001-feedback-backup-locked",
+      "width": 390,
+      "phase": "positive",
+      "lockReads": [
+        {
+          "label": "Download backup",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 37.45378699997673
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/overview",
+          "status": 200,
+          "milliseconds": 49.2128720000037
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 27.872165000007953
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/moderation",
+          "status": 200,
+          "milliseconds": 30.820492000028025
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/features",
+          "status": 200,
+          "milliseconds": 18.90589599998202
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/prioritisation",
+          "status": 200,
+          "milliseconds": 20.85316800000146
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/decisions",
+          "status": 200,
+          "milliseconds": 26.384273000003304
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/roadmap",
+          "status": 200,
+          "milliseconds": 24.254981000034604
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/releases",
+          "status": 200,
+          "milliseconds": 24.043796000012662
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/customers",
+          "status": 200,
+          "milliseconds": 21.840570000000298
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/search",
+          "status": 200,
+          "milliseconds": 19.622563000011723
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/settings",
+          "status": 200,
+          "milliseconds": 46.05862299998989
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/data",
+          "status": 200,
+          "milliseconds": 28.787561999983154
+        },
+        {
+          "label": "Download backup",
+          "path": "/app/feedback",
+          "status": 200,
+          "milliseconds": 33.2305429999833
+        }
+      ]
+    },
+    {
+      "label": "DATA-001-hosted-active-operation",
+      "width": 390,
+      "phase": "positive",
+      "scope": "source-only, local TLS emitted production-mode Worker",
+      "authority": "native bootstrap cookie and first-run form",
+      "tlsTrust": "test-certificate SPKI pin; explicit CA for Node",
+      "api": "/api/operator/data/overview",
+      "providerCalls": 0,
+      "operation": {
+        "id": "01M6Q658CCTTZ4HWH3JC69Z4TS",
+        "kind": "export",
+        "status": "pending",
+        "progress": null
+      },
+      "observation": "Real SSR and hydrated panel read the native pending export reservation while its original R2 list transport is held."
+    }
+  ],
+  "negativeChecks": [
+    {
+      "width": 1440,
+      "phase": "negative",
+      "diagnostics": [
+        {
+          "path": "/api/operator/decisions/attention-decision/commit",
+          "status": 422,
+          "message": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "phase": "negative",
+      "diagnostics": [
+        {
+          "path": "/api/operator/decisions/attention-decision/commit",
+          "status": 422,
+          "message": "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+        }
+      ]
+    }
+  ]
+}

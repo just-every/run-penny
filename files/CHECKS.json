@@ -1,0 +1,80 @@
+{
+  "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+  "checks": [
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/decision-loop-dimensions.test.ts tests/base/decision-loop-commit.test.ts tests/base/decision-loop-roadmap.test.ts",
+      "exit": 0,
+      "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+      "tests": 13,
+      "files": 3,
+      "log": "focused-tests.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+      "log": "typecheck.log"
+    },
+    {
+      "command": "pnpm run check -- --profile first-party",
+      "exit": 0,
+      "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+      "phase": "final contract with generated views temporarily present",
+      "log": "first-party-check.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write && node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+      "log": "contract-views.log",
+      "restored_views": [
+        "ACCEPTANCE.md",
+        "docs/CLAIMS.md"
+      ]
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock; node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+      "log": "lock-check.json"
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "phase": "source save; copied source bytes unchanged"
+    },
+    {
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_OPERATOR_CORE_ONLY=1 node tests/browser/operator-pages.mjs",
+      "exit": 0,
+      "source_commit": "93afd32743565cef8306096568a9f45b993378ec",
+      "candidate_relevant_source_diff": "empty",
+      "screens": [
+        1440,
+        390
+      ],
+      "captures": 100,
+      "log": "browser.log",
+      "results": "browser-results.json"
+    },
+    {
+      "command": "migration ledger check",
+      "exit": 0,
+      "status": "not applicable; no migration added or edited"
+    }
+  ],
+  "ci": {
+    "run": 42141867258,
+    "event": "push",
+    "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+    "conclusion": "failure",
+    "classification": "permitted_generated_view_only",
+    "failed_step": "Check generated contract documents",
+    "sample_job": 127643936633,
+    "command": "node src/base/contract-docs.mjs check",
+    "local_reproduction_exit": 1,
+    "failure": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+    "product_assertions": "not reached; no assertion failure",
+    "dispatches": 0,
+    "reruns": 0
+  }
+}

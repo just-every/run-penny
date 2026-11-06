@@ -1,0 +1,41 @@
+
+ RUN  v4.1.11 /workspace/run-penny
+
+ ❯ tests/base/decision-loop-dimensions.test.ts (2 tests | 1 failed) 1695ms
+   × [DEC-001][DEC-002] retains confidence, review dates and per-bet assumptions and reads current eligible requesters through approved mappings 117ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  01:05:52
+   Duration  8.46s (transform 2.41s, setup 0ms, import 5.79s, tests 1.70s, environment 0ms)
+
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/decision-loop-dimensions.test.ts > [DEC-001][DEC-002] retains confidence, review dates and per-bet assumptions and reads current eligible requesters through approved mappings
+AssertionError: expected [ { …(11) }, { …(11) } ] to match object [ { …(2) }, { …(2) } ]
+(14 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,8 +1,8 @@
+  [
+    {
+-     "assumptions": "People can complete the task independently",
++     "assumptions": null,
+      "id": "01M6Q68974SZA710X9NT0N2WPC",
+    },
+    {
+      "assumptions": null,
+      "id": "01M6Q6897DATVBW4FHSKNXYK6A",
+
+ ❯ tests/base/decision-loop-dimensions.test.ts:20:97
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

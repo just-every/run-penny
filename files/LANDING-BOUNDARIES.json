@@ -1,0 +1,14 @@
+{
+  "head": "cec0ebc982c0e9ad11615d5be8796650a6f1c338",
+  "publication_scan": {
+    "status": "not_run_in_cloud",
+    "complete": false,
+    "historyScanned": false,
+    "findings": null,
+    "owner": "fleet guarded lander"
+  },
+  "main_equality": "not_claimed",
+  "candidate_run_site": "not_run_main_not_pushed",
+  "provider_qualification": "not_claimed",
+  "pr": null
+}

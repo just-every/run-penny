@@ -1,0 +1,23 @@
+[
+  {
+    "name": "assumptions-write",
+    "source": "src/core/features/decisions/write-service.ts",
+    "head": "09584a2187c7c469860c330b3188479d005a03b4",
+    "exit": 1,
+    "failure": "AssertionError: expected [ { \u2026(11) }, { \u2026(11) } ] to match object [ { \u2026(2) }, { \u2026(2) } ]"
+  },
+  {
+    "name": "eligible-requesters",
+    "source": "src/core/features/decisions/read-requesters.ts",
+    "head": "09584a2187c7c469860c330b3188479d005a03b4",
+    "exit": 1,
+    "failure": "AssertionError: expected [] to deeply equal [ { \u2026(2) }, { \u2026(2) } ]"
+  },
+  {
+    "name": "withdrawn-mapping",
+    "source": "src/core/features/decisions/read-requesters.ts",
+    "head": "09584a2187c7c469860c330b3188479d005a03b4",
+    "exit": 1,
+    "failure": "AssertionError: expected [ { \u2026(2) }, { \u2026(2) } ] to deeply equal []"
+  }
+]
