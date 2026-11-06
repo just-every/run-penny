@@ -1,0 +1,144 @@
+{
+  "repository": "just-every/run-penny",
+  "tag": "sd-penny-c-f104",
+  "branch": "cloud/sd-penny-c-f104",
+  "head": "8ab4437f64bea2a3f1c55c689d65da50a207c55e",
+  "baseMain": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "saveHead": "ee3deb1a0ba466eb088d54af1e45e2778b396d3d",
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer install --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email <fleet address> --non-interactive",
+      "exit": 0,
+      "privateSettingsExcluded": true
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0,
+      "log": "logs/build.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "logs/typecheck.log"
+    },
+    {
+      "command": "pnpm exec oxlint tests/browser/keyboard-controls.mjs tests/browser/keyboard-journey.mjs tests/browser/requester-board.mjs",
+      "exit": 0,
+      "log": "logs/touched-lint.log"
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "log": "logs/first-party.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "log": "logs/views-write.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "tree": "locally generated views",
+      "log": "logs/views-check.log"
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "tree": "exact product candidate with main views retained",
+      "log": "logs/restored-views-check.log",
+      "expected": true
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run test:browser",
+      "exit": 0,
+      "head": "8ab4437f64bea2a3f1c55c689d65da50a207c55e",
+      "dirty": false,
+      "browserExecutable": "/usr/bin/chromium",
+      "widths": [
+        1440,
+        390
+      ],
+      "receipt": "browser-final/keyboard-receipt.json",
+      "log": "logs/browser-final.log"
+    },
+    {
+      "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f104",
+      "exit": 0,
+      "attempts": 1,
+      "head": "8ab4437f64bea2a3f1c55c689d65da50a207c55e",
+      "log": "logs/candidate-push.log"
+    }
+  ],
+  "mechanical": {
+    "lockExit": 0,
+    "viewsWriteExit": 0,
+    "viewsGeneratedCheckExit": 0,
+    "viewsRestoredCheckExit": 1,
+    "ledger": "none; no migration changed",
+    "ledgerExit": 0,
+    "parentTableRowCounts": [
+      445,
+      445
+    ],
+    "parentStatusRowsRetained": true,
+    "generatedViewsCommitted": false
+  },
+  "countsBefore": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "countsAfter": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "newIndependentTestRegistrations": 0,
+  "testCap": 200,
+  "existingAssertionsRemoved": 0,
+  "publicationScan": {
+    "status": "not run in cloud",
+    "owner": "maintained Mac lander"
+  },
+  "runSite": {
+    "candidate": "main-only; pending lander",
+    "baseRun": 42201695577,
+    "baseConclusion": "success"
+  },
+  "baseVerify": {
+    "run": 42201695865,
+    "conclusion": "success"
+  },
+  "pr": null,
+  "verify": {
+    "run": 42206370013,
+    "head": "8ab4437f64bea2a3f1c55c689d65da50a207c55e",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "jobs": 30,
+    "failedShards": 29,
+    "onlyFailedStep": "Check generated contract documents",
+    "generatedViewException": true,
+    "ciJourneysExecuted": false,
+    "runUrl": "https://github.com/just-every/run-penny/actions/runs/42206370013"
+  },
+  "githubApiCalls": 5
+}

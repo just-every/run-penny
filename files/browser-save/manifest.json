@@ -1,0 +1,158 @@
+{
+  "sourceCommit": "ee3deb1a0ba466eb088d54af1e45e2778b396d3d",
+  "dirty": false,
+  "generatedAt": "2026-11-06T10:51:48.400Z",
+  "runtime": {
+    "environment": "emitted local workerd with isolated D1/R2",
+    "capabilities": {
+      "transport": "sendgrid",
+      "testCustomers": false
+    },
+    "providerSends": false,
+    "node": "v24.19.0"
+  },
+  "captures": [
+    {
+      "file": "submitted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/portal/feedback/new",
+      "overflow": false,
+      "sha256": "b2594f604aee0c9e536387a2eb2036c3d714e6e2a42d1092db6666a448154c93"
+    },
+    {
+      "file": "approve-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/app/moderation",
+      "overflow": false,
+      "sha256": "64d56c1c15be0ed5c1c0cea1858135064d7194e28444b234bcb4df45ed0d1480"
+    },
+    {
+      "file": "vote-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/portal/feedback/feedback-01m6r7rf4z4080f4hrpbrh3tsk",
+      "overflow": false,
+      "sha256": "a771c1c4cdd50b975170692eb6a2435a4a59012b87f8595875d0ee56788a9ab2"
+    },
+    {
+      "file": "follow-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/portal/feedback/feedback-01m6r7rf4z4080f4hrpbrh3tsk",
+      "overflow": false,
+      "sha256": "2e4d2b6bf9017ca2fb7e4e3ad1905e7dce954312e56ed8e932feaf876d01fbf8"
+    },
+    {
+      "file": "comment-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/portal/feedback/feedback-01m6r7rf4z4080f4hrpbrh3tsk",
+      "overflow": false,
+      "sha256": "78f1de5dcc5ba3f5bdd0dd04637eb7f3bea7139f9c42f84d36790d592ecea8c9"
+    },
+    {
+      "file": "comment-approval-ready-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/app/moderation",
+      "overflow": false,
+      "sha256": "0707c0e72d97a1bd1a15b922c215ee11b8f567c96ae4f2428985114071317b8f"
+    },
+    {
+      "file": "comment-approved-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/app/moderation",
+      "overflow": false,
+      "sha256": "a55c4217d0c32b7eab612d50ed83e901cba2eac44a8fd0d7af9b6a46a1f12e44"
+    },
+    {
+      "file": "status-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/portal/feedback/feedback-01m6r7rf4z4080f4hrpbrh3tsk",
+      "overflow": false,
+      "sha256": "387d4927a35880b0bfd24a71add3d061d503f43849f228302d9aac868a7fd0b4"
+    },
+    {
+      "file": "your-feedback-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "3fb9bee37bba7c4c519b9e0709505f1a23c76fe37e33f72ba4268b0a30c13b5a"
+    },
+    {
+      "file": "search-filter-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:45947/?q=Scheduled+exports&status=under_review",
+      "overflow": false,
+      "sha256": "3f7d2b79d06758d2e26418f11fd3667d293a514689d7f1c3bff0e723a35416d0"
+    },
+    {
+      "file": "submitted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/portal/feedback/new",
+      "overflow": false,
+      "sha256": "02ca4a0f9ef7ee3980d4951c2c6edfbcb371b94f3b5d5c15795dfb2730567b3e"
+    },
+    {
+      "file": "approve-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/app/moderation",
+      "overflow": false,
+      "sha256": "a87a95453e4f5d7af7b44398a06d909ea6b15b69020945f41917792f7de41ef5"
+    },
+    {
+      "file": "vote-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/portal/feedback/feedback-01m6r7rq38txk8chewjgrtkc3d",
+      "overflow": false,
+      "sha256": "e8a50a10f2c23d1400364dc78f9be96186234f0453809012fd57517cf565fb6c"
+    },
+    {
+      "file": "follow-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/portal/feedback/feedback-01m6r7rq38txk8chewjgrtkc3d",
+      "overflow": false,
+      "sha256": "3123e2f59a7485388f94480362c25b59660804770de36aa2f49ba94c765fb141"
+    },
+    {
+      "file": "comment-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/portal/feedback/feedback-01m6r7rq38txk8chewjgrtkc3d",
+      "overflow": false,
+      "sha256": "bd228917f03ef895ef3b3d4b9f60c1ed9b11c6a78f6ff4ad15692022358a5180"
+    },
+    {
+      "file": "comment-approval-ready-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/app/moderation",
+      "overflow": false,
+      "sha256": "f6810ae27e09499b9dfb5c47823f63d7a83184f6e8b7ac029f4ec8b2355ee9bc"
+    },
+    {
+      "file": "comment-approved-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/app/moderation",
+      "overflow": false,
+      "sha256": "bea1cc8f30ce73a84e08a483f791fb4258e6e1722caf15afb23ed2129b0eeeb5"
+    },
+    {
+      "file": "status-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/portal/feedback/feedback-01m6r7rq38txk8chewjgrtkc3d",
+      "overflow": false,
+      "sha256": "ca57451d5f289856acc85f52350466ef8f8cf72b2d254a4b5067b8a8c716aa04"
+    },
+    {
+      "file": "your-feedback-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "807b60cd1e921b1e2d921487572e7b780941676eacef16a8d0a1fdc3a8b95a1e"
+    },
+    {
+      "file": "search-filter-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:45947/?q=Scheduled+exports&status=under_review",
+      "overflow": false,
+      "sha256": "862e7d21591a6a8ac8de3002a7bc9ce8c6239e63fe3ac0d6ef52ea4f1060f2be"
+    }
+  ],
+  "pageErrors": [],
+  "checks": []
+}
