@@ -8510,7 +8510,7 @@
       "executable": false
     },
     "tests/base/product-hierarchy.test.ts": {
-      "sha256": "3c189717f47e19d342c01150467f99063d6b0ff4898edd36a5c8d1474a739f4d",
+      "sha256": "59f0024fb285136f794ab17caa81bc835663a8b3cb1cb1453e51a676216b4b84",
       "executable": false
     },
     "tests/base/provider-messages.ts": {

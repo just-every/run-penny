@@ -87,12 +87,20 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
  expect(new Set(found).size).toBe(31)
  expect((await json<{total:number}>('/api/operator/search?q=Harbor&entity=products&tag=missing-tag')).total).toBe(0)
  expect((await call('/api/operator/search?q=Harbor&entity=product',undefined,g.operator)).status).toBe(400)
- for(const headers of [{},second]){
-  const refused=await call('/api/operator/search?q=Harbor',undefined,headers)
-  expect(refused.status).toBe(401);expect(await refused.text()).not.toContain('Harbor')
+ const privateDoors=['/api/operator/search?q=Harbor','/api/operator/search?q=Harbor&entity=features','/api/operator/hierarchy',...searched.map(record=>record.href)]
+ const refuseHierarchy=async(headers:Record<string,string>)=>{
+  for(const path of privateDoors){
+   const document=!path.startsWith('/api/')
+   const refused=await call(path,undefined,{...headers,...(document?{Accept:'text/html'}:{})})
+   expect(refused.status).toBe(document?302:401)
+   if(document)expect(refused.headers.get('Location')).toBe('/signin')
+   const body=await refused.text()
+   for(const record of searched)expect(body).not.toContain(record.title)
+   expect(body).not.toContain('Harbor')
+  }
  }
+ for(const headers of [{},second])await refuseHierarchy(headers)
  expect((await call('/api/auth/sign-out',{},g.operator)).status).toBe(204)
- const revoked=await call('/api/operator/search?q=Harbor',undefined,g.operator)
- expect(revoked.status).toBe(401);expect(await revoked.text()).not.toContain('Harbor')
+ await refuseHierarchy(g.operator)
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
