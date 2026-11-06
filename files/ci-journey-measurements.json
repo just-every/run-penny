@@ -1,0 +1,73 @@
+{
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "counts": {
+    "requests": 100000,
+    "boards": 100,
+    "requesters": 250000
+  },
+  "results": [
+    {
+      "door": "public",
+      "workload": "exact",
+      "samples": 25,
+      "p95": 120.4585819999993,
+      "max": 124.58206000000064
+    },
+    {
+      "door": "public",
+      "workload": "partial",
+      "samples": 25,
+      "p95": 121.26166000000012,
+      "max": 123.23842200000036
+    },
+    {
+      "door": "public",
+      "workload": "absent",
+      "samples": 25,
+      "p95": 116.71079499999905,
+      "max": 116.8611149999997
+    },
+    {
+      "door": "public",
+      "workload": "unicode",
+      "samples": 25,
+      "p95": 29.45684899999833,
+      "max": 35.48697099999845
+    },
+    {
+      "door": "operator",
+      "workload": "exact",
+      "samples": 25,
+      "p95": 96.10843000000023,
+      "max": 100.70048599999791
+    },
+    {
+      "door": "operator",
+      "workload": "partial",
+      "samples": 25,
+      "p95": 102.45050999999876,
+      "max": 107.20701399999962
+    },
+    {
+      "door": "operator",
+      "workload": "absent",
+      "samples": 25,
+      "p95": 110.42635300000256,
+      "max": 114.8203539999995
+    },
+    {
+      "door": "operator",
+      "workload": "unicode",
+      "samples": 25,
+      "p95": 16.195223999999143,
+      "max": 39.25956600000063
+    }
+  ],
+  "hardware": {
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz",
+    "memory": 16759304192
+  },
+  "node": "v22.20.0"
+}

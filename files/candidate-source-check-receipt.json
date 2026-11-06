@@ -1,0 +1,13 @@
+{
+  "command": [
+    "node",
+    "scripts/edition-authoring/cli.mjs",
+    "check"
+  ],
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "started": "2026-11-06T15:31:54.990479+00:00",
+  "ended": "2026-11-06T15:31:55.708936+00:00",
+  "elapsed_seconds": 0.7184642009999607,
+  "exit": 0,
+  "log": "candidate-source-check.log"
+}

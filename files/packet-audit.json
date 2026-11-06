@@ -1,0 +1,315 @@
+{
+  "product.diff": {
+    "credential_shape_matches": 0
+  },
+  "REPORT.md": {
+    "credential_shape_matches": 0
+  },
+  "PLAN.md": {
+    "credential_shape_matches": 0
+  },
+  "setup.log": {
+    "credential_shape_matches": 0
+  },
+  "build.log": {
+    "credential_shape_matches": 0
+  },
+  "install.log": {
+    "credential_shape_matches": 0
+  },
+  "product_head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "clean_checkout": true,
+  "scope": [
+    "sources.lock.json",
+    "src/core/features/requests/suggestions.ts"
+  ],
+  "publication_scan": "NOT RUN: cloud lacks the Mac publication-scan service; audit here covers own diff and selected text only",
+  "selected_files": [
+    {
+      "file": "REPORT.md",
+      "bytes": 16519,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "PLAN.md",
+      "bytes": 2329,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "COMMANDS.md",
+      "bytes": 3960,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "RECEIPT.json",
+      "bytes": 6986,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "provenance.json",
+      "bytes": 845,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "source-hashes.json",
+      "bytes": 3316,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "candidate-messages.txt",
+      "bytes": 190,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "product.diff",
+      "bytes": 2625,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "packet-audit.json",
+      "bytes": 651,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "toolchain.json",
+      "bytes": 515,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "toolchain-setup.sh",
+      "bytes": 2812,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "receipt-runner.py",
+      "bytes": 1005,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "runtime-reaper.py",
+      "bytes": 460,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "install.log",
+      "bytes": 2509,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "setup.log",
+      "bytes": 2668916,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "setup-receipt.json",
+      "bytes": 275,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "source-lock.log",
+      "bytes": 430146,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "source-lock-receipt.json",
+      "bytes": 319,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "source-check.log",
+      "bytes": 430160,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "source-check-receipt.json",
+      "bytes": 321,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "candidate-source-check.log",
+      "bytes": 430160,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "candidate-source-check-receipt.json",
+      "bytes": 331,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "base-source.log",
+      "bytes": 14163,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "base-source-receipt.json",
+      "bytes": 303,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "push.log",
+      "bytes": 958,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "push-receipt.json",
+      "bytes": 375,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "build.log",
+      "bytes": 42630,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "build-receipt.json",
+      "bytes": 304,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "journey.log",
+      "bytes": 7114,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "journey-receipt.json",
+      "bytes": 309,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "journey-measurements.json",
+      "bytes": 1532,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "typecheck.log",
+      "bytes": 103,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "typecheck-receipt.json",
+      "bytes": 292,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "door-check.log",
+      "bytes": 400,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "door-check-receipt.json",
+      "bytes": 444,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "query-probe.mjs",
+      "bytes": 4639,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "query-probe.log",
+      "bytes": 9320,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "query-probe-receipt.json",
+      "bytes": 298,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "query-trace.json",
+      "bytes": 4353,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "contract-check.log",
+      "bytes": 32,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "contract-check-receipt.json",
+      "bytes": 317,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "github-calls.jsonl",
+      "bytes": 975,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "ci-discovery.json",
+      "bytes": 12409,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "ci-poll-1.json",
+      "bytes": 175,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "before/REPORT.md",
+      "bytes": 12558,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "before/source-hashes.json",
+      "bytes": 1296,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "before/query-trace.json",
+      "bytes": 19742,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "before/query-plan-only.mjs",
+      "bytes": 6880,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "before/toolchain.json",
+      "bytes": 415,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "before/measurements.json",
+      "bytes": 3784,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "before/RECEIPT.json",
+      "bytes": 2893,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "ci-poll-2.json",
+      "bytes": 178,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "ci-jobs.json",
+      "bytes": 117571,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "ci-final.json",
+      "bytes": 863,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "ci-failed-job-127979480403.log",
+      "bytes": 165759,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "ci-failed-job-127979480403.stderr",
+      "bytes": 0,
+      "credential_shape_matches": 0
+    },
+    {
+      "file": "ci-journey-measurements.json",
+      "bytes": 1547,
+      "credential_shape_matches": 0
+    }
+  ],
+  "final_ci": "completed/failure on exact head; later requester-repair assertion; scale passed"
+}

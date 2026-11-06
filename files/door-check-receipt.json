@@ -1,0 +1,19 @@
+{
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "--config",
+    "vitest.base.config.ts",
+    "tests/base/penny-evidence.test.ts",
+    "-t",
+    "deterministic published-only suggestions"
+  ],
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "started": "2026-11-06T15:31:07.233803+00:00",
+  "ended": "2026-11-06T15:31:15.661102+00:00",
+  "elapsed_seconds": 8.42730372699998,
+  "exit": 0,
+  "log": "door-check.log"
+}

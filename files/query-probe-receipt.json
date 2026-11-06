@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "../packet/query-probe.mjs"
+  ],
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "started": "2026-11-06T15:31:15.709474+00:00",
+  "ended": "2026-11-06T15:31:24.907816+00:00",
+  "elapsed_seconds": 9.198348065000005,
+  "exit": 0,
+  "log": "query-probe.log"
+}

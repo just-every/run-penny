@@ -1,0 +1,630 @@
+{
+  "head": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "counts": {
+    "requests": 100000,
+    "boards": 100,
+    "requesters": 250000
+  },
+  "sqlite_version": "NOT RUN: D1 denies sqlite_version() function",
+  "plans": [
+    {
+      "door": "public",
+      "query": "WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),\n indexed AS MATERIALIZED (SELECT r.id,r.slug,r.terms\n FROM penny_suggestions_public_rows r\n JOIN boards b ON b.id=r.board_id LEFT JOIN blocked author ON author.id=r.author_requester_id\n WHERE \n  r.moderation_state = 'approved'\n  AND r.published_at IS NOT NULL\n  AND r.withdrawn_at IS NULL\n  AND r.merged_into_request_id IS NULL\n  AND r.public_state NOT IN ('unpublished','withdrawn')\n  AND b.visibility = 'public'\n  AND (author.id IS NULL OR author.blocked_at IS NULL)\n AND b.archived_at IS NULL AND r.public_state!='unpublished'), ranked AS (\n SELECT id,(0) AS matches FROM indexed WHERE terms IS NOT NULL ORDER BY matches DESC,slug LIMIT 5\n ), selected AS (\n SELECT id FROM ranked WHERE matches>0 UNION ALL SELECT id FROM indexed WHERE terms IS NULL\n ) SELECT r.id,r.slug,b.show_voters AS showVoters,r.public_title AS title,r.public_description AS description\n FROM selected JOIN requests r ON r.id=selected.id JOIN boards b ON b.id=r.board_id",
+      "bindings": [],
+      "plan": [
+        {
+          "id": 1,
+          "parent": 0,
+          "notused": 0,
+          "detail": "COMPOUND QUERY"
+        },
+        {
+          "id": 2,
+          "parent": 1,
+          "notused": 0,
+          "detail": "LEFT-MOST SUBQUERY"
+        },
+        {
+          "id": 4,
+          "parent": 2,
+          "notused": 0,
+          "detail": "CO-ROUTINE ranked"
+        },
+        {
+          "id": 7,
+          "parent": 4,
+          "notused": 0,
+          "detail": "MATERIALIZE indexed"
+        },
+        {
+          "id": 10,
+          "parent": 7,
+          "notused": 0,
+          "detail": "MATERIALIZE blocked"
+        },
+        {
+          "id": 13,
+          "parent": 10,
+          "notused": 203,
+          "detail": "SCAN requesters USING COVERING INDEX penny_suggestions_blocked"
+        },
+        {
+          "id": 27,
+          "parent": 7,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_public (merged_into_request_id=? AND moderation_state=?)"
+        },
+        {
+          "id": 47,
+          "parent": 7,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 67,
+          "parent": 7,
+          "notused": 53,
+          "detail": "SEARCH author USING AUTOMATIC COVERING INDEX (id=?) LEFT-JOIN"
+        },
+        {
+          "id": 95,
+          "parent": 4,
+          "notused": 94,
+          "detail": "SCAN indexed"
+        },
+        {
+          "id": 110,
+          "parent": 4,
+          "notused": 0,
+          "detail": "USE TEMP B-TREE FOR ORDER BY"
+        },
+        {
+          "id": 122,
+          "parent": 2,
+          "notused": 39,
+          "detail": "SCAN ranked"
+        },
+        {
+          "id": 127,
+          "parent": 2,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 133,
+          "parent": 2,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 145,
+          "parent": 1,
+          "notused": 0,
+          "detail": "UNION ALL"
+        },
+        {
+          "id": 153,
+          "parent": 145,
+          "notused": 216,
+          "detail": "SCAN indexed"
+        },
+        {
+          "id": 157,
+          "parent": 145,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 163,
+          "parent": 145,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        }
+      ]
+    },
+    {
+      "door": "operator",
+      "query": "WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),\n indexed AS MATERIALIZED (SELECT r.id,r.slug,r.terms\n FROM penny_suggestions_operator_rows r\n JOIN boards b ON b.id=r.board_id \n WHERE r.merged_into_request_id IS NULL), ranked AS (\n SELECT id,(0) AS matches FROM indexed WHERE terms IS NOT NULL ORDER BY matches DESC,slug LIMIT 5\n ), selected AS (\n SELECT id FROM ranked WHERE matches>0 UNION ALL SELECT id FROM indexed WHERE terms IS NULL\n ) SELECT r.id,r.slug,b.show_voters AS showVoters,r.title AS title,r.description AS description\n FROM selected JOIN requests r ON r.id=selected.id JOIN boards b ON b.id=r.board_id",
+      "bindings": [],
+      "plan": [
+        {
+          "id": 1,
+          "parent": 0,
+          "notused": 0,
+          "detail": "COMPOUND QUERY"
+        },
+        {
+          "id": 2,
+          "parent": 1,
+          "notused": 0,
+          "detail": "LEFT-MOST SUBQUERY"
+        },
+        {
+          "id": 4,
+          "parent": 2,
+          "notused": 0,
+          "detail": "CO-ROUTINE ranked"
+        },
+        {
+          "id": 7,
+          "parent": 4,
+          "notused": 0,
+          "detail": "MATERIALIZE indexed"
+        },
+        {
+          "id": 12,
+          "parent": 7,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_operator (merged_into_request_id=?)"
+        },
+        {
+          "id": 18,
+          "parent": 7,
+          "notused": 44,
+          "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 35,
+          "parent": 4,
+          "notused": 59,
+          "detail": "SCAN indexed"
+        },
+        {
+          "id": 50,
+          "parent": 4,
+          "notused": 0,
+          "detail": "USE TEMP B-TREE FOR ORDER BY"
+        },
+        {
+          "id": 62,
+          "parent": 2,
+          "notused": 39,
+          "detail": "SCAN ranked"
+        },
+        {
+          "id": 67,
+          "parent": 2,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 73,
+          "parent": 2,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 85,
+          "parent": 1,
+          "notused": 0,
+          "detail": "UNION ALL"
+        },
+        {
+          "id": 93,
+          "parent": 85,
+          "notused": 216,
+          "detail": "SCAN indexed"
+        },
+        {
+          "id": 97,
+          "parent": 85,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 103,
+          "parent": 85,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        }
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "door": "public",
+      "name": "full-query",
+      "elapsed_ms": 146.2012450000002,
+      "meta": {
+        "served_by": "miniflare.db",
+        "duration": 130,
+        "changes": 0,
+        "last_row_id": 1,
+        "changed_db": false,
+        "size_after": 102363136,
+        "rows_read": 600003,
+        "rows_written": 0
+      },
+      "row_count": 1,
+      "result": [
+        {
+          "id": "request-1",
+          "slug": "request-000001",
+          "showVoters": 0,
+          "title": "Export project reports — résumé",
+          "description": "CSV workspace reports"
+        }
+      ],
+      "plan": [
+        {
+          "id": 1,
+          "parent": 0,
+          "notused": 0,
+          "detail": "COMPOUND QUERY"
+        },
+        {
+          "id": 2,
+          "parent": 1,
+          "notused": 0,
+          "detail": "LEFT-MOST SUBQUERY"
+        },
+        {
+          "id": 4,
+          "parent": 2,
+          "notused": 0,
+          "detail": "CO-ROUTINE ranked"
+        },
+        {
+          "id": 7,
+          "parent": 4,
+          "notused": 0,
+          "detail": "MATERIALIZE indexed"
+        },
+        {
+          "id": 10,
+          "parent": 7,
+          "notused": 0,
+          "detail": "MATERIALIZE blocked"
+        },
+        {
+          "id": 13,
+          "parent": 10,
+          "notused": 203,
+          "detail": "SCAN requesters USING COVERING INDEX penny_suggestions_blocked"
+        },
+        {
+          "id": 27,
+          "parent": 7,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_public (merged_into_request_id=? AND moderation_state=?)"
+        },
+        {
+          "id": 47,
+          "parent": 7,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 67,
+          "parent": 7,
+          "notused": 53,
+          "detail": "SEARCH author USING AUTOMATIC COVERING INDEX (id=?) LEFT-JOIN"
+        },
+        {
+          "id": 95,
+          "parent": 4,
+          "notused": 94,
+          "detail": "SCAN indexed"
+        },
+        {
+          "id": 110,
+          "parent": 4,
+          "notused": 0,
+          "detail": "USE TEMP B-TREE FOR ORDER BY"
+        },
+        {
+          "id": 122,
+          "parent": 2,
+          "notused": 39,
+          "detail": "SCAN ranked"
+        },
+        {
+          "id": 127,
+          "parent": 2,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 133,
+          "parent": 2,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 145,
+          "parent": 1,
+          "notused": 0,
+          "detail": "UNION ALL"
+        },
+        {
+          "id": 153,
+          "parent": 145,
+          "notused": 216,
+          "detail": "SCAN indexed"
+        },
+        {
+          "id": 157,
+          "parent": 145,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 163,
+          "parent": 145,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        }
+      ],
+      "query": "WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),\n indexed AS MATERIALIZED (SELECT r.id,r.slug,r.terms\n FROM penny_suggestions_public_rows r\n JOIN boards b ON b.id=r.board_id LEFT JOIN blocked author ON author.id=r.author_requester_id\n WHERE \n  r.moderation_state = 'approved'\n  AND r.published_at IS NOT NULL\n  AND r.withdrawn_at IS NULL\n  AND r.merged_into_request_id IS NULL\n  AND r.public_state NOT IN ('unpublished','withdrawn')\n  AND b.visibility = 'public'\n  AND (author.id IS NULL OR author.blocked_at IS NULL)\n AND b.archived_at IS NULL AND r.public_state!='unpublished'), ranked AS (\n SELECT id,(0) AS matches FROM indexed WHERE terms IS NOT NULL ORDER BY matches DESC,slug LIMIT 5\n ), selected AS (\n SELECT id FROM ranked WHERE matches>0 UNION ALL SELECT id FROM indexed WHERE terms IS NULL\n ) SELECT r.id,r.slug,b.show_voters AS showVoters,r.public_title AS title,r.public_description AS description\n FROM selected JOIN requests r ON r.id=selected.id JOIN boards b ON b.id=r.board_id"
+    },
+    {
+      "door": "public",
+      "name": "candidate-terms",
+      "elapsed_ms": 122.37390600000072,
+      "meta": {
+        "served_by": "miniflare.db",
+        "duration": 111,
+        "changes": 0,
+        "last_row_id": 1,
+        "changed_db": false,
+        "size_after": 102363136,
+        "rows_read": 400002,
+        "rows_written": 0
+      },
+      "row_count": 1,
+      "result": [
+        {
+          "rows": 100000,
+          "null_terms": 1
+        }
+      ],
+      "plan": [
+        {
+          "id": 3,
+          "parent": 0,
+          "notused": 0,
+          "detail": "MATERIALIZE indexed"
+        },
+        {
+          "id": 6,
+          "parent": 3,
+          "notused": 0,
+          "detail": "MATERIALIZE blocked"
+        },
+        {
+          "id": 9,
+          "parent": 6,
+          "notused": 203,
+          "detail": "SCAN requesters USING COVERING INDEX penny_suggestions_blocked"
+        },
+        {
+          "id": 23,
+          "parent": 3,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_public (merged_into_request_id=? AND moderation_state=?)"
+        },
+        {
+          "id": 43,
+          "parent": 3,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 63,
+          "parent": 3,
+          "notused": 53,
+          "detail": "SEARCH author USING AUTOMATIC COVERING INDEX (id=?) LEFT-JOIN"
+        },
+        {
+          "id": 90,
+          "parent": 0,
+          "notused": 94,
+          "detail": "SCAN indexed"
+        }
+      ],
+      "query": "WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL), indexed AS MATERIALIZED (SELECT r.id,r.slug,r.terms\n FROM penny_suggestions_public_rows r\n JOIN boards b ON b.id=r.board_id LEFT JOIN blocked author ON author.id=r.author_requester_id\n WHERE \n  r.moderation_state = 'approved'\n  AND r.published_at IS NOT NULL\n  AND r.withdrawn_at IS NULL\n  AND r.merged_into_request_id IS NULL\n  AND r.public_state NOT IN ('unpublished','withdrawn')\n  AND b.visibility = 'public'\n  AND (author.id IS NULL OR author.blocked_at IS NULL)\n AND b.archived_at IS NULL AND r.public_state!='unpublished') SELECT count(*) rows,sum(terms IS NULL) null_terms FROM indexed"
+    },
+    {
+      "door": "operator",
+      "name": "full-query",
+      "elapsed_ms": 83.92488800000137,
+      "meta": {
+        "served_by": "miniflare.db",
+        "duration": 67,
+        "changes": 0,
+        "last_row_id": 1,
+        "changed_db": false,
+        "size_after": 102363136,
+        "rows_read": 500001,
+        "rows_written": 0
+      },
+      "row_count": 1,
+      "result": [
+        {
+          "id": "request-1",
+          "slug": "request-000001",
+          "showVoters": 0,
+          "title": "Export project reports — résumé",
+          "description": "CSV workspace reports"
+        }
+      ],
+      "plan": [
+        {
+          "id": 1,
+          "parent": 0,
+          "notused": 0,
+          "detail": "COMPOUND QUERY"
+        },
+        {
+          "id": 2,
+          "parent": 1,
+          "notused": 0,
+          "detail": "LEFT-MOST SUBQUERY"
+        },
+        {
+          "id": 4,
+          "parent": 2,
+          "notused": 0,
+          "detail": "CO-ROUTINE ranked"
+        },
+        {
+          "id": 7,
+          "parent": 4,
+          "notused": 0,
+          "detail": "MATERIALIZE indexed"
+        },
+        {
+          "id": 12,
+          "parent": 7,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_operator (merged_into_request_id=?)"
+        },
+        {
+          "id": 18,
+          "parent": 7,
+          "notused": 44,
+          "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 35,
+          "parent": 4,
+          "notused": 59,
+          "detail": "SCAN indexed"
+        },
+        {
+          "id": 50,
+          "parent": 4,
+          "notused": 0,
+          "detail": "USE TEMP B-TREE FOR ORDER BY"
+        },
+        {
+          "id": 62,
+          "parent": 2,
+          "notused": 39,
+          "detail": "SCAN ranked"
+        },
+        {
+          "id": 67,
+          "parent": 2,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 73,
+          "parent": 2,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 85,
+          "parent": 1,
+          "notused": 0,
+          "detail": "UNION ALL"
+        },
+        {
+          "id": 93,
+          "parent": 85,
+          "notused": 216,
+          "detail": "SCAN indexed"
+        },
+        {
+          "id": 97,
+          "parent": 85,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 103,
+          "parent": 85,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        }
+      ],
+      "query": "WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),\n indexed AS MATERIALIZED (SELECT r.id,r.slug,r.terms\n FROM penny_suggestions_operator_rows r\n JOIN boards b ON b.id=r.board_id \n WHERE r.merged_into_request_id IS NULL), ranked AS (\n SELECT id,(0) AS matches FROM indexed WHERE terms IS NOT NULL ORDER BY matches DESC,slug LIMIT 5\n ), selected AS (\n SELECT id FROM ranked WHERE matches>0 UNION ALL SELECT id FROM indexed WHERE terms IS NULL\n ) SELECT r.id,r.slug,b.show_voters AS showVoters,r.title AS title,r.description AS description\n FROM selected JOIN requests r ON r.id=selected.id JOIN boards b ON b.id=r.board_id"
+    },
+    {
+      "door": "operator",
+      "name": "candidate-terms",
+      "elapsed_ms": 72.71806999999899,
+      "meta": {
+        "served_by": "miniflare.db",
+        "duration": 62,
+        "changes": 0,
+        "last_row_id": 1,
+        "changed_db": false,
+        "size_after": 102363136,
+        "rows_read": 300000,
+        "rows_written": 0
+      },
+      "row_count": 1,
+      "result": [
+        {
+          "rows": 100000,
+          "null_terms": 1
+        }
+      ],
+      "plan": [
+        {
+          "id": 3,
+          "parent": 0,
+          "notused": 0,
+          "detail": "MATERIALIZE indexed"
+        },
+        {
+          "id": 8,
+          "parent": 3,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_operator (merged_into_request_id=?)"
+        },
+        {
+          "id": 14,
+          "parent": 3,
+          "notused": 44,
+          "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 30,
+          "parent": 0,
+          "notused": 59,
+          "detail": "SCAN indexed"
+        }
+      ],
+      "query": "WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL), indexed AS MATERIALIZED (SELECT r.id,r.slug,r.terms\n FROM penny_suggestions_operator_rows r\n JOIN boards b ON b.id=r.board_id \n WHERE r.merged_into_request_id IS NULL) SELECT count(*) rows,sum(terms IS NULL) null_terms FROM indexed"
+    },
+    {
+      "door": "operator",
+      "name": "null-terms-index-query",
+      "elapsed_ms": 11.5211109999982,
+      "meta": {
+        "served_by": "miniflare.db",
+        "duration": 0,
+        "changes": 0,
+        "last_row_id": 1,
+        "changed_db": false,
+        "size_after": 102363136,
+        "rows_read": 2,
+        "rows_written": 0
+      },
+      "row_count": 1,
+      "result": [
+        {
+          "id": "request-1",
+          "slug": "request-000001"
+        }
+      ],
+      "plan": [
+        {
+          "id": 3,
+          "parent": 0,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_operator (merged_into_request_id=? AND <expr>=?)"
+        }
+      ],
+      "query": "SELECT id,slug FROM penny_suggestions_operator_rows WHERE merged_into_request_id IS NULL AND terms IS NULL"
+    }
+  ],
+  "indexedCounts": {
+    "rows": 100000,
+    "null_terms": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-main-unicode-fix-1",
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "base": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "triage_evidence_ref": "refs/heads/evidence/sd-penny-main-unicode-triage-1",
+  "triage_evidence_head": "fa007b129ec15492b19fe3b4fae33ff67b25061f",
+  "changed_files": [
+    "sources.lock.json",
+    "src/core/features/requests/suggestions.ts"
+  ],
+  "product_push_exit": 0,
+  "pr": null,
+  "clauses_changed": [],
+  "tests_added": 0,
+  "tests_removed": 0,
+  "test_files_changed": 0,
+  "assertions_weakened": 0,
+  "notes": "No publication scan available in this cloud; mandatory exact-tree scan remains a Mac lander gate.",
+  "terminal_status": "BLOCKED",
+  "ci_run_id": 42243440254,
+  "ci_conclusion": "failure",
+  "failed_job_id": 127979480403
+}

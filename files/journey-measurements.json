@@ -1,0 +1,73 @@
+{
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "counts": {
+    "requests": 100000,
+    "boards": 100,
+    "requesters": 250000
+  },
+  "results": [
+    {
+      "door": "public",
+      "workload": "exact",
+      "samples": 25,
+      "p95": 129.2864320000008,
+      "max": 131.10634500000015
+    },
+    {
+      "door": "public",
+      "workload": "partial",
+      "samples": 25,
+      "p95": 107.38763699999981,
+      "max": 110.2575340000003
+    },
+    {
+      "door": "public",
+      "workload": "absent",
+      "samples": 25,
+      "p95": 107.96763699999792,
+      "max": 111.44278800000029
+    },
+    {
+      "door": "public",
+      "workload": "unicode",
+      "samples": 25,
+      "p95": 29.964068999997835,
+      "max": 33.597247000001516
+    },
+    {
+      "door": "operator",
+      "workload": "exact",
+      "samples": 25,
+      "p95": 80.08211200000005,
+      "max": 133.27786099999867
+    },
+    {
+      "door": "operator",
+      "workload": "partial",
+      "samples": 25,
+      "p95": 84.17528999999922,
+      "max": 85.24801700000171
+    },
+    {
+      "door": "operator",
+      "workload": "absent",
+      "samples": 25,
+      "p95": 86.13494799999899,
+      "max": 97.62985900000058
+    },
+    {
+      "door": "operator",
+      "workload": "unicode",
+      "samples": 25,
+      "p95": 16.13312500000029,
+      "max": 16.801719999999477
+    }
+  ],
+  "hardware": {
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "memory": 18882662400
+  },
+  "node": "v22.20.0"
+}

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "pnpm",
+    "run",
+    "verify:base-source"
+  ],
+  "head": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "started": "2026-11-06T15:28:32.174920+00:00",
+  "ended": "2026-11-06T15:28:32.501365+00:00",
+  "elapsed_seconds": 0.3264502499999935,
+  "exit": 0,
+  "log": "base-source.log"
+}

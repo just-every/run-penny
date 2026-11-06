@@ -1,0 +1,21 @@
+{
+  "run_id": 42243440254,
+  "failed_job_id": 127979480403,
+  "conclusion": "failure",
+  "head_sha": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "html_url": "https://github.com/just-every/run-penny/actions/runs/42243440254",
+  "status": "completed",
+  "failed_assertion": "request controls are open",
+  "stack": [
+    "tests/browser/requester-evidence.mjs:34",
+    "tests/browser/requester-repair.mjs:71"
+  ],
+  "actual": null,
+  "expected": "open attribute must be non-null",
+  "scale_journey": "passed all eight workloads and final 500ms assertions before later browser failure",
+  "gh_calls": 5,
+  "failed_job_log_command": "gh run view 42243440254 --repo just-every/run-penny --job 127979480403 --log-failed",
+  "failed_job_log_exit": 0,
+  "rerun_or_dispatch": false,
+  "disposition": "BLOCKED: exact-SHA Verify red; no contract-generator-only exemption"
+}

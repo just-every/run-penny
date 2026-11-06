@@ -1,0 +1,36 @@
+diff --git a/sources.lock.json b/sources.lock.json
+index a05340e..80dc354 100644
+--- a/sources.lock.json
++++ b/sources.lock.json
+@@ -7330,7 +7330,7 @@
+       "executable": false
+     },
+     "src/core/features/requests/suggestions.ts": {
+-      "sha256": "3ba53837c3014c33c95fbf538401ab01cdf0d9fa6288f413ed45c7d4d9f79528",
++      "sha256": "fa4c962ba9ac0dcf04898b1b57a33d4b541b0ce480746fd7e2dc38a062b35517",
+       "executable": false
+     },
+     "src/core/features/requests/ui/attachment-recovery.tsx": {
+diff --git a/src/core/features/requests/suggestions.ts b/src/core/features/requests/suggestions.ts
+index 3d8bd47..24b1913 100644
+--- a/src/core/features/requests/suggestions.ts
++++ b/src/core/features/requests/suggestions.ts
+@@ -14,12 +14,15 @@ export async function requestSuggestions(db:D1Database,title:string,operator=fal
+  // matcher below; ASCII wording cannot match a non-ASCII query term.
+  const asciiTerms=terms.filter(term=>/^[a-z0-9]+$/.test(term))
+  const score=asciiTerms.map(()=>`CASE WHEN instr(terms,?)>0 THEN 1 ELSE 0 END`).join('+')||'0'
+- const query=`WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),
+- indexed AS MATERIALIZED (${candidates}), ranked AS (
++ const selection=asciiTerms.length?`indexed AS MATERIALIZED (${candidates}), ranked AS (
+  SELECT id,(${score}) AS matches FROM indexed WHERE terms IS NOT NULL ORDER BY matches DESC,slug LIMIT 5
+  ), selected AS (
+  SELECT id FROM ranked WHERE matches>0 UNION ALL SELECT id FROM indexed WHERE terms IS NULL
+- ) SELECT r.id,r.slug,b.show_voters AS showVoters,${titleColumn} AS title,${descriptionColumn} AS description
++ )`:`selected AS (${candidates} AND r.terms IS NULL)`
++ // With no ASCII query terms, only NULL-terms wording can match. Filter the
++ // existing view first, without limiting candidates before the whole-term match.
++ const query=`WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),
++ ${selection} SELECT r.id,r.slug,b.show_voters AS showVoters,${titleColumn} AS title,${descriptionColumn} AS description
+  FROM selected JOIN requests r ON r.id=selected.id JOIN boards b ON b.id=r.board_id`
+  const rows=await db.prepare(query).bind(...asciiTerms.map(term=>` ${term} `)).all<{id:string;slug:string;showVoters:number;title:string;description:string}>()
+  return rows.results.map(row=>{const words=new Set(lexicalTerms(`${row.title}\n${row.description}`));return {...(operator?{id:row.id}:{showVoters:!!row.showVoters}),slug:row.slug,title:row.title,description:row.description,matchedTerms:terms.filter(term=>words.has(term))}})

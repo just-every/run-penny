@@ -1,0 +1,21 @@
+{
+  "node": "v22.20.0",
+  "pnpm": "10.12.4",
+  "rer": "0.2.94",
+  "miniflare": "5.20261006.1-alpha",
+  "workerd": "1.20260907.1",
+  "typescript": "6.0.3",
+  "runner": {
+    "platform": "linux",
+    "arch": "x64",
+    "release": "6.18.57",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "logical_cpus": 5,
+    "memory": 18882662400,
+    "cgroup": {
+      "cpu.max": "400000 100000",
+      "memory.max": "17179869184",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0"
+    }
+  }
+}

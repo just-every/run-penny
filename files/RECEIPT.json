@@ -1,0 +1,246 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-main-unicode-fix-1",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-main-unicode-fix-1",
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "checks": [
+    {
+      "file": "base-source-receipt.json",
+      "command": [
+        "pnpm",
+        "run",
+        "verify:base-source"
+      ],
+      "head": "f52beea3be587114d61166d21e4be26777fa96f3",
+      "started": "2026-11-06T15:28:32.174920+00:00",
+      "ended": "2026-11-06T15:28:32.501365+00:00",
+      "elapsed_seconds": 0.3264502499999935,
+      "exit": 0,
+      "log": "base-source.log"
+    },
+    {
+      "file": "build-receipt.json",
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "build"
+      ],
+      "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+      "started": "2026-11-06T15:28:57.536080+00:00",
+      "ended": "2026-11-06T15:29:32.403578+00:00",
+      "elapsed_seconds": 34.86752809699999,
+      "exit": 0,
+      "log": "build.log"
+    },
+    {
+      "file": "candidate-source-check-receipt.json",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+      "started": "2026-11-06T15:31:54.990479+00:00",
+      "ended": "2026-11-06T15:31:55.708936+00:00",
+      "elapsed_seconds": 0.7184642009999607,
+      "exit": 0,
+      "log": "candidate-source-check.log"
+    },
+    {
+      "file": "contract-check-receipt.json",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+      "started": "2026-11-06T15:31:24.942705+00:00",
+      "ended": "2026-11-06T15:31:25.051840+00:00",
+      "elapsed_seconds": 0.10913850999997976,
+      "exit": 0,
+      "log": "contract-check.log"
+    },
+    {
+      "file": "door-check-receipt.json",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/penny-evidence.test.ts",
+        "-t",
+        "deterministic published-only suggestions"
+      ],
+      "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+      "started": "2026-11-06T15:31:07.233803+00:00",
+      "ended": "2026-11-06T15:31:15.661102+00:00",
+      "elapsed_seconds": 8.42730372699998,
+      "exit": 0,
+      "log": "door-check.log"
+    },
+    {
+      "file": "journey-receipt.json",
+      "command": [
+        "node",
+        "tests/runtime/duplicate-suggestions-scale.mjs"
+      ],
+      "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+      "started": "2026-11-06T15:29:42.350050+00:00",
+      "ended": "2026-11-06T15:30:06.325924+00:00",
+      "elapsed_seconds": 23.975880163,
+      "exit": 0,
+      "log": "journey.log"
+    },
+    {
+      "file": "push-receipt.json",
+      "command": [
+        "python3",
+        "/home/agent/rer-consolidation/.tools/cloud-push.py",
+        "origin",
+        "cloud/sd-penny-main-unicode-fix-1"
+      ],
+      "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+      "started": "2026-11-06T15:28:54.713138+00:00",
+      "ended": "2026-11-06T15:28:56.535958+00:00",
+      "elapsed_seconds": 1.8228257170000006,
+      "exit": 0,
+      "log": "push.log"
+    },
+    {
+      "file": "query-probe-receipt.json",
+      "command": [
+        "node",
+        "../packet/query-probe.mjs"
+      ],
+      "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+      "started": "2026-11-06T15:31:15.709474+00:00",
+      "ended": "2026-11-06T15:31:24.907816+00:00",
+      "elapsed_seconds": 9.198348065000005,
+      "exit": 0,
+      "log": "query-probe.log"
+    },
+    {
+      "file": "setup-receipt.json",
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "node": "22.20.0",
+      "pnpm": "10.12.4",
+      "notes": "Setup builds, applies migrations and stops its own temporary server. No remote provider setup."
+    },
+    {
+      "file": "source-check-receipt.json",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "head": "f52beea3be587114d61166d21e4be26777fa96f3",
+      "started": "2026-11-06T15:28:31.464176+00:00",
+      "ended": "2026-11-06T15:28:32.148272+00:00",
+      "elapsed_seconds": 0.6841027380000355,
+      "exit": 0,
+      "log": "source-check.log"
+    },
+    {
+      "file": "source-lock-receipt.json",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "lock"
+      ],
+      "head": "f52beea3be587114d61166d21e4be26777fa96f3",
+      "started": "2026-11-06T15:28:30.790373+00:00",
+      "ended": "2026-11-06T15:28:31.434745+00:00",
+      "elapsed_seconds": 0.6443792759999951,
+      "exit": 0,
+      "log": "source-lock.log"
+    },
+    {
+      "file": "typecheck-receipt.json",
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+      "started": "2026-11-06T15:30:38.817275+00:00",
+      "ended": "2026-11-06T15:31:07.183340+00:00",
+      "elapsed_seconds": 28.366070854000043,
+      "exit": 0,
+      "log": "typecheck.log"
+    }
+  ],
+  "ci": {
+    "run_id": 42243440254,
+    "failed_job_id": 127979480403,
+    "conclusion": "failure",
+    "head_sha": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42243440254",
+    "status": "completed",
+    "failed_assertion": "request controls are open",
+    "stack": [
+      "tests/browser/requester-evidence.mjs:34",
+      "tests/browser/requester-repair.mjs:71"
+    ],
+    "actual": null,
+    "expected": "open attribute must be non-null",
+    "scale_journey": "passed all eight workloads and final 500ms assertions before later browser failure",
+    "gh_calls": 5,
+    "failed_job_log_command": "gh run view 42243440254 --repo just-every/run-penny --job 127979480403 --log-failed",
+    "failed_job_log_exit": 0,
+    "rerun_or_dispatch": false,
+    "disposition": "BLOCKED: exact-SHA Verify red; no contract-generator-only exemption"
+  },
+  "clause_changes": [],
+  "counts_before_after": {
+    "requests": [
+      100000,
+      100000
+    ],
+    "boards": [
+      100,
+      100
+    ],
+    "requesters": [
+      250000,
+      250000
+    ],
+    "published_done": [
+      59,
+      59
+    ],
+    "published_partial": [
+      56,
+      56
+    ],
+    "published_missing": [
+      1,
+      1
+    ],
+    "all_done": [
+      79,
+      79
+    ],
+    "all_partial": [
+      124,
+      124
+    ],
+    "all_missing": [
+      78,
+      78
+    ],
+    "clauses_total": [
+      281,
+      281
+    ],
+    "tests_added": 0,
+    "tests_removed": 0,
+    "test_files_changed": 0
+  },
+  "outcome": "BLOCKED",
+  "blocked_reason": "Exact-SHA Verify 42243440254/job127979480403: requester-repair request controls disclosure assertion, outside suggestions-only lease; scale passes both local and CI."
+}

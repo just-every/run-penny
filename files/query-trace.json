@@ -1,0 +1,115 @@
+{
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "counts": {
+    "requests": 100000,
+    "boards": 100,
+    "requesters": 250000
+  },
+  "scope": "One execution per door of exact source function against unchanged full corpus; supplementary query-cost evidence, not endpoint timing proof",
+  "queries": [
+    {
+      "door": "public",
+      "query": "WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),\n selected AS (SELECT r.id,r.slug,r.terms\n FROM penny_suggestions_public_rows r\n JOIN boards b ON b.id=r.board_id LEFT JOIN blocked author ON author.id=r.author_requester_id\n WHERE \n  r.moderation_state = 'approved'\n  AND r.published_at IS NOT NULL\n  AND r.withdrawn_at IS NULL\n  AND r.merged_into_request_id IS NULL\n  AND r.public_state NOT IN ('unpublished','withdrawn')\n  AND b.visibility = 'public'\n  AND (author.id IS NULL OR author.blocked_at IS NULL)\n AND b.archived_at IS NULL AND r.public_state!='unpublished' AND r.terms IS NULL) SELECT r.id,r.slug,b.show_voters AS showVoters,r.public_title AS title,r.public_description AS description\n FROM selected JOIN requests r ON r.id=selected.id JOIN boards b ON b.id=r.board_id",
+      "bindings": [],
+      "plan": [
+        {
+          "id": 3,
+          "parent": 0,
+          "notused": 0,
+          "detail": "MATERIALIZE blocked"
+        },
+        {
+          "id": 6,
+          "parent": 3,
+          "notused": 203,
+          "detail": "SCAN requesters USING COVERING INDEX penny_suggestions_blocked"
+        },
+        {
+          "id": 23,
+          "parent": 0,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_public (merged_into_request_id=? AND moderation_state=?)"
+        },
+        {
+          "id": 45,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 65,
+          "parent": 0,
+          "notused": 53,
+          "detail": "SEARCH author USING AUTOMATIC COVERING INDEX (id=?) LEFT-JOIN"
+        },
+        {
+          "id": 76,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 81,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        }
+      ],
+      "meta": {
+        "served_by": "miniflare.db",
+        "duration": 22,
+        "changes": 0,
+        "last_row_id": 100000,
+        "changed_db": false,
+        "size_after": 102363136,
+        "rows_read": 100006,
+        "rows_written": 0
+      },
+      "elapsed_ms": 28.474506000000474,
+      "rows": 1
+    },
+    {
+      "door": "operator",
+      "query": "WITH blocked AS MATERIALIZED (SELECT id,blocked_at FROM requesters WHERE blocked_at IS NOT NULL),\n selected AS (SELECT r.id,r.slug,r.terms\n FROM penny_suggestions_operator_rows r\n JOIN boards b ON b.id=r.board_id \n WHERE r.merged_into_request_id IS NULL AND r.terms IS NULL) SELECT r.id,r.slug,b.show_voters AS showVoters,r.title AS title,r.description AS description\n FROM selected JOIN requests r ON r.id=selected.id JOIN boards b ON b.id=r.board_id",
+      "bindings": [],
+      "plan": [
+        {
+          "id": 10,
+          "parent": 0,
+          "notused": 60,
+          "detail": "SEARCH requests USING COVERING INDEX penny_suggestions_operator (merged_into_request_id=? AND <expr>=?)"
+        },
+        {
+          "id": 17,
+          "parent": 0,
+          "notused": 44,
+          "detail": "SEARCH b USING COVERING INDEX sqlite_autoindex_boards_1 (id=?)"
+        },
+        {
+          "id": 21,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH r USING INDEX sqlite_autoindex_requests_1 (id=?)"
+        },
+        {
+          "id": 26,
+          "parent": 0,
+          "notused": 46,
+          "detail": "SEARCH b USING INDEX sqlite_autoindex_boards_1 (id=?)"
+        }
+      ],
+      "meta": {
+        "served_by": "miniflare.db",
+        "duration": 1,
+        "changes": 0,
+        "last_row_id": 100000,
+        "changed_db": false,
+        "size_after": 102363136,
+        "rows_read": 5,
+        "rows_written": 0
+      },
+      "elapsed_ms": 7.340017999998963,
+      "rows": 1
+    }
+  ]
+}

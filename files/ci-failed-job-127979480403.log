@@ -1,0 +1,1205 @@
+shards (requester-board, true)	Run this shard	﻿2026-11-06T15:30:04.5599789Z ##[group]Run node scripts/verify-ci.mjs "$SHARD"
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5600165Z [36;1mnode scripts/verify-ci.mjs "$SHARD"[0m
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5611543Z shell: /usr/bin/bash -e {0}
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5611808Z env:
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5611999Z   CI: true
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5612339Z   WRANGLER_SEND_METRICS: false
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5612618Z   CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV: false
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5612940Z   PLAYWRIGHT_SKIP_BROWSER_GC: 1
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5613197Z   SHARD: requester-board
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5613434Z ##[endgroup]
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.5895200Z > pnpm run verify:app
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.8365808Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.8366450Z > penny@0.2.2 verify:app /home/runner/work/run-penny/run-penny
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.8367054Z > node scripts/verify-app.mjs
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.8367251Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:04.8636470Z > pnpm run build
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:05.1051828Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:05.1052830Z > penny@0.2.2 build /home/runner/work/run-penny/run-penny
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:05.1053434Z > rer build
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:05.1053764Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:05.6706412Z Checking pinned pnpm
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:05.8997902Z 10.12.4
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:05.9697726Z Building your application
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:42.0319749Z (node:3404) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:42.0320472Z (Use `node --trace-warnings ...` to show where the warning was created)
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:42.6875801Z vite v8.2.2 building client environment for production...
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:42.7002427Z transforming...
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.2841147Z ✓ 956 modules transformed.
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.3846282Z rendering chunks...
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5228324Z computing gzip size...
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5286254Z dist/client/.assetsignore                                      0.02 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5288037Z dist/client/assets/app-B0M2xxCW.css                           10.11 kB │ gzip:   2.27 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5303999Z dist/client/assets/DocsRoutes-DWuQYGRn.css                    18.34 kB │ gzip:   4.11 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5305583Z dist/client/assets/index-BA-wZsVN.css                         64.04 kB │ gzip:  12.39 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5307024Z dist/client/assets/app.customers-BwDufS0k.js                   0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5308506Z dist/client/assets/app.decisions-BwDufS0k.js                   0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5318760Z dist/client/assets/app.releases-BwDufS0k.js                    0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5320337Z dist/client/assets/app.customers._accountSlug-hRgaxDlU.js      0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5321910Z dist/client/assets/app.customers.index-B1ex1cI6.js             0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5323442Z dist/client/assets/app.index-D0K4wkvy.js                       0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5324848Z dist/client/assets/app.overview-D0K4wkvy.js                    0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5325943Z dist/client/assets/app.releases._releaseSlug-BbFs7QVz.js       0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5335891Z dist/client/assets/app.releases.index-CKrWy-Pm.js              0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5337595Z dist/client/assets/app.decisions._decisionSlug-Dej8DSD8.js     0.07 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5338835Z dist/client/assets/app.decisions.index-DSCqq0a4.js             0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5340012Z dist/client/assets/docs._slug-wSot1yxu.js                      0.07 kB │ gzip:   0.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5341113Z dist/client/assets/docs.index-CcN_WLJF.js                      0.07 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5342220Z dist/client/assets/portal-BPLJB5hJ.js                          0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5343453Z dist/client/assets/portal.feedback-BPLJB5hJ.js                 0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5344451Z dist/client/assets/portal.roadmap-BPLJB5hJ.js                  0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5345153Z dist/client/assets/portal.updates-BPLJB5hJ.js                  0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5346150Z dist/client/assets/app.customers.index-DW3Oa9cl.js             0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5347040Z dist/client/assets/app.decisions-DW3Oa9cl.js                   0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5347959Z dist/client/assets/app.decisions.index-DW3Oa9cl.js             0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5348651Z dist/client/assets/app.feedback-DW3Oa9cl.js                    0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5349328Z dist/client/assets/app.index-DW3Oa9cl.js                       0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5349999Z dist/client/assets/app.moderation-DW3Oa9cl.js                  0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5350678Z dist/client/assets/app.overview-DW3Oa9cl.js                    0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5351361Z dist/client/assets/app.releases.index-DW3Oa9cl.js              0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5352080Z dist/client/assets/app.roadmap-DW3Oa9cl.js                     0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5353026Z dist/client/assets/app.search-DW3Oa9cl.js                      0.08 kB │ gzip:   0.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5353712Z dist/client/assets/utils-BpQCHKf-.js                           0.11 kB │ gzip:   0.12 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5354386Z dist/client/assets/matchContext-3_qaq2Nv.js                    0.14 kB │ gzip:   0.12 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5355078Z dist/client/assets/public-landing-BHkxKxVh.js                  0.14 kB │ gzip:   0.14 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5355750Z dist/client/assets/root-CDpNo7ef.js                            0.14 kB │ gzip:   0.12 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5356505Z dist/client/assets/hydrated-BVYr95eC.js                        0.15 kB │ gzip:   0.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5357618Z dist/client/assets/public-format-Dviu6xdB.js                   0.18 kB │ gzip:   0.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5358288Z dist/client/assets/relay-BiI_lOnB.js                           0.20 kB │ gzip:   0.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5358983Z dist/client/assets/portal.feedback._requestSlug-BkuGDpJL.js    0.26 kB │ gzip:   0.21 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5359859Z dist/client/assets/portal.updates._releaseSlug-B8zONwEp.js     0.26 kB │ gzip:   0.21 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5360567Z dist/client/assets/portal.updates.index-DxOc9I-I.js            0.26 kB │ gzip:   0.21 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5361276Z dist/client/assets/portal.feedback.index-02YHZmRw.js           0.26 kB │ gzip:   0.21 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5361951Z dist/client/assets/routes-02YHZmRw.js                          0.26 kB │ gzip:   0.21 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5362637Z dist/client/assets/requester-return-BpSBu9Ym.js                0.27 kB │ gzip:   0.19 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5363508Z dist/client/assets/operator-client--4AF5xS7.js                 0.29 kB │ gzip:   0.24 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5364341Z dist/client/assets/fold-open-when-empty-CNe3vpA1.js            0.31 kB │ gzip:   0.25 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5365030Z dist/client/assets/ui-types-CLPOUCWa.js                        0.34 kB │ gzip:   0.20 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5365717Z dist/client/assets/redirect-DmtLUW0N.js                        0.38 kB │ gzip:   0.25 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5366567Z dist/client/assets/operator-options-state-4q1AQKZd.js          0.40 kB │ gzip:   0.28 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5367510Z dist/client/assets/SectionHeading-JA7OJ68x.js                  0.42 kB │ gzip:   0.28 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5368228Z dist/client/assets/form-classes-7ElMS555.js                    0.46 kB │ gzip:   0.24 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5368925Z dist/client/assets/requester-client-CEgC2nJM.js                0.47 kB │ gzip:   0.34 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5369627Z dist/client/assets/portal-back-link-poi2DyWm.js                0.47 kB │ gzip:   0.32 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5370417Z dist/client/assets/public-detail-routes-eN7_ANpn.js            0.48 kB │ gzip:   0.27 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5371263Z dist/client/assets/resource-request-BXng5Z7n.js                0.53 kB │ gzip:   0.31 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5372124Z dist/client/assets/workspace-link-DKOhrt8q.js                  0.55 kB │ gzip:   0.37 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5372813Z dist/client/assets/useMatch-CKU2Edh2.js                        0.58 kB │ gzip:   0.37 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5373504Z dist/client/assets/maintenance-notice-CfX44yJV.js              0.65 kB │ gzip:   0.42 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5374811Z dist/client/assets/DataField-IT0nQjb4.js                       0.68 kB │ gzip:   0.42 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5375895Z dist/client/assets/public-roadmap-releases-DAxmCinV.js         0.69 kB │ gzip:   0.41 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5376609Z dist/client/assets/list-query-refusal-Crl9aeLw.js              0.78 kB │ gzip:   0.46 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5377548Z dist/client/assets/SectionCard-D04uMrDP.js                     0.83 kB │ gzip:   0.45 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5378228Z dist/client/assets/app-DKUPhB9X.js                             0.84 kB │ gzip:   0.49 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5378904Z dist/client/assets/delivery-counts-BN3wpjMj.js                 0.87 kB │ gzip:   0.55 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5379741Z dist/client/assets/PageTitle-ErK-y7z_.js                       1.01 kB │ gzip:   0.52 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5380448Z dist/client/assets/Stroke-DbsmwQcO.js                          1.07 kB │ gzip:   0.67 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5381255Z dist/client/assets/public-resource-DrPks5R5.js                 1.12 kB │ gzip:   0.62 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5381950Z dist/client/assets/portal-classes-wjonY3MU.js                  1.15 kB │ gzip:   0.54 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5382646Z dist/client/assets/DisclosureRow-Cm-Xnr86.js                   1.37 kB │ gzip:   0.58 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5383321Z dist/client/assets/Chip-YNwZ1BZY.js                            1.50 kB │ gzip:   0.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5384122Z dist/client/assets/action-message-U-xOoZgI.js                  1.55 kB │ gzip:   0.70 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5384923Z dist/client/assets/failure-hint-BYu0DbLz.js                    1.57 kB │ gzip:   0.65 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5385609Z dist/client/assets/_virtual_penny-docs-BCs79L9A.js             1.74 kB │ gzip:   0.73 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5386326Z dist/client/assets/operator-primitives-BB09MDCk.js             1.95 kB │ gzip:   0.86 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5387234Z dist/client/assets/getting-started-CurBicov.js                 2.03 kB │ gzip:   1.05 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5388141Z dist/client/assets/portal.roadmap._roadmapSlug-DVfxyTAn.js     2.25 kB │ gzip:   0.96 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5388853Z dist/client/assets/owner-control-H57Z83ZD.js                   2.34 kB │ gzip:   1.10 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5389544Z dist/client/assets/client-mutations-CZW3kBGV.js                2.39 kB │ gzip:   1.10 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5390229Z dist/client/assets/classes-SZpZ5zVi.js                         2.63 kB │ gzip:   0.91 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5390896Z dist/client/assets/portal.verify-BnaLe6Xa.js                   3.54 kB │ gzip:   1.56 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5391579Z dist/client/assets/loop-form-C3qD0Md4.js                       3.62 kB │ gzip:   1.78 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5392394Z dist/client/assets/custom-fields-editor-D4hwtkHV.js            3.65 kB │ gzip:   1.45 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5393284Z dist/client/assets/draft-panel-DDIiWuc3.js                     3.73 kB │ gzip:   1.59 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5394089Z dist/client/assets/app.search-C8Ck5Tkw.js                      4.23 kB │ gzip:   1.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5394953Z dist/client/assets/aging-panel-B213eKSt.js                     4.26 kB │ gzip:   1.72 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5395740Z dist/client/assets/Icon-Bdj1-S6x.js                            4.27 kB │ gzip:   1.85 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5396508Z dist/client/assets/list-controls-BeIABRuQ.js                   4.35 kB │ gzip:   1.71 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5397530Z dist/client/assets/workspace-clock-settings-2I1JScL5.js        4.51 kB │ gzip:   1.90 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5398672Z dist/client/assets/operator-page-header-CafzzaD5.js            4.54 kB │ gzip:   1.83 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5399516Z dist/client/assets/operator-resource-state-BrS1NItA.js         4.89 kB │ gzip:   1.92 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5400846Z dist/client/assets/tracker-actions-N7ZyuTj2.js                 5.20 kB │ gzip:   1.90 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5401692Z dist/client/assets/portal.roadmap.index-DUe9KZ60.js            5.43 kB │ gzip:   1.81 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5402684Z dist/client/assets/weekly-summary-BYduormy.js                  5.63 kB │ gzip:   1.94 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5403493Z dist/client/assets/app.ask-BWKYivKG.js                         6.04 kB │ gzip:   2.27 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5404406Z dist/client/assets/evidence-actions-CZL83nJz.js                6.28 kB │ gzip:   2.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5405166Z dist/client/assets/app.features-u5OMWisC.js                    6.35 kB │ gzip:   2.30 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5406274Z dist/client/assets/status-drafts-CSGvhZ0X.js                   6.62 kB │ gzip:   2.35 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5407215Z dist/client/assets/browser-capture-BYFU8k0m.js                 6.82 kB │ gzip:   2.84 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5407986Z dist/client/assets/requester-actions-F6-DqFtZ.js               6.82 kB │ gzip:   2.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5409050Z dist/client/assets/tag-editor-BH_ADuvv.js                      7.25 kB │ gzip:   2.58 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5409797Z dist/client/assets/page-BnIqbhDr.js                            7.65 kB │ gzip:   2.94 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5410601Z dist/client/assets/portal.feedback.activity-BOoAuecY.js        8.57 kB │ gzip:   2.51 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5411538Z dist/client/assets/signin-WAnqe6-E.js                          8.71 kB │ gzip:   3.45 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5412467Z dist/client/assets/public-release-pages-CknVpt5Q.js            8.74 kB │ gzip:   2.92 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5413303Z dist/client/assets/public-portal-layout-DHj8JU5m.js            8.91 kB │ gzip:   3.40 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5414223Z dist/client/assets/DocsRoutes-D6uSLBmi.js                      9.16 kB │ gzip:   2.87 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5415182Z dist/client/assets/link-BiuQ-uIj.js                            9.17 kB │ gzip:   4.23 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5415922Z dist/client/assets/agents-DuKtESHQ.js                          9.22 kB │ gzip:   2.97 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5416854Z dist/client/assets/app-5Ze0aQYb.js                             9.31 kB │ gzip:   3.38 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5417992Z dist/client/assets/useSelector-C-dqHmFk.js                    11.18 kB │ gzip:   4.19 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5418772Z dist/client/assets/app.prioritisation-B5PHvjYY.js             11.23 kB │ gzip:   3.85 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5419757Z dist/client/assets/portal.feedback.new-ZHLBtvDB.js            11.62 kB │ gzip:   4.01 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5420632Z dist/client/assets/customise-C7pgDQZQ.js                      12.46 kB │ gzip:   4.76 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5421489Z dist/client/assets/public-feedback-pages-D8iR_c3V.js          12.54 kB │ gzip:   3.55 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5422241Z dist/client/assets/data-B8L6eqHY.js                           13.11 kB │ gzip:   4.79 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5423212Z dist/client/assets/app.browser-capture-JLYRWbn_.js            14.52 kB │ gzip:   5.00 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5424029Z dist/client/assets/portal-VzLD6XO_.js                         14.58 kB │ gzip:   5.40 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5424779Z dist/client/assets/overview-BJ4eVjbU.js                       15.09 kB │ gzip:   4.43 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5425798Z dist/client/assets/accounts-dgLrDyDj.js                       16.80 kB │ gzip:   4.66 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5426591Z dist/client/assets/app.roadmap-B6xgr2tp.js                    17.64 kB │ gzip:   5.34 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5427807Z dist/client/assets/app.feedback-DmPkQda1.js                   18.64 kB │ gzip:   5.53 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5428762Z dist/client/assets/install-DZ2yotof.js                        19.28 kB │ gzip:   7.47 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5429592Z dist/client/assets/decisions-BXxPzxbb.js                      19.59 kB │ gzip:   7.07 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5430393Z dist/client/assets/email-BxGTE8iz.js                          20.40 kB │ gzip:   7.56 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5431282Z dist/client/assets/decisions--4HXr5vR.js                      25.36 kB │ gzip:   6.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5432318Z dist/client/assets/releases-OUd_0hT8.js                       25.80 kB │ gzip:   6.98 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5433323Z dist/client/assets/app.learning-D5IncxGW.js                   38.90 kB │ gzip:  11.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5434315Z dist/client/assets/app.moderation-CuYhoOdI.js                 42.34 kB │ gzip:  11.51 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5435205Z dist/client/assets/schemas-CaincDXf.js                        89.50 kB │ gzip:  25.29 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5436048Z dist/client/assets/app.data-Ce0DxsJ8.js                      100.60 kB │ gzip:  29.81 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5437048Z dist/client/assets/release-markdown-BwCuHQJc.js              111.01 kB │ gzip:  34.78 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5438159Z dist/client/assets/app.settings-BTx-wGeM.js                  118.85 kB │ gzip:  29.55 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5438954Z dist/client/assets/index-FNwRIh6l.js                         407.43 kB │ gzip: 131.71 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.5439315Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.6145645Z ✓ built in 1.93s
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.6146847Z vite v8.2.2 building ssr environment for production...
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:44.6301046Z transforming...
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.0858104Z ✓ 2017 modules transformed.
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.2747342Z rendering chunks...
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5508225Z computing gzip size...
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5920409Z dist/server/wrangler.json                                                   1.79 kB │ gzip:   0.87 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5922199Z dist/server/.vite/manifest.json                                            93.36 kB │ gzip:  12.11 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5934761Z dist/server/assets/CoinMark-B2D7Eivn.css                                    0.35 kB │ gzip:   0.18 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5936523Z dist/server/assets/app-B0M2xxCW.css                                        10.11 kB │ gzip:   2.27 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5938287Z dist/server/assets/DocsRoutes-DWuQYGRn.css                                 18.34 kB │ gzip:   4.11 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5939945Z dist/server/assets/router-D-bpFhnk.css                                     63.69 kB │ gzip:  12.29 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5942664Z dist/server/assets/app.releases-XQi3DCKs.js                                 0.19 kB │ gzip:   0.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5944655Z dist/server/assets/app.customers-BXmy0j6b.js                                0.19 kB │ gzip:   0.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5946298Z dist/server/assets/app.decisions-ns0l9J86.js                                0.19 kB │ gzip:   0.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5948247Z dist/server/assets/app.index-Bhv-U9JZ.js                                    0.20 kB │ gzip:   0.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5949944Z dist/server/assets/app.overview-D7OpOmUG.js                                 0.20 kB │ gzip:   0.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5951700Z dist/server/assets/app.releases.index-BNfSH3Kq.js                           0.21 kB │ gzip:   0.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5953494Z dist/server/assets/app.customers.index-RiZM-k7X.js                          0.21 kB │ gzip:   0.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5955221Z dist/server/assets/portal-BLcbuEGQ.js                                       0.21 kB │ gzip:   0.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5956633Z dist/server/assets/branding-BT3ua4Qq.js                                     0.22 kB │ gzip:   0.18 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5958561Z dist/server/assets/app.decisions.index-DIvfBq39.js                          0.22 kB │ gzip:   0.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5960386Z dist/server/assets/portal.roadmap-BSN2F9Hu.js                               0.22 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5962204Z dist/server/assets/portal.updates-bPety-Z9.js                               0.22 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5963734Z dist/server/assets/portal.feedback-CuMpwghr.js                              0.22 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5965441Z dist/server/assets/app.releases._releaseSlug-wwST3EBK.js                    0.23 kB │ gzip:   0.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5967519Z dist/server/assets/app.customers._accountSlug-BgVdf6h_.js                   0.23 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5969613Z dist/server/assets/app.decisions._decisionSlug-DfTSGs2E.js                  0.23 kB │ gzip:   0.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5989234Z dist/server/assets/app.index-DUY46P0q.js                                    0.24 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5991372Z dist/server/assets/app.search-CpFw3Ces.js                                   0.24 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5992993Z dist/server/assets/app.roadmap-CfzvQxrW.js                                  0.24 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5994758Z dist/server/assets/app.feedback-DEae1LKK.js                                 0.24 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5996254Z dist/server/assets/app.overview-BO5_vU5_.js                                 0.24 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.5998404Z dist/server/assets/app.decisions-c6LN5erP.js                                0.24 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6000184Z dist/server/assets/app.moderation-BTYhSRez.js                               0.24 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6002039Z dist/server/assets/app.releases.index-CX7yJaDn.js                           0.25 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6003829Z dist/server/assets/app.customers.index-DVOF0wUG.js                          0.25 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6005608Z dist/server/assets/app.decisions.index-BkjT0bpm.js                          0.25 kB │ gzip:   0.17 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6007502Z dist/server/assets/empty-plugin-adapters-D_0twvAa.js                        0.28 kB │ gzip:   0.18 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6009130Z dist/server/assets/start-Cfzuoyj8.js                                        0.28 kB │ gzip:   0.21 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6010903Z dist/server/assets/extension-config-Cgo_P-l0.js                             0.31 kB │ gzip:   0.21 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6012505Z dist/server/assets/docs._slug-DD1J-mFK.js                                   0.33 kB │ gzip:   0.24 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6014029Z dist/server/assets/public-format-BUSUDH7L.js                                0.34 kB │ gzip:   0.24 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6015841Z dist/server/assets/0049_dependency_approval-CwtPlbVp.js                     0.35 kB │ gzip:   0.23 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6017657Z dist/server/assets/0046_idp_owner-CJqQacj0.js                               0.35 kB │ gzip:   0.24 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6019851Z dist/server/assets/public-landing-Yr9TbKpd.js                               0.37 kB │ gzip:   0.25 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6021187Z dist/server/assets/docs.index-BauVoP7z.js                                   0.38 kB │ gzip:   0.27 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6022582Z dist/server/assets/relay-CzS6a0tR.js                                        0.39 kB │ gzip:   0.25 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6023975Z dist/server/assets/0091_email_capture_provenance-C4PuXq7o.js                0.41 kB │ gzip:   0.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6025555Z dist/server/assets/0033_decision_review_completion-CvUWDcQw.js              0.41 kB │ gzip:   0.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6027310Z dist/server/assets/0016_restored_notification_hold-BU6l7RrD.js              0.43 kB │ gzip:   0.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6028906Z dist/server/assets/createServerRpc-clVF8hjL.js                              0.45 kB │ gzip:   0.29 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6030383Z dist/server/assets/0003_opaque_native_request_slugs-Bi6EbGpi.js             0.47 kB │ gzip:   0.31 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6031936Z dist/server/assets/0097_discord_source_checks-DF3asYU3.js                   0.47 kB │ gzip:   0.28 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6033552Z dist/server/assets/matchContext-CpPLY1ki.js                                 0.49 kB │ gzip:   0.27 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6035047Z dist/server/assets/0105_agent_identity_custody-IAt0ZhOw.js                  0.49 kB │ gzip:   0.33 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6036662Z dist/server/assets/0090_evidence_redaction-DT7ZUexw.js                      0.49 kB │ gzip:   0.28 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6038387Z dist/server/assets/requester-return-BdmTE1Ab.js                             0.51 kB │ gzip:   0.29 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6040092Z dist/server/assets/0047_provider_pins-QXpTebbz.js                           0.51 kB │ gzip:   0.32 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6041654Z dist/server/assets/operator-client-Bu4k7nPu.js                              0.53 kB │ gzip:   0.35 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6043395Z dist/server/assets/0036_feedback_source_erasure-DZMg777d.js                 0.56 kB │ gzip:   0.33 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6044932Z dist/server/assets/0102_business_people-BYprZBcT.js                         0.56 kB │ gzip:   0.28 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6047819Z dist/server/assets/utils-D0vioRNL.js                                        0.57 kB │ gzip:   0.36 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6049706Z dist/server/assets/hydrated-CQ89KeBF.js                                     0.60 kB │ gzip:   0.39 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6051463Z dist/server/assets/0108_ai_answers-Ngn46hny.js                              0.60 kB │ gzip:   0.34 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6053204Z dist/server/assets/0094_dependency_keys_sealed-Brhd_SSJ.js                  0.61 kB │ gzip:   0.35 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6055024Z dist/server/assets/ui-types-Cvc3VL11.js                                     0.61 kB │ gzip:   0.30 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6056804Z dist/server/assets/0089_requester_oauth-DNC4L_Ef.js                         0.63 kB │ gzip:   0.32 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6058654Z dist/server/assets/0083_prioritisation_views-DVm7eFyq.js                    0.64 kB │ gzip:   0.33 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6060372Z dist/server/assets/0072_workspace_clock-0KuAfu7A.js                         0.66 kB │ gzip:   0.35 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6062142Z dist/server/assets/0104_agent_custody_fence-R-fZ6532.js                     0.70 kB │ gzip:   0.40 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6063845Z dist/server/assets/0088_email_capture-B97IDCxP.js                           0.73 kB │ gzip:   0.35 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6065381Z dist/server/assets/portal.updates.index-BuSOjVHi.js                         0.74 kB │ gzip:   0.40 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6067395Z dist/server/assets/portal.updates._releaseSlug-CF85E1oS.js                  0.76 kB │ gzip:   0.41 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6068955Z dist/server/assets/portal.feedback._requestSlug-DyyZqRSs.js                 0.77 kB │ gzip:   0.41 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6070613Z dist/server/assets/requester-client-DD1xIIen.js                             0.81 kB │ gzip:   0.46 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6072526Z dist/server/assets/SectionHeading-B8FM2tIc.js                               0.81 kB │ gzip:   0.45 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6073365Z dist/server/assets/0027_first_run-CyIxjXhU.js                               0.84 kB │ gzip:   0.52 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6074271Z dist/server/assets/routes-Cyd50Hvf.js                                       0.85 kB │ gzip:   0.46 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6075101Z dist/server/assets/0051_operator_management-DePQk8_O.js                     0.85 kB │ gzip:   0.49 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6075977Z dist/server/assets/0078_import_status_custody-CUDZcY9i.js                   0.86 kB │ gzip:   0.32 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6076860Z dist/server/assets/font-head-CjIsrApy.js                                    0.87 kB │ gzip:   0.54 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6078533Z dist/server/assets/portal.feedback.index-DyWoT7IE.js                        0.87 kB │ gzip:   0.48 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6080338Z dist/server/assets/0029_dev_minted_api_tokens-Bs7r2689.js                   0.88 kB │ gzip:   0.54 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6082303Z dist/server/assets/portal-back-link-CN8pvZ1N.js                             0.88 kB │ gzip:   0.50 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6084141Z dist/server/assets/0018_owner_claim-BrJ98RWr.js                             0.89 kB │ gzip:   0.47 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6085886Z dist/server/assets/operator-options-state-BYiRNBQG.js                       0.90 kB │ gzip:   0.42 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6087743Z dist/server/assets/0041_legacy_outbox_visible_state-BPsDmcej.js             0.91 kB │ gzip:   0.51 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6089290Z dist/server/assets/useLocation-B7brgVO6.js                                  0.92 kB │ gzip:   0.51 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6090869Z dist/server/assets/fold-open-when-empty-BpLBQ4EU.js                         0.92 kB │ gzip:   0.54 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6092690Z dist/server/assets/form-classes-OLfwPCgF.js                                 0.94 kB │ gzip:   0.48 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6094235Z dist/server/assets/status-sql-LcxDa4cd.js                                   0.97 kB │ gzip:   0.41 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6095855Z dist/server/assets/public-detail-routes-DV6UCiEV.js                         0.97 kB │ gzip:   0.41 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6097552Z dist/server/assets/config-CVn-bPzK.js                                       0.97 kB │ gzip:   0.53 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6099051Z dist/server/assets/0045_dependencies-CpE1n9FI.js                            1.01 kB │ gzip:   0.40 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6100700Z dist/server/assets/0086_scheduled_publications-B1y8ribe.js                  1.05 kB │ gzip:   0.46 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6102361Z dist/server/assets/workspace-link-Bgw3wR8Z.js                               1.06 kB │ gzip:   0.55 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6103961Z dist/server/assets/useSearch-0fL_bXFJ.js                                    1.09 kB │ gzip:   0.58 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6105586Z dist/server/assets/0087_ai_configuration-D_rsaxjA.js                        1.11 kB │ gzip:   0.48 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6107260Z dist/server/assets/resource-request-Com-APDQ.js                             1.13 kB │ gzip:   0.53 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6108628Z dist/server/assets/0076_roadmap_public_eta-BRM0Vb-g.js                      1.13 kB │ gzip:   0.53 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6109980Z dist/server/assets/useNavigate-RmmA-sAZ.js                                  1.13 kB │ gzip:   0.62 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6111343Z dist/server/assets/useParams-B7G0mfc5.js                                    1.14 kB │ gzip:   0.60 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6112719Z dist/server/assets/0071_author_publication_permission-CwLoMSzS.js           1.15 kB │ gzip:   0.57 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6114283Z dist/server/assets/0062_data_runner_claims-Ben4US9Q.js                      1.18 kB │ gzip:   0.57 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6115594Z dist/server/assets/root-9EyTSWnO.js                                         1.18 kB │ gzip:   0.57 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6117212Z dist/server/assets/request-context.server-BT0pSdhH.js                       1.25 kB │ gzip:   0.58 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6118709Z dist/server/assets/0101_business_settings-DitRLlYI.js                       1.25 kB │ gzip:   0.53 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6120199Z dist/server/assets/public-roadmap-releases-DXiVYwJq.js                      1.27 kB │ gzip:   0.59 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6121730Z dist/server/assets/maintenance-notice-Bb7Xni5E.js                           1.30 kB │ gzip:   0.64 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6123233Z dist/server/assets/0048_dependency_setup-DwN9WdQ5.js                        1.33 kB │ gzip:   0.65 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6124799Z dist/server/assets/admission-CPVQHMXS.js                                    1.37 kB │ gzip:   0.64 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6126278Z dist/server/assets/0024_portal_branding-uXn1n10h.js                         1.38 kB │ gzip:   0.45 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6132048Z dist/server/assets/0031_penny_release_outcomes-D1BqgQq7.js                  1.40 kB │ gzip:   0.53 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6133614Z dist/server/assets/0025_portability-DWnEMIcy.js                             1.43 kB │ gzip:   0.47 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6135000Z dist/server/assets/native-tokens-IetnLvIm.js                                1.43 kB │ gzip:   0.80 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6136367Z dist/server/assets/0055_auth_admission_custody-Cg1x07rN.js                  1.43 kB │ gzip:   0.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6138031Z dist/server/assets/0056_import_preparation_steps-CwNGBZQr.js                1.46 kB │ gzip:   0.65 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6139561Z dist/server/assets/0043_domain_rules_step_up-CmsCBaAI.js                    1.47 kB │ gzip:   0.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6140968Z dist/server/assets/0082_product_hierarchy-hhQEAdYG.js                       1.47 kB │ gzip:   0.39 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6142250Z dist/server/assets/rich-content-Dbbc-9i7.js                                 1.52 kB │ gzip:   0.74 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6143701Z dist/server/assets/loaders-Bhw5Svv7.js                                      1.54 kB │ gzip:   0.58 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6144495Z dist/server/assets/operator-primitives-RS-_-ho6.js                          1.55 kB │ gzip:   0.63 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6145412Z dist/server/assets/0044_provider_control-CQiFio2p.js                        1.57 kB │ gzip:   0.63 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6146181Z dist/server/assets/delivery-counts-CIrmgV6z.js                              1.60 kB │ gzip:   0.79 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6147181Z dist/server/assets/0084_release_planning-CfjfK6g0.js                        1.60 kB │ gzip:   0.60 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6148011Z dist/server/assets/app-CS4TIqEM.js                                          1.60 kB │ gzip:   0.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6148769Z dist/server/assets/0028_operator_dev_sessions-B24C-aWv.js                   1.61 kB │ gzip:   0.73 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6149535Z dist/server/assets/DataField-JWKGWevh.js                                    1.64 kB │ gzip:   0.84 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6150308Z dist/server/assets/0106_agent_native_actor_binding-Do_jrGns.js              1.65 kB │ gzip:   0.66 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6151053Z dist/server/assets/useMatch-BoPeLhs3.js                                     1.67 kB │ gzip:   0.75 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6151782Z dist/server/assets/SectionCard-D909t_JF.js                                  1.68 kB │ gzip:   0.73 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6152524Z dist/server/assets/failure-hint-C1umv0HW.js                                 1.74 kB │ gzip:   0.73 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6153252Z dist/server/assets/redirect-BDbpra0T.js                                     1.75 kB │ gzip:   0.85 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6153970Z dist/server/assets/PageTitle-jT-32ISu.js                                    1.79 kB │ gzip:   0.81 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6154721Z dist/server/assets/0065_request_status_terminal_states-DXYpqzC9.js          1.81 kB │ gzip:   0.72 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6155496Z dist/server/assets/0012_base_local_auth-DxWGrpby.js                         1.82 kB │ gzip:   0.85 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6156265Z dist/server/assets/0103_agent_attribution-BOsz-rEP.js                       1.83 kB │ gzip:   0.66 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6157194Z dist/server/assets/list-query-refusal-C-9Hk0sH.js                           1.85 kB │ gzip:   0.83 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6157977Z dist/server/assets/operator-format-CmskICCD.js                              1.97 kB │ gzip:   0.77 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6158741Z dist/server/assets/action-message-K3letHGM.js                               2.03 kB │ gzip:   0.85 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6159492Z dist/server/assets/0099_browser_capture-CXPmfMxE.js                         2.08 kB │ gzip:   0.78 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6160248Z dist/server/assets/0100_agent_door-CpU5FbKq.js                              2.09 kB │ gzip:   0.61 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6160967Z dist/server/assets/Stroke-BIbF0lC3.js                                       2.09 kB │ gzip:   1.00 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6161700Z dist/server/assets/0030_penny_evidence-BRXRaryV.js                          2.10 kB │ gzip:   0.68 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6162477Z dist/server/assets/0038_feedback_supporter_types--dlu8FNv.js                2.15 kB │ gzip:   0.67 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6163267Z dist/server/assets/0042_identity_providers-CCL4CJPN.js                      2.15 kB │ gzip:   0.88 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6164034Z dist/server/assets/0039_import_reversal_fence-Bp9KSDSe.js                   2.15 kB │ gzip:   0.78 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6164807Z dist/server/assets/0058_portable_settings_records-BWd02afl.js               2.16 kB │ gzip:   0.59 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6165589Z dist/server/assets/0002_native_feedback_baseline-CvQq_eHr.js                2.18 kB │ gzip:   0.74 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6166362Z dist/server/assets/_virtual_penny-docs-DnyxuCf2.js                          2.21 kB │ gzip:   0.79 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6167291Z dist/server/assets/getting-started-BA09GBHS.js                              2.21 kB │ gzip:   1.11 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6168225Z dist/server/assets/0020_base_integrations-XmGV65wv.js                       2.24 kB │ gzip:   0.60 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6168998Z dist/server/assets/0035_feedback_erasure-BCU1nRHP.js                        2.24 kB │ gzip:   0.87 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6169840Z dist/server/assets/portal-classes-CYBQ3mZb.js                               2.26 kB │ gzip:   1.01 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6170576Z dist/server/assets/Matches-dRtGuKFl.js                                      2.27 kB │ gzip:   0.92 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6171285Z dist/server/assets/config-xwGAcfRv.js                                       2.31 kB │ gzip:   0.91 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6172015Z dist/server/assets/public-resource-kPtWHwCe.js                              2.31 kB │ gzip:   0.94 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6172735Z dist/server/assets/Chip-BJQiNnTl.js                                         2.33 kB │ gzip:   0.95 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6173460Z dist/server/assets/0064_status_roadmap-9yJcswSz.js                          2.45 kB │ gzip:   0.83 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6174233Z dist/server/assets/0080_native_proxy_votes-CveNN_at.js                      2.45 kB │ gzip:   0.67 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6174996Z dist/server/assets/0019_host_identity_custody-CFij5O2J.js                   2.49 kB │ gzip:   0.53 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6175778Z dist/server/assets/0074_internal_discussion-Bj8A9rku.js                     2.58 kB │ gzip:   0.72 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6176544Z dist/server/assets/workspace-clock-Jkjs_pxl.js                              2.60 kB │ gzip:   1.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6177372Z dist/server/assets/CatchBoundary-5Q3DFBlh.js                                2.63 kB │ gzip:   1.02 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6178135Z dist/server/assets/0061_import_erasure_progress-BY206f9f.js                 2.74 kB │ gzip:   0.83 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6178923Z dist/server/assets/0008_requester_write_and_upload_custody-Ctk0QyzA.js      2.74 kB │ gzip:   1.13 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6179690Z dist/server/assets/DisclosureRow-D5KrHQ2Y.js                                2.81 kB │ gzip:   1.00 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6180442Z dist/server/assets/0054_frame_settings-0rNodPxV.js                          2.82 kB │ gzip:   0.82 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6181188Z dist/server/assets/list-query-DSfXNZzh.js                                   2.97 kB │ gzip:   1.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6181947Z dist/server/assets/0085_rich_changelog-DJfCUX73.js                          3.01 kB │ gzip:   0.94 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6182743Z dist/server/assets/__23tanstack-start-server-fn-resolver-R2zE1lw2.js        3.12 kB │ gzip:   1.21 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6183538Z dist/server/assets/0107_survey_capture-DVvjfpNN.js                          3.22 kB │ gzip:   0.91 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6184292Z dist/server/assets/0096_discord_capture-BTJbevhA.js                         3.27 kB │ gzip:   0.92 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6185022Z dist/server/assets/formulas-B2UtYLlr.js                                     3.43 kB │ gzip:   1.29 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6185770Z dist/server/assets/0037_feedback_maintenance-DqzxW3Rd.js                    3.61 kB │ gzip:   0.58 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6186546Z dist/server/assets/client-mutations-Doks144m.js                             3.62 kB │ gzip:   1.37 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6187881Z dist/server/assets/0009_base_operator_auth-BqNNJVqI.js                      3.91 kB │ gzip:   1.41 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6188675Z dist/server/assets/0093_request_batches-CcTF1w9Z.js                         4.02 kB │ gzip:   0.73 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6189413Z dist/server/assets/tearing-B1BOWW9P.js                                      4.15 kB │ gzip:   1.68 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6190154Z dist/server/assets/0081_vote_importance-DWpfkpz_.js                         4.27 kB │ gzip:   0.73 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6190910Z dist/server/assets/owner-control-DnCLF47w.js                                4.36 kB │ gzip:   1.52 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6191666Z dist/server/assets/0050_erasure_preview_revision-BQWq0ASe.js                4.37 kB │ gzip:   0.67 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6192447Z dist/server/assets/0079_import_status_roadmap-eYFe_YZo.js                   4.43 kB │ gzip:   0.94 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6193919Z dist/server/assets/0070_requester_subscription_provenance-ByLyppCw.js       4.62 kB │ gzip:   1.40 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6195259Z dist/server/assets/hash-DB9K51eJ.js                                         4.69 kB │ gzip:   2.16 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6196459Z dist/server/assets/portal.roadmap._roadmapSlug-DXYrh5_v.js                  4.71 kB │ gzip:   1.42 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6197875Z dist/server/assets/0032_penny_decision_reviews-t3iRPpBX.js                  4.74 kB │ gzip:   1.27 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6198847Z dist/server/assets/0057_operator_mail_events-Dpym5BfP.js                    4.83 kB │ gzip:   1.10 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6199598Z dist/server/assets/storage-CUJHpAV4.js                                      4.91 kB │ gzip:   1.95 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6200331Z dist/server/assets/merge-notices-BSrigVH_.js                                5.02 kB │ gzip:   1.78 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6201105Z dist/server/assets/0021_integration_authority-DE6bouag.js                   5.17 kB │ gzip:   0.70 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6201897Z dist/server/assets/0109_duplicate_suggestion_indexes-Cxsg6EEM.js            5.24 kB │ gzip:   0.77 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6202706Z dist/server/assets/public-read-repository-CGxdMuH4.js                       5.36 kB │ gzip:   1.83 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6203458Z dist/server/assets/Icon-CGjhRjXm.js                                         5.47 kB │ gzip:   2.25 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6204164Z dist/server/assets/classes-MMR9TXLx.js                                      5.53 kB │ gzip:   2.08 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6204901Z dist/server/assets/receiver-protocol-C7ypd5pA.js                            5.92 kB │ gzip:   2.48 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6205666Z dist/server/assets/portal.verify-CtKwAQI2.js                                5.98 kB │ gzip:   2.06 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6206389Z dist/server/assets/link-j0r0Jlef.js                                         6.05 kB │ gzip:   2.25 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6207343Z dist/server/assets/0092_weekly_summary-CXLJWPfQ.js                          6.22 kB │ gzip:   0.99 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6208155Z dist/server/assets/0066_categories_board_controls-BNQBvq1b.js               6.25 kB │ gzip:   1.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6208966Z dist/server/assets/0040_import_custody_retirement-Co-8qHzC.js               6.33 kB │ gzip:   1.23 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6209753Z dist/server/assets/0059_scoped_learning-XoVVgKRC.js                         6.41 kB │ gzip:   1.51 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6210525Z dist/server/assets/draft-panel-Cu9i0QWI.js                                  6.53 kB │ gzip:   2.07 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6211269Z dist/server/assets/loop-form-C8hBjdbr.js                                    6.83 kB │ gzip:   2.40 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6212052Z dist/server/assets/workspace-clock-settings-C08Hj0ET.js                     6.87 kB │ gzip:   2.14 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6212865Z dist/server/assets/custom-fields-editor-D_jUljgy.js                         6.92 kB │ gzip:   1.96 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6213643Z dist/server/assets/browser-capture-DXYBMFOL.js                              7.16 kB │ gzip:   2.96 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6214385Z dist/server/assets/app.search-CBmzy4ql.js                                   7.31 kB │ gzip:   2.20 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6215129Z dist/server/assets/0023_tracker_links-D5H7_EUd.js                           7.34 kB │ gzip:   0.98 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6215895Z dist/server/assets/0011_notification_delivery_events-O1R9x3uk.js            7.50 kB │ gzip:   1.67 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6216635Z dist/server/assets/runtime-Dc_N1gXr.js                                      7.55 kB │ gzip:   2.68 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6217539Z dist/server/assets/aging-panel-Cg_QOAMf.js                                  7.56 kB │ gzip:   2.22 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6218298Z dist/server/assets/0063_request_status_workflow-C4m-dMbe.js                 7.57 kB │ gzip:   1.50 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6219100Z dist/server/assets/0006_request_contribution_provenance-CFPSqoCb.js         7.90 kB │ gzip:   1.77 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6220036Z dist/server/assets/page-BbRQlXVf.js                                         8.01 kB │ gzip:   3.03 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6220754Z dist/server/assets/list-controls-BIq8-LCn.js                                8.10 kB │ gzip:   2.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6221586Z dist/server/assets/0077_merge_notices-DdIiIaYG.js                           8.88 kB │ gzip:   1.59 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6222340Z dist/server/assets/0073_native_ownership-DbPce8aJ.js                        9.22 kB │ gzip:   1.45 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6223067Z dist/server/assets/agents-Dpp7dtCU.js                                       9.36 kB │ gzip:   3.03 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6223769Z dist/server/assets/Match-CwR8y7sG.js                                        9.40 kB │ gzip:   2.42 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6224556Z dist/server/assets/operator-resource-state-C9NrDk4D.js                      9.49 kB │ gzip:   2.98 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6225335Z dist/server/assets/tracker-actions-Cv2cIJnH.js                              9.66 kB │ gzip:   2.45 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6226116Z dist/server/assets/portal.roadmap.index-D25Gp3sr.js                         9.69 kB │ gzip:   2.47 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6227031Z dist/server/assets/operator-page-header-DxX9eTls.js                         9.77 kB │ gzip:   2.91 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6227821Z dist/server/assets/weekly-summary-CbVKyCVJ.js                               9.91 kB │ gzip:   2.51 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6228595Z dist/server/assets/0015_publication_seals-Ceyn5qs8.js                      10.16 kB │ gzip:   1.07 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6229328Z dist/server/assets/route-BU2U43tt.js                                       10.32 kB │ gzip:   2.51 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6230035Z dist/server/assets/effects-DdMDGtwl.js                                     10.86 kB │ gzip:   4.07 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6230793Z dist/server/assets/0010_request_notifications-71PkMN8T.js                  10.90 kB │ gzip:   2.01 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6231544Z dist/server/assets/app.ask-GFzZEpEL.js                                     10.97 kB │ gzip:   3.07 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6232280Z dist/server/assets/0098_helpscout-Chg9IPFg.js                              10.97 kB │ gzip:   1.35 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6233046Z dist/server/assets/0022_integration_events-Dx9e46Gb.js                     11.17 kB │ gzip:   1.49 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6233798Z dist/server/assets/app.features-7TAVOyen.js                                11.39 kB │ gzip:   3.05 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6234565Z dist/server/assets/evidence-actions-C3O8ky7h.js                            11.55 kB │ gzip:   2.77 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6235319Z dist/server/assets/status-drafts-DpZaOW6Z.js                               11.83 kB │ gzip:   3.14 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6236067Z dist/server/assets/0075_triage_aging-DazQmDq8.js                           11.85 kB │ gzip:   1.58 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6236823Z dist/server/assets/0013_decision_loop-B6K4xmA6.js                          12.07 kB │ gzip:   2.50 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6237671Z dist/server/assets/0005_requester_board-BJ0pYzBY.js                        12.14 kB │ gzip:   2.43 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6238445Z dist/server/assets/requester-actions-ZEQsc2Ia.js                           12.24 kB │ gzip:   3.45 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6239230Z dist/server/assets/createServerFn-LbQwuMn2.js                              12.37 kB │ gzip:   3.65 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6240013Z dist/server/assets/0060_learning_maintenance-DWzqc-GI.js                   12.44 kB │ gzip:   0.78 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6240847Z dist/server/assets/resources.server-CGO5qv6c.js                            12.49 kB │ gzip:   3.72 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6241585Z dist/server/assets/customise-CNC-4276.js                                   12.88 kB │ gzip:   4.86 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6242286Z dist/server/assets/signin-6In-QDAF.js                                      12.93 kB │ gzip:   3.50 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6242995Z dist/server/assets/path-D61GSMUv.js                                        13.04 kB │ gzip:   5.03 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6243838Z dist/server/assets/data-sO2Uvxav.js                                        13.57 kB │ gzip:   4.89 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6244546Z dist/server/assets/tag-editor-BlVOvGb5.js                                  13.73 kB │ gzip:   3.47 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6245386Z dist/server/assets/0001_initial_data_foundation-9u0S5Ucg.js                14.21 kB │ gzip:   2.31 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6246186Z dist/server/assets/_tanstack-start-manifest_v-x1Jx73Tl.js                  14.55 kB │ gzip:   2.60 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6247036Z dist/server/assets/portal-BNvgWNmv.js                                      15.13 kB │ gzip:   5.52 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6247800Z dist/server/assets/public-portal-layout-BEB7sze5.js                        15.30 kB │ gzip:   4.47 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6248535Z dist/server/assets/app-Cyrxz9k_.js                                         15.47 kB │ gzip:   4.34 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6249452Z dist/server/assets/0007_requester_board_maintenance-nb-JiOlf.js            15.69 kB │ gzip:   0.89 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6250256Z dist/server/assets/portal.feedback.activity-n47wDhj4.js                    15.81 kB │ gzip:   3.46 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6251053Z dist/server/assets/public-release-pages-Brut7QNt.js                        16.81 kB │ gzip:   3.92 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6251835Z dist/server/assets/0014_release_delivery-DSdSn6JH.js                       17.80 kB │ gzip:   2.55 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6252612Z dist/server/assets/app.prioritisation-scV81V2j.js                          18.53 kB │ gzip:   4.66 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6253351Z dist/server/assets/install-BydEAfwh.js                                     19.92 kB │ gzip:   7.58 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6254080Z dist/server/assets/decisions-DVj652a1.js                                   20.24 kB │ gzip:   7.19 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6254795Z dist/server/assets/email-CdtUTcUO.js                                       21.06 kB │ gzip:   7.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6255528Z dist/server/assets/portal.feedback.new-Do2TeSqd.js                         21.96 kB │ gzip:   5.35 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6256315Z dist/server/assets/0017_saved_feedback_import-DNeY6azX.js                  22.50 kB │ gzip:   2.12 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6257210Z dist/server/assets/DocsRoutes-DRW49ONB.js                                  22.52 kB │ gzip:   5.47 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6257993Z dist/server/assets/public-feedback-pages-CWxigzxK.js                       23.20 kB │ gzip:   4.77 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6258792Z dist/server/assets/app.browser-capture-Bm63BLo6.js                         25.95 kB │ gzip:   6.50 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6259539Z dist/server/assets/overview-D4kkSPXz.js                                    26.89 kB │ gzip:   5.75 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6260290Z dist/server/assets/0004_archive_erasure_fences-D8e9NjwY.js                 27.89 kB │ gzip:   1.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6261057Z dist/server/assets/useSelector-CAg46y4m.js                                 28.31 kB │ gzip:   7.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6261787Z dist/server/assets/CoinMark-hLjIlbrj.js                                    29.35 kB │ gzip:   9.97 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6262517Z dist/server/assets/accounts-Bp631XPt.js                                    30.90 kB │ gzip:   6.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6263248Z dist/server/assets/app.roadmap-DUWXJdKU.js                                 31.89 kB │ gzip:   7.02 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6263973Z dist/server/assets/app.feedback-ByxgK2zN.js                                34.15 kB │ gzip:   7.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6264723Z dist/server/assets/0095_paged_redaction-V1zz90l-.js                        35.58 kB │ gzip:   2.07 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6265482Z dist/server/assets/decisions-CmFrQ12v.js                                   46.21 kB │ gzip:   8.90 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6266203Z dist/server/assets/releases-DNTOak1L.js                                    49.28 kB │ gzip:   9.31 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6267010Z dist/server/assets/0034_feedback_move_in-BM1dTog1.js                       62.30 kB │ gzip:   3.09 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6267922Z dist/server/assets/app.learning-BhRsdssC.js                                68.51 kB │ gzip:  14.26 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6268667Z dist/server/assets/export-Dre5zOKJ.js                                      76.38 kB │ gzip:  20.43 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6269487Z dist/server/assets/app.moderation-6Vub6GxG.js                              76.40 kB │ gzip:  15.41 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6270259Z dist/server/assets/0026_import_custody_evolution-DM9WZD8y.js               88.69 kB │ gzip:   6.29 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6271014Z dist/server/assets/load-server-BKYBXqXt.js                                107.81 kB │ gzip:  26.15 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6271737Z dist/server/assets/router-GrXVAd_-.js                                     108.51 kB │ gzip:  27.96 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6272433Z dist/server/assets/owner-D0_zvkJa.js                                      111.74 kB │ gzip:  29.75 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6273312Z dist/server/assets/uservoice-columns-BzYHfhX_.js                          126.39 kB │ gzip:  34.69 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6274324Z dist/server/assets/app.data-DFf0bfHg.js                                   135.19 kB │ gzip:  29.24 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6275103Z dist/server/assets/schemas-D5HKCZPj.js                                    191.29 kB │ gzip:  41.97 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6275832Z dist/server/assets/app.settings-cWLf7fmU.js                               213.24 kB │ gzip:  39.01 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6276605Z dist/server/assets/operator-auth-DXMv64lO.js                              254.90 kB │ gzip:  61.90 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6277552Z dist/server/assets/release-markdown-CpISFBJq.js                           351.94 kB │ gzip:  80.24 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6278316Z dist/server/index.js                                                      509.78 kB │ gzip: 132.92 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6279056Z dist/server/assets/server-DbmZT3Ys.js                                     752.08 kB │ gzip: 157.28 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6279827Z dist/server/assets/first-run-BSBMnMgz.js                                2,295.13 kB │ gzip: 537.10 kB
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.6280201Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:46.7268914Z ✓ built in 2.11s
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:47.1144784Z Your application is built
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:47.2016800Z build: complete (exit 0)
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:47.2166511Z > node tests/runtime/duplicate-suggestions-scale.mjs
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:47.9533646Z browser-runtime: waiting for workerd
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:48.5458012Z browser-runtime: ready
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:48.6628135Z browser-runtime: D1 ready
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.3430950Z browser-runtime: migration 0001_initial_data_foundation.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.4536483Z browser-runtime: migration 0002_native_feedback_baseline.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.4749451Z browser-runtime: migration 0003_opaque_native_request_slugs.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.4811122Z browser-runtime: migration 0004_archive_erasure_fences.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.6572841Z browser-runtime: migration 0005_requester_board.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.7342714Z browser-runtime: migration 0006_request_contribution_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.7827919Z browser-runtime: migration 0007_requester_board_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.8748651Z browser-runtime: migration 0008_requester_write_and_upload_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.8914826Z browser-runtime: migration 0009_base_operator_auth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.9176607Z browser-runtime: migration 0010_request_notifications.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:49.9702112Z browser-runtime: migration 0011_notification_delivery_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.0127688Z browser-runtime: migration 0012_base_local_auth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.0230638Z browser-runtime: migration 0013_decision_loop.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.1043239Z browser-runtime: migration 0014_release_delivery.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.2545008Z browser-runtime: migration 0015_publication_seals.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.3120850Z browser-runtime: migration 0016_restored_notification_hold.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.3196185Z browser-runtime: migration 0017_saved_feedback_import.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.4439440Z browser-runtime: migration 0018_owner_claim.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.4514307Z browser-runtime: migration 0019_host_identity_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.4651067Z browser-runtime: migration 0020_base_integrations.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.4779359Z browser-runtime: migration 0021_integration_authority.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.5007617Z browser-runtime: migration 0022_integration_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.5335055Z browser-runtime: migration 0023_tracker_links.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.5667254Z browser-runtime: migration 0024_portal_branding.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.5746246Z browser-runtime: migration 0025_portability.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.5865955Z browser-runtime: migration 0026_import_custody_evolution.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:50.9985516Z browser-runtime: migration 0027_first_run.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.0047619Z browser-runtime: migration 0028_operator_dev_sessions.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.0348812Z browser-runtime: migration 0029_dev_minted_api_tokens.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.0478596Z browser-runtime: migration 0030_penny_evidence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.0701995Z browser-runtime: migration 0031_penny_release_outcomes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.0959861Z browser-runtime: migration 0032_penny_decision_reviews.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.1211078Z browser-runtime: migration 0033_decision_review_completion.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.1319582Z browser-runtime: migration 0034_feedback_move_in.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.5355433Z browser-runtime: migration 0035_feedback_erasure.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.5878281Z browser-runtime: migration 0036_feedback_source_erasure.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.6093022Z browser-runtime: migration 0037_feedback_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.6250621Z browser-runtime: migration 0038_feedback_supporter_types.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.6358389Z browser-runtime: migration 0039_import_reversal_fence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.6540453Z browser-runtime: migration 0040_import_custody_retirement.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.6848562Z browser-runtime: migration 0041_legacy_outbox_visible_state.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.6889661Z browser-runtime: migration 0042_identity_providers.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.7003835Z browser-runtime: migration 0043_domain_rules_step_up.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.7078637Z browser-runtime: migration 0044_provider_control.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.7216440Z browser-runtime: migration 0045_dependencies.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.7322506Z browser-runtime: migration 0046_idp_owner.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.7367071Z browser-runtime: migration 0047_provider_pins.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.7433146Z browser-runtime: migration 0048_dependency_setup.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.7618291Z browser-runtime: migration 0049_dependency_approval.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.7757181Z browser-runtime: migration 0050_erasure_preview_revision.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.8004759Z browser-runtime: migration 0051_operator_management.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.8046631Z browser-runtime: migration 0054_frame_settings.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.8133898Z browser-runtime: migration 0055_auth_admission_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.8210005Z browser-runtime: migration 0056_import_preparation_steps.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.8274293Z browser-runtime: migration 0057_operator_mail_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.8798909Z browser-runtime: migration 0058_portable_settings_records.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.8905397Z browser-runtime: migration 0059_scoped_learning.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.9161244Z browser-runtime: migration 0060_learning_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.9701518Z browser-runtime: migration 0061_import_erasure_progress.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.9833406Z browser-runtime: migration 0062_data_runner_claims.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:51.9887702Z browser-runtime: migration 0063_request_status_workflow.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.1047139Z browser-runtime: migration 0064_status_roadmap.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.1140771Z browser-runtime: migration 0065_request_status_terminal_states.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.1192524Z browser-runtime: migration 0066_categories_board_controls.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.2061109Z browser-runtime: migration 0070_requester_subscription_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.2705347Z browser-runtime: migration 0071_author_publication_permission.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.2764797Z browser-runtime: migration 0072_workspace_clock.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.2805109Z browser-runtime: migration 0073_native_ownership.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.3223258Z browser-runtime: migration 0074_internal_discussion.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.3533615Z browser-runtime: migration 0075_triage_aging.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.3981966Z browser-runtime: migration 0076_roadmap_public_eta.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.4295600Z browser-runtime: migration 0077_merge_notices.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.4653089Z browser-runtime: migration 0078_import_status_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.4718913Z browser-runtime: migration 0079_import_status_roadmap.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.4878770Z browser-runtime: migration 0080_native_proxy_votes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.4998630Z browser-runtime: migration 0081_vote_importance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.5226819Z browser-runtime: migration 0082_product_hierarchy.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.5362681Z browser-runtime: migration 0083_prioritisation_views.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.5415679Z browser-runtime: migration 0084_release_planning.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.5526258Z browser-runtime: migration 0085_rich_changelog.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.5936431Z browser-runtime: migration 0086_scheduled_publications.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.6002634Z browser-runtime: migration 0087_ai_configuration.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.6112422Z browser-runtime: migration 0088_email_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.6195428Z browser-runtime: migration 0089_requester_oauth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.6271977Z browser-runtime: migration 0090_evidence_redaction.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.6314772Z browser-runtime: migration 0091_email_capture_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.6493140Z browser-runtime: migration 0092_weekly_summary.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.6848715Z browser-runtime: migration 0093_request_batches.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.7044387Z browser-runtime: migration 0094_dependency_keys_sealed.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.7332101Z browser-runtime: migration 0095_paged_redaction.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.9560778Z browser-runtime: migration 0096_discord_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:52.9732235Z browser-runtime: migration 0097_discord_source_checks.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.0066586Z browser-runtime: migration 0098_helpscout.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.0516796Z browser-runtime: migration 0099_browser_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.0667487Z browser-runtime: migration 0100_agent_door.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.0843967Z browser-runtime: migration 0101_business_settings.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.0947704Z browser-runtime: migration 0102_business_people.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.1414667Z browser-runtime: migration 0103_agent_attribution.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.2288046Z browser-runtime: migration 0104_agent_custody_fence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.2335855Z browser-runtime: migration 0105_agent_identity_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.2377021Z browser-runtime: migration 0106_agent_native_actor_binding.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.2441620Z browser-runtime: migration 0107_survey_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.2597314Z browser-runtime: migration 0108_ai_answers.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:30:53.2649808Z browser-runtime: migration 0109_duplicate_suggestion_indexes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:13.5375848Z {"head":"0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed","counts":{"requests":100000,"boards":100,"requesters":250000},"results":[{"door":"public","workload":"exact","samples":25,"p95":120.4585819999993,"max":124.58206000000064},{"door":"public","workload":"partial","samples":25,"p95":121.26166000000012,"max":123.23842200000036},{"door":"public","workload":"absent","samples":25,"p95":116.71079499999905,"max":116.8611149999997},{"door":"public","workload":"unicode","samples":25,"p95":29.45684899999833,"max":35.48697099999845},{"door":"operator","workload":"exact","samples":25,"p95":96.10843000000023,"max":100.70048599999791},{"door":"operator","workload":"partial","samples":25,"p95":102.45050999999876,"max":107.20701399999962},{"door":"operator","workload":"absent","samples":25,"p95":110.42635300000256,"max":114.8203539999995},{"door":"operator","workload":"unicode","samples":25,"p95":16.195223999999143,"max":39.25956600000063}],"hardware":{"platform":"linux","arch":"x64","cpu":"Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz","memory":16759304192},"node":"v22.20.0"}
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:13.5923744Z > PENNY_EVIDENCE=../evidence/requester-board pnpm run test:browser
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:13.8375174Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:13.8375854Z > penny@0.2.2 test:browser /home/runner/work/run-penny/run-penny
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:13.8376556Z > node tests/browser/requester-board.mjs
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:13.8376774Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:15.6480118Z browser-runtime: waiting for workerd
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:16.2732467Z browser-runtime: ready
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:16.3901248Z browser-runtime: D1 ready
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.0574021Z browser-runtime: migration 0001_initial_data_foundation.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.1716191Z browser-runtime: migration 0002_native_feedback_baseline.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.1982839Z browser-runtime: migration 0003_opaque_native_request_slugs.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.2056266Z browser-runtime: migration 0004_archive_erasure_fences.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.3858333Z browser-runtime: migration 0005_requester_board.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.4631793Z browser-runtime: migration 0006_request_contribution_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.5116042Z browser-runtime: migration 0007_requester_board_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.6070627Z browser-runtime: migration 0008_requester_write_and_upload_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.6261047Z browser-runtime: migration 0009_base_operator_auth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.6500382Z browser-runtime: migration 0010_request_notifications.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.7037954Z browser-runtime: migration 0011_notification_delivery_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.7468700Z browser-runtime: migration 0012_base_local_auth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.7576247Z browser-runtime: migration 0013_decision_loop.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.8390460Z browser-runtime: migration 0014_release_delivery.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:17.9912602Z browser-runtime: migration 0015_publication_seals.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.0493644Z browser-runtime: migration 0016_restored_notification_hold.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.0578881Z browser-runtime: migration 0017_saved_feedback_import.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.1790194Z browser-runtime: migration 0018_owner_claim.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.1868059Z browser-runtime: migration 0019_host_identity_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.1997783Z browser-runtime: migration 0020_base_integrations.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.2143504Z browser-runtime: migration 0021_integration_authority.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.2383688Z browser-runtime: migration 0022_integration_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.2730759Z browser-runtime: migration 0023_tracker_links.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.3042360Z browser-runtime: migration 0024_portal_branding.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.3120683Z browser-runtime: migration 0025_portability.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.3242294Z browser-runtime: migration 0026_import_custody_evolution.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.7439007Z browser-runtime: migration 0027_first_run.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.7507662Z browser-runtime: migration 0028_operator_dev_sessions.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.7823445Z browser-runtime: migration 0029_dev_minted_api_tokens.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.7959688Z browser-runtime: migration 0030_penny_evidence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.8183936Z browser-runtime: migration 0031_penny_release_outcomes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.8453435Z browser-runtime: migration 0032_penny_decision_reviews.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.8725292Z browser-runtime: migration 0033_decision_review_completion.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:18.8836086Z browser-runtime: migration 0034_feedback_move_in.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.2682260Z browser-runtime: migration 0035_feedback_erasure.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.3220155Z browser-runtime: migration 0036_feedback_source_erasure.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.3449599Z browser-runtime: migration 0037_feedback_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.3608517Z browser-runtime: migration 0038_feedback_supporter_types.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.3718822Z browser-runtime: migration 0039_import_reversal_fence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.3881106Z browser-runtime: migration 0040_import_custody_retirement.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4151531Z browser-runtime: migration 0041_legacy_outbox_visible_state.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4193653Z browser-runtime: migration 0042_identity_providers.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4289536Z browser-runtime: migration 0043_domain_rules_step_up.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4366483Z browser-runtime: migration 0044_provider_control.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4485321Z browser-runtime: migration 0045_dependencies.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4586076Z browser-runtime: migration 0046_idp_owner.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4633254Z browser-runtime: migration 0047_provider_pins.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4694686Z browser-runtime: migration 0048_dependency_setup.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.4851114Z browser-runtime: migration 0049_dependency_approval.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.5055893Z browser-runtime: migration 0050_erasure_preview_revision.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.5291093Z browser-runtime: migration 0051_operator_management.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.5335272Z browser-runtime: migration 0054_frame_settings.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.5421776Z browser-runtime: migration 0055_auth_admission_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.5528137Z browser-runtime: migration 0056_import_preparation_steps.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.5593738Z browser-runtime: migration 0057_operator_mail_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.6125484Z browser-runtime: migration 0058_portable_settings_records.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.6235840Z browser-runtime: migration 0059_scoped_learning.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.6494470Z browser-runtime: migration 0060_learning_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.7045718Z browser-runtime: migration 0061_import_erasure_progress.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.7172426Z browser-runtime: migration 0062_data_runner_claims.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.7227022Z browser-runtime: migration 0063_request_status_workflow.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.8384451Z browser-runtime: migration 0064_status_roadmap.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.8521738Z browser-runtime: migration 0065_request_status_terminal_states.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.8576596Z browser-runtime: migration 0066_categories_board_controls.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:19.9511965Z browser-runtime: migration 0070_requester_subscription_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.0203841Z browser-runtime: migration 0071_author_publication_permission.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.0269607Z browser-runtime: migration 0072_workspace_clock.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.0313793Z browser-runtime: migration 0073_native_ownership.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.0736778Z browser-runtime: migration 0074_internal_discussion.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.1050116Z browser-runtime: migration 0075_triage_aging.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.1583548Z browser-runtime: migration 0076_roadmap_public_eta.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.1928915Z browser-runtime: migration 0077_merge_notices.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.2292465Z browser-runtime: migration 0078_import_status_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.2363871Z browser-runtime: migration 0079_import_status_roadmap.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.2531555Z browser-runtime: migration 0080_native_proxy_votes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.2655284Z browser-runtime: migration 0081_vote_importance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.2853426Z browser-runtime: migration 0082_product_hierarchy.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.2989581Z browser-runtime: migration 0083_prioritisation_views.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.3044070Z browser-runtime: migration 0084_release_planning.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.3153273Z browser-runtime: migration 0085_rich_changelog.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.3571668Z browser-runtime: migration 0086_scheduled_publications.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.3645046Z browser-runtime: migration 0087_ai_configuration.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.3762401Z browser-runtime: migration 0088_email_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.3839837Z browser-runtime: migration 0089_requester_oauth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.3891593Z browser-runtime: migration 0090_evidence_redaction.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.3978123Z browser-runtime: migration 0091_email_capture_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.4193334Z browser-runtime: migration 0092_weekly_summary.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.4545486Z browser-runtime: migration 0093_request_batches.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.4740776Z browser-runtime: migration 0094_dependency_keys_sealed.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.5047790Z browser-runtime: migration 0095_paged_redaction.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.7354988Z browser-runtime: migration 0096_discord_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.7533001Z browser-runtime: migration 0097_discord_source_checks.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.7883798Z browser-runtime: migration 0098_helpscout.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.8407777Z browser-runtime: migration 0099_browser_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.8569627Z browser-runtime: migration 0100_agent_door.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.8743503Z browser-runtime: migration 0101_business_settings.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.8849744Z browser-runtime: migration 0102_business_people.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:20.9356306Z browser-runtime: migration 0103_agent_attribution.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:21.0321641Z browser-runtime: migration 0104_agent_custody_fence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:21.0372198Z browser-runtime: migration 0105_agent_identity_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:21.0415942Z browser-runtime: migration 0106_agent_native_actor_binding.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:21.0484417Z browser-runtime: migration 0107_survey_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:21.0657503Z browser-runtime: migration 0108_ai_answers.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:21.0718161Z browser-runtime: migration 0109_duplicate_suggestion_indexes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:23.2448694Z requester-auth: 1440px public verification, browser-local session, cookie-free, operator refusal 401, signed-out refusal 401
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:27.1261363Z request-controls: {"width":1440,"wasOpen":true,"clicked":false}
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:28.1562875Z request-controls: {"width":1440,"wasOpen":false,"clicked":true}
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:31.1645619Z requester-auth: 390px public verification, browser-local session, cookie-free, operator refusal 401, signed-out refusal 401
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:34.8201467Z request-controls: {"width":390,"wasOpen":true,"clicked":false}
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:35.6203197Z request-controls: {"width":390,"wasOpen":false,"clicked":true}
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:37.6128586Z requester-auth: zero 429 responses
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:37.6145742Z requester-auth: zero console errors and external requests
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:37.8935735Z 20 captures; 0 checks; commit 0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed; dirty=false
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:37.9597233Z browser-runtime: waiting for workerd
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:38.5831798Z browser-runtime: ready
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:38.6973187Z browser-runtime: D1 ready
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:38.7231818Z browser-runtime: migration 0001_initial_data_foundation.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:38.8235655Z browser-runtime: migration 0002_native_feedback_baseline.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:38.8385659Z browser-runtime: migration 0003_opaque_native_request_slugs.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:38.8431619Z browser-runtime: migration 0004_archive_erasure_fences.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.0173114Z browser-runtime: migration 0005_requester_board.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.0978436Z browser-runtime: migration 0006_request_contribution_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.1402230Z browser-runtime: migration 0007_requester_board_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.2273656Z browser-runtime: migration 0008_requester_write_and_upload_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.2435744Z browser-runtime: migration 0009_base_operator_auth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.2675842Z browser-runtime: migration 0010_request_notifications.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.3262213Z browser-runtime: migration 0011_notification_delivery_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.3678701Z browser-runtime: migration 0012_base_local_auth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.3775361Z browser-runtime: migration 0013_decision_loop.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.4584806Z browser-runtime: migration 0014_release_delivery.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.6067605Z browser-runtime: migration 0015_publication_seals.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.6636793Z browser-runtime: migration 0016_restored_notification_hold.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.6714413Z browser-runtime: migration 0017_saved_feedback_import.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.7899732Z browser-runtime: migration 0018_owner_claim.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.8010402Z browser-runtime: migration 0019_host_identity_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.8135385Z browser-runtime: migration 0020_base_integrations.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.8302681Z browser-runtime: migration 0021_integration_authority.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.8553624Z browser-runtime: migration 0022_integration_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.8893118Z browser-runtime: migration 0023_tracker_links.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.9170659Z browser-runtime: migration 0024_portal_branding.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.9247625Z browser-runtime: migration 0025_portability.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:39.9369637Z browser-runtime: migration 0026_import_custody_evolution.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.3578452Z browser-runtime: migration 0027_first_run.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.3640921Z browser-runtime: migration 0028_operator_dev_sessions.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.3948362Z browser-runtime: migration 0029_dev_minted_api_tokens.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.4089630Z browser-runtime: migration 0030_penny_evidence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.4319993Z browser-runtime: migration 0031_penny_release_outcomes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.4584502Z browser-runtime: migration 0032_penny_decision_reviews.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.4839082Z browser-runtime: migration 0033_decision_review_completion.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.4956865Z browser-runtime: migration 0034_feedback_move_in.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.8541563Z browser-runtime: migration 0035_feedback_erasure.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.9067980Z browser-runtime: migration 0036_feedback_source_erasure.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.9297083Z browser-runtime: migration 0037_feedback_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.9456528Z browser-runtime: migration 0038_feedback_supporter_types.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.9569109Z browser-runtime: migration 0039_import_reversal_fence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.9694875Z browser-runtime: migration 0040_import_custody_retirement.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.9954070Z browser-runtime: migration 0041_legacy_outbox_visible_state.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:40.9996403Z browser-runtime: migration 0042_identity_providers.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.0096024Z browser-runtime: migration 0043_domain_rules_step_up.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.0168672Z browser-runtime: migration 0044_provider_control.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.0300744Z browser-runtime: migration 0045_dependencies.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.0405981Z browser-runtime: migration 0046_idp_owner.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.0452165Z browser-runtime: migration 0047_provider_pins.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.0519628Z browser-runtime: migration 0048_dependency_setup.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.0678332Z browser-runtime: migration 0049_dependency_approval.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.0844343Z browser-runtime: migration 0050_erasure_preview_revision.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.1159357Z browser-runtime: migration 0051_operator_management.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.1202586Z browser-runtime: migration 0054_frame_settings.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.1293558Z browser-runtime: migration 0055_auth_admission_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.1369638Z browser-runtime: migration 0056_import_preparation_steps.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.1438377Z browser-runtime: migration 0057_operator_mail_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.1953316Z browser-runtime: migration 0058_portable_settings_records.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.2077751Z browser-runtime: migration 0059_scoped_learning.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.2346729Z browser-runtime: migration 0060_learning_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.2851864Z browser-runtime: migration 0061_import_erasure_progress.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.2995451Z browser-runtime: migration 0062_data_runner_claims.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.3053603Z browser-runtime: migration 0063_request_status_workflow.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.4305191Z browser-runtime: migration 0064_status_roadmap.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.4435994Z browser-runtime: migration 0065_request_status_terminal_states.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.4489891Z browser-runtime: migration 0066_categories_board_controls.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.5379070Z browser-runtime: migration 0070_requester_subscription_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.6063142Z browser-runtime: migration 0071_author_publication_permission.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.6121693Z browser-runtime: migration 0072_workspace_clock.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.6165118Z browser-runtime: migration 0073_native_ownership.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.6561372Z browser-runtime: migration 0074_internal_discussion.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.6841984Z browser-runtime: migration 0075_triage_aging.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.7325155Z browser-runtime: migration 0076_roadmap_public_eta.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.7663422Z browser-runtime: migration 0077_merge_notices.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.8050847Z browser-runtime: migration 0078_import_status_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.8118783Z browser-runtime: migration 0079_import_status_roadmap.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.8281921Z browser-runtime: migration 0080_native_proxy_votes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.8417251Z browser-runtime: migration 0081_vote_importance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.8650308Z browser-runtime: migration 0082_product_hierarchy.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.8788509Z browser-runtime: migration 0083_prioritisation_views.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.8852188Z browser-runtime: migration 0084_release_planning.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.8973256Z browser-runtime: migration 0085_rich_changelog.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.9382072Z browser-runtime: migration 0086_scheduled_publications.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.9441645Z browser-runtime: migration 0087_ai_configuration.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.9518236Z browser-runtime: migration 0088_email_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.9614777Z browser-runtime: migration 0089_requester_oauth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.9664709Z browser-runtime: migration 0090_evidence_redaction.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.9702218Z browser-runtime: migration 0091_email_capture_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:41.9881559Z browser-runtime: migration 0092_weekly_summary.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.0261460Z browser-runtime: migration 0093_request_batches.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.0455319Z browser-runtime: migration 0094_dependency_keys_sealed.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.0778491Z browser-runtime: migration 0095_paged_redaction.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.3054751Z browser-runtime: migration 0096_discord_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.3222565Z browser-runtime: migration 0097_discord_source_checks.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.3556410Z browser-runtime: migration 0098_helpscout.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.3998914Z browser-runtime: migration 0099_browser_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.4148998Z browser-runtime: migration 0100_agent_door.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.4317531Z browser-runtime: migration 0101_business_settings.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.4423847Z browser-runtime: migration 0102_business_people.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.4932222Z browser-runtime: migration 0103_agent_attribution.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.5855532Z browser-runtime: migration 0104_agent_custody_fence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.5907737Z browser-runtime: migration 0105_agent_identity_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.5951728Z browser-runtime: migration 0106_agent_native_actor_binding.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.6020679Z browser-runtime: migration 0107_survey_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.6179573Z browser-runtime: migration 0108_ai_answers.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:42.6234192Z browser-runtime: migration 0109_duplicate_suggestion_indexes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:44.9545822Z requester-auth: 1440px public verification, browser-local session, cookie-free, operator refusal 401, signed-out refusal 401
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:50.7694324Z PROBE A11Y-001 point 2 1440px: native keyboard submit, vote, link and reasoned review -> held request 01M6RQSGWBSP4CNABY421MBH3F, approved request 01M6RQSF45TM1MQG6G99N4XP5S, evidence attention-evidence; persisted after reload; zero pointer events and focus calls
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:51.3198712Z requester-auth: 390px public verification, browser-local session, cookie-free, operator refusal 401, signed-out refusal 401
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:56.5062094Z PROBE A11Y-001 point 2 390px: native keyboard submit, vote, link and reasoned review -> held request 01M6RQSQ0F37XDNQPTGC1HZ1XZ, approved request 01M6RQSF45TM1MQG6G99N4XP5S, evidence attention-evidence; persisted after reload; zero pointer events and focus calls
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:56.5578613Z requester-auth: zero 429 responses
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:56.5580304Z requester-auth: zero console errors and external requests
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:56.5868077Z 26 captures; 2 checks; commit 0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed; dirty=false
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:56.7108734Z > PENNY_EVIDENCE=../evidence/requester-repair node tests/browser/requester-repair.mjs
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:57.8050368Z browser-runtime: waiting for workerd
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:58.4523158Z browser-runtime: ready
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:58.5675823Z browser-runtime: D1 ready
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.2318415Z browser-runtime: migration 0001_initial_data_foundation.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.3453801Z browser-runtime: migration 0002_native_feedback_baseline.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.3706318Z browser-runtime: migration 0003_opaque_native_request_slugs.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.3785236Z browser-runtime: migration 0004_archive_erasure_fences.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.5596084Z browser-runtime: migration 0005_requester_board.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.6388606Z browser-runtime: migration 0006_request_contribution_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.6879776Z browser-runtime: migration 0007_requester_board_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.7802663Z browser-runtime: migration 0008_requester_write_and_upload_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.7983768Z browser-runtime: migration 0009_base_operator_auth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.8229553Z browser-runtime: migration 0010_request_notifications.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.8766435Z browser-runtime: migration 0011_notification_delivery_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.9211198Z browser-runtime: migration 0012_base_local_auth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:31:59.9312088Z browser-runtime: migration 0013_decision_loop.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.0099737Z browser-runtime: migration 0014_release_delivery.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.1656496Z browser-runtime: migration 0015_publication_seals.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.2280172Z browser-runtime: migration 0016_restored_notification_hold.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.2357920Z browser-runtime: migration 0017_saved_feedback_import.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.3566455Z browser-runtime: migration 0018_owner_claim.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.3644811Z browser-runtime: migration 0019_host_identity_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.3768991Z browser-runtime: migration 0020_base_integrations.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.3912085Z browser-runtime: migration 0021_integration_authority.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.4145342Z browser-runtime: migration 0022_integration_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.4477817Z browser-runtime: migration 0023_tracker_links.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.4787935Z browser-runtime: migration 0024_portal_branding.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.4866603Z browser-runtime: migration 0025_portability.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.4988613Z browser-runtime: migration 0026_import_custody_evolution.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.8826446Z browser-runtime: migration 0027_first_run.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.8888140Z browser-runtime: migration 0028_operator_dev_sessions.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.9194261Z browser-runtime: migration 0029_dev_minted_api_tokens.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.9322867Z browser-runtime: migration 0030_penny_evidence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.9522916Z browser-runtime: migration 0031_penny_release_outcomes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:00.9766555Z browser-runtime: migration 0032_penny_decision_reviews.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.0016322Z browser-runtime: migration 0033_decision_review_completion.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.0126264Z browser-runtime: migration 0034_feedback_move_in.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.3725972Z browser-runtime: migration 0035_feedback_erasure.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.4295878Z browser-runtime: migration 0036_feedback_source_erasure.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.4534184Z browser-runtime: migration 0037_feedback_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.4698929Z browser-runtime: migration 0038_feedback_supporter_types.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.4814629Z browser-runtime: migration 0039_import_reversal_fence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.4981466Z browser-runtime: migration 0040_import_custody_retirement.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5252279Z browser-runtime: migration 0041_legacy_outbox_visible_state.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5291986Z browser-runtime: migration 0042_identity_providers.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5390069Z browser-runtime: migration 0043_domain_rules_step_up.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5455042Z browser-runtime: migration 0044_provider_control.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5568155Z browser-runtime: migration 0045_dependencies.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5671792Z browser-runtime: migration 0046_idp_owner.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5718289Z browser-runtime: migration 0047_provider_pins.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5776416Z browser-runtime: migration 0048_dependency_setup.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.5945215Z browser-runtime: migration 0049_dependency_approval.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.6128413Z browser-runtime: migration 0050_erasure_preview_revision.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.6378668Z browser-runtime: migration 0051_operator_management.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.6420351Z browser-runtime: migration 0054_frame_settings.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.6513739Z browser-runtime: migration 0055_auth_admission_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.6623419Z browser-runtime: migration 0056_import_preparation_steps.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.6693908Z browser-runtime: migration 0057_operator_mail_events.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.7229245Z browser-runtime: migration 0058_portable_settings_records.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.7350676Z browser-runtime: migration 0059_scoped_learning.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.7595848Z browser-runtime: migration 0060_learning_maintenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.8101672Z browser-runtime: migration 0061_import_erasure_progress.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.8226481Z browser-runtime: migration 0062_data_runner_claims.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.8284384Z browser-runtime: migration 0063_request_status_workflow.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.9496420Z browser-runtime: migration 0064_status_roadmap.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.9628930Z browser-runtime: migration 0065_request_status_terminal_states.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:01.9680879Z browser-runtime: migration 0066_categories_board_controls.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.0586277Z browser-runtime: migration 0070_requester_subscription_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.1287647Z browser-runtime: migration 0071_author_publication_permission.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.1356015Z browser-runtime: migration 0072_workspace_clock.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.1404937Z browser-runtime: migration 0073_native_ownership.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.1802958Z browser-runtime: migration 0074_internal_discussion.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.2083525Z browser-runtime: migration 0075_triage_aging.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.2598750Z browser-runtime: migration 0076_roadmap_public_eta.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.2930577Z browser-runtime: migration 0077_merge_notices.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.3288453Z browser-runtime: migration 0078_import_status_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.3357625Z browser-runtime: migration 0079_import_status_roadmap.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.3524960Z browser-runtime: migration 0080_native_proxy_votes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.3657664Z browser-runtime: migration 0081_vote_importance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.3859328Z browser-runtime: migration 0082_product_hierarchy.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.3993387Z browser-runtime: migration 0083_prioritisation_views.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.4045903Z browser-runtime: migration 0084_release_planning.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.4159762Z browser-runtime: migration 0085_rich_changelog.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.4578382Z browser-runtime: migration 0086_scheduled_publications.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.4652694Z browser-runtime: migration 0087_ai_configuration.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.4749864Z browser-runtime: migration 0088_email_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.4829465Z browser-runtime: migration 0089_requester_oauth.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.4888883Z browser-runtime: migration 0090_evidence_redaction.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.4967828Z browser-runtime: migration 0091_email_capture_provenance.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.5186053Z browser-runtime: migration 0092_weekly_summary.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.5528362Z browser-runtime: migration 0093_request_batches.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.5728298Z browser-runtime: migration 0094_dependency_keys_sealed.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.6029044Z browser-runtime: migration 0095_paged_redaction.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.8377243Z browser-runtime: migration 0096_discord_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.8558592Z browser-runtime: migration 0097_discord_source_checks.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.8905105Z browser-runtime: migration 0098_helpscout.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.9405223Z browser-runtime: migration 0099_browser_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.9561662Z browser-runtime: migration 0100_agent_door.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.9727670Z browser-runtime: migration 0101_business_settings.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:02.9834210Z browser-runtime: migration 0102_business_people.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:03.0344184Z browser-runtime: migration 0103_agent_attribution.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:03.1299042Z browser-runtime: migration 0104_agent_custody_fence.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:03.1348461Z browser-runtime: migration 0105_agent_identity_custody.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:03.1393211Z browser-runtime: migration 0106_agent_native_actor_binding.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:03.1460935Z browser-runtime: migration 0107_survey_capture.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:03.1624165Z browser-runtime: migration 0108_ai_answers.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:03.1683951Z browser-runtime: migration 0109_duplicate_suggestion_indexes.sql
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:05.3423286Z requester-auth: 1440px public verification, browser-local session, cookie-free, operator refusal 401, signed-out refusal 401
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:09.1594569Z request-controls: {"width":1440,"wasOpen":true,"clicked":false}
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:10.0237244Z request-controls: {"width":1440,"wasOpen":false,"clicked":true}
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:12.0848769Z request-controls: {"width":1440,"wasOpen":false,"clicked":true}
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:13.2107257Z request-controls: {"width":1440,"wasOpen":true,"clicked":false}
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:18.3168786Z request-controls: {"width":1440,"wasOpen":true,"clicked":false}
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:22.0264734Z request-controls: {"width":1440,"wasOpen":true,"clicked":false}
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:24.2481328Z PROBE REQ-020 holding comment edit: mounted own-comment form -> pending private edit; signed-out list, detail and page retain approved wording and identity
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:24.2500398Z PROBE REQ-020 comment verdicts: mounted rejection -> original persists; second edit and approval -> only replacement public under original identity, including reload
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:24.7871297Z requester-auth: 390px public verification, browser-local session, cookie-free, operator refusal 401, signed-out refusal 401
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:28.4782835Z request-controls: {"width":390,"wasOpen":true,"clicked":false}
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:29.4241305Z request-controls: {"width":390,"wasOpen":false,"clicked":true}
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5202204Z Failure page: Skip to content
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5203036Z Penny
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5203887Z Feedback
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5204292Z Roadmap
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5204616Z Your feedback
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5204942Z Updates
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5205242Z Signed in as
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5205556Z Review requester
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5205751Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5205883Z FEEDBACK
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5206065Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5206199Z Submit feedback
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5206512Z Vote saved
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5206714Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5207447Z Your vote was added to Scheduled exports 390 mw54ummw. No new feedback was submitted.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5207977Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5208151Z View existing feedback
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5208469Z Start a new request
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5208648Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5208860Z Browse published feedback
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5209101Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5209584Z Share feedback, follow the roadmap, and see published customer updates.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5210038Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5210177Z Powered by Penny
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5210728Z ·
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5211055Z runeditrun.com
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5211406Z ·
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.5211691Z Operator sign in
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6178309Z Failure page: Skip to content
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6179287Z Penny
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6179847Z Sign out
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6180346Z Menu
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6180986Z Decision review reminders (0)
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6181649Z Your mentions
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6182024Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6182652Z No new mentions.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6183046Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6183350Z Nothing goes
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6184525Z public until
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6189291Z approved.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6189615Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6189826Z CUSTOMER FEEDBACK
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6190306Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6190566Z Review feedback before it becomes public.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6191315Z Approve customer-safe wording, board and display name explicitly. Original evidence remains private and unchanged.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6191930Z Feedback settings
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6192229Z Search
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6192508Z Tag
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6192777Z Sort
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6193054Z Recent activity
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6193357Z Oldest first
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6193637Z Name
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6193905Z Vote total
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6194188Z Moderation
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6194458Z All
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6194732Z awaiting review
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6195031Z approved
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6195434Z rejected
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6195781Z Board
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6196050Z Status
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6196332Z All
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6196611Z unpublished
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6197074Z open
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6199543Z under review
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6200287Z planned
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6200777Z in progress
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6201274Z shipped
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6201690Z declined
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6202195Z withdrawn
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6202615Z Decision
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6203019Z Account
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6203412Z Apply filters
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6203841Z Clear
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6204144Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6204704Z 2 results · Page 1 of 1
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6205089Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6205382Z Bulk request actions
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6205723Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6208164Z Loading bulk actions…
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6208560Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6208824Z Scheduled exports 390 mw54ummw
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6209225Z Approved
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6209423Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6209805Z A monthly export removes repetitive accountant handoffs.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6210242Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6210418Z Accountable owner
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6210765Z Unassigned
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6211100Z Review owner
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6211394Z Save owner
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6211588Z Evidence summary
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6211729Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6211875Z Monthly scheduling avoids a manual step.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6212067Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6212155Z Reply draft
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6212352Z Customer demand
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6212588Z Export individual votes (CSV)
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6212833Z VOTES
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6213018Z 1
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6213201Z LINKED EVIDENCE
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6213403Z 1
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6213592Z DISTINCT ACCOUNTS
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6213788Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6213889Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6214290Z Each person counts once. Accounts include those linked through voters or evidence; each account counts once.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6214680Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6214770Z Votes by account
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6214981Z Importance
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6215170Z NICE TO HAVE
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6215365Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6215544Z IMPORTANT
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6215727Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6215914Z MUST HAVE
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6216091Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6216283Z NOT SPECIFIED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6216477Z 1
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6216580Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6217147Z Each customer counts once, including proxy votes. Importance never changes public vote totals.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6217759Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6218069Z Record a customer’s vote
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6218326Z Follower notifications
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6218561Z QUEUED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6218743Z 2
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6218917Z SENT
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6219105Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6219283Z SUPPRESSED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6219471Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6219658Z FAILED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6219859Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6220035Z UNKNOWN
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6220215Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6220405Z DELIVERED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6220586Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6220999Z Supporters (1)
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6221208Z Internal notes
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6221500Z Add an internal note
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6221831Z @mention operators
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6222195Z @Review owner
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6222477Z Save note
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6223017Z Discussion, status and request controls
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6223364Z Scheduled exports 1440 mw54ummw
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6223696Z Approved
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6223805Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6224009Z A monthly export removes repetitive accountant handoffs.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6224238Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6224340Z Accountable owner
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6224640Z Unassigned
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6224876Z Review owner
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6225069Z Save owner
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6225266Z Evidence summary
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6225393Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6225580Z Synthetic Penny approved scheduling clarification.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6225795Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6225889Z Reply draft
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6226086Z Customer demand
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6226335Z Export individual votes (CSV)
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6226569Z VOTES
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6226753Z 1
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6227100Z LINKED EVIDENCE
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6227318Z 1
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6227515Z DISTINCT ACCOUNTS
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6227719Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6227828Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6228234Z Each person counts once. Accounts include those linked through voters or evidence; each account counts once.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6228613Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6228708Z Votes by account
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6228911Z Importance
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6229110Z NICE TO HAVE
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6229294Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6229470Z IMPORTANT
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6229651Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6229835Z MUST HAVE
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6230017Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6230200Z NOT SPECIFIED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6230403Z 1
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6230498Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6230845Z Each customer counts once, including proxy votes. Importance never changes public vote totals.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6231196Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6231447Z Record a customer’s vote
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6231716Z Follower notifications
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6231969Z QUEUED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6232177Z 2
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6232366Z SENT
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6232553Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6232757Z SUPPRESSED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6232947Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6233120Z FAILED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6233298Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6233477Z UNKNOWN
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6233656Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6233827Z DELIVERED
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6234014Z 0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6234194Z Supporters (1)
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6234399Z Internal notes
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6234614Z Add an internal note
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6234846Z @mention operators
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6235051Z Save note
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6235294Z Discussion, status and request controls
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6235577Z 2 awaiting review
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6235776Z Request edit
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6235893Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6236146Z Scheduled exports 1440 mw54ummw An edit with further scheduling detail.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6236434Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6236524Z Rejection reason
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6236784Z Email the author this rejection reason
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6237326Z Approve request edit
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6237632Z Reject
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6237922Z Attachment
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6238088Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6238241Z  recovery.pdf
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6238440Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6238590Z Download for review
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6238934Z Rejection reason
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6239290Z Approve attachment
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6239616Z Reject
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6239945Z Linked tracker evidence
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6240166Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6240791Z Tracker receipts do not change Penny’s status or publish an update.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6241265Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6241498Z Create or link a tracker issue
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6241926Z Tracker connection
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6242285Z Choose a connection
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6242628Z Tracker action
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6242982Z Link a known issue
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6243640Z Create a new issue
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6243965Z Stable issue ID
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6244317Z HTTPS issue URL
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6244543Z Link tracker issue
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6244769Z Publish status update
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6244914Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6245326Z Current public status: Under Review · Direct status
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6245560Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6245652Z Status
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6245839Z Open
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6246029Z Under Review
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6246229Z Planned
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6246428Z In Progress
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6246619Z Shipped
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6246799Z Declined
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6247346Z Public update
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6247688Z Optional, except when declining. Only this wording is public.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6248021Z Public ETA
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6248286Z Month or quarter. Leave blank to clear it.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6248573Z Pin above comments
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6248806Z Publish status update
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6249028Z Operator comment
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6249262Z Post public comment
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6249491Z Canonical request slug
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6249764Z Review merge
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6250041Z Public category
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6250339Z No category
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6250565Z Save category
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6250759Z Move to board
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6250959Z Move request
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6251175Z Private request tags
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6251313Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6251393Z No tags yet.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6251508Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6251788Z Create tags in Feedback settings → Private tags first.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6252012Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6252210Z Appeal (reviewed): The monthly frequency is now clear.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6252436Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.6252584Z reopen: New context merits another review.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8973050Z node:internal/modules/run_main:123
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8973747Z     triggerUncaughtException(
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8975205Z     ^
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8975456Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8975989Z AssertionError [ERR_ASSERTION]: request controls are open
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8977166Z     at openRequestControls (file:///home/runner/work/run-penny/run-penny/tests/browser/requester-evidence.mjs:34:9)
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8978293Z     at async file:///home/runner/work/run-penny/run-penny/tests/browser/requester-repair.mjs:71:25 {
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8979108Z   generatedMessage: false,
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8979493Z   code: 'ERR_ASSERTION',
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8979875Z   actual: null,
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8980233Z   expected: null,
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8980613Z   operator: 'notStrictEqual',
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8981087Z   diff: 'simple'
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8981428Z }
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8981597Z 
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.8981747Z Node.js v22.20.0
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.9402136Z  ELIFECYCLE  Command failed with exit code 1.
+shards (requester-board, true)	Run this shard	2026-11-06T15:32:31.9813732Z ##[error]Process completed with exit code 1.

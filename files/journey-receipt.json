@@ -1,0 +1,12 @@
+{
+  "command": [
+    "node",
+    "tests/runtime/duplicate-suggestions-scale.mjs"
+  ],
+  "head": "0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed",
+  "started": "2026-11-06T15:29:42.350050+00:00",
+  "ended": "2026-11-06T15:30:06.325924+00:00",
+  "elapsed_seconds": 23.975880163,
+  "exit": 0,
+  "log": "journey.log"
+}

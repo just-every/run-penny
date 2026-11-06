@@ -1,0 +1,132 @@
+[
+  {
+    "started_epoch": 1793977507.2391045,
+    "command": "cloud_run node tests/runtime/duplicate-suggestions-scale.mjs",
+    "head": "f52beea3be587114d61166d21e4be26777fa96f3",
+    "loadavg": "1.12 1.04 0.49 1/147 1295",
+    "cpu_max": "400000 100000",
+    "exit": 1,
+    "ended_epoch": 1793977591.3025038,
+    "loadavg_end": "1.31 1.10 0.56 1/142 1343",
+    "log": "journey.log",
+    "measurement": {
+      "head": "f52beea3be587114d61166d21e4be26777fa96f3",
+      "counts": {
+        "requests": 100000,
+        "boards": 100,
+        "requesters": 250000
+      },
+      "results": [
+        {
+          "door": "public",
+          "workload": "exact",
+          "samples": 25,
+          "p95": 198.2801240000008,
+          "max": 206.03827900000033
+        },
+        {
+          "door": "public",
+          "workload": "partial",
+          "samples": 25,
+          "p95": 356.387064999999,
+          "max": 357.48537600000054
+        },
+        {
+          "door": "public",
+          "workload": "absent",
+          "samples": 25,
+          "p95": 268.6596800000043,
+          "max": 297.17455800000243
+        },
+        {
+          "door": "public",
+          "workload": "unicode",
+          "samples": 25,
+          "p95": 155.56909599999926,
+          "max": 183.48300000000017
+        },
+        {
+          "door": "operator",
+          "workload": "exact",
+          "samples": 25,
+          "p95": 228.5571820000041,
+          "max": 324.2451829999991
+        },
+        {
+          "door": "operator",
+          "workload": "partial",
+          "samples": 25,
+          "p95": 211.00396999999793,
+          "max": 249.5426359999983
+        },
+        {
+          "door": "operator",
+          "workload": "absent",
+          "samples": 25,
+          "p95": 3465.4512659999964,
+          "max": 6272.782610000002
+        },
+        {
+          "door": "operator",
+          "workload": "unicode",
+          "samples": 25,
+          "p95": 2321.522232999996,
+          "max": 6376.799467000004
+        }
+      ],
+      "hardware": {
+        "platform": "linux",
+        "arch": "x64",
+        "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+        "memory": 18882662400
+      },
+      "node": "v22.20.0"
+    },
+    "phase_outcome": "TIMING_ASSERTION_FAILED"
+  },
+  {
+    "started_epoch": 1793977608.1596172,
+    "command": "cloud_run node --import ./node_modules/tsx/dist/loader.mjs ../packet/operator-unicode-probe.mjs --trace",
+    "measurement": null,
+    "loadavg": "1.02 1.05 0.55 1/139 1399",
+    "exit": 1,
+    "ended_epoch": 1793977664.165449,
+    "loadavg_end": "1.00 1.05 0.58 1/139 1454",
+    "log": "repeat-2.log",
+    "phase_outcome": "NOT RUN: local socket closed during migration 0021"
+  },
+  {
+    "started_epoch": 1793977696.4816124,
+    "command": "cloud_run node ../packet/operator-unicode-probe.mjs --trace",
+    "measurement": {
+      "head": "f52beea3be587114d61166d21e4be26777fa96f3",
+      "counts": {
+        "requests": 100000,
+        "boards": 100,
+        "requesters": 250000
+      },
+      "results": [
+        {
+          "door": "operator",
+          "workload": "unicode",
+          "samples": 25,
+          "p95": 153.01507800000036,
+          "max": 197.33593199999814
+        }
+      ],
+      "hardware": {
+        "platform": "linux",
+        "arch": "x64",
+        "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+        "memory": 18882662400
+      },
+      "node": "v22.20.0"
+    },
+    "loadavg": "0.66 0.97 0.57 1/139 1517",
+    "exit": 1,
+    "ended_epoch": 1793977716.8468142,
+    "loadavg_end": "0.82 0.98 0.58 1/139 1543",
+    "log": "repeat-3.log",
+    "phase_outcome": "25 RESPONSE/CORRECTNESS SAMPLES COMPLETED; p95 NUMERICALLY UNDER CAP; FINAL TIMING ASSERTION NOT RUN: post-measurement D1 sqlite_version() probe failed"
+  }
+]

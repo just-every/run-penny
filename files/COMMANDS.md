@@ -1,0 +1,19 @@
+# Actual setup and command record
+
+All commands ran in /home/agent/rer-consolidation/work/sd-penny-main-unicode-fix-1/repo unless noted. No full local suite/baseline suite, rer verify, deployment, CI dispatch or rerun.
+
+- Fleet global identity, launcher refresh, provided Git setup, shallow filtered clone, local fleet identity, fleet hook install and cloud branch creation: exit 0.
+- Exact historical evidence fetch to origin/evidence/sd-penny-main-unicode-triage-1: exit 0; selected files read at fa007b129ec15492b19fe3b4fae33ff67b25061f, not adopted into checkout.
+- Initial /tmp toolchain-script correction: first heredoc write hit SyntaxError; corrected before dependent commands. Supplied shell implementation retained as toolchain-setup.sh.
+- `. /tmp/rer-cloud-toolchain.sh; cloud_run pnpm install --frozen-lockfile`: exit 0 (initial VM Node 24.19.0; pnpm 10.12.4).
+- `timeout 300 npm install --prefix "$HOME/.rer/toolchain/node-22.20.0" --no-audit --no-fund node@22.20.0`: exit 0. Every subsequent runtime/check shell explicitly prepended `$HOME/.rer/toolchain/node-22.20.0/node_modules/node/bin` after sourcing toolchain shell. Actual journey logs process.version=v22.20.0.
+- `cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive`: exit 0. Setup private local settings were never read/copied into evidence; credential-bearing console lines omitted.
+- Local fleet identity and fleet hook installation repeated after dependency/setup; source staged, documented source lock command and check plus verify:base-source: exit 0. Individual receipts identify precommit HEAD f52beea3be587114d61166d21e4be26777fa96f3 with the exact staged candidate source content; clean candidate source check was separately repeated after commit.
+- `env GIT_AUTHOR_NAME='Run Edit Run fleet' GIT_AUTHOR_EMAIL=fleet@runeditrun.com GIT_COMMITTER_NAME='Run Edit Run fleet' GIT_COMMITTER_EMAIL=fleet@runeditrun.com git commit -m "Select Unicode-only suggestion candidates before corpus ranking"`: exit 0, 0a14e2fd24bdee47cbe880bb96215c6e0e9f4aed.
+- `git fetch origin main`: exit 0; same base f52beea3be587114d61166d21e4be26777fa96f3. Fleet-identity env-prefixed `git rebase origin/main`: exit 0, already current.
+- `git log origin/main..HEAD --format="%an <%ae>%n%cn <%ce>%n%(trailers:only,unfold)"` and full `%H%n%B`: exit 0; both identities fleet, no trailers. Complete candidate messages retained.
+- `python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-main-unicode-fix-1`: exit 0, first attempt; actual push receipt retained. No retry/rewrite/force/default branch push.
+- All candidate build, journey, typecheck, affected door and diagnostic commands and exits are recorded exactly in individual *-receipt.json files and RECEIPT.json. They ran via supplied cloud_run subreaper (runtime-reaper.py), with CI=true, metrics disabled and Wrangler dotenv loading disabled. These named flags are non-secret CI configuration, not an environment dump.
+- Receipt wrapper source is receipt-runner.py. It records real command, exit, HEAD, timestamps, elapsed seconds and complete captured output, omitting local credential-bearing console lines. It does not substitute assertions or alter command results.
+- One REST watcher discovers/polls exact-SHA Verify using gh api with GH_TOKEN loaded from the refreshed injected bundle only into the gh subprocess environment. github-calls.jsonl records every API call; each run is polled no more than once per 300 seconds including discovery. Selected actual API responses are retained. No signed URL/header/token output.
+- Evidence publication uses the user-supplied separate cloud_evidence.py entrypoint and explicitly selected report/receipt files only; the terminal evidence output is saved outside the packet after publication. It changes no product head/index/ref. Owned-clone cleanup occurs only after verified custody, with terminal cleanup receipt retained outside the clone.
