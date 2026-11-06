@@ -1,0 +1,173 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f93",
+  "head": "3c778e5960f10179fc055f58222173930591a565",
+  "test_command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/integration-openapi.test.ts tests/base/integration-api.test.ts tests/base/proxy-votes.test.ts",
+  "test_exit": 0,
+  "suites": 3,
+  "passed": 9,
+  "failed": 0,
+  "tests": [
+    {
+      "file": "tests/base/integration-api.test.ts",
+      "cases": [
+        {
+          "name": "[API-001 BASE-ACCESS-002] issues a reveal-once hashed key, confines route-selected scopes to the REST namespace and refuses unissued keys without a usage record",
+          "status": "passed",
+          "duration_ms": 995
+        },
+        {
+          "name": "[API-001 API-002] expiry, revocation, issuer removal and usage-write failure refuse authority after a fresh runtime",
+          "status": "passed",
+          "duration_ms": 986
+        },
+        {
+          "name": "[API-002 BASE-ACCESS-002] fences issuance and business writes against native revocation in their D1 transaction",
+          "status": "passed",
+          "duration_ms": 991
+        },
+        {
+          "name": "[API-002 BASE-OPS-002 DATA-001] applies each new migration to populated prior native history and preserves revoked authority, files and seals",
+          "status": "passed",
+          "duration_ms": 3221
+        }
+      ]
+    },
+    {
+      "file": "tests/base/integration-openapi.test.ts",
+      "cases": [
+        {
+          "name": "[DATA-006] serves an offline OpenAPI contract and reconciles every documented operation with native allowed and unchanged-state refusal journeys",
+          "status": "passed",
+          "duration_ms": 1913
+        }
+      ]
+    },
+    {
+      "file": "tests/base/proxy-votes.test.ts",
+      "cases": [
+        {
+          "name": "[CAP-014 REQ-026 REQ-010] records inbox-sourced customer demand once, without verification or consent, and collapses with the customer\u2019s later own vote",
+          "status": "passed",
+          "duration_ms": 1202
+        },
+        {
+          "name": "[CAP-014 REQ-035 REQ-008 REQ-009 DATA-001] retains native source attribution and importance through merge, unmerge and the product archive",
+          "status": "passed",
+          "duration_ms": 2537
+        },
+        {
+          "name": "[CAP-014 DATA-003] refuses stale or invalid authority and rolls back every effect if auditing fails; requester erasure removes proxy custody",
+          "status": "passed",
+          "duration_ms": 1479
+        },
+        {
+          "name": "[CAP-014 API-001 API-002] server-held scoped keys record proxy demand, refuse a read-only key and stop on revocation",
+          "status": "passed",
+          "duration_ms": 1142
+        }
+      ]
+    }
+  ],
+  "additional_checks": [
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec oxlint (eight touched files and modules)",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0
+    }
+  ],
+  "mechanical": {
+    "views": {
+      "write": "node src/base/contract-docs.mjs write",
+      "check": "node src/base/contract-docs.mjs check",
+      "write_exit": 0,
+      "check_exit": 0,
+      "restored_from": "origin/main",
+      "committed": false
+    },
+    "lock": {
+      "write": "node scripts/edition-authoring/cli.mjs lock",
+      "check": "node scripts/edition-authoring/cli.mjs check",
+      "write_exit": 0,
+      "check_exit": 0,
+      "exact_head_check_exit": 0
+    },
+    "ledger": {
+      "command": null,
+      "exit": 0,
+      "reason": "No migration added or edited."
+    }
+  },
+  "exact_head_files_sha256": {
+    "src/core/app/api.ts": "03db0466b042b0eef48fd617121e079534cc95cf7a501e7afa7a735f2b9f4cc0",
+    "src/core/features/docs/openapi-route.ts": "7c89f1f0742f5be6b34bd766b30430c2c431a1eb92f1992b744f9ed6ea5d2bb5",
+    "src/core/features/integrations/api-routes.ts": "1e8ae83b4e67cde146350305b3e9426bd1d9e1036f1246a60445b75a6fe05ce1",
+    "src/core/features/integrations/openapi/document.ts": "1c4a49d7092ed1c485fa5fa7856a2af66cf4b5bcdb20fd1b804ec47e4e536d37",
+    "src/core/features/integrations/openapi/inputs.ts": "b447a078c0c55d56344161782765d2cf17e837cab8e424eb88a87ddcda6cf280",
+    "src/core/features/integrations/openapi/responses.ts": "b1eced067e8b0b9ac5f0d76cc3093c038dca13afd742ca5d3018bfd76201987f",
+    "tests/base/integration-api.test.ts": "018e506a4b8a1d634df66f8564c179d61123245bc1acc935bb9fbb2b5f0d3baf",
+    "tests/base/integration-openapi.test.ts": "8153d091c107b6150ffc96ed0b703bcbe584cc2968f74ab21c1d6d73b9608531",
+    "tests/base/proxy-votes.test.ts": "ea347190efa40431effa10143b02ac57618f2128a8fbc91cae099f6ddf1d82b0",
+    "sources.lock.json": "c7b9a34d210688de0188aa76093ac328372843c0436bfab1ceb70635f77ab03b"
+  },
+  "authority_and_privacy": {
+    "operations": 14,
+    "unauthenticated": 401,
+    "malformed_credential": 401,
+    "insufficient_scope": 401,
+    "revoked": 401,
+    "refusals_leave_business_snapshots_unchanged": true,
+    "held_request_excluded": true,
+    "proxy_permission_grants": 0
+  },
+  "publication_scan": {
+    "status": "not_run_in_cloud",
+    "owner": "guarded Mac lander",
+    "required_at_landing": true
+  },
+  "ui": {
+    "changed_screens": 0,
+    "browser_screens": "not applicable; machine-readable route and native contract proof only"
+  },
+  "push": {
+    "result": "PUSH_OK",
+    "attempt": 1,
+    "verified_remote_head": "3c778e5960f10179fc055f58222173930591a565",
+    "worktree_clean": true,
+    "full_history": true
+  },
+  "ci": {
+    "run": {
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "3c778e5960f10179fc055f58222173930591a565",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42190618712",
+      "id": 42190618712,
+      "name": "Verify Penny",
+      "status": "completed"
+    },
+    "jobs": 30,
+    "failed_shards": 29,
+    "only_failed_step": "Check generated contract documents",
+    "classification": "Expected generated-view-only exception; eligible for READY under the brief. No green test workflow is claimed.",
+    "api_calls_used": 6,
+    "reruns_or_dispatches": 0
+  },
+  "blockers_in_selected_scope": []
+}

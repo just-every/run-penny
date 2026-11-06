@@ -1,0 +1,15 @@
+head=3c778e5960f10179fc055f58222173930591a565
+MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock and check exit=0; views=node src/base/contract-docs.mjs write and check exit=0; ledger=none exit=0
+Generated views restored from origin/main before committing; no migration change.
+views write
+Wrote 1 contract documents.
+
+views check
+Contract documents are current.
+
+lock check exact HEAD
+exit=0; True
+first-party check
+exit=0
+Base source custody
+exit=0; True

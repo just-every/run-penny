@@ -1,0 +1,22 @@
+head=3c778e5960f10179fc055f58222173930591a565
+PROBE DATA-006 point 1: emitted Worker GET /docs/openapi.json and all 14 documented native operations with populated fixture data -> 200 JSON document; successful results match its schemas; invalid inputs, absent or malformed credentials, insufficient scopes and revoked keys are refused with business snapshots unchanged.
+Document-driven operation results:
+- GET /api/v1/boards -> 200, nonempty board and category projection.
+- GET /api/v1/requests with board, search and sort -> 200, nonempty approved request projection.
+- POST /api/v1/requests with native board and wording -> 201, held request identity; held wording absent from public lists.
+- GET /api/v1/requests/{slug} -> 200, matching request with published comment and pinned status wording.
+- GET /api/v1/requests/{slug}/comments -> 200, nonempty public comments.
+- POST /api/v1/requests/{slug}/comments with approve=true -> 201, published comment identity.
+- GET /api/v1/requests/{slug}/status-updates -> 200, nonempty public status history.
+- POST /api/v1/requests/{slug}/status-updates with approval and idempotency key -> 200, published=true.
+- GET /api/v1/proxy-vote-contacts with contact search -> 200, exact newly recorded native contact, no verified address.
+- POST /api/v1/requests/{slug}/proxy-votes with a new synthetic contact and source -> 200, created=true, no verification or update permission.
+- GET /api/v1/releases -> 200, nonempty current release projection.
+- POST /api/v1/releases with native targets and draft data -> 201, new release and version identities.
+- GET /api/v1/releases/{slug} -> 200, exact selected release wording and current state.
+- POST /api/v1/releases/{slug}/publish with approval -> 200, release and version identities.
+For each operation: absent credentials=401; malformed credentials=401; wrong scope=401; revoked key=401; all refusal business snapshots unchanged.
+For each mutation: empty and unknown-field bodies=400, both rejected by the published input schema; no business changes.
+For parameterized reads: invalid slug, sort or excessive contact query=400. The two unfiltered array list endpoints have no invalid supported parameter; unsupported PUT=404 instead.
+Additional native refusals: impossible calendar date, non-HTTP setup URL, competing proxy selectors and duplicate evidence identifiers -> 400 with snapshots unchanged. Replayed status publication reuses one result; changed content under its idempotency key -> 409.
+Native admission: foreign Origin mutation=403 with snapshots unchanged; foreign Origin read with a valid server credential=200, matching the documented mutation-only Origin policy. Integration credential at operator read door=401. Unknown API and document paths, including a nested OpenAPI path=404. Existing /docs=200 and OpenAPI response sets no cookie.

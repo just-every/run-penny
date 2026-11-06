@@ -1,0 +1,18 @@
+command=python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f93
+result=PUSH_OK
+transport_attempt=1
+remote_ref=3c778e5960f10179fc055f58222173930591a565	refs/heads/cloud/sd-penny-c-f93
+worktree=clean
+full_history=true
+3c778e5960f10179fc055f58222173930591a565
+Run Edit Run fleet <fleet@runeditrun.com>
+Run Edit Run fleet <fleet@runeditrun.com>
+
+Reconcile OpenAPI Origin semantics and revoked-key contract cases
+
+045534fd378715fa848c9a66ef8d010c2411dfb5
+Run Edit Run fleet <fleet@runeditrun.com>
+Run Edit Run fleet <fleet@runeditrun.com>
+
+Replay native integration OpenAPI proof onto current main [skip ci]
+

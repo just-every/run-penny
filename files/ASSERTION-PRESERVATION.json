@@ -1,0 +1,74 @@
+{
+  "parent": "e0d08ded23baf16293d79c3b725bbd2276ad4d1b",
+  "head": "3c778e5960f10179fc055f58222173930591a565",
+  "original": "tests/base/integration-api.test.ts",
+  "receiving": "tests/base/integration-openapi.test.ts",
+  "journey": "[API-003 REQ-010 REL-001] composes native public reads, comments, status publication and validation without widening approval or consent",
+  "normalization": "The original direct API helper becomes the emitted Worker call helper; snapshot is renamed publicationSnapshot; whitespace is ignored.",
+  "assertions": [
+    {
+      "expression": "expect((await request('/api/v1/requests/'+slug+'/comments',{body:'Comment without approval'},issued.headers)).status).toBe(400)",
+      "preserved": true
+    },
+    {
+      "expression": "expect((await request('/api/v1/requests',{title:'New',description:'Body',boardSlug:'missing'},issued.headers)).status).toBe(404)",
+      "preserved": true
+    },
+    {
+      "expression": "expect((await request('/api/v1/requests',{title:'New',description:'Body',boardSlug:'regression',resource:'releases'},issued.headers)).status).toBe(400)",
+      "preserved": true
+    },
+    {
+      "expression": "expect(await snapshot()).toEqual(before)",
+      "preserved": true
+    },
+    {
+      "expression": "expect((await request('/api/v1/requests/'+slug+'/comments',{body:'Approved safe comment',approve:true},issued.headers)).status).toBe(201)",
+      "preserved": true
+    },
+    {
+      "expression": "expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)",
+      "preserved": true
+    },
+    {
+      "expression": "expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)",
+      "preserved": true
+    },
+    {
+      "expression": "expect((await request('/api/v1/requests/'+slug+'/status-updates',{...action,body:'Different'},issued.headers)).status).toBe(409)",
+      "preserved": true
+    },
+    {
+      "expression": "expect(await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n')).toBe(1)",
+      "preserved": true
+    },
+    {
+      "expression": "expect(await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')).toBe(before.permissions)",
+      "preserved": true
+    },
+    {
+      "expression": "expect(publicText).toContain('Approved safe comment')",
+      "preserved": true
+    },
+    {
+      "expression": "expect(publicText).toContain('Approved public update')",
+      "preserved": true
+    },
+    {
+      "expression": "expect(publicText).not.toContain(g.recipient.email)",
+      "preserved": true
+    },
+    {
+      "expression": "expect((await request('/api/v1/releases/missing/publish',{approve:true},issued.headers)).status).toBe(404)",
+      "preserved": true
+    },
+    {
+      "expression": "expect(fresh.status).toBe(201)",
+      "preserved": true
+    },
+    {
+      "expression": "expect(await (await request('/api/v1/requests',undefined,issued.headers)).text()).not.toContain('Private unreviewed wording')",
+      "preserved": true
+    }
+  ]
+}

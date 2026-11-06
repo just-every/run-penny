@@ -1,0 +1,14 @@
+# sd-penny-c-f93 execution plan
+
+The selected scope is DATA-006 point 1 for the existing scoped API operations. DATA-006 stays partial; the brief explicitly omits additional operator resource families, full pagination and filters, and point 2 lifecycle-webhook proof. No other clause or campaign is selected.
+
+1. Read the inline campaign extract, current DATA-006 requirement and acceptance, current Status evidence and Gap, Penny's own development and landing rules, and the inherited DONE riders. Preserve every earlier hold.
+2. Use a fresh full-history clone on current main. Replay the refused predecessor's two product commits, 1b4ab258feaf85a52df44fba224333839d345e0e and 4ab9cda462ad2d3b68106df1f2ddf5f4b76ad748, onto the new named branch. Retain main's newer audit-route import and registration, changelog and every Status row. Regenerate source custody rather than resolve hash conflicts by hand.
+3. Serve the machine-readable contract from the exact public document route. Share the existing request validators with the native handlers and describe the actual response projections, bearer authentication and required scopes for all 14 selected operations.
+4. Keep one broad built-Worker HTTP contract journey. Populate native fixture data, fetch the contract offline, drive every operation from its paths and schemas, validate populated responses and exercise invalid bodies or parameters, absent or malformed credentials, wrong scopes, and revoked credentials with unchanged business snapshots. Preserve every assertion of the publication journey consolidated into this registration.
+5. Run only touched native tests, typecheck, lint on touched files, first-party structural inspection, and Base source-custody verification. No visual screen is changed; homepage, logos, documentation layout and styles remain untouched.
+6. Save the first real commit immediately through the fleet push guard. Merge current main before the landing candidate; do not rebase published work. Generate contract views locally and check them, restore both generated files from main, regenerate the source lock last and check it. Keep all 281 Status rows.
+7. Commit and push only the named product branch. Discover exact-head Verify through REST within the ten-call budget and classify only actual completed results. The expected stale generated-view failure belongs to the guarded lander.
+8. Store the actual report, receipts and complete relevant public evidence outside the product clone. Publish only explicitly selected files through the separate evidence ref. Record product provenance, CI status and lane handoff, then delete the pushed clone and dependencies.
+
+No provider credentials, deployment, live mail, hosted publication or external account qualification is needed or claimed. No new policy default, acceptance sentence or Base version is introduced.

@@ -1,0 +1,61 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f93",
+  "head": "3c778e5960f10179fc055f58222173930591a565",
+  "main_at_merge": "e0d08ded23baf16293d79c3b725bbd2276ad4d1b",
+  "save": "045534fd378715fa848c9a66ef8d010c2411dfb5",
+  "replayed_from": [
+    "1b4ab258feaf85a52df44fba224333839d345e0e",
+    "4ab9cda462ad2d3b68106df1f2ddf5f4b76ad748"
+  ],
+  "product_files": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "docs/API.md",
+    "package.json",
+    "pnpm-lock.yaml",
+    "sources.lock.json",
+    "src/core/app/api.ts",
+    "src/core/features/docs/openapi-route.ts",
+    "src/core/features/integrations/api-routes.ts",
+    "src/core/features/integrations/openapi/document.ts",
+    "src/core/features/integrations/openapi/inputs.ts",
+    "src/core/features/integrations/openapi/responses.ts",
+    "tests/base/integration-api.test.ts",
+    "tests/base/integration-openapi.test.ts"
+  ],
+  "generated_views_committed": false,
+  "pr": null,
+  "clause": {
+    "id": "DATA-006",
+    "before": "partial",
+    "after": "partial",
+    "selected_slice": "point 1, existing 14 operations"
+  },
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "test_registration_delta": 0,
+  "status_rows_before": 281,
+  "status_rows_after": 281,
+  "main_checks": {
+    "head": "e0d08ded23baf16293d79c3b725bbd2276ad4d1b",
+    "verify": 42186734450,
+    "verify_conclusion": "success",
+    "run_site": 42186734578,
+    "run_site_conclusion": "success"
+  },
+  "predecessor_verify": {
+    "id": 42183620010,
+    "conclusion": "failure",
+    "only_failed_step": "Check generated contract documents",
+    "all_29_failed_shards_same_step": true
+  }
+}

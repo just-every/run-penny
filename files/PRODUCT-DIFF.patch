@@ -1,0 +1,521 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 1cfa86a..e1f3d2e 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -5,0 +6 @@
++- Serve an offline OpenAPI document at `/docs/openapi.json` for the existing scoped board, request, comment, status, release and proxy-vote operations. Share request validators with native routes and reconcile populated HTTP responses, invalid inputs, missing credentials and insufficient scopes in one built-Worker sanity journey, replacing the overlapping native publication registration with all of its assertions retained. Preserve native admission, explicit approval, held wording and consent boundaries. DATA-006 remains partial for other resource families, full pagination and filters, and lifecycle-webhook proof. No migration or configuration change is required.
+diff --git a/CONTRACT.md b/CONTRACT.md
+index 28609d9..dbd3775 100644
+--- a/CONTRACT.md
++++ b/CONTRACT.md
+@@ -3513 +3513 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+-| `DATA-006` | Complete API and webhooks | target | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts` | Requests, comments, status and releases are covered today, as are proxy-vote customer lookup and recording under `votes:write`; the remaining record types, full pagination/filter coverage and OpenAPI acceptance remain required. OpenAPI contract tests exercise every resource through the public API; each webhook's signature verifies and replays are rejected. |
++| `DATA-006` | Complete API and webhooks | target | partial | `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts`; `tests/base/integration-openapi.test.ts` — serves an offline OpenAPI contract and reconciles every documented operation with native allowed and unchanged-state refusal journeys (point 1, existing resource slice) | OpenAPI and native contract proof cover existing boards, requests, comments, status updates, releases and proxy-vote contact lookup and recording. Point 1 remains incomplete for other operator record types and their OpenAPI coverage and full pagination and filters; point 2 still requires each lifecycle webhook signature and replay proof. Existing provider, account, Base and publication-custody holds remain unchanged. |
+diff --git a/docs/API.md b/docs/API.md
+index 5a58582..d4f92fd 100644
+--- a/docs/API.md
++++ b/docs/API.md
+@@ -86,0 +87,18 @@ return `csv_export_limit` (413); use the complete portable archive instead.
++
++## Machine-readable contract
++
++The installation serves its machine-readable OpenAPI document at `/docs/openapi.json`
++without sign-in. It describes the existing native board, request, comment, status,
++release and proxy-vote operations with their request and response schemas and
++required key scopes. Issue a key in the authenticated integration settings and
++send it as a Bearer credential. Missing, expired, revoked and insufficient-scope
++keys return 401. Mutations refuse a supplied foreign Origin and cross-site fetch
++metadata; server clients may omit Origin.
++
++Request lists support the documented filters; these operations return arrays
++without pagination. Requests created through this API remain held for native
++moderation. Comment, status and release publication require explicit approval,
++and release publication retains its current target and mapping checks. Proxy
++votes grant neither verified identity nor email permission. Other operator
++resource families and complete lifecycle-webhook coverage remain unfinished
++under DATA-006.
+diff --git a/package.json b/package.json
+index f20f27e..db5a9d0 100644
+--- a/package.json
++++ b/package.json
+@@ -84,0 +85 @@
++    "@cfworker/json-schema": "4.1.1",
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 19a720c..b797fa4 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -35,0 +36,3 @@ importers:
++      '@cfworker/json-schema':
++        specifier: 4.1.1
++        version: 4.1.1
+@@ -174,0 +178,3 @@ packages:
++  '@cfworker/json-schema@4.1.1':
++    resolution: {integrity: sha512-gAmrUZSGtKc3AiBL71iNWxDsyUC5uMaKKGdvzYsBoTW/xi42JQHl7eKV2OYzCUqvc+D2RCcf7EXY2iCyFIk6og==}
++
+@@ -2589,0 +2596,2 @@ snapshots:
++  '@cfworker/json-schema@4.1.1': {}
++
+diff --git a/src/core/app/api.ts b/src/core/app/api.ts
+index 20e379f..9b66c49 100644
+--- a/src/core/app/api.ts
++++ b/src/core/app/api.ts
+@@ -1,0 +2 @@ import { registerAuditRoutes } from '@/core/features/audit/routes'
++import { registerOpenApiRoute } from '@/core/features/docs/openapi-route'
+@@ -124,0 +126 @@ export function createPennyApi(options: PennyAppOptions = {}) {
++  registerOpenApiRoute(app)
+diff --git a/src/core/features/docs/openapi-route.ts b/src/core/features/docs/openapi-route.ts
+new file mode 100644
+index 0000000..a853b39
+--- /dev/null
++++ b/src/core/features/docs/openapi-route.ts
+@@ -0,0 +1,11 @@
++import type { Hono } from 'hono'
++import type { OperatorMutationEnvironment } from '@/core/app/operator-mutations'
++import { integrationOpenApi } from '../integrations/openapi/document'
++
++export function registerOpenApiRoute(app: Hono<OperatorMutationEnvironment>) {
++  app.get('/docs/openapi.json', context => {
++    context.header('Cache-Control', 'no-store')
++    context.header('X-Content-Type-Options', 'nosniff')
++    return context.json(integrationOpenApi)
++  })
++}
+diff --git a/src/core/features/integrations/api-routes.ts b/src/core/features/integrations/api-routes.ts
+index 5ebdadf..68078fd 100644
+--- a/src/core/features/integrations/api-routes.ts
++++ b/src/core/features/integrations/api-routes.ts
+@@ -3 +3 @@ import { publicRequestFiltersSchema } from '../portal/routes'
+-import { statusPublicationSchema } from '../requests/status-schema'
++import { createIntegrationRequest as create, integrationComment as comment, integrationStatus as status, integrationRelease, integrationApproval, integrationSlug as slug } from './openapi/inputs'
+@@ -13 +13 @@ import {RequestOperatorRepository} from '../requests/operator-repository'
+-import {saveReleaseDraft,releaseDraftSchema} from '../releases/drafts'
++import {saveReleaseDraft} from '../releases/drafts'
+@@ -16,4 +15,0 @@ import {apiAuthority,apiScopes,managedKeys} from './keys'
+-const text=z.string().trim().min(1).max(20000),slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(128)
+-const create=z.object({title:z.string().trim().min(1).max(280),description:text,boardSlug:slug,evidenceIds:z.array(z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/)).max(100).default([])}).strict()
+-const comment=z.object({body:text,approve:z.literal(true)}).strict()
+-const status=statusPublicationSchema.extend({idempotencyKey:z.string().regex(/^[A-Za-z0-9_-]+$/).min(1).max(128),approve:z.literal(true)}).strict()
+@@ -77 +73 @@ export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
+-  const auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases'),input=await parseInput(c.req.raw,releaseDraftSchema.omit({authorOperatorId:true}))
++  const auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases'),input=await parseInput(c.req.raw,integrationRelease)
+@@ -81 +77 @@ export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
+-  const key=slug.parse(c.req.param('slug')),auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases');await parseInput(c.req.raw,z.object({approve:z.literal(true)}).strict())
++  const key=slug.parse(c.req.param('slug')),auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases');await parseInput(c.req.raw,integrationApproval)
+diff --git a/src/core/features/integrations/openapi/document.ts b/src/core/features/integrations/openapi/document.ts
+new file mode 100644
+index 0000000..6141897
+--- /dev/null
++++ b/src/core/features/integrations/openapi/document.ts
+@@ -0,0 +1,100 @@
++import { z } from 'zod'
++import { publicRequestFiltersSchema } from '../../portal/routes'
++import { proxyVoteSchema } from '../../requests/proxy-votes'
++import { apiScopes } from '../keys'
++import { createIntegrationRequest, integrationApproval, integrationComment, integrationRelease, integrationSlug, integrationStatus } from './inputs'
++import { releaseResponses, responses } from './responses'
++
++type Schema = Record<string, unknown>
++const jsonSchema = (schema: z.ZodType): Schema => {
++  const { $schema: _dialect, ...result } = z.toJSONSchema(schema, { io: 'input', unrepresentable: 'any' })
++  return result
++}
++const ref = (name: string) => ({ $ref: '#/components/schemas/' + name })
++const content = (name: string) => ({ 'application/json': { schema: ref(name) } })
++const inputs = {
++  CreateRequest: createIntegrationRequest, CreateComment: integrationComment,
++  PublishStatus: integrationStatus, CreateRelease: integrationRelease,
++  Approval: integrationApproval, RecordProxyVote: proxyVoteSchema,
++}
++const schemas: Record<string, Schema> = Object.fromEntries(Object.entries({ ...inputs, ...responses, ...releaseResponses }).map(([name, schema]) => [name, jsonSchema(schema)]))
++// These cross-field and URL refinements cannot be emitted by Zod's JSON Schema converter.
++const createProperties = schemas.CreateRequest.properties as Record<string, Schema>
++createProperties.evidenceIds.uniqueItems = true
++const releaseProperties = schemas.CreateRelease.properties as Record<string, Schema>
++releaseProperties.publicationDate.format = 'date'
++releaseProperties.setupUrl = { anyOf: [{ const: '' }, { type: 'string', format: 'uri', pattern: '^https?://' }] }
++const proxyProperties = schemas.RecordProxyVote.properties as Record<string, Schema>
++proxyProperties.sourceUrl.pattern = '^[Hh][Tt][Tt][Pp][Ss]?:'
++proxyProperties.sourceUrl.not = { pattern: '^[Hh][Tt][Tt][Pp][Ss]?://[^/?#]*@' }
++schemas.RecordProxyVote.oneOf = [
++  { required: ['requesterId'], not: { required: ['contact'] } },
++  { required: ['contact'], not: { required: ['requesterId'] } },
++]
++schemas.RecordProxyVote.description = 'Select exactly one active requesterId or new contact. A source URL uses HTTP or HTTPS without embedded credentials. Importance requires the board setting. No identity verification or email permission is granted.'
++schemas.CreateRequest.description = 'Evidence identifiers must be distinct and exist. Creates held wording awaiting native moderation; this operation does not publish it.'
++schemas.CreateRelease.description = 'A valid calendar publication date is required. Setup URL is empty or HTTP or HTTPS. Tags must exist; targets must have current approved request mappings. Creates a draft attributed to the key issuer.'
++schemas.PublishStatus.description = 'Explicit approval and an idempotency key are required. Repeating the same action reuses its result; changed wording under that key is refused. ETA is a month or quarter.'
++
++type Scope = typeof apiScopes[number]
++type Parameter = { name: string; in: 'path' | 'query'; required?: boolean; schema: Schema; description?: string }
++const slug: Parameter = { name: 'slug', in: 'path', required: true, schema: jsonSchema(integrationSlug) }
++function operation(operationId: string, summary: string, scope: Scope, output: string, status = 200, input?: keyof typeof inputs, parameters: Parameter[] = []) {
++  const projection = operationId === 'findProxyContacts' ? 'Customer lookup returns private active contact choices; keep this votes:write key on the server.' : 'Request, board and release reads expose approved public projections.'
++  return {
++    operationId, summary, security: [{ integrationKey: [] }], 'x-required-scopes': [scope],
++    description: `Requires a current installation key with ${scope}. Missing, expired, revoked and insufficient-scope keys all return 401. Mutations refuse a supplied foreign Origin and cross-site fetch metadata; server clients may omit Origin. ${projection}`,
++    parameters,
++    ...(input ? { requestBody: { required: true, description: 'JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.', content: content(input) } } : {}),
++    responses: {
++      [status]: { description: 'Successful native operation.', content: content(output) },
++      '400': { description: 'Invalid body, path or supported query. Empty request-list query values are ignored.', content: content('Error') },
++      '401': { description: 'Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.', content: content('Error') },
++      '403': { description: 'Origin or native authority refused.', content: content('Error') },
++      '404': { description: 'Resource unavailable to this operation, or unknown route or method.', content: content('Error') },
++      '409': { description: 'Conflicting idempotency key, changed custody or unavailable current state.', content: content('Error') },
++      '422': { description: 'Referenced records or publication prerequisites are not satisfied.', content: content('Error') },
++      '503': { description: 'Required authority, storage or service unavailable; no successful result is claimed.', content: content('Error') },
++    },
++  }
++}
++const filters = jsonSchema(publicRequestFiltersSchema).properties as Record<string, Schema>
++const queryParameters: Parameter[] = Object.entries(filters).map(([name, schema]) => ({ name, in: 'query', schema }))
++
++/** Only existing scoped REST operations are described. Operator administration and future resource families are outside this document. */
++export const integrationOpenApi = {
++  openapi: '3.1.0', jsonSchemaDialect: 'https://json-schema.org/draft/2020-12/schema',
++  info: {
++    title: 'Penny native integration API', version: '1',
++    description: 'Existing scoped REST operations only. Lists are returned as arrays; pagination and additional operator resource families are not implemented. Request lists accept only the documented filters. Other list operations ignore extra query values. Issue keys through authenticated native integration settings. Keys do not admit operator pages, exports or configuration. Publication needs explicit approval and existing native prerequisites.',
++  },
++  servers: [{ url: '/' }],
++  paths: {
++    '/api/v1/boards': { get: operation('listBoards', 'List public boards', 'requests:read', 'Boards') },
++    '/api/v1/requests': {
++      get: operation('listRequests', 'List approved requests', 'requests:read', 'Requests', 200, undefined, queryParameters),
++      post: operation('createRequest', 'Create a held request', 'requests:write', 'CreatedRequest', 201, 'CreateRequest'),
++    },
++    '/api/v1/requests/{slug}': { get: operation('getRequest', 'Read an approved request or canonical lookup', 'requests:read', 'Request', 200, undefined, [slug]) },
++    '/api/v1/requests/{slug}/comments': {
++      get: operation('listComments', 'List approved comments', 'comments:read', 'Comments', 200, undefined, [slug]),
++      post: operation('createComment', 'Publish an approved operator comment', 'comments:write', 'CreatedComment', 201, 'CreateComment', [slug]),
++    },
++    '/api/v1/requests/{slug}/status-updates': {
++      get: operation('listStatusUpdates', 'List published status updates', 'status:read', 'StatusUpdates', 200, undefined, [slug]),
++      post: operation('publishStatus', 'Publish an approved status update', 'status:write', 'PublishedStatus', 200, 'PublishStatus', [slug]),
++    },
++    '/api/v1/proxy-vote-contacts': { get: operation('findProxyContacts', 'Find active proxy-vote customers, at most 25', 'votes:write', 'Contacts', 200, undefined, [{ name: 'q', in: 'query', schema: { type: 'string', maxLength: 200 } }]) },
++    '/api/v1/requests/{slug}/proxy-votes': { post: operation('recordProxyVote', 'Record attributed customer demand without granting consent', 'votes:write', 'ProxyVote', 200, 'RecordProxyVote', [slug]) },
++    '/api/v1/releases': {
++      get: operation('listReleases', 'List published current releases', 'releases:read', 'Releases'),
++      post: operation('createRelease', 'Create a release draft', 'releases:write', 'CreatedRelease', 201, 'CreateRelease'),
++    },
++    '/api/v1/releases/{slug}': { get: operation('getRelease', 'Read a published current release', 'releases:read', 'Release', 200, undefined, [slug]) },
++    '/api/v1/releases/{slug}/publish': { post: operation('publishRelease', 'Publish an explicitly approved release with current Shipped targets', 'releases:write', 'PublishedRelease', 200, 'Approval', [slug]) },
++  },
++  components: {
++    securitySchemes: { integrationKey: { type: 'http', scheme: 'bearer', bearerFormat: 'installation integration key', description: 'Reveal-once key issued by this installation. Each operation names its required native scope in x-required-scopes. Insufficient scope returns 401.' } },
++    schemas,
++  },
++}
+diff --git a/src/core/features/integrations/openapi/inputs.ts b/src/core/features/integrations/openapi/inputs.ts
+new file mode 100644
+index 0000000..178cefa
+--- /dev/null
++++ b/src/core/features/integrations/openapi/inputs.ts
+@@ -0,0 +1,16 @@
++import { z } from 'zod'
++import { statusPublicationSchema } from '../../requests/status-schema'
++import { releaseDraftSchema } from '../../releases/drafts'
++
++export const integrationSlug = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(128)
++const text = z.string().trim().min(1).max(20000)
++export const createIntegrationRequest = z.object({
++  title: z.string().trim().min(1).max(280), description: text, boardSlug: integrationSlug,
++  evidenceIds: z.array(z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/)).max(100).default([]),
++}).strict()
++export const integrationComment = z.object({ body: text, approve: z.literal(true) }).strict()
++export const integrationStatus = statusPublicationSchema.extend({
++  idempotencyKey: z.string().regex(/^[A-Za-z0-9_-]+$/).min(1).max(128), approve: z.literal(true),
++}).strict()
++export const integrationRelease = releaseDraftSchema.omit({ authorOperatorId: true })
++export const integrationApproval = z.object({ approve: z.literal(true) }).strict()
+diff --git a/src/core/features/integrations/openapi/responses.ts b/src/core/features/integrations/openapi/responses.ts
+new file mode 100644
+index 0000000..9f0d503
+--- /dev/null
++++ b/src/core/features/integrations/openapi/responses.ts
+@@ -0,0 +1,58 @@
++import { z } from 'zod'
++
++const text = z.string(), nullableText = text.nullable(), count = z.number().int().nonnegative()
++const named = z.object({ id: text, name: text }).strict()
++const boardReference = z.object({ slug: text, name: text }).strict()
++const category = named.extend({ parent: named.nullable() }).strict().nullable()
++const status = z.enum(['open', 'under_review', 'planned', 'in_progress', 'shipped', 'declined'])
++export const publicComment = z.object({
++  id: text, author: z.object({ displayName: text, kind: z.enum(['requester', 'operator']) }).strict(),
++  body: text, publishedAt: text,
++}).strict()
++export const publicStatus = z.object({
++  id: text, status: z.union([status, z.literal('withdrawn')]), body: text,
++  pinned: z.union([z.literal(0), z.literal(1)]), publishedAt: text,
++}).strict()
++export const requestCard = z.object({
++  slug: text, board: boardReference, title: text, description: text, status,
++  publicEta: nullableText, statusLabel: nullableText, category, voteCount: count.optional(),
++  commentCount: count, publishedAt: text, recentActivityAt: text,
++}).strict()
++const requestDetail = requestCard.extend({
++  authorDisplayName: nullableText, commentsAllowed: z.boolean(), showVoters: z.boolean(),
++  voters: z.array(z.object({ displayName: text }).strict()).optional(),
++  comments: z.array(publicComment), statusUpdates: z.array(publicStatus),
++  attachments: z.array(z.object({ id: text, filename: text, contentType: text }).strict()),
++}).strict()
++export const responses = {
++  Error: z.object({ error: text, message: text.optional() }).strict(),
++  Boards: z.array(boardReference.extend({
++    requestCount: count, categoryMode: z.enum(['off', 'optional', 'required']),
++    postingPolicy: z.enum(['requesters', 'operators']), commentsAllowed: z.boolean(),
++    showVoteCounts: z.boolean(), showVoters: z.boolean(), anonymousRequesters: z.boolean(),
++    importanceChoices: z.array(text),
++    categories: z.array(named.extend({ parentId: nullableText, position: z.number(), archived: z.boolean(), requestCount: count }).strict()),
++    subscriptionDisclosure: z.object({ enabled: z.boolean(), version: z.number().int(), vote: nullableText, submission: nullableText }).strict(),
++  }).strict()),
++  Requests: z.array(requestCard),
++  Request: z.union([
++    z.object({ kind: z.literal('found'), request: requestDetail }).strict(),
++    z.object({ kind: z.literal('redirect'), slug: text }).strict(),
++    z.object({ kind: z.literal('withdrawn') }).strict(),
++  ]),
++  Comments: z.array(publicComment),
++  StatusUpdates: z.array(publicStatus),
++  CreatedRequest: z.object({ id: text, slug: text }).strict(),
++  CreatedComment: z.object({ id: text }).strict(),
++  PublishedStatus: z.object({ published: z.literal(true) }).strict(),
++  Contacts: z.array(z.object({ id: text, displayName: text, email: nullableText }).strict()),
++  ProxyVote: z.object({ requesterId: text, created: z.boolean() }).strict(),
++  CreatedRelease: z.object({ id: text, slug: text, versionId: text }).strict(),
++  PublishedRelease: z.object({ id: text, versionId: text }).strict(),
++}
++const release = z.object({
++  slug: text, versionNumber: z.number().int(), title: text, releaseType: z.enum(['new', 'improved', 'fixed']),
++  body: text, publicationDate: text, setupUrl: nullableText, authorName: text,
++  labels: z.array(named), products: z.array(named), isCurrent: z.literal(true),
++}).strict()
++export const releaseResponses = { Release: release, Releases: z.array(release) }
+diff --git a/tests/base/integration-api.test.ts b/tests/base/integration-api.test.ts
+index d0d2692..0708f07 100644
+--- a/tests/base/integration-api.test.ts
++++ b/tests/base/integration-api.test.ts
+@@ -7 +6,0 @@ import {observeD1} from './review-race-storage'
+-import {graph} from './notification-regression-fixture'
+@@ -74,23 +72,0 @@ it('[API-002 BASE-ACCESS-002] fences issuance and business writes against native
+-it('[API-003 REQ-010 REL-001] composes native public reads, comments, status publication and validation without widening approval or consent',async()=>{
+- const g=await graph(),issued=await key(g.operator,['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write'])
+- const slug=g.requests[0].slug
+- const snapshot=async()=>({requests:await env.DB.prepare('SELECT count(*) n FROM requests').first('n'),comments:await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n'),updates:await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n'),permissions:await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')})
+- const before=await snapshot()
+- expect((await request('/api/v1/requests/'+slug+'/comments',{body:'Comment without approval'},issued.headers)).status).toBe(400)
+- expect((await request('/api/v1/requests',{title:'New',description:'Body',boardSlug:'missing'},issued.headers)).status).toBe(404)
+- expect((await request('/api/v1/requests',{title:'New',description:'Body',boardSlug:'regression',resource:'releases'},issued.headers)).status).toBe(400)
+- expect(await snapshot()).toEqual(before)
+- expect((await request('/api/v1/requests/'+slug+'/comments',{body:'Approved safe comment',approve:true},issued.headers)).status).toBe(201)
+- const action={status:'under_review',body:'Approved public update',pinned:false,idempotencyKey:'native-api-update',approve:true}
+- expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)
+- expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)
+- expect((await request('/api/v1/requests/'+slug+'/status-updates',{...action,body:'Different'},issued.headers)).status).toBe(409)
+- expect(await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n')).toBe(1)
+- expect(await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')).toBe(before.permissions)
+- const publicText=await (await request('/api/v1/requests/'+slug,undefined,issued.headers)).text()
+- expect(publicText).toContain('Approved safe comment');expect(publicText).toContain('Approved public update');expect(publicText).not.toContain(g.recipient.email)
+- expect((await request('/api/v1/releases/missing/publish',{approve:true},issued.headers)).status).toBe(404)
+- const fresh=await request('/api/v1/requests',{title:'Private unreviewed wording',description:'Private context',boardSlug:'regression'},issued.headers)
+- expect(fresh.status).toBe(201)
+- expect(await (await request('/api/v1/requests',undefined,issued.headers)).text()).not.toContain('Private unreviewed wording')
+-})
+diff --git a/tests/base/integration-openapi.test.ts b/tests/base/integration-openapi.test.ts
+new file mode 100644
+index 0000000..59a6644
+--- /dev/null
++++ b/tests/base/integration-openapi.test.ts
+@@ -0,0 +1,190 @@
++import { applyD1Migrations, reset } from 'cloudflare:test'
++import { afterEach, expect, inject, it, vi } from 'vitest'
++import { Validator, type Schema as JsonSchema } from '@cfworker/json-schema'
++import { call, env } from './support'
++import { releaseGraph } from './release-fixture'
++
++type Schema = Record<string, unknown>
++type Operation = {
++  operationId: string; security: Record<string, string[]>[]; 'x-required-scopes': string[]
++  parameters: { name: string; in: string; required?: boolean; schema: Schema }[]
++  requestBody?: { content: { 'application/json': { schema: { $ref: string } } } }
++  responses: Record<string, { content: { 'application/json': { schema: { $ref: string } } } }>
++}
++type Document = {
++  openapi: string; servers: { url: string }[]; paths: Record<string, Record<string, Operation>>
++  components: { schemas: Record<string, Schema>; securitySchemes: Record<string, { type: string; scheme: string }> }
++}
++afterEach(() => vi.restoreAllMocks())
++
++it('[DATA-006] serves an offline OpenAPI contract and reconciles every documented operation with native allowed and unchanged-state refusal journeys', async () => {
++  await reset(); await applyD1Migrations(env.DB, inject('migrations'))
++  const g = await releaseGraph(1)
++  expect((await call('/api/operator/boards/regression/categories', { name: 'synthetic-penny-category' }, g.operator)).status).toBe(201)
++  const documentResponse = await call('/docs/openapi.json')
++  expect(documentResponse.status).toBe(200)
++  expect(documentResponse.headers.get('Content-Type')).toContain('application/json')
++  expect(documentResponse.headers.get('Set-Cookie')).toBeNull()
++  const document = await documentResponse.json() as Document
++  expect(document.openapi).toMatch(/^3\.1\./)
++  expect(document.servers).toEqual([{ url: '/' }])
++  const schemaFor = (ref: string) => {
++    expect(ref).toMatch(/^#\/components\/schemas\/[A-Za-z]+$/)
++    const schema = document.components.schemas[ref.split('/').at(-1)!]
++    expect(schema).toBeDefined()
++    return schema
++  }
++  const validates = (schema: Schema, value: unknown, expected = true) => {
++    const result = new Validator(schema as JsonSchema, '2020-12', false).validate(value)
++    expect(result.valid, JSON.stringify(result.errors)).toBe(expected)
++  }
++  const issue = async (scopes: string[]) => {
++    const response = await call('/api/operator/integrations/keys', { name: 'synthetic-penny-1', scopes }, g.operator)
++    expect(response.status).toBe(201)
++    const { token, credential } = await response.json() as { token: string; credential: { id: string } }
++    return { id: credential.id, headers: { Authorization: 'Bearer ' + token } }
++  }
++  // Retain the earlier native publication journey here, within the same API
++  // contract flow, so the broader proof replaces its registration.
++  const issued = await issue(['requests:read', 'requests:write', 'comments:read', 'comments:write', 'status:read', 'status:write', 'releases:read', 'releases:write'])
++ const slug=g.requests[0].slug
++ const publicationSnapshot=async()=>({requests:await env.DB.prepare('SELECT count(*) n FROM requests').first('n'),comments:await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n'),updates:await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n'),permissions:await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')})
++ const before=await publicationSnapshot()
++ expect((await call('/api/v1/requests/'+slug+'/comments',{body:'Comment without approval'},issued.headers)).status).toBe(400)
++ expect((await call('/api/v1/requests',{title:'New',description:'Body',boardSlug:'missing'},issued.headers)).status).toBe(404)
++ expect((await call('/api/v1/requests',{title:'New',description:'Body',boardSlug:'regression',resource:'releases'},issued.headers)).status).toBe(400)
++ expect(await publicationSnapshot()).toEqual(before)
++ expect((await call('/api/v1/requests/'+slug+'/comments',{body:'Approved safe comment',approve:true},issued.headers)).status).toBe(201)
++ const action={status:'under_review',body:'Approved public update',pinned:false,idempotencyKey:'native-api-update',approve:true}
++ expect((await call('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)
++ expect((await call('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)
++ expect((await call('/api/v1/requests/'+slug+'/status-updates',{...action,body:'Different'},issued.headers)).status).toBe(409)
++ expect(await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n')).toBe(1)
++ expect(await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')).toBe(before.permissions)
++ const publicText=await (await call('/api/v1/requests/'+slug,undefined,issued.headers)).text()
++ expect(publicText).toContain('Approved safe comment');expect(publicText).toContain('Approved public update');expect(publicText).not.toContain(g.recipient.email)
++ expect((await call('/api/v1/releases/missing/publish',{approve:true},issued.headers)).status).toBe(404)
++ const fresh=await call('/api/v1/requests',{title:'Private unreviewed wording',description:'Private context',boardSlug:'regression'},issued.headers)
++ expect(fresh.status).toBe(201)
++ expect(await (await call('/api/v1/requests',undefined,issued.headers)).text()).not.toContain('Private unreviewed wording')
++  const scopes = [...new Set(Object.values(document.paths).flatMap(methods => Object.values(methods).flatMap(op => op['x-required-scopes'])))]
++  const active = await issue(scopes), allowed = active.headers
++  const readOnly = (await issue(['requests:read'])).headers, releaseOnly = (await issue(['releases:read'])).headers
++  const snapshot = async () => (await env.DB.batch([
++    'requests', 'request_comments', 'request_status_updates', 'request_vote_contributions', 'request_votes',
++    'penny_proxy_votes', 'requesters', 'requester_addresses', 'requester_update_permissions',
++    'releases', 'release_versions', 'release_recipient_snapshots', 'notification_outbox', 'audit_entries',
++  ].map(table => env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`)))).map(result => result.results)
++  const requestSlug = g.requests[0].slug
++  let releaseSlug = '', proxyId = ''
++  const { authorOperatorId: _author, ...releaseInput } = g.input
++  const cases: Record<string, () => { slug?: string; query?: string; body?: unknown }> = {
++    listBoards: () => ({}),
++    listRequests: () => ({ query: '?board=regression&q=Public&sort=recent' }),
++    createRequest: () => ({ body: { title: 'synthetic-penny-held', description: 'Held integration wording', boardSlug: 'regression' } }),
++    getRequest: () => ({ slug: requestSlug }),
++    listComments: () => ({ slug: requestSlug }),
++    createComment: () => ({ slug: requestSlug, body: { body: 'synthetic-penny-comment', approve: true } }),
++    listStatusUpdates: () => ({ slug: requestSlug }),
++    publishStatus: () => ({ slug: requestSlug, body: { status: 'under_review', body: 'synthetic-penny-status', pinned: true, idempotencyKey: 'synthetic-penny-1', approve: true } }),
++    findProxyContacts: () => ({ query: '?q=synthetic-penny-contact' }),
++    recordProxyVote: () => ({ slug: requestSlug, body: { contact: { displayName: 'synthetic-penny-contact' }, source: 'synthetic-penny-source' } }),
++    listReleases: () => ({}),
++    createRelease: () => ({ body: { ...releaseInput, title: 'synthetic-penny-release' } }),
++    getRelease: () => ({ slug: releaseSlug }),
++    publishRelease: () => ({ slug: releaseSlug, body: { approve: true } }),
++  }
++  const order = ['createRequest', 'createComment', 'publishStatus', 'recordProxyVote', 'createRelease', 'publishRelease']
++  const operations = Object.entries(document.paths).flatMap(([path, methods]) => Object.entries(methods).map(([method, operation]) => ({ path, method: method.toUpperCase(), operation })))
++  expect(operations.map(({ operation }) => operation.operationId).sort()).toEqual(Object.keys(cases).sort())
++  operations.sort((a, b) => {
++    const rank = (id: string) => order.includes(id) ? order.indexOf(id) : order.length
++    return rank(a.operation.operationId) - rank(b.operation.operationId)
++  })
++  for (const { path, method, operation } of operations) {
++    const input = cases[operation.operationId](), url = path.replace('{slug}', input.slug ?? '') + (input.query ?? '')
++    const securityName = Object.keys(operation.security[0])[0]
++    expect(document.components.securitySchemes[securityName]).toMatchObject({ type: 'http', scheme: 'bearer' })
++    const wrongScope = operation['x-required-scopes'][0] === 'requests:read' ? releaseOnly : readOnly
++    const before = await snapshot()
++    for (const headers of [{}, { Authorization: 'Bearer synthetic-penny-invalid' }, wrongScope]) {
++      const denied = await call(url, input.body, headers, method)
++      expect(denied.status, operation.operationId + ' authority').toBe(401)
++      validates(schemaFor(operation.responses[String(denied.status)].content['application/json'].schema.$ref), await denied.json())
++      expect(await snapshot()).toEqual(before)
++    }
++    // Lists without filters have no invalid parameter. An unsupported method is
++    // their invalid HTTP case; the contract does not invent query validation.
++    const invalidUrl = operation.requestBody ? url : input.slug ? path.replace('{slug}', 'INVALID') : operation.operationId === 'findProxyContacts' ? path + '?q=' + 'x'.repeat(201) : operation.operationId === 'listRequests' ? path + '?sort=invalid' : url
++    const invalidMethod = !operation.requestBody && invalidUrl === url ? 'PUT' : method
++    const invalidBodies = operation.requestBody ? [{}, { ...input.body as object, unexpected: true }] : [undefined]
++    for (const invalidBody of invalidBodies) {
++      if (operation.requestBody) validates(schemaFor(operation.requestBody.content['application/json'].schema.$ref), invalidBody, false)
++      const invalid = await call(invalidUrl, invalidBody, allowed, invalidMethod)
++      expect(invalid.status, operation.operationId + ' invalid').toBe(invalidMethod === 'PUT' ? 404 : 400)
++      validates(schemaFor(operation.responses[String(invalid.status)].content['application/json'].schema.$ref), await invalid.json())
++      expect(await snapshot()).toEqual(before)
++    }
++    for (const parameter of operation.parameters) {
++      const value = parameter.in === 'path' ? input.slug : new URL('https://penny.test' + url).searchParams.get(parameter.name)
++      if (value !== null && value !== undefined) validates(parameter.schema, value)
++      else expect(parameter.required).not.toBe(true)
++    }
++    if (operation.requestBody) {
++      const schema = schemaFor(operation.requestBody.content['application/json'].schema.$ref)
++      validates(schema, input.body); validates(schema, {}, false)
++    }
++    const response = await call(url, input.body, allowed, method)
++    expect(response.status, operation.operationId + ': ' + await response.clone().text()).toBe(method === 'POST' && ['createRequest', 'createComment', 'createRelease'].includes(operation.operationId) ? 201 : 200)
++    expect(response.headers.get('Cache-Control')).toContain('no-store')
++    const result = await response.json() as Record<string, unknown>
++    validates(schemaFor(operation.responses[String(response.status)].content['application/json'].schema.$ref), result)
++    if (operation.operationId === 'createRelease') releaseSlug = String(result.slug)
++    if (operation.operationId === 'recordProxyVote') { proxyId = String(result.requesterId); expect(result.created).toBe(true) }
++    if (Array.isArray(result)) expect(result.length, operation.operationId + ' populated response').toBeGreaterThan(0)
++    if (operation.operationId === 'getRequest') {
++      expect(result).toMatchObject({ kind: 'found', request: { slug: requestSlug } })
++      const detail = result.request as { comments: { body: string }[]; statusUpdates: { body: string; pinned: number }[] }
++      expect(detail.comments).toContainEqual(expect.objectContaining({ body: 'synthetic-penny-comment' }))
++      expect(detail.statusUpdates).toContainEqual(expect.objectContaining({ body: 'synthetic-penny-status', pinned: 1 }))
++    }
++    if (operation.operationId === 'getRelease') expect(result).toMatchObject({ slug: releaseSlug, title: 'synthetic-penny-release', body: releaseInput.body, isCurrent: true })
++    if (operation.operationId === 'findProxyContacts') expect(result).toEqual([{ id: proxyId, displayName: 'synthetic-penny-contact', email: null }])
++  }
++  const beforeRefinements = await snapshot()
++  const invalidRelease = { ...releaseInput, publicationDate: '2026-02-30' }
++  const conflictingProxy = { contact: { displayName: 'synthetic-penny-2' }, requesterId: g.recipient.requesterId, source: 'synthetic-penny-2' }
++  const duplicateEvidence = { title: 'synthetic-penny-2', description: 'synthetic-penny-2', boardSlug: 'regression', evidenceIds: [g.requests[0].id, g.requests[0].id] }
++  for (const [path, schema, input] of [
++    ['/api/v1/releases', 'CreateRelease', invalidRelease],
++    ['/api/v1/releases', 'CreateRelease', { ...releaseInput, setupUrl: 'ftp://example.test/synthetic-penny-1' }],
++    ['/api/v1/requests/' + requestSlug + '/proxy-votes', 'RecordProxyVote', conflictingProxy],
++    ['/api/v1/requests', 'CreateRequest', duplicateEvidence],
++  ] as const) {
++    validates(document.components.schemas[schema], input, false)
++    expect((await call(path, input, allowed)).status).toBe(400)
++    expect(await snapshot()).toEqual(beforeRefinements)
++  }
++  // Published projection, consent and namespace boundaries survive the document route.
++  const listing = await (await call('/api/v1/requests', undefined, allowed)).text()
++  expect(listing).not.toContain('synthetic-penny-held')
++  expect(await env.DB.prepare('SELECT verified_at FROM requester_addresses WHERE requester_id=?').bind(proxyId).first()).toBeNull()
++  expect(await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions WHERE requester_id=?').bind(proxyId).first('n')).toBe(0)
++  for (const path of ['/api/v1/unknown', '/docs/openapi-unknown.json', '/docs/openapi.json/nested']) expect((await call(path)).status).toBe(404)
++  expect((await call('/docs')).status).toBe(200)
++  expect((await call('/api/operator/requests', undefined, allowed)).status).toBe(401)
++  const beforeOriginRefusal = await snapshot()
++  expect((await call('/api/v1/requests', { title: 'refused', description: 'refused', boardSlug: 'regression' }, { ...allowed, Origin: 'https://other.test' })).status).toBe(403)
++  expect(await snapshot()).toEqual(beforeOriginRefusal)
++  // Read credentials remain server-held; Origin admission applies to mutations.
++  expect((await call('/api/v1/requests', undefined, { ...allowed, Origin: 'https://other.test' })).status).toBe(200)
++  expect((await call('/api/operator/integrations/keys/' + active.id, {}, g.operator, 'DELETE')).status).toBe(200)
++  const beforeRevoked = await snapshot()
++  for (const { path, method, operation } of operations) {
++    const input = cases[operation.operationId](), url = path.replace('{slug}', input.slug ?? '') + (input.query ?? '')
++    const response = await call(url, input.body, allowed, method)
++    expect(response.status, operation.operationId + ' revoked').toBe(401)
++    validates(schemaFor(operation.responses['401'].content['application/json'].schema.$ref), await response.json())
++    expect(await snapshot()).toEqual(beforeRevoked)
++  }
++})
