@@ -1,0 +1,24 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f79",
+  "head": "c538718ba72fb8ef341c76a1f8f5f4cef9cd0e01",
+  "base": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f79",
+  "attempt": 1,
+  "exit": 0,
+  "result": "PUSH_OK",
+  "identities": "all candidate authors and committers are fleet; no co-author trailers",
+  "publishedFiles": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "package.json",
+    "pnpm-lock.yaml",
+    "sources.lock.json",
+    "src/core/features/portal/routes.ts",
+    "src/core/features/releases/feeds.ts",
+    "src/core/features/releases/public-read-repository.ts",
+    "tests/base/release-custody.test.ts",
+    "tests/base/release-feeds.test.ts",
+    "tests/base/release-fixture.ts"
+  ]
+}

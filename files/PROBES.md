@@ -1,0 +1,5 @@
+PROBE REL-016 point 1: built-Worker GET of both feed routes against empty, draft and future-scheduled native releases -> HTTP 200, independently valid XML and required RSS or Atom structure, zero entries, and no private or held wording.
+PROBE REL-016 point 1: native publication of three releases followed by both feed reads and native public list and detail reads -> identical current identities, canonical links, approved titles and bodies, date-descending order with slug tie-break, and XML-sensitive text round-tripped without active markup.
+PROBE REL-016 point 1: native correction followed by both feed reads -> same release identity, current corrected wording only, Atom correction timestamp and no delivery-custody change.
+PROBE REL-016 point 1: requester erasure followed by both feed reads -> approved public release versions remain unchanged and both feed responses remain byte-identical; private recipient identifiers remain absent.
+PROBE REL-016 point 2: none, segment delivery is explicitly omitted from the planner-selected slice and remains named in the clause Gap.

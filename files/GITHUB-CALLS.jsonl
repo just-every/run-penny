@@ -1,0 +1,5 @@
+{"time": "2026-11-06T05:59:28.235632+00:00", "args": ["api", "repos/just-every/run-penny/actions/runs?head_sha=e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f&per_page=100", "--jq", "{runs:[.workflow_runs[]|{id,name,event,status,conclusion,head_sha,html_url}]}"], "exit": 0}
+{"time": "2026-11-06T06:01:23.838296+00:00", "args": ["api", "repos/just-every/run-penny/actions/runs?head_sha=c538718ba72fb8ef341c76a1f8f5f4cef9cd0e01&per_page=100", "--jq", "{runs:[.workflow_runs[]|{id,name,event,status,conclusion,head_sha,html_url}]}"], "exit": 0}
+{"time": "2026-11-06T06:06:32.079375+00:00", "args": ["api", "repos/just-every/run-penny/actions/runs/42171795269", "--jq", "{status,conclusion,head_sha,html_url}"], "exit": 0}
+{"time": "2026-11-06T06:06:40.754016+00:00", "args": ["api", "repos/just-every/run-penny/actions/runs/42171795269/jobs?per_page=100", "--jq", "{jobs:[.jobs[]|{id,name,status,conclusion,failed_steps:[.steps[]|select(.conclusion==\"failure\")|{name,number,conclusion}]}]}"], "exit": 0}
+{"time": "2026-11-06T06:07:02.796669+00:00", "args": ["run", "view", "42171795269", "--repo", "just-every/run-penny", "--job", "127741137141", "--log-failed"], "exit": 0}

@@ -1,0 +1,625 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 18a11cd..d25bbef 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -2,6 +2,8 @@
+ 
+ ## Unreleased
+ 
++- Add public RSS at `/api/public/releases/rss.xml` and Atom at `/api/public/releases/atom.xml`, using the same current published release projection as the native public reads. Keep canonical release identities and publication order through corrections, encode Markdown as literal text, and exclude draft, scheduled, superseded and private wording. Validate both responses offline in the built-Worker release journey, including approved wording surviving requester erasure. Consolidate the existing approved-public-phrase erasure regression into that journey without increasing test registrations. REL-016 remains partial for segment delivery and the existing distribution and qualification prerequisites. No migration or owner reconfiguration is required.
++
+ - Strengthen LEARN-001's existing native model-boundary journey with a selected requester-authored request, account evidence and an existing explicit update permission. Forged root and option fields preserve populated identity, permission, follow and grant custody and create no derived work; valid output derives both requester and account dimensions from originals while retaining run accounting. LEARN-001 remains partial for deployment principal pinning and live qualification. No runtime, migration or configuration change is required.
+ 
+ - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
+diff --git a/CONTRACT.md b/CONTRACT.md
+index e6039be..cd707ef 100644
+--- a/CONTRACT.md
++++ b/CONTRACT.md
+@@ -3480,7 +3480,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `ROAD-014` | Status roadmap | target | done | `tests/base/request-status-workflow.test.ts`; `tests/base/import-roadmap.test.ts`; `tests/browser/import-roadmap.mjs` |  |
+ | `REL-014` | Scheduled publication | target | done | `tests/base/penny-releases.test.ts`; `tests/browser/loopjourney-release.mjs` |  |
+ | `REL-015` | Rich changelog | target | done | `tests/base/rich-changelog.test.ts`; `tests/browser/rich-changelog.mjs` |  |
+-| `REL-016` | Changelog distribution | target | partial | `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts` | Subscriber email ships today. The feeds validate and list only published versions; a segment send reaches exactly the intersection of consent and segment. |
++| `REL-016` | Changelog distribution | target | partial | `tests/base/release-feeds.test.ts` — RSS and Atom reconcile current published wording across correction and requester erasure; `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts` | Subscriber email ships today. Gap: Segment-targeted email must reach exactly the intersection of consent and SEG-006 membership; WIDGET-003 distribution remains unmet. Live mail and provider qualification and existing deployment and release prerequisites remain unchanged. |
+ | `REL-017` | Release notes from delivered work | target | missing |  | A Linear fixture completion drafts a release containing only approved wording and marked items. |
+ | `REL-018` | Announcements | target | missing |  | Today every release needs a roadmap target; REL-014 supplies scheduling for the entry types this clause will add. An entry with no target publishes, appears on the changelog page, both feeds and the widget, and emails each updates subscriber once and nobody else; with Notify subscribers unticked it emails nobody; it shows no outcome prompt. |
+ | `REL-019` | Request targets on any release | target | missing |  | Today every release needs a roadmap target. A release whose roadmap target is Planned is still refused; a release with an Open request target is refused unless Mark linked requests Shipped is ticked, which makes the request Shipped and adds its subscribed voters to the snapshot once each. |
+diff --git a/package.json b/package.json
+index f20f27e..6edbb3b 100644
+--- a/package.json
++++ b/package.json
+@@ -93,6 +93,7 @@
+     "@types/react-dom": "^19.2.4",
+     "@vitejs/plugin-react": "6.1.1",
+     "axe-core": "4.10.2",
++    "fast-xml-parser": "5.12.0",
+     "highlight.js": "10.7.3",
+     "miniflare": "5.20260907.0-alpha",
+     "oxlint": "^1.79.0",
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 19a720c..0c96ee1 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -66,6 +66,9 @@ importers:
+       axe-core:
+         specifier: 4.10.2
+         version: 4.10.2
++      fast-xml-parser:
++        specifier: 5.12.0
++        version: 5.12.0
+       highlight.js:
+         specifier: 10.7.3
+         version: 10.7.3
+@@ -895,6 +898,9 @@ packages:
+   '@jridgewell/trace-mapping@0.3.9':
+     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+ 
++  '@nodable/entities@3.1.0':
++    resolution: {integrity: sha512-LsS/DjHr+uDM647Gru/cA8+J3a3HfhttwCKLyuoyN7yXTFCxKBtSgMQBvrW9yNPa2/zDRUNuGPaH5QUFoa4arQ==}
++
+   '@oozcitak/dom@2.0.2':
+     resolution: {integrity: sha512-GjpKhkSYC3Mj4+lfwEyI1dqnsKTgwGy48ytZEhm4A/xnH/8z9M3ZVXKr/YGQi3uCLs1AEBS+x5T2JPiueEDW8w==}
+     engines: {node: '>=20.0'}
+@@ -1451,6 +1457,9 @@ packages:
+     resolution: {integrity: sha512-9k3v7xcHwgdO/DruxGIg4HtjvlAZlcnsX/mzqUb1t3NkYnl9kK2UJ+Gq0io+vQf7iT//BD/HB/NBkUR1LWxoeA==}
+     engines: {node: '>=14'}
+ 
++  anynum@1.0.1:
++    resolution: {integrity: sha512-N6//FLET/tXYNM/F6ABca1oH6fWB+KlTt909Le28WMDBk8oaT4vY17DCrwg2MvmuqUKt3Ni4N5dGJ/EoBgcO6A==}
++
+   argparse@2.0.1:
+     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
+ 
+@@ -1679,6 +1688,13 @@ packages:
+   extend@3.0.2:
+     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
+ 
++  fast-xml-builder@1.3.1:
++    resolution: {integrity: sha512-pIM/1n3ntFXKYrUZwW7QCK0gAW7XY+wzj1YMIV3tLDvPj/V+zTGJK5e3/4WJfwj0qWw2ElNXiTixda/R+3YSug==}
++
++  fast-xml-parser@5.12.0:
++    resolution: {integrity: sha512-/pXxRBtwxY9w8z7YbgsvIPPcPvFDsTbIkWwTQJhzNJPokj+TbN6ftmcv4j/pEQDvOCNnKGDzuk5Bo2oogIOiFg==}
++    hasBin: true
++
+   fdir@6.5.0:
+     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
+     engines: {node: '>=12.0.0'}
+@@ -1743,6 +1759,9 @@ packages:
+     resolution: {integrity: sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==}
+     engines: {node: '>=8'}
+ 
++  is-unsafe@2.0.3:
++    resolution: {integrity: sha512-ZBllczCCO267vgdFb6Tq3pv+LhHaCiGMdr+ZsuL+OopruAg7S+3ZDs1vD0RPC0uSrkjzbraxaGjtX1YBxjPeFQ==}
++
+   isbot@5.2.2:
+     resolution: {integrity: sha512-iQcBXcd+Rv/pkubRyGh2utW2j1oPG5hZY6TUhVPpqK4G+o3IbxpJNx04hgksjc/N7GK5pEorUxDeg31cFgEk/w==}
+     engines: {node: '>=18'}
+@@ -2029,6 +2048,10 @@ packages:
+   parse-entities@2.0.0:
+     resolution: {integrity: sha512-kkywGpCcRYhqQIchaWqZ875wzpS/bMKhz5HnN3p7wveJTkTtyAB/AlnS0f8DFSqYW1T82t6yEAkEcB+A1I3MbQ==}
+ 
++  path-expression-matcher@1.6.2:
++    resolution: {integrity: sha512-enSlaiat05iasnzmgNxRj8reFdj3puY2QpNgP1aPIaVfT6nn9ICuPoFlKHk8EN22HcwewshO+mN2DGbkCEOtqQ==}
++    engines: {node: '>=14.0.0'}
++
+   path-to-regexp@6.3.0:
+     resolution: {integrity: sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==}
+ 
+@@ -2181,6 +2204,9 @@ packages:
+   std-env@4.3.0:
+     resolution: {integrity: sha512-OtU/EgQ1kIm5KwqQpBC6ZEMXrZRui11w8zgfTWp8cdO9B8OaPsbA8bTHO2P+HNo1VlUTGMVBwPhydu6poeXiag==}
+ 
++  strnum@2.5.1:
++    resolution: {integrity: sha512-UM4nTLWzQiDBseVxUGxN0wJzIk0UU89Qi7pKXz9qISo+lhviJikTuikBsK/oFRlpvYHvSdz0TVoLyQ+sEpYwxA==}
++
+   style-to-object@0.3.0:
+     resolution: {integrity: sha512-CzFnRRXhzWIdItT3OmF8SQfWyahHhjq3HwcMNCNLn+N7klOOqPjMeG/4JSu77D7ypZdGvSzvkrbyeTMizz2VrA==}
+ 
+@@ -2462,6 +2488,10 @@ packages:
+       utf-8-validate:
+         optional: true
+ 
++  xml-naming@0.3.0:
++    resolution: {integrity: sha512-ghig2TBE/H11aOVgmahA3MhimvkBr6JIYknH/Dhdk10nXwdbIqBJsbfMxpvFPG8bAw77gN29aQWvKpmVoPlvPQ==}
++    engines: {node: '>=16.0.0'}
++
+   xmlbuilder2@4.0.3:
+     resolution: {integrity: sha512-bx8Q1STctnNaaDymWnkfQLKofs0mGNN7rLLapJlGuV3VlvegD7Ls4ggMjE3aUSWItCCzU0PEv45lI87iSigiCA==}
+     engines: {node: '>=20.0'}
+@@ -3059,6 +3089,8 @@ snapshots:
+       '@jridgewell/resolve-uri': 3.1.2
+       '@jridgewell/sourcemap-codec': 1.6.0
+ 
++  '@nodable/entities@3.1.0': {}
++
+   '@oozcitak/dom@2.0.2':
+     dependencies:
+       '@oozcitak/infra': 2.0.2
+@@ -3569,6 +3601,8 @@ snapshots:
+ 
+   ansis@4.4.0: {}
+ 
++  anynum@1.0.1: {}
++
+   argparse@2.0.1: {}
+ 
+   assertion-error@2.0.1: {}
+@@ -3721,6 +3755,20 @@ snapshots:
+ 
+   extend@3.0.2: {}
+ 
++  fast-xml-builder@1.3.1:
++    dependencies:
++      path-expression-matcher: 1.6.2
++      xml-naming: 0.3.0
++
++  fast-xml-parser@5.12.0:
++    dependencies:
++      '@nodable/entities': 3.1.0
++      fast-xml-builder: 1.3.1
++      is-unsafe: 2.0.3
++      path-expression-matcher: 1.6.2
++      strnum: 2.5.1
++      xml-naming: 0.3.0
++
+   fdir@6.5.0(picomatch@4.0.7):
+     optionalDependencies:
+       picomatch: 4.0.7
+@@ -3760,6 +3808,8 @@ snapshots:
+ 
+   is-plain-obj@2.1.0: {}
+ 
++  is-unsafe@2.0.3: {}
++
+   isbot@5.2.2: {}
+ 
+   jiti@2.7.0: {}
+@@ -4077,6 +4127,8 @@ snapshots:
+       is-decimal: 1.0.4
+       is-hexadecimal: 1.0.4
+ 
++  path-expression-matcher@1.6.2: {}
++
+   path-to-regexp@6.3.0: {}
+ 
+   pathe@2.0.3: {}
+@@ -4279,6 +4331,10 @@ snapshots:
+ 
+   std-env@4.3.0: {}
+ 
++  strnum@2.5.1:
++    dependencies:
++      anynum: 1.0.1
++
+   style-to-object@0.3.0:
+     dependencies:
+       inline-style-parser: 0.1.1
+@@ -4495,6 +4551,8 @@ snapshots:
+ 
+   ws@8.21.0: {}
+ 
++  xml-naming@0.3.0: {}
++
+   xmlbuilder2@4.0.3:
+     dependencies:
+       '@oozcitak/dom': 2.0.2
+diff --git a/sources.lock.json b/sources.lock.json
+index c58d202..929be6e 100644
+--- a/sources.lock.json
++++ b/sources.lock.json
+@@ -3354,7 +3354,7 @@
+       "executable": false
+     },
+     "CHANGELOG.md": {
+-      "sha256": "1050feea764dafb5d9934be0bcfd3b5e5d00f5ce7045dad188d95016da22a997",
++      "sha256": "b5ccc5928b81ecb2c2f21391d339720c3692290cdc7a84c2c23845ba90fe2a4a",
+       "executable": false
+     },
+     "CLAUDE.md": {
+@@ -3366,7 +3366,7 @@
+       "executable": false
+     },
+     "CONTRACT.md": {
+-      "sha256": "d3f67f3e51c4474b79f3c6ce70a2639a61ceb6150a2d11922420320df6a73163",
++      "sha256": "b1fe0366b3f45d2e5d1f24f1dd97823b9ed0ebdc00f9854b7f66882cada82dab",
+       "executable": false
+     },
+     "DEMO.md": {
+@@ -4106,7 +4106,7 @@
+       "executable": false
+     },
+     "package.json": {
+-      "sha256": "2956fe10930f469dfc870ae56b2fc907acc3f81bed63a28b888dfb23c2544b6f",
++      "sha256": "b1ec2ad3d7252e654b3d3bfbed1814736b67cb088ca2ae80e569f166ae52126b",
+       "executable": false
+     },
+     "packaging.json": {
+@@ -4114,7 +4114,7 @@
+       "executable": false
+     },
+     "pnpm-lock.yaml": {
+-      "sha256": "1a6089ec7e053f2763b238200667946bc11d5355fec630d07a52e34dd5e5f5c9",
++      "sha256": "4a81645216cd79018b414e3bd6413a6ad11143b3373427e119965e3887459850",
+       "executable": false
+     },
+     "public/brand/band.svg": {
+@@ -6826,7 +6826,7 @@
+       "executable": false
+     },
+     "src/core/features/portal/routes.ts": {
+-      "sha256": "b2fd01675f02abf11a671693561bdce730936b0fe6a030d5297f00ebdb70fadf",
++      "sha256": "51ecd04ceaee677d12a200aa8280012962cbf06b422466a92625eb0d11060382",
+       "executable": false
+     },
+     "src/core/features/portal/service.ts": {
+@@ -6969,6 +6969,10 @@
+       "sha256": "081929c6cb8ac00c935a960523dca418b0e4dfc9dbec80a388c4ad3412d17995",
+       "executable": false
+     },
++    "src/core/features/releases/feeds.ts": {
++      "sha256": "bfcd358fca15374ece1fca9057206d99ad27cf5b63da7b6bc4085cc20e088ada",
++      "executable": false
++    },
+     "src/core/features/releases/index.ts": {
+       "sha256": "05f79eb80a1c652dc1bbe89bc96cc7130ea42f4f0f571a0a87dde654483ae9c4",
+       "executable": false
+@@ -6982,7 +6986,7 @@
+       "executable": false
+     },
+     "src/core/features/releases/public-read-repository.ts": {
+-      "sha256": "12854b5c8595e90cd389a9635fac350e7ecbce91476d2411ff9a1c1ebf01744c",
++      "sha256": "2dcff1bad57b294ab473ec643b792ce0acd3fd286c1a2656a7404f33b24f982c",
+       "executable": false
+     },
+     "src/core/features/releases/publication-actor.ts": {
+@@ -8546,11 +8550,15 @@
+       "executable": false
+     },
+     "tests/base/release-custody.test.ts": {
+-      "sha256": "da4e975450c54726d09b6b5bec0de51fec4c8990686a9f9aa1bd58ba12bc2353",
++      "sha256": "a898fcfb80fc613c82f1791a00dfc4f2d1e3ea476845296dc24e32b8b616e8b2",
++      "executable": false
++    },
++    "tests/base/release-feeds.test.ts": {
++      "sha256": "06d01f84e48cd65255e00340625b4842664afcc2166205217b9caee55482372a",
+       "executable": false
+     },
+     "tests/base/release-fixture.ts": {
+-      "sha256": "e38bd8b2362c8e3535109c75bf2b1f0eab75edf75f2d3e3df057f083d47a004d",
++      "sha256": "23bcd8cb3739e6fe857a87accb8892452bafe92deee3c2b267c54debb0cd4a59",
+       "executable": false
+     },
+     "tests/base/release-mail-identity.ts": {
+diff --git a/src/core/features/portal/routes.ts b/src/core/features/portal/routes.ts
+index 802bf1e..881b0bb 100644
+--- a/src/core/features/portal/routes.ts
++++ b/src/core/features/portal/routes.ts
+@@ -4,6 +4,8 @@ import { z } from 'zod'
+ import type { PennyRuntime } from '@/core/app/runtime'
+ import type { AppBindings } from '@/core/shared/bindings'
+ import { portalReadService } from './service'
++import { PublicReleasesReadRepository } from '../releases/public-read-repository'
++import { releaseFeed, releaseFeedPaths, type ReleaseFeedFormat } from '../releases/feeds'
+ 
+ interface PortalRouteEnvironment {
+   Bindings: AppBindings
+@@ -36,6 +38,18 @@ export function registerPortalRoutes(app: Hono<PortalRouteEnvironment>): void {
+     return result.kind === 'withdrawn' ? context.json({ error: 'withdrawn' }, 410) : context.json({ error: 'not_found' }, 404)
+   })
+   app.get('/api/public/roadmap', async (context) => context.json(await portalReadService(context.get('runtime').database).listRoadmap()))
++  for (const format of Object.keys(releaseFeedPaths) as ReleaseFeedFormat[]) {
++    app.get(releaseFeedPaths[format], async context => {
++      const runtime = context.get('runtime')
++      const releases = await new PublicReleasesReadRepository(runtime.database).listForFeed()
++      const origin = runtime.configuration.appOrigin ?? new URL(context.req.url).origin
++      return context.body(releaseFeed(format, origin, releases), 200, {
++        'Content-Type': `application/${format}+xml; charset=utf-8`,
++        'Cache-Control': 'no-store',
++        'X-Content-Type-Options': 'nosniff',
++      })
++    })
++  }
+   app.get('/api/public/releases', async context => {const filters=releaseFiltersSchema.safeParse(context.req.query());if(!filters.success)return context.json({error:'validation_failed'},400);return context.json(await portalReadService(context.get('runtime').database).listReleases(filters.data))})
+   app.get('/api/public/releases/:slug', async (context) => {
+     const slug = publicSlugSchema.safeParse(context.req.param('slug'))
+diff --git a/src/core/features/releases/feeds.ts b/src/core/features/releases/feeds.ts
+new file mode 100644
+index 0000000..a0c52b5
+--- /dev/null
++++ b/src/core/features/releases/feeds.ts
+@@ -0,0 +1,46 @@
++import type { FeedRelease } from './public-read-repository'
++
++export const releaseFeedPaths = {
++  rss: '/api/public/releases/rss.xml',
++  atom: '/api/public/releases/atom.xml',
++} as const
++
++export type ReleaseFeedFormat = keyof typeof releaseFeedPaths
++
++// XML 1.0 text must exclude disallowed controls as well as escape markup.
++function xml(value: string): string {
++  // eslint-disable-next-line no-control-regex -- XML 1.0 excludes these characters.
++  return value.replace(/[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/gu, '')
++    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
++    .replace(/"/g, '&quot;').replace(/'/g, '&apos;')
++}
++
++export function releaseFeed(format: ReleaseFeedFormat, origin: string, releases: readonly FeedRelease[]): string {
++  const changelog = new URL('/portal/updates', origin).href
++  const self = new URL(releaseFeedPaths[format], origin).href
++  const link = (release: FeedRelease) => `${changelog}/${encodeURIComponent(release.slug)}`
++  const published = (release: FeedRelease) => `${release.publicationDate}T00:00:00.000Z`
++  const declaration = '<?xml version="1.0" encoding="UTF-8"?>\n'
++
++  if (format === 'rss') {
++    // RSS descriptions are HTML: encode the Markdown as literal text before XML encoding.
++    return declaration + `<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
++<title>Penny changelog</title><link>${xml(changelog)}</link><description>Published release notes from Penny.</description>
++<atom:link href="${xml(self)}" rel="self" type="application/rss+xml"/>
++${releases.map(release => `<item><guid isPermaLink="true">${xml(link(release))}</guid><link>${xml(link(release))}</link>
++<title>${xml(release.title)}</title><pubDate>${new Date(published(release)).toUTCString()}</pubDate>
++<description>${xml(xml(release.body))}</description></item>`).join('\n')}
++</channel></rss>`
++  }
++
++  // A deterministic epoch keeps an empty Atom feed valid without a changing clock.
++  const updated = releases.map(release => release.updatedAt).sort().at(-1) ?? '1970-01-01T00:00:00.000Z'
++  return declaration + `<feed xmlns="http://www.w3.org/2005/Atom">
++<id>${xml(changelog)}</id><title type="text">Penny changelog</title><updated>${xml(updated)}</updated>
++<author><name>Penny</name></author><link href="${xml(changelog)}" rel="alternate" type="text/html"/>
++<link href="${xml(self)}" rel="self" type="application/atom+xml"/>
++${releases.map(release => `<entry><id>${xml(link(release))}</id><link href="${xml(link(release))}" rel="alternate" type="text/html"/>
++<title type="text">${xml(release.title)}</title><published>${published(release)}</published><updated>${xml(release.updatedAt)}</updated>
++<author><name>${xml(release.authorName)}</name></author><content type="text">${xml(release.body)}</content></entry>`).join('\n')}
++</feed>`
++}
+diff --git a/src/core/features/releases/public-read-repository.ts b/src/core/features/releases/public-read-repository.ts
+index 3fd5a3d..f176319 100644
+--- a/src/core/features/releases/public-read-repository.ts
++++ b/src/core/features/releases/public-read-repository.ts
+@@ -4,13 +4,14 @@ import type { ReleaseRichFields } from './rich-content'
+ import type { ReleaseFilters } from './rich-repository'
+ 
+ export type CurrentPublicRelease=PublicRelease & ReleaseRichFields & {versionNumber:number;isCurrent:true}
+-type ReleaseRow=Omit<CurrentPublicRelease,'isCurrent'|'labels'|'products'>&{labelsJson:string;productsJson:string}
++export type FeedRelease=CurrentPublicRelease & {updatedAt:string}
++type ReleaseRow=Omit<FeedRelease,'isCurrent'|'labels'|'products'>&{labelsJson:string;productsJson:string}
+ const currentReleases=`SELECT r.slug AS slug,rv.version_number AS versionNumber,rv.title AS title,rv.release_type AS releaseType,rv.body AS body,
+- rv.publication_date AS publicationDate,rv.setup_url AS setupUrl,rv.author_name AS authorName,
++ rv.publication_date AS publicationDate,rv.setup_url AS setupUrl,rv.author_name AS authorName,rv.updated_at AS updatedAt,
+  rv.public_labels_json AS labelsJson,rv.public_products_json AS productsJson FROM releases r
+  JOIN release_versions rv ON rv.id=r.current_version_id AND rv.is_portal_current=1
+  WHERE r.state='published' AND r.published_at IS NOT NULL AND rv.publication_date IS NOT NULL`
+-function publicRelease({labelsJson,productsJson,...row}:ReleaseRow):CurrentPublicRelease{
++function publicRelease({labelsJson,productsJson,updatedAt:_updatedAt,...row}:ReleaseRow):CurrentPublicRelease{
+  const publicNames=(value:string)=>(JSON.parse(value) as {id:string;name:string}[]).map(({id,name})=>({id,name}))
+  return {...row,labels:publicNames(labelsJson),products:publicNames(productsJson),isCurrent:true}
+ }
+@@ -18,11 +19,17 @@ export class PublicReleasesReadRepository {
+  private readonly connection:DatabaseConnection
+  constructor(connection:DatabaseConnection){this.connection=connection}
+  async list(filters:ReleaseFilters={}):Promise<readonly CurrentPublicRelease[]>{
++  return (await this.listRows(filters)).map(publicRelease)
++ }
++ async listForFeed():Promise<readonly FeedRelease[]>{
++  return (await this.listRows()).map(row=>({...publicRelease(row),updatedAt:row.updatedAt}))
++ }
++ private async listRows(filters:ReleaseFilters={}):Promise<readonly ReleaseRow[]>{
+   const conditions:string[]=[],values:string[]=[]
+   if(filters.label){conditions.push(`(rv.release_type=? OR EXISTS(SELECT 1 FROM json_each(rv.public_labels_json) label WHERE json_extract(label.value,'$.id')=?))`);values.push(filters.label,filters.label)}
+   if(filters.product){conditions.push(`EXISTS(SELECT 1 FROM json_each(rv.public_products_json) product WHERE json_extract(product.value,'$.id')=?)`);values.push(filters.product)}
+   const result=await this.connection.binding.prepare(`${currentReleases}${conditions.map(condition=>' AND '+condition).join('')} ORDER BY rv.publication_date DESC,r.slug ASC`).bind(...values).all<ReleaseRow>()
+-  return result.results.map(publicRelease)
++  return result.results
+  }
+  async find(slug:string):Promise<CurrentPublicRelease|null>{
+   const row=await this.connection.binding.prepare(`${currentReleases} AND r.slug=? LIMIT 1`).bind(slug).first<ReleaseRow>()
+diff --git a/tests/base/release-custody.test.ts b/tests/base/release-custody.test.ts
+index ee932dd..b87337e 100644
+--- a/tests/base/release-custody.test.ts
++++ b/tests/base/release-custody.test.ts
+@@ -67,15 +67,6 @@ it('[DATA-001 REL-006/007] restored queued release is explicitly unknown and ine
+  await reset();await applyD1Migrations(env.DB,inject('migrations'));await restoreArchive(env.DB,env.FILES,snapshot.archive,snapshot.journal)
+  const sent=provider();await drainReleaseDeliveries(runtime(),()=>start+60000);expect(sent).toHaveLength(0)
+ })
+-it('[DATA-003 REL-003/005] approved public phrase survives requester erasure while private copied wording still refuses',async()=>{
+- const g=await releaseGraph(1)
+- const {saveReleaseDraft}=await import('@/core/features/releases/drafts')
+- await saveReleaseDraft(env.DB,{...g.input,body:'Public request 0 is now easier.'},g.draft.slug,time());await publishRelease(env.DB,g.draft.slug,time())
+- const before=await rows('release_versions'),plan=await planErasure(env.DB,'requesters',g.recipient.requesterId)
+- expect(plan.blockedCopies).toEqual([])
+- await eraseEntity(env.DB,env.FILES,'requesters',g.recipient.requesterId,plan.planHash)
+- expect(await rows('release_versions')).toEqual(before)
+-})
+ it('[DATA-003 BASE-DATA-003] independently published wording never exempts private email or unapproved copied phrases',async()=>{
+  const g=await releaseGraph(1)
+  const {saveReleaseDraft}=await import('@/core/features/releases/drafts')
+diff --git a/tests/base/release-feeds.test.ts b/tests/base/release-feeds.test.ts
+new file mode 100644
+index 0000000..bbe8c5f
+--- /dev/null
++++ b/tests/base/release-feeds.test.ts
+@@ -0,0 +1,161 @@
++import { applyD1Migrations, reset } from 'cloudflare:test'
++import { XMLParser, XMLValidator } from 'fast-xml-parser'
++import { afterEach, beforeEach, expect, inject, it, vi } from 'vitest'
++import type { CurrentPublicRelease } from '@/core/features/releases/public-read-repository'
++import { call, env, origin } from './support'
++import { nativeReleaseDraft, releaseGraph } from './release-fixture'
++import { rows } from './notification-regression-fixture'
++import { planErasure } from '@/core/features/data/archive'
++import { eraseEntity } from '@/core/features/data/operations'
++
++beforeEach(async () => { await reset(); await applyD1Migrations(env.DB, inject('migrations')) })
++afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks() })
++
++const atomNamespace = 'http://www.w3.org/2005/Atom'
++const paths = ['/api/public/releases/rss.xml', '/api/public/releases/atom.xml']
++type Element = Record<string, unknown>
++function parseXml(source: string): Element {
++  expect(XMLValidator.validate(source)).toBe(true)
++  return new XMLParser({ ignoreAttributes: false, trimValues: false, parseTagValue: false, alwaysCreateTextNode: true }).parse(source) as Element
++}
++function children(node: Element, name: string): Element[] {
++  const value = node[name]
++  return value === undefined ? [] : (Array.isArray(value) ? value : [value]) as Element[]
++}
++function one(node: Element, name: string): Element {
++  const matches = children(node, name)
++  expect(matches, `Exactly one ${name}`).toHaveLength(1)
++  return matches[0]
++}
++const text = (node: Element, name: string) => String(one(node, name)['#text'] ?? '')
++const attribute = (node: Element, name: string) => node[`@_${name}`]
++async function json<T>(response: Response, status = 200): Promise<T> {
++  expect(response.status, await response.clone().text()).toBe(status)
++  return response.json() as Promise<T>
++}
++function timestamp(value: string | null): void {
++  expect(value).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/)
++  expect(Number.isFinite(Date.parse(value!))).toBe(true)
++}
++
++// Parse the actual HTTP responses offline, then check the RSS 2.0 and Atom
++// required structure and reconcile every entry with native public reads.
++async function feeds(expectedSlugs: string[], excluded: string[] = []) {
++  const current = await json<CurrentPublicRelease[]>(await call('/api/public/releases'))
++  expect(current.map(release => release.slug)).toEqual(expectedSlugs)
++  for (const release of current) {
++    expect(await json(await call(`/api/public/releases/${release.slug}`))).toEqual(release)
++    expect(release).not.toHaveProperty('updatedAt')
++  }
++  const documents: Element[] = []
++  const bodies: string[] = []
++  for (const [index, path] of paths.entries()) {
++    const response = await call(path)
++    expect(response.status).toBe(200)
++    expect(response.headers.get('Content-Type')).toBe(`application/${index === 0 ? 'rss' : 'atom'}+xml; charset=utf-8`)
++    expect(response.headers.get('Cache-Control')).toBe('no-store')
++    expect(response.headers.get('Set-Cookie')).toBeNull()
++    const body = await response.text()
++    for (const marker of excluded) expect(body).not.toContain(marker)
++    expect(body).toMatch(/^<\?xml version="1.0" encoding="UTF-8"\?>/)
++    const document = parseXml(body)
++    documents.push(document); bodies.push(body)
++  }
++  const rss = one(documents[0], 'rss')
++  expect(attribute(rss, 'version')).toBe('2.0')
++  const channel = one(rss, 'channel')
++  expect(text(channel, 'title')!.length).toBeGreaterThan(0)
++  expect(text(channel, 'description')!.length).toBeGreaterThan(0)
++  expect(text(channel, 'link')).toBe(`${origin}/portal/updates`)
++  const rssSelf = one(channel, 'atom:link')
++  expect(attribute(rss, 'xmlns:atom')).toBe(atomNamespace)
++  expect(attribute(rssSelf, 'rel')).toBe('self')
++  expect(attribute(rssSelf, 'href')).toBe(origin + paths[0])
++  const items = children(channel, 'item')
++  const atom = one(documents[1], 'feed')
++  expect(attribute(atom, 'xmlns')).toBe(atomNamespace)
++  expect(text(atom, 'id')).toBe(`${origin}/portal/updates`)
++  expect(text(atom, 'title')!.length).toBeGreaterThan(0)
++  timestamp(text(atom, 'updated'))
++  expect(text(one(atom, 'author'), 'name')!.length).toBeGreaterThan(0)
++  const atomSelf = children(atom, 'link').filter(link => attribute(link, 'rel') === 'self')
++  expect(atomSelf).toHaveLength(1); expect(attribute(atomSelf[0], 'href')).toBe(origin + paths[1])
++  const entries = children(atom, 'entry')
++  expect(items).toHaveLength(current.length); expect(entries).toHaveLength(current.length)
++  for (const [index, release] of current.entries()) {
++    const item = items[index], entry = entries[index], url = `${origin}/portal/updates/${release.slug}`
++    expect(text(item, 'guid')).toBe(url); expect(attribute(one(item, 'guid'), 'isPermaLink')).toBe('true')
++    expect(text(item, 'link')).toBe(url); expect(text(entry, 'id')).toBe(url)
++    expect(attribute(one(entry, 'link'), 'href')).toBe(url)
++    expect(text(item, 'title')).toBe(release.title); expect(text(entry, 'title')).toBe(release.title)
++    expect(attribute(one(entry, 'title'), 'type')).toBe('text')
++    expect(Date.parse(text(item, 'pubDate')!)).toBe(Date.parse(`${release.publicationDate}T00:00:00Z`))
++    expect(text(entry, 'published')).toBe(`${release.publicationDate}T00:00:00.000Z`)
++    timestamp(text(entry, 'updated'))
++    expect(text(one(entry, 'author'), 'name')).toBe(release.authorName)
++    expect(attribute(one(entry, 'content'), 'type')).toBe('text')
++    expect(text(entry, 'content')).toBe(release.body)
++    // RSS descriptions contain encoded HTML text. Parsing that layer must
++    // produce the original Markdown as text, with no active markup.
++    const description = one(parseXml(`<div>${text(item, 'description')}</div>`), 'div')
++    expect(description).toEqual({ '#text': release.body })
++    expect(one(entry, 'content')).toEqual({ '#text': release.body, '@_type': 'text' })
++  }
++  return { entries, bodies }
++}
++
++it('[REL-016 DATA-003 REL-003 REL-005] RSS and Atom reconcile current published wording across correction and requester erasure', async () => {
++  vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date('2026-11-06T12:00:00.000Z'))
++  await feeds([])
++  const g = await releaseGraph(1)
++  await env.DB.prepare("UPDATE tags SET name='Confidential tag marker' WHERE id='release-tag'").run()
++  const original = { title: 'Approved & <release> "one"', body: 'Public request 0 is now easier. Public & customer wording: <script>literal text</script>, "quotes", apostrophe\'s and ]]> with 🪙.' }
++  await json(await call(`/api/operator/releases/${g.draft.slug}`, { ...g.input, ...original }, g.operator, 'PATCH'))
++  const draft = await nativeReleaseDraft(g, { title: 'Unpublished draft marker', body: 'Unpublished draft body marker' })
++  const scheduled = await nativeReleaseDraft(g, { title: 'Scheduled release marker', body: 'Scheduled body marker' })
++  await json(await call(`/api/operator/releases/${scheduled.slug}/schedule`, { localTime: '2026-11-07T12:00' }, g.operator))
++  const excluded = [draft.slug, scheduled.slug, 'Unpublished draft marker', 'Unpublished draft body marker', 'Scheduled release marker', 'Scheduled body marker',
++    'Private decision marker', 'Private question', 'Private commercial rationale', 'Private item title', 'Private item summary', 'Private delivery notes',
++    'private-decision-slug', 'private-item-slug', 'Confidential tag marker', g.recipient.email, g.recipient.requesterId, g.actor,
++    'recipient_email', 'requester_id', 'requester_address_id', 'outcome_prompt', 'subject_tags_json', 'delivery_notes', 'decision_id', 'author_operator_id']
++  await feeds([], excluded)
++  for (const release of [g.draft, draft, scheduled]) expect((await call(`/api/public/releases/${release.slug}`)).status).toBe(404)
++  const publish = async (slug: string) => json(await call(`/api/operator/releases/${slug}/publish`, {}, g.operator))
++  await publish(g.draft.slug)
++  const before = await feeds([g.draft.slug], excluded)
++  const peers = await Promise.all([
++    nativeReleaseDraft(g, { title: 'Later public release', publicationDate: '2026-10-10' }),
++    nativeReleaseDraft(g, { title: 'Same-day public release', publicationDate: '2026-10-10' }),
++  ])
++  for (const peer of peers) await publish(peer.slug)
++  const ordered = [...peers.map(peer => peer.slug).sort(), g.draft.slug]
++  await feeds(ordered, excluded)
++  const custody = await Promise.all(['release_recipient_snapshots', 'release_recipient_contexts', 'notification_outbox'].map(rows))
++  const correctedAt = '2026-11-06T13:00:00.000Z'
++  vi.setSystemTime(new Date(correctedAt))
++  const corrected = { title: 'Corrected & <approved> "release"', body: 'Public request 0 is now easier. Corrected customer text & <b>literal markup</b> with apostrophe\'s and ]]>.' }
++  await json(await call(`/api/operator/releases/${g.draft.slug}/corrections`, { expectedVersionId: g.draft.versionId, ...corrected }, g.operator), 201)
++  const after = await feeds(ordered, [...excluded, original.title, original.body])
++  const correctedEntry = after.entries.at(-1)!
++  expect(text(correctedEntry, 'id')).toBe(text(before.entries[0], 'id'))
++  expect(text(correctedEntry, 'updated')).toBe(correctedAt)
++  expect(text(correctedEntry, 'title')).toBe(corrected.title)
++  expect(text(correctedEntry, 'content')).toBe(corrected.body)
++  expect(await json(await call(`/api/public/releases/${g.draft.slug}`))).toMatchObject({ ...corrected, versionNumber: 2, isCurrent: true })
++  for (const body of after.bodies) {
++    expect(body).not.toContain('Approved &amp; &lt;release&gt;')
++    expect(body).not.toContain('Public &amp; customer wording')
++  }
++  // Feed reads and correction never request a customer send or change custody.
++  expect(await Promise.all(['release_recipient_snapshots', 'release_recipient_contexts', 'notification_outbox'].map(rows))).toEqual(custody)
++  expect((await rows('releases')).find(row => row.id === scheduled.id)?.state).toBe('draft')
++  expect((await rows('penny_publication_schedules')).find(row => row.release_id === scheduled.id)?.state).toBe('scheduled')
++  // Preserve the existing approved-public-phrase erasure regression in this
++  // same populated release journey instead of retaining its duplicate fixture.
++  const versions = await rows('release_versions')
++  const plan = await planErasure(env.DB, 'requesters', g.recipient.requesterId)
++  expect(plan.blockedCopies).toEqual([])
++  await eraseEntity(env.DB, env.FILES, 'requesters', g.recipient.requesterId, plan.planHash)
++  expect(await rows('release_versions')).toEqual(versions)
++  expect((await feeds(ordered, [...excluded, original.title, original.body])).bodies).toEqual(after.bodies)
++})
+diff --git a/tests/base/release-fixture.ts b/tests/base/release-fixture.ts
+index 2eb874a..d3bb588 100644
+--- a/tests/base/release-fixture.ts
++++ b/tests/base/release-fixture.ts
+@@ -1,8 +1,15 @@
+ import { expect } from 'vitest'
+-import { env } from './support'
++import { call, env } from './support'
+ import { graph,time } from './notification-regression-fixture'
+ import { saveReleaseDraft } from '@/core/features/releases/drafts'
+ import { prepareRoadmapUpdateDraft } from '@/core/features/roadmap/update-drafts'
++import type { ReleaseDraft } from '@/core/features/releases/drafts'
++
++export async function nativeReleaseDraft(g:Awaited<ReturnType<typeof releaseGraph>>,changes:Partial<ReleaseDraft>={}){
++ const response=await call('/api/operator/releases',{...g.input,...changes},g.operator)
++ expect(response.status,await response.clone().text()).toBe(201)
++ return response.json() as Promise<{id:string;slug:string;versionId:string}>
++}
+ export async function releaseGraph(count=2,otherAuthor=false,existing?:Awaited<ReturnType<typeof graph>>){
+  const g=existing??await graph(count,otherAuthor),db=env.DB,actor=(await db.prepare('SELECT id FROM operators').first<{id:string}>())!.id
+  await db.batch([

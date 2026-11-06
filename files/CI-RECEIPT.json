@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f79",
+  "head": "c538718ba72fb8ef341c76a1f8f5f4cef9cd0e01",
+  "run_id": 42171795269,
+  "event": "push",
+  "observed": {
+    "conclusion": "failure",
+    "head_sha": "c538718ba72fb8ef341c76a1f8f5f4cef9cd0e01",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42171795269",
+    "status": "completed"
+  },
+  "jobs": 30,
+  "failed_jobs": 29,
+  "failure_steps": [
+    "Check generated contract documents"
+  ],
+  "contract_view_exception": true,
+  "other_failed_steps": [],
+  "local_exact_head_tests": {
+    "passed": 12,
+    "failed": 0
+  },
+  "github_calls_used": 5,
+  "github_call_budget": 10,
+  "log_command": "gh run view 42171795269 --repo just-every/run-penny --job 127741137141 --log-failed",
+  "log_exit": 0,
+  "landing": "branch-only; lander must regenerate views, run exact-SHA Verify and publication scan, and land"
+}

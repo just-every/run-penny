@@ -1,0 +1,758 @@
+[
+  {
+    "name": "[BASE-ACCESS-001/002/004] Base bootstrap, real cookie, private API and generated Start authorization, sign-out",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-001/003] SendGrid mail uses Base, admission does not enumerate, GET preview cannot consume, confirmation races once",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-001/002] expired links and expired sessions deny access; membership survives configuration changes",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[REQ-039 BASE-ACCESS-001 REQ-023] requester OAuth verifies at the provider edge without cookies or operator authority; missing mail fails closed",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-001 REQ-023] rejected provider sends invalidate both operator and requester verification links",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[OPS-001 BASE-ACCESS-001] configuring a bootstrap owner preserves existing explicitly allowlisted operators",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[OPS-001/002] equal native invitees operate and manage peers; removal revokes cookies, links, generated functions and keys with durable audit",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[OPS-002] initial owner self-removal requires a verified successor and survives configuration/bootstrap admission",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[OPS-002] ownership moves only by the owner handing over to a successor they name",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[OPS-002 BASE-OPS-005] management refuses maintenance and audit failure without leaving membership changes",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[OPS-002 BASE-ACCESS-004] an actor revoked after admission cannot commit an invitation",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/auth.test.ts"
+  },
+  {
+    "name": "[REQ-012][REQ-034][REQ-040] upgrades populated boards and supports category browsing, ranking, canonical merges and board participation/privacy through routes",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/board-categories.test.ts"
+  },
+  {
+    "name": "[DATA-004 BASE-ACCESS-004] custom-field writes require explicit same origin and reject removal during body read and commit",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/board.test.ts"
+  },
+  {
+    "name": "[DATA-004] concurrent definition edits and value saves cannot commit incompatible typed values",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/board.test.ts"
+  },
+  {
+    "name": "[DATA-004 BASE-OPS-005] an erased entity cannot regain a value and clearing rolls back with its audit",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/board.test.ts"
+  },
+  {
+    "name": "[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/board.test.ts"
+  },
+  {
+    "name": "[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/board.test.ts"
+  },
+  {
+    "name": "[BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/board.test.ts"
+  },
+  {
+    "name": "[BASE-OPS-005] publication and real scheduled mail retain feature outcomes; an unavailable audit prevents publication",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/board.test.ts"
+  },
+  {
+    "name": "[DATA-001 BASE-ACCESS-002] recovery uses Base authority even when restored product data has no matching attribution",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/custody.test.ts"
+  },
+  {
+    "name": "Accountable commitment > [DEC-001][DEC-003][DEC-004][DEC-005] derives hand-computable dimensions and immutable current-version snapshots",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-commit.test.ts"
+  },
+  {
+    "name": "Accountable commitment > [DEC-004] validates commitment fields and viable alternatives before changing a decision",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-commit.test.ts"
+  },
+  {
+    "name": "Accountable commitment > [DEC-001][DEC-005] concurrent edit and evidence relink produce one coherent stored snapshot",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-commit.test.ts"
+  },
+  {
+    "name": "[DEC-001] queue retains all states with distinct evidence, owner and latest action",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-commit.test.ts"
+  },
+  {
+    "name": "[DEC-001][DEC-004][DEC-005] a concurrent blank-question edit cannot create a committed blank brief",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-commit.test.ts"
+  },
+  {
+    "name": "[DEC-001][DEC-002] requires question, owner, a bet and linked evidence, and reverses readiness when the final link is removed",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-dimensions.test.ts"
+  },
+  {
+    "name": "[DEC-003][DEC-004] compares distinct stored relations, null provenance, shared evidence and offset instants without summing duplicate accounts",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-dimensions.test.ts"
+  },
+  {
+    "name": "Explicit roadmap publication > [ROAD-004][ROAD-005][ROAD-006] keeps commitments internal, approves safe identity, withdraws to 404 and reuses the mapping slot without losing history",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-roadmap.test.ts"
+  },
+  {
+    "name": "Explicit roadmap publication > [ROAD-004] refuses second mappings including concurrent approval and rejects private, blocked or nonexistent requests atomically",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-roadmap.test.ts"
+  },
+  {
+    "name": "Explicit roadmap publication > [ROAD-001][ROAD-003][ROAD-007] projects every forward/backward move within five seconds and snapshots exact approval/mapping witnesses atomically",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-roadmap.test.ts"
+  },
+  {
+    "name": "Explicit roadmap publication > [DEC-005][ROAD-007] committing an existing approved item records its real prior status and exactly one safe draft",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-roadmap.test.ts"
+  },
+  {
+    "name": "[ROAD-001][ROAD-007] concurrent distinct moves form a truthful transition chain, and unapproved items prepare no draft",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-roadmap.test.ts"
+  },
+  {
+    "name": "[ROAD-004][ROAD-007] a move racing reapproval captures one complete approval and its mappings, while withdrawal cannot leave a partially captured draft",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/decision-loop-roadmap.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-004][EDIT-001] returns a short owner-only editor lease with no authority values and rejects foreign-origin configuration",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/editor-admission.test.ts"
+  },
+  {
+    "name": "[INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/egress-delivery.test.ts"
+  },
+  {
+    "name": "[BASE-SECRET-001] an unexpected storage failure answers the standard error and logs no secret or personal value",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/failure-privacy.test.ts"
+  },
+  {
+    "name": "[IMP-003][IMP-004] resumes each configured input persisted jobs, repeats exactly and undoes only unchanged imported effects",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-custody.test.ts"
+  },
+  {
+    "name": "[IMP-004] refuses undo after later native wording, votes, follows, comments, publication or unmerge and preserves the complete graph",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-custody.test.ts"
+  },
+  {
+    "name": "[IMP-003][BASE-ACCESS-002] keeps a failed late D1 batch resumable and rolls back revoked-authority creation atomically",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-custody.test.ts"
+  },
+  {
+    "name": "[IMP-005][DATA-001] erasure purges exact retained each configured input history and blocks old source resurrection",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-custody.test.ts"
+  },
+  {
+    "name": "[IMP-003][IMP-005][DATA-001] validates a bounded stream archive and keeps its receipt and exact originals after restore",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-custody.test.ts"
+  },
+  {
+    "name": "[DATA-003][IMP-005] erases one person from a legacy saved import too large for one request, across requests and a killed one, applying nothing twice",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-custody.test.ts"
+  },
+  {
+    "name": "[IMP-003][OWN-001] export, reset, import, setup: current owner reads, undoes and resumes legacy history; demoted operators cannot",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-restored-owner.test.ts"
+  },
+  {
+    "name": "[IMP-008][IMP-007] previews, applies, replays and reverses UserVoice ideas with their supporters and a filtered-history warning",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-uservoice.test.ts"
+  },
+  {
+    "name": "[IMP-008][IMP-002] refuses unmapped statuses, unknown headings, workbooks and undeclared scope by name before any write",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-uservoice.test.ts"
+  },
+  {
+    "name": "[IMP-008][IMP-001][REQ-010] keeps 300 imported supporters inert, unmerged and private from requesters and public pages",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-uservoice.test.ts"
+  },
+  {
+    "name": "[IMP-008][IMP-004][IMP-005] fences undo behind later native votes and erases a UserVoice each configured input with its originals and a replay fence",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-uservoice.test.ts"
+  },
+  {
+    "name": "[IMP-008][IMP-005] a paged UserVoice import keeps every supporter and erases one whose votes fall on two pages",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import-uservoice.test.ts"
+  },
+  {
+    "name": "[IMP-001][REQ-031][EVID-006] imports each configured input multi-board history without authority, consent or publication effects",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import.test.ts"
+  },
+  {
+    "name": "[IMP-001][IMP-002] previews classic CSV omissions and retains multiline Unicode originals without invented aggregates",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import.test.ts"
+  },
+  {
+    "name": "[IMP-002][BASE-ACCESS-002] refuses invalid, incomplete, unreviewed and unauthorized saved imports before product writes",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import.test.ts"
+  },
+  {
+    "name": "[IMP-006][IMP-007] previews, applies, replays and reverses explicit Ideas mappings and duplicate rows with supplied author each configured input",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import.test.ts"
+  },
+  {
+    "name": "[IMP-002][IMP-006] refuses unknown and missing Ideas headings by name and lists all unresolved relationships",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import.test.ts"
+  },
+  {
+    "name": "[IMP-003][IMP-007] resumes bounded saved history by job ID and preserves stream originals and receipts through undo",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/feedback-import.test.ts"
+  },
+  {
+    "name": "[FIRST-RUN] an owner whose setup is unfinished is sent to /setup from every app document, finishes there and then reaches the app",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/first-run.test.ts"
+  },
+  {
+    "name": "[REQ-014 REQ-031 DATA-002] rejects invalid signed claims without writes or identity disclosure",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/host-identity.test.ts"
+  },
+  {
+    "name": "[REQ-014 REQ-031 EVID-006 BASE-ACCESS-002] accepts supplied account context only privately, with no email permission or operator authority",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/host-identity.test.ts"
+  },
+  {
+    "name": "[REQ-014 REQ-031 DATA-003] fences conflicting or older claims, erased identities and identity changes at the business transaction",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/host-identity.test.ts"
+  },
+  {
+    "name": "[REQ-014 BASE-OPS-002 DATA-001] upgrades populated prior history with authority, revocation, files and all native records intact",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/host-identity.test.ts"
+  },
+  {
+    "name": "[REQ-027 BASE-PUBLIC-002] persisted canonical embedding policy applies on the next document and never admits private frames",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/host-identity.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-003] Worker entry shares bounded fail-closed admission across documents, auth, public reads and generated functions, with page assets bounded separately",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/host-identity.test.ts"
+  },
+  {
+    "name": "[DATA-001 BASE-ACCESS-002] hosted data mutations and recovery require current native operator authority and the configured origin",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/hosted-export.test.ts"
+  },
+  {
+    "name": "[DATA-001 DATA-003] hosted empty-target restore and file erasure preserve preview and latest-journal fences",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/hosted-export.test.ts"
+  },
+  {
+    "name": "[DATA-001] hosted archive includes every classified product table and exact original R2 bytes without installation authority",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/hosted-export.test.ts"
+  },
+  {
+    "name": "[DATA-001] a RER Managed archive round trips while each installation keeps its own validated Platform migration ledger and unknown schema is refused",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/hosted-export.test.ts"
+  },
+  {
+    "name": "[DATA-001] held original-byte export keeps authorized reads available while fencing writes and overlapping export",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/hosted-export.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-002 DATA-001] revocation during R2 export withholds the archive and releases its maintenance lock",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/hosted-export.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-002 DATA-001] each configured input during a restore R2 write refuses the apply transaction and keeps destination authority",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/hosted-export.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-002 DATA-003] revocation during erasure file cleanup retains a pending operation for current-authority recovery",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/hosted-export.test.ts"
+  },
+  {
+    "name": "[REQ-040 IMP-002] reviewed Canny board mappings preserve posting, comments, hidden votes, voter disclosure and anonymity without inventing source fields or email",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-board-policy.test.ts"
+  },
+  {
+    "name": "[REQ-040 IMP-004] mapped boards replay, undo and reapply; later native policy changes refuse reversal and invalid mappings create nothing",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-board-policy.test.ts"
+  },
+  {
+    "name": "[ROAD-014 IMP-002 IMP-004] rebuilds a reviewed Canny roadmap, preserves moderation and source statuses, replays without mail and restores prior settings on undo",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-roadmap.test.ts"
+  },
+  {
+    "name": "[ROAD-014 IMP-002 IMP-004] stale approval, private boards and later native roadmap edits refuse without deleting imported work",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-roadmap.test.ts"
+  },
+  {
+    "name": "[ROAD-014 BASE-OPS-002] upgrades populated previous-head imports without changing their records and applies the new roadmap as a reviewed delta",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-roadmap.test.ts"
+  },
+  {
+    "name": "[PRIO-002 IMP-002 IMP-004] imports reviewed Canny custom statuses once, maps public labels, refuses changed approval and reverses unchanged definitions and requests",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-statuses.test.ts"
+  },
+  {
+    "name": "[REQ-035 IMP-002 IMP-004] imports every documented Canny vote priority, counts each in receipts and reverses it with the vote",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-vote-importance.test.ts"
+  },
+  {
+    "name": "[REQ-035 IMP-002] refuses unknown, null and create-API numeric priorities by name, without applying any history",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-vote-importance.test.ts"
+  },
+  {
+    "name": "[REQ-035 DATA-003] erasing an imported voter removes importance and prevents re-import of that identity",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/import-vote-importance.test.ts"
+  },
+  {
+    "name": "[API-001 BASE-ACCESS-002] issues a reveal-once hashed key, confines route-selected scopes to the REST namespace and refuses unissued keys without a usage record",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/integration-api.test.ts"
+  },
+  {
+    "name": "[API-001 API-002] expiry, revocation, issuer removal and usage-write failure refuse authority after a fresh runtime",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/integration-api.test.ts"
+  },
+  {
+    "name": "[API-002 BASE-ACCESS-002] fences issuance and business writes against native revocation in their D1 transaction",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/integration-api.test.ts"
+  },
+  {
+    "name": "[API-003 REQ-010 REL-001] composes native public reads, comments, status publication and validation without widening approval or consent",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/integration-api.test.ts"
+  },
+  {
+    "name": "[API-002 BASE-OPS-002 DATA-001] applies each new migration to populated prior native history and preserves revoked authority, files and seals",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/integration-api.test.ts"
+  },
+  {
+    "name": "[TRIAGE-004] a selected mention persists once across retries and dismissal; replies stay private",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/internal-discussion.test.ts"
+  },
+  {
+    "name": "[TRIAGE-004] upgrading populated notes preserves the original discussion and accepts a threaded reply",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/internal-discussion.test.ts"
+  },
+  {
+    "name": "[LEARN-001] refuses model identity and grants, captures permitted originals and commits an accountable protocol",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/learning-stage2.test.ts"
+  },
+  {
+    "name": "[AI-010 LEARN-002] configures providers, meters the monthly cap, preserves manual work and refuses invalid or revoked learning",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/learning-stage2.test.ts"
+  },
+  {
+    "name": "[LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/learning-stage3.test.ts"
+  },
+  {
+    "name": "[LEARN-004] contribution erasure removes every dependent version/snapshot, preserves unrelated native records and refuses replay and active restored grants",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/learning-stage3.test.ts"
+  },
+  {
+    "name": "[LEARN-005] source person erasure covers duplicate connections and fresh-grant replay; actual restore holds all source authority",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/learning-stage3.test.ts"
+  },
+  {
+    "name": "[LEARN-005] observed provider credential revocation purges all matching source installations; outage preserves evidence",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/learning-stage3.test.ts"
+  },
+  {
+    "name": "[LEARN-003] learning actions retain the acting peer and roll back with their audit",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/learning-stage3.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-001 BASE-ACCESS-003 REQ-023] both identities use the provider transport, confirm once, and retain private custody",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/local-adoption.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-002 OPS-002] branded invitation is multipart and cancelled identities can receive a fresh same-role invitation",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/local-adoption.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-001 REQ-023] deployed modes refuse development capture and report absent mail",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/local-capabilities.test.ts"
+  },
+  {
+    "name": "[NOTIFY-013][OPS-005] setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/mail-identity.test.ts"
+  },
+  {
+    "name": "[NOTIFY-012] previews and delivers only duplicate subscribers absent from the canonical request, once, with opt-out and silent unmerge",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/merge-notices.test.ts"
+  },
+  {
+    "name": "[NOTIFY-012] holds private canonical notices until publication and rechecks opt-outs, reversal and authority before delivery",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/merge-notices.test.ts"
+  },
+  {
+    "name": "[NOTIFY-012] migration preserves populated event, intent and delivery custody and restored pending notices stay held",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/merge-notices.test.ts"
+  },
+  {
+    "name": "[G.3 REQ-002 REQ-003 REQ-031 DATA-002] valid host identities may submit without outbound mail and retain private commercial claims",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/no-mail-identity.test.ts"
+  },
+  {
+    "name": "[G.3 REQ-023 REQ-003] delivered verification consumes once and replays its held submission after outbound mail is removed",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/no-mail-identity.test.ts"
+  },
+  {
+    "name": "[G.3 REQ-014 REQ-023 BASE-ACCESS-003] no mail admits neither invalid trust, first-time provisioning nor an unverified hold",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/no-mail-identity.test.ts"
+  },
+  {
+    "name": "[G.3 REQ-010 REL-011 BASE-ACCESS-003] signed no-mail writes keep blocking, suppression, consent and rate limits",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/no-mail-identity.test.ts"
+  },
+  {
+    "name": "[DATA-001 BASE-ACCESS-002 NOTIFY-001] round-trips exact notification custody while keeping destination Base authority and disabling source credentials",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notification-custody.test.ts"
+  },
+  {
+    "name": "[DATA-001 NOTIFY-001] restored sending history becomes unknown for review and never a replayable provider call",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notification-custody.test.ts"
+  },
+  {
+    "name": "[DATA-003 NOTIFY-001] erasure removes recipient, event, attempt and preference custody and rejects stale restoration and old unsubscribe capabilities",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notification-custody.test.ts"
+  },
+  {
+    "name": "[DATA-001 DATA-003 NOTIFY-001] maintenance excludes notification writes and Cron, and provider ownership excludes data maintenance",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notification-custody.test.ts"
+  },
+  {
+    "name": "[DATA-003 NOTIFY-001] erasing a commenter removes copied event wording without erasing another requester’s request",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notification-custody.test.ts"
+  },
+  {
+    "name": "[NOTIFY-001/002/010 REQ-007] public event intent is atomic; fixed windows and weekly summaries retain public-only consent",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-001 REQ-007] public reply routes retain intents while excluding the recipient’s own approved comment from mail",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-002/005] overlapping drains claim once, persist ownership before HTTP, and nullable acceptance never replays",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-002 REQ-019/022] rechecks each configured input after enqueue",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-002 EVID-006] mixed batch drops a newly held comment and still sends its public status",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-005 REL-006] bounded exponential known failures, ambiguous outcomes and interrupted attempts require review",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-002 REQ-025] signed no-login request/global unsubscribe resists tampering and retains votes, follows and access",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-002] Base providers send through public identity and Queue paths with durable relay failures",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-002] Queue transport drains before Cron and duplicate wakeups never resend",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[REQ-024 NOTIFY-002] identity merge preserves global and request mute, accepts old links, and suppresses muted intent",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-002 REQ-008/009] request-scoped mute follows canonical resolution and survives unmerge",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-002 EVID-006] corrected approved comment sends the current public projection",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-005 REL-006] known local validation failures are bounded and the retry window expires after one hour",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[REQ-030 BASE-OPS-005] chosen private request and comment rejection reaches the scheduled provider transport exactly once",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[NOTIFY-004 CAP-009] notification replies create nothing through HTTP or the dedicated email door",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/notifications.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-004][OWN-001] rejects invalid claims, admits one concurrent owner and refuses replay without changing authority",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/owner-claim.test.ts"
+  },
+  {
+    "name": "[OWN-001][BASE-ACCESS-004] preserves setup-token bootstrap and refuses takeover of its existing owner",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/owner-claim.test.ts"
+  },
+  {
+    "name": "[OWN-001][BASE-OPS-002][DATA-001] upgrades populated native and imported history without resetting authority, revocation or original files",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/owner-claim.test.ts"
+  },
+  {
+    "name": "[TRIAGE-001 TRIAGE-005] upgrades populated records without granting an owner, captures the current board default, and moves only assigned work between native operator queues",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/ownership.test.ts"
+  },
+  {
+    "name": "[TRIAGE-001 REQ-020] requester comments retain approved public text through own-edit review and follow the request owner",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/ownership.test.ts"
+  },
+  {
+    "name": "[TRIAGE-001] session revocation and target removal between admission and the ownership transaction refuse the entire assignment",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/ownership.test.ts"
+  },
+  {
+    "name": "[TRIAGE-001][DATA-001][DATA-003] archives retain private assignment history without authority and erasure removes the ownership graph",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/ownership.test.ts"
+  },
+  {
+    "name": "[DEC-006] revisions preserve commitment evidence and declined dimensions while atomically replacing approved roadmap bets",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-decisions.test.ts"
+  },
+  {
+    "name": "[DEC-007] calendar dates expire after the workspace day, explicit timestamps at their instant, and a revision can complete a due schedule",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-decisions.test.ts"
+  },
+  {
+    "name": "[NOTIFY-003 NOTIFY-005] completing a review holds that schedule; reminders stay in app until dismissed even when mail fails",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-decisions.test.ts"
+  },
+  {
+    "name": "[DEC-008] requester outcome revisions and release-linked evidence appear immediately through original publication links without changing commitment snapshots",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-decisions.test.ts"
+  },
+  {
+    "name": "[BASE-ACCESS-004 DEC-006] unauthorized, foreign-origin, stale and failed revisions leave the entire commitment unchanged",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-decisions.test.ts"
+  },
+  {
+    "name": "[DATA-003 BASE-DATA-003] evidence and account erasure fence every history child and original file against revision and stale restore",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-erasure.test.ts"
+  },
+  {
+    "name": "[DATA-003 BASE-DATA-003] erasing a requester keeps evidence someone else gave on their request, the decision's evidence count and other people's votes, follows, comments and release answers",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-erasure.test.ts"
+  },
+  {
+    "name": "[DATA-003 BASE-DATA-003] active evidence writers fence erasure; interrupted original-file removal holds maintenance until authenticated resume",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-erasure.test.ts"
+  },
+  {
+    "name": "[DATA-003] repeated words are listed with links and redacted or renamed from the preview; sealed public wording stays independent and operator identity still blocks",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-erasure.test.ts"
+  },
+  {
+    "name": "[DATA-003 BASE-DATA-003] a removed operator is erased: identity, sign-in and name copies go while their attributed work and everyone else stay",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-erasure.test.ts"
+  },
+  {
+    "name": "[DATA-003] another person's audit rows that only repeat a removed operator's display name are listed and resolved by the owner, who keeps or clears each",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-erasure.test.ts"
+  },
+  {
+    "name": "[DATA-003 BASE-DATA-003] a confirmed erasure whose tab closes mid-step finishes on the server once, and the stopped request cannot apply anything again",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-erasure.test.ts"
+  },
+  {
+    "name": "[EVID-005] account writes require an owner and context includes transaction-linked requests and decisions in observed-time order",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-evidence.test.ts"
+  },
+  {
+    "name": "[AI-008] every capture door stores marked excerpts in D1, search and the archive",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-evidence.test.ts"
+  },
+  {
+    "name": "[AI-008 EVID-010] edits retain wording versions and reject stale authority; explicit owner redaction irreversibly removes sensitive wording",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-evidence.test.ts"
+  },
+  {
+    "name": "[EVID-007][REQ-004] deterministic published-only suggestions rank lexical overlap within 500ms without linking, merging or creating drafts",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-evidence.test.ts"
+  },
+  {
+    "name": "[EVID-001 CAP-009 EVID-008] captures source provenance atomically and keeps originals private with durable replay and upload custody",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-evidence.test.ts"
+  },
+  {
+    "name": "[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-evidence.test.ts"
+  },
+  {
+    "name": "[REL-003 REL-014] clock-advanced scheduled releases and status updates publish once, cancel, notify failures and round-trip; corrections preserve snapshots",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-releases.test.ts"
+  },
+  {
+    "name": "[REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes and follows",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-releases.test.ts"
+  },
+  {
+    "name": "[REL-008 REL-009 DEC-008 DATA-003] original snapshot members retain revisions through identity merges until erasure; outsiders and erased archive restoration are refused",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-releases.test.ts"
+  },
+  {
+    "name": "[REL-009] coverage state table counts current responses over original recipients across multiple targets with private snapshot links",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/penny-releases.test.ts"
+  },
+  {
+    "name": "[PRIO-003 REQ-035] saves and shares transparent native-demand comparisons, re-sorts explicit inputs and keeps decisions and public records score-free",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/prioritisation.test.ts"
+  },
+  {
+    "name": "[PRIO-001] populated upgrade, linked feature rollups, move custody and private source/archive boundaries work through operator routes",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/product-hierarchy.test.ts"
+  },
+  {
+    "name": "[CAP-014 REQ-026 REQ-010] records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/proxy-votes.test.ts"
+  },
+  {
+    "name": "[CAP-014 REQ-035 REQ-008 REQ-009 DATA-001] retains native source attribution and importance through merge, unmerge and the product archive",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/proxy-votes.test.ts"
+  },
+  {
+    "name": "[CAP-014 DATA-003] refuses stale or invalid authority and rolls back every effect if auditing fails; requester erasure removes proxy custody",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/proxy-votes.test.ts"
+  },
+  {
+    "name": "[CAP-014 API-001 API-002] server-held scoped keys record proxy demand, refuse a read-only key and stop on revocation",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/proxy-votes.test.ts"
+  },
+  {
+    "name": "[DATA-001 REL-004/007 BASE-DATA-003] schema-discovered export restores every populated new ownership table exactly",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/release-custody.test.ts"
+  },
+  {
+    "name": "[DATA-001/003 REL-007 REQ-023] in-flight release claim fences archive, erasure and identity merge until provider settles",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/release-custody.test.ts"
+  },
+  {
+    "name": "[DATA-001 REL-006/007] restored queued release is explicitly unknown and inert",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/release-custody.test.ts"
+  },
+  {
+    "name": "[DATA-003 BASE-DATA-003] independently published wording never exempts private email or unapproved copied phrases",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/release-custody.test.ts"
+  },
+  {
+    "name": "[DATA-003 REL-004] follower erasure does not mistake another author’s approved public request context for private recipient wording",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/release-custody.test.ts"
+  },
+  {
+    "name": "[REL-016 DATA-003 REL-003 REL-005] RSS and Atom reconcile current published wording across correction and requester erasure",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/release-feeds.test.ts"
+  },
+  {
+    "name": "[ROAD-011] dated release plans retain items and states; slipped dependencies flag transitive dependents and public promises privately with atomic admission",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/release-planning.test.ts"
+  },
+  {
+    "name": "exports the hosted Base archive and matching journal, restores the same originals locally, and removes source snapshots",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/remote-portability.test.ts"
+  },
+  {
+    "name": "requires a current native owner, exact origin and job ownership, and never mounts remote restore",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/remote-portability.test.ts"
+  },
+  {
+    "name": "recovers an undelivered creation by its durable actor without deleting unrelated snapshots",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/remote-portability.test.ts"
+  },
+  {
+    "name": "serializes abort with advancement and fences an old runner after owner-confirmed recovery",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/remote-portability.test.ts"
+  },
+  {
+    "name": "names an interrupted export to guarded writers, offers its owner the job to resume or abort, then releases publication",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/remote-portability.test.ts"
+  },
+  {
+    "name": "[REQ-026] private demand counts people, evidence and accounts separately, preserves every attribution and excludes removed or blocked votes",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/request-demand.test.ts"
+  },
+  {
+    "name": "[REQ-017][REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/request-status-workflow.test.ts"
+  },
+  {
+    "name": "[REQ-021] only the author withdraws a pending or published request; public URLs become gone, votes stop counting and original evidence survives",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/request-withdrawal.test.ts"
+  },
+  {
+    "name": "[REQ-022] blocking refuses every requester action, hides their public content and votes, and unblocking restores retained contributions",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/requester-blocking.test.ts"
+  },
+  {
+    "name": "[NOTIFY-008] disclosed voting grants address-bound permission, explicit following survives vote removal, and unsubscribe stops delivery",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/requester-subscriptions.test.ts"
+  },
+  {
+    "name": "[NOTIFY-011] submission records one removable author vote and independent permission, delivers replies and status, and explicit consent is address-bound, timestamped and revocable",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/requester-subscriptions.test.ts"
+  },
+  {
+    "name": "[REL-015] a populated upgrade preserves published wording, sealed recipients and original rows on repeated migration",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/rich-changelog.test.ts"
+  },
+  {
+    "name": "[REL-015] approved release images, public label/product filters and corrected snapshots respect native authority and publication",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/rich-changelog.test.ts"
+  },
+  {
+    "name": "[ROAD-012] explicitly approves coarse ETAs, drafts each change once, preserves internal dates and refuses stale, private or unauthorised writes",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/roadmap-public-eta.test.ts"
+  },
+  {
+    "name": "[ROAD-012] populated upgrade preserves previous cells and a repeated migration is a no-op",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/roadmap-public-eta.test.ts"
+  },
+  {
+    "name": "[TRIAGE-002] flags overdue work, reminds once per age step across repeated worker drains, snoozes until its date and clears public-response and stale attention",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/triage-aging.test.ts"
+  },
+  {
+    "name": "[TRIAGE-002] populated upgrade is repeatable, settings change ages through the route, and archives and erasure keep custody",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/triage-aging.test.ts"
+  },
+  {
+    "name": "[BASE-OPS-002 DATA-001 REL-014 AI-010 AI-008] populated previous-head data and originals survive Discord, Help Scout, browser capture, agent and survey upgrades and repeat",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/upgrade.test.ts"
+  },
+  {
+    "name": "[REQ-035 CAP-014] keeps optional vote importance private, permits change/clear and records stated proxy importance with configurable three or four labels",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/vote-importance.test.ts"
+  },
+  {
+    "name": "[REQ-035 REQ-008 REQ-009] projects the latest person choice through merge and restores origin custody on unmerge",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/vote-importance.test.ts"
+  },
+  {
+    "name": "[REQ-035 BASE-ACCESS-004] refuses absent votes, foreign origins, invalid choices and non-owner settings; audit refusal preserves the previous configuration",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/vote-importance.test.ts"
+  },
+  {
+    "name": "[OPS-008][OPS-005] requires an IANA timezone before setup commits, retains it on repeat and confirms legacy settings once",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/workspace-clock.test.ts"
+  },
+  {
+    "name": "[OPS-008][NOTIFY-002] sends Eastern daytime updates, holds overnight to 08:00 and applies timezone changes and quiet-hours off to queued mail",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/workspace-clock.test.ts"
+  },
+  {
+    "name": "[OPS-008][DEC-007][NOTIFY-003] calendar reviews use the recorded timezone and operator mail has no requester quiet hours",
+    "file": "/workspace/run-penny-sd-penny-c-f79/tests/base/workspace-clock.test.ts"
+  }
+]

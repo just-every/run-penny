@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f79",
+  "head": "c538718ba72fb8ef341c76a1f8f5f4cef9cd0e01",
+  "time": "2026-11-06T06:05:10.554637+00:00",
+  "tests": {
+    "files": 4,
+    "passed": 12,
+    "failed": 0
+  },
+  "worker_inventory": 189,
+  "net_registered_test_change": 0,
+  "checks": [
+    {
+      "name": "build",
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "log": "BUILD.log",
+      "sha256": "c01d6bc0edd19b63fe4cea918b9b86bd6d7645cbf23c6b782eb3d2b7ed3c0c3c"
+    },
+    {
+      "name": "touched_tests",
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/release-feeds.test.ts tests/base/release-custody.test.ts tests/base/rich-changelog.test.ts tests/base/penny-releases.test.ts",
+      "exit": 0,
+      "log": "TESTS.log",
+      "sha256": "f4eec9ab4d117dc0b9c0f6a7624855b0249f7e917529449baaf174b2548ebe2a"
+    },
+    {
+      "name": "typecheck",
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "TYPECHECK.log",
+      "sha256": "dd6c0a415a61e02d436f2cd7c610402eda01190f98c9f59f19d6d8ffab66f5ae"
+    },
+    {
+      "name": "touched_lint",
+      "command": "pnpm exec oxlint <six changed TypeScript files>",
+      "exit": 0,
+      "log": "LINT.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "base_source",
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "log": "BASE-SOURCE.log",
+      "sha256": "87dabb2c99b06e2cd3a3c761aa359ed3c4d8043d9fbd3dc0a9ab0b9d090d5dc4"
+    }
+  ],
+  "notes": [
+    "Build and touched tests rerun after candidate commit. Typecheck, lint and structural checks saw identical source bytes before commit.",
+    "No UI screens changed; browser widths are inapplicable.",
+    "No hosted provider qualification, publication, customer send or cloud publication scan was performed."
+  ]
+}

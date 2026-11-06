@@ -1,0 +1,55 @@
+{
+  "head": "c538718ba72fb8ef341c76a1f8f5f4cef9cd0e01",
+  "time": "2026-11-06T06:04:18.688135+00:00",
+  "steps": [
+    {
+      "name": "views_write",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "write"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "views_check",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "restore_views",
+      "command": [
+        "git",
+        "checkout",
+        "origin/main",
+        "--",
+        "ACCEPTANCE.md",
+        "docs/CLAIMS.md"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "lock_check",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "exit": 0
+    }
+  ],
+  "ledger": {
+    "command": null,
+    "exit": 0,
+    "reason": "no migration added or changed"
+  },
+  "source_lock_regeneration": {
+    "command": "node scripts/edition-authoring/cli.mjs lock",
+    "exit": 0,
+    "stage": "intentional files staged, views restored before lock, prior to candidate commit"
+  }
+}

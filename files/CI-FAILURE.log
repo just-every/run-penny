@@ -1,0 +1,7 @@
+Sanitized failed-job log: workflow environment metadata omitted; command and error output retained.
+shards (base-1, false)	Check generated contract documents	﻿2026-11-06T06:01:21.7112701Z ##[group]Run node src/base/contract-docs.mjs check
+shards (base-1, false)	Check generated contract documents	2026-11-06T06:01:21.7112925Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (base-1, false)	Check generated contract documents	2026-11-06T06:01:21.7136238Z shell: /usr/bin/bash -e {0}
+shards (base-1, false)	Check generated contract documents	2026-11-06T06:01:21.7137249Z ##[endgroup]
+shards (base-1, false)	Check generated contract documents	2026-11-06T06:01:21.9180373Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (base-1, false)	Check generated contract documents	2026-11-06T06:01:21.9231365Z ##[error]Process completed with exit code 1.
