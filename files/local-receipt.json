@@ -1,0 +1,103 @@
+{
+  "tag": "sd-penny-c-f54",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f54",
+  "head": "ca50734876911283ca703df43f26836f310f67c0",
+  "recorded_at": "2026-11-06T00:23:16.258283+00:00",
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "scope": "local frozen setup and owner bootstrap; no deployment"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "scope": "built Worker; runtime source unchanged since build"
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/mail-identity.test.ts tests/base/notifications.test.ts",
+      "exit": 0,
+      "files": 2,
+      "tests_passed": 16,
+      "node": "22.20.0",
+      "log": "focused-tests.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "node": "22.20.0",
+      "log": "typecheck.log"
+    },
+    {
+      "command": "pnpm run check -- --profile first-party",
+      "exit": 0,
+      "log": "first-party.log"
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "log": "base-source.log",
+      "scope": "offline retained-byte integrity"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write; node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "log": "contract-views.log",
+      "restored_from": "origin/main",
+      "generated_views_committed": false
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock; node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "log": "source-lock-check.json"
+    },
+    {
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium cloud_run timeout 1200 node tests/browser/workspace-clock.mjs",
+      "exit": 0,
+      "viewports": [
+        1440,
+        390
+      ],
+      "node": "22.20.0",
+      "log": "browser.log",
+      "scope": "mounted owner refusal, address confirmation and recovery; existing requester choice and workspace-clock coverage; axe serious and critical zero, no overflow or unexpected browser errors"
+    }
+  ],
+  "files": {
+    "src/core/features/notifications/weekly-routes.ts": "19a3f157291455df72b55bf45a063066c247b3167bd556ff204806ab298b0e79",
+    "src/core/features/integrations/guarded-database.ts": "72989de4cdfd5ad97d959b6975b12591e3b53e787a6e7d7dd75bf381e92e387d",
+    "tests/base/mail-identity.test.ts": "a36d0da627c82474e1bc01de352d6792c73471de4d54582b6c230ca5b95883fa",
+    "tests/base/weekly-summary-flow.ts": "0cf0ea6908a8b1c68971da5eeac3674a8eb824b2f213b2d0d54e7deecf703a94",
+    "tests/browser/weekly-summary-choice.mjs": "07cc45f5960e32da04ba9e46fa5c85a1ab28e5d22e99737ef1379865a6733830",
+    "tests/browser/workspace-clock.mjs": "1014850eff910a96fe60d8bfb5d525719dc675f354956840c63869847204b191",
+    "CONTRACT.md": "ea3bb1234506a0eb6a9ae2704036a211cbe3d0ff1bb53d257fb13848088da1f9",
+    "sources.lock.json": "45770c940cea3672a19c45e9ec418f4a8b9dae61f8b87cf1d5139d28f9042759"
+  },
+  "test_registrations": {
+    "added": 0,
+    "removed": 0,
+    "skipped": 0,
+    "cap_unchanged": 200
+  },
+  "migration_ledger": {
+    "command": null,
+    "reason": "no migration changed"
+  },
+  "public_scan": {
+    "status": "not_run_in_cloud",
+    "reason": "guarded Mac lander owns full-history publication scan"
+  },
+  "run_site": {
+    "status": "not_run_in_cloud",
+    "reason": "main-only landing duty"
+  },
+  "mechanical": "MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock and check exit=0; views=node src/base/contract-docs.mjs write and check exit=0; ledger=none exit=0",
+  "prepublication_diff_checks": {
+    "credential_patterns": 0,
+    "new_email_literals": 0,
+    "generated_views_committed": false,
+    "shared_guard_unchanged": true,
+    "worktree_clean": true
+  }
+}

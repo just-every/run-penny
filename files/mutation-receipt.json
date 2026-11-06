@@ -1,0 +1,13 @@
+{
+  "head_at_probe": "14f13c8d193c98eeb775764b301b7a258f7827a6",
+  "door": "PUT /api/operator/settings/weekly-summary",
+  "mutation": "remove missing-postal preflight from emitted Worker, retaining transaction guard",
+  "test": "tests/base/mail-identity.test.ts: setup and legacy postal admission journey",
+  "exit": 1,
+  "failure": "expected 401 to be 409",
+  "restored_artifact_sha256": "60f1b9e01aedf2c0b208c5dd4e15e0a48048dcf83be4a6c35086c956ef0916aa",
+  "result": "detected",
+  "candidate_head": "ca50734876911283ca703df43f26836f310f67c0",
+  "route_source_byte_identical": true,
+  "route_source_sha256": "19a3f157291455df72b55bf45a063066c247b3167bd556ff204806ab298b0e79"
+}
