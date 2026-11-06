@@ -62,3 +62,5 @@ Exact candidate push Verify: run 42204073677, event push, full head `676857454ae
 For baseline context only, main `6c1eb018f6391de17e04fc8868c0c74f8732abd8` has successful Verify runs 42201695865 and 42200169242 and successful Run site 42201695577. These are not presented as candidate proof.
 
 Product push custody is separate from evidence transfer. All report files are outside the product checkout and selected explicitly for the report-only evidence ref. Evidence transfer does not signify DONE, acceptance, READY or landing. Publication scanning and the guarded landing remain fleet work. There is no known real test failure or missing account blocking this selected slice.
+
+Evidence publication readback: the first report-only head `c0d3fb6994a18930981f35a7147fe6871ba08613` was fetched through the evidence entrypoint. Its manifest, product head and all 14 file hashes verified. EVIDENCE-TRANSFER.json is that actual readback receipt; the final evidence update includes it with the complete packet.
