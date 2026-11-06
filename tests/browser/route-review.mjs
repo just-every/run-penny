@@ -205,10 +205,19 @@ async function checkOperatorRoutes(page, width) {
   for (const item of routes) await visit(page, width, { ...item, auth: 'operator-session' })
 }
 
+async function waitForDocsHydration(page) {
+  // Network idle alone can precede React attaching to a streamed route.
+  await page.waitForFunction(() => {
+    const heading = document.querySelector('h1')
+    return heading && Object.keys(heading).some(key => key.startsWith('__reactFiber$'))
+  })
+}
+
 // Use the mounted prose container and its actual content as the positive control:
 // docs use a div, so an absent article element alone would prove nothing.
 async function checkDocsRefusal(page, width) {
   const known = await visit(page, width, { route: 'public-docs-page', path: `/docs/${docsSampleSlug}`, auth: 'public', contains: 'Install and deploy' })
+  await waitForDocsHydration(page)
   const prose = page.locator('.docs-prose')
   assert.equal(await prose.count(), 1, '[DOCS-001] the published page has a documentation body')
   const paragraph = prose.locator('p').first()
@@ -223,6 +232,7 @@ async function checkDocsRefusal(page, width) {
     { route: 'public-docs-nested', path: `/docs/${docsSampleSlug}/no-such-page` },
   ]) {
     const missing = await visit(page, width, { route, path, status: 404, auth: 'public', contains: 'That page does not exist.' })
+    await waitForDocsHydration(page)
     assert.doesNotMatch(missing.serverText, /class="[^"]*docs-(?:prose|page-head)[^"]*"|id="docs-content"|<article(?:\s|>)/i, '[DOCS-001] refused SSR has no documentation body or article')
     assert.ok(!missing.serverText.includes(publishedHtml), '[DOCS-001] refused SSR excludes the published control prose')
     assert.equal(await page.locator('.docs-prose, .docs-page-head, #docs-content, article').count(), 0, '[DOCS-001] hydrated refusal has no documentation body or article')
@@ -247,6 +257,7 @@ async function captureDesktopDocs() {
       expectedFailures.clear(); observedFailures.clear()
       if (status >= 400) expectFailure(path, status)
       const response = await page.goto(origin + path, { waitUntil: 'networkidle' })
+      await waitForDocsHydration(page)
       await capture(page, route, origin + path, response.status(), 'public', width)
     }
   } finally {
