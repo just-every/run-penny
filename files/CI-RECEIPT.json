@@ -1,0 +1,19 @@
+{
+  "head": "5eb5ad4cfabc9b28c24ad83ef5e807f16cd22e3a",
+  "run_id": 42204760178,
+  "event": "push",
+  "status": "completed",
+  "conclusion": "failure",
+  "interpretation": "generated-view freshness exception only; runtime shards did not run",
+  "failed_job_count": 29,
+  "failed_step": "Check generated contract documents",
+  "representative_job_id": 127848554340,
+  "dispatches": 0,
+  "reruns": 0,
+  "github_calls": 6,
+  "main_head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "main_verify_run_id": 42201695865,
+  "main_verify_conclusion": "success",
+  "main_run_site_id": 42201695577,
+  "main_run_site_conclusion": "success"
+}

@@ -1,0 +1,45 @@
+{
+  "head": "5eb5ad4cfabc9b28c24ad83ef5e807f16cd22e3a",
+  "checks": [
+    {
+      "head": "5eb5ad4cfabc9b28c24ad83ef5e807f16cd22e3a",
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/feedback-volume-report.test.ts",
+      "exit": 0,
+      "started_at": "2026-11-06T10:43:19.633996+00:00",
+      "finished_at": "2026-11-06T10:43:24.811565+00:00",
+      "log": "feedback-volume-test.log"
+    },
+    {
+      "head": "5eb5ad4cfabc9b28c24ad83ef5e807f16cd22e3a",
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "started_at": "2026-11-06T10:43:24.811604+00:00",
+      "finished_at": "2026-11-06T10:43:48.652848+00:00",
+      "log": "typecheck.log"
+    },
+    {
+      "head": "5eb5ad4cfabc9b28c24ad83ef5e807f16cd22e3a",
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "started_at": "2026-11-06T10:43:48.653045+00:00",
+      "finished_at": "2026-11-06T10:43:50.135089+00:00",
+      "log": "first-party.log"
+    },
+    {
+      "head": "5eb5ad4cfabc9b28c24ad83ef5e807f16cd22e3a",
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "started_at": "2026-11-06T10:43:50.135118+00:00",
+      "finished_at": "2026-11-06T10:43:50.526811+00:00",
+      "log": "lock-check.log"
+    },
+    {
+      "head": "5eb5ad4cfabc9b28c24ad83ef5e807f16cd22e3a",
+      "command": "pnpm exec oxlint src/core/features/reports tests/base/feedback-volume-report.test.ts",
+      "exit": 0,
+      "started_at": "2026-11-06T10:43:50.527022+00:00",
+      "finished_at": "2026-11-06T10:43:51.030801+00:00",
+      "log": "lint.log"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "files": [
+    {
+      "blob": "36c42086737b997f6a1fcb5f912e4c2c1b110961",
+      "bytes": 632,
+      "path": "CI-RECEIPT.json",
+      "sha256": "b4dc774538970fe0ab42077c36991dbc9639187cf69289cc617289a64f846a74"
+    },
+    {
+      "blob": "df7c3bf7791c766ee97a7ba2c3994021b1235818",
+      "bytes": 1628,
+      "path": "LOCAL-RECEIPT.json",
+      "sha256": "bde47d7a40c6884cfb9698788edfb0dbcaf7912c0f58b2ec4aa85e47f3a42862"
+    },
+    {
+      "blob": "0f0d21329d6dae37919f6595a05362ea8b8a988d",
+      "bytes": 1889,
+      "path": "PLAN.md",
+      "sha256": "3154fe49be0673be98931ac339df24ed9565ddd0661b1e0b09dca0bf6b3e2a1c"
+    },
+    {
+      "blob": "a4760c78e8cb1523214cd0833ae2d2474c3faad0",
+      "bytes": 13102,
+      "path": "REPORT.md",
+      "sha256": "8af0adc44cd9d32a016a1ee5ceef9b2b20114d163b912cc1e3b255832bd53c94"
+    },
+    {
+      "blob": "d005716b6865a2fcc572a346bad6cd241255dd4a",
+      "bytes": 42569,
+      "path": "build.log",
+      "sha256": "91f1d70a956b26b5269ef5cfc733d0c5c92a397a91f8f98ae41695554d991f9e"
+    },
+    {
+      "blob": "75fccbcf30315ab73ab68768986da667bf5f83c5",
+      "bytes": 234,
+      "path": "candidate-ci.json",
+      "sha256": "1000b517cd3b8192c39d64c855f7de1e5769811e47541d29b1f952c52573dd9c"
+    },
+    {
+      "blob": "140c3502fab3cfa72ddcf7f5452c739e489e9962",
+      "bytes": 778,
+      "path": "candidate-failed-job.log",
+      "sha256": "3c3b030ef4ea60efe511341806a39b2b0b01dc080b3d9ee695f1c838d75cc85d"
+    },
+    {
+      "blob": "91af479053171a2d6131bb89ac2501a7d9e3ec42",
+      "bytes": 4627,
+      "path": "candidate-jobs.json",
+      "sha256": "56cfdeb85dd6294ed0831667abdf92effa85472244f9bbce4a39363d5851176b"
+    },
+    {
+      "blob": "eb374adfb9c14ee113abe14d9ae98c24ac4011c1",
+      "bytes": 340,
+      "path": "feedback-volume-test.log",
+      "sha256": "855d7983ca67d5aa59c48bbb0258b2e19e46ec7cc8ae8369cb57b6b2dd9c3ca8"
+    },
+    {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "path": "first-party.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "blob": "a538f47891837d30bbbe638c727c39cc488c70f0",
+      "bytes": 403,
+      "path": "identity-audit.txt",
+      "sha256": "056dabf72410fe2b332cde14812db39bedd2117eb2d8cbd3605d50b67945a6bd"
+    },
+    {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "path": "lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "blob": "5f38f48a43633da4f0433290818b6ad22c8b6f4b",
+      "bytes": 27,
+      "path": "lock-check.log",
+      "sha256": "27e3bcd40d7f73a27fd177a87385e5f6000fdbf0aa7a7d7c501d4dae006f47e7"
+    },
+    {
+      "blob": "41dc3f0d0a3cdc7b8c3c6b7049ef5a6219d78881",
+      "bytes": 1157,
+      "path": "main-ci.json",
+      "sha256": "1d9ec3c0150bca8c78cdb7018f6f40e78ccc67b3a70a3aa85648fc733b8d82ca"
+    },
+    {
+      "blob": "7239f183fe0dfa9845a3cbf182a98fb0b60ac706",
+      "bytes": 74,
+      "path": "product-ref.txt",
+      "sha256": "426a1a47938b2cc7a6553e0af8e6a68390c39d9969b95d18d7342fd44b9d7268"
+    },
+    {
+      "blob": "aa2495fdf84d2e098002b641749960728a2e3930",
+      "bytes": 162,
+      "path": "typecheck.log",
+      "sha256": "06dc68bd63e5a31247106eca2b338be98e6ca68822e77d55b2d1c343c429719e"
+    },
+    {
+      "blob": "ae869b2fafd3acf46a2dc6ce35ec869497ae9cfb",
+      "bytes": 32,
+      "path": "views-check.log",
+      "sha256": "c21aae40192141751d6d5c7a3a1d0eb701a6852f305d592d77b4dcab9c2536ab"
+    },
+    {
+      "blob": "d4d1e60ea7fdc565c576421664992b40e47a816e",
+      "bytes": 28,
+      "path": "views-write.log",
+      "sha256": "df91012bf66fb476e9cd1a30c002829398beb55f869e07cc7be477197fa5a276"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f103",
+  "product_head": "5eb5ad4cfabc9b28c24ad83ef5e807f16cd22e3a",
+  "ref": "refs/heads/evidence/sd-penny-c-f103",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f103"
+}
