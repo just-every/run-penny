@@ -531,7 +531,7 @@ Core · published · **partial**
 2. Moving a request to an internal board withdraws it from the portal within 5 seconds and its public URL returns 404.
 
 **Evidence.** `tests/base/board.test.ts` — Base-signed board and tag management, via `tests/base/internal-board-exclusion.ts` proveInternalBoardExclusion; `tests/base/notifications.test.ts` — rechecks each configured input after enqueue
-**Gap.** Moving a request to an internal board, including withdrawal from the portal within five seconds, has no passing assertion. Changing board visibility proves exclusion from populated public roadmaps, release-publication refusal with unchanged publication, snapshot and outbox state, queued-mail suppression and refusal of later public status and reply activity; it does not prove the request move.
+**Gap.** Moving a request to an internal board, including withdrawal from the portal within five seconds, has no passing assertion. Changing board visibility proves exclusion from populated public roadmaps, release-publication refusal with unchanged publication, snapshot, outbox and attempt state, queued-mail suppression and refusal of later public status and reply activity; emitted-Worker scheduler drains bind public control deliveries to their recipient and durable attempts; it does not prove the request move.
 
 #### REQ-020 — Requester's own content
 
