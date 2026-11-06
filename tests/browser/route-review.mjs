@@ -237,6 +237,8 @@ async function checkDocsRefusal(page, width) {
     assert.ok(!missing.serverText.includes(publishedHtml), '[DOCS-001] refused SSR excludes the published control prose')
     assert.equal(await page.locator('.docs-prose, .docs-page-head, #docs-content, article').count(), 0, '[DOCS-001] hydrated refusal has no documentation body or article')
     const hydrated = await page.locator('html').evaluate(element => element.outerHTML)
+    const hydratedText = await page.locator('body').innerText()
+    assert.ok(!hydratedText.includes(publishedText), '[DOCS-001] fully hydrated refusal excludes the published control text')
     assert.ok(!hydrated.includes(publishedHtml) && !missing.text.includes(publishedText), '[DOCS-001] hydration does not restore published prose')
     docsRefusals.push({ path, width, status: missing.response.status(), ssrProse: false, hydratedProse: false, control: `/docs/${docsSampleSlug}`, controlProseLength: publishedText.length })
   }
