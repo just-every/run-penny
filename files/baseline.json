@@ -1,0 +1,17 @@
+{
+  "main": "f4eb5b2ec26b038c5656fcb027bf28755178c990",
+  "counts": {
+    "partial": 124,
+    "done": 79,
+    "missing": 78
+  },
+  "status_rows": 281,
+  "target": "LEARN-001",
+  "before": "partial",
+  "after": "partial",
+  "acceptance_points_closed": [
+    4
+  ],
+  "test_registrations_added": 0,
+  "test_registrations_removed": 0
+}

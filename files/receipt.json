@@ -1,0 +1,170 @@
+{
+  "api_calls": 5,
+  "api_notes": "One mistyped initial main SHA discovery returned no runs; all reported SHA values were subsequently read from Git. No polling, dispatch or rerun.",
+  "artifacts": [
+    {
+      "bytes": 2227,
+      "path": "PLAN.md",
+      "sha256": "b87e0d2d390d03149745710970b90ae125652f6f3f1fb3eff29da1781e4b9067"
+    },
+    {
+      "bytes": 333,
+      "path": "baseline.json",
+      "sha256": "6322f8bf1707c3e1252ad4d8aab3a28bf6d0e6c374e10b24698c6e69c331504f"
+    },
+    {
+      "bytes": 243,
+      "path": "ci-discovery.json",
+      "sha256": "c38e1e44dfce97a417486b24cfd089c68c4509a7a668276339f1f1ffbd460d80"
+    },
+    {
+      "bytes": 1328,
+      "path": "ci-generated-view.log",
+      "sha256": "815f4fc684b604e33f3780d6d657586ba1d743f1498ca13cb7cf98b18a35727a"
+    },
+    {
+      "bytes": 6282,
+      "path": "ci-jobs.json",
+      "sha256": "b60804c13cbac2c0f9bdafaa4891f89e6c34c75a99b34aeaa8ac1ba577d59be5"
+    },
+    {
+      "bytes": 85,
+      "path": "commit-identities.txt",
+      "sha256": "148bad84b5b174568017df50d58e073566703d43c6c9fe7fa6f1af04420adf55"
+    },
+    {
+      "bytes": 221,
+      "path": "first-party.log",
+      "sha256": "fd38260b5567fc6b42d7c4817ed8ef16ffcee571e8617aaaa2d951954441d852"
+    },
+    {
+      "bytes": 337,
+      "path": "learning-tests.log",
+      "sha256": "d1af131aeed2950214c95113c0939c8f88f7d50cf22b13c1f5980f0123971ffb"
+    },
+    {
+      "bytes": 0,
+      "path": "lint.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 426720,
+      "path": "source-lock-check.json",
+      "sha256": "19dd04c1cc6a11d7c8701cd6443acfe36c24b9a9f65ba32e4e09d3cd497a70e3"
+    },
+    {
+      "bytes": 197,
+      "path": "typecheck.log",
+      "sha256": "94007e47432c0fbb18df2bbd471f39c72d42834af664a0084c78a832405ca98c"
+    },
+    {
+      "bytes": 67,
+      "path": "views-before-generation.log",
+      "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+    },
+    {
+      "bytes": 32,
+      "path": "views-check.log",
+      "sha256": "c21aae40192141751d6d5c7a3a1d0eb701a6852f305d592d77b4dcab9c2536ab"
+    },
+    {
+      "bytes": 28,
+      "path": "views-write.log",
+      "sha256": "df91012bf66fb476e9cd1a30c002829398beb55f869e07cc7be477197fa5a276"
+    }
+  ],
+  "branch": "cloud/sd-penny-c-f51",
+  "checks": [
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-stage2.test.ts tests/base/learning-stage3.test.ts",
+      "exit": 0,
+      "log": "learning-tests.log",
+      "test_files": 2,
+      "tests_passed": 7
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "command": "pnpm run check -- --profile first-party",
+      "exit": 0,
+      "log": "first-party.log"
+    },
+    {
+      "command": "pnpm exec oxlint tests/base/learning-stage2.test.ts tests/base/learning-test-runtime.ts",
+      "exit": 0,
+      "log": "lint.log"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "log": "source-lock-check.json"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "expected": true,
+      "log": "views-before-generation.log",
+      "reason": "Generated views restored from origin/main as instructed"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write && node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "logs": [
+        "views-write.log",
+        "views-check.log"
+      ]
+    }
+  ],
+  "ci": {
+    "conclusion": "failure",
+    "event": "push",
+    "head_sha": "438da05c1bb046f2d4cce276d46ede470eecf8df",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42135975335",
+    "id": 42135975335,
+    "name": "Verify Penny",
+    "status": "completed"
+  },
+  "ci_classification": "expected generated-view freshness only; all 29 failed shards stop at Check generated contract documents; no repair or rerun",
+  "contract_status_rows_after": 281,
+  "contract_status_rows_before": 281,
+  "counts_after": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "counts_before": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "generated_views_committed": false,
+  "head": "438da05c1bb046f2d4cce276d46ede470eecf8df",
+  "ledger": {
+    "command": null,
+    "exit": 0,
+    "reason": "No migration added or changed"
+  },
+  "parent_main": "1db862912dc18165739d5385fcca0f886c023ca4",
+  "product_push": {
+    "attempts": 1,
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f51",
+    "status": "pushed"
+  },
+  "publication_scan": {
+    "custody": "fleet lander",
+    "status": "not run in cloud"
+  },
+  "recorded_at": "2026-11-06T00:22:41.800679+00:00",
+  "repository": "just-every/run-penny",
+  "run_site": {
+    "status": "not run for branch; fleet lander after main landing"
+  },
+  "schema": 1,
+  "table_lines_after": 445,
+  "table_lines_before": 445,
+  "tag": "sd-penny-c-f51",
+  "test_registration_delta": 0
+}
