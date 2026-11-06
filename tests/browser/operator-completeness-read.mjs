@@ -67,7 +67,13 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
  for(const record of hierarchy) {
   const destination=`/app/features#${record.entity}-${record.id}`
   await page.getByRole('link',{name:record.name,exact:true}).and(page.locator(`a[href="${destination}"]`)).click()
-  await page.waitForURL(url=>url.pathname==='/app/features'&&url.hash===`#${record.entity}-${record.id}`)
+  try {
+   await page.waitForURL(url=>url.pathname==='/app/features'&&url.hash===`#${record.entity}-${record.id}`)
+  } catch(error) {
+   const actual=new URL(page.url())
+   error.message+=` Expected hierarchy destination ${destination}; observed ${actual.pathname}${actual.hash} at ${width}.`
+   throw error
+  }
   const target=page.locator(`[id="${record.entity}-${record.id}"]`)
   await target.getByRole('heading',{name:record.name,exact:true}).waitFor()
   if(width===1440) {
@@ -106,6 +112,11 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
    await page.getByRole('navigation',{name:'List pages'}).getByRole('status').filter({hasText:`Page ${number} of 2`}).waitFor()
    const links=page.locator('main h2 a')
    assert.deepEqual(await links.evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href'))),result.items.map(row=>row.href),'[OPS-004] rendered order and destinations match the mixed page')
+   for(const [index,row] of result.items.entries()) {
+    const card=links.nth(index).locator('xpath=ancestor::section[1]')
+    assert.equal(await card.locator('span').innerText(),row.entity.toUpperCase(),'[OPS-004] each mixed result displays its own record type')
+    assert.equal(await links.nth(index).innerText(),row.title,'[OPS-004] each mixed result displays its own current name')
+   }
    seen.push(...result.items.map(row=>row.id))
    if(number===1) {
     await page.getByRole('link',{name:'Next page',exact:true}).click()
@@ -157,6 +168,43 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
    assert.doesNotMatch(await response.text(),/privateproof|customproof/,'[OPS-004 DATA-004] public documents/API contain no private fixture fields')
   }
  }finally{await anonymous.close()}
+ // Change names through the mounted hierarchy editors, then disambiguate all types.
+ if(width===1440) {
+  const sharedName=marker('accountname'),oldNames=hierarchy.slice(0,3).map(record=>record.name)
+  for(const record of hierarchy.slice(0,3)) {
+   await page.goto(origin+`/app/features#${record.entity}-${record.id}`)
+   const target=page.locator(`[id="${record.entity}-${record.id}"]`)
+   await target.locator('summary').filter({hasText:`Edit ${record.entity.slice(0,-1)}: ${record.name}`}).first().click()
+   const form=target.getByRole('form',{name:`Edit ${record.entity.slice(0,-1)}: ${record.name}`,exact:true})
+   await form.getByLabel(`${record.entity[0].toUpperCase()+record.entity.slice(1,-1)} name`,{exact:true}).fill(sharedName)
+   const saved=page.waitForResponse(response=>new URL(response.url()).pathname===`/api/operator/hierarchy/${record.entity.slice(0,-1)}/${record.id}`&&response.request().method()==='PATCH')
+   await form.getByRole('button',{name:'Save changes',exact:true}).click()
+   assert.equal((await saved).status(),200,'[OPS-004] native hierarchy edit saves the current name')
+   await target.getByRole('heading',{name:sharedName,exact:true}).first().waitFor()
+   record.name=sharedName
+  }
+  const expected=[{entity:'accounts',id:proofId(6)},hierarchy[1],hierarchy[2],hierarchy[0]]
+  for(const q of [sharedName,sharedName.slice(7)]) {
+   await page.goto(origin+'/app/search?'+new URLSearchParams({q}))
+   const result=await (await api(page,'/api/operator/search?'+new URLSearchParams({q}))).json()
+   assert.equal(result.total,4,'[OPS-004] full and partial current names match every type sharing that name')
+   assert.deepEqual(result.items.map(({entity,id})=>({entity,id})),expected.map(({entity,id})=>({entity,id})),'[OPS-004] shared names retain the existing cross-type ranking')
+   await page.getByRole('navigation',{name:'List pages'}).getByRole('status').filter({hasText:'Page 1 of 1'}).waitFor()
+   const links=page.locator('main h2 a')
+   assert.deepEqual(await links.evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href'))),result.items.map(row=>row.href))
+  }
+  for(const record of hierarchy.slice(0,3)) {
+   const destination=`/app/features#${record.entity}-${record.id}`
+   await page.getByRole('link',{name:sharedName,exact:true}).and(page.locator(`a[href="${destination}"]`)).click()
+   await page.waitForFunction(id=>document.activeElement?.id===id,`${record.entity}-${record.id}`)
+   await page.locator(`[id="${record.entity}-${record.id}"]`).getByRole('heading',{name:sharedName,exact:true}).first().waitFor()
+   await page.goto(origin+'/app/search?'+new URLSearchParams({q:sharedName}))
+  }
+  for(const q of oldNames.slice(1))assert.equal((await (await api(page,'/api/operator/search?'+new URLSearchParams({q}))).json()).total,0,'[OPS-004] renamed records no longer match stale names')
+  const originalProduct=await (await api(page,'/api/operator/search?'+new URLSearchParams({q:oldNames[0]}))).json()
+  assert.deepEqual(originalProduct.items.map(row=>row.id),[duplicate.id],'[OPS-004] renaming one equal-name product preserves the other identity')
+ }
+ await page.goto(origin+'/app/search')
  await page.getByLabel('Search Penny',{exact:true}).fill('missing-proof-no-match')
  await page.getByRole('button',{name:'Search',exact:true}).click()
  await page.getByText('No records match this search.',{exact:true}).waitFor()

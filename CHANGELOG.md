@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the existing hierarchy search journey with native name edits, equal names across an account and all three hierarchy types, current-name matching and exact record destinations. Check the displayed type and name on every mixed search row. OPS-004 remains partial for finer role permissions and declared-capacity timing. No migration or configuration change.
+
 - Prove mixed global search pagination through the mounted next-page control, exact later-page hierarchy destinations and type-filter page reset. Preserve all previous hierarchy search and authority checks. OPS-004 remains partial for finer permissions and declared-capacity timing; no migration or configuration change.
 
 - Prove full and partial hierarchy-name search without a type filter, exact destinations across mixed paginated results, and independent destinations for equal-name products after navigation and reload. OPS-004 remains partial with its finer permissions and capacity proof open. No migration or configuration change.

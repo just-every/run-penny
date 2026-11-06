@@ -87,6 +87,21 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
  expect(new Set(found).size).toBe(31)
  expect((await json<{total:number}>('/api/operator/search?q=Harbor&entity=products&tag=missing-tag')).total).toBe(0)
  expect((await call('/api/operator/search?q=Harbor&entity=product',undefined,g.operator)).status).toBe(400)
+ // A current name can belong to different record types; edits retain each destination.
+ const sharedName='Harbor Analytics',oldNames=searched.map(record=>record.title)
+ for(const [index,record] of searched.entries()){
+  const kind=['product','component','feature'][index]
+  await json(`/api/operator/hierarchy/${kind}/${record.id}`,{name:sharedName,...(index?{parentId:index===1?product.id:components[1].id}:{})},'PATCH')
+  record.title=sharedName
+ }
+ const shared=[{id:accounts[0].id,entity:'accounts',title:sharedName,href:`/app/customers/${accounts[0].slug}`},searched[1],searched[2],searched[0]]
+ for(const q of [sharedName,'Harbor Anal']){
+  const result=await json<{total:number;items:typeof searched}>(`/api/operator/search?${new URLSearchParams({q})}`)
+  expect(result.total).toBe(4)
+  expect(result.items.map(({id,entity,title,href})=>({id,entity,title,href}))).toEqual(shared)
+  for(const record of result.items)expect((await call(record.href,undefined,g.operator)).status).toBe(200)
+ }
+ for(const q of oldNames)expect((await json<{total:number}>(`/api/operator/search?${new URLSearchParams({q})}`)).total).toBe(0)
  const privateDoors=['/api/operator/search?q=Harbor','/api/operator/search?q=Harbor&entity=features','/api/operator/hierarchy',...searched.map(record=>record.href)]
  const refuseHierarchy=async(headers:Record<string,string>)=>{
   for(const path of privateDoors){
