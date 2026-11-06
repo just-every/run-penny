@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f60",
+  "head": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+  "base": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+  "new_product_commits": 0,
+  "product_diff_from_pinned_base": false,
+  "setup": {
+    "command": "cloud_run npx -y @runeditrun/rer setup --owner-email <fleet address> --non-interactive",
+    "exit": 0,
+    "build_completed": true,
+    "migrations_completed": true,
+    "private_settings_excluded": true
+  },
+  "tests": {
+    "command": "cloud_run timeout 1200 pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts",
+    "exit": 0,
+    "files_passed": 1,
+    "tests_passed": 7,
+    "log": "board-test.log"
+  },
+  "typecheck": {
+    "command": "pnpm run typecheck",
+    "exit": 0,
+    "log": "typecheck.log"
+  },
+  "browser": {
+    "status": "not_applicable",
+    "reason": "No UI changes; selected POINTS explicitly omit visual work."
+  },
+  "scope": {
+    "clause": "REQ-008",
+    "before": "partial",
+    "after": "partial",
+    "selected_points_already_present_in_base": true,
+    "remaining": [
+      "duplicate title and source as merge history",
+      "canonical end of chain behavior"
+    ],
+    "new_assertions": 0,
+    "removed_assertions": 0,
+    "narrowed_assertions": 0
+  },
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "probes": [
+    {
+      "point": "atomic rollback",
+      "door": "POST /api/operator/requests/:source/merge with final audit trigger abort",
+      "observed": "503; complete merge graph and R2 object listing equal the pre-merge snapshot; source public response and private original bytes retained",
+      "test": "tests/base/board.test.ts:80"
+    },
+    {
+      "point": "evidence custody",
+      "door": "native evidence creation, native merge, authenticated evidence links and context readback",
+      "observed": "five exact canonical evidence identities; shared link collapsed; original evidence and contribution rows unchanged",
+      "test": "tests/base/board.test.ts:97"
+    },
+    {
+      "point": "follower custody",
+      "door": "native follows and merge, requester activity readback",
+      "observed": "three exact canonical followers; four permission records and their distinct grant times unchanged; earliest grant retained on collapsed follower",
+      "test": "tests/base/board.test.ts:98"
+    },
+    {
+      "point": "attachment custody",
+      "door": "native upload, moderation and merge; authenticated context and public attachment reads",
+      "observed": "two approved canonical files with original identities and bytes; moved source origin retained; held file excluded publicly and retained at source with original private bytes",
+      "test": "tests/base/board.test.ts:111"
+    },
+    {
+      "point": "existing behavior",
+      "door": "duplicate public URL, canonical public detail and native reversal",
+      "observed": "301 to canonical; one collapsed vote; approved moved comment; reversal preserves comment and original source status history",
+      "test": "tests/base/board.test.ts:93"
+    }
+  ],
+  "publication_scan": {
+    "status": "not_run",
+    "reason": "Cloud branch exception; exact-tree full-history publication scan is the maintained Mac lander duty."
+  },
+  "run_site": {
+    "status": "not_run",
+    "reason": "Main-only lander duty."
+  },
+  "pr": null,
+  "ci": {
+    "run_id": 42145247395,
+    "event": "push",
+    "head": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+    "conclusion": "failure",
+    "only_failed_step": "Check generated contract documents",
+    "contract_view_exception": true,
+    "jobs_receipt": "ci-jobs.json",
+    "github_calls_used": 4,
+    "github_calls_budget": 10,
+    "prior_f56_run": 42141058059,
+    "prior_f56_same_only_failure": true
+  },
+  "push": {
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f60",
+    "exit": 0,
+    "attempts": 1,
+    "branch_created": true,
+    "head": "cb8538438ad3a8da25ad744447e7fd3904ed67bc"
+  },
+  "main_before_candidate_push": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "generated_views_after_restore": {
+    "command": "node src/base/contract-docs.mjs check",
+    "exit": 1,
+    "expected_exception": true,
+    "log": "restored-views-check.log"
+  }
+}
