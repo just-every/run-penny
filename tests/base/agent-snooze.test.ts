@@ -1,7 +1,7 @@
 import { applyD1Migrations, reset } from 'cloudflare:test'
-import { expect, inject, it } from 'vitest'
-import { env, owner, origin, call } from './support'
-import { good } from './ownership-fixture'
+import { afterEach, expect, inject, it, vi } from 'vitest'
+import { env, owner, origin, call, mockMail } from './support'
+import { good, peer } from './ownership-fixture'
 import { createPennyRuntime } from '@/core/app/runtime'
 import { pennyAgentDoor } from '@/core/features/agent-door'
 import { pennyBusiness } from '@/core/features/agent-door/business'
@@ -9,8 +9,10 @@ import { accessToken, autonomousPolicy, signJws } from './agent-signing'
 import { document_sha256, validateDocument } from '../../base/modules/agent-door/policy/document.ts'
 import type { AgingSummary } from '@/core/features/triage/reminders'
 
+afterEach(() => vi.restoreAllMocks())
+
 it('snoozes and clears native evidence equally through HTTP and MCP with standard policy, attributed approval, once-only replay and unchanged-state refusals', async () => {
-  await reset(); await applyD1Migrations(env.DB, inject('migrations'))
+  await reset(); mockMail(); await applyD1Migrations(env.DB, inject('migrations'))
   const cookie = await owner(), email = 'owner' + String.fromCharCode(64) + 'penny.invalid'
   const session = await good<{ operator: { id: string } }>('/auth/session', undefined, cookie)
   const pair = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify'])
@@ -135,4 +137,12 @@ it('snoozes and clears native evidence equally through HTTP and MCP with standar
   expect(doorRows.some(row => row.decision === 'autonomous' && row.outcome === 'done')).toBe(true)
   expect(doorRows.some(row => row.decision === 'approval' && row.outcome === 'pending')).toBe(true)
   expect(doorRows.filter(row => row.classes?.length).every(row => row.classes.length === 1 && row.classes[0].class === 'standard')).toBe(true)
+  const successor = await peer(cookie, 'synthetic-penny-2' + String.fromCharCode(64) + 'example.test')
+  const liveToken = await accessToken({ ...context, agentId: 'synthetic-penny-2', consent: 'synthetic-penny-2' })
+  expect((await rpc(args(mcp.id, 'snooze', { until }), liveToken)).result.structuredContent).toEqual({ id: mcp.id, ok: true })
+  await good('/api/operator/settings/operators/' + session.operator.id, { successorId: successor.nativeId }, cookie, 'DELETE')
+  const removed = await snapshot()
+  expect((await rpc(args(mcp.id, 'unsnooze'), liveToken)).status).toBe(401)
+  expect((await call(`/api/operator/triage/evidence/${http.id}/snooze`, { until }, cookie, 'PATCH')).status).toBe(401)
+  expect(await snapshot()).toEqual(removed)
 })

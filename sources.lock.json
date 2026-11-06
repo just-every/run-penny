@@ -3394,7 +3394,7 @@
       "executable": false
     },
     "docs/AGENTS.md": {
-      "sha256": "1a558c70f25f021d82368b61d9082c9c204d9b0f30ae298b10f825552a93acac",
+      "sha256": "9eada2aa7af991114de1bca3e35277d1607ab15b8f687e424b9810f59206c48a",
       "executable": false
     },
     "docs/API.md": {
@@ -4210,7 +4210,7 @@
       "executable": false
     },
     "scripts/agent-docs.mjs": {
-      "sha256": "cfc13540200aabb818ae56be4bd21974050eb62e4bb17238ed9751de23eb44b6",
+      "sha256": "cadd51f26e738c69e2c92d71712b56f8aa6ecde4740ae20cb6a3983a737318b5",
       "executable": false
     },
     "scripts/ai-eval/metrics.mjs": {
@@ -8318,7 +8318,7 @@
       "executable": false
     },
     "tests/base/agent-snooze.test.ts": {
-      "sha256": "70fa16cc61662ae478d3584a7a4cbe3dbbcd9c280a9a3dca1291347e26bc8cc5",
+      "sha256": "68300adf90285f97fad974e48c985c90f1b451ab342e59990c4dd4a200994f81",
       "executable": false
     },
     "tests/base/audit-fixture.ts": {
