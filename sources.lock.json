@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "527591eccdfe4824d3c911b7f5246e36578f6a0dcf2120f14b80d186dcbc4793",
+      "sha256": "c9e480156140cf486cb45cb617149b021ef305d2e049c46ec36d80cd06a6a92d",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "27d450a0d6e2a1d81ac666b66d47f7471a37439bbe91215611240454bba89804",
+      "sha256": "efed18821485327ed41b9c4d96123599436162d70dee94602adf8d7241e1ee74",
       "executable": false
     },
     "DEMO.md": {
@@ -8290,7 +8290,7 @@
       "executable": false
     },
     "tests/base/board.test.ts": {
-      "sha256": "b0195ac3af1c0e3e0e5bd807680d2f8cdf32f6e8c245e2aa039e44ee90c006a9",
+      "sha256": "8ba1042beb08c16f5f4d29f467c0ce9985f4631fa3462f0ec0acf801981b31c1",
       "executable": false
     },
     "tests/base/custody.test.ts": {
