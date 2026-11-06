@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "5d6114d1e1c793d905d7cc97ec481db776b5cb555837da79b84e9c2a71bb3060",
+      "sha256": "579280e0751be06be32fe88f8c5c20c08c0e253adf5c4a4d790a0af064232db2",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "af1656b681438d35f82dbe0d18022925eb26fac02b36c4c6af6ace7b88a763fb",
+      "sha256": "cbc771ca8296b84cdfd15633222fc8eeabb8ff439177462ea42a8eabc7600fbd",
       "executable": false
     },
     "DEMO.md": {
@@ -5330,7 +5330,7 @@
       "executable": false
     },
     "src/core/features/categories/request-csv.ts": {
-      "sha256": "688c8b526b5c06493d23e62c6b04d717db00299e15acbaad5b3cb368553f4b0a",
+      "sha256": "ef82caf58352c81184317a5589e5fc4454a642cd6ed80cea28c5718caededa96",
       "executable": false
     },
     "src/core/features/categories/ui-types.ts": {
@@ -8286,11 +8286,15 @@
       "executable": false
     },
     "tests/base/board-categories.test.ts": {
-      "sha256": "79cb1ce8368267d760bce8c2a5941fdb81dcea94cca12fc715848fd638dc0402",
+      "sha256": "3308faa4bbf0098f18fd4a7a1e5f13b97158a942713cd45bd65993453fc28bd2",
       "executable": false
     },
     "tests/base/board.test.ts": {
       "sha256": "1d8943fead813e292c2717374f43406670f340dc05cb92f658ee6b66f33b737a",
+      "executable": false
+    },
+    "tests/base/csv-vote-reconciliation.ts": {
+      "sha256": "d349818df975940d400feac2b4a14913e72329a0bbc89aaee9ee491be80743c7",
       "executable": false
     },
     "tests/base/custody.test.ts": {
@@ -8518,7 +8522,7 @@
       "executable": false
     },
     "tests/base/proxy-votes.test.ts": {
-      "sha256": "ea347190efa40431effa10143b02ac57618f2128a8fbc91cae099f6ddf1d82b0",
+      "sha256": "672379fe99c9c5e1badce9306a2d6fab70c144d811cc94bba28fdc710ea3b205",
       "executable": false
     },
     "tests/base/redaction-copy-doors.ts": {
