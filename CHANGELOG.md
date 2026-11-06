@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Verify failed request merges leave both public request details, authenticated operator contexts, requester activity and evidence links unchanged, together with both approved files' original bytes. Retain the complete persisted custody rollback and successful merge assertions. REQ-008 remains partial for title and source history and chain behavior. No runtime, migration or configuration change is required.
+
 - Strengthen the native request-merge custody journey with distinct permission grant times, earliest follower grants, authenticated evidence-link readback and retained held-file bytes after both audit rollback and merge. Keep REQ-008 partial for its unproved history and chain behavior. No runtime, migration or configuration change is required.
 
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.

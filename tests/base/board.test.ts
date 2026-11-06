@@ -75,6 +75,20 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  for(const permission of beforeMerge.requester_update_permissions){expect(permission.id).toEqual(expect.any(String));expect(Number.isFinite(Date.parse(String(permission.granted_at)))).toBe(true)}
  expect(beforeMerge.requester_update_permissions.map(row=>row.granted_at).sort()).toEqual([0,60_000,120_000,180_000].map(offset=>new Date(start+offset).toISOString()))
  const objectsBefore=await env.FILES.list()
+ async function readJson(path:string,identity:Record<string,string>={}){
+  const response=await call(path,undefined,identity)
+  expect(response.status,path).toBe(200)
+  return response.json()
+ }
+ async function mergeViews(){
+  return {
+   published:await Promise.all([a,b].map(slug=>readJson(`/api/public/requests/${slug}`))),
+   operator:await Promise.all([a,b].map(slug=>readJson(`/api/operator/requests/${slug}/context`,g.operator))),
+   followers:await Promise.all([g.person,sourceFollower,targetFollower].map(person=>readJson('/api/public/requester/activity',person))),
+   evidence:await Promise.all(evidenceIds.map(evidenceId=>readJson(`/api/operator/evidence/${evidenceId}/links`,g.operator))),
+  }
+ }
+ const viewsBefore=await mergeViews()
  vi.setSystemTime(start+240_000)
  // Fail the final business write: every earlier transfer and projection must roll back with it.
  await env.DB.exec("CREATE TRIGGER refuse_merge_audit BEFORE INSERT ON audit_entries WHEN NEW.action='request.merged' BEGIN SELECT RAISE(ABORT,'merge audit unavailable'); END")
@@ -82,8 +96,12 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  expect(refused.status).toBe(503)
  expect(await requestMergeCustody()).toEqual(beforeMerge)
  expect(await env.FILES.list()).toEqual(objectsBefore)
+ expect(await mergeViews()).toEqual(viewsBefore)
  expect((await call(`/api/public/requests/${a}`)).status).toBe(200)
- expect(new Uint8Array(await (await call(`/api/public/attachments/${approved}`)).arrayBuffer())).toEqual(sourceBytes)
+ for(const [file,bytes] of [[approved,sourceBytes],[canonicalFile,targetBytes]] as const){
+  const response=await call(`/api/public/attachments/${file}`)
+  expect(response.status).toBe(200);expect(new Uint8Array(await response.arrayBuffer())).toEqual(bytes)
+ }
  expect((await call(`/api/public/attachments/${privateFile}`)).status).toBe(404)
  const retainedPrivate=await call(`/api/operator/attachments/${privateFile}`,undefined,g.operator)
  expect(retainedPrivate.status).toBe(200);expect(new Uint8Array(await retainedPrivate.arrayBuffer())).toEqual(heldBytes)
