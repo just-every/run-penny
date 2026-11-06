@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
 
 ## Status
 
-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.
+Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); DEC-002 additionally proved from code and tests at commit `93afd32743565cef8306096568a9f45b993378ec` (6 November 2026); other judgments are retained.
 
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Published | 59 | 56 | 1 | 116 |
+| Published | 60 | 55 | 1 | 116 |
 | Target and push further | 20 | 68 | 77 | 165 |
-| All | 79 | 124 | 78 | 281 |
+| All | 80 | 123 | 78 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3326,7 +3326,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `REQ-031` | Host identity claims | published | done | `tests/base/host-identity.test.ts` |  |
 | `REQ-032` | Internal notes | published | done | `tests/browser/internal-discussion.mjs` — native note and public comment controls on one approved request, distinct labelled rendering and unchanged identities after reload; `tests/base/penny-evidence.test.ts` — "[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail" checks portal responses, complete page metadata, releases and requester notifications. |  |
 | `DEC-001` | States and queue | published | partial | `tests/base/decision-loop-commit.test.ts` | The review date in the decision queue has no passing assertion; decisions in every state staying in the queue with their state and owner, and the last action and linked-evidence count, are asserted. |
-| `DEC-002` | Brief | published | partial | `tests/base/decision-loop-dimensions.test.ts` — retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness; compares distinct stored relations, null provenance, shared evidence and offset instants without summing duplicate accounts | Per-bet assumptions and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, each bet's counter-evidence count, low, medium and high confidence, and changed and cleared review dates under the same decision identity are asserted. |
+| `DEC-002` | Brief | published | done | `tests/base/decision-loop-dimensions.test.ts` — "[DEC-001][DEC-002] retains confidence, review dates and per-bet assumptions and reads current eligible requesters through approved mappings" proves question, owner, bet assumptions, all confidence levels, date edits and live mapped-request eligibility with mute, permission, mapping, block and erasure fences; "[DEC-003][DEC-004] compares distinct stored relations, null provenance, shared evidence and offset instants without summing duplicate accounts" proves linked accounts and exact supporting and contradicting evidence; `tests/browser/operator-pages-decisions.mjs` — reviewDecisionPages, invoked by `tests/browser/operator-pages.mjs`, saves assumptions through the native form and reads them and the eligible requester on the reloaded brief. |  |
 | `DEC-003` | Comparable bets | published | partial | `tests/base/decision-loop-dimensions.test.ts` | The absence of a stored or displayed combined score and of an automatic ranking has no passing assertion: the bet record and the stored snapshot are checked in a way that allows extra fields, and bets are looked up by id, so their order is unchecked; each bet's metrics holding exactly the five dimension figures is asserted. |
 | `DEC-004` | Commitment | published | partial | `tests/base/decision-loop-commit.test.ts` | The `decision.commitment.v1` default that any operator may commit has no passing assertion, since every cited commit runs as the owner; the recorded declined bets and the evidence snapshot of evidence IDs, evidence-version IDs and DEC-003 dimensions, with the evidence itself unchanged, are asserted. |
 | `DEC-005` | Commitment effects | published | done | `tests/base/decision-loop-roadmap.test.ts` |  |

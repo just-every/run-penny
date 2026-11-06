@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Complete the native decision brief: create, edit and clear each bet's assumptions in the existing forms, and show current eligible requester names through approved mapped requests using the shared release eligibility rules. Readback stays read-only, deduplicates identities, and immediately respects mute, unfollow, mapping withdrawal, block and erasure. Extend the existing decision and browser journeys without adding test registrations; mark DEC-002 done. No migration, provider or configuration change is required; unrelated field-proof and release holds remain unchanged.
+
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
 
 - Prove low, medium and high decision confidence and changed and cleared review dates through native brief creation, editing and detail readback, retaining decision identity, readiness and linked-bet evidence checks. DEC-002 remains partial for per-bet assumptions and currently eligible requesters through mapped requests. No runtime, migration or configuration change is required.
