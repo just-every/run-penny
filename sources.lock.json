@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "c7b6b4ab845c9fd7c27c2baf8938cd734025e3f1dc7d066d50752a2ec6d59b3b",
+      "sha256": "c1e2c11273a0630a5591ff88e32f1497ea725517be384b8d29f8492fe8afb7d7",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "088466566a8b3953c16f04e5f5bcab50eb3277e0067cf10e62ce493163620e13",
+      "sha256": "78386ed55f244a694cad75592b7c234ebc1b7bbe669a60e004a480ee2703a16f",
       "executable": false
     },
     "DEMO.md": {
@@ -8290,7 +8290,7 @@
       "executable": false
     },
     "tests/base/board.test.ts": {
-      "sha256": "1d8943fead813e292c2717374f43406670f340dc05cb92f658ee6b66f33b737a",
+      "sha256": "b0195ac3af1c0e3e0e5bd807680d2f8cdf32f6e8c245e2aa039e44ee90c006a9",
       "executable": false
     },
     "tests/base/custody.test.ts": {
@@ -8630,7 +8630,7 @@
       "executable": false
     },
     "tests/base/support.ts": {
-      "sha256": "dc87ded7066096665109c2accc562e9fd91e626978292723a5c8ec1b5b388e38",
+      "sha256": "6cc3e1d6dce121193127d5fd2927624009126efc7262c0b2628c976bf9c558da",
       "executable": false
     },
     "tests/base/triage-aging.test.ts": {
