@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "7647c71f92527f0352e1bf895237bc0907859bff9ac95823ff77836ed6d797f2",
+      "sha256": "050e09aa2090fd2d69ec1f0f2f16efe36467fdf7ec08d4ae7542f75d52917556",
       "executable": false
     },
     "DEMO.md": {
@@ -8862,7 +8862,7 @@
       "executable": false
     },
     "tests/browser/keyboard-journey.mjs": {
-      "sha256": "6b9f47339f329fbac2bd6de426a8c920e1d5c000fd945dda851c9b0762a70331",
+      "sha256": "97fcfb6dd4f174981c7b1df588ff9d8f812fcb28dabecf48cff569ba91a4f552",
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
