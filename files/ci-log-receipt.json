@@ -1,0 +1,8 @@
+{
+  "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+  "run": 42210077655,
+  "job": 127866299266,
+  "command": "gh run view 42210077655 --repo just-every/run-penny --job 127866299266 --log-failed",
+  "exit": 0,
+  "purpose": "Representative generated-view failure; all other failed jobs have this same sole failing step in ci-jobs.json."
+}

@@ -1,0 +1,11 @@
+# sd-penny-c-f106 plan
+
+1. Inspect current main, SEG-006 acceptance, the predecessor implementation, existing account admission, archive inventory and operator erasure. Preserve all current main judgments and unrelated work.
+2. Replay the refused predecessor's unfinished native account-owner slice onto current main without rewriting its published branch. Validate saved rules and current membership through the built Worker. Strengthen missing refusal and custody readbacks in the existing focused journeys where needed.
+3. Prove native create, save, read, exact account entry and exit with a control; invalid input and authority refusals; additive populated upgrade and repeated migration; populated archive transfer and destination authority; reviewed operator-reference erasure and stale replay; bounded nonempty public request exclusion.
+4. Run focused segment, existing erasure and hosted archive journeys, typecheck, focused lint and first-party contract validation. Preserve the test cap and all existing assertions. No UI, branding or homepage changes are authorized.
+5. Keep SEG-006 PARTIAL after proving the selected point-1 slice. Preserve all wider obligations in its Gap. Generate and check contract views locally, restore main's view files, regenerate the source lock last and check it. Retain every parent Status row.
+6. Commit with fleet identity and hooks, audit every unpublished parent and trailer, push only cloud/sd-penny-c-f106 through the fleet guard. Merge fresh main after a published save. Discover exact-head Verify within the GitHub budget; report its actual state and generated-view exception honestly.
+7. Save complete non-secret reports and actual receipts in this packet. Publish explicitly selected files only on evidence/sd-penny-c-f106. Leave publication scan, landing and Run site to the fleet. Delete the clone after confirmed product and evidence transfer.
+
+Excluded by the selected scope: broader requester, commercial and custom attributes; provider-origin attributes and arrival timing; ROLE-001 restrictions; request, inbox and report agreement; every-list filters; segment UI; universal public-payload certification. No new provider, live account, Base or cross-seed proof is inferred. SEG-006 cannot claim DONE from this bounded slice.

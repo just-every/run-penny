@@ -1,0 +1,67 @@
+{
+  "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+  "base": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "scope": "Changed lines only, excluding the generated source lock; not a publication scan.",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "CONTRACT.md",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "migrations/core/0110_saved_segments.sql",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "src/core/app/api.ts",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "src/core/features/data/archive.ts",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "src/core/features/data/operator-erasure.ts",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "src/core/features/data/schema-inventory.json",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "src/core/features/segments/archive.ts",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "src/core/features/segments/input.ts",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "src/core/features/segments/repository.ts",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "src/core/features/segments/routes.ts",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    },
+    {
+      "path": "tests/base/segments.test.ts",
+      "email_shaped_strings": [],
+      "slash_tokens_for_inspection": []
+    }
+  ]
+}

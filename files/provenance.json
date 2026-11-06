@@ -1,0 +1,34 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f106",
+  "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+  "base": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "predecessor": "b6647daf56c00f4738fdc0fbf8a2e68bed2b94d6",
+  "full_history": true,
+  "remote_branch": "6845ceb30666d0df6cdd51b88866dee9cf1db253\trefs/heads/cloud/sd-penny-c-f106",
+  "commits": [
+    {
+      "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+      "author": "Run Edit Run fleet",
+      "author_email": "fleet@runeditrun.com",
+      "committer": "Run Edit Run fleet",
+      "committer_email": "fleet@runeditrun.com",
+      "message": "Save native account owner segments with current membership"
+    }
+  ],
+  "changed_files": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "migrations/core/0110_saved_segments.sql",
+    "sources.lock.json",
+    "src/core/app/api.ts",
+    "src/core/features/data/archive.ts",
+    "src/core/features/data/operator-erasure.ts",
+    "src/core/features/data/schema-inventory.json",
+    "src/core/features/segments/archive.ts",
+    "src/core/features/segments/input.ts",
+    "src/core/features/segments/repository.ts",
+    "src/core/features/segments/routes.ts",
+    "tests/base/segments.test.ts"
+  ]
+}

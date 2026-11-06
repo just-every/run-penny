@@ -1,0 +1,98 @@
+{
+  "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+  "checks": [
+    {
+      "name": "worker-tests",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/segments.test.ts",
+        "tests/base/penny-erasure.test.ts",
+        "tests/base/hosted-export.test.ts",
+        "--reporter=json",
+        "--outputFile=/home/agent/rer-consolidation/work/sd-penny-c-f106/packet/candidate-worker-tests.json"
+      ],
+      "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+      "exit": 0,
+      "seconds": 55.456,
+      "output_sha256": "86257543d03e16c9f669a654d97419a2af5d34b1db5c6351bd1cab6f9b121863",
+      "output_file": "worker-tests.log"
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+      "exit": 0,
+      "seconds": 26.334,
+      "output_sha256": "7d1d92cfbba55bfc307ecace047f23f909f097ea07d7694ee4581399235352b8",
+      "output_file": "typecheck.log"
+    },
+    {
+      "name": "first-party",
+      "command": [
+        "pnpm",
+        "exec",
+        "rer",
+        "check",
+        "--profile",
+        "first-party"
+      ],
+      "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+      "exit": 0,
+      "seconds": 0.988,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_file": "first-party.log"
+    },
+    {
+      "name": "lint",
+      "command": [
+        "pnpm",
+        "exec",
+        "oxlint",
+        "src/core/features/segments",
+        "src/core/features/data/archive.ts",
+        "src/core/features/data/operator-erasure.ts",
+        "src/core/app/api.ts",
+        "tests/base/segments.test.ts"
+      ],
+      "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+      "exit": 0,
+      "seconds": 0.373,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "output_file": "lint.log"
+    },
+    {
+      "name": "source-lock",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+      "exit": 0,
+      "seconds": 0.354,
+      "output_sha256": "ed60ba7ca1c3a410f67ac9f4fc198dac26071564a6221cb8b36d828ccf2fc4f8",
+      "output": "Successful structured integrity receipt; full local output retained outside packet."
+    },
+    {
+      "name": "base-custody",
+      "command": [
+        "node",
+        "scripts/verify-base-source.mjs"
+      ],
+      "head": "6845ceb30666d0df6cdd51b88866dee9cf1db253",
+      "exit": 0,
+      "seconds": 0.124,
+      "output_sha256": "b94168d0f9dad4555638a998f12ac5fbee69317ef1a1009f10cd7833220fcf85",
+      "output": "Successful structured integrity receipt; full local output retained outside packet."
+    }
+  ]
+}
