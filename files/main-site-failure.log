@@ -1,0 +1,15 @@
+deploy	Run pnpm exec rer deploy --site	﻿2026-11-06T09:22:15.8062592Z ##[group]Run pnpm exec rer deploy --site
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:15.8062883Z [36;1mpnpm exec rer deploy --site[0m
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:15.8081419Z shell: /usr/bin/bash -e {0}
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:15.8082599Z ##[endgroup]
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:16.3455307Z Checking pinned pnpm
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:16.5579195Z 10.12.4
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:16.6292293Z Building the run site
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:17.7591804Z {"pages":14,"assets":3,"styles":1}
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:18.3045482Z Run site plan: site Worker penny-production--site, Base-generated, its only binding the assets (the app's Worker penny-production is not touched)
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:18.3046542Z   assets: dist/site (27 files; HTML auto-trailing-slash, not found 404-page; the Worker runs first)
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:18.3047048Z   custom domains: run-penny.com, www.run-penny.com; workers.dev off
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:18.3047602Z   redirect in the Worker: https://www.run-penny.com/* -> https://run-penny.com/ (301, keeps path and query)
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:18.7439854Z Run site deploy stopped: provider-http-503. checking site Worker: GET /client/v4/accounts/[REDACTED]/workers/scripts/penny-production--site/settings; elapsed 96 ms; HTTP 503; Cloudflare refused GET /workers/scripts/penny-production--site/settings: no healthy upstream; no healthy upstream.
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:18.7441192Z deploy: failed (exit 1)
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:18.7650859Z ##[error]Process completed with exit code 1.

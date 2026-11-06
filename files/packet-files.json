@@ -1,0 +1,237 @@
+[
+  {
+    "path": "REPORT.md",
+    "bytes": 11550,
+    "sha256": "c87eebab486be36a1f157b84496ab1b82806aded25a8f0bd02bc3a81cd501749"
+  },
+  {
+    "path": "PLAN.md",
+    "bytes": 2150,
+    "sha256": "92d47fb2c7cd2f76a1796d10da23f605b42304a77e6c182278a7b13ccb62758c"
+  },
+  {
+    "path": "keyboard-receipt.json",
+    "bytes": 10672,
+    "sha256": "e8b9f4c37db4c6424dd12d28ecf46b58607987074d620ed258fbfec1869a26ec"
+  },
+  {
+    "path": "mechanical-receipt.json",
+    "bytes": 3760,
+    "sha256": "3dffcc26a309519c1540c8b0a91af83c111d93afcdcfd35f647cdad4ff0e71b4"
+  },
+  {
+    "path": "manifest.json",
+    "bytes": 5432,
+    "sha256": "bde3ba0d547922dffbcd9f3d17333f5365375e13679c79fce7b83960b4742da2"
+  },
+  {
+    "path": "browser.log",
+    "bytes": 13605,
+    "sha256": "10aa3b4b54130974f0c187b4e4b30c7a2873ec47c0256cd61f9848e2d4d78168"
+  },
+  {
+    "path": "typecheck.log",
+    "bytes": 201,
+    "sha256": "8225b47e58cd5d21e94f0cd9e48a47c720437a85f5ca0a5ab3f6045f6ce1dd7c"
+  },
+  {
+    "path": "lint.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "views-write.log",
+    "bytes": 28,
+    "sha256": "df91012bf66fb476e9cd1a30c002829398beb55f869e07cc7be477197fa5a276"
+  },
+  {
+    "path": "views-check.log",
+    "bytes": 32,
+    "sha256": "c21aae40192141751d6d5c7a3a1d0eb701a6852f305d592d77b4dcab9c2536ab"
+  },
+  {
+    "path": "expected-stale-views.log",
+    "bytes": 67,
+    "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+  },
+  {
+    "path": "probes.txt",
+    "bytes": 527,
+    "sha256": "396aaf5d3cea49dbcfda21ba68f0b864a5b4dda41f0d06eb5ca17815d40600ef"
+  },
+  {
+    "path": "main-ci.json",
+    "bytes": 1157,
+    "sha256": "c547555c12d345897d402f036640eda916de7e12fd7fc85ebc51d890e5d8904c"
+  },
+  {
+    "path": "main-site-jobs.json",
+    "bytes": 169,
+    "sha256": "69d148b63d0fcd18b831c408f18227c4da079505526786d712cf852b0514a2c5"
+  },
+  {
+    "path": "main-site-failure.log",
+    "bytes": 2011,
+    "sha256": "fdd0d5ef933227edf49e456ec84e7135c04c5d37640c394e57b3e5d81bc8bb4c"
+  },
+  {
+    "path": "main-site-rerun.txt",
+    "bytes": 227,
+    "sha256": "44632947d673a47f7213671c446a8a15a604aa8426bcbc13777b66d4a2c3ebee"
+  },
+  {
+    "path": "main-site-rerun-recovery.log",
+    "bytes": 1652,
+    "sha256": "81d3d24e7783f35832631ad4f587452f0c727f50680404640a56d5cf0efc91b1"
+  },
+  {
+    "path": "candidate-ci.json",
+    "bytes": 234,
+    "sha256": "0023a41823445830c4c819e6d8cade7b7741a074721618466724faaa933f9ad7"
+  },
+  {
+    "path": "candidate-jobs.json",
+    "bytes": 5096,
+    "sha256": "0282f48387c9f15aa83340bc6c6d7d45f3ab0a2549aa65f98cbeb64c6835b299"
+  },
+  {
+    "path": "product-ref.txt",
+    "bytes": 73,
+    "sha256": "ce7a15d2019d974f1e62f3c3c9a8eb150beffbe973ac79ad09e892a6a83979fe"
+  },
+  {
+    "path": "push-receipt.txt",
+    "bytes": 756,
+    "sha256": "53d06a80d3a8fae0197b4e254b8dd0b5e4f7856c154307e2546f0cb9f8d471ed"
+  },
+  {
+    "path": "submitted-1440.jpg",
+    "bytes": 50817,
+    "sha256": "b2594f604aee0c9e536387a2eb2036c3d714e6e2a42d1092db6666a448154c93"
+  },
+  {
+    "path": "submitted-390.jpg",
+    "bytes": 38113,
+    "sha256": "02ca4a0f9ef7ee3980d4951c2c6edfbcb371b94f3b5d5c15795dfb2730567b3e"
+  },
+  {
+    "path": "approve-1440.jpg",
+    "bytes": 264303,
+    "sha256": "ca50950391355f73c0d7390c9eaf75ac4bff2a4f0ed1743a88412909e678498f"
+  },
+  {
+    "path": "approve-390.jpg",
+    "bytes": 256586,
+    "sha256": "c14c281eb5e231dcbeaf1a3330eaa12bda9d147a8ae2b6d8bcf4ff5418b07f32"
+  },
+  {
+    "path": "vote-1440.jpg",
+    "bytes": 81422,
+    "sha256": "dd707195a4b495206a040c0a3344a5e3f1474e9b8b7ecbc3f813afce60f687fe"
+  },
+  {
+    "path": "vote-390.jpg",
+    "bytes": 63765,
+    "sha256": "49e4aee38a87ae222b3040d526f7f912d0e4c271d8b60a196e085e699a498b40"
+  },
+  {
+    "path": "follow-1440.jpg",
+    "bytes": 81834,
+    "sha256": "889d0fc4b557b3de6e59d4db4694831a6711c9e506dd7235c3312b9af3c00cca"
+  },
+  {
+    "path": "follow-390.jpg",
+    "bytes": 63323,
+    "sha256": "ff6aa0e763d0e1b7b355e8fc273ce1d3667f05f8e01e7a41f3ab5a0d3e88966c"
+  },
+  {
+    "path": "comment-1440.jpg",
+    "bytes": 81768,
+    "sha256": "073cf808edab8465d280eeb35f670700a68796bc7b3c42a8b388e565b1fc21c7"
+  },
+  {
+    "path": "comment-390.jpg",
+    "bytes": 63279,
+    "sha256": "b9c80294dad5d69cb8dd8969a8ae170d35495253642704c090cdead8058bf144"
+  },
+  {
+    "path": "comment-approval-ready-1440.jpg",
+    "bytes": 392032,
+    "sha256": "f20900d19e7245ab021fc7aef3efd6c0dcb00baee02045619e68dfd92bd893ba"
+  },
+  {
+    "path": "comment-approval-ready-390.jpg",
+    "bytes": 317585,
+    "sha256": "4c11e363c93f514da12e7d25868d239f43e9b23f75aa876d1e3d9e27e21a9690"
+  },
+  {
+    "path": "comment-approved-1440.jpg",
+    "bytes": 389388,
+    "sha256": "05437e769615adf53f0a40efe88830d52c7eecf4599db01b3281424ef5c43efb"
+  },
+  {
+    "path": "comment-approved-390.jpg",
+    "bytes": 337550,
+    "sha256": "31c250dbb166966f73b754ac8052fc6f92475cf8bb0515c9fa86f49a3edffc2e"
+  },
+  {
+    "path": "status-1440.jpg",
+    "bytes": 87563,
+    "sha256": "d82ab189757df3d83d7d6f4d171bd1cabdff1a6856e9349e258f436a34616db0"
+  },
+  {
+    "path": "status-390.jpg",
+    "bytes": 68751,
+    "sha256": "bbad27d9372da3f30075ec42bf59db2ca7c45c423291192fbbd0981d483d88e9"
+  },
+  {
+    "path": "your-feedback-1440.jpg",
+    "bytes": 134787,
+    "sha256": "03e125b4625dd1197077a43bcb8931d31bfc8f8bb6550572dcba53d69126ac45"
+  },
+  {
+    "path": "your-feedback-390.jpg",
+    "bytes": 108535,
+    "sha256": "f294e5164d5ff6517317ace6864227c78c37eb592ed0fefe9918397c4d44db5b"
+  },
+  {
+    "path": "search-filter-1440.jpg",
+    "bytes": 70394,
+    "sha256": "08449fa629821ee92b9a648fdd53c16eebc3fc3eda8ee0838a0a05ecafe60285"
+  },
+  {
+    "path": "search-filter-390.jpg",
+    "bytes": 70128,
+    "sha256": "09c266f66f6d3c2798bbae594ade28a649066f891315c7f47833778ae65e9ceb"
+  },
+  {
+    "path": "keyboard-submitted-1440.jpg",
+    "bytes": 50817,
+    "sha256": "b2594f604aee0c9e536387a2eb2036c3d714e6e2a42d1092db6666a448154c93"
+  },
+  {
+    "path": "keyboard-submitted-390.jpg",
+    "bytes": 38113,
+    "sha256": "02ca4a0f9ef7ee3980d4951c2c6edfbcb371b94f3b5d5c15795dfb2730567b3e"
+  },
+  {
+    "path": "keyboard-voted-1440.jpg",
+    "bytes": 70459,
+    "sha256": "9963ac2990b990096bc51aff5f4f1e6e994eb3a1493be6f574c3cf0c339d4f54"
+  },
+  {
+    "path": "keyboard-voted-390.jpg",
+    "bytes": 55196,
+    "sha256": "213f9d7e8ad45d0d8fd3eefe31da876b5401e1631409cfa26df39e8731945115"
+  },
+  {
+    "path": "keyboard-triaged-1440.jpg",
+    "bytes": 394129,
+    "sha256": "ed1ee36444514b660883df55c5ffd7d75c10029c185ef56fe575428aa7627994"
+  },
+  {
+    "path": "keyboard-triaged-390.jpg",
+    "bytes": 309562,
+    "sha256": "46a13e03bd269e2cca0529466072d258ae67bd95046d29cf0180f7e8559dd6df"
+  }
+]

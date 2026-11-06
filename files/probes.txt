@@ -1,0 +1,2 @@
+PROBE A11Y-001 point 2 1440px: native keyboard submit, vote, link and reasoned review -> held request 01M6R4VBAR6G9EVRNKB9P67AGT, approved request 01M6R4V983A3CD6Z5XA84A9P1G, evidence attention-evidence; persisted after reload; zero pointer events and focus calls
+PROBE A11Y-001 point 2 390px: native keyboard submit, vote, link and reasoned review -> held request 01M6R4VH196DB7EVGXGY194HMW, approved request 01M6R4V983A3CD6Z5XA84A9P1G, evidence attention-evidence; persisted after reload; zero pointer events and focus calls

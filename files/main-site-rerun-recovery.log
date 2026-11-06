@@ -1,0 +1,21 @@
+attempt=1 exit=1 HTTP=403; This workflow run cannot be retried
+backoff=15s
+attempt=2 launcher_refresh_exit=0 git_setup_exit=0
+command=gh api --method POST repos/just-every/run-penny/actions/runs/42194484854/rerun-failed-jobs exit=1
+{"message":"This workflow run cannot be retried","documentation_url":"https://docs.github.com/rest/actions/workflow-runs#re-run-failed-jobs-from-a-workflow-run","status":"403"}gh: This workflow run cannot be retried (HTTP 403)
+
+backoff=45s
+attempt=3 launcher_refresh_exit=0 git_setup_exit=0
+command=gh api --method POST repos/just-every/run-penny/actions/runs/42194484854/rerun-failed-jobs exit=1
+{"message":"This workflow run cannot be retried","documentation_url":"https://docs.github.com/rest/actions/workflow-runs#re-run-failed-jobs-from-a-workflow-run","status":"403"}gh: This workflow run cannot be retried (HTTP 403)
+
+backoff=90s
+attempt=4 launcher_refresh_exit=0 git_setup_exit=0
+command=gh api --method POST repos/just-every/run-penny/actions/runs/42194484854/rerun-failed-jobs exit=1
+{"message":"This workflow run cannot be retried","documentation_url":"https://docs.github.com/rest/actions/workflow-runs#re-run-failed-jobs-from-a-workflow-run","status":"403"}gh: This workflow run cannot be retried (HTTP 403)
+
+backoff=150s
+attempt=5 launcher_refresh_exit=0 git_setup_exit=0
+command=gh api --method POST repos/just-every/run-penny/actions/runs/42194484854/rerun-failed-jobs exit=1
+{"message":"This workflow run cannot be retried","documentation_url":"https://docs.github.com/rest/actions/workflow-runs#re-run-failed-jobs-from-a-workflow-run","status":"403"}gh: This workflow run cannot be retried (HTTP 403)
+
