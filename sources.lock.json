@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "b09b8415c302010220e6d817f88857c3c94c4722ba6997a4b6ee4f62632b3a86",
+      "sha256": "f6786256b21f524d68a7061d91605ccf389f7770bb96c03bf8ede02e8698ab4a",
       "executable": false
     },
     "CLAUDE.md": {
@@ -8870,7 +8870,7 @@
       "executable": false
     },
     "tests/browser/integration-tracker-actions.mjs": {
-      "sha256": "b0fa35b8d62475ea98b0b822ba22f6a8f237b41378f55a51ff96a55fa22594c6",
+      "sha256": "301f29f4d45bfe1069df42617f55f08be912a5767d93fb591fbca4b5752c5f5b",
       "executable": false
     },
     "tests/browser/integration-tracker-checks.mjs": {

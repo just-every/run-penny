@@ -24,6 +24,15 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    assert.equal(read.status(),200)
    assert.equal((await read.json()).commands.find(row=>row.id===commandId).state,state,'[INT-005] native readback retains the refused command state')
   }
+  const readReconciled=async(commandId,issue,linkId)=>{
+   const response=await page.request.get(runtime.origin+'/api/operator/integrations/trackers')
+   assert.equal(response.status(),200)
+   const read=await response.json(),command=read.commands.find(row=>row.id===commandId),link=read.links.find(row=>row.id===linkId)
+   assert.ok(command,'[INT-005] the native tracker readback retains the reconciled command')
+   assert.deepEqual({requestId:command.request_id,decisionId:command.decision_id,connectionId:command.connection_id,linkId:command.link_id,state:command.state},{requestId:selected.requestId??null,decisionId:selected.decisionId??null,connectionId:connection.id,linkId,state:'accepted'},'[INT-005] native readback binds the accepted command to its selected subject, connection and original link')
+   assert.ok(link,'[INT-005] the original reconciled link remains readable')
+   assert.deepEqual({requestId:link.request_id,decisionId:link.decision_id,connectionId:link.connection_id,externalId:link.external_id,url:link.issue_url},{requestId:selected.requestId??null,decisionId:selected.decisionId??null,connectionId:connection.id,externalId:issue.externalId,url:issue.url},'[INT-005] native readback preserves the known issue identity and URL')
+  }
   const visit=async()=>{
    await page.goto(runtime.origin+(kind==='request'?'/app/moderation':'/app/decisions/'+decision.slug));await page.waitForLoadState('networkidle')
    if(kind==='request')await page.locator('article').filter({has:page.getByRole('heading',{name:'Deliberate tracker subject',exact:true})}).getByText('Discussion, status and request controls',{exact:true}).click()
@@ -77,13 +86,19 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
     await receipt.getByRole('button',{name:'Reconcile known issue',exact:true}).click();await panel.getByText('Known issue reconciled. No new create was sent.',{exact:true}).waitFor()
     const reconciled=await snapshot(),repeat=await action(`/api/operator/integrations/trackers/commands/${command.id}/reconcile`,issue)
     assert.equal(repeat.id,await runtime.db.prepare('SELECT link_id FROM penny_tracker_commands WHERE id=?').bind(command.id).first('link_id'),'[INT-005] repeating a known reconciliation returns the same issue link')
+    assert.equal(repeat.repeat,true,'[INT-005] an identical known-issue replay is acknowledged as the original reconciliation')
     assert.deepEqual(await snapshot(),reconciled,'[INT-005] identical reconciled replay preserves the original link and all history')
+    await readReconciled(command.id,issue,repeat.id)
     const different={...issue,externalId:provider==='linear'?crypto.randomUUID():'10045',url:provider==='linear'?'https://linear.app/penny/issue/PEN-45/different-issue':'https://penny-fixture.atlassian.net/browse/PEN-45'}
     await refuse(command.id,different,'accepted')
     await page.waitForLoadState('networkidle');await runtime.restart();await runtime.schedule();await runtime.schedule();await visit()
     assert.deepEqual({state:await state(),resolutions:await runtime.db.prepare('SELECT count(*) n FROM integration_resolutions WHERE delivery_id=?').bind(command.id).first('n'),calls:edge.calls.length},{state:'accepted',resolutions:1,calls:before+1},'[INT-005] explicit reconciliation resolves exactly once without another create')
+    await readReconciled(command.id,issue,repeat.id)
     assert.equal(await panel.getByRole('button',{name:'Reconcile known issue',exact:true}).count(),0,'[INT-005] resolved commands no longer offer reconciliation')
    }else{
+    const created=await runtime.db.prepare('SELECT l.* FROM penny_tracker_links l JOIN penny_tracker_commands c ON c.link_id=l.id WHERE c.id=?').bind(command.id).first()
+    assert.ok(created,'[INT-005] the ordinary accepted create has a stored link')
+    await refuse(command.id,{...selected,connectionId:connection.id,externalId:created.external_id,url:created.issue_url},'accepted')
     assert.ok(await runtime.db.prepare('SELECT 1 FROM penny_tracker_links WHERE id=? AND state=\'created\'').bind(command.link_id??(await runtime.db.prepare('SELECT link_id FROM penny_tracker_commands WHERE id=?').bind(command.id).first('link_id'))).first(),'[INT-005] accepted create links its returned issue')
    }
    await capture(`tracker-${provider}-${kind}-${unknown?'reconciled':'created'}`,kind==='request'?form.locator('..'):panel)
