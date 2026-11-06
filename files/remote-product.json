@@ -1,0 +1,13 @@
+{
+  "repository": "just-every/run-penny",
+  "ref": "refs/heads/cloud/sd-penny-c-f83",
+  "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+  "verified": true,
+  "command": [
+    "git",
+    "ls-remote",
+    "--heads",
+    "origin",
+    "refs/heads/cloud/sd-penny-c-f83"
+  ]
+}

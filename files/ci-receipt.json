@@ -1,0 +1,24 @@
+{
+  "repository": "just-every/run-penny",
+  "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+  "run": 42176667361,
+  "event": "push",
+  "status": "completed",
+  "conclusion": "failure",
+  "html_url": "https://github.com/just-every/run-penny/actions/runs/42176667361",
+  "disposition": "allowed generated-view exception",
+  "failedStep": "Check generated contract documents",
+  "failedShards": 29,
+  "sourceLockCheck": "success in all 29 shards",
+  "productAssertionsInCi": "not reached because generated views are intentionally restored from main",
+  "localTouchedTests": {
+    "files": 2,
+    "passed": 6,
+    "exit": 0
+  },
+  "representativeFailedJob": 127756647322,
+  "repairRounds": 0,
+  "githubBudgetCalls": 5,
+  "rerunOrDispatch": false,
+  "publicationScan": "not run in cloud; fleet lander duty"
+}

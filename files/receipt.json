@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f83",
+  "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+  "checks": [
+    {
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/release-feeds.test.ts",
+        "tests/base/release-custody.test.ts"
+      ],
+      "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+      "started": "2026-11-06T06:47:41.887068+00:00",
+      "ended": "2026-11-06T06:48:16.961518+00:00",
+      "exit": 0,
+      "log": "touched-tests.log",
+      "logSha256": "42f2058901331455b8e7c1c3997377fa6240f44fbce2558b60ef3b218f08759e"
+    },
+    {
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+      "started": "2026-11-06T06:48:16.961905+00:00",
+      "ended": "2026-11-06T06:48:50.031038+00:00",
+      "exit": 0,
+      "log": "typecheck.log",
+      "logSha256": "06dc68bd63e5a31247106eca2b338be98e6ca68822e77d55b2d1c343c429719e"
+    },
+    {
+      "command": [
+        "pnpm",
+        "exec",
+        "oxlint",
+        "src/core/features/releases/feeds.ts",
+        "src/core/features/releases/public-read-repository.ts",
+        "src/core/features/portal/routes.ts",
+        "tests/base/release-feeds.test.ts",
+        "tests/base/release-fixture.ts",
+        "tests/base/release-custody.test.ts"
+      ],
+      "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+      "started": "2026-11-06T06:48:50.031661+00:00",
+      "ended": "2026-11-06T06:48:50.533043+00:00",
+      "exit": 0,
+      "log": "touched-lint.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "check",
+        "--profile",
+        "first-party"
+      ],
+      "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+      "started": "2026-11-06T06:48:50.533715+00:00",
+      "ended": "2026-11-06T06:48:52.529945+00:00",
+      "exit": 0,
+      "log": "first-party.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

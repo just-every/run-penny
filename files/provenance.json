@@ -1,0 +1,33 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f83",
+  "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+  "main": "bc006e93ab58927b5db2d12d8ac35ff0a9341bf0",
+  "predecessor": "c538718ba72fb8ef341c76a1f8f5f4cef9cd0e01",
+  "integration": "72f48b9cfc01c0bd94f19997c805188a9cf0c85e",
+  "clean": true,
+  "statusBefore": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "statusAfter": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "contractTableRows": 445,
+  "productPushes": [
+    "cloud/sd-penny-c-f83"
+  ],
+  "publicationScan": {
+    "state": "not run in cloud",
+    "owner": "fleet lander"
+  },
+  "migrationLedger": {
+    "state": "not applicable",
+    "reason": "no migration change"
+  },
+  "pr": null,
+  "testRegistrationDelta": 0
+}

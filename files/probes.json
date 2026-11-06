@@ -1,0 +1,48 @@
+{
+  "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+  "source": "passing built Worker route journey in touched-tests.log",
+  "clause": "REL-016",
+  "statusBefore": "partial",
+  "statusAfter": "partial",
+  "point": 1,
+  "rows": [
+    {
+      "id": "R1",
+      "result": "MET",
+      "test": "tests/base/release-feeds.test.ts:117",
+      "assertions": "XML syntax and required RSS and Atom structure; empty and populated HTTP responses"
+    },
+    {
+      "id": "R2",
+      "result": "MET",
+      "test": "tests/base/release-feeds.test.ts:117",
+      "assertions": "unpublished and scheduled exclusion; native public identity and order"
+    },
+    {
+      "id": "R3",
+      "result": "MET",
+      "test": "tests/base/release-feeds.test.ts:117",
+      "assertions": "native correction, stable canonical identity, current title and body and Atom timestamp"
+    },
+    {
+      "id": "R4",
+      "result": "MET",
+      "test": "tests/base/release-feeds.test.ts:117",
+      "assertions": "literal markup and quotes; private and superseded values excluded"
+    },
+    {
+      "id": "R5",
+      "result": "MET",
+      "test": "tests/base/release-feeds.test.ts:117",
+      "assertions": "canonical public HTML, unchanged record snapshots, no provider calls, approved release survives erasure"
+    }
+  ],
+  "held": [
+    "acceptance point 2 consent and segment intersection",
+    "SEG-006 membership",
+    "WIDGET-003 distribution",
+    "live mail and provider qualification",
+    "existing deployment and release prerequisites"
+  ],
+  "mutations": "not applied; no DONE claim"
+}

@@ -1,0 +1,99 @@
+[
+  {
+    "command": [
+      "node",
+      "src/base/contract-docs.mjs",
+      "write"
+    ],
+    "exit": 0,
+    "at": "2026-11-06T06:46:56.724301+00:00",
+    "stdout": "Wrote 1 contract documents.",
+    "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350"
+  },
+  {
+    "command": [
+      "node",
+      "src/base/contract-docs.mjs",
+      "check"
+    ],
+    "exit": 0,
+    "at": "2026-11-06T06:46:56.888881+00:00",
+    "stdout": "Contract documents are current.",
+    "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350"
+  },
+  {
+    "command": [
+      "git",
+      "checkout",
+      "origin/main",
+      "--",
+      "ACCEPTANCE.md",
+      "docs/CLAIMS.md"
+    ],
+    "exit": 0,
+    "at": "2026-11-06T06:46:56.897112+00:00",
+    "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350"
+  },
+  {
+    "command": [
+      "git",
+      "add",
+      "tests/base/release-feeds.test.ts"
+    ],
+    "exit": 0,
+    "at": "2026-11-06T06:46:56.903597+00:00",
+    "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350"
+  },
+  {
+    "command": [
+      "node",
+      "scripts/edition-authoring/cli.mjs",
+      "lock"
+    ],
+    "exit": 0,
+    "at": "2026-11-06T06:46:57.507338+00:00",
+    "observed": {
+      "schemaVersion": 1,
+      "ok": true,
+      "trackedFiles": 2419
+    },
+    "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350"
+  },
+  {
+    "command": [
+      "node",
+      "scripts/edition-authoring/cli.mjs",
+      "check"
+    ],
+    "exit": 0,
+    "at": "2026-11-06T06:46:57.968055+00:00",
+    "observed": {
+      "schemaVersion": 1,
+      "ok": true,
+      "trackedFiles": 2419
+    },
+    "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350"
+  },
+  {
+    "command": [
+      "git",
+      "add",
+      "sources.lock.json"
+    ],
+    "exit": 0,
+    "at": "2026-11-06T06:46:58.002501+00:00",
+    "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350"
+  },
+  {
+    "command": [
+      "node",
+      "src/base/contract-docs.mjs",
+      "check"
+    ],
+    "head": "4e8dc9dcf46049c7f2bab2771c12bf7026519350",
+    "exit": 1,
+    "state": "expected after restoring generated views from origin/main",
+    "stdout": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+    "log": "restored-view-check.log"
+  }
+]

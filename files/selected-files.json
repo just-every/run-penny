@@ -1,0 +1,20 @@
+[
+  "REPORT.md",
+  "receipt.json",
+  "mechanical.json",
+  "provenance.json",
+  "probes.json",
+  "remote-product.json",
+  "ci-discovery.json",
+  "ci-status.json",
+  "ci-jobs.json",
+  "ci-receipt.json",
+  "ci-failed-job.log",
+  "touched-tests.log",
+  "typecheck.log",
+  "touched-lint.log",
+  "first-party.log",
+  "build.log",
+  "restored-view-check.log",
+  "selected-files.json"
+]
