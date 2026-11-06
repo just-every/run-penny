@@ -1,0 +1,152 @@
+{
+  "source": "f8377876c502bb0c5a99de92f7964c6f30e41c76",
+  "kind": "manual functional observations, not a passing original browser test",
+  "observations": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "unavailable": true,
+      "verificationDisabled": true,
+      "verifiedText": "Verified as Verified requester. Your vote is recorded when you submit.",
+      "submissionEnabled": true,
+      "outcome": "Feedback is awaiting review",
+      "cookies": 0,
+      "outboxStatuses": [
+        404,
+        404
+      ],
+      "responses": [
+        {
+          "path": "/api/public/identity/host/frames",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/branding",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/identity/host/frames",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/branding",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/identity/host/frames",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/branding",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/identity/session",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/identity/session",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/requests/suggestions",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/requests",
+          "status": 201,
+          "setsCookie": false
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "unavailable": true,
+      "verificationDisabled": true,
+      "verifiedText": "Verified as Verified requester. Your vote is recorded when you submit.",
+      "submissionEnabled": true,
+      "outcome": "Feedback is awaiting review",
+      "cookies": 0,
+      "outboxStatuses": [
+        404,
+        404
+      ],
+      "responses": [
+        {
+          "path": "/api/public/identity/host/frames",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/branding",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/identity/host/frames",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/branding",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/identity/host/frames",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/branding",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/identity/session",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/identity/session",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/requests/suggestions",
+          "status": 200,
+          "setsCookie": false
+        },
+        {
+          "path": "/api/public/requests",
+          "status": 201,
+          "setsCookie": false
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "requests": 2,
+    "evidence_items": 2,
+    "request_votes": 2,
+    "requester_update_permissions": 0,
+    "notification_events": 0,
+    "notification_intents": 0,
+    "notification_outbox": 0
+  },
+  "mailCalls": 0
+}

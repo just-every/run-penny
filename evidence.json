@@ -1,0 +1,214 @@
+{
+  "files": [
+    {
+      "blob": "80e8123f67ca4f4b79a577c7ec1ec2a8ba4553c0",
+      "bytes": 6205,
+      "path": "COMMAND-RECEIPT.json",
+      "sha256": "bbf207e4b3791c6c7f2b1bee3ce7ea8574501e5176564d7cbc53ded21d4fb3d4"
+    },
+    {
+      "blob": "a753908a2c7158dbd0fd883fd120e3bf5efcb93e",
+      "bytes": 10684,
+      "path": "INSPECTION-RECEIPT.json",
+      "sha256": "a548a21ae97096e376ca6161be5b4b9a2244dd65f86cf57096d2a9183d47f790"
+    },
+    {
+      "blob": "a9be72a6edbe1f9064a9c93df3b74cedac6494e8",
+      "bytes": 3361,
+      "path": "PLAN.md",
+      "sha256": "1dd2ab357d17f8a47b8264b59cb83c1181108299022134debba3fce29836afe5"
+    },
+    {
+      "blob": "416ae09e7df1f7dddcc338289cb6532cb7f9954e",
+      "bytes": 1024,
+      "path": "PUBLICATION-CHECK.json",
+      "sha256": "492798507cc754f09c4ff7e21d4d3ffe93b678a068148e0641128f3b8421baa9"
+    },
+    {
+      "blob": "6e73fbf288c9f21aa149fd069dfbc50611f3658c",
+      "bytes": 2642,
+      "path": "REPORT.md",
+      "sha256": "6222b01867551446634740ca7e8ce38b55d4f36e6570820ecf04f6ff76e125e1"
+    },
+    {
+      "blob": "0d83e8cf713a2a64457af42181400667df8c556f",
+      "bytes": 17310,
+      "path": "SOURCE-DIFF.json",
+      "sha256": "650428f5d0e9fbddb5f4d8581fb9219b0a4e9bed33d8a0903a2a2e281fa43d09"
+    },
+    {
+      "blob": "327903d960b673f12e1b1885e3923b0a8f895c20",
+      "bytes": 3005,
+      "path": "SOURCE-RECEIPT.json",
+      "sha256": "a37e83887f14a174163e1116cfa28edb72635d967d161d22af8f325dcdd29432"
+    },
+    {
+      "blob": "d5190f477ac32a109802436494821b0d959d5a17",
+      "bytes": 21963,
+      "path": "VERDICT.md",
+      "sha256": "b79b3cdfff99902f379f3c05e410dad19f2e23f93aa9061bdc256e9a01c574ad"
+    },
+    {
+      "blob": "22891e7cda2a152b53f5fe8ea40a18df98cce330",
+      "bytes": 66725,
+      "path": "browser-functional-file.log",
+      "sha256": "4357e12599f339382b6d9efcbbfa1569c98fbf2d71a6926c315d048b9a51a46d"
+    },
+    {
+      "blob": "7ae5a2e0269a00e61056c87adde6dfbac054f214",
+      "bytes": 753,
+      "path": "browser-functional.log",
+      "sha256": "20aed739c96627c576e3656e514c442018ca2cec2c05e0393aa9979550b9ab2c"
+    },
+    {
+      "blob": "ca6014888c08cef4ed45d5ef40a143e0974df96c",
+      "bytes": 31774,
+      "path": "browser-no-mail.log",
+      "sha256": "9b098c856c665ea16878d9ba96b6b4019fea78d685b1f3e330489b728f4d4730"
+    },
+    {
+      "blob": "1261dbf1b199d84443de3474ecfcb267b51396bb",
+      "bytes": 42569,
+      "path": "build.log",
+      "sha256": "d29ba5f2a135f7bd7011252bde7446228426c5e5877b23a2c0841f0d756af8ae"
+    },
+    {
+      "blob": "d02d5050c03b1c35adcd31af0217d98b6c724852",
+      "bytes": 135,
+      "path": "contract-docs-check.log",
+      "sha256": "7ad216a96aec3893ae2ff91078f202d32a1232f8fefc9e6c15f2ec54b9e40063"
+    },
+    {
+      "blob": "a8f7480eb3e6f47825773be20efa334a23ad775d",
+      "bytes": 3074,
+      "path": "dependency-install.log",
+      "sha256": "a0bf4dd46930071d041faed34949e0b9e104273bbd86db1b6fca5f8dcb96812e"
+    },
+    {
+      "blob": "512d7f83b99d931e4cb13c7c20bf29473c137124",
+      "bytes": 411,
+      "path": "focused-native.log",
+      "sha256": "60bc0b6aceafb66b94ea89e1f84f8a7d15627dbf7155c4dcd5c4224b996c186b"
+    },
+    {
+      "blob": "bbab6b684e47d0a9c3e34c4b9eac129b88f797c5",
+      "bytes": 3755,
+      "path": "functional-browser/FUNCTIONAL-RECEIPT.json",
+      "sha256": "16d6eeade9f40eedebe54012ae3150707c6bace71fa01b7d3f5541fbc1d76f92"
+    },
+    {
+      "blob": "166e31296a20241a415a51865f092d81561030b3",
+      "bytes": 2303,
+      "path": "functional-browser/manual-no-mail-functional-1440.json",
+      "sha256": "43d8c3430d78654a293761106dbd11ace716fea07880520b773f0aadd7f341fe"
+    },
+    {
+      "blob": "522564d328998a9dcac9e4af7011e4486aeea743",
+      "bytes": 2278,
+      "path": "functional-browser/manual-no-mail-functional-390.json",
+      "sha256": "25b519adc4b17b2a7a81e87c65867f51ab947af7631172e54525ff8404fd0e1c"
+    },
+    {
+      "blob": "be769786c62d9067cda597aa0da8ffc8d7a7cabe",
+      "bytes": 331542,
+      "path": "functional-browser/manual-no-mail-public-1440.png",
+      "sha256": "c40abf21c23e1d21d140cbf5cf73961ab67abf0435c3e8289cdb800b0f3613f8"
+    },
+    {
+      "blob": "8090a7af1b40f7660037ed709df9e7c27ef664e3",
+      "bytes": 284600,
+      "path": "functional-browser/manual-no-mail-public-390.png",
+      "sha256": "0853a252cff49b408437e7becefb4f38edebd2203d0aeedee565acd43dab04de"
+    },
+    {
+      "blob": "69ad0e7b2e2372e9a625ac83bf58267d333c3a47",
+      "bytes": 360006,
+      "path": "functional-browser/manual-no-mail-signin-1440.png",
+      "sha256": "73ce59face5a341691ec398d3ced9363072312bc80038f0898f877514726ec51"
+    },
+    {
+      "blob": "b3a490eb107887ac429564115b4bff18383a2468",
+      "bytes": 144645,
+      "path": "functional-browser/manual-no-mail-signin-390.png",
+      "sha256": "0fffb0305341dc594030c06dabb3dd604d744acd4a1ead240c41df4f7ec467a5"
+    },
+    {
+      "blob": "601bf303f25f6a8eab35aa6390272ac12c285afa",
+      "bytes": 293760,
+      "path": "functional-browser/manual-no-mail-submitted-1440.png",
+      "sha256": "9cf68b17a0d0f7c7654c96a750be0f3dc72f077b1d9ecb21e417d4261764b812"
+    },
+    {
+      "blob": "e5f7ea508ba3a55542e0d988bc87c63de00abe50",
+      "bytes": 201470,
+      "path": "functional-browser/manual-no-mail-submitted-390.png",
+      "sha256": "7b89d807f872ab50e3b0e730d776b63a3fc6d34a8e0482ee8788da8a65bcf39d"
+    },
+    {
+      "blob": "e94c72c298b0753f99adb721820713600271aa69",
+      "bytes": 305267,
+      "path": "functional-browser/manual-no-mail-verification-1440.png",
+      "sha256": "3b171443fd5a0cbd1a347d8db15332fbf74e9051dfb819a80c459863addd51b7"
+    },
+    {
+      "blob": "744341133529c1bf40903094c6adb2c31931d32b",
+      "bytes": 205934,
+      "path": "functional-browser/manual-no-mail-verification-390.png",
+      "sha256": "e6c6e7c399f493551809eb14c46863d0979e34425539450f707e074d1d5a0975"
+    },
+    {
+      "blob": "0ed569a1a023d230125147bd4805c70f2854f7f4",
+      "bytes": 485227,
+      "path": "functional-browser/manual-no-mail-verified-form-1440.png",
+      "sha256": "cbbbb4783c79f3bd008e533cbd2d34d92f0e0546d18a0c670808479ef11243e5"
+    },
+    {
+      "blob": "ff4a52426de4ad04f527e4bd6dd75b46453f99ca",
+      "bytes": 266228,
+      "path": "functional-browser/manual-no-mail-verified-form-390.png",
+      "sha256": "3a72659fd92d1056e3b8b1bb46f07e2093f234311f38360afa10b9e11807ca78"
+    },
+    {
+      "blob": "7425687127c54f53b2af0039396977af0d8878f7",
+      "bytes": 5195,
+      "path": "manual-no-mail-functional.mjs",
+      "sha256": "d31bc303ece9955f38f20d491cddf484b1c942555d4cbf2fffa8056c97f1d6d2"
+    },
+    {
+      "blob": "be769786c62d9067cda597aa0da8ffc8d7a7cabe",
+      "bytes": 331542,
+      "path": "original-browser/G-3-no-mail-public-reading-1440.png",
+      "sha256": "c40abf21c23e1d21d140cbf5cf73961ab67abf0435c3e8289cdb800b0f3613f8"
+    },
+    {
+      "blob": "69ad0e7b2e2372e9a625ac83bf58267d333c3a47",
+      "bytes": 360006,
+      "path": "original-browser/G-3-no-mail-signin-1440.png",
+      "sha256": "73ce59face5a341691ec398d3ced9363072312bc80038f0898f877514726ec51"
+    },
+    {
+      "blob": "e94c72c298b0753f99adb721820713600271aa69",
+      "bytes": 305267,
+      "path": "original-browser/G-3-no-mail-verification-1440.png",
+      "sha256": "3b171443fd5a0cbd1a347d8db15332fbf74e9051dfb819a80c459863addd51b7"
+    },
+    {
+      "blob": "b1cc8107b0bdbc29889e57477b9b7fb5d7f4391c",
+      "bytes": 426503,
+      "path": "source-check.log",
+      "sha256": "328b87dbdad9f88c44f36e0dc83de8abdf70af1014316b876b5e85d9b7e7eaec"
+    },
+    {
+      "blob": "7944c98fcc7be268d8b02a65719623664cd71a54",
+      "bytes": 227,
+      "path": "typecheck.log",
+      "sha256": "96d09ec6963deb61ebc12c25b7afbf93a59ad0749980558b52fd8b7cef2873f0"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f24",
+  "product_head": "f8377876c502bb0c5a99de92f7964c6f30e41c76",
+  "ref": "refs/heads/evidence/ct-judge-penny-req023-20261105-1430-sol1",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "ct-judge-penny-req023-20261105-1430-sol1"
+}

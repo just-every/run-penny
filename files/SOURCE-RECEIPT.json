@@ -1,0 +1,55 @@
+{
+  "source": "f8377876c502bb0c5a99de92f7964c6f30e41c76",
+  "raw": [
+    {
+      "path": "CONTRACT.md",
+      "http_status": 200,
+      "bytes": 351675,
+      "sha256": "7570591c85e43747b67e14baf3f709741e82a4d6617044e4c44c1c9c62b8df73",
+      "matches_clone": true
+    },
+    {
+      "path": "ACCEPTANCE.md",
+      "http_status": 200,
+      "bytes": 309987,
+      "sha256": "a1892ab4b7e449b40e22e11ee344bbf07d2e625d63a1bf79d9900d8e46e03378",
+      "matches_clone": true
+    },
+    {
+      "path": "AGENTS.md",
+      "http_status": 200,
+      "bytes": 11191,
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968",
+      "matches_clone": true
+    },
+    {
+      "path": "RULINGS.md",
+      "http_status": 200,
+      "bytes": 10219,
+      "sha256": "d7a6d055f345370be57062ca0daf40d1b491a94da3fcb690fa3d442f8e98f868",
+      "matches_clone": true
+    }
+  ],
+  "full_document_comparison": {
+    "contract_bytes": 351675,
+    "acceptance_bytes": 309987,
+    "contract_clause_count": 281,
+    "acceptance_clause_count": 281,
+    "ids_equal": true,
+    "all_requirement_acceptance_bodies_equal": true,
+    "differences": []
+  },
+  "counts": {
+    "done": 78,
+    "partial": 125,
+    "missing": 78,
+    "total": 281
+  },
+  "REQ-023": {
+    "contract_status_row": "| `REQ-023` | Email verification | published | done | `tests/base/requester-expiry.test.ts` \u2014 \"emailed links consume once; requester use renews thirty-day idle sessions and expired credentials change nothing\" and \"four held actions expire after twenty-four hours, are discarded on fresh verification and never replay on later reads or verification\"; `tests/base/no-mail-identity.test.ts` \u2014 \"delivered verification consumes once and replays its held submission after outbound mail is removed\"; `tests/base/auth.test.ts` \u2014 \"requester OAuth verifies at the provider edge without cookies or operator authority; missing mail fails closed\"; `tests/browser/no-mail-journey.mjs` |  |",
+    "acceptance_full_entry": {
+      "title": "Email verification",
+      "rest": "\nCore \u00b7 published \u00b7 **partial**\n\n**Requirement.** A requester verifies an email address by following a single-use link sent to it; the link expires 30 minutes after it is sent and fails after one use.\n\n**Acceptance.**\n1. The verified session is a browser-local token created at the requester's first interaction and expiring after 30 days without use, so no portal surface sets a cookie.\n2. An identity-required action attempted before verification is held for 24 hours, applied on the first verification of that address, and otherwise discarded, and it creates no vote, public record, or notification while held.\n\n**Evidence.** `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs`\n**Gap.** The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted.\n\n"
+    }
+  }
+}

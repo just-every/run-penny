@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "tag": "ct-judge-penny-req023-20261105-1430-sol1",
+  "source": "f8377876c502bb0c5a99de92f7964c6f30e41c76",
+  "tracked_status": "",
+  "selected_file_count_before_this_receipt": 33,
+  "selected_bytes_before_this_receipt": 4526352,
+  "symlinks": 0,
+  "injected_credential_matches": 0,
+  "provider_token_pattern_matches": 0,
+  "selection": "Explicit regular report, receipt, command-log, observation-script and browser-capture files only; no environment dump or private held-out inputs",
+  "product_changes": 0,
+  "product_pushes": 0,
+  "product_prs": 0,
+  "evidence_entrypoint_sha256": "f9a910bc75cf0efaa62909fb705a9b8fbcc66c038904344a776815f507bd34c3",
+  "entrypoint_note": "Provided isolated report-only protocol with fleet commit environment, all-candidate identity/trailer checks and verified outside-clone report bundle before evidence push. Product checkout/head/index remain unchanged. Main boundary fetched only in isolated evidence storage, never written."
+}

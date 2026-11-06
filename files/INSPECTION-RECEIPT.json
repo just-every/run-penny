@@ -1,0 +1,304 @@
+{
+  "source": "f8377876c502bb0c5a99de92f7964c6f30e41c76",
+  "read_and_inspected": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 11191,
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968",
+      "matches_pin": true
+    },
+    {
+      "path": "CONTRACT.md",
+      "bytes": 351675,
+      "sha256": "7570591c85e43747b67e14baf3f709741e82a4d6617044e4c44c1c9c62b8df73",
+      "matches_pin": true
+    },
+    {
+      "path": "ACCEPTANCE.md",
+      "bytes": 309987,
+      "sha256": "a1892ab4b7e449b40e22e11ee344bbf07d2e625d63a1bf79d9900d8e46e03378",
+      "matches_pin": true
+    },
+    {
+      "path": "RULINGS.md",
+      "bytes": 10219,
+      "sha256": "d7a6d055f345370be57062ca0daf40d1b491a94da3fcb690fa3d442f8e98f868",
+      "matches_pin": true
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 403749,
+      "sha256": "54c43fcb1b0b11568c12e56d28b2ba9b929ca2b2be16955e64edb79f63660b89",
+      "matches_pin": true
+    },
+    {
+      "path": "package.json",
+      "bytes": 5965,
+      "sha256": "2956fe10930f469dfc870ae56b2fc907acc3f81bed63a28b888dfb23c2544b6f",
+      "matches_pin": true
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "bytes": 150353,
+      "sha256": "1a6089ec7e053f2763b238200667946bc11d5355fec630d07a52e34dd5e5f5c9",
+      "matches_pin": true
+    },
+    {
+      "path": "vitest.base.config.ts",
+      "bytes": 2556,
+      "sha256": "76ad6675aabcc4cc8d0f831167541de43d34a5426534ca3a440d352f8f8f4b42",
+      "matches_pin": true
+    },
+    {
+      "path": "verification.json",
+      "bytes": 7899,
+      "sha256": "d8db2050dc706da26dfbc5f2e72f190d4721efb76d60d9b66e78f5bf97d13b11",
+      "matches_pin": true
+    },
+    {
+      "path": ".github/workflows/verify.yml",
+      "bytes": 3125,
+      "sha256": "4baf892a475f3f47d8d5cb726360b27f85cff4c6f475ba4e7d388a5d8786428a",
+      "matches_pin": true
+    },
+    {
+      "path": "scripts/verify-ci.mjs",
+      "bytes": 11843,
+      "sha256": "869b3eb0dd41a034002133d4c18ad20a345c752571989f087b5902fed3485984",
+      "matches_pin": true
+    },
+    {
+      "path": "scripts/verify-app.mjs",
+      "bytes": 1739,
+      "sha256": "4c3a87c809e2b671a555dc36171b60675f87be96362de7d2269d9f5e1c3100b6",
+      "matches_pin": true
+    },
+    {
+      "path": "src/base/contract-docs.mjs",
+      "bytes": 49754,
+      "sha256": "9c1d8f38c42cd18539792f71bda94cbcd6ebe30e25c884eb6af51de1dccabdfd",
+      "matches_pin": true
+    },
+    {
+      "path": "src/base/seed-contract.mjs",
+      "bytes": 19462,
+      "sha256": "7beada5d271beaaf63d76e1f8cf2712ba906ec7d430f8312f4abedfad57428b4",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/base/requester-expiry.test.ts",
+      "bytes": 9571,
+      "sha256": "23b18f670b4412e4e3b2284d2d5a9bf7fc08f3687a477a5e0201f493ab806c6f",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/base/no-mail-identity.test.ts",
+      "bytes": 8087,
+      "sha256": "7e423e8f2f894f57d4744c01629a7ce8678b300d8a6dffea53614aefdb928d0d",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/base/auth.test.ts",
+      "bytes": 18575,
+      "sha256": "fb5c35b044beef3e656cc43b9f3345354108840e80d642c70f15509bffae656e",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/base/support.ts",
+      "bytes": 4699,
+      "sha256": "dc87ded7066096665109c2accc562e9fd91e626978292723a5c8ec1b5b388e38",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/base/requester-oauth-fixture.ts",
+      "bytes": 13473,
+      "sha256": "aeec54e4e8d56a67c40b294b96287c2f93f80a0f592d7eb5ff110d5b8c69a4e0",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/base/explicit-consent-board.ts",
+      "bytes": 823,
+      "sha256": "90593703460f12eed77ae05399b27a20a058067aedad222a6a03c23189273302",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/base/review-race-storage.ts",
+      "bytes": 1652,
+      "sha256": "d2fb050a0b657583f971ea5045417f04b475d2bdb9521f04454d32f62bacc369",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/migration/generated-transport.ts",
+      "bytes": 982,
+      "sha256": "446d433790f9f6a113274c20beb5cebe51ac485c77fa84102cf86c97456313f3",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/browser/no-mail-journey.mjs",
+      "bytes": 4528,
+      "sha256": "0fad0b36f1e7217d87d63362a9a81761571b8a859157fbe6791e4ff74e164f75",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/browser/base-runtime.mjs",
+      "bytes": 4455,
+      "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/browser/browser-options.mjs",
+      "bytes": 868,
+      "sha256": "b65e6f23ac704b3eb8d1a5ff5577d3ce404dac7428ef7541d49f1d56cab898ad",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/browser/headless-executable.mjs",
+      "bytes": 1437,
+      "sha256": "7d84c36ede672de5316e599255b77ca51ac742c5cffb857c53542b0e7132033f",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/browser/fresh-local-port.mjs",
+      "bytes": 741,
+      "sha256": "b7429126f647fbd7fd6d7ad0b5d85771114dc6e625e800eae183198b23fd073a",
+      "matches_pin": true
+    },
+    {
+      "path": "tests/browser/acceptance-audit.mjs",
+      "bytes": 7342,
+      "sha256": "8173387eb4c696e6f75d044a43af9f248c157f40d2066b5eb03d835ed32fbabf",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/native-routes.ts",
+      "bytes": 4394,
+      "sha256": "327521adcceec36ab5a407dc5876a72541c3b39457fa8a56a977e9c28bb600ea",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/native-service.ts",
+      "bytes": 5831,
+      "sha256": "f538ba26d74b83b366a88801c5cc0e1c03f87f7c86af31e20ae54b8739c79ae5",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/native-tokens.ts",
+      "bytes": 1533,
+      "sha256": "5a14a07d8a9934f0dc7ee582bd70126f183d6dccd59c6e4492fe88d564a9752d",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/verified-requester.ts",
+      "bytes": 2557,
+      "sha256": "02e937e4bcbb2a73be6dda0dd5fb4982ea2aa3a2aab2055ccb40a760aa08a7cd",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/requester.ts",
+      "bytes": 5168,
+      "sha256": "e444bd2101d63ccb33418ec45ef1ad555152bc1def7df23302f3dd99ae8c8e74",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/requester-pending.ts",
+      "bytes": 250,
+      "sha256": "908db8f7570ba233bf3f07322fb44d87994c1c40821789b5895755b58b3e5a61",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/client-mutations.ts",
+      "bytes": 1944,
+      "sha256": "6599cffb8980af80b828c6cf32826d3ff29cc2ebe1fffd427f1188ea9d512dcb",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/host-client.ts",
+      "bytes": 1358,
+      "sha256": "05bcb7fe0b1d994aca5fe08c106de30aa92965969e4cc4652d55d1798e0e7e8c",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/ui/verify-requester.tsx",
+      "bytes": 4666,
+      "sha256": "497064e76aaca93d4767f7f841bf6c87dc4f57e928360969ad9d0d2d60b15296",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/portal/ui/submit-feedback.tsx",
+      "bytes": 10539,
+      "sha256": "628f059ba569f21a770b9a32266de15153f95d6c64885fe3d9c4f3b40ccba556",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/requests/pending-actions.ts",
+      "bytes": 7407,
+      "sha256": "b8efdff8e4b51f6389a42ac7bd944e2ef431b1f3a66ec088765a2d4dfece2d0c",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/requests/moderation-repository.ts",
+      "bytes": 8422,
+      "sha256": "eec3e35f5c91e640a0f4b81bfeb708147ee8cb932abbc32c4feb4f9283d11eb2",
+      "matches_pin": true
+    },
+    {
+      "path": "migrations/core/0010_request_notifications.sql",
+      "bytes": 10586,
+      "sha256": "c02218cde66f1bc7a9c9079ef411c5b68e5f8c0b9dd345c50fc771098f2925ce",
+      "matches_pin": true
+    },
+    {
+      "path": "migrations/core/0070_requester_subscription_provenance.sql",
+      "bytes": 4348,
+      "sha256": "7d6771e1cc20496fbbcd3394ae307575a9f9efb1b31f9ab9a69b4091976f5bf1",
+      "matches_pin": true
+    },
+    {
+      "path": "migrations/core/0071_author_publication_permission.sql",
+      "bytes": 933,
+      "sha256": "337d8a3f865db81d770026258e5ed80f957e0b6d0c8c4f40a500edb9e385214d",
+      "matches_pin": true
+    },
+    {
+      "path": "migrations/core/0077_merge_notices.sql",
+      "bytes": 8629,
+      "sha256": "bba0bc53f2004fe836ba5f41ecaaa0b0bca67baa57759dea10a7701b81e522a3",
+      "matches_pin": true
+    },
+    {
+      "path": "BASELINE.md",
+      "bytes": 6587,
+      "sha256": "854a33949f3c52c059f0983ef9d322b1b22dd786c4ded1583b9c05133e929214",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/tokens.ts",
+      "bytes": 1825,
+      "sha256": "18b79bbad86ab445d34aaab9a1d427c2fee1e0e3a7b2cb08640fadec9664176c",
+      "matches_pin": true
+    },
+    {
+      "path": "src/core/features/auth/oauth-routes.ts",
+      "bytes": 6891,
+      "sha256": "ac11f7c1759ac02f1b2bc3830184240d1e4f26727f3c707f1826e1708f525350",
+      "matches_pin": true
+    }
+  ],
+  "acceptance_metadata_differences": [
+    {
+      "id": "REQ-023",
+      "contract": {
+        "status": "done",
+        "evidence": "`tests/base/requester-expiry.test.ts` \u2014 \"emailed links consume once; requester use renews thirty-day idle sessions and expired credentials change nothing\" and \"four held actions expire after twenty-four hours, are discarded on fresh verification and never replay on later reads or verification\"; `tests/base/no-mail-identity.test.ts` \u2014 \"delivered verification consumes once and replays its held submission after outbound mail is removed\"; `tests/base/auth.test.ts` \u2014 \"requester OAuth verifies at the provider edge without cookies or operator authority; missing mail fails closed\"; `tests/browser/no-mail-journey.mjs`",
+        "gap": ""
+      },
+      "generated_view": {
+        "status": "partial",
+        "evidence": "`tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs`",
+        "gap": "The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted."
+      }
+    }
+  ],
+  "source_status": "",
+  "note": "Full immutable documents acquired. All 281 requirement and acceptance bodies were compared across CONTRACT and ACCEPTANCE, with no differences. Read named journeys and direct relied-on helpers; metadata differences are listed without adopting other clause judgments."
+}

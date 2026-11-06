@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "tag": "ct-judge-penny-req023-20261105-1430-sol1",
+  "completed_at": "2026-11-06T02:11:00.617280+00:00",
+  "repository": "just-every/run-penny",
+  "source": "f8377876c502bb0c5a99de92f7964c6f30e41c76",
+  "source_branch": "cloud/sd-penny-c-f24",
+  "actual_model": "gpt-6.1-sol",
+  "reasoning_effort": "xhigh",
+  "model_authority": "2026-11-06T01:26Z routing authority in commission; no model API requests or successor sessions",
+  "product_head_unchanged": "f8377876c502bb0c5a99de92f7964c6f30e41c76",
+  "product_status_porcelain": "",
+  "commands": [
+    {
+      "command": "git clone --depth 1 --filter=blob:none --single-branch --branch cloud/sd-penny-c-f24 https://github.com/just-every/run-penny.git <disposable-clone>",
+      "exit": 0
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run pnpm install --frozen-lockfile",
+      "exit": 0,
+      "log": "dependency-install.log"
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run env -u GH_TOKEN -u GITHUB_TOKEN -u RER_CLOUD_KEY npx -y @runeditrun/rer build",
+      "exit": 0,
+      "log": "build.log",
+      "node": "rer selected project Node 22.20.0"
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run env -u GH_TOKEN -u GITHUB_TOKEN -u RER_CLOUD_KEY pnpm exec vitest run --config vitest.base.config.ts tests/base/requester-expiry.test.ts tests/base/no-mail-identity.test.ts tests/base/auth.test.ts",
+      "exit": 0,
+      "log": "focused-native.log",
+      "files": 3,
+      "tests": 17,
+      "passed": 17,
+      "skipped": 0,
+      "duration_seconds": 49.69,
+      "node": "24.19.0"
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run env -u GH_TOKEN -u GITHUB_TOKEN -u RER_CLOUD_KEY PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=<lane>/evidence/no-mail-judge node tests/browser/no-mail-journey.mjs",
+      "exit": 1,
+      "log": "browser-no-mail.log",
+      "reason": "Timeout at line 38 waiting for obsolete copy; three screenshots at 1440, no 390 leg reached"
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run env -u GH_TOKEN -u GITHUB_TOKEN -u RER_CLOUD_KEY PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium node --input-type=module <manual-browser-stdin>",
+      "exit": 1,
+      "log": "browser-functional.log",
+      "reason": "Harness worker startup under eval inherited module mode: require is not defined; no completed functional result"
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run env -u GH_TOKEN -u GITHUB_TOKEN -u RER_CLOUD_KEY PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium /home/agent/.rer/node/node-v22.20.0-linux-x64/bin/node ../manual-no-mail-functional.mjs",
+      "exit": 0,
+      "log": "browser-functional-file.log",
+      "script": "manual-no-mail-functional.mjs",
+      "receipt": "functional-browser/FUNCTIONAL-RECEIPT.json",
+      "kind": "separate manual functional observation, never a passing original browser test",
+      "viewports": [
+        1440,
+        390
+      ],
+      "captures": 10,
+      "node": "22.20.0"
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run pnpm run typecheck",
+      "exit": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run pnpm run source:check",
+      "exit": 0,
+      "log": "source-check.log"
+    },
+    {
+      "command": "source /tmp/rer-cloud-toolchain.sh; cloud_run node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "log": "contract-docs-check.log",
+      "reason": "Only ACCEPTANCE.md and docs/CLAIMS.md freshness; no view written"
+    },
+    {
+      "command": "gh api repos/just-every/run-penny/commits/f8377876c502bb0c5a99de92f7964c6f30e41c76 --jq <sha,parents,files-only projection>",
+      "exit": 0,
+      "receipt": "SOURCE-DIFF.json",
+      "github_budget_calls": 1
+    }
+  ],
+  "not_run": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "reason": "Unnecessary for emitted-Worker test harness; read-only product review creates no installation"
+    },
+    {
+      "command": "full suite or full runtime Verify",
+      "reason": "Explicitly prohibited review scope; focused public-door tests only"
+    },
+    {
+      "command": "contract-docs write, source:lock or source edits",
+      "reason": "Read-only commission; mechanical generation and relock belong to future integration"
+    },
+    {
+      "command": "CI polling, dispatch, rerun and failed-job archive download",
+      "reason": "Explicitly prohibited; supplied run 42036312798 is used only as supplied evidence"
+    },
+    {
+      "command": "live mail, OAuth consent, device or hosted provider proof",
+      "reason": "Not authorized; original field-proof boundaries retained"
+    },
+    {
+      "command": "complete full-history publication scan, main equality and exact-main Run site",
+      "reason": "Mac integration duties; no cloud source landing authority"
+    }
+  ],
+  "ci": {
+    "run_id": 42036312798,
+    "event": "push",
+    "source": "supplied commission only, not polled",
+    "conclusion": "failure",
+    "failure_scope": "generated-view freshness and consequential steps; runtime shards did not execute",
+    "full_runtime_green": false
+  },
+  "result": {
+    "clause": "REQ-023",
+    "verdict": "STAYS PARTIAL",
+    "R1": "MET",
+    "R2": "UNMET: populated notification custody not exercised",
+    "new_findings": 0,
+    "accepted_source": [],
+    "counts_before": [
+      77,
+      126,
+      78,
+      281
+    ],
+    "candidate_proposal": [
+      78,
+      125,
+      78,
+      281
+    ],
+    "judged_counts": [
+      77,
+      126,
+      78,
+      281
+    ]
+  },
+  "boundaries": {
+    "product_edits": 0,
+    "product_commits": 0,
+    "product_pushes": 0,
+    "prs": 0,
+    "ci_mutations": 0,
+    "ci_polls": 0,
+    "provider_calls": 0,
+    "source_or_custody_releases": 0
+  },
+  "toolchain_note": "Supplied shim reports Node 24.19.0 and pnpm 10.12.4 because Node 24 exceeds the shim minimum. rer build selected pinned 22.20.0; final manual functional run explicitly used the installed 22.20.0. No dependency or source pins were changed."
+}

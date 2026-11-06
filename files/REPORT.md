@@ -1,0 +1,13 @@
+# CT Penny REQ-023 review report
+
+REQ-023 STAYS PARTIAL at f8377876c502bb0c5a99de92f7964c6f30e41c76 on cloud/sd-penny-c-f24. R1 MET; R2 UNMET for preservation of populated notification custody through held-action expiry and discard. The fixture has a real published request and evidence, but no existing business notification rows to preserve. No new runtime defect was found.
+
+The complete judgment is in VERDICT.md; the full working plan is in PLAN.md. The rubric was retained verbatim. All 17 named native tests passed. Build, typecheck and source-lock check passed. The original browser journey failed on stale expected copy; a separately recorded functional browser observation completed verified no-mail submissions at 1440 and 390 with no cookies or mail. The original failure was not recast as a pass. Generator check failed only for the stale ACCEPTANCE.md and docs/CLAIMS.md views; neither was edited.
+
+Candidate proposal: 77 done, 126 partial, 78 missing to 78 done, 125 partial, 78 missing across 281 IDs. Judgment: retain 77 done, 126 partial, 78 missing, with the exact remaining Gap written in VERDICT.md. These are the isolated parent and candidate counts, not current-main counts or a sum of concurrent candidates. No source status changed here. accepted(source) remains empty.
+
+Supplied Verify Penny run 42036312798: push, generated-view-only failure and consequential steps; native runtime shards did not execute. It was not polled, rerun or dispatched. No full runtime green is claimed. Exact-FINAL runtime, merged generator/provenance/counts, source-lock-last, COMPLETE full-history NEW 0 scan, guarded main equality and exact-main Run site remain pending. Preserve every newer main Status AND Gap, Evidence, provenance and assertion on any later integration.
+
+One source commit API read was made; no CI calls. Product edits, commits, pushes, PRs, provider operations, source releases and custody changes: zero. The replacement product branch was not created because the specific commission makes the product read-only. Only the separate evidence ref is authorized for report transport.
+
+The packet includes the complete verdict, plan, command receipt, immutable source receipts, source-only diff, dependency/build/native/browser/typecheck/source/generator logs, the manual observation script and receipts, all original partial browser captures and ten completed functional browser captures. It excludes credentials, environment dumps, private held-outs and symlinks. Evidence transport is separate from product readiness. The final response records the actual evidence ref and head and confirms cleanup after execution.

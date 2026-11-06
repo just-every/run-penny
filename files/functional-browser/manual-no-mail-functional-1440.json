@@ -1,0 +1,88 @@
+{
+  "source": "Exact source; manual continuation of existing no-mail journey using rendered copy; original journey remains FAILED",
+  "captures": [
+    {
+      "label": "manual-no-mail-signin",
+      "path": "/signin",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "manual-no-mail-signin-1440.png",
+      "sha256": "73ce59face5a341691ec398d3ced9363072312bc80038f0898f877514726ec51",
+      "violations": [],
+      "layout": {
+        "html": 1440,
+        "body": 1440,
+        "viewport": 1440
+      }
+    },
+    {
+      "label": "manual-no-mail-public",
+      "path": "/",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "manual-no-mail-public-1440.png",
+      "sha256": "c40abf21c23e1d21d140cbf5cf73961ab67abf0435c3e8289cdb800b0f3613f8",
+      "violations": [],
+      "layout": {
+        "html": 1440,
+        "body": 1440,
+        "viewport": 1440
+      }
+    },
+    {
+      "label": "manual-no-mail-verification",
+      "path": "/portal/feedback/new",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "manual-no-mail-verification-1440.png",
+      "sha256": "3b171443fd5a0cbd1a347d8db15332fbf74e9051dfb819a80c459863addd51b7",
+      "violations": [],
+      "layout": {
+        "html": 1440,
+        "body": 1440,
+        "viewport": 1440
+      }
+    },
+    {
+      "label": "manual-no-mail-verified-form",
+      "path": "/portal/feedback/new",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "manual-no-mail-verified-form-1440.png",
+      "sha256": "cbbbb4783c79f3bd008e533cbd2d34d92f0e0546d18a0c670808479ef11243e5",
+      "violations": [],
+      "layout": {
+        "html": 1440,
+        "body": 1440,
+        "viewport": 1440
+      }
+    },
+    {
+      "label": "manual-no-mail-submitted",
+      "path": "/portal/feedback/new",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "file": "manual-no-mail-submitted-1440.png",
+      "sha256": "9cf68b17a0d0f7c7654c96a750be0f3dc72f077b1d9ecb21e417d4261764b812",
+      "violations": [],
+      "layout": {
+        "html": 1440,
+        "body": 1440,
+        "viewport": 1440
+      }
+    }
+  ],
+  "errors": [],
+  "external": [],
+  "expectedNetworkDiagnostics": []
+}

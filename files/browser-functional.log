@@ -1,0 +1,15 @@
+browser-runtime: waiting for workerd
+browser-runtime: ready
+
+node:internal/event_target:1136
+  process.nextTick(() => { throw err; });
+                           ^
+ReferenceError: require is not defined in ES module scope, you can use import instead
+    at file:///home/agent/rer-consolidation/work/ct-judge-penny-req023-20261105-1430-sol1/run-penny/[eval1]:2:27
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async node:internal/modules/esm/loader:224:26
+    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:221:20)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
