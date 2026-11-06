@@ -113,7 +113,7 @@ it('[CAP-014 REQ-035 REQ-008 REQ-009 DATA-001] retains native source attribution
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
 
-it('[CAP-014 DATA-003] refuses stale or invalid authority and rolls back every effect if auditing fails; requester erasure removes proxy custody',async()=>{
+it('[CAP-014 DATA-003 DATA-005] refuses stale or invalid authority and rolls back every effect if auditing fails; requester erasure removes proxy custody',async()=>{
  const g=await graph(),r=g.requests[0],input={contact:{displayName:'Sam Rivera'},source:'Customer interview'}
  for(const headers of [{},g.person])expect((await call(`/api/operator/requests/${r.slug}/proxy-votes`,input,headers)).status).toBe(401)
  expect((await call(`/api/operator/requests/${r.slug}/proxy-votes`,input,{...g.operator,Origin:'https://other.test'})).status).toBe(403)
@@ -123,12 +123,18 @@ it('[CAP-014 DATA-003] refuses stale or invalid authority and rolls back every e
  expect(await total('penny_proxy_votes')).toBe(0);expect(await env.DB.prepare("SELECT COUNT(*) n FROM requesters WHERE display_name='Sam Rivera'").first('n')).toBe(0)
  await env.DB.exec('DROP TRIGGER refuse_proxy_audit;')
  const person=await json<{requesterId:string}>(`/api/operator/requests/${r.slug}/proxy-votes`,input,g.operator)
+ const expected=[{slug:r.slug,voters:[{id:g.recipient.requesterId,name:'Private display',proxy:0},{id:person.requesterId,name:input.contact.displayName,proxy:1}]}]
+ await reconcileVoteCsv(g.operator,g.person,expected)
  const root={table:'requesters',id:person.requesterId},preview=await json<{planHash:string}>('/api/operator/data/erasure/preview',root,g.operator)
  const response=await call('/api/operator/data/erasure',{...root,planHash:preview.planHash},g.operator)
  expect([200,202],await response.clone().text()).toContain(response.status)
  let erased=await response.json() as {operationId:string;status:string}
  for(let step=0;step<100&&erased.status!=='complete';step++)erased=await json(`/api/operator/data/operations/${erased.operationId}/resume`,{},g.operator)
  expect(erased.status).toBe('complete');expect(await total('penny_proxy_votes')).toBe(0)
+ expected[0].voters.pop()
+ await reconcileVoteCsv(g.operator,g.person,expected)
+ expect((await call(`/api/operator/requests/${r.slug}/proxy-votes`,{requesterId:person.requesterId,source:input.source},g.operator)).status).toBe(409)
+ await reconcileVoteCsv(g.operator,g.person,expected)
 })
 
 it('[CAP-014 API-001 API-002] server-held scoped keys record proxy demand, refuse a read-only key and stop on revocation',async()=>{
