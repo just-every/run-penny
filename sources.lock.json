@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "6fd3787551928b3b57e08f5835ab5e3470423c10eb2ff46489848db1bbbec168",
+      "sha256": "8dd9781d583b22f79a23c73646ab5b5ef1f970b605b8087fd08d20949677ff66",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "0983c330e03425bd5b3dd2168918ea3b94121d55282dc8906ac89ccef27ac50a",
+      "sha256": "69da5e56e6200e38b35a3f4ae8dc9b6d6178d7aba339e3bf7e88b334e623fe0a",
       "executable": false
     },
     "DEMO.md": {
@@ -8866,7 +8866,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-read.mjs": {
-      "sha256": "9eb337b71f6d2ad2fd29b7e2007294f26fd85d14ed3e25f6517ff801797d85bb",
+      "sha256": "fde45c3b67c5bb65c33dd171b2d8d51304fbd16a65800b88b78a587075912421",
       "executable": false
     },
     "tests/browser/operator-completeness-requester.mjs": {

@@ -84,6 +84,53 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
   await page.getByRole('link',{name:record.name,exact:true}).and(page.locator(`a[href="${destination}"]`)).waitFor()
  }
 
+ // Cross the shared page boundary with native hierarchy records, then open a later result.
+ const paged=[]
+ for(let index=0;index<22;index++) {
+  const name=marker(`pagedproduct${String(index).padStart(2,'0')}`)
+  const response=await api(page,'/api/operator/hierarchy/product',{name})
+  assert.equal(response.status(),201,'[OPS-004] native records populate mixed search pages')
+  paged.push({id:(await response.json()).id,entity:'products',name})
+ }
+ await page.reload()
+ if(width===1440) {
+  const existing=[['accounts',6],['decisions',3],['evidence',2],['releases',5],['requesters',7],['requests',1],['roadmap',4]].map(([entity,kind])=>({entity,id:proofId(kind)}))
+  const expected=[existing[0],hierarchy[1],existing[1],existing[2],hierarchy[2],...paged,...[hierarchy[0],duplicate].sort((a,b)=>a.id.localeCompare(b.id)),...existing.slice(3)]
+  const seen=[]
+  for(let number=1;number<=2;number++) {
+   const response=await api(page,`/api/operator/search?q=privateproof&page=${number}`)
+   assert.equal(response.status(),200)
+   const result=await response.json(),slice=expected.slice((number-1)*25,number*25)
+   assert.equal(result.total,33,'[OPS-004] total includes hierarchy and every existing record type')
+   assert.deepEqual(result.items.map(({entity,id})=>({entity,id})),slice.map(({entity,id})=>({entity,id})),'[OPS-004] global ordering survives a page boundary inside products')
+   await page.getByRole('navigation',{name:'List pages'}).getByRole('status').filter({hasText:`Page ${number} of 2`}).waitFor()
+   const links=page.locator('main h2 a')
+   assert.deepEqual(await links.evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href'))),result.items.map(row=>row.href),'[OPS-004] rendered order and destinations match the mixed page')
+   seen.push(...result.items.map(row=>row.id))
+   if(number===1) {
+    await page.getByRole('link',{name:'Next page',exact:true}).click()
+    await page.waitForURL(url=>url.searchParams.get('page')==='2'&&url.searchParams.get('q')==='privateproof')
+   }
+  }
+  assert.equal(new Set(seen).size,33,'[OPS-004] adjacent mixed pages have no missing or repeated identities')
+ } else {
+  await page.getByRole('link',{name:'Next page',exact:true}).click()
+  await page.waitForURL(url=>url.searchParams.get('page')==='2')
+ }
+ await page.getByRole('link',{name:paged[21].name,exact:true}).waitFor()
+ await capture('OPS-004-mixed-second-page',page)
+ await page.getByRole('link',{name:paged[21].name,exact:true}).click()
+ await page.locator(`[id="products-${paged[21].id}"]`).getByRole('heading',{name:paged[21].name,exact:true}).waitFor()
+ if(width===1440)await page.waitForFunction(id=>document.activeElement?.id===id,`products-${paged[21].id}`)
+ await capture('OPS-004-second-page-destination',page)
+ await page.goto(origin+'/app/search?q=privateproof&page=2')
+ await page.getByRole('navigation',{name:'Search record types'}).getByRole('link',{name:'Products',exact:true}).click()
+ await page.waitForURL(url=>url.searchParams.get('entity')==='products'&&!url.searchParams.has('page'))
+ if(width===1440) {
+  await page.getByRole('link',{name:paged[0].name,exact:true}).waitFor()
+  assert.equal(await page.locator('main h2 a').count(),24,'[OPS-004] switching type resets the shared page and retains every matching product')
+ }
+
  for(const [entity,names] of Object.entries(fields))for(const name of names) {
   const path='/api/operator/search?q='+marker(name)
   for(const actor of [page,peer]) {

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove mixed global search pagination through the mounted next-page control, exact later-page hierarchy destinations and type-filter page reset. Preserve all previous hierarchy search and authority checks. OPS-004 remains partial for finer permissions and declared-capacity timing; no migration or configuration change.
+
 - Prove full and partial hierarchy-name search without a type filter, exact destinations across mixed paginated results, and independent destinations for equal-name products after navigation and reload. OPS-004 remains partial with its finer permissions and capacity proof open. No migration or configuration change.
 
 - Search native products, components and features by full or partial name alongside existing workspace records, retaining global ordering and pagination. Result links identify and focus the particular hierarchy record. Extend the existing native and mounted browser journeys with hierarchy identity, ordering, page boundaries and current authority checks. OPS-004 remains partial for finer record permissions and capacity proof. No migration or configuration change is required.
