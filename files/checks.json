@@ -1,0 +1,151 @@
+{
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "build"
+      ],
+      "exit": 0,
+      "seconds": 43.33
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/integration-openapi.test.ts",
+        "tests/base/integration-api.test.ts",
+        "tests/base/proxy-votes.test.ts"
+      ],
+      "exit": 0,
+      "seconds": 31.81
+    },
+    {
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "exit": 0,
+      "seconds": 34.37
+    },
+    {
+      "command": [
+        "pnpm",
+        "exec",
+        "oxlint",
+        "src/core/features/integrations/openapi",
+        "src/core/features/docs/openapi-route.ts",
+        "src/core/features/integrations/api-routes.ts",
+        "src/core/app/api.ts",
+        "tests/base/integration-openapi.test.ts",
+        "tests/base/integration-api.test.ts"
+      ],
+      "exit": 0,
+      "seconds": 0.33
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "check",
+        "--profile",
+        "first-party"
+      ],
+      "exit": 0,
+      "seconds": 1.5
+    },
+    {
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "write"
+      ],
+      "exit": 0,
+      "seconds": 0.12
+    },
+    {
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 0,
+      "seconds": 0.12
+    },
+    {
+      "command": [
+        "git",
+        "checkout",
+        "origin/main",
+        "--",
+        "ACCEPTANCE.md",
+        "docs/CLAIMS.md"
+      ],
+      "exit": 0,
+      "seconds": 0.01
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "src/core/features/integrations/openapi/document.ts",
+        "tests/base/integration-openapi.test.ts"
+      ],
+      "exit": 0,
+      "seconds": 0.01
+    },
+    {
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "lock"
+      ],
+      "exit": 0,
+      "seconds": 0.41
+    },
+    {
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "exit": 0,
+      "seconds": 0.38
+    }
+  ],
+  "head": "4ab9cda462ad2d3b68106df1f2ddf5f4b76ad748",
+  "tree": "a6aa71b5ad088fede00a654e4ce733559f26adc9",
+  "node": "22.20.0",
+  "testedSourceHashes": {
+    "CHANGELOG.md": "baf4eb1857024ea781f862330b6cea94bfdc459d963e7a4d1c5f1818925eeb38",
+    "CONTRACT.md": "fc030a97cc85b022b3dc06be3be9ad7e1af56b5a9e5f34022ac5705e338f4cfb",
+    "docs/API.md": "93f6024410ec9be9cead92b0fd5fafa863227c7844c227f9676a9b99e428d8a2",
+    "package.json": "98a1965e89ae7edd0ad558ecbc59925d068f259ee715b78e531be098c9c4caf4",
+    "pnpm-lock.yaml": "17fdc142df6ac3f47c0820afa49fa728d090a9d6c6897a7611e06be53571beff",
+    "sources.lock.json": "ddd0a17fda7114fd60d785fce8a4c46b68b9591c1d76f1117008a1849fd2c76e",
+    "src/core/app/api.ts": "642b61d1e75977ffc5ce1c799b2bb302c91ef91b919298fb81265272dd3d6cf8",
+    "src/core/features/docs/openapi-route.ts": "7c89f1f0742f5be6b34bd766b30430c2c431a1eb92f1992b744f9ed6ea5d2bb5",
+    "src/core/features/integrations/api-routes.ts": "1e8ae83b4e67cde146350305b3e9426bd1d9e1036f1246a60445b75a6fe05ce1",
+    "src/core/features/integrations/openapi/document.ts": "f91ec78fa38ce655138df15aded9bfbde5f94126c40798bc4cd0950da218a6b0",
+    "src/core/features/integrations/openapi/inputs.ts": "b447a078c0c55d56344161782765d2cf17e837cab8e424eb88a87ddcda6cf280",
+    "src/core/features/integrations/openapi/responses.ts": "b1eced067e8b0b9ac5f0d76cc3093c038dca13afd742ca5d3018bfd76201987f",
+    "tests/base/integration-api.test.ts": "018e506a4b8a1d634df66f8564c179d61123245bc1acc935bb9fbb2b5f0d3baf",
+    "tests/base/integration-openapi.test.ts": "83b130344ba6f81f0e27ccf0cee9df39004b86af7804ddf888c2d2d1eff641ac"
+  },
+  "sourceUnchangedAfterTests": true,
+  "viewsRestored": true,
+  "migrationLedger": "not applicable; no migration changed"
+}

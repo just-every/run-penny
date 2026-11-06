@@ -1,0 +1,2941 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "Penny native integration API",
+    "version": "1",
+    "description": "Existing scoped REST operations only. Lists are returned as arrays; pagination and additional operator resource families are not implemented. Request lists accept only the documented filters. Other list operations ignore extra query values. Issue keys through authenticated native integration settings. Keys do not admit operator pages, exports or configuration. Publication needs explicit approval and existing native prerequisites."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/api/v1/boards": {
+      "get": {
+        "operationId": "listBoards",
+        "summary": "List public boards",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "requests:read"
+        ],
+        "description": "Requires a current installation key with requests:read. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Boards"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/requests": {
+      "get": {
+        "operationId": "listRequests",
+        "summary": "List approved requests",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "requests:read"
+        ],
+        "description": "Requires a current installation key with requests:read. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          {
+            "name": "board",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "under_review",
+                "planned",
+                "in_progress",
+                "shipped",
+                "declined"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9A-HJKMNPQRSTVWXYZ]{26}$"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "recent",
+                "votes",
+                "newest",
+                "trending"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Requests"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createRequest",
+        "summary": "Create a held request",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "requests:write"
+        ],
+        "description": "Requires a current installation key with requests:write. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/requests/{slug}": {
+      "get": {
+        "operationId": "getRequest",
+        "summary": "Read an approved request or canonical lookup",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "requests:read"
+        ],
+        "description": "Requires a current installation key with requests:read. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Request"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/requests/{slug}/comments": {
+      "get": {
+        "operationId": "listComments",
+        "summary": "List approved comments",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "comments:read"
+        ],
+        "description": "Requires a current installation key with comments:read. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comments"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createComment",
+        "summary": "Publish an approved operator comment",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "comments:write"
+        ],
+        "description": "Requires a current installation key with comments:write. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateComment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedComment"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/requests/{slug}/status-updates": {
+      "get": {
+        "operationId": "listStatusUpdates",
+        "summary": "List published status updates",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "status:read"
+        ],
+        "description": "Requires a current installation key with status:read. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusUpdates"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "publishStatus",
+        "summary": "Publish an approved status update",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "status:write"
+        ],
+        "description": "Requires a current installation key with status:write. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublishStatus"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublishedStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proxy-vote-contacts": {
+      "get": {
+        "operationId": "findProxyContacts",
+        "summary": "Find active proxy-vote customers, at most 25",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "votes:write"
+        ],
+        "description": "Requires a current installation key with votes:write. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Customer lookup returns private active contact choices; keep this votes:write key on the server.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contacts"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/requests/{slug}/proxy-votes": {
+      "post": {
+        "operationId": "recordProxyVote",
+        "summary": "Record attributed customer demand without granting consent",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "votes:write"
+        ],
+        "description": "Requires a current installation key with votes:write. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordProxyVote"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyVote"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/releases": {
+      "get": {
+        "operationId": "listReleases",
+        "summary": "List published current releases",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "releases:read"
+        ],
+        "description": "Requires a current installation key with releases:read. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Releases"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createRelease",
+        "summary": "Create a release draft",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "releases:write"
+        ],
+        "description": "Requires a current installation key with releases:write. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRelease"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedRelease"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/releases/{slug}": {
+      "get": {
+        "operationId": "getRelease",
+        "summary": "Read a published current release",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "releases:read"
+        ],
+        "description": "Requires a current installation key with releases:read. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Release"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/releases/{slug}/publish": {
+      "post": {
+        "operationId": "publishRelease",
+        "summary": "Publish an explicitly approved release with current Shipped targets",
+        "security": [
+          {
+            "integrationKey": []
+          }
+        ],
+        "x-required-scopes": [
+          "releases:write"
+        ],
+        "description": "Requires a current installation key with releases:write. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Request, board and release reads expose approved public projections.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Approval"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful native operation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublishedRelease"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid body, path or supported query. Empty request-list query values are ignored.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Key absent, invalid, expired, revoked, lacking the required scope or without a current issuer.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Origin or native authority refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource unavailable to this operation, or unknown route or method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicting idempotency key, changed custody or unavailable current state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Referenced records or publication prerequisites are not satisfied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required authority, storage or service unavailable; no successful result is claimed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "integrationKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "installation integration key",
+        "description": "Reveal-once key issued by this installation. Each operation names its required native scope in x-required-scopes. Insufficient scope returns 401."
+      }
+    },
+    "schemas": {
+      "CreateRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 280
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "boardSlug": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "evidenceIds": {
+            "default": [],
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9A-HJKMNPQRSTVWXYZ]{26}$"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "boardSlug"
+        ],
+        "additionalProperties": false,
+        "description": "Evidence identifiers must be distinct and exist. Creates held wording awaiting native moderation; this operation does not publish it."
+      },
+      "CreateComment": {
+        "type": "object",
+        "properties": {
+          "body": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "approve": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "body",
+          "approve"
+        ],
+        "additionalProperties": false
+      },
+      "PublishStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "under_review",
+              "planned",
+              "in_progress",
+              "shipped",
+              "declined"
+            ]
+          },
+          "body": {
+            "default": "",
+            "type": "string",
+            "maxLength": 20000
+          },
+          "pinned": {
+            "default": false,
+            "type": "boolean"
+          },
+          "publicEta": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-(?:0[1-9]|1[0-2]|Q[1-4])$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "internalStatusId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "approve": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "status",
+          "idempotencyKey",
+          "approve"
+        ],
+        "additionalProperties": false,
+        "description": "Explicit approval and an idempotency key are required. Repeating the same action reuses its result; changed wording under that key is refused. ETA is a month or quarter."
+      },
+      "CreateRelease": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 30000
+          },
+          "releaseType": {
+            "type": "string",
+            "enum": [
+              "new",
+              "improved",
+              "fixed"
+            ]
+          },
+          "labelIds": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "productIds": {
+            "maxItems": 30,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "tagIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "publicationDate": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "format": "date"
+          },
+          "setupUrl": {
+            "anyOf": [
+              {
+                "const": ""
+              },
+              {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https?://"
+              }
+            ]
+          },
+          "targetIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "title",
+          "body",
+          "releaseType",
+          "tagIds",
+          "publicationDate",
+          "targetIds"
+        ],
+        "additionalProperties": false,
+        "description": "A valid calendar publication date is required. Setup URL is empty or HTTP or HTTPS. Tags must exist; targets must have current approved request mappings. Creates a draft attributed to the key issuer."
+      },
+      "Approval": {
+        "type": "object",
+        "properties": {
+          "approve": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "approve"
+        ],
+        "additionalProperties": false
+      },
+      "RecordProxyVote": {
+        "type": "object",
+        "properties": {
+          "importance": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "requesterId": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNPQRSTVWXYZ]{26}$"
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "displayName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "email": {
+                "type": "string",
+                "maxLength": 254,
+                "format": "email",
+                "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              }
+            },
+            "required": [
+              "displayName"
+            ],
+            "additionalProperties": false
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "sourceUrl": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^[Hh][Tt][Tt][Pp][Ss]?:",
+            "not": {
+              "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://[^/?#]*@"
+            }
+          },
+          "evidenceId": {
+            "type": "string",
+            "pattern": "^[0-9A-HJKMNPQRSTVWXYZ]{26}$"
+          }
+        },
+        "required": [
+          "source"
+        ],
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "requesterId"
+            ],
+            "not": {
+              "required": [
+                "contact"
+              ]
+            }
+          },
+          {
+            "required": [
+              "contact"
+            ],
+            "not": {
+              "required": [
+                "requesterId"
+              ]
+            }
+          }
+        ],
+        "description": "Select exactly one active requesterId or new contact. A source URL uses HTTP or HTTPS without embedded credentials. Importance requires the board setting. No identity verification or email permission is granted."
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false
+      },
+      "Boards": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "requestCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "categoryMode": {
+              "type": "string",
+              "enum": [
+                "off",
+                "optional",
+                "required"
+              ]
+            },
+            "postingPolicy": {
+              "type": "string",
+              "enum": [
+                "requesters",
+                "operators"
+              ]
+            },
+            "commentsAllowed": {
+              "type": "boolean"
+            },
+            "showVoteCounts": {
+              "type": "boolean"
+            },
+            "showVoters": {
+              "type": "boolean"
+            },
+            "anonymousRequesters": {
+              "type": "boolean"
+            },
+            "importanceChoices": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "position": {
+                    "type": "number"
+                  },
+                  "archived": {
+                    "type": "boolean"
+                  },
+                  "requestCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "parentId",
+                  "position",
+                  "archived",
+                  "requestCount"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "subscriptionDisclosure": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "vote": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "submission": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "enabled",
+                "version",
+                "vote",
+                "submission"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "slug",
+            "name",
+            "requestCount",
+            "categoryMode",
+            "postingPolicy",
+            "commentsAllowed",
+            "showVoteCounts",
+            "showVoters",
+            "anonymousRequesters",
+            "importanceChoices",
+            "categories",
+            "subscriptionDisclosure"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "Requests": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string"
+            },
+            "board": {
+              "type": "object",
+              "properties": {
+                "slug": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "slug",
+                "name"
+              ],
+              "additionalProperties": false
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "open",
+                "under_review",
+                "planned",
+                "in_progress",
+                "shipped",
+                "declined"
+              ]
+            },
+            "publicEta": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "statusLabel": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "category": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "parent": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "parent"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "voteCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "commentCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "publishedAt": {
+              "type": "string"
+            },
+            "recentActivityAt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "slug",
+            "board",
+            "title",
+            "description",
+            "status",
+            "publicEta",
+            "statusLabel",
+            "category",
+            "commentCount",
+            "publishedAt",
+            "recentActivityAt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "Request": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "found"
+              },
+              "request": {
+                "type": "object",
+                "properties": {
+                  "slug": {
+                    "type": "string"
+                  },
+                  "board": {
+                    "type": "object",
+                    "properties": {
+                      "slug": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "slug",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "under_review",
+                      "planned",
+                      "in_progress",
+                      "shipped",
+                      "declined"
+                    ]
+                  },
+                  "publicEta": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "statusLabel": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "category": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "parent": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "parent"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "voteCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "commentCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "publishedAt": {
+                    "type": "string"
+                  },
+                  "recentActivityAt": {
+                    "type": "string"
+                  },
+                  "authorDisplayName": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "commentsAllowed": {
+                    "type": "boolean"
+                  },
+                  "showVoters": {
+                    "type": "boolean"
+                  },
+                  "voters": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "displayName": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "displayName"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "comments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "author": {
+                          "type": "object",
+                          "properties": {
+                            "displayName": {
+                              "type": "string"
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "requester",
+                                "operator"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "displayName",
+                            "kind"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "body": {
+                          "type": "string"
+                        },
+                        "publishedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "author",
+                        "body",
+                        "publishedAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "statusUpdates": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "open",
+                                "under_review",
+                                "planned",
+                                "in_progress",
+                                "shipped",
+                                "declined"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "const": "withdrawn"
+                            }
+                          ]
+                        },
+                        "body": {
+                          "type": "string"
+                        },
+                        "pinned": {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "const": 0
+                            },
+                            {
+                              "type": "number",
+                              "const": 1
+                            }
+                          ]
+                        },
+                        "publishedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "body",
+                        "pinned",
+                        "publishedAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "attachments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "filename": {
+                          "type": "string"
+                        },
+                        "contentType": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "filename",
+                        "contentType"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "slug",
+                  "board",
+                  "title",
+                  "description",
+                  "status",
+                  "publicEta",
+                  "statusLabel",
+                  "category",
+                  "commentCount",
+                  "publishedAt",
+                  "recentActivityAt",
+                  "authorDisplayName",
+                  "commentsAllowed",
+                  "showVoters",
+                  "comments",
+                  "statusUpdates",
+                  "attachments"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "kind",
+              "request"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "redirect"
+              },
+              "slug": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "slug"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "withdrawn"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "Comments": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "author": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "requester",
+                    "operator"
+                  ]
+                }
+              },
+              "required": [
+                "displayName",
+                "kind"
+              ],
+              "additionalProperties": false
+            },
+            "body": {
+              "type": "string"
+            },
+            "publishedAt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "author",
+            "body",
+            "publishedAt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "StatusUpdates": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "status": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "open",
+                    "under_review",
+                    "planned",
+                    "in_progress",
+                    "shipped",
+                    "declined"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "const": "withdrawn"
+                }
+              ]
+            },
+            "body": {
+              "type": "string"
+            },
+            "pinned": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "const": 0
+                },
+                {
+                  "type": "number",
+                  "const": 1
+                }
+              ]
+            },
+            "publishedAt": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "status",
+            "body",
+            "pinned",
+            "publishedAt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "CreatedRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug"
+        ],
+        "additionalProperties": false
+      },
+      "CreatedComment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "additionalProperties": false
+      },
+      "PublishedStatus": {
+        "type": "object",
+        "properties": {
+          "published": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "published"
+        ],
+        "additionalProperties": false
+      },
+      "Contacts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "email": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "displayName",
+            "email"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "ProxyVote": {
+        "type": "object",
+        "properties": {
+          "requesterId": {
+            "type": "string"
+          },
+          "created": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "requesterId",
+          "created"
+        ],
+        "additionalProperties": false
+      },
+      "CreatedRelease": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "versionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "versionId"
+        ],
+        "additionalProperties": false
+      },
+      "PublishedRelease": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "versionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "versionId"
+        ],
+        "additionalProperties": false
+      },
+      "Release": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "versionNumber": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "title": {
+            "type": "string"
+          },
+          "releaseType": {
+            "type": "string",
+            "enum": [
+              "new",
+              "improved",
+              "fixed"
+            ]
+          },
+          "body": {
+            "type": "string"
+          },
+          "publicationDate": {
+            "type": "string"
+          },
+          "setupUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "authorName": {
+            "type": "string"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "isCurrent": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "slug",
+          "versionNumber",
+          "title",
+          "releaseType",
+          "body",
+          "publicationDate",
+          "setupUrl",
+          "authorName",
+          "labels",
+          "products",
+          "isCurrent"
+        ],
+        "additionalProperties": false
+      },
+      "Releases": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string"
+            },
+            "versionNumber": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "title": {
+              "type": "string"
+            },
+            "releaseType": {
+              "type": "string",
+              "enum": [
+                "new",
+                "improved",
+                "fixed"
+              ]
+            },
+            "body": {
+              "type": "string"
+            },
+            "publicationDate": {
+              "type": "string"
+            },
+            "setupUrl": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "authorName": {
+              "type": "string"
+            },
+            "labels": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "isCurrent": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "slug",
+            "versionNumber",
+            "title",
+            "releaseType",
+            "body",
+            "publicationDate",
+            "setupUrl",
+            "authorName",
+            "labels",
+            "products",
+            "isCurrent"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

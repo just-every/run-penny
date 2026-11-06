@@ -1,0 +1,19 @@
+{
+  "head": "4ab9cda462ad2d3b68106df1f2ddf5f4b76ad748",
+  "runs": [
+    {
+      "id": 42183620010,
+      "name": "Verify Penny",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "4ab9cda462ad2d3b68106df1f2ddf5f4b76ad748",
+      "event": "push",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010",
+      "created_at": "2026-11-06T07:51:26Z",
+      "updated_at": "2026-11-06T07:51:55Z"
+    }
+  ],
+  "githubCallsUsed": 4,
+  "acceptedGeneratedViewException": true,
+  "explanation": "All 29 shard jobs fail only Check generated contract documents. Source lock check passed; runtime shards did not start. Expected stale ACCEPTANCE.md after mandatory restoration to main. Generated views are left to the guarded lander."
+}

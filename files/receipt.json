@@ -1,0 +1,43 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f87",
+  "head": "4ab9cda462ad2d3b68106df1f2ddf5f4b76ad748",
+  "baseline": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+  "push": "success",
+  "productCommits": [
+    "1b4ab258feaf85a52df44fba224333839d345e0e",
+    "4ab9cda462ad2d3b68106df1f2ddf5f4b76ad748"
+  ],
+  "statusBefore": "partial",
+  "statusAfter": "partial",
+  "countsBefore": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "countsAfter": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "localTests": {
+    "files": 3,
+    "passed": 9,
+    "failed": 0
+  },
+  "testRegistrationDelta": 0,
+  "mechanical": {
+    "sourceLock": 0,
+    "contractWrite": 0,
+    "contractCheckAfterWrite": 0,
+    "viewsRestored": true,
+    "migrationLedger": "not applicable"
+  },
+  "verifyRunId": 42183620010,
+  "verifyConclusion": "failure",
+  "verifyPermittedException": "generated contract views only",
+  "pullRequest": null,
+  "publicationScan": "guarded lander duty; not run in cloud",
+  "runSite": "main landing duty; not run for cloud branch",
+  "blockers": []
+}

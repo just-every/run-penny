@@ -1,0 +1,2620 @@
+{
+  "runId": 42183620010,
+  "jobs": [
+    {
+      "id": 127778690359,
+      "name": "plan",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778690359",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run echo \"matrix=$(node scripts/verify-ci.mjs --matrix \"$TIER\")\" >> \"$GITHUB_OUTPUT\"",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 7
+        }
+      ]
+    },
+    {
+      "id": 127778749614,
+      "name": "shards (dev-flows, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749614",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749630,
+      "name": "shards (base-2, false)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749630",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749665,
+      "name": "shards (browser, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749665",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749668,
+      "name": "shards (internal-discussion, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749668",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749679,
+      "name": "shards (requester-board, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749679",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749701,
+      "name": "shards (request-decline, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749701",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749702,
+      "name": "shards (base-1, false)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749702",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749713,
+      "name": "shards (rich-changelog, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749713",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749737,
+      "name": "shards (static, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749737",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749743,
+      "name": "shards (merge-notices, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749743",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749757,
+      "name": "shards (ownership, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749757",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749771,
+      "name": "shards (triage-aging, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749771",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749775,
+      "name": "shards (requester-blocking, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749775",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749776,
+      "name": "shards (loop-health, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749776",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749778,
+      "name": "shards (proxy-votes, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749778",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749779,
+      "name": "shards (survey-capture, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749779",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749791,
+      "name": "shards (release-planning, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749791",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749804,
+      "name": "shards (product-hierarchy, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749804",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749818,
+      "name": "shards (workspace-clock, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749818",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749827,
+      "name": "shards (roadmap-public-eta, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749827",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749854,
+      "name": "shards (import-roadmap, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749854",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749885,
+      "name": "shards (prioritisation, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749885",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749906,
+      "name": "shards (vote-importance, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749906",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749914,
+      "name": "shards (browser-capture, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749914",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749924,
+      "name": "shards (agent-door, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749924",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749929,
+      "name": "shards (import-statuses, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749929",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749938,
+      "name": "shards (older-archive, false)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749938",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778749962,
+      "name": "shards (helpscout-capture, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778749962",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    },
+    {
+      "id": 127778750164,
+      "name": "shards (discord-capture, true)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183620010/job/127778750164",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Check generated contract documents",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "conclusion": "skipped",
+          "number": 6
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Run pnpm run deps",
+          "conclusion": "skipped",
+          "number": 9
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Run this shard",
+          "conclusion": "skipped",
+          "number": 12
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "conclusion": "skipped",
+          "number": 25
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success",
+          "number": 27
+        }
+      ]
+    }
+  ]
+}

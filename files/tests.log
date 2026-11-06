@@ -1,0 +1,12 @@
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /workspace/run-penny
+
+
+ Test Files  3 passed (3)
+      Tests  9 passed (9)
+   Start at  07:49:13
+   Duration  29.97s (transform 2.33s, setup 0ms, import 6.88s, tests 20.76s, environment 0ms)
+

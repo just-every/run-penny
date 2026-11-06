@@ -1,0 +1,53 @@
+{
+  "document": {
+    "door": "GET /docs/openapi.json",
+    "status": 200,
+    "operations": [
+      "listBoards",
+      "listRequests",
+      "createRequest",
+      "getRequest",
+      "listComments",
+      "createComment",
+      "listStatusUpdates",
+      "publishStatus",
+      "findProxyContacts",
+      "recordProxyVote",
+      "listReleases",
+      "createRelease",
+      "getRelease",
+      "publishRelease"
+    ],
+    "setCookie": false
+  },
+  "unknownDocument": {
+    "door": "GET /docs/openapi-unknown.json",
+    "status": 404
+  },
+  "captures": [
+    {
+      "path": "/docs",
+      "width": 1440,
+      "status": 200,
+      "file": "docs-1440.png",
+      "sha256": "d082886639a1ec98f5d9ea24c1ca76070c650826bce50f8daebab1692e47c1f5"
+    },
+    {
+      "path": "/docs",
+      "width": 390,
+      "status": 200,
+      "file": "docs-390.png",
+      "sha256": "98110abfe5cd639f53d72bbbb4e6d063825608f75fa57ba2cb55099b456b8e11"
+    }
+  ],
+  "externalProviderCalls": 0,
+  "head": "4ab9cda462ad2d3b68106df1f2ddf5f4b76ad748",
+  "tree": "a6aa71b5ad088fede00a654e4ce733559f26adc9",
+  "openapiSha256": "f1e951cbac16dd250a1d4685ba90f37732362a51435102a3a087ab3bb2064437",
+  "offlineOpenApiValidation": {
+    "validator": "openapi-spec-validator 0.7.2",
+    "openapi": "3.1.0",
+    "result": "pass",
+    "networkReferences": 0
+  }
+}
