@@ -3640,5 +3640,16 @@
       "cost_micros",
       "created_at"
     ]
+  },
+  "penny_segments": {
+    "classification": "product",
+    "columns": [
+      "id",
+      "name",
+      "internal_owner_id",
+      "created_by_operator_id",
+      "created_at",
+      "updated_at"
+    ]
   }
 }
