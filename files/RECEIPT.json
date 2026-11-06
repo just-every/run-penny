@@ -1,0 +1,277 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f78",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f78",
+  "head": "4588e84551ad74f779976225a3e78b04f318db63",
+  "base": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "checks": [
+    {
+      "name": "base-source",
+      "head": "4588e84551ad74f779976225a3e78b04f318db63",
+      "command": [
+        "bash",
+        "-c",
+        ". /tmp/rer-cloud-toolchain.sh; cloud_run pnpm run verify:base-source"
+      ],
+      "exit": 0,
+      "started": "2026-11-06T05:56:45.585011+00:00",
+      "ended": "2026-11-06T05:56:46.530506+00:00",
+      "log": "base-source.log"
+    },
+    {
+      "name": "browser",
+      "head": "4588e84551ad74f779976225a3e78b04f318db63",
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=<packet>/browser cloud_run timeout 1200 node tests/browser/prioritisation.mjs",
+      "exit": 0,
+      "observed_completed": "2026-11-06T05:56:44.650285+00:00",
+      "log": "browser.log",
+      "widths": [
+        1440,
+        390
+      ],
+      "assertion_width": 1440
+    },
+    {
+      "name": "first-party",
+      "head": "4588e84551ad74f779976225a3e78b04f318db63",
+      "command": [
+        "bash",
+        "-c",
+        ". /tmp/rer-cloud-toolchain.sh; cloud_run npx -y @runeditrun/rer check --profile first-party"
+      ],
+      "exit": 0,
+      "started": "2026-11-06T05:55:53.566604+00:00",
+      "ended": "2026-11-06T05:55:55.855112+00:00",
+      "log": "first-party.log"
+    },
+    {
+      "name": "lint",
+      "head": "4588e84551ad74f779976225a3e78b04f318db63",
+      "command": [
+        "bash",
+        "-c",
+        ". /tmp/rer-cloud-toolchain.sh; cloud_run pnpm exec oxlint src/core/features/prioritisation/formulas.ts src/core/features/prioritisation/repository.ts src/core/features/prioritisation/view-editor.tsx tests/base/prioritisation.test.ts tests/browser/prioritisation.mjs"
+      ],
+      "exit": 0,
+      "started": "2026-11-06T05:55:55.885596+00:00",
+      "ended": "2026-11-06T05:55:57.063690+00:00",
+      "log": "lint.log"
+    },
+    {
+      "name": "route",
+      "head": "4588e84551ad74f779976225a3e78b04f318db63",
+      "command": [
+        "bash",
+        "-c",
+        ". /tmp/rer-cloud-toolchain.sh; cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/prioritisation.test.ts"
+      ],
+      "exit": 0,
+      "started": "2026-11-06T05:55:25.314943+00:00",
+      "ended": "2026-11-06T05:55:30.661043+00:00",
+      "log": "route.log"
+    },
+    {
+      "name": "source-lock",
+      "head": "4588e84551ad74f779976225a3e78b04f318db63",
+      "command": [
+        "bash",
+        "-c",
+        ". /tmp/rer-cloud-toolchain.sh; node scripts/edition-authoring/cli.mjs check"
+      ],
+      "exit": 0,
+      "started": "2026-11-06T05:56:44.679979+00:00",
+      "ended": "2026-11-06T05:56:45.557593+00:00",
+      "log": "source-lock.log"
+    },
+    {
+      "name": "typecheck",
+      "head": "4588e84551ad74f779976225a3e78b04f318db63",
+      "command": [
+        "bash",
+        "-c",
+        ". /tmp/rer-cloud-toolchain.sh; cloud_run pnpm run typecheck"
+      ],
+      "exit": 0,
+      "started": "2026-11-06T05:55:30.689885+00:00",
+      "ended": "2026-11-06T05:55:53.537743+00:00",
+      "log": "typecheck.log"
+    }
+  ],
+  "mechanical": {
+    "lock_command": "node scripts/edition-authoring/cli.mjs lock",
+    "lock_exit": 0,
+    "lock_check": "node scripts/edition-authoring/cli.mjs check",
+    "lock_check_exit": 0,
+    "views_write": "node src/base/contract-docs.mjs write",
+    "views_write_exit": 0,
+    "views_check": "node src/base/contract-docs.mjs check",
+    "views_check_exit": 0,
+    "views_restored": [
+      "ACCEPTANCE.md",
+      "docs/CLAIMS.md"
+    ],
+    "ledger": "none; no migration changed",
+    "ledger_exit": 0,
+    "generated_diff_files": [
+      "ACCEPTANCE.md"
+    ],
+    "restored_view_check": {
+      "exit": 1,
+      "error": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+      "expected": true
+    },
+    "final_source_lock_check_exit": 0
+  },
+  "build": {
+    "command": "cloud_run npx -y @runeditrun/rer build",
+    "exit": 0,
+    "log": "build.log",
+    "timing": "Built before commit; relevant runtime and test bytes are unchanged in the committed candidate"
+  },
+  "counts": {
+    "before": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    },
+    "after": {
+      "done": 79,
+      "partial": 125,
+      "missing": 77,
+      "total": 281
+    }
+  },
+  "status_rows": {
+    "parent": 281,
+    "candidate": 281,
+    "parent_table_lines": 445,
+    "candidate_table_lines": 445,
+    "lost": []
+  },
+  "tests": {
+    "added_registrations": 0,
+    "removed_registrations": 0,
+    "weakened_assertions": 0,
+    "route_test_count": 1,
+    "browser_journeys": 1
+  },
+  "identity": {
+    "candidate_commits_checked": 1,
+    "including_side_parents": true,
+    "author_pass": true,
+    "committer_pass": true,
+    "trailers_pass": true,
+    "openai_coauthors": 0
+  },
+  "diff_hygiene": {
+    "new_email_literals": 0,
+    "new_credential_shaped_literals": 0,
+    "scan": "Cloud publication scan deferred to the fleet lander; no COMPLETE scan claimed"
+  },
+  "images": [
+    {
+      "path": "browser/empty-comparisons-1440.png",
+      "bytes": 134801,
+      "sha256": "39c51e03d6d60a3b92d665a04f5054606fedf1c8c2150dc12a29044f86cb6844"
+    },
+    {
+      "path": "browser/filtered-request-owner-1440.png",
+      "bytes": 204191,
+      "sha256": "694d54626f38e1bfdada39b125ad486a66f2595844c5457fac8062b2b3fc1745"
+    },
+    {
+      "path": "browser/filtered-request-owner-390.png",
+      "bytes": 139173,
+      "sha256": "41c1d2158c0dff835d8ad6e60aa2a70eba2ee9d46b73b38cc36385e0cce8c5d3"
+    },
+    {
+      "path": "browser/filtered-request-owner-detail-1440.png",
+      "bytes": 92730,
+      "sha256": "7a0bf7d36bf4869d3a070418339c9bb6d4687da8232308e073458ff374a0e9e3"
+    },
+    {
+      "path": "browser/filtered-request-owner-detail-390.png",
+      "bytes": 90014,
+      "sha256": "90a653bc456417735440d1a83d557088d6984b77cdf3996ac4d7150e395f3ee8"
+    },
+    {
+      "path": "browser/filtered-request-peer-1440.png",
+      "bytes": 167736,
+      "sha256": "a11185940cde1c4fd736bfa0dd5f06c88df34a14d37d94832cc96408dcb14210"
+    },
+    {
+      "path": "browser/filtered-request-peer-390.png",
+      "bytes": 107771,
+      "sha256": "6ea901cd2c86ee29db2b8af78bb02fdda5eddd36ca890216c6af8d0c86581d3e"
+    },
+    {
+      "path": "browser/filtered-request-peer-detail-1440.png",
+      "bytes": 59177,
+      "sha256": "5948918252b85802f0a63dd83acd8ac8a1c6d46ac0eeff4e6d86aeddab677468"
+    },
+    {
+      "path": "browser/filtered-request-peer-detail-390.png",
+      "bytes": 60875,
+      "sha256": "6c82f891aaa3e5110018c4babc9820efa9e44e62bc2c0835aecbd82caf2fade5"
+    },
+    {
+      "path": "browser/importance-resorted-1440.png",
+      "bytes": 348542,
+      "sha256": "d3fba173c122588f3aac205ac03b4fa1d770f2b96ab96bd08b7b7fc853510909"
+    },
+    {
+      "path": "browser/importance-resorted-detail-1440.png",
+      "bytes": 154643,
+      "sha256": "3e8fa2dc1dec2c49e182a2380037118c4e1c262685d22d0fb2f72a9643ce890b"
+    },
+    {
+      "path": "browser/missing-inputs-1440.png",
+      "bytes": 205096,
+      "sha256": "a9855a5d09834a1d38fec34b4de8ac186a7d0d909ac31be8e898d9e6018b69ec"
+    },
+    {
+      "path": "browser/private-view-refused-1440.png",
+      "bytes": 169789,
+      "sha256": "4d692cae09d444ce006a018f1b8f7d69751cdf3d1ab7000818875da839710ae7"
+    },
+    {
+      "path": "browser/rice-inputs-1440.png",
+      "bytes": 181022,
+      "sha256": "ece80be247beb6d036043c6b73204a60a88e53a71002079079b4f08b10d9f725"
+    },
+    {
+      "path": "browser/rice-results-1440.png",
+      "bytes": 297438,
+      "sha256": "20f643e6be63b7103f101f5ea0f7505f5c70c163313cdc9a6f417b1596e0ad75"
+    },
+    {
+      "path": "browser/rice-results-detail-1440.png",
+      "bytes": 105727,
+      "sha256": "17e268971454a6a2ece0e0e371a45c16788a72206ae920591256431b531b0e78"
+    },
+    {
+      "path": "browser/shared-comparison-1440.png",
+      "bytes": 160231,
+      "sha256": "5b57201e56432f519ae4d283d4e608321fe8f2940f7756559fdd568960d3653f"
+    }
+  ],
+  "observed_at": "2026-11-06T05:57:48.970640+00:00",
+  "ci": {
+    "run_id": 42171324936,
+    "event": "push",
+    "head": "4588e84551ad74f779976225a3e78b04f318db63",
+    "status": "completed",
+    "conclusion": "failure",
+    "classification": "expected generated-acceptance-view-only failure",
+    "failed_jobs": 29,
+    "failed_step": "Check generated contract documents",
+    "runtime_shards_executed": false,
+    "source_lock_steps": "all success",
+    "ready_exception_applies": true,
+    "github_calls_used": 3,
+    "github_call_budget": 10,
+    "observed_at": "2026-11-06T06:03:07.813803+00:00"
+  }
+}

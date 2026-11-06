@@ -1,0 +1,13 @@
+{
+  "name": "browser",
+  "head": "4588e84551ad74f779976225a3e78b04f318db63",
+  "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=<packet>/browser cloud_run timeout 1200 node tests/browser/prioritisation.mjs",
+  "exit": 0,
+  "observed_completed": "2026-11-06T05:56:44.650285+00:00",
+  "log": "browser.log",
+  "widths": [
+    1440,
+    390
+  ],
+  "assertion_width": 1440
+}

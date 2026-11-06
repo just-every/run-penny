@@ -1,0 +1,13 @@
+{
+  "name": "first-party",
+  "head": "4588e84551ad74f779976225a3e78b04f318db63",
+  "command": [
+    "bash",
+    "-c",
+    ". /tmp/rer-cloud-toolchain.sh; cloud_run npx -y @runeditrun/rer check --profile first-party"
+  ],
+  "exit": 0,
+  "started": "2026-11-06T05:55:53.566604+00:00",
+  "ended": "2026-11-06T05:55:55.855112+00:00",
+  "log": "first-party.log"
+}

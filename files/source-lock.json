@@ -1,0 +1,13 @@
+{
+  "name": "source-lock",
+  "head": "4588e84551ad74f779976225a3e78b04f318db63",
+  "command": [
+    "bash",
+    "-c",
+    ". /tmp/rer-cloud-toolchain.sh; node scripts/edition-authoring/cli.mjs check"
+  ],
+  "exit": 0,
+  "started": "2026-11-06T05:56:44.679979+00:00",
+  "ended": "2026-11-06T05:56:45.557593+00:00",
+  "log": "source-lock.log"
+}

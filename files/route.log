@@ -1,0 +1,13 @@
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /workspace/penny-f78
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  05:55:27
+   Duration  3.09s (transform 90ms, setup 0ms, import 469ms, tests 1.99s, environment 0ms)
+

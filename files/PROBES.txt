@@ -1,0 +1,4 @@
+PROBE OPS-006 1: mounted Create comparison with title contains FINANCE, shared checked and reach weight -1 -> saved filter FINANCE; owner reload and peer reopen each render exactly Department finance summaries then Schedule monthly finance exports, excluding Export invoices.
+PROBE OPS-006 1: native saved-view routes with title filter REQUEST -> exactly request 1 then request 0; a no-match edit returns []; a blank edit returns all three eligible requests; restoring the filter restores the proper subset under both operators.
+PROBE OPS-006 2: native peer view list and direct private-view read -> private identity absent from list and HTTP 404; mounted peer private URL shows Comparison unavailable without the private title.
+MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock and check exit=0; views=node src/base/contract-docs.mjs write and check exit=0, generated views restored from main; ledger=none exit=0.

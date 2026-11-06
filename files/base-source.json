@@ -1,0 +1,13 @@
+{
+  "name": "base-source",
+  "head": "4588e84551ad74f779976225a3e78b04f318db63",
+  "command": [
+    "bash",
+    "-c",
+    ". /tmp/rer-cloud-toolchain.sh; cloud_run pnpm run verify:base-source"
+  ],
+  "exit": 0,
+  "started": "2026-11-06T05:56:45.585011+00:00",
+  "ended": "2026-11-06T05:56:46.530506+00:00",
+  "log": "base-source.log"
+}

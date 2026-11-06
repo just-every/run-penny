@@ -1,0 +1,13 @@
+{
+  "name": "lint",
+  "head": "4588e84551ad74f779976225a3e78b04f318db63",
+  "command": [
+    "bash",
+    "-c",
+    ". /tmp/rer-cloud-toolchain.sh; cloud_run pnpm exec oxlint src/core/features/prioritisation/formulas.ts src/core/features/prioritisation/repository.ts src/core/features/prioritisation/view-editor.tsx tests/base/prioritisation.test.ts tests/browser/prioritisation.mjs"
+  ],
+  "exit": 0,
+  "started": "2026-11-06T05:55:55.885596+00:00",
+  "ended": "2026-11-06T05:55:57.063690+00:00",
+  "log": "lint.log"
+}

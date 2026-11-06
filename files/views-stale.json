@@ -1,0 +1,13 @@
+{
+  "name": "views-stale",
+  "head": "4588e84551ad74f779976225a3e78b04f318db63",
+  "command": [
+    "bash",
+    "-c",
+    ". /tmp/rer-cloud-toolchain.sh; node src/base/contract-docs.mjs check"
+  ],
+  "exit": 1,
+  "started": "2026-11-06T05:58:53.522817+00:00",
+  "ended": "2026-11-06T05:58:54.206365+00:00",
+  "log": "views-stale.log"
+}
