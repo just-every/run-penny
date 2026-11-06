@@ -13,16 +13,16 @@
       "sha256": "81bc745f77eee85f78f151c7d911b0c54f2a80077a1a443f103f26ea58dd4517"
     },
     {
-      "blob": "588a9038191dc2afbd7d3c12c8d44977f0b5f9ea",
-      "bytes": 3757,
+      "blob": "ec96e5a276bdead6cf1b58892a07f6e69cb38e7d",
+      "bytes": 4349,
       "path": "RECEIPT.json",
-      "sha256": "e47865841b6d9f1ff1076cfa385042cad4941a71b06ff8f10d4d0e048717e2ad"
+      "sha256": "31e076bb5a1329eb2f393c84a94a7ca3a05cf4c11b7621de674867d744cc64f7"
     },
     {
-      "blob": "b21156ec02063557f5f9b9504251c9c5fe1f4b56",
-      "bytes": 11698,
+      "blob": "679778b3a97f345046d8a4f88e57c0d5407c9b06",
+      "bytes": 12242,
       "path": "REPORT.md",
-      "sha256": "09ba129e8c6488851369c6801c17436401be8f7e37e9dea937b1ad7b0d6d0948"
+      "sha256": "4006029b8984a2f1ac3a6a252b8a437a9d3d9feafcd6ea63b30de1f2fe7c544e"
     },
     {
       "blob": "635d9e5f0e1474a5030adcff14fdcc3ca744a4ee",
@@ -47,6 +47,18 @@
       "bytes": 42569,
       "path": "build.log",
       "sha256": "ac726e8281274a6c9e25b583a255319f04bfe0d3ceea46e67bc64f67aede305d"
+    },
+    {
+      "blob": "f03de2df2752cb96241e98ef711d8ea98250278b",
+      "bytes": 195,
+      "path": "candidate-ci-final.json",
+      "sha256": "6d7d491a7b43508c6464c94b352aa5b53fbd67910a84cd54321f88f807a03b8a"
+    },
+    {
+      "blob": "2c69a3f372ca2f8086f16ee1b4ed2ea92f633f70",
+      "bytes": 6056,
+      "path": "candidate-ci-jobs.json",
+      "sha256": "c94566b8e9295f5ea5cd70b0c4cb3dac14ce2b61793d18a508949597e2d05e45"
     },
     {
       "blob": "562defdd9269317a610b71b9b4b3413b2a32976a",
@@ -83,6 +95,12 @@
       "bytes": 28367,
       "path": "diff.patch",
       "sha256": "1763312c60cdb67e823c4e8f8e75a3c19fbdb79da3b2bef36673147628218f09"
+    },
+    {
+      "blob": "630c48d6cfe44170aab8e910bdefe2bd04f20c8f",
+      "bytes": 8517,
+      "path": "evidence-transfer-verification.json",
+      "sha256": "f978f839d2a345bff1f455a0c22039ceedef7e12aa4811fe19a527c25db1dd9b"
     },
     {
       "blob": "78e3cdef0a79e798d074ba419eca914a8cc2284f",

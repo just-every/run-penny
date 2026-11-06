@@ -65,6 +65,10 @@ No real blocker was found in the selected POINTS. No failing assertion or repair
 
 Failure sensitivity was inspected, not mutation-executed: removing filtering admits the excluded control and fails exact-set assertions; breaking formula order fails ordered identities and headings; dropping saved filter edits fails the one-row reloaded results and persisted filter assertion; exposing private views fails exact peer-list and 404 assertions. No existing assertion was removed, narrowed, skipped or put behind a viewport or branch condition. Existing assertions run at one width; phone captures reuse the same saved state. No erasure, credential lifecycle or capture replay behavior was modified. No new screen, icon-only control, configuration placement, homepage, logo or visual styling was added. Changed text introduces zero email-shaped literals. New test and report prose was checked for ambiguous repository-shaped slash tokens; actual paths are identified as paths. Source lock is fresh; publication scanning and remaining CI checks are explicitly pending with the fleet, not claimed complete.
 
+Final CI observation: run 42183951324 completed failure; every failed job failed only Check generated contract documents, matching the reproduced local expected generated-view failure. This is the expressly permitted generated-view exception; no assertion failed. Source-lock steps passed. No workflow rerun or failed assertion repair was performed.
+
+GitHub API budget update: one permitted run observation after at least 300 seconds, plus one jobs read only if completed failure; total at most five REST calls. No workflow log archive calls.
+
 ## Receipts and evidence
 
 RECEIPT.json binds actual check exits, probes, source-lock and view mechanics, counts, product provenance and known CI observations to this head. Raw local logs, identity and all-parent row custody results, plan, diff, check receipts and selected actual screenshots are selected explicitly for the separate evidence ref. No credentials, environment dump, symlink or private gate material is selected. The evidence ref is report transport only and confers no product acceptance or landing status.

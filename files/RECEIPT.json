@@ -137,5 +137,12 @@
     1440,
     390
   ],
-  "blockers": []
+  "blockers": [],
+  "ci_final": {
+    "conclusion": "failure",
+    "head_sha": "3bb0fe6f354f2a69c33730dd5371b32879314319",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42183951324",
+    "status": "completed"
+  },
+  "ci_final_note": "Final CI observation: run 42183951324 completed failure; every failed job failed only Check generated contract documents, matching the reproduced local expected generated-view failure. This is the expressly permitted generated-view exception; no assertion failed. Source-lock steps passed. No workflow rerun or failed assertion repair was performed."
 }
