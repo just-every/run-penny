@@ -1,5 +1,5 @@
 import { expect } from 'vitest'
-import { env } from './support'
+import { call, env } from './support'
 import { graph,time } from './notification-regression-fixture'
 import { saveReleaseDraft } from '@/core/features/releases/drafts'
 import { prepareRoadmapUpdateDraft } from '@/core/features/roadmap/update-drafts'
@@ -25,4 +25,33 @@ export async function releaseGraph(count=2,otherAuthor=false,existing?:Awaited<R
   return id
  }
  return {...g,actor,input,draft,transition}
+}
+
+/** A complete native decision, approved mapping and draft for visibility journeys. */
+export async function nativeReleaseTarget(operator:Record<string,string>,requestId:string,boardSlug:string,title:string){
+ const post=async<T>(path:string,input:unknown,status=201):Promise<T>=>{
+  const response=await call(path,input,operator)
+  expect(response.status,await response.clone().text()).toBe(status)
+  return response.json() as Promise<T>
+ }
+ const options=await call('/api/operator/releases/options',undefined,operator)
+ expect(options.status).toBe(200)
+ const {operators}=await options.json() as {operators:{id:string}[]}
+ expect(operators).toHaveLength(1)
+ const actor=operators[0].id
+ const decision=await post<{id:string}>('/api/operator/decisions',{question:`Choose ${title}`,ownerOperatorId:actor})
+ const betInput={summary:'A concrete improvement',urgency:'This quarter',deliveryShape:'Small release',successMeasure:'Fewer repeated steps'}
+ const chosen=await post<{id:string}>(`/api/operator/decisions/${decision.id}/bets`,{...betInput,title})
+ await post(`/api/operator/decisions/${decision.id}/bets`,{...betInput,title:`Alternative to ${title}`})
+ const evidence=await post<{id:string}>('/api/operator/evidence',{sourceType:'interview',wording:`Observed need for ${title}`,observedAt:new Date().toISOString()})
+ const linked=await call(`/api/operator/evidence/${evidence.id}/links`,{target:'bet',targetId:chosen.id,stance:'supporting'},operator,'PUT')
+ expect(linked.status,await linked.clone().text()).toBe(200)
+ const item=await post<{itemId:string}>(`/api/operator/decisions/${decision.id}/commit`,{selectedCandidateBetId:chosen.id,rationale:'Measured choice',ownerOperatorId:actor,confidence:'medium',reviewAt:new Date(Date.now()+7*86_400_000).toISOString().slice(0,10)},200)
+ await post(`/api/operator/roadmap/${item.itemId}/approve`,{publicTitle:title,publicSummary:`Public improvement for ${title}`,boardSlug,requestIds:[requestId]},200)
+ await post(`/api/operator/roadmap/${item.itemId}/move`,{status:'shipped',reason:'Delivery completed',idempotencyKey:crypto.randomUUID()},200)
+ const tag=await post<{id:string}>('/api/operator/catalog/tags',{name:`Release tag for ${title}`})
+ const draft=await post<{id:string;slug:string;versionId:string}>('/api/operator/releases',{title:`Release for ${title}`,body:`Released improvement for ${title}.`,releaseType:'improved',tagIds:[tag.id],publicationDate:new Date().toISOString().slice(0,10),targetIds:[item.itemId],authorOperatorId:actor})
+ const publicSlug=await env.DB.prepare('SELECT public_slug FROM roadmap_publications WHERE roadmap_item_id=?').bind(item.itemId).first<string>('public_slug')
+ expect(publicSlug).toBeTruthy()
+ return {itemId:item.itemId,publicSlug:publicSlug!,draft}
 }
