@@ -9,7 +9,7 @@ const json=async<T>(path:string,body:unknown,headers:Record<string,string>,statu
 const total=async(table:string)=>env.DB.prepare(`SELECT COUNT(*) n FROM ${table}`).first<number>('n')
 
 it('[CAP-014 REQ-026 REQ-010 DATA-005] records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote',async()=>{
- const g=await graph(3),r=g.requests[0],before={permissions:await total('requester_update_permissions'),sessions:await total('native_requester_sessions')}
+ const g=await graph(4),r=g.requests[0],before={permissions:await total('requester_update_permissions'),sessions:await total('native_requester_sessions')}
  const evidence=await json<{id:string}>('/api/operator/evidence',{sourceType:'support_conversation',wording:'Customer needs monthly exports.',observedAt:new Date().toISOString(),requestLinks:[{id:r.id,stance:'supporting'}]},g.operator,201)
  const contactEmail='synthetic-penny-4'+String.fromCharCode(64)+'example.test'
  const input={contact:{displayName:'Casey Bell',email:contactEmail},source:'Zendesk ticket 738: monthly exports, "priority"\nCustomer asked again',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',evidenceId:evidence.id}
@@ -27,8 +27,9 @@ it('[CAP-014 REQ-026 REQ-010 DATA-005] records inbox-sourced customer demand onc
  expect((await call('/api/operator/boards/regression',{showVoters:true},g.operator,'PATCH')).status).toBe(200)
  const publicBody=await(await call(`/api/public/requests/${r.slug}`)).text()
  for(const secret of ['Casey Bell',contactEmail,'738','recorderId','proxyAttributionsJson'])expect(publicBody).not.toContain(secret)
- // Native fixtures cover mixed demand, direct-only demand and a zero-vote request.
- expect((await call(`/api/public/requests/${g.requests[2].slug}/vote`,undefined,g.person,'DELETE')).status).toBe(204)
+ // Native fixtures cover mixed, direct-only, zero and proxy-only demand.
+ for(const index of [2,3])expect((await call(`/api/public/requests/${g.requests[index].slug}/vote`,undefined,g.person,'DELETE')).status).toBe(204)
+ const proxyOnly=await json<{requesterId:string}>(`/api/operator/requests/${g.requests[3].slug}/proxy-votes`,{contact:{displayName:'synthetic-penny-5'},source:'Customer interview'},g.operator)
  const actor=await env.DB.prepare('SELECT id,display_name FROM operators').first<{id:string;display_name:string}>()
  const accountIds:string[]=[]
  for(const name of ['synthetic-penny-1','synthetic-penny-2']){
@@ -44,6 +45,7 @@ it('[CAP-014 REQ-026 REQ-010 DATA-005] records inbox-sourced customer demand onc
   {slug:r.slug,voters:[{id:g.recipient.requesterId,name:'Private display',proxy:0},{id:vote.requesterId,name:'Casey Bell',proxy:1}]},
   {slug:g.requests[1].slug,voters:[{id:g.recipient.requesterId,name:'Private display',proxy:0}]},
   {slug:g.requests[2].slug,voters:[]},
+  {slug:g.requests[3].slug,voters:[{id:proxyOnly.requesterId,name:'synthetic-penny-5',proxy:1}]},
  ]
  const csv=await reconcileVoteCsv(g.operator,g.person,expected)
  expect(csv.find(row=>row.customer_id===vote.requesterId)).toMatchObject({request:r.slug,source:input.source,source_url:input.sourceUrl,recorder_id:actor!.id,recorder:actor!.display_name})
@@ -63,6 +65,13 @@ it('[CAP-014 REQ-026 REQ-010 DATA-005] records inbox-sourced customer demand onc
  expect((await call(`/api/operator/requesters/${vote.requesterId}/block`,{},g.operator)).status).toBe(200)
  expected[0].voters.pop()
  await reconcileVoteCsv(g.operator,g.person,expected)
+ expect((await call('/api/auth/sign-out',{},g.operator)).status).toBe(204)
+ for(const path of ['/api/operator/requests/export.csv','/api/operator/votes/export.csv']){
+  const refused=await call(path,undefined,g.operator)
+  expect(refused.status).toBe(401)
+  const body=await refused.text()
+  for(const value of [r.slug,'Casey Bell','synthetic-penny-5',contactEmail])expect(body).not.toContain(value)
+ }
 })
 
 it('[CAP-014 REQ-035 REQ-008 REQ-009 DATA-001] retains native source attribution and importance through merge, unmerge and the product archive',async()=>{

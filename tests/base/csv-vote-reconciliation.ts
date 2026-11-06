@@ -51,6 +51,9 @@ export async function reconcileVoteCsv(operator:Record<string,string>,requester:
   expect(individuals.map(person=>({id:person.customer_id,name:person.customer,proxy:Number(person.proxy)})).sort((a,b)=>a.id.localeCompare(b.id)))
    .toEqual([...fixture.voters].sort((a,b)=>a.id.localeCompare(b.id)))
   expect(new Set(individuals.map(person=>person.customer_id)).size).toBe(individuals.length)
+  const publicResponse=await call(`/api/public/requests/${fixture.slug}`)
+  expect(publicResponse.status).toBe(200)
+  expect(await publicResponse.json()).toMatchObject({voteCount:fixture.voters.length})
   const response=await call(`/api/operator/requests/${fixture.slug}/context`,undefined,operator)
   expect(response.status).toBe(200)
   const context=await response.json() as {demand:{voteCount:number};voters:{id:string;nativeProxy:number;votedAt:string}[]}
