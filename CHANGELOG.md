@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reconcile DATA-006’s existing API contract with canonical and withdrawn request results, held-request and draft-release isolation, hidden vote totals and optional voter lists, and unchanged-state proxy, status and release replay. Extend the existing built-Worker journey without a new test registration. Document the native JSON lookup and replay semantics; wider resource, pagination, filter and webhook remainders stay partial. No migration or configuration change is required.
+
 - Validate DATA-006's served OpenAPI document offline against the official structural schema. Reconcile every existing operation with a native server request using only its advertised scope, and preserve unchanged business state on foreign-origin, cross-site, malformed JSON, content-type and body-size refusals. The clause stays partial for the existing resource, pagination, filter and webhook remainders. No runtime, migration or configuration change is required.
 
 - Add Owner and Admin audit metadata reads and bounded CSV and JSON exports with actor, action, subject and date filters, stable pagination and existing agent attribution. Exclude private details and recheck current native authority on every page. ROLE-004 remains partial for its audit screen, every-action coverage and wider privacy obligations. No migration or configuration change is required.
