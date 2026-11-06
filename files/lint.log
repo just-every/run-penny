@@ -1,0 +1,10 @@
+tests/browser/operator-completeness.mjs:9:17: warning eslint(no-unused-vars): Variable 'page' is declared but never used. Unused variables should start with a '_'. help: Consider removing this declaration.
+tests/browser/operator-completeness.mjs:32:17: warning eslint(no-unused-vars): Variable 'page' is declared but never used. Unused variables should start with a '_'. help: Consider removing this declaration.
+src/core/features/workspace/list-repository.ts:26:16: warning eslint(no-unused-expressions): Expected expression to be used help: Consider using this expression or removing it
+src/core/features/workspace/list-repository.ts:29:18: warning eslint(no-unused-expressions): Expected expression to be used help: Consider using this expression or removing it
+src/core/features/workspace/list-repository.ts:31:21: warning eslint(no-unused-expressions): Expected expression to be used help: Consider using this expression or removing it
+src/core/features/workspace/list-repository.ts:32:20: warning eslint(no-unused-expressions): Expected expression to be used help: Consider using this expression or removing it
+src/core/features/workspace/list-repository.ts:34:302: warning eslint(no-unused-expressions): Expected expression to be used help: Consider using this expression or removing it
+src/core/features/workspace/list-repository.ts:37:20: warning eslint(no-unused-expressions): Expected expression to be used help: Consider using this expression or removing it
+src/core/features/workspace/list-repository.ts:41:51: warning eslint(no-unused-expressions): Expected expression to be used help: Consider using this expression or removing it
+src/core/features/workspace/ui/search-page.tsx:18:101: warning eslint(no-unused-expressions): Expected expression to be used help: Consider using this expression or removing it

@@ -1,0 +1,158 @@
+{
+  "branch": "cloud/sd-penny-c-f77",
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email [fleet identity] --non-interactive",
+      "exit": 0,
+      "scope": "Local setup only; no provider credentials or deploy"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "scope": "Built product source equals candidate src tree"
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/product-hierarchy.test.ts",
+      "exit": 0,
+      "head": "bc72ff1eba4fc5d0a58fab7895ba77890890bdd2",
+      "log": "native-candidate.log",
+      "tests": 1
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "typecheck.log",
+      "scope": "Identical candidate source and test bytes before commit"
+    },
+    {
+      "assertion_width": 1440,
+      "captures": 40,
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_OPERATOR_FIELDS_ONLY=1 cloud_run perl -e [1200 second alarm] -- node tests/browser/operator-pages.mjs",
+      "exit": 0,
+      "log": "browser.log",
+      "scope": "No source or browser test bytes changed between browser run and candidate",
+      "started_from": "5b8ad57",
+      "widths": [
+        1440,
+        390
+      ]
+    },
+    {
+      "command": "cloud_run pnpm exec rer check --profile first-party",
+      "exit": 0,
+      "log": "first-party.log"
+    },
+    {
+      "command": "pnpm exec oxlint [changed source and test files]",
+      "exit": 0,
+      "log": "lint.log",
+      "scope": "Existing warnings only"
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "scope": "Recorded Base comparison hashes verified offline"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "log": "views-write.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "log": "views-check.log",
+      "scope": "Immediately after write, before restoring main views"
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0,
+      "scope": "Both generated view files retained whole from main; neither committed"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "scope": "Regenerated last after final source and test edits"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "manifest": "1a685056031b19d71afbeae2ef0a3d719996b0586c0ebea3cae76faf02c766df",
+      "ok": true
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "expected": true,
+      "log": "restored-views-check.log",
+      "scope": "After main views restored; ACCEPTANCE.md generated content differs"
+    },
+    {
+      "command": "migration ledger check",
+      "exit": null,
+      "scope": "Not applicable: no migration edited or added"
+    }
+  ],
+  "counts_after": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "counts_before": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "created_utc": "2026-11-06T05:48:48.040454+00:00",
+  "github_api_calls": 5,
+  "head": "bc72ff1eba4fc5d0a58fab7895ba77890890bdd2",
+  "main_observed": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "proof_equivalence": {
+    "browser_start_head": "5b8ad57",
+    "candidate_head": "bc72ff1eba4fc5d0a58fab7895ba77890890bdd2",
+    "git_diff_src_and_browser": "empty"
+  },
+  "publication_scan": "Deferred to maintained fleet lander under cloud brief; no cloud COMPLETE or zero-findings claim",
+  "push": {
+    "attempt": 1,
+    "candidate_commits": 6,
+    "identity_check": "all fleet authors and committers, no trailers; every parent Status row preserved",
+    "remote_observed_head": "bc72ff1eba4fc5d0a58fab7895ba77890890bdd2",
+    "rewritten_history": false,
+    "status": "success"
+  },
+  "repository": "just-every/run-penny",
+  "requested_base": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+  "runtime_proof_hashes": {
+    "src/core/features/hierarchy/page.tsx": "6dbe90dd50caca2b0ce02fd6134bde297bb542ef4f5fb45e7b6db25da1b9f8a1",
+    "src/core/features/workspace/list-query.ts": "5e5d6a60ee3108a97f523272367d706e65cce2780c56d7491185935ff65079ff",
+    "src/core/features/workspace/list-repository.ts": "efaf3adee95784ed44196ef10d6c8cd6d23b3ab9b67fcf6d1d2fc9bfd3c2dbaa",
+    "src/core/features/workspace/search-repository.ts": "7119e3ce6d3321cfd6e2a2c3b86752d355e2bf7b2be733659b4cbbb40350664e",
+    "src/core/features/workspace/ui/search-page.tsx": "d368da516417ba883013208fffbb5b8f2863b8acb09451fc73fc930981deb921",
+    "tests/browser/operator-completeness-read.mjs": "fde45c3b67c5bb65c33dd171b2d8d51304fbd16a65800b88b78a587075912421",
+    "tests/browser/operator-completeness.mjs": "c66b0447cbec5a99688110e4cfd6ce915de3aed3107f5ce5a0e78f0be3f1b9c9"
+  },
+  "schema": 1,
+  "status": {
+    "OPS-004": {
+      "after": "partial",
+      "before": "partial"
+    }
+  },
+  "tag": "sd-penny-c-f77",
+  "test_registration_delta": 0,
+  "verify": [
+    {
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "bc72ff1eba4fc5d0a58fab7895ba77890890bdd2",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42170286870",
+      "id": 42170286870,
+      "name": "Verify Penny",
+      "status": "completed"
+    }
+  ],
+  "verify_failed_steps": [
+    "Check generated contract documents"
+  ]
+}
