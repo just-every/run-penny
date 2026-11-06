@@ -1,0 +1,11 @@
+shards (workspace-clock, true)	Check generated contract documents	﻿2026-11-06T12:28:47.5954632Z ##[group]Run node src/base/contract-docs.mjs check
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.5954825Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.5974596Z shell: /usr/bin/bash -e {0}
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.5974678Z env:
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.5974758Z   CI: true
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.5974855Z   WRANGLER_SEND_METRICS: false
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.5974973Z   CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV: false
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.5975085Z   PLAYWRIGHT_SKIP_BROWSER_GC: 1
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.5975170Z ##[endgroup]
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.7251527Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T12:28:47.7307345Z ##[error]Process completed with exit code 1.

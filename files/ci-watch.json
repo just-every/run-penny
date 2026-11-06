@@ -1,0 +1,9 @@
+{
+  "head": "c73d2c585fbc28799e6f3fb7c282577046cc79d4",
+  "apiCalls": 5,
+  "lastObservationUnix": 1793968435.4333925,
+  "pollIntervalSeconds": 300,
+  "finalRunStatus": "completed",
+  "finalRunConclusion": "failure",
+  "classification": "generated-view-only exception"
+}

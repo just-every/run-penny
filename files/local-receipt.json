@@ -1,0 +1,312 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f109",
+  "repository": "just-every/run-penny",
+  "head": "c73d2c585fbc28799e6f3fb7c282577046cc79d4",
+  "branch": "cloud/sd-penny-c-f109",
+  "relevantFilesUnchangedSinceLocalJourney": [
+    {
+      "path": "src/core/features/integrations/tracker-service.ts",
+      "sha256": "cc37a6e1c3f80fedf7120ac2214822254a038599c233f31809ab4a9ffb20b06c"
+    },
+    {
+      "path": "tests/browser/integration-tracker-actions.mjs",
+      "sha256": "b0fa35b8d62475ea98b0b822ba22f6a8f237b41378f55a51ff96a55fa22594c6"
+    },
+    {
+      "path": "tests/browser/integration-tracker-edge.mjs",
+      "sha256": "07d3c73803bfd2c06e1d7480cef177f20f05e7c030215ff6cd52bd630588a909"
+    }
+  ],
+  "journey": {
+    "command": "timeout 1200 env PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=../browser-proof node tests/browser/integration-states.mjs",
+    "exit": 0,
+    "widths": [
+      1440,
+      390
+    ],
+    "results": {
+      "clauses": [
+        "INT-002",
+        "INT-003",
+        "INT-004",
+        "INT-005",
+        "INT-006",
+        "INT-007"
+      ],
+      "checks": [
+        {
+          "label": "signed-receiver-masked",
+          "width": 1440
+        },
+        {
+          "label": "signed-receiver-guide",
+          "width": 1440
+        },
+        {
+          "label": "tracker-configured",
+          "width": 1440
+        },
+        {
+          "label": "tracker-linked",
+          "width": 1440
+        },
+        {
+          "label": "tracker-received-state",
+          "width": 1440
+        },
+        {
+          "label": "branded-portal",
+          "width": 1440
+        },
+        {
+          "label": "selected-public-events",
+          "width": 1440
+        },
+        {
+          "label": "uncertain-accepted",
+          "width": 1440
+        },
+        {
+          "label": "reconciled-accepted",
+          "width": 1440
+        },
+        {
+          "label": "uncertain-rejected",
+          "width": 1440
+        },
+        {
+          "label": "reconciled-rejected",
+          "width": 1440
+        },
+        {
+          "label": "tracker-linear-request-created",
+          "width": 1440
+        },
+        {
+          "label": "tracker-linear-request-uncertain",
+          "width": 1440
+        },
+        {
+          "label": "tracker-linear-request-reconciled",
+          "width": 1440
+        },
+        {
+          "label": "tracker-linear-decision-created",
+          "width": 1440
+        },
+        {
+          "label": "tracker-linear-decision-uncertain",
+          "width": 1440
+        },
+        {
+          "label": "tracker-linear-decision-reconciled",
+          "width": 1440
+        },
+        {
+          "label": "tracker-jira-request-created",
+          "width": 1440
+        },
+        {
+          "label": "tracker-jira-request-uncertain",
+          "width": 1440
+        },
+        {
+          "label": "tracker-jira-request-reconciled",
+          "width": 1440
+        },
+        {
+          "label": "tracker-jira-decision-created",
+          "width": 1440
+        },
+        {
+          "label": "tracker-jira-decision-uncertain",
+          "width": 1440
+        },
+        {
+          "label": "tracker-jira-decision-reconciled",
+          "width": 1440
+        },
+        {
+          "label": "signed-receiver-masked",
+          "width": 390
+        },
+        {
+          "label": "signed-receiver-guide",
+          "width": 390
+        },
+        {
+          "label": "tracker-configured",
+          "width": 390
+        },
+        {
+          "label": "tracker-linked",
+          "width": 390
+        },
+        {
+          "label": "tracker-received-state",
+          "width": 390
+        },
+        {
+          "label": "branded-portal",
+          "width": 390
+        },
+        {
+          "label": "selected-public-events",
+          "width": 390
+        },
+        {
+          "label": "uncertain-accepted",
+          "width": 390
+        },
+        {
+          "label": "reconciled-accepted",
+          "width": 390
+        },
+        {
+          "label": "uncertain-rejected",
+          "width": 390
+        },
+        {
+          "label": "reconciled-rejected",
+          "width": 390
+        },
+        {
+          "label": "tracker-linear-request-created",
+          "width": 390
+        },
+        {
+          "label": "tracker-linear-request-uncertain",
+          "width": 390
+        },
+        {
+          "label": "tracker-linear-request-reconciled",
+          "width": 390
+        },
+        {
+          "label": "tracker-linear-decision-created",
+          "width": 390
+        },
+        {
+          "label": "tracker-linear-decision-uncertain",
+          "width": 390
+        },
+        {
+          "label": "tracker-linear-decision-reconciled",
+          "width": 390
+        },
+        {
+          "label": "tracker-jira-request-created",
+          "width": 390
+        },
+        {
+          "label": "tracker-jira-request-uncertain",
+          "width": 390
+        },
+        {
+          "label": "tracker-jira-request-reconciled",
+          "width": 390
+        },
+        {
+          "label": "tracker-jira-decision-created",
+          "width": 390
+        },
+        {
+          "label": "tracker-jira-decision-uncertain",
+          "width": 390
+        },
+        {
+          "label": "tracker-jira-decision-reconciled",
+          "width": 390
+        }
+      ],
+      "secretValuesMasked": true,
+      "unexpectedErrors": 0,
+      "externalRequests": 0,
+      "providerCalls": 0,
+      "fixtureEgressCalls": 28,
+      "outbound": "synthetic-network-edge",
+      "nativeRuntimeRestarts": 48,
+      "teardown": "fulfilled"
+    }
+  },
+  "checks": {
+    "setup": 0,
+    "build": 0,
+    "typecheck": 0,
+    "touchedLint": 0,
+    "firstParty": 0,
+    "firstPartyClauses": 1148,
+    "baseSource": 0,
+    "contractWrite": 0,
+    "contractCheckAfterWrite": 0,
+    "contractViewsRestoredFromMain": true,
+    "sourceLock": 0,
+    "sourceCheck": 0,
+    "migrationLedger": "not applicable: no migration changed"
+  },
+  "countsBefore": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "countsAfter": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "statusRows": {
+    "before": 281,
+    "after": 281
+  },
+  "allTableRows": {
+    "before": 445,
+    "after": 445
+  },
+  "testsAdded": 0,
+  "testsRemoved": 0,
+  "testsWeakened": 0,
+  "productPush": "success",
+  "publicationScan": "not run in cloud; fleet lander required",
+  "landing": "not performed",
+  "committedCandidateProbe": {
+    "head": "c73d2c585fbc28799e6f3fb7c282577046cc79d4",
+    "exit": 0,
+    "queued": 409,
+    "sending": 409,
+    "rejected": 409,
+    "uncertainResolution": "accepted",
+    "sameLinkReplay": true,
+    "resolutions": 1,
+    "additionalCreatesAfterReconciliation": 0,
+    "providerHttpFakeOnly": true,
+    "teardown": "fulfilled"
+  },
+  "ci": {
+    "run": 42217914659,
+    "event": "push",
+    "head": "c73d2c585fbc28799e6f3fb7c282577046cc79d4",
+    "status": "completed",
+    "conclusion": "failure",
+    "url": "https://github.com/just-every/run-penny/actions/runs/42217914659",
+    "head_sha": "c73d2c585fbc28799e6f3fb7c282577046cc79d4",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42217914659",
+    "classification": "Expected generated-view-only failure; permitted READY exception; assertions did not execute in CI",
+    "failedJobs": 29,
+    "failureStep": "Check generated contract documents",
+    "representativeJob": 127892519348,
+    "apiCalls": 5
+  },
+  "mechanicalSummary": "MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock and check exit=0; views=node src/base/contract-docs.mjs write and check, then restore origin/main views exit=0; ledger=none exit=0",
+  "preReady": {
+    "selectedRuntimeProof": "pass",
+    "assertionsPreserved": true,
+    "noNewAuthorityOrPublicExposure": true,
+    "visualCodeChanged": false,
+    "sourceLockFresh": true,
+    "generatedViews": "restored from origin/main; candidate freshness failure expected",
+    "publicationScan": "fleet lander pending",
+    "runSite": "fleet lander pending",
+    "wholeClauseDoneClaim": false
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "clauses": [
+    "INT-002",
+    "INT-003",
+    "INT-004",
+    "INT-005",
+    "INT-006",
+    "INT-007"
+  ],
+  "checks": [
+    {
+      "label": "signed-receiver-masked",
+      "width": 1440
+    },
+    {
+      "label": "signed-receiver-guide",
+      "width": 1440
+    },
+    {
+      "label": "tracker-configured",
+      "width": 1440
+    },
+    {
+      "label": "tracker-linked",
+      "width": 1440
+    },
+    {
+      "label": "tracker-received-state",
+      "width": 1440
+    },
+    {
+      "label": "branded-portal",
+      "width": 1440
+    },
+    {
+      "label": "selected-public-events",
+      "width": 1440
+    },
+    {
+      "label": "uncertain-accepted",
+      "width": 1440
+    },
+    {
+      "label": "reconciled-accepted",
+      "width": 1440
+    },
+    {
+      "label": "uncertain-rejected",
+      "width": 1440
+    },
+    {
+      "label": "reconciled-rejected",
+      "width": 1440
+    },
+    {
+      "label": "tracker-linear-request-created",
+      "width": 1440
+    },
+    {
+      "label": "tracker-linear-request-uncertain",
+      "width": 1440
+    },
+    {
+      "label": "tracker-linear-request-reconciled",
+      "width": 1440
+    },
+    {
+      "label": "tracker-linear-decision-created",
+      "width": 1440
+    },
+    {
+      "label": "tracker-linear-decision-uncertain",
+      "width": 1440
+    },
+    {
+      "label": "tracker-linear-decision-reconciled",
+      "width": 1440
+    },
+    {
+      "label": "tracker-jira-request-created",
+      "width": 1440
+    },
+    {
+      "label": "tracker-jira-request-uncertain",
+      "width": 1440
+    },
+    {
+      "label": "tracker-jira-request-reconciled",
+      "width": 1440
+    },
+    {
+      "label": "tracker-jira-decision-created",
+      "width": 1440
+    },
+    {
+      "label": "tracker-jira-decision-uncertain",
+      "width": 1440
+    },
+    {
+      "label": "tracker-jira-decision-reconciled",
+      "width": 1440
+    },
+    {
+      "label": "signed-receiver-masked",
+      "width": 390
+    },
+    {
+      "label": "signed-receiver-guide",
+      "width": 390
+    },
+    {
+      "label": "tracker-configured",
+      "width": 390
+    },
+    {
+      "label": "tracker-linked",
+      "width": 390
+    },
+    {
+      "label": "tracker-received-state",
+      "width": 390
+    },
+    {
+      "label": "branded-portal",
+      "width": 390
+    },
+    {
+      "label": "selected-public-events",
+      "width": 390
+    },
+    {
+      "label": "uncertain-accepted",
+      "width": 390
+    },
+    {
+      "label": "reconciled-accepted",
+      "width": 390
+    },
+    {
+      "label": "uncertain-rejected",
+      "width": 390
+    },
+    {
+      "label": "reconciled-rejected",
+      "width": 390
+    },
+    {
+      "label": "tracker-linear-request-created",
+      "width": 390
+    },
+    {
+      "label": "tracker-linear-request-uncertain",
+      "width": 390
+    },
+    {
+      "label": "tracker-linear-request-reconciled",
+      "width": 390
+    },
+    {
+      "label": "tracker-linear-decision-created",
+      "width": 390
+    },
+    {
+      "label": "tracker-linear-decision-uncertain",
+      "width": 390
+    },
+    {
+      "label": "tracker-linear-decision-reconciled",
+      "width": 390
+    },
+    {
+      "label": "tracker-jira-request-created",
+      "width": 390
+    },
+    {
+      "label": "tracker-jira-request-uncertain",
+      "width": 390
+    },
+    {
+      "label": "tracker-jira-request-reconciled",
+      "width": 390
+    },
+    {
+      "label": "tracker-jira-decision-created",
+      "width": 390
+    },
+    {
+      "label": "tracker-jira-decision-uncertain",
+      "width": 390
+    },
+    {
+      "label": "tracker-jira-decision-reconciled",
+      "width": 390
+    }
+  ],
+  "secretValuesMasked": true,
+  "unexpectedErrors": 0,
+  "externalRequests": 0,
+  "providerCalls": 0,
+  "fixtureEgressCalls": 28,
+  "outbound": "synthetic-network-edge",
+  "nativeRuntimeRestarts": 48,
+  "teardown": "fulfilled"
+}
