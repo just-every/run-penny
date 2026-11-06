@@ -1,0 +1,10 @@
+{
+  "head": "10251bf06e325648e6c16a2414e2ed50686bee84",
+  "tool_session_exit": 1,
+  "assertions_reported": "integration-states: 46 captures passed",
+  "result_file_written": true,
+  "unexpectedErrors": 0,
+  "externalRequests": 0,
+  "teardown": "fulfilled",
+  "disposition": "Do not treat the ambiguous process exit as a passed gate. Repeat the unchanged command with an explicit child-process receipt."
+}

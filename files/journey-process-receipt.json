@@ -1,0 +1,12 @@
+{
+  "head": "10251bf06e325648e6c16a2414e2ed50686bee84",
+  "command": [
+    "timeout",
+    "1200",
+    "node",
+    "tests/browser/integration-states.mjs"
+  ],
+  "started": "2026-11-06T13:33:30.128300+00:00",
+  "completed": "2026-11-06T13:37:44.953849+00:00",
+  "exit": 0
+}

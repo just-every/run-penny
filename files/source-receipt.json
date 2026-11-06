@@ -1,0 +1,39 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f114",
+  "head": "10251bf06e325648e6c16a2414e2ed50686bee84",
+  "base": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "predecessor": "c73d2c585fbc28799e6f3fb7c282577046cc79d4",
+  "reproduction": {
+    "door": "POST /api/operator/integrations/trackers/commands/:id/reconcile",
+    "state": "queued",
+    "unguarded_response": 200,
+    "queued_delivery_retained": true,
+    "additional_create_calls": 1,
+    "guarded_response": 409,
+    "guarded_custody_unchanged": true,
+    "guarded_provider_calls": 0
+  },
+  "files": [
+    {
+      "path": "src/core/features/integrations/tracker-service.ts",
+      "sha256": "cc37a6e1c3f80fedf7120ac2214822254a038599c233f31809ab4a9ffb20b06c"
+    },
+    {
+      "path": "tests/browser/integration-tracker-actions.mjs",
+      "sha256": "301f29f4d45bfe1069df42617f55f08be912a5767d93fb591fbca4b5752c5f5b"
+    },
+    {
+      "path": "tests/browser/integration-tracker-edge.mjs",
+      "sha256": "07d3c73803bfd2c06e1d7480cef177f20f05e7c030215ff6cd52bd630588a909"
+    },
+    {
+      "path": "tests/browser/integration-states.mjs",
+      "sha256": "f72e999c0bec5423c72efdb0202e6779d9d6bc3542993c1f7da85d4fe0c9ff51"
+    },
+    {
+      "path": "tests/browser/base-runtime.mjs",
+      "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9"
+    }
+  ]
+}

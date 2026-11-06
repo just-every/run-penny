@@ -1,0 +1,104 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f114",
+  "head": "10251bf06e325648e6c16a2414e2ed50686bee84",
+  "remote_product_head_verified": "10251bf06e325648e6c16a2414e2ed50686bee84",
+  "main_head": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "main_equals_candidate": false,
+  "claimed_status": "PARTIAL",
+  "clause": "INT-005",
+  "selected_acceptance_points": [
+    2
+  ],
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec oxlint <touched tracker files>",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run timeout 1200 node tests/browser/integration-states.mjs",
+      "exit": 0
+    }
+  ],
+  "browser": {
+    "captures": 46,
+    "widths": [
+      390,
+      1440
+    ],
+    "unexpectedErrors": 0,
+    "externalRequests": 0,
+    "providerCalls": 0,
+    "fixtureEgressCalls": 28,
+    "teardown": "fulfilled"
+  },
+  "contract_changed": false,
+  "generated_views_committed": false,
+  "registrations_added": 0,
+  "registrations_removed": 0,
+  "migration_changed": false,
+  "publication_scan": {
+    "commit": "10251bf06e325648e6c16a2414e2ed50686bee84",
+    "complete": null,
+    "historyScanned": null,
+    "findings": null,
+    "state": "deferred_to_fleet_lander"
+  },
+  "verify_run": 42227124916,
+  "pr": null,
+  "verify": {
+    "id": 42227124916,
+    "name": "Verify Penny",
+    "event": "push",
+    "conclusion": "success",
+    "head_sha": "10251bf06e325648e6c16a2414e2ed50686bee84",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42227124916",
+    "status": "completed"
+  },
+  "github_api_calls_total": 5,
+  "candidate_commit_identity": {
+    "commits": 2,
+    "author": "Run Edit Run fleet",
+    "committer": "Run Edit Run fleet",
+    "trailers": "absent",
+    "passed": true
+  }
+}
