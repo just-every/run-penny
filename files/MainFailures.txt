@@ -1,0 +1,3 @@
+shards (import-statuses, true)	Run this shard	2026-11-06T09:27:43.8917753Z page.waitForURL: Timeout 30000ms exceeded.
+shards (import-statuses, true)	Run this shard	2026-11-06T09:27:43.8919990Z     at reviewPrivateSearch (/home/runner/work/run-penny/run-penny/tests/browser/operator-completeness-read.mjs:70:14)
+deploy	Run pnpm exec rer deploy --site	2026-11-06T09:22:18.7439854Z Run site deploy stopped: provider-http-503. checking site Worker: GET /client/v4/accounts/[REDACTED]/workers/scripts/penny-production--site/settings; elapsed 96 ms; HTTP 503; Cloudflare refused GET /workers/scripts/penny-production--site/settings: no healthy upstream; no healthy upstream.

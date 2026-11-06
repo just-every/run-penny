@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f98",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f98",
+  "head": "4381f49c0ca4fcb8358e44b7393fd7e3093c433f",
+  "base": "0d6f3416c75fe29675323ad1a2ef4bd1f8086756",
+  "generatedAt": "2026-11-06T10:02:34.519708+00:00",
+  "productPush": {
+    "exit": 0,
+    "attempts": 1,
+    "remoteHeadVerified": "4381f49c0ca4fcb8358e44b7393fd7e3093c433f"
+  },
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email <fleet-address> --non-interactive",
+      "exit": 0,
+      "scope": "fresh clone setup"
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0,
+      "scope": "final production code"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/segments.test.ts tests/base/penny-erasure.test.ts tests/base/hosted-export.test.ts",
+      "exit": 0,
+      "testsPassed": 17,
+      "filesPassed": 3,
+      "log": "TouchedTests.log"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/segments.test.ts",
+      "exit": 0,
+      "testsPassed": 2,
+      "head": "4381f49c0ca4fcb8358e44b7393fd7e3093c433f",
+      "log": "ExactHeadProbes.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "Typecheck.log"
+    },
+    {
+      "command": "pnpm exec oxlint src/core/features/segments src/core/features/data/operator-erasure.ts src/core/features/data/archive.ts tests/base/segments.test.ts",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec rer check --profile first-party --json",
+      "exit": 0,
+      "clausesPassed": 1147,
+      "log": "FirstPartyCheck.json"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write && node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "viewsRestoredFrom": "origin/main",
+      "log": "ContractGeneration.log"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock; node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "log": "SourceLockCheck.json"
+    },
+    {
+      "command": "scripts/portability/ledger.mjs via Node child_process.fork",
+      "exit": 0,
+      "result": {
+        "nativeApply": true
+      },
+      "scope": "native migration ledger preflight; populated upgrade and repeated no-op ledger assertions in segment journey"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "head": "4381f49c0ca4fcb8358e44b7393fd7e3093c433f",
+      "exit": 1,
+      "expected": true,
+      "reason": "Generated views restored from main as required; only generated-view freshness differs",
+      "log": "CandidateViewCheck.log"
+    }
+  ],
+  "contract": {
+    "clause": "SEG-006",
+    "before": "missing",
+    "after": "partial",
+    "countsBefore": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    },
+    "countsAfter": {
+      "done": 79,
+      "partial": 125,
+      "missing": 77
+    },
+    "statusRowsBefore": 281,
+    "statusRowsAfter": 281
+  },
+  "baseTestRegistrations": {
+    "before": 189,
+    "after": 191,
+    "added": 2,
+    "removed": 0
+  },
+  "hygiene": {
+    "newEmailShapedLiterals": 0,
+    "generatedViewFilesCommitted": 0,
+    "existingAssertionsRemovedNarrowedOrSkipped": false,
+    "fullHistory": true,
+    "allCandidateIdentitiesAndTrailersChecked": true,
+    "publicationScan": "fleet lander duty; not run in cloud"
+  },
+  "ui": "No changed screen; segment UI explicitly omitted",
+  "githubCallsUsed": 7,
+  "candidateVerify": {
+    "id": 42199428187,
+    "event": "push",
+    "head": "4381f49c0ca4fcb8358e44b7393fd7e3093c433f",
+    "status": "completed",
+    "conclusion": "failure",
+    "failedJobs": 29,
+    "onlyFailedStep": "Check generated contract documents",
+    "permittedGeneratedViewException": true,
+    "log": "candidate-jobs.json"
+  },
+  "mechanical": "MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock then check exit=0; views=node src/base/contract-docs.mjs write then check exit=0, generated views restored from origin/main; ledger=scripts/portability/ledger.mjs native preflight plus populated upgrade and no-op journey exit=0"
+}

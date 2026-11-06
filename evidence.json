@@ -1,0 +1,106 @@
+{
+  "files": [
+    {
+      "blob": "fba560db7c48416c914446f2a1e319a79104d105",
+      "bytes": 67,
+      "path": "CandidateViewCheck.log",
+      "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+    },
+    {
+      "blob": "0bdf8de6fd75f621dfa1fb2874d4907239559e87",
+      "bytes": 60,
+      "path": "ContractGeneration.log",
+      "sha256": "a0dc3e5a57608862eebb5d81291a8613096d4984f76019b102a0ac55b950fe97"
+    },
+    {
+      "blob": "7c6a6c49205242ec1d2a31c7a116f4cafcdea6c1",
+      "bytes": 299,
+      "path": "ExactHeadProbes.log",
+      "sha256": "886a1d759de4075c7b41467cf77bcc2d5f26ce1391b44ed4b802874c812b6282"
+    },
+    {
+      "blob": "e3ed17c8240b0ad74dd7434823e3dc4876154133",
+      "bytes": 70490,
+      "path": "FirstPartyCheck.json",
+      "sha256": "c470ce1cd8fd81b001f7d867fda94d21325e72bad7330d057841dd8e39eec2d3"
+    },
+    {
+      "blob": "69120619548337b6feaada55040853f5b43521fe",
+      "bytes": 669,
+      "path": "MainFailures.txt",
+      "sha256": "1e1565f901ec1d735df647738529e32e7af675f11b934f8239b43a826c489f20"
+    },
+    {
+      "blob": "f5f3d7c1344a4f90212304f9d7067c0f78f21ad8",
+      "bytes": 2643,
+      "path": "PLAN.md",
+      "sha256": "b60acaabf7e8bee9d0c298ac360c68bfc61f944c9bfd3fd6167198fef0392909"
+    },
+    {
+      "blob": "1776b3d1862c074b4869365c9bd6b606fa23dc7b",
+      "bytes": 10643,
+      "path": "REPORT.md",
+      "sha256": "482d3ae0dbd5ae3494e3e77bc4465234645fb894cd441d63f0424ee44cd61afc"
+    },
+    {
+      "blob": "93fcd479339d59404e3c4b341135ad3476c1f163",
+      "bytes": 429492,
+      "path": "SourceLockCheck.json",
+      "sha256": "83ac6ba3f329f250a89fd0d179bcd9c5590d4530107e609b2f4e8eb35528c118"
+    },
+    {
+      "blob": "647b560582d24a3ce9432444c4ef6861ea36ff54",
+      "bytes": 304,
+      "path": "TouchedTests.log",
+      "sha256": "616991d260b9f751eede1de517e9ec362911cc8143dc6fc394f573ec1dea2a4a"
+    },
+    {
+      "blob": "aa2495fdf84d2e098002b641749960728a2e3930",
+      "bytes": 162,
+      "path": "Typecheck.log",
+      "sha256": "06dc68bd63e5a31247106eca2b338be98e6ca68822e77d55b2d1c343c429719e"
+    },
+    {
+      "blob": "c0014ecbfc2434b8da7257203c66ae71f5fd32f4",
+      "bytes": 234,
+      "path": "candidate-ci.json",
+      "sha256": "b060946607aa4e5c530b4bc1d90411f2387bb56c1c6a5f9ff937f7a599a4810e"
+    },
+    {
+      "blob": "86c6b59c15042236992e5c06343d0f7ef1d6164b",
+      "bytes": 3967,
+      "path": "candidate-jobs.json",
+      "sha256": "8ffeee99cb71037bb6181e77d665110c79bdb7aebf94af81089945e2f3d5ea72"
+    },
+    {
+      "blob": "d63f0ed539bb3ea7bcc72097b3e0a762dd067a16",
+      "bytes": 1157,
+      "path": "main-ci.json",
+      "sha256": "c547555c12d345897d402f036640eda916de7e12fd7fc85ebc51d890e5d8904c"
+    },
+    {
+      "blob": "1641fd67191d4766531814ced5f73beef28bf377",
+      "bytes": 137,
+      "path": "main-site-jobs.json",
+      "sha256": "19c174b861572378092c0327db546516e16d85220e81694e74e6c928f1c0d3aa"
+    },
+    {
+      "blob": "6d5e5a24179e6982e4b1779ba1403af69441b200",
+      "bytes": 144,
+      "path": "main-verify-jobs.json",
+      "sha256": "a59fdd41c66cf2f9508c425b100eca49fa85ae6de59f5800b3125eb2cdace6c5"
+    },
+    {
+      "blob": "cb0d118d60c6e47c57849b4dfd579d289f9c4d65",
+      "bytes": 4134,
+      "path": "receipt.json",
+      "sha256": "6f337bdd5d3472de19b890d4e5c750ea20d445d18802711572aeb03ce0ce37f5"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f98",
+  "product_head": "4381f49c0ca4fcb8358e44b7393fd7e3093c433f",
+  "ref": "refs/heads/evidence/sd-penny-c-f98",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f98"
+}
