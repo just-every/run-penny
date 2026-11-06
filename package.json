@@ -82,6 +82,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@cfworker/json-schema": "4.1.1",
     "@cloudflare/vite-plugin": "1.54.5",
     "@cloudflare/vitest-plugin": "^1.1.2",
     "@cloudflare/workers-types": "^5.20260828.1",

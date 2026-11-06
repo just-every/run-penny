@@ -155,8 +155,8 @@ Core · published · **partial** · Rules D-3
 3. Product, component and feature results pass the same permission filtering as every other searched record: an operator who cannot open one does not see its name.
 4. The first page of results returns within 500ms.
 
-**Evidence.** `tests/base/product-hierarchy.test.ts` — populated upgrade, linked feature rollups, move custody and private source and archive boundaries; `tests/browser/operator-completeness-read.mjs` — reviewPrivateSearch; `tests/browser/operator-completeness-requester.mjs` — reviewRequesterPrivacy
-**Gap.** Named fields, including product, component and feature names, have native search and record-link proof. Finer record and role-permission completeness remains open with ROLE-001; the 500 ms first page has no seeded capacity p95 run on declared CI hardware at the estimated, untested `seed.json` limits (D-3).
+**Evidence.** `tests/browser/operator-completeness-requester.mjs`
+**Gap.** Search across every other named field ships; product, component and feature names are not yet searched (`src/core/features/workspace/list-repository.ts`), and the 500 ms first page has no seeded run at the `seed.json` limits (D-3).
 
 ### Evidence and accounts
 
@@ -1206,7 +1206,7 @@ Core · published · **partial**
 4. Model output cannot set identity or grants.
 
 **Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
-**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing existing identity, explicit update permissions, authority or selected scope, and create no derived artifacts. Valid output derives requester and account dimensions from selected native requests and evidence while retaining legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
@@ -2858,8 +2858,8 @@ Core · target · **partial**
 1. The feeds validate and list only published versions.
 2. A segment send reaches exactly the intersection of consent and segment.
 
-**Evidence.** `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts`
-**Gap.** Subscriber email ships today. The feeds validate and list only published versions; a segment send reaches exactly the intersection of consent and segment.
+**Evidence.** `tests/base/release-feeds.test.ts` — RSS and Atom reconcile current published wording across correction and requester erasure; `src/core/features/releases/recipients.ts`; `tests/base/penny-releases.test.ts`
+**Gap.** Subscriber email ships today. Gap: Segment-targeted email must reach exactly the intersection of consent and SEG-006 membership; WIDGET-003 distribution remains unmet. Live mail and provider qualification and existing deployment and release prerequisites remain unchanged.
 
 #### REL-017 — Release notes from delivered work
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 
