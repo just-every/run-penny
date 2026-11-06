@@ -21,7 +21,7 @@ afterEach(() => vi.restoreAllMocks())
 
 it('[DATA-006] serves an offline OpenAPI contract and reconciles every documented operation with native allowed and unchanged-state refusal journeys', async () => {
   await reset(); await applyD1Migrations(env.DB, inject('migrations'))
-  const g = await releaseGraph(1)
+  const g = await releaseGraph(2)
   expect((await call('/api/operator/boards/regression/categories', { name: 'synthetic-penny-category' }, g.operator)).status).toBe(201)
   const documentResponse = await call('/docs/openapi.json')
   expect(documentResponse.status).toBe(200)
@@ -87,6 +87,7 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
   ].map(table => env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`)))).map(result => result.results)
   const requestSlug = g.requests[0].slug
   let releaseSlug = '', proxyId = ''
+  let releasePublication: Record<string, unknown> | undefined
   const { authorOperatorId: _author, ...releaseInput } = g.input
   const cases: Record<string, () => { slug?: string; query?: string; body?: unknown }> = {
     listBoards: () => ({}),
@@ -106,6 +107,20 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
   }
   const order = ['createRequest', 'createComment', 'publishStatus', 'recordProxyVote', 'createRelease', 'publishRelease']
   const operations = Object.entries(document.paths).flatMap(([path, methods]) => Object.entries(methods).map(([method, operation]) => ({ path, method: method.toUpperCase(), operation })))
+  // Additional ordinary response variants use the served operation and schema,
+  // rather than a second handwritten API contract.
+  const contractRequest = async (operationId: string, input: { slug?: string; query?: string; body?: unknown } = {}, expectedStatus = 200) => {
+    const { path, method, operation } = operations.find(entry => entry.operation.operationId === operationId)!
+    if (operation.requestBody) validates(schemaFor(operation.requestBody.content['application/json'].schema.$ref), input.body)
+    const response = await nativeHttp(path.replace('{slug}', input.slug ?? '') + (input.query ?? ''), method, {
+      ...allowed, ...(input.body === undefined ? {} : { 'Content-Type': 'application/json' }),
+    }, input.body === undefined ? undefined : JSON.stringify(input.body))
+    expect(response.status, operationId + ': ' + await response.clone().text()).toBe(expectedStatus)
+    expect(response.headers.get('Content-Type')).toContain('application/json')
+    const payload = await response.json()
+    validates(schemaFor(operation.responses[String(response.status)].content['application/json'].schema.$ref), payload)
+    return payload
+  }
   expect(operations.map(({ operation }) => operation.operationId).sort()).toEqual(Object.keys(cases).sort())
   operations.sort((a, b) => {
     const rank = (id: string) => order.includes(id) ? order.indexOf(id) : order.length
@@ -169,10 +184,23 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
     }, input.body === undefined ? undefined : JSON.stringify(input.body))
     expect(response.status, operation.operationId + ': ' + await response.clone().text()).toBe(method === 'POST' && ['createRequest', 'createComment', 'createRelease'].includes(operation.operationId) ? 201 : 200)
     expect(response.headers.get('Cache-Control')).toContain('no-store')
+    expect(response.headers.get('Content-Type')).toContain('application/json')
     const result = await response.json() as Record<string, unknown>
     validates(schemaFor(operation.responses[String(response.status)].content['application/json'].schema.$ref), result)
-    if (operation.operationId === 'createRelease') releaseSlug = String(result.slug)
+    if (operation.operationId === 'createRequest') {
+      const heldSlug = String(result.slug)
+      for (const id of ['getRequest', 'listComments', 'listStatusUpdates']) {
+        expect(await contractRequest(id, { slug: heldSlug }, 404)).toEqual({ error: 'not_found' })
+      }
+      expect(await contractRequest('listRequests')).not.toContainEqual(expect.objectContaining({ slug: heldSlug }))
+    }
+    if (operation.operationId === 'createRelease') {
+      releaseSlug = String(result.slug)
+      expect(await contractRequest('getRelease', { slug: releaseSlug }, 404)).toEqual({ error: 'not_found' })
+      expect(await contractRequest('listReleases')).not.toContainEqual(expect.objectContaining({ slug: releaseSlug }))
+    }
     if (operation.operationId === 'recordProxyVote') { proxyId = String(result.requesterId); expect(result.created).toBe(true) }
+    if (operation.operationId === 'publishRelease') releasePublication = result
     if (Array.isArray(result)) expect(result.length, operation.operationId + ' populated response').toBeGreaterThan(0)
     if (operation.operationId === 'getRequest') {
       expect(result).toMatchObject({ kind: 'found', request: { slug: requestSlug } })
@@ -183,6 +211,49 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
     if (operation.operationId === 'getRelease') expect(result).toMatchObject({ slug: releaseSlug, title: 'synthetic-penny-release', body: releaseInput.body, isCurrent: true })
     if (operation.operationId === 'findProxyContacts') expect(result).toEqual([{ id: proxyId, displayName: 'synthetic-penny-contact', email: null }])
   }
+  // Existing-customer proxy recording and publication replay must match their
+  // alternate successful response without inventing demand or deliveries.
+  const beforeReplay = await snapshot()
+  expect(await contractRequest('recordProxyVote', { slug: requestSlug, body: { requesterId: proxyId, source: 'synthetic-penny-replay' } })).toEqual({ requesterId: proxyId, created: false })
+  expect(await snapshot()).toEqual(beforeReplay)
+  expect(await contractRequest('publishStatus', cases.publishStatus())).toEqual({ published: true })
+  expect(await snapshot()).toEqual(beforeReplay)
+  expect(await contractRequest('publishRelease', { slug: releaseSlug, body: { approve: true } })).toEqual(releasePublication)
+  expect(await snapshot()).toEqual(beforeReplay)
+
+  // Current board privacy changes alter the actual response shape: totals are
+  // omitted, visible voters exclude proxy customers, and disabling the list
+  // removes its field entirely. Both shapes must validate, with real demand.
+  expect((await call('/api/operator/boards/regression', { showVoteCounts: false, showVoters: true }, g.operator, 'PATCH')).status).toBe(200)
+  const hiddenTotals = await contractRequest('getRequest', { slug: requestSlug }) as { request: Record<string, unknown> }
+  expect(hiddenTotals.request).not.toHaveProperty('voteCount')
+  expect(hiddenTotals.request.voters).toEqual([{ displayName: 'Private display' }])
+  expect(await env.DB.prepare('SELECT count(*) n FROM request_votes WHERE request_id=?').bind(g.requests[0].id).first('n')).toBeGreaterThan(0)
+  const hiddenCards = await contractRequest('listRequests') as Record<string, unknown>[]
+  expect(hiddenCards.length).toBeGreaterThan(0)
+  for (const card of hiddenCards) expect(card).not.toHaveProperty('voteCount')
+  expect((await call('/api/operator/boards/regression', { showVoteCounts: true, showVoters: false }, g.operator, 'PATCH')).status).toBe(200)
+  const visibleTotals = await contractRequest('getRequest', { slug: requestSlug }) as { request: Record<string, unknown> }
+  expect(visibleTotals.request.voteCount).toBeGreaterThan(0)
+  expect(visibleTotals.request).not.toHaveProperty('voters')
+
+  // Canonical and withdrawn lookups are JSON results in this API, while their
+  // comment and history subresources become unavailable. Seed the states only
+  // through the existing native doors and keep private identity out of each.
+  const otherSlug = g.requests[1].slug
+  expect((await call('/api/operator/requests/' + otherSlug + '/merge', { targetSlug: requestSlug, notifySubscribers: false }, g.operator)).status).toBe(200)
+  expect(await contractRequest('getRequest', { slug: otherSlug })).toEqual({ kind: 'redirect', slug: requestSlug })
+  for (const id of ['listComments', 'listStatusUpdates']) expect(await contractRequest(id, { slug: otherSlug }, 404)).toEqual({ error: 'not_found' })
+  expect((await call('/api/operator/requests/' + otherSlug + '/unmerge', {}, g.operator)).status).toBe(200)
+  expect((await call('/api/public/requests/' + otherSlug + '/withdraw', {}, g.person)).status).toBe(204)
+  expect(await contractRequest('getRequest', { slug: otherSlug })).toEqual({ kind: 'withdrawn' })
+  for (const id of ['listComments', 'listStatusUpdates']) expect(await contractRequest(id, { slug: otherSlug }, 404)).toEqual({ error: 'not_found' })
+  expect(await contractRequest('listRequests')).not.toContainEqual(expect.objectContaining({ slug: otherSlug }))
+  expect(await contractRequest('getRequest', { slug: 'synthetic-penny-missing' }, 404)).toEqual({ error: 'not_found' })
+  const afterVariants = await snapshot()
+  expect(await contractRequest('listRequests', { query: '?board=&status=&q=&sort=&category=' })).toEqual(await contractRequest('listRequests'))
+  expect(await contractRequest('listRequests', { query: '?unsupported=synthetic-penny-1' }, 400)).toEqual({ error: 'validation_failed' })
+  expect(await snapshot()).toEqual(afterVariants)
   const beforeRefinements = await snapshot()
   const invalidRelease = { ...releaseInput, publicationDate: '2026-02-30' }
   const conflictingProxy = { contact: { displayName: 'synthetic-penny-2' }, requesterId: g.recipient.requesterId, source: 'synthetic-penny-2' }
