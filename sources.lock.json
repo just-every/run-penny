@@ -670,7 +670,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "8a2c1af69322b3c68a5f82ec9086eba16655b75c3846476ecbcdb41253151812",
+      "sha256": "d9402250168e4a85d1b7fa72f63aa332902f6e21705916fc732de2645a9a483e",
       "executable": false
     },
     "agent-surface.json": {
@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "f4a8ac5f3a1ce09cb3e0eaa9b72b379bb57227a0b40f424e3da735a66120a9d0",
+      "sha256": "9f8270957ee50e75214b4e415515ff53cf45a459674b3eedbbfaabe90d090a7d",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "f2143f1121052fe53369d031d53b81c4c71fc8615a1c2a4ae41c5d8a4a201cee",
+      "sha256": "bd5eb3b4772d19f5955432e75aaad78116e7ec04fc85f3b182a38c23396d540c",
       "executable": false
     },
     "DEMO.md": {
@@ -8398,7 +8398,11 @@
       "executable": false
     },
     "tests/base/integration-effects.ts": {
-      "sha256": "90bd00707554e8ac75cbe5f003201fc65062c469f69e18193b52eef4ba154f2c",
+      "sha256": "05984f8710d634ed8d863e1cc93c6206551df8d7b091f28b5dc9cee663026b48",
+      "executable": false
+    },
+    "tests/base/integration-publications.ts": {
+      "sha256": "c31102d344f789ab5fa83972c35cb9956ff8963fd5546dd6212b20bab0ec7764",
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {
@@ -8410,7 +8414,7 @@
       "executable": false
     },
     "tests/base/learning-stage2.test.ts": {
-      "sha256": "3269c672e416ae10b7fb9128d0011b5139fce9af86398d02e70bf47ff72f7c2d",
+      "sha256": "3900c223f8d61a597b5bf7bbae2164df11e51147e35324f602719f0d2f0ebd55",
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
