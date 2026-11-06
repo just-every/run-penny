@@ -1,0 +1,188 @@
+{
+  "clauses": "[MEAS-006 OPS-001 OPS-002 OPS-004 REQ-027 REQ-028 EVID-009 DATA-004 BASE-ACCESS-003 BASE-OPS-005 OPS-003 REQ-014 REQ-030 EVID-003 DEC-001 ROAD-007 ROAD-008 REL-001 DATA-001 DATA-003]",
+  "checks": [
+    {
+      "label": "first-run-setup",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "first-run-setup",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-001-invited-settings",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-001-invited-settings",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-002-peer-operates",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-002-peer-operates",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-bounded-first-page",
+      "width": 390,
+      "milliseconds": 148,
+      "scope": "small 392-record fixture; not capacity p95"
+    },
+    {
+      "label": "OPS-004-bounded-first-page",
+      "width": 1440,
+      "milliseconds": 164,
+      "scope": "small 392-record fixture; not capacity p95"
+    },
+    {
+      "label": "OPS-004-global-search",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-global-search",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-products-destination",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-components-destination",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-features-destination",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-products-same-name-destination",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-products-destination",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-components-destination",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-features-destination",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-empty-search",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-products-same-name-destination",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "OPS-004-empty-search",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-request-persisted",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-evidence-persisted",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-request-persisted",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-decision-persisted",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-evidence-persisted",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-roadmapItem-persisted",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-decision-persisted",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-release-persisted",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-roadmapItem-persisted",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-account-persisted",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-release-persisted",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-account-persisted",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-requester-persisted",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-published-field-exclusion",
+      "width": 390,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-requester-persisted",
+      "width": 1440,
+      "phase": "positive"
+    },
+    {
+      "label": "DATA-004-published-field-exclusion",
+      "width": 1440,
+      "phase": "positive"
+    }
+  ],
+  "negativeChecks": []
+}

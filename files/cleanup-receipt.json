@@ -1,0 +1,239 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-11-06T11:42:37.655750+00:00",
+  "all_setup_build_browser_commands_completed": true,
+  "commands": [
+    {
+      "label": "node22-install",
+      "pid": 852,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:29:57.058399+00:00"
+    },
+    {
+      "label": "candidate-install",
+      "pid": 889,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:30:10.398366+00:00"
+    },
+    {
+      "label": "candidate-deps",
+      "pid": 1008,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:30:35.061778+00:00"
+    },
+    {
+      "label": "candidate-setup",
+      "pid": 1077,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:32:03.361492+00:00"
+    },
+    {
+      "label": "candidate-build",
+      "pid": 2027,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:32:52.437920+00:00"
+    },
+    {
+      "label": "candidate-operator-completeness",
+      "pid": 2172,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:35:21.579150+00:00"
+    },
+    {
+      "label": "main-install",
+      "pid": 3325,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:36:08.535232+00:00"
+    },
+    {
+      "label": "main-deps",
+      "pid": 3351,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:36:17.159724+00:00"
+    },
+    {
+      "label": "main-setup",
+      "pid": 3416,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:38:00.616540+00:00"
+    },
+    {
+      "label": "main-build",
+      "pid": 4353,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:38:45.243174+00:00"
+    },
+    {
+      "label": "main-operator-completeness",
+      "pid": 4486,
+      "exit": 0,
+      "ended_at": "2026-11-06T11:41:10.539310+00:00"
+    }
+  ],
+  "owned_process_snapshots": [
+    {
+      "recorded_at": "2026-11-06T11:35:28.539978+00:00",
+      "label": "candidate-operator-completeness",
+      "owned_root_pid": 2172,
+      "owned_processes": []
+    },
+    {
+      "recorded_at": "2026-11-06T11:39:47.373183+00:00",
+      "label": "main-operator-completeness",
+      "owned_root_pid": 4486,
+      "owned_processes": [
+        {
+          "pid": 4486,
+          "ppid": 4484,
+          "state": "S",
+          "start_ticks": "78660",
+          "comm": "node"
+        },
+        {
+          "pid": 4497,
+          "ppid": 4486,
+          "state": "S",
+          "start_ticks": "78773",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4515,
+          "ppid": 4497,
+          "state": "S",
+          "start_ticks": "78794",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4516,
+          "ppid": 4497,
+          "state": "S",
+          "start_ticks": "78794",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4539,
+          "ppid": 4515,
+          "state": "S",
+          "start_ticks": "78803",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4542,
+          "ppid": 4497,
+          "state": "S",
+          "start_ticks": "78805",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4564,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "78816",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4577,
+          "ppid": 4486,
+          "state": "S",
+          "start_ticks": "78919",
+          "comm": "workerd"
+        },
+        {
+          "pid": 4578,
+          "ppid": 4486,
+          "state": "S",
+          "start_ticks": "78960",
+          "comm": "workerd"
+        },
+        {
+          "pid": 4590,
+          "ppid": 4486,
+          "state": "S",
+          "start_ticks": "79148",
+          "comm": "esbuild"
+        },
+        {
+          "pid": 4598,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "80108",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4608,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "80112",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4625,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "80116",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4635,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "80119",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4785,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "81310",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4793,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "81312",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4812,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "81315",
+          "comm": "chromium"
+        },
+        {
+          "pid": 4823,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "81318",
+          "comm": "chromium"
+        },
+        {
+          "pid": 5144,
+          "ppid": 4516,
+          "state": "S",
+          "start_ticks": "83076",
+          "comm": "chromium"
+        }
+      ]
+    }
+  ],
+  "recorded_owned_process_survivors": [],
+  "command_root_pids_absent": true,
+  "subreaper_waited_for_all_owned_children": true,
+  "remaining_test_runtime_state_directories": [],
+  "manual_pid_signals_sent": [],
+  "broad_stop_commands_used": false,
+  "product_source_diff_before_cleanup": "clean",
+  "product_worktree_deleted": true,
+  "product_node_modules_deleted": true,
+  "product_setup_database_private_settings_build_deleted_with_checkout": true,
+  "owned_node22_toolchain_prefix_deleted": true,
+  "full_logs_decompression_hashes_verified_before_raw_log_removal": true,
+  "screenshots_byte_compared_before_duplicate_capture_cleanup": true,
+  "nonsecret_packet_retained": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/packet",
+  "remaining_git_transport": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/run-penny-transport.git",
+  "git_transport_purpose": "Original clone Git storage retained as a bare report transport solely until evidence publication succeeds. No product commits or pushes. Remove this final transport after evidence ref/head confirmation.",
+  "private_settings_values_read": false,
+  "private_settings_evidence_selection": false
+}

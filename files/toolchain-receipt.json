@@ -1,0 +1,57 @@
+{
+  "recorded_at": "2026-11-06T11:33:25.784908+00:00",
+  "versions": {
+    "node": {
+      "version": "v22.20.0",
+      "exit": 0
+    },
+    "pnpm": {
+      "version": "10.12.4",
+      "exit": 0
+    },
+    "chromium": {
+      "version": "Chromium 154.0.8037.57 built on Debian GNU/Linux 13 (trixie)",
+      "exit": 0
+    },
+    "rer": {
+      "version": "0.2.94",
+      "exit": 0
+    },
+    "playwright": {
+      "version": "1.63.0",
+      "exit": 0
+    },
+    "vite": {
+      "version": "8.2.2",
+      "exit": 0
+    },
+    "wrangler": {
+      "version": "4.129.1",
+      "exit": 0
+    },
+    "miniflare-root": {
+      "version": "5.20260907.0-alpha",
+      "exit": 0
+    }
+  },
+  "ordinary_configuration": {
+    "CI": "true",
+    "WRANGLER_SEND_METRICS": "false",
+    "CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV": "false",
+    "PLAYWRIGHT_SKIP_BROWSER_GC": "1",
+    "PENNY_BROWSER_EXECUTABLE": "/usr/bin/chromium",
+    "owner_email": "fleet@runeditrun.com",
+    "NODE_USE_ENV_PROXY": "1",
+    "NO_PROXY": "localhost,127.0.0.1,::1"
+  },
+  "lockfile_sha256": "17fdc142df6ac3f47c0820afa49fa728d090a9d6c6897a7611e06be53571beff",
+  "package_json_sha256": "98a1965e89ae7edd0ad558ecbc59925d068f259ee715b78e531be098c9c4caf4",
+  "browser_args_source": "tests/browser/browser-options.mjs: headless true; --disable-gpu --use-mock-keychain --password-store=basic --no-sandbox",
+  "platform_limitation": "Debian 13.6 x86_64 with system Chromium 154.0.8037.57 versus original GitHub Actions Ubuntu 24.04 and managed Playwright Chromium. Same runner and versions used for both diagnostic arms.",
+  "main_hashes": {
+    "package.json": "98a1965e89ae7edd0ad558ecbc59925d068f259ee715b78e531be098c9c4caf4",
+    "pnpm-lock.yaml": "17fdc142df6ac3f47c0820afa49fa728d090a9d6c6897a7611e06be53571beff"
+  },
+  "pins_identical": true,
+  "main_node_confirmed": "v22.20.0"
+}

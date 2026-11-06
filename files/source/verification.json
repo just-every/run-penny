@@ -1,0 +1,309 @@
+{
+  "push": [
+    {
+      "name": "static",
+      "browser": true,
+      "hosted": true,
+      "commands": [
+        "pnpm run check -- --profile first-party",
+        "pnpm run source:check",
+        "pnpm run verify:base-source",
+        "pnpm run feedback:status",
+        "pnpm run build",
+        "pnpm run check:deployment-spec",
+        "pnpm run typecheck",
+        "pnpm run eval:ai -- --set redaction-v1",
+        "pnpm run lint",
+        "pnpm run test:mail-runtime",
+        "pnpm run test:data:commands",
+        "node --test tests/installer/deploy-dry-run.test.mjs"
+      ]
+    },
+    {
+      "name": "base-1",
+      "browser": false,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "pnpm exec vitest run --config vitest.base.config.ts --shard=1/2"
+      ]
+    },
+    {
+      "name": "base-2",
+      "browser": false,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "pnpm exec vitest run --config vitest.base.config.ts --shard=2/2"
+      ]
+    },
+    {
+      "name": "browser",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node --test --test-concurrency=1 tests/browser/signin.test.mjs",
+        "pnpm run test:browser:dev-credentials",
+        "pnpm run test:browser:learning"
+      ]
+    },
+    {
+      "name": "dev-flows",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run test:browser:dev-flows"
+      ]
+    },
+    {
+      "name": "workspace-clock",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/workspace-clock.mjs",
+        "PENNY_EVIDENCE=../evidence/integration-states pnpm run test:browser:integrations"
+      ]
+    },
+    {
+      "name": "ownership",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/ownership-journey.mjs"
+      ]
+    },
+    {
+      "name": "internal-discussion",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/internal-discussion.mjs"
+      ]
+    },
+    {
+      "name": "triage-aging",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/triage-aging.mjs"
+      ]
+    },
+    {
+      "name": "request-decline",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/request-decline.mjs"
+      ]
+    },
+    {
+      "name": "requester-blocking",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/requester-blocking.mjs",
+        "node tests/browser/request-withdrawal.mjs",
+        "node tests/browser/requester-activity.mjs",
+        "node tests/browser/import-board-policy.mjs",
+        "node tests/browser/request-demand.mjs"
+      ]
+    },
+    {
+      "name": "requester-board",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/runtime/duplicate-suggestions-scale.mjs",
+        "PENNY_EVIDENCE=../evidence/requester-board pnpm run test:browser",
+        "PENNY_EVIDENCE=../evidence/requester-repair node tests/browser/requester-repair.mjs"
+      ]
+    },
+    {
+      "name": "roadmap-public-eta",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/roadmap-public-eta.mjs"
+      ]
+    },
+    {
+      "name": "merge-notices",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/merge-notices.mjs"
+      ]
+    },
+    {
+      "name": "import-statuses",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/import-statuses.mjs",
+        "PENNY_EVIDENCE=../evidence/operator-completeness PENNY_OPERATOR_FIELDS_ONLY=1 node tests/browser/operator-pages.mjs"
+      ]
+    },
+    {
+      "name": "import-roadmap",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/import-roadmap.mjs"
+      ]
+    },
+    {
+      "name": "proxy-votes",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/proxy-votes.mjs",
+        "node tests/browser/zendesk-proxy-votes.mjs"
+      ]
+    },
+    {
+      "name": "vote-importance",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/vote-importance.mjs"
+      ]
+    },
+    {
+      "name": "product-hierarchy",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/product-hierarchy.mjs"
+      ]
+    },
+    {
+      "name": "prioritisation",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/prioritisation.mjs"
+      ]
+    },
+    {
+      "name": "release-planning",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/release-planning.mjs",
+        "node tests/browser/loopjourney-release.mjs"
+      ]
+    },
+    {
+      "name": "rich-changelog",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/rich-changelog.mjs",
+        "PENNY_BROWSER_EXECUTABLE=$(node --input-type=module -e \"import {chromium} from '@playwright/test';process.stdout.write(chromium.executablePath())\") pnpm run test:browser:routes"
+      ]
+    },
+    {
+      "name": "loop-health",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "PENNY_EVIDENCE=../evidence/operator-core PENNY_OPERATOR_CORE_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_EVIDENCE=../evidence/operator-capture PENNY_CAPTURE_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_EVIDENCE=../evidence/operator-oauth PENNY_OAUTH_ONLY=1 node tests/browser/operator-pages.mjs",
+        "PENNY_EVIDENCE=../evidence/operator-redaction PENNY_REDACTION_ONLY=1 node tests/browser/operator-pages.mjs"
+      ]
+    },
+    {
+      "name": "older-archive",
+      "browser": false,
+      "hosted": false,
+      "commands": [
+        "node --test tests/installer/older-archive.test.mjs"
+      ]
+    },
+    {
+      "name": "discord-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/discord-capture.mjs",
+        "node --test tests/installer/discord-relay.test.mjs"
+      ]
+    },
+    {
+      "name": "survey-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/survey-capture.mjs"
+      ]
+    },
+    {
+      "name": "helpscout-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/helpscout-capture.mjs"
+      ]
+    },
+    {
+      "name": "browser-capture",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run build",
+        "node tests/browser/browser-capture-review.mjs",
+        "xvfb-run -a node tests/browser/browser-capture.mjs"
+      ]
+    },
+    {
+      "name": "agent-door",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "node scripts/agent-docs.mjs check",
+        "pnpm run build"
+      ]
+    }
+  ],
+  "nightly": [
+    {
+      "name": "readme",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run test:browser:readme"
+      ]
+    },
+    {
+      "name": "installer",
+      "browser": true,
+      "hosted": false,
+      "commands": [
+        "pnpm run test:installer"
+      ]
+    }
+  ]
+}

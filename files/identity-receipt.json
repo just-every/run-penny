@@ -1,0 +1,84 @@
+{
+  "recorded_at": "2026-11-06T11:30:18.853126+00:00",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "runner_hostname": "8cd0548f16da",
+  "os_release": "PRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"13\"\nVERSION=\"13 (trixie)\"\nVERSION_CODENAME=trixie\nDEBIAN_VERSION_FULL=13.6\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n",
+  "candidate": "ad5e5b85c2a0f14a83c9fcc4fbc450a01a43bd89",
+  "fresh_main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "original_observer_main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "source_files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968"
+    },
+    {
+      "path": "tests/browser/operator-pages.mjs",
+      "sha256": "ddfc7746e8be560e1a2d18f522702368eebdef6308ab90735c6b2d7cb97c7987"
+    },
+    {
+      "path": "tests/browser/operator-completeness.mjs",
+      "sha256": "c66b0447cbec5a99688110e4cfd6ce915de3aed3107f5ce5a0e78f0be3f1b9c9"
+    },
+    {
+      "path": "tests/browser/operator-completeness-auth.mjs",
+      "sha256": "026ca30c2e16989c978b7ad009c05b5173abbf39915244082289f725be89d046"
+    },
+    {
+      "path": "tests/browser/operator-completeness-read.mjs",
+      "sha256": "9eb337b71f6d2ad2fd29b7e2007294f26fd85d14ed3e25f6517ff801797d85bb"
+    },
+    {
+      "path": "tests/browser/operator-completeness-fields.mjs",
+      "sha256": "85b7684826d30579eac50bf466d4ed4e1d669abe0d0acbe4037b361ab4f70679"
+    },
+    {
+      "path": "tests/browser/operator-completeness-data.mjs",
+      "sha256": "85c834b4301e2195e347814bf5b43adb33ae3690f56882eab70b8a6de16417b1"
+    },
+    {
+      "path": "tests/browser/operator-field-public-proof.mjs",
+      "sha256": "953b33bb046a5ff725b9d93b005832ddd1522070e7e8561109fc2938c6577335"
+    },
+    {
+      "path": "tests/browser/operator-completeness-transport.mjs",
+      "sha256": "0f652d4750ca2aea42ca57e89e3c1a16a9d1a788d6539babde1cf968c5933e37"
+    },
+    {
+      "path": "tests/browser/base-runtime.mjs",
+      "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9"
+    },
+    {
+      "path": "tests/browser/browser-options.mjs",
+      "sha256": "b65e6f23ac704b3eb8d1a5ff5577d3ce404dac7428ef7541d49f1d56cab898ad"
+    },
+    {
+      "path": "tests/browser/local-signin.mjs",
+      "sha256": "816994170420e792c2875a8cde26f8342e3236927d0f5381584e998071c54ae1"
+    },
+    {
+      "path": "verification.json",
+      "sha256": "d8db2050dc706da26dfbc5f2e72f190d4721efb76d60d9b66e78f5bf97d13b11"
+    },
+    {
+      "path": "scripts/verify-ci.mjs",
+      "sha256": "869b3eb0dd41a034002133d4c18ad20a345c752571989f087b5902fed3485984"
+    },
+    {
+      "path": "scripts/verify-app.mjs",
+      "sha256": "4c3a87c809e2b671a555dc36171b60675f87be96362de7d2269d9f5e1c3100b6"
+    }
+  ],
+  "original_ci_run": 42208214989,
+  "original_ci_job": 127860127222,
+  "fresh_main_before_comparison": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "fresh_main_comparison_fetched_at": "2026-11-06T11:35:55.254253+00:00",
+  "main_drift_from_original_observer": false,
+  "diagnostic_github_api_calls": 0,
+  "ci_log_refetches": 0,
+  "ci_polls": 0,
+  "ci_reruns_or_dispatches": 0,
+  "launcher_gh_auth_status_invocations": 1,
+  "terminal_product_branch": "cloud/sd-penny100-ci-triage-1",
+  "terminal_product_head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "product_worktree_status": ""
+}

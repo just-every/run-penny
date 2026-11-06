@@ -1,0 +1,94 @@
+name: Verify Penny
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      tier:
+        type: string
+        default: push
+      timeout:
+        type: number
+        default: 14
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seed-verify-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 1
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - id: plan
+        env:
+          TIER: ${{ inputs.tier || 'push' }}
+        run: echo "matrix=$(node scripts/verify-ci.mjs --matrix "$TIER")" >> "$GITHUB_OUTPUT"
+
+  shards:
+    needs: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.timeout || 14 }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    env:
+      CI: 'true'
+      WRANGLER_SEND_METRICS: 'false'
+      CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV: 'false'
+      PLAYWRIGHT_SKIP_BROWSER_GC: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22.20.0'
+          package-manager-cache: false
+      - name: Check edition source lock freshness
+        if: ${{ hashFiles('edition.json', 'sources.lock.json') != '' }}
+        run: node scripts/edition-authoring/cli.mjs check
+      - name: Check generated contract documents
+        run: node src/base/contract-docs.mjs check
+      - run: npm install --global pnpm@10.12.4
+      - name: Cache frozen dependencies and Chromium
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            ~/.cache/ms-playwright
+          key: seed-ubuntu24-${{ runner.arch }}-browser-${{ matrix.browser }}-${{ hashFiles('pnpm-lock.yaml', 'package.json') }}
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run deps
+      - name: Install Chromium and system libraries
+        if: matrix.browser
+        run: bash scripts/install-ci-chromium.sh
+      - name: Reserve disk for native runtime journeys
+        if: matrix.browser
+        run: |
+          free_kib() { df -Pk "$GITHUB_WORKSPACE" | awk 'END { print $4 }'; }
+          for unused_tools in /usr/local/lib/android /usr/share/dotnet /opt/ghc /opt/hostedtoolcache/CodeQL; do
+            if [ "$(free_kib)" -ge "$((20 * 1024 * 1024))" ]; then break; fi
+            sudo rm -rf -- "$unused_tools"
+          done
+      - name: Run this shard
+        env:
+          SHARD: ${{ matrix.name }}
+        run: node scripts/verify-ci.mjs "$SHARD"
+      - name: Read redacted dev failure diagnostics
+        if: failure()
+        run: |
+          if [ -d ../evidence ]; then
+            find ../evidence -type f -name 'failure-dev-*' -print -exec cat {} \;
+          fi

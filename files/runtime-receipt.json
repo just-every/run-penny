@@ -1,0 +1,264 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-11-06T11:41:49.672423+00:00",
+  "commands": [
+    {
+      "label": "node22-install",
+      "head": "ad5e5b85c2a0f14a83c9fcc4fbc450a01a43bd89",
+      "command": [
+        "timeout",
+        "300",
+        "npm",
+        "install",
+        "--prefix",
+        "/home/agent/.rer/toolchain/node-22.20.0",
+        "--no-audit",
+        "--no-fund",
+        "node@22.20.0"
+      ],
+      "started_at": "2026-11-06T11:29:51.984454+00:00",
+      "ended_at": "2026-11-06T11:29:57.058399+00:00",
+      "exit": 0,
+      "pid": 852,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/node22-install.log",
+      "published_log": "runtime/node22-install.log.gz",
+      "uncompressed_log_bytes": 24,
+      "uncompressed_log_sha256": "f6b3015540a8faaeab0d34bc590d69ab23310b3000fe44bf48780dbb883292f1"
+    },
+    {
+      "label": "candidate-install",
+      "head": "ad5e5b85c2a0f14a83c9fcc4fbc450a01a43bd89",
+      "command": [
+        "pnpm",
+        "install",
+        "--frozen-lockfile"
+      ],
+      "started_at": "2026-11-06T11:29:57.096924+00:00",
+      "ended_at": "2026-11-06T11:30:10.398366+00:00",
+      "exit": 0,
+      "pid": 889,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/candidate-install.log",
+      "published_log": "runtime/candidate-install.log.gz",
+      "uncompressed_log_bytes": 2760,
+      "uncompressed_log_sha256": "087bcf0c2e50f5a3cddc7aa404ece2a291c151446825e31001061632ed1d9136",
+      "arm": "candidate"
+    },
+    {
+      "label": "candidate-deps",
+      "head": "ad5e5b85c2a0f14a83c9fcc4fbc450a01a43bd89",
+      "command": [
+        "pnpm",
+        "run",
+        "deps"
+      ],
+      "started_at": "2026-11-06T11:30:26.618434+00:00",
+      "ended_at": "2026-11-06T11:30:35.061778+00:00",
+      "exit": 0,
+      "pid": 1008,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/candidate-deps.log",
+      "published_log": "runtime/candidate-deps.log.gz",
+      "uncompressed_log_bytes": 284,
+      "uncompressed_log_sha256": "5120a5f6c235ad4faedfecae38e125a4e87dc9906159129c96db66aff0fc2990",
+      "arm": "candidate"
+    },
+    {
+      "label": "candidate-setup",
+      "head": "ad5e5b85c2a0f14a83c9fcc4fbc450a01a43bd89",
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "setup",
+        "--owner-email",
+        "fleet@runeditrun.com",
+        "--non-interactive"
+      ],
+      "started_at": "2026-11-06T11:30:35.120033+00:00",
+      "ended_at": "2026-11-06T11:32:03.361492+00:00",
+      "exit": 0,
+      "pid": 1077,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/candidate-setup.log",
+      "published_log": "runtime/candidate-setup.log.gz",
+      "uncompressed_log_bytes": 2668860,
+      "uncompressed_log_sha256": "f2dc3501cce17e91584d3a08f04b6036e1f81135295383bbf32b5942ecc6498f",
+      "arm": "candidate"
+    },
+    {
+      "label": "candidate-build",
+      "head": "ad5e5b85c2a0f14a83c9fcc4fbc450a01a43bd89",
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "build"
+      ],
+      "started_at": "2026-11-06T11:32:12.452534+00:00",
+      "ended_at": "2026-11-06T11:32:52.437920+00:00",
+      "exit": 0,
+      "pid": 2027,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/candidate-build.log",
+      "published_log": "runtime/candidate-build.log.gz",
+      "uncompressed_log_bytes": 42630,
+      "uncompressed_log_sha256": "9ec69699fe6f36360f468f9a79eebb5fb08e4d760671223e1c8b0ed4a826e00a",
+      "arm": "candidate"
+    },
+    {
+      "label": "candidate-operator-completeness",
+      "head": "ad5e5b85c2a0f14a83c9fcc4fbc450a01a43bd89",
+      "command": [
+        "env",
+        "PENNY_EVIDENCE=../evidence/operator-completeness",
+        "PENNY_OPERATOR_FIELDS_ONLY=1",
+        "node",
+        "tests/browser/operator-pages.mjs"
+      ],
+      "started_at": "2026-11-06T11:32:52.509065+00:00",
+      "ended_at": "2026-11-06T11:35:21.579150+00:00",
+      "exit": 0,
+      "pid": 2172,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/candidate-operator-completeness.log",
+      "published_log": "runtime/candidate-operator-completeness.log.gz",
+      "uncompressed_log_bytes": 12409,
+      "uncompressed_log_sha256": "d46e608221a3cd8bd3715737962712be9300b1fd3f255e66b082371fef41eafa",
+      "arm": "candidate"
+    },
+    {
+      "label": "main-install",
+      "head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+      "command": [
+        "pnpm",
+        "install",
+        "--frozen-lockfile"
+      ],
+      "started_at": "2026-11-06T11:35:56.312955+00:00",
+      "ended_at": "2026-11-06T11:36:08.535232+00:00",
+      "exit": 0,
+      "pid": 3325,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/main-install.log",
+      "published_log": "runtime/main-install.log.gz",
+      "uncompressed_log_bytes": 1064,
+      "uncompressed_log_sha256": "9d760a026a449fe6456ae2c41fd38178adc5808e6980b3806d79aa88804af675",
+      "arm": "main"
+    },
+    {
+      "label": "main-deps",
+      "head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+      "command": [
+        "pnpm",
+        "run",
+        "deps"
+      ],
+      "started_at": "2026-11-06T11:36:08.574832+00:00",
+      "ended_at": "2026-11-06T11:36:17.159724+00:00",
+      "exit": 0,
+      "pid": 3351,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/main-deps.log",
+      "published_log": "runtime/main-deps.log.gz",
+      "uncompressed_log_bytes": 284,
+      "uncompressed_log_sha256": "5120a5f6c235ad4faedfecae38e125a4e87dc9906159129c96db66aff0fc2990",
+      "arm": "main"
+    },
+    {
+      "label": "main-setup",
+      "head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "setup",
+        "--owner-email",
+        "fleet@runeditrun.com",
+        "--non-interactive"
+      ],
+      "started_at": "2026-11-06T11:36:17.220015+00:00",
+      "ended_at": "2026-11-06T11:38:00.616540+00:00",
+      "exit": 0,
+      "pid": 3416,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/main-setup.log",
+      "published_log": "runtime/main-setup.log.gz",
+      "uncompressed_log_bytes": 2668860,
+      "uncompressed_log_sha256": "2f0d26e2c3a0a073c31101b5ceac4001ed7c7d7f6b7739fa23920868f45943f4",
+      "arm": "main"
+    },
+    {
+      "label": "main-build",
+      "head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "build"
+      ],
+      "started_at": "2026-11-06T11:38:00.740265+00:00",
+      "ended_at": "2026-11-06T11:38:45.243174+00:00",
+      "exit": 0,
+      "pid": 4353,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/main-build.log",
+      "published_log": "runtime/main-build.log.gz",
+      "uncompressed_log_bytes": 42630,
+      "uncompressed_log_sha256": "9977bd01e03da2d7ccc809c1a2cf68b10c7f1de78da383062053981708720e7e",
+      "arm": "main"
+    },
+    {
+      "label": "main-operator-completeness",
+      "head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+      "command": [
+        "env",
+        "PENNY_EVIDENCE=../evidence/operator-completeness",
+        "PENNY_OPERATOR_FIELDS_ONLY=1",
+        "node",
+        "tests/browser/operator-pages.mjs"
+      ],
+      "started_at": "2026-11-06T11:38:45.323458+00:00",
+      "ended_at": "2026-11-06T11:41:10.539310+00:00",
+      "exit": 0,
+      "pid": 4486,
+      "log": "/home/agent/rer-consolidation/work/sd-penny100-ci-triage-1/runtime-logs/main-operator-completeness.log",
+      "published_log": "runtime/main-operator-completeness.log.gz",
+      "uncompressed_log_bytes": 12409,
+      "uncompressed_log_sha256": "edc46bee2bd1916b735fb257bfdb8ecce98cf7bef77f90a856588c194db1d2b8",
+      "arm": "main"
+    }
+  ],
+  "runs": {
+    "candidate": {
+      "case_executions": 1,
+      "exit": 0,
+      "widths": [
+        1440,
+        390
+      ],
+      "check_entries": 36,
+      "checks_by_width": {
+        "390": 18,
+        "1440": 18
+      },
+      "png_files": 34,
+      "actual_summary": "operator-pages: 36 captures passed"
+    },
+    "main": {
+      "case_executions": 1,
+      "exit": 0,
+      "widths": [
+        1440,
+        390
+      ],
+      "check_entries": 36,
+      "checks_by_width": {
+        "390": 18,
+        "1440": 18
+      },
+      "png_files": 34,
+      "actual_summary": "operator-pages: 36 captures passed"
+    }
+  },
+  "diagnostic_api_calls": 0,
+  "ci_log_refetches": 0,
+  "ci_polls": 0,
+  "ci_reruns": 0,
+  "product_commits": 0,
+  "product_pushes": 0,
+  "product_diff": "",
+  "log_redactions": 0,
+  "log_compression": "gzip, byte-exact decompression; uncompressed hashes recorded"
+}
