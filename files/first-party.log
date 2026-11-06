@@ -1,0 +1,2 @@
+Command: cloud_run timeout 1200 npx -y @runeditrun/rer check --profile first-party
+Exit: 0

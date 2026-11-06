@@ -1,0 +1,256 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f91",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f91",
+  "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+  "base": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+  "originMain": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+  "productEditsThisRun": false,
+  "newCommitsThisRun": [],
+  "selectedPoints": "AI-011 point 1 duplicates corpus and point 4 lexical floor",
+  "status": {
+    "base": "partial",
+    "candidate": "partial",
+    "main": "missing"
+  },
+  "counts": {
+    "origin/main": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    },
+    "HEAD": {
+      "done": 79,
+      "partial": 125,
+      "missing": 77,
+      "total": 281
+    }
+  },
+  "commands": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "result": "setup built the Worker, migrated local storage, claimed the synthetic fleet owner and exited"
+    },
+    {
+      "command": "cloud_run timeout 1200 node --input-type=module -e \"import {proveAiEvaluationCommand} from './tests/runtime/ai-eval-command.mjs'; await proveAiEvaluationCommand()\"",
+      "exit": 0,
+      "result": "PASS proveAiEvaluationCommand; default corpus, known native ranking, all four confusion outcomes, invalid-label refusal, output parity and retained redaction"
+    },
+    {
+      "command": "node scripts/ai-eval/run.mjs --set duplicates-v1 --output <packet>/duplicates-v1-report.json",
+      "exit": 0,
+      "providerCredentials": "removed from child environment",
+      "report": "duplicates-v1-report.json"
+    },
+    {
+      "command": "node scripts/ai-eval/run.mjs --set redaction-v1 --output <packet>/redaction-v1-report.json",
+      "exit": 0,
+      "providerCredentials": "removed from child environment",
+      "report": "redaction-v1-report.json"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run timeout 1200 npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "result": "Wrote 1 contract documents."
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "result": "Contract documents are current."
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0,
+      "result": "generated views restored whole from main; no view committed"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "result": "no tracked changes"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "git merge origin/main",
+      "exit": 0,
+      "result": "Already up to date. Published predecessor preserved."
+    },
+    {
+      "command": "candidate identities, trailers and every parent Status-row inclusion check",
+      "exit": 0,
+      "result": "all five candidate commits pass"
+    },
+    {
+      "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f91",
+      "exit": 0,
+      "result": "PUSH_OK branch=cloud/sd-penny-c-f91; first attempt"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check after restoring main views",
+      "exit": 1,
+      "failure": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+      "classification": "expected generated-view exception; no product assertion failure"
+    }
+  ],
+  "integrationNote": "The requested pre-push rebase attempted to flatten the already-published predecessor merge history and conflicted in CHANGELOG.md and sources.lock.json. It was aborted without committing; merge origin/main then confirmed the published head already contains main. No published history changed.",
+  "runtime": {
+    "node": "v24.19.0",
+    "pnpm": "10.12.4",
+    "browser": "not applicable; no UI changes",
+    "migrationLedger": "not applicable; no migrations changed"
+  },
+  "publicationScan": {
+    "status": "deferred to maintained Mac lander",
+    "cloudScanRequired": false
+  },
+  "ci": {
+    "discoveryCalls": 2,
+    "runs": [
+      {
+        "id": 42185094008,
+        "name": "Verify Penny",
+        "event": "push",
+        "branch": "cloud/sd-penny-c-f91",
+        "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+        "status": "completed",
+        "conclusion": "failure",
+        "failedJobCount": 29,
+        "representativeJob": 127783489357,
+        "note": "All failed shards failed only Check generated contract documents; qualifies for the explicit cloud generated-view exception. No full Verify success claimed."
+      },
+      {
+        "id": 42180864207,
+        "name": "Verify Penny",
+        "event": "push",
+        "branch": "cloud/sd-penny-c-f86",
+        "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+        "status": "completed",
+        "conclusion": "failure",
+        "note": "all 29 failed shard jobs failed only step 5, Check generated contract documents; plan succeeded; no product test failure",
+        "failedJobCount": 29,
+        "representativeJob": 127769957919
+      }
+    ],
+    "apiCalls": 6,
+    "classification": "permitted generated-view-only exception"
+  },
+  "checksScope": "Touched command proof plus typecheck and first-party check; no full local suite or unnecessary browser run.",
+  "probes": [
+    {
+      "id": "AI-011",
+      "point": "1 duplicates-v1 portion",
+      "door": "eval:ai command, emitted /api/public/requests/suggestions",
+      "input": "version 1.0.0 authored pairs",
+      "output": "300 pairs; 100 distinct candidates; 200 positives; 100 hard negatives; 100 disjoint-term paraphrase positives"
+    },
+    {
+      "id": "AI-011",
+      "point": "4 lexical floor",
+      "door": "eval:ai command with provider credentials removed",
+      "input": "duplicates-v1 and ranked control",
+      "output": "TP=100 FP=100 FN=100 TN=0; precision=recall=F1=topFiveRecall=0.5; paraphraseRecall=0; providerCalls=0; USD=0; control reconciles ranks 1 through 5 and exclusion of rank 6"
+    },
+    {
+      "id": "AI-011",
+      "point": "redaction preservation",
+      "door": "eval:ai command",
+      "input": "redaction-v1",
+      "output": "210 excerpts; 170 labeled spans; passed=true; failed=[]"
+    }
+  ],
+  "productPush": {
+    "ref": "refs/heads/cloud/sd-penny-c-f91",
+    "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+    "verifiedBy": "git ls-remote --refs origin refs/heads/cloud/sd-penny-c-f91",
+    "exit": 0
+  },
+  "commandProof": {
+    "head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+    "name": "proveAiEvaluationCommand",
+    "path": "tests/runtime/ai-eval-command.mjs",
+    "exit": 0,
+    "stdout": "PASS proveAiEvaluationCommand\n",
+    "defaultControl": [
+      [
+        true,
+        true,
+        1
+      ],
+      [
+        false,
+        true,
+        1
+      ],
+      [
+        true,
+        false,
+        null
+      ]
+    ],
+    "rankedControl": [
+      [
+        true,
+        true,
+        1
+      ],
+      [
+        true,
+        true,
+        2
+      ],
+      [
+        true,
+        true,
+        3
+      ],
+      [
+        true,
+        true,
+        4
+      ],
+      [
+        true,
+        true,
+        5
+      ],
+      [
+        true,
+        false,
+        null
+      ],
+      [
+        false,
+        true,
+        1
+      ],
+      [
+        false,
+        true,
+        5
+      ],
+      [
+        false,
+        false,
+        null
+      ]
+    ],
+    "invalidLabelRefused": true,
+    "reportAbsentOnInvalidLabel": true,
+    "retainedRedactionPassed": true,
+    "proofOrigin": "Assertions in the actual completed command journey; same unchanged product SHA."
+  },
+  "handoff": "READY under the explicit generated-view exception; partial clause, no landing or DONE claim"
+}

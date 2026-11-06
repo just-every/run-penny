@@ -1,0 +1,6 @@
+node src/base/contract-docs.mjs write: exit 0; Wrote 1 contract documents.
+node src/base/contract-docs.mjs check: exit 0; Contract documents are current.
+git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md: exit 0
+node scripts/edition-authoring/cli.mjs lock: exit 0; tracked tree unchanged.
+node scripts/edition-authoring/cli.mjs check: exit 0.
+ledger: none; no migration changed.

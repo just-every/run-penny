@@ -1,0 +1,3759 @@
+{
+  "set": "duplicates-v1",
+  "version": "1.0.0",
+  "sha256": "d5599bacbe1dc5c2812c3c8028419dc88cb0c9ccfdcd364ecd0d2bbf3f92031d",
+  "mode": "lexical-baseline",
+  "door": "/api/public/requests/suggestions",
+  "implementation": "src/core/features/requests/suggestions.ts",
+  "model": {
+    "applicable": false,
+    "id": null
+  },
+  "promptVersion": null,
+  "counts": {
+    "pairs": 300,
+    "candidates": 100,
+    "positives": 200,
+    "negatives": 100,
+    "hardNegatives": 100,
+    "paraphrasePositives": 100
+  },
+  "prediction": {
+    "matchedTermsMinimum": 1,
+    "returnedLimit": 5,
+    "scope": "labeled pairs in the native top five"
+  },
+  "confusionMatrix": {
+    "tp": 100,
+    "fp": 100,
+    "fn": 100,
+    "tn": 0
+  },
+  "precision": 0.5,
+  "recall": 0.5,
+  "f1": 0.5,
+  "topFiveRecall": 0.5,
+  "paraphraseRecall": 0,
+  "capabilityBars": {
+    "clause": "AI-001",
+    "precision": {
+      "minimum": 0.9,
+      "observed": 0.5,
+      "met": false
+    },
+    "recall": {
+      "minimum": 0.85,
+      "observed": 0.5,
+      "met": false
+    },
+    "topFiveRecall": {
+      "minimum": 0.9,
+      "observed": 0.5,
+      "met": false
+    },
+    "paraphraseImprovement": {
+      "minimum": 0.15,
+      "baseline": 0,
+      "met": null,
+      "reason": "Requires a semantic model evaluated on this same corpus"
+    }
+  },
+  "qualityGate": {
+    "applicable": false,
+    "reason": "Lexical floor measurement; no semantic model is qualified"
+  },
+  "cost": {
+    "providerCalls": 0,
+    "amount": 0,
+    "currency": "USD"
+  },
+  "observations": [
+    {
+      "id": "synthetic-penny-1",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-1",
+      "suggestions": [
+        "synthetic-penny-target-1"
+      ]
+    },
+    {
+      "id": "synthetic-penny-2",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-1",
+      "suggestions": [
+        "synthetic-penny-target-1",
+        "synthetic-penny-target-12",
+        "synthetic-penny-target-40",
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-3",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-1",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-4",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-2",
+      "suggestions": [
+        "synthetic-penny-target-2"
+      ]
+    },
+    {
+      "id": "synthetic-penny-5",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-2",
+      "suggestions": [
+        "synthetic-penny-target-2",
+        "synthetic-penny-target-24",
+        "synthetic-penny-target-60",
+        "synthetic-penny-target-96"
+      ]
+    },
+    {
+      "id": "synthetic-penny-6",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-2",
+      "suggestions": [
+        "synthetic-penny-target-89"
+      ]
+    },
+    {
+      "id": "synthetic-penny-7",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-3",
+      "suggestions": [
+        "synthetic-penny-target-3"
+      ]
+    },
+    {
+      "id": "synthetic-penny-8",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-3",
+      "suggestions": [
+        "synthetic-penny-target-3"
+      ]
+    },
+    {
+      "id": "synthetic-penny-9",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-3",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-10",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-4",
+      "suggestions": [
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-1",
+        "synthetic-penny-target-21",
+        "synthetic-penny-target-68",
+        "synthetic-penny-target-70"
+      ]
+    },
+    {
+      "id": "synthetic-penny-11",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-4",
+      "suggestions": [
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-64",
+        "synthetic-penny-target-68",
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-81"
+      ]
+    },
+    {
+      "id": "synthetic-penny-12",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-4",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-65"
+      ]
+    },
+    {
+      "id": "synthetic-penny-13",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-5",
+      "suggestions": [
+        "synthetic-penny-target-5"
+      ]
+    },
+    {
+      "id": "synthetic-penny-14",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-5",
+      "suggestions": [
+        "synthetic-penny-target-5",
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-2",
+        "synthetic-penny-target-27",
+        "synthetic-penny-target-33"
+      ]
+    },
+    {
+      "id": "synthetic-penny-15",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-5",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-16",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-6",
+      "suggestions": [
+        "synthetic-penny-target-6",
+        "synthetic-penny-target-38"
+      ]
+    },
+    {
+      "id": "synthetic-penny-17",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-6",
+      "suggestions": [
+        "synthetic-penny-target-6",
+        "synthetic-penny-target-98"
+      ]
+    },
+    {
+      "id": "synthetic-penny-18",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-6",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-19",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-7",
+      "suggestions": [
+        "synthetic-penny-target-7",
+        "synthetic-penny-target-53"
+      ]
+    },
+    {
+      "id": "synthetic-penny-20",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-7",
+      "suggestions": [
+        "synthetic-penny-target-7",
+        "synthetic-penny-target-53"
+      ]
+    },
+    {
+      "id": "synthetic-penny-21",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-7",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-22",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-8",
+      "suggestions": [
+        "synthetic-penny-target-8"
+      ]
+    },
+    {
+      "id": "synthetic-penny-23",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-8",
+      "suggestions": [
+        "synthetic-penny-target-8",
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-91"
+      ]
+    },
+    {
+      "id": "synthetic-penny-24",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-8",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-25",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-9",
+      "suggestions": [
+        "synthetic-penny-target-9",
+        "synthetic-penny-target-89"
+      ]
+    },
+    {
+      "id": "synthetic-penny-26",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-9",
+      "suggestions": [
+        "synthetic-penny-target-9",
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-24",
+        "synthetic-penny-target-27",
+        "synthetic-penny-target-46"
+      ]
+    },
+    {
+      "id": "synthetic-penny-27",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-9",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62"
+      ]
+    },
+    {
+      "id": "synthetic-penny-28",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-10",
+      "suggestions": [
+        "synthetic-penny-target-10",
+        "synthetic-penny-target-48",
+        "synthetic-penny-target-69"
+      ]
+    },
+    {
+      "id": "synthetic-penny-29",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-10",
+      "suggestions": [
+        "synthetic-penny-target-10",
+        "synthetic-penny-target-30",
+        "synthetic-penny-target-48",
+        "synthetic-penny-target-69",
+        "synthetic-penny-target-75"
+      ]
+    },
+    {
+      "id": "synthetic-penny-30",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-10",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-68"
+      ]
+    },
+    {
+      "id": "synthetic-penny-31",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-11",
+      "suggestions": [
+        "synthetic-penny-target-11",
+        "synthetic-penny-target-82"
+      ]
+    },
+    {
+      "id": "synthetic-penny-32",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-11",
+      "suggestions": [
+        "synthetic-penny-target-11",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-97"
+      ]
+    },
+    {
+      "id": "synthetic-penny-33",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-11",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-34",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-12",
+      "suggestions": [
+        "synthetic-penny-target-12",
+        "synthetic-penny-target-40"
+      ]
+    },
+    {
+      "id": "synthetic-penny-35",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-12",
+      "suggestions": [
+        "synthetic-penny-target-12",
+        "synthetic-penny-target-68"
+      ]
+    },
+    {
+      "id": "synthetic-penny-36",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-12",
+      "suggestions": [
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-76",
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-93",
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-37",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-13",
+      "suggestions": [
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-46",
+        "synthetic-penny-target-80",
+        "synthetic-penny-target-88",
+        "synthetic-penny-target-91"
+      ]
+    },
+    {
+      "id": "synthetic-penny-38",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-13",
+      "suggestions": [
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-88",
+        "synthetic-penny-target-91"
+      ]
+    },
+    {
+      "id": "synthetic-penny-39",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-13",
+      "suggestions": [
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-90"
+      ]
+    },
+    {
+      "id": "synthetic-penny-40",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-14",
+      "suggestions": [
+        "synthetic-penny-target-14"
+      ]
+    },
+    {
+      "id": "synthetic-penny-41",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-14",
+      "suggestions": [
+        "synthetic-penny-target-14"
+      ]
+    },
+    {
+      "id": "synthetic-penny-42",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-14",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-43",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-15",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62"
+      ]
+    },
+    {
+      "id": "synthetic-penny-44",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-15",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-62"
+      ]
+    },
+    {
+      "id": "synthetic-penny-45",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-15",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-46",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-16",
+      "suggestions": [
+        "synthetic-penny-target-16"
+      ]
+    },
+    {
+      "id": "synthetic-penny-47",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-16",
+      "suggestions": [
+        "synthetic-penny-target-16",
+        "synthetic-penny-target-7",
+        "synthetic-penny-target-79"
+      ]
+    },
+    {
+      "id": "synthetic-penny-48",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-16",
+      "suggestions": [
+        "synthetic-penny-target-41"
+      ]
+    },
+    {
+      "id": "synthetic-penny-49",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-17",
+      "suggestions": [
+        "synthetic-penny-target-17",
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-83",
+        "synthetic-penny-target-86"
+      ]
+    },
+    {
+      "id": "synthetic-penny-50",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-17",
+      "suggestions": [
+        "synthetic-penny-target-17",
+        "synthetic-penny-target-81"
+      ]
+    },
+    {
+      "id": "synthetic-penny-51",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-17",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-52",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-18",
+      "suggestions": [
+        "synthetic-penny-target-18",
+        "synthetic-penny-target-73",
+        "synthetic-penny-target-77",
+        "synthetic-penny-target-85",
+        "synthetic-penny-target-86"
+      ]
+    },
+    {
+      "id": "synthetic-penny-53",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-18",
+      "suggestions": [
+        "synthetic-penny-target-18",
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-86"
+      ]
+    },
+    {
+      "id": "synthetic-penny-54",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-18",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-55",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-19",
+      "suggestions": [
+        "synthetic-penny-target-19"
+      ]
+    },
+    {
+      "id": "synthetic-penny-56",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-19",
+      "suggestions": [
+        "synthetic-penny-target-19",
+        "synthetic-penny-target-40"
+      ]
+    },
+    {
+      "id": "synthetic-penny-57",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-19",
+      "suggestions": [
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-58",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-20",
+      "suggestions": [
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-47",
+        "synthetic-penny-target-67",
+        "synthetic-penny-target-68"
+      ]
+    },
+    {
+      "id": "synthetic-penny-59",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-20",
+      "suggestions": [
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-47",
+        "synthetic-penny-target-67",
+        "synthetic-penny-target-80"
+      ]
+    },
+    {
+      "id": "synthetic-penny-60",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-20",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62"
+      ]
+    },
+    {
+      "id": "synthetic-penny-61",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-21",
+      "suggestions": [
+        "synthetic-penny-target-21",
+        "synthetic-penny-target-73"
+      ]
+    },
+    {
+      "id": "synthetic-penny-62",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-21",
+      "suggestions": [
+        "synthetic-penny-target-21",
+        "synthetic-penny-target-40",
+        "synthetic-penny-target-73",
+        "synthetic-penny-target-99"
+      ]
+    },
+    {
+      "id": "synthetic-penny-63",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-21",
+      "suggestions": [
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46",
+        "synthetic-penny-target-8"
+      ]
+    },
+    {
+      "id": "synthetic-penny-64",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-22",
+      "suggestions": [
+        "synthetic-penny-target-22",
+        "synthetic-penny-target-82"
+      ]
+    },
+    {
+      "id": "synthetic-penny-65",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-22",
+      "suggestions": [
+        "synthetic-penny-target-22",
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-82",
+        "synthetic-penny-target-91"
+      ]
+    },
+    {
+      "id": "synthetic-penny-66",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-22",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-67",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-23",
+      "suggestions": [
+        "synthetic-penny-target-23",
+        "synthetic-penny-target-95"
+      ]
+    },
+    {
+      "id": "synthetic-penny-68",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-23",
+      "suggestions": [
+        "synthetic-penny-target-23",
+        "synthetic-penny-target-58",
+        "synthetic-penny-target-95"
+      ]
+    },
+    {
+      "id": "synthetic-penny-69",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-23",
+      "suggestions": [
+        "synthetic-penny-target-98"
+      ]
+    },
+    {
+      "id": "synthetic-penny-70",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-24",
+      "suggestions": [
+        "synthetic-penny-target-24",
+        "synthetic-penny-target-75"
+      ]
+    },
+    {
+      "id": "synthetic-penny-71",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-24",
+      "suggestions": [
+        "synthetic-penny-target-24",
+        "synthetic-penny-target-17"
+      ]
+    },
+    {
+      "id": "synthetic-penny-72",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-24",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-73",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-25",
+      "suggestions": [
+        "synthetic-penny-target-25",
+        "synthetic-penny-target-76",
+        "synthetic-penny-target-77",
+        "synthetic-penny-target-97"
+      ]
+    },
+    {
+      "id": "synthetic-penny-74",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-25",
+      "suggestions": [
+        "synthetic-penny-target-25",
+        "synthetic-penny-target-64",
+        "synthetic-penny-target-76",
+        "synthetic-penny-target-77",
+        "synthetic-penny-target-84"
+      ]
+    },
+    {
+      "id": "synthetic-penny-75",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-25",
+      "suggestions": [
+        "synthetic-penny-target-31"
+      ]
+    },
+    {
+      "id": "synthetic-penny-76",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-26",
+      "suggestions": [
+        "synthetic-penny-target-26",
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-30"
+      ]
+    },
+    {
+      "id": "synthetic-penny-77",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-26",
+      "suggestions": [
+        "synthetic-penny-target-26",
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-81"
+      ]
+    },
+    {
+      "id": "synthetic-penny-78",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-26",
+      "suggestions": [
+        "synthetic-penny-target-17"
+      ]
+    },
+    {
+      "id": "synthetic-penny-79",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-27",
+      "suggestions": [
+        "synthetic-penny-target-27",
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-46",
+        "synthetic-penny-target-80",
+        "synthetic-penny-target-81"
+      ]
+    },
+    {
+      "id": "synthetic-penny-80",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-27",
+      "suggestions": [
+        "synthetic-penny-target-27",
+        "synthetic-penny-target-52",
+        "synthetic-penny-target-64",
+        "synthetic-penny-target-82",
+        "synthetic-penny-target-84"
+      ]
+    },
+    {
+      "id": "synthetic-penny-81",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-27",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-82",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-28",
+      "suggestions": [
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-63"
+      ]
+    },
+    {
+      "id": "synthetic-penny-83",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-28",
+      "suggestions": [
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-63"
+      ]
+    },
+    {
+      "id": "synthetic-penny-84",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-28",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62"
+      ]
+    },
+    {
+      "id": "synthetic-penny-85",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-29",
+      "suggestions": [
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-47",
+        "synthetic-penny-target-63"
+      ]
+    },
+    {
+      "id": "synthetic-penny-86",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-29",
+      "suggestions": [
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-11",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-47"
+      ]
+    },
+    {
+      "id": "synthetic-penny-87",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-29",
+      "suggestions": [
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-76"
+      ]
+    },
+    {
+      "id": "synthetic-penny-88",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-30",
+      "suggestions": [
+        "synthetic-penny-target-30",
+        "synthetic-penny-target-31",
+        "synthetic-penny-target-39",
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-69"
+      ]
+    },
+    {
+      "id": "synthetic-penny-89",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-30",
+      "suggestions": [
+        "synthetic-penny-target-30",
+        "synthetic-penny-target-22",
+        "synthetic-penny-target-65"
+      ]
+    },
+    {
+      "id": "synthetic-penny-90",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-30",
+      "suggestions": [
+        "synthetic-penny-target-98"
+      ]
+    },
+    {
+      "id": "synthetic-penny-91",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-31",
+      "suggestions": [
+        "synthetic-penny-target-31",
+        "synthetic-penny-target-38"
+      ]
+    },
+    {
+      "id": "synthetic-penny-92",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-31",
+      "suggestions": [
+        "synthetic-penny-target-31"
+      ]
+    },
+    {
+      "id": "synthetic-penny-93",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-31",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-94",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-32",
+      "suggestions": [
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-1",
+        "synthetic-penny-target-21",
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-93"
+      ]
+    },
+    {
+      "id": "synthetic-penny-95",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-32",
+      "suggestions": [
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-40",
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-93",
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-96",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-32",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-97",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-33",
+      "suggestions": [
+        "synthetic-penny-target-33"
+      ]
+    },
+    {
+      "id": "synthetic-penny-98",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-33",
+      "suggestions": [
+        "synthetic-penny-target-33",
+        "synthetic-penny-target-2"
+      ]
+    },
+    {
+      "id": "synthetic-penny-99",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-33",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-100",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-34",
+      "suggestions": [
+        "synthetic-penny-target-34"
+      ]
+    },
+    {
+      "id": "synthetic-penny-101",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-34",
+      "suggestions": [
+        "synthetic-penny-target-34",
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-102",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-34",
+      "suggestions": [
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-91",
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-103",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-35",
+      "suggestions": [
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-90",
+        "synthetic-penny-target-93"
+      ]
+    },
+    {
+      "id": "synthetic-penny-104",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-35",
+      "suggestions": [
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-56",
+        "synthetic-penny-target-55",
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-90"
+      ]
+    },
+    {
+      "id": "synthetic-penny-105",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-35",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-106",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-36",
+      "suggestions": [
+        "synthetic-penny-target-36"
+      ]
+    },
+    {
+      "id": "synthetic-penny-107",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-36",
+      "suggestions": [
+        "synthetic-penny-target-36",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-95"
+      ]
+    },
+    {
+      "id": "synthetic-penny-108",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-36",
+      "suggestions": [
+        "synthetic-penny-target-49"
+      ]
+    },
+    {
+      "id": "synthetic-penny-109",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-37",
+      "suggestions": [
+        "synthetic-penny-target-37",
+        "synthetic-penny-target-40",
+        "synthetic-penny-target-72"
+      ]
+    },
+    {
+      "id": "synthetic-penny-110",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-37",
+      "suggestions": [
+        "synthetic-penny-target-37",
+        "synthetic-penny-target-40",
+        "synthetic-penny-target-72"
+      ]
+    },
+    {
+      "id": "synthetic-penny-111",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-37",
+      "suggestions": [
+        "synthetic-penny-target-98"
+      ]
+    },
+    {
+      "id": "synthetic-penny-112",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-38",
+      "suggestions": [
+        "synthetic-penny-target-38",
+        "synthetic-penny-target-31",
+        "synthetic-penny-target-39",
+        "synthetic-penny-target-69",
+        "synthetic-penny-target-85"
+      ]
+    },
+    {
+      "id": "synthetic-penny-113",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-38",
+      "suggestions": [
+        "synthetic-penny-target-38",
+        "synthetic-penny-target-61"
+      ]
+    },
+    {
+      "id": "synthetic-penny-114",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-38",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-115",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-39",
+      "suggestions": [
+        "synthetic-penny-target-39",
+        "synthetic-penny-target-72"
+      ]
+    },
+    {
+      "id": "synthetic-penny-116",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-39",
+      "suggestions": [
+        "synthetic-penny-target-39",
+        "synthetic-penny-target-17",
+        "synthetic-penny-target-30",
+        "synthetic-penny-target-65"
+      ]
+    },
+    {
+      "id": "synthetic-penny-117",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-39",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-118",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-40",
+      "suggestions": [
+        "synthetic-penny-target-40",
+        "synthetic-penny-target-12",
+        "synthetic-penny-target-37",
+        "synthetic-penny-target-73",
+        "synthetic-penny-target-77"
+      ]
+    },
+    {
+      "id": "synthetic-penny-119",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-40",
+      "suggestions": [
+        "synthetic-penny-target-40",
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-37",
+        "synthetic-penny-target-68"
+      ]
+    },
+    {
+      "id": "synthetic-penny-120",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-40",
+      "suggestions": [
+        "synthetic-penny-target-98"
+      ]
+    },
+    {
+      "id": "synthetic-penny-121",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-41",
+      "suggestions": [
+        "synthetic-penny-target-41",
+        "synthetic-penny-target-60",
+        "synthetic-penny-target-96"
+      ]
+    },
+    {
+      "id": "synthetic-penny-122",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-41",
+      "suggestions": [
+        "synthetic-penny-target-41",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-60"
+      ]
+    },
+    {
+      "id": "synthetic-penny-123",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-41",
+      "suggestions": [
+        "synthetic-penny-target-6",
+        "synthetic-penny-target-84"
+      ]
+    },
+    {
+      "id": "synthetic-penny-124",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-42",
+      "suggestions": [
+        "synthetic-penny-target-42",
+        "synthetic-penny-target-47"
+      ]
+    },
+    {
+      "id": "synthetic-penny-125",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-42",
+      "suggestions": [
+        "synthetic-penny-target-42",
+        "synthetic-penny-target-10"
+      ]
+    },
+    {
+      "id": "synthetic-penny-126",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-42",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-127",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-43",
+      "suggestions": [
+        "synthetic-penny-target-43",
+        "synthetic-penny-target-8",
+        "synthetic-penny-target-44",
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46"
+      ]
+    },
+    {
+      "id": "synthetic-penny-128",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-43",
+      "suggestions": [
+        "synthetic-penny-target-43",
+        "synthetic-penny-target-44",
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46"
+      ]
+    },
+    {
+      "id": "synthetic-penny-129",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-43",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-130",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-44",
+      "suggestions": [
+        "synthetic-penny-target-44",
+        "synthetic-penny-target-43",
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46"
+      ]
+    },
+    {
+      "id": "synthetic-penny-131",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-44",
+      "suggestions": [
+        "synthetic-penny-target-44",
+        "synthetic-penny-target-43",
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46",
+        "synthetic-penny-target-67"
+      ]
+    },
+    {
+      "id": "synthetic-penny-132",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-44",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-133",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-45",
+      "suggestions": [
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46",
+        "synthetic-penny-target-43",
+        "synthetic-penny-target-44"
+      ]
+    },
+    {
+      "id": "synthetic-penny-134",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-45",
+      "suggestions": [
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46",
+        "synthetic-penny-target-43",
+        "synthetic-penny-target-44"
+      ]
+    },
+    {
+      "id": "synthetic-penny-135",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-45",
+      "suggestions": [
+        "synthetic-penny-target-21"
+      ]
+    },
+    {
+      "id": "synthetic-penny-136",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 2,
+      "candidate": "synthetic-penny-target-46",
+      "suggestions": [
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46",
+        "synthetic-penny-target-43",
+        "synthetic-penny-target-44"
+      ]
+    },
+    {
+      "id": "synthetic-penny-137",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 2,
+      "candidate": "synthetic-penny-target-46",
+      "suggestions": [
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-46",
+        "synthetic-penny-target-43",
+        "synthetic-penny-target-44",
+        "synthetic-penny-target-62"
+      ]
+    },
+    {
+      "id": "synthetic-penny-138",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-46",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-139",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-47",
+      "suggestions": [
+        "synthetic-penny-target-47",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-67",
+        "synthetic-penny-target-80"
+      ]
+    },
+    {
+      "id": "synthetic-penny-140",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-47",
+      "suggestions": [
+        "synthetic-penny-target-47",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-67",
+        "synthetic-penny-target-70"
+      ]
+    },
+    {
+      "id": "synthetic-penny-141",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-47",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-142",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-48",
+      "suggestions": [
+        "synthetic-penny-target-48",
+        "synthetic-penny-target-10",
+        "synthetic-penny-target-69"
+      ]
+    },
+    {
+      "id": "synthetic-penny-143",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-48",
+      "suggestions": [
+        "synthetic-penny-target-48",
+        "synthetic-penny-target-10",
+        "synthetic-penny-target-69"
+      ]
+    },
+    {
+      "id": "synthetic-penny-144",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-48",
+      "suggestions": [
+        "synthetic-penny-target-76"
+      ]
+    },
+    {
+      "id": "synthetic-penny-145",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-49",
+      "suggestions": [
+        "synthetic-penny-target-49",
+        "synthetic-penny-target-50"
+      ]
+    },
+    {
+      "id": "synthetic-penny-146",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-49",
+      "suggestions": [
+        "synthetic-penny-target-49",
+        "synthetic-penny-target-50",
+        "synthetic-penny-target-95"
+      ]
+    },
+    {
+      "id": "synthetic-penny-147",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-49",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-148",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-50",
+      "suggestions": [
+        "synthetic-penny-target-50",
+        "synthetic-penny-target-49"
+      ]
+    },
+    {
+      "id": "synthetic-penny-149",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-50",
+      "suggestions": [
+        "synthetic-penny-target-50",
+        "synthetic-penny-target-49",
+        "synthetic-penny-target-52"
+      ]
+    },
+    {
+      "id": "synthetic-penny-150",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-50",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-151",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-51",
+      "suggestions": [
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-1",
+        "synthetic-penny-target-21"
+      ]
+    },
+    {
+      "id": "synthetic-penny-152",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-51",
+      "suggestions": [
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-52"
+      ]
+    },
+    {
+      "id": "synthetic-penny-153",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-51",
+      "suggestions": [
+        "synthetic-penny-target-70"
+      ]
+    },
+    {
+      "id": "synthetic-penny-154",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-52",
+      "suggestions": [
+        "synthetic-penny-target-52",
+        "synthetic-penny-target-78"
+      ]
+    },
+    {
+      "id": "synthetic-penny-155",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-52",
+      "suggestions": [
+        "synthetic-penny-target-52",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-78"
+      ]
+    },
+    {
+      "id": "synthetic-penny-156",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-52",
+      "suggestions": [
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-91"
+      ]
+    },
+    {
+      "id": "synthetic-penny-157",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-53",
+      "suggestions": [
+        "synthetic-penny-target-53",
+        "synthetic-penny-target-7"
+      ]
+    },
+    {
+      "id": "synthetic-penny-158",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-53",
+      "suggestions": [
+        "synthetic-penny-target-53",
+        "synthetic-penny-target-7"
+      ]
+    },
+    {
+      "id": "synthetic-penny-159",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-53",
+      "suggestions": [
+        "synthetic-penny-target-54"
+      ]
+    },
+    {
+      "id": "synthetic-penny-160",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-54",
+      "suggestions": [
+        "synthetic-penny-target-54"
+      ]
+    },
+    {
+      "id": "synthetic-penny-161",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-54",
+      "suggestions": [
+        "synthetic-penny-target-54",
+        "synthetic-penny-target-2",
+        "synthetic-penny-target-33"
+      ]
+    },
+    {
+      "id": "synthetic-penny-162",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-54",
+      "suggestions": [
+        "synthetic-penny-target-22",
+        "synthetic-penny-target-28"
+      ]
+    },
+    {
+      "id": "synthetic-penny-163",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-55",
+      "suggestions": [
+        "synthetic-penny-target-55",
+        "synthetic-penny-target-56"
+      ]
+    },
+    {
+      "id": "synthetic-penny-164",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-55",
+      "suggestions": [
+        "synthetic-penny-target-55",
+        "synthetic-penny-target-56"
+      ]
+    },
+    {
+      "id": "synthetic-penny-165",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-55",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-166",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-56",
+      "suggestions": [
+        "synthetic-penny-target-56",
+        "synthetic-penny-target-55"
+      ]
+    },
+    {
+      "id": "synthetic-penny-167",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-56",
+      "suggestions": [
+        "synthetic-penny-target-56",
+        "synthetic-penny-target-55"
+      ]
+    },
+    {
+      "id": "synthetic-penny-168",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-56",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-169",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-57",
+      "suggestions": [
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-90"
+      ]
+    },
+    {
+      "id": "synthetic-penny-170",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-57",
+      "suggestions": [
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-56",
+        "synthetic-penny-target-90"
+      ]
+    },
+    {
+      "id": "synthetic-penny-171",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-57",
+      "suggestions": [
+        "synthetic-penny-target-87"
+      ]
+    },
+    {
+      "id": "synthetic-penny-172",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-58",
+      "suggestions": [
+        "synthetic-penny-target-58"
+      ]
+    },
+    {
+      "id": "synthetic-penny-173",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-58",
+      "suggestions": [
+        "synthetic-penny-target-58",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-97"
+      ]
+    },
+    {
+      "id": "synthetic-penny-174",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-58",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-175",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-59",
+      "suggestions": [
+        "synthetic-penny-target-59"
+      ]
+    },
+    {
+      "id": "synthetic-penny-176",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-59",
+      "suggestions": [
+        "synthetic-penny-target-59"
+      ]
+    },
+    {
+      "id": "synthetic-penny-177",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-59",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-178",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-60",
+      "suggestions": [
+        "synthetic-penny-target-60",
+        "synthetic-penny-target-41",
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-91"
+      ]
+    },
+    {
+      "id": "synthetic-penny-179",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-60",
+      "suggestions": [
+        "synthetic-penny-target-60",
+        "synthetic-penny-target-41",
+        "synthetic-penny-target-61"
+      ]
+    },
+    {
+      "id": "synthetic-penny-180",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-60",
+      "suggestions": [
+        "synthetic-penny-target-98"
+      ]
+    },
+    {
+      "id": "synthetic-penny-181",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-61",
+      "suggestions": [
+        "synthetic-penny-target-61",
+        "synthetic-penny-target-6"
+      ]
+    },
+    {
+      "id": "synthetic-penny-182",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-61",
+      "suggestions": [
+        "synthetic-penny-target-61",
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-91"
+      ]
+    },
+    {
+      "id": "synthetic-penny-183",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-61",
+      "suggestions": [
+        "synthetic-penny-target-22",
+        "synthetic-penny-target-42"
+      ]
+    },
+    {
+      "id": "synthetic-penny-184",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-62",
+      "suggestions": [
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-25",
+        "synthetic-penny-target-76"
+      ]
+    },
+    {
+      "id": "synthetic-penny-185",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-62",
+      "suggestions": [
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-63"
+      ]
+    },
+    {
+      "id": "synthetic-penny-186",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-62",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-187",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-63",
+      "suggestions": [
+        "synthetic-penny-target-63",
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-90"
+      ]
+    },
+    {
+      "id": "synthetic-penny-188",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 2,
+      "candidate": "synthetic-penny-target-63",
+      "suggestions": [
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-63",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-90"
+      ]
+    },
+    {
+      "id": "synthetic-penny-189",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-63",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-81"
+      ]
+    },
+    {
+      "id": "synthetic-penny-190",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-64",
+      "suggestions": [
+        "synthetic-penny-target-64"
+      ]
+    },
+    {
+      "id": "synthetic-penny-191",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-64",
+      "suggestions": [
+        "synthetic-penny-target-64",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-97"
+      ]
+    },
+    {
+      "id": "synthetic-penny-192",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-64",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-193",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-65",
+      "suggestions": [
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-26",
+        "synthetic-penny-target-55",
+        "synthetic-penny-target-63",
+        "synthetic-penny-target-78"
+      ]
+    },
+    {
+      "id": "synthetic-penny-194",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-65",
+      "suggestions": [
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-26",
+        "synthetic-penny-target-63",
+        "synthetic-penny-target-90"
+      ]
+    },
+    {
+      "id": "synthetic-penny-195",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-65",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-196",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-66",
+      "suggestions": [
+        "synthetic-penny-target-66",
+        "synthetic-penny-target-77"
+      ]
+    },
+    {
+      "id": "synthetic-penny-197",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-66",
+      "suggestions": [
+        "synthetic-penny-target-66",
+        "synthetic-penny-target-77",
+        "synthetic-penny-target-9"
+      ]
+    },
+    {
+      "id": "synthetic-penny-198",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-66",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-199",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-67",
+      "suggestions": [
+        "synthetic-penny-target-67",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-47",
+        "synthetic-penny-target-80"
+      ]
+    },
+    {
+      "id": "synthetic-penny-200",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-67",
+      "suggestions": [
+        "synthetic-penny-target-67",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-47",
+        "synthetic-penny-target-80"
+      ]
+    },
+    {
+      "id": "synthetic-penny-201",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-67",
+      "suggestions": [
+        "synthetic-penny-target-100",
+        "synthetic-penny-target-77"
+      ]
+    },
+    {
+      "id": "synthetic-penny-202",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-68",
+      "suggestions": [
+        "synthetic-penny-target-68",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-81",
+        "synthetic-penny-target-98"
+      ]
+    },
+    {
+      "id": "synthetic-penny-203",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-68",
+      "suggestions": [
+        "synthetic-penny-target-68",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-70"
+      ]
+    },
+    {
+      "id": "synthetic-penny-204",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-68",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-205",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-69",
+      "suggestions": [
+        "synthetic-penny-target-69",
+        "synthetic-penny-target-10",
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-48"
+      ]
+    },
+    {
+      "id": "synthetic-penny-206",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-69",
+      "suggestions": [
+        "synthetic-penny-target-69",
+        "synthetic-penny-target-10",
+        "synthetic-penny-target-48",
+        "synthetic-penny-target-81"
+      ]
+    },
+    {
+      "id": "synthetic-penny-207",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-69",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-72"
+      ]
+    },
+    {
+      "id": "synthetic-penny-208",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-70",
+      "suggestions": [
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-68",
+        "synthetic-penny-target-81"
+      ]
+    },
+    {
+      "id": "synthetic-penny-209",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-70",
+      "suggestions": [
+        "synthetic-penny-target-70",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-68",
+        "synthetic-penny-target-81"
+      ]
+    },
+    {
+      "id": "synthetic-penny-210",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-70",
+      "suggestions": [
+        "synthetic-penny-target-51"
+      ]
+    },
+    {
+      "id": "synthetic-penny-211",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-71",
+      "suggestions": [
+        "synthetic-penny-target-71"
+      ]
+    },
+    {
+      "id": "synthetic-penny-212",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-71",
+      "suggestions": [
+        "synthetic-penny-target-71"
+      ]
+    },
+    {
+      "id": "synthetic-penny-213",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-71",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-214",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-72",
+      "suggestions": [
+        "synthetic-penny-target-72",
+        "synthetic-penny-target-37"
+      ]
+    },
+    {
+      "id": "synthetic-penny-215",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-72",
+      "suggestions": [
+        "synthetic-penny-target-72",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-37",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51"
+      ]
+    },
+    {
+      "id": "synthetic-penny-216",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-72",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-217",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-73",
+      "suggestions": [
+        "synthetic-penny-target-73",
+        "synthetic-penny-target-21"
+      ]
+    },
+    {
+      "id": "synthetic-penny-218",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 2,
+      "candidate": "synthetic-penny-target-73",
+      "suggestions": [
+        "synthetic-penny-target-21",
+        "synthetic-penny-target-73",
+        "synthetic-penny-target-1"
+      ]
+    },
+    {
+      "id": "synthetic-penny-219",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-73",
+      "suggestions": [
+        "synthetic-penny-target-76",
+        "synthetic-penny-target-8",
+        "synthetic-penny-target-88"
+      ]
+    },
+    {
+      "id": "synthetic-penny-220",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-74",
+      "suggestions": [
+        "synthetic-penny-target-74"
+      ]
+    },
+    {
+      "id": "synthetic-penny-221",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-74",
+      "suggestions": [
+        "synthetic-penny-target-74"
+      ]
+    },
+    {
+      "id": "synthetic-penny-222",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-74",
+      "suggestions": [
+        "synthetic-penny-target-21",
+        "synthetic-penny-target-66",
+        "synthetic-penny-target-73"
+      ]
+    },
+    {
+      "id": "synthetic-penny-223",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-75",
+      "suggestions": [
+        "synthetic-penny-target-75",
+        "synthetic-penny-target-88"
+      ]
+    },
+    {
+      "id": "synthetic-penny-224",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-75",
+      "suggestions": [
+        "synthetic-penny-target-75",
+        "synthetic-penny-target-88",
+        "synthetic-penny-target-9"
+      ]
+    },
+    {
+      "id": "synthetic-penny-225",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-75",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-226",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-76",
+      "suggestions": [
+        "synthetic-penny-target-76"
+      ]
+    },
+    {
+      "id": "synthetic-penny-227",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-76",
+      "suggestions": [
+        "synthetic-penny-target-76"
+      ]
+    },
+    {
+      "id": "synthetic-penny-228",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-76",
+      "suggestions": [
+        "synthetic-penny-target-15",
+        "synthetic-penny-target-62",
+        "synthetic-penny-target-73"
+      ]
+    },
+    {
+      "id": "synthetic-penny-229",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-77",
+      "suggestions": [
+        "synthetic-penny-target-77",
+        "synthetic-penny-target-25",
+        "synthetic-penny-target-66"
+      ]
+    },
+    {
+      "id": "synthetic-penny-230",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-77",
+      "suggestions": [
+        "synthetic-penny-target-77",
+        "synthetic-penny-target-25",
+        "synthetic-penny-target-66"
+      ]
+    },
+    {
+      "id": "synthetic-penny-231",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-77",
+      "suggestions": [
+        "synthetic-penny-target-31"
+      ]
+    },
+    {
+      "id": "synthetic-penny-232",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-78",
+      "suggestions": [
+        "synthetic-penny-target-78",
+        "synthetic-penny-target-52"
+      ]
+    },
+    {
+      "id": "synthetic-penny-233",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-78",
+      "suggestions": [
+        "synthetic-penny-target-78",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-52"
+      ]
+    },
+    {
+      "id": "synthetic-penny-234",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-78",
+      "suggestions": [
+        "synthetic-penny-target-25",
+        "synthetic-penny-target-30",
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-97"
+      ]
+    },
+    {
+      "id": "synthetic-penny-235",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-79",
+      "suggestions": [
+        "synthetic-penny-target-79"
+      ]
+    },
+    {
+      "id": "synthetic-penny-236",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-79",
+      "suggestions": [
+        "synthetic-penny-target-79"
+      ]
+    },
+    {
+      "id": "synthetic-penny-237",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-79",
+      "suggestions": [
+        "synthetic-penny-target-75",
+        "synthetic-penny-target-88"
+      ]
+    },
+    {
+      "id": "synthetic-penny-238",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-80",
+      "suggestions": [
+        "synthetic-penny-target-80",
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-46"
+      ]
+    },
+    {
+      "id": "synthetic-penny-239",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-80",
+      "suggestions": [
+        "synthetic-penny-target-80",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-47",
+        "synthetic-penny-target-67"
+      ]
+    },
+    {
+      "id": "synthetic-penny-240",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-80",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-241",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-81",
+      "suggestions": [
+        "synthetic-penny-target-81",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-47"
+      ]
+    },
+    {
+      "id": "synthetic-penny-242",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-81",
+      "suggestions": [
+        "synthetic-penny-target-81",
+        "synthetic-penny-target-20",
+        "synthetic-penny-target-29",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-47"
+      ]
+    },
+    {
+      "id": "synthetic-penny-243",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-81",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-244",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-82",
+      "suggestions": [
+        "synthetic-penny-target-82",
+        "synthetic-penny-target-22",
+        "synthetic-penny-target-27"
+      ]
+    },
+    {
+      "id": "synthetic-penny-245",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 2,
+      "candidate": "synthetic-penny-target-82",
+      "suggestions": [
+        "synthetic-penny-target-22",
+        "synthetic-penny-target-82",
+        "synthetic-penny-target-27"
+      ]
+    },
+    {
+      "id": "synthetic-penny-246",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-82",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-247",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-83",
+      "suggestions": [
+        "synthetic-penny-target-83"
+      ]
+    },
+    {
+      "id": "synthetic-penny-248",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-83",
+      "suggestions": [
+        "synthetic-penny-target-83",
+        "synthetic-penny-target-52"
+      ]
+    },
+    {
+      "id": "synthetic-penny-249",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-83",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-250",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-84",
+      "suggestions": [
+        "synthetic-penny-target-84"
+      ]
+    },
+    {
+      "id": "synthetic-penny-251",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-84",
+      "suggestions": [
+        "synthetic-penny-target-84",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-97"
+      ]
+    },
+    {
+      "id": "synthetic-penny-252",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-84",
+      "suggestions": [
+        "synthetic-penny-target-41"
+      ]
+    },
+    {
+      "id": "synthetic-penny-253",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-85",
+      "suggestions": [
+        "synthetic-penny-target-85",
+        "synthetic-penny-target-72",
+        "synthetic-penny-target-73",
+        "synthetic-penny-target-77"
+      ]
+    },
+    {
+      "id": "synthetic-penny-254",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-85",
+      "suggestions": [
+        "synthetic-penny-target-85",
+        "synthetic-penny-target-73",
+        "synthetic-penny-target-77"
+      ]
+    },
+    {
+      "id": "synthetic-penny-255",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-85",
+      "suggestions": [
+        "synthetic-penny-target-2",
+        "synthetic-penny-target-33"
+      ]
+    },
+    {
+      "id": "synthetic-penny-256",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-86",
+      "suggestions": [
+        "synthetic-penny-target-86",
+        "synthetic-penny-target-18",
+        "synthetic-penny-target-67"
+      ]
+    },
+    {
+      "id": "synthetic-penny-257",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 2,
+      "candidate": "synthetic-penny-target-86",
+      "suggestions": [
+        "synthetic-penny-target-67",
+        "synthetic-penny-target-86",
+        "synthetic-penny-target-18"
+      ]
+    },
+    {
+      "id": "synthetic-penny-258",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-86",
+      "suggestions": [
+        "synthetic-penny-target-77"
+      ]
+    },
+    {
+      "id": "synthetic-penny-259",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-87",
+      "suggestions": [
+        "synthetic-penny-target-87"
+      ]
+    },
+    {
+      "id": "synthetic-penny-260",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-87",
+      "suggestions": [
+        "synthetic-penny-target-87",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-97"
+      ]
+    },
+    {
+      "id": "synthetic-penny-261",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-87",
+      "suggestions": [
+        "synthetic-penny-target-25",
+        "synthetic-penny-target-75"
+      ]
+    },
+    {
+      "id": "synthetic-penny-262",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-88",
+      "suggestions": [
+        "synthetic-penny-target-88",
+        "synthetic-penny-target-12",
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-40"
+      ]
+    },
+    {
+      "id": "synthetic-penny-263",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-88",
+      "suggestions": [
+        "synthetic-penny-target-88",
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-75",
+        "synthetic-penny-target-9",
+        "synthetic-penny-target-91"
+      ]
+    },
+    {
+      "id": "synthetic-penny-264",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-88",
+      "suggestions": [
+        "synthetic-penny-target-90",
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-63",
+        "synthetic-penny-target-65"
+      ]
+    },
+    {
+      "id": "synthetic-penny-265",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-89",
+      "suggestions": [
+        "synthetic-penny-target-89",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-9",
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-93"
+      ]
+    },
+    {
+      "id": "synthetic-penny-266",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-89",
+      "suggestions": [
+        "synthetic-penny-target-89",
+        "synthetic-penny-target-28",
+        "synthetic-penny-target-9"
+      ]
+    },
+    {
+      "id": "synthetic-penny-267",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-89",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-268",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-90",
+      "suggestions": [
+        "synthetic-penny-target-90",
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-63",
+        "synthetic-penny-target-65"
+      ]
+    },
+    {
+      "id": "synthetic-penny-269",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-90",
+      "suggestions": [
+        "synthetic-penny-target-90",
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-63",
+        "synthetic-penny-target-64"
+      ]
+    },
+    {
+      "id": "synthetic-penny-270",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-90",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-271",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-91",
+      "suggestions": [
+        "synthetic-penny-target-91",
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-88"
+      ]
+    },
+    {
+      "id": "synthetic-penny-272",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-91",
+      "suggestions": [
+        "synthetic-penny-target-91",
+        "synthetic-penny-target-13",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51"
+      ]
+    },
+    {
+      "id": "synthetic-penny-273",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-91",
+      "suggestions": [
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-57",
+        "synthetic-penny-target-64",
+        "synthetic-penny-target-84",
+        "synthetic-penny-target-90"
+      ]
+    },
+    {
+      "id": "synthetic-penny-274",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-92",
+      "suggestions": [
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-8",
+        "synthetic-penny-target-93",
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-275",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-92",
+      "suggestions": [
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-9",
+        "synthetic-penny-target-93",
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-276",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-92",
+      "suggestions": [
+        "synthetic-penny-target-95"
+      ]
+    },
+    {
+      "id": "synthetic-penny-277",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 2,
+      "candidate": "synthetic-penny-target-93",
+      "suggestions": [
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-93",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-45",
+        "synthetic-penny-target-83"
+      ]
+    },
+    {
+      "id": "synthetic-penny-278",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-93",
+      "suggestions": [
+        "synthetic-penny-target-93",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-35",
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-94"
+      ]
+    },
+    {
+      "id": "synthetic-penny-279",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-93",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-280",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-94",
+      "suggestions": [
+        "synthetic-penny-target-94",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-93"
+      ]
+    },
+    {
+      "id": "synthetic-penny-281",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-94",
+      "suggestions": [
+        "synthetic-penny-target-94",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-34",
+        "synthetic-penny-target-92",
+        "synthetic-penny-target-93"
+      ]
+    },
+    {
+      "id": "synthetic-penny-282",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-94",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-283",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-95",
+      "suggestions": [
+        "synthetic-penny-target-95",
+        "synthetic-penny-target-23",
+        "synthetic-penny-target-26",
+        "synthetic-penny-target-55",
+        "synthetic-penny-target-78"
+      ]
+    },
+    {
+      "id": "synthetic-penny-284",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-95",
+      "suggestions": [
+        "synthetic-penny-target-95",
+        "synthetic-penny-target-23"
+      ]
+    },
+    {
+      "id": "synthetic-penny-285",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-95",
+      "suggestions": [
+        "synthetic-penny-target-30",
+        "synthetic-penny-target-65",
+        "synthetic-penny-target-78"
+      ]
+    },
+    {
+      "id": "synthetic-penny-286",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-96",
+      "suggestions": [
+        "synthetic-penny-target-96"
+      ]
+    },
+    {
+      "id": "synthetic-penny-287",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-96",
+      "suggestions": [
+        "synthetic-penny-target-96"
+      ]
+    },
+    {
+      "id": "synthetic-penny-288",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-96",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-289",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-97",
+      "suggestions": [
+        "synthetic-penny-target-97",
+        "synthetic-penny-target-1",
+        "synthetic-penny-target-21",
+        "synthetic-penny-target-25"
+      ]
+    },
+    {
+      "id": "synthetic-penny-290",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-97",
+      "suggestions": [
+        "synthetic-penny-target-97",
+        "synthetic-penny-target-25",
+        "synthetic-penny-target-56"
+      ]
+    },
+    {
+      "id": "synthetic-penny-291",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-97",
+      "suggestions": []
+    },
+    {
+      "id": "synthetic-penny-292",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-98",
+      "suggestions": [
+        "synthetic-penny-target-98"
+      ]
+    },
+    {
+      "id": "synthetic-penny-293",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-98",
+      "suggestions": [
+        "synthetic-penny-target-98",
+        "synthetic-penny-target-32",
+        "synthetic-penny-target-4",
+        "synthetic-penny-target-51",
+        "synthetic-penny-target-97"
+      ]
+    },
+    {
+      "id": "synthetic-penny-294",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-98",
+      "suggestions": [
+        "synthetic-penny-target-68"
+      ]
+    },
+    {
+      "id": "synthetic-penny-295",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-99",
+      "suggestions": [
+        "synthetic-penny-target-99",
+        "synthetic-penny-target-15"
+      ]
+    },
+    {
+      "id": "synthetic-penny-296",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-99",
+      "suggestions": [
+        "synthetic-penny-target-99",
+        "synthetic-penny-target-15"
+      ]
+    },
+    {
+      "id": "synthetic-penny-297",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-99",
+      "suggestions": [
+        "synthetic-penny-target-73",
+        "synthetic-penny-target-77",
+        "synthetic-penny-target-85"
+      ]
+    },
+    {
+      "id": "synthetic-penny-298",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-100",
+      "suggestions": [
+        "synthetic-penny-target-100"
+      ]
+    },
+    {
+      "id": "synthetic-penny-299",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "predicted": true,
+      "rank": 1,
+      "candidate": "synthetic-penny-target-100",
+      "suggestions": [
+        "synthetic-penny-target-100"
+      ]
+    },
+    {
+      "id": "synthetic-penny-300",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "predicted": false,
+      "rank": null,
+      "candidate": "synthetic-penny-target-100",
+      "suggestions": []
+    }
+  ]
+}

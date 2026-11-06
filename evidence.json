@@ -1,0 +1,82 @@
+{
+  "files": [
+    {
+      "blob": "846c86c6eeec84479efe855b36cc09bd3c406369",
+      "bytes": 2333,
+      "path": "PLAN.md",
+      "sha256": "a47500d132320b7a78374edfc25372eca2b443c378f5008b44a84cac0e9d12fd"
+    },
+    {
+      "blob": "b518c6418734df7d47939dd8657b1e78afe99f4f",
+      "bytes": 7908,
+      "path": "RECEIPT.json",
+      "sha256": "3d0cd8abb9a58fd18a743c20ddbd1ee69cd2e6e7df41c0a71ca1566a1b57fa0d"
+    },
+    {
+      "blob": "b6ffe6839297f75e76fada36e7f03dd75e028f46",
+      "bytes": 10402,
+      "path": "REPORT.md",
+      "sha256": "b6b2a9319906903b398b46c50623141e75adeec215e3e8f7ea06e1a67abea1d2"
+    },
+    {
+      "blob": "23613cbbaa6d406d127b29ccd0dd3f01caefa3d1",
+      "bytes": 5233,
+      "path": "ci-42185094008-jobs.json",
+      "sha256": "8e1e8012ac4828c62bd498a49eddf624f3e9f64b3e5cfe99b97cfa292e48840a"
+    },
+    {
+      "blob": "6b42f8bec7dc89803132570719d5fd4914591686",
+      "bytes": 549,
+      "path": "ci-runs.json",
+      "sha256": "66178437c75703794c21467ba6d667342756ab8dc5b92495574174bcfbadf385"
+    },
+    {
+      "blob": "bc3c5bbbed44690e4ada0fd8e7ce01f99b8e9cdc",
+      "bytes": 96932,
+      "path": "duplicates-v1-report.json",
+      "sha256": "79b9a509f0194453b0b10729ae7ca18caa67c4672509a268607873eeb8c9b4b8"
+    },
+    {
+      "blob": "89d0e040e49d2813e238ad93315f0b50b8d07788",
+      "bytes": 91,
+      "path": "first-party.log",
+      "sha256": "19f7ac715241c19cb4dabb98fcf476fc48c6ae92a45d65cab2114b593353e720"
+    },
+    {
+      "blob": "d94fc7d7dba24eef94a489c6bea5a92980f50155",
+      "bytes": 386,
+      "path": "mechanical.log",
+      "sha256": "fc5c8897b436e3d7ceba5cf49b350cac3e647de714e413c1594dcc2a6a4526b1"
+    },
+    {
+      "blob": "049ac8eb9460cbd095b155215509f92c11f57c4b",
+      "bytes": 1049,
+      "path": "redaction-v1-report.json",
+      "sha256": "70441eac71f2eb40f7bd4bacbcc6dbf5fc8bef86833265f86076496ea3eb6d0e"
+    },
+    {
+      "blob": "018bf6755f51b841cdf68c39efc19830e0f9a12b",
+      "bytes": 201,
+      "path": "typecheck.log",
+      "sha256": "5c54a4aca8d517e1a73905b9bafb8d3b130f9ed964d01dfc676d027d3028f96d"
+    },
+    {
+      "blob": "964298e67fe0950030c7de9f7e2a58e1394b6a33",
+      "bytes": 1405,
+      "path": "verify-42180864207-static.log",
+      "sha256": "872b494091b62fdb0bcad15c58791b59abb10082105ffbe96a03ee9eff215f68"
+    },
+    {
+      "blob": "d4d23a2840db3f52856a8a081ea427e25110cf28",
+      "bytes": 1405,
+      "path": "verify-42185094008-static.log",
+      "sha256": "3603b186b866b7006f279127fc67e3f793820834dd751aaee8397e69f2080cef"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f91",
+  "product_head": "41e313788c47c7cfadeb9cade9f2c4c0d636b31f",
+  "ref": "refs/heads/evidence/sd-penny-c-f91",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f91"
+}
