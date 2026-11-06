@@ -47,5 +47,47 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
  for(const path of ['/api/public/requests','/api/public/roadmap','/api/public/releases',`/api/public/requests/${g.requests[0].slug}`]){const text=await(await call(path)).text();for(const privateText of ['Private finance platform','Private scheduled reports','480000','revenueCents','componentId'])expect(text).not.toContain(privateText)}
  const exported=await json<{archive:{tables:Record<string,unknown[]>}}>('/api/operator/data/export');expect(exported.archive.tables.penny_feature_requests).toHaveLength(3);expect(exported.archive.tables.penny_features).toMatchObject([{id:feature.id,component_id:components[1].id}])
  const {schema}=await import('@/core/features/data/archive');expect((await schema(env.DB)).map(t=>t.name)).toEqual(expect.arrayContaining(['penny_products','penny_components','penny_features','penny_feature_requests','penny_feature_roadmap']))
+ // Search the hierarchy created through native writes alongside an existing account.
+ const searched:{id:string;entity:string;title:string;href:string}[]=[]
+ for(const [kind,name,parentId] of [
+  ['product','Harbor Search Product',undefined],
+  ['component','Harbor Search Component',product.id],
+  ['feature','Harbor Search Feature',components[1].id],
+ ] as const){
+  const {id}=await json<{id:string}>(`/api/operator/hierarchy/${kind}`,{name,...(parentId?{parentId}:{})},'POST',201)
+  const entity=kind==='product'?'products':kind==='component'?'components':'features'
+  const record={id,entity,title:name,href:`/app/features#${entity}-${id}`}
+  searched.push(record)
+  for(const q of [name,name.replace('Harbor ',''),name.toUpperCase()]){
+   const result=await json<{total:number;items:typeof searched}>(`/api/operator/search?${new URLSearchParams({q,entity})}`)
+   expect(result.total).toBe(1)
+   expect(result.items.map(({id,entity,title,href})=>({id,entity,title,href}))).toEqual([record])
+   expect((await call(record.href,undefined,g.operator)).status).toBe(200)
+  }
+ }
+ const paging=[]
+ for(let index=0;index<26;index++){
+  const title=`Harbor paging ${String(index).padStart(2,'0')}`
+  const {id}=await json<{id:string}>('/api/operator/hierarchy/product',{name:title},'POST',201)
+  paging.push({id,entity:'products',title,href:`/app/features#products-${id}`})
+ }
+ const expected=[{id:accounts[0].id,entity:'accounts',title:'Harbor Analytics'},searched[1],searched[2],...paging,searched[0]].map(({id,entity,title})=>({id,entity,title}))
+ const found=[]
+ for(let page=1;page<=3;page++){
+  const result=await json<{total:number;page:number;pageSize:number;items:typeof searched}>(`/api/operator/search?q=hArBoR&page=${page}`)
+  expect({total:result.total,page:result.page,pageSize:result.pageSize}).toEqual({total:30,page,pageSize:25})
+  expect(result.items.map(({id,entity,title})=>({id,entity,title}))).toEqual(expected.slice((page-1)*25,page*25))
+  found.push(...result.items.map(row=>row.id))
+ }
+ expect(new Set(found).size).toBe(30)
+ expect((await json<{total:number}>('/api/operator/search?q=Harbor&entity=products&tag=missing-tag')).total).toBe(0)
+ expect((await call('/api/operator/search?q=Harbor&entity=product',undefined,g.operator)).status).toBe(400)
+ for(const headers of [{},second]){
+  const refused=await call('/api/operator/search?q=Harbor',undefined,headers)
+  expect(refused.status).toBe(401);expect(await refused.text()).not.toContain('Harbor')
+ }
+ expect((await call('/api/auth/sign-out',{},g.operator)).status).toBe(204)
+ const revoked=await call('/api/operator/search?q=Harbor',undefined,g.operator)
+ expect(revoked.status).toBe(401);expect(await revoked.text()).not.toContain('Harbor')
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
