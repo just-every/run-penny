@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "7855f3aed1794e881a16388cbcd81cec19665e8fc8317563fd82c6f3405e2c73",
+      "sha256": "645ce3fec444288ab8bc50e0106cae1aee4fb03209443dbd12168635eb048bdf",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "a2626762097deb1555518a4a87009e2c7cd0945e08baf0e98ebc7f5be7b266ad",
+      "sha256": "f35463eaf7981cfb36d67d27216470acf24a1cb377c1eeeeecc521b79556d46b",
       "executable": false
     },
     "DEMO.md": {
@@ -3678,7 +3678,7 @@
       "executable": false
     },
     "management/integration/deployment-spec.json": {
-      "sha256": "a254e3520ca277b02169f041508457220354ea25f7b0a5412927b1e1f7a3ddc7",
+      "sha256": "85d57094907de8e9d8763a8aeaa9f93b121937d5d66b6625fdca24cc9f0977f7",
       "executable": false
     },
     "migrations/core/0001_initial_data_foundation.sql": {
@@ -8722,7 +8722,7 @@
       "executable": false
     },
     "tests/base/segments.test.ts": {
-      "sha256": "45eaa41eab802cdfba4fbac6fa108da8d6d6b86ca48442254f5ed225bd147e39",
+      "sha256": "43918f295b405d7da80f9834e5bcde506a39fa8aeb89786967d1ca35dba14820",
       "executable": false
     },
     "tests/base/subscription-fixture.ts": {

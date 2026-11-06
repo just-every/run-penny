@@ -148,6 +148,13 @@ it('[SEG-006 DATA-001 DATA-003] native archives restore rules and membership whi
  expect(await json(`/api/operator/segments/${targeted.id}`, destination)).toEqual(expected)
  expect((await call(`/api/operator/segments/${targeted.id}`, undefined, g.operator)).status).toBe(401)
  expect((await call(`/api/operator/segments/${retained.id}`, undefined, g.peer)).status).toBe(401)
+ const restoredState = await savedState()
+ for (const cookie of [g.operator, g.peer]) {
+  const input = { name: 'synthetic-penny-refused-source-edit', rule: rule(g.actor) }
+  expect((await call('/api/operator/segments', input, cookie)).status).toBe(401)
+  expect((await call(`/api/operator/segments/${retained.id}`, input, cookie, 'PATCH')).status).toBe(401)
+ }
+ expect(await savedState()).toEqual(restoredState)
  const again = await json<{ archive: Archive; journal: ErasureJournal }>('/api/operator/data/export', destination)
  expect(again.archive.tables.penny_segments).toEqual(source.archive.tables.penny_segments)
  expect(again.archive.tables.accounts).toEqual(source.archive.tables.accounts)
@@ -174,5 +181,15 @@ it('[SEG-006 DATA-001 DATA-003] native archives restore rules and membership whi
  expect(await savedState()).toEqual(after)
  const erased = await json<{ archive: Archive }>('/api/operator/data/export', destination)
  expect(erased.archive.tables.penny_segments.map(row => row.id)).toEqual([retained.id])
+ // Restored product rules remain editable by the destination's own authority.
+ const destinationActor = (await json<{ operator: { id: string } }>('/api/auth/session', destination)).operator.id
+ const edited = { name: 'synthetic-penny-destination-rule', rule: rule(destinationActor) }
+ await json(`/api/operator/segments/${retained.id}`, destination, edited, 'PATCH')
+ expect(await json(`/api/operator/segments/${retained.id}`, destination)).toEqual({ id: retained.id, ...edited, accountIds: [g.accounts[0].id] })
+ await json(`/api/operator/accounts/${g.accounts[1].id}`, destination, { name: 'synthetic-penny-control-account', internalOwnerId: destinationActor }, 'PATCH')
+ expect(await json(`/api/operator/segments/${retained.id}`, destination)).toEqual({ id: retained.id, ...edited, accountIds: g.accounts.map(account => account.id).sort() })
+ const destinationExport = await json<{ archive: Archive }>('/api/operator/data/export', destination)
+ expect(destinationExport.archive.tables.penny_segments).toHaveLength(1)
+ expect(destinationExport.archive.tables.penny_segments[0]).toMatchObject({ id: retained.id, name: edited.name, internal_owner_id: destinationActor, created_by_operator_id: g.peerId })
  expect((await env.DB.prepare('PRAGMA foreign_key_check').all()).results).toEqual([])
 })
