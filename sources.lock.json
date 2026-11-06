@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "79de17832808464860d71b4b6262c5176edebbca0e0d81e45110a45f2ec76077",
+      "sha256": "b551278fbf661a70958e87ec8e664c844c983d1670fcaebc47c107256782d2c9",
       "executable": false
     },
     "DEMO.md": {
@@ -8438,7 +8438,7 @@
       "executable": false
     },
     "tests/base/mail-identity.test.ts": {
-      "sha256": "35c2e7e804fe2948abc4a9524af8e2ebd30b2fc8b4807ad8447f41fef3930846",
+      "sha256": "a44cc115c2fa332f3c13ee0a3f09f1eafc24c040f61434387d3dd9b1520bba2d",
       "executable": false
     },
     "tests/base/merge-notices.test.ts": {
@@ -9058,7 +9058,7 @@
       "executable": false
     },
     "tests/browser/weekly-summary-choice.mjs": {
-      "sha256": "f5d8280a0249261fd8afee307b0867337cb92042e2289d78431c15ada08aa856",
+      "sha256": "5896420d785c50be3988492256fc0b612bc3b1b28dab3be0429c52feb5c36f3a",
       "executable": false
     },
     "tests/browser/workspace-clock.mjs": {
