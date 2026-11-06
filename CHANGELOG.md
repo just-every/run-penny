@@ -2,7 +2,11 @@
 
 ## Unreleased
 
+- Strengthen the existing explanation-rejection journey with a native invited reviewer distinct from the grant creator, paused-grant refusal without changed custody, and removal that revokes both history reads and the next rejection while current operators retain attributed history. Existing restore, erasure, audit rollback and snapshot checks remain. AGENT-001 stays partial with its wider agent and provider obligations unchanged; no new migration or configuration is required.
+
 - Add explicit native rejection of one current learning explanation option, with a required redacted reason, current operator attribution and immutable detail history. Rejection leaves explanations, originals, contribution links and commitment snapshots unchanged. Migration 0110 adds portable review history with maintenance and erasure custody; apply before starting this version and retain the expanded schema on rollback. AGENT-001 remains partial; broader agent work and live qualification stay open.
+
+- Add Owner and Admin audit metadata reads and bounded CSV and JSON exports with actor, action, subject and date filters, stable pagination and existing agent attribution. Exclude private details and recheck current native authority on every page. ROLE-004 remains partial for its audit screen, every-action coverage and wider privacy obligations. No migration or configuration change is required.
 
 - Prove full and partial hierarchy-name search without a type filter, exact destinations across mixed paginated results, and independent destinations for equal-name products after navigation and reload. OPS-004 remains partial with its finer permissions and capacity proof open. No migration or configuration change.
 

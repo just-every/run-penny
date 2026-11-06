@@ -1,9 +1,10 @@
-import {expect,inject,it} from 'vitest'
+import {expect,inject,it,vi} from 'vitest'
 import {env} from 'cloudflare:workers'
 import {applyD1Migrations,reset} from 'cloudflare:test'
 import {base64urlEncode,sign} from '@/core/features/auth/tokens'
 import {hash,type exportArchive} from '@/core/features/data/archive'
 import {call,json,fixture,path,bindings,sent} from './learning-test-runtime'
+import {mockMail,messages} from './support'
 
 type Review={id:string;investigationId:string;interpretationId:string;interpretationVersion:number;optionId:string;decision:string;reason:string;actorId:string;createdAt:string}
 type Detail={investigation:Record<string,unknown>;artifacts:{id:string;version:number;body:Record<string,unknown>}[];observations:Record<string,unknown>[];commitments:Record<string,unknown>[];optionReviews:Review[]}
@@ -13,6 +14,24 @@ const custody=async()=> (await env.DB.batch(retainedTables.map(table=>env.DB.pre
 it('rejects an explanation with attributed history while retaining originals and commitment custody through restore and erasure',async()=>{
  const f=await fixture({nativeOnly:true}),custom=bindings()
  delete custom.PENNY_LEARNING
+ // Invite through native management, then restore the mail edge before the
+ // learning journey: only the existing model HTTP edge is faked below.
+ const peerEmail=['synthetic-penny-reviewer','example.test'].join('@')
+ let peer=''
+ mockMail()
+ try{
+  await json(call('/api/operator/settings/operators',{email:peerEmail},f.cookie,custom),202)
+  const message=messages.findLast(message=>message.to===peerEmail)!
+  const confirmed=await call('/auth/confirm',{token:new URL(message.url).searchParams.get('token')},'',custom)
+  expect(confirmed.status).toBe(303)
+  peer=confirmed.headers.get('set-cookie')!.split(';')[0]
+ }finally{vi.restoreAllMocks()}
+ await json(call(path,undefined,peer,custom))
+ const actorId=(await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind(peerEmail).first<string>('id'))!
+ const nativePeerId=(await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind(peerEmail).first<string>('id'))!
+ expect(actorId).toBeTruthy()
+ expect(nativePeerId).toBeTruthy()
+ expect(actorId).not.toBe(await env.DB.prepare('SELECT actor_id FROM learning_investigations WHERE id=?').bind(f.investigation.id).first('actor_id'))
  custom.PORTAL_IDENTITY_SECRET='synthetic-penny-host-signing-material'
  const claim=base64urlEncode(new TextEncoder().encode(JSON.stringify({aud:'https://penny.test',issuedAt:new Date().toISOString(),email:['synthetic-penny-1','example.test'].join('@'),displayName:'Synthetic Penny person'})))
  const identity={'X-Penny-Identity':claim,'X-Penny-Identity-Signature':base64urlEncode(await sign(custom.PORTAL_IDENTITY_SECRET,claim))}
@@ -26,14 +45,23 @@ it('rejects an explanation with attributed history while retaining originals and
  const detail=(cookie=f.cookie)=>json<Detail>(call(url,undefined,cookie,custom))
  const run=await json<{artifactId:string}>(call(url+'/run',{},f.cookie,custom))
  await json(call(url+'/commit',{interpretationId:run.artifactId,optionId:'assist',rationale:'Keep the accountable choice separate from explanation review',confidence:'low',reviewAt:'2098-01-01T00:00:00Z'},f.cookie,custom),201)
+ const active=await detail(),pausedInput={interpretationId:run.artifactId,interpretationVersion:active.artifacts[0].version,optionId:'build',reason:'Review the explanation only under a current grant.'}
+ await json(call(url+'/control',{action:'pause'},f.cookie,custom))
+ const paused=await detail(),pausedCustody=await custody(),pausedCalls=sent.length
+ expect(await json(call(url+'/reject',pausedInput,peer,custom),409)).toMatchObject({error:'learning_scope_changed'})
+ expect(await custody()).toEqual(pausedCustody)
+ expect(await detail()).toEqual(paused)
+ expect(sent).toHaveLength(pausedCalls)
+ await json(call(url+'/control',{action:'resume'},f.cookie,custom))
+ const resumed=await detail()
+ expect({...resumed,investigation:active.investigation}).toEqual(active)
  const before=await detail(),artifact=before.artifacts.find(a=>a.id===run.artifactId)!
  expect(before.observations).toHaveLength(2)
  expect(before.commitments).toHaveLength(1)
  expect(before.optionReviews).toEqual([])
- const actorId=(await env.DB.prepare('SELECT id FROM operators').first<string>('id'))!
  const input={interpretationId:artifact.id,interpretationVersion:artifact.version,optionId:'build',reason:'The existing report already meets the need; the handoff explanation is stronger.'}
  const modelCalls=sent.length,started=Date.now(),beforeCustody=await custody()
- const rejected=await json<{id:string}>(call(url+'/reject',input,f.cookie,custom),201)
+ const rejected=await json<{id:string}>(call(url+'/reject',input,peer,custom),201)
  const after=await detail(),review=after.optionReviews[0]
  expect(review).toEqual({id:rejected.id,investigationId:investigation.id,interpretationId:artifact.id,interpretationVersion:artifact.version,optionId:'build',decision:'rejected',reason:input.reason,actorId,createdAt:expect.any(String)})
  expect(Date.parse(review.createdAt)).toBeGreaterThanOrEqual(started)
@@ -86,6 +114,12 @@ it('rejects an explanation with attributed history while retaining originals and
  const bundle=await json<Awaited<ReturnType<typeof exportArchive>>>(call('/api/operator/data/export',undefined,f.cookie,custom))
  const rawReviews=(await env.DB.prepare('SELECT * FROM learning_option_reviews ORDER BY id').all()).results
  expect(bundle.archive.tables.learning_option_reviews.slice().sort((a,b)=>String(a.id).localeCompare(String(b.id)))).toEqual(rawReviews)
+ // Removing the actual reviewer revokes both history reads and the next write.
+ // Existing attributed reviews remain readable by a current operator.
+ await json(call(`/api/operator/settings/operators/${nativePeerId}`,{},f.cookie,custom,'DELETE'))
+ await refuse({...input,interpretationId:current.id,interpretationVersion:current.version,optionId:'assist'},401,'unauthenticated',url,peer)
+ expect(await json(call(url,undefined,peer,custom),401)).toMatchObject({error:'unauthenticated'})
+ expect(await detail()).toEqual(exportedDetail)
  // Signing out revokes current authority, even for another valid option.
  expect((await call('/api/auth/sign-out',{},f.cookie,custom)).status).toBe(204)
  await refuse({...input,interpretationId:current.id,interpretationVersion:current.version,optionId:'assist'},401,'unauthenticated')
