@@ -8554,7 +8554,7 @@
       "executable": false
     },
     "tests/base/release-feeds.test.ts": {
-      "sha256": "06d01f84e48cd65255e00340625b4842664afcc2166205217b9caee55482372a",
+      "sha256": "893132901749f7514d4afcc4775b3b5bfbcb9b8377cc484e9d0146cbdaa9adf8",
       "executable": false
     },
     "tests/base/release-fixture.ts": {

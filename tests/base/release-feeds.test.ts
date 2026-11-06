@@ -41,6 +41,10 @@ function timestamp(value: string | null): void {
 // Parse the actual HTTP responses offline, then check the RSS 2.0 and Atom
 // required structure and reconcile every entry with native public reads.
 async function feeds(expectedSlugs: string[], excluded: string[] = []) {
+  const tables = ['releases', 'release_versions', 'release_recipient_snapshots', 'release_recipient_contexts',
+    'notification_outbox', 'notification_outbox_attempts', 'requester_update_permissions']
+  const custody = await Promise.all(tables.map(rows))
+  const sent = vi.isMockFunction(fetch) ? vi.mocked(fetch).mock.calls.length : undefined
   const current = await json<CurrentPublicRelease[]>(await call('/api/public/releases'))
   expect(current.map(release => release.slug)).toEqual(expectedSlugs)
   for (const release of current) {
@@ -100,7 +104,13 @@ async function feeds(expectedSlugs: string[], excluded: string[] = []) {
     const description = one(parseXml(`<div>${text(item, 'description')}</div>`), 'div')
     expect(description).toEqual({ '#text': release.body })
     expect(one(entry, 'content')).toEqual({ '#text': release.body, '@_type': 'text' })
+    // A feed reader can follow the canonical link without operator authority.
+    const page = await call(new URL(url).pathname)
+    expect(page.status).toBe(200)
+    expect(page.headers.get('Content-Type')).toContain('text/html')
   }
+  expect(await Promise.all(tables.map(rows))).toEqual(custody)
+  if (sent !== undefined) expect(fetch).toHaveBeenCalledTimes(sent)
   return { entries, bodies }
 }
 
@@ -123,6 +133,8 @@ it('[REL-016 DATA-003 REL-003 REL-005] RSS and Atom reconcile current published 
   const publish = async (slug: string) => json(await call(`/api/operator/releases/${slug}/publish`, {}, g.operator))
   await publish(g.draft.slug)
   const before = await feeds([g.draft.slug], excluded)
+  expect(text(before.entries[0], 'title')).toBe(original.title)
+  expect(text(before.entries[0], 'content')).toBe(original.body)
   const peers = await Promise.all([
     nativeReleaseDraft(g, { title: 'Later public release', publicationDate: '2026-10-10' }),
     nativeReleaseDraft(g, { title: 'Same-day public release', publicationDate: '2026-10-10' }),
