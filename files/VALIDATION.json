@@ -1,0 +1,145 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f74",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f74",
+  "head": "0e34f894705e0026a0306bfc3323816786608c28",
+  "base": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+  "main_integrated": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "file_hashes": {
+    "src/core/features/categories/request-csv.ts": "ef82caf58352c81184317a5589e5fc4454a642cd6ed80cea28c5718caededa96",
+    "src/core/features/requests/proxy-votes-csv.ts": "54470348cad1e8b6844f49493084a0a55e148f5f6e6e721ba1f6d2dcbb9ecd81",
+    "src/core/features/requests/request-context-rows.ts": "ef7660937294a8f2a6f5f29653b415d6715b69ef7f42869e5e6496595e1b16dd",
+    "src/core/features/requests/request-context-read.ts": "e83dca6283768ac12f229a5f45e78f51ba13ae7e67cfef46cb83d011f50d118d",
+    "tests/base/board-categories.test.ts": "3308faa4bbf0098f18fd4a7a1e5f13b97158a942713cd45bd65993453fc28bd2",
+    "tests/base/proxy-votes.test.ts": "ed012b91c83e1475b5a4380464bbfc1f8a72c3eb11832994a4dddfb5d3ec9bec",
+    "tests/base/csv-vote-reconciliation.ts": "ece65153381e459b7a01d805addef701ea0de68f37208167f4eb707b76cee347",
+    "CONTRACT.md": "2d5b30778a8a23809a30ab619b3e4a8cd9c967599a082b75a846e4c4dd318222",
+    "sources.lock.json": "bc05b6e112debeb6dbe90e0209acbcfdbc2cadbc532360879cf8a53de6f85c7f"
+  },
+  "commands": [
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/board-categories.test.ts tests/base/proxy-votes.test.ts",
+      "exit": 0,
+      "tests": 5,
+      "receipt": "touched-tests.json"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/board-categories.test.ts tests/base/proxy-votes.test.ts",
+      "exit": 0,
+      "head": "0e34f894705e0026a0306bfc3323816786608c28",
+      "tests": 5,
+      "receipt": "exact-sha-tests.json"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "receipt": "typecheck.log"
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party --json",
+      "exit": 0,
+      "receipt": "first-party.json"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "receipt": "views-write.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "receipt": "views-check.log"
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "receipt": "source-check.json"
+    }
+  ],
+  "migrations": "none changed; ledger check not applicable",
+  "generated_views": "Locally generated and checked, then restored to origin/main; no generated view changed in this round\u2019s commits.",
+  "publication_scan": "Not run in cloud; guarded lander required.",
+  "site": "No site or screen touched. Run site remains a landing gate.",
+  "counts": {
+    "before": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    },
+    "after": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    }
+  },
+  "clause": {
+    "id": "DATA-005",
+    "before": "partial",
+    "after": "partial",
+    "closed": "Selected native request and voter reconciliation proof only",
+    "remaining": [
+      "Other CSV record families",
+      "Exports from saved views",
+      "ROLE-001 field restrictions",
+      "All previously held provider, device, account, cross-seed, Base and release requirements"
+    ]
+  },
+  "registrations": {
+    "added": 0,
+    "removed": 0,
+    "affected_before": 5,
+    "affected_after": 5,
+    "cap": 200
+  },
+  "status_table_rows": {
+    "before": 445,
+    "after": 445
+  },
+  "merge": "git fetch origin main; git merge --no-commit --no-ff origin/main returned Already up to date; no rebase or history rewrite.",
+  "pushes": [
+    {
+      "head": "4dbd3513e698eef1358b77940dae697c03fd5f33",
+      "kind": "save",
+      "skip_ci": true,
+      "success": true
+    },
+    {
+      "head": "0e34f894705e0026a0306bfc3323816786608c28",
+      "kind": "candidate",
+      "success": true
+    }
+  ],
+  "pre_ready": {
+    "assertions_preserved": true,
+    "no_width_or_branch_gating_added": true,
+    "new_email_shaped_strings": 0,
+    "new_bare_slash_tokens": 0,
+    "authority": "Unauthenticated, requester and revoked operator exports refused with no fixture identity disclosure.",
+    "erasure": "Proxy voter disappears after erasure; replay using erased identity is refused; repeat exports retain only direct voter.",
+    "replay": "Repeated direct vote creates one row; proxy takeover retains one voter.",
+    "ui": "not applicable; no screen touched",
+    "policy": "no new policy default or acceptance edit",
+    "source_lock_fresh": true
+  },
+  "ci": {
+    "id": 42164520482,
+    "name": "Verify Penny",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "head_sha": "0e34f894705e0026a0306bfc3323816786608c28",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42164520482",
+    "generated_view_only": true
+  }
+}

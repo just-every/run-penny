@@ -1,0 +1,23 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f74/run-penny
+
+stderr | tests/base/proxy-votes.test.ts > [CAP-014 DATA-003 DATA-005] refuses stale or invalid authority and rolls back every effect if auditing fails; requester erasure removes proxy custody
+Penny request failed {"method":"POST","route":"/api/operator/requests/:slug/proxy-votes","name":"Error","code":"unclassified"}
+
+ ✓ tests/base/proxy-votes.test.ts (4 tests) 11180ms
+   ✓ [CAP-014 REQ-026 REQ-010 DATA-005] records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote  2923ms
+   ✓ [CAP-014 REQ-035 REQ-008 REQ-009 DATA-001] retains native source attribution and importance through merge, unmerge and the product archive  4072ms
+   ✓ [CAP-014 DATA-003 DATA-005] refuses stale or invalid authority and rolls back every effect if auditing fails; requester erasure removes proxy custody  2319ms
+   ✓ [CAP-014 API-001 API-002] server-held scoped keys record proxy demand, refuse a read-only key and stop on revocation  1864ms
+ ✓ tests/base/board-categories.test.ts (1 test) 3122ms
+   ✓ [REQ-012][REQ-034][REQ-040] upgrades populated boards and supports category browsing, ranking, canonical merges and board participation and privacy through routes  2094ms
+
+ Test Files  2 passed (2)
+      Tests  5 passed (5)
+   Start at  04:45:49
+   Duration  21.76s (transform 2.27s, setup 0ms, import 5.81s, tests 14.30s, environment 0ms)
+
+JSON report written to /home/agent/rer-consolidation/work/sd-penny-c-f74/packet/touched-tests.json

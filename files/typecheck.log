@@ -1,0 +1,5 @@
+ WARN  Unsupported engine: wanted: {"node":"22.20.0"} (current: {"node":"v24.19.0","pnpm":"10.12.4"})
+
+> penny@0.2.2 typecheck /home/agent/rer-consolidation/work/sd-penny-c-f74/run-penny
+> tsc -b
+
