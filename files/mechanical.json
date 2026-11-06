@@ -1,0 +1,36 @@
+{
+  "head": "3f11d2ec528376af456eac71f44773953b620db1",
+  "steps": [
+    {
+      "name": "views-write",
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0
+    },
+    {
+      "name": "views-check",
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0
+    },
+    {
+      "name": "source-lock-check",
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    }
+  ],
+  "generatedViewsRestored": true,
+  "sourceLockRegeneration": "node scripts/edition-authoring/cli.mjs lock",
+  "sourceLockRegenerationExit": 0,
+  "migrationLedger": "not applicable: no migration edits",
+  "parentStatusIds": 281,
+  "candidateStatusIds": 281,
+  "parentTableRows": 445,
+  "candidateTableRows": 445,
+  "workingTreeClean": true,
+  "statusesUnchanged": true,
+  "restoredViewCheck": {
+    "command": "node src/base/contract-docs.mjs check",
+    "exit": 1,
+    "expected": true,
+    "log": "generated-view-check.log"
+  }
+}

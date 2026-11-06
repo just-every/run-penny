@@ -1,0 +1,11 @@
+{
+  "head": "3f11d2ec528376af456eac71f44773953b620db1",
+  "command": "gh run view 42136095263 --repo just-every/run-penny --job 127624549958 --log-failed",
+  "exit": 0,
+  "job": 127624549958,
+  "log": "ci-failed-job.log",
+  "failedJobs": 29,
+  "onlyFailedStep": "Check generated contract documents",
+  "apiInvocationsTotal": 5,
+  "sanitization": "Credentials and signed query strings redacted by fleet sanitizer; CI environment metadata omitted from the log."
+}

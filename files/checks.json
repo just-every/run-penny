@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "repository": "just-every/run-penny",
+  "head": "3f11d2ec528376af456eac71f44773953b620db1",
+  "checks": [
+    {
+      "name": "first-party",
+      "head": "3f11d2ec528376af456eac71f44773953b620db1",
+      "command": "cloud_run pnpm exec rer check --profile first-party",
+      "exit": 0,
+      "seconds": 1.747,
+      "log": "first-party.log"
+    },
+    {
+      "name": "base-copies",
+      "head": "3f11d2ec528376af456eac71f44773953b620db1",
+      "command": "cloud_run pnpm run verify:base-source",
+      "exit": 0,
+      "seconds": 1.082,
+      "log": "base-copies.log"
+    },
+    {
+      "name": "board-tests",
+      "head": "3f11d2ec528376af456eac71f44773953b620db1",
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts",
+      "node": "v22.20.0",
+      "exit": 0,
+      "seconds": 18.335,
+      "log": "board-tests.log"
+    },
+    {
+      "name": "typecheck",
+      "head": "3f11d2ec528376af456eac71f44773953b620db1",
+      "command": "cloud_run pnpm run typecheck",
+      "node": "v22.20.0",
+      "exit": 0,
+      "seconds": 26.488,
+      "log": "typecheck.log"
+    }
+  ]
+}

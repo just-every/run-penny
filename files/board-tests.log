@@ -1,0 +1,13 @@
+
+ RUN  v4.1.11 /workspace/run-penny
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  00:23:56
+   Duration  15.84s (transform 1.66s, setup 0ms, import 3.97s, tests 11.16s, environment 0ms)
+
+rer toolchain: node v22.20.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+

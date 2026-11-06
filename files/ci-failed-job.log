@@ -1,0 +1,7 @@
+shards (base-1, false)	Check generated contract documents	﻿2026-11-06T00:20:46.6835284Z ##[group]Run node src/base/contract-docs.mjs check
+shards (base-1, false)	Check generated contract documents	2026-11-06T00:20:46.6835443Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (base-1, false)	Check generated contract documents	2026-11-06T00:20:46.6852865Z shell: /usr/bin/bash -e {0}
+[CI environment metadata omitted from public evidence]
+shards (base-1, false)	Check generated contract documents	2026-11-06T00:20:46.6853399Z ##[endgroup]
+shards (base-1, false)	Check generated contract documents	2026-11-06T00:20:46.7889982Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (base-1, false)	Check generated contract documents	2026-11-06T00:20:46.7941036Z ##[error]Process completed with exit code 1.

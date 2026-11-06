@@ -1,0 +1,30 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f53",
+  "head": "3f11d2ec528376af456eac71f44773953b620db1",
+  "parent": "1db862912dc18165739d5385fcca0f886c023ca4",
+  "remoteHead": "3f11d2ec528376af456eac71f44773953b620db1",
+  "pushGuard": "cloud-push.py origin cloud/sd-penny-c-f53",
+  "pushExit": 0,
+  "pushAttempt": 1,
+  "author": "Run Edit Run fleet <fleet@runeditrun.com>",
+  "committer": "Run Edit Run fleet <fleet@runeditrun.com>",
+  "trailers": "",
+  "workingTreeClean": true,
+  "pr": null,
+  "runtimeInputsUnchangedFromSetup": true,
+  "setupCommand": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+  "setupExit": 0,
+  "buildCommand": "cloud_run npx -y @runeditrun/rer build",
+  "buildExit": 0,
+  "buildInputsCompared": [
+    "src",
+    "public",
+    "package.json",
+    "pnpm-lock.yaml",
+    "migrations",
+    "scripts",
+    "base",
+    ".github/workflows"
+  ]
+}

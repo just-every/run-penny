@@ -1,0 +1,16 @@
+{
+  "head": "3f11d2ec528376af456eac71f44773953b620db1",
+  "statusRowsBefore": 281,
+  "statusRowsAfter": 281,
+  "allStatusesUnchanged": true,
+  "newEmailLiterals": 0,
+  "newRegistrations": 0,
+  "removedRegistrations": 0,
+  "weakenedAssertions": 0,
+  "slashTokenReview": [
+    "image/png",
+    "tests/base"
+  ],
+  "review": "Only real route and repository paths and the image/png MIME type; no new prose shorthand. Existing redirect assertion is strengthened with the canonical Location. All existing assertions remain unconditional.",
+  "publicationScan": "Not run in cloud; exact-tree full-history scan remains guarded lander duty."
+}
