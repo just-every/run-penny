@@ -6238,7 +6238,7 @@
       "executable": false
     },
     "src/core/features/integrations/openapi/document.ts": {
-      "sha256": "17b77f77fb2f499ccc1eb208038d5c6d4abebfa1f426f602d5f6ad3f44c85b1d",
+      "sha256": "f91ec78fa38ce655138df15aded9bfbde5f94126c40798bc4cd0950da218a6b0",
       "executable": false
     },
     "src/core/features/integrations/openapi/inputs.ts": {
@@ -8418,7 +8418,7 @@
       "executable": false
     },
     "tests/base/integration-openapi.test.ts": {
-      "sha256": "a8fe9f0a0b3d3855157150d0a67229a2f4bbe54c56876382a09038723cf97963",
+      "sha256": "83b130344ba6f81f0e27ccf0cee9df39004b86af7804ddf888c2d2d1eff641ac",
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {

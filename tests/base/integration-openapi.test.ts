@@ -146,6 +146,20 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
     if (operation.operationId === 'getRelease') expect(result).toMatchObject({ slug: releaseSlug, title: 'synthetic-penny-release', body: releaseInput.body, isCurrent: true })
     if (operation.operationId === 'findProxyContacts') expect(result).toEqual([{ id: proxyId, displayName: 'synthetic-penny-contact', email: null }])
   }
+  const beforeRefinements = await snapshot()
+  const invalidRelease = { ...releaseInput, publicationDate: '2026-02-30' }
+  const conflictingProxy = { contact: { displayName: 'synthetic-penny-2' }, requesterId: g.recipient.requesterId, source: 'synthetic-penny-2' }
+  const duplicateEvidence = { title: 'synthetic-penny-2', description: 'synthetic-penny-2', boardSlug: 'regression', evidenceIds: [g.requests[0].id, g.requests[0].id] }
+  for (const [path, schema, input] of [
+    ['/api/v1/releases', 'CreateRelease', invalidRelease],
+    ['/api/v1/releases', 'CreateRelease', { ...releaseInput, setupUrl: 'ftp://example.test/synthetic-penny-1' }],
+    ['/api/v1/requests/' + requestSlug + '/proxy-votes', 'RecordProxyVote', conflictingProxy],
+    ['/api/v1/requests', 'CreateRequest', duplicateEvidence],
+  ] as const) {
+    validates(document.components.schemas[schema], input, false)
+    expect((await call(path, input, allowed)).status).toBe(400)
+    expect(await snapshot()).toEqual(beforeRefinements)
+  }
   // Published projection, consent and namespace boundaries survive the document route.
   const listing = await (await call('/api/v1/requests', undefined, allowed)).text()
   expect(listing).not.toContain('synthetic-penny-held')

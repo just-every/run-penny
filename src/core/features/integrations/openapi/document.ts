@@ -19,6 +19,14 @@ const inputs = {
 }
 const schemas: Record<string, Schema> = Object.fromEntries(Object.entries({ ...inputs, ...responses, ...releaseResponses }).map(([name, schema]) => [name, jsonSchema(schema)]))
 // These cross-field and URL refinements cannot be emitted by Zod's JSON Schema converter.
+const createProperties = schemas.CreateRequest.properties as Record<string, Schema>
+createProperties.evidenceIds.uniqueItems = true
+const releaseProperties = schemas.CreateRelease.properties as Record<string, Schema>
+releaseProperties.publicationDate.format = 'date'
+releaseProperties.setupUrl = { anyOf: [{ const: '' }, { type: 'string', format: 'uri', pattern: '^https?://' }] }
+const proxyProperties = schemas.RecordProxyVote.properties as Record<string, Schema>
+proxyProperties.sourceUrl.pattern = '^[Hh][Tt][Tt][Pp][Ss]?:'
+proxyProperties.sourceUrl.not = { pattern: '^[Hh][Tt][Tt][Pp][Ss]?://[^/?#]*@' }
 schemas.RecordProxyVote.oneOf = [
   { required: ['requesterId'], not: { required: ['contact'] } },
   { required: ['contact'], not: { required: ['requesterId'] } },
@@ -32,11 +40,12 @@ type Scope = typeof apiScopes[number]
 type Parameter = { name: string; in: 'path' | 'query'; required?: boolean; schema: Schema; description?: string }
 const slug: Parameter = { name: 'slug', in: 'path', required: true, schema: jsonSchema(integrationSlug) }
 function operation(operationId: string, summary: string, scope: Scope, output: string, status = 200, input?: keyof typeof inputs, parameters: Parameter[] = []) {
+  const projection = operationId === 'findProxyContacts' ? 'Customer lookup returns private active contact choices; keep this votes:write key on the server.' : 'Request, board and release reads expose approved public projections.'
   return {
     operationId, summary, security: [{ integrationKey: [] }], 'x-required-scopes': [scope],
-    description: `Requires a current installation key with ${scope}. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. Reads expose only approved public projections.`,
+    description: `Requires a current installation key with ${scope}. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. ${projection}`,
     parameters,
-    ...(input ? { requestBody: { required: true, content: content(input) } } : {}),
+    ...(input ? { requestBody: { required: true, description: 'JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.', content: content(input) } } : {}),
     responses: {
       [status]: { description: 'Successful native operation.', content: content(output) },
       '400': { description: 'Invalid body, path or supported query. Empty request-list query values are ignored.', content: content('Error') },
