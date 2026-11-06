@@ -1,0 +1,14 @@
+head=d1d45bf94c51f3645445ad7611c9507eb2f67187
+command=pnpm exec vitest run --config vitest.base.config.ts tests/base/agent-snooze.test.ts tests/base/triage-aging.test.ts
+exit=0
+
+
+
+ RUN  v4.1.11 /workspace/run-penny-sd-penny-c-f96
+
+
+ Test Files  2 passed (2)
+      Tests  3 passed (3)
+   Start at  09:59:18
+   Duration  10.19s (transform 549ms, setup 0ms, import 1.92s, tests 6.74s, environment 0ms)
+

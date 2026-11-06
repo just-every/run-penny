@@ -1,0 +1,40 @@
+{
+  "files": [
+    {
+      "blob": "cd40b52da3bdbfe5b78373f37d7f8cee4d8b8f5b",
+      "bytes": 9210,
+      "path": "CI-RECEIPT.json",
+      "sha256": "e55d8e07575751fc1c3862bb4c3508878070ad0674b616a294c7f22ad715eb6c"
+    },
+    {
+      "blob": "0d1affc5306db6c40a44d74c84c16762d501c44f",
+      "bytes": 84346,
+      "path": "CONFORMANCE.txt",
+      "sha256": "334bb9ad4a55c550a536897f7f68504bf9115109a80144985088d2bb4b2e7737"
+    },
+    {
+      "blob": "7ba2f012f5df887d46eaa907f081287208d6ff48",
+      "bytes": 2909,
+      "path": "LOCAL-RECEIPT.json",
+      "sha256": "b048a2ac1768c38d678c1c07077300f189ead7361e8a0e870ffd57c97cb304bd"
+    },
+    {
+      "blob": "938c61a61b0eb9daa25851c6d3a7b29f463fca0a",
+      "bytes": 10954,
+      "path": "REPORT.md",
+      "sha256": "f6129e2ada0f835c6ce9d5703ba7f4584635c16d3134ffb43d84622a59792556"
+    },
+    {
+      "blob": "abc409fceb036cc0fe288c161ef3fcf9d911c6c5",
+      "bytes": 400,
+      "path": "TOUCHED-TESTS.txt",
+      "sha256": "e215a03d3d00279d09bc9e40be8a4658691a97e18c2535745b74ed5b7c20d25f"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f96",
+  "product_head": "d1d45bf94c51f3645445ad7611c9507eb2f67187",
+  "ref": "refs/heads/evidence/sd-penny-c-f96",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f96"
+}

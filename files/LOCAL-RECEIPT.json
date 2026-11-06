@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f96",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f96",
+  "head": "d1d45bf94c51f3645445ad7611c9507eb2f67187",
+  "baseline": "0d6f3416c75fe29675323ad1a2ef4bd1f8086756",
+  "created_at": "2026-11-06T10:01:20.543932+00:00",
+  "clause": {
+    "id": "SURFACE-002",
+    "before": "partial",
+    "after": "partial",
+    "point": "acceptance point 4 native snooze and clear only"
+  },
+  "counts": {
+    "before": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    },
+    "after": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    }
+  },
+  "checks": [
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/agent-snooze.test.ts tests/base/triage-aging.test.ts",
+      "exit": 0,
+      "head": "d1d45bf94c51f3645445ad7611c9507eb2f67187",
+      "tests": 3,
+      "files": 2,
+      "receipt": "TOUCHED-TESTS.txt"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec oxlint on the four touched TypeScript files",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/agent-docs.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write and check; restore generated views from origin/main",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock and check",
+      "exit": 0
+    },
+    {
+      "command": "timeout 1200 node node_modules/@runeditrun/rer/cli/agent-door.mjs .",
+      "head": "d1d45bf94c51f3645445ad7611c9507eb2f67187",
+      "exit": 0,
+      "points_passed": 2263,
+      "points_total": 2263,
+      "receipt": "CONFORMANCE.txt"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "head": "d1d45bf94c51f3645445ad7611c9507eb2f67187",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0
+    }
+  ],
+  "migration_ledger": "not applicable; no migration changed",
+  "publication_scan": {
+    "status": "not run in cloud; fleet lander owns it"
+  },
+  "base_test_registration_calls": {
+    "before": 187,
+    "after": 188,
+    "cap": 200
+  },
+  "assertions_removed": 0,
+  "pr": null,
+  "product_push": {
+    "status": "success",
+    "attempts": 1,
+    "force": false
+  },
+  "generated_views_committed": false,
+  "contract_table_rows": {
+    "parent": 445,
+    "candidate": 445
+  },
+  "generated_view_check_after_restore": {
+    "command": "node src/base/contract-docs.mjs check",
+    "exit": 1,
+    "reason": "expected stale ACCEPTANCE.md after CONTRACT.md Evidence and Gap changes; lander writes the view"
+  },
+  "ci_receipt": "CI-RECEIPT.json",
+  "ready_basis": "permitted generated-view freshness exception with passing local touched checks",
+  "conformance_receipt": "CONFORMANCE.txt"
+}
