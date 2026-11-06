@@ -9,7 +9,7 @@ import { accessToken, autonomousPolicy, signJws } from './agent-signing'
 import { document_sha256, validateDocument } from '../../base/modules/agent-door/policy/document.ts'
 import type { AgingSummary } from '@/core/features/triage/reminders'
 
-afterEach(() => vi.restoreAllMocks())
+afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks() })
 
 it('snoozes and clears native evidence equally through HTTP and MCP with standard policy, attributed approval, once-only replay and unchanged-state refusals', async () => {
   await reset(); mockMail(); await applyD1Migrations(env.DB, inject('migrations'))
@@ -52,7 +52,8 @@ it('snoozes and clears native evidence equally through HTTP and MCP with standar
   const actor = await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind(email).first<string>('id')
   expect(actor).toBeTruthy()
   expect(http.id).not.toBe(mcp.id)
-  const until = new Date(Date.now() + 7 * 86400000).toISOString(), offset = until.replace('Z', '+00:00')
+  const until = new Date(Date.now() + 7 * 86400000).toISOString()
+  const offset = new Date(Date.parse(until) + 330 * 60000).toISOString().replace('Z', '+05:30')
   const summary = () => good<AgingSummary>('/api/operator/triage', undefined, cookie)
   const activity = () => env.DB.prepare("SELECT * FROM audit_entries WHERE action IN ('triage.snoozed','triage.unsnoozed') ORDER BY id").all()
   const snapshot = async () => (await env.DB.batch(['penny_evidence_snoozes','evidence_items','evidence_versions'].map(table => env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`)))).map(result => result.results).concat([(await activity()).results])
@@ -76,12 +77,12 @@ it('snoozes and clears native evidence equally through HTTP and MCP with standar
   expect(await snapshot()).toEqual(clearedState)
   expect((await summary()).snoozed).toEqual([])
 
-  const past = new Date(Date.now() - 86400000).toISOString()
-  for (const [value, expected] of [[past, 'snooze_must_be_future'], ['invalid-time', 'validation_failed']] as const) {
+  const past = new Date(Date.now() - 86400000).toISOString(), current = new Date().toISOString()
+  for (const [value, expected] of [[past, 'snooze_must_be_future'], [current, 'snooze_must_be_future'], ['invalid-time', 'validation_failed']] as const) {
     const before = await snapshot()
     const refused = await call(`/api/operator/triage/evidence/${http.id}/snooze`, { until: value }, cookie, 'PATCH')
     expect(refused.status).toBe(400); expect(await refused.json()).toEqual({ error: expected })
-    expect(code(await rpc(args(mcp.id, 'snooze', { until: value })))).toBe(value === past ? expected : 'invalid_arguments')
+    expect(code(await rpc(args(mcp.id, 'snooze', { until: value })))).toBe(expected === 'validation_failed' ? 'invalid_arguments' : expected)
     expect(await snapshot()).toEqual(before)
   }
   const beforeRefusals = await snapshot()
@@ -122,6 +123,26 @@ it('snoozes and clears native evidence equally through HTTP and MCP with standar
     expect(JSON.parse(String(latest.approvers_json))).toEqual([expect.objectContaining({ id: session.operator.id })])
     const after = await snapshot(); await rpc(input); expect(await snapshot()).toEqual(after)
   }
+  // Approval authorizes an operation, never a date that has already elapsed.
+  const expiryUntil = new Date(Date.now() + 60_000).toISOString()
+  const expiryInput = args(mcp.id, 'snooze', { until: expiryUntil })
+  const beforeExpiry = await snapshot(), expiring = await rpc(expiryInput)
+  expect(code(expiring)).toBe('approval_required'); standard(expiring, 'approval')
+  expect(await snapshot()).toEqual(beforeExpiry)
+  const expiryId = expiring.result._meta['com.runeditrun/error'].approval.id
+  const expiryResponse = await door.handle(new Request(origin + '/agents/api/approvals/' + expiryId, { headers: cookie }))
+  expect(expiryResponse?.status).toBe(200)
+  const { approval: expiryApproval } = await expiryResponse!.json() as { approval: { revision: number; summary_sha256: string } }
+  vi.useFakeTimers({ toFake: ['Date'] }); vi.setSystemTime(new Date(Date.parse(expiryUntil) + 1))
+  try {
+    await personPost('/agents/api/approvals/' + expiryId + '/approve', { revision: expiryApproval.revision, summary_sha256: expiryApproval.summary_sha256 })
+    const expired = await rpc(expiryInput)
+    expect(code(expired)).toBe('snooze_must_be_future'); standard(expired, 'approval')
+    expect((await summary()).snoozed).toEqual([])
+    expect(await snapshot()).toEqual(beforeExpiry)
+    await rpc(expiryInput)
+    expect(await snapshot()).toEqual(beforeExpiry)
+  } finally { vi.useRealTimers() }
   await adopt(autonomousPolicy(), [context.consent])
   const final = await snapshot()
   expect(code(await rpc(snooze))).toBe('unauthenticated')

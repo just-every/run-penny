@@ -17,9 +17,18 @@ export async function afterStep({ phase, step, args, result, tool, request, orig
   const read = await request(origin + '/api/operator/triage', { headers: { Cookie: cookie } });
   assert(read.ok, 'Native triage readback must succeed');
   const summary = await read.json();
-  for (const id of [args.id, peer.id]) assert(until ? summary.snoozed.some(row => row.id === id && row.untilAt === until) : !summary.snoozed.some(row => row.id === id), 'HTTP and MCP must read back the same snooze date or clear');
-  const activity = await db.prepare('SELECT agent_id,sponsor_native_id,prepared_by,approvers_json FROM audit_entries WHERE action=? AND entity_id=? ORDER BY id DESC LIMIT 1').bind(until ? 'triage.snoozed' : 'triage.unsnoozed', args.id).first();
+  for (const id of [args.id, peer.id]) assert(until ? summary.snoozed.some(row => row.id === id && row.untilAt === new Date(until).toISOString()) : !summary.snoozed.some(row => row.id === id), 'HTTP and MCP must read back the same normalized snooze date or clear');
+  const action = until ? 'triage.snoozed' : 'triage.unsnoozed';
+  const activity = await db.prepare('SELECT actor_type,actor_id,agent_id,sponsor_native_id,prepared_by,approvers_json FROM audit_entries WHERE action=? AND entity_id=? ORDER BY id DESC LIMIT 1').bind(action, args.id).first();
   assert(activity?.agent_id && activity.sponsor_native_id && activity.prepared_by.includes(' for '), 'Native snooze activity must retain its agent and sponsor');
+  const httpActivity = await db.prepare('SELECT actor_type,actor_id,agent_id FROM audit_entries WHERE action=? AND entity_id=? ORDER BY id DESC LIMIT 1').bind(action, peer.id).first();
+  assert(activity.actor_type === 'operator' && httpActivity?.actor_type === 'operator' && activity.actor_id === httpActivity.actor_id && httpActivity.agent_id === null, 'Both snooze doors must retain the same native actor and event type');
+  const snapshot = async () => JSON.stringify(await Promise.all([
+   db.prepare('SELECT * FROM penny_evidence_snoozes WHERE evidence_id=?').bind(args.id).all(),
+   db.prepare('SELECT * FROM audit_entries WHERE entity_id=? ORDER BY id').bind(args.id).all(),
+  ]).then(rows => rows.map(row => row.results)));
+  const beforeReplay = await snapshot(), replayed = await tool(step.tool, args);
+  assert(JSON.stringify(replayed.result?.structuredContent) === JSON.stringify(result) && await snapshot() === beforeReplay, 'Snooze replay must retain its result without another state or native audit write');
  }
  if (phase === 'autonomous' && step.id === 'capture') {
   const changed = await tool(step.tool, { ...args, wording: 'A different proposed capture under the same key.' });
