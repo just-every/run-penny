@@ -1,0 +1,127 @@
+{
+  "assigned_base": "4588e84551ad74f779976225a3e78b04f318db63",
+  "branch": "cloud/sd-penny-c-f82",
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "observation": "Frozen install, build, all 109 migrations and first owner claim completed. Private settings excluded from this packet."
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "observation": "Integrated Worker and client built; same tracked tree as candidate."
+    },
+    {
+      "command": "cloud_run pnpm exec tsc -b",
+      "exit": 0,
+      "observation": "Passed on the integrated source before the merge commit; no tracked source changed afterward."
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/prioritisation.test.ts",
+      "exit": 0,
+      "files": 1,
+      "observation": "Same integrated source and emitted Worker as the committed candidate.",
+      "output": "prioritisation-test.log",
+      "tests": 1
+    },
+    {
+      "assertion_width": 1440,
+      "capture_widths": [
+        1440,
+        390
+      ],
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=$HOME/rer-consolidation/work/sd-penny-c-f82/packet/screens cloud_run perl -e 'alarm 1200; exec @ARGV' -- node tests/browser/prioritisation.mjs",
+      "exit": 0,
+      "head": "44516243b5cda49e56d7278ccc3691007a42f32c",
+      "observation": "Mounted native owner and peer save and reopen; accessibility, overflow and unexpected browser request checks pass. Browsers, contexts and runtime closed.",
+      "output": "browser.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write; node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "observation": "Views restored whole from origin/main afterward. No generated view changes relative to main.",
+      "output": "contract-views.log"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "observation": "Regenerated after source merge and view restoration; never hand-edited hashes."
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "head": "44516243b5cda49e56d7278ccc3691007a42f32c",
+      "output_sha256": "3f2c0c652e2d4468ce3e2342c2144a0e2d563afd890c9ddc3fcfba46c6642313"
+    },
+    {
+      "command": "node scripts/verify-base-source.mjs",
+      "exit": 0,
+      "observation": "Existing copied Base bytes and modes verified offline against the recorded source; no Base adoption."
+    },
+    {
+      "command": "git diff --cached --check and parent Status-row comparison",
+      "exit": 0,
+      "status_rows_each_parent": 281,
+      "table_rows": 445
+    }
+  ],
+  "ci_runs": [
+    {
+      "conclusion": null,
+      "event": "push",
+      "head_sha": "44516243b5cda49e56d7278ccc3691007a42f32c",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42176296674",
+      "id": 42176296674,
+      "name": "Verify Penny",
+      "status": "in_progress"
+    }
+  ],
+  "counts_after": {
+    "done": 79,
+    "missing": 77,
+    "partial": 125,
+    "total": 281
+  },
+  "counts_before_main": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124,
+    "total": 281
+  },
+  "github_api_calls": 2,
+  "head": "44516243b5cda49e56d7278ccc3691007a42f32c",
+  "integrated_main": "bc006e93ab58927b5db2d12d8ac35ff0a9341bf0",
+  "migration_ledger": {
+    "reason": "No migration added or changed.",
+    "status": "not applicable"
+  },
+  "ops_006": {
+    "after": "partial",
+    "assigned_base_before": "partial",
+    "done_claim": false,
+    "main_before": "missing"
+  },
+  "pr": null,
+  "product_push": {
+    "attempt": 1,
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f82",
+    "exit": 0,
+    "identity_check": "All origin/main..HEAD commits, including side parents, are fleet authors and committers with no co-author trailers.",
+    "remote_head_verified": "44516243b5cda49e56d7278ccc3691007a42f32c"
+  },
+  "publication_scan": {
+    "claim": "No COMPLETE or zero-findings claim made.",
+    "custodian": "fleet lander",
+    "status": "not run in cloud"
+  },
+  "recorded_at": "2026-11-06T06:46:25.401880+00:00",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f82",
+  "tree": "7606141495a34929975076aaa5675e8c789b75e5"
+}
