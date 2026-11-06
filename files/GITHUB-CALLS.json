@@ -1,0 +1,42 @@
+[
+  {
+    "time": 1793940404.505211,
+    "command": [
+      "gh",
+      "api",
+      "repos/just-every/run-penny/actions/runs?head_sha=e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f&per_page=100",
+      "--jq",
+      "[.workflow_runs[] | {id,name,event,status,conclusion,head_sha,html_url}]"
+    ]
+  },
+  {
+    "time": 1793940845.301613,
+    "command": [
+      "gh",
+      "api",
+      "repos/just-every/run-penny/actions/runs?head_sha=26072c01e17dc384ca507cd90a9a6fe679aa8742&per_page=100",
+      "--jq",
+      "[.workflow_runs[] | {id,name,event,status,conclusion,head_sha,html_url}]"
+    ]
+  },
+  {
+    "time": 1793941145.4281385,
+    "command": [
+      "gh",
+      "api",
+      "repos/just-every/run-penny/actions/runs/42165165033",
+      "--jq",
+      "{status,conclusion,head_sha,html_url}"
+    ]
+  },
+  {
+    "time": 1793941445.5589018,
+    "command": [
+      "gh",
+      "api",
+      "repos/just-every/run-penny/actions/runs/42165165033/jobs?per_page=100",
+      "--jq",
+      "[.jobs[] | {id,name,status,conclusion,head_sha,html_url,failed_steps:[.steps[] | select(.conclusion == \"failure\") | {name,number,conclusion}]}]"
+    ]
+  }
+]

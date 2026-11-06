@@ -1,0 +1,40 @@
+{
+  "head": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+  "rows": [
+    {
+      "commit": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "parent": "1a6d71977ec28951e4dbcca527ab5c1e44032e43",
+      "retained": true,
+      "parent_table_rows": 445,
+      "candidate_table_rows": 445
+    },
+    {
+      "commit": "1a6d71977ec28951e4dbcca527ab5c1e44032e43",
+      "parent": "cc060e826c4ade7f6171028c79a81aa2d4e980f6",
+      "retained": true,
+      "parent_table_rows": 445,
+      "candidate_table_rows": 445
+    },
+    {
+      "commit": "cc060e826c4ade7f6171028c79a81aa2d4e980f6",
+      "parent": "2cd154478afd7ed101f660f3b9dfa73183f23f68",
+      "retained": true,
+      "parent_table_rows": 445,
+      "candidate_table_rows": 445
+    },
+    {
+      "commit": "cc060e826c4ade7f6171028c79a81aa2d4e980f6",
+      "parent": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+      "retained": true,
+      "parent_table_rows": 445,
+      "candidate_table_rows": 445
+    },
+    {
+      "commit": "2cd154478afd7ed101f660f3b9dfa73183f23f68",
+      "parent": "84bad894d12e7f969f567177a126cb544a3237b1",
+      "retained": true,
+      "parent_table_rows": 445,
+      "candidate_table_rows": 445
+    }
+  ]
+}

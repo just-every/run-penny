@@ -1,0 +1,5 @@
+PROBE OPS-004 point-1-hierarchy: native POST hierarchy creation then GET /api/operator/search with full, partial and uppercase names -> each exact id, entity, title and record link returned, with and without the type filter.
+PROBE OPS-004 point-2: GET /api/operator/search?q=hArBoR&page=1,2,3 -> total 31, page sizes 25, 6 and 0, exact mixed order and destinations, 31 distinct identities.
+PROBE OPS-004 point-2-destination: mounted Search form and hierarchy type links at 1440 -> expected record link; each product, component and feature link -> matching anchor, focus and reload target; equal-name products retain two identities. Changed screens captured at 1440 and 390.
+PROBE OPS-004 existing-admission: native anonymous, real requester and signed-out operator search -> 401 without hierarchy names; active peer -> same native hierarchy results and openable destinations. Finer role policy remains omitted.
+PROBE OPS-004 point-4: none, selected scope omits capacity p95; small-fixture timing is not capacity proof.

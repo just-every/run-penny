@@ -1,0 +1,538 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f73",
+  "head": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+  "base": "cc060e826c4ade7f6171028c79a81aa2d4e980f6",
+  "main_at_integration": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec tsc -b",
+      "exit": 0,
+      "head": "26072c01e17dc384ca507cd90a9a6fe679aa8742"
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/product-hierarchy.test.ts",
+      "exit": 0,
+      "tests": 1,
+      "head": "26072c01e17dc384ca507cd90a9a6fe679aa8742"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run env PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=../candidate-browser PENNY_OPERATOR_FIELDS_ONLY=1 perl -e 'alarm 1200; exec @ARGV' -- node tests/browser/operator-pages.mjs",
+      "head": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "exit": 0,
+      "captures": 36,
+      "widths": [
+        1440,
+        390
+      ]
+    }
+  ],
+  "status": "partial",
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "new_test_registrations": 0,
+  "publication_scan": "not run in cloud; guarded lander duty",
+  "run_site_candidate": "not a branch workflow; guarded lander duty",
+  "local_checks": "passed",
+  "browser_source_sha256": "9eb337b71f6d2ad2fd29b7e2007294f26fd85d14ed3e25f6517ff801797d85bb",
+  "source_tree": "07acd1258b5252e1d524bcbfef6f29716bad1ff9",
+  "build_source_tree": "07acd1258b5252e1d524bcbfef6f29716bad1ff9",
+  "github_api_calls": 4,
+  "product_push": "succeeded",
+  "committed_views_check": {
+    "exit": 1,
+    "expected": true,
+    "reason": "main views intentionally restored; guarded lander regenerates"
+  },
+  "ci": [
+    {
+      "conclusion": null,
+      "event": "push",
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033",
+      "id": 42165165033,
+      "name": "Verify Penny",
+      "status": "in_progress"
+    }
+  ],
+  "ci_run_id": 42165165033,
+  "ci_event": "push",
+  "ci_status": {
+    "conclusion": "failure",
+    "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033",
+    "status": "completed"
+  },
+  "ci_jobs": [
+    {
+      "conclusion": "success",
+      "failed_steps": [],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719829456",
+      "id": 127719829456,
+      "name": "plan",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883374",
+      "id": 127719883374,
+      "name": "shards (base-1, false)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883378",
+      "id": 127719883378,
+      "name": "shards (request-decline, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883383",
+      "id": 127719883383,
+      "name": "shards (browser, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883397",
+      "id": 127719883397,
+      "name": "shards (internal-discussion, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883410",
+      "id": 127719883410,
+      "name": "shards (proxy-votes, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883430",
+      "id": 127719883430,
+      "name": "shards (base-2, false)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883433",
+      "id": 127719883433,
+      "name": "shards (product-hierarchy, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883436",
+      "id": 127719883436,
+      "name": "shards (triage-aging, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883437",
+      "id": 127719883437,
+      "name": "shards (import-statuses, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883439",
+      "id": 127719883439,
+      "name": "shards (import-roadmap, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883444",
+      "id": 127719883444,
+      "name": "shards (rich-changelog, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883456",
+      "id": 127719883456,
+      "name": "shards (roadmap-public-eta, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883458",
+      "id": 127719883458,
+      "name": "shards (requester-blocking, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883473",
+      "id": 127719883473,
+      "name": "shards (requester-board, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883485",
+      "id": 127719883485,
+      "name": "shards (merge-notices, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883490",
+      "id": 127719883490,
+      "name": "shards (prioritisation, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883494",
+      "id": 127719883494,
+      "name": "shards (static, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883515",
+      "id": 127719883515,
+      "name": "shards (release-planning, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883520",
+      "id": 127719883520,
+      "name": "shards (browser-capture, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883529",
+      "id": 127719883529,
+      "name": "shards (older-archive, false)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883534",
+      "id": 127719883534,
+      "name": "shards (dev-flows, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883559",
+      "id": 127719883559,
+      "name": "shards (ownership, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883578",
+      "id": 127719883578,
+      "name": "shards (loop-health, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883579",
+      "id": 127719883579,
+      "name": "shards (discord-capture, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883583",
+      "id": 127719883583,
+      "name": "shards (survey-capture, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883627",
+      "id": 127719883627,
+      "name": "shards (helpscout-capture, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883709",
+      "id": 127719883709,
+      "name": "shards (vote-importance, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719883759",
+      "id": 127719883759,
+      "name": "shards (agent-door, true)",
+      "status": "completed"
+    },
+    {
+      "conclusion": "failure",
+      "failed_steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "head_sha": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42165165033/job/127719884286",
+      "id": 127719884286,
+      "name": "shards (workspace-clock, true)",
+      "status": "completed"
+    }
+  ],
+  "ci_disposition": "expected generated-view-only failure; permitted handoff exception; runtime test steps were not reached",
+  "handoff": "READY under the generated-view exception",
+  "product_branch_pushed": true,
+  "product_blockers": []
+}

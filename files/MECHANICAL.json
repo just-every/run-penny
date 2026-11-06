@@ -1,0 +1,56 @@
+{
+  "steps": [
+    {
+      "label": "views_write",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "write"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "views_check",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "views_restore",
+      "command": [
+        "git",
+        "checkout",
+        "origin/main",
+        "--",
+        "ACCEPTANCE.md",
+        "docs/CLAIMS.md"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "source_lock",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "lock"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "source_check",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "exit": 0
+    }
+  ],
+  "migration_ledger": "not applicable: no migration changed",
+  "generated_views_committed": false,
+  "head": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+  "source_lock_sha256": "6c80c8d2b9e362b7f5c72ea07fe991ec93278201c5610b07ba013523c75c3e8d"
+}

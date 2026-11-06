@@ -1,0 +1,8 @@
+{
+  "head": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+  "command": "node src/base/contract-docs.mjs check",
+  "exit": 1,
+  "output": "ACCEPTANCE.md: generated content differs; run contract-docs write.\n",
+  "expected": true,
+  "repair": "none: generated views intentionally excluded from the product branch"
+}
