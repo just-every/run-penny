@@ -1,0 +1,146 @@
+{
+  "branch": "cloud/sd-penny-c-f69",
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email <fleet identity> --non-interactive",
+      "exit": 0,
+      "receipt": "terminal process completion; private setup output excluded"
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0,
+      "receipt": "BUILD.txt"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "receipt": "TYPECHECK.txt"
+    },
+    {
+      "command": "pnpm exec rer check --profile first-party",
+      "exit": 0,
+      "receipt": "FIRST-PARTY.txt"
+    },
+    {
+      "command": "pnpm exec oxlint tests/base/proxy-votes.test.ts tests/base/csv-vote-reconciliation.ts",
+      "exit": 0,
+      "receipt": "LINT.txt"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "receipt": "VIEWS.txt"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "phase": "after local generation before restoring main views",
+      "receipt": "VIEWS.txt"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "receipt": "LOCK.txt"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "final_commit_check_exit": 0,
+      "receipt": "LOCK.txt"
+    }
+  ],
+  "ci": {
+    "conclusion": "failure",
+    "event": "push",
+    "generated_view_exception_permitted": true,
+    "head_sha": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42158298559",
+    "jobs_failed_generated_views": 29,
+    "jobs_total": 30,
+    "only_failure": "Check generated contract documents",
+    "run": 42158298559,
+    "status": "completed",
+    "url": "https://github.com/just-every/run-penny/actions/runs/42158298559"
+  },
+  "github_api_calls": 6,
+  "head": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+  "identity": {
+    "all_candidate_author_and_committer": "fleet identity",
+    "candidate_commits": [
+      "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+      "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23"
+    ],
+    "trailers": []
+  },
+  "mechanical": {
+    "all_parent_status_rows_preserved": true,
+    "all_parent_table_rows": 445,
+    "generated_views_equal_to": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+    "migration": "none",
+    "source_lock_fresh": true,
+    "staged_table_rows": 445
+  },
+  "parents": [
+    "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23",
+    "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f"
+  ],
+  "product_push": {
+    "attempts": 1,
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f69",
+    "exit": 0,
+    "remote_advertised_head": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+    "remote_ref": "refs/heads/cloud/sd-penny-c-f69"
+  },
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "scope": {
+    "after": "partial",
+    "before": "partial",
+    "clause": "DATA-005",
+    "contract_counts_after": {
+      "done": 79,
+      "missing": 78,
+      "partial": 124,
+      "total": 281
+    },
+    "contract_counts_before": {
+      "done": 79,
+      "missing": 78,
+      "partial": 124,
+      "total": 281
+    },
+    "new_registrations": 0,
+    "provider_calls": "mail HTTP edge faked in tests",
+    "publication_scan": "not run in cloud; guarded lander required",
+    "removed_assertions": 0,
+    "ui_changes": false
+  },
+  "tag": "sd-penny-c-f69",
+  "tests": [
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/proxy-votes.test.ts tests/base/board-categories.test.ts",
+      "exit": 0,
+      "files_passed": 2,
+      "phase": "baseline",
+      "receipt": "BASELINE-TESTS.txt",
+      "tests_passed": 5
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/proxy-votes.test.ts tests/base/board-categories.test.ts",
+      "exit": 0,
+      "files_passed": 2,
+      "phase": "extended",
+      "receipt": "TOUCHED-TESTS.txt",
+      "tests_passed": 5
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/proxy-votes.test.ts tests/base/board-categories.test.ts",
+      "exit": 0,
+      "files_passed": 2,
+      "head": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+      "phase": "committed exact head",
+      "receipt": "EXACT-HEAD-TESTS.txt",
+      "tests_passed": 5
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "files": [
+    {
+      "blob": "348af3f2f7cf1144b75ffeab632a9157859eedf9",
+      "bytes": 342,
+      "path": "BASELINE-TESTS.txt",
+      "sha256": "9c5f748c6f187896b14ed11562a0375915f10c0a5585928230a38f7f1ed1c465"
+    },
+    {
+      "blob": "eb8d0e8b5f323ee0107d20c9ea6d14cebec60dca",
+      "bytes": 42569,
+      "path": "BUILD.txt",
+      "sha256": "0df1902d0a0744f62d52ee10d637b9d5b591ad31078159a9efe9bbd77efe5165"
+    },
+    {
+      "blob": "c79e4e90ba50d374168aba6918f0e23ffc7f910e",
+      "bytes": 178,
+      "path": "CI-FINAL.json",
+      "sha256": "537af85349a21509e94af127f0aa1dcdcd6f8f3d45518104b67f101f0fb5bbcd"
+    },
+    {
+      "blob": "ee4796263cc56fe12d2f52015838cc03356c74c3",
+      "bytes": 4653,
+      "path": "CI-JOBS.json",
+      "sha256": "4c0c35147846a230c148f3a93c23301c6166aa0fee34be43078371b72d68e958"
+    },
+    {
+      "blob": "2f06b0b333c458ad527f9ea15cd5e21a572cae7c",
+      "bytes": 229,
+      "path": "CI-RUNS.jsonl",
+      "sha256": "4e46c58b55b99ee4f4778ca61a53f23f00554a1217a862f2ea524461cf641ce2"
+    },
+    {
+      "blob": "9beb343a2e10fb92e4dad04393bc381145d4fb02",
+      "bytes": 4385,
+      "path": "COMMAND-RECEIPT.json",
+      "sha256": "fe8a4c36608db8a3711bbef3639b2f5ce14d0d996fadf2a8b1ed39dfbe13c264"
+    },
+    {
+      "blob": "a327e021cb5374f2a587a5d476b1ec00cec61b17",
+      "bytes": 354,
+      "path": "EXACT-HEAD-TESTS.txt",
+      "sha256": "fbcd010ba647e200281270de2b4416e6513f12b250e803ca7384dada1fd1821d"
+    },
+    {
+      "blob": "993f5f8901ced4c3be0f464eb07a041a80e29cdc",
+      "bytes": 41,
+      "path": "EXACT-HEAD.txt",
+      "sha256": "9686ad2a640a216d085d8af7dd445fba491fbc1387bfabf335348a3dc9991f79"
+    },
+    {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "path": "FIRST-PARTY.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "bytes": 0,
+      "path": "LINT.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "blob": "cc24d50c74545932053b461663906d142e7f5f1b",
+      "bytes": 853754,
+      "path": "LOCK.txt",
+      "sha256": "6d2e3887206683924d44a125108a2ed6c1adb5188b38f1c48c0404e986bf3a61"
+    },
+    {
+      "blob": "e9a7958d4aa500229df90295c1a572fc79c58978",
+      "bytes": 12627,
+      "path": "REPORT.md",
+      "sha256": "5abf08a5463e114858e922f5c7183c5469299058fc728043e00136bfb0c0c87a"
+    },
+    {
+      "blob": "46f42ea6b86c193a0bfb813acabf287a9aa6aaaf",
+      "bytes": 342,
+      "path": "TOUCHED-TESTS.txt",
+      "sha256": "b4ef292e2873231b74190e862c01b05bfb3ee5323759545468d6dfe8bd2fb043"
+    },
+    {
+      "blob": "aa2495fdf84d2e098002b641749960728a2e3930",
+      "bytes": 162,
+      "path": "TYPECHECK.txt",
+      "sha256": "06dc68bd63e5a31247106eca2b338be98e6ca68822e77d55b2d1c343c429719e"
+    },
+    {
+      "blob": "0bdf8de6fd75f621dfa1fb2874d4907239559e87",
+      "bytes": 60,
+      "path": "VIEWS.txt",
+      "sha256": "a0dc3e5a57608862eebb5d81291a8613096d4984f76019b102a0ac55b950fe97"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f69",
+  "product_head": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+  "ref": "refs/heads/evidence/sd-penny-c-f69",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f69"
+}
