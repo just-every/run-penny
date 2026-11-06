@@ -1,0 +1,15 @@
+Main SHA: 84bad894d12e7f969f567177a126cb544a3237b1
+Verify: 42140171112; job: 127638280568; browser shard
+Earlier same-head Verify 42138503924 and Run site 42140171051 passed.
+Known infrastructure class: local browser connection refused. No product repair attempted and no workflow rerun requested.
+Failed archive read once with gh run view 42140171112 --repo just-every/run-penny --job 127638280568 --log-failed, exit 0.
+2026-11-06T01:00:50.9837539Z > node tests/browser/learning-journey.mjs
+2026-11-06T01:02:29.5991079Z +   'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+2026-11-06T01:02:29.5991474Z +   'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+2026-11-06T01:02:29.5992068Z +   'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+2026-11-06T01:02:29.5992449Z +   'Failed to load resource: net::ERR_CONNECTION_REFUSED'
+2026-11-06T01:02:29.5993689Z     at file:///home/runner/work/run-penny/run-penny/tests/browser/learning-journey.mjs:115:11 {
+2026-11-06T01:02:29.5995145Z     'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+2026-11-06T01:02:29.5995619Z     'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+2026-11-06T01:02:29.5996252Z     'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+2026-11-06T01:02:29.5996749Z     'Failed to load resource: net::ERR_CONNECTION_REFUSED'

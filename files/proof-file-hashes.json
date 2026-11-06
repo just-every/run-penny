@@ -1,0 +1,8 @@
+{
+  "src/core/features/notifications/weekly-routes.ts": "19a3f157291455df72b55bf45a063066c247b3167bd556ff204806ab298b0e79",
+  "src/core/features/integrations/guarded-database.ts": "72989de4cdfd5ad97d959b6975b12591e3b53e787a6e7d7dd75bf381e92e387d",
+  "tests/base/mail-identity.test.ts": "a44cc115c2fa332f3c13ee0a3f09f1eafc24c040f61434387d3dd9b1520bba2d",
+  "tests/base/weekly-summary-flow.ts": "ec182fa847ae1da787b13dadc56a65836956046c3baf2b0c3ede6b0d9963447e",
+  "tests/browser/weekly-summary-choice.mjs": "5896420d785c50be3988492256fc0b612bc3b1b28dab3be0429c52feb5c36f3a",
+  "tests/browser/workspace-clock.mjs": "1014850eff910a96fe60d8bfb5d525719dc675f354956840c63869847204b191"
+}

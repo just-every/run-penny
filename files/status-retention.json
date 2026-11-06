@@ -1,0 +1,44 @@
+[
+  {
+    "commit": "3a7486d49daae82df7dbe4ea5a343fbffb0179f4",
+    "parent": "c91cc8aab8fe9e09c998fc460b6018e1397ab36f",
+    "parent_rows": 281,
+    "candidate_rows": 281,
+    "dropped": []
+  },
+  {
+    "commit": "c91cc8aab8fe9e09c998fc460b6018e1397ab36f",
+    "parent": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e",
+    "parent_rows": 281,
+    "candidate_rows": 281,
+    "dropped": []
+  },
+  {
+    "commit": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e",
+    "parent": "ca50734876911283ca703df43f26836f310f67c0",
+    "parent_rows": 281,
+    "candidate_rows": 281,
+    "dropped": []
+  },
+  {
+    "commit": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e",
+    "parent": "84bad894d12e7f969f567177a126cb544a3237b1",
+    "parent_rows": 281,
+    "candidate_rows": 281,
+    "dropped": []
+  },
+  {
+    "commit": "ca50734876911283ca703df43f26836f310f67c0",
+    "parent": "14f13c8d193c98eeb775764b301b7a258f7827a6",
+    "parent_rows": 281,
+    "candidate_rows": 281,
+    "dropped": []
+  },
+  {
+    "commit": "14f13c8d193c98eeb775764b301b7a258f7827a6",
+    "parent": "1db862912dc18165739d5385fcca0f886c023ca4",
+    "parent_rows": 281,
+    "candidate_rows": 281,
+    "dropped": []
+  }
+]

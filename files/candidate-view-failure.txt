@@ -1,0 +1,8 @@
+Exact-head Verify 42145691316; push; completed failure.
+All 29 failed shards stopped only at Check generated contract documents; plan succeeded.
+Sample job: 127656537616 (workspace-clock).
+Command: node src/base/contract-docs.mjs check
+Archive read once: gh run view 42145691316 --repo just-every/run-penny --job 127656537616 --log-failed; exit 0.
+Sanitized failure excerpt; workflow environment lines omitted:
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T01:43:34.1863970Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T01:43:34.1920260Z ##[error]Process completed with exit code 1.
