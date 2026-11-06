@@ -1,8 +1,15 @@
 import { expect } from 'vitest'
-import { env } from './support'
+import { call, env } from './support'
 import { graph,time } from './notification-regression-fixture'
 import { saveReleaseDraft } from '@/core/features/releases/drafts'
 import { prepareRoadmapUpdateDraft } from '@/core/features/roadmap/update-drafts'
+import type { ReleaseDraft } from '@/core/features/releases/drafts'
+
+export async function nativeReleaseDraft(g:Awaited<ReturnType<typeof releaseGraph>>,changes:Partial<ReleaseDraft>={}){
+ const response=await call('/api/operator/releases',{...g.input,...changes},g.operator)
+ expect(response.status,await response.clone().text()).toBe(201)
+ return response.json() as Promise<{id:string;slug:string;versionId:string}>
+}
 export async function releaseGraph(count=2,otherAuthor=false,existing?:Awaited<ReturnType<typeof graph>>){
  const g=existing??await graph(count,otherAuthor),db=env.DB,actor=(await db.prepare('SELECT id FROM operators').first<{id:string}>())!.id
  await db.batch([

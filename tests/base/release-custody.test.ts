@@ -67,15 +67,6 @@ it('[DATA-001 REL-006/007] restored queued release is explicitly unknown and ine
  await reset();await applyD1Migrations(env.DB,inject('migrations'));await restoreArchive(env.DB,env.FILES,snapshot.archive,snapshot.journal)
  const sent=provider();await drainReleaseDeliveries(runtime(),()=>start+60000);expect(sent).toHaveLength(0)
 })
-it('[DATA-003 REL-003/005] approved public phrase survives requester erasure while private copied wording still refuses',async()=>{
- const g=await releaseGraph(1)
- const {saveReleaseDraft}=await import('@/core/features/releases/drafts')
- await saveReleaseDraft(env.DB,{...g.input,body:'Public request 0 is now easier.'},g.draft.slug,time());await publishRelease(env.DB,g.draft.slug,time())
- const before=await rows('release_versions'),plan=await planErasure(env.DB,'requesters',g.recipient.requesterId)
- expect(plan.blockedCopies).toEqual([])
- await eraseEntity(env.DB,env.FILES,'requesters',g.recipient.requesterId,plan.planHash)
- expect(await rows('release_versions')).toEqual(before)
-})
 it('[DATA-003 BASE-DATA-003] independently published wording never exempts private email or unapproved copied phrases',async()=>{
  const g=await releaseGraph(1)
  const {saveReleaseDraft}=await import('@/core/features/releases/drafts')

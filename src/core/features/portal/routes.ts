@@ -4,6 +4,8 @@ import { z } from 'zod'
 import type { PennyRuntime } from '@/core/app/runtime'
 import type { AppBindings } from '@/core/shared/bindings'
 import { portalReadService } from './service'
+import { PublicReleasesReadRepository } from '../releases/public-read-repository'
+import { releaseFeed, releaseFeedPaths, type ReleaseFeedFormat } from '../releases/feeds'
 
 interface PortalRouteEnvironment {
   Bindings: AppBindings
@@ -36,6 +38,18 @@ export function registerPortalRoutes(app: Hono<PortalRouteEnvironment>): void {
     return result.kind === 'withdrawn' ? context.json({ error: 'withdrawn' }, 410) : context.json({ error: 'not_found' }, 404)
   })
   app.get('/api/public/roadmap', async (context) => context.json(await portalReadService(context.get('runtime').database).listRoadmap()))
+  for (const format of Object.keys(releaseFeedPaths) as ReleaseFeedFormat[]) {
+    app.get(releaseFeedPaths[format], async context => {
+      const runtime = context.get('runtime')
+      const releases = await new PublicReleasesReadRepository(runtime.database).listForFeed()
+      const origin = runtime.configuration.appOrigin ?? new URL(context.req.url).origin
+      return context.body(releaseFeed(format, origin, releases), 200, {
+        'Content-Type': `application/${format}+xml; charset=utf-8`,
+        'Cache-Control': 'no-store',
+        'X-Content-Type-Options': 'nosniff',
+      })
+    })
+  }
   app.get('/api/public/releases', async context => {const filters=releaseFiltersSchema.safeParse(context.req.query());if(!filters.success)return context.json({error:'validation_failed'},400);return context.json(await portalReadService(context.get('runtime').database).listReleases(filters.data))})
   app.get('/api/public/releases/:slug', async (context) => {
     const slug = publicSlugSchema.safeParse(context.req.param('slug'))
