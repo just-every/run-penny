@@ -1,5 +1,6 @@
 import { proveAuditReadExport } from './audit-read-export'
 import {proveRoadmapPublication} from './roadmap-update-publication'
+import {proveInternalBoardExclusion} from './internal-board-exclusion'
 import './custom-field-races'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterEach,vi, expect,inject,it } from 'vitest'
@@ -56,8 +57,7 @@ it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves privat
  expect(new Uint8Array(await (await call(`/api/public/attachments/${file}`)).arrayBuffer())).toEqual(new Uint8Array([137,80,78,71]))
  for(let room=Math.floor((limits.uploadBytesPerRequest-await stored())/limits.uploadBytesPerFile);room>0;room--)expect((await pdf(limits.uploadBytesPerFile)).status).toBe(201);const left=limits.uploadBytesPerRequest-await stored(),objects=(await env.FILES.list()).objects.length;expect((await Promise.all([pdf(left),pdf(left)])).map(r=>r.status).sort(),'a request keeps its files within the per-request total').toEqual([201,400]);expect(await stored()).toBe(limits.uploadBytesPerRequest);expect((await env.FILES.list()).objects.length).toBe(objects+1)
  expect(await (await call(`/api/public/requests/${slug}`)).text()).not.toContain('Private enterprise context')
- expect((await call('/api/operator/boards/product',{visibility:'internal'},g.operator,'PATCH')).status).toBe(200)
- expect((await call(`/api/public/requests/${slug}`)).status).toBe(404);expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
+ await proveInternalBoardExclusion({...g,slug,file})
 })
 
 it('[BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back',async()=>{
