@@ -542,7 +542,7 @@ Core · published · **partial**
 **Acceptance.**
 1. An edit to already-public text re-enters moderation under `request.moderation.v1`, and the previously approved text stays public until the edit is approved or rejected; on an auto-publish board (REQ-033) an unflagged edit is public on submission and the earlier text stays in the request's history for operators.
 
-**Evidence.** `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback and unchanged-state refusal); `tests/browser/requester-repair.mjs` — requester repair journey
+**Evidence.** `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback, unchanged-state refusal and private activity isolation throughout review, and rejected-edit approval replay refusal); `tests/browser/requester-repair.mjs` with `tests/browser/requester-comment-edit.mjs` — mounted own-comment edit and operator rejection and approval, signed-out public wording and identity readback, activity and review screens at 1440 and 390
 **Gap.** Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved.
 
 #### REQ-021 — Requester withdrawal
@@ -1205,8 +1205,8 @@ Core · published · **partial**
 3. Requester/account links come only from native records; Orbit identity remains source-local and nullable.
 4. Model output cannot set identity or grants.
 
-**Evidence.** `tests/base/learning-stage2.test.ts`
-**Gap.** The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted.
+**Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
@@ -1232,8 +1232,8 @@ Core · published · **partial**
 1. The immutable snapshot retains the exact interpretation, original evidence, comparable selected/declined options and owner, plus the predeclared cohort, denominator, baseline, window, measure, data source, comparison, limits, stop rule and budget.
 2. Missing protocol fields are explicit nulls and prevent commitment.
 
-**Evidence.** `tests/base/learning-stage3.test.ts`
-**Gap.** The committed snapshot retaining the interpretation, original evidence, compared options, owner and full predeclared protocol, and missing protocol fields as explicit nulls that prevent commitment, have no passing assertion in this clause's evidence; commitment and its attributed audit are asserted.
+**Evidence.** `tests/base/learning-stage2.test.ts` — captures native and real-protocol Orbit facts, validates exact spans, compares no-build and commits an immutable accountable protocol; `tests/base/learning-commitment-snapshot.ts` — complete snapshot readback and unchanged commitment after correction and refresh; `tests/base/learning-stage3.test.ts` — learning actions retain the acting peer and roll back with their audit
+**Gap.** Missing protocol fields as explicit nulls that prevent commitment have no passing assertion. Complete interpretation and version, original evidence identities and content, selected and declined options, rationale, confidence, review date, acting owner and all ten protocol fields are asserted through native commitment readback, including unchanged history after correction and refresh.
 
 #### LEARN-004 — Bounded recurring work
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 

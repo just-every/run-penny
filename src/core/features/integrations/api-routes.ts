@@ -1,6 +1,6 @@
 import { recordProxyVote,proxyVoteSchema,proxyContacts } from '../requests/proxy-votes'
 import { publicRequestFiltersSchema } from '../portal/routes'
-import { statusPublicationSchema } from '../requests/status-schema'
+import { createIntegrationRequest as create, integrationComment as comment, integrationStatus as status, integrationRelease, integrationApproval, integrationSlug as slug } from './openapi/inputs'
 import {revokeKey} from './revocation'
 import type {Hono} from 'hono'
 import {z} from 'zod'
@@ -10,13 +10,9 @@ import {NativeError} from '../auth/native-tokens'
 import {portalReadService} from '../portal/service'
 import {createOperatorRequest,postOperatorComment} from '../requests/operator-context'
 import {RequestOperatorRepository} from '../requests/operator-repository'
-import {saveReleaseDraft,releaseDraftSchema} from '../releases/drafts'
+import {saveReleaseDraft} from '../releases/drafts'
 import {publishRelease} from '../releases/publication'
 import {apiAuthority,apiScopes,managedKeys} from './keys'
-const text=z.string().trim().min(1).max(20000),slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(128)
-const create=z.object({title:z.string().trim().min(1).max(280),description:text,boardSlug:slug,evidenceIds:z.array(z.string().regex(/^[0-9A-HJKMNPQRSTVWXYZ]{26}$/)).max(100).default([])}).strict()
-const comment=z.object({body:text,approve:z.literal(true)}).strict()
-const status=statusPublicationSchema.extend({idempotencyKey:z.string().regex(/^[A-Za-z0-9_-]+$/).min(1).max(128),approve:z.literal(true)}).strict()
 const issue=z.object({name:z.string().trim().min(1).max(200),scopes:z.array(z.enum(apiScopes)).min(1),expiresAt:z.number().int().optional()}).strict()
 export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
  app.use('/api/v1/*',async(c,next)=>{c.header('Cache-Control','private, no-store');await next()})
@@ -74,11 +70,11 @@ export function registerIntegrationApi(app:Hono<OperatorMutationEnvironment>) {
   if(!result)throw new NativeError('not_found',404);return c.json(result)
  })
  app.post('/api/v1/releases',async c=>{
-  const auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases'),input=await parseInput(c.req.raw,releaseDraftSchema.omit({authorOperatorId:true}))
+  const auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases'),input=await parseInput(c.req.raw,integrationRelease)
   return c.json(await saveReleaseDraft(auth.database.binding,{...input,authorOperatorId:auth.actor.id},undefined,undefined,auth.actor.id),201)
  })
  app.post('/api/v1/releases/:slug/publish',async c=>{
-  const key=slug.parse(c.req.param('slug')),auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases');await parseInput(c.req.raw,z.object({approve:z.literal(true)}).strict())
+  const key=slug.parse(c.req.param('slug')),auth=await apiAuthority(c.get('runtime'),c.req.raw,'releases:write','releases');await parseInput(c.req.raw,integrationApproval)
   return c.json(await publishRelease(auth.database.binding,key,undefined,auth.actor.id))
  })
  app.all('/api/v1/*',c=>c.json({error:'integration_route_not_found'},404))
