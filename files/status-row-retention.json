@@ -1,0 +1,56 @@
+[
+  {
+    "head": "5cc1f1aa2e657af14b373d521feb83f5f334bae9",
+    "parent": "0e34f894705e0026a0306bfc3323816786608c28",
+    "parent_pipe_rows": 445,
+    "candidate_pipe_rows": 445,
+    "parent_keys": 332,
+    "candidate_keys": 332,
+    "dropped": []
+  },
+  {
+    "head": "0e34f894705e0026a0306bfc3323816786608c28",
+    "parent": "4dbd3513e698eef1358b77940dae697c03fd5f33",
+    "parent_pipe_rows": 445,
+    "candidate_pipe_rows": 445,
+    "parent_keys": 332,
+    "candidate_keys": 332,
+    "dropped": []
+  },
+  {
+    "head": "4dbd3513e698eef1358b77940dae697c03fd5f33",
+    "parent": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+    "parent_pipe_rows": 445,
+    "candidate_pipe_rows": 445,
+    "parent_keys": 332,
+    "candidate_keys": 332,
+    "dropped": []
+  },
+  {
+    "head": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+    "parent": "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23",
+    "parent_pipe_rows": 445,
+    "candidate_pipe_rows": 445,
+    "parent_keys": 332,
+    "candidate_keys": 332,
+    "dropped": []
+  },
+  {
+    "head": "e3ebcc7130fd1879bb5ed8c736b0f7f1b3c097ef",
+    "parent": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+    "parent_pipe_rows": 445,
+    "candidate_pipe_rows": 445,
+    "parent_keys": 332,
+    "candidate_keys": 332,
+    "dropped": []
+  },
+  {
+    "head": "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23",
+    "parent": "84bad894d12e7f969f567177a126cb544a3237b1",
+    "parent_pipe_rows": 445,
+    "candidate_pipe_rows": 445,
+    "parent_keys": 332,
+    "candidate_keys": 332,
+    "dropped": []
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "head": "5cc1f1aa2e657af14b373d521feb83f5f334bae9",
+  "exit": 0,
+  "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/proxy-votes.test.ts"
+}

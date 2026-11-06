@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f76",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f76",
+  "head": "5cc1f1aa2e657af14b373d521feb83f5f334bae9",
+  "base": "0e34f894705e0026a0306bfc3323816786608c28",
+  "main_at_sync": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "utc": "2026-11-06T05:24:45.875801+00:00",
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email [fleet identity] --non-interactive",
+      "exit": 0,
+      "detail": "first owner claimed; setup exited; private output intentionally excluded"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/proxy-votes.test.ts tests/base/board-categories.test.ts",
+      "exit": 0,
+      "passed": 5,
+      "files": 2,
+      "seconds": 28.88
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "rer check --profile first-party --json",
+      "exit": 0,
+      "ok": true
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "detail": "copied local bytes match recorded custody; upstream origin not checked"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write then check",
+      "exit": 0,
+      "detail": "generated views restored from main before committing"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock then check",
+      "exit": 0
+    },
+    {
+      "command": "migration ledger",
+      "exit": 0,
+      "detail": "not applicable: no migration changed"
+    }
+  ],
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "test_registrations_delta": 0,
+  "source_bytes_unchanged_since_passing_tests": true,
+  "files": {
+    "CONTRACT.md": "b17187840af0d22ae0e6972178bd06ad082699e6ef57e6d1330c433f69091ae7",
+    "CHANGELOG.md": "1ebf177d70eb6a21d706d79f1fda594422dca4dc0d471851e3bb7615f9e6e442",
+    "sources.lock.json": "40e8f4b569044a7fc5c912939fb44d250b704d1aa9988c03edf00e6f14d5709e",
+    "tests/base/proxy-votes.test.ts": "2f0958fdf085b653e2d46d67077f9ed8ec4cdc8b73cbe11ff7d0e310c8a60022",
+    "tests/base/csv-vote-reconciliation.ts": "ece65153381e459b7a01d805addef701ea0de68f37208167f4eb707b76cee347",
+    "src/core/features/categories/request-csv.ts": "ef82caf58352c81184317a5589e5fc4454a642cd6ed80cea28c5718caededa96",
+    "src/core/features/requests/proxy-votes-csv.ts": "54470348cad1e8b6844f49493084a0a55e148f5f6e6e721ba1f6d2dcbb9ecd81"
+  },
+  "exact_head_probe": {
+    "head": "5cc1f1aa2e657af14b373d521feb83f5f334bae9",
+    "exit": 0,
+    "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/proxy-votes.test.ts",
+    "passed": 4,
+    "files": 1,
+    "seconds": 16.31
+  },
+  "product_worktree_clean": true,
+  "publication_scan": "not run in cloud; required at guarded landing",
+  "committed_generated_view_check": {
+    "exit": 1,
+    "only": "ACCEPTANCE.md stale by required restore-from-main rule"
+  },
+  "ci": {
+    "conclusion": "failure",
+    "head_sha": "5cc1f1aa2e657af14b373d521feb83f5f334bae9",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42168227588",
+    "status": "completed",
+    "run_id": 42168227588,
+    "event": "push",
+    "failed_jobs": 29,
+    "only_failure": "Check generated contract documents",
+    "generated_view_exception": true
+  },
+  "github_calls": 4
+}

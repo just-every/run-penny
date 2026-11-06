@@ -1,0 +1,14 @@
+[
+  {
+    "command": "node scripts/edition-authoring/cli.mjs lock",
+    "exit": 0,
+    "manifest": "1a685056031b19d71afbeae2ef0a3d719996b0586c0ebea3cae76faf02c766df",
+    "stdout_sha256": "a223c0a1a6d71944bedb97ead7689337f2c39dd7c3c91d1765590083bc876012"
+  },
+  {
+    "command": "node scripts/edition-authoring/cli.mjs check",
+    "exit": 0,
+    "manifest": "1a685056031b19d71afbeae2ef0a3d719996b0586c0ebea3cae76faf02c766df",
+    "stdout_sha256": "959abc1d788bd2fa9ada2808242f019f6ea959eb1bb224d867f390950eb45077"
+  }
+]
