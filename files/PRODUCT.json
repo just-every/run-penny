@@ -1,0 +1,30 @@
+{
+  "head": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+  "branch": "cloud/sd-penny-c-f56",
+  "changed_files": [
+    {
+      "path": "CHANGELOG.md",
+      "head_blob": "94e081bee687a6e535f4ea42cdaa24701cfd7e47"
+    },
+    {
+      "path": "CONTRACT.md",
+      "head_blob": "c0df6f7ee161cf61fe7f2573144ac822bb4bb1b6"
+    },
+    {
+      "path": "sources.lock.json",
+      "head_blob": "c12f687164275f4b4bd656f61b1ec2b27982e74b"
+    },
+    {
+      "path": "tests/base/board.test.ts",
+      "head_blob": "2d10c2c4517551f0a53f207bbc7c6128d436b303"
+    },
+    {
+      "path": "tests/base/support.ts",
+      "head_blob": "7a4a5d2587c459f6dd8c77b8f0eccaf340a63ffe"
+    }
+  ],
+  "commit_identity_check": "Run Edit Run fleet <fleet@runeditrun.com>\nRun Edit Run fleet <fleet@runeditrun.com>\n\nRun Edit Run fleet <fleet@runeditrun.com>\nRun Edit Run fleet <fleet@runeditrun.com>\n\n",
+  "git_worktree_clean": true,
+  "default_branch_push": false,
+  "force_push": false
+}

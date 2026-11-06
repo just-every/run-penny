@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-11-06T01:02:44.372888+00:00",
+  "command": [
+    "gh",
+    "api",
+    "repos/just-every/run-penny/actions/runs?head_sha=cb8538438ad3a8da25ad744447e7fd3904ed67bc&per_page=100",
+    "--jq",
+    "{workflow_runs: [.workflow_runs[] | {id,name,event,status,conclusion,head_sha,html_url}], total_count}"
+  ],
+  "exit": 0,
+  "result": {
+    "total_count": 1,
+    "workflow_runs": [
+      {
+        "conclusion": null,
+        "event": "push",
+        "head_sha": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+        "html_url": "https://github.com/just-every/run-penny/actions/runs/42141058059",
+        "id": 42141058059,
+        "name": "Verify Penny",
+        "status": "in_progress"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+
+> penny@0.2.2 test:base /home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny
+> vitest run --config vitest.base.config.ts tests/base/board.test.ts
+
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  01:02:29
+   Duration  12.68s (transform 1.32s, setup 0ms, import 3.19s, tests 8.99s, environment 0ms)
+

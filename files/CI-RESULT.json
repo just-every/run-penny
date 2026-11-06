@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-11-06T01:07:49.996678+00:00",
+  "command": [
+    "gh",
+    "api",
+    "repos/just-every/run-penny/actions/runs/42141058059",
+    "--jq",
+    "{status,conclusion,head_sha,html_url,event,id}"
+  ],
+  "exit": 0,
+  "result": {
+    "conclusion": "failure",
+    "event": "push",
+    "head_sha": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42141058059",
+    "id": 42141058059,
+    "status": "completed"
+  }
+}

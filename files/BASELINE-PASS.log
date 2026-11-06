@@ -1,0 +1,17 @@
+ WARN  Unsupported engine: wanted: {"node":"22.20.0"} (current: {"node":"v24.19.0","pnpm":"10.12.4"})
+
+> penny@0.2.2 test:base /home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny
+> vitest run --config vitest.base.config.ts tests/base/board.test.ts
+
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny
+
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  00:55:54
+   Duration  10.70s (transform 1.15s, setup 0ms, import 2.58s, tests 7.67s, environment 0ms)
+

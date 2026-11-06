@@ -1,0 +1,154 @@
+{
+  "schema": 1,
+  "tag": "sd-penny-c-f56",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f56",
+  "head": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+  "tree": "e93e5887f963451a4e9c887fd4c6fb38926080d6",
+  "main_at_integration": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "supplied_base": "3f11d2ec528376af456eac71f44773953b620db1",
+  "published_save": "5131e0e386a3551a7e32425eea680d1be931dcf3",
+  "product_remote": "cb8538438ad3a8da25ad744447e7fd3904ed67bc\trefs/heads/cloud/sd-penny-c-f56",
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email [fleet identity] --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm test:base tests/base/board.test.ts",
+      "exit": 1,
+      "log": "BASELINE-STARTUP.log",
+      "phase": "Initial baseline launch while build was still completing",
+      "failure": "No such module with duplicated absolute path; no tests loaded."
+    },
+    {
+      "command": "pnpm test:base tests/base/board.test.ts",
+      "exit": 0,
+      "log": "BASELINE-PASS.log",
+      "phase": "Baseline after build completed",
+      "tests": 7
+    },
+    {
+      "command": "pnpm test:base tests/base/board.test.ts",
+      "exit": 0,
+      "test_files": 1,
+      "tests": 7,
+      "log": "BOARD.log",
+      "head": "cb8538438ad3a8da25ad744447e7fd3904ed67bc"
+    },
+    {
+      "command": "pnpm typecheck",
+      "exit": 0,
+      "log": "TYPECHECK.log"
+    },
+    {
+      "command": "pnpm check -- --profile first-party",
+      "exit": 0,
+      "log": "FIRST-PARTY.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "log": "VIEWS-WRITE.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "log": "VIEWS-CHECK.log",
+      "note": "Checked generated views, then restored origin/main views; views are not committed."
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "head": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+      "lock_sha256": "2b86fe9a77d5d09219e1bef5bdb3a63cc9efc5b67a17ef936f9174a7ea598bfe"
+    },
+    {
+      "command": "migration ledger",
+      "exit": 0,
+      "note": "Not applicable: no migration added or edited."
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "log": "FIRST-PARTY-DIRECT.log"
+    }
+  ],
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "status_rows_before": 281,
+  "status_rows_after": 281,
+  "table_lines_before": 445,
+  "table_lines_after": 445,
+  "test_registrations_added": 0,
+  "test_registrations_removed": 0,
+  "rollback_snapshot_tables": [
+    "requests",
+    "request_canonical_roots",
+    "request_merges",
+    "request_merge_evidence_transfers",
+    "request_merge_vote_transfers",
+    "request_merge_follow_transfers",
+    "request_merge_comment_transfers",
+    "request_merge_attachment_transfers",
+    "request_votes",
+    "request_vote_contributions",
+    "request_follows",
+    "request_follow_contributions",
+    "request_evidence_links",
+    "request_evidence_contributions",
+    "evidence_items",
+    "evidence_versions",
+    "request_comments",
+    "attachments",
+    "request_attachment_uploads",
+    "requester_update_permissions",
+    "requester_addresses",
+    "request_tag_assignments",
+    "request_status_updates",
+    "penny_request_status",
+    "penny_merge_notices",
+    "penny_merge_notice_recipients",
+    "notification_events",
+    "notification_intents",
+    "notification_batches",
+    "notification_outbox",
+    "audit_entries"
+  ],
+  "publication_scan": {
+    "status": "NOT RUN",
+    "reason": "Cloud branch push uses the guarded Mac lander for the full-history publication scan."
+  },
+  "screens": {
+    "status": "NOT APPLICABLE",
+    "reason": "No UI changes or touched screens; selected proof uses native routes."
+  },
+  "pr": null,
+  "ci": {
+    "run_id": 42141058059,
+    "head": "cb8538438ad3a8da25ad744447e7fd3904ed67bc",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "only_failed_step": "Check generated contract documents",
+    "exception": "Expected lander-owned generated-view freshness failure; no runtime CI success claimed.",
+    "jobs": 30,
+    "github_calls": 5
+  }
+}

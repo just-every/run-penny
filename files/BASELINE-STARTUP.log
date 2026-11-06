@@ -1,0 +1,28 @@
+ WARN  Unsupported engine: wanted: {"node":"22.20.0"} (current: {"node":"v24.19.0","pnpm":"10.12.4"})
+
+> penny@0.2.2 test:base /home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny
+> vitest run --config vitest.base.config.ts tests/base/board.test.ts
+
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny
+
+[vitest-plugin] Failed to import "/home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny/home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny/dist/server/index.js?mf_vitest_force=ESModule" from "/home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny/node_modules/.pnpm/vitest@4.1.11_@types+node@24.19.2_vite@8.2.2_@types+node@24.19.2_esbuild@0.28.2_jiti@2.7.0_tsx@4.23.15_/node_modules/vitest/dist/module-evaluator.js". To resolve this, try bundling the relevant dependency with Vite. For more details, refer to https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/#module-resolution
+Fallback service failed to fetch module; payload = ; spec = /?specifier=%2Fhome%2Fagent%2Frer-consolidation%2Fwork%2Fsd-penny-c-f56%2Frun-penny%2Fhome%2Fagent%2Frer-consolidation%2Fwork%2Fsd-penny-c-f56%2Frun-penny%2Fdist%2Fserver%2Findex.js%3Fmf_vitest_force%3DESModule&referrer=%2Fhome%2Fagent%2Frer-consolidation%2Fwork%2Fsd-penny-c-f56%2Frun-penny%2Fnode_modules%2F.pnpm%2Fvitest%404.1.11_%40types%2Bnode%4024.19.2_vite%408.2.2_%40types%2Bnode%4024.19.2_esbuild%400.28.2_jiti%402.7.0_tsx%404.23.15_%2Fnode_modules%2Fvitest%2Fdist%2Fmodule-evaluator.js&rawSpecifier=%2Fhome%2Fagent%2Frer-consolidation%2Fwork%2Fsd-penny-c-f56%2Frun-penny%2Fhome%2Fagent%2Frer-consolidation%2Fwork%2Fsd-penny-c-f56%2Frun-penny%2Fdist%2Fserver%2Findex.js%3Fmf_vitest_force%3DESModule
+ ❯ tests/base/board.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/board.test.ts [ tests/base/board.test.ts ]
+Error: No such module "home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny/home/agent/rer-consolidation/work/sd-penny-c-f56/run-penny/dist/server/index.js?mf_vitest_force=ESModule".
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  00:55:27
+   Duration  605ms (transform 35ms, setup 0ms, import 0ms, tests 0ms, environment 1ms)
+
+ ELIFECYCLE  Command failed with exit code 1.
