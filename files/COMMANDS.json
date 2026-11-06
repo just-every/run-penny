@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "tag": "ct-judge-penny-road007-20261105-1325-sol1",
+  "source": "89d5997b2ba55fb4637552fc2c656bcced2bcc15",
+  "created_at_utc": "2026-11-06T02:07:37.234177+00:00",
+  "commands": [
+    {
+      "id": "C1",
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "result": "Frozen dependencies installed; dispatcher selected Node 22.20.0 and built exact source; local migrations and owner setup completed. No provider deployment.",
+      "receipt": "setup-receipt.json"
+    },
+    {
+      "id": "C2",
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/decision-loop-roadmap.test.ts tests/base/request-status-workflow.test.ts",
+      "exit": 0,
+      "result": "2 files; 7 tests passed (six roadmap sanity journeys and one request-status sanity journey).",
+      "receipt": "focused.log"
+    },
+    {
+      "id": "C3",
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=<packet>/browser cloud_run node <packet>/browser-journey.mjs",
+      "exit": 0,
+      "result": "Existing native reviewStatusDrafts invoked once per width at 1440 and 390. 16 captures; no serious/critical axe findings or horizontal overflow; anonymous/stale publication refused without publication-state change. Decline observation recorded at each width.",
+      "receipt": "browser/browser-receipt.json"
+    },
+    {
+      "id": "C4",
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/penny-decisions.test.ts -t 'revisions preserve commitment|unauthorized, foreign-origin, stale and failed revisions'",
+      "exit": 0,
+      "result": "2 selected tests passed; 3 unrelated tests NOT RUN by name selection. No source skip was added.",
+      "receipt": "revision.log"
+    },
+    {
+      "id": "C5",
+      "command": "cloud_run pnpm run typecheck",
+      "exit": 0,
+      "result": "tsc -b passed; shell Node v24.19.0 with repository engine warning, pnpm 10.12.4. Dispatcher build used Node 22.20.0.",
+      "receipt": "typecheck.log"
+    },
+    {
+      "id": "C6",
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "result": "ACCEPTANCE.md: generated content differs; run contract-docs write. Expected generated-view freshness exception. No generator write or tracked edit performed.",
+      "receipt": "generator-check.log"
+    },
+    {
+      "id": "C7",
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "result": "JSON ok:true; source lock freshness passed. Large public source inventory output inspected, not copied as a new raw receipt.",
+      "receipt": null
+    },
+    {
+      "id": "C8",
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts -t 'publication and real scheduled mail retain feature outcomes'",
+      "exit": 0,
+      "result": "1 selected sanity journey passed, including proveRoadmapPublication; 6 unrelated tests NOT RUN by name selection. Native publication preserves earlier updates and refuses repeated publication without history, intent or mail changes. Provider calls mocked only at the mail HTTP edge.",
+      "receipt": "publication.log"
+    }
+  ],
+  "github_api_calls": 0,
+  "ci_poll_or_rerun": false,
+  "source_mutations": false,
+  "product_commits": [],
+  "product_pushes": [],
+  "pr": null,
+  "unrun": [
+    "Full Verify and baseline suites",
+    "Existing three unselected penny-decisions tests",
+    "CI run 42029366548 not polled or rerun",
+    "D-3 declared-capacity p95 timing/scale run",
+    "Private held-outs and mutation applications",
+    "Live mail/provider/account/device/other-seed checks",
+    "Generator write, source relock, final publication scan, landing, exact-main Run site",
+    "Existing six unselected board.test.ts tests"
+  ]
+}

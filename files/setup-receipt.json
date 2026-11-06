@@ -1,0 +1,12 @@
+{
+  "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+  "exit": 0,
+  "built_exact_source": true,
+  "selected_non_secret_output": [
+    "Using project Node 22.20.0 (current Node 24.19.0).",
+    "Heavy job admitted: Penny setup:workflow [62d9e64b7222]",
+    "First owner claimed",
+    "RER_SETUP_READY http://127.0.0.1:8787"
+  ],
+  "raw_log_not_selected": "May contain local setup credentials; excluded from public packet."
+}

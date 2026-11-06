@@ -1,0 +1,12 @@
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/ct-judge-penny-road007-20261105-1325-sol1/run-penny
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  02:01:44
+   Duration  14.14s (transform 2.33s, setup 0ms, import 7.61s, tests 4.98s, environment 1ms)
+

@@ -1,0 +1,42 @@
+{
+  "frozen_at_utc": "2026-11-06T01:59:17.663834+00:00",
+  "source": "89d5997b2ba55fb4637552fc2c656bcced2bcc15",
+  "authority": "Original requirement, acceptance and expressly requested rider outcomes; no earlier rubric rows were shipped. Frozen before running journeys. Existing private held-outs not accessed.",
+  "rows": [
+    {
+      "id": "R1",
+      "item": "Every approved ROAD-004 roadmap-item status change prepares a draft naming its new public status and problem, including forward and backward moves, recommitment and truthful prior status.",
+      "verification": "Route sanity journey with populated approval and mappings; inspect every transition, draft and public status."
+    },
+    {
+      "id": "R2",
+      "item": "Every REQ-017 decline prepares the customer-safe draft with Declined and the problem, while inherited refusal and reversal behavior survives.",
+      "verification": "Route journey attempts reasonless decline and populated valid decline, reads draft and public status/history, checks unchanged-state refusal and reversal."
+    },
+    {
+      "id": "R3",
+      "item": "The full stored draft and operator projection exclude internal rationale, commercial context, declined bet and outcome prompt.",
+      "verification": "Seed distinct private markers, read durable payload and native operator projection; inspect safe allowlist builder."
+    },
+    {
+      "id": "R4",
+      "item": "Draft identity and body remain invisible in public API and rendered history before operator publication, with public status continuity and prior history preserved.",
+      "verification": "Populated route and native browser journey before publication at 1440 and 390."
+    },
+    {
+      "id": "R5",
+      "item": "Explicit operator publication reveals the safe draft exactly once and preserves earlier history; unsafe authority/publication attempts refuse with unchanged state.",
+      "verification": "Route supported and refused publication/replay paths and native operator publish then public readback."
+    },
+    {
+      "id": "R6",
+      "item": "Approval and mappings are captured atomically; concurrent transitions form a truthful chain; reapproval and withdrawal cannot leave partial witnesses; unapproved items prepare no draft.",
+      "verification": "Focused route journey under seeded concurrency, rollback and approval-race injection already present at the pin."
+    },
+    {
+      "id": "R7",
+      "item": "Replay and rollback retain draft, transition and public custody without duplicate publication or partial data loss.",
+      "verification": "Read and execute existing route replay and transaction-failure paths; no mutation applied."
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "source": "89d5997b2ba55fb4637552fc2c656bcced2bcc15",
+  "started_at": "2026-11-06T02:02:43.415Z",
+  "entry": "Existing reviewStatusDrafts exported by tests/browser/operator-pages-status.mjs; isolated native setup outside product checkout",
+  "checks": [
+    {
+      "width": 1440,
+      "label": "stale-status-drafts",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "label": "discarded-stale-status-draft",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "label": "unpublished-status-history-first",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "label": "unpublished-status-history-second",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "label": "current-authority-status-draft",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "label": "published-status-draft",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "label": "mapped-status-history-first",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "label": "mapped-status-history-second",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "label": "stale-status-drafts",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "label": "discarded-stale-status-draft",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "label": "unpublished-status-history-first",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "label": "unpublished-status-history-second",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "label": "current-authority-status-draft",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "label": "published-status-draft",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "label": "mapped-status-history-first",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "label": "mapped-status-history-second",
+      "seriousCriticalAxe": 0,
+      "overflow": false
+    }
+  ],
+  "refusals": [
+    {
+      "width": 1440,
+      "anonymous": 401,
+      "stale": 409,
+      "unchangedPublicationState": true
+    },
+    {
+      "width": 390,
+      "anonymous": 401,
+      "stale": 409,
+      "unchangedPublicationState": true
+    }
+  ],
+  "declineObservations": [
+    {
+      "width": 1440,
+      "httpStatus": 200,
+      "publicStatus": "declined",
+      "roadmapDraftCountBefore": 3,
+      "roadmapDraftCountAfter": 3,
+      "publishedDeclineRows": 1,
+      "allDeclineRowsImmediatelyPublished": true,
+      "reasonVisibleInPublicHistory": true
+    },
+    {
+      "width": 390,
+      "httpStatus": 200,
+      "publicStatus": "declined",
+      "roadmapDraftCountBefore": 3,
+      "roadmapDraftCountAfter": 3,
+      "publishedDeclineRows": 1,
+      "allDeclineRowsImmediatelyPublished": true,
+      "reasonVisibleInPublicHistory": true
+    }
+  ],
+  "errors": [],
+  "status": "passed",
+  "finished_at": "2026-11-06T02:03:17.026Z"
+}

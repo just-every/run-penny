@@ -1,0 +1,164 @@
+{
+  "at_utc": "2026-11-06T02:03:24.342970+00:00",
+  "source": "89d5997b2ba55fb4637552fc2c656bcced2bcc15",
+  "original_main": "1d278bb9a1582cb59f92d7a41e131ed6286444c0",
+  "observed_main": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "head_detached": true,
+  "worktree_status": "",
+  "docs_raw_match": {
+    "CONTRACT.md": true,
+    "ACCEPTANCE.md": true,
+    "AGENTS.md": true
+  },
+  "counts": {
+    "1d278bb9a1582cb59f92d7a41e131ed6286444c0": {
+      "done": 77,
+      "partial": 126,
+      "missing": 78
+    },
+    "89d5997b2ba55fb4637552fc2c656bcced2bcc15": {
+      "done": 78,
+      "partial": 125,
+      "missing": 78
+    },
+    "84bad894d12e7f969f567177a126cb544a3237b1": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    }
+  },
+  "clause_counts": {
+    "1d278bb9a1582cb59f92d7a41e131ed6286444c0": 281,
+    "89d5997b2ba55fb4637552fc2c656bcced2bcc15": 281,
+    "84bad894d12e7f969f567177a126cb544a3237b1": 281
+  },
+  "source_obligation_count": 281,
+  "acceptance_obligation_count": 281,
+  "acceptance_different_obligations": [],
+  "original_to_source_changed_status_rows": {
+    "ROAD-007": {
+      "before": {
+        "title": "Status update draft",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs`",
+        "gap": "The draft's absence of internal rationale, commercial context, declined bets and outcome prompts has no passing assertion in this clause's evidence, whose check of the draft allows extra fields, and no cited case reads the portal before the draft is published; a draft prepared for each approved status change with the safe title, problem and new public status, unpublished until an operator publishes it, and no draft for an unapproved item are asserted."
+      },
+      "candidate": {
+        "title": "Status update draft",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/base/decision-loop-roadmap.test.ts` \u2014 Explicit roadmap publication: projects every forward and backward move within five seconds and keeps complete safe drafts private with atomic approval witnesses; committing an existing approved item records its real prior status and exactly one safe draft; concurrent distinct moves form a truthful transition chain, and unapproved items prepare no draft; a move racing reapproval captures one complete approval and its mappings, while withdrawal cannot leave a partially captured draft. `tests/browser/operator-pages-status.mjs` \u2014 reviewStatusDrafts, invoked by `tests/browser/operator-pages.mjs`: safe native operator draft readback, public status before publication, absent draft identity and body in mapped public history, and explicit publication reveals that body once.",
+        "gap": ""
+      }
+    }
+  },
+  "source_to_fresh_main_changed_status_rows": {
+    "REQ-010": {
+      "candidate": {
+        "title": "Follow and consent",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/board.test.ts`",
+        "gap": "The unticked \"Email me updates\" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion."
+      },
+      "main": {
+        "title": "Follow and consent",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/browser/requester-repair.mjs` with `tests/browser/requester-consent.mjs` \u2014 mounted explicit and automatic consent; `tests/base/requester-subscriptions.test.ts` \u2014 disclosed voting and submission, explicit consent address binding, exact grant time and unfollow revocation (`tests/base/request-consent.ts`)",
+        "gap": ""
+      }
+    },
+    "REQ-020": {
+      "candidate": {
+        "title": "Requester's own content",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/browser/requester-repair.mjs`",
+        "gap": "Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions."
+      },
+      "main": {
+        "title": "Requester's own content",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/ownership.test.ts` \u2014 requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback, unchanged-state refusal and private activity isolation throughout review, and rejected-edit approval replay refusal); `tests/browser/requester-repair.mjs` with `tests/browser/requester-comment-edit.mjs` \u2014 mounted own-comment edit and operator rejection and approval, signed-out public wording and identity readback, activity and review screens at 1440 and 390",
+        "gap": "Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved."
+      }
+    },
+    "REQ-032": {
+      "candidate": {
+        "title": "Internal notes",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/penny-evidence.test.ts`",
+        "gap": "A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted."
+      },
+      "main": {
+        "title": "Internal notes",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/browser/internal-discussion.mjs` \u2014 native note and public comment controls on one approved request, distinct labelled rendering and unchanged identities after reload; `tests/base/penny-evidence.test.ts` \u2014 \"[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail\" checks portal responses, complete page metadata, releases and requester notifications.",
+        "gap": ""
+      }
+    },
+    "ROAD-007": {
+      "candidate": {
+        "title": "Status update draft",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/base/decision-loop-roadmap.test.ts` \u2014 Explicit roadmap publication: projects every forward and backward move within five seconds and keeps complete safe drafts private with atomic approval witnesses; committing an existing approved item records its real prior status and exactly one safe draft; concurrent distinct moves form a truthful transition chain, and unapproved items prepare no draft; a move racing reapproval captures one complete approval and its mappings, while withdrawal cannot leave a partially captured draft. `tests/browser/operator-pages-status.mjs` \u2014 reviewStatusDrafts, invoked by `tests/browser/operator-pages.mjs`: safe native operator draft readback, public status before publication, absent draft identity and body in mapped public history, and explicit publication reveals that body once.",
+        "gap": ""
+      },
+      "main": {
+        "title": "Status update draft",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/decision-loop-roadmap.test.ts`; `tests/browser/operator-pages-status.mjs`",
+        "gap": "The draft's absence of internal rationale, commercial context, declined bets and outcome prompts has no passing assertion in this clause's evidence, whose check of the draft allows extra fields, and no cited case reads the portal before the draft is published; a draft prepared for each approved status change with the safe title, problem and new public status, unpublished until an operator publishes it, and no draft for an unapproved item are asserted."
+      }
+    },
+    "REL-005": {
+      "candidate": {
+        "title": "Customer-safe delivery",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/browser/loopjourney-release.mjs`",
+        "gap": "The owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted."
+      },
+      "main": {
+        "title": "Customer-safe delivery",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/browser/loopjourney-release.mjs`; `tests/base/mail-identity.test.ts` \u2014 setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport; `tests/base/release-mail-identity.ts` \u2014 proveReleaseMailIdentity binds the native release delivery to its tested sender name, from address, reply-to, postal footer and signed-out unsubscribe, retaining wording and replay assertions.",
+        "gap": "The owner's brand header (INT-008) in release email and the remaining acceptance-point-1 email privacy obligations are unproved; private context staying out of the public updates is asserted. Live verified-domain, reply and inbox qualification remains held in R-6."
+      }
+    },
+    "LEARN-001": {
+      "candidate": {
+        "title": "Permitted originals",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/learning-stage2.test.ts`",
+        "gap": "The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted."
+      },
+      "main": {
+        "title": "Permitted originals",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol",
+        "gap": "The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved."
+      }
+    }
+  },
+  "original_to_source_changed_obligations": [],
+  "source_to_fresh_main_changed_obligations": [],
+  "original_source_runtime_diff": "",
+  "source_to_fresh_main_diffstat": " ACCEPTANCE.md                              | 30 +++++-----\n CHANGELOG.md                               | 14 ++++-\n CONTRACT.md                                | 18 +++---\n docs/CLAIMS.md                             |  4 +-\n sources.lock.json                          | 44 +++++++++-----\n tests/base/decision-loop-fixture.ts        | 26 ---------\n tests/base/decision-loop-roadmap.test.ts   | 36 ++----------\n tests/base/learning-stage2.test.ts         | 57 +++++++++++++++++-\n tests/base/learning-test-runtime.ts        | 11 ++--\n tests/base/mail-identity.test.ts           |  6 +-\n tests/base/ownership.test.ts               | 89 +++++++++++++++++++++++++++-\n tests/base/release-mail-identity.ts        | 77 ++++++++++++++++++++++++\n tests/base/request-consent.ts              | 65 +++++++++++++++++++++\n tests/base/requester-subscriptions.test.ts |  4 +-\n tests/browser/internal-discussion.mjs      | 61 +++++++++++++++++--\n tests/browser/operator-pages-status.mjs    | 46 +--------------\n tests/browser/requester-comment-edit.mjs   | 93 +++++++++++++++++++++++++++++\n tests/browser/requester-consent.mjs        | 94 ++++++++++++++++++++++++++++++\n tests/browser/requester-repair.mjs         |  4 ++\n 19 files changed, 618 insertions(+), 161 deletions(-)\n",
+  "original_to_source_diffstat": " CHANGELOG.md                             |  2 ++\n CONTRACT.md                              |  6 ++---\n sources.lock.json                        | 10 +++----\n tests/base/decision-loop-fixture.ts      | 26 ++++++++++++++++++\n tests/base/decision-loop-roadmap.test.ts | 36 ++++++++++++++++++++++---\n tests/browser/operator-pages-status.mjs  | 46 ++++++++++++++++++++++++++++++--\n 6 files changed, 112 insertions(+), 14 deletions(-)\n",
+  "document_sha256": {
+    "CONTRACT.md": "4b28f61f07dc52c578d6404e1224ad8bb559c96332e7b1b1ec90164c39361d5f",
+    "ACCEPTANCE.md": "a1892ab4b7e449b40e22e11ee344bbf07d2e625d63a1bf79d9900d8e46e03378",
+    "AGENTS.md": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968"
+  }
+}
