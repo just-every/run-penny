@@ -155,8 +155,8 @@ Core · published · **partial** · Rules D-3
 3. Product, component and feature results pass the same permission filtering as every other searched record: an operator who cannot open one does not see its name.
 4. The first page of results returns within 500ms.
 
-**Evidence.** `tests/base/product-hierarchy.test.ts` — populated upgrade, linked feature rollups, move custody and private source and archive boundaries: full and partial hierarchy names, mixed result identity, ranking and pagination; `tests/browser/operator-completeness-read.mjs` — reviewPrivateSearch: exact hierarchy destinations, including equal-name products, after navigation and reload; `tests/browser/operator-completeness-requester.mjs` — reviewRequesterPrivacy
-**Gap.** Named fields, including product, component and feature names, have native search and record-link proof. Finer record and role-permission completeness remains open with ROLE-001; the 500 ms first page has no seeded capacity p95 run on declared CI hardware at the estimated, untested `seed.json` limits (D-3).
+**Evidence.** `tests/browser/operator-completeness-requester.mjs`
+**Gap.** Search across every other named field ships; product, component and feature names are not yet searched (`src/core/features/workspace/list-repository.ts`), and the 500 ms first page has no seeded run at the `seed.json` limits (D-3).
 
 ### Evidence and accounts
 
@@ -1206,7 +1206,7 @@ Core · published · **partial**
 4. Model output cannot set identity or grants.
 
 **Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
-**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing existing identity, explicit update permissions, authority or selected scope, and create no derived artifacts. Valid output derives requester and account dimensions from selected native requests and evidence while retaining legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
@@ -1649,8 +1649,8 @@ Core · target · **partial** · Cites BASE-AUDIT-001, BASE-OPS-005
 2. Entries contain no customer wording or commercial values.
 3. Erase an operator and see their entries anonymized while the events remain (DATA-003).
 
-**Evidence.** `tests/base/board.test.ts`; `tests/base/board.test.ts`: catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back (`tests/base/audit-read-export.ts` helper)
-**Gap.** Native Owner and Admin metadata API reads and bounded CSV and JSON exports prove actor, action, subject and date filters, stable event pagination, existing agent attribution and private-detail exclusion. The audit UI and every-action coverage remain incomplete, including REQ-038 and REQ-041 edits, removals, restores and permanent deletes and INT-007 and NOTIFY-013 changes. Point 2 certification outside this metadata projection remains open. Point 3 operator-erasure custody already exists but its audit UI readback remains unproved; this slice changes no erasure or agent policy.
+**Evidence.** `tests/base/board.test.ts`
+**Gap.** Durable actor audits are recorded and archived today; there is no audit screen or export. Perform each listed action (including REQ-038 and REQ-041 edits, removals, restores and permanent deletes and INT-007 and NOTIFY-013 changes), then read and export the log through the UI and API; erase an operator and see their entries anonymized while the events remain.
 
 #### OPS-006 — Saved views and filters
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 
@@ -3213,8 +3213,8 @@ Core · target · **partial**
 2. Response and resolution times on a fixture with a public comment, a status update, a snooze and a decline equal the hand-computed median and 90th percentile.
 3. A scheduled report sends once per period.
 
-**Evidence.** `src/core/features/releases/outcomes.ts`; `src/core/features/requests/operator-context.ts`; `tests/base/feedback-volume-report.test.ts` — native feedback volume reconciles private JSON and CSV windows without multiplying linked records
-**Gap.** Current per-account counts and release outcome totals remain. Native operator JSON and CSV feedback-volume reports reconcile request creation counts by current board and evidence capture counts by source, with explicit exclusive-end windows and UTC daily buckets. Remaining: dashboard presentation; votes over time; theme, segment and account report dimensions; top requests by voters, accounts and ARR; new and rising themes; response and resolution median and 90th percentile including snooze exclusion and NOTIFY-007 original-thread replies; scheduled email and Slack reports once per period. Commercial-role machinery, provider, device, account and cross-seed and Base prerequisites, all earlier ct and uip and payments holds, live qualification and release requirements remain held.
+**Evidence.** `src/core/features/releases/outcomes.ts`; `src/core/features/requests/operator-context.ts`
+**Gap.** Current per-account counts and release outcome totals ship today. Report totals reconcile with record counts on fixture data; response and resolution times on a fixture with a public comment, a status update, a snooze and a decline equal the hand-computed median and 90th percentile; a scheduled report sends once per period.
 
 #### MEAS-005 — Release adoption
 
@@ -3266,8 +3266,8 @@ Core · target · **partial**
 1. OpenAPI contract tests exercise every resource through the public API.
 2. Each webhook's signature verifies and replays are rejected.
 
-**Evidence.** `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts`; `tests/base/integration-openapi.test.ts` — serves an offline OpenAPI contract and reconciles every documented operation with native allowed and unchanged-state refusal journeys, including official structural validation, least-scope server requests and HTTP admission (point 1, existing resource slice)
-**Gap.** OpenAPI and native contract proof cover existing boards, requests, comments, status updates, releases and proxy-vote contact lookup and recording. Point 1 remains incomplete for other operator record types and their OpenAPI coverage and full pagination and filters; point 2 still requires each lifecycle webhook signature and replay proof. Existing provider, account, Base and publication-custody holds remain unchanged.
+**Evidence.** `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts`
+**Gap.** Requests, comments, status and releases are covered today, as are proxy-vote customer lookup and recording under `votes:write`; the remaining record types, full pagination/filter coverage and OpenAPI acceptance remain required. OpenAPI contract tests exercise every resource through the public API; each webhook's signature verifies and replays are rejected.
 
 ### Migration from each incumbent
 
