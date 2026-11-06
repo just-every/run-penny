@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "5d6114d1e1c793d905d7cc97ec481db776b5cb555837da79b84e9c2a71bb3060",
+      "sha256": "f4a8ac5f3a1ce09cb3e0eaa9b72b379bb57227a0b40f424e3da735a66120a9d0",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "af1656b681438d35f82dbe0d18022925eb26fac02b36c4c6af6ace7b88a763fb",
+      "sha256": "f2143f1121052fe53369d031d53b81c4c71fc8615a1c2a4ae41c5d8a4a201cee",
       "executable": false
     },
     "DEMO.md": {
@@ -8322,7 +8322,7 @@
       "executable": false
     },
     "tests/base/egress-delivery.test.ts": {
-      "sha256": "febc2de61da981b293199298484f07792ba7b567d13e6cb13ec87d6c92248a40",
+      "sha256": "9e29feb5f65a01b1560e1c7e4abd2b7ae95d5a6f76f0ab224344f42972c9a5bf",
       "executable": false
     },
     "tests/base/email-capture-fixture.ts": {
@@ -8390,7 +8390,7 @@
       "executable": false
     },
     "tests/base/integration-delivery-fixture.ts": {
-      "sha256": "921326f550280ceca6642aec390cd9bde49a7514ab8d425d7a33e17c3dfbfe5b",
+      "sha256": "33eae77a288abf30216b3531415bd65ed27e75b927e92c432d12c746f16f062f",
       "executable": false
     },
     "tests/base/integration-durable.ts": {
@@ -8398,7 +8398,7 @@
       "executable": false
     },
     "tests/base/integration-effects.ts": {
-      "sha256": "a514826c75f35b44dbda4ca6031b2d791f425dcc644777ad03d3141e678943c4",
+      "sha256": "90bd00707554e8ac75cbe5f003201fc65062c469f69e18193b52eef4ba154f2c",
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the existing integration custody journey with complete populated publication comparisons around native saved-feedback import and authenticated archive restore. Approved requests, comments, status history, roadmap publications and updates, release versions and sealed target and recipient snapshots retain their identities and content. Imported feedback remains held, portable integration history retains its safety normalization, and repeated drains with fresh credentials send nothing. API-003 stays partial for the wider held scope; no runtime, migration or configuration change is required.
+
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
 
 - Prove native learning refuses otherwise valid model output carrying identity, derived identity, grant or authority fields at root and option boundaries. The existing learning journey reads unchanged native authority and selected scope after each refusal, retains permitted originals without an artifact or commitment, and accepts valid output with native account derivation and metered run accounting. LEARN-001 stays partial for deployment principal pinning and live source and model qualification. No runtime, migration or configuration change is required.
