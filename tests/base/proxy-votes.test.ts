@@ -36,6 +36,7 @@ it('[CAP-014 REQ-026 REQ-010 DATA-005] records inbox-sourced customer demand onc
   const account=await json<{id:string}>('/api/operator/accounts',{name,internalOwnerId:actor!.id},g.operator,201)
   accountIds.push(account.id)
   await env.DB.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(g.recipient.requesterId,account.id,new Date().toISOString()).run()
+  await env.DB.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(proxyOnly.requesterId,account.id,new Date().toISOString()).run()
  }
  const address=await env.DB.prepare('SELECT verified_at FROM requester_addresses WHERE id=?').bind(g.recipient.addressId).first<{verified_at:string}>()
  const extraAddress='synthetic-penny-3'+String.fromCharCode(64)+'example.test'
@@ -53,6 +54,17 @@ it('[CAP-014 REQ-026 REQ-010 DATA-005] records inbox-sourced customer demand onc
  const joined=await json<{voters:{id:string;accountId:string}[];demand:{voteCount:number}}>(`/api/operator/requests/${r.slug}/context`,undefined,g.operator)
  expect(joined.voters.filter(person=>person.id===g.recipient.requesterId)).toHaveLength(4)
  expect([...new Set(joined.voters.filter(person=>person.id===g.recipient.requesterId).map(person=>person.accountId))].sort()).toEqual(accountIds.sort())
+ const proxyJoined=await json<typeof joined>(`/api/operator/requests/${g.requests[3].slug}/context`,undefined,g.operator)
+ expect(proxyJoined.voters.filter(person=>person.id===proxyOnly.requesterId)).toHaveLength(2)
+ expect(proxyJoined.demand.voteCount).toBe(1)
+ // Export the current participation after removal and an idempotent repeat vote.
+ const directVoters=expected[1].voters
+ expect((await call(`/api/public/requests/${g.requests[1].slug}/vote`,undefined,g.person,'DELETE')).status).toBe(204)
+ expected[1].voters=[]
+ await reconcileVoteCsv(g.operator,g.person,expected)
+ for(let attempt=0;attempt<2;attempt++)expect((await call(`/api/public/requests/${g.requests[1].slug}/vote`,{},g.person)).status).toBe(204)
+ expected[1].voters=directVoters
+ await reconcileVoteCsv(g.operator,g.person,expected)
  expect((await call('/api/public/identity/email',{email:contactEmail,displayName:'Casey Bell'})).status).toBe(202)
  const token=new URLSearchParams(new URL(messages.findLast(m=>m.to===contactEmail)!.url).hash.slice(1)).get('token')
  const verified=await json<{token:string}>('/api/public/identity/email/verify',{token},{})
