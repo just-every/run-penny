@@ -1,0 +1,6 @@
+{
+  "command": "gh run view 42218054922 --repo just-every/run-penny --job 127892981073 --log-failed",
+  "exit": 0,
+  "bytes": 0,
+  "classification": "unestablished; no log text returned; not retried"
+}

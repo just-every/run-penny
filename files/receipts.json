@@ -1,0 +1,152 @@
+{
+  "tag": "sd-penny-c-f118",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f118",
+  "head": "d331e3762ef153b225b1fa72c04890b4979a71fe",
+  "timestamp": "2026-11-06T14:27:01.135501+00:00",
+  "base": "10251bf06e325648e6c16a2414e2ed50686bee84",
+  "main": "f52beea3be587114d61166d21e4be26777fa96f3",
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium timeout 1200 node tests/browser/integration-states.mjs",
+      "exit": 0,
+      "captures": 46,
+      "widths": [
+        1440,
+        390
+      ],
+      "tree": "requested base; runtime and UI bytes identical to final head"
+    },
+    {
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium timeout 1200 node /tmp/penny-tracker-journey.mjs <exact-output>",
+      "exit": 0,
+      "entrypoint": "tests/browser/integration-tracker-actions.mjs#checkTrackerActions",
+      "width": 1440,
+      "tree": "committed exact candidate",
+      "head": "d331e3762ef153b225b1fa72c04890b4979a71fe"
+    },
+    {
+      "command": "timeout 300 node /tmp/penny-tracker-probe.mjs candidate <receipt>",
+      "exit": 0,
+      "head": "d331e3762ef153b225b1fa72c04890b4979a71fe"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit": 0
+    },
+    {
+      "command": "git fetch origin main; git merge --no-edit origin/main",
+      "exit": 0,
+      "result": "Already up to date; no merge commit"
+    },
+    {
+      "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f118",
+      "exit": 0,
+      "attempts": 1
+    }
+  ],
+  "mainReproduction": {
+    "serviceSource": "origin/main at f52beea3be587114d61166d21e4be26777fa96f3",
+    "otherSources": "requested base",
+    "assertions": "completed, unsafe queued reconciliation and subsequent create observed",
+    "wrapperExit": 1,
+    "note": "Expected unsafe observations are stored in main-reproduction.json; wrapper exit was not used as a passing check."
+  },
+  "sourceHashes": {
+    "src/core/features/integrations/tracker-service.ts": "cc37a6e1c3f80fedf7120ac2214822254a038599c233f31809ab4a9ffb20b06c",
+    "src/core/features/integrations/tracker-delivery.ts": "6c29d78cf030d35de88e591fe2ac677ead0cbe4d03001c639acea56e2a3ac73c",
+    "src/core/features/integrations/tracker-routes.ts": "59b71133364cff592067379d6510fa00351644e99d00526b45d3c51a818baece",
+    "tests/browser/integration-tracker-actions.mjs": "6f7c962b726f20b60c4d0b85828eed2877ceba2bdaff15eb78480bd3351e4799",
+    "tests/browser/integration-tracker-edge.mjs": "07d3c73803bfd2c06e1d7480cef177f20f05e7c030215ff6cd52bd630588a909",
+    "tests/browser/integration-states.mjs": "f72e999c0bec5423c72efdb0202e6779d9d6bc3542993c1f7da85d4fe0c9ff51"
+  },
+  "testRegistrations": {
+    "added": 0,
+    "removed": 0,
+    "cap": 200
+  },
+  "contractCounts": {
+    "before": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    },
+    "after": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    }
+  },
+  "contractJudgmentsChanged": false,
+  "generatedViewsCommitted": false,
+  "migrationChanged": false,
+  "publicationScan": {
+    "commit": "d331e3762ef153b225b1fa72c04890b4979a71fe",
+    "complete": null,
+    "historyScanned": null,
+    "findings": null,
+    "status": "NOT_RUN; guarded fleet lander duty"
+  },
+  "landing": {
+    "mainEqualsCandidate": false,
+    "runSiteCandidate": null,
+    "status": "branch only"
+  },
+  "githubCalls": 6,
+  "ci": {
+    "run_id": 42233789351,
+    "event": "push",
+    "conclusion": "success",
+    "head_sha": "d331e3762ef153b225b1fa72c04890b4979a71fe",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42233789351",
+    "status": "completed"
+  },
+  "mainLogRead": {
+    "command": "gh run view 42218054922 --repo just-every/run-penny --job 127892981073 --log-failed",
+    "exit": 0,
+    "bytes": 0,
+    "classification": "unestablished; no log text returned; not retried"
+  },
+  "remoteCustody": {
+    "verified": true,
+    "head": "d331e3762ef153b225b1fa72c04890b4979a71fe",
+    "ref": "refs/heads/cloud/sd-penny-c-f118"
+  },
+  "blockers": []
+}

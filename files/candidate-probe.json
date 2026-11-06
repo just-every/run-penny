@@ -1,0 +1,21 @@
+{
+  "mode": "candidate",
+  "door": "native tracker routes and scheduled Worker",
+  "observations": [
+    {
+      "step": "queued reconciliation",
+      "status": 409,
+      "state": "queued",
+      "linkAdded": 0,
+      "unchanged": true
+    },
+    {
+      "step": "uncertain reconcile, identical replay, restart and repeated drain",
+      "state": "accepted",
+      "sameLink": true,
+      "resolutions": 1,
+      "additionalCreates": 0
+    }
+  ],
+  "passed": true
+}

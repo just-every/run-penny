@@ -1,0 +1,20 @@
+{
+  "mode": "main",
+  "door": "native tracker routes and scheduled Worker",
+  "observations": [
+    {
+      "step": "queued reconciliation",
+      "status": 200,
+      "state": "queued",
+      "linkAdded": 1,
+      "unchanged": false
+    },
+    {
+      "step": "restart and drain",
+      "additionalCreates": 1,
+      "state": "accepted",
+      "originalLinkRetained": true
+    }
+  ],
+  "passed": true
+}

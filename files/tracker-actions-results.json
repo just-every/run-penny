@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "width": 1440,
+  "journey": "checkTrackerActions",
+  "providers": [
+    "linear",
+    "jira"
+  ],
+  "subjects": [
+    "request",
+    "decision"
+  ],
+  "captures": [
+    "tracker-linear-request-created",
+    "tracker-linear-request-uncertain",
+    "tracker-linear-request-reconciled",
+    "tracker-linear-decision-created",
+    "tracker-linear-decision-uncertain",
+    "tracker-linear-decision-reconciled",
+    "tracker-jira-request-created",
+    "tracker-jira-request-uncertain",
+    "tracker-jira-request-reconciled",
+    "tracker-jira-decision-created",
+    "tracker-jira-decision-uncertain",
+    "tracker-jira-decision-reconciled"
+  ],
+  "nativeRuntimeRestarts": 16,
+  "fixtureCreates": 12,
+  "assertions": "queued, sending and rejected new and existing issue refusals; wrong-subject uncertain refusal; rollback; reconciliation; replay; restart and repeated drain",
+  "teardown": "fulfilled"
+}
