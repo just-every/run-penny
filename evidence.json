@@ -61,16 +61,16 @@
       "sha256": "5c54a4aca8d517e1a73905b9bafb8d3b130f9ed964d01dfc676d027d3028f96d"
     },
     {
-      "blob": "964298e67fe0950030c7de9f7e2a58e1394b6a33",
-      "bytes": 1405,
+      "blob": "6bb346b8af7eb067ce1dcb8cc35162037bdb23c5",
+      "bytes": 849,
       "path": "verify-42180864207-static.log",
-      "sha256": "872b494091b62fdb0bcad15c58791b59abb10082105ffbe96a03ee9eff215f68"
+      "sha256": "37e29c4dddd73a4013c78b81ea92dd13f0f451be84e6fa28d57d6fabfee54811"
     },
     {
-      "blob": "d4d23a2840db3f52856a8a081ea427e25110cf28",
-      "bytes": 1405,
+      "blob": "98ad2cfcbb453ddf491810df806707142c99add8",
+      "bytes": 849,
       "path": "verify-42185094008-static.log",
-      "sha256": "3603b186b866b7006f279127fc67e3f793820834dd751aaee8397e69f2080cef"
+      "sha256": "c8d00223d5a097e5050e774f6f14a3b4f9ef317dc2976b7518f5c37dc7cd7868"
     }
   ],
   "product_branch": "cloud/sd-penny-c-f91",
