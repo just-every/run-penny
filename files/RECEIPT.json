@@ -1,0 +1,90 @@
+{
+  "repository": "just-every/run-penny",
+  "tag": "sd-penny-c-f89",
+  "branch": "cloud/sd-penny-c-f89",
+  "head": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+  "base": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+  "status": "ready_for_fleet_lander_under_generated_view_exception",
+  "pr": null,
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "clauses": [
+    {
+      "id": "AGENT-001",
+      "before": "partial",
+      "after": "partial",
+      "selected_point": 2
+    }
+  ],
+  "registered_tests_before": 201,
+  "registered_tests_after": 200,
+  "local_results": [
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-option-review.test.ts tests/base/learning-stage2.test.ts tests/base/learning-stage3.test.ts tests/base/upgrade.test.ts",
+      "exit": 0,
+      "tests": 7,
+      "log": "LEARNING-TESTS.log"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/hosted-export.test.ts",
+      "exit": 0,
+      "tests": 8,
+      "log": "LEDGER-TESTS.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "TYPECHECK.log"
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party --json",
+      "exit": 0,
+      "checks": 1144,
+      "log": "FIRST-PARTY-CHECK.json"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write then check; restore generated views to origin/main",
+      "exit": 0,
+      "logs": [
+        "VIEWS-WRITE.log",
+        "VIEWS-CHECK.log"
+      ]
+    }
+  ],
+  "publication_scan": {
+    "status": "not_run",
+    "responsibility": "fleet lander"
+  },
+  "landing": {
+    "status": "not_performed",
+    "responsibility": "fleet lander"
+  },
+  "product_remote": {
+    "ref": "refs/heads/cloud/sd-penny-c-f89",
+    "head": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+    "verified": true
+  },
+  "ci": {
+    "id": 42183091402,
+    "event": "push",
+    "conclusion": "failure",
+    "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402",
+    "status": "completed",
+    "failure_class": "generated_contract_views_only",
+    "failed_jobs": 29,
+    "accepted_cloud_generated_view_exception": true,
+    "sample_log_job": 127777039984,
+    "github_calls_used": 5
+  }
+}

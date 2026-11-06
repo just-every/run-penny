@@ -1,0 +1,34 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f89",
+  "head": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+  "checks": [
+    {
+      "head": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-option-review.test.ts",
+      "exit": 0,
+      "started_at": "2026-11-06T07:45:55.469818+00:00",
+      "finished_at": "2026-11-06T07:46:09.069827+00:00",
+      "log": "OPTION-REVIEW.log",
+      "sha256": "65cd435bcc0c0017484e4fe89a6f8a0ff514730b4932116f5da684d6257721bc"
+    },
+    {
+      "head": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "started_at": "2026-11-06T07:46:09.069926+00:00",
+      "finished_at": "2026-11-06T07:46:10.283620+00:00",
+      "log": "SOURCE-LOCK.log",
+      "sha256": "33ee19d492edff4570b62bedd53a59ab3d93532b78c78178c68de7b19249691a"
+    },
+    {
+      "head": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "command": "node scripts/build-deployment-spec.mjs --check",
+      "exit": 0,
+      "started_at": "2026-11-06T07:46:10.284062+00:00",
+      "finished_at": "2026-11-06T07:46:11.307282+00:00",
+      "log": "DEPLOYMENT-SPEC.log",
+      "sha256": "eb82bcb8c5db540d2c2d35467d4df738910290d80ffaa5ccfc79d5f262913b24"
+    }
+  ]
+}

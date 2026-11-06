@@ -1,0 +1,4597 @@
+{
+  "total_count": 30,
+  "jobs": [
+    {
+      "id": 127776986855,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBoW5w",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127776986855",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127776986855",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-06T07:46:36Z",
+      "started_at": "2026-11-06T07:46:37Z",
+      "completed_at": "2026-11-06T07:46:44Z",
+      "name": "plan",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:38Z",
+          "completed_at": "2026-11-06T07:46:39Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:39Z",
+          "completed_at": "2026-11-06T07:46:42Z"
+        },
+        {
+          "name": "Run echo \"matrix=$(node scripts/verify-ci.mjs --matrix \"$TIER\")\" >> \"$GITHUB_OUTPUT\"",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:42Z",
+          "completed_at": "2026-11-06T07:46:42Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:42Z",
+          "completed_at": "2026-11-06T07:46:42Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:42Z",
+          "completed_at": "2026-11-06T07:46:42Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127776986855",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258231,
+      "runner_name": "GitHub Actions 1000258231",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777039984,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmcA",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777039984",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777039984",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (base-1, false)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:55Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:55Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777039984",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258234,
+      "runner_name": "GitHub Actions 1000258234",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777039990,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmdg",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777039990",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777039990",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:01Z",
+      "name": "shards (triage-aging, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:52Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:52Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777039990",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258237,
+      "runner_name": "GitHub Actions 1000258237",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040011,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmiw",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040011",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040011",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (base-2, false)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:47Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:50Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:50Z",
+          "completed_at": "2026-11-06T07:46:55Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:55Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040011",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258235,
+      "runner_name": "GitHub Actions 1000258235",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040013,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmjQ",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040013",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040013",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:03Z",
+      "name": "shards (requester-blocking, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:53Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:53Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040013",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258232,
+      "runner_name": "GitHub Actions 1000258232",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040030,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmng",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040030",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040030",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (proxy-votes, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:55Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:55Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040030",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258241,
+      "runner_name": "GitHub Actions 1000258241",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040036,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmpA",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040036",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040036",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (static, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040036",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258247,
+      "runner_name": "GitHub Actions 1000258247",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040037,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmpQ",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040037",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040037",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:02Z",
+      "name": "shards (roadmap-public-eta, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:52Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:52Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040037",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258233,
+      "runner_name": "GitHub Actions 1000258233",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040039,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmpw",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040039",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040039",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (internal-discussion, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040039",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258242,
+      "runner_name": "GitHub Actions 1000258242",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040049,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmsQ",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040049",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040049",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (merge-notices, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040049",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258243,
+      "runner_name": "GitHub Actions 1000258243",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040058,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmug",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040058",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040058",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:01Z",
+      "name": "shards (prioritisation, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:52Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:52Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040058",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258248,
+      "runner_name": "GitHub Actions 1000258248",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040064,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmwA",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040064",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040064",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (survey-capture, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040064",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258244,
+      "runner_name": "GitHub Actions 1000258244",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040067,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmww",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040067",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040067",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (product-hierarchy, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040067",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258245,
+      "runner_name": "GitHub Actions 1000258245",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040077,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmzQ",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040077",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040077",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:01Z",
+      "name": "shards (loop-health, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:52Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:52Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040077",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258240,
+      "runner_name": "GitHub Actions 1000258240",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040078,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrmzg",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040078",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040078",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (browser-capture, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040078",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258236,
+      "runner_name": "GitHub Actions 1000258236",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040085,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrm1Q",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040085",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040085",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (dev-flows, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040085",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258251,
+      "runner_name": "GitHub Actions 1000258251",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040100,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrm5A",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040100",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040100",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:02Z",
+      "name": "shards (helpscout-capture, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:52Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:52Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:59Z",
+          "completed_at": "2026-11-06T07:46:59Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040100",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258238,
+      "runner_name": "GitHub Actions 1000258238",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040103,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrm5w",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040103",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040103",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:01Z",
+      "name": "shards (requester-board, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:52Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:52Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040103",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258249,
+      "runner_name": "GitHub Actions 1000258249",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040116,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrm9A",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040116",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040116",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:59Z",
+      "name": "shards (discord-capture, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040116",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258239,
+      "runner_name": "GitHub Actions 1000258239",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040119,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrm9w",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040119",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040119",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:02Z",
+      "name": "shards (import-statuses, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:52Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:52Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040119",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258246,
+      "runner_name": "GitHub Actions 1000258246",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040122,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrm-g",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040122",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040122",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:59Z",
+      "name": "shards (ownership, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040122",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258255,
+      "runner_name": "GitHub Actions 1000258255",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040147,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrnEw",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040147",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040147",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (vote-importance, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040147",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258256,
+      "runner_name": "GitHub Actions 1000258256",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040151,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrnFw",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040151",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040151",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (rich-changelog, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040151",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258254,
+      "runner_name": "GitHub Actions 1000258254",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040158,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrnHg",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040158",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040158",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (older-archive, false)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:55Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:55Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040158",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258257,
+      "runner_name": "GitHub Actions 1000258257",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040160,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrnIA",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040160",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040160",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (request-decline, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040160",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258252,
+      "runner_name": "GitHub Actions 1000258252",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040176,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrnMA",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040176",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040176",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:01Z",
+      "name": "shards (import-roadmap, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:52Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:52Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:58Z",
+          "completed_at": "2026-11-06T07:46:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040176",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258250,
+      "runner_name": "GitHub Actions 1000258250",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040180,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrnNA",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040180",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040180",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (release-planning, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:55Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:55Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040180",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258253,
+      "runner_name": "GitHub Actions 1000258253",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040192,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrnQA",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040192",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040192",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:46Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (browser, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:55Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:55Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040192",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258258,
+      "runner_name": "GitHub Actions 1000258258",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040201,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBrnSQ",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040201",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040201",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:46:58Z",
+      "name": "shards (agent-door, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:47Z",
+          "completed_at": "2026-11-06T07:46:48Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:55Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:55Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040201",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258259,
+      "runner_name": "GitHub Actions 1000258259",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 127777040419,
+      "run_id": 42183091402,
+      "workflow_name": "Verify Penny",
+      "head_branch": "cloud/sd-penny-c-f89",
+      "run_url": "https://api.github.com/repos/just-every/run-penny/actions/runs/42183091402",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVG1Mcs8AAAAdwBroIw",
+      "head_sha": "532aa11aa0f70eeb4e77fed038be34358a9ccdf2",
+      "url": "https://api.github.com/repos/just-every/run-penny/actions/jobs/127777040419",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42183091402/job/127777040419",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-06T07:46:45Z",
+      "started_at": "2026-11-06T07:46:47Z",
+      "completed_at": "2026-11-06T07:47:00Z",
+      "name": "shards (workspace-clock, true)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-06T07:46:48Z",
+          "completed_at": "2026-11-06T07:46:49Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-06T07:46:49Z",
+          "completed_at": "2026-11-06T07:46:51Z"
+        },
+        {
+          "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-06T07:46:51Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check edition source lock freshness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:56Z"
+        },
+        {
+          "name": "Check generated contract documents",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-11-06T07:46:56Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run npm install --global pnpm@10.12.4",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Cache frozen dependencies and Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm install --frozen-lockfile",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run pnpm run deps",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Install Chromium and system libraries",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Reserve disk for native runtime journeys",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Run this shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Read redacted dev failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 25,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-11-06T07:46:57Z",
+          "completed_at": "2026-11-06T07:46:57Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/just-every/run-penny/check-runs/127777040419",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000258260,
+      "runner_name": "GitHub Actions 1000258260",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

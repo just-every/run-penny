@@ -1,0 +1,277 @@
+{
+  "registrations": 200,
+  "files": [
+    {
+      "file": "tests/base/auth.test.ts",
+      "count": 11
+    },
+    {
+      "file": "tests/base/board-categories.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/board.test.ts",
+      "count": 4
+    },
+    {
+      "file": "tests/base/custody.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/decision-loop-commit.test.ts",
+      "count": 5
+    },
+    {
+      "file": "tests/base/decision-loop-dimensions.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/decision-loop-roadmap.test.ts",
+      "count": 6
+    },
+    {
+      "file": "tests/base/editor-admission.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/egress-delivery.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/failure-privacy.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/feedback-import-custody.test.ts",
+      "count": 6
+    },
+    {
+      "file": "tests/base/feedback-import-restored-owner.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/feedback-import-uservoice.test.ts",
+      "count": 5
+    },
+    {
+      "file": "tests/base/feedback-import.test.ts",
+      "count": 6
+    },
+    {
+      "file": "tests/base/first-run.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/host-identity.test.ts",
+      "count": 6
+    },
+    {
+      "file": "tests/base/hosted-export.test.ts",
+      "count": 8
+    },
+    {
+      "file": "tests/base/import-board-policy.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/import-roadmap.test.ts",
+      "count": 3
+    },
+    {
+      "file": "tests/base/import-statuses.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/import-vote-importance.test.ts",
+      "count": 3
+    },
+    {
+      "file": "tests/base/integration-api.test.ts",
+      "count": 5
+    },
+    {
+      "file": "tests/base/internal-discussion.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/learning-option-review.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/learning-stage2.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/learning-stage3.test.ts",
+      "count": 3
+    },
+    {
+      "file": "tests/base/local-adoption.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/local-capabilities.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/mail-identity.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/merge-notices.test.ts",
+      "count": 3
+    },
+    {
+      "file": "tests/base/no-mail-identity.test.ts",
+      "count": 4
+    },
+    {
+      "file": "tests/base/notification-custody.test.ts",
+      "count": 5
+    },
+    {
+      "file": "tests/base/notifications.test.ts",
+      "count": 15
+    },
+    {
+      "file": "tests/base/owner-claim.test.ts",
+      "count": 3
+    },
+    {
+      "file": "tests/base/ownership.test.ts",
+      "count": 4
+    },
+    {
+      "file": "tests/base/penny-decisions.test.ts",
+      "count": 5
+    },
+    {
+      "file": "tests/base/penny-erasure.test.ts",
+      "count": 7
+    },
+    {
+      "file": "tests/base/penny-evidence.test.ts",
+      "count": 6
+    },
+    {
+      "file": "tests/base/penny-releases.test.ts",
+      "count": 4
+    },
+    {
+      "file": "tests/base/prioritisation.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/product-hierarchy.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/proxy-votes.test.ts",
+      "count": 4
+    },
+    {
+      "file": "tests/base/release-custody.test.ts",
+      "count": 6
+    },
+    {
+      "file": "tests/base/release-planning.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/remote-portability.test.ts",
+      "count": 5
+    },
+    {
+      "file": "tests/base/request-demand.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/request-status-workflow.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/request-withdrawal.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/requester-blocking.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/requester-subscriptions.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/rich-changelog.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/roadmap-public-eta.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/triage-aging.test.ts",
+      "count": 2
+    },
+    {
+      "file": "tests/base/upgrade.test.ts",
+      "count": 1
+    },
+    {
+      "file": "tests/base/vote-importance.test.ts",
+      "count": 3
+    },
+    {
+      "file": "tests/base/workspace-clock.test.ts",
+      "count": 3
+    },
+    {
+      "file": "tests/browser/dev-operator-flows.test.mjs",
+      "count": 2
+    },
+    {
+      "file": "tests/browser/signin.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/data/command-boundaries.test.mjs",
+      "count": 3
+    },
+    {
+      "file": "tests/data/commands.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/data/redirect-boundaries.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/installer/deploy-dry-run.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/installer/dev-credentials.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/installer/discord-relay.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/installer/older-archive.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/installer/portability.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/installer/readme.test.mjs",
+      "count": 1
+    },
+    {
+      "file": "tests/runtime/mail-events-restart.test.mjs",
+      "count": 1
+    }
+  ]
+}
