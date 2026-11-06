@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "572a76b7e0dd66d1024add688de6697014a7b976e3c7d9859d980edc2223539c",
+      "sha256": "4fec990430adceb1a7a74d5cd2173a2b8da49a28e1c9e6a2b220f57f193e59a3",
       "executable": false
     },
     "CLAUDE.md": {
@@ -8490,7 +8490,7 @@
       "executable": false
     },
     "tests/base/learning-stage3.test.ts": {
-      "sha256": "7a3c48c289fe69c7610bf70d90e4b49d00df99ed5448947bda467f920c4891f5",
+      "sha256": "6f6ea83343dd6184efaf406a8675c9c05ab5977b5d795ff1c151da24671eb12a",
       "executable": false
     },
     "tests/base/learning-test-runtime.ts": {
