@@ -1,8 +1,9 @@
 import {expect,inject,it,vi} from 'vitest'
 import {env} from 'cloudflare:workers'
 import {applyD1Migrations,reset} from 'cloudflare:test'
-import {call,json,fixture,path,bindings,sent,network,resetLearning} from './learning-test-runtime'
-import {learningOutput} from './learning-fixture'
+import {call,json,fixture,path,bindings,sent,network,resetLearning,dimensionOriginals} from './learning-test-runtime'
+import {learningOutput,dimensionOutput} from './learning-fixture'
+import type {validateLearning} from '@/core/features/learning/validation'
 import {base64urlEncode,sign} from '@/core/features/auth/tokens'
 import {digest} from '@/core/features/auth/native-tokens'
 import {canonical,hash,type exportArchive} from '@/core/features/data/archive'
@@ -71,6 +72,33 @@ it('[LEARN-001] refuses model identity and grants, captures permitted originals 
  await expect(env.DB.prepare("UPDATE learning_commitments SET snapshot_json='{}'").run()).rejects.toThrow('learning_snapshot_immutable')
  expect((await call(path)).status).toBe(401);expect((await call('/api/public/learning')).status).toBe(404)
  const unchanged=await json<{unchanged:boolean}>(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie));expect(unchanged.unchanged).toBe(true);expect(sent.filter(s=>s.startsWith('POST'))).toHaveLength(1)
+ // A native-only comparison has overlapping people and accounts, null links,
+ // different times and counter-evidence that must not leak into support metrics.
+ const originals=await dimensionOriginals(f.cookie)
+ const native=await json<{id:string}>(call(path+'/investigations',{nativeEvidenceIds:originals.map(o=>o.id),nativeRequestIds:[],question:'Which handoff intervention is supported?',purpose:'Compare declared native originals',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+ const nativeUrl=path+`/investigations/${native.id}`,beforeNative=sent.length
+ network.modelOutput=(_output,input)=>dimensionOutput(input)
+ let nativeRun:{artifactId:string}
+ try{nativeRun=await json(call(nativeUrl+'/run',{},f.cookie))}finally{network.modelOutput=undefined}
+ const nativeDetail=await json<{observations:{id:string;evidence_id:string;wording:string;requesterId:string|null;accountId:string|null;observedAt:string}[];artifacts:{id:string;body:ReturnType<typeof validateLearning>}[]}>(call(nativeUrl,undefined,f.cookie))
+ expect(sent.slice(beforeNative)).toEqual(['POST https://api.anthropic.com/v1/messages'])
+ expect(nativeDetail.observations).toHaveLength(originals.length)
+ const observed=originals.map(original=>{
+  const observation=nativeDetail.observations.find(o=>o.evidence_id===original.id)!
+  expect({id:observation.evidence_id,wording:observation.wording,requesterId:observation.requesterId,accountId:observation.accountId,observedAt:observation.observedAt}).toEqual(original)
+  return observation.id
+ })
+ expect(nativeDetail.artifacts).toHaveLength(1);expect(nativeDetail.artifacts[0].id).toBe(nativeRun.artifactId)
+ const compared=nativeDetail.artifacts[0].body
+ expect(compared.options).toHaveLength(2)
+ const contradiction=(indices:number[])=>indices.map(index=>({id:observed[index],observedAt:originals[index].observedAt})).sort((a,b)=>a.id.localeCompare(b.id))
+ const dimensions=compared.options.map(option=>({id:option.id,kind:option.kind,mechanism:option.mechanism,affectedRequesters:option.affectedRequesters,affectedAccounts:option.affectedAccounts,unlinkedObservations:option.unlinkedObservations,supportingEvidenceCount:option.supportingEvidenceCount,latestObservedAt:option.latestObservedAt,contradictingEvidence:option.contradictingEvidence,urgency:option.urgency,deliveryShape:option.deliveryShape,successMeasure:option.successMeasure}))
+ expect(dimensions).toEqual([
+  {id:'build',kind:'product',mechanism:'Make the handoff direct.',affectedRequesters:[originals[4].requesterId],affectedAccounts:[originals[0].accountId],unlinkedObservations:3,supportingEvidenceCount:5,latestObservedAt:originals[1].observedAt,contradictingEvidence:contradiction([2,6]),urgency:'Before the next renewal cohort',deliveryShape:'A bounded internal prototype',successMeasure:'Handoff completed without support'},
+  {id:'assist',kind:'no-build',mechanism:'Use existing product with a guided checklist.',affectedRequesters:[originals[4].requesterId,originals[6].requesterId].sort(),affectedAccounts:[originals[0].accountId,originals[2].accountId].sort(),unlinkedObservations:2,supportingEvidenceCount:4,latestObservedAt:originals[2].observedAt,contradictingEvidence:contradiction([0,3]),urgency:'Before committing engineering time',deliveryShape:'One internal support checklist and staged comparison',successMeasure:'Handoff completed without another support request'},
+ ])
+ for(const [index,expected] of [[0,[0,1,3,4,5]],[1,[1,2,5,6]]] as const)expect([...new Set(compared.options[index].supportingObservationIds)].sort()).toEqual(expected.map(i=>observed[i]).sort())
+ for(const [index,expected] of [[0,[2,6]],[1,[0,3]]] as const)expect([...new Set(compared.options[index].contradictingObservationIds)].sort()).toEqual(expected.map(i=>observed[i]).sort())
  const rules={enabled:true,kinds:['ssn','card','phone','email','credential'],patterns:[] as string[]}
  await json(call('/api/operator/settings/redaction',rules,f.cookie,undefined,'PUT'))
  await proveLearningRedaction((url,body,headers,method)=>call(url,body,headers?.Cookie??'',undefined,method),{Cookie:f.cookie},'Synthetic Penny ticket: SSN 234-56-7890; card 4111 1111 1111 1111; ACCOUNT-1234.')

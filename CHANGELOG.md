@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove each learning option’s separate dimensions through a native run and authenticated detail readback. Native originals include shared and distinct requester and account associations, null links and different observation times; the model HTTP-edge fixture assigns different supporting and contradicting originals, including duplicate references, while retaining the assisted no-build alternative. Extend the existing learning sanity journey without adding test registrations. LEARN-002 remains partial for correction and contest completeness, no automatic ranking, contact or publication proof, and existing live qualification holds. No runtime, migration or configuration change is required.
+
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
 
 - Prove native learning refuses otherwise valid model output carrying identity, derived identity, grant or authority fields at root and option boundaries. The existing learning journey reads unchanged native authority and selected scope after each refusal, retains permitted originals without an artifact or commitment, and accepts valid output with native account derivation and metered run accounting. LEARN-001 stays partial for deployment principal pinning and live source and model qualification. No runtime, migration or configuration change is required.
