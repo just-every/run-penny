@@ -1,0 +1,52 @@
+{
+  "files": [
+    {
+      "blob": "fa6e2c3dcba199e368fe095920349a59b472dcda",
+      "bytes": 2426,
+      "path": "CHECKS.txt",
+      "sha256": "747a92ce6462d4a0078c021bb80664fd654809348020101bdb5efbc0f30aba2d"
+    },
+    {
+      "blob": "dc8419fa02eccc55b5554ba24d04ae05ed3490cd",
+      "bytes": 5186,
+      "path": "CI-JOBS.json",
+      "sha256": "7fcd32342d51c0178c3cc939718786cb73730a0ab7ca3c90a77e27e21642a85e"
+    },
+    {
+      "blob": "9d5a747b352c7b731b9a5e9196f4772e68283445",
+      "bytes": 235,
+      "path": "CI-RESULT.json",
+      "sha256": "0f11caa2a16a9c6c234d1cf5493247320e709c4f961a9630df80b672635a6c44"
+    },
+    {
+      "blob": "18817cf46c44f783c9a03c1cc035e3f6d14d8acb",
+      "bytes": 208,
+      "path": "CI-SUMMARY.json",
+      "sha256": "524681eca41393eb004da56bf1630340bacaa1fb0c893ea99bb82793ae10b9e7"
+    },
+    {
+      "blob": "4a3a81e0443a7a0fdd0901d0b3984b84ac228b40",
+      "bytes": 2493,
+      "path": "RECEIPT.json",
+      "sha256": "3c72e1d0e0b882f637d7dcbfa6eaf374e80577116870d6ae17a38953ec032261"
+    },
+    {
+      "blob": "8a98f38a4cf1d5ca90262d6682eb7d7b4bfbfc4c",
+      "bytes": 12321,
+      "path": "REPORT.md",
+      "sha256": "213f1a4c4309ba9b99e920191ecf0176beb984bfb29a4452545583a586db4a25"
+    },
+    {
+      "blob": "0535d2faa213058e1d44200b44554bcd71b45f4f",
+      "bytes": 3374,
+      "path": "TEST-RESULTS.json",
+      "sha256": "9da5e6882922d0cdb2208dc7ce8e16a7b1066625c5c410a13630643c6318b7d5"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f59",
+  "product_head": "ae479e788152d7d9a2862bbc2c081b565fef7e81",
+  "ref": "refs/heads/evidence/sd-penny-c-f59",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f59"
+}

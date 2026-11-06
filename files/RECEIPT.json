@@ -1,0 +1,94 @@
+{
+  "after": "partial",
+  "before": "partial",
+  "branch": "cloud/sd-penny-c-f59",
+  "ci": {
+    "conclusion": "failure",
+    "event": "push",
+    "failedJobs": 29,
+    "failedSteps": [
+      "Check generated contract documents"
+    ],
+    "generatedViewsOnly": true,
+    "head_sha": "ae479e788152d7d9a2862bbc2c081b565fef7e81",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42143275216",
+    "id": 42143275216,
+    "ordinaryGreen": false,
+    "readinessException": "generated views restored from main; maintained lander regenerates",
+    "status": "completed"
+  },
+  "clause": "LEARN-002",
+  "commands": [
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec oxlint tests/base/learning-stage2.test.ts tests/base/learning-test-runtime.ts tests/base/learning-fixture.ts",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    }
+  ],
+  "counts": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "generatedViewsCommitted": false,
+  "githubCalls": 5,
+  "handoff": "READY under the generated-view-only exception",
+  "head": "ae479e788152d7d9a2862bbc2c081b565fef7e81",
+  "identityAudit": {
+    "authors": "fleet",
+    "candidateCommits": 1,
+    "committers": "fleet",
+    "passed": true,
+    "trailers": []
+  },
+  "integratedMain": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "migrationChange": false,
+  "productPush": {
+    "guard": "PUSH_OK",
+    "remoteConfirmed": true,
+    "sha": "ae479e788152d7d9a2862bbc2c081b565fef7e81"
+  },
+  "publicationScan": "not run in cloud; maintained lander required",
+  "repository": "just-every/run-penny",
+  "runSite": "maintained lander required",
+  "schema": 1,
+  "screenChange": false,
+  "selectedPoint": "acceptance point 1 per-option computed dimensions",
+  "tag": "sd-penny-c-f59",
+  "testCap": 200,
+  "testRegistrationDelta": 0,
+  "tests": {
+    "exit": 0,
+    "failed": 0,
+    "file": "TEST-RESULTS.json",
+    "passed": 7
+  },
+  "vitestRegistrationCount": 189
+}

@@ -1,0 +1,51 @@
+penny-final-tests.log
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /workspace/run-penny
+
+stderr | tests/base/learning-stage3.test.ts > [LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke
+Penny request failed {"method":"POST","route":"/api/operator/learning/investigations/:id/run","name":"Error","code":"unclassified"}
+
+stderr | tests/base/learning-stage3.test.ts > [LEARN-003] learning actions retain the acting peer and roll back with their audit
+Penny request failed {"method":"POST","route":"/api/operator/learning/investigations/:id/control","name":"Error","code":"unclassified"}
+
+ ✓ tests/base/learning-stage3.test.ts (5 tests) 24102ms
+   ✓ [LEARN-003] scheduled refresh obtains new evidence, deduplicates unchanged work and supports pause, correction, resume and revoke  13798ms
+   ✓ [LEARN-004] contribution erasure removes every dependent version/snapshot, preserves unrelated native records and refuses replay and active restored grants  4021ms
+   ✓ [LEARN-005] source person erasure covers duplicate connections and fresh-grant replay; actual restore holds all source authority  3416ms
+   ✓ [LEARN-005] observed provider credential revocation purges all matching source installations; outage preserves evidence  1327ms
+   ✓ [LEARN-003] learning actions retain the acting peer and roll back with their audit  1538ms
+ ✓ tests/base/learning-stage2.test.ts (2 tests) 7644ms
+   ✓ [LEARN-001] refuses model identity and grants, captures permitted originals and commits an accountable protocol  5878ms
+   ✓ [AI-010 LEARN-002] configures providers, meters the monthly cap, preserves manual work and refuses invalid or revoked learning  1765ms
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  01:20:15
+   Duration  43.23s (transform 2.91s, setup 0ms, import 9.72s, tests 31.75s, environment 0ms)
+
+JSON report written to /home/agent/rer-consolidation/work/sd-penny-c-f59/packet/TEST-RESULTS.json
+
+
+penny-final-typecheck.log
+ WARN  Unsupported engine: wanted: {"node":"22.20.0"} (current: {"node":"v24.19.0","pnpm":"10.12.4"})
+
+> penny@0.2.2 typecheck /workspace/run-penny
+> tsc -b
+
+
+
+penny-first-party.log
+
+
+penny-lint.log
+
+
+penny-final-views-write.log
+Wrote 1 contract documents.
+
+
+penny-final-views-check.log
+Contract documents are current.
