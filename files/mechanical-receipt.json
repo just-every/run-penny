@@ -1,0 +1,11 @@
+{
+  "clean": true,
+  "command": "node src/base/contract-docs.mjs write && node src/base/contract-docs.mjs check && git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md && node scripts/edition-authoring/cli.mjs lock > ../packet/source-lock-final.json && node scripts/edition-authoring/cli.mjs check > ../packet/source-check-final.json && git diff --exit-code HEAD -- CONTRACT.md ACCEPTANCE.md docs/CLAIMS.md sources.lock.json && git diff --cached --exit-code && git diff --check",
+  "exit": 0,
+  "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+  "label": "mechanical",
+  "log": "mechanical.log",
+  "seconds": 1.798,
+  "sha256": "be5ce9f7986a60db0912a733575965cb41a321530655d343773cb83886ade16b",
+  "started": "2026-11-06T06:31:40.218153+00:00"
+}

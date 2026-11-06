@@ -1,0 +1,11 @@
+{
+  "clean": true,
+  "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/product-hierarchy.test.ts",
+  "exit": 0,
+  "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+  "label": "native-final",
+  "log": "native-final.log",
+  "seconds": 11.827,
+  "sha256": "a1276e9dfd08859a00958535d1aae12eb592d7e2f8913d7f7c1180ad1119a399",
+  "started": "2026-11-06T06:27:54.508575+00:00"
+}

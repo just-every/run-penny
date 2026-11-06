@@ -1,0 +1,6 @@
+ CHANGELOG.md                                 |   6 ++
+ CONTRACT.md                                  |   2 +-
+ sources.lock.json                            |   8 +-
+ tests/base/product-hierarchy.test.ts         |  42 +++++++--
+ tests/browser/operator-completeness-read.mjs | 135 ++++++++++++++++++++++++++-
+ 5 files changed, 176 insertions(+), 17 deletions(-)

@@ -1,0 +1,11 @@
+{
+  "clean": true,
+  "command": "pnpm run typecheck",
+  "exit": 0,
+  "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+  "label": "typecheck-final",
+  "log": "typecheck-final.log",
+  "seconds": 27.157,
+  "sha256": "a009019be2f920b37383ac92d90bbb4790cc40fcb02663ec1728cb863e6a3a66",
+  "started": "2026-11-06T06:27:54.532107+00:00"
+}

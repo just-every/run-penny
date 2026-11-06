@@ -1,0 +1,11 @@
+{
+  "clean": true,
+  "command": "cloud_run npx -y @runeditrun/rer build",
+  "exit": 0,
+  "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+  "label": "build",
+  "log": "build.log",
+  "seconds": 33.442,
+  "sha256": "b5cedbb5654e179a5672546e6d7d781403f3c2c3196ccb4b773208b99e026385",
+  "started": "2026-11-06T06:26:52.310495+00:00"
+}

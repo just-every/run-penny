@@ -1,0 +1,12 @@
+{
+  "files": {
+    "src/core/features/hierarchy/page.tsx": "6dbe90dd50caca2b0ce02fd6134bde297bb542ef4f5fb45e7b6db25da1b9f8a1",
+    "src/core/features/workspace/list-query.ts": "5e5d6a60ee3108a97f523272367d706e65cce2780c56d7491185935ff65079ff",
+    "src/core/features/workspace/list-repository.ts": "efaf3adee95784ed44196ef10d6c8cd6d23b3ab9b67fcf6d1d2fc9bfd3c2dbaa",
+    "src/core/features/workspace/search-repository.ts": "7119e3ce6d3321cfd6e2a2c3b86752d355e2bf7b2be733659b4cbbb40350664e",
+    "src/core/features/workspace/ui/search-page.tsx": "d368da516417ba883013208fffbb5b8f2863b8acb09451fc73fc930981deb921",
+    "tests/base/product-hierarchy.test.ts": "a3d40e2cecf92bbe885b3eb85b950ca5f227d527c0120c33a5c7cb9b7c8c252a",
+    "tests/browser/operator-completeness-read.mjs": "f50699bda53d899b40b39da8ba985996923e7085783e9b3902203fe15951372c"
+  },
+  "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96"
+}

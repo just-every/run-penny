@@ -1,0 +1,9 @@
+# OPS-004 probe map
+
+POINT 1 is limited to hierarchy-name and record-link coverage; other native named fields keep their existing checks. POINT 2 is full and partial names for all three hierarchy types in the existing global order and pagination. Point 3 finer role completeness and point 4 capacity timing are deliberately held by the selected brief.
+
+- PROBE OPS-004 point-1: native hierarchy create and PATCH, followed by GET /api/operator/search and opened result documents -> each current product, component and feature name returns its exact identity and functional anchor; old component and feature names no longer match after editing. Equal-name products retain independent destinations.
+- PROBE OPS-004 point-2: full and partial hierarchy-name queries, mixed with the existing account and other record types -> exact type, name and identity order; the native journey checks 31 distinct results over adjacent pages, the mounted browser checks 33 distinct results across its page boundary. After native edits, an account and all three hierarchy types share one name and return in account, component, feature, product order with their separate destinations.
+- PROBE OPS-004 preserved authority: anonymous, genuine requester and signed-out operator sessions attempt the native search, typed search, hierarchy read and destination documents -> 401 for APIs, 302 to sign-in for documents, with private names absent. Active peer operator search and opened destinations remain admitted. This is existing admission, not finer ROLE-001 proof.
+
+These observed outcomes are asserted in the focused native journey and the mounted reviewPrivateSearch journey. The final check receipt files identify actual executions and their SHA. Initial browser failure and its correction are documented in REPORT.md; this file does not claim provider qualification, capacity p95, production installation, publication scan or landing.

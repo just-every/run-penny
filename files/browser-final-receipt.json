@@ -1,0 +1,11 @@
+{
+  "clean": true,
+  "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=/home/agent/rer-consolidation/work/sd-penny-c-f81/packet/browser-final PENNY_OPERATOR_FIELDS_ONLY=1 cloud_run perl -e 'alarm 1800; exec @ARGV' -- node tests/browser/operator-pages.mjs",
+  "exit": 0,
+  "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+  "label": "browser-final",
+  "log": "browser-final.log",
+  "seconds": 197.423,
+  "sha256": "445391efe58f99f183424b863c0f6374312e3b2ee24ed1d17a2fcc67fc2b882f",
+  "started": "2026-11-06T06:27:54.523382+00:00"
+}

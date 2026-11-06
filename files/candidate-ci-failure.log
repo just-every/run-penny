@@ -1,0 +1,7 @@
+shards (import-statuses, true)	Check generated contract documents	﻿2026-11-06T06:32:09.1981299Z ##[group]Run node src/base/contract-docs.mjs check
+shards (import-statuses, true)	Check generated contract documents	2026-11-06T06:32:09.1981422Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (import-statuses, true)	Check generated contract documents	2026-11-06T06:32:09.1997826Z shell: /usr/bin/bash -e {0}
+[Runner environment block omitted from the public evidence packet.]
+shards (import-statuses, true)	Check generated contract documents	2026-11-06T06:32:09.1998182Z ##[endgroup]
+shards (import-statuses, true)	Check generated contract documents	2026-11-06T06:32:09.2810680Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (import-statuses, true)	Check generated contract documents	2026-11-06T06:32:09.2860554Z ##[error]Process completed with exit code 1.

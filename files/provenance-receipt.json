@@ -1,0 +1,79 @@
+{
+  "assigned_base": "bc72ff1eba4fc5d0a58fab7895ba77890890bdd2",
+  "base_main": "bc006e93ab58927b5db2d12d8ac35ff0a9341bf0",
+  "candidate_history": [
+    {
+      "commit": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+      "identity": "fleet",
+      "parent_rows_preserved": true,
+      "parents": [
+        "b4ad80657cf09f4d4d19df895f894d814176cfad"
+      ],
+      "status_ids": 281,
+      "trailers": "none"
+    },
+    {
+      "commit": "b4ad80657cf09f4d4d19df895f894d814176cfad",
+      "identity": "fleet",
+      "parent_rows_preserved": true,
+      "parents": [
+        "bc006e93ab58927b5db2d12d8ac35ff0a9341bf0",
+        "bc72ff1eba4fc5d0a58fab7895ba77890890bdd2"
+      ],
+      "status_ids": 281,
+      "trailers": "none"
+    },
+    {
+      "commit": "bc72ff1eba4fc5d0a58fab7895ba77890890bdd2",
+      "identity": "fleet",
+      "parent_rows_preserved": true,
+      "parents": [
+        "5b8ad579eaa7f5c4f63b5246fcdb77c4677489ec"
+      ],
+      "status_ids": 281,
+      "trailers": "none"
+    },
+    {
+      "commit": "5b8ad579eaa7f5c4f63b5246fcdb77c4677489ec",
+      "identity": "fleet",
+      "parent_rows_preserved": true,
+      "parents": [
+        "26072c01e17dc384ca507cd90a9a6fe679aa8742"
+      ],
+      "status_ids": 281,
+      "trailers": "none"
+    },
+    {
+      "commit": "26072c01e17dc384ca507cd90a9a6fe679aa8742",
+      "identity": "fleet",
+      "parent_rows_preserved": true,
+      "parents": [
+        "1a6d71977ec28951e4dbcca527ab5c1e44032e43"
+      ],
+      "status_ids": 281,
+      "trailers": "none"
+    },
+    {
+      "commit": "1a6d71977ec28951e4dbcca527ab5c1e44032e43",
+      "identity": "fleet",
+      "parent_rows_preserved": true,
+      "parents": [
+        "cc060e826c4ade7f6171028c79a81aa2d4e980f6"
+      ],
+      "status_ids": 281,
+      "trailers": "none"
+    }
+  ],
+  "clean": true,
+  "final_source_proof_matches_commit": true,
+  "generated_views_committed": false,
+  "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+  "hooks_active": true,
+  "product_changed_files": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "sources.lock.json",
+    "tests/base/product-hierarchy.test.ts",
+    "tests/browser/operator-completeness-read.mjs"
+  ]
+}

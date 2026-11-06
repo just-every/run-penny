@@ -1,0 +1,328 @@
+{
+  "branch": "cloud/sd-penny-c-f81",
+  "browser_checks": 40,
+  "browser_screenshots": 38,
+  "checks": {
+    "browser-final": {
+      "clean": true,
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=/home/agent/rer-consolidation/work/sd-penny-c-f81/packet/browser-final PENNY_OPERATOR_FIELDS_ONLY=1 cloud_run perl -e 'alarm 1800; exec @ARGV' -- node tests/browser/operator-pages.mjs",
+      "exit": 0,
+      "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+      "label": "browser-final",
+      "log": "browser-final.log",
+      "seconds": 197.423,
+      "sha256": "445391efe58f99f183424b863c0f6374312e3b2ee24ed1d17a2fcc67fc2b882f",
+      "started": "2026-11-06T06:27:54.523382+00:00"
+    },
+    "build": {
+      "clean": true,
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+      "label": "build",
+      "log": "build.log",
+      "seconds": 33.442,
+      "sha256": "b5cedbb5654e179a5672546e6d7d781403f3c2c3196ccb4b773208b99e026385",
+      "started": "2026-11-06T06:26:52.310495+00:00"
+    },
+    "first-party-final": {
+      "clean": true,
+      "command": "cloud_run npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+      "label": "first-party-final",
+      "log": "first-party-final.log",
+      "seconds": 3.582,
+      "sha256": "0be1c32f376f15c72452fd602286b701e3a1fc7ff2cc7add4b5b721266c84cbc",
+      "started": "2026-11-06T06:27:54.510170+00:00"
+    },
+    "mechanical": {
+      "clean": true,
+      "command": "node src/base/contract-docs.mjs write && node src/base/contract-docs.mjs check && git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md && node scripts/edition-authoring/cli.mjs lock > ../packet/source-lock-final.json && node scripts/edition-authoring/cli.mjs check > ../packet/source-check-final.json && git diff --exit-code HEAD -- CONTRACT.md ACCEPTANCE.md docs/CLAIMS.md sources.lock.json && git diff --cached --exit-code && git diff --check",
+      "exit": 0,
+      "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+      "label": "mechanical",
+      "log": "mechanical.log",
+      "seconds": 1.798,
+      "sha256": "be5ce9f7986a60db0912a733575965cb41a321530655d343773cb83886ade16b",
+      "started": "2026-11-06T06:31:40.218153+00:00"
+    },
+    "native-final": {
+      "clean": true,
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/product-hierarchy.test.ts",
+      "exit": 0,
+      "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+      "label": "native-final",
+      "log": "native-final.log",
+      "seconds": 11.827,
+      "sha256": "a1276e9dfd08859a00958535d1aae12eb592d7e2f8913d7f7c1180ad1119a399",
+      "started": "2026-11-06T06:27:54.508575+00:00"
+    },
+    "typecheck-final": {
+      "clean": true,
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+      "label": "typecheck-final",
+      "log": "typecheck-final.log",
+      "seconds": 27.157,
+      "sha256": "a009019be2f920b37383ac92d90bbb4790cc40fcb02663ec1728cb863e6a3a66",
+      "started": "2026-11-06T06:27:54.532107+00:00"
+    }
+  },
+  "ci": {
+    "allowed_generated_view_exception": true,
+    "ci_tests_executed": false,
+    "conclusion": "failure",
+    "custody": "READY under the explicit generated-view freshness exception; not landed",
+    "dispatches": 0,
+    "event": "push",
+    "failed_job_log_command": "gh run view 42175003652 --repo just-every/run-penny --job 127751384708 --log-failed",
+    "failed_job_log_command_exit": 0,
+    "failed_jobs": [
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384636,
+        "name": "shards (workspace-clock, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384666,
+        "name": "shards (base-2, false)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384691,
+        "name": "shards (vote-importance, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384692,
+        "name": "shards (merge-notices, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384701,
+        "name": "shards (requester-blocking, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384708,
+        "name": "shards (import-statuses, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384715,
+        "name": "shards (dev-flows, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384718,
+        "name": "shards (request-decline, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384729,
+        "name": "shards (rich-changelog, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384742,
+        "name": "shards (release-planning, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384750,
+        "name": "shards (roadmap-public-eta, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384754,
+        "name": "shards (proxy-votes, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384755,
+        "name": "shards (browser, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384771,
+        "name": "shards (requester-board, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384784,
+        "name": "shards (static, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384799,
+        "name": "shards (base-1, false)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384803,
+        "name": "shards (older-archive, false)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384804,
+        "name": "shards (internal-discussion, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384822,
+        "name": "shards (triage-aging, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384825,
+        "name": "shards (product-hierarchy, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384843,
+        "name": "shards (survey-capture, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384845,
+        "name": "shards (prioritisation, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384846,
+        "name": "shards (browser-capture, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384855,
+        "name": "shards (agent-door, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384870,
+        "name": "shards (loop-health, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384884,
+        "name": "shards (import-roadmap, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384886,
+        "name": "shards (ownership, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384890,
+        "name": "shards (discord-capture, true)"
+      },
+      {
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127751384929,
+        "name": "shards (helpscout-capture, true)"
+      }
+    ],
+    "failure": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+    "github_budget_calls": 6,
+    "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+    "repair_rounds": 0,
+    "reruns": 0,
+    "run": 42175003652,
+    "source_lock": "success in every shard",
+    "status": "completed",
+    "test_assertion_failures": []
+  },
+  "counts_after": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "counts_before": {
+    "done": 79,
+    "missing": 78,
+    "partial": 124
+  },
+  "generated_views_restored": true,
+  "head": "b4fee4a9e36233472924d6f08637a522bd2dbe96",
+  "landing": "not attempted; branch only",
+  "migration_ledger": {
+    "command": "none",
+    "exit": 0,
+    "reason": "no migration changes"
+  },
+  "publication_scan": "not run in cloud; fleet lander required",
+  "repository": "just-every/run-penny",
+  "restored_view_check": {
+    "exit": 1,
+    "expected_by_cloud_contract": true,
+    "failure": "ACCEPTANCE.md: generated content differs; run contract-docs write."
+  },
+  "status_after": "partial",
+  "status_before": "partial",
+  "widths": [
+    1440,
+    390
+  ]
+}
