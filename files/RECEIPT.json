@@ -1,0 +1,380 @@
+{
+  "assertions_removed": 0,
+  "base": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+  "branch": "cloud/sd-penny-c-f88",
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email <fleet identity> --non-interactive",
+      "exit": 0,
+      "scope": "local setup; no provider deployment"
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0,
+      "scope": "emitted Worker and production assets"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts",
+      "exit": 0,
+      "head": "7c6fe309489271b0c5a177a8a28892797ddb4a15",
+      "scope": "existing board journeys, including native audit projection helper",
+      "tests": 7
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec oxlint src/core/features/audit src/core/app/api.ts tests/base/audit-fixture.ts tests/base/audit-read-export.ts tests/base/board.test.ts",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "scope": "generated local views, restored to main before commit"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "head": "7c6fe309489271b0c5a177a8a28892797ddb4a15",
+      "ok": true
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "head": "7c6fe309489271b0c5a177a8a28892797ddb4a15",
+      "scope": "expected stale ACCEPTANCE.md only; view deliberately not committed"
+    }
+  ],
+  "ci": {
+    "conclusion": "failure",
+    "event": "push",
+    "expected_under_generated_view_exception": true,
+    "head": "7c6fe309489271b0c5a177a8a28892797ddb4a15",
+    "jobs": [
+      {
+        "conclusion": "success",
+        "failed_steps": [],
+        "id": 127775156088,
+        "name": "plan",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201326,
+        "name": "shards (dev-flows, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201360,
+        "name": "shards (ownership, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201363,
+        "name": "shards (request-decline, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201386,
+        "name": "shards (merge-notices, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201387,
+        "name": "shards (triage-aging, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201395,
+        "name": "shards (requester-blocking, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201418,
+        "name": "shards (browser, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201419,
+        "name": "shards (requester-board, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201431,
+        "name": "shards (base-1, false)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201432,
+        "name": "shards (workspace-clock, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201445,
+        "name": "shards (import-roadmap, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201450,
+        "name": "shards (import-statuses, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201455,
+        "name": "shards (base-2, false)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201481,
+        "name": "shards (vote-importance, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201490,
+        "name": "shards (internal-discussion, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201494,
+        "name": "shards (roadmap-public-eta, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201501,
+        "name": "shards (proxy-votes, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201504,
+        "name": "shards (static, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201530,
+        "name": "shards (product-hierarchy, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201532,
+        "name": "shards (older-archive, false)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201571,
+        "name": "shards (prioritisation, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201625,
+        "name": "shards (loop-health, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201632,
+        "name": "shards (browser-capture, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201677,
+        "name": "shards (rich-changelog, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201679,
+        "name": "shards (agent-door, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201703,
+        "name": "shards (release-planning, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201736,
+        "name": "shards (survey-capture, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201767,
+        "name": "shards (discord-capture, true)",
+        "status": "completed"
+      },
+      {
+        "conclusion": "failure",
+        "failed_steps": [
+          "Check generated contract documents"
+        ],
+        "id": 127775201841,
+        "name": "shards (helpscout-capture, true)",
+        "status": "completed"
+      }
+    ],
+    "only_failed_step": "Check generated contract documents",
+    "run": 42182510736
+  },
+  "contract": {
+    "ROLE-004": {
+      "after": "partial",
+      "before": "partial"
+    },
+    "counts_after": {
+      "done": 79,
+      "missing": 78,
+      "partial": 124
+    },
+    "counts_before": {
+      "done": 79,
+      "missing": 78,
+      "partial": 124
+    },
+    "status_rows_after": 281,
+    "status_rows_before": 281,
+    "table_rows_after": 445,
+    "table_rows_before": 445
+  },
+  "github_calls": 4,
+  "head": "7c6fe309489271b0c5a177a8a28892797ddb4a15",
+  "landing": "not performed",
+  "main_ci_at_start": {
+    "head": "8d4b0ac3eebe3e50003b61820f9c366282986327",
+    "run_site": 42176843655,
+    "run_site_conclusion": "success",
+    "verify": 42176843779,
+    "verify_conclusion": "success"
+  },
+  "migration_check": "not applicable: no migration",
+  "product_push": {
+    "attempts": 1,
+    "exit": 0
+  },
+  "publication_scan": "not run in cloud; fleet lander duty",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "screens_changed": 0,
+  "tag": "sd-penny-c-f88",
+  "test_registration_delta": 0
+}
