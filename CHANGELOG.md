@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove full and partial hierarchy-name search without a type filter, exact destinations across mixed paginated results, and independent destinations for equal-name products after navigation and reload. OPS-004 remains partial with its finer permissions and capacity proof open. No migration or configuration change.
+
 - Search native products, components and features by full or partial name alongside existing workspace records, retaining global ordering and pagination. Result links identify and focus the particular hierarchy record. Extend the existing native and mounted browser journeys with hierarchy identity, ordering, page boundaries and current authority checks. OPS-004 remains partial for finer record permissions and capacity proof. No migration or configuration change is required.
 - Add an authored, versioned 300-pair duplicate corpus and measure EVID-007's lexical floor through the emitted public suggestion route in fresh fixture storage. Report corpus identity, labeled-pair confusion counts, precision, recall, F1, top-five and paraphrase recall with no model or provider cost. The existing duplicate-suggestion journey also reconciles the evaluation command against a native control, rejects invalid labels and retains the redaction evaluation without adding a test registration. AI-011 moves from missing to partial; other corpora, model qualification, degraded-model gates and dated model receipts remain open. No runtime migration or installation reconfiguration is required.
 
