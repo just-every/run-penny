@@ -1,0 +1,12 @@
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f71/run-penny
+
+
+ Test Files  2 passed (2)
+      Tests  22 passed (22)
+   Start at  04:25:50
+   Duration  113.55s (transform 21.69s, setup 0ms, import 45.33s, tests 63.21s, environment 2ms)
+

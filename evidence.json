@@ -1,0 +1,94 @@
+{
+  "files": [
+    {
+      "blob": "10cf901d801944aeffb93fa3d91df6eb7f828b9a",
+      "bytes": 14155,
+      "path": "BASE-SOURCE.log",
+      "sha256": "679e1e6f860ca08346857c9d65e716462a400ec12fe596d0ddfe31135235225d"
+    },
+    {
+      "blob": "20b4ea7102319fa9d0875883c2a92994882d6dd9",
+      "bytes": 346,
+      "path": "BASELINE-TESTS.log",
+      "sha256": "6d4fdd3c5c6acd2a118b8650bd3ce4fc1d963708863ffc17775d7c9852cdbe79"
+    },
+    {
+      "blob": "949f4e07330a30f3f11fdb3b1e408b4686307ef8",
+      "bytes": 341,
+      "path": "BOARD-TESTS.log",
+      "sha256": "a87548ee8ad9ac0a1f7b243f2495b406a11c23c233b351adc21e2f73dd385092"
+    },
+    {
+      "blob": "872d4c0585d0b7a86e2a55d25db68bca1f1eb630",
+      "bytes": 427,
+      "path": "CI-FAILURE.log",
+      "sha256": "eb0aed81a12406ba545ac5ed019395e03803953a3e36085d5bd6e6f0a1295f7b"
+    },
+    {
+      "blob": "25d675c02096350a714371289c84f4a64c504714",
+      "bytes": 8818,
+      "path": "CI.json",
+      "sha256": "afdc7f126a845b3de828b9415bc7bcfba88bd37d3f0452df17cc77aa328de7c4"
+    },
+    {
+      "blob": "fba560db7c48416c914446f2a1e319a79104d105",
+      "bytes": 67,
+      "path": "COMMITTED-VIEWS-CHECK.log",
+      "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+    },
+    {
+      "blob": "dccba85862a6fe39517a0629358374583bfada18",
+      "bytes": 70307,
+      "path": "FIRST-PARTY.json",
+      "sha256": "0a3061a2d0193d5b80075d48d298e8e74d9c363784b8f0cf477e8a4e39bb745b"
+    },
+    {
+      "blob": "0704a22c4db813b5b148b1dece50ee542732a4e0",
+      "bytes": 1763,
+      "path": "PLAN.md",
+      "sha256": "a54b342a8a8916f46487c3561e113eb8019420c62173488ba887bf408fe0003c"
+    },
+    {
+      "blob": "a0f623705b7bf5800ae4159763fe9ea94739c0c3",
+      "bytes": 1661,
+      "path": "PROBES.md",
+      "sha256": "b8d740d74d4bf4e6e3130c49a5dc6e638f72aa86f6fdd2c0e74cf80fbc3994f8"
+    },
+    {
+      "blob": "f6f54bee8f775e0e0c2b74adc7aeb9a8e3312365",
+      "bytes": 5317,
+      "path": "RECEIPTS.json",
+      "sha256": "dd4709d72c91e5b98b6e7ae2491d49b1475b1bebcaa9ef92f7aea40ec73a11a1"
+    },
+    {
+      "blob": "101a61b54ac3db3faee06986c7f6f0ec88bfa5d7",
+      "bytes": 8045,
+      "path": "REPORT.md",
+      "sha256": "574de40c3fdcfcf8e9fe218eb0a2595fbfd19cf40c2dcabd77a46e59dd83bc26"
+    },
+    {
+      "blob": "0551d63426fefc3419a71c0c05de2ff070a118b2",
+      "bytes": 95,
+      "path": "TYPECHECK.log",
+      "sha256": "cc3b9ca554ce56c0394de704af19e59f4063e61db0d8dd5c6d571dfc935ee236"
+    },
+    {
+      "blob": "ae869b2fafd3acf46a2dc6ce35ec869497ae9cfb",
+      "bytes": 32,
+      "path": "VIEWS-CHECK.log",
+      "sha256": "c21aae40192141751d6d5c7a3a1d0eb701a6852f305d592d77b4dcab9c2536ab"
+    },
+    {
+      "blob": "d4d1e60ea7fdc565c576421664992b40e47a816e",
+      "bytes": 28,
+      "path": "VIEWS-WRITE.log",
+      "sha256": "df91012bf66fb476e9cd1a30c002829398beb55f869e07cc7be477197fa5a276"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f71",
+  "product_head": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+  "ref": "refs/heads/evidence/sd-penny-c-f71",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f71"
+}

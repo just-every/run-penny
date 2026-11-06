@@ -1,0 +1,375 @@
+{
+  "run": {
+    "conclusion": "failure",
+    "event": "push",
+    "head_sha": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42163055860",
+    "id": 42163055860,
+    "name": "Verify Penny",
+    "status": "completed"
+  },
+  "jobs": [
+    {
+      "conclusion": "success",
+      "id": 127713036747,
+      "name": "plan",
+      "steps": []
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074486,
+      "name": "shards (base-2, false)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074503,
+      "name": "shards (browser, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074528,
+      "name": "shards (ownership, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074531,
+      "name": "shards (release-planning, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074534,
+      "name": "shards (base-1, false)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074537,
+      "name": "shards (requester-board, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074541,
+      "name": "shards (request-decline, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074549,
+      "name": "shards (import-roadmap, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074554,
+      "name": "shards (merge-notices, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074555,
+      "name": "shards (proxy-votes, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074558,
+      "name": "shards (triage-aging, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074559,
+      "name": "shards (vote-importance, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074566,
+      "name": "shards (product-hierarchy, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074598,
+      "name": "shards (requester-blocking, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074615,
+      "name": "shards (roadmap-public-eta, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074616,
+      "name": "shards (helpscout-capture, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074619,
+      "name": "shards (dev-flows, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074628,
+      "name": "shards (workspace-clock, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074632,
+      "name": "shards (browser-capture, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074646,
+      "name": "shards (import-statuses, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074649,
+      "name": "shards (rich-changelog, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074655,
+      "name": "shards (loop-health, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074656,
+      "name": "shards (internal-discussion, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074662,
+      "name": "shards (discord-capture, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074663,
+      "name": "shards (prioritisation, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074686,
+      "name": "shards (static, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074772,
+      "name": "shards (older-archive, false)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074773,
+      "name": "shards (agent-door, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "id": 127713074841,
+      "name": "shards (survey-capture, true)",
+      "steps": [
+        {
+          "conclusion": "failure",
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ]
+    }
+  ],
+  "observed_only_failure": "Check generated contract documents: ACCEPTANCE.md generated content differs",
+  "log_job_id": 127713074486,
+  "log_command": "gh run view 42163055860 --repo just-every/run-penny --job 127713074486 --log-failed",
+  "log_exit": 0,
+  "workflow_dispatches": 0,
+  "reruns": 0,
+  "github_cli_calls": 4,
+  "discovery_correction": "The first discovery used an incorrect SHA and returned no runs; no conclusion was taken from it."
+}

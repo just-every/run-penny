@@ -1,0 +1,164 @@
+{
+  "tag": "sd-penny-c-f71",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f71",
+  "head": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+  "requested_base": "2236f87f4375799c35944caf633d66814b73c610",
+  "main_at_final_fetch": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "captured_at": "2026-11-06T04:34:57.376869+00:00",
+  "product_push": {
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f71",
+    "exit": 0,
+    "attempts": 1,
+    "remote_ref": "refs/heads/cloud/sd-penny-c-f71",
+    "remote_head_verified": "580c5541b47ab211ac4700ae64fcb724235a15aa"
+  },
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run timeout 600 pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts tests/base/notifications.test.ts",
+      "tree": "2236f87f4375799c35944caf633d66814b73c610",
+      "exit": 0,
+      "passed": 22,
+      "duration_seconds": 113.55,
+      "log": "BASELINE-TESTS.log"
+    },
+    {
+      "command": "cloud_run timeout 600 pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts",
+      "tree_content_matches": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+      "exit": 0,
+      "passed": 7,
+      "duration_seconds": 28.52,
+      "log": "BOARD-TESTS.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "tree_content_matches": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+      "exit": 0,
+      "log": "TYPECHECK.log"
+    },
+    {
+      "command": "cloud_run pnpm exec rer check --profile first-party --json",
+      "head": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+      "exit": 0,
+      "passed": 1143,
+      "failed": 0,
+      "log": "FIRST-PARTY.json"
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "log": "BASE-SOURCE.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "head": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+      "exit": 0,
+      "log": "VIEWS-WRITE.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "after_local_write": true,
+      "head": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+      "exit": 0,
+      "log": "VIEWS-CHECK.log"
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0,
+      "generated_files_in_product_diff": []
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "head": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "head": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "committed_tree": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+      "exit": 1,
+      "expected": "ACCEPTANCE.md generated content differs",
+      "log": "COMMITTED-VIEWS-CHECK.log"
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit": 0
+    }
+  ],
+  "test_timing_note": "The full board test and typecheck ran on the final file contents before commit. The subsequent rebase was a no-op. Proof file hashes match the committed candidate. No earlier working-tree slice is presented as an exact-SHA CI run.",
+  "proof_sha256": {
+    "tests/base/board.test.ts": "b493a4b39a0a8e68acb4a67e4768038f80e4ca63f6bfbd24b1b6baa64aeb2d81",
+    "tests/base/internal-board-exclusion.ts": "d5a26ce516d84e17627fe93da0229dcba6a4eda4325082e34a89946c99fc02aa",
+    "tests/base/notifications.test.ts": "1ea1bcf5a08808b65144f7684487ea2f8fffb92fc5d4f24eaa08c665ffa92e61",
+    "tests/base/release-fixture.ts": "c9462d9fda538519f8e534032d7ac39657c481251a7524d0fc2d36eb41780515"
+  },
+  "identity": {
+    "candidate_commits_checked": 2,
+    "authors_and_committers": "fleet identity",
+    "trailers": "absent",
+    "including_side_parents": true
+  },
+  "status_rows": {
+    "parent": 281,
+    "candidate": 281,
+    "table_lines_parent": 445,
+    "table_lines_candidate": 445,
+    "dropped": 0
+  },
+  "counts": {
+    "before": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    },
+    "after": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    }
+  },
+  "test_registrations": {
+    "added": 0,
+    "removed": 0,
+    "touched_board_before": 7,
+    "touched_board_after": 7,
+    "notifications_before": 15,
+    "notifications_after": 15
+  },
+  "migration_ledger": {
+    "command": null,
+    "reason": "No migration changed"
+  },
+  "ui_browser_proof": {
+    "required": false,
+    "reason": "No UI implementation changed; the planner excludes visual work"
+  },
+  "publication_scan": {
+    "status": "NOT RUN",
+    "reason": "Cloud brief delegates full-history publication scan to the maintained lander"
+  },
+  "main_landing": false,
+  "run_site": {
+    "status": "NOT RUN",
+    "reason": "Product main was not pushed"
+  },
+  "verify": {
+    "conclusion": "failure",
+    "event": "push",
+    "head_sha": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42163055860",
+    "id": 42163055860,
+    "name": "Verify Penny",
+    "status": "completed"
+  }
+}
