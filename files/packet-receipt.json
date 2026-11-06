@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "source": "8a64c07a4a99c32fd62abb3cfce94b5b6dc6392e",
+  "regular_files_only": true,
+  "secrets_scan": "no credential signatures detected; report and synthetic journey artifacts only",
+  "files": [
+    {
+      "path": "COMMANDS.json",
+      "bytes": 4158,
+      "sha256": "dc38eed812934102f2258b77b499f85c2cc94e7e3a08d74da1eda2db343ab3fb"
+    },
+    {
+      "path": "REPORT.md",
+      "bytes": 3272,
+      "sha256": "e5d2b664a18f7d5f2d333ecaf3350d6c78152bf738f50938c075b70ed244cf3a"
+    },
+    {
+      "path": "VERDICT.md",
+      "bytes": 18849,
+      "sha256": "a6bb9bc3e9437ba585989f7ddc10ba8620de1d1de639b05d4a089534ec7e7ffe"
+    },
+    {
+      "path": "base-source-check.log",
+      "bytes": 14022,
+      "sha256": "b94168d0f9dad4555638a998f12ac5fbee69317ef1a1009f10cd7833220fcf85"
+    },
+    {
+      "path": "browser/E.1-pending-status-update-1440.png",
+      "bytes": 348945,
+      "sha256": "29e00934d5d0da9699cf28d503382e1b3955cf3c548f4c39566480f020d6b8cf"
+    },
+    {
+      "path": "browser/E.1-release-draft-1440.png",
+      "bytes": 401584,
+      "sha256": "8f4aab117dda5b7587d145a52ff01f2fd189cc0150d67a1a49580eba849e4f3b"
+    },
+    {
+      "path": "browser/E.1-release-draft-form-1440.png",
+      "bytes": 315802,
+      "sha256": "7839a6590df5e3b694ee880a94924cb0b39839eb5d74b022b989f85c32af9593"
+    },
+    {
+      "path": "browser/E.1-release-published-1440.png",
+      "bytes": 416251,
+      "sha256": "770c87f03da590a46e631572012c45339b6bd28b645a270c559657ff319b785d"
+    },
+    {
+      "path": "browser/E.1-status-update-published-1440.png",
+      "bytes": 310955,
+      "sha256": "2b1dd7fed47955c89fb857466e33359e08f89d5b706719db92d6a90c7065088f"
+    },
+    {
+      "path": "browser/REL-014-author-failure-notice-dismissed-1440.png",
+      "bytes": 387258,
+      "sha256": "73fe9aa4892276745e5f4bc89aff86ba8204f8c8384f5a8bafb474f1c699aaa9"
+    },
+    {
+      "path": "browser/REL-014-author-failure-notice-dismissed-detail-1440.png",
+      "bytes": 4417,
+      "sha256": "913eb5baacd9b98ee0bfdbb5a05eaf135e6627f79fc117a851690d2082447e04"
+    },
+    {
+      "path": "browser/REL-014-author-publication-failure-notice-1440.png",
+      "bytes": 400924,
+      "sha256": "51a9a70c23cd5b231a90eb0524436c9e419730e2e789e40bd428a332b4a19a6e"
+    },
+    {
+      "path": "browser/REL-014-author-publication-failure-notice-detail-1440.png",
+      "bytes": 18174,
+      "sha256": "c553424aacd0ef235a1b10c154950671e8f1939e60a69f6beb7cee6a06c88abd"
+    },
+    {
+      "path": "browser/REL-014-failing-release-schedule-form-1440.png",
+      "bytes": 402708,
+      "sha256": "954b4e7a187147ab5dea373946886526f7bfb62c9abc5c744efbb6909e84b13f"
+    },
+    {
+      "path": "browser/REL-014-failing-release-schedule-form-detail-1440.png",
+      "bytes": 22814,
+      "sha256": "60bd90f426339460b27db7775258399a7f4b6d63eb84930464f840fe8942c52d"
+    },
+    {
+      "path": "browser/REL-014-failing-release-scheduled-1440.png",
+      "bytes": 395073,
+      "sha256": "1a6ad3afd260f9af15d99ce9361a06db5ca56abe242bded7ab5d28669ae6f939"
+    },
+    {
+      "path": "browser/REL-014-failing-release-scheduled-detail-1440.png",
+      "bytes": 15812,
+      "sha256": "8956cb5262cabe799c3bd45a5d3e97840a28aa0f173e9172f91c2d1697a52ffe"
+    },
+    {
+      "path": "browser/REL-014-release-schedule-cancelled-1440.png",
+      "bytes": 411414,
+      "sha256": "3f798025087b25e1476601e70879e1a86f3f892dcb1115d5daf671df89ee95ea"
+    },
+    {
+      "path": "browser/REL-014-release-schedule-cancelled-detail-1440.png",
+      "bytes": 31932,
+      "sha256": "94490b5c02f2befdbea6a73bfb93b41b06773386ce632789014797c47c253daf"
+    },
+    {
+      "path": "browser/REL-014-release-schedule-form-1440.png",
+      "bytes": 402640,
+      "sha256": "5a4aa289ee286dcbda8ea7ebf220ac07be1f0aeecabd7f2b12a01fbb07ecf65b"
+    },
+    {
+      "path": "browser/REL-014-release-schedule-form-detail-1440.png",
+      "bytes": 22814,
+      "sha256": "60bd90f426339460b27db7775258399a7f4b6d63eb84930464f840fe8942c52d"
+    },
+    {
+      "path": "browser/REL-014-release-scheduled-1440.png",
+      "bytes": 395086,
+      "sha256": "c8b12bc0fe9cef085a1caa4a5ff21e02063e0d68ba4712f47fb98b1f6ed08d09"
+    },
+    {
+      "path": "browser/REL-014-release-scheduled-detail-1440.png",
+      "bytes": 15812,
+      "sha256": "8956cb5262cabe799c3bd45a5d3e97840a28aa0f173e9172f91c2d1697a52ffe"
+    },
+    {
+      "path": "browser/REL-014-release-scheduled-publication-failed-1440.png",
+      "bytes": 424465,
+      "sha256": "d795ce1da49f4e213e4dfde2ff3a72928c304566ea418fe5aa0b916d6bf1ca7a"
+    },
+    {
+      "path": "browser/REL-014-release-scheduled-publication-failed-detail-1440.png",
+      "bytes": 33003,
+      "sha256": "b582e6119813095acb2de2008954bc7f67c3674e25d17530b70e43523a40aa0f"
+    },
+    {
+      "path": "browser/REL-014-status-update-schedule-cancelled-1440.png",
+      "bytes": 358847,
+      "sha256": "ac4c2b4389ad98b5140e7256b75977eabc53de27bd7ce3c933806db61759d7ba"
+    },
+    {
+      "path": "browser/REL-014-status-update-schedule-cancelled-detail-1440.png",
+      "bytes": 34141,
+      "sha256": "d5bd4ed164e932288e2583cfcf9c0e07beb631c2222eb29c53177949fbb276ee"
+    },
+    {
+      "path": "browser/REL-014-status-update-schedule-form-1440.png",
+      "bytes": 350257,
+      "sha256": "cb816368717e519824cf698d011d0e9af5362306b55d29dcad536774c36c9fc1"
+    },
+    {
+      "path": "browser/REL-014-status-update-schedule-form-detail-1440.png",
+      "bytes": 24583,
+      "sha256": "41284e95f5dfddfeaf98615c3d49f6fab89a8878efae554c523c4b7a77fbb11d"
+    },
+    {
+      "path": "browser/REL-014-status-update-scheduled-1440.png",
+      "bytes": 342629,
+      "sha256": "9734fbbd7c1c7ebfd52d061efadc85ac37aa56ef21b99e3be154bd60ca743f77"
+    },
+    {
+      "path": "browser/REL-014-status-update-scheduled-detail-1440.png",
+      "bytes": 17080,
+      "sha256": "6aef2b824ceb92e3155ee78fa6704ed3aaf365832d6e980ffe8ce67e1d9d0a3d"
+    },
+    {
+      "path": "browser.log",
+      "bytes": 6272,
+      "sha256": "7b770368eb22c730bec96e8d7cfc34cf3135ce70dfbf943375ecbb8398ceee07"
+    },
+    {
+      "path": "build.log",
+      "bytes": 42569,
+      "sha256": "c5333865f3d229f71c4f8248a272dd511ddd6b341444e6466402ede24a15a136"
+    },
+    {
+      "path": "contract-check.log",
+      "bytes": 67,
+      "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+    },
+    {
+      "path": "contract-corpus-audit.json",
+      "bytes": 712284,
+      "sha256": "7aa3f02d389ea9bd3fbcde5e514621aa51e347279b27fdf1270f38a4b3593399"
+    },
+    {
+      "path": "custody-receipt.json",
+      "bytes": 3499,
+      "sha256": "ec711aa62e865729b6fbd49cd70b2acf0c796252379692a153befd0f2728c6fa"
+    },
+    {
+      "path": "install.log",
+      "bytes": 2597,
+      "sha256": "c34d0896cf3455b19f20bb6f10d43de5db675f67f8147d157be91b178254125e"
+    },
+    {
+      "path": "release-custody.log",
+      "bytes": 405,
+      "sha256": "1dc691ceeffc6c3a31906c3407ba0329f7e3b76b9c381fedf0720c3bfeffc254"
+    },
+    {
+      "path": "source-check.log",
+      "bytes": 426884,
+      "sha256": "5844b63bfb68f8935733b5fae5b6687f3683397dbf02243029d172dc9dad7bbf"
+    },
+    {
+      "path": "source-identities.txt",
+      "bytes": 378,
+      "sha256": "c694717dc4593b6eae195cd7b5b4f7ff74dd6844461186dd52cb4850b7244a2b"
+    },
+    {
+      "path": "source-read-receipt.json",
+      "bytes": 6390,
+      "sha256": "7a5d496ae85e6f6923aba74b144d5e8db2f67d1f14b8a8f223ca2bb75e0a53fe"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "source": "8a64c07a4a99c32fd62abb3cfce94b5b6dc6392e",
+  "main": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "files": [
+    {
+      "path": "CONTRACT.md",
+      "bytes": 353084,
+      "sha256": "d61150915e86a0a3db57ff2d5ebdc9162b05d6a54f4a556a4ba17e011fe48b09"
+    },
+    {
+      "path": "ACCEPTANCE.md",
+      "bytes": 311487,
+      "sha256": "e4ca260f331c1c6be124151c3cb3e1714a09dd57ff30a3a18be9f96070ab2bff"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 11191,
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968"
+    },
+    {
+      "path": "RULINGS.md",
+      "bytes": 10219,
+      "sha256": "d7a6d055f345370be57062ca0daf40d1b491a94da3fcb690fa3d442f8e98f868"
+    },
+    {
+      "path": "BASELINE.md",
+      "bytes": 6587,
+      "sha256": "854a33949f3c52c059f0983ef9d322b1b22dd786c4ded1583b9c05133e929214"
+    },
+    {
+      "path": "docs/contract-mechanism.md",
+      "bytes": 8006,
+      "sha256": "e70328ecf1328a128494f486570055668b0da6be9b9a206295e7750c5cda09e5"
+    }
+  ],
+  "pinnedCounts": {
+    "done": 80,
+    "partial": 123,
+    "missing": 78
+  },
+  "baseCounts": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "mainCounts": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "pinnedClauseCount": 281,
+  "baseToPinStatusChanges": [
+    {
+      "id": "REL-006",
+      "before": "| `REL-006` | Acceptance and retry | published | partial | `tests/base/notifications.test.ts`; `tests/base/release-custody.test.ts` | The published update staying visible on the portal in every failure state has no passing assertion, and an ambiguous or interrupted send held unknown with no replay (point 3, reconciled with RL-3) is asserted for requester status-update mail but not for a release delivery; bounded retry of known failures ending in failed, and a restored queued release held unknown and inert, are asserted. |",
+      "after": "| `REL-006` | Acceptance and retry | published | done | `tests/base/release-custody.test.ts` — \"[DATA-001 REL-006] release failures stay visible, uncertain and restored deliveries never replay\" invokes `tests/base/release-failure-visibility.ts` proveReleaseFailureVisibility for points 1 through 4 and `tests/base/release-delivery-timing.ts` proveReleaseDeliveryTiming for permitted send time, scheduling, ordering, quiet hours and overlapping Queue and Cron claims. Both providers use native publication, authenticated delivery and release reads, nonempty public API and rendered wording, and mail HTTP-edge fixtures. |  |"
+    }
+  ],
+  "baseToMainStatusChanges": [
+    {
+      "id": "REQ-020",
+      "before": "| `REQ-020` | Requester's own content | published | partial | `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback and unchanged-state refusal); `tests/browser/requester-repair.mjs` — requester repair journey | Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved. |",
+      "after": "| `REQ-020` | Requester's own content | published | partial | `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback, unchanged-state refusal and private activity isolation throughout review, and rejected-edit approval replay refusal); `tests/browser/requester-repair.mjs` with `tests/browser/requester-comment-edit.mjs` — mounted own-comment edit and operator rejection and approval, signed-out public wording and identity readback, activity and review screens at 1440 and 390 | Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved. |"
+    },
+    {
+      "id": "LEARN-001",
+      "before": "| `LEARN-001` | Permitted originals | published | partial | `tests/base/learning-stage2.test.ts` | The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted. |",
+      "after": "| `LEARN-001` | Permitted originals | published | partial | `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol | The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved. |"
+    }
+  ],
+  "allPreStatusContractBytesUnchangedFromBase": true,
+  "allPreStatusContractBytesUnchangedOnMain": true,
+  "mainProvenance": "Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.",
+  "pinnedProvenance": "Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained. REL-006 additionally proved from code and tests at commit `645764987ec24c08dde9bf291e822bfe68e08379` (5 November 2026); its final candidate keeps those product and journey bytes."
+}

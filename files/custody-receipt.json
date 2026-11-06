@@ -1,0 +1,98 @@
+{
+  "utc": "2026-11-06T02:02:58.110704+00:00",
+  "source": "8a64c07a4a99c32fd62abb3cfce94b5b6dc6392e",
+  "reviewed_branch": "cloud/sd-penny-c-f43",
+  "local_checkout": "detached HEAD",
+  "main": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "head_matches": true,
+  "tracked_worktree_status": "",
+  "product_changes": false,
+  "product_commits_created": 0,
+  "product_pushes": 0,
+  "PRs_created": 0,
+  "CI_queries": 0,
+  "journey_hashes": [
+    {
+      "path": "CONTRACT.md",
+      "sha256": "d61150915e86a0a3db57ff2d5ebdc9162b05d6a54f4a556a4ba17e011fe48b09"
+    },
+    {
+      "path": "ACCEPTANCE.md",
+      "sha256": "e4ca260f331c1c6be124151c3cb3e1714a09dd57ff30a3a18be9f96070ab2bff"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968"
+    },
+    {
+      "path": "RULINGS.md",
+      "sha256": "d7a6d055f345370be57062ca0daf40d1b491a94da3fcb690fa3d442f8e98f868"
+    },
+    {
+      "path": "tests/base/release-custody.test.ts",
+      "sha256": "ea6a580649aa397f6c7b566b597a123b74faaf9c0122093569bbbe0b230cd7c2"
+    },
+    {
+      "path": "tests/base/release-failure-visibility.ts",
+      "sha256": "5c7b448bb1de411a1dd915f9086eca0e6cf383fdb101af47be9a10fdc9f3beec"
+    },
+    {
+      "path": "tests/base/release-delivery-timing.ts",
+      "sha256": "aa7e98d851ad58881653bb5c0fc12185e404af32a9353e5a911042dac0764efb"
+    },
+    {
+      "path": "tests/base/notification-regression-fixture.ts",
+      "sha256": "e09aebbda2530c1ce8445012f4f20a4ef492046a62718b7112b7ab8acc9188ed"
+    },
+    {
+      "path": "tests/base/release-fixture.ts",
+      "sha256": "e38bd8b2362c8e3535109c75bf2b1f0eab75edf75f2d3e3df057f083d47a004d"
+    },
+    {
+      "path": "tests/base/weekly-summary-release.ts",
+      "sha256": "508edb6d5dc0ba30ff609eb87b33238a0745122fb36e387b0a588348292e1e4f"
+    },
+    {
+      "path": "tests/base/support.ts",
+      "sha256": "dc87ded7066096665109c2accc562e9fd91e626978292723a5c8ec1b5b388e38"
+    },
+    {
+      "path": "tests/base/explicit-consent-board.ts",
+      "sha256": "90593703460f12eed77ae05399b27a20a058067aedad222a6a03c23189273302"
+    },
+    {
+      "path": "tests/base/review-mail-fixture.ts",
+      "sha256": "d9d6ea216d0cade40b8bfb74ad010c6346eea99c1c39607309b35813a1d71cf9"
+    },
+    {
+      "path": "tests/browser/loopjourney-release.mjs",
+      "sha256": "d983b82d67cba4689d133884387387ef4efbc4ab214d1c9cde6fbc2fa8ff8144"
+    },
+    {
+      "path": "tests/browser/moderation-runtime.mjs",
+      "sha256": "e97836342d52835d857b27a873d48f6f3b1bf9aca03c2dfe9782e8d8a9008a30"
+    },
+    {
+      "path": "tests/browser/base-runtime.mjs",
+      "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9"
+    },
+    {
+      "path": "tests/browser/browser-options.mjs",
+      "sha256": "b65e6f23ac704b3eb8d1a5ff5577d3ce404dac7428ef7541d49f1d56cab898ad"
+    },
+    {
+      "path": "vitest.base.config.ts",
+      "sha256": "76ad6675aabcc4cc8d0f831167541de43d34a5426534ca3a440d352f8f8f4b42"
+    },
+    {
+      "path": "verification.json",
+      "sha256": "d8db2050dc706da26dfbc5f2e72f190d4721efb76d60d9b66e78f5bf97d13b11"
+    },
+    {
+      "path": ".github/workflows/verify.yml",
+      "sha256": "4baf892a475f3f47d8d5cb726360b27f85cff4c6f475ba4e7d388a5d8786428a"
+    }
+  ],
+  "source_journey_diff_from_64576498": 0,
+  "safety": "All mail calls used maintained HTTP-edge test fixtures. No provider or production action. Browser contexts and runtime were closed by maintained finally blocks."
+}

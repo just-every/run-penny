@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "tag": "ct-judge-penny-rel006-20261105-2114-sol1",
+  "completed_utc": "2026-11-06T02:05:31Z",
+  "source": "8a64c07a4a99c32fd62abb3cfce94b5b6dc6392e",
+  "commands": [
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "exit": 0,
+      "log": "install.log"
+    },
+    {
+      "command": "timeout 600 cloud_run npx -y @runeditrun/rer build",
+      "exit": 127,
+      "result": "timeout cannot execute shell function; build not started"
+    },
+    {
+      "command": "cloud_run timeout 600 npx -y @runeditrun/rer build",
+      "exit": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "cloud_run timeout 420 pnpm exec vitest run --config vitest.base.config.ts tests/base/release-custody.test.ts --maxWorkers=1",
+      "exit": 0,
+      "filesPassed": 1,
+      "testsPassed": 6,
+      "durationSeconds": 71.58,
+      "log": "release-custody.log",
+      "executions": 1
+    },
+    {
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=<task packet>/browser cloud_run timeout 420 node tests/browser/loopjourney-release.mjs",
+      "exit": 0,
+      "width": 1440,
+      "screenshots": 27,
+      "log": "browser.log",
+      "executions": 1
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "lockedFiles": 2418,
+      "log": "source-check.log"
+    },
+    {
+      "command": "node scripts/verify-base-source.mjs",
+      "exit": 0,
+      "originReadback": false,
+      "log": "base-source-check.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "diagnostic": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+      "log": "contract-check.log",
+      "permittedCandidateException": true
+    },
+    {
+      "command": "git diff --quiet 645764987ec24c08dde9bf291e822bfe68e08379 HEAD -- src tests verification.json .github/workflows",
+      "exit": 0
+    },
+    {
+      "command": "full-file parser/parity audit of pinned contract and acceptance and complete fresh-main Status/Evidence/Gap/provenance comparison",
+      "exit": 0,
+      "clauses": 281,
+      "acceptanceBodyDifferences": 0,
+      "receipt": "contract-corpus-audit.json"
+    },
+    {
+      "command": "git status --porcelain; git diff --exit-code",
+      "exit": 0,
+      "status": "clean"
+    },
+    {
+      "command": "receipt-printing shell wrapper following completed Base check",
+      "exit": 1,
+      "diagnostic": "NameError: name 'PY' is not defined; completed Base check was exit 0"
+    },
+    {
+      "command": "cloud_evidence.py publish (first attempt, identity-audit preparation)",
+      "exit": 1,
+      "diagnostic": "Git fetch failed exit=128 on a local partial-clone boundary fetch; product checkout unchanged and no evidence push attempted",
+      "correction": "Fetch the main exclusion commit directly from the declared remote using --depth=1 --filter=tree:0 before the identical complete identity/trailer audit"
+    }
+  ],
+  "CI": {
+    "queries": 0,
+    "suppliedRunId": 42108186095,
+    "event": "push",
+    "reportedConclusion": "failure: generated ACCEPTANCE only; runtime skipped",
+    "independentlyQueried": false,
+    "originalAffectedGate": "sd-penny-c-f43-gate-1",
+    "originalAffectedActualPass": "UNESTABLISHED"
+  },
+  "rubric": {
+    "R1": "MET",
+    "R2": "MET",
+    "R3": "MET",
+    "R4": "MET",
+    "R5": "MET",
+    "NEW": 0
+  },
+  "counts": {
+    "main": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    },
+    "proposed": {
+      "done": 80,
+      "partial": 123,
+      "missing": 78
+    },
+    "awardedDelta": 0
+  },
+  "model": {
+    "taskDeclaredModel": "gpt-6.1-sol",
+    "taskDeclaredEffort": "xhigh",
+    "systemExposedIdentity": "Codex, GPT-6 family",
+    "independentAttestationAvailable": false
+  },
+  "NOT_RUN": [
+    "full or baseline suite",
+    "broad type/lint suites",
+    "390px smoke: nonvisual no UI change",
+    "live providers, domain and mailbox qualification",
+    "hosted scheduling",
+    "original affected gate readback: forbidden CI query",
+    "final full runtime Verify",
+    "full-history publication scan",
+    "landing or Run site"
+  ]
+}
