@@ -29,12 +29,27 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
     assert.equal(result.items[0].id,record.id)
     assert.equal(result.items[0].entity,record.entity)
     assert.equal(result.items[0].href,`/app/features#${record.entity}-${record.id}`)
+    const global=await (await api(page,'/api/operator/search?'+new URLSearchParams({q}))).json()
+    assert.equal(global.total,1,'[OPS-004] full and partial names work without a type filter')
+    assert.deepEqual(global.items.map(({id,entity,title,href})=>({id,entity,title,href})),[{id:record.id,entity:record.entity,title:record.name,href:`/app/features#${record.entity}-${record.id}`}])
    }
   }
  }
+ // Equal names are separate records; opening either result must preserve its identity.
+ const duplicateResponse=await api(page,'/api/operator/hierarchy/product',{name:hierarchy[0].name})
+ assert.equal(duplicateResponse.status(),201,'[OPS-004] native duplicate-name product creation')
+ const duplicate={...hierarchy[0],id:(await duplicateResponse.json()).id,duplicate:true}
+ if(width===1440) {
+  const sameName=await (await api(page,'/api/operator/search?'+new URLSearchParams({q:duplicate.name}))).json()
+  assert.equal(sameName.total,2,'[OPS-004] search retains both equal-name records')
+  assert.deepEqual(sameName.items.map(({id,entity,title,href})=>({id,entity,title,href})),[hierarchy[0],duplicate].sort((a,b)=>a.id.localeCompare(b.id)).map(record=>({id:record.id,entity:record.entity,title:record.name,href:`/app/features#${record.entity}-${record.id}`})))
+ }
+ hierarchy.push(duplicate)
+ await page.reload()
  // Capture the real record destinations at both widths; behavioural assertions run at desktop.
  for(const record of hierarchy) {
-  await page.getByRole('link',{name:record.name,exact:true}).click()
+  const destination=`/app/features#${record.entity}-${record.id}`
+  await page.getByRole('link',{name:record.name,exact:true}).and(page.locator(`a[href="${destination}"]`)).click()
   await page.waitForURL(url=>url.pathname==='/app/features'&&url.hash===`#${record.entity}-${record.id}`)
   const target=page.locator(`[id="${record.entity}-${record.id}"]`)
   await target.getByRole('heading',{name:record.name,exact:true}).waitFor()
@@ -47,9 +62,9 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
    const box=await target.boundingBox()
    assert.ok(box.y>=0&&box.y<page.viewportSize().height,'[OPS-004] the selected hierarchy record is scrolled into view')
   }
-  await capture(`OPS-004-${record.entity}-destination`,page)
+  await capture(`OPS-004-${record.entity}${record.duplicate?'-same-name':''}-destination`,page)
   await page.goto(origin+'/app/search?q=privateproof')
-  await page.getByRole('link',{name:record.name,exact:true}).waitFor()
+  await page.getByRole('link',{name:record.name,exact:true}).and(page.locator(`a[href="${destination}"]`)).waitFor()
  }
 
  for(const [entity,names] of Object.entries(fields))for(const name of names) {
