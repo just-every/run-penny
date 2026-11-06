@@ -1,0 +1,73 @@
+{
+  "source": "6bba101216c1a229d436085871982442fbba4f2d",
+  "documents": {
+    "CONTRACT.md": {
+      "bytes": 352087,
+      "sha256": "2d80b7e6d20a55d46bb0d94261865091f0581932f79754f3875d9b75f5a900b1",
+      "lines": 3558
+    },
+    "ACCEPTANCE.md": {
+      "bytes": 310443,
+      "sha256": "364a5c7763dd62e10550c60bec92cff6d007374d9d65b601949658ed49f6b1c7",
+      "lines": 4003
+    },
+    "AGENTS.md": {
+      "bytes": 11191,
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968",
+      "lines": 192
+    },
+    "RULINGS.md": {
+      "bytes": 10219,
+      "sha256": "d7a6d055f345370be57062ca0daf40d1b491a94da3fcb690fa3d442f8e98f868",
+      "lines": 87
+    },
+    "BASELINE.md": {
+      "bytes": 6587,
+      "sha256": "854a33949f3c52c059f0983ef9d322b1b22dd786c4ded1583b9c05133e929214",
+      "lines": 54
+    },
+    "docs/contract-mechanism.md": {
+      "bytes": 8006,
+      "sha256": "e70328ecf1328a128494f486570055668b0da6be9b9a206295e7750c5cda09e5",
+      "lines": 53
+    }
+  },
+  "contract_clauses": 281,
+  "acceptance_clauses": 281,
+  "missing_from_acceptance": [],
+  "missing_from_contract": [],
+  "requirement_acceptance_body_differences": {},
+  "status_evidence_gap_differences": {
+    "REQ-015": {
+      "acceptance": {
+        "status": "partial",
+        "evidence": "`tests/base/board.test.ts`",
+        "gap": "A status update rendered distinctly from comments, pinned above them and notifying followers under NOTIFY-001 has no passing assertion; posting a pinned update and its text on the request are asserted."
+      },
+      "contract": {
+        "status": "done",
+        "evidence": "`tests/browser/requester-repair.mjs` \u2014 requester repair: older pinned and newer unpinned status identities, distinct cards above the approved comment, unchanged history after reload; `tests/base/notifications.test.ts` \u2014 pinned status publication reaches its follower once; `tests/base/request-status-workflow.test.ts` \u2014 sets a direct plan and ETA, resolves latest changes",
+        "gap": ""
+      }
+    }
+  },
+  "contract_counts": {
+    "Published": {
+      "partial": 56,
+      "done": 59,
+      "missing": 1
+    },
+    "Target and push further": {
+      "done": 20,
+      "missing": 77,
+      "partial": 68
+    },
+    "All": {
+      "partial": 124,
+      "done": 79,
+      "missing": 78
+    }
+  },
+  "contract_provenance": "Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); other judgments are retained. REQ-015 additionally proved from code and tests at commit `e381f02e9d0f2edec1fea6ddd3ad0b57bac71097` (5 November 2026); other judgments and field-proof holds are retained.",
+  "acceptance_provenance": "Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run."
+}

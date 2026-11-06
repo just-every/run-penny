@@ -1,0 +1,192 @@
+{
+  "source": "6bba101216c1a229d436085871982442fbba4f2d",
+  "tracked_and_untracked_status": "",
+  "diff_exit": 0,
+  "files": [
+    {
+      "path": "tests/browser/requester-repair.mjs",
+      "sha256": "0270c876a73e27cbeb0b339d9e6860c0167fdab39b37b66df125ba62e5560efe",
+      "bytes": 14672
+    },
+    {
+      "path": "tests/browser/requester-auth.mjs",
+      "sha256": "281bdfaba3956b25472aa015c1a0af7b2aa4e4cda7ea3c72d3356c89b49b2905",
+      "bytes": 6928
+    },
+    {
+      "path": "tests/browser/requester-evidence.mjs",
+      "sha256": "79c6cea03c0dd8b32114b0f236b118d43339aa50b8d397beeeb4f36c700c7225",
+      "bytes": 2883
+    },
+    {
+      "path": "tests/browser/browser-options.mjs",
+      "sha256": "b65e6f23ac704b3eb8d1a5ff5577d3ce404dac7428ef7541d49f1d56cab898ad",
+      "bytes": 868
+    },
+    {
+      "path": "tests/browser/headless-executable.mjs",
+      "sha256": "7d84c36ede672de5316e599255b77ca51ac742c5cffb857c53542b0e7132033f",
+      "bytes": 1437
+    },
+    {
+      "path": "tests/browser/base-runtime.mjs",
+      "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9",
+      "bytes": 4455
+    },
+    {
+      "path": "tests/browser/fresh-local-port.mjs",
+      "sha256": "b7429126f647fbd7fd6d7ad0b5d85771114dc6e625e800eae183198b23fd073a",
+      "bytes": 741
+    },
+    {
+      "path": "tests/browser/local-signin.mjs",
+      "sha256": "816994170420e792c2875a8cde26f8342e3236927d0f5381584e998071c54ae1",
+      "bytes": 1458
+    },
+    {
+      "path": "tests/base/notifications.test.ts",
+      "sha256": "9fc1a43b86b0447eedf56bb7b5080778b609dbc016675a08d894846649f194d2",
+      "bytes": 37311
+    },
+    {
+      "path": "tests/base/request-status-workflow.test.ts",
+      "sha256": "e674326673b1e9bcd78835a2bccac5ef990c9d65452c41c12e845ce9e929bd8e",
+      "bytes": 7961
+    },
+    {
+      "path": "tests/base/support.ts",
+      "sha256": "dc87ded7066096665109c2accc562e9fd91e626978292723a5c8ec1b5b388e38",
+      "bytes": 4699
+    },
+    {
+      "path": "tests/base/explicit-consent-board.ts",
+      "sha256": "90593703460f12eed77ae05399b27a20a058067aedad222a6a03c23189273302",
+      "bytes": 823
+    },
+    {
+      "path": "tests/base/decision-loop-fixture.ts",
+      "sha256": "965f0f3ad6c961bbe992820a8335f95f14398ee22cdd0de4db1aa32ecdf74697",
+      "bytes": 4238
+    },
+    {
+      "path": "tests/base/weekly-summary-flow.ts",
+      "sha256": "85f84afae953f82cc32801d3abf340e36eba09b0cf34d6af253b4e0fdf521c12",
+      "bytes": 8152
+    },
+    {
+      "path": "tests/base/weekly-summary-release.ts",
+      "sha256": "2321b92a63d083f52c769e6311ec3a45c4819daa77e94175065aa42d70ee1d42",
+      "bytes": 2513
+    },
+    {
+      "path": "tests/base/weekly-summary-portability.ts",
+      "sha256": "50a66650a308081122ef8ba709b303471fcb87bf67cdad785b3a556d3941a1d6",
+      "bytes": 3990
+    },
+    {
+      "path": "tests/base/notification-regression-fixture.ts",
+      "sha256": "e09aebbda2530c1ce8445012f4f20a4ef492046a62718b7112b7ab8acc9188ed",
+      "bytes": 2997
+    },
+    {
+      "path": "tests/base/feedback-import-fixture.ts",
+      "sha256": "d21d8177e70b87a300e0033aaae789797d6513533454db648fc320322706df82",
+      "bytes": 8049
+    },
+    {
+      "path": "tests/base/rejection-fixture.ts",
+      "sha256": "8f5f2888e07fb1c8fac0d32068a5afffcca04a676aa8e19904024a22c507000f",
+      "bytes": 3248
+    },
+    {
+      "path": "tests/base/provider-messages.ts",
+      "sha256": "08269bb2a177ce939504f300957e3828768d72b5c675d9a89faf02f6ec052923",
+      "bytes": 892
+    },
+    {
+      "path": "tests/base/email-capture-fixture.ts",
+      "sha256": "18c0aa8e7573d97292c5c7f3c3da6bb19dd719816bb2de2d452026d4f7381b9e",
+      "bytes": 8347
+    },
+    {
+      "path": "tests/migration/generated-transport.ts",
+      "sha256": "446d433790f9f6a113274c20beb5cebe51ac485c77fa84102cf86c97456313f3",
+      "bytes": 982
+    },
+    {
+      "path": "src/core/features/requests/status-publication.ts",
+      "sha256": "d1e4bec3fcc879fe8c3b78d3c8287fb649184796094eb6bfe6d57c69a378469d",
+      "bytes": 6884
+    },
+    {
+      "path": "src/core/features/requests/operator-routes.ts",
+      "sha256": "1676777cb98171e2f26b1ea26a627bae86b5e75dafea6ca5006b30a11d899899",
+      "bytes": 19453
+    },
+    {
+      "path": "src/core/features/requests/public-read-repository.ts",
+      "sha256": "e40cc77c8610c3b0afb9db79b67f9fc7226e20abf74c0d4809ef0d991ca62fd7",
+      "bytes": 13534
+    },
+    {
+      "path": "src/core/features/requests/ui/public-feedback-pages.tsx",
+      "sha256": "2074bb5d8242b1e7801e88e9e4d50b624265859552de8d055ff1860951dc2b27",
+      "bytes": 13678
+    },
+    {
+      "path": "src/core/features/requests/ui/status-update-form.tsx",
+      "sha256": "de8da780b9240ed15fe4fddca3c0f483b03ed67c91c0ca94916b99c3c64df991",
+      "bytes": 4737
+    },
+    {
+      "path": "src/core/features/notifications/delivery.ts",
+      "sha256": "ad1a5c50edf90e86a0c52bfa02233563dc2a55de825f74d692090e0c32b27c65",
+      "bytes": 9073
+    },
+    {
+      "path": "src/core/features/notifications/batches.ts",
+      "sha256": "390113286852dbd21f30ac9b31027aa82adecd8aa40b011995b8fe4e74487587",
+      "bytes": 4172
+    },
+    {
+      "path": "src/core/features/notifications/queue.ts",
+      "sha256": "d584097085f38f9116cde022036c949b26f0fd8bfb3cd7613da8e73a3bee5779",
+      "bytes": 3659
+    },
+    {
+      "path": "src/core/features/notifications/content.ts",
+      "sha256": "3230a6146a4e7def842be3b275e79439816d075f8d6024499c15ae49f75435e3",
+      "bytes": 3978
+    },
+    {
+      "path": "src/core/features/notifications/delivery-admission.ts",
+      "sha256": "d5f23c8aa792e0e4c2be2ce9b4dfbfeb5fbd6bd79733601da1b5219cb75d8f82",
+      "bytes": 1271
+    },
+    {
+      "path": ".github/workflows/verify.yml",
+      "sha256": "4baf892a475f3f47d8d5cb726360b27f85cff4c6f475ba4e7d388a5d8786428a",
+      "bytes": 3125
+    },
+    {
+      "path": "verification.json",
+      "sha256": "d8db2050dc706da26dfbc5f2e72f190d4721efb76d60d9b66e78f5bf97d13b11",
+      "bytes": 7899
+    },
+    {
+      "path": "vitest.base.config.ts",
+      "sha256": "76ad6675aabcc4cc8d0f831167541de43d34a5426534ca3a440d352f8f8f4b42",
+      "bytes": 2556
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "1a6089ec7e053f2763b238200667946bc11d5355fec630d07a52e34dd5e5f5c9",
+      "bytes": 150353
+    },
+    {
+      "path": "package.json",
+      "sha256": "2956fe10930f469dfc870ae56b2fc907acc3f81bed63a28b888dfb23c2544b6f",
+      "bytes": 5965
+    }
+  ]
+}

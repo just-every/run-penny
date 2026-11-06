@@ -1,0 +1,220 @@
+{
+  "schema": 1,
+  "tag": "ct-judge-penny-req015-20261105-1610-sol1",
+  "repository": "just-every/run-penny",
+  "source": "6bba101216c1a229d436085871982442fbba4f2d",
+  "source_branch": "cloud/sd-penny-c-f26",
+  "checkout_branch": "detached",
+  "verdict": "REQ-015 ACCEPT ON LANDING",
+  "rubric_met": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5"
+  ],
+  "new_findings": 0,
+  "product_commits": 0,
+  "product_pushes": 0,
+  "prs": 0,
+  "ci_api_calls": 0,
+  "ci": {
+    "run_id": 42057437143,
+    "event": "push",
+    "conclusion": "failure",
+    "provenance": "supplied original commission, no independent poll",
+    "boundary": "generated views and derivative failures only; runtime jobs skipped; candidate exception, final runtime green pending"
+  },
+  "tests": {
+    "files": 2,
+    "passed": 16,
+    "executions": 1
+  },
+  "browser": {
+    "executions": 1,
+    "widths": [
+      1440,
+      390
+    ],
+    "captures": 30,
+    "manifest_records": 10,
+    "page_errors": [],
+    "dirty": false,
+    "provider_sends": false,
+    "independent_inspection": [
+      "browser/status-published-1440.jpg",
+      "browser/status-published-390.jpg"
+    ],
+    "bookkeeping_note": "390 manifest flags overstate desktop-only DOM/reload assertions; API history executes at both widths"
+  },
+  "baseline_counts": {
+    "core": [
+      78,
+      109,
+      71,
+      258
+    ],
+    "full_target": [
+      78,
+      125,
+      78,
+      281
+    ]
+  },
+  "candidate_counts": {
+    "core": [
+      79,
+      108,
+      71,
+      258
+    ],
+    "full_target": [
+      79,
+      124,
+      78,
+      281
+    ]
+  },
+  "candidate_delta": {
+    "done": 1,
+    "partial": -1,
+    "missing": 0,
+    "awarded": false
+  },
+  "actual_review_delta": 0,
+  "checks": [
+    {
+      "stage": "bootstrap",
+      "command": "git config --global user.name 'Run Edit Run fleet' && git config --global user.email fleet@runeditrun.com",
+      "exit": 0
+    },
+    {
+      "stage": "bootstrap",
+      "command": "bash /workspace/rer-cloud-launcher/refresh.sh; fleet Git setup",
+      "exit": 0,
+      "result": "23 keys decrypted; no values logged; bundle-only helper installed; zero credential URL rewrites"
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "build"
+      ],
+      "cwd": "/workspace/ct-penny-req015-review",
+      "end": "2026-11-06T02:00:45.205813+00:00",
+      "exit": 0,
+      "log": "build.log",
+      "seconds": 58.151,
+      "stage": "build",
+      "start": "2026-11-06T01:59:47.054813+00:00"
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/notifications.test.ts",
+        "tests/base/request-status-workflow.test.ts",
+        "--reporter=verbose"
+      ],
+      "cwd": "/workspace/ct-penny-req015-review",
+      "end": "2026-11-06T02:02:19.877003+00:00",
+      "exit": 0,
+      "log": "focused-tests.log",
+      "seconds": 76.667,
+      "stage": "focused-tests",
+      "start": "2026-11-06T02:01:03.210214+00:00"
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "node",
+        "tests/browser/requester-repair.mjs"
+      ],
+      "cwd": "/workspace/ct-penny-req015-review",
+      "end": "2026-11-06T02:02:21.476828+00:00",
+      "exit": 0,
+      "log": "browser.log",
+      "seconds": 53.75,
+      "stage": "browser",
+      "start": "2026-11-06T02:01:27.726487+00:00"
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/workspace/ct-penny-req015-review",
+      "end": "2026-11-06T02:03:23.802730+00:00",
+      "exit": 0,
+      "log": "typecheck.log",
+      "seconds": 32.772,
+      "stage": "typecheck",
+      "start": "2026-11-06T02:02:51.030669+00:00"
+    },
+    {
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "cwd": "/workspace/ct-penny-req015-review",
+      "end": "2026-11-06T02:03:24.034700+00:00",
+      "exit": 1,
+      "log": "contract-check.log",
+      "seconds": 0.195,
+      "stage": "contract-check",
+      "start": "2026-11-06T02:03:23.839400+00:00"
+    },
+    {
+      "command": [
+        "pnpm",
+        "run",
+        "source:check"
+      ],
+      "cwd": "/workspace/ct-penny-req015-review",
+      "end": "2026-11-06T02:03:24.942303+00:00",
+      "exit": 0,
+      "log": "source-check.log",
+      "seconds": 0.842,
+      "stage": "source-check",
+      "start": "2026-11-06T02:03:24.100547+00:00"
+    },
+    {
+      "command": "git clone --depth 1 --filter=blob:none --no-checkout --branch cloud/sd-penny-c-f26 https://github.com/just-every/run-penny.git /workspace/ct-penny-req015-review; local fleet identity; git fetch --depth 1 origin 6bba101216c1a229d436085871982442fbba4f2d; git checkout --detach 6bba101216c1a229d436085871982442fbba4f2d",
+      "exit": 0,
+      "stage": "checkout"
+    },
+    {
+      "command": "cloud_run pnpm install --frozen-lockfile",
+      "exit": 0,
+      "log": "install.log",
+      "stage": "frozen-install"
+    }
+  ],
+  "source_clean": true,
+  "created_utc": "2026-11-06T02:09:23.087403+00:00",
+  "pending": [
+    "CT exact-source acceptance and protected hold establishment/readback",
+    "fresh-main Status AND Gap/Evidence/provenance/newer assertion preservation",
+    "merged generator write/check/counts/provenance",
+    "source lock LAST and check",
+    "actually executed full-green exact-final runtime Verify with relied-on journeys",
+    "COMPLETE full-history publication scan NEW 0",
+    "guarded fast-forward/main equality",
+    "exact-main green Run site"
+  ],
+  "prohibited_actions_performed": false
+}

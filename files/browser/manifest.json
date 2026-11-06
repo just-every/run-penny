@@ -1,0 +1,291 @@
+{
+  "sourceCommit": "6bba101216c1a229d436085871982442fbba4f2d",
+  "dirty": false,
+  "generatedAt": "2026-11-06T02:02:21.335Z",
+  "runtime": {
+    "environment": "emitted local workerd with isolated D1/R2",
+    "capabilities": {
+      "transport": "sendgrid",
+      "testCustomers": false
+    },
+    "providerSends": false,
+    "node": "v24.19.0"
+  },
+  "captures": [
+    {
+      "file": "submitted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/portal/feedback/new",
+      "overflow": false,
+      "sha256": "b2594f604aee0c9e536387a2eb2036c3d714e6e2a42d1092db6666a448154c93"
+    },
+    {
+      "file": "approved-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "38407945840a0894501f3095738a03ef6850298463af95034dbc558caf8de172"
+    },
+    {
+      "file": "voted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/portal/feedback/feedback-01m6q9eatdzfvp6v5a7129kehd",
+      "overflow": false,
+      "sha256": "fbff24fbb5024e6c34f12559cf858e4e6bd2e2e7196b819cd31cae64eafdd711"
+    },
+    {
+      "file": "followed-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/portal/feedback/feedback-01m6q9eatdzfvp6v5a7129kehd",
+      "overflow": false,
+      "sha256": "dbd3158a92496a9ac269f983d327f34501b7975f140ee5f0c30c811163332fbe"
+    },
+    {
+      "file": "comment-held-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/portal/feedback/feedback-01m6q9eatdzfvp6v5a7129kehd",
+      "overflow": false,
+      "sha256": "98f8b13afa383147159a75515ea6fe6b12266cf9f4ee7e29f5c08f7476565a10"
+    },
+    {
+      "file": "comment-approval-ready-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "85d7023d7ea2b2aaef8c7569ea465234a67dd127ec77692c0853f56fe6c0aafa"
+    },
+    {
+      "file": "comment-approved-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "ecc65b3c1255def39acee9225e8e85f4c4764587bc85edd228db34c578ba0872"
+    },
+    {
+      "file": "status-published-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/portal/feedback/feedback-01m6q9eatdzfvp6v5a7129kehd",
+      "overflow": false,
+      "sha256": "11315fb2d88bf85b269d6509c52af7ef92cd5d047cd67a9eb90970481a263def"
+    },
+    {
+      "file": "duplicate-vote-success-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/portal/feedback/new",
+      "overflow": false,
+      "sha256": "c8d5d32ca6581c356e756c7e86c0b40a8887b1e0be8e5dc1029287d44fe35cf8"
+    },
+    {
+      "file": "appeal-reopened-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "7be2fc9d55cc60b9fc7b8bbbfc2aee04825691c76d798ea437e8bdd35d612d08"
+    },
+    {
+      "file": "upload-recovery-ready-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "15d59248c6f44f98749179a45ff91f5b29e1ad8b8871a0118e224c5cae3241e8"
+    },
+    {
+      "file": "upload-recovered-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "50a32c731f5bc08059454f524569e146159e9a682fdf096a8a4f2eb8611db676"
+    },
+    {
+      "file": "withdrawn-removed-from-moderation-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "f5c7520605c341b15d5dc8925a15e32ab97a2a877cca87cad3f12e73a10b8269"
+    },
+    {
+      "file": "your-feedback-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "315aff38756098523c92288567ac15a7ec621c94890a85a6a37f01f8c3c8609c"
+    },
+    {
+      "file": "search-filter-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:41297/?q=Scheduled+exports&status=under_review",
+      "overflow": false,
+      "sha256": "30f2dd1117ff96bc6085143a8eeaabaf08bc95c0191a6c13058aac13ab8d3f30"
+    },
+    {
+      "file": "submitted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/portal/feedback/new",
+      "overflow": false,
+      "sha256": "02ca4a0f9ef7ee3980d4951c2c6edfbcb371b94f3b5d5c15795dfb2730567b3e"
+    },
+    {
+      "file": "approved-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "d9e3279b41604e75e96872b81ac5704ada280e5cfc1ada2c2361754bc3931e6e"
+    },
+    {
+      "file": "voted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/portal/feedback/feedback-01m6q9ez76e7615b9n4cx1fnnw",
+      "overflow": false,
+      "sha256": "c848bd3ef3993b39562f782488eca57b4bedec438eae2358c6e4e5feb114f534"
+    },
+    {
+      "file": "followed-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/portal/feedback/feedback-01m6q9ez76e7615b9n4cx1fnnw",
+      "overflow": false,
+      "sha256": "7c670d82f7344a4057ba81151e9e27601bd334a06e3f8df541870b947dba5d6b"
+    },
+    {
+      "file": "comment-held-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/portal/feedback/feedback-01m6q9ez76e7615b9n4cx1fnnw",
+      "overflow": false,
+      "sha256": "84d183f9d4c7631b9a097c997c2a8c279a35741bf8b151baf91e1b802038f4c1"
+    },
+    {
+      "file": "comment-approval-ready-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "95271f7db7bbceee83029fa3f407dbc36b605f8d632deb073eaf549672663587"
+    },
+    {
+      "file": "comment-approved-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "fe87f7b8f7610fac484c6cb8acb261c848728537a9a1435d202ff88d771c8151"
+    },
+    {
+      "file": "status-published-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/portal/feedback/feedback-01m6q9ez76e7615b9n4cx1fnnw",
+      "overflow": false,
+      "sha256": "57a9a250d1961ed08c94d6021def8c1726bc5b18b08a030b764609a5f2a864ae"
+    },
+    {
+      "file": "duplicate-vote-success-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/portal/feedback/new",
+      "overflow": false,
+      "sha256": "23b336498eff70c0a4557328b89e4d051abd4f7ff02b9a2c5f100f125786ac88"
+    },
+    {
+      "file": "appeal-reopened-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "7c752df003f6eb6a27517818ba32de19d400b30c16cbf52b7f0e03cb5345f8a7"
+    },
+    {
+      "file": "upload-recovery-ready-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "fe91d3c76b00250ea045f059152843a738af47d86dbba3ed7962377b40791fdf"
+    },
+    {
+      "file": "upload-recovered-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "abbec2706d1239b1080f06ac75d47c8a9b7e579c9f01e355347449dce19cff77"
+    },
+    {
+      "file": "withdrawn-removed-from-moderation-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/app/moderation",
+      "overflow": false,
+      "sha256": "abbec2706d1239b1080f06ac75d47c8a9b7e579c9f01e355347449dce19cff77"
+    },
+    {
+      "file": "your-feedback-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "aba79e1414f2679956fcec29626f73783f3144bf564a60c02754dc5d52abe71e"
+    },
+    {
+      "file": "search-filter-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:41297/?q=Scheduled+exports&status=under_review",
+      "overflow": false,
+      "sha256": "9be30b4714e2f318a920e261470f6f047a2193f6794b8970993bb04b679e82ef"
+    }
+  ],
+  "pageErrors": [],
+  "checks": [
+    {
+      "width": 1440,
+      "statusHistory": [
+        "01M6Q9EH0SETNQEFP9RCTTFQG5",
+        "01M6Q9EH7TQ5KPMCW7X43TRWHY"
+      ],
+      "commentId": "01M6Q9EE69HRENK9YEM5CEWQ2C",
+      "pinnedBeforeNewerUpdateAndComments": true,
+      "persistentAfterReload": true
+    },
+    {
+      "width": 1440,
+      "duplicateChoice": "vote",
+      "newRequests": 0,
+      "newEvidence": 0,
+      "falseSubmissionCopy": false
+    },
+    {
+      "width": 1440,
+      "appealReopenedByMountedControl": true
+    },
+    {
+      "width": 1440,
+      "syntheticInterruptedUploadRecoveredByMountedControl": true,
+      "originalBytesPreserved": true
+    },
+    {
+      "width": 1440,
+      "withdrawnPendingNotActionable": true,
+      "initialSubmissionHasNoEditApproval": true
+    },
+    {
+      "width": 390,
+      "statusHistory": [
+        "01M6Q9F5KZPY7QEYQV522YNT76",
+        "01M6Q9F5V02CQA4JQV7TNDZDAN"
+      ],
+      "commentId": "01M6Q9F2K4J5CRYET0YBE4KDVS",
+      "pinnedBeforeNewerUpdateAndComments": true,
+      "persistentAfterReload": true
+    },
+    {
+      "width": 390,
+      "duplicateChoice": "vote",
+      "newRequests": 0,
+      "newEvidence": 0,
+      "falseSubmissionCopy": false
+    },
+    {
+      "width": 390,
+      "appealReopenedByMountedControl": true
+    },
+    {
+      "width": 390,
+      "syntheticInterruptedUploadRecoveredByMountedControl": true,
+      "originalBytesPreserved": true
+    },
+    {
+      "width": 390,
+      "withdrawnPendingNotActionable": true,
+      "initialSubmissionHasNoEditApproval": true
+    }
+  ]
+}

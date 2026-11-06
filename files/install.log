@@ -1,0 +1,75 @@
+ WARN  Unsupported engine: wanted: {"node":"22.20.0"} (current: {"node":"v24.19.0","pnpm":"10.12.4"})
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +282
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   ╭──────────────────────────────────────────╮
+   │                                          │
+   │   Update available! 10.12.4 → 12.18.0.   │
+   │   Changelog: https://pnpm.io/v/12.18.0   │
+   │     To update, run: pnpm add -g pnpm     │
+   │                                          │
+   ╰──────────────────────────────────────────╯
+
+Progress: resolved 282, reused 0, downloaded 16, added 16
+Progress: resolved 282, reused 0, downloaded 43, added 43
+Progress: resolved 282, reused 0, downloaded 68, added 68
+Progress: resolved 282, reused 0, downloaded 83, added 83
+Progress: resolved 282, reused 0, downloaded 109, added 109
+Progress: resolved 282, reused 0, downloaded 126, added 126
+Progress: resolved 282, reused 0, downloaded 139, added 139
+Progress: resolved 282, reused 0, downloaded 153, added 151
+Progress: resolved 282, reused 0, downloaded 181, added 181
+Progress: resolved 282, reused 0, downloaded 199, added 199
+Progress: resolved 282, reused 0, downloaded 227, added 227
+Progress: resolved 282, reused 0, downloaded 258, added 258
+Progress: resolved 282, reused 0, downloaded 277, added 276
+Progress: resolved 282, reused 0, downloaded 281, added 281
+Progress: resolved 282, reused 0, downloaded 282, added 281
+Progress: resolved 282, reused 0, downloaded 282, added 282, done
+.../esbuild@0.28.1/node_modules/esbuild postinstall$ node install.js
+.../node_modules/workerd postinstall$ node install.js
+.../node_modules/workerd postinstall$ node install.js
+.../esbuild@0.28.2/node_modules/esbuild postinstall$ node install.js
+.../node_modules/workerd postinstall: Done
+.../esbuild@0.28.1/node_modules/esbuild postinstall: Done
+.../esbuild@0.28.2/node_modules/esbuild postinstall: Done
+.../node_modules/workerd postinstall: Done
+
+dependencies:
++ @tanstack/react-router 1.170.41
++ @tanstack/react-start 1.168.60
++ drizzle-orm 0.45.4
++ hono 4.13.13
++ postal-mime 4.1.3
++ react 19.3.0
++ react-dom 19.3.0
++ zod 4.6.5
+
+devDependencies:
++ @cloudflare/vite-plugin 1.54.5
++ @cloudflare/vitest-plugin 1.4.0
++ @cloudflare/workers-types 5.20261010.1
++ @playwright/test 1.63.0
++ @runeditrun/rer 0.2.94
++ @tailwindcss/vite 4.3.3
++ @types/node 24.19.2
++ @types/react 19.3.0
++ @types/react-dom 19.3.0
++ @vitejs/plugin-react 6.1.1
++ axe-core 4.10.2
++ highlight.js 10.7.3
++ miniflare 5.20260907.0-alpha
++ oxlint 1.87.0
++ react-markdown 6.0.3
++ remark-gfm 1.0.0
++ seroval 1.6.5
++ tailwindcss 4.3.3
++ tsx 4.23.15
++ typescript 6.0.3
++ vite 8.2.2
++ vitest 4.1.11
++ wrangler 4.129.1
+
+Done in 17.6s using pnpm v10.12.4

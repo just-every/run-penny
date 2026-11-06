@@ -1,0 +1,20 @@
+{
+  "mode": "pure in-memory comparison; no generated file written",
+  "rows": [
+    {
+      "path": "CONTRACT.md",
+      "identical": true,
+      "expectedSha256": "2d80b7e6d20a55d46bb0d94261865091f0581932f79754f3875d9b75f5a900b1"
+    },
+    {
+      "path": "ACCEPTANCE.md",
+      "identical": false,
+      "expectedSha256": "02a97127b90e8475202e332ac749ff1446a1ad2c4522c002f076602a779ddf59"
+    },
+    {
+      "path": "docs/CLAIMS.md",
+      "identical": true,
+      "expectedSha256": "49beb00a6883b09ab84ce32d3eac7c841760b0fd917a8c78af9f0aeec412858d"
+    }
+  ]
+}

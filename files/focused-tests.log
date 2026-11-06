@@ -1,0 +1,28 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /workspace/ct-penny-req015-review
+
+ ✓ tests/base/notifications.test.ts > [REQ-015 NOTIFY-001 NOTIFY-002 NOTIFY-010 REQ-007] pinned status publication reaches its follower once; atomic windows and weekly summaries retain public-only consent 7411ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-001 REQ-007] public reply routes retain intents while excluding the recipient’s own approved comment from mail 1585ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-002/005] overlapping drains claim once, persist ownership before HTTP, and nullable acceptance never replays 1541ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-002 REQ-019/022] rechecks each configured input after enqueue 20381ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-002 EVID-006] mixed batch drops a newly held comment and still sends its public status 2257ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-005 REL-006] bounded exponential known failures, ambiguous outcomes and interrupted attempts require review 2792ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-002 REQ-025] signed no-login request/global unsubscribe resists tampering and retains votes, follows and access 2240ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-002] Base providers send through public identity and Queue paths with durable relay failures 2645ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-002] Queue transport drains before Cron and duplicate wakeups never resend 4111ms
+ ✓ tests/base/notifications.test.ts > [REQ-024 NOTIFY-002] identity merge preserves global and request mute, accepts old links, and suppresses muted intent 2376ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-002 REQ-008/009] request-scoped mute follows canonical resolution and survives unmerge 2478ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-002 EVID-006] corrected approved comment sends the current public projection 2472ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-005 REL-006] known local validation failures are bounded and the retry window expires after one hour 2182ms
+ ✓ tests/base/notifications.test.ts > [REQ-030 BASE-OPS-005] chosen private request and comment rejection reaches the scheduled provider transport exactly once 2337ms
+ ✓ tests/base/notifications.test.ts > [NOTIFY-004 CAP-009] notification replies create nothing through HTTP or the dedicated email door 2641ms
+ ✓ tests/base/request-status-workflow.test.ts > [REQ-017][REQ-016][REQ-036][PRIO-002][ROAD-014] sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards 700ms
+
+ Test Files  2 passed (2)
+      Tests  16 passed (16)
+   Start at  02:01:05
+   Duration  74.44s (transform 2.58s, setup 0ms, import 10.46s, tests 61.93s, environment 0ms)
+
