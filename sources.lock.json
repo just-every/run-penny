@@ -8890,7 +8890,7 @@
       "executable": false
     },
     "tests/browser/keyboard-controls.mjs": {
-      "sha256": "6bb5d50a9992406d3c3a6161a64ec9bf0d3a3df0c67a89acb56a708a14b8f485",
+      "sha256": "18c731bc15140cabc59d03e85aa575f205cd8866383384aa2b1b3d02ea049443",
       "executable": false
     },
     "tests/browser/keyboard-journey.mjs": {
