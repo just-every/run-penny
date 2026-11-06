@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add an authored, versioned 300-pair duplicate corpus and measure EVID-007's lexical floor through the emitted public suggestion route in fresh fixture storage. Report corpus identity, labeled-pair confusion counts, precision, recall, F1, top-five and paraphrase recall with no model or provider cost. A command sanity journey reconciles the native control, rejects invalid labels and retains the redaction evaluation. AI-011 moves from missing to partial; other corpora, model qualification, degraded-model gates and dated model receipts remain open. No runtime migration or installation reconfiguration is required.
+
 - Strengthen LEARN-001's existing native model-boundary journey with a selected requester-authored request, account evidence and an existing explicit update permission. Forged root and option fields preserve populated identity, permission, follow and grant custody and create no derived work; valid output derives both requester and account dimensions from originals while retaining run accounting. LEARN-001 remains partial for deployment principal pinning and live qualification. No runtime, migration or configuration change is required.
 
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.

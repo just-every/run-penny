@@ -1,0 +1,4205 @@
+{
+  "version": "1.0.0",
+  "cases": [
+    {
+      "id": "synthetic-penny-1",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retrieve billing invoices",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-1",
+        "title": "Download billing invoices",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-2",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Correct billing invoices before payment",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-1",
+        "title": "Download billing invoices",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-3",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Fetch charge documents",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-1",
+        "title": "Download billing invoices",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-4",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Automate weekly reports",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-2",
+        "title": "Schedule weekly reports",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-5",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Restrict weekly reports access",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-2",
+        "title": "Schedule weekly reports",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-6",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Arrange recurring summaries",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-2",
+        "title": "Schedule weekly reports",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-7",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Recover deleted projects",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-3",
+        "title": "Restore deleted projects",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-8",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Permanently purge deleted projects",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-3",
+        "title": "Restore deleted projects",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-9",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Bring removed workspaces back",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-3",
+        "title": "Restore deleted projects",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-10",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Download board votes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-4",
+        "title": "Export board votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-11",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Hide board votes from visitors",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-4",
+        "title": "Export board votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-12",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retrieve feedback support totals",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-4",
+        "title": "Export board votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-13",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Activate dark mode",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-5",
+        "title": "Enable dark mode",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-14",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Schedule dark mode by sunset",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-5",
+        "title": "Enable dark mode",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-15",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Offer nighttime appearance",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-5",
+        "title": "Enable dark mode",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-16",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Configure keyboard shortcuts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-6",
+        "title": "Add keyboard shortcuts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-17",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Disable keyboard shortcuts during typing",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-6",
+        "title": "Add keyboard shortcuts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-18",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Provide hotkeys",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-6",
+        "title": "Add keyboard shortcuts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-19",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Find archived tickets",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-7",
+        "title": "Search archived tickets",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-20",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Delete archived tickets permanently",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-7",
+        "title": "Search archived tickets",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-21",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Locate closed support conversations",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-7",
+        "title": "Search archived tickets",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-22",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Upload files with comments",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-8",
+        "title": "Attach files to comments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-23",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Remove files from comments",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-8",
+        "title": "Attach files to comments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-24",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Include documents alongside replies",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-8",
+        "title": "Attach files to comments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-25",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Localize customer portal",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-9",
+        "title": "Translate customer portal",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-26",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Restrict customer portal by country",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-9",
+        "title": "Translate customer portal",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-27",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Offer multilingual feedback pages",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-9",
+        "title": "Translate customer portal",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-28",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Silence request notifications",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-10",
+        "title": "Mute request notifications",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-29",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Customize request notifications wording",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-10",
+        "title": "Mute request notifications",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-30",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Stop feedback alerts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-10",
+        "title": "Mute request notifications",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-31",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Combine duplicate contacts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-11",
+        "title": "Merge duplicate contacts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-32",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export duplicate contacts separately",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-11",
+        "title": "Merge duplicate contacts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-33",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Unify repeated people",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-11",
+        "title": "Merge duplicate contacts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-34",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Enforce approval before publishing",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-12",
+        "title": "Require approval before publishing",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-35",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Notify approval reviewers after publishing",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-12",
+        "title": "Require approval before publishing",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-36",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Moderate submissions prior release",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-12",
+        "title": "Require approval before publishing",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-37",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Select roadmap product filter",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-13",
+        "title": "Filter roadmap by product",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-38",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Rename roadmap product labels",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-13",
+        "title": "Filter roadmap by product",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-39",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Narrow delivery plans per offering",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-13",
+        "title": "Filter roadmap by product",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-40",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Assign owners across ticket selection",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-14",
+        "title": "Bulk assign ticket owners",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-41",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Notify ticket owners about assignment",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-14",
+        "title": "Bulk assign ticket owners",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-42",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Distribute support cases together",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-14",
+        "title": "Bulk assign ticket owners",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-43",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Load feedback spreadsheet",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-15",
+        "title": "Import spreadsheet feedback",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-44",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export feedback spreadsheet template",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-15",
+        "title": "Import spreadsheet feedback",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-45",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Ingest tabular suggestions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-15",
+        "title": "Import spreadsheet feedback",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-46",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Mask sensitive quotations",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-16",
+        "title": "Redact sensitive quotations",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-47",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Search sensitive quotations internally",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-16",
+        "title": "Redact sensitive quotations",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-48",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Conceal private excerpts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-16",
+        "title": "Redact sensitive quotations",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-49",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Record customer renewal dates",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-17",
+        "title": "Track renewal dates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-50",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Sort renewal dates chronologically",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-17",
+        "title": "Track renewal dates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-51",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Monitor contract anniversaries",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-17",
+        "title": "Track renewal dates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-52",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Review feature alternatives together",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-18",
+        "title": "Compare feature alternatives",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-53",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Archive feature alternatives permanently",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-18",
+        "title": "Compare feature alternatives",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-54",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Contrast possible solutions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-18",
+        "title": "Compare feature alternatives",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-55",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Keep important updates pinned",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-19",
+        "title": "Pin important updates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-56",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Email important updates immediately",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-19",
+        "title": "Pin important updates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-57",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Anchor critical announcements",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-19",
+        "title": "Pin important updates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-58",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Stop following individual requests",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-20",
+        "title": "Unfollow individual requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-59",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Unfollow all requests globally",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-20",
+        "title": "Unfollow individual requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-60",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Leave selected feedback subscriptions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-20",
+        "title": "Unfollow individual requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-61",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retrieve original attachments",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-21",
+        "title": "Download original attachments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-62",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Preview original attachments inline",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-21",
+        "title": "Download original attachments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-63",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Save uploaded source files",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-21",
+        "title": "Download original attachments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-64",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Confirm additional addresses",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-22",
+        "title": "Verify additional addresses",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-65",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Remove additional addresses",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-22",
+        "title": "Verify additional addresses",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-66",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Validate secondary mailboxes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-22",
+        "title": "Verify additional addresses",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-67",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Invalidate integration keys",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-23",
+        "title": "Revoke integration keys",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-68",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Rotate integration keys automatically",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-23",
+        "title": "Revoke integration keys",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-69",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Disable connector credentials",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-23",
+        "title": "Revoke integration keys",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-70",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Allow approved embedding origins",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-24",
+        "title": "Restrict embedding origins",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-71",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Track embedding origins analytics",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-24",
+        "title": "Restrict embedding origins",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-72",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Limit permitted framing domains",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-24",
+        "title": "Restrict embedding origins",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-73",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retain comment edit history",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-25",
+        "title": "Preserve comment edit history",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-74",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Hide comment edit history publicly",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-25",
+        "title": "Preserve comment edit history",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-75",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Keep reply revision records",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-25",
+        "title": "Preserve comment edit history",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-76",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Display vote timestamps",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-26",
+        "title": "Show vote timestamps",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-77",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Sort vote timestamps newest first",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-26",
+        "title": "Show vote timestamps",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-78",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Reveal support creation dates",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-26",
+        "title": "Show vote timestamps",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-79",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Organize supporters by account",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-27",
+        "title": "Group supporters by account",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-80",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Hide supporters account information",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-27",
+        "title": "Group supporters by account",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-81",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Cluster voters per company",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-27",
+        "title": "Group supporters by account",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-82",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retire inactive boards",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-28",
+        "title": "Archive inactive boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-83",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Delete inactive boards with content",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-28",
+        "title": "Archive inactive boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-84",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Shelve unused feedback spaces",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-28",
+        "title": "Archive inactive boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-85",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Transfer requests between boards",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-29",
+        "title": "Move requests between boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-86",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Merge requests across boards",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-29",
+        "title": "Move requests between boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-87",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Relocate submissions among categories",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-29",
+        "title": "Move requests between boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-88",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Set sender display name",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-30",
+        "title": "Customize sender display name",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-89",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Verify sender display name domain",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-30",
+        "title": "Customize sender display name",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-90",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Personalize outgoing mail identity",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-30",
+        "title": "Customize sender display name",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-91",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Configure monitored reply address",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-31",
+        "title": "Set monitored reply address",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-92",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Validate monitored reply address ownership",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-31",
+        "title": "Set monitored reply address",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-93",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Route responses toward watched mailbox",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-31",
+        "title": "Set monitored reply address",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-94",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Download release subscribers",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-32",
+        "title": "Export release subscribers",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-95",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Email release subscribers immediately",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-32",
+        "title": "Export release subscribers",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-96",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retrieve announcement audience list",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-32",
+        "title": "Export release subscribers",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-97",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Delay changelog publication",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-33",
+        "title": "Schedule changelog publication",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-98",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Cancel changelog publication schedule",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-33",
+        "title": "Schedule changelog publication",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-99",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Arrange announcement launch time",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-33",
+        "title": "Schedule changelog publication",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-100",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Withdraw incorrect releases",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-34",
+        "title": "Unpublish incorrect releases",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-101",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Correct incorrect releases publicly",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-34",
+        "title": "Unpublish incorrect releases",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-102",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Remove mistaken announcements",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-34",
+        "title": "Unpublish incorrect releases",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-103",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Capture delivery outcomes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-35",
+        "title": "Record delivery outcomes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-104",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Retry failed delivery outcomes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-35",
+        "title": "Record delivery outcomes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-105",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Log message results",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-35",
+        "title": "Record delivery outcomes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-106",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Exclude bounced recipients",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-36",
+        "title": "Suppress bounced recipients",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-107",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export bounced recipients report",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-36",
+        "title": "Suppress bounced recipients",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-108",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Block unreachable mailboxes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-36",
+        "title": "Suppress bounced recipients",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-109",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Suspend notification sending",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-37",
+        "title": "Pause notification sending",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-110",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "View notification sending failures",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-37",
+        "title": "Pause notification sending",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-111",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Halt outgoing alerts temporarily",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-37",
+        "title": "Pause notification sending",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-112",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Set quiet hours",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-38",
+        "title": "Configure quiet hours",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-113",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Ignore quiet hours for operators",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-38",
+        "title": "Configure quiet hours",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-114",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Establish silent periods",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-38",
+        "title": "Configure quiet hours",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-115",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Choose workspace timezone",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-39",
+        "title": "Set workspace timezone",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-116",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Display workspace timezone beside dates",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-39",
+        "title": "Set workspace timezone",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-117",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Select organization clock region",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-39",
+        "title": "Set workspace timezone",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-118",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Review email before sending",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-40",
+        "title": "Preview email before sending",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-119",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Archive email after sending",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-40",
+        "title": "Preview email before sending",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-120",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Inspect outgoing message draft",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-40",
+        "title": "Preview email before sending",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-121",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Write private operator notes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-41",
+        "title": "Create private operator notes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-122",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export private operator notes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-41",
+        "title": "Create private operator notes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-123",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Add internal staff annotations",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-41",
+        "title": "Create private operator notes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-124",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Tag teammates in discussions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-42",
+        "title": "Mention teammates in discussions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-125",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Mute teammates discussions globally",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-42",
+        "title": "Mention teammates in discussions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-126",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Notify colleagues within conversations",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-42",
+        "title": "Mention teammates in discussions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-127",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Attach evidence to decisions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-43",
+        "title": "Link evidence to decisions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-128",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Unlink evidence from decisions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-43",
+        "title": "Link evidence to decisions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-129",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Associate observations with choices",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-43",
+        "title": "Link evidence to decisions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-130",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Flag evidence reviewed",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-44",
+        "title": "Mark evidence reviewed",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-131",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Reopen reviewed evidence",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-44",
+        "title": "Mark evidence reviewed",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-132",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Acknowledge inspected observations",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-44",
+        "title": "Mark evidence reviewed",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-133",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Save evidence source URLs",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-45",
+        "title": "Record evidence source URLs",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-134",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Validate evidence source URLs reachability",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-45",
+        "title": "Record evidence source URLs",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-135",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Store original citation links",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-45",
+        "title": "Record evidence source URLs",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-136",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Narrow evidence source selection",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-46",
+        "title": "Filter evidence by source",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-137",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Rename evidence source types",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-46",
+        "title": "Filter evidence by source",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-138",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Select observations per origin",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-46",
+        "title": "Filter evidence by source",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-139",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Label imported requests",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-47",
+        "title": "Tag imported requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-140",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Remove imported requests tags",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-47",
+        "title": "Tag imported requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-141",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Categorize migrated suggestions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-47",
+        "title": "Tag imported requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-142",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Reverse request merges",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-48",
+        "title": "Undo request merges",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-143",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Audit request merges",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-48",
+        "title": "Undo request merges",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-144",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Separate combined submissions again",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-48",
+        "title": "Undo request merges",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-145",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Ban abusive requesters",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-49",
+        "title": "Block abusive requesters",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-146",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Report abusive requesters privately",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-49",
+        "title": "Block abusive requesters",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-147",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Exclude disruptive contributors",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-49",
+        "title": "Block abusive requesters",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-148",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Reinstate blocked requesters",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-50",
+        "title": "Restore blocked requesters",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-149",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Erase blocked requesters",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-50",
+        "title": "Restore blocked requesters",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-150",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Readmit banned contributors",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-50",
+        "title": "Restore blocked requesters",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-151",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Download personal participation",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-51",
+        "title": "Export personal participation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-152",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Erase personal participation",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-51",
+        "title": "Export personal participation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-153",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retrieve own contribution records",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-51",
+        "title": "Export personal participation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-154",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Delete requester information",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-52",
+        "title": "Erase requester information",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-155",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export requester information",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-52",
+        "title": "Erase requester information",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-156",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Remove contributor personal data",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-52",
+        "title": "Erase requester information",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-157",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Recover archived installation",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-53",
+        "title": "Restore archived installation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-158",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Inspect archived installation metadata",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-53",
+        "title": "Restore archived installation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-159",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Rebuild deployment using backup",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-53",
+        "title": "Restore archived installation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-160",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Validate backup integrity",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-54",
+        "title": "Check backup integrity",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-161",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Schedule backup integrity checks",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-54",
+        "title": "Check backup integrity",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-162",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Verify archive consistency",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-54",
+        "title": "Check backup integrity",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-163",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "List failed automation jobs",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-55",
+        "title": "Show failed automation jobs",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-164",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Retry failed automation jobs",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-55",
+        "title": "Show failed automation jobs",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-165",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Reveal unsuccessful background tasks",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-55",
+        "title": "Show failed automation jobs",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-166",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Resend known failed deliveries",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-56",
+        "title": "Retry known failed deliveries",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-167",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Delete known failed deliveries",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-56",
+        "title": "Retry known failed deliveries",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-168",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Repeat messages confirmed unsent",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-56",
+        "title": "Retry known failed deliveries",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-169",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Quarantine uncertain delivery attempts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-57",
+        "title": "Hold uncertain delivery attempts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-170",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Retry uncertain delivery attempts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-57",
+        "title": "Hold uncertain delivery attempts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-171",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Freeze messages lacking confirmed outcome",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-57",
+        "title": "Hold uncertain delivery attempts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-172",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Replace signing secret",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-58",
+        "title": "Rotate signing secret",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-173",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export signing secret",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-58",
+        "title": "Rotate signing secret",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-174",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Renew authentication cryptographic material",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-58",
+        "title": "Rotate signing secret",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-175",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "End idle sessions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-59",
+        "title": "Expire idle sessions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-176",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "List idle sessions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-59",
+        "title": "Expire idle sessions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-177",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Invalidate dormant logins",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-59",
+        "title": "Expire idle sessions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-178",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Remove operator access",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-60",
+        "title": "Revoke operator access",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-179",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Invite operator access",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-60",
+        "title": "Revoke operator access",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-180",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Disable staff membership",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-60",
+        "title": "Revoke operator access",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-181",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Add new operators",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-61",
+        "title": "Invite new operators",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-182",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Remove new operators",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-61",
+        "title": "Invite new operators",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-183",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Onboard additional teammates",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-61",
+        "title": "Invite new operators",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-184",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Edit feedback categories names",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-62",
+        "title": "Rename feedback categories",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-185",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Reorder feedback categories",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-62",
+        "title": "Rename feedback categories",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-186",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Relabel suggestion groups",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-62",
+        "title": "Rename feedback categories",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-187",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Arrange public boards order",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-63",
+        "title": "Reorder public boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-188",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Archive public boards",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-63",
+        "title": "Reorder public boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-189",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Sort visible feedback spaces",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-63",
+        "title": "Reorder public boards",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-190",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Conceal voter identities",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-64",
+        "title": "Hide voter identities",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-191",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export voter identities",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-64",
+        "title": "Hide voter identities",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-192",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Anonymize supporter names",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-64",
+        "title": "Hide voter identities",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-193",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Show public vote totals",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-65",
+        "title": "Display public vote totals",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-194",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Reset public vote totals",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-65",
+        "title": "Display public vote totals",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-195",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Reveal visible support counts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-65",
+        "title": "Display public vote totals",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-196",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Mandate decline reasons",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-66",
+        "title": "Require decline reasons",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-197",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Translate decline reasons",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-66",
+        "title": "Require decline reasons",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-198",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Enforce rejection explanations",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-66",
+        "title": "Require decline reasons",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-199",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Reactivate declined requests",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-67",
+        "title": "Reopen declined requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-200",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Delete declined requests",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-67",
+        "title": "Reopen declined requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-201",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Resume rejected suggestions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-67",
+        "title": "Reopen declined requests",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-202",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Disable votes after shipment",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-68",
+        "title": "Stop votes after shipment",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-203",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export votes after shipment",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-68",
+        "title": "Stop votes after shipment",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-204",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Close support once delivered",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-68",
+        "title": "Stop votes after shipment",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-205",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Record request importance",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-69",
+        "title": "Set request importance",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-206",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Sort request importance automatically",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-69",
+        "title": "Set request importance",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-207",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Choose feedback urgency level",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-69",
+        "title": "Set request importance",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-208",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Withdraw own votes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-70",
+        "title": "Remove own votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-209",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Transfer own votes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-70",
+        "title": "Remove own votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-210",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retract personal support",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-70",
+        "title": "Remove own votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-211",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Subscribe without voting",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-71",
+        "title": "Follow without voting",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-212",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Disallow follow without voting",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-71",
+        "title": "Follow without voting",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-213",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Receive alerts absent support",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-71",
+        "title": "Follow without voting",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-214",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Select notification consent",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-72",
+        "title": "Choose notification consent",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-215",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export notification consent",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-72",
+        "title": "Choose notification consent",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-216",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Opt into update permission",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-72",
+        "title": "Choose notification consent",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-217",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Moderate pending attachments",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-73",
+        "title": "Review pending attachments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-218",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Download pending attachments",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-73",
+        "title": "Review pending attachments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-219",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Approve held uploaded files",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-73",
+        "title": "Review pending attachments",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-220",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Refuse unsafe uploads",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-74",
+        "title": "Reject unsafe uploads",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-221",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Quarantine unsafe uploads",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-74",
+        "title": "Reject unsafe uploads",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-222",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Decline dangerous attachments",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-74",
+        "title": "Reject unsafe uploads",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-223",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Keep approved wording",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-75",
+        "title": "Preserve approved wording",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-224",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Translate approved wording",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-75",
+        "title": "Preserve approved wording",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-225",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retain published text",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-75",
+        "title": "Preserve approved wording",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-226",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Revise held submissions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-76",
+        "title": "Edit held submissions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-227",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Delete held submissions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-76",
+        "title": "Edit held submissions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-228",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Change pending feedback",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-76",
+        "title": "Edit held submissions",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-229",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Read rejected comment reasons",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-77",
+        "title": "Review rejected comment reasons",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-230",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Delete rejected comment reasons",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-77",
+        "title": "Review rejected comment reasons",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-231",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Inspect explanation behind refused reply",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-77",
+        "title": "Review rejected comment reasons",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-232",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "List requester activity",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-78",
+        "title": "Show requester activity",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-233",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export requester activity",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-78",
+        "title": "Show requester activity",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-234",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Display contributor history",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-78",
+        "title": "Show requester activity",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-235",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Find exact phrases",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-79",
+        "title": "Search exact phrases",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-236",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Highlight exact phrases",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-79",
+        "title": "Search exact phrases",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-237",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Locate verbatim wording",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-79",
+        "title": "Search exact phrases",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-238",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Select requests status filter",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-80",
+        "title": "Filter requests by status",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-239",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Change requests status",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-80",
+        "title": "Filter requests by status",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-240",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Narrow suggestions using state",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-80",
+        "title": "Filter requests by status",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-241",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Order requests votes descending",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-81",
+        "title": "Sort requests by votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-242",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Hide requests votes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-81",
+        "title": "Sort requests by votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-243",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Rank suggestions using support counts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-81",
+        "title": "Sort requests by votes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-244",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Unify account addresses",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-82",
+        "title": "Combine account addresses",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-245",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Verify account addresses",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-82",
+        "title": "Combine account addresses",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-246",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Join company mailboxes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-82",
+        "title": "Combine account addresses",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-247",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Store commercial context",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-83",
+        "title": "Record commercial context",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-248",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Erase commercial context",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-83",
+        "title": "Record commercial context",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-249",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Capture business background",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-83",
+        "title": "Record commercial context",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-250",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Conceal internal revenue",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-84",
+        "title": "Hide internal revenue",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-251",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export internal revenue",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-84",
+        "title": "Hide internal revenue",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-252",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Protect private income figures",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-84",
+        "title": "Hide internal revenue",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-253",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Choose decision review date",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-85",
+        "title": "Set decision review date",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-254",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Cancel decision review date",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-85",
+        "title": "Set decision review date",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-255",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Schedule choice reassessment",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-85",
+        "title": "Set decision review date",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-256",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Save declined alternatives",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-86",
+        "title": "Record declined alternatives",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-257",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Reopen declined alternatives",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-86",
+        "title": "Record declined alternatives",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-258",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Document rejected options",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-86",
+        "title": "Record declined alternatives",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-259",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Seal commitment snapshot",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-87",
+        "title": "Freeze commitment snapshot",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-260",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export commitment snapshot",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-87",
+        "title": "Freeze commitment snapshot",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-261",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Preserve immutable chosen plan",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-87",
+        "title": "Freeze commitment snapshot",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-262",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Review roadmap wording before release",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-88",
+        "title": "Approve roadmap wording",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-263",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Translate roadmap wording",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-88",
+        "title": "Approve roadmap wording",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-264",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Authorize public delivery descriptions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-88",
+        "title": "Approve roadmap wording",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-265",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Release customer safe summaries",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-89",
+        "title": "Publish customer safe summaries",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-266",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Archive customer safe summaries",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-89",
+        "title": "Publish customer safe summaries",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-267",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Share sanitized client overviews",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-89",
+        "title": "Publish customer safe summaries",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-268",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Choose public delivery estimates",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-90",
+        "title": "Set public delivery estimates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-269",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Hide public delivery estimates",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-90",
+        "title": "Set public delivery estimates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-270",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Provide visible completion forecasts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-90",
+        "title": "Set public delivery estimates",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-271",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Withdraw dropped roadmap items",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-91",
+        "title": "Remove dropped roadmap items",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-272",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export dropped roadmap items",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-91",
+        "title": "Remove dropped roadmap items",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-273",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Hide abandoned delivery plans",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-91",
+        "title": "Remove dropped roadmap items",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-274",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Attach release documentation",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-92",
+        "title": "Link release documentation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-275",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Translate release documentation",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-92",
+        "title": "Link release documentation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-276",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Connect announcement usage guides",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-92",
+        "title": "Link release documentation",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-277",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Record release outcomes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-93",
+        "title": "Collect release outcomes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-278",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Delete release outcomes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-93",
+        "title": "Collect release outcomes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-279",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Gather launch results",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-93",
+        "title": "Collect release outcomes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-280",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Amend release announcements",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-94",
+        "title": "Correct release announcements",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-281",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Unpublish release announcements",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-94",
+        "title": "Correct release announcements",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-282",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Fix launch messages",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-94",
+        "title": "Correct release announcements",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-283",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Show integration usage",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-95",
+        "title": "Report integration usage",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-284",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Limit integration usage",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-95",
+        "title": "Report integration usage",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-285",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Display connector activity",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-95",
+        "title": "Report integration usage",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-286",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Limit API write scopes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-96",
+        "title": "Restrict API write scopes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-287",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Audit API write scopes",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-96",
+        "title": "Restrict API write scopes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-288",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Constrain programmatic mutation permissions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-96",
+        "title": "Restrict API write scopes",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-289",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Download webhook history",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-97",
+        "title": "Export webhook history",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-290",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Retry webhook history failures",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-97",
+        "title": "Export webhook history",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-291",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Retrieve callback records",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-97",
+        "title": "Export webhook history",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-292",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Turn outgoing webhooks off",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-98",
+        "title": "Disable outgoing webhooks",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-293",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Export outgoing webhooks",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-98",
+        "title": "Disable outgoing webhooks",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-294",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Stop external callbacks",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-98",
+        "title": "Disable outgoing webhooks",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-295",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Inspect import conflicts",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-99",
+        "title": "Preview import conflicts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-296",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Resolve import conflicts automatically",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-99",
+        "title": "Preview import conflicts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-297",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Review migration collisions",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-99",
+        "title": "Preview import conflicts",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-298",
+      "kind": "lexical-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Continue interrupted imports",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-100",
+        "title": "Resume interrupted imports",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-299",
+      "kind": "hard-negative",
+      "duplicate": false,
+      "query": {
+        "title": "Discard interrupted imports",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-100",
+        "title": "Resume interrupted imports",
+        "description": ""
+      }
+    },
+    {
+      "id": "synthetic-penny-300",
+      "kind": "paraphrase-positive",
+      "duplicate": true,
+      "query": {
+        "title": "Restart stalled migrations",
+        "description": ""
+      },
+      "candidate": {
+        "id": "synthetic-penny-target-100",
+        "title": "Resume interrupted imports",
+        "description": ""
+      }
+    }
+  ]
+}

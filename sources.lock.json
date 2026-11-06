@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "1050feea764dafb5d9934be0bcfd3b5e5d00f5ce7045dad188d95016da22a997",
+      "sha256": "a824f29d1041fed5c9acbf127a7074aed0dba305c9827456b8cc9ebff931f807",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "d3f67f3e51c4474b79f3c6ce70a2639a61ceb6150a2d11922420320df6a73163",
+      "sha256": "3d18d182aaf931d2752b8ce1db6a951214db230c3f0f675cc1ddc2f2b96fe68b",
       "executable": false
     },
     "DEMO.md": {
@@ -4209,12 +4209,20 @@
       "sha256": "cfc13540200aabb818ae56be4bd21974050eb62e4bb17238ed9751de23eb44b6",
       "executable": false
     },
+    "scripts/ai-eval/duplicates.mjs": {
+      "sha256": "80b5b7f40de28307c8fad53a68396735afe45709a7308b245c25f0154e3309aa",
+      "executable": false
+    },
+    "scripts/ai-eval/lexical-runtime.mjs": {
+      "sha256": "abd239cb0e2063d288e157be0adbc240686d9fa9ac70c4a0dca01c28760c5c46",
+      "executable": false
+    },
     "scripts/ai-eval/metrics.mjs": {
       "sha256": "67a04d0d9cd4401090581e5e151acc28ac743748644f5dd316a80a08fd27b138",
       "executable": false
     },
     "scripts/ai-eval/run.mjs": {
-      "sha256": "724bd4d1cb719a288e028b951969defa94cfcb0f87cc21351b13c29b327c1ea1",
+      "sha256": "f2e28081c97bcea92b3f496ea907a470aeafc13808460ce9ea8a0a93d94a8915",
       "executable": false
     },
     "scripts/build-delivery-artifact.mjs": {
@@ -9073,6 +9081,10 @@
       "sha256": "892328ef9733f49073b4ebadc0b1d444d9a5b45424fabcc5250b44e9c4c2d7a8",
       "executable": false
     },
+    "tests/data/ai-eval.test.mjs": {
+      "sha256": "ac64b309e91e130ff4544ed0da6584b59bf51fbf1b4651c7d235ca18584676df",
+      "executable": false
+    },
     "tests/data/command-boundaries.test.mjs": {
       "sha256": "6c152249c897adf872c09fbe166c04c2e062ee13492a538ef43e817ac5350c66",
       "executable": false
@@ -9107,6 +9119,14 @@
     },
     "tests/fixtures/ai/draft-network.ts": {
       "sha256": "38c70a7b62e957c7d9d4abc3121d873287557b4d8ee1cf098d01c71dc7b19f4c",
+      "executable": false
+    },
+    "tests/fixtures/ai/duplicates-v1/cases.json": {
+      "sha256": "d5599bacbe1dc5c2812c3c8028419dc88cb0c9ccfdcd364ecd0d2bbf3f92031d",
+      "executable": false
+    },
+    "tests/fixtures/ai/duplicates-v1/SPEC.md": {
+      "sha256": "5fc9734dbbb20d609926d998ec310783989d839aec25fcb842b14805ea995743",
       "executable": false
     },
     "tests/fixtures/ai/redaction-v1/cases.json": {
