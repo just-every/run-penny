@@ -1,0 +1,163 @@
+{
+  "tag": "sd-penny-c-f100",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f100",
+  "head": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+  "checks": [
+    {
+      "name": "first-party",
+      "command": [
+        "pnpm",
+        "exec",
+        "rer",
+        "check",
+        "--profile",
+        "first-party"
+      ],
+      "head": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+      "started": "2026-11-06T10:38:44.287581+00:00",
+      "seconds": 0.866,
+      "exit": 0,
+      "output_file": "FIRST-PARTY.log",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "head": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+      "started": "2026-11-06T10:38:45.153550+00:00",
+      "seconds": 21.864,
+      "exit": 0,
+      "output_file": "TYPECHECK.log",
+      "output_sha256": "c3a63c937ccbae7d1bc8fe42d249e64bede5d829c6ee8c5ce4f221f9207ca4d9"
+    },
+    {
+      "name": "touched-lint",
+      "command": [
+        "pnpm",
+        "exec",
+        "oxlint",
+        "src/core/features/integrations/openapi/document.ts",
+        "tests/base/integration-openapi.test.ts"
+      ],
+      "head": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+      "started": "2026-11-06T10:39:07.018111+00:00",
+      "seconds": 0.365,
+      "exit": 0,
+      "output_file": "LINT.log",
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "source-lock",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "head": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+      "started": "2026-11-06T10:39:07.383282+00:00",
+      "seconds": 0.394,
+      "exit": 0,
+      "output_file": "SOURCE-CHECK.json",
+      "output_sha256": "b5448416b0d8ea8b439bc5084f26c47237baf240148185aad7d5c17681f3973f"
+    },
+    {
+      "name": "copied-source",
+      "command": [
+        "node",
+        "scripts/verify-base-source.mjs"
+      ],
+      "head": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+      "started": "2026-11-06T10:39:07.777850+00:00",
+      "seconds": 0.154,
+      "exit": 0,
+      "output_file": "BASE-SOURCE-CHECK.json",
+      "output_sha256": "b94168d0f9dad4555638a998f12ac5fbee69317ef1a1009f10cd7833220fcf85"
+    },
+    {
+      "name": "native-api-journeys",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/integration-openapi.test.ts",
+        "tests/base/integration-api.test.ts",
+        "tests/base/proxy-votes.test.ts"
+      ],
+      "head": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+      "exit": 0,
+      "files": 3,
+      "tests_passed": 9,
+      "tests_failed": 0,
+      "output_file": "NATIVE-TESTS.log",
+      "output_sha256": "d40d2ce5da9cafb8fee54d1f51addfc20c5821ecad02f4a87e68301bc8bd5ce2"
+    }
+  ],
+  "mechanical": {
+    "views_write": {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "output_file": "VIEWS-WRITE.log"
+    },
+    "views_check_after_write": {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "output_file": "VIEWS-CHECK.log"
+    },
+    "views_restored_from": "origin/main",
+    "views_check_on_candidate": {
+      "exit": 1,
+      "reason": "Generated ACCEPTANCE.md intentionally restored to main; lander regenerates.",
+      "output_file": "VIEWS-RESTORED-CHECK.log"
+    },
+    "lock_regenerate": {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    "migration_ledger": {
+      "command": null,
+      "exit": 0,
+      "reason": "No migration changed."
+    },
+    "status_rows": {
+      "parent": 281,
+      "candidate": 281,
+      "parent_table_lines": 445,
+      "candidate_table_lines": 445
+    },
+    "counts_before": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    },
+    "counts_after": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78
+    }
+  },
+  "ci": [
+    {
+      "id": 42204073677,
+      "name": "Verify Penny",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42204073677"
+    }
+  ],
+  "publication": {
+    "product_push": "succeeded first attempt",
+    "scan": "fleet lander only; no cloud scan claimed",
+    "landing": "pending fleet",
+    "pr": null
+  }
+}

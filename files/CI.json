@@ -1,0 +1,16 @@
+{
+  "observed": "2026-11-06T10:40:50.225283+00:00",
+  "runs": [
+    {
+      "id": 42204073677,
+      "name": "Verify Penny",
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42204073677"
+    }
+  ],
+  "github_calls_so_far": 3,
+  "polling": "Discovery only. No repeat before 300 seconds."
+}
