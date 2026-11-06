@@ -1,0 +1,111 @@
+{
+  "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+  "observations": [
+    {
+      "door": "/api/operator/prioritisation",
+      "method": "GET",
+      "status": 200,
+      "visibleViews": [
+        {
+          "name": "Finance priorities",
+          "titleFilter": "",
+          "shared": true,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "door": "/api/operator/prioritisation",
+      "method": "GET",
+      "status": 200,
+      "visibleViews": [
+        {
+          "name": "Finance priorities",
+          "titleFilter": "",
+          "shared": true,
+          "owned": true
+        },
+        {
+          "name": "Finance request subset",
+          "titleFilter": "FINANCE",
+          "shared": true,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "door": "/api/operator/prioritisation/01M6QVW57V15ETDDH1G6DNG9E0",
+      "method": "GET",
+      "status": 200,
+      "name": "Finance request subset",
+      "titleFilter": "FINANCE",
+      "owned": true,
+      "rows": [
+        {
+          "id": "01M6QVVYEMME7ZA61K1KH0CW3P",
+          "title": "Department finance summaries",
+          "score": -1
+        },
+        {
+          "id": "01M6QVVYC80Z863D2EPFWDAEFB",
+          "title": "Schedule monthly finance exports",
+          "score": -2
+        }
+      ]
+    },
+    {
+      "door": "/api/operator/prioritisation/01M6QVW57V15ETDDH1G6DNG9E0",
+      "method": "GET",
+      "status": 200,
+      "name": "Finance request subset",
+      "titleFilter": "FINANCE",
+      "owned": false,
+      "rows": [
+        {
+          "id": "01M6QVVYEMME7ZA61K1KH0CW3P",
+          "title": "Department finance summaries",
+          "score": -1
+        },
+        {
+          "id": "01M6QVVYC80Z863D2EPFWDAEFB",
+          "title": "Schedule monthly finance exports",
+          "score": -2
+        }
+      ]
+    },
+    {
+      "door": "/api/operator/prioritisation",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "door": "/api/operator/prioritisation",
+      "method": "GET",
+      "status": 200,
+      "visibleViews": [
+        {
+          "name": "Finance priorities",
+          "titleFilter": "",
+          "shared": true,
+          "owned": false
+        },
+        {
+          "name": "Finance request subset",
+          "titleFilter": "FINANCE",
+          "shared": true,
+          "owned": false
+        }
+      ]
+    },
+    {
+      "door": "/api/operator/prioritisation/01M6QVW8VY6G6AK42DDWA7C8PD",
+      "method": "GET",
+      "status": 404
+    },
+    {
+      "door": "/api/operator/prioritisation",
+      "method": "GET",
+      "status": 401
+    }
+  ]
+}

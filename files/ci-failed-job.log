@@ -1,0 +1,6 @@
+shards (prioritisation, true)	Check generated contract documents	﻿2026-11-06T07:22:52.2255716Z ##[group]Run node src/base/contract-docs.mjs check
+shards (prioritisation, true)	Check generated contract documents	2026-11-06T07:22:52.2255898Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (prioritisation, true)	Check generated contract documents	2026-11-06T07:22:52.2276733Z shell: /usr/bin/bash -e {0}
+shards (prioritisation, true)	Check generated contract documents	2026-11-06T07:22:52.2277284Z ##[endgroup]
+shards (prioritisation, true)	Check generated contract documents	2026-11-06T07:22:52.3610090Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (prioritisation, true)	Check generated contract documents	2026-11-06T07:22:52.3667333Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,90 @@
+{
+  "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+  "checks": [
+    {
+      "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "setup",
+        "--owner-email",
+        "fleet@runeditrun.com",
+        "--non-interactive"
+      ],
+      "exit": 0,
+      "output_sha256": "ec10312c8afb278784204ecda33e403b0c3137247a05e43a3c1a749013dcb3eb",
+      "description": "Setup built the emitted Worker with the repository pin and completed owner bootstrap; private setup output is deliberately excluded."
+    },
+    {
+      "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "exit": 0,
+      "output_sha256": "06dc68bd63e5a31247106eca2b338be98e6ca68822e77d55b2d1c343c429719e",
+      "description": "Typecheck passed on unchanged candidate source bytes."
+    },
+    {
+      "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+      "command": [
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "check",
+        "--profile",
+        "first-party"
+      ],
+      "exit": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "description": "First-party check passed on unchanged candidate source bytes."
+    },
+    {
+      "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+      "command": [
+        "pnpm",
+        "run",
+        "verify:base-source"
+      ],
+      "exit": 0,
+      "output_sha256": "f5700e77eb9009f5c363888f3a0958edc11299ad11b22ba8c57725355d3ef07b",
+      "description": "Byte custody passed locally, without external origin reads."
+    },
+    {
+      "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+      "command": [
+        "timeout",
+        "1200",
+        "node",
+        "/tmp/penny-runtime-probe.mjs"
+      ],
+      "exit": 0,
+      "output_sha256": "ee7e2fd7e0e854c70a851feac060302452e02e19c54b0b0549e75ddc71ea358b",
+      "description": "Mounted owner and peer journey passed on committed candidate; behavioral assertions at 1440, screenshots and accessibility checks at 1440 and 390."
+    }
+  ],
+  "test_registrations_added": 0,
+  "test_registrations_removed": 0,
+  "migration_changes": false,
+  "screenshots": [
+    "browser/empty-comparisons-1440.png",
+    "browser/filtered-request-owner-1440.png",
+    "browser/filtered-request-owner-390.png",
+    "browser/filtered-request-owner-detail-1440.png",
+    "browser/filtered-request-owner-detail-390.png",
+    "browser/filtered-request-peer-1440.png",
+    "browser/filtered-request-peer-390.png",
+    "browser/filtered-request-peer-detail-1440.png",
+    "browser/filtered-request-peer-detail-390.png",
+    "browser/importance-resorted-1440.png",
+    "browser/importance-resorted-detail-1440.png",
+    "browser/missing-inputs-1440.png",
+    "browser/private-view-refused-1440.png",
+    "browser/rice-inputs-1440.png",
+    "browser/rice-results-1440.png",
+    "browser/rice-results-detail-1440.png",
+    "browser/shared-comparison-1440.png"
+  ]
+}

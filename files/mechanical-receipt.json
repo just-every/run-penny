@@ -1,0 +1,77 @@
+[
+  {
+    "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+    "command": [
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "--config",
+      "vitest.base.config.ts",
+      "tests/base/prioritisation.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 5.451,
+    "output_sha256": "f9e7ae62be71191f78d2bed6425edd3b6e2236a4b28dddfcc01bee3e4cb0ca1b"
+  },
+  {
+    "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+    "command": [
+      "node",
+      "src/base/contract-docs.mjs",
+      "write"
+    ],
+    "exit": 0,
+    "seconds": 0.15,
+    "output_sha256": "df91012bf66fb476e9cd1a30c002829398beb55f869e07cc7be477197fa5a276",
+    "output": "Wrote 1 contract documents."
+  },
+  {
+    "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+    "command": [
+      "node",
+      "src/base/contract-docs.mjs",
+      "check"
+    ],
+    "exit": 0,
+    "seconds": 0.153,
+    "output_sha256": "c21aae40192141751d6d5c7a3a1d0eb701a6852f305d592d77b4dcab9c2536ab",
+    "output": "Contract documents are current."
+  },
+  {
+    "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+    "command": [
+      "git",
+      "checkout",
+      "origin/main",
+      "--",
+      "ACCEPTANCE.md",
+      "docs/CLAIMS.md"
+    ],
+    "exit": 0,
+    "seconds": 0.008,
+    "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+    "command": [
+      "node",
+      "scripts/edition-authoring/cli.mjs",
+      "lock"
+    ],
+    "exit": 0,
+    "seconds": 0.369,
+    "output_sha256": "e5cf9ad40fd0107eb3355dff4fb22883cf094c56b1c0b2e4a7be1c2100547efb"
+  },
+  {
+    "head": "83e668d977c5c85595709e6bffdd5d3d27e46a3a",
+    "command": [
+      "node",
+      "scripts/edition-authoring/cli.mjs",
+      "check"
+    ],
+    "exit": 0,
+    "seconds": 0.354,
+    "output_sha256": "ae748b208c31955ebcc087bc5b3166360a04092f704b7231118d8a193d76a0ae"
+  }
+]
