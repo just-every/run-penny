@@ -42,6 +42,7 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
   const form=panel.getByRole('form',{name:'Tracker issue action',exact:true})
   await form.getByRole('combobox',{name:/^Tracker connection/}).selectOption(connection.id)
   const linkedId=provider==='linear'?crypto.randomUUID():'10043',linkedUrl=provider==='linear'?'https://linear.app/penny/issue/PEN-43/entered-link':'https://penny-fixture.atlassian.net/browse/PEN-43'
+  const existingIssue={...selected,connectionId:connection.id,externalId:linkedId,url:linkedUrl}
   await form.getByLabel('Stable issue ID',{exact:true}).fill(linkedId);await form.getByLabel('HTTPS issue URL',{exact:true}).fill(linkedUrl)
   const sentBefore=edge.calls.length
   await form.getByRole('button',{name:'Link tracker issue',exact:true}).click();await panel.getByText('Issue linked.',{exact:true}).waitFor()
@@ -61,10 +62,12 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    const before=edge.calls.length
    if(!unknown){
     await refuse(command.id,known(),'queued')
+    await refuse(command.id,existingIssue,'queued')
     const paused=edge.pause(),drain=runtime.schedule()
     try{
      await Promise.race([paused.entered,new Promise((_,reject)=>{const timer=setTimeout(()=>reject(new Error('Tracker edge did not receive the sending command')),15000);timer.unref()})])
      await refuse(command.id,known(),'sending')
+     await refuse(command.id,existingIssue,'sending')
     }finally{paused.resume();await drain}
    }else await runtime.schedule()
    assert.equal(edge.calls.length,before+1,'[INT-005] one deliberate native create reaches the provider edge')
@@ -76,6 +79,8 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    if(unknown){
     const receipt=panel.locator('li').filter({has:page.getByRole('button',{name:'Reconcile known issue',exact:true})})
     const issue=known(),uncertain=await snapshot()
+    const otherSubject=kind==='request'?{decisionId:decision.id}:{requestId:subject.id}
+    await refuse(command.id,{...otherSubject,connectionId:connection.id,externalId:issue.externalId,url:issue.url},'uncertain')
     await runtime.db.exec("CREATE TRIGGER synthetic_penny_reconcile_failure BEFORE UPDATE ON integration_deliveries WHEN OLD.namespace='penny-trackers' AND OLD.state='uncertain' AND NEW.state='accepted' BEGIN SELECT RAISE(ABORT,'synthetic late reconciliation failure'); END")
     try{assert.equal((await reconcile(command.id,issue)).status(),503,'[INT-005] late storage failure refuses reconciliation')}
     finally{await runtime.db.exec('DROP TRIGGER synthetic_penny_reconcile_failure')}
@@ -109,6 +114,7 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
   edge.reject(true)
   try{await runtime.schedule()}finally{edge.reject(false)}
   await refuse(rejected.id,known(),'rejected')
+  await refuse(rejected.id,existingIssue,'rejected')
   const settled=await snapshot(),calls=edge.calls.length
   await runtime.restart();await runtime.schedule();await runtime.schedule()
   assert.deepEqual(await snapshot(),settled,'[INT-005] terminal command custody survives restart and repeated scheduler drains')
