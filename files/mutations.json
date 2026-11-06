@@ -1,0 +1,38 @@
+[
+  {
+    "mutation": "requester-dedup",
+    "exit": 1,
+    "detected": true,
+    "log": "/tmp/penny-mutation-requester-dedup.log"
+  },
+  {
+    "mutation": "account-dedup",
+    "exit": 1,
+    "detected": true,
+    "log": "/tmp/penny-mutation-account-dedup.log"
+  },
+  {
+    "mutation": "support-count",
+    "exit": 1,
+    "detected": true,
+    "log": "/tmp/penny-mutation-support-count.log"
+  },
+  {
+    "mutation": "option-latest",
+    "exit": 1,
+    "detected": true,
+    "log": "/tmp/penny-mutation-option-latest.log"
+  },
+  {
+    "mutation": "contradiction-identities",
+    "exit": 1,
+    "detected": true,
+    "log": "/tmp/penny-mutation-contradiction-identities.log"
+  },
+  {
+    "mutation": "qualitative-dimension",
+    "exit": 1,
+    "detected": true,
+    "log": "/tmp/penny-mutation-qualitative-dimension.log"
+  }
+]

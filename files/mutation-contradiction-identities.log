@@ -1,0 +1,93 @@
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f52/run-penny
+
+ ❯ tests/base/learning-stage2.test.ts (2 tests | 1 failed | 1 skipped) 1248ms
+   × [LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, computes each option from distinct originals, compares no-build and commits an immutable accountable protocol 1247ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/learning-stage2.test.ts > [LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, computes each option from distinct originals, compares no-build and commits an immutable accountable protocol
+AssertionError: expected [ { id: 'build', …(11) }, …(1) ] to deeply equal [ { id: 'build', …(11) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -6,16 +6,28 @@
+      "affectedRequesters": [
+        "01M6Q3ETR4F7SD6XM9TG5XS4C2",
+      ],
+      "contradictingEvidence": [
+        {
+-         "id": "e9916ba5-55e5-4ee8-8a04-8363a68c4e87",
+-         "observedAt": "2026-01-03T00:30:00Z",
++         "id": "0806377d-bf95-4520-91a8-921aeacdf3cf",
++         "observedAt": "2026-01-01T00:00:00Z",
+        },
+        {
+-         "id": "f579871c-3e2f-4ef9-84f5-b2096e6109d6",
+-         "observedAt": "2026-11-06T00:17:11.892Z",
++         "id": "2b83f184-0671-43d3-8bfc-2ce646f2f2cc",
++         "observedAt": "2026-11-06T00:17:10.892Z",
++       },
++       {
++         "id": "5defc60a-c766-4783-adaf-58593fc869c9",
++         "observedAt": "2026-11-06T00:17:09.892Z",
++       },
++       {
++         "id": "ac380eb4-5379-4e9d-9ad0-23341a85e803",
++         "observedAt": "2026-01-03T10:00:00+10:00",
++       },
++       {
++         "id": "b4903bc2-a52f-4cbc-b276-c594efdececb",
++         "observedAt": "2026-01-02T23:55:00Z",
+        },
+      ],
+      "deliveryShape": "A bounded internal prototype",
+      "id": "build",
+      "kind": "product",
+@@ -34,17 +46,25 @@
+      "affectedRequesters": [
+        "01M6Q3ETR4F7SD6XM9TG5XS4C2",
+        "01M6Q3EWPM3EN0KSPWH7H99SMC",
+      ],
+      "contradictingEvidence": [
++       {
++         "id": "2b83f184-0671-43d3-8bfc-2ce646f2f2cc",
++         "observedAt": "2026-11-06T00:17:10.892Z",
++       },
+        {
+-         "id": "0806377d-bf95-4520-91a8-921aeacdf3cf",
+-         "observedAt": "2026-01-01T00:00:00Z",
++         "id": "ac380eb4-5379-4e9d-9ad0-23341a85e803",
++         "observedAt": "2026-01-03T10:00:00+10:00",
++       },
++       {
++         "id": "e9916ba5-55e5-4ee8-8a04-8363a68c4e87",
++         "observedAt": "2026-01-03T00:30:00Z",
+        },
+        {
+-         "id": "b4903bc2-a52f-4cbc-b276-c594efdececb",
+-         "observedAt": "2026-01-02T23:55:00Z",
++         "id": "f579871c-3e2f-4ef9-84f5-b2096e6109d6",
++         "observedAt": "2026-11-06T00:17:11.892Z",
+        },
+      ],
+      "deliveryShape": "One internal support checklist and staged comparison",
+      "id": "assist",
+      "kind": "no-build",
+
+ ❯ tests/base/learning-stage2.test.ts:43:21
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  00:17:03
+   Duration  5.53s (transform 1.66s, setup 0ms, import 3.66s, tests 1.25s, environment 0ms)
+

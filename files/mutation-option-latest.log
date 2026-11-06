@@ -1,0 +1,43 @@
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f52/run-penny
+
+ ❯ tests/base/learning-stage2.test.ts (2 tests | 1 failed | 1 skipped) 1248ms
+   × [LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, computes each option from distinct originals, compares no-build and commits an immutable accountable protocol 1247ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/learning-stage2.test.ts > [LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, computes each option from distinct originals, compares no-build and commits an immutable accountable protocol
+AssertionError: expected [ { id: 'build', …(11) }, …(1) ] to deeply equal [ { id: 'build', …(11) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -17,11 +17,11 @@
+        },
+      ],
+      "deliveryShape": "A bounded internal prototype",
+      "id": "build",
+      "kind": "product",
+-     "latestObservedAt": "2026-11-06T00:17:03.318Z",
++     "latestObservedAt": "2026-11-06T00:17:04.318Z",
+      "mechanism": "Make the handoff direct.",
+      "successMeasure": "Handoff completed without support",
+      "supportingEvidenceCount": 5,
+      "unlinkedObservations": 3,
+      "urgency": "Before the next renewal cohort",
+
+ ❯ tests/base/learning-stage2.test.ts:43:21
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  00:16:55
+   Duration  5.47s (transform 1.60s, setup 0ms, import 3.56s, tests 1.25s, environment 0ms)
+

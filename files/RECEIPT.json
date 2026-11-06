@@ -1,0 +1,187 @@
+{
+  "base": "1db862912dc18165739d5385fcca0f886c023ca4",
+  "branch": "cloud/sd-penny-c-f52",
+  "changed_files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "d052ab65da88c1aa294dae3c8493eac8e9d27ba738829538356626741945e049"
+    },
+    {
+      "path": "CONTRACT.md",
+      "sha256": "f3e14feae17d99a7d0603396076cd50e1f640001073288f9df7e17ee4b6bb3be"
+    },
+    {
+      "path": "sources.lock.json",
+      "sha256": "30e751d32bd02c031f1e0ac3fc36b11e9d5efab713ad91ea1a0b3f46256dec4a"
+    },
+    {
+      "path": "tests/base/learning-fixture.ts",
+      "sha256": "b23d627e65c3a006970735c7092f62cde3165d5217a657e003f661cb16c469e9"
+    },
+    {
+      "path": "tests/base/learning-stage2.test.ts",
+      "sha256": "95fa784e38af44af9944ddd5418b2e704bfbacf85192fb632a4b02d04dd84cea"
+    },
+    {
+      "path": "tests/base/learning-test-runtime.ts",
+      "sha256": "ed853cfe4425d47089c85b85134e949eed4fa8947e7100b244c1acb215a32f84"
+    }
+  ],
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0,
+      "relevant_source_unchanged_since_build": true
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-stage2.test.ts tests/base/learning-stage3.test.ts",
+      "exit": 0,
+      "files_passed": 2,
+      "head": "ee3302d24fe4094c856bacdb79e627bfe6ad5328",
+      "node": "22.20.0",
+      "tests_passed": 7
+    }
+  ],
+  "counts": {
+    "candidate_pipe_rows": 445,
+    "done_after": 79,
+    "done_before": 79,
+    "missing_after": 78,
+    "missing_before": 78,
+    "new_test_registrations": 0,
+    "parent_pipe_rows": 445,
+    "partial_after": 124,
+    "partial_before": 124,
+    "removed_test_registrations": 0,
+    "status_rows_dropped": 0,
+    "total": 281
+  },
+  "evidence_preparation": {
+    "first_attempt": "No remote push attempted; local product-history fetch for extra identity audit refused missing promisor blob (exit 128).",
+    "resolution": "Audit every report-only evidence ancestor directly; no product-history fetch needed."
+  },
+  "github_calls_used": 2,
+  "head": "ee3302d24fe4094c856bacdb79e627bfe6ad5328",
+  "mechanical": {
+    "ledger": {
+      "command": null,
+      "exit": 0,
+      "reason": "No migration changed"
+    },
+    "lock": {
+      "command": "node scripts/edition-authoring/cli.mjs lock; node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    },
+    "restored_views": {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "reason": "ACCEPTANCE.md generated content differs after restoring main views as required; lander regenerates"
+    },
+    "views": {
+      "command": "node src/base/contract-docs.mjs write; node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "generated_views_committed": false
+    }
+  },
+  "mutations": [
+    {
+      "detected": true,
+      "exit": 1,
+      "log": "mutation-requester-dedup.log",
+      "mutation": "requester-dedup"
+    },
+    {
+      "detected": true,
+      "exit": 1,
+      "log": "mutation-account-dedup.log",
+      "mutation": "account-dedup"
+    },
+    {
+      "detected": true,
+      "exit": 1,
+      "log": "mutation-support-count.log",
+      "mutation": "support-count"
+    },
+    {
+      "detected": true,
+      "exit": 1,
+      "log": "mutation-option-latest.log",
+      "mutation": "option-latest"
+    },
+    {
+      "detected": true,
+      "exit": 1,
+      "log": "mutation-contradiction-identities.log",
+      "mutation": "contradiction-identities"
+    },
+    {
+      "detected": true,
+      "exit": 1,
+      "log": "mutation-qualitative-dimension.log",
+      "mutation": "qualitative-dimension"
+    }
+  ],
+  "notes": [
+    "No DONE claim",
+    "No runtime or visual change",
+    "No new policy default",
+    "Temporary mutations restored",
+    "No provider or private held-out gate material included"
+  ],
+  "pr": null,
+  "product_push": {
+    "attempts": 1,
+    "identity_checked": "all candidate commits including side parents; fleet author and committer; no trailers",
+    "remote_head": "ee3302d24fe4094c856bacdb79e627bfe6ad5328",
+    "status": "success"
+  },
+  "publication_scan": {
+    "full_history": true,
+    "owner": "guarded Mac lander",
+    "status": "not run in cloud"
+  },
+  "repository": "just-every/run-penny",
+  "run_site": {
+    "owner": "guarded Mac lander",
+    "status": "not run; product remains branch-only"
+  },
+  "tag": "sd-penny-c-f52",
+  "target": {
+    "after": "partial",
+    "before": "partial",
+    "closed": [
+      "acceptance point 1 per-option computed dimensions"
+    ],
+    "id": "LEARN-002",
+    "open": [
+      "acceptance point 2 correction and invalidation completeness and versioned contests",
+      "acceptance point 3 no automatic ranking, contact or publication",
+      "live model and source qualification and existing external holds"
+    ]
+  },
+  "workflow": {
+    "workflow_runs": [
+      {
+        "conclusion": null,
+        "event": "push",
+        "head_sha": "ee3302d24fe4094c856bacdb79e627bfe6ad5328",
+        "html_url": "https://github.com/just-every/run-penny/actions/runs/42136220642",
+        "id": 42136220642,
+        "name": "Verify Penny",
+        "status": "queued"
+      }
+    ]
+  }
+}

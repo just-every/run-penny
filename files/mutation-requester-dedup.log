@@ -1,0 +1,42 @@
+rer toolchain: node v24.19.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f52/run-penny
+
+ ❯ tests/base/learning-stage2.test.ts (2 tests | 1 failed | 1 skipped) 1341ms
+   × [LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, computes each option from distinct originals, compares no-build and commits an immutable accountable protocol 1340ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/learning-stage2.test.ts > [LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, computes each option from distinct originals, compares no-build and commits an immutable accountable protocol
+AssertionError: expected [ { id: 'build', …(11) }, …(1) ] to deeply equal [ { id: 'build', …(11) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -3,10 +3,11 @@
+      "affectedAccounts": [
+        "01M6Q3DSECKC9G66ETAGJ8W66M",
+      ],
+      "affectedRequesters": [
+        "01M6Q3DTFKFB699MMZ7G0MNR1R",
++       "01M6Q3DTFKFB699MMZ7G0MNR1R",
+      ],
+      "contradictingEvidence": [
+        {
+          "id": "2ddfe986-e31e-409c-aad3-b47d764cdd9a",
+          "observedAt": "2026-11-06T00:16:38.851Z",
+
+ ❯ tests/base/learning-stage2.test.ts:43:21
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  00:16:29
+   Duration  6.95s (transform 2.27s, setup 0ms, import 4.86s, tests 1.34s, environment 0ms)
+
