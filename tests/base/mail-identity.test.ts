@@ -23,7 +23,7 @@ it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected se
  const update=g.sent.at(-1)!;expect(update.from).toEqual({email:input.fromAddress,name:input.senderName});expect(update.reply_to?.email).toBe(input.replyTo);expect(body(update)).toContain(input.postalAddress)
  // A legacy installation has already finished setup without a postal address.
  await env.DB.prepare('DELETE FROM penny_mail_identity').run()
- const custody=async()=>Object.fromEntries(await Promise.all(['penny_mail_identity','penny_weekly_summary','audit_entries','requester_update_permissions','notification_events','notification_intents','notification_outbox'].map(async table=>[table,(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY 1`).all()).results])))
+ const custody=async()=>Object.fromEntries(await Promise.all(['penny_mail_identity','penny_weekly_summary','audit_entries','requester_update_permissions','notification_events','notification_intents','notification_batches','notification_attempts','notification_outbox','notification_outbox_attempts','notification_delivery_facts','penny_weekly_choices','penny_weekly_publications'].map(async table=>[table,(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY 1`).all()).results])))
  const beforeWeekly=await custody()
  const refused=await call('/api/operator/settings/weekly-summary',{enabled:true},g.operator,'PUT')
  expect(refused.status).toBe(409)
