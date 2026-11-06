@@ -1205,8 +1205,8 @@ Core · published · **partial**
 3. Requester/account links come only from native records; Orbit identity remains source-local and nullable.
 4. Model output cannot set identity or grants.
 
-**Evidence.** `tests/base/learning-stage2.test.ts`
-**Gap.** The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted.
+**Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
