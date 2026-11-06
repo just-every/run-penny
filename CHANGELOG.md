@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove native held-request submission, voting on a separately approved request, and inbox evidence linking and reasoned review using sequential keyboard navigation at desktop and phone widths. Read back persisted identities through native routes and retain admission, axe and layout checks. A11Y-001 remains partial for every-page axe, widget keyboard and wider Base accessibility proof; field reviews remain held. No application, migration or configuration change is required.
+
 - Add Owner and Admin audit metadata reads and bounded CSV and JSON exports with actor, action, subject and date filters, stable pagination and existing agent attribution. Exclude private details and recheck current native authority on every page. ROLE-004 remains partial for its audit screen, every-action coverage and wider privacy obligations. No migration or configuration change is required.
 - Serve an offline OpenAPI document at `/docs/openapi.json` for the existing scoped board, request, comment, status, release and proxy-vote operations. Share request validators with native routes and reconcile populated HTTP responses, invalid inputs, missing credentials and insufficient scopes in one built-Worker sanity journey, replacing the overlapping native publication registration with all of its assertions retained. Preserve native admission, explicit approval, held wording and consent boundaries. DATA-006 remains partial for other resource families, full pagination and filters, and lifecycle-webhook proof. No migration or configuration change is required.
 
