@@ -1,0 +1,12 @@
+fleet Git: removed 0 credential-bearing GitHub URL rewrite sections
+PUSH attempt=1/5 command=git push --porcelain origin HEAD:refs/heads/cloud/sd-penny-c-f68
+PUSH_CREDENTIAL sha256_16=8addacf6ac95b0bc bundle_file_age_seconds=1251 token_issue_age=unknown
+fleet Git: removed 0 credential-bearing GitHub URL rewrite sections
+To https://github.com/just-every/run-penny.git
+ 	HEAD:refs/heads/cloud/sd-penny-c-f68	2cd1544..cc060e8
+Done
+remote: 
+remote: GitHub found 46 vulnerabilities on just-every/run-penny's default branch (19 high, 19 moderate, 8 low). To find out more, visit:        
+remote:      https://github.com/just-every/run-penny/security/dependabot        
+remote: 
+PUSH_OK branch=cloud/sd-penny-c-f68

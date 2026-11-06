@@ -1,0 +1,18 @@
+{
+  "observed_at_epoch": 1793934750.2621276,
+  "github_calls_used": 8,
+  "runs": [
+    {
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "cc060e826c4ade7f6171028c79a81aa2d4e980f6",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42155043067",
+      "id": 42155043067,
+      "name": "Verify Penny",
+      "status": "completed"
+    }
+  ],
+  "final_status": "completed",
+  "final_conclusion": "failure",
+  "exception": "Generated contract views only"
+}

@@ -1,0 +1,4 @@
+PROBE OPS-004 point-2: native hierarchy creation then GET /api/operator/search with full, partial and uppercase names -> exact identity, entity and destination; mixed Harbor query across pages -> 31 results, pages of 25, 6 and 0, with identically named products spanning the boundary without duplicates.
+PROBE OPS-004 point-1 hierarchy-links: mounted search for privateproof -> all ten record types in the original entity order; each hierarchy result opens its own exact fragment and heading, receives focus, stays visible after reload at 1440, and is captured at 1440 and 390.
+PROBE OPS-004 point-3: none for finer role and record permissions, excluded by POINTS; native anonymous, requester and revoked-session search attempts remain refused with no hierarchy name disclosed.
+PROBE OPS-004 point-4: none, declared-hardware capacity p95 is explicitly excluded; estimated seed limits remain untested.

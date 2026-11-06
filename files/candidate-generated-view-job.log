@@ -1,0 +1,11 @@
+shards (static, true)	Check generated contract documents	﻿2026-11-06T03:12:18.1782246Z ##[group]Run node src/base/contract-docs.mjs check
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.1782377Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.1798769Z shell: /usr/bin/bash -e {0}
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.1798825Z env:
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.1798880Z   CI: true
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.1798936Z   WRANGLER_SEND_METRICS: false
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.1799003Z   CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV: false
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.1799056Z   PLAYWRIGHT_SKIP_BROWSER_GC: 1
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.1799109Z ##[endgroup]
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.2598403Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (static, true)	Check generated contract documents	2026-11-06T03:12:18.2647545Z ##[error]Process completed with exit code 1.
