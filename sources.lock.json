@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "e4f3b9ad928d26b2ebdba39f8dd4f82cd8d4b48dc46565a42daa39576a60a708",
+      "sha256": "cf5de9fa2e51571e96a962f577fa342a2d13f95c1c94bd3371b682516af27a4f",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "44ab664e2c5bf1d6730276b641eee2a93a67dc2809377d7e9ad4f83eb6c6e69c",
+      "sha256": "3a93b84b7882c9cb222b948fa0914465a84fe49e49cf548faa76dd2aa2f62436",
       "executable": false
     },
     "DEMO.md": {
@@ -9118,7 +9118,7 @@
       "executable": false
     },
     "tests/browser/route-review.mjs": {
-      "sha256": "c369725fc07442a740a4104dc9e49dff209f3a12ad40d2955cc2aefc2809bf86",
+      "sha256": "dd9c1b5a6bcb29161647133b262638e28cb7602e73c87a3f402cd3d562d9c9f6",
       "executable": false
     },
     "tests/browser/signin.test.mjs": {
