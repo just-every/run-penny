@@ -1,0 +1,9 @@
+{
+  "head": "2761a4bc87b80a218713bb6c8337886b26cbfc01",
+  "branch": "cloud/sd-penny-c-f58",
+  "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-stage2.test.ts",
+  "node": "v22.20.0",
+  "exit": 0,
+  "recorded_at": "2026-11-06T01:18:12.385186+00:00",
+  "log": "learning-stage2-exact-sha.log"
+}

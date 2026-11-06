@@ -1,0 +1,59 @@
+{
+  "head": "2761a4bc87b80a218713bb6c8337886b26cbfc01",
+  "base": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "branch": "cloud/sd-penny-c-f58",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "1050feea764dafb5d9934be0bcfd3b5e5d00f5ce7045dad188d95016da22a997"
+    },
+    {
+      "path": "CONTRACT.md",
+      "sha256": "d3f67f3e51c4474b79f3c6ce70a2639a61ceb6150a2d11922420320df6a73163"
+    },
+    {
+      "path": "sources.lock.json",
+      "sha256": "7b5b772d0a4690c13a3949c8ae4974d847dff23c8f14e49191d11dbd85753fd6"
+    },
+    {
+      "path": "tests/base/learning-stage2.test.ts",
+      "sha256": "3900c223f8d61a597b5bf7bbae2164df11e51147e35324f602719f0d2f0ebd55"
+    }
+  ],
+  "checks": {
+    "typecheck_exit": 0,
+    "first_party_exit": 0,
+    "views_write_exit": 0,
+    "views_check_exit": 0,
+    "generated_views_restored": true,
+    "source_lock_exit": 0,
+    "diff_check_exit": 0,
+    "committed_generated_view_check_exit": 1,
+    "committed_generated_view_failure_expected": true
+  },
+  "repository_checks": {
+    "acceptance_points_changed": 0,
+    "statuses_changed": 0,
+    "status_rows_preserved": 281,
+    "generated_views_committed": false,
+    "new_tests": 0,
+    "removed_tests": 0,
+    "focused_tests_before": 2,
+    "focused_tests_after": 2
+  },
+  "status_counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "status_counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78,
+    "total": 281
+  },
+  "deployment": false,
+  "publication_scan": "fleet lander required; not run in cloud",
+  "pr": null
+}

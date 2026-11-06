@@ -1,0 +1,29 @@
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5989860Z AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5990395Z + actual - expected
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5990618Z 
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5990751Z + [
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5991079Z +   'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5991474Z +   'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5992068Z +   'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5992449Z +   'Failed to load resource: net::ERR_CONNECTION_REFUSED'
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5992844Z + ]
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5993120Z - []
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5993257Z 
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5993689Z     at file:///home/runner/work/run-penny/run-penny/tests/browser/learning-journey.mjs:115:11 {
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5994243Z   generatedMessage: true,
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5994524Z   code: 'ERR_ASSERTION',
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5994782Z   actual: [
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5995145Z     'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5995619Z     'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5996252Z     'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5996749Z     'Failed to load resource: net::ERR_CONNECTION_REFUSED'
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5997101Z   ],
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5997330Z   expected: [],
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5997654Z   operator: 'deepStrictEqual',
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5997952Z   diff: 'simple'
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5998224Z }
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5998348Z 
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.5998458Z Node.js v22.20.0
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.6536791Z  ELIFECYCLE  Command failed with exit code 1.
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.6820609Z  ELIFECYCLE  Command failed with exit code 1.
+shards (browser, true)	Run this shard	2026-11-06T01:02:29.7019813Z ##[error]Process completed with exit code 1.

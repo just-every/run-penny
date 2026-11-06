@@ -1,0 +1,19 @@
+{
+  "source_restored": true,
+  "mutations": [
+    {
+      "boundary": "root",
+      "change": "temporarily strip unexpected fields instead of refusing them",
+      "exit": 1,
+      "duration_seconds": 16.73,
+      "log": "mutation-root.log"
+    },
+    {
+      "boundary": "option",
+      "change": "temporarily strip unexpected fields instead of refusing them",
+      "exit": 1,
+      "duration_seconds": 22.78,
+      "log": "mutation-option.log"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/sd-penny-c-f58/run-penny
+
+ ❯ tests/base/learning-stage2.test.ts (2 tests | 1 failed | 1 skipped) 2801ms
+   × [LEARN-001] refuses model identity and grants, captures permitted originals and commits an accountable protocol 2797ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/base/learning-stage2.test.ts > [LEARN-001] refuses model identity and grants, captures permitted originals and commits an accountable protocol
+AssertionError: {"runId":"1eca01ec-99ab-416b-be7d-5974d74f321f","artifactId":"f76159ab-7084-49f7-8baf-0c255836d908","unchanged":false}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ json tests/base/learning-test-runtime.ts:23:176
+
+ ❯ tests/base/learning-stage2.test.ts:50:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 skipped (2)
+   Start at  01:12:51
+   Duration  19.68s (transform 7.90s, setup 0ms, import 15.24s, tests 2.80s, environment 0ms)
+
