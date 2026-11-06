@@ -1,3 +1,4 @@
+import { proveAuditReadExport } from './audit-read-export'
 import {proveRoadmapPublication} from './roadmap-update-publication'
 import './custom-field-races'
 import { applyD1Migrations,reset } from 'cloudflare:test'
@@ -95,6 +96,7 @@ it('[BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configurati
  expect(keyResponse.status).toBe(201);const key=await keyResponse.json() as {credential:{id:string}}
  expect((await call(`/api/operator/integrations/keys/${key.credential.id}`,undefined,g.operator,'DELETE')).status).toBe(200)
  expect(await env.DB.prepare("SELECT actor_id,entity_id FROM audit_entries WHERE action='integration.key_revoked'").first()).toEqual({actor_id:actor,entity_id:key.credential.id})
+ await proveAuditReadExport()
 })
 
 it('[BASE-OPS-005] publication and real scheduled mail retain feature outcomes; an unavailable audit prevents publication',async()=>{
