@@ -8866,7 +8866,7 @@
       "executable": false
     },
     "tests/browser/operator-completeness-read.mjs": {
-      "sha256": "9fbd177cbc30f072904fe57000a52c52fee386fb0274c2d7e47fb957e80f5359",
+      "sha256": "9eb337b71f6d2ad2fd29b7e2007294f26fd85d14ed3e25f6517ff801797d85bb",
       "executable": false
     },
     "tests/browser/operator-completeness-requester.mjs": {
