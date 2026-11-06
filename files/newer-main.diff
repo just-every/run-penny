@@ -1,0 +1,1100 @@
+diff --git a/ACCEPTANCE.md b/ACCEPTANCE.md
+index 5acc7e1..e68e944 100644
+--- a/ACCEPTANCE.md
++++ b/ACCEPTANCE.md
+@@ -8,12 +8,12 @@ The primary journey: customers post, vote and follow on the owner's branded boar
+ 
+ | Tier | Done | Partial | Missing | Total |
+ | --- | ---: | ---: | ---: | ---: |
+-| Core | 77 | 110 | 71 | 258 |
++| Core | 79 | 108 | 71 | 258 |
+ | Agent surface | 0 | 16 | 5 | 21 |
+ | Later | 0 | 0 | 2 | 2 |
+-| Full target | 77 | 126 | 78 | 281 |
++| Full target | 79 | 124 | 78 | 281 |
+ 
+-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
++Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
+ 
+ ## Core
+ 
+@@ -399,7 +399,7 @@ Core · published · **partial**
+ 
+ #### REQ-010 — Follow and consent
+ 
+-Core · published · **partial**
++Core · published · **done**
+ 
+ **Requirement.** A verified requester can follow and unfollow a published request.
+ 
+@@ -407,8 +407,8 @@ Core · published · **partial**
+ 1. Submitting and voting present an unticked "Email me updates" control and grant no email permission on their own, except that on a board whose owner turned on vote subscriptions (NOTIFY-008) the vote control says that voting subscribes and the vote itself follows, and submitting subscribes the author (NOTIFY-011).
+ 2. Following, or ticking that control, stores a timestamped permission record for the verified address, which is what makes the identity eligible under REL-004.
+ 
+-**Evidence.** `tests/base/board.test.ts`
+-**Gap.** The unticked "Email me updates" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion.
++**Evidence.** `tests/browser/requester-repair.mjs` with `tests/browser/requester-consent.mjs` — mounted explicit and automatic consent; `tests/base/requester-subscriptions.test.ts` — disclosed voting and submission, explicit consent address binding, exact grant time and unfollow revocation (`tests/base/request-consent.ts`)
++**Gap.** None.
+ 
+ #### REQ-011 — Portal attachments
+ 
+@@ -542,8 +542,8 @@ Core · published · **partial**
+ **Acceptance.**
+ 1. An edit to already-public text re-enters moderation under `request.moderation.v1`, and the previously approved text stays public until the edit is approved or rejected; on an auto-publish board (REQ-033) an unflagged edit is public on submission and the earlier text stays in the request's history for operators.
+ 
+-**Evidence.** `tests/browser/requester-repair.mjs`
+-**Gap.** Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions.
++**Evidence.** `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback, unchanged-state refusal and private activity isolation throughout review, and rejected-edit approval replay refusal); `tests/browser/requester-repair.mjs` with `tests/browser/requester-comment-edit.mjs` — mounted own-comment edit and operator rejection and approval, signed-out public wording and identity readback, activity and review screens at 1440 and 390
++**Gap.** Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved.
+ 
+ #### REQ-021 — Requester withdrawal
+ 
+@@ -690,15 +690,15 @@ Core · published · **done**
+ 
+ #### REQ-032 — Internal notes
+ 
+-Core · published · **partial**
++Core · published · **done**
+ 
+ **Requirement.** Operators can add a note to any request.
+ 
+ **Acceptance.**
+ 1. A note is rendered distinctly from an operator comment and never appears in a portal response, page metadata, a release, or a notification.
+ 
+-**Evidence.** `tests/base/penny-evidence.test.ts`
+-**Gap.** A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted.
++**Evidence.** `tests/browser/internal-discussion.mjs` — native note and public comment controls on one approved request, distinct labelled rendering and unchanged identities after reload; `tests/base/penny-evidence.test.ts` — "[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail" checks portal responses, complete page metadata, releases and requester notifications.
++**Gap.** None.
+ 
+ ### Decisions
+ 
+@@ -964,8 +964,8 @@ Core · published · **partial**
+ 1. Recipient lists, other requesters, account context, commercial impact, decision rationale, confidence, and declined bets never appear in either.
+ 2. Release email carries the owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014).
+ 
+-**Evidence.** `tests/browser/loopjourney-release.mjs`
+-**Gap.** The owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted.
++**Evidence.** `tests/browser/loopjourney-release.mjs`; `tests/base/mail-identity.test.ts` — setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport; `tests/base/release-mail-identity.ts` — proveReleaseMailIdentity binds the native release delivery to its tested sender name, from address, reply-to, postal footer and signed-out unsubscribe, retaining wording and replay assertions.
++**Gap.** The owner's brand header (INT-008) in release email and the remaining acceptance-point-1 email privacy obligations are unproved; private context staying out of the public updates is asserted. Live verified-domain, reply and inbox qualification remains held in R-6.
+ 
+ #### REL-006 — Acceptance and retry
+ 
+@@ -1205,8 +1205,8 @@ Core · published · **partial**
+ 3. Requester/account links come only from native records; Orbit identity remains source-local and nullable.
+ 4. Model output cannot set identity or grants.
+ 
+-**Evidence.** `tests/base/learning-stage2.test.ts`
+-**Gap.** The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted.
++**Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
++**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
+ 
+ #### LEARN-002 — Contestable learning
+ 
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index a48499a..aba7837 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -2,6 +2,20 @@
+ 
+ ## Unreleased
+ 
++- Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
++
++- Prove native learning refuses otherwise valid model output carrying identity, derived identity, grant or authority fields at root and option boundaries. The existing learning journey reads unchanged native authority and selected scope after each refusal, retains permitted originals without an artifact or commitment, and accepts valid output with native account derivation and metered run accounting. LEARN-001 stays partial for deployment principal pinning and live source and model qualification. No runtime, migration or configuration change is required.
++
++- Exercise holding-board comment edits through the mounted requester activity form and operator verdict controls. The existing requester repair journey now reads the signed-out discussion while edits await review and after rejection, then proves an approved replacement retains the comment identity and count after reload. Capture the affected activity, review and public pages at desktop and phone widths. REQ-020 remains partial for the existing request-edit and auto-publish-history gaps; no runtime, migration or configuration change is required.
++
++- Prove holding-board comment edits retain the approved public comment while a replacement is pending or rejected, and publish only an approved replacement under the same identity. Extend the existing ownership journey with authenticated context and requester activity readback, nonempty public list and detail reads, rendered text, and another requester's unchanged-state refusal. REQ-020 remains partial for request title and description edit retention and auto-publish edit history. No runtime, migration or configuration change is required.
++
++- Prove the saved sender name, from address, monitored reply-to and postal footer on an actual native release delivery, correlated to its HTTP-edge envelope and durable attempt. Extend the existing mail-identity sanity journey with isolated release setup, publication, unchanged wording, signed-out unsubscribe and repeated-drain no-replay assertions. REL-005 stays partial for the owner brand header and remaining email privacy proof; live sender qualification remains in R-6. No runtime, migration or configuration change is required.
++
++- Complete REQ-010 consent proof through the existing requester and subscription journeys: mounted submit and vote controls start unchecked, ordinary unticked actions grant nothing, current automatic disclosures lead to author and voter follows, and explicit grants bind the verified address, request, source and controlled time. Unfollow revokes the permission while preserving the vote. Retain automatic-subscription, unsubscribe and withdrawal coverage. No runtime, migration or configuration change is required; separate notification, provider and release obligations remain unchanged.
++
++- Prove that a saved internal note and a public operator comment remain separate on the same approved request, including after reload. Extend the existing discussion browser journey with native controls, stored identities and public-response privacy, retaining mention and reply checks and screenshots at desktop and phone widths. No migration or configuration change is required.
++
+ - Complete NOTIFY-005’s existing route journeys: requester status history retains each event identity, body and publication time after retry exhaustion, ambiguous sends and interrupted attempts; operator review reminders retain the due decision, review date and notification identity through the same failures and later drains. Preserve bounded retries, durable operator failure visibility and unknown-send no-replay checks. No runtime, migration or configuration change is required; other clauses and field-proof holds remain unchanged.
+ 
+ - Prove EVID-007 suggestion requests leave existing request and bet evidence links, evidence contributions, merge history, canonical targets, requests, evidence wording and pending submissions unchanged before any explicit action. Retain published-only, deterministic no-model matching and explicit vote and follow assertions, including case, punctuation and Unicode coverage. Rank indexed ASCII terms inside D1 while preserving the full Unicode matcher. Migration 0109 adds expression indexes and read-only views; apply it with the existing migration runner and retain those schema objects on source rollback. Existing product records stay unchanged. Add a manual built-Worker capacity journey for exact, partial, absent and Unicode queries at the declared request, board and requester limits, and close EVID-007’s native proof gap. Automatic model rules remain in their existing clauses.
+diff --git a/CONTRACT.md b/CONTRACT.md
+index beec59b..83ebc8c 100644
+--- a/CONTRACT.md
++++ b/CONTRACT.md
+@@ -3265,13 +3265,13 @@ Penny does the whole feedback-to-roadmap job; these neighboring jobs stay in the
+ 
+ ## Status
+ 
+-Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026).
++Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.
+ 
+ | Clauses | Done | Partial | Missing | Total |
+ | --- | ---: | ---: | ---: | ---: |
+-| Published | 57 | 58 | 1 | 116 |
++| Published | 59 | 56 | 1 | 116 |
+ | Target and push further | 20 | 68 | 77 | 165 |
+-| All | 77 | 126 | 78 | 281 |
++| All | 79 | 124 | 78 | 281 |
+ 
+ | Clause | Title | Kind | Status | Evidence | Gap |
+ | --- | --- | --- | --- | --- | --- |
+@@ -3302,7 +3302,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `REQ-007` | Discussion | published | done | `tests/base/notifications.test.ts` |  |
+ | `REQ-008` | Merge | published | partial | `tests/base/board.test.ts` | Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted. |
+ | `REQ-009` | Unmerge | published | partial | `tests/base/board.test.ts`; `tests/base/notifications.test.ts` | Restoring the duplicate's votes, followers and evidence links, leaving post-merge additions on the canonical request and recording the reversal have no passing assertion; the duplicate's comment and status update reappearing are asserted. |
+-| `REQ-010` | Follow and consent | published | partial | `tests/base/board.test.ts` | The unticked "Email me updates" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion. |
++| `REQ-010` | Follow and consent | published | done | `tests/browser/requester-repair.mjs` with `tests/browser/requester-consent.mjs` — mounted explicit and automatic consent; `tests/base/requester-subscriptions.test.ts` — disclosed voting and submission, explicit consent address binding, exact grant time and unfollow revocation (`tests/base/request-consent.ts`) |  |
+ | `REQ-011` | Portal attachments | published | partial | `tests/base/board.test.ts` | Rejecting a file with a reason without rejecting the request, and the declared content type and inline disposition of a published image, have no passing assertion; approval, the 404 before it and the served bytes are asserted. |
+ | `REQ-012` | Portal search and browse | published | partial | `tests/base/board-categories.test.ts`; `visual/board-categories/REQ-012/` | Category filtering, newest and recency-weighted last-14-day trending are implemented alongside search, board, status and existing sorts. Gap: the 500 ms first page has no seeded run at the `seed.json` limits (D-3). |
+ | `REQ-013` | Submission idempotency | published | partial | `tests/base/board.test.ts`; `tests/browser/requester-repair.mjs` | No test repeats a submission with its idempotency key to get the original request and evidence result back, sends a changed body under the same key for 409, or checks 30-day key retention and keys holding no personal data. |
+@@ -3312,7 +3312,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `REQ-017` | Decline | published | done | `tests/base/request-status-workflow.test.ts` — sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards (reason refusal, declined history, closed participation, direct and mapped reversal); `tests/browser/request-decline.mjs` — request-decline (operator controls and customer history, repeated decline and reversal, screens at 1440 and 390) |  |
+ | `REQ-018` | Boards | published | partial | `tests/base/board.test.ts` | Renaming, reordering and archiving boards, moving a request with its votes, comments, followers and evidence links, and the 409 on submission to an archived board have no passing assertion. |
+ | `REQ-019` | Internal boards | published | partial | `tests/base/board.test.ts` | Keeping internal-board requests off the public roadmap, out of releases and out of requester notifications has no passing assertion in this clause's evidence; the request and attachment 404s are asserted. |
+-| `REQ-020` | Requester's own content | published | partial | `tests/browser/requester-repair.mjs` | Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions. |
++| `REQ-020` | Requester's own content | published | partial | `tests/base/ownership.test.ts` — requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback, unchanged-state refusal and private activity isolation throughout review, and rejected-edit approval replay refusal); `tests/browser/requester-repair.mjs` with `tests/browser/requester-comment-edit.mjs` — mounted own-comment edit and operator rejection and approval, signed-out public wording and identity readback, activity and review screens at 1440 and 390 | Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved. |
+ | `REQ-021` | Requester withdrawal | published | done | `tests/base/request-withdrawal.test.ts`; `tests/browser/request-withdrawal.mjs` |  |
+ | `REQ-022` | Blocking a requester | published | done | `tests/base/requester-blocking.test.ts`; `tests/browser/requester-blocking.mjs` |  |
+ | `REQ-023` | Email verification | published | partial | `tests/base/auth.test.ts`; `tests/browser/no-mail-journey.mjs` | The verified session expiring after 30 days without use, and a held action discarded after 24 hours without verification, have no passing assertion; held actions applied on verification are asserted. |
+@@ -3324,7 +3324,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `REQ-029` | Operator-authored request | published | done | `tests/base/operator-request-publication.ts`; `tests/base/penny-evidence.test.ts`; `tests/browser/operator-evidence-flow.mjs`; `tests/browser/operator-pages.mjs` |  |
+ | `REQ-030` | Moderation verdicts | published | partial | `tests/base/notifications.test.ts` | A rejected item counting toward no public total and staying visible with its reason to its author and operators, and the author notice's consent, suppression, mute and quiet-hours checks, have no passing assertion; the unsubscribe link and the once-only send are asserted. |
+ | `REQ-031` | Host identity claims | published | done | `tests/base/host-identity.test.ts` |  |
+-| `REQ-032` | Internal notes | published | partial | `tests/base/penny-evidence.test.ts` | A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted. |
++| `REQ-032` | Internal notes | published | done | `tests/browser/internal-discussion.mjs` — native note and public comment controls on one approved request, distinct labelled rendering and unchanged identities after reload; `tests/base/penny-evidence.test.ts` — "[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail" checks portal responses, complete page metadata, releases and requester notifications. |  |
+ | `DEC-001` | States and queue | published | partial | `tests/base/decision-loop-commit.test.ts` | The review date in the decision queue has no passing assertion; decisions in every state staying in the queue with their state and owner, and the last action and linked-evidence count, are asserted. |
+ | `DEC-002` | Brief | published | partial | `tests/base/decision-loop-dimensions.test.ts` | Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted. |
+ | `DEC-003` | Comparable bets | published | partial | `tests/base/decision-loop-dimensions.test.ts` | The absence of a stored or displayed combined score and of an automatic ranking has no passing assertion: the bet record and the stored snapshot are checked in a way that allows extra fields, and bets are looked up by id, so their order is unchecked; each bet's metrics holding exactly the five dimension figures is asserted. |
+@@ -3345,7 +3345,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `REL-002` | Publication | published | done | `tests/browser/loopjourney-release.mjs` |  |
+ | `REL-003` | Published wording | published | done | `tests/base/penny-releases.test.ts`; `tests/base/release-custody.test.ts` |  |
+ | `REL-004` | Recipient eligibility and snapshot | published | partial | `tests/base/release-custody.test.ts` | The snapshot staying unchanged after a later merge, relink or preference change, and the `release.recipient-eligibility.v1` default (which actions grant a permission record, that voting elsewhere and an operator-entered address grant none, and NOTIFY-009's one-snapshot addition) have no passing assertion; export and restore of the snapshot tables, an identity merge fenced while a send is in flight, and follower erasure are asserted. |
+-| `REL-005` | Customer-safe delivery | published | partial | `tests/browser/loopjourney-release.mjs` | The owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted. |
++| `REL-005` | Customer-safe delivery | published | partial | `tests/browser/loopjourney-release.mjs`; `tests/base/mail-identity.test.ts` — setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport; `tests/base/release-mail-identity.ts` — proveReleaseMailIdentity binds the native release delivery to its tested sender name, from address, reply-to, postal footer and signed-out unsubscribe, retaining wording and replay assertions. | The owner's brand header (INT-008) in release email and the remaining acceptance-point-1 email privacy obligations are unproved; private context staying out of the public updates is asserted. Live verified-domain, reply and inbox qualification remains held in R-6. |
+ | `REL-006` | Acceptance and retry | published | partial | `tests/base/notifications.test.ts`; `tests/base/release-custody.test.ts` | The published update staying visible on the portal in every failure state has no passing assertion, and an ambiguous or interrupted send held unknown with no replay (point 3, reconciled with RL-3) is asserted for requester status-update mail but not for a release delivery; bounded retry of known failures ending in failed, and a restored queued release held unknown and inert, are asserted. |
+ | `REL-007` | Idempotent delivery and provider events | published | partial | `tests/base/release-custody.test.ts` | Resend idempotency key and signed event dedupe ship; SendGrid has no provider duplicate suppression, so its delivery key is correlation only (RL-3). |
+ | `REL-008` | Outcome response | published | done | `tests/base/penny-releases.test.ts` |  |
+@@ -3363,7 +3363,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `DATA-002` | Public/private boundary | published | partial | `tests/base/host-identity.test.ts`; `tests/base/no-mail-identity.test.ts` | The absence of operator-only field names and values from a public payload has no passing assertion over a non-empty response: both cited checks read the public request list while it holds no published request (the non-empty public-surface scan in `tests/base/penny-evidence.test.ts` is not cited here); the refusal of invalid signed claims without writes or identity disclosure is asserted. |
+ | `DATA-003` | Erasure outranks history | published | done | `tests/base/penny-erasure.test.ts` |  |
+ | `DATA-004` | Custom fields | published | done | `tests/browser/operator-completeness-fields.mjs`; `tests/browser/operator-pages.mjs` |  |
+-| `LEARN-001` | Permitted originals | published | partial | `tests/base/learning-stage2.test.ts` | The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted. |
++| `LEARN-001` | Permitted originals | published | partial | `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol | The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved. |
+ | `LEARN-002` | Contestable learning | published | partial | `tests/base/learning-stage2.test.ts` | Every option carrying the DEC-003 dimensions computed from originals, invalidation by native or source corrections with versioned operator contests, and the absence of automatic ranking, customer contact or publication have no passing assertion in this clause's evidence; validated spans, the clarification and the no-build option are asserted. |
+ | `LEARN-003` | Accountable pre-action choice | published | partial | `tests/base/learning-stage3.test.ts` | The committed snapshot retaining the interpretation, original evidence, compared options, owner and full predeclared protocol, and missing protocol fields as explicit nulls that prevent commitment, have no passing assertion in this clause's evidence; commitment and its attributed audit are asserted. |
+ | `LEARN-004` | Bounded recurring work | published | partial | `tests/base/learning-stage3.test.ts` | Expiry, budget, correction-version and erasure-epoch checks before external work and in the result transaction, the absence of any implicit contact, production or publication effect, and interrupted or ambiguous calls keeping their uncertainty and reserved budget without retry have no passing assertion in this clause's evidence; durable runs, unchanged-input deduplication, in-flight pause and revoke, and pause, resume, revoke and disconnect are asserted. |
+diff --git a/docs/CLAIMS.md b/docs/CLAIMS.md
+index 6e54cd2..1a31c87 100644
+--- a/docs/CLAIMS.md
++++ b/docs/CLAIMS.md
+@@ -8,7 +8,7 @@ A claim is done when every clause behind it is done, missing when every one is m
+ | --- | --- | --- | --- |
+ | 1 | 100% free, open source alternative to Canny, UserVoice and Productboard | `MIG-001` partial; `MIG-002` missing; `MIG-004` partial | partial |
+ | 2 | Collect requests, decide with real evidence, and tell everyone who asked when it ships. | `REQ-003` partial; `DEC-004` partial; `REL-002` done | partial |
+-| 3 | Customers post requests, vote, follow and comment on a public board. | `REQ-003` partial; `REQ-006` partial; `REQ-007` done; `REQ-010` partial | partial |
++| 3 | Customers post requests, vote, follow and comment on a public board. | `REQ-003` partial; `REQ-006` partial; `REQ-007` done; `REQ-010` done | partial |
+ | 4 | Nothing goes public until you approve it. | `REQ-005` done; `REQ-030` partial | partial |
+ | 5 | Duplicate suggestions before anyone posts | `REQ-004` done; `EVID-007` done | done |
+ | 6 | Email-verified votes, one per address | `REQ-006` partial; `REQ-023` partial | partial |
+@@ -22,7 +22,7 @@ A claim is done when every clause behind it is done, missing when every one is m
+ | 14 | Release notes in your own words | `REL-001` partial; `REL-003` done | partial |
+ | 15 | Account names, revenue, evidence sources and internal notes never reach a public page, an email or a search engine. | `EVID-006` done; `DATA-002` partial | partial |
+ | 16 | Customer-safe wording you approve | `REQ-005` done; `ROAD-004` done | done |
+-| 17 | Internal boards and notes | `REQ-019` partial; `REQ-032` partial | partial |
++| 17 | Internal boards and notes | `REQ-019` partial; `REQ-032` done | partial |
+ | 18 | No tracking, no cookies on public pages | `REQ-023` partial; `HOME-002` partial | partial |
+ | 19 | Download an archive of your business data from the operator app | `DATA-001` done | done |
+ | 20 | Change anything with your own coding agent | `EDIT-001` partial | partial |
+diff --git a/sources.lock.json b/sources.lock.json
+index 78f62b9..f247f9d 100644
+--- a/sources.lock.json
++++ b/sources.lock.json
+@@ -670,7 +670,7 @@
+       "executable": false
+     },
+     "ACCEPTANCE.md": {
+-      "sha256": "a1892ab4b7e449b40e22e11ee344bbf07d2e625d63a1bf79d9900d8e46e03378",
++      "sha256": "8a2c1af69322b3c68a5f82ec9086eba16655b75c3846476ecbcdb41253151812",
+       "executable": false
+     },
+     "agent-surface.json": {
+@@ -3354,7 +3354,7 @@
+       "executable": false
+     },
+     "CHANGELOG.md": {
+-      "sha256": "18343f6e22f90f3d5f20cb079e9dbefb53b60745fd0dfdb247fe6ced2cb3dbb7",
++      "sha256": "5d6114d1e1c793d905d7cc97ec481db776b5cb555837da79b84e9c2a71bb3060",
+       "executable": false
+     },
+     "CLAUDE.md": {
+@@ -3366,7 +3366,7 @@
+       "executable": false
+     },
+     "CONTRACT.md": {
+-      "sha256": "ce573fd505226629fe811135205465cce9251b8e0d553ab19406d913008b5d9b",
++      "sha256": "af1656b681438d35f82dbe0d18022925eb26fac02b36c4c6af6ace7b88a763fb",
+       "executable": false
+     },
+     "DEMO.md": {
+@@ -3418,7 +3418,7 @@
+       "executable": false
+     },
+     "docs/CLAIMS.md": {
+-      "sha256": "d2efe01b51dbae01703c63f96db0e3616e5b2e42b17aca4d9f8616c2f8f91643",
++      "sha256": "d4a8b952e1f779f01db8e8894901609bc6483226143356c176602437c83eed12",
+       "executable": false
+     },
+     "docs/contract-mechanism.md": {
+@@ -8410,7 +8410,7 @@
+       "executable": false
+     },
+     "tests/base/learning-stage2.test.ts": {
+-      "sha256": "2e4d6ae4538cdb47c4fce69f5d612ad012ace1cacd2e3973d00c742fe9b50fdf",
++      "sha256": "3269c672e416ae10b7fb9128d0011b5139fce9af86398d02e70bf47ff72f7c2d",
+       "executable": false
+     },
+     "tests/base/learning-stage3.test.ts": {
+@@ -8418,7 +8418,7 @@
+       "executable": false
+     },
+     "tests/base/learning-test-runtime.ts": {
+-      "sha256": "b390bf1caf2a5095beb189d866288b9a7fcecdad116b5eb6d615c8341ed1c0a1",
++      "sha256": "dcf8713834e9b6e871b9920a826bddcdb0b1a62f6612e3ff73fe942d6c3955b3",
+       "executable": false
+     },
+     "tests/base/legacy-feedback-fixture.ts": {
+@@ -8438,7 +8438,7 @@
+       "executable": false
+     },
+     "tests/base/mail-identity.test.ts": {
+-      "sha256": "a2743d85d4feb43e924a15e61f1fc08e0271c7b39aca53a0539d9a7e4aa87eb5",
++      "sha256": "927883977980909f930b43894f63daf9bca528a912e176c3b517a3e89d0cd817",
+       "executable": false
+     },
+     "tests/base/merge-notices.test.ts": {
+@@ -8478,7 +8478,7 @@
+       "executable": false
+     },
+     "tests/base/ownership.test.ts": {
+-      "sha256": "c77d8895854135ae9a79096d4b69a25bb4d366e24cac44d613aaf2aa032b273f",
++      "sha256": "6b651e4ae91ae362432131c0c3f7232f3655c564dd359b55d2a7fdfc5c3b1527",
+       "executable": false
+     },
+     "tests/base/penny-decisions.test.ts": {
+@@ -8553,6 +8553,10 @@
+       "sha256": "e38bd8b2362c8e3535109c75bf2b1f0eab75edf75f2d3e3df057f083d47a004d",
+       "executable": false
+     },
++    "tests/base/release-mail-identity.ts": {
++      "sha256": "7dcd6e98f1ef4bc6109805ea75eec48977180a3c78d577be6ae1cc0d93b65e05",
++      "executable": false
++    },
+     "tests/base/release-planning.test.ts": {
+       "sha256": "165bed3a8d37d5e67ce4bc593203cc6dabb784089fa35543043292ddbf0f56c1",
+       "executable": false
+@@ -8569,6 +8573,10 @@
+       "sha256": "27cd10205c3a365da605c3dd1c0d45315f66c2197a35b4c3962a7862ed485a1c",
+       "executable": false
+     },
++    "tests/base/request-consent.ts": {
++      "sha256": "e4bf65fbf6d3caae3d6ccef59a6c96fd0bf126c735f85ddcb598ee77132d900c",
++      "executable": false
++    },
+     "tests/base/request-demand.test.ts": {
+       "sha256": "724b8a4bdc76915f17834a44f97cf8567cc1ee1cbd8333f3592a3fd83c2557d8",
+       "executable": false
+@@ -8590,7 +8598,7 @@
+       "executable": false
+     },
+     "tests/base/requester-subscriptions.test.ts": {
+-      "sha256": "7f2271b409ff282d969b78c4438d9d172c1702e984b62075be90a26a2f86a72c",
++      "sha256": "20b0f79dded6d73fc54cebe60c59c8e88887ae5c50346b7d9130e041293842dd",
+       "executable": false
+     },
+     "tests/base/review-mail-fixture.ts": {
+@@ -8802,7 +8810,7 @@
+       "executable": false
+     },
+     "tests/browser/internal-discussion.mjs": {
+-      "sha256": "c4ed618859d574831ea49dd47c9de639de807e33bab1b4e32ea00576e68eb2e6",
++      "sha256": "c0a09a3c501c404e52845892ff01acb0f145ddc7da0636776c0526b9670cf1c6",
+       "executable": false
+     },
+     "tests/browser/learning-journey.mjs": {
+@@ -8989,6 +8997,14 @@
+       "sha256": "82ac05e4b70fe781510f6c32065d71937f9696a55ec95385aeaf8b87db763e9d",
+       "executable": false
+     },
++    "tests/browser/requester-comment-edit.mjs": {
++      "sha256": "30b3dd614c761bf69a49c1a63982efbc590b9058e4c4514d856d5f2e2656d67f",
++      "executable": false
++    },
++    "tests/browser/requester-consent.mjs": {
++      "sha256": "77a9b40aa98295bcd0ee24f1ef70294674a0d6a314126854518183127cc1352c",
++      "executable": false
++    },
+     "tests/browser/requester-evidence.mjs": {
+       "sha256": "79c6cea03c0dd8b32114b0f236b118d43339aa50b8d397beeeb4f36c700c7225",
+       "executable": false
+@@ -9002,7 +9018,7 @@
+       "executable": false
+     },
+     "tests/browser/requester-repair.mjs": {
+-      "sha256": "d3fe982de9219c249398a70de25e8929a1386efa1c63c031acddd8bf836ed797",
++      "sha256": "e2f3461ca9a31681e811c969e9d08e7483b28eec3765ae68f8c01ec5b6c51d17",
+       "executable": false
+     },
+     "tests/browser/rich-changelog.mjs": {
+diff --git a/tests/base/learning-stage2.test.ts b/tests/base/learning-stage2.test.ts
+index f352624..e398967 100644
+--- a/tests/base/learning-stage2.test.ts
++++ b/tests/base/learning-stage2.test.ts
+@@ -1,12 +1,65 @@
+ import {expect,inject,it,vi} from 'vitest'
+ import {env} from 'cloudflare:workers'
+ import {applyD1Migrations,reset} from 'cloudflare:test'
+-import {call,json,fixture,path,bindings,sent,network} from './learning-test-runtime'
++import {call,json,fixture,path,bindings,sent,network,resetLearning} from './learning-test-runtime'
+ import {learningOutput} from './learning-fixture'
++import {base64urlEncode,sign} from '@/core/features/auth/tokens'
+ import {digest} from '@/core/features/auth/native-tokens'
+ import {canonical,hash,type exportArchive} from '@/core/features/data/archive'
+ import {proveLearningRedaction} from './redaction-learning-door'
+-it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, compares no-build and commits an immutable accountable protocol',async()=>{
++it('[LEARN-001] refuses model identity and grants, captures permitted originals and commits an accountable protocol',async()=>{
++ {
++ // Model fields are untrusted even when every required interpretation field is valid.
++ const native=await fixture({nativeOnly:true}),custom=bindings()
++ delete custom.PENNY_LEARNING
++ custom.PORTAL_IDENTITY_SECRET='synthetic-penny-host-signing-material'
++ const claim=base64urlEncode(new TextEncoder().encode(JSON.stringify({aud:'https://penny.test',issuedAt:new Date().toISOString(),email:['synthetic-penny-1','example.test'].join('@'),displayName:'Synthetic Penny person',accountId:'synthetic-penny-1',accountName:'Synthetic Penny account'})))
++ await json(call('/api/public/identity/host',{},'',custom,'POST',{'X-Penny-Identity':claim,'X-Penny-Identity-Signature':base64urlEncode(await sign(custom.PORTAL_IDENTITY_SECRET,claim))}))
++ const requesterId=await env.DB.prepare('SELECT id FROM requesters').first<string>('id'),accountId=await env.DB.prepare('SELECT id FROM accounts').first<string>('id')
++ expect(requesterId).toBeTruthy();expect(accountId).toBeTruthy()
++ const evidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Selected native account note',wording:'The existing handoff needs a checklist.',accountId,observedAt:'2026-10-01T00:00:00Z'},native.cookie,custom),201)
++ const investigation=await json<{id:string}>(call(path+'/investigations',{nativeEvidenceIds:[evidence.id],nativeRequestIds:[],purpose:'Compare only the selected native account note',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:10000000,maxRunCostMicros:100000,intervalMinutes:60},native.cookie,custom),201)
++ const detailPath=path+`/investigations/${investigation.id}`
++ type Detail={investigation:Record<string,unknown>;observations:Record<string,unknown>[];artifacts:{id:string;body:{options:Record<string,unknown>[]}}[];commitments:unknown[];runs:{state:string;reason:string;actual_micros:number|null}[]}
++ const detail=()=>json<Detail>(call(detailPath,undefined,native.cookie,custom))
++ // Session use timestamps and run accounting may advance; identity, grants and
++ // selected scope must remain fixed. Read whole authority rows where possible.
++ const custody=async()=>({
++  identities:(await env.DB.batch(['requesters','requester_addresses','accounts','requester_account_links','requester_update_permissions','native_requester_sessions','operators','oa_operators','learning_sources'].map(table=>env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`)))).map(result=>result.results),
++  sessions:(await env.DB.prepare('SELECT id,operator_id,revoked_at FROM oa_sessions ORDER BY id').all()).results,
++  grants:(await env.DB.prepare('SELECT id,source_id,question,purpose,native_evidence_ids_json,native_request_ids_json,state,native_operator_id,operator_version,actor_id,expires_at,budget_micros,max_run_cost_micros,interval_minutes,version,created_at FROM learning_investigations ORDER BY id').all()).results,
++ })
++ const fixedScope=(scope:Record<string,unknown>)=>Object.fromEntries(Object.entries(scope).filter(([key])=>!['spentMicros','actualCostMicros','reservedCostMicros','nextRunAt','lastReason'].includes(key)))
++ const before=await custody(),scope=fixedScope((await detail()).investigation)
++ const attacks=[
++  {requesterId:'synthetic-penny-forged-requester',accountId:'synthetic-penny-forged-account'},
++  {requester_id:requesterId,account_id:accountId},
++  {grant:{nativeOperatorId:'synthetic-penny-forged-operator',state:'active',nativeEvidenceIds:[native.evidence.id]},authority:{role:'owner',verified:true}},
++  {affectedRequesters:[requesterId],affectedAccounts:[accountId]},
++ ]
++ for(const boundary of ['root','option'] as const)for(const fields of attacks){
++  network.modelOutput=output=>boundary==='root'?{...output,...fields}:{...output,options:output.options.map((option,index)=>index===0?{...option,...fields}:option)}
++  try{expect(await json(call(detailPath+'/run',{},native.cookie,custom),409),boundary+JSON.stringify(fields)).toEqual({error:'learning_model_output_invalid'})}finally{network.modelOutput=undefined}
++  const refused=await detail()
++  expect(refused.artifacts).toEqual([]);expect(refused.commitments).toEqual([])
++  expect(refused.runs.every(run=>run.state==='uncertain'&&run.reason==='learning_model_output_invalid'&&run.actual_micros===null)).toBe(true)
++  expect(await custody()).toEqual(before)
++  expect(fixedScope(refused.investigation)).toEqual(scope)
++  expect(refused.investigation).toMatchObject({spentMicros:refused.runs.length*100000,lastReason:'learning_model_output_invalid'})
++  expect(refused.observations).toHaveLength(1)
++  expect(refused.observations[0]).toMatchObject({evidence_id:evidence.id,requesterId:null,accountId})
++  expect(JSON.stringify(refused)).not.toContain('synthetic-penny-forged')
++ }
++ const accepted=await json<{artifactId:string}>(call(detailPath+'/run',{},native.cookie,custom)),valid=await detail()
++ expect(valid.artifacts).toHaveLength(1);expect(valid.artifacts[0].id).toBe(accepted.artifactId)
++ for(const option of valid.artifacts[0].body.options)expect(option).toMatchObject({affectedRequesters:[],affectedAccounts:[accountId],supportingEvidenceCount:1})
++ expect(valid.runs.filter(run=>run.state==='complete')).toEqual([expect.objectContaining({reason:'material_learning',actual_micros:1100})])
++ expect(await custody()).toEqual(before)
++ expect(sent).toHaveLength(attacks.length*2+1);expect(sent.every(wire=>wire.startsWith('POST '))).toBe(true)
++ const usage=(await env.DB.prepare('SELECT state,actual_micros,input_tokens,output_tokens FROM penny_ai_runs ORDER BY rowid').all()).results
++ expect(usage).toHaveLength(sent.length);expect(usage.every(run=>run.state==='metered'&&run.actual_micros===1100&&run.input_tokens===100&&run.output_tokens===500)).toBe(true)
++ }
++ await resetLearning()
+  const f=await fixture();network.sourceText=canonical({id:'cancellation',subject:'I cancelled because I could not hand off the report.',occurred_at:'2026-10-01T00:00:00.000Z',confidence:'observed'})
+  const run=await json<{artifactId:string}>(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie))
+  const detail=await json<{observations:Record<string,unknown>[];artifacts:{body:ReturnType<typeof learningOutput>;id:string}[]}>(call(path+`/investigations/${f.investigation.id}`,undefined,f.cookie));expect(detail.observations).toHaveLength(2);expect(detail.observations.every(o=>o.requester_id===null&&o.account_id===null)).toBe(true)
+diff --git a/tests/base/learning-test-runtime.ts b/tests/base/learning-test-runtime.ts
+index 1498f66..b142ee0 100644
+--- a/tests/base/learning-test-runtime.ts
++++ b/tests/base/learning-test-runtime.ts
+@@ -5,24 +5,25 @@ import {createPennyApi} from '@/core/app/api'
+ import {digest} from '@/core/features/auth/native-tokens'
+ import {canonical} from '@/core/features/data/archive'
+ import type {AppBindings} from '@/core/shared/bindings'
++import type {LearningOutput} from '@/core/features/learning/schema'
+ import {learningOutput,type ModelInput} from './learning-fixture'
+ const app=createPennyApi(),origin='https://penny.test'
+ export const path='/api/operator/learning'
+ export let sent:string[]=[]
+-export const network={sourceStatus:200,badCitation:false,beforeModel:undefined as (()=>Promise<void>)|undefined,lastBody:'',sourceText:null as string|null}
++export const network={sourceStatus:200,badCitation:false,beforeModel:undefined as (()=>Promise<void>)|undefined,lastBody:'',sourceText:null as string|null,modelOutput:undefined as ((output:LearningOutput)=>unknown)|undefined}
+ export const config={orbit:{origin:'https://orbit.example.com',token:'network-edge-test-token',installationId:'fixture-orbit',audiencePrincipalIds:['source-operator'],readCostMicros:0}}
+ export const bindings=():AppBindings=>({...env,PENNY_LEARNING:JSON.stringify(config),PENNY_AI:JSON.stringify({anthropic:{apiKey:'synthetic-edge-model-key',models:[{id:'configured-claude',inputMicrosPerToken:1,outputMicrosPerToken:2,maxOutputTokens:4000}]},openai:{apiKey:'synthetic-edge-openai-key',models:[{id:'configured-model',inputMicrosPerToken:1,outputMicrosPerToken:2,maxOutputTokens:4000}]}}),PENNY_LEARNING_EGRESS:{async send(wire){sent.push(wire.method+' '+wire.url);if(wire.method==='GET'){
+  if(network.sourceStatus!==200)return {status:network.sourceStatus,headers:{},body:'{}'}
+  const target=new URL(wire.url).searchParams.get('target')!,text=network.sourceText??canonical({id:target.split('/')[1],subject:'I cancelled because I could not hand off the report.',occurred_at:'2026-10-01T00:00:00Z',confidence:'observed'})
+  return {status:200,headers:{},body:JSON.stringify({provider:'orbit',installationId:'fixture-orbit',accountId:'workspace',principalId:'source-operator',target,revision:await digest(text),observedAt:'2026-10-14T00:00:00Z',audience:{kind:'source-principals',principalIds:['source-operator']},title:'Cancellation',text,canonicalUrl:'https://orbit.example.com'+(target.startsWith('opportunities/')?'/app/opportunities/'+target.split('/')[1]:'/app/records')})}
+  }
+- expect(['https://api.openai.com/v1/chat/completions','https://api.anthropic.com/v1/messages']).toContain(wire.url);const reservation=await env.DB.prepare("SELECT reserved_micros FROM penny_ai_runs WHERE state='reserved' ORDER BY created_at DESC LIMIT 1").first<{reserved_micros:number}>();expect(reservation).not.toBeNull();expect(reservation!.reserved_micros).toBeGreaterThanOrEqual(100*1+500*2);network.lastBody=wire.body;const payload=JSON.parse(wire.body);if(wire.url.includes('anthropic')&&unsupportedSchema(payload.output_config.format.schema))return {status:400,headers:{},body:JSON.stringify({error:{type:'invalid_request_error'}})};const input=JSON.parse(payload.messages.at(-1).content) as ModelInput,output=learningOutput(input);if(network.badCitation)output.citations[0].quote='invented quote';if(network.beforeModel)await network.beforeModel();return {status:200,headers:{},body:JSON.stringify(wire.url.includes('anthropic')?{content:[{type:'text',text:JSON.stringify(output)}],stop_reason:'end_turn',usage:{input_tokens:100,output_tokens:500}}:{choices:[{message:{content:JSON.stringify(output)},finish_reason:'stop'}],usage:{prompt_tokens:100,completion_tokens:500}})} }}})
++ expect(['https://api.openai.com/v1/chat/completions','https://api.anthropic.com/v1/messages']).toContain(wire.url);const reservation=await env.DB.prepare("SELECT reserved_micros FROM penny_ai_runs WHERE state='reserved' ORDER BY created_at DESC LIMIT 1").first<{reserved_micros:number}>();expect(reservation).not.toBeNull();expect(reservation!.reserved_micros).toBeGreaterThanOrEqual(100*1+500*2);network.lastBody=wire.body;const payload=JSON.parse(wire.body);if(wire.url.includes('anthropic')&&unsupportedSchema(payload.output_config.format.schema))return {status:400,headers:{},body:JSON.stringify({error:{type:'invalid_request_error'}})};const input=JSON.parse(payload.messages.at(-1).content) as ModelInput,output=learningOutput(input);if(network.badCitation)output.citations[0].quote='invented quote';if(network.beforeModel)await network.beforeModel();const modelOutput=network.modelOutput?.(output)??output;return {status:200,headers:{},body:JSON.stringify(wire.url.includes('anthropic')?{content:[{type:'text',text:JSON.stringify(modelOutput)}],stop_reason:'end_turn',usage:{input_tokens:100,output_tokens:500}}:{choices:[{message:{content:JSON.stringify(modelOutput)},finish_reason:'stop'}],usage:{prompt_tokens:100,completion_tokens:500}})} }}})
+ let ip=0
+-export const call=(url:string,body?:unknown,cookie='',custom?:AppBindings,method=body===undefined?'GET':'POST')=>app.fetch(new Request(origin+url,{method,headers:{Host:'penny.test',Origin:origin,Cookie:cookie,'Content-Type':'application/json','CF-Connecting-IP':`192.0.2.${++ip}`},...(body===undefined?{}:{body:JSON.stringify(body)})}),custom??bindings())
++export const call=(url:string,body?:unknown,cookie='',custom?:AppBindings,method=body===undefined?'GET':'POST',headers:Record<string,string>={})=>app.fetch(new Request(origin+url,{method,headers:{Host:'penny.test',Origin:origin,Cookie:cookie,'Content-Type':'application/json','CF-Connecting-IP':`192.0.2.${++ip}`,...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),custom??bindings())
+ export async function json<T=Record<string,unknown>>(response:Response|Promise<Response>,status=200):Promise<T>{const r=await response;expect(r.status,await r.clone().text()).toBe(status);return r.json() as Promise<T>}
+-export async function resetLearning(){await reset();await applyD1Migrations(env.DB,inject('migrations'));sent=[];network.sourceStatus=200;network.badCitation=false;network.beforeModel=undefined;network.sourceText=null}
++export async function resetLearning(){await reset();await applyD1Migrations(env.DB,inject('migrations'));sent=[];network.sourceStatus=200;network.badCitation=false;network.beforeModel=undefined;network.sourceText=null;network.modelOutput=undefined}
+ beforeEach(resetLearning)
+-export async function fixture(){const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303);const cookie=boot.headers.get('set-cookie')!.split(';')[0];await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:true,choices:[]},cookie,undefined,'PUT'));const evidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Native cancellation note',wording:'Customer cancelled after the report handoff failed.',observedAt:'2026-10-01T00:00:00Z'},cookie),201);const source=await json<{id:string}>(call(path+'/sources',{name:'Selected sales context',provider:'orbit',resourceIds:['signals/cancellation'],useBasis:'Authorized cancellation investigation for every operator',allOperatorsAuthorized:true},cookie),201);const investigation=await json<{id:string}>(call(path+'/investigations',{sourceId:source.id,question:'',nativeEvidenceIds:[evidence.id],nativeRequestIds:[],purpose:'Understand the cancellation and prepare a bounded next step',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},cookie),201);return {cookie,evidence,source,investigation}}
++export async function fixture({nativeOnly=false}={}){const boot=await call('/auth/bootstrap',{token:'synthetic-base-setup-token-for-worker-tests',displayName:'Owner'});expect(boot.status).toBe(303);const cookie=boot.headers.get('set-cookie')!.split(';')[0];await json(call('/api/operator/settings/ai',{monthlyBudgetMicros:100000000,includePrivate:true,choices:[]},cookie,undefined,'PUT'));const evidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Native cancellation note',wording:'Customer cancelled after the report handoff failed.',observedAt:'2026-10-01T00:00:00Z'},cookie),201);const source=nativeOnly?null:await json<{id:string}>(call(path+'/sources',{name:'Selected sales context',provider:'orbit',resourceIds:['signals/cancellation'],useBasis:'Authorized cancellation investigation for every operator',allOperatorsAuthorized:true},cookie),201);const investigation=await json<{id:string}>(call(path+'/investigations',{sourceId:source?.id,question:'',nativeEvidenceIds:[evidence.id],nativeRequestIds:[],purpose:'Understand the cancellation and prepare a bounded next step',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},cookie),201);return {cookie,evidence,source:source??{id:(await env.DB.prepare('SELECT source_id FROM learning_investigations WHERE id=?').bind(investigation.id).first<string>('source_id'))!},investigation}}
+ 
+ // Provider-side validation at the paid edge, matching the documented raw-schema API.
+ function unsupportedSchema(value:unknown):boolean{
+diff --git a/tests/base/mail-identity.test.ts b/tests/base/mail-identity.test.ts
+index 7914ea7..1a5d347 100644
+--- a/tests/base/mail-identity.test.ts
++++ b/tests/base/mail-identity.test.ts
+@@ -2,9 +2,10 @@ import {applyD1Migrations,reset} from 'cloudflare:test'
+ import {exports} from 'cloudflare:workers'
+ import {beforeEach,afterEach,vi,expect,inject,it} from 'vitest'
+ import {mockMail,owner,finishFirstRun} from './support'
++import {proveReleaseMailIdentity} from './release-mail-identity'
+ import {accepted,body,graph,call,env,origin} from './subscription-fixture'
+-beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()});afterEach(()=>vi.restoreAllMocks())
+-it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower transport',async()=>{
++beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()});afterEach(()=>{vi.useRealTimers();vi.restoreAllMocks()})
++it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport',async()=>{
+  const operator=await owner({finishSetup:false})
+  const incomplete=await exports.default.fetch(new Request(origin+'/setup',{method:'POST',headers:{...operator,Origin:origin,'Content-Type':'application/x-www-form-urlencoded'},body:'confirm=yes&companyName=Example'}));expect(incomplete.status).toBe(400)
+  expect(await env.DB.prepare('SELECT * FROM oa_first_run').first()).toBeNull()
+@@ -26,4 +27,5 @@ it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected se
+  expect((await call('/api/operator/boards/subscriptions/vote-subscriptions',{enabled:true,version:g.disclosure.version+1},g.operator,'PUT')).status).toBe(409)
+  const before=g.sent.length;await g.status(slug,'planned');await g.flush();expect(g.sent.length).toBeGreaterThan(before)
+  expect(g.sent.filter(message=>message.personalizations[0].to[0].email===update.personalizations[0].to[0].email).length).toBeGreaterThan(1)
++ await proveReleaseMailIdentity()
+ })
+diff --git a/tests/base/ownership.test.ts b/tests/base/ownership.test.ts
+index 459dda0..548a101 100644
+--- a/tests/base/ownership.test.ts
++++ b/tests/base/ownership.test.ts
+@@ -7,6 +7,8 @@ import type { Archive, ErasureJournal } from '../../src/core/features/data/archi
+ import type { ItemOwner, OwnershipQueue } from '../../src/core/features/ownership/types'
+ import { call, env, mockMail, origin, owner, requester } from './support'
+ import { observeD1 } from './review-race-storage'
++import type { PublicRequestCard, PublicRequestDetail } from '../../src/core/shared/api/public'
++import type { RequestContext } from '../../src/core/features/requests/request-context-read'
+ import { assign, capture, catalog, good, peer, queue, type Cookie } from './ownership-fixture'
+ 
+ beforeEach(async () => { await reset(); mockMail() })
+@@ -73,7 +75,7 @@ it('[TRIAGE-001 TRIAGE-005] upgrades populated records without granting an owner
+  await proveRequestBatches()
+ })
+ 
+-it('[TRIAGE-001] requester comments follow the request owner, require review before handling and reappear for a new owner', async () => {
++it('[TRIAGE-001 REQ-020] requester comments retain approved public text through own-edit review and follow the request owner', async () => {
+  const { cookie, self } = await setup(), other = await peer(cookie)
+  await assign('boards', 'owned-feedback', self.id, cookie)
+  const { request } = await capture(cookie, 'owned-feedback')
+@@ -85,15 +87,73 @@ it('[TRIAGE-001] requester comments follow the request owner, require review bef
+  const pending = (await queue(cookie)).comments[0]
+  expect((await call(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: pending.updatedAt }, cookie)).status).toBe(409)
+  await good(`/api/operator/comments/${comment.id}/moderate`, { verdict: 'approved', publicAuthorDisplayName: 'Customer' }, cookie)
++ const original = await good<PublicRequestDetail>(`/api/public/requests/${request.slug}`)
++ expect(original.comments).toEqual([{ id: comment.id, body: 'Please explain this workflow', author: { displayName: 'Customer', kind: 'requester' }, publishedAt: expect.any(String) }])
++ const originalList = await good<PublicRequestCard[]>(`/api/public/requests?board=owned-feedback`)
++ expect(originalList).toHaveLength(1)
++ expect(originalList[0]).toMatchObject({ slug: request.slug, commentCount: 1 })
++ const proposed = 'An updated workflow question', replacement = 'Please explain the approved replacement workflow'
++ async function publicComment(body: string) {
++  const detail = await good<PublicRequestDetail>(`/api/public/requests/${request.slug}`)
++  expect(detail.comments).toEqual([{ ...original.comments[0], body }])
++  expect({ ...detail, comments: original.comments }).toEqual(original)
++  const list = await good<PublicRequestCard[]>(`/api/public/requests?board=owned-feedback`)
++  expect(list).toEqual(originalList)
++  for (const projection of [list, detail]) {
++   expect(JSON.stringify(projection)).not.toContain(proposed)
++   if (body !== replacement) expect(JSON.stringify(projection)).not.toContain(replacement)
++  }
++  const rendered = await call(`/portal/feedback/${request.slug}`)
++  expect(rendered.status).toBe(200)
++  const html = await rendered.text()
++  expect(html).toContain(body); expect(html).not.toContain(proposed)
++  if (body !== replacement) expect(html).not.toContain(replacement)
++ }
++ const context = () => good<RequestContext>(`/api/operator/requests/${request.slug}/context`, undefined, cookie)
++ type Activity = { comments: { id: string; body: string; moderationState: string }[]; commentEdits: { id: string; body: string; moderationState: string; rejectionReason: string | null }[] }
++ const activity = () => good<Activity>('/api/public/requester/activity', undefined, identity)
++ // Another verified requester cannot create an edit or change comment custody.
++ const stranger = await requester('Another comment author')
++ const custody = async () => Promise.all(['request_comments', 'request_comment_edits', 'request_moderation_events', 'audit_entries', 'requester_update_permissions'].map(async table => (await env.DB.prepare(`SELECT * FROM ${table} ORDER BY id`).all()).results))
++ async function refuseOtherRequester() {
++  const beforeRefusal = await custody(), beforeContext = await context(), beforeActivity = await activity()
++  const refused = await call(`/api/public/comments/${comment.id}`, { body: 'A different requester must not replace this comment' }, stranger, 'PATCH')
++  expect(refused.status).toBe(404); expect(await refused.json()).toMatchObject({ error: 'not_found' })
++  expect(await custody()).toEqual(beforeRefusal)
++  expect(await context()).toEqual(beforeContext)
++  expect(await activity()).toEqual(beforeActivity)
++  const strangerActivity = await good<Activity>('/api/public/requester/activity', undefined, stranger)
++  expect(strangerActivity.comments).toEqual([])
++  expect(strangerActivity.commentEdits).toEqual([])
++ }
++ await refuseOtherRequester()
++ await publicComment('Please explain this workflow')
+  const approved = (await queue(cookie)).comments[0]
+  expect((await call(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: approved.updatedAt }, other.cookie)).status).toBe(409)
+  await good(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: approved.updatedAt }, cookie)
+  expect((await queue(cookie)).comments).toEqual([])
+- await good(`/api/public/comments/${comment.id}`, { body: 'An updated workflow question' }, identity, 'PATCH')
++ expect(await good(`/api/public/comments/${comment.id}`, { body: proposed }, identity, 'PATCH')).toEqual({ moderationState: 'awaiting_review' })
+  expect((await queue(cookie)).comments).toMatchObject([{ id: comment.id, moderationState: 'awaiting_review' }])
+  expect((await call(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: approved.updatedAt }, cookie)).status).toBe(409)
+- const editId = await env.DB.prepare("SELECT id FROM request_comment_edits WHERE comment_id=? AND moderation_state='awaiting_review'").bind(comment.id).first<string>('id')
++ const pendingEdit = (await context()).commentEdits.find(edit => edit.comment_id === comment.id && edit.moderation_state === 'awaiting_review')
++ expect(pendingEdit).toMatchObject({ id: expect.any(String), comment_id: comment.id, body: proposed, moderation_state: 'awaiting_review', rejection_reason: null })
++ const editId = pendingEdit!.id as string
++ expect((await activity()).commentEdits).toEqual([{ id: editId, slug: request.slug, available: 1, body: proposed, moderationState: 'awaiting_review', rejectionReason: null }])
++ expect((await activity()).comments).toMatchObject([{ id: comment.id, body: 'Please explain this workflow', moderationState: 'approved' }])
++ await refuseOtherRequester()
++ await publicComment('Please explain this workflow')
+  await good(`/api/operator/comments/edits/${editId}/moderate`, { verdict: 'rejected', reason: 'Keep the original question' }, cookie)
++ expect((await context()).commentEdits).toMatchObject([{ id: editId, comment_id: comment.id, body: proposed, moderation_state: 'rejected', rejection_reason: 'Keep the original question' }])
++ expect((await activity()).commentEdits).toEqual([{ id: editId, slug: request.slug, available: 1, body: proposed, moderationState: 'rejected', rejectionReason: 'Keep the original question' }])
++ await refuseOtherRequester()
++ // Replaying approval of a rejected proposal cannot make that wording public.
++ const beforeReplay = await custody(), rejectedContext = await context(), rejectedActivity = await activity()
++ const replayed = await call(`/api/operator/comments/edits/${editId}/moderate`, { verdict: 'approved' }, cookie)
++ expect(replayed.status).toBe(404); expect(await replayed.json()).toMatchObject({ error: 'not_found' })
++ expect(await custody()).toEqual(beforeReplay)
++ expect(await context()).toEqual(rejectedContext)
++ expect(await activity()).toEqual(rejectedActivity)
++ await publicComment('Please explain this workflow')
+  expect((await queue(cookie)).comments).toEqual([])
+  await assign('requests', request.slug, other.id, cookie)
+  expect((await queue(other.cookie)).comments.map(row => row.id)).toEqual([comment.id])
+@@ -101,6 +161,29 @@ it('[TRIAGE-001] requester comments follow the request owner, require review bef
+  await good(`/api/operator/ownership/comments/${comment.id}/handled`, { updatedAt: approved.updatedAt }, other.cookie)
+  const portable = await good<{ archive: Archive }>('/api/operator/data/export', undefined, cookie)
+  expect(portable.archive.tables.penny_comment_receipts).toHaveLength(2)
++ // A later approved edit replaces wording without replacing the public comment.
++ expect(await good(`/api/public/comments/${comment.id}`, { body: replacement }, identity, 'PATCH')).toEqual({ moderationState: 'awaiting_review' })
++ const nextEdit = (await context()).commentEdits.find(edit => edit.comment_id === comment.id && edit.moderation_state === 'awaiting_review')
++ expect(nextEdit).toMatchObject({ id: expect.any(String), body: replacement })
++ expect(nextEdit!.id).not.toBe(editId)
++ expect((await activity()).commentEdits.find(edit => edit.id === nextEdit!.id)).toMatchObject({ body: replacement, moderationState: 'awaiting_review' })
++ await refuseOtherRequester()
++ await publicComment('Please explain this workflow')
++ await good(`/api/operator/comments/edits/${nextEdit!.id}/moderate`, { verdict: 'approved' }, cookie)
++ const reviewed = await context()
++ expect(reviewed.commentEdits).toEqual(expect.arrayContaining([
++  expect.objectContaining({ id: editId, body: proposed, moderation_state: 'rejected' }),
++  expect.objectContaining({ id: nextEdit!.id, comment_id: comment.id, body: replacement, moderation_state: 'approved', rejection_reason: null }),
++ ]))
++ expect(reviewed.commentEdits).toHaveLength(2)
++ const finalActivity = await activity()
++ expect(finalActivity.commentEdits.find(edit => edit.id === nextEdit!.id)).toMatchObject({ body: replacement, moderationState: 'approved', rejectionReason: null })
++ expect(finalActivity.comments).toMatchObject([{ id: comment.id, body: replacement, moderationState: 'approved' }])
++ await refuseOtherRequester()
++ await publicComment(replacement)
++ console.log('PROBE REQ-020 holding comment edit: native PATCH, context and activity -> pending and rejected proposals private; original public wording and identity retained; approved replacement keeps identity and count')
++ console.log('PROBE REQ-020 requester authority and replay: another requester refused before, during and after review with unchanged custody and no private activity; approval replay of rejected edit refused without changes')
++ expect(JSON.stringify(await good<PublicRequestDetail>(`/api/public/requests/${request.slug}`))).not.toContain('Please explain this workflow')
+  await good('/api/operator/boards/owned-feedback', { archived: true }, cookie, 'PATCH')
+  expect((await queue(other.cookie)).requests).toEqual([])
+  expect((await ownerOf('requests', request.slug, cookie)).owner?.id).toBe(other.id)
+diff --git a/tests/base/release-mail-identity.ts b/tests/base/release-mail-identity.ts
+new file mode 100644
+index 0000000..4f1c59d
+--- /dev/null
++++ b/tests/base/release-mail-identity.ts
+@@ -0,0 +1,77 @@
++import {applyD1Migrations,reset} from 'cloudflare:test'
++import {exports} from 'cloudflare:workers'
++import {expect,inject,vi} from 'vitest'
++import {call,env,origin} from './support'
++import {releaseGraph} from './release-fixture'
++import {provider,rows} from './notification-regression-fixture'
++import {accepted,body,type ProviderMessage} from './subscription-fixture'
++import type {OperatorReleaseDetail} from '@/core/shared/api/operator'
++
++type Envelope=ProviderMessage&{subject:string;headers:Record<string,string>;custom_args:{rer_delivery_id:string;rer_penny_attempt:string}}
++const address=(number:number)=>[`synthetic-penny-${number}`,'example.test'].join(String.fromCharCode(64))
++export async function proveReleaseMailIdentity(){
++ await reset();await applyD1Migrations(env.DB,inject('migrations'))
++ vi.restoreAllMocks()
++ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-11-05T12:00:00.000Z'))
++ const g=await releaseGraph(1),sent=provider()
++ const identity={companyName:'synthetic-penny-1 business',senderName:'synthetic-penny-2 customer team',fromAddress:address(1),replyTo:address(2),postalAddress:'42 Synthetic Street, Brisbane QLD 4000'}
++ const tested=await (await accepted(call('/api/operator/settings/mail/test',identity,g.operator))).json() as {testId:string;accepted:boolean}
++ expect(tested.accepted).toBe(true)
++ expect(sent).toHaveLength(1)
++ const testMail=sent[0].body as unknown as Envelope
++ expect(testMail.custom_args.rer_delivery_id).toBe(tested.testId)
++ expect(testMail.from).toEqual({name:identity.senderName,email:identity.fromAddress})
++ await accepted(call('/api/operator/settings/mail',{...identity,testId:tested.testId,acceptProviderResult:true},g.operator,'PUT'))
++ const saved=await (await accepted(call('/api/operator/settings/mail',undefined,g.operator))).json() as {identity:typeof identity}
++ expect(saved.identity).toEqual(identity)
++
++ const input={...g.input,title:'synthetic-penny-3 release',body:'synthetic-penny-4 customer-safe release wording'}
++ await accepted(call(`/api/operator/releases/${g.draft.slug}`,input,g.operator,'PATCH'))
++ const publish=()=>accepted(call(`/api/operator/releases/${g.draft.slug}/publish`,{},g.operator))
++ await publish()
++ const deliveries=await rows('notification_outbox')
++ expect(deliveries).toHaveLength(1)
++ const delivery=deliveries[0]
++ expect(delivery).toMatchObject({event_type:'release_version',subject_id:g.draft.versionId,requester_id:g.recipient.requesterId,address_id:g.recipient.addressId,delivery_state:'queued'})
++ const worker=exports.default as typeof exports.default&{scheduled(options:{scheduledTime:number;cron:string}):Promise<void>}
++ const cron=()=>worker.scheduled({scheduledTime:Date.now(),cron:'* * * * *'})
++ await cron()
++ // Correlate this release's durable delivery, rather than the sender-test mail.
++ expect(sent).toHaveLength(2)
++ const release=sent[1].body as unknown as Envelope
++ expect(release.custom_args.rer_delivery_id).toBe(delivery.id)
++ const attempts=await rows('notification_outbox_attempts')
++ expect(attempts).toEqual([expect.objectContaining({id:release.custom_args.rer_penny_attempt,outbox_id:delivery.id,state:'accepted',provider_message_id:'receipt-2'})])
++ expect(release.personalizations).toEqual([{to:[{email:g.recipient.email}]}])
++ expect(release.from).toEqual({name:identity.senderName,email:identity.fromAddress})
++ expect(release.reply_to).toEqual({email:identity.replyTo})
++ expect(release.subject).toBe(input.title)
++ const text=body(release)
++ expect(text).toContain(input.body)
++ expect(text).toContain(`${input.title}\nImproved · ${input.publicationDate}`)
++ expect(text).toContain(`${origin}/portal/feedback/${g.requests[0].slug}`)
++ expect(text).toContain(`${origin}/portal/updates/${g.draft.slug}`)
++ expect(text.endsWith(`\n${identity.postalAddress}`)).toBe(true)
++ const unsubscribe=text.match(/^Unsubscribe from all requester email: (https:\/\/\S+)$/m)![1]
++ expect(release.headers['List-Unsubscribe']).toBe(`<${unsubscribe}>`)
++ expect(release.headers['List-Unsubscribe-Post']).toBe('List-Unsubscribe=One-Click')
++ const detail=await (await accepted(call(`/api/operator/releases/${g.draft.slug}`,undefined,g.operator))).json() as OperatorReleaseDetail
++ expect(detail).toMatchObject({id:g.draft.id,versionId:g.draft.versionId,state:'published',deliveryCounts:{sent:1,queued:0}})
++ const acceptedDeliveries=await rows('notification_outbox')
++ expect(acceptedDeliveries[0]).toMatchObject({id:delivery.id,delivery_state:'accepted',attempt_count:1,provider_message_id:'receipt-2'})
++ await publish();await cron();await cron()
++ expect(sent).toHaveLength(2)
++ expect(await rows('notification_outbox')).toEqual(acceptedDeliveries)
++ expect(await rows('notification_outbox_attempts')).toEqual(attempts)
++
++ const link=new URL(unsubscribe)
++ expect(link.origin).toBe(origin)
++ const preferences=await rows('requester_notification_preferences'),permissions=await rows('requester_update_permissions')
++ await accepted(call(link.pathname+link.search))
++ expect(await rows('requester_notification_preferences')).toEqual(preferences)
++ expect(await rows('requester_update_permissions')).toEqual(permissions)
++ await accepted(call(link.pathname+link.search,{},{}))
++ expect(await (await accepted(call('/api/public/requester/notifications',undefined,g.person))).json()).toEqual({muted:true})
++ await cron();expect(sent).toHaveLength(2)
++ vi.useRealTimers()
++}
+diff --git a/tests/base/request-consent.ts b/tests/base/request-consent.ts
+new file mode 100644
+index 0000000..99c4ed4
+--- /dev/null
++++ b/tests/base/request-consent.ts
+@@ -0,0 +1,65 @@
++import {applyD1Migrations,reset} from 'cloudflare:test'
++import {expect,inject,vi} from 'vitest'
++import {mockMail,messages} from './support'
++import {accepted,call,env,graph,requester} from './subscription-fixture'
++
++export async function proveExplicitConsent(){
++ await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()
++ try{
++ const g=await graph(),emails=new Map<Record<string,string>,string>()
++ const person=async(name:string)=>{const headers=await requester(name);emails.set(headers,messages.at(-1)!.to);return headers}
++ const author=await person('Consent author'),voter=await person('Consent voter')
++ await accepted(call('/api/operator/boards/subscriptions/vote-subscriptions',{enabled:false,version:g.disclosure.version},g.operator,'PUT'))
++ // Keep native D1 authority inside the current day while controlling every grant time.
++ const start=new Date(vi.getRealSystemTime()).setUTCHours(12,0,0,0)
++ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(start)
++ const plain=await g.submit(author);await g.publish(plain)
++ await accepted(call(`/api/public/requests/${plain}/vote`,{emailUpdates:false},voter),204)
++ expect(await g.rows()).toEqual([])
++ const activity=async(person:Record<string,string>)=>{
++  const response=await accepted(call('/api/public/requester/activity',undefined,person))
++  return await response.json() as {votes:{slug:string}[];follows:{slug:string}[]}
++ }
++ for(const person of [author,voter]){
++  expect((await activity(person)).votes.map(row=>row.slug)).toContain(plain)
++  expect((await activity(person)).follows).toEqual([])
++ }
++ const assertGrant=async(person:Record<string,string>,slug:string,source:string,at:number)=>{
++  const email=emails.get(person)!,address=await env.DB.prepare('SELECT id,requester_id FROM requester_addresses WHERE email=? AND verified_at IS NOT NULL').bind(email).first<{id:string;requester_id:string}>()
++  expect(address).not.toBeNull()
++  const requestId=await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(slug).first<string>('id')
++  const permissions=(await g.rows()).filter(row=>row.requester_id===address!.requester_id&&row.request_id===requestId)
++  expect(permissions).toHaveLength(1)
++  expect(permissions[0]).toMatchObject({requester_id:address!.requester_id,requester_address_id:address!.id,request_id:requestId,source,grant_origin:'explicit',board_id:null,setting_version:null,granted_at:new Date(at).toISOString(),revoked_at:null})
++  expect((await activity(person)).follows.map(row=>row.slug)).toContain(slug)
++  return permissions[0]
++ }
++ vi.setSystemTime(start+60_000)
++ const checked=await g.submit(author,true);await g.publish(checked)
++ await assertGrant(author,checked,'submission',start+60_000)
++ await accepted(call(`/api/public/requests/${plain}/vote`,undefined,voter,'DELETE'),204)
++ vi.setSystemTime(start+120_000)
++ await accepted(call(`/api/public/requests/${plain}/vote`,{emailUpdates:true},voter),204)
++ await assertGrant(voter,plain,'vote',start+120_000)
++ // A replay cannot move the original permission's grant time or duplicate it.
++ vi.setSystemTime(start+180_000)
++ await accepted(call(`/api/public/requests/${plain}/vote`,{emailUpdates:true},voter),204)
++ await assertGrant(voter,plain,'vote',start+120_000)
++ const follower=await person('Explicit follower')
++ vi.setSystemTime(start+240_000)
++ await accepted(call(`/api/public/requests/${plain}/follow`,{},follower),204)
++ await assertGrant(follower,plain,'follow',start+240_000)
++ const before=await g.rows()
++ expect((await call(`/api/public/requests/${plain}/follow`,{})).status).toBe(401)
++ expect(await g.rows()).toEqual(before)
++ vi.setSystemTime(start+300_000)
++ for(const [person,slug] of [[author,checked],[voter,plain],[follower,plain]] as const){
++  await accepted(call(`/api/public/requests/${slug}/follow`,undefined,person,'DELETE'),204)
++  expect((await activity(person)).follows).toEqual([])
++ }
++ const revoked=await g.rows()
++ expect(revoked).toHaveLength(3)
++ for(const row of revoked)expect(row.revoked_at).toBe(new Date(start+300_000).toISOString())
++ expect((await activity(voter)).votes.map(row=>row.slug)).toContain(plain)
++ }finally{vi.useRealTimers()}
++}
+diff --git a/tests/base/requester-subscriptions.test.ts b/tests/base/requester-subscriptions.test.ts
+index 0331fdf..610000b 100644
+--- a/tests/base/requester-subscriptions.test.ts
++++ b/tests/base/requester-subscriptions.test.ts
+@@ -1,3 +1,4 @@
++import {proveExplicitConsent} from './request-consent'
+ import {applyD1Migrations,reset} from 'cloudflare:test'
+ import {beforeEach,afterEach,vi,expect,inject,it} from 'vitest'
+ import {mockMail} from './support'
+@@ -37,7 +38,7 @@ it('[NOTIFY-008] disclosed voting grants address-bound permission, explicit foll
+  expect((await g.rows()).some(row=>row.grant_origin==='author_subscription'&&row.revoked_at===null)).toBe(true)
+  expect((await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='board.vote_subscriptions_changed' AND json_extract(details_json,'$.withdrawExisting')=1 AND json_extract(details_json,'$.reason') IS NOT NULL").first('n'))).toBe(1)
+ })
+-it('[NOTIFY-011] submission records one removable author vote and independent permission, delivers replies and status, and withdrawal revokes it',async()=>{
++it('[NOTIFY-011] submission records one removable author vote and independent permission, delivers replies and status, and explicit consent is address-bound, timestamped and revocable',async()=>{
+  const g=await graph(),slug=await g.submit();await g.publish(slug);await g.flush()
+  expect(g.sent).toHaveLength(1);await g.flush();expect(g.sent).toHaveLength(1)
+  const permissions=(await g.rows()).filter(row=>row.grant_origin==='author_subscription');expect(permissions).toHaveLength(1)
+@@ -56,4 +57,5 @@ it('[NOTIFY-011] submission records one removable author vote and independent pe
+  const response=await accepted(call('/api/public/requests',{title:'No subscription',description:'Vote still recorded',boardSlug:'subscriptions',idempotencyKey:crypto.randomUUID()},g.author),201),off=(await response.json() as {slug:string}).slug
+  await g.publish(off);expect(await (await call(`/api/public/requests/${off}`)).json()).toMatchObject({voteCount:1})
+  expect((await g.rows()).filter(row=>row.revoked_at===null)).toHaveLength(0)
++ await proveExplicitConsent()
+ })
+diff --git a/tests/browser/internal-discussion.mjs b/tests/browser/internal-discussion.mjs
+index 83e7c39..755489d 100644
+--- a/tests/browser/internal-discussion.mjs
++++ b/tests/browser/internal-discussion.mjs
+@@ -13,7 +13,8 @@ process.env.PENNY_BROWSER_EXECUTABLE??=chromium.executablePath()
+ let browser
+ try{
+  browser=await chromium.launch(browserOptions())
+- for(const width of [1440,390]){
++ // Exercise the discussion once; capture its same saved state at both widths.
++ const width=1440;{
+   const runtime=await startBrowserRuntime();let context
+   try{
+    const {origin}=runtime
+@@ -24,30 +25,80 @@ try{
+    const split=cookie.indexOf('=');await context.addCookies([{name:cookie.slice(0,split),value:cookie.slice(split+1),url:origin}])
+    const page=await context.newPage();page.setDefaultTimeout(15000)
+    page.on('response',response=>{if(response.url().includes('/api/operator/discussion')&&!response.ok())console.log(new URL(response.url()).pathname,response.status())})
+-   async function audit(target,label){assert.equal(await target.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await target.evaluate(axe);assert.deepEqual(await target.evaluate(async()=> (await window.axe.run(document)).violations.filter(row=>['serious','critical'].includes(row.impact))),[]);await target.screenshot({path:join(output,`${label}-${width}.png`),fullPage:true});if(label==='threaded-internal-notes')await target.getByRole('region',{name:'Internal notes',exact:true}).screenshot({path:join(output,`notes-detail-${width}.png`)});if(label==='durable-mention')await target.getByRole('region',{name:'Your mentions',exact:true}).screenshot({path:join(output,`mentions-detail-${width}.png`)})}
++   async function audit(target,label){
++    try{for(const width of [1440,390]){
++     await target.setViewportSize({width,height:900})
++     assert.equal(await target.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false)
++     await target.evaluate(axe)
++     assert.deepEqual(await target.evaluate(async()=> (await window.axe.run(document)).violations.filter(row=>['serious','critical'].includes(row.impact))),[])
++     await target.screenshot({path:join(output,`${label}-${width}.png`),fullPage:true})
++     if(label==='threaded-internal-notes')await target.getByRole('region',{name:'Internal notes',exact:true}).screenshot({path:join(output,`notes-detail-${width}.png`)})
++     if(label==='durable-mention')await target.getByRole('region',{name:'Your mentions',exact:true}).screenshot({path:join(output,`mentions-detail-${width}.png`)})
++    }}finally{await target.setViewportSize({width,height:900})}
++   }
+    await page.goto(origin+'/setup');await finishFirstRun(page,audit)
+    await send('/api/operator/boards',{slug:'discussion',name:'Discussion',visibility:'public'},cookie,201)
+    const request=await (await send('/api/operator/requests',{title:'Schedule monthly finance exports',description:'Finance needs a CSV before its monthly review.',boardSlug:'discussion'},cookie,201)).json()
++   await send(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title:'Schedule monthly finance exports',description:'Finance needs a CSV before its monthly review.',boardSlug:'discussion',displayName:'Owner'},cookie)
+    const operators=await (await send('/api/operator/discussion/operators',undefined,cookie)).json()
+    await page.goto(origin+`/app/moderation?item=${request.id}`)
+    const notes=page.getByRole('region',{name:'Internal notes',exact:true})
+-   await notes.getByLabel('Add an internal note',{exact:true}).fill('Please confirm whether finance needs scheduled exports or an on-demand download.')
++   const noteBody='Please confirm whether finance needs scheduled exports or an on-demand download.'
++   const commentBody='We are exploring scheduled monthly exports for your finance team.'
++   await notes.getByLabel('Add an internal note',{exact:true}).fill(noteBody)
+    await notes.getByRole('checkbox',{name:'@'+operators.operators[0].displayName,exact:true}).check()
++   const noteSaved=page.waitForResponse(response=>response.url().endsWith(`/api/operator/discussion/requests/${request.slug}/notes`)&&response.request().method()==='POST')
+    await notes.getByRole('button',{name:'Save note',exact:true}).click()
+-   try{await notes.getByText('Please confirm whether finance needs scheduled exports or an on-demand download.',{exact:true}).waitFor()}catch(error){await page.screenshot({path:join(output,`failure-${width}.png`),fullPage:true});throw error}
++   const noteResponse=await noteSaved;assert.equal(noteResponse.status(),201)
++   const note=await noteResponse.json();assert.ok(note.id)
++   try{await notes.getByText(noteBody,{exact:true}).waitFor()}catch(error){await page.screenshot({path:join(output,`failure-${width}.png`),fullPage:true});throw error}
+    await notes.getByRole('button',{name:'Reply',exact:true}).click()
+    await notes.getByLabel('Internal reply',{exact:true}).fill('Maya confirmed a scheduled monthly CSV would remove the manual reporting step.')
+    await notes.getByRole('button',{name:'Save note',exact:true}).click()
+    await notes.getByText('Maya confirmed a scheduled monthly CSV would remove the manual reporting step.',{exact:true}).waitFor()
++   const card=page.locator(`[id="request-${request.slug}"]`)
++   await card.getByText('Discussion, status and request controls',{exact:true}).click()
++   await card.getByLabel('Operator comment',{exact:true}).fill(commentBody)
++   const commentSaved=page.waitForResponse(response=>response.url().endsWith(`/api/operator/requests/${request.slug}/comments`)&&response.request().method()==='POST')
++   await card.getByRole('button',{name:'Post public comment',exact:true}).click()
++   const commentResponse=await commentSaved;assert.equal(commentResponse.status(),201)
++   const comment=await commentResponse.json();assert.ok(comment.id);assert.notEqual(comment.id,note.id)
++   async function distinctDiscussion(){
++    await notes.locator(`[id="note-${note.id}"]`).getByText(noteBody,{exact:true}).waitFor()
++    assert.equal(await notes.getByText(commentBody,{exact:true}).count(),0)
++    const publicComment=card.getByText(commentBody,{exact:true})
++    await publicComment.waitFor()
++    assert.equal(await publicComment.evaluate(element=>element.closest('[aria-label="Internal notes"]')===null),true)
++    const context=await (await send(`/api/operator/requests/${request.slug}/context`,undefined,cookie)).json()
++    assert.equal(context.requestId,request.id)
++    assert.deepEqual(context.notes.map(({id,body,parent_note_id})=>({id,body,parent_note_id})).find(row=>row.id===note.id),{id:note.id,body:noteBody,parent_note_id:null})
++    assert.deepEqual(context.comments.map(({id,body})=>({id,body})),[{id:comment.id,body:commentBody}])
++    assert.equal(context.notes.some(row=>row.id===comment.id||row.body===commentBody),false)
++    assert.equal(context.comments.some(row=>row.id===note.id||row.body===noteBody),false)
++    return {notes:context.notes,comments:context.comments}
++   }
++   const savedDiscussion=await distinctDiscussion()
++   async function publishedDiscussion(){
++    const publicRequest=await (await send(`/api/public/requests/${request.slug}`)).json()
++    assert.deepEqual(publicRequest.comments.map(({id,body,author})=>({id,body,kind:author.kind})),[{id:comment.id,body:commentBody,kind:'operator'}])
++    for(const privateText of [noteBody,'Maya confirmed a scheduled monthly CSV would remove the manual reporting step.',note.id])assert.equal(JSON.stringify(publicRequest).includes(privateText),false)
++    return publicRequest.comments
++   }
++   const savedPublicDiscussion=await publishedDiscussion()
+    await audit(page,'threaded-internal-notes')
+    await page.reload()
++   assert.deepEqual(await distinctDiscussion(),savedDiscussion)
++   assert.deepEqual(await publishedDiscussion(),savedPublicDiscussion)
+    const mentions=page.getByRole('region',{name:'Your mentions',exact:true})
+-   await mentions.getByText('Please confirm whether finance needs scheduled exports or an on-demand download.',{exact:true}).waitFor()
++   await mentions.getByText(noteBody,{exact:true}).waitFor()
+    assert.equal(await mentions.getByRole('button',{name:'Dismiss mention',exact:true}).count(),1)
+    await audit(page,'durable-mention')
+    await mentions.getByRole('button',{name:'Dismiss mention',exact:true}).click()
+    await mentions.getByText('No new mentions.',{exact:true}).waitFor()
+    await page.reload();await mentions.getByText('No new mentions.',{exact:true}).waitFor()
++   assert.deepEqual(await distinctDiscussion(),savedDiscussion)
++   assert.deepEqual(await publishedDiscussion(),savedPublicDiscussion)
++   console.log('PROBE REQ-032 point 1: approved request, native note and public comment controls -> distinct labelled note and separate operator comment; identities and wording persist after reload; public read contains only the comment')
+   }finally{await context?.close();await runtime.close()}
+  }
+ }finally{await browser?.close()}
+diff --git a/tests/browser/requester-comment-edit.mjs b/tests/browser/requester-comment-edit.mjs
+new file mode 100644
+index 0000000..29d8d3f
+--- /dev/null
++++ b/tests/browser/requester-comment-edit.mjs
+@@ -0,0 +1,93 @@
++import assert from 'node:assert/strict'
++import {expect} from '@playwright/test'
++import {openRequestControls,shot} from './requester-evidence.mjs'
++
++/** Exercise the existing requester and operator controls once at desktop width. */
++export async function proveRequesterCommentEdit({browser,harness,page,review,card,slug,auth}){
++ const {origin,api}=harness
++ const detail=async()=>(await api(`/api/public/requests/${slug}`)).json()
++ const activity=async()=>(await api('/api/public/requester/activity',undefined,auth)).json()
++ const context=async()=>(await api(`/api/operator/requests/${slug}/context`,undefined,review.request)).json()
++ const original=await detail(),comment=original.comments[0]
++ assert.ok(comment,'the public request has an approved comment before editing')
++ const listPath=`/api/public/requests?board=${original.board.slug}`
++ const originalList=await(await api(listPath)).json()
++ assert.ok(originalList.some(item=>item.slug===slug&&item.commentCount===1))
++ const rejected='Synthetic Penny scheduling clarification for review.'
++ const replacement='Synthetic Penny approved scheduling clarification.'
++ const reason='Keep the approved question until the frequency is clear.'
++ const visitor=await browser.newContext({viewport:{width:1440,height:1000}})
++ const publicPage=await visitor.newPage()
++ async function screens(target,name){
++  await shot(target,name,1440)
++  await target.setViewportSize({width:390,height:844})
++  try{await shot(target,name,390)}finally{await target.setViewportSize({width:1440,height:1000})}
++ }
++ const submitted=body=>page.locator('section').filter({has:page.getByRole('heading',{name:'Comment edit',exact:true})}).filter({has:page.getByText(body,{exact:true})}).last()
++ async function readPublic(body,label){
++  const current=await detail()
++  assert.deepEqual(current.comments,[{...comment,body}])
++  assert.deepEqual({...current,comments:original.comments},original)
++  assert.deepEqual(await(await api(listPath)).json(),originalList)
++  await publicPage.goto(origin+`/portal/feedback/${slug}`)
++  const discussion=publicPage.getByRole('region',{name:'Published comments',exact:true})
++  await expect(discussion.getByText(body,{exact:true})).toBeVisible()
++  await expect(discussion.getByText(rejected,{exact:true})).toHaveCount(0)
++  if(body!==replacement)await expect(discussion.getByText(replacement,{exact:true})).toHaveCount(0)
++  else await expect(discussion.getByText(comment.body,{exact:true})).toHaveCount(0)
++  await screens(publicPage,label)
++ }
++ async function edit(body){
++  await page.goto(origin+'/portal/feedback/activity')
++  await page.getByRole('textbox',{name:/^Edit comment\b/}).fill(body)
++  const saved=page.waitForResponse(response=>new URL(response.url()).pathname===`/api/public/comments/${comment.id}`&&response.request().method()==='PATCH')
++  await page.getByRole('button',{name:'Send comment edit for review',exact:true}).click()
++  const response=await saved
++  assert.equal(response.status(),200,await response.text())
++  await expect(submitted(body).getByText('awaiting review',{exact:true})).toBeVisible()
++  const pending=(await context()).commentEdits.find(item=>item.comment_id===comment.id&&item.body===body)
++  assert.ok(pending)
++  assert.equal(pending.moderation_state,'awaiting_review')
++  assert.deepEqual((await activity()).commentEdits.find(item=>item.id===pending.id),{
++   id:pending.id,slug,available:1,body,moderationState:'awaiting_review',rejectionReason:null,
++  })
++  return pending.id
++ }
++ async function verdict(editId,body,verdict){
++  await review.reload();await openRequestControls(card)
++  const form=card.locator('form').filter({has:review.getByRole('heading',{name:'Comment edit',exact:true})}).filter({has:review.getByText(body,{exact:true})})
++  await expect(form.getByText(body,{exact:true})).toBeVisible()
++  if(verdict==='rejected')await form.getByLabel('Rejection reason',{exact:true}).fill(reason)
++  await screens(review,`comment-edit-${verdict}-review`)
++  const saved=review.waitForResponse(response=>new URL(response.url()).pathname===`/api/operator/comments/edits/${editId}/moderate`&&response.request().method()==='POST')
++  await form.getByRole('button',{name:verdict==='approved'?'Approve comment edit':'Reject',exact:true}).click()
++  const response=await saved
++  assert.equal(response.status(),200,await response.text())
++  await expect(form).toHaveCount(0)
++  assert.equal((await context()).commentEdits.find(item=>item.id===editId).moderation_state,verdict)
++ }
++ try{
++  const first=await edit(rejected)
++  await screens(page,'comment-edit-pending-activity')
++  await readPublic(comment.body,'comment-edit-pending-public')
++  await verdict(first,rejected,'rejected')
++  await page.reload()
++  await expect(submitted(rejected).getByText('rejected',{exact:true})).toBeVisible()
++  await expect(submitted(rejected).getByText(`Reason: ${reason}`,{exact:true})).toBeVisible()
++  await screens(page,'comment-edit-rejected-activity')
++  await readPublic(comment.body,'comment-edit-rejected-public')
++  const second=await edit(replacement)
++  assert.notEqual(second,first)
++  await readPublic(comment.body,'comment-edit-second-pending-public')
++  await verdict(second,replacement,'approved')
++  await page.reload()
++  await expect(submitted(replacement).getByText('approved',{exact:true})).toBeVisible()
++  assert.equal((await activity()).comments.find(item=>item.id===comment.id).body,replacement)
++  await readPublic(replacement,'comment-edit-approved-public')
++  await publicPage.reload()
++  await expect(publicPage.getByRole('region',{name:'Published comments',exact:true}).getByText(replacement,{exact:true})).toBeVisible()
++  console.log('PROBE REQ-020 holding comment edit: mounted own-comment form -> pending private edit; signed-out list, detail and page retain approved wording and identity')
++  console.log('PROBE REQ-020 comment verdicts: mounted rejection -> original persists; second edit and approval -> only replacement public under original identity, including reload')
++  return {commentEditControls:true,pendingTextPrivate:true,rejectedTextPrivate:true,approvedReplacementSameIdentity:true,commentCountUnchanged:true}
++ }finally{await visitor.close()}
++}
+diff --git a/tests/browser/requester-consent.mjs b/tests/browser/requester-consent.mjs
+new file mode 100644
+index 0000000..3ae7824
+--- /dev/null
++++ b/tests/browser/requester-consent.mjs
+@@ -0,0 +1,94 @@
++import assert from 'node:assert/strict'
++import {expect} from '@playwright/test'
++import {shot} from './requester-evidence.mjs'
++
++export async function proveRequesterConsent(harness){
++ const {origin,api,sql}=harness,operator=await harness.operator(1440)
++ for(const slug of ['consent-explicit','consent-automatic'])await api('/api/operator/boards',{slug,name:slug==='consent-explicit'?'Explicit consent':'Automatic subscriptions',visibility:'public'},operator.page.request)
++ await harness.explicitConsentBoard('consent-explicit',operator.page.request)
++ const boards=await (await api('/api/public/boards')).json(),automatic=boards.find(board=>board.slug==='consent-automatic').subscriptionDisclosure
++ assert.equal(automatic.enabled,true)
++ assert.match(automatic.vote,/voting subscribes.*unfollow/i)
++ assert.match(automatic.submission,/updates.*unfollow/i)
++ const author=await harness.requester(1440,['synthetic-penny-1','example.test'].join('@'))
++ const voter=await harness.requester(1440,['synthetic-penny-2','example.test'].join('@'))
++ const authority=person=>({Authorization:`Bearer ${person.token}`,'CF-Connecting-IP':person.clientAddress})
++ const activity=async person=>(await api('/api/public/requester/activity',undefined,authority(person))).json()
++ const permissions=async person=>sql(`SELECT p.* FROM requester_update_permissions p JOIN requester_addresses a ON a.id=p.requester_address_id WHERE a.email='${person===author?['synthetic-penny-1','example.test'].join('@'):['synthetic-penny-2','example.test'].join('@')}' ORDER BY p.id`)
++ async function screens(page,label){
++  await shot(page,label,1440)
++  await page.setViewportSize({width:390,height:844})
++  try{await shot(page,label,390)}finally{await page.setViewportSize({width:1440,height:1000})}
++ }
++ async function submit(board,title,checked=false){
++  const page=author.page
++  await page.goto(origin+'/portal/feedback/new')
++  await page.getByLabel('Title',{exact:true}).fill(title)
++  await page.getByLabel('Problem description',{exact:true}).fill('Customers need a reliable scheduled report.')
++  await page.locator('select[name=board]').selectOption(board)
++  const control=page.getByRole('checkbox',{name:'Email me updates',exact:true})
++  await expect(control).not.toBeChecked()
++  if(board==='consent-automatic')await expect(page.getByText(automatic.submission,{exact:true})).toBeVisible()
++  else await expect(page.getByText(automatic.submission,{exact:true})).toHaveCount(0)
++  if(checked)await control.check()
++  if(!checked)await screens(page,board+'-submission')
++  const saved=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/public/requests'&&response.request().method()==='POST')
++  await page.getByRole('button',{name:'Send for review',exact:true}).click()
++  const response=await saved;assert.equal(response.status(),201,await response.text())
++  await page.getByRole('heading',{name:'Feedback is awaiting review',exact:true}).waitFor()
++  const request=(await activity(author)).requests.find(request=>request.title===title)
++  assert.ok(request)
++  await api(`/api/operator/moderation/${request.slug}`,{verdict:'approved',title,description:'Customers need a reliable scheduled report.',boardSlug:board,displayName:'Verified customer'},operator.page.request)
++  return request
++ }
++ const plain=await submit('consent-explicit','Schedule a customer report')
++ assert.deepEqual(await permissions(author),[])
++ assert.deepEqual((await activity(author)).follows,[])
++ const checked=await submit('consent-explicit','Choose update emails explicitly',true)
++ assert.deepEqual((await permissions(author)).map(row=>[row.request_id,row.source,row.grant_origin]),[[checked.id,'submission','explicit']])
++ const automaticRequest=await submit('consent-automatic','Subscribe to report progress')
++ assert.ok((await permissions(author)).some(row=>row.request_id===automaticRequest.id&&row.grant_origin==='author_subscription'&&row.setting_version===automatic.version))
++ assert.ok((await activity(author)).follows.some(row=>row.slug===automaticRequest.slug))
++ const page=voter.page,participation=page.getByRole('region',{name:'Participate in feedback',exact:true})
++ await page.goto(origin+`/portal/feedback/${plain.slug}`)
++ const control=participation.getByRole('checkbox',{name:'Email me updates',exact:true}),vote=participation.getByRole('button',{name:'Vote',exact:true})
++ await expect(vote).toBeEnabled();await expect(control).not.toBeChecked()
++ await expect(participation.getByText(automatic.vote,{exact:true})).toHaveCount(0)
++ await screens(page,'consent-explicit-vote')
++ await vote.click();await participation.getByText('Vote saved.',{exact:true}).waitFor()
++ assert.deepEqual(await permissions(voter),[])
++ assert.ok((await activity(voter)).votes.some(row=>row.slug===plain.slug))
++ assert.deepEqual((await activity(voter)).follows,[])
++ await participation.getByRole('button',{name:'Remove vote',exact:true}).click()
++ await participation.getByText('Vote removed.',{exact:true}).waitFor()
++ await control.check();await vote.click()
++ await expect(participation.getByRole('button',{name:'Unfollow',exact:true})).toBeEnabled()
++ assert.deepEqual((await permissions(voter)).map(row=>[row.request_id,row.source,row.grant_origin]),[[plain.id,'vote','explicit']])
++ await participation.getByRole('button',{name:'Unfollow',exact:true}).click()
++ await participation.getByText('Unfollowed.',{exact:true}).waitFor()
++ assert.deepEqual((await activity(voter)).follows,[])
++ assert.ok((await permissions(voter)).every(row=>row.revoked_at))
++ await participation.getByRole('button',{name:'Follow',exact:true}).click()
++ await participation.getByText('Following with email permission.',{exact:true}).waitFor()
++ assert.ok((await permissions(voter)).some(row=>row.request_id===plain.id&&row.source==='follow'&&row.revoked_at===null))
++ await page.goto(origin+`/portal/feedback/${automaticRequest.slug}`)
++ await expect(vote).toBeEnabled();await expect(control).not.toBeChecked()
++ await expect(participation.getByText(automatic.vote,{exact:true})).toBeVisible()
++ await screens(page,'consent-automatic-vote')
++ await vote.click()
++ await expect(participation.getByRole('button',{name:'Unfollow',exact:true})).toBeEnabled()
++ assert.ok((await activity(voter)).follows.some(row=>row.slug===automaticRequest.slug))
++ assert.ok((await permissions(voter)).some(row=>row.request_id===automaticRequest.id&&row.grant_origin==='vote_subscription'&&row.setting_version===automatic.version))
++ await page.reload()
++ await expect(participation.getByRole('button',{name:'Unfollow',exact:true})).toBeEnabled()
++ await participation.getByRole('button',{name:'Unfollow',exact:true}).click()
++ await participation.getByText('Unfollowed.',{exact:true}).waitFor()
++ assert.ok(!(await activity(voter)).follows.some(row=>row.slug===automaticRequest.slug))
++ assert.ok((await permissions(voter)).filter(row=>row.request_id===automaticRequest.id).every(row=>row.revoked_at))
++ const checks={uncheckedSubmission:true,uncheckedVote:true,untickedActionsGrantNothing:true,currentAutomaticDisclosures:true,checkedSubmission:true,checkedVote:true,explicitFollow:true,automaticAuthorFollow:true,automaticVoterFollow:true,unfollowRevokes:true}
++ harness.assertNoRateLimits();harness.assertNoBrowserDiagnostics()
++ console.log('PROBE REQ-010 point 1: mounted submission and vote controls -> unchecked; ordinary actions grant nothing; current disclosures lead to automatic follows')
++ console.log('PROBE REQ-010 point 2: checked submission, checked vote and Follow -> persisted explicit permissions; Unfollow -> revoked permission and absent activity follow')
++ await author.context.close();await voter.context.close();await operator.context.close()
++ return checks
++}
+diff --git a/tests/browser/requester-repair.mjs b/tests/browser/requester-repair.mjs
+index 4a46dd4..761d265 100644
+--- a/tests/browser/requester-repair.mjs
++++ b/tests/browser/requester-repair.mjs
+@@ -1,3 +1,5 @@
++import {proveRequesterConsent} from './requester-consent.mjs'
++import {proveRequesterCommentEdit} from './requester-comment-edit.mjs'
+ import assert from 'node:assert/strict'
+ import { chromium } from '@playwright/test'
+ import {browserOptions} from './browser-options.mjs'
+@@ -97,8 +99,10 @@ try {
+   checks.push({width,withdrawnPendingNotActionable:true,initialSubmissionHasNoEditApproval:true})
+   await page.goto(origin+'/portal/feedback/activity');await page.getByRole('heading',{name:title,exact:true}).first().waitFor();await shot(page,'your-feedback',width)
+   await page.goto(origin+'/portal/feedback');await page.getByLabel('Search feedback',{exact:true}).fill('Scheduled exports');await page.locator('select[name=status]').selectOption('under_review');await page.getByRole('button',{name:'Search',exact:true}).click();await page.getByRole('heading',{name:title,exact:true}).waitFor();await shot(page,'search-filter',width)
++  if(width===1440)checks.push(await proveRequesterCommentEdit({browser,harness,page,review,card,slug,auth}))
+   await requester.close();await operator.close()
+  }
++ checks.push(await proveRequesterConsent(harness))
+  harness.assertNoRateLimits()
+  await manifest('manifest',errors,checks,origin)
+ }catch(error){for(const context of browser.contexts())for(const page of context.pages()){console.error('Failure page: '+await page.locator('body').innerText());await page.screenshot({path:process.env.PENNY_EVIDENCE+'/failure-'+page.viewportSize().width+'-'+browser.contexts().indexOf(context)+'.png',fullPage:true})}throw error}finally{await browser.close();await runtime?.close()}

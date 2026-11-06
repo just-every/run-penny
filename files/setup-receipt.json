@@ -1,0 +1,20 @@
+{
+  "command": [
+    "npx",
+    "-y",
+    "@runeditrun/rer",
+    "setup",
+    "--owner-email",
+    "fleet@runeditrun.com",
+    "--non-interactive"
+  ],
+  "wrapper": "cloud_run",
+  "exit": 0,
+  "head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+  "result": "Frozen dependencies installed; application built; all local migrations applied; first owner claimed; setup returned with no server remaining.",
+  "log_policy": "Setup log retained outside public packet during execution; private local authority and settings are not published.",
+  "host_node": "24.19.0",
+  "pnpm": "10.12.4",
+  "requested_node": "22.20.0",
+  "toolchain_note": "The supplied setup retains newer host Node; direct test commands show Node 24.19.0. CI declares 22.20.0 and remains a separate final integration gate."
+}

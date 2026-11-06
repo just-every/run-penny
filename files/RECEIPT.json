@@ -1,0 +1,232 @@
+{
+  "award": false,
+  "ci_api_calls": 0,
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "node",
+        "tests/browser/proxy-votes.mjs"
+      ],
+      "cwd": "/home/agent/rer-consolidation/work/ct-judge-penny-cap014-20261105-1305-sol1/run-penny",
+      "exit": 0,
+      "finished": "2026-11-06T02:02:03.317257+00:00",
+      "head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+      "label": "browser-proxy",
+      "log": "browser-proxy.log",
+      "seconds": 18.063,
+      "sha256": "4341dd938774fba422959a110eabf8718abf59ec7b13d47df872ce40c710a076",
+      "started": "2026-11-06T02:01:45.254189+00:00"
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--config",
+        "vitest.base.config.ts",
+        "tests/base/proxy-votes.test.ts",
+        "tests/base/feedback-import-uservoice.test.ts"
+      ],
+      "cwd": "/home/agent/rer-consolidation/work/ct-judge-penny-cap014-20261105-1305-sol1/run-penny",
+      "exit": 0,
+      "finished": "2026-11-06T02:02:12.095779+00:00",
+      "head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+      "label": "focused-worker",
+      "log": "focused-worker.log",
+      "seconds": 43.217,
+      "sha256": "43a271d0cc5d44add2d45bbef0522c3123a58b1f69b948e9c61942a82ee75911",
+      "started": "2026-11-06T02:01:28.878379+00:00"
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "node",
+        "tests/browser/zendesk-proxy-votes.mjs"
+      ],
+      "cwd": "/home/agent/rer-consolidation/work/ct-judge-penny-cap014-20261105-1305-sol1/run-penny",
+      "exit": 0,
+      "finished": "2026-11-06T02:02:14.148942+00:00",
+      "head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+      "label": "browser-zendesk",
+      "log": "browser-zendesk.log",
+      "seconds": 10.78,
+      "sha256": "a658eee8fa2e5f3d51d6a6249aa06a1613e33beb521883caefb55ba102ade8eb",
+      "started": "2026-11-06T02:02:03.368484+00:00"
+    },
+    {
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "cwd": "/home/agent/rer-consolidation/work/ct-judge-penny-cap014-20261105-1305-sol1/run-penny",
+      "exit": 1,
+      "finished": "2026-11-06T02:02:47.839397+00:00",
+      "head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+      "label": "contract-check",
+      "log": "contract-check.log",
+      "seconds": 0.183,
+      "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603",
+      "started": "2026-11-06T02:02:47.656539+00:00"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "cwd": "/home/agent/rer-consolidation/work/ct-judge-penny-cap014-20261105-1305-sol1/run-penny",
+      "exit": 0,
+      "finished": "2026-11-06T02:02:48.363716+00:00",
+      "head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+      "label": "source-check",
+      "log": "source-check.log",
+      "seconds": 0.488,
+      "sha256": "6d095974d3e59375eacd279145e208c2f9f10a7383dbf7b070da683b877f20c9",
+      "started": "2026-11-06T02:02:47.875511+00:00"
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/home/agent/rer-consolidation/work/ct-judge-penny-cap014-20261105-1305-sol1/run-penny",
+      "exit": 0,
+      "finished": "2026-11-06T02:03:16.609717+00:00",
+      "head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+      "label": "typecheck",
+      "log": "typecheck.log",
+      "seconds": 28.2,
+      "sha256": "a2db559bcc3517b5025efcf4abc0e5543c266acb0c039e8df897550e0a8cee30",
+      "started": "2026-11-06T02:02:48.409662+00:00"
+    },
+    {
+      "command": [
+        "python3",
+        "/tmp/rer-reap.py",
+        "npx",
+        "-y",
+        "@runeditrun/rer",
+        "build"
+      ],
+      "cwd": "/home/agent/rer-consolidation/work/ct-judge-penny-cap014-20261105-1305-sol1/run-penny",
+      "exit": 0,
+      "finished": "2026-11-06T02:05:23.533594+00:00",
+      "head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+      "label": "build",
+      "log": "build.log",
+      "seconds": 45.469,
+      "sha256": "a33f99da1a853be622f153708151443071d14490cc4affdc63cade9695cd0234",
+      "started": "2026-11-06T02:04:38.064191+00:00"
+    }
+  ],
+  "external": {
+    "R-5": "UNMET-EXTERNAL; not run"
+  },
+  "fresh_main_observed": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "holds_released": false,
+  "native_rubric": {
+    "R1/AP1": "MET",
+    "R2/AP2": "MET",
+    "R3/AP3": "MET",
+    "R4/AP4": "MET",
+    "R5/AP5": "MET"
+  },
+  "new_findings": [],
+  "original_main": "1d278bb9a1582cb59f92d7a41e131ed6286444c0",
+  "pending_done_riders": [
+    3,
+    11
+  ],
+  "product_commits_created": 0,
+  "product_index_unchanged": true,
+  "product_pushes": 0,
+  "product_source_unchanged": true,
+  "prs_created": 0,
+  "recorded_at": "2026-11-06T02:11:24.722586+00:00",
+  "reviewed_branch": "cloud/sd-penny-c-f16",
+  "reviewed_head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+  "reviewed_repository": "just-every/run-penny",
+  "schema": 1,
+  "screenshots": [
+    {
+      "bytes": 453983,
+      "path": "browser-proxy/duplicate-proxy-refused-1440.png",
+      "sha256": "d7e96b2157135aa3952a8be453fb595c3425e026408e46e1b90b647006a12fa7"
+    },
+    {
+      "bytes": 459403,
+      "path": "browser-proxy/inbox-proxy-form-1440.png",
+      "sha256": "0aeaf0970a03a1a7a5a0a7bce5dd5fc7c6293ecf0baf56b1f3f833804b8cd1d9"
+    },
+    {
+      "bytes": 105213,
+      "path": "browser-proxy/inbox-proxy-form-detail-1440.png",
+      "sha256": "d285e526e6cc929b2b47ab04bb4abe865e28d141398a4ec616425de23520c1e8"
+    },
+    {
+      "bytes": 417814,
+      "path": "browser-proxy/public-proxy-total-1440.png",
+      "sha256": "6167c067622ee361c720305765d1fa52b0b871980d9e1a54f2a7cfb9d7f260b6"
+    },
+    {
+      "bytes": 405173,
+      "path": "browser-proxy/request-proxy-attribution-1440.png",
+      "sha256": "8f9cbdbf15cc0c71fb8037f799c4cd479dd438f95e4af02810b7ed1f55988632"
+    },
+    {
+      "bytes": 23894,
+      "path": "browser-proxy/request-proxy-attribution-detail-1440.png",
+      "sha256": "f17e2a2261760a62e4235a624bd1cd8541f0fd5860baadc6b0e7e24ad441cdf8"
+    },
+    {
+      "bytes": 84571,
+      "path": "browser-zendesk/zendesk-existing-result-1440.png",
+      "sha256": "ef8abb518d78e827b599b2f04874c938fef872f61f6a159590507082f98911fb"
+    },
+    {
+      "bytes": 83919,
+      "path": "browser-zendesk/zendesk-existing-review-1440.png",
+      "sha256": "6de16efaab6434878ed5de324b2a26dd7840532371f08815ca9e1d8dc8442698"
+    },
+    {
+      "bytes": 24291,
+      "path": "browser-zendesk/zendesk-invalid-origin-1440.png",
+      "sha256": "af1b12ae957b74037eb3c16940bd91aa098d7b99a247d9ddd2abbc677ccfc065"
+    },
+    {
+      "bytes": 84771,
+      "path": "browser-zendesk/zendesk-new-contact-result-1440.png",
+      "sha256": "1cc1b0ce0b7dd838700ab113e840181b8126591ade54d1637ed1aef6eae7619f"
+    },
+    {
+      "bytes": 92379,
+      "path": "browser-zendesk/zendesk-new-contact-review-1440.png",
+      "sha256": "74bdf3bb41a11cd9f01f408abe940f5e39f8edee444b9c28dd5280a723dffeef"
+    },
+    {
+      "bytes": 86985,
+      "path": "browser-zendesk/zendesk-revoked-key-1440.png",
+      "sha256": "9755a0bf8dcea92facd51907e89a199d188a7368ccca6edd5a31f0736624a35d"
+    }
+  ],
+  "supplied_ci": {
+    "conclusion": "failure",
+    "event": "push",
+    "functional_shards_proved_by_run": false,
+    "independently_polled": false,
+    "reason": "generated view freshness only, as supplied by brief",
+    "run_id": 42028937737
+  },
+  "tag": "ct-judge-penny-cap014-20261105-1305-sol1",
+  "verdict": "ACCEPT ON LANDING"
+}

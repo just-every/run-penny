@@ -1,0 +1,178 @@
+{
+  "files": [
+    {
+      "blob": "f5463a5f0fdcc98c0b8f202deea94bc90d173c0b",
+      "bytes": 2025,
+      "path": "PLAN.md",
+      "sha256": "8b6a5da469432f6007d9056c32b5588d686683d08c374737c379b0756c3b419c"
+    },
+    {
+      "blob": "63c6ba63b66180a95b2f031b7bdda8972dc67c7e",
+      "bytes": 7719,
+      "path": "RECEIPT.json",
+      "sha256": "b043a2f4c066c62646305f7289a94fa7c6c769e5e608f918c64bcd0daaba4d7d"
+    },
+    {
+      "blob": "6583ef8b6238b607b3febdacb7b765620e756676",
+      "bytes": 3517,
+      "path": "REPORT.md",
+      "sha256": "5411531e959497202f4a8b84939011b90bf3ace00df05cbc8d783d7a311ae7be"
+    },
+    {
+      "blob": "a909512bda1d105361eae5a103cced9f622658f1",
+      "bytes": 23939,
+      "path": "VERDICT.md",
+      "sha256": "8f775581f390e2229a4dbcb0e824a220b00e2f312eaf4975fd61f6c82caf6ebf"
+    },
+    {
+      "blob": "8aa858fd5e982b4522c31f0acfa2f34030e8f5ab",
+      "bytes": 6081,
+      "path": "browser-proxy.log",
+      "sha256": "4341dd938774fba422959a110eabf8718abf59ec7b13d47df872ce40c710a076"
+    },
+    {
+      "blob": "d9122a3c6e01e4aa0e3ade1c57977be814045d87",
+      "bytes": 453983,
+      "path": "browser-proxy/duplicate-proxy-refused-1440.png",
+      "sha256": "d7e96b2157135aa3952a8be453fb595c3425e026408e46e1b90b647006a12fa7"
+    },
+    {
+      "blob": "2263d6406f2b14596ebb72f1514e856af5614a4f",
+      "bytes": 459403,
+      "path": "browser-proxy/inbox-proxy-form-1440.png",
+      "sha256": "0aeaf0970a03a1a7a5a0a7bce5dd5fc7c6293ecf0baf56b1f3f833804b8cd1d9"
+    },
+    {
+      "blob": "c44b0560ac0c7e39dfa33791c0f0546293ceb658",
+      "bytes": 105213,
+      "path": "browser-proxy/inbox-proxy-form-detail-1440.png",
+      "sha256": "d285e526e6cc929b2b47ab04bb4abe865e28d141398a4ec616425de23520c1e8"
+    },
+    {
+      "blob": "a8de4e9edeb45e0f3b3e1f980e2d2fa8c9459d22",
+      "bytes": 417814,
+      "path": "browser-proxy/public-proxy-total-1440.png",
+      "sha256": "6167c067622ee361c720305765d1fa52b0b871980d9e1a54f2a7cfb9d7f260b6"
+    },
+    {
+      "blob": "adbaa7a8337cc9c731a4342d2402c511214cc1f3",
+      "bytes": 405173,
+      "path": "browser-proxy/request-proxy-attribution-1440.png",
+      "sha256": "8f9cbdbf15cc0c71fb8037f799c4cd479dd438f95e4af02810b7ed1f55988632"
+    },
+    {
+      "blob": "57b076372cab6f784fde7ea2c818365d5c5cb9e8",
+      "bytes": 23894,
+      "path": "browser-proxy/request-proxy-attribution-detail-1440.png",
+      "sha256": "f17e2a2261760a62e4235a624bd1cd8541f0fd5860baadc6b0e7e24ad441cdf8"
+    },
+    {
+      "blob": "0d8842b2a44a18054233998a68e4302b34bb2893",
+      "bytes": 6089,
+      "path": "browser-zendesk.log",
+      "sha256": "a658eee8fa2e5f3d51d6a6249aa06a1613e33beb521883caefb55ba102ade8eb"
+    },
+    {
+      "blob": "0cbba79d83a41c369fa7a20bdce9e5af5e4693c4",
+      "bytes": 84571,
+      "path": "browser-zendesk/zendesk-existing-result-1440.png",
+      "sha256": "ef8abb518d78e827b599b2f04874c938fef872f61f6a159590507082f98911fb"
+    },
+    {
+      "blob": "0d64618b3ca740cc6a1d336fbbd820b8a157ae18",
+      "bytes": 83919,
+      "path": "browser-zendesk/zendesk-existing-review-1440.png",
+      "sha256": "6de16efaab6434878ed5de324b2a26dd7840532371f08815ca9e1d8dc8442698"
+    },
+    {
+      "blob": "bc4c70cd7a4e9cbae301bcd8c6315a033578bdbf",
+      "bytes": 24291,
+      "path": "browser-zendesk/zendesk-invalid-origin-1440.png",
+      "sha256": "af1b12ae957b74037eb3c16940bd91aa098d7b99a247d9ddd2abbc677ccfc065"
+    },
+    {
+      "blob": "05d20cdf44512758341d546eb94914dff0b26bfd",
+      "bytes": 84771,
+      "path": "browser-zendesk/zendesk-new-contact-result-1440.png",
+      "sha256": "1cc1b0ce0b7dd838700ab113e840181b8126591ade54d1637ed1aef6eae7619f"
+    },
+    {
+      "blob": "82af19f8fcc46c3f116d567d3c6c4d670d03855f",
+      "bytes": 92379,
+      "path": "browser-zendesk/zendesk-new-contact-review-1440.png",
+      "sha256": "74bdf3bb41a11cd9f01f408abe940f5e39f8edee444b9c28dd5280a723dffeef"
+    },
+    {
+      "blob": "1d0bc2480318c24148f552b2ef3826564b53ba4d",
+      "bytes": 86985,
+      "path": "browser-zendesk/zendesk-revoked-key-1440.png",
+      "sha256": "9755a0bf8dcea92facd51907e89a199d188a7368ccca6edd5a31f0736624a35d"
+    },
+    {
+      "blob": "ac680d5ba80d55bc04c41421bb98e5802fed14cf",
+      "bytes": 42569,
+      "path": "build.log",
+      "sha256": "a33f99da1a853be622f153708151443071d14490cc4affdc63cade9695cd0234"
+    },
+    {
+      "blob": "125c195b40560f3b6a0ec080ac219106d62cbd10",
+      "bytes": 21329,
+      "path": "candidate.diff",
+      "sha256": "360a720a111365a7469d6f424ca2fd2f2c4ec7975e6b64b7d35435b2d2317e7c"
+    },
+    {
+      "blob": "01d4aad7fe629085406f2747063f2667044be2fe",
+      "bytes": 3477,
+      "path": "commands.jsonl",
+      "sha256": "c5c5f2413ca9aa6b2230569c8f2c52eafb5c58acb9f9825e2c48a402cd6b6e81"
+    },
+    {
+      "blob": "fba560db7c48416c914446f2a1e319a79104d105",
+      "bytes": 67,
+      "path": "contract-check.log",
+      "sha256": "183372998615cc516043a5f66404b300281009a84349eda72da66d79fe542603"
+    },
+    {
+      "blob": "16b2defaf683c352f10245da21cdb5da243e37cb",
+      "bytes": 408,
+      "path": "focused-worker.log",
+      "sha256": "43a271d0cc5d44add2d45bbef0522c3123a58b1f69b948e9c61942a82ee75911"
+    },
+    {
+      "blob": "cc8ab10afa86834aaf61f3e8b700ef1ac1d162a4",
+      "bytes": 103566,
+      "path": "newer-main.diff",
+      "sha256": "a99d89e9b4eace43233b855357ce7ac5a388eb7c80093e4877accb6d6fdd763c"
+    },
+    {
+      "blob": "fe4a1543d53c36f982c4d08ff3e7f2820c437a1c",
+      "bytes": 789,
+      "path": "setup-receipt.json",
+      "sha256": "3da8e7a53ae716f11bb894236ed685476cd659909850e23b0e3015bb3d745229"
+    },
+    {
+      "blob": "7dcbee2f48d0c3f43775b3a580b81f96f8029280",
+      "bytes": 426073,
+      "path": "source-check.log",
+      "sha256": "6d095974d3e59375eacd279145e208c2f9f10a7383dbf7b070da683b877f20c9"
+    },
+    {
+      "blob": "9e00c68e955c91dcc0c52b446fb3dca19f802f10",
+      "bytes": 377305,
+      "path": "source-custody.json",
+      "sha256": "9ca7e40425ead41b2e82c308a357c1a4ddfe693fc1f97bc5031bea045fa9c8ab"
+    },
+    {
+      "blob": "f92d4c3d990dfcabe30c484c4ea705557797dcc3",
+      "bytes": 227,
+      "path": "typecheck.log",
+      "sha256": "a2db559bcc3517b5025efcf4abc0e5543c266acb0c039e8df897550e0a8cee30"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f16",
+  "product_head": "2e3cfa5aff5a21e7f99b6de6be62c30f7d9583bf",
+  "ref": "refs/heads/evidence/ct-judge-penny-cap014-20261105-1305-sol1",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "ct-judge-penny-cap014-20261105-1305-sol1"
+}
