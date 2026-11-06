@@ -12,7 +12,7 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
  const actor=await env.DB.prepare('SELECT id FROM operators').first<string>('id')
  const json=async<T>(path:string,body?:unknown,method?:string,status=200,headers=g.operator):Promise<T>=>{const response=await call(path,body,headers,method);expect(response.status,await response.clone().text()).toBe(status);return response.json() as Promise<T>}
  const accounts=[]
- for(const [name,revenueCents] of [['Harbor Analytics',120000],['Northstar Logistics',360000]] as const)accounts.push(await json<{id:string}>('/api/operator/accounts',{name,internalOwnerId:actor,revenueCents},'POST',201))
+ for(const [name,revenueCents] of [['Harbor Analytics',120000],['Northstar Logistics',360000]] as const)accounts.push(await json<{id:string;slug:string}>('/api/operator/accounts',{name,internalOwnerId:actor,revenueCents},'POST',201))
  const people=(await env.DB.prepare('SELECT id FROM requesters ORDER BY id').all<{id:string}>()).results
  for(let i=0;i<people.length;i++)await env.DB.prepare('INSERT INTO requester_account_links(requester_id,account_id,created_at) VALUES(?,?,?)').bind(people[i].id,accounts[i].id,new Date().toISOString()).run()
  const tables=(await env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '_cf_%' AND name!='d1_migrations' ORDER BY name").all<{name:string}>()).results
@@ -62,6 +62,9 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
    const result=await json<{total:number;items:typeof searched}>(`/api/operator/search?${new URLSearchParams({q,entity})}`)
    expect(result.total).toBe(1)
    expect(result.items.map(({id,entity,title,href})=>({id,entity,title,href}))).toEqual([record])
+   const global=await json<{total:number;items:typeof searched}>(`/api/operator/search?${new URLSearchParams({q})}`)
+   expect(global.total).toBe(1)
+   expect(global.items.map(({id,entity,title,href})=>({id,entity,title,href}))).toEqual([record])
    expect((await call(record.href,undefined,g.operator)).status).toBe(200)
   }
  }
@@ -73,12 +76,12 @@ it('[PRIO-001] populated upgrade, linked feature rollups, move custody and priva
  }
  const duplicateId=(await json<{id:string}>('/api/operator/hierarchy/product',{name:paging[21].title},'POST',201)).id
  const duplicate={id:duplicateId,entity:'products',title:paging[21].title,href:`/app/features#products-${duplicateId}`}
- const expected=[{id:accounts[0].id,entity:'accounts',title:'Harbor Analytics'},searched[1],searched[2],...paging.slice(0,22),duplicate,...paging.slice(22),searched[0]].map(({id,entity,title})=>({id,entity,title}))
+ const expected=[{id:accounts[0].id,entity:'accounts',title:'Harbor Analytics',href:`/app/customers/${accounts[0].slug}`},searched[1],searched[2],...paging.slice(0,22),duplicate,...paging.slice(22),searched[0]]
  const found=[]
  for(let page=1;page<=3;page++){
   const result=await json<{total:number;page:number;pageSize:number;items:typeof searched}>(`/api/operator/search?q=hArBoR&page=${page}`)
   expect({total:result.total,page:result.page,pageSize:result.pageSize}).toEqual({total:31,page,pageSize:25})
-  expect(result.items.map(({id,entity,title})=>({id,entity,title}))).toEqual(expected.slice((page-1)*25,page*25))
+  expect(result.items.map(({id,entity,title,href})=>({id,entity,title,href}))).toEqual(expected.slice((page-1)*25,page*25))
   found.push(...result.items.map(row=>row.id))
  }
  expect(new Set(found).size).toBe(31)
