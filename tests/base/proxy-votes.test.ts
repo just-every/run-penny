@@ -10,6 +10,13 @@ const total=async(table:string)=>env.DB.prepare(`SELECT COUNT(*) n FROM ${table}
 
 it('[CAP-014 REQ-026 REQ-010 DATA-005] records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote',async()=>{
  const g=await graph(4),r=g.requests[0],before={permissions:await total('requester_update_permissions'),sessions:await total('native_requester_sessions')}
+ const direct=g.requests.map(request=>({slug:request.slug,voters:[{id:g.recipient.requesterId,name:'Private display',proxy:0}]}))
+ await reconcileVoteCsv(g.operator,g.person,direct)
+ // A populated request export must retain every zero even when the voter file has only its header.
+ for(const request of g.requests)expect((await call(`/api/public/requests/${request.slug}/vote`,undefined,g.person,'DELETE')).status).toBe(204)
+ await reconcileVoteCsv(g.operator,g.person,g.requests.map(request=>({slug:request.slug,voters:[]})))
+ for(const request of g.requests.slice(0,2))expect((await call(`/api/public/requests/${request.slug}/vote`,{},g.person)).status).toBe(204)
+ await reconcileVoteCsv(g.operator,g.person,direct.map((request,index)=>index<2?request:{...request,voters:[]}))
  const evidence=await json<{id:string}>('/api/operator/evidence',{sourceType:'support_conversation',wording:'Customer needs monthly exports.',observedAt:new Date().toISOString(),requestLinks:[{id:r.id,stance:'supporting'}]},g.operator,201)
  const contactEmail='synthetic-penny-4'+String.fromCharCode(64)+'example.test'
  const input={contact:{displayName:'Casey Bell',email:contactEmail},source:'Zendesk ticket 738: monthly exports, "priority"\nCustomer asked again',sourceUrl:'https://harbor.zendesk.com/agent/tickets/738',evidenceId:evidence.id}

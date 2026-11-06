@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "2897eeab3418cb96e9761f736c0f30cdec93782ef7f5fa2b738b0849152496bd",
+      "sha256": "1ebf177d70eb6a21d706d79f1fda594422dca4dc0d471851e3bb7615f9e6e442",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "2d5b30778a8a23809a30ab619b3e4a8cd9c967599a082b75a846e4c4dd318222",
+      "sha256": "b17187840af0d22ae0e6972178bd06ad082699e6ef57e6d1330c433f69091ae7",
       "executable": false
     },
     "DEMO.md": {
@@ -8522,7 +8522,7 @@
       "executable": false
     },
     "tests/base/proxy-votes.test.ts": {
-      "sha256": "ed012b91c83e1475b5a4380464bbfc1f8a72c3eb11832994a4dddfb5d3ec9bec",
+      "sha256": "2f0958fdf085b653e2d46d67077f9ed8ec4cdc8b73cbe11ff7d0e310c8a60022",
       "executable": false
     },
     "tests/base/redaction-copy-doors.ts": {

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reconcile the native CSV exports while all fixture requests have zero votes: every request remains in the request file with zero demand and the individual-voter file contains only its header. Re-add the votes through the native route and reconcile their exact identities again in the existing journey. DATA-005 remains partial for the existing omitted CSV families, saved views and role field restrictions. No migration or configuration change is required.
+
 - Reconcile native request and voter CSVs after removing a direct vote and replaying its replacement, and for addressless proxy demand linked to several accounts. Erased proxy voters stay absent after an attempted replay; refused exports expose none of the fixture request or voter identities. DATA-005 stays partial for other record families, saved views and role field restrictions. No migration or configuration change is required.
 
 - Extend the native CSV reconciliation journey with proxy-only demand, public participation totals and revoked operator export refusals. Retain the existing zero, direct, mixed proxy, takeover, blocked-person and joined-address checks without adding a test registration. DATA-005 stays partial for the other CSV families, saved views and role field restrictions. No migration or configuration change is required.
