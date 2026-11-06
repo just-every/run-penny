@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "1050feea764dafb5d9934be0bcfd3b5e5d00f5ce7045dad188d95016da22a997",
+      "sha256": "810a50a1c67d0a15bbffe8f50a517fdd04d8aaf17254129695be406f1ec54a76",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "d3f67f3e51c4474b79f3c6ce70a2639a61ceb6150a2d11922420320df6a73163",
+      "sha256": "3958c5ad60b6aa9a40913e7d1d6bd6a0763ed309a18b5f44bf7c9ae8d966f3d1",
       "executable": false
     },
     "DEMO.md": {
@@ -8290,7 +8290,7 @@
       "executable": false
     },
     "tests/base/board.test.ts": {
-      "sha256": "1d8943fead813e292c2717374f43406670f340dc05cb92f658ee6b66f33b737a",
+      "sha256": "e2753ab2e34f9b36b6f01479c7d61cd40a12a68f6f4bdc213d52b6e3f84e328b",
       "executable": false
     },
     "tests/base/custody.test.ts": {
@@ -8401,6 +8401,10 @@
       "sha256": "a514826c75f35b44dbda4ca6031b2d791f425dcc644777ad03d3141e678943c4",
       "executable": false
     },
+    "tests/base/internal-board-exclusion.ts": {
+      "sha256": "6c5ae2639c61d5931bc49bfa689ab51c18cb5acea235fe8ae0829243085256d9",
+      "executable": false
+    },
     "tests/base/internal-discussion.test.ts": {
       "sha256": "8d361651751aaacf8f930a108ce0cf91a7d0d241315a3d9fd0ed0ed238b115c1",
       "executable": false
@@ -8462,7 +8466,7 @@
       "executable": false
     },
     "tests/base/notifications.test.ts": {
-      "sha256": "c74d749c7f952363f659472fe9429171b410b8bebdf43609949df10e82e41f6a",
+      "sha256": "1ea1bcf5a08808b65144f7684487ea2f8fffb92fc5d4f24eaa08c665ffa92e61",
       "executable": false
     },
     "tests/base/operator-request-publication.ts": {
@@ -8550,7 +8554,7 @@
       "executable": false
     },
     "tests/base/release-fixture.ts": {
-      "sha256": "e38bd8b2362c8e3535109c75bf2b1f0eab75edf75f2d3e3df057f083d47a004d",
+      "sha256": "c9462d9fda538519f8e534032d7ac39657c481251a7524d0fc2d36eb41780515",
       "executable": false
     },
     "tests/base/release-mail-identity.ts": {
