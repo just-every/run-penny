@@ -1,0 +1,11 @@
+Evidence transport receipt, 6 November 2026 UTC.
+
+Initial publication succeeded: EVIDENCE repo=just-every/run-penny ref=refs/heads/evidence/ct-judge-penny-road007-20261105-1325-sol1 head=5f087aaeb6582331db453b3f4b703bdff259d494
+
+The pre-push audit inspected every report candidate with git log origin/main..HEAD --format="%an <%ae>%n%cn <%ce>%n%(trailers:only,unfold)". Both author and committer were Run Edit Run fleet <fleet@runeditrun.com>; no trailers were present. The evidence entrypoint also checks all candidate parent commits programmatically before each push and supplies explicit fleet commit-tree environment identity. Product HEAD, branch and index were unchanged.
+
+Initial optional round-trip calls returned Git fetch exit 128. Direct isolated bare-repository fetches, both with ordinary and entrypoint environments, succeeded and read the same evidence head. An instrumented read-only diagnostic isolated the real local error: fatal: not a git repository (or any of the parent directories): .git. The supplied task-side cloud_evidence.py fetch implementation omitted git init for its new temporary directory. One initialization call, git(temp, 'init', '--bare', '--quiet'), was added outside the product repository before ls-remote and fetch. No product code or fleet publication authority was changed. No network rejection, HTTP failure, credential replacement or product push occurred.
+
+The corrected entrypoint fetched the exact initial evidence head and returned status=restored, validating the report-only tree, manifest, all 34 file lengths, SHA-256 hashes and Git blob identities. The product manifest remained source 89d5997b2ba55fb4637552fc2c656bcced2bcc15 with an empty product_branch, reflecting the detached read-only review.
+
+This packet includes all actual non-secret initial transport receipts and terminal product custody, and is being published as a child evidence commit so the final returned ref contains the complete review and recovery record. The final evidence head is the terminal EVIDENCE line returned with the report; it does not signal product READY or landing. No product branch or PR was created. The publication helper's task-side initialization repair may be needed by a receiver using the exact uncorrected fetch code from the commission.

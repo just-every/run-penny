@@ -1,0 +1,15 @@
+{
+  "result": {
+    "repository": "just-every/run-penny",
+    "ref": "refs/heads/evidence/ct-judge-penny-road007-20261105-1325-sol1",
+    "status": "failed",
+    "reason": "Git fetch failed exit=128"
+  },
+  "errors": [
+    {
+      "verb": "fetch",
+      "exit": 128,
+      "sanitized_stderr": "fatal: not a git repository (or any of the parent directories): .git\n"
+    }
+  ]
+}

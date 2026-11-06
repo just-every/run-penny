@@ -1,5 +1,5 @@
 {
-  "at_utc": "2026-11-06T02:11:59.537599+00:00",
+  "at_utc": "2026-11-06T02:16:29.028129+00:00",
   "source": "89d5997b2ba55fb4637552fc2c656bcced2bcc15",
   "product_branch": null,
   "tracked_worktree_clean": true,
@@ -9,13 +9,13 @@
   "files": [
     {
       "path": "REPORT.md",
-      "bytes": 23380,
-      "sha256": "e7227c52288096dca210f6fd7986299bf870348cee2b7f2b682c745b773b24c6"
+      "bytes": 24105,
+      "sha256": "d9913b2401c3a171fb59d83b7471578a31538043d23b518ea8fdb145f37b8dbf"
     },
     {
       "path": "VERDICT.md",
-      "bytes": 22941,
-      "sha256": "d3e8c0e80fa97fee207f15150d73c8037cebb810cd3867eaa7727d7523cc2f6c"
+      "bytes": 23666,
+      "sha256": "314fefb0cf5094a00f01429c3e554787c1e39d22cb876024c41fad0087c2f76e"
     },
     {
       "path": "PLAN.md",
@@ -171,6 +171,53 @@
       "path": "browser/mapped-status-history-second-390.png",
       "bytes": 253255,
       "sha256": "ec2746f2a28b173f9e696da464cb596e4e4a765e31e0530f267eb0427ce5f51e"
+    },
+    {
+      "path": "terminal-receipt.json",
+      "bytes": 465,
+      "sha256": "cbc60ce3b53bebc730a94dfcc13755aa2e51df9333ceed376e522c887d9721d3"
+    },
+    {
+      "path": "transport/first-publication.log",
+      "bytes": 6926,
+      "sha256": "0561190c10504fd62dd2be0472f15a34261e66a0e913a47ffe8b22204d70e582"
+    },
+    {
+      "path": "transport/roundtrip-initial.json",
+      "bytes": 170,
+      "sha256": "877e30b1dd6223339a5ff4acfde346dce2d104cba162aec0f25f26d9402b7ba4"
+    },
+    {
+      "path": "transport/fetch-diagnostic.json",
+      "bytes": 192,
+      "sha256": "759d96ffbe1376a043ae3bd176c1606a77c8efaeef6add212b3d065a1d050488"
+    },
+    {
+      "path": "transport/roundtrip-retry.json",
+      "bytes": 170,
+      "sha256": "877e30b1dd6223339a5ff4acfde346dce2d104cba162aec0f25f26d9402b7ba4"
+    },
+    {
+      "path": "transport/entrypoint-diagnostic.json",
+      "bytes": 217,
+      "sha256": "82f1c31846fc5020f66826959b3af0808acc3617b9a56f214ebe9bdfab20c2d3"
+    },
+    {
+      "path": "transport/roundtrip-diagnosed.json",
+      "bytes": 378,
+      "sha256": "8bfd95adaba0c5bf58d9fddee8b7c23adc9e7f9c84eaad0cbc120bbe0afe6073"
+    },
+    {
+      "path": "transport/roundtrip-verified.json",
+      "bytes": 6960,
+      "sha256": "1e65be04475d35e318d298b7b279692a9ca1d2b9db4a9691bb6f39ab72661771"
+    },
+    {
+      "path": "transport/RECEIPT.md",
+      "bytes": 2287,
+      "sha256": "edb5206203ec3cb540a6a596fc04a5e3af40c2923d2aec3ad282afef0266f318"
     }
-  ]
+  ],
+  "initial_evidence_head": "5f087aaeb6582331db453b3f4b703bdff259d494",
+  "initial_evidence_roundtrip": "restored; 34 file hashes and Git blob identities verified; task-side missing init repaired"
 }

@@ -1,0 +1,14 @@
+{
+  "at_utc": "2026-11-06T02:12:40.253044+00:00",
+  "head": "89d5997b2ba55fb4637552fc2c656bcced2bcc15",
+  "branch": "",
+  "tracked_status": "",
+  "product_commits_created": 0,
+  "product_pushes": 0,
+  "pr": null,
+  "evidence_ref": "refs/heads/evidence/ct-judge-penny-road007-20261105-1325-sol1",
+  "evidence_head": "5f087aaeb6582331db453b3f4b703bdff259d494",
+  "evidence_publish_exit": 0,
+  "ci_api_calls": 0,
+  "no_running_task_browser_or_server_observed": true
+}

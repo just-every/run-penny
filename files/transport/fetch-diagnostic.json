@@ -1,0 +1,5 @@
+{
+  "command": "git fetch --quiet --no-tags https://github.com/just-every/run-penny.git refs/heads/evidence/ct-judge-penny-road007-20261105-1325-sol1",
+  "exit": 0,
+  "sanitized_output": ""
+}
