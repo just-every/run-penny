@@ -242,7 +242,7 @@ try {
       assert.ok(await page.locator('main section, main article').filter({has:page.getByRole('heading',{name:'attention-request',exact:true})}).last().getAttribute('class').then(value=>value.includes('shadow-')),'[REQ-014] moderation reuses operator card')
       assert.ok((await page.getByLabel('Public title').first().locator('xpath=..').getAttribute('class')).includes(fieldLabelClass),'[REQ-014] moderation uses operator labels')
       await capture('moderation')
-      negativeChecks.push(await reviewDecisionPages({page,db:runtime.db,goto,capture,width}))
+      negativeChecks.push(await reviewDecisionPages({page,db:runtime.db,goto,capture,width,outbox:runtime.outbox}))
       await reviewStatusDrafts({page,db:runtime.db,goto,capture})
       if(!coreOnly)await reviewClauseStates({page,goto,capture})
       }

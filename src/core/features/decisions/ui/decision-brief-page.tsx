@@ -47,6 +47,7 @@ function DecisionContent({ decision, onSaved }: { readonly decision: OperatorDec
               <DataField label="Confidence">{decision.confidence ?? 'Not recorded'}</DataField>
               <DataField label="Review date">{formatOperatorDate(decision.reviewAt)}</DataField>
               <DataField label="Linked evidence" valueClassName="tabular-nums">{decision.evidenceCount}</DataField>
+              <DataField label="Eligible requesters">{decision.eligibleRequesters.length ? <ul aria-label="Eligible requesters">{decision.eligibleRequesters.map(person => <li key={person.id}>{person.displayName}</li>)}</ul> : 'None currently eligible'}</DataField>
             </dl>
           </OperatorCard>
           <OperatorCard className="p-5 sm:p-6">

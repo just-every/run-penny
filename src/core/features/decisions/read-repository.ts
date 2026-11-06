@@ -2,6 +2,7 @@ import { boundedIds } from '@/core/features/workspace/list-query'
 import type { OperatorDecisionBrief, OperatorDecisionListItem, OperatorRoadmapCard } from '@/core/shared/api/operator'
 import type { DatabaseConnection } from '@/core/platform/database'
 import { readDecisionBets } from './read-bets'
+import { readDecisionRequesters } from './read-requesters'
 
 export class DecisionsReadRepository {
   private readonly connection: DatabaseConnection
@@ -37,7 +38,7 @@ export class DecisionsReadRepository {
   async find(slug: string): Promise<OperatorDecisionBrief | null> {
     const record = await this.connection.binding.prepare('SELECT id FROM decisions WHERE slug=? LIMIT 1').bind(slug).first<{id:string}>()
     if (!record) return null
-    const [summaries, detailResult, bets] = await Promise.all([
+    const [summaries, detailResult, bets, eligibleRequesters] = await Promise.all([
       this.list([record.id]),
       this.connection.binding.prepare(`
         SELECT d.question AS question, d.confidence AS confidence, d.rationale AS rationale,
@@ -50,11 +51,12 @@ export class DecisionsReadRepository {
         readonly roadmapSlug: string | null; readonly roadmapTitle: string | null; readonly roadmapStatus: OperatorRoadmapCard['status'] | null
       }>(),
       readDecisionBets(this.connection, record.id),
+      readDecisionRequesters(this.connection.binding, record.id),
     ])
     const summary = summaries[0], row = detailResult.results[0]
     if (!summary || !row) return null
     const { roadmapSlug, roadmapTitle, roadmapStatus, ...detail } = row
     const roadmapItem = roadmapSlug !== null ? { slug: roadmapSlug, title: roadmapTitle!, status: roadmapStatus! } : null
-    return { ...summary, ...detail, bets, roadmapItem }
+    return { ...summary, ...detail, bets, eligibleRequesters, roadmapItem }
   }
 }

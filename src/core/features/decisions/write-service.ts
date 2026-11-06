@@ -23,11 +23,11 @@ export async function editDecision(db:D1Database,id:string,input:DecisionInput,a
  if(input.reviewAt&&!validDate(input.reviewAt))throw new MutationError(422,'Review date must be valid.')
  await db.batch([db.prepare(`UPDATE decisions SET title=?,question=?,owner_operator_id=?,confidence=?,review_at=?,updated_at=? WHERE id=?`).bind(question||'Untitled decision',question,input.ownerOperatorId??null,input.confidence??null,input.reviewAt??null,now,id),refreshReadiness(db,id),audit(db,actor,'decision',id,'decision.edited',now)])
 }
-export interface BetInput{title:string;summary:string;urgency?:string|null;deliveryShape?:string|null;successMeasure?:string|null}
+export interface BetInput{title:string;summary:string;urgency?:string|null;deliveryShape?:string|null;successMeasure?:string|null;assumptions?:string|null}
 export async function saveBet(db:D1Database,decisionId:string,id:string|null,input:BetInput,actor:string,now:string){
  await mutableDecision(db,decisionId)
  if(id&&!await db.prepare('SELECT id FROM candidate_bets WHERE id=? AND decision_id=?').bind(id,decisionId).first())throw new MutationError(404,'Bet not found in this decision.')
  const betId=id??createUlid()
- await db.batch([id?db.prepare('UPDATE candidate_bets SET title=?,summary=?,urgency=?,delivery_shape=?,success_measure=?,updated_at=? WHERE id=?').bind(input.title,input.summary,input.urgency??null,input.deliveryShape??null,input.successMeasure??null,now,id):db.prepare('INSERT INTO candidate_bets(id,decision_id,title,summary,urgency,delivery_shape,success_measure,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)').bind(betId,decisionId,input.title,input.summary,input.urgency??null,input.deliveryShape??null,input.successMeasure??null,now,now),refreshReadiness(db,decisionId),audit(db,actor,'decision',decisionId,id?'bet.edited':'bet.added',now)])
+ await db.batch([id?db.prepare('UPDATE candidate_bets SET title=?,summary=?,urgency=?,delivery_shape=?,success_measure=?,assumptions=CASE WHEN ? THEN assumptions ELSE ? END,updated_at=? WHERE id=?').bind(input.title,input.summary,input.urgency??null,input.deliveryShape??null,input.successMeasure??null,input.assumptions===undefined?1:0,input.assumptions??null,now,id):db.prepare('INSERT INTO candidate_bets(id,decision_id,title,summary,urgency,delivery_shape,success_measure,assumptions,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)').bind(betId,decisionId,input.title,input.summary,input.urgency??null,input.deliveryShape??null,input.successMeasure??null,input.assumptions??null,now,now),refreshReadiness(db,decisionId),audit(db,actor,'decision',decisionId,id?'bet.edited':'bet.added',now)])
  return{id:betId}
 }

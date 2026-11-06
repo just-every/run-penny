@@ -10,7 +10,7 @@ import { reviewDecision } from './reviews'
 const optionalText=z.string().max(20000).nullable().optional()
 const confidence=z.enum(['low','medium','high']).nullable().optional()
 const decisionInput=z.object({question:z.string().max(1000),ownerOperatorId:optionalText,confidence,reviewAt:optionalText}).strict()
-const betInput=z.object({title:z.string().trim().min(1).max(280),summary:z.string().trim().min(1).max(20000),urgency:optionalText,deliveryShape:optionalText,successMeasure:optionalText}).strict()
+const betInput=z.object({title:z.string().trim().min(1).max(280),summary:z.string().trim().min(1).max(20000),urgency:optionalText,deliveryShape:optionalText,successMeasure:optionalText,assumptions:optionalText}).strict()
 const commitInput=z.object({selectedCandidateBetId:optionalText,rationale:optionalText,ownerOperatorId:optionalText,confidence,reviewAt:optionalText,noViableAlternativeReason:optionalText}).strict()
 export function registerDecisionRoutes(app:Hono<OperatorMutationEnvironment>){
  app.post('/api/operator/decisions',c=>loopMutation(c,async(actor,now)=>{const input=await parseMutationBody(c,decisionInput);if(!input)return c.json({error:'validation_failed'},400);return c.json(await createDecision(c.get('runtime').database.binding,input,actor,now),201)}))

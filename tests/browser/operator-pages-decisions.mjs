@@ -3,7 +3,7 @@ import {reviewRoadmapRecord} from './operator-roadmap-record.mjs'
 import {reviewEvidenceFlow} from './operator-evidence-flow.mjs'
 
 /** DOM acceptance for the decision and roadmap findings, on each caller viewport. */
-export async function reviewDecisionPages({page,db,goto,capture,width}) {
+export async function reviewDecisionPages({page,db,goto,capture,width,outbox}) {
   for(const state of ['ready','review_due']) {
     await db.prepare('UPDATE decisions SET state=? WHERE id=?').bind(state,'attention-decision').run()
     await goto('/app/decisions/attention-decision')
@@ -49,6 +49,27 @@ export async function reviewDecisionPages({page,db,goto,capture,width}) {
   await db.prepare("UPDATE evidence_items SET account_id='page-account-two' WHERE id='second-evidence'").run()
   for(const [id,title] of [['page-bet-a','Selected approach'],['page-bet-b','Declined approach']])await db.prepare('INSERT INTO candidate_bets(id,decision_id,title,summary,created_at,updated_at) VALUES(?,?,?,?,?,?)').bind(id,'attention-decision',title,'An approach to compare',now,now).run()
   for(const [bet,evidence,stance] of [['page-bet-a','attention-evidence','supporting'],['page-bet-b','attention-evidence','supporting'],['page-bet-b','second-evidence','contradicting']])await db.prepare('INSERT INTO candidate_bet_evidence_links(candidate_bet_id,evidence_id,stance,created_at) VALUES(?,?,?,?)').bind(bet,evidence,stance,now).run()
+  await goto('/app/decisions/attention-decision')
+  const selectedCard=page.locator('article,section').filter({has:page.getByRole('heading',{name:'Selected approach',exact:true})}).last()
+  await selectedCard.getByText('Manage this bet',{exact:true}).click()
+  const comparison=selectedCard.getByRole('form',{name:'Edit comparison dimensions',exact:true})
+  await comparison.getByLabel('Assumptions',{exact:true}).fill('Customers can finish without training')
+  const saved=page.waitForResponse(response=>new URL(response.url()).pathname==='/api/operator/decisions/attention-decision/bets/page-bet-a'&&response.request().method()==='PATCH')
+  await comparison.getByRole('button',{name:'Save',exact:true}).click()
+  assert.equal((await saved).status(),200)
+  const board=await db.prepare("SELECT id FROM boards WHERE slug='attention-board'").first()
+  await db.prepare("INSERT INTO requests(id,slug,board_id,title,description,moderation_state,public_state,public_title,public_description,published_at,created_at,updated_at) VALUES('page-mapped-request','page-mapped-request',?,'Mapped request','Mapped problem','approved','open','Mapped request','Mapped problem',?,?,?)").bind(board.id,now,now,now).run()
+  const email=['synthetic-penny-brief','example.test'].join('@')
+  const issued=await page.request.post(origin+'/api/public/identity/email',{headers:{Origin:origin},data:{email,displayName:'Current mapped requester'}})
+  assert.equal(issued.status(),202)
+  const message=outbox.findLast(message=>message.email===email)
+  assert.ok(message)
+  const token=new URLSearchParams(new URL(message.url).hash.slice(1)).get('token')
+  const verified=await page.request.post(origin+'/api/public/identity/email/verify',{headers:{Origin:origin},data:{token}})
+  assert.equal(verified.status(),200)
+  const authority={Origin:origin,Authorization:`Bearer ${(await verified.json()).token}`}
+  assert.equal((await page.request.post(origin+'/api/public/requests/page-mapped-request/follow',{headers:authority,data:{}})).status(),204)
+  assert.equal((await page.request.post(origin+'/api/operator/roadmap/attention-planned/approve',{headers:{Origin:origin},data:{publicTitle:'Customer promise',publicSummary:'Customer problem',boardSlug:'attention-board',requestIds:['page-mapped-request']}})).status(),200)
   await db.prepare("UPDATE decisions SET state='committed',selected_candidate_bet_id='page-bet-a',title='Choose the approach that makes the delivery promise clear' WHERE id='attention-decision'").run()
   await db.prepare("UPDATE roadmap_items SET candidate_bet_id='page-bet-a' WHERE id='attention-planned'").run()
   await db.prepare("UPDATE roadmap_items SET candidate_bet_id='page-bet-b' WHERE id='attention-shipped'").run()
@@ -60,6 +81,13 @@ export async function reviewDecisionPages({page,db,goto,capture,width}) {
   assert.equal(await page.getByRole('heading',{name:'Contradicts (1)',exact:true}).count(),1)
   assert.equal(await page.getByText('Supporting',{exact:true}).count(),2)
   assert.equal(await page.getByText('Contradicting',{exact:true}).count(),1)
+  if(width===1440) {
+    const brief=await (await page.request.get(origin+'/api/operator/decisions/attention-decision')).json()
+    assert.equal(brief.bets.find(bet=>bet.id==='page-bet-a').assumptions,'Customers can finish without training')
+    const assumptions=page.locator('dt').filter({hasText:/^Assumptions$/}).locator('..')
+    assert.equal(await assumptions.filter({hasText:'Customers can finish without training'}).count(),1)
+    assert.deepEqual(await page.getByRole('list',{name:'Eligible requesters',exact:true}).getByRole('listitem').allTextContents(),['Current mapped requester'])
+  }
   await capture('brief-counts-and-stances')
   for(const id of ['page-requester-one','page-requester-two'])await db.prepare('INSERT INTO requesters(id,display_name,created_at,updated_at) VALUES(?,?,?,?)').bind(id,id,now,now).run()
   await db.prepare("UPDATE evidence_items SET requester_id='page-requester-one' WHERE id='attention-evidence'").run()

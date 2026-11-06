@@ -130,6 +130,7 @@ export interface OperatorAccountDetail extends OperatorAccountCard {
 }
 
 export interface OperatorDecisionBrief extends OperatorDecisionListItem {
+  readonly eligibleRequesters: readonly { readonly id: string; readonly displayName: string }[]
   readonly question: string
   readonly confidence: 'low' | 'medium' | 'high' | null
   readonly rationale: string | null
