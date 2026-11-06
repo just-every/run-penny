@@ -23,7 +23,7 @@ Three native GET routes read the existing agent projection without widening its 
 
 ## Validation
 
-Candidate: `7c6fe309489271b0c5a177a8a28892797ddb4a15`. Base: `8d4b0ac3eebe3e50003b61820f9c366282986327`. Product push succeeded on attempt 1. No PR is required; the push starts Verify. `RECEIPT.json` records the actual checks and their outcomes, with actual terminal logs alongside it.
+Candidate: `7c6fe309489271b0c5a177a8a28892797ddb4a15`. Base: `8d4b0ac3eebe3e50003b61820f9c366282986327`. Product push succeeded on attempt 1. No PR is required; the push starts Verify. `RECEIPT.json` records the actual checks and their outcomes, with actual terminal logs and the machine-readable first-party check result in first-party.json alongside it.
 
 Build, typecheck, first-party structural check, touched-file lint and source lock freshness all passed. The touched Worker suite passed all 7 tests on the exact committed candidate (19.48 seconds). Both generator commands passed with local generated views; ACCEPTANCE.md and docs/CLAIMS.md were restored from main before committing. The unchanged source lock passes on the committed candidate. No migration was added.
 

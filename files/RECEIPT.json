@@ -56,6 +56,13 @@
       "exit": 1,
       "head": "7c6fe309489271b0c5a177a8a28892797ddb4a15",
       "scope": "expected stale ACCEPTANCE.md only; view deliberately not committed"
+    },
+    {
+      "command": "pnpm exec rer check --profile first-party --json",
+      "exit": 0,
+      "head": "7c6fe309489271b0c5a177a8a28892797ddb4a15",
+      "ok": true,
+      "receipt": "first-party.json"
     }
   ],
   "ci": {
