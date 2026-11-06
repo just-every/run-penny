@@ -1,0 +1,842 @@
+{
+  "source_migrations": 104,
+  "spec_migrations": 104,
+  "source_not_in_spec": [],
+  "spec_not_in_source": [],
+  "source": [
+    {
+      "name": "0001_initial_data_foundation.sql",
+      "sha256": "166f26b66d7472f2c2601ef8c9c034e74761ec389f3c0eb46854de2214a8e544"
+    },
+    {
+      "name": "0002_native_feedback_baseline.sql",
+      "sha256": "8faf47203247538cbe0063f6184ecaa8147969bf00f8c5e0d08ba5de86336f4f"
+    },
+    {
+      "name": "0003_opaque_native_request_slugs.sql",
+      "sha256": "9af05f5e9f5181daaf55e1826d35faaa0c0ff068a162f68278f08f29e3482100"
+    },
+    {
+      "name": "0004_archive_erasure_fences.sql",
+      "sha256": "bb481fa09d245a54ad60c67bcfdcf7c4a907a716a67721fc2b6d2910c0137b1e"
+    },
+    {
+      "name": "0005_requester_board.sql",
+      "sha256": "c464c8aa0c8311daf487f169324f5a2af47929ab09e507ac6b06b71c6f736b19"
+    },
+    {
+      "name": "0006_request_contribution_provenance.sql",
+      "sha256": "90eff47230b5e621f01b298f6ace5ead6015dcb103a18e4721e1b3df8bd592e6"
+    },
+    {
+      "name": "0007_requester_board_maintenance.sql",
+      "sha256": "b7b3632b6aae8f7ccc8f4941bd2713ed06d71eb4a2b4ccabe1bba08e85df9931"
+    },
+    {
+      "name": "0008_requester_write_and_upload_custody.sql",
+      "sha256": "587c62f971fa22facf79779e52f2b4e9d6aaafc574cafbc7e6978b91b5f3dbee"
+    },
+    {
+      "name": "0009_base_operator_auth.sql",
+      "sha256": "39a0af318b92857811e1590d65a2d7d902da2969b1c8bf191e18b41fbc5a798b"
+    },
+    {
+      "name": "0010_request_notifications.sql",
+      "sha256": "c02218cde66f1bc7a9c9079ef411c5b68e5f8c0b9dd345c50fc771098f2925ce"
+    },
+    {
+      "name": "0011_notification_delivery_events.sql",
+      "sha256": "c7c9059214c065f80e1df87234f6fda2071023512f1f57ac3c26e4e4aa740247"
+    },
+    {
+      "name": "0012_base_local_auth.sql",
+      "sha256": "807f8056a8037131680bf9d3cfcaa41b5bf798fc8f26f62148a233a8b81c516d"
+    },
+    {
+      "name": "0013_decision_loop.sql",
+      "sha256": "af5e48c703caeea9cf8c42a0963e0961704212bc6b5e31c1d821c2a0af3b7317"
+    },
+    {
+      "name": "0014_release_delivery.sql",
+      "sha256": "e56f7d7b388978a371ec9ecd1cc7035e0e7772b6792098e231901f1f3b16464f"
+    },
+    {
+      "name": "0015_publication_seals.sql",
+      "sha256": "3633f6c84857ec09606bea6d1b0e611dadb70be4d8b675593a2948a50501e55f"
+    },
+    {
+      "name": "0016_restored_notification_hold.sql",
+      "sha256": "8a94e0579ec11c1733a4d143a249463fc1ed633acec4c777742c224af4c3def4"
+    },
+    {
+      "name": "0017_saved_feedback_import.sql",
+      "sha256": "64a8fda0a496a6ca982adb64fd04145df41308d4767f30877a0f381221d13e4b"
+    },
+    {
+      "name": "0018_owner_claim.sql",
+      "sha256": "c3ffe653727bb4867b064dc2489df5013613f08f4b5998d2fe2b6a8485cdb815"
+    },
+    {
+      "name": "0019_host_identity_custody.sql",
+      "sha256": "26f7fd092737ba3a848b315d0cb2bd7882a368954899f2585e051f7799dba6c2"
+    },
+    {
+      "name": "0020_base_integrations.sql",
+      "sha256": "1a24ad5a3b682c5bb3ab53966732a62ea97a7e7a23a16effbefbd0a908722509"
+    },
+    {
+      "name": "0021_integration_authority.sql",
+      "sha256": "90e255664f36c5bdefbad242adf53355cee0ec0565869189086748b6e6515bd6"
+    },
+    {
+      "name": "0022_integration_events.sql",
+      "sha256": "ddaf2f6f243359be39d405309925eda4e695b58b18bc2ddf003d0f6a69c93ffe"
+    },
+    {
+      "name": "0023_tracker_links.sql",
+      "sha256": "f2bf55e73e3e5282dcac879e79260c015fbd07d2be54e7a158a90b0e8e686732"
+    },
+    {
+      "name": "0024_portal_branding.sql",
+      "sha256": "3bb122211965e9b32e684ed402da7f5853d41bb750f40d7e4d11fc9eb493439d"
+    },
+    {
+      "name": "0025_portability.sql",
+      "sha256": "c7db9042f6d5c571e10297c02df858ad2f3466beb4fa85649fee407cc228747b"
+    },
+    {
+      "name": "0026_import_custody_evolution.sql",
+      "sha256": "5e7c59b6bb00b8d0a0e46e04f3d46b201ad03f6d2f9707000ef8fd12c8a6985b"
+    },
+    {
+      "name": "0027_first_run.sql",
+      "sha256": "b1019b2ae77abed5178ff9548314ddb5475a9e6b418ae7bd25c445610ff8353a"
+    },
+    {
+      "name": "0028_operator_dev_sessions.sql",
+      "sha256": "18754583983c09f3624038131c1b03fadecb8375dddb0a5d09c449a4238ce298"
+    },
+    {
+      "name": "0029_dev_minted_api_tokens.sql",
+      "sha256": "4caf96a2a5abd5840dfe1ee278c43883d2b3295185e193b7a52aaa0e258029ce"
+    },
+    {
+      "name": "0030_penny_evidence.sql",
+      "sha256": "da3f79613eec33e286e07173fd657ca337e3bebba0c3c13f3c51d645a3f2cbb4"
+    },
+    {
+      "name": "0031_penny_release_outcomes.sql",
+      "sha256": "4547c518e762ed149bd822c8a67302739823b577428cde0a8ebd599ba2a888ea"
+    },
+    {
+      "name": "0032_penny_decision_reviews.sql",
+      "sha256": "026f2ff9d9036eb6f45d01d8ceb489b7cc8a97e373b54727cc22ac6acef7bb8d"
+    },
+    {
+      "name": "0033_decision_review_completion.sql",
+      "sha256": "e7d3290fbbfef32a121e10eadd546aa8586b77a35da279e0d57c028392d1bbc6"
+    },
+    {
+      "name": "0034_feedback_move_in.sql",
+      "sha256": "b15c83a09edea9a1d44de0b35b0c9e474d5da22d146d6b3cb7c57b659951ec68"
+    },
+    {
+      "name": "0035_feedback_erasure.sql",
+      "sha256": "7e8f1deb30aff2919d1b4ec8011ad787891239f8b033351caf003c3ece1d19ef"
+    },
+    {
+      "name": "0036_feedback_source_erasure.sql",
+      "sha256": "9ce8aff37cb33210ab7b521b0f52000fd1353494d8e52ea04f6a95826ec8c7b6"
+    },
+    {
+      "name": "0037_feedback_maintenance.sql",
+      "sha256": "5f827d1fdefab59ba58e6cfe3c0bd0f9ac5b9e1be7d4e25c212910c6925dc301"
+    },
+    {
+      "name": "0038_feedback_supporter_types.sql",
+      "sha256": "4c6a17293a553a1c75ca690741f29cdb189788f2ce3635f5e48cb92db10b7be2"
+    },
+    {
+      "name": "0039_import_reversal_fence.sql",
+      "sha256": "3a99b42f5524c311ca541b6db9cf9f0d05e66434c7a998a6bd64d0a5adf97cbf"
+    },
+    {
+      "name": "0040_import_custody_retirement.sql",
+      "sha256": "e9ea5de249c052f5726594ac92576e5078326f4b5b2f95ab0e53a5d6763c3fe6"
+    },
+    {
+      "name": "0041_legacy_outbox_visible_state.sql",
+      "sha256": "32bdba8868d2386fca67fc2f41401171d80c26aee3cb5e6a5b164712c89a6f15"
+    },
+    {
+      "name": "0042_identity_providers.sql",
+      "sha256": "f879fb86b079e591dfe4a8513752a8e0394e252b940aa35d3f7430f27b7382c6"
+    },
+    {
+      "name": "0043_domain_rules_step_up.sql",
+      "sha256": "e41c7f1381f547582148cdf247b521d7f166461ab24058ace95acdf21839e815"
+    },
+    {
+      "name": "0044_provider_control.sql",
+      "sha256": "a1e74cd263d294e75b5b09baf364c81d324e50ae17a77c5a287d58b833b56cdc"
+    },
+    {
+      "name": "0045_dependencies.sql",
+      "sha256": "3481d8aef870a9eda153a1617e99bb71a408e61a25dea92bb132efa7dd1c2526"
+    },
+    {
+      "name": "0046_idp_owner.sql",
+      "sha256": "a870102648a2226b18a2fe8168d096389b698af88333d112fa8137e582fc2b33"
+    },
+    {
+      "name": "0047_provider_pins.sql",
+      "sha256": "f0cfb6b3740869fd098ee449efb25807f8b1ef51c353fd07bafeb00ce38aeb63"
+    },
+    {
+      "name": "0048_dependency_setup.sql",
+      "sha256": "7b36f7e1fb0991fe3e808613d911393bbad3386ead06427082c69a48c5738108"
+    },
+    {
+      "name": "0049_dependency_approval.sql",
+      "sha256": "7d3742369189b69ea28bdc000097f150f83221c6474f7e177c7b5590691b67e9"
+    },
+    {
+      "name": "0050_erasure_preview_revision.sql",
+      "sha256": "8dffe9635f2561a48821dda62ec4f6754e1c148488284bb05e4c62f540773fdd"
+    },
+    {
+      "name": "0051_operator_management.sql",
+      "sha256": "cb90a8e86556e7c4cc741d481dbe272f0fcee85297c141da74be7113f0885862"
+    },
+    {
+      "name": "0054_frame_settings.sql",
+      "sha256": "26cd71ee621270fc0028dfe7576bbad2886362304ef1140381d2c635fdb5e295"
+    },
+    {
+      "name": "0055_auth_admission_custody.sql",
+      "sha256": "056333e1463fcc982f69c86352e2f2e7f4cda44570626fb5a1d9b778a886e3ce"
+    },
+    {
+      "name": "0056_import_preparation_steps.sql",
+      "sha256": "05e1d22169d841cccbcdd26fc76f6ca4a41c1ab562d230c83b4ce4a3d66f9310"
+    },
+    {
+      "name": "0057_operator_mail_events.sql",
+      "sha256": "6ccc7ee739119af9885d2347eaed34f4525963bccadf46427ddaf4b29dacc502"
+    },
+    {
+      "name": "0058_portable_settings_records.sql",
+      "sha256": "997421b34e5cafb5695b7683533f8b94554fe24977fa26e8f18198f853bec25e"
+    },
+    {
+      "name": "0059_scoped_learning.sql",
+      "sha256": "825de07706b833a7a0ec75916af4887e08681c483a98ded1def3d778754d0047"
+    },
+    {
+      "name": "0060_learning_maintenance.sql",
+      "sha256": "fb26a1f4622a615e91f8678d0ee38c57598aba30729e420c49d6ab4b564f98cd"
+    },
+    {
+      "name": "0061_import_erasure_progress.sql",
+      "sha256": "df8e3a616c26be30b7b1866e6a682098f0aea3fed33b6a497a0f066fb5336608"
+    },
+    {
+      "name": "0062_data_runner_claims.sql",
+      "sha256": "15761fd2dde0960f6290b7a388087088e46ff1c02ece85f2cdcdc72fad627682"
+    },
+    {
+      "name": "0063_request_status_workflow.sql",
+      "sha256": "3728281b3f4685dd69ffec0747248337e8d357b380033ca622ec7a46e85c4238"
+    },
+    {
+      "name": "0064_status_roadmap.sql",
+      "sha256": "d49a223fc6a22e57155ccb0394f914c72c60ecdc40c4b1346693e31531d3ad12"
+    },
+    {
+      "name": "0065_request_status_terminal_states.sql",
+      "sha256": "7f1ca3f01534ee598e9f7650bb6e45b43aea7894b9a1c8c12abe7fb2bd9a61b5"
+    },
+    {
+      "name": "0066_categories_board_controls.sql",
+      "sha256": "3c193e1ecfbf8386746170c2fc7f42e088b035d3905957d160da7fdaeae14cda"
+    },
+    {
+      "name": "0070_requester_subscription_provenance.sql",
+      "sha256": "7d6771e1cc20496fbbcd3394ae307575a9f9efb1b31f9ab9a69b4091976f5bf1"
+    },
+    {
+      "name": "0071_author_publication_permission.sql",
+      "sha256": "337d8a3f865db81d770026258e5ed80f957e0b6d0c8c4f40a500edb9e385214d"
+    },
+    {
+      "name": "0072_workspace_clock.sql",
+      "sha256": "fcb855efd6c6243b7cde9274f18569404cca1d54cbc0f94a9d511b3a43b8bde2"
+    },
+    {
+      "name": "0073_native_ownership.sql",
+      "sha256": "de3992723ffe33d4128659d49355e1765776df6d82fb23844df323b35f4bd576"
+    },
+    {
+      "name": "0074_internal_discussion.sql",
+      "sha256": "4ef7cc148186cfb4b17834a107e9f34b10f8f97a5807909dfb24966ed8656346"
+    },
+    {
+      "name": "0075_triage_aging.sql",
+      "sha256": "666c15ba5d06e95cd8c203ca8419677140a4ac257bf41f84c4ea19c3e7fb7ba3"
+    },
+    {
+      "name": "0076_roadmap_public_eta.sql",
+      "sha256": "902145d586bed7e27b8e2192860abedde46b45770639bacf0a412109d8de9d86"
+    },
+    {
+      "name": "0077_merge_notices.sql",
+      "sha256": "bba0bc53f2004fe836ba5f41ecaaa0b0bca67baa57759dea10a7701b81e522a3"
+    },
+    {
+      "name": "0078_import_status_custody.sql",
+      "sha256": "2588b9994705b27da1bf49c1b46c68eecbf0cfded852a1454c8658b8e4253d74"
+    },
+    {
+      "name": "0079_import_status_roadmap.sql",
+      "sha256": "bdb10f0f79827aeca3e501559f5159312d09212d74e29ad7bb9aae17141cb298"
+    },
+    {
+      "name": "0080_native_proxy_votes.sql",
+      "sha256": "5dfef7d6d14c2a35e583ae95a3e85c870d55553e7c0258aff1412230beca7b2c"
+    },
+    {
+      "name": "0081_vote_importance.sql",
+      "sha256": "a784c274a14a400f79e0a9d7b52bd7edb584d42b6dc76301e3fcb303f4f97a74"
+    },
+    {
+      "name": "0082_product_hierarchy.sql",
+      "sha256": "282bc6143bf4e5f1193c91e84a72ca9cc6acc84eb7d30ed4e1cb7885d6febf59"
+    },
+    {
+      "name": "0083_prioritisation_views.sql",
+      "sha256": "74c062427fab16fbe1b6d2d15b177dfd6abe2c23dc02487b8f2fa1bb70ba2c85"
+    },
+    {
+      "name": "0084_release_planning.sql",
+      "sha256": "47fa0c5c51195dac7aa49846fd9e6fedceeffb81d8eb8ecff05012a0692bc6ae"
+    },
+    {
+      "name": "0085_rich_changelog.sql",
+      "sha256": "3c5fcfd194a2d15967331f879c5a5e2b96666e419ad36521829a0131879a61fd"
+    },
+    {
+      "name": "0086_scheduled_publications.sql",
+      "sha256": "e03bed9f2850655d7fd856d220fd859efb49442db74924ec0d25afbbeff227c1"
+    },
+    {
+      "name": "0087_ai_configuration.sql",
+      "sha256": "632dcbb323bb997922fd722773b7662504aa9cfef74a20b9367d9d7e8a9575fe"
+    },
+    {
+      "name": "0088_email_capture.sql",
+      "sha256": "3db437bb2a70c52577eb9b0f0eb1fdb6504874146616cd0ef8eefd9790255ef9"
+    },
+    {
+      "name": "0089_requester_oauth.sql",
+      "sha256": "a6b99244fd1ecd930fa8c5b1a17022e74c7887e6e7620eaa502d0c8eea19c19e"
+    },
+    {
+      "name": "0090_evidence_redaction.sql",
+      "sha256": "c37efe6930642437b8fec09cb2fad0eec34e766908e6c5ecf61c01e022430a64"
+    },
+    {
+      "name": "0091_email_capture_provenance.sql",
+      "sha256": "c27b3440a76ec95d5d0a68574d441cea3aab40efddd1b8b8fc84b53dd7f2161e"
+    },
+    {
+      "name": "0092_weekly_summary.sql",
+      "sha256": "3a5c605445151c765fdef6fcd24727a2b27340bd56280ba4838f62e61c36ea39"
+    },
+    {
+      "name": "0093_request_batches.sql",
+      "sha256": "a159a8e41c4f5c4e7c1be0c079b3571a59aabf852b2f71cb3c0766c2b354e0f6"
+    },
+    {
+      "name": "0094_dependency_keys_sealed.sql",
+      "sha256": "9c8fa5f94c48a230f326cd4d666cbc2bd1e7d5a18327b89e65b339ac6a533d9a"
+    },
+    {
+      "name": "0095_paged_redaction.sql",
+      "sha256": "5e561e78d5bbb8efbb1f7d67be47f86616d6e3b1444c7800c6d50c05751b5684"
+    },
+    {
+      "name": "0096_discord_capture.sql",
+      "sha256": "e4afe52a0bb0ad2f9639b06fb454e2701a5677827b6e0892725077ccec1c57d5"
+    },
+    {
+      "name": "0097_discord_source_checks.sql",
+      "sha256": "0580ba2ae20a304e6950580e2c95343043ed9fd80fbf32b76b542ae760528a16"
+    },
+    {
+      "name": "0098_helpscout.sql",
+      "sha256": "0ac331a2dc08bbf925b106d2161e955f38837565310cc3a3635c96073167f77f"
+    },
+    {
+      "name": "0099_browser_capture.sql",
+      "sha256": "2cbad37d3c5ff73bad0f90839541ad3d7562737aac0c95aefb47245954d6ea2d"
+    },
+    {
+      "name": "0100_agent_door.sql",
+      "sha256": "016d8a98b964385f5c4a13447361c3c783910a76aaf4606b0e0081482bc819cc"
+    },
+    {
+      "name": "0101_business_settings.sql",
+      "sha256": "a16f736a781aa3fe02a2e090c993f8c360c904f9fb6d86126acdab6e1f24e773"
+    },
+    {
+      "name": "0102_business_people.sql",
+      "sha256": "51aa39622d866b987d71b6e37c9a8300e7f24c54a55611edaab669ed051b01cd"
+    },
+    {
+      "name": "0103_agent_attribution.sql",
+      "sha256": "e51fc1daf76f89da1f599223763f48988a6dc93d8a1eee5c50d3d03fa6a6a24f"
+    },
+    {
+      "name": "0104_agent_custody_fence.sql",
+      "sha256": "3cfd10637d70135392d2a776f754f096abe9f84ef1a5ef923bec0c6ced731de4"
+    },
+    {
+      "name": "0105_agent_identity_custody.sql",
+      "sha256": "abc7007d60d4d275ea16a6e94fd50d07aa7c09984e5556f9fbdebc891191e472"
+    },
+    {
+      "name": "0106_agent_native_actor_binding.sql",
+      "sha256": "544ed1f639ab172e16bfb61877b49ef4b93d36d88380f44c64ea710ca9e6f576"
+    },
+    {
+      "name": "0107_survey_capture.sql",
+      "sha256": "a18de3c7ae974d843c2c5d1e273663e5d3380567c0243c095c5b6e7078d1473a"
+    },
+    {
+      "name": "0108_ai_answers.sql",
+      "sha256": "99873e7be9bb3ac3279cbd7fb2cffa9304be2a0eb5e1377c0bda9e18f8f339e0"
+    },
+    {
+      "name": "0109_duplicate_suggestion_indexes.sql",
+      "sha256": "9c5de5b28f9a812419c17beeb5408cc02c9a0cef2bd044ad78a36cfc430d014d"
+    }
+  ],
+  "committed_spec": [
+    {
+      "name": "0001_initial_data_foundation.sql",
+      "sha256": "166f26b66d7472f2c2601ef8c9c034e74761ec389f3c0eb46854de2214a8e544"
+    },
+    {
+      "name": "0002_native_feedback_baseline.sql",
+      "sha256": "8faf47203247538cbe0063f6184ecaa8147969bf00f8c5e0d08ba5de86336f4f"
+    },
+    {
+      "name": "0003_opaque_native_request_slugs.sql",
+      "sha256": "9af05f5e9f5181daaf55e1826d35faaa0c0ff068a162f68278f08f29e3482100"
+    },
+    {
+      "name": "0004_archive_erasure_fences.sql",
+      "sha256": "bb481fa09d245a54ad60c67bcfdcf7c4a907a716a67721fc2b6d2910c0137b1e"
+    },
+    {
+      "name": "0005_requester_board.sql",
+      "sha256": "c464c8aa0c8311daf487f169324f5a2af47929ab09e507ac6b06b71c6f736b19"
+    },
+    {
+      "name": "0006_request_contribution_provenance.sql",
+      "sha256": "90eff47230b5e621f01b298f6ace5ead6015dcb103a18e4721e1b3df8bd592e6"
+    },
+    {
+      "name": "0007_requester_board_maintenance.sql",
+      "sha256": "b7b3632b6aae8f7ccc8f4941bd2713ed06d71eb4a2b4ccabe1bba08e85df9931"
+    },
+    {
+      "name": "0008_requester_write_and_upload_custody.sql",
+      "sha256": "587c62f971fa22facf79779e52f2b4e9d6aaafc574cafbc7e6978b91b5f3dbee"
+    },
+    {
+      "name": "0009_base_operator_auth.sql",
+      "sha256": "39a0af318b92857811e1590d65a2d7d902da2969b1c8bf191e18b41fbc5a798b"
+    },
+    {
+      "name": "0010_request_notifications.sql",
+      "sha256": "c02218cde66f1bc7a9c9079ef411c5b68e5f8c0b9dd345c50fc771098f2925ce"
+    },
+    {
+      "name": "0011_notification_delivery_events.sql",
+      "sha256": "c7c9059214c065f80e1df87234f6fda2071023512f1f57ac3c26e4e4aa740247"
+    },
+    {
+      "name": "0012_base_local_auth.sql",
+      "sha256": "807f8056a8037131680bf9d3cfcaa41b5bf798fc8f26f62148a233a8b81c516d"
+    },
+    {
+      "name": "0013_decision_loop.sql",
+      "sha256": "af5e48c703caeea9cf8c42a0963e0961704212bc6b5e31c1d821c2a0af3b7317"
+    },
+    {
+      "name": "0014_release_delivery.sql",
+      "sha256": "e56f7d7b388978a371ec9ecd1cc7035e0e7772b6792098e231901f1f3b16464f"
+    },
+    {
+      "name": "0015_publication_seals.sql",
+      "sha256": "3633f6c84857ec09606bea6d1b0e611dadb70be4d8b675593a2948a50501e55f"
+    },
+    {
+      "name": "0016_restored_notification_hold.sql",
+      "sha256": "8a94e0579ec11c1733a4d143a249463fc1ed633acec4c777742c224af4c3def4"
+    },
+    {
+      "name": "0017_saved_feedback_import.sql",
+      "sha256": "64a8fda0a496a6ca982adb64fd04145df41308d4767f30877a0f381221d13e4b"
+    },
+    {
+      "name": "0018_owner_claim.sql",
+      "sha256": "c3ffe653727bb4867b064dc2489df5013613f08f4b5998d2fe2b6a8485cdb815"
+    },
+    {
+      "name": "0019_host_identity_custody.sql",
+      "sha256": "26f7fd092737ba3a848b315d0cb2bd7882a368954899f2585e051f7799dba6c2"
+    },
+    {
+      "name": "0020_base_integrations.sql",
+      "sha256": "1a24ad5a3b682c5bb3ab53966732a62ea97a7e7a23a16effbefbd0a908722509"
+    },
+    {
+      "name": "0021_integration_authority.sql",
+      "sha256": "90e255664f36c5bdefbad242adf53355cee0ec0565869189086748b6e6515bd6"
+    },
+    {
+      "name": "0022_integration_events.sql",
+      "sha256": "ddaf2f6f243359be39d405309925eda4e695b58b18bc2ddf003d0f6a69c93ffe"
+    },
+    {
+      "name": "0023_tracker_links.sql",
+      "sha256": "f2bf55e73e3e5282dcac879e79260c015fbd07d2be54e7a158a90b0e8e686732"
+    },
+    {
+      "name": "0024_portal_branding.sql",
+      "sha256": "3bb122211965e9b32e684ed402da7f5853d41bb750f40d7e4d11fc9eb493439d"
+    },
+    {
+      "name": "0025_portability.sql",
+      "sha256": "c7db9042f6d5c571e10297c02df858ad2f3466beb4fa85649fee407cc228747b"
+    },
+    {
+      "name": "0026_import_custody_evolution.sql",
+      "sha256": "5e7c59b6bb00b8d0a0e46e04f3d46b201ad03f6d2f9707000ef8fd12c8a6985b"
+    },
+    {
+      "name": "0027_first_run.sql",
+      "sha256": "b1019b2ae77abed5178ff9548314ddb5475a9e6b418ae7bd25c445610ff8353a"
+    },
+    {
+      "name": "0028_operator_dev_sessions.sql",
+      "sha256": "18754583983c09f3624038131c1b03fadecb8375dddb0a5d09c449a4238ce298"
+    },
+    {
+      "name": "0029_dev_minted_api_tokens.sql",
+      "sha256": "4caf96a2a5abd5840dfe1ee278c43883d2b3295185e193b7a52aaa0e258029ce"
+    },
+    {
+      "name": "0030_penny_evidence.sql",
+      "sha256": "da3f79613eec33e286e07173fd657ca337e3bebba0c3c13f3c51d645a3f2cbb4"
+    },
+    {
+      "name": "0031_penny_release_outcomes.sql",
+      "sha256": "4547c518e762ed149bd822c8a67302739823b577428cde0a8ebd599ba2a888ea"
+    },
+    {
+      "name": "0032_penny_decision_reviews.sql",
+      "sha256": "026f2ff9d9036eb6f45d01d8ceb489b7cc8a97e373b54727cc22ac6acef7bb8d"
+    },
+    {
+      "name": "0033_decision_review_completion.sql",
+      "sha256": "e7d3290fbbfef32a121e10eadd546aa8586b77a35da279e0d57c028392d1bbc6"
+    },
+    {
+      "name": "0034_feedback_move_in.sql",
+      "sha256": "b15c83a09edea9a1d44de0b35b0c9e474d5da22d146d6b3cb7c57b659951ec68"
+    },
+    {
+      "name": "0035_feedback_erasure.sql",
+      "sha256": "7e8f1deb30aff2919d1b4ec8011ad787891239f8b033351caf003c3ece1d19ef"
+    },
+    {
+      "name": "0036_feedback_source_erasure.sql",
+      "sha256": "9ce8aff37cb33210ab7b521b0f52000fd1353494d8e52ea04f6a95826ec8c7b6"
+    },
+    {
+      "name": "0037_feedback_maintenance.sql",
+      "sha256": "5f827d1fdefab59ba58e6cfe3c0bd0f9ac5b9e1be7d4e25c212910c6925dc301"
+    },
+    {
+      "name": "0038_feedback_supporter_types.sql",
+      "sha256": "4c6a17293a553a1c75ca690741f29cdb189788f2ce3635f5e48cb92db10b7be2"
+    },
+    {
+      "name": "0039_import_reversal_fence.sql",
+      "sha256": "3a99b42f5524c311ca541b6db9cf9f0d05e66434c7a998a6bd64d0a5adf97cbf"
+    },
+    {
+      "name": "0040_import_custody_retirement.sql",
+      "sha256": "e9ea5de249c052f5726594ac92576e5078326f4b5b2f95ab0e53a5d6763c3fe6"
+    },
+    {
+      "name": "0041_legacy_outbox_visible_state.sql",
+      "sha256": "32bdba8868d2386fca67fc2f41401171d80c26aee3cb5e6a5b164712c89a6f15"
+    },
+    {
+      "name": "0042_identity_providers.sql",
+      "sha256": "f879fb86b079e591dfe4a8513752a8e0394e252b940aa35d3f7430f27b7382c6"
+    },
+    {
+      "name": "0043_domain_rules_step_up.sql",
+      "sha256": "e41c7f1381f547582148cdf247b521d7f166461ab24058ace95acdf21839e815"
+    },
+    {
+      "name": "0044_provider_control.sql",
+      "sha256": "a1e74cd263d294e75b5b09baf364c81d324e50ae17a77c5a287d58b833b56cdc"
+    },
+    {
+      "name": "0045_dependencies.sql",
+      "sha256": "3481d8aef870a9eda153a1617e99bb71a408e61a25dea92bb132efa7dd1c2526"
+    },
+    {
+      "name": "0046_idp_owner.sql",
+      "sha256": "a870102648a2226b18a2fe8168d096389b698af88333d112fa8137e582fc2b33"
+    },
+    {
+      "name": "0047_provider_pins.sql",
+      "sha256": "f0cfb6b3740869fd098ee449efb25807f8b1ef51c353fd07bafeb00ce38aeb63"
+    },
+    {
+      "name": "0048_dependency_setup.sql",
+      "sha256": "7b36f7e1fb0991fe3e808613d911393bbad3386ead06427082c69a48c5738108"
+    },
+    {
+      "name": "0049_dependency_approval.sql",
+      "sha256": "7d3742369189b69ea28bdc000097f150f83221c6474f7e177c7b5590691b67e9"
+    },
+    {
+      "name": "0050_erasure_preview_revision.sql",
+      "sha256": "8dffe9635f2561a48821dda62ec4f6754e1c148488284bb05e4c62f540773fdd"
+    },
+    {
+      "name": "0051_operator_management.sql",
+      "sha256": "cb90a8e86556e7c4cc741d481dbe272f0fcee85297c141da74be7113f0885862"
+    },
+    {
+      "name": "0054_frame_settings.sql",
+      "sha256": "26cd71ee621270fc0028dfe7576bbad2886362304ef1140381d2c635fdb5e295"
+    },
+    {
+      "name": "0055_auth_admission_custody.sql",
+      "sha256": "056333e1463fcc982f69c86352e2f2e7f4cda44570626fb5a1d9b778a886e3ce"
+    },
+    {
+      "name": "0056_import_preparation_steps.sql",
+      "sha256": "05e1d22169d841cccbcdd26fc76f6ca4a41c1ab562d230c83b4ce4a3d66f9310"
+    },
+    {
+      "name": "0057_operator_mail_events.sql",
+      "sha256": "6ccc7ee739119af9885d2347eaed34f4525963bccadf46427ddaf4b29dacc502"
+    },
+    {
+      "name": "0058_portable_settings_records.sql",
+      "sha256": "997421b34e5cafb5695b7683533f8b94554fe24977fa26e8f18198f853bec25e"
+    },
+    {
+      "name": "0059_scoped_learning.sql",
+      "sha256": "825de07706b833a7a0ec75916af4887e08681c483a98ded1def3d778754d0047"
+    },
+    {
+      "name": "0060_learning_maintenance.sql",
+      "sha256": "fb26a1f4622a615e91f8678d0ee38c57598aba30729e420c49d6ab4b564f98cd"
+    },
+    {
+      "name": "0061_import_erasure_progress.sql",
+      "sha256": "df8e3a616c26be30b7b1866e6a682098f0aea3fed33b6a497a0f066fb5336608"
+    },
+    {
+      "name": "0062_data_runner_claims.sql",
+      "sha256": "15761fd2dde0960f6290b7a388087088e46ff1c02ece85f2cdcdc72fad627682"
+    },
+    {
+      "name": "0063_request_status_workflow.sql",
+      "sha256": "3728281b3f4685dd69ffec0747248337e8d357b380033ca622ec7a46e85c4238"
+    },
+    {
+      "name": "0064_status_roadmap.sql",
+      "sha256": "d49a223fc6a22e57155ccb0394f914c72c60ecdc40c4b1346693e31531d3ad12"
+    },
+    {
+      "name": "0065_request_status_terminal_states.sql",
+      "sha256": "7f1ca3f01534ee598e9f7650bb6e45b43aea7894b9a1c8c12abe7fb2bd9a61b5"
+    },
+    {
+      "name": "0066_categories_board_controls.sql",
+      "sha256": "3c193e1ecfbf8386746170c2fc7f42e088b035d3905957d160da7fdaeae14cda"
+    },
+    {
+      "name": "0070_requester_subscription_provenance.sql",
+      "sha256": "7d6771e1cc20496fbbcd3394ae307575a9f9efb1b31f9ab9a69b4091976f5bf1"
+    },
+    {
+      "name": "0071_author_publication_permission.sql",
+      "sha256": "337d8a3f865db81d770026258e5ed80f957e0b6d0c8c4f40a500edb9e385214d"
+    },
+    {
+      "name": "0072_workspace_clock.sql",
+      "sha256": "fcb855efd6c6243b7cde9274f18569404cca1d54cbc0f94a9d511b3a43b8bde2"
+    },
+    {
+      "name": "0073_native_ownership.sql",
+      "sha256": "de3992723ffe33d4128659d49355e1765776df6d82fb23844df323b35f4bd576"
+    },
+    {
+      "name": "0074_internal_discussion.sql",
+      "sha256": "4ef7cc148186cfb4b17834a107e9f34b10f8f97a5807909dfb24966ed8656346"
+    },
+    {
+      "name": "0075_triage_aging.sql",
+      "sha256": "666c15ba5d06e95cd8c203ca8419677140a4ac257bf41f84c4ea19c3e7fb7ba3"
+    },
+    {
+      "name": "0076_roadmap_public_eta.sql",
+      "sha256": "902145d586bed7e27b8e2192860abedde46b45770639bacf0a412109d8de9d86"
+    },
+    {
+      "name": "0077_merge_notices.sql",
+      "sha256": "bba0bc53f2004fe836ba5f41ecaaa0b0bca67baa57759dea10a7701b81e522a3"
+    },
+    {
+      "name": "0078_import_status_custody.sql",
+      "sha256": "2588b9994705b27da1bf49c1b46c68eecbf0cfded852a1454c8658b8e4253d74"
+    },
+    {
+      "name": "0079_import_status_roadmap.sql",
+      "sha256": "bdb10f0f79827aeca3e501559f5159312d09212d74e29ad7bb9aae17141cb298"
+    },
+    {
+      "name": "0080_native_proxy_votes.sql",
+      "sha256": "5dfef7d6d14c2a35e583ae95a3e85c870d55553e7c0258aff1412230beca7b2c"
+    },
+    {
+      "name": "0081_vote_importance.sql",
+      "sha256": "a784c274a14a400f79e0a9d7b52bd7edb584d42b6dc76301e3fcb303f4f97a74"
+    },
+    {
+      "name": "0082_product_hierarchy.sql",
+      "sha256": "282bc6143bf4e5f1193c91e84a72ca9cc6acc84eb7d30ed4e1cb7885d6febf59"
+    },
+    {
+      "name": "0083_prioritisation_views.sql",
+      "sha256": "74c062427fab16fbe1b6d2d15b177dfd6abe2c23dc02487b8f2fa1bb70ba2c85"
+    },
+    {
+      "name": "0084_release_planning.sql",
+      "sha256": "47fa0c5c51195dac7aa49846fd9e6fedceeffb81d8eb8ecff05012a0692bc6ae"
+    },
+    {
+      "name": "0085_rich_changelog.sql",
+      "sha256": "3c5fcfd194a2d15967331f879c5a5e2b96666e419ad36521829a0131879a61fd"
+    },
+    {
+      "name": "0086_scheduled_publications.sql",
+      "sha256": "e03bed9f2850655d7fd856d220fd859efb49442db74924ec0d25afbbeff227c1"
+    },
+    {
+      "name": "0087_ai_configuration.sql",
+      "sha256": "632dcbb323bb997922fd722773b7662504aa9cfef74a20b9367d9d7e8a9575fe"
+    },
+    {
+      "name": "0088_email_capture.sql",
+      "sha256": "3db437bb2a70c52577eb9b0f0eb1fdb6504874146616cd0ef8eefd9790255ef9"
+    },
+    {
+      "name": "0089_requester_oauth.sql",
+      "sha256": "a6b99244fd1ecd930fa8c5b1a17022e74c7887e6e7620eaa502d0c8eea19c19e"
+    },
+    {
+      "name": "0090_evidence_redaction.sql",
+      "sha256": "c37efe6930642437b8fec09cb2fad0eec34e766908e6c5ecf61c01e022430a64"
+    },
+    {
+      "name": "0091_email_capture_provenance.sql",
+      "sha256": "c27b3440a76ec95d5d0a68574d441cea3aab40efddd1b8b8fc84b53dd7f2161e"
+    },
+    {
+      "name": "0092_weekly_summary.sql",
+      "sha256": "3a5c605445151c765fdef6fcd24727a2b27340bd56280ba4838f62e61c36ea39"
+    },
+    {
+      "name": "0093_request_batches.sql",
+      "sha256": "a159a8e41c4f5c4e7c1be0c079b3571a59aabf852b2f71cb3c0766c2b354e0f6"
+    },
+    {
+      "name": "0094_dependency_keys_sealed.sql",
+      "sha256": "9c8fa5f94c48a230f326cd4d666cbc2bd1e7d5a18327b89e65b339ac6a533d9a"
+    },
+    {
+      "name": "0095_paged_redaction.sql",
+      "sha256": "5e561e78d5bbb8efbb1f7d67be47f86616d6e3b1444c7800c6d50c05751b5684"
+    },
+    {
+      "name": "0096_discord_capture.sql",
+      "sha256": "e4afe52a0bb0ad2f9639b06fb454e2701a5677827b6e0892725077ccec1c57d5"
+    },
+    {
+      "name": "0097_discord_source_checks.sql",
+      "sha256": "0580ba2ae20a304e6950580e2c95343043ed9fd80fbf32b76b542ae760528a16"
+    },
+    {
+      "name": "0098_helpscout.sql",
+      "sha256": "0ac331a2dc08bbf925b106d2161e955f38837565310cc3a3635c96073167f77f"
+    },
+    {
+      "name": "0099_browser_capture.sql",
+      "sha256": "2cbad37d3c5ff73bad0f90839541ad3d7562737aac0c95aefb47245954d6ea2d"
+    },
+    {
+      "name": "0100_agent_door.sql",
+      "sha256": "016d8a98b964385f5c4a13447361c3c783910a76aaf4606b0e0081482bc819cc"
+    },
+    {
+      "name": "0101_business_settings.sql",
+      "sha256": "a16f736a781aa3fe02a2e090c993f8c360c904f9fb6d86126acdab6e1f24e773"
+    },
+    {
+      "name": "0102_business_people.sql",
+      "sha256": "51aa39622d866b987d71b6e37c9a8300e7f24c54a55611edaab669ed051b01cd"
+    },
+    {
+      "name": "0103_agent_attribution.sql",
+      "sha256": "e51fc1daf76f89da1f599223763f48988a6dc93d8a1eee5c50d3d03fa6a6a24f"
+    },
+    {
+      "name": "0104_agent_custody_fence.sql",
+      "sha256": "3cfd10637d70135392d2a776f754f096abe9f84ef1a5ef923bec0c6ced731de4"
+    },
+    {
+      "name": "0105_agent_identity_custody.sql",
+      "sha256": "abc7007d60d4d275ea16a6e94fd50d07aa7c09984e5556f9fbdebc891191e472"
+    },
+    {
+      "name": "0106_agent_native_actor_binding.sql",
+      "sha256": "544ed1f639ab172e16bfb61877b49ef4b93d36d88380f44c64ea710ca9e6f576"
+    },
+    {
+      "name": "0107_survey_capture.sql",
+      "sha256": "a18de3c7ae974d843c2c5d1e273663e5d3380567c0243c095c5b6e7078d1473a"
+    },
+    {
+      "name": "0108_ai_answers.sql",
+      "sha256": "99873e7be9bb3ac3279cbd7fb2cffa9304be2a0eb5e1377c0bda9e18f8f339e0"
+    },
+    {
+      "name": "0109_duplicate_suggestion_indexes.sql",
+      "sha256": "9c5de5b28f9a812419c17beeb5408cc02c9a0cef2bd044ad78a36cfc430d014d"
+    }
+  ]
+}

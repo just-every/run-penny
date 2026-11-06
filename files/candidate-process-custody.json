@@ -1,0 +1,90 @@
+{
+  "recorded_utc": "2026-11-06T11:17:57.093372+00:00",
+  "root_pid": 1345,
+  "processes": [
+    {
+      "pid": 1345,
+      "ppid": 483,
+      "comm": "python3",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 1649,
+      "ppid": 1345,
+      "comm": "bash",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 1694,
+      "ppid": 1649,
+      "comm": "python3",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 1695,
+      "ppid": 1694,
+      "comm": "timeout",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 1696,
+      "ppid": 1695,
+      "comm": "node",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 1702,
+      "ppid": 1696,
+      "comm": "node",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 1710,
+      "ppid": 1702,
+      "comm": "esbuild",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 1719,
+      "ppid": 1702,
+      "comm": "node",
+      "cwd": "/tmp/penny-older-archive-yF5p5b/native"
+    },
+    {
+      "pid": 2508,
+      "ppid": 1719,
+      "comm": "node",
+      "cwd": "/tmp/penny-older-archive-yF5p5b/native"
+    },
+    {
+      "pid": 2519,
+      "ppid": 2508,
+      "comm": "node",
+      "cwd": "/tmp/penny-older-archive-yF5p5b/native"
+    },
+    {
+      "pid": 2535,
+      "ppid": 2519,
+      "comm": "node",
+      "cwd": "/tmp/penny-older-archive-yF5p5b/native"
+    },
+    {
+      "pid": 2543,
+      "ppid": 2535,
+      "comm": "esbuild",
+      "cwd": "/tmp/penny-older-archive-yF5p5b/native"
+    },
+    {
+      "pid": 2557,
+      "ppid": 2535,
+      "comm": "esbuild",
+      "cwd": "/tmp/penny-older-archive-yF5p5b/native"
+    },
+    {
+      "pid": 2562,
+      "ppid": 2535,
+      "comm": "workerd",
+      "cwd": "/tmp/penny-older-archive-yF5p5b/native"
+    }
+  ]
+}

@@ -1,0 +1,929 @@
+
+## scripts/build-deployment-spec.mjs
+SHA256 f7f6d80cff8033d75fd8c9191ceeccedb015b8cdce980ef6494be1d6976974ee
+
+   1 import { readFile, mkdir, writeFile } from 'node:fs/promises'
+   2 import { fileURLToPath } from 'node:url'
+   3 import { deploymentSpec } from './delivery/base/spec.mjs'
+   4 import { packagingConfig } from './delivery/base/package.mjs'
+   5 import { loadSetupManifest } from './delivery/base/setup-manifest.mjs'
+   6 
+   7 const root = fileURLToPath(new URL('../', import.meta.url))
+   8 const config = JSON.parse(await readFile(new URL('../packaging.json', import.meta.url), 'utf8'))
+   9 
+  10 // Read the emitted Wrangler configuration and migration bytes through the same
+  11 // Base reader that packages Penny's managed artifact. Run after rer build.
+  12 const spec = await deploymentSpec(root, config.artifact.specInputs)
+  13 const { project, workflow, setup } = packagingConfig(config)
+  14 const selected = await loadSetupManifest(root, setup, config.artifact.specInputs.mail)
+  15 const descriptor = { ...project, setup: { path: selected.path, sha256: selected.sha256 } }
+  16 const json = value => `${JSON.stringify(value, null, 2)}\n`
+  17 const files = new Map([
+  18   ['management/integration/deployment-spec.json', json(spec)],
+  19   ['rer-project.json', json(descriptor)],
+  20   ['.github/workflows/rer-managed.yml', workflow],
+  21 ])
+  22 const [mode = '--check', ...extra] = process.argv.slice(2)
+  23 if (extra.length || !['--check', '--write'].includes(mode)) {
+  24   throw new Error('Use build-deployment-spec.mjs --check or --write after rer build')
+  25 }
+  26 for (const [path, bytes] of files) {
+  27   const file = new URL(`../${path}`, import.meta.url)
+  28   if (mode === '--write') {
+  29     await mkdir(new URL('.', file), { recursive: true })
+  30     await writeFile(file, bytes)
+  31     continue
+  32   }
+  33   let published
+  34   try { published = await readFile(file, 'utf8') } catch (error) {
+  35     if (error.code !== 'ENOENT') throw error
+  36   }
+  37   if (published !== bytes) throw new Error(`${path} drift: run pnpm delivery:spec after rer build and commit the result.`)
+  38 }
+  39 console.log(mode === '--write' ? 'Published the build-derived deployment specification, setup digest and workflow.' : 'Deployment specification, setup digest and workflow match the build (Base deploymentSpec).')
+
+## scripts/delivery/base/spec.mjs
+SHA256 65179ca5222485513260e8d58aaae6740ae6fe1b27065e96f0d95d197fc6d3f0
+
+   1 import {readFile} from 'node:fs/promises';
+   2 import {dirname, resolve} from 'node:path';
+   3 import {createHash} from 'node:crypto';
+   4 import {array, object, keys, string, strings, bindingPattern, wranglerBindings, validateEmailSending, validateDurableMigrations} from './bindings.mjs';
+   5 import {sourcePath, decodeUtf8, collectMigrations} from './migrations.mjs';
+   6 import {validateDeclarations} from './declarations.mjs';
+   7 import {validateMailSpec} from './mail.mjs';
+   8 import {validateNativeExport} from './native-export.mjs';
+   9 import {seedSignIn} from './sign-in.mjs';
+  10 const reserved = new Set(['ASSETS','RER_RELEASE_DIGEST','RER_PREVIEW_TOKEN','RER_VERSION_METADATA','RER_INSTALLATION_ID','RER_MANAGEMENT_ORIGIN']);
+  11 const specKeys = ['schema','resources','migrations','compatibilityDate','compatibilityFlags','durableObjects','durableObjectMigrations','publicVariables','secretNames','optionalSecretNames','schedules','queueConsumers','healthPath','recovery','emailSending','providerEffects','surfaces','initialSetup','mail','nativeExport'];
+  12 /** Validate the exact producer contract without implying service acceptance or provider consent. */
+  13 export function validateCandidateSpec(spec) {
+  14   keys(spec, specKeys, 'candidate specification');
+  15   if (spec.schema !== 1) throw Error('Candidate deployment specification schema must be 1');
+  16   validateDeclarations(spec);
+  17   for (const field of ['resources','migrations','compatibilityFlags','durableObjects','durableObjectMigrations','secretNames','schedules','queueConsumers']) array(spec[field], field);
+  18   if (spec.resources.length > 32 || spec.durableObjects.length > 32 || spec.migrations.length > 1000) throw Error('Candidate deployment specification exceeds supported limits');
+  19   string(spec.compatibilityDate, 'compatibility date', /^\d{4}-\d{2}-\d{2}$/);
+  20   const date = new Date(`${spec.compatibilityDate}T00:00:00.000Z`);
+  21   if (Number.isNaN(date.valueOf()) || date.toISOString().slice(0,10) !== spec.compatibilityDate) throw Error('Invalid compatibility date');
+  22   strings(spec.compatibilityFlags, 'compatibility flags', /^[a-zA-Z0-9_]+$/);
+  23   string(spec.healthPath, 'health path', /^\/[a-zA-Z0-9/_-]*$/);
+  24   string(spec.recovery, 'recovery instructions');
+  25   const bindings = new Set();
+  26   function claim(name, label, allowReserved = false) {
+  27     string(name, label, bindingPattern);
+  28     if (bindings.has(name) || (!allowReserved && reserved.has(name))) throw Error(`Conflicting or reserved binding: ${name}`);
+  29     bindings.add(name);
+  30   }
+  31   for (const item of spec.resources) {
+  32     keys(item, ['kind','binding','nameVariable'], 'resource');
+  33     if (!['d1','r2','queue','kv','analytics_engine'].includes(item.kind)) throw Error('Invalid resource kind');
+  34     claim(item.binding, 'resource binding');
+  35   }
+  36   for (const item of spec.durableObjects) {
+  37     keys(item, ['binding','className'], 'Durable Object');
+  38     claim(item.binding, 'Durable Object binding');
+  39     string(item.className, 'Durable Object class', /^[$A-Z_a-z][$\w]*$/);
+  40   }
+  41   if (spec.emailSending !== undefined) {
+  42     if (array(spec.emailSending, 'emailSending').length > 32) throw Error('Too many email bindings');
+  43     for (const item of validateEmailSending(spec.emailSending)) claim(item.binding, 'email binding');
+  44   }
+  45   for (const item of spec.resources) if (item.nameVariable !== undefined) {
+  46     if (typeof item.nameVariable !== 'string' || item.nameVariable.startsWith('RER_')) throw Error('Invalid resource name variable');
+  47     claim(item.nameVariable, 'resource name variable');
+  48   }
+  49   for (const field of ['secretNames','optionalSecretNames']) if (spec[field] !== undefined) for (const name of strings(spec[field], field, bindingPattern)) claim(name, 'secret binding');
+  50   object(spec.publicVariables, 'publicVariables');
+  51   for (const [name,value] of Object.entries(spec.publicVariables)) {
+  52     // These two broker values may occur as public build inputs in existing seeds.
+  53     claim(name, 'public variable', ['RER_INSTALLATION_ID','RER_MANAGEMENT_ORIGIN'].includes(name));
+  54     if (typeof value !== 'string') throw Error(`Public variable must be a string: ${name}`);
+  55   }
+  56   validateMailSpec(spec);
+  57   validateDurableMigrations(spec.durableObjectMigrations);
+  58   const migrations = new Set();
+  59   for (const item of spec.migrations) {
+  60     keys(item, ['binding','name','sha256','sql'], 'migration');
+  61     string(item.name, 'migration name', /^[\w.-]+\.sql$/);
+  62     if (!spec.resources.some(resource => resource.kind === 'd1' && resource.binding === item.binding)) throw Error('Migration requires a declared D1 binding');
+  63     const identity = `${item.binding}/${item.name}`;
+  64     if (migrations.has(identity)) throw Error(`Duplicate migration identity: ${identity}`);
+  65     migrations.add(identity);
+  66     if (typeof item.sql !== 'string' || Buffer.byteLength(item.sql) > 10 * 1024 * 1024 || item.name === 'setup-initial-owner.sql' || /\brer_migrations\b/i.test(item.sql)) throw Error('Candidate cannot replace owner initialization or migration authority');
+  67     if (typeof item.sha256 !== 'string' || !/^[a-f0-9]{64}$/.test(item.sha256) || createHash('sha256').update(item.sql).digest('hex') !== item.sha256) throw Error('Invalid migration byte digest');
+  68   }
+  69   if (spec.nativeExport !== undefined) validateNativeExport(spec.nativeExport, spec);
+  70   strings(spec.schedules, 'schedules');
+  71   for (const cron of spec.schedules) if (cron.length > 128 || cron.trim().split(/\s+/).length !== 5) throw Error('Invalid candidate schedule');
+  72   const consumers = new Set();
+  73   for (const item of spec.queueConsumers) {
+  74     keys(item, ['binding','maxBatchSize','maxBatchTimeout','maxRetries','deadLetterBinding'], 'queue consumer');
+  75     const exists = name => spec.resources.some(resource => resource.kind === 'queue' && resource.binding === name);
+  76     if (!exists(item.binding) || consumers.has(item.binding)) throw Error('Invalid or duplicate queue consumer');
+  77     consumers.add(item.binding);
+  78     if (![item.maxBatchSize,item.maxBatchTimeout,item.maxRetries].every(n => Number.isSafeInteger(n) && n >= 0)) throw Error('Invalid queue consumer limits');
+  79     if (item.deadLetterBinding !== undefined && (item.deadLetterBinding === item.binding || !exists(item.deadLetterBinding))) throw Error('Invalid dead letter queue binding');
+  80   }
+  81   return spec;
+  82 }
+  83 // JSON.parse alone silently drops earlier duplicate keys, including restrictions.
+  84 function parseWranglerJson(text) {
+  85   const value = JSON.parse(text);
+  86   let position = 0;
+  87   const whitespace = () => { while (/\s/.test(text[position] ?? '') && position < text.length) position++; };
+  88   function token() {
+  89     const start = position++;
+  90     while (position < text.length) {
+  91       if (text[position++] === '"') break;
+  92       if (text[position - 1] === '\\') position++;
+  93     }
+  94     return JSON.parse(text.slice(start,position));
+  95   }
+  96   function visit() {
+  97     whitespace();
+  98     const opening = text[position];
+  99     if (opening === '"') { token(); return; }
+ 100     if (opening !== '{' && opening !== '[') {
+ 101       while (position < text.length && !/[\s,}\]]/.test(text[position])) position++;
+ 102       return;
+ 103     }
+ 104     position++; whitespace();
+ 105     const closing = opening === '{' ? '}' : ']', names = new Set();
+ 106     if (text[position] === closing) { position++; return; }
+ 107     for (;;) {
+ 108       if (opening === '{') {
+ 109         whitespace(); const key = token();
+ 110         if (names.has(key)) throw Error(`Duplicate Wrangler JSON field: ${key}`);
+ 111         names.add(key); whitespace(); position++;
+ 112       }
+ 113       visit(); whitespace();
+ 114       if (text[position++] === closing) return;
+ 115     }
+ 116   }
+ 117   visit();
+ 118   return value;
+ 119 }
+ 120 /** Options are explicit packaging policy; callers may derive them from their own manifest adapter. */
+ 121 export async function deploymentSpec(root, options = {}) {
+ 122   keys(options, ['publicVariableNames','secretNames','optionalSecretNames','extraMigrationDirectories','migrationPrefix','healthPath','recovery','wranglerFile','providerEffects','surfaces','initialSetup','mail','nativeExport'], 'deployment options');
+ 123   validateDeclarations(options);
+ 124   const {publicVariableNames = [], secretNames = [], optionalSecretNames = [], extraMigrationDirectories = [], migrationPrefix = '', healthPath = '/health', recovery, wranglerFile = 'dist/server/wrangler.json'} = options;
+ 125   strings(publicVariableNames, 'publicVariableNames', bindingPattern);
+ 126   strings(secretNames, 'secretNames', bindingPattern); strings(optionalSecretNames, 'optionalSecretNames', bindingPattern);
+ 127   array(extraMigrationDirectories, 'extraMigrationDirectories');
+ 128   if (typeof migrationPrefix !== 'string' || !/^[\w.-]*$/.test(migrationPrefix)) throw Error('Invalid migration prefix');
+ 129   const file = await sourcePath(root, wranglerFile);
+ 130   const config = parseWranglerJson(decodeUtf8(await readFile(file), 'Wrangler configuration'));
+ 131   const bindings = wranglerBindings(config);
+ 132   const directories = (config.d1_databases ?? []).map(item => {
+ 133     // Vite emits migrations_dir relative to the emitted configuration location.
+ 134     string(item.migrations_dir, 'D1 migrations_dir');
+ 135     return {binding:item.binding,path:resolve(dirname(file), item.migrations_dir),prefix:migrationPrefix};
+ 136   });
+ 137   const migrations = await collectMigrations(root, [...directories,...extraMigrationDirectories], bindings.resources);
+ 138   const publicVariables = {};
+ 139   object(config.vars === undefined ? {} : config.vars, 'Wrangler vars');
+ 140   for (const [name,value] of Object.entries(config.vars ?? {})) {
+ 141     if (!publicVariableNames.includes(name)) throw Error(`Undeclared public build variable: ${name}`);
+ 142     if (typeof value !== 'string') throw Error(`Public variable must be a string: ${name}`);
+ 143     Object.defineProperty(publicVariables, name, {value, enumerable:true, writable:true, configurable:true});
+ 144   }
+ 145   const triggers = config.triggers === undefined ? {} : keys(config.triggers, ['crons'], 'triggers');
+ 146   const spec = {schema:1,resources:bindings.resources,migrations,compatibilityDate:config.compatibility_date,compatibilityFlags:config.compatibility_flags === undefined ? [] : config.compatibility_flags,durableObjects:bindings.durableObjects,durableObjectMigrations:bindings.durableObjectMigrations,publicVariables,secretNames:[...secretNames],optionalSecretNames:[...optionalSecretNames],schedules:triggers.crons === undefined ? [] : triggers.crons,queueConsumers:bindings.queueConsumers,healthPath,recovery,...(bindings.emailSending ? {emailSending:bindings.emailSending} : {})};
+ 147   for (const field of ['providerEffects','surfaces','initialSetup','mail','nativeExport']) if (options[field] !== undefined) spec[field] = structuredClone(options[field]);
+ 148   await seedSignIn(root, spec);
+ 149   return validateCandidateSpec(spec);
+ 150 }
+
+## scripts/delivery/base/migrations.mjs
+SHA256 41650d5f2c22c0dbf8c4d8640bc89d872907828b558df4af89c4f70059d4878f
+
+   1 import {lstat, readFile, readdir, realpath} from 'node:fs/promises';
+   2 import {resolve, relative, isAbsolute, sep, join} from 'node:path';
+   3 import {createHash} from 'node:crypto';
+   4 import {array, keys, string, bindingPattern} from './bindings.mjs';
+   5 export const codeUnitOrder = (a,b) => a < b ? -1 : a > b ? 1 : 0;
+   6 const privatePart = /^(?:\.git|\.env(?:\..*)?|\.dev\.vars(?:\..*)?|\.npmrc|\.yarnrc(?:\.yml)?|\.netrc|\.pypirc|release-provenance\.json)$/i;
+   7 /** Check each actual path component, including in-root symlinks. Never read through one. */
+   8 export async function sourcePath(root, input, {base = root, kind = 'file', optional = false} = {}) {
+   9   if (typeof input !== 'string' || !input || /[\\\x00-\x1f\x7f]/.test(input)) throw Error('Invalid candidate source path');
+  10   const rootPath = await realpath(root);
+  11   let destination = resolve(base, input);
+  12   // macOS /var and /tmp aliases (and an explicitly supplied root alias) refer
+  13   // to the same candidate root. Normalize only that known root, not child links.
+  14   const lexicalWithin = relative(resolve(root), destination);
+  15   if (lexicalWithin && lexicalWithin !== '..' && !lexicalWithin.startsWith(`..${sep}`) && !isAbsolute(lexicalWithin)) destination = resolve(rootPath, lexicalWithin);
+  16   const within = relative(rootPath, destination);
+  17   if (!within || within === '..' || within.startsWith(`..${sep}`) || isAbsolute(within)) throw Error('Input escapes candidate source or names its root');
+  18   const parts = within.split(sep);
+  19   if (parts.some(part => privatePart.test(part))) throw Error('Private candidate source path is forbidden');
+  20   let path = rootPath;
+  21   for (let index = 0; index < parts.length; index++) {
+  22     path = join(path, parts[index]);
+  23     let stat;
+  24     try { stat = await lstat(path); }
+  25     catch (error) { if (error.code === 'ENOENT' && optional) return null; throw error; }
+  26     if (stat.isSymbolicLink()) throw Error('Candidate source symlink is forbidden');
+  27     if (index < parts.length - 1 ? !stat.isDirectory() : kind === 'directory' ? !stat.isDirectory() : !stat.isFile()) throw Error(`Candidate source must be a regular ${kind}`);
+  28   }
+  29   return path;
+  30 }
+  31 export function decodeUtf8(bytes, label) {
+  32   // Preserve a UTF-8 BOM: it is part of both SQL text and its byte digest.
+  33   try { return new TextDecoder('utf-8', {fatal:true, ignoreBOM:true}).decode(bytes); }
+  34   catch { throw Error(`Invalid UTF-8 ${label}`); }
+  35 }
+  36 export async function collectMigrations(root, directories, resources) {
+  37   const result = [], identities = new Set();
+  38   for (const directory of array(directories, 'migration directories')) {
+  39     keys(directory, ['binding','path','prefix','optional'], 'migration directory');
+  40     string(directory.binding, 'migration binding', bindingPattern);
+  41     if (!resources.some(row => row.kind === 'd1' && row.binding === directory.binding)) throw Error(`Migration directory requires D1 binding: ${directory.binding}`);
+  42     if (directory.optional !== undefined && typeof directory.optional !== 'boolean') throw Error('Invalid migration optional flag');
+  43     const prefix = directory.prefix === undefined ? '' : directory.prefix;
+  44     if (typeof prefix !== 'string' || !/^[\w.-]*$/.test(prefix)) throw Error('Invalid migration prefix');
+  45     const path = await sourcePath(root, directory.path, {kind:'directory',optional:directory.optional === true});
+  46     if (path === null) continue;
+  47     for (const file of (await readdir(path, {withFileTypes:true})).sort((a,b) => codeUnitOrder(a.name,b.name))) {
+  48       if (!file.name.endsWith('.sql')) continue;
+  49       if (!file.isFile() || !/^[\w.-]+\.sql$/.test(file.name)) throw Error('Migration must be a regular SQL file');
+  50       const name = prefix + file.name, identity = `${directory.binding}/${name}`;
+  51       if (identities.has(identity)) throw Error(`Duplicate migration identity: ${identity}`);
+  52       identities.add(identity);
+  53       const filePath = await sourcePath(root, join(path, file.name));
+  54       const bytes = await readFile(filePath);
+  55       if (bytes.length > 10 * 1024 * 1024) throw Error('Migration exceeds supported limit');
+  56       const sql = decodeUtf8(bytes, 'migration');
+  57       result.push({binding:directory.binding,name,sha256:createHash('sha256').update(bytes).digest('hex'),sql});
+  58     }
+  59   }
+  60   return result;
+  61 }
+
+## scripts/portability/adapter.mjs
+SHA256 77b48b3651992e04861b67b54d72cce2e6501f6571ff32aa639a4498a4460f53
+
+   1 import { refuse, missing, RerError } from '@runeditrun/rer/errors'
+   2 import { relative } from 'node:path'
+   3 import { applyMigrations } from '../installer/migrations.mjs'
+   4 import { localState, commandEnvironment } from '../installer/settings.mjs'
+   5 // A database RER Platform's runner migrated keeps that runner as its only migration authority: Wrangler cannot read its
+   6 // rer_migrations ledger and would apply every file again. Such a database must already hold every migration file here,
+   7 // as rer's transfer checks again before it moves any data, and no Wrangler migration runs on it.
+   8 async function nativeMigrationsAllowed({ root, store, signal, operationToken }) {
+   9   const child = store.spawn('Checking migration history', process.execPath, ['scripts/portability/ledger.mjs'], { cwd: root, signal, env: { ...commandEnvironment(), RER_LOCAL_OPERATION: operationToken }, stdio: ['ignore', 'pipe', 'pipe', 'ipc'] })
+  10   let reply
+  11   child.on('message', message => { reply = message })
+  12   await new Promise(resolve => { child.once('exit', resolve); child.once('error', resolve) })
+  13   await store.stop(child)
+  14   if (reply?.refused) throw new RerError('restore_refused', `Local transfer refused (${reply.refused}): this database's migration history does not authorize Wrangler migrations. Reconcile the history through its owning runner, keeping Platform's ledger as its only migration authority and applying every migration of this version through Platform when it owns the database, then run the same command again. Nothing was changed.`, 4)
+  15   if (typeof reply?.nativeApply !== 'boolean') throw new RerError('transfer_failed', 'Local transfer failed: the migration history could not be read. Run the same command again.', 1)
+  16   return reply.nativeApply
+  17 }
+  18 async function transfer(context, direction) {
+  19   const { root, path, journal, store, signal, operationToken, target, origin, sessionFile } = context
+  20   if (target === 'remote') {
+  21     if (direction !== 'export') throw refuse('Remote restore is not exposed. Import the hosted archive into an empty local installation.')
+  22     if (!origin || !sessionFile) throw missing('Hosted export requires --origin and a private --session-file containing one native owner cookie.')
+  23     await store.run('Downloading complete hosted Penny data', process.execPath, ['scripts/portability/remote-export.mjs', origin, sessionFile, path], { cwd: root, signal, env: commandEnvironment() })
+  24     return { target: 'remote', output: path, journal: path + '.erasure-journal.json', scope: 'Penny domain data and original files; fresh owner and configuration required after restore' }
+  25   }
+  26   if (await nativeMigrationsAllowed(context)) await applyMigrations({ root, stateDirectory: localState(root), run: (label, command, args, options) => store.run(label, command, args, { ...options, cwd: root, signal, env: { ...options.env, RER_LOCAL_OPERATION: operationToken } }) })
+  27   // Product policy stays in this child; no functions cross a JSON boundary. `journal` is
+  28   // `rer import --journal LATER_ARCHIVE`: a later archive whose erasures fence this restore.
+  29   await store.run('Moving Penny installation data', 'pnpm', ['exec', 'tsx', '--tsconfig', 'tsconfig.app.json', 'scripts/portability/worker.ts', direction, path, ...(journal ? [journal] : [])], { cwd: root, signal, env: { ...commandEnvironment(), RER_LOCAL_OPERATION: operationToken } })
+  30   return { target: 'local', [direction === 'export' ? 'output' : 'input']: relative(root, path), journal: relative(root, path) + '.erasure-journal.json', scope: 'Penny domain data and original files; fresh owner and configuration required after restore' }
+  31 }
+  32 export const pennyPortability = { remote: true, export: context => transfer(context, 'export'), import: context => transfer(context, 'import') }
+
+## scripts/portability/ledger.mjs
+SHA256 9f1ddb86cbc2a6f8abb214177c66e4ccfae05424941d48450835e0e62a40c5c2
+
+   1 import { join } from 'node:path'
+   2 import { createRequire } from 'node:module'
+   3 import { PortabilityError } from '@runeditrun/rer/modules/portability'
+   4 import { platformMigrationDeclaration, nativeMigrationPreflight } from '@runeditrun/rer/portability-migrations'
+   5 // Which runner migrates this installation's database. RER Platform's runner records each file it applies in
+   6 // rer_migrations, a ledger Wrangler cannot read: such a database is Platform's alone to migrate and must already hold
+   7 // every migration file of this checkout, matched by SHA-256 (Base's own preflight, as rer's local transfers run it).
+   8 // Reported over IPC: {nativeApply}, or {refused} with Base's symbolic code.
+   9 const root = process.cwd()
+  10 const { getPlatformProxy } = createRequire(join(root, 'package.json'))('wrangler')
+  11 const proxy = await getPlatformProxy({ configPath: join(root, 'wrangler.jsonc'), persist: { path: join(root, '.wrangler/state/v3') }, remoteBindings: false })
+  12 let reply
+  13 try { reply = await nativeMigrationPreflight({ root, db: proxy.env.DB, binding: 'DB', platformMigrations: platformMigrationDeclaration() }) }
+  14 catch (error) { if (!(error instanceof PortabilityError)) throw error; reply = { refused: error.code } }
+  15 finally { await proxy.dispose() }
+  16 await new Promise(resolve => process.send(reply, resolve))
+  17 process.disconnect()
+
+## scripts/portability/migrations.mjs
+SHA256 5108a7d93dc0acde9831c8edadb07034ef1071947a9b20940e464d31d5bbd02f
+
+   1 import { createHash } from 'node:crypto'
+   2 import { readFile } from 'node:fs/promises'
+   3 import { unstable_splitSqlQuery as split } from 'wrangler'
+   4 import { PortabilityError } from '@runeditrun/rer/modules/portability'
+   5 import { migrationReplay } from '@runeditrun/rer/modules/portability/migration-history'
+   6 import { appliedMigrations } from '@runeditrun/rer/internal/modules/portability/bridge.mjs'
+   7 const directory = new URL('../../migrations/core/', import.meta.url)
+   8 /** Base's replay of this installation's applied migrations, in its ledger's order
+   9  * (Wrangler's d1_migrations or RER Platform's rer_migrations), from this checkout's
+  10  * files, never the archive's SQL. Base places an older archive in that history,
+  11  * refuses a later migration that rewrites restorable rows, and vouches for rows the
+  12  * migrations themselves seed. */
+  13 export async function restoreMigrations(db, policy) {
+  14   const plan = await Promise.all(((await appliedMigrations(db)) ?? []).map(async name => {
+  15     // An applied migration this checkout does not ship cannot be replayed.
+  16     if (!/^[\w.-]+\.sql$/.test(name)) throw new PortabilityError('schema_mismatch:migration_history', 409)
+  17     const bytes = await readFile(new URL(name, directory)).catch(error => { if (error.code === 'ENOENT') throw new PortabilityError('schema_mismatch:migration_history', 409); throw error })
+  18     return { name, statements: split(bytes.toString('utf8')), sha256: createHash('sha256').update(bytes).digest('hex') }
+  19   }))
+  20   return migrationReplay(plan, policy)
+  21 }
+
+## scripts/installer/migrations.mjs
+SHA256 b792913b7a8883307040ff0aca09deebcb9d5df52b0a5e196c34084efbd48015
+
+   1 import { commandEnvironment } from './settings.mjs'
+   2 export async function applyMigrations(context) {
+   3   const env = { ...commandEnvironment(), PENNY_LOCAL_STATE: context.stateDirectory, CI: '1' }
+   4   await context.run('Applying local migrations', 'pnpm', ['exec', 'wrangler', 'd1', 'migrations', 'apply', 'feedback-penny-local', '--local', '--persist-to', context.stateDirectory], { env })
+   5 }
+
+## tests/installer/older-archive.test.mjs
+SHA256 f6c37303d1026135de434edeb20f86d0d1fe83dd5d8dad1dcbac47c93ed575d0
+
+   1 import assert from 'node:assert/strict'
+   2 import test from 'node:test'
+   3 import {execFile} from 'node:child_process'
+   4 import {promisify} from 'node:util'
+   5 import {mkdtemp, mkdir, cp, symlink, rm, stat, chmod, readFile, rename} from 'node:fs/promises'
+   6 import {tmpdir} from 'node:os'
+   7 import {join, resolve} from 'node:path'
+   8 import {fileURLToPath} from 'node:url'
+   9 import {getPlatformProxy} from 'wrangler'
+  10 import {splitSqlStatements} from '../../scripts/delivery/base/sql-statements.mjs'
+  11 import {assertArchiveRestored} from './archive-comparison.mjs'
+  12 
+  13 const execute = promisify(execFile)
+  14 const source = fileURLToPath(new URL('../../', import.meta.url))
+  15 const rer = fileURLToPath(import.meta.resolve('@runeditrun/rer/internal/global/rer.mjs'))
+  16 
+  17 // RER Platform's runner records each deployment-spec migration in rer_migrations, in the same request as the file's
+  18 // statements (platform src/integrations/migration-batch.ts); its effect stands in for the hosted service here.
+  19 async function platformMigrations(db) {
+  20   const {migrations} = JSON.parse(await readFile(join(source, 'management/integration/deployment-spec.json'), 'utf8'))
+  21   await db.prepare('CREATE TABLE IF NOT EXISTS rer_migrations (name TEXT PRIMARY KEY, sha256 TEXT NOT NULL, applied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP)').run()
+  22   for (const migration of migrations) await db.batch([db.prepare('INSERT INTO rer_migrations(name,sha256) VALUES (?,?)').bind(migration.name, migration.sha256), ...splitSqlStatements(migration.sql).map(sql => db.prepare(sql))])
+  23 }
+  24 
+  25 test('[DATA-001 DATA-003] import before setup restores an older backup with either migration ledger and replays later settings and status clocks', {timeout: 600_000}, async t => {
+  26   const area = await mkdtemp(join(tmpdir(), 'penny-older-archive-'))
+  27   t.after(() => rm(area, {recursive: true, force: true}))
+  28   const env = {...process.env, CI: 'true', WRANGLER_SEND_METRICS: 'false', RER_JOBS_DIR: join(area, 'jobs'), RER_SERVERS_DIR: join(area, 'servers')}
+  29   for (const name of Object.keys(env)) if (/^(AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|SETUP_TOKEN|OPERATOR_EMAIL|APP_ORIGIN|PENNY_)/.test(name)) delete env[name]
+  30   delete env.RER_LOCAL_OPERATION
+  31   const command = async (root, args) => {
+  32     try { await execute(process.execPath, [rer, ...args, '--non-interactive'], {cwd: root, env, maxBuffer: 4 * 1024 * 1024}) }
+  33     catch (error) { throw new Error(`rer ${args[0]} failed: ` + error.stderr?.slice(-3000)) }
+  34   }
+  35   for (const platform of [false, true]) {
+  36     const root = join(area, platform ? 'platform' : 'native')
+  37     await mkdir(root)
+  38     for (const path of ['scripts', 'base', 'src', 'migrations', 'wrangler.jsonc', 'package.json', 'OPERATIONS.json', 'OPERATIONS.md', 'ACCEPTANCE.md', 'rer-setup.json', 'tsconfig.json', 'tsconfig.app.json', '.node-version']) {
+  39       await cp(join(source, path), join(root, path), {recursive: true})
+  40     }
+  41     await symlink(join(source, 'node_modules'), join(root, 'node_modules'), 'dir')
+  42     await cp(join(source, 'tests/fixtures/older-archive'), join(root, 'exports'), {recursive: true})
+  43     await rename(join(root, 'exports/penny.archive'), join(root, 'exports/penny.rer'))
+  44     for (const suffix of ['', '.erasure-journal.json']) await chmod(join(root, 'exports/penny.rer') + suffix, 0o600)
+  45     const options = {configPath: resolve(root, 'wrangler.jsonc'), persist: {path: join(root, '.wrangler/state/v3')}, remoteBindings: false}
+  46     // A native destination is empty; import prepares its schema with Wrangler.
+  47     if (platform) {
+  48       const proxy = await getPlatformProxy(options)
+  49       try { await platformMigrations(proxy.env.DB) } finally { await proxy.dispose() }
+  50     }
+  51     await command(root, ['import', '--input', 'exports/penny.rer', '--yes'])
+  52     await assert.rejects(stat(join(root, '.dev.vars')), {code: 'ENOENT'}, 'restore precedes setup and never creates private settings')
+  53     // The restored installation backs up again through the same door.
+  54     await command(root, ['export', '--output', 'exports/again.rer'])
+  55     const proxy = await getPlatformProxy(options)
+  56     try {
+  57       console.log(await assertArchiveRestored(join(root, 'exports/penny.rer'), proxy.env))
+  58       await assertArchiveRestored(join(root, 'exports/again.rer'), proxy.env)
+  59       assert.equal(await proxy.env.DB.prepare('SELECT COUNT(*) n FROM oa_operators').first('n'), 0, 'destination still needs its own owner')
+  60       // Platform's runner stays the database's only migration authority: Wrangler never adds its ledger beside it.
+  61       const ledgers = (await proxy.env.DB.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name IN ('rer_migrations','d1_migrations')").all()).results.map(row => row.name)
+  62       assert.deepEqual(ledgers, [platform ? 'rer_migrations' : 'd1_migrations'])
+  63     } finally { await proxy.dispose() }
+  64   }
+  65 })
+
+## tests/installer/archive-comparison.mjs
+SHA256 a52cf7bc1a71babf2648b58eddb89f1b712534850a7277ae2ff9e6dd59df6fa5
+
+   1 import assert from 'node:assert/strict'
+   2 import {createHash} from 'node:crypto'
+   3 import {readFile} from 'node:fs/promises'
+   4 import {readArchive} from '@runeditrun/rer/modules/portability'
+   5 
+   6 const hash = bytes => createHash('sha256').update(bytes).digest('hex')
+   7 const canonical = value => Array.isArray(value) ? value.map(canonical) : value && typeof value === 'object'
+   8   ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value
+   9 const image = rows => rows.map(row => JSON.stringify(canonical(row))).sort()
+  10 const quote = name => '"' + name.replaceAll('"', '""') + '"'
+  11 
+  12 // Compare against the archive itself, including empty tables and original bytes.
+  13 export async function assertArchiveRestored(archive, {DB: db, FILES: files}) {
+  14   const records = []
+  15   for await (const record of readArchive(new Blob([await readFile(archive)]).stream())) records.push(record)
+  16   const manifest = records.find(record => record.kind === 'manifest')
+  17   const items = records.filter(record => record.kind === 'part').flatMap(record => record.items)
+  18   let rows = 0
+  19   for (const table of manifest.tables) {
+  20     const columns = table.columns.filter(column => !column.generated).map(column => column.name)
+  21     const expected = items.filter(item => item.kind === 'row' && item.table === table.name).map(item => item.row)
+  22     const actual = (await db.prepare(`SELECT ${columns.map(quote).join(',')} FROM ${quote(table.name)}`).all()).results
+  23     const project = values => values.map(row => Object.fromEntries(columns.map(column => [column, row[column]])))
+  24     assert.deepEqual(image(project(actual)), image(project(expected)), table.name + ' retains every archived cell')
+  25     rows += expected.length
+  26   }
+  27   for (const object of manifest.objects) {
+  28     const restored = await files.get(object.key)
+  29     assert.ok(restored, object.key + ' exists')
+  30     assert.equal(hash(new Uint8Array(await restored.arrayBuffer())), object.sha256, object.key + ' retains original bytes')
+  31     assert.equal(restored.httpMetadata?.contentType, object.httpMetadata?.contentType)
+  32   }
+  33   assert.equal(await db.prepare('SELECT COUNT(*) n FROM penny_triage_settings').first('n'), 1, 'later settings seed is replayed')
+  34   assert.equal(await db.prepare('SELECT COUNT(*) n FROM penny_triage_status_clock').first('n'), 1, 'later status clock backfill is replayed')
+  35   assert.deepEqual((await db.prepare('PRAGMA foreign_key_check').all()).results, [])
+  36   return {tables: manifest.tables.length, rows, objects: manifest.objects.length, settings: 1, clock: 1}
+  37 }
+
+## tests/fixtures/older-archive/README.md
+SHA256 56a3b0b769a5d4a69d9720d57d4b09cf26d7bbe573870b699e71a879638496cb
+
+   1 This synthetic backup keeps the ten rows and original file retained by the
+   2 catalogue qualification at Penny d4c99123, with migrations through 0071. The
+   3 fixture was freshly exported by rer 0.2.80 from a real local D1 database at that
+   4 schema, retaining its complete schema-object inventory. Every archived row and
+   5 original object stayed identical to the earlier fixture. The maintained exporter
+   6 excludes its now-reserved empty import assertion table.
+   7 
+   8 It is deliberately older than the triage settings and status-clock backfill and
+   9 notification table rebuild. The installer test restores it through `rer import`
+  10 before setup, compares every archived cell and original object, and checks the
+  11 later backfill. Legacy v2 archives without `schemaObjects` are refused by rer
+  12 0.2.80; this fixture does not claim recovery of that format.
+
+## src/core/features/data/platform-ledger.ts
+SHA256 e5cdbfc366056d487884eb9928453b9438aeaf786cf5d783e56987e181824375
+
+   1 import {NativeError,digest} from '../auth/native-tokens'
+   2 
+   3 // RER Platform (RER Managed) applies migrations/core itself and records each
+   4 // applied file's name and SHA-256 in rer_migrations(name,sha256,applied_at).
+   5 // That ledger is the installation's: it never travels in an archive and a
+   6 // restore never writes it. Every archive door still requires it to list exactly
+   7 // this revision's migrations with their file hashes, as Platform records them;
+   8 // anything else (an interrupted '<file>#<start>-<end>' row, a missing, extra or
+   9 // edited migration) means the database is not this revision's schema.
+  10 async function revision():Promise<{name:string;sha256:string}[]>{
+  11  // Vite bundles the files' text; Node scripts that load this module never call it.
+  12  const files=import.meta.glob<string>('../../../../migrations/core/*.sql',{query:'?raw',import:'default'})
+  13  const migrations=await Promise.all(Object.entries(files).map(async([path,load])=>({name:path.split('/').at(-1)!,sha256:await digest(await load())})))
+  14  return migrations.sort((a,b)=>a.name<b.name?-1:a.name>b.name?1:0)
+  15 }
+  16 export async function assertPlatformLedger(db:D1Database):Promise<void>{
+  17  const columns=(await db.prepare("SELECT name FROM pragma_table_info('rer_migrations')").all<{name:string}>()).results.map(column=>column.name)
+  18  if(!columns.length)return
+  19  const mismatch=()=>new NativeError('migration_history_mismatch',503)
+  20  if(!columns.includes('name')||!columns.includes('sha256'))throw mismatch()
+  21  const [recorded,expected]=await Promise.all([db.prepare('SELECT name,sha256 FROM rer_migrations ORDER BY name').all<{name:string;sha256:string}>(),revision()])
+  22  if(!expected.length||JSON.stringify(recorded.results.map(({name,sha256})=>({name,sha256})))!==JSON.stringify(expected))throw mismatch()
+  23 }
+
+## node_modules/@runeditrun/rer/cli/portability-migrations.mjs
+SHA256 564db8f5eb62c63a3a74a1d8d3209463f2b19834479aaaf94d9f2e3ea5ea78e9
+
+   1 import { join } from 'node:path';
+   2 import { createHash } from 'node:crypto';
+   3 import { readFile, readdir } from 'node:fs/promises';
+   4 import { migrationStatements } from '../modules/portability/migration-sql.mjs';
+   5 import { destinationLedger, ledgerNames, matchMigrationLedger } from '../modules/portability/ledgers.mjs';
+   6 import { all, insist, PortabilityError } from '../modules/portability/storage.mjs';
+   7 import { parseJsonc } from './jsonc.mjs';
+   8 
+   9 // Seed-owned declarations, never archive metadata: the deploymentSpec prefix
+  10 // for this binding's directory, and data-only seeds without schema files.
+  11 export function platformMigrationDeclaration(input={}) {
+  12  insist(input && typeof input==='object' && !Array.isArray(input) && Object.keys(input).every(key=>['prefix','dataOnly'].includes(key)),'invalid_platform_migrations',409);
+  13  const {prefix,dataOnly=[]}=input;
+  14  insist(prefix===undefined || typeof prefix==='string' && /^[\w.-]*$/.test(prefix),'invalid_platform_migrations',409);
+  15  insist(Array.isArray(dataOnly) && dataOnly.every(name=>typeof name==='string' && /^[\w.-]+\.sql$/.test(name)) && new Set(dataOnly).size===dataOnly.length,'invalid_platform_migrations',409);
+  16  return {prefix,dataOnly};
+  17 }
+  18 
+  19 // Native archive/migration checks and deploy packaging use the same seed-owned
+  20 // directory declaration. Only packaging supplies its historical fallback.
+  21 export async function migrationDirectory(root,binding,{fallback}={}) {
+  22  let config;
+  23  try { config=parseJsonc(await readFile(join(root,'wrangler.jsonc'),'utf8')); }
+  24  catch(error) { if(error.code!=='ENOENT' || fallback===undefined)throw error; return join(root,fallback); }
+  25  const bindings=config.d1_databases?.filter(entry=>entry.binding===binding) ?? [];
+  26  insist(bindings.length===1 || bindings.length===0 && fallback!==undefined,'migration_ledger:binding',409);
+  27  return join(root,bindings[0]?.migrations_dir ?? fallback ?? 'migrations');
+  28 }
+  29 
+  30 // Reproduce the runner's stored SQL text, then recover SQLite's statement
+  31 // boundaries (migration-sql.mjs).
+  32 export async function migrationInventory(root,binding,{prefix},split) {
+  33  const directory=await migrationDirectory(root,binding);
+  34  return Promise.all((await readdir(directory)).filter(name=>name.endsWith('.sql')).sort().map(async name=>{
+  35   const bytes=await readFile(join(directory,name));
+  36   return {name,...(split?{statements:migrationStatements(bytes.toString('utf8'),split)}:{}),sha256:createHash('sha256').update(bytes).digest('hex'),...(prefix===undefined?{}:{aliases:[prefix+name]})};
+  37  }));
+  38 }
+  39 
+  40 // Preserve the runner's applied order, resolving file identities by hash.
+  41 export async function appliedMigrations(root,db,binding,declaration,split) {
+  42  const ledger=await destinationLedger(db) ?? [],files=await migrationInventory(root,binding,declaration,split);
+  43  return matchMigrationLedger(ledger,files,declaration).map(name=>files.find(file=>file.name===name));
+  44 }
+  45 
+  46 // Ledger contents can contain private values. Report constant categories,
+  47 // retaining the transfer's canonical compatibility and hash-matching policy.
+  48 function constantRefusal(error,files) {
+  49  if(!(error instanceof PortabilityError))return error;
+  50  const code=error.code.startsWith('migration_ledger:')?error.code.split(':').slice(0,2).join(':')
+  51   :error.code==='schema_mismatch:uncertain_migrations'?'migration_ledger:uncertain':'migration_ledger:incompatible';
+  52  // Only checkout-owned names may accompany the constant category. A ledger
+  53  // entry with no matching file or declared alias can contain private values.
+  54  const name=error.code.split(':').slice(2).join(':');
+  55  const identity=['migration_ledger:unknown','migration_ledger:ambiguous','migration_ledger:conflict'].includes(code) && name && files.some(file=>file.name===name || file.aliases?.includes(name))?name:undefined;
+  56  return Object.assign(new PortabilityError(code,409),error.migration===undefined?{}:{migration:error.migration},identity?{identity}:{});
+  57 }
+  58 
+  59 // For adapters with their own archive format: the entries of a migration ledger
+  60 // ([{name,sha256}], as RER Platform's rer_migrations records them or as an
+  61 // archive carries them) named by the checkout's migration files, matched by
+  62 // SHA-256 and refused when a name or hash differs from the checkout's. The
+  63 // result is the native-equivalent ledger: write it to an export, or compare it
+  64 // with the archive on import, instead of comparing ledger controllers.
+  65 // Declared data-only entries keep their own names. Reads files only.
+  66 export async function mapMigrationLedger({root,binding='DB',platformMigrations,entries}) {
+  67  const declaration=platformMigrationDeclaration(platformMigrations);
+  68  insist(Array.isArray(entries) && entries.every(entry=>entry && typeof entry.name==='string' && typeof entry.sha256==='string' && /^[a-f0-9]{64}$/.test(entry.sha256)) && new Set(entries.map(entry=>entry.name)).size===entries.length,'migration_ledger:incompatible',409);
+  69  const files=await migrationInventory(root,binding,declaration);
+  70  try {
+  71   const mapped=entries.map(({name,sha256})=>({name:matchMigrationLedger([{name,sha256}],files,declaration)[0]??name,sha256}));
+  72   insist(new Set(mapped.map(entry=>entry.name)).size===mapped.length,'migration_ledger:ambiguous',409);
+  73   return mapped;
+  74  } catch(error) { throw constantRefusal(error,files); }
+  75 }
+  76 
+  77 // Older runners leave Wrangler's bookkeeping beside their authoritative hashed
+  78 // history. A tracked D1 ledger is another history and must agree with it.
+  79 async function legacyPairPreflight(db) {
+  80  const columns=await all(db,'PRAGMA table_info(_rer_deploy_migrations)');
+  81  insist(['name','sha256','state'].every(name=>columns.some(column=>column.name===name)),'migration_ledger:incompatible',409);
+  82  const history=await all(db,'SELECT name,sha256,state FROM _rer_deploy_migrations ORDER BY name');
+  83  insist(history.every(row=>row.state==='applied'),'migration_ledger:uncertain',409);
+  84  insist(history.every(row=>typeof row.name==='string' && typeof row.sha256==='string' && /^[a-f0-9]{64}$/.test(row.sha256)) && new Set(history.map(row=>row.name)).size===history.length,'migration_ledger:incompatible',409);
+  85  const nativeColumns=(await all(db,'PRAGMA table_info(d1_migrations)')).map(column=>column.name);
+  86  const tracked=nativeColumns.includes('state') || nativeColumns.includes('sha256');
+  87  insist(['id','name','applied_at'].every(name=>nativeColumns.includes(name)) && (!tracked || nativeColumns.includes('state') && nativeColumns.includes('sha256')),'migration_ledger:incompatible',409);
+  88  const native=await all(db,`SELECT name${tracked?',sha256,state':''} FROM d1_migrations ORDER BY id`);
+  89  insist(native.every(row=>typeof row.name==='string') && new Set(native.map(row=>row.name)).size===native.length,'migration_ledger:incompatible',409);
+  90  if(tracked) {
+  91   insist(native.every(row=>row.state==='applied'),'migration_ledger:uncertain',409);
+  92   insist(native.every(row=>typeof row.sha256==='string' && /^[a-f0-9]{64}$/.test(row.sha256)),'migration_ledger:incompatible',409);
+  93   insist(native.length===history.length && native.every((row,index)=>row.name===history[index].name && row.sha256===history[index].sha256),'migration_ledger:multiple',409);
+  94  } else insist(native.every(row=>history.some(prior=>prior.name===row.name)),'migration_ledger:multiple',409);
+  95 }
+  96 
+  97 // Adapter entry point, before *any* native Wrangler apply. The caller supplies
+  98 // the real target binding and keeps its writers stopped through apply/transfer.
+  99 // This only reads: it never repairs history or creates a second ledger.
+ 100 export async function nativeMigrationPreflight({root,db,binding='DB',platformMigrations}) {
+ 101  const declaration=platformMigrationDeclaration(platformMigrations);
+ 102  const tables=await all(db,`SELECT type,name FROM sqlite_master WHERE lower(name) IN (${ledgerNames.map(name=>`'${name}'`).join(',')})`);
+ 103  const legacyPair=tables.length===2 && ['_rer_deploy_migrations','d1_migrations'].every(name=>tables.some(row=>row.name===name));
+ 104  if(tables.length>1 && !legacyPair)throw Object.assign(new PortabilityError('migration_ledger:multiple',409),tables.some(row=>row.name==='rer_migrations')?{identity:'rer_migrations'}:{});
+ 105  insist(tables.every(row=>row.type==='table' && ledgerNames.includes(row.name)),'migration_ledger:incompatible',409);
+ 106  const table=legacyPair?'_rer_deploy_migrations':tables[0]?.name;
+ 107  if(!table)return {nativeApply:true};
+ 108  // This runner's history cannot authorize Wrangler to apply the same files.
+ 109  insist(table!=='_rer_deploy_migrations' || legacyPair,'migration_ledger:runner',409);
+ 110  const files=await migrationInventory(root,binding,declaration);
+ 111  let nativeApply=false;
+ 112  try {
+ 113   if(legacyPair)await legacyPairPreflight(db);
+ 114   const ledger=await destinationLedger(db),applied=matchMigrationLedger(ledger,files,declaration);
+ 115   // Wrangler skips only literal filenames, not transfer aliases or hashes.
+ 116   if(table==='d1_migrations')insist(ledger.every(row=>files.some(file=>file.name===row.name)),'migration_ledger:incompatible',409);
+ 117   nativeApply=table==='d1_migrations' && files.some(file=>!applied.includes(file.name));
+ 118   // The checkout file is named: it is the seed's own, never a ledger value.
+ 119   if(table!=='d1_migrations')for(const file of files)if(!applied.includes(file.name))throw Object.assign(new PortabilityError('migration_ledger:unapplied',409),{migration:file.name});
+ 120  } catch(error) { throw constantRefusal(error,files); }
+ 121  return {nativeApply};
+ 122 }
+
+## scripts/installer/build-source.mjs
+   1 // The installer executes the real build commands while its caller owns
+   2 // Base's private-settings lock and captured command store for the whole build.
+   3 export async function buildSource(run) {
+   4   await run('pnpm', ['exec', 'tsc', '-b'])
+   5   await run('pnpm', ['exec', 'vite', 'build'])
+   6 }
+
+## scripts/installer/local.mjs
+   1 // Penny's placement and install-environment policy runs before every other
+   2 // module this adapter loads (see placement.mjs).
+   3 import './placement.mjs'
+   4 import { commandAdapter as createCommandAdapter } from '@runeditrun/rer/adapter'
+   5 import { previewTarget } from '@runeditrun/rer/operator-installer'
+   6 import { operatorPrerequisites } from '@runeditrun/rer/operator-prerequisites'
+   7 import { deployPenny } from './deploy.mjs'
+   8 import { pennyPortability } from '../portability/adapter.mjs'
+   9 import { localInstaller, ownerAccountHosting } from '@runeditrun/rer/local-installer'
+  10 import { prepareLocal, savedOrigin, commandEnvironment, runtimeEnvironment, localState } from './settings.mjs'
+  11 import {manifest} from './manifest.mjs'
+  12 import { features } from './ui/seed.mjs'
+  13 import { applyMigrations } from './migrations.mjs'
+  14 import { assertLocalAdmission, admissionOutput } from './admission.mjs'
+  15 import { buildSource } from './build-source.mjs'
+  16 import { ownerDeclaration } from './owner-environment.mjs'
+  17 
+  18 const definitions = {
+  19   node: '22.20.0', tools: ['pnpm'], prepare: prepareLocal, sessionSecretKey: 'AUTH_SECRET',
+  20   dependencies: ['pnpm', ['install', '--frozen-lockfile'], { env: commandEnvironment() }],
+  21   origin: savedOrigin,
+  22   secrets: {
+  23     file: '.dev.vars', originKey: 'APP_ORIGIN',
+  24     values: context => ({ APP_ORIGIN: context.origin, OPERATOR_EMAIL: context.input.OPERATOR_EMAIL.toLowerCase(), PENNY_ENVIRONMENT: 'local', MAIL_PROVIDER: 'development', MAIL_FROM: 'auth@localhost.test', WORKSPACE_TIMEZONE: context.input.WORKSPACE_TIMEZONE || 'UTC' }),
+  25   },
+  26   build: async context => {
+  27     if (context.input.OPERATOR_EMAIL) assertLocalAdmission(context)
+  28     await buildSource((command, args) => context.run('Building your application', command, args, { env: commandEnvironment(), step: 'build' }))
+  29   },
+  30   migrate: async context => {
+  31     // `rer demo` migrates and claims the saved owner in its own throwaway folder (.rer/demo/START), never .wrangler/state.
+  32     // Every `rer dev` start also migrates; only setup's prepare step chose the folder before.
+  33     context.stateDirectory = context.demo ? context.demo.state : context.stateDirectory ?? localState(context.root)
+  34     const env = { ...commandEnvironment(), PENNY_LOCAL_STATE: context.stateDirectory, CI: '1' }
+  35     await applyMigrations(context)
+  36     // Read native authority; only /auth/bootstrap may create it. A populated
+  37     // store cannot be rebound by changing an email in a local settings file.
+  38     const email = context.vars.OPERATOR_EMAIL
+  39     const sql = `SELECT (SELECT COUNT(*) FROM oa_bootstrap) AS installed, (SELECT COUNT(*) FROM oa_operators WHERE email='${email}' AND role='owner' AND status='active') AS ownerMatch;`
+  40     const output = await admissionOutput(context, 'Checking existing owner authority', 'pnpm', ['exec', 'wrangler', 'd1', 'execute', 'feedback-penny-local', '--local', '--persist-to', context.stateDirectory, '--command', sql, '--json'], { env })
+  41     const installed = [...output.matchAll(/"installed"\s*:\s*(\d+)/g)].at(-1)?.[1]
+  42     const matched = [...output.matchAll(/"ownerMatch"\s*:\s*(\d+)/g)].at(-1)?.[1]
+  43     if (installed === undefined || matched === undefined || (installed !== '0' && matched !== '1')) {
+  44       context.store.report('The local store must be empty or retain this active native owner. No ownership change was applied.')
+  45       throw context.fail('setup')
+  46     }
+  47   },
+  48   // Setup's temporary app is the built production runtime preview uses: no Vite
+  49   // file server, trigger handlers or Local Explorer on the public port.
+  50   start: previewTarget,
+  51   owner: { displayName: input => input.displayName || 'Owner', returnTo: '/setup' },
+  52   signIn: { emailKey: 'OPERATOR_EMAIL', returnTo: '/setup' },
+  53   hosting: async context => {
+  54     if (context.input.target !== 'remote') return ownerAccountHosting({ cli: 'scripts/installer/owner-cli.mjs' })(context)
+  55     const project = (await ownerDeclaration(context.root)).declaration.project.split('/').at(-1)
+  56     if (!context.input.prefix?.startsWith(`${project}-`)) throw context.fail('deploy')
+  57     const target = await ownerDeclaration(context.root, context.input.prefix.slice(project.length + 1))
+  58     return ownerAccountHosting({ cli:'scripts/installer/owner-cli.mjs',declaration:'deploy.json',environment:target.environment,state:target.stateFile,secrets:context=>{
+  59     return {...Object.fromEntries(manifest.fields.filter(field=>field.group==='host'&&context.hostingInput[field.name]!==undefined).map(field=>[field.name,context.hostingInput[field.name]])),OPERATOR_EMAIL:context.vars.OPERATOR_EMAIL,PENNY_EXPECTED_ORIGIN:context.input.appOrigin,WORKSPACE_TIMEZONE:context.vars.WORKSPACE_TIMEZONE,MAIL_PROVIDER:context.hostingInput.MAIL_PROVIDER||'later',...(context.hostingInput.MAIL_PROVIDER==='rer'?{MAIL_FROM:context.hostingInput.MAIL_FROM,MAIL_RELAY_URL:context.hostingInput.MAIL_RELAY_URL,MAIL_API_KEY:context.hostingInput.MAIL_API_KEY}:context.hostingInput.MAIL_PROVIDER==='sendgrid'?{MAIL_FROM:context.hostingInput.MAIL_FROM,MAIL_API_KEY:context.hostingInput.MAIL_API_KEY,SENDGRID_EVENT_PUBLIC_KEY:context.hostingInput.SENDGRID_EVENT_PUBLIC_KEY}:context.hostingInput.MAIL_PROVIDER==='resend'?{MAIL_FROM:context.hostingInput.MAIL_FROM,MAIL_API_KEY:context.hostingInput.MAIL_API_KEY,RESEND_WEBHOOK_SECRET:context.hostingInput.RESEND_WEBHOOK_SECRET}:{})}
+  60     }})(context)
+  61   },
+  62   guard: context => { context.signal?.throwIfAborted(); localState(context.root) },
+  63   features,
+  64 }
+  65 const lifecycle = localInstaller(definitions)
+  66 export const commandAdapter = createCommandAdapter(lifecycle, {
+  67   product: 'Penny',
+  68   site: { entry: 'src/site/pages.tsx', output: 'dist/site', declaration: 'deploy-site.json', config: 'vite.site.config.ts' },
+  69   setup: { manifestFile: 'rer-setup.json' }, browserModule: 'scripts/installer/ui/seed.mjs',
+  70   input: { names: { email: 'OPERATOR_EMAIL', name: 'displayName' }, defaults: async () => ({ target: 'local', MAIL_PROVIDER: 'later', WORKSPACE_TIMEZONE: 'UTC' }) },
+  71   // Penny's own environment (no inherited secrets), plus this run's origin, the
+  72   // checkout's dev key and the Local Explorer off; a demo adds its switches and state folder.
+  73   dev: context => ['pnpm', ['exec', 'vite', 'dev', '--host', '127.0.0.1', '--port', String(context.runtimePort ?? new URL(context.origin).port), '--strictPort'], { env: { ...runtimeEnvironment(context.root), RER_DEV_ORIGIN: context.origin, X_LOCAL_EXPLORER: 'false', ...(context.devKey ? { RER_DEV_KEY: context.devKey, RER_DEV_IDENTITY: context.devLogin ? 'off' : 'on' } : {}), ...(context.demo ? { RER_DEMO: '1', RER_DEMO_EXPIRES: context.demo.ends, RER_STATE_DIR: context.demo.state } : {}) } }],
+  74   preview: previewTarget,
+  75   // A demo never opens the checkout's database (even a read rewrites SQLite's -shm index); it migrates its own.
+  76   localPrerequisites: async ({ root, vars, email, demo }) => vars.PENNY_ENVIRONMENT === 'local' && vars.MAIL_PROVIDER === 'development' && Boolean(vars.AUTH_SECRET) && (demo || await operatorPrerequisites(root, email)),
+  77   verify: ['pnpm', ['run', 'verify:app']], deploy: deployPenny,
+  78   // Local dev identity: the local-only Worker entry, the build output rer build
+  79   // scans for the dev layer, and the kept end-to-end email-link test.
+  80   devIdentity: { entry: 'src/server.dev.ts', output: ['dist'], emailLinkTest: 'tests/installer/readme.test.mjs' },
+  81   localOnlyKeys: ['RER_DEV_ORIGIN', 'RER_DEV_IDENTITY'],
+  82   portability: pennyPortability,
+  83 })
+
+## node_modules/@runeditrun/rer/modules/portability/ledgers.mjs
+   1 import { all, insist } from './storage.mjs';
+   2 import { identifier } from './bookkeeping.mjs';
+   3 import { canonicalJson } from './hash.mjs';
+   4 import { validateRow } from './catalogue.mjs';
+   5 
+   6 // Migration ledgers, by the runner that writes them: Base deploy and container
+   7 // runners (_rer_deploy_migrations), Wrangler and the Base deploy kit
+   8 // (d1_migrations, tracked or plain) and RER Platform (rer_migrations).
+   9 export const ledgerNames=['_rer_deploy_migrations','d1_migrations','rer_migrations'];
+  10 // Platform's ledger exactly as its runner creates it
+  11 // (platform src/integrations/cloudflare-migrations.ts:33).
+  12 const platformShape=canonicalJson([{name:'name',type:'TEXT',notnull:0,pk:1},{name:'sha256',type:'TEXT',notnull:1,pk:0},{name:'applied_at',type:'TEXT',notnull:1,pk:0}]);
+  13 const shape=columns=>canonicalJson(columns.map(({name,type,notnull,pk})=>({name,type,notnull,pk})));
+  14 // Platform records a file applied in part as <name>#<start>-<end> until the
+  15 // file completes (platform src/integrations/migration-batch.ts:31): its effects
+  16 // are uncertain, like a tracked ledger's 'applying' row.
+  17 const partial=name=>name.includes('#');
+  18 
+  19 /** The destination's applied product migrations, [{name,sha256?}] in the ledger's own order, or undefined without a ledger. */
+  20 export async function destinationLedger(db) {
+  21   return (await readLedger(db))?.entries;
+  22 }
+  23 /** The ledger table in use and its applied migrations, {table,entries}, or undefined without a ledger. */
+  24 export async function readLedger(db) {
+  25   const found=(await all(db,`SELECT name FROM sqlite_master WHERE type='table' AND name IN (${ledgerNames.map(n=>`'${n}'`).join(',')})`)).map(x=>x.name);
+  26   if(found.includes('_rer_deploy_migrations'))return {table:'_rer_deploy_migrations',entries:(await all(db,"SELECT * FROM _rer_deploy_migrations WHERE state='applied' ORDER BY name")).map(entry)};
+  27   if(found.includes('d1_migrations')) {
+  28     const columns=(await all(db,'PRAGMA table_info(d1_migrations)')).map(x=>x.name);
+  29     insist(['id','name','applied_at'].every(name=>columns.includes(name)),'schema_mismatch:migration_history',409);
+  30     const tracked=columns.includes('state') || columns.includes('sha256');
+  31     if(tracked)insist(columns.includes('state') && columns.includes('sha256'),'schema_mismatch:migration_history',409);
+  32     const rows=await all(db,`SELECT name${tracked?',state,sha256':''} FROM d1_migrations ORDER BY id`);
+  33     insist(rows.every(row=>typeof row.name==='string') && new Set(rows.map(row=>row.name)).size===rows.length,'schema_mismatch:migration_history',409);
+  34     if(tracked)insist(rows.every(row=>row.state==='applied'),'schema_mismatch:uncertain_migrations',409);
+  35     if(tracked)insist(rows.every(row=>typeof row.sha256==='string' && /^[a-f0-9]{64}$/.test(row.sha256)),'schema_mismatch:migration_history',409);
+  36     return {table:'d1_migrations',entries:rows.map(entry)};
+  37   }
+  38   if(!found.includes('rer_migrations'))return;
+  39   // Platform applies pending files in its plan's order and inserts each ledger
+  40   // row in the same request as the file's SQL (migration-batch.ts:35-38,43-64;
+  41   // cloudflare-migrations.ts:34-44), so rowid order is application order.
+  42   insist(shape(await all(db,'PRAGMA table_info(rer_migrations)'))===platformShape,'schema_mismatch:migration_history',409);
+  43   const rows=await all(db,'SELECT name,sha256 FROM rer_migrations ORDER BY rowid');
+  44   insist(rows.every(row=>typeof row.name==='string' && typeof row.sha256==='string' && /^[a-f0-9]{64}$/.test(row.sha256)) && new Set(rows.map(row=>row.name)).size===rows.length,'schema_mismatch:migration_history',409);
+  45   insist(!rows.some(row=>partial(row.name)),'schema_mismatch:uncertain_migrations',409);
+  46   return {table:'rer_migrations',entries:rows.map(entry)};
+  47 }
+  48 const entry=row=>({name:row.name,...(typeof row.sha256==='string'?{sha256:row.sha256}:{})});
+  49 
+  50 // Resolve ledger identities against the destination's own migration files.
+  51 // Hash-bearing entries must identify exactly one file; a coinciding name may
+  52 // confirm that file, but cannot point at another one. Hashless rows use exact
+  53 // names or seed-declared aliases. The caller keeps the destination replay order.
+  54 export function matchMigrationLedger(entries,files,{dataOnly=[]}={}) {
+  55   const matched=entries.flatMap(m=>{
+  56     const named=files.filter(file=>file.name===m.name || file.aliases?.includes(m.name));
+  57     insist(named.length<=1,'migration_ledger:ambiguous:'+m.name,409);
+  58     if(m.sha256===undefined) {
+  59       if(!named.length && dataOnly.includes(m.name))return [];
+  60       insist(named.length,'migration_ledger:unknown:'+m.name,409);
+  61       return [named[0].name];
+  62     }
+  63     const matches=files.filter(file=>file.sha256===m.sha256);
+  64     if(!matches.length && !named.length && dataOnly.includes(m.name))return [];
+  65     insist(matches.length,'migration_ledger:unknown:'+m.name,409);
+  66     insist(matches.length===1,'migration_ledger:ambiguous:'+m.name,409);
+  67     insist(!named.length || named[0]===matches[0],'migration_ledger:conflict:'+m.name,409);
+  68     return [matches[0].name];
+  69   });
+  70   insist(new Set(matched).size===matched.length,'migration_ledger:ambiguous',409);
+  71   return matched;
+  72 }
+  73 
+  74 /**
+  75  * What an export records when its source was migrated by RER Platform:
+  76  * {origin:'rer_migrations',entries:[{name,sha256}]} in application order, each
+  77  * entry named by the checkout file with that hash (the native identity) where
+  78  * the exporter can read the checkout's files. Declared data-only entries and
+  79  * hosted exporters, which have no files, keep the ledger's own names. Native
+  80  * sources record nothing here, so their archives are unchanged.
+  81  */
+  82 export async function platformOrigin(ledger,migrations) {
+  83   if(ledger?.table!=='rer_migrations')return;
+  84   const replay=await migrations?.();
+  85   const files=replay?.names.map(name=>({name,sha256:replay.sha256?.(name),aliases:replay.aliases?.(name)}));
+  86   const entries=ledger.entries.map(({name,sha256})=>({name:files?(matchMigrationLedger([{name,sha256}],files,replay)[0]??name):name,sha256}));
+  87   insist(new Set(entries.map(entry=>entry.name)).size===entries.length,'migration_ledger:ambiguous',409);
+  88   return {origin:'rer_migrations',entries};
+  89 }
+  90 
+  91 /** The ledger tables an archive carries (old archives carried rer_migrations before it became bookkeeping). */
+  92 export const archivedLedgerTables=manifest=>manifest.tables.filter(t=>ledgerNames.includes(identifier(t.name)));
+  93 
+  94 /** Collects the rows of an archive's ledger tables while its records are read: add(record) each, then ledgers() is {table:rows}, or undefined without one. */
+  95 export function ledgerReader() {
+  96   let ledgers;
+  97   return {
+  98     add(record) {
+  99       if(record.kind==='manifest') {const tables=archivedLedgerTables(record);if(tables.length)ledgers=Object.fromEntries(tables.map(t=>[t.name,[]]));}
+ 100       if(record.kind==='part' && ledgers)for(const item of record.items)if(item.kind==='row' && ledgers[item.table])ledgers[item.table].push(item.row);
+ 101     },
+ 102     ledgers:()=>ledgers,
+ 103   };
+ 104 }
+ 105 /** Checks rows a caller read from the archive for its ledger tables ({table:rows}), so uploadPart can bind each to the authenticated parts. */
+ 106 export function checkArchivedLedgers(manifest,ledgers) {
+ 107   if(ledgers===undefined)return;
+ 108   const tables=archivedLedgerTables(manifest);
+ 109   insist(ledgers && typeof ledgers==='object' && Object.keys(ledgers).every(name=>tables.some(t=>t.name===name)),'ledger_inventory');
+ 110   for(const [name,rows] of Object.entries(ledgers)) {
+ 111     const table=tables.find(t=>t.name===name);
+ 112     insist(Array.isArray(rows) && rows.length===table.count,'ledger_inventory');
+ 113     for(const row of rows)validateRow(table,row,manifest.excludedColumns[name]??[]);
+ 114   }
+ 115 }
+ 116 
+ 117 /** The applied migrations an archive's own ledger records, [{name,sha256?}]; undefined when it carries no ledger. */
+ 118 export function archivedHistory(manifest,ledgers,{allowOlderShape=false}={}) {
+ 119   const tables=archivedLedgerTables(manifest);
+ 120   // A Platform-origin export records its ledger in the manifest, never as a table.
+ 121   if(manifest.migrationLedger)insist(!tables.length,'schema_mismatch:migration_history');
+ 122   if(!tables.length)return manifest.migrationLedger?.entries.map(entry);
+ 123   insist(tables.length===1 && ledgers?.[tables[0].name],'schema_mismatch:migration_history');
+ 124   const [table]=tables,rows=ledgers[table.name],columns=table.columns.map(c=>c.name);
+ 125   if(identifier(table.name)==='rer_migrations') {
+ 126     const older=canonicalJson([{name:'name',type:'TEXT',notnull:0,pk:1},{name:'applied_at',type:'TEXT',notnull:1,pk:0}]);
+ 127     insist(shape(table.columns)===platformShape || (allowOlderShape && shape(table.columns)===older),'schema_mismatch:migration_history');
+ 128     insist(!rows.some(row=>partial(row.name)),'schema_mismatch:uncertain_migrations');
+ 129   }else{
+ 130     insist(columns.includes('name') && columns.includes('state')===columns.includes('sha256'),'schema_mismatch:migration_history');
+ 131     insist(rows.every(row=>row.state===undefined || row.state==='applied'),'schema_mismatch:uncertain_migrations');
+ 132   }
+ 133   insist(rows.every(row=>typeof row.name==='string') && new Set(rows.map(row=>row.name)).size===rows.length,'schema_mismatch:migration_history');
+ 134   return rows.map(entry);
+ 135 }
+
+## scripts/installer/settings.mjs
+   1 import { basename, dirname, join, resolve } from 'node:path'
+   2 import { existsSync } from 'node:fs'
+   3 import { readSettings, freePort } from '@runeditrun/rer/local-installer'
+   4 import { privateDirectory } from '@runeditrun/rer/private-files'
+   5 import { buildEnvironment } from '@runeditrun/rer/local/environment'
+   6 import { installationFailure } from '@runeditrun/rer/failures'
+   7 import { recoverInterrupted } from '@runeditrun/rer/local/recovery'
+   8 
+   9 export const bindings = /^(SESSION_SECRET|INSTALLATION_KEY(?:_|$)|SETUP_TOKEN|OWNER_EMAIL|OPERATOR_EMAIL|APP_ORIGIN|PENNY_ENVIRONMENT|WORKSPACE_TIMEZONE|AUTH_|MAIL_|OIDC_|SENDGRID_|RESEND_|CLOUDFLARE_ACCOUNT_ID|CLOUDFLARE_API_TOKEN|CF_THROWAWAY_|RER_DEPLOY_)/
+  10 export const settings = root => readSettings(root, { file: '.dev.vars' })
+  11 export async function recoveredSettings(root) {
+  12   const operation = await recoverInterrupted(root)
+  13   try { return await settings(root) }
+  14   finally { await operation?.release() }
+  15 }
+  16 export function commandEnvironment() {
+  17   const env = buildEnvironment(bindings)
+  18   for (const key of Object.keys(env)) if (/(?:TOKEN|SECRET|PASSWORD|API_KEY|PRIVATE_KEY|AUTHORIZATION|COOKIE|CREDENTIAL)/i.test(key) || ['NODE_OPTIONS', 'NODE_PATH'].includes(key)) delete env[key]
+  19   return env
+  20 }
+  21 export function localState(root, env = process.env) {
+  22   root = resolve(root)
+  23   const state = join(root, '.wrangler/state')
+  24   const sibling = join(dirname(root), `.penny-local-state-${basename(root)}`)
+  25   if (existsSync(sibling)) throw new Error('Penny found another local data store beside this checkout. Both stores were kept. Follow "Local state placement" in OPERATIONS.md to back up and place the store you want to use, then run npx -y @runeditrun/rer setup.')
+  26   if (env.PENNY_LOCAL_STATE && resolve(env.PENNY_LOCAL_STATE) !== state) throw new Error('Penny cannot start with a local data path outside this checkout. No data was changed. To use this checkout’s local data, run: unset PENNY_LOCAL_STATE && npx -y @runeditrun/rer setup. To keep the other store, first follow "Local state placement" in OPERATIONS.md.')
+  27   return state
+  28 }
+  29 export async function prepareLocal(context) {
+  30   if (process.versions.node !== '22.20.0') throw installationFailure('node_version', { version: '22.20.0' })
+  31   const saved = await settings(context.root)
+  32   const email = context.input.OPERATOR_EMAIL?.trim().toLowerCase()
+  33   if (context.input.OPERATOR_EMAIL !== context.input.OPERATOR_EMAIL?.trim() || !/^[a-zA-Z0-9.!+_%-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/.test(email ?? '')) throw context.fail('setup')
+  34   if (saved.values.OPERATOR_EMAIL && saved.values.OPERATOR_EMAIL !== email) {
+  35     context.store.report('The saved owner differs from this choice. Resume with the saved owner; changing setup cannot transfer ownership.')
+  36     throw context.fail('setup')
+  37   }
+  38   if (saved.text !== undefined && saved.values.PENNY_ENVIRONMENT !== 'local') throw context.fail('setup')
+  39   context.hostingInput={...context.input}
+  40   context.store.addSecrets(Object.entries(context.input).filter(([name])=>/SECRET|TOKEN|API_KEY/.test(name)).map(([,value])=>value))
+  41   // Local settings always use the explicit silent development mail transport. Hosted choices
+  42   // stay in the captured approved input for the optional owner-account hook.
+  43   context.input={...context.input,OPERATOR_EMAIL:email,APP_ORIGIN:undefined,MAIL_PROVIDER:undefined,MAIL_FROM:undefined,MAIL_API_KEY:undefined,MAIL_RELAY_URL:undefined,SENDGRID_EVENT_PUBLIC_KEY:undefined,RESEND_WEBHOOK_SECRET:undefined}
+  44   context.stateDirectory = localState(context.root)
+  45   await privateDirectory(context.root, ['.wrangler', 'state'])
+  46 
+  47 }
+  48 export async function savedOrigin(context) {
+  49   const saved = (await settings(context.root)).values.APP_ORIGIN
+  50   if (saved) {
+  51     const url = localOrigin({ APP_ORIGIN: saved, PENNY_ENVIRONMENT: 'local' })
+  52     if (context.input.localOrigin && context.input.localOrigin !== url.origin) throw context.fail('setup')
+  53     return saved
+  54   }
+  55   return context.input.localOrigin ? localOrigin({ APP_ORIGIN: context.input.localOrigin, PENNY_ENVIRONMENT: 'local' }).origin : `http://127.0.0.1:${await freePort()}`
+  56 }
+  57 export function localOrigin(vars) {
+  58   let url
+  59   try { url = new URL(vars.APP_ORIGIN) } catch { throw installationFailure('command_failed', { step: 'start' }) }
+  60   if (vars.PENNY_ENVIRONMENT !== 'local' || url.protocol !== 'http:' || url.hostname !== '127.0.0.1' || url.origin !== vars.APP_ORIGIN || url.username || url.password) throw installationFailure('command_failed', { step: 'start' })
+  61   return url
+  62 }
+  63 export function runtimeEnvironment(root, state = localState(root)) {
+  64   return { ...commandEnvironment(), PENNY_LOCAL_STATE: state, CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV: 'true' }
+  65 }

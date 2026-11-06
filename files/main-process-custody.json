@@ -1,0 +1,78 @@
+{
+  "recorded_utc": "2026-11-06T11:22:08.207067+00:00",
+  "root_pid": 2961,
+  "processes": [
+    {
+      "pid": 2961,
+      "ppid": 483,
+      "comm": "python3",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 3204,
+      "ppid": 2961,
+      "comm": "bash",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 3249,
+      "ppid": 3204,
+      "comm": "python3",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 3250,
+      "ppid": 3249,
+      "comm": "timeout",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 3251,
+      "ppid": 3250,
+      "comm": "node",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 3257,
+      "ppid": 3251,
+      "comm": "node",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 3265,
+      "ppid": 3257,
+      "comm": "esbuild",
+      "cwd": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny"
+    },
+    {
+      "pid": 3274,
+      "ppid": 3257,
+      "comm": "node",
+      "cwd": "/tmp/penny-older-archive-ZxJysH/native"
+    },
+    {
+      "pid": 4055,
+      "ppid": 3274,
+      "comm": "node",
+      "cwd": "/tmp/penny-older-archive-ZxJysH/native"
+    },
+    {
+      "pid": 4066,
+      "ppid": 4055,
+      "comm": "node",
+      "cwd": "/tmp/penny-older-archive-ZxJysH/native"
+    },
+    {
+      "pid": 4082,
+      "ppid": 4066,
+      "comm": "node",
+      "cwd": "/tmp/penny-older-archive-ZxJysH/native"
+    },
+    {
+      "pid": 4090,
+      "ppid": 4082,
+      "comm": "esbuild",
+      "cwd": "/tmp/penny-older-archive-ZxJysH/native"
+    }
+  ]
+}

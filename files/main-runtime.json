@@ -1,0 +1,57 @@
+{
+  "label": "main",
+  "commands": [
+    {
+      "name": "install",
+      "command": "cloud_run timeout 900 pnpm install --frozen-lockfile",
+      "start_utc": "2026-11-06T11:20:01.930489+00:00",
+      "exit": 0,
+      "elapsed_seconds": 8.192,
+      "pid": 2787,
+      "log": "main-install.log"
+    },
+    {
+      "name": "deps",
+      "command": "cloud_run timeout 900 pnpm run deps",
+      "start_utc": "2026-11-06T11:20:10.123352+00:00",
+      "exit": 0,
+      "elapsed_seconds": 6.456,
+      "pid": 2848,
+      "log": "main-deps.log"
+    },
+    {
+      "name": "build",
+      "command": "cloud_run timeout 900 pnpm run build",
+      "start_utc": "2026-11-06T11:20:57.664268+00:00",
+      "exit": 0,
+      "elapsed_seconds": 33.943,
+      "pid": 2970,
+      "log": "main-build.log"
+    },
+    {
+      "name": "deployment-spec",
+      "command": "cloud_run timeout 120 node scripts/build-deployment-spec.mjs --check",
+      "start_utc": "2026-11-06T11:21:31.607702+00:00",
+      "exit": 0,
+      "elapsed_seconds": 0.694,
+      "pid": 3146,
+      "log": "main-deployment-spec.log"
+    },
+    {
+      "name": "older-archive",
+      "command": "cloud_run timeout 720 node --test --test-name-pattern='^\\[DATA-001 DATA-003\\] import before setup restores an older backup with either migration ledger and replays later settings and status clocks$' tests/installer/older-archive.test.mjs",
+      "start_utc": "2026-11-06T11:21:32.302227+00:00",
+      "exit": 0,
+      "elapsed_seconds": 245.62,
+      "pid": 3204,
+      "log": "main-older-archive.log"
+    }
+  ],
+  "head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "ci_configuration": {
+    "CI": "true",
+    "WRANGLER_SEND_METRICS": "false",
+    "CLOUDFLARE_LOAD_DEV_VARS_FROM_DOT_ENV": "false",
+    "PLAYWRIGHT_SKIP_BROWSER_GC": "1"
+  }
+}

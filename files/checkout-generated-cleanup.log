@@ -1,0 +1,4 @@
+Removing .seed/
+Removing .wrangler/
+Removing dist/
+Removing node_modules/

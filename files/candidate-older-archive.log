@@ -1,0 +1,44 @@
+HEAD=2b24048f80b48cb59043620245e519b3fd01b73a
+START=2026-11-06T11:16:41.338561+00:00
+COMMAND=cloud_run timeout 720 node --test --test-name-pattern='^\[DATA-001 DATA-003\] import before setup restores an older backup with either migration ledger and replays later settings and status clocks$' tests/installer/older-archive.test.mjs
+rer toolchain: node v22.20.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+TAP version 13
+# [33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+# { tables: 172, rows: 10, objects: 1, settings: 1, clock: 1 }
+# Subtest: [DATA-001 DATA-003] import before setup restores an older backup with either migration ledger and replays later settings and status clocks
+not ok 1 - [DATA-001 DATA-003] import before setup restores an older backup with either migration ledger and replays later settings and status clocks
+  ---
+  duration_ms: 143939.827087
+  type: 'test'
+  location: '/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny/tests/installer/older-archive.test.mjs:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    rer import failed: Checking pinned pnpm
+    10.12.4
+    Local import
+    Checking migration history
+    ▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+    
+    
+    Local transfer refused (migration_ledger:unapplied): this database's migration history does not authorize Wrangler migrations. Reconcile the history through its owning runner, keeping Platform's ledger as its only migration authority and applying every migration of this version through Platform when it owns the database, then run the same command again. Nothing was changed.
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    command (file:///home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny/tests/installer/older-archive.test.mjs:33:27)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async TestContext.<anonymous> (file:///home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny/tests/installer/older-archive.test.mjs:51:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 144827.443877
+
+EXIT=1
+ELAPSED_SECONDS=145.495

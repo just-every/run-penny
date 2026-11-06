@@ -1,0 +1,18 @@
+{
+  "recorded_utc": "2026-11-06T11:26:25.661813+00:00",
+  "original_clone": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny",
+  "original_clone_removed": true,
+  "repository_dependencies_removed": true,
+  "candidate_scratch_removed": true,
+  "main_scratch_removed": true,
+  "manual_process_termination": [],
+  "all_recorded_owned_processes_exited": true,
+  "temporary_evidence_transport": "/home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/evidence-transport.git",
+  "temporary_evidence_transport_present": true,
+  "temporary_evidence_transport_next_action": "remove after successful evidence publication",
+  "product_changes": 0,
+  "product_commits": 0,
+  "product_pushes": 0,
+  "ci_api_calls": 0,
+  "ci_log_refetches": 0
+}

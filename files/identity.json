@@ -1,0 +1,29 @@
+{
+  "recorded_utc": "2026-11-06T11:14:04.047658+00:00",
+  "runner_hostname": "75a04694cd9c",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "uname": [
+    "Linux",
+    "75a04694cd9c",
+    "6.18.57",
+    "#1 SMP Tue Oct 20 21:56:04 UTC 2026",
+    "x86_64",
+    ""
+  ],
+  "os_release": "PRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nVERSION_ID=\"13\"\nVERSION=\"13 (trixie)\"\nVERSION_CODENAME=trixie\nDEBIAN_VERSION_FULL=13.6\nID=debian\nHOME_URL=\"https://www.debian.org/\"\nSUPPORT_URL=\"https://www.debian.org/support\"\nBUG_REPORT_URL=\"https://bugs.debian.org/\"\n",
+  "candidate": "2b24048f80b48cb59043620245e519b3fd01b73a",
+  "fresh_main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "brief_observed_main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "repository": "just-every/run-penny",
+  "product_branch_created": "cloud/sd-penny102-ci-triage-1",
+  "product_push_authorized": false,
+  "ci_api_calls": 0,
+  "main_drift": false,
+  "runner_boot_id": "70136ca8-279e-47ce-a0bb-78deec705fcb",
+  "node": "22.20.0",
+  "pnpm": "10.12.4",
+  "rer": "0.2.94",
+  "wrangler": "4.129.1",
+  "original_ci_os": "ubuntu-24.04",
+  "platform_limitation": "Same Linux x86_64 runner for both revisions; Debian 13/glibc 2.41 instead of Ubuntu 24.04. No claim of Ubuntu CI equivalence."
+}

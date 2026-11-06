@@ -1,0 +1,11 @@
+{
+  "head": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "runner_boot_id": "70136ca8-279e-47ce-a0bb-78deec705fcb",
+  "runner_hostname": "75a04694cd9c",
+  "node_executable": "/home/agent/.rer/toolchain/node-22.20.0/node_modules/node/bin/node",
+  "node": "v22.20.0",
+  "rer": "0.2.94",
+  "wrangler": "4.129.1",
+  "lock_sha256": "17fdc142df6ac3f47c0820afa49fa728d090a9d6c6897a7611e06be53571beff",
+  "same_runner_boot_as_candidate": true
+}

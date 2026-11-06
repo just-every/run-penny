@@ -1,0 +1,11 @@
+{
+  "published_sha256": "a254e3520ca277b02169f041508457220354ea25f7b0a5412927b1e1f7a3ddc7",
+  "computed_sha256": "a254e3520ca277b02169f041508457220354ea25f7b0a5412927b1e1f7a3ddc7",
+  "exact_bytes_equal": true,
+  "differentTopLevel": [],
+  "published_migrations": 104,
+  "computed_migrations": 104,
+  "missingFromPublished": [],
+  "extraInPublished": [],
+  "changedMigrations": []
+}

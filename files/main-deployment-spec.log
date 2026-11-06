@@ -1,0 +1,8 @@
+HEAD=6c1eb018f6391de17e04fc8868c0c74f8732abd8
+START=2026-11-06T11:21:31.607702+00:00
+COMMAND=cloud_run timeout 120 node scripts/build-deployment-spec.mjs --check
+rer toolchain: node v22.20.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+Deployment specification, setup digest and workflow match the build (Base deploymentSpec).
+
+EXIT=0
+ELAPSED_SECONDS=0.694

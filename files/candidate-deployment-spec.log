@@ -1,0 +1,15 @@
+HEAD=2b24048f80b48cb59043620245e519b3fd01b73a
+START=2026-11-06T11:16:40.595939+00:00
+COMMAND=cloud_run timeout 120 node scripts/build-deployment-spec.mjs --check
+rer toolchain: node v22.20.0 pnpm 10.12.4 (pins 22.20.0 / 10.12.4)
+file:///home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny/scripts/build-deployment-spec.mjs:37
+  if (published !== bytes) throw new Error(`${path} drift: run pnpm delivery:spec after rer build and commit the result.`)
+                                 ^
+
+Error: management/integration/deployment-spec.json drift: run pnpm delivery:spec after rer build and commit the result.
+    at file:///home/agent/rer-consolidation/work/sd-penny102-ci-triage-1/run-penny/scripts/build-deployment-spec.mjs:37:34
+
+Node.js v22.20.0
+
+EXIT=1
+ELAPSED_SECONDS=0.742
