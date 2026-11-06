@@ -313,6 +313,7 @@ async function proveScopeFences(){
 }
 
 async function proveNativeFences(){
+ await proveResumeWindow()
  await resetLearning()
  const f=await fixture(),url=path+`/investigations/${f.investigation.id}`
  const first=await json<{artifactId:string}>(call(url+'/run',{},f.cookie))
@@ -347,4 +348,40 @@ async function proveNativeFences(){
  expect(await env.DB.prepare('SELECT id FROM evidence_items WHERE id=?').bind(f.evidence.id).first()).toBeNull()
  const calls=sent.length;expect((await call(url+'/run',{},f.cookie)).ok).toBe(false);expect(sent).toHaveLength(calls)
  expect(erased.investigation.spentMicros).toBe(201100)
+}
+
+async function proveResumeWindow(){
+ await resetLearning()
+ const now=Date.now(),expiresAt=new Date(now+60_000).toISOString()
+ try{
+  const f=await fixture({nativeOnly:true}),controlUrl=path+`/investigations/${f.investigation.id}`
+  const grant=await json<{id:string}>(call(path+'/investigations',{nativeEvidenceIds:[f.evidence.id],nativeRequestIds:[],purpose:'Resume only during the authorized window',expiresAt,budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
+  const url=path+`/investigations/${grant.id}`
+  await json(call(url+'/control',{action:'pause'},f.cookie))
+  await json(call(controlUrl+'/control',{action:'pause'},f.cookie))
+  const controlBefore=await json<{investigation:{version:number}}>(call(controlUrl,undefined,f.cookie))
+
+  // The same current operator can resume a valid native grant at the instant
+  // the shorter grant expires. No run or external work is requested.
+  vi.setSystemTime(now+60_000)
+  await json(call(controlUrl+'/control',{action:'resume'},f.cookie))
+  const control=await json<{investigation:{state:string;version:number;lastReason:string};runs:unknown[]}>(call(controlUrl,undefined,f.cookie))
+  expect(control.investigation).toMatchObject({state:'active',version:controlBefore.investigation.version+1,lastReason:'operator_resume'})
+  expect(control.runs).toEqual([])
+  const detail=await json<{investigation:{sourceId:string;state:string;version:number;expiresAt:string;spentMicros:number;budgetMicros:number;maxRunCostMicros:number};runs:unknown[]}>(call(url,undefined,f.cookie))
+  expect(detail.investigation).toMatchObject({state:'paused',version:2,expiresAt,spentMicros:0})
+  expect(detail.investigation.spentMicros+detail.investigation.maxRunCostMicros).toBeLessThan(detail.investigation.budgetMicros)
+  expect(await env.DB.prepare('SELECT provider,state FROM learning_sources WHERE id=?').bind(detail.investigation.sourceId).first()).toEqual({provider:'native',state:'active'})
+  const custody=async()=>Promise.all(['learning_investigations','learning_sources','learning_runs','penny_ai_runs','audit_entries','penny_integration_guards'].map(async table=>({table,rows:(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()).results})))
+  const before=await custody()
+  expect(before.find(row=>row.table==='audit_entries')!.rows.length).toBeGreaterThan(0)
+  expect(sent).toEqual([])
+  for(const time of [now+60_000,now+60_001]){
+   vi.setSystemTime(time)
+   expect(await json(call(url+'/control',{action:'resume'},f.cookie),409)).toEqual({error:'learning_resume_requires_new_grant'})
+   expect(await json(call(url,undefined,f.cookie))).toEqual(detail)
+   expect(await custody()).toEqual(before)
+   expect(sent).toEqual([])
+  }
+ }finally{vi.setSystemTime(now)}
 }

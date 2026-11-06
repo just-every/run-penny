@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prove native learning resume refuses a paused, still-budgeted grant at and after expiry while the same current operator can resume a valid grant. The existing control journey compares grant version, runs, reservations and audit and records no source or model calls. LEARN-004 remains partial; no migration or reconfiguration is needed.
+
 - Validate DATA-006's served OpenAPI document offline against the official structural schema. Reconcile every existing operation with a native server request using only its advertised scope, and preserve unchanged business state on foreign-origin, cross-site, malformed JSON, content-type and body-size refusals. The clause stays partial for the existing resource, pagination, filter and webhook remainders. No runtime, migration or configuration change is required.
 - Add native operator JSON and CSV feedback-volume reports by board and evidence source, over explicit UTC date windows with daily counts. Count retained records independently of links and versions, recheck current session authority in the read transaction, and escape spreadsheet cells. MEAS-004 remains partial for dashboards, wider dimensions, timing percentiles and scheduled delivery. No migration or configuration change is required.
 
