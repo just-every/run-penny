@@ -1,0 +1,39 @@
+{
+  "repair_paths": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "OPERATIONS.md",
+    "sources.lock.json",
+    "src/core/features/data/erasure-native.ts",
+    "src/core/features/data/erasure-redaction.ts",
+    "src/core/features/scorecards/erasure.ts"
+  ],
+  "inherited_main_paths": [
+    "ACCEPTANCE.md",
+    "docs/API.md",
+    "tests/base/fixtures/openapi-3.1-LICENSE.txt",
+    "tests/base/fixtures/openapi-3.1-NOTICE.txt",
+    "tests/base/fixtures/openapi-3.1-schema.json",
+    "tests/base/integration-openapi.test.ts"
+  ],
+  "candidate_vs_main": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "OPERATIONS.md",
+    "migrations/core/0110_scorecards.sql",
+    "sources.lock.json",
+    "src/core/app/api.ts",
+    "src/core/features/data/archive.ts",
+    "src/core/features/data/erasure-dependencies.ts",
+    "src/core/features/data/erasure-native.ts",
+    "src/core/features/data/erasure-redaction.ts",
+    "src/core/features/data/schema-inventory.json",
+    "src/core/features/scorecards/archive.ts",
+    "src/core/features/scorecards/erasure.ts",
+    "src/core/features/scorecards/input.ts",
+    "src/core/features/scorecards/ranking.ts",
+    "src/core/features/scorecards/repository.ts",
+    "src/core/features/scorecards/routes.ts",
+    "tests/base/scorecards.test.ts"
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "observations": [
+    {
+      "method": "POST",
+      "path": "/api/operator/boards",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/requests",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/requests",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/scorecards",
+      "status": 201
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0/requests/01M6R756VPPAXWYBRDY7J0B2SA/scores",
+      "status": 204
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0/requests/01M6R756W8JY8VS4YVR4CWEV63/scores",
+      "status": 204
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0/versions",
+      "status": 201
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0/requests/01M6R756VPPAXWYBRDY7J0B2SA/scores",
+      "status": 204
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0/requests/01M6R756W8JY8VS4YVR4CWEV63/scores",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0?versionId=01M6R756WWD7RCGFQ2PWT5HH3A",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure/preview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 409,
+      "body": {
+        "error": "erasure_scorecard_invalid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 409,
+      "body": {
+        "error": "erasure_scorecard_invalid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 409,
+      "body": {
+        "error": "erasure_scorecard_invalid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 409,
+      "body": {
+        "error": "erasure_scorecard_invalid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 409,
+      "body": {
+        "error": "erasure_scorecard_invalid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 409,
+      "body": {
+        "error": "erasure_scorecard_invalid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 409,
+      "body": {
+        "error": "erasure_scorecard_invalid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 409,
+      "body": {
+        "error": "erasure_rename_repeats"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R756WW0DAT5WW5PBGH22Q0?versionId=01M6R756WWD7RCGFQ2PWT5HH3A",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/data/export",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/requests",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure/preview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/data/export",
+      "status": 200
+    }
+  ],
+  "refusals": [
+    {
+      "label": "invalid JSON",
+      "error": "erasure_scorecard_invalid",
+      "unchanged": true
+    },
+    {
+      "label": "invalid key",
+      "error": "erasure_scorecard_invalid",
+      "unchanged": true
+    },
+    {
+      "label": "different valid key",
+      "error": "erasure_scorecard_invalid",
+      "unchanged": true
+    },
+    {
+      "label": "changed scale",
+      "error": "erasure_scorecard_invalid",
+      "unchanged": true
+    },
+    {
+      "label": "changed weight",
+      "error": "erasure_scorecard_invalid",
+      "unchanged": true
+    },
+    {
+      "label": "empty criteria",
+      "error": "erasure_scorecard_invalid",
+      "unchanged": true
+    },
+    {
+      "label": "invalid name",
+      "error": "erasure_scorecard_invalid",
+      "unchanged": true
+    }
+  ],
+  "summary": {
+    "acceptedRename": true,
+    "structuralRefusals": 7,
+    "repeatRefused": true,
+    "refusalsAtomic": true,
+    "survivingCurrentAndHistoryInputsUnchanged": true,
+    "exportScoreRows": 2,
+    "exportVersions": 2,
+    "propertyOnlyMatchErased": true,
+    "outboundCalls": 0
+  },
+  "passed": true
+}

@@ -1,0 +1,34 @@
+{
+  "head_sha": "51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52",
+  "observed_at": "2026-11-06T10:42:33.491097+00:00",
+  "github_api_calls": 5,
+  "runs": [
+    {
+      "id": 42204655361,
+      "name": "Verify Penny",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42204655361"
+    }
+  ],
+  "final_observed_at": "2026-11-06T10:47:34.949745+00:00",
+  "final_status": {
+    "conclusion": "failure",
+    "head_sha": "51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42204655361",
+    "status": "completed"
+  },
+  "qualification": "READY under the explicitly authorized generated-view-only exception; underlying workflow conclusion remains failure",
+  "generated_view_only_exception": true,
+  "plan_jobs_success": 1,
+  "failed_shards": 29,
+  "all_failed_steps": [
+    "Check generated contract documents"
+  ],
+  "runtime_shard_steps": "skipped after generated view check; no runtime CI success claimed",
+  "diagnostic_log_command": "gh run view 42204655361 --repo just-every/run-penny --job 127848221139 --log-failed",
+  "diagnostic_log_exit": 0,
+  "diagnostic_scope": "One representative completed generator job archive; all 29 job step records checked. No failed runtime assertion exists.",
+  "publication_scan": "Deferred to existing fleet/independent landing custody; not run in cloud"
+}

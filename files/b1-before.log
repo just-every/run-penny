@@ -1,0 +1,6 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+Penny request failed {"method":"GET","route":"/api/operator/scorecards/:id","name":"ZodError","code":"unclassified"}
+Penny request failed {"method":"GET","route":"/api/operator/scorecards/:id","name":"ZodError","code":"unclassified"}
+{"erasure":200,"current":503,"history":503,"export":409,"exportError":"scorecard_archive_invalid","criteriaKeys":[["[erased]"],["[erased]"]],"criterionNames":[["Customer [erased]"],["Customer [erased]"]],"outboundCalls":0}

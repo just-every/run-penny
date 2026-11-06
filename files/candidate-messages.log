@@ -1,0 +1,8 @@
+51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52
+Preserve scorecard structure during accepted erasure
+
+Repair B1 only: distinguish human definition wording from structural criteria and numeric score inputs in erasure review, preview and transactional redaction. Validate reviewed renames without allowing retained criterion identities, scales or weights to change. Preserve the frozen original scorecard assertions and PRIO-004 partial judgment. Integrate current main without rewriting the original published source.
+
+599d82f10cb4a6c5746f3b68b66515eb4872826e
+Add versioned native request scorecards
+

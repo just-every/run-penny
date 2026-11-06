@@ -1,0 +1,161 @@
+{
+  "tag": "sd-penny-c-f99-fix1",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f99-fix1",
+  "source": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "head": "51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52",
+  "parents": [
+    "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+    "6c1eb018f6391de17e04fc8868c0c74f8732abd8"
+  ],
+  "product_push": {
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f99-fix1",
+    "exit": 0,
+    "attempts": 1
+  },
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "scope": "frozen dependency setup, build, migrations and local owner; raw private setup log excluded"
+    },
+    {
+      "command": "cloud_run node ../packet/b1-probe.mjs before ../packet/b1-before.json",
+      "exit": 0,
+      "source": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+      "result": "accepted erasure 200; current/history 503; export 409 scorecard_archive_invalid"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/scorecards.test.ts tests/base/penny-erasure.test.ts tests/base/hosted-export.test.ts",
+      "exit": 0,
+      "files": 3,
+      "passed": 17
+    },
+    {
+      "command": "cloud_run node ../packet/b1-probe.mjs after ../packet/b1-after.json",
+      "exit": 0,
+      "head": "51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52",
+      "result": "accepted erasure/current/history/export all 200"
+    },
+    {
+      "command": "cloud_run node ../packet/b1-custody-probe.mjs",
+      "exit": 0,
+      "result": "7 schema/structure refusals, repeated wording refusal, unchanged refusal state, accepted rename, surviving current/history inputs unchanged, 2 archive scores, 2 versions, property-only match erasure; no outbound calls"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check (before restoring views)",
+      "exit": 0
+    },
+    {
+      "command": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock (last source write)",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check (after restoring main views)",
+      "exit": 1,
+      "expected": true,
+      "reason": "ACCEPTANCE.md generated content differs; lander owns generated views"
+    },
+    {
+      "command": "python3 ../packet/mechanical-proof.py",
+      "exit": 0,
+      "unchanged_migrations": 105,
+      "unrelated_status_rows_preserved": 280
+    },
+    {
+      "command": "pnpm exec oxlint src/core/features/data/erasure-native.ts src/core/features/data/erasure-redaction.ts src/core/features/scorecards/erasure.ts",
+      "exit": 0
+    },
+    {
+      "command": "node ../packet/migration-ledger-check.mjs",
+      "exit": 0,
+      "reply": {
+        "nativeApply": false
+      },
+      "meaning": "complete existing migration ledger authorizes no additional native apply"
+    }
+  ],
+  "harness_corrections": [
+    {
+      "probe": "b1-custody-attempt1",
+      "exit": 1,
+      "reason": "Probe accidentally reused the erased root description on the surviving request. The planner correctly offered a third copy. Gave the requests distinct descriptions, then reran the probe; no product change."
+    },
+    {
+      "probe": "migration-ledger-attempt1",
+      "exit": 1,
+      "reason": "Wrapper incorrectly required nativeApply=true. Adapter contract accepts either boolean; false means no extra migration needed. Corrected the wrapper and reran; no product change."
+    },
+    {
+      "probe": "ci-discovery-wrong-sha",
+      "exit": 0,
+      "reason": "Initial manually transcribed head query was wrong and found no runs. Corrected discovery derives HEAD from Git; wrong-SHA result never used as candidate evidence."
+    }
+  ],
+  "permanent_tests": {
+    "scorecard_registrations_before": 2,
+    "scorecard_registrations_after": 2,
+    "scorecard_assertion_file_byte_identical": true,
+    "fix_added_registrations": 0
+  },
+  "status": {
+    "PRIO-004": {
+      "before": "partial",
+      "after": "partial"
+    },
+    "frozen_source_counts": {
+      "done": 79,
+      "partial": 125,
+      "missing": 77,
+      "total": 281
+    },
+    "candidate_counts": {
+      "done": 79,
+      "partial": 125,
+      "missing": 77,
+      "total": 281
+    },
+    "count_award": 0
+  },
+  "created_at": "2026-11-06T10:45:36.856758+00:00",
+  "ci": {
+    "run_id": 42204655361,
+    "head_sha": "51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52",
+    "status": "completed",
+    "conclusion": "failure",
+    "generated_view_only_exception": true,
+    "all_failed_steps": [
+      "Check generated contract documents"
+    ],
+    "github_api_calls": 5
+  }
+}

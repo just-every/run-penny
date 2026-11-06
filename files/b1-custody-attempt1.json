@@ -1,0 +1,67 @@
+{
+  "observations": [
+    {
+      "method": "POST",
+      "path": "/api/operator/boards",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/requests",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/requests",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/scorecards",
+      "status": 201
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R73GJBHW5WWM1PFCR6RAYY/requests/01M6R73GHA43RQJ5WNEF7FV35E/scores",
+      "status": 204
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R73GJBHW5WWM1PFCR6RAYY/requests/01M6R73GHV3D60V6C5BKRFG2RR/scores",
+      "status": 204
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/scorecards/01M6R73GJBHW5WWM1PFCR6RAYY/versions",
+      "status": 201
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R73GJBHW5WWM1PFCR6RAYY/requests/01M6R73GHA43RQJ5WNEF7FV35E/scores",
+      "status": 204
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R73GJBHW5WWM1PFCR6RAYY/requests/01M6R73GHV3D60V6C5BKRFG2RR/scores",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R73GJBHW5WWM1PFCR6RAYY",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R73GJBHW5WWM1PFCR6RAYY?versionId=01M6R73GJBD2Z002NF0K6EG1FA",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure/preview",
+      "status": 200
+    }
+  ],
+  "refusals": [],
+  "passed": false,
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n3 !== 2\n\n    at file:///home/agent/rer-consolidation/work/sd-penny-c-f99-fix1/packet/b1-custody-probe.mjs:31:59\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
+}

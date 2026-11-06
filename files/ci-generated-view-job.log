@@ -1,0 +1,6 @@
+shards (dev-flows, true)	Check generated contract documents	﻿2026-11-06T10:42:26.0797851Z ##[group]Run node src/base/contract-docs.mjs check
+shards (dev-flows, true)	Check generated contract documents	2026-11-06T10:42:26.0797972Z [36;1mnode src/base/contract-docs.mjs check[0m
+shards (dev-flows, true)	Check generated contract documents	2026-11-06T10:42:26.0815035Z shell: /usr/bin/bash -e {0}
+[workflow environment block omitted]
+shards (dev-flows, true)	Check generated contract documents	2026-11-06T10:42:26.1633579Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (dev-flows, true)	Check generated contract documents	2026-11-06T10:42:26.1686565Z ##[error]Process completed with exit code 1.

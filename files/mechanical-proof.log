@@ -1,0 +1,12 @@
+{
+  "source": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "all_applied_migrations_unchanged": 105,
+  "parent_status_rows_preserved": 280,
+  "clause_status_before": "partial",
+  "clause_status_after": "partial",
+  "permanent_scorecard_registrations_before": 2,
+  "permanent_scorecard_registrations_after": 2,
+  "assertion_bytes_unchanged": true,
+  "generated_views_equal_main": true
+}

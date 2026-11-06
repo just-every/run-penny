@@ -1,0 +1,11 @@
+{
+  "source": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "candidate": "51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52",
+  "merged_main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "working_tree_clean": true,
+  "candidate_is_descendant_of_frozen_source": true,
+  "candidate_contains_fresh_main": true,
+  "candidate_tree": "f373816e09316952b5a24a39d08cdfda5757a1d6",
+  "product_diff_sha256": "442ae1874db21891654e7954c1d696fdd957aa4f0b95fbe9b12166782f11f90a",
+  "owned_worker_processes_remaining": 0
+}

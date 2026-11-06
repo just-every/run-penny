@@ -1,0 +1,307 @@
+{
+  "label": "before",
+  "source": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "observations": [
+    {
+      "method": "POST",
+      "path": "/api/operator/boards",
+      "status": 201,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/requests",
+      "status": 201,
+      "body": {
+        "id": "01M6R6SACFDZPKF4RARSGM0DZS",
+        "slug": "feedback-01m6r6sacfdzpkf4rarsgm0dzs"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/scorecards",
+      "status": 201,
+      "body": {
+        "id": "01M6R6SADDR1T28Z30CZJ0RGK0",
+        "versionId": "01M6R6SADDTYY4Q0C9KX69B2SR"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R6SADDR1T28Z30CZJ0RGK0/requests/01M6R6SACFDZPKF4RARSGM0DZS/scores",
+      "status": 204,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/scorecards/01M6R6SADDR1T28Z30CZJ0RGK0/versions",
+      "status": 201,
+      "body": {
+        "id": "01M6R6SADDR1T28Z30CZJ0RGK0",
+        "versionId": "01M6R6SAEGFG54DQYC11MTCMQB"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R6SADDR1T28Z30CZJ0RGK0",
+      "status": 200,
+      "body": {
+        "id": "01M6R6SADDR1T28Z30CZJ0RGK0",
+        "currentVersionId": "01M6R6SAEGFG54DQYC11MTCMQB",
+        "versions": [
+          {
+            "id": "01M6R6SAEGFG54DQYC11MTCMQB",
+            "version": 2,
+            "name": "Retained second version"
+          },
+          {
+            "id": "01M6R6SADDTYY4Q0C9KX69B2SR",
+            "version": 1,
+            "name": "Synthetic B1 scorecard"
+          }
+        ],
+        "version": {
+          "id": "01M6R6SAEGFG54DQYC11MTCMQB",
+          "version": 2,
+          "name": "Retained second version",
+          "criteria": [
+            {
+              "key": "impact",
+              "name": "Customer impact",
+              "scale": 5,
+              "weight": 1
+            }
+          ],
+          "createdBy": "01M6R6SABRV78HAGJVX0D84P5N",
+          "createdAt": "2026-11-06T10:34:33.804Z"
+        },
+        "rows": [
+          {
+            "requestId": "01M6R6SACFDZPKF4RARSGM0DZS",
+            "slug": "feedback-01m6r6sacfdzpkf4rarsgm0dzs",
+            "title": "impact",
+            "scorers": [],
+            "components": [
+              {
+                "key": "impact",
+                "name": "Customer impact",
+                "scale": 5,
+                "weight": 1,
+                "count": 0,
+                "mean": null,
+                "contribution": null
+              }
+            ],
+            "missing": [
+              "impact"
+            ],
+            "weightedResult": null,
+            "rank": null
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R6SADDR1T28Z30CZJ0RGK0?versionId=01M6R6SADDTYY4Q0C9KX69B2SR",
+      "status": 200,
+      "body": {
+        "id": "01M6R6SADDR1T28Z30CZJ0RGK0",
+        "currentVersionId": "01M6R6SAEGFG54DQYC11MTCMQB",
+        "versions": [
+          {
+            "id": "01M6R6SAEGFG54DQYC11MTCMQB",
+            "version": 2,
+            "name": "Retained second version"
+          },
+          {
+            "id": "01M6R6SADDTYY4Q0C9KX69B2SR",
+            "version": 1,
+            "name": "Synthetic B1 scorecard"
+          }
+        ],
+        "version": {
+          "id": "01M6R6SADDTYY4Q0C9KX69B2SR",
+          "version": 1,
+          "name": "Synthetic B1 scorecard",
+          "criteria": [
+            {
+              "key": "impact",
+              "name": "Customer impact",
+              "scale": 5,
+              "weight": 1
+            }
+          ],
+          "createdBy": "01M6R6SABRV78HAGJVX0D84P5N",
+          "createdAt": "2026-11-06T10:34:33.769Z"
+        },
+        "rows": [
+          {
+            "requestId": "01M6R6SACFDZPKF4RARSGM0DZS",
+            "slug": "feedback-01m6r6sacfdzpkf4rarsgm0dzs",
+            "title": "impact",
+            "scorers": [
+              {
+                "operatorId": "01M6R6SABRV78HAGJVX0D84P5N",
+                "displayName": "Owner",
+                "inputs": {
+                  "impact": 5
+                },
+                "updatedAt": "2026-11-06T10:34:33.785Z"
+              }
+            ],
+            "components": [
+              {
+                "key": "impact",
+                "name": "Customer impact",
+                "scale": 5,
+                "weight": 1,
+                "count": 1,
+                "mean": 5,
+                "contribution": 1
+              }
+            ],
+            "missing": [],
+            "weightedResult": 1,
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure/preview",
+      "status": 200,
+      "body": {
+        "table": "requests",
+        "id": "01M6R6SACFDZPKF4RARSGM0DZS",
+        "planHash": "534fb6637c506fc7e0d1757e62c01dc091859c0caadc90aa4e5db8dc36597212",
+        "counts": {
+          "penny_scorecard_scores": 1,
+          "penny_triage_status_clock": 1,
+          "requests": 1,
+          "audit_anonymized": 2
+        },
+        "kept": {},
+        "fileCount": 0,
+        "importCount": 0,
+        "blockedCopies": [
+          {
+            "table": "penny_scorecard_versions",
+            "key": "[\"01M6R6SADDTYY4Q0C9KX69B2SR\"]",
+            "columns": [
+              "criteria_json"
+            ],
+            "resolvable": true,
+            "values": {
+              "criteria_json": {
+                "current": "[{\"key\":\"impact\",\"name\":\"Customer impact\",\"scale\":5,\"weight\":1}]",
+                "redacted": "[{\"key\":\"[erased]\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]"
+              }
+            },
+            "label": null,
+            "href": null
+          },
+          {
+            "table": "penny_scorecard_versions",
+            "key": "[\"01M6R6SAEGFG54DQYC11MTCMQB\"]",
+            "columns": [
+              "criteria_json"
+            ],
+            "resolvable": true,
+            "values": {
+              "criteria_json": {
+                "current": "[{\"key\":\"impact\",\"name\":\"Customer impact\",\"scale\":5,\"weight\":1}]",
+                "redacted": "[{\"key\":\"[erased]\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]"
+              }
+            },
+            "label": null,
+            "href": null
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 200,
+      "body": {
+        "operationId": "01M6R6SAQ2KQ1BE5WJNVD2QHKY",
+        "status": "complete"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R6SADDR1T28Z30CZJ0RGK0",
+      "status": 503,
+      "body": {
+        "error": "service_unavailable",
+        "message": "Penny could not complete the requested operation."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R6SADDR1T28Z30CZJ0RGK0?versionId=01M6R6SADDTYY4Q0C9KX69B2SR",
+      "status": 503,
+      "body": {
+        "error": "service_unavailable",
+        "message": "Penny could not complete the requested operation."
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/data/export",
+      "status": 409,
+      "body": {
+        "error": "scorecard_archive_invalid"
+      }
+    }
+  ],
+  "persistedVersions": [
+    {
+      "id": "01M6R6SADDTYY4Q0C9KX69B2SR",
+      "scorecard_id": "01M6R6SADDR1T28Z30CZJ0RGK0",
+      "version": 1,
+      "name": "Synthetic B1 scorecard",
+      "criteria_json": "[{\"key\":\"[erased]\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]",
+      "created_by": "01M6R6SABRV78HAGJVX0D84P5N",
+      "created_at": "2026-11-06T10:34:33.769Z"
+    },
+    {
+      "id": "01M6R6SAEGFG54DQYC11MTCMQB",
+      "scorecard_id": "01M6R6SADDR1T28Z30CZJ0RGK0",
+      "version": 2,
+      "name": "Retained second version",
+      "criteria_json": "[{\"key\":\"[erased]\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]",
+      "created_by": "01M6R6SABRV78HAGJVX0D84P5N",
+      "created_at": "2026-11-06T10:34:33.804Z"
+    }
+  ],
+  "summary": {
+    "erasure": 200,
+    "current": 503,
+    "history": 503,
+    "export": 409,
+    "exportError": "scorecard_archive_invalid",
+    "criteriaKeys": [
+      [
+        "[erased]"
+      ],
+      [
+        "[erased]"
+      ]
+    ],
+    "criterionNames": [
+      [
+        "Customer [erased]"
+      ],
+      [
+        "Customer [erased]"
+      ]
+    ],
+    "outboundCalls": 0
+  },
+  "passed": true
+}

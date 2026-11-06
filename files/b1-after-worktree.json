@@ -1,0 +1,808 @@
+{
+  "label": "after",
+  "source": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "observations": [
+    {
+      "method": "POST",
+      "path": "/api/operator/boards",
+      "status": 201,
+      "body": {
+        "ok": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/requests",
+      "status": 201,
+      "body": {
+        "id": "01M6R6ZB9SCCFVXS0K2YNP5R74",
+        "slug": "feedback-01m6r6zb9sccfvxs0k2ynp5r74"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/scorecards",
+      "status": 201,
+      "body": {
+        "id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+        "versionId": "01M6R6ZBAR001BNDDDT176EE86"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/operator/scorecards/01M6R6ZBARKDSSFS9JR3VAX29M/requests/01M6R6ZB9SCCFVXS0K2YNP5R74/scores",
+      "status": 204,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/scorecards/01M6R6ZBARKDSSFS9JR3VAX29M/versions",
+      "status": 201,
+      "body": {
+        "id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+        "versionId": "01M6R6ZBBZJEQFT4MRJFGVB377"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R6ZBARKDSSFS9JR3VAX29M",
+      "status": 200,
+      "body": {
+        "id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+        "currentVersionId": "01M6R6ZBBZJEQFT4MRJFGVB377",
+        "versions": [
+          {
+            "id": "01M6R6ZBBZJEQFT4MRJFGVB377",
+            "version": 2,
+            "name": "Retained second version"
+          },
+          {
+            "id": "01M6R6ZBAR001BNDDDT176EE86",
+            "version": 1,
+            "name": "Synthetic B1 scorecard"
+          }
+        ],
+        "version": {
+          "id": "01M6R6ZBBZJEQFT4MRJFGVB377",
+          "version": 2,
+          "name": "Retained second version",
+          "criteria": [
+            {
+              "key": "impact",
+              "name": "Customer impact",
+              "scale": 5,
+              "weight": 1
+            }
+          ],
+          "createdBy": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+          "createdAt": "2026-11-06T10:37:51.356Z"
+        },
+        "rows": [
+          {
+            "requestId": "01M6R6ZB9SCCFVXS0K2YNP5R74",
+            "slug": "feedback-01m6r6zb9sccfvxs0k2ynp5r74",
+            "title": "impact",
+            "scorers": [],
+            "components": [
+              {
+                "key": "impact",
+                "name": "Customer impact",
+                "scale": 5,
+                "weight": 1,
+                "count": 0,
+                "mean": null,
+                "contribution": null
+              }
+            ],
+            "missing": [
+              "impact"
+            ],
+            "weightedResult": null,
+            "rank": null
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R6ZBARKDSSFS9JR3VAX29M?versionId=01M6R6ZBAR001BNDDDT176EE86",
+      "status": 200,
+      "body": {
+        "id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+        "currentVersionId": "01M6R6ZBBZJEQFT4MRJFGVB377",
+        "versions": [
+          {
+            "id": "01M6R6ZBBZJEQFT4MRJFGVB377",
+            "version": 2,
+            "name": "Retained second version"
+          },
+          {
+            "id": "01M6R6ZBAR001BNDDDT176EE86",
+            "version": 1,
+            "name": "Synthetic B1 scorecard"
+          }
+        ],
+        "version": {
+          "id": "01M6R6ZBAR001BNDDDT176EE86",
+          "version": 1,
+          "name": "Synthetic B1 scorecard",
+          "criteria": [
+            {
+              "key": "impact",
+              "name": "Customer impact",
+              "scale": 5,
+              "weight": 1
+            }
+          ],
+          "createdBy": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+          "createdAt": "2026-11-06T10:37:51.314Z"
+        },
+        "rows": [
+          {
+            "requestId": "01M6R6ZB9SCCFVXS0K2YNP5R74",
+            "slug": "feedback-01m6r6zb9sccfvxs0k2ynp5r74",
+            "title": "impact",
+            "scorers": [
+              {
+                "operatorId": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+                "displayName": "Owner",
+                "inputs": {
+                  "impact": 5
+                },
+                "updatedAt": "2026-11-06T10:37:51.333Z"
+              }
+            ],
+            "components": [
+              {
+                "key": "impact",
+                "name": "Customer impact",
+                "scale": 5,
+                "weight": 1,
+                "count": 1,
+                "mean": 5,
+                "contribution": 1
+              }
+            ],
+            "missing": [],
+            "weightedResult": 1,
+            "rank": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure/preview",
+      "status": 200,
+      "body": {
+        "table": "requests",
+        "id": "01M6R6ZB9SCCFVXS0K2YNP5R74",
+        "planHash": "bd4db5764bf2250215e15d1a03d3a33023517e1997be7528618bf960e51d3876",
+        "counts": {
+          "penny_scorecard_scores": 1,
+          "penny_triage_status_clock": 1,
+          "requests": 1,
+          "audit_anonymized": 2
+        },
+        "kept": {},
+        "fileCount": 0,
+        "importCount": 0,
+        "blockedCopies": [
+          {
+            "table": "penny_scorecard_versions",
+            "key": "[\"01M6R6ZBAR001BNDDDT176EE86\"]",
+            "columns": [
+              "criteria_json"
+            ],
+            "resolvable": true,
+            "values": {
+              "criteria_json": {
+                "current": "[{\"key\":\"impact\",\"name\":\"Customer impact\",\"scale\":5,\"weight\":1}]",
+                "redacted": "[{\"key\":\"impact\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]"
+              }
+            },
+            "label": null,
+            "href": null
+          },
+          {
+            "table": "penny_scorecard_versions",
+            "key": "[\"01M6R6ZBBZJEQFT4MRJFGVB377\"]",
+            "columns": [
+              "criteria_json"
+            ],
+            "resolvable": true,
+            "values": {
+              "criteria_json": {
+                "current": "[{\"key\":\"impact\",\"name\":\"Customer impact\",\"scale\":5,\"weight\":1}]",
+                "redacted": "[{\"key\":\"impact\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]"
+              }
+            },
+            "label": null,
+            "href": null
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/operator/data/erasure",
+      "status": 200,
+      "body": {
+        "operationId": "01M6R6ZBQ5PTTQ25KVMHK8RGV7",
+        "status": "complete"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R6ZBARKDSSFS9JR3VAX29M",
+      "status": 200,
+      "body": {
+        "id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+        "currentVersionId": "01M6R6ZBBZJEQFT4MRJFGVB377",
+        "versions": [
+          {
+            "id": "01M6R6ZBBZJEQFT4MRJFGVB377",
+            "version": 2,
+            "name": "Retained second version"
+          },
+          {
+            "id": "01M6R6ZBAR001BNDDDT176EE86",
+            "version": 1,
+            "name": "Synthetic B1 scorecard"
+          }
+        ],
+        "version": {
+          "id": "01M6R6ZBBZJEQFT4MRJFGVB377",
+          "version": 2,
+          "name": "Retained second version",
+          "criteria": [
+            {
+              "key": "impact",
+              "name": "Customer [erased]",
+              "scale": 5,
+              "weight": 1
+            }
+          ],
+          "createdBy": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+          "createdAt": "2026-11-06T10:37:51.356Z"
+        },
+        "rows": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/scorecards/01M6R6ZBARKDSSFS9JR3VAX29M?versionId=01M6R6ZBAR001BNDDDT176EE86",
+      "status": 200,
+      "body": {
+        "id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+        "currentVersionId": "01M6R6ZBBZJEQFT4MRJFGVB377",
+        "versions": [
+          {
+            "id": "01M6R6ZBBZJEQFT4MRJFGVB377",
+            "version": 2,
+            "name": "Retained second version"
+          },
+          {
+            "id": "01M6R6ZBAR001BNDDDT176EE86",
+            "version": 1,
+            "name": "Synthetic B1 scorecard"
+          }
+        ],
+        "version": {
+          "id": "01M6R6ZBAR001BNDDDT176EE86",
+          "version": 1,
+          "name": "Synthetic B1 scorecard",
+          "criteria": [
+            {
+              "key": "impact",
+              "name": "Customer [erased]",
+              "scale": 5,
+              "weight": 1
+            }
+          ],
+          "createdBy": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+          "createdAt": "2026-11-06T10:37:51.314Z"
+        },
+        "rows": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/operator/data/export",
+      "status": 200,
+      "body": {
+        "archive": {
+          "format": "penny-data",
+          "version": 1,
+          "schemaHash": "d656acd116ae4e4f7ccbe58a9fb6716a08ac0b37e30cc9edc8f8ec1e47a75b79",
+          "origin": "47c3cd0f1697cc173ed3bbb6314ae104",
+          "epoch": 1,
+          "journalHash": "8978b877f3660bb8d4a99fee1fefb2d779e9e07aa1343f9f8d2b08ff7fc532e3",
+          "tables": {
+            "accounts": [],
+            "attachments": [],
+            "audit_entries": [
+              {
+                "id": "01M6R6ZB9S6BBDT8J6TYQCZ60E",
+                "actor_type": "operator",
+                "actor_id": null,
+                "action": "request.created",
+                "entity_type": "request",
+                "entity_id": "erased:3328521f-fe07-48a6-b5cc-615ecefd1ce9",
+                "occurred_at": "2026-11-06T10:37:51.289Z",
+                "details_json": null,
+                "created_at": "2026-11-06T10:37:51.289Z",
+                "updated_at": "2026-11-06T10:37:51.896Z",
+                "agent_id": null,
+                "agent_name": null,
+                "sponsor_native_id": null,
+                "prepared_by": null,
+                "approvers_json": null,
+                "door_operation_id": null
+              },
+              {
+                "id": "01M6R6ZBARXMDXJKAP8HZ7VPZ1",
+                "actor_type": "operator",
+                "actor_id": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+                "action": "scorecard.created",
+                "entity_type": "scorecard",
+                "entity_id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+                "occurred_at": "2026-11-06T10:37:51.314Z",
+                "details_json": "{\"versionId\":\"01M6R6ZBAR001BNDDDT176EE86\"}",
+                "created_at": "2026-11-06T10:37:51.314Z",
+                "updated_at": "2026-11-06T10:37:51.314Z",
+                "agent_id": null,
+                "agent_name": null,
+                "sponsor_native_id": null,
+                "prepared_by": null,
+                "approvers_json": null,
+                "door_operation_id": null
+              },
+              {
+                "id": "01M6R6ZBBBA7F4FV4MKT0F055J",
+                "actor_type": "operator",
+                "actor_id": null,
+                "action": "scorecard.scored",
+                "entity_type": "scorecard",
+                "entity_id": "erased:3328521f-fe07-48a6-b5cc-615ecefd1ce9",
+                "occurred_at": "2026-11-06T10:37:51.333Z",
+                "details_json": null,
+                "created_at": "2026-11-06T10:37:51.333Z",
+                "updated_at": "2026-11-06T10:37:51.896Z",
+                "agent_id": null,
+                "agent_name": null,
+                "sponsor_native_id": null,
+                "prepared_by": null,
+                "approvers_json": null,
+                "door_operation_id": null
+              },
+              {
+                "id": "01M6R6ZBC0H0MXKG2N95826TSA",
+                "actor_type": "operator",
+                "actor_id": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+                "action": "scorecard.revised",
+                "entity_type": "scorecard",
+                "entity_id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+                "occurred_at": "2026-11-06T10:37:51.356Z",
+                "details_json": "{\"versionId\":\"01M6R6ZBBZJEQFT4MRJFGVB377\"}",
+                "created_at": "2026-11-06T10:37:51.356Z",
+                "updated_at": "2026-11-06T10:37:51.356Z",
+                "agent_id": null,
+                "agent_name": null,
+                "sponsor_native_id": null,
+                "prepared_by": null,
+                "approvers_json": null,
+                "door_operation_id": null
+              },
+              {
+                "id": "01M6R6ZBWRCN2B2Z968P9CY127",
+                "actor_type": "operator",
+                "actor_id": "80b60307-dbfc-4771-a19d-8341881b3585",
+                "action": "data.erased",
+                "entity_type": "data_operation",
+                "entity_id": "01M6R6ZBQ5PTTQ25KVMHK8RGV7",
+                "occurred_at": "2026-11-06T10:37:51.896Z",
+                "details_json": "{\"phase\":\"native_rows_erased\",\"targetType\":\"requests\",\"targetReference\":\"731f2ea20c47e0e8dae592692902bb101591be8d4c1c5d851fcbb5a1052876c3\",\"recordsKeptWithoutWords\":0,\"copiesRedacted\":2,\"copiesRenamed\":0}",
+                "created_at": "2026-11-06T10:37:51.896Z",
+                "updated_at": "2026-11-06T10:37:51.896Z",
+                "agent_id": null,
+                "agent_name": null,
+                "sponsor_native_id": null,
+                "prepared_by": null,
+                "approvers_json": null,
+                "door_operation_id": null
+              },
+              {
+                "id": "01M6R6ZBX6R93H35WFGKDYSMB5",
+                "actor_type": "operator",
+                "actor_id": "80b60307-dbfc-4771-a19d-8341881b3585",
+                "action": "data.erasure_completed",
+                "entity_type": "data_operation",
+                "entity_id": "01M6R6ZBQ5PTTQ25KVMHK8RGV7",
+                "occurred_at": "2026-11-06T10:37:51.910Z",
+                "details_json": null,
+                "created_at": "2026-11-06T10:37:51.910Z",
+                "updated_at": "2026-11-06T10:37:51.910Z",
+                "agent_id": null,
+                "agent_name": null,
+                "sponsor_native_id": null,
+                "prepared_by": null,
+                "approvers_json": null,
+                "door_operation_id": null
+              }
+            ],
+            "boards": [
+              {
+                "id": "01M6R6ZB945TE8BRVT3BBZM7YM",
+                "slug": "synthetic-b1",
+                "name": "Synthetic B1 board",
+                "visibility": "public",
+                "position": 0,
+                "archived_at": null,
+                "created_at": "2026-11-06T10:37:51.267Z",
+                "updated_at": "2026-11-06T10:37:51.267Z",
+                "category_mode": "off",
+                "posting_policy": "requesters",
+                "comments_allowed": 1,
+                "show_vote_counts": 1,
+                "show_voters": 0,
+                "anonymous_requesters": 0,
+                "vote_subscriptions": 0,
+                "vote_subscription_version": 1
+              }
+            ],
+            "candidate_bet_account_links": [],
+            "candidate_bet_evidence_links": [],
+            "candidate_bets": [],
+            "custom_field_definitions": [],
+            "custom_field_values": [],
+            "decision_bet_snapshots": [],
+            "decision_evidence_snapshots": [],
+            "decision_review_delivery_facts": [],
+            "decision_review_notifications": [],
+            "decision_reviews": [],
+            "decision_revisions": [],
+            "decisions": [],
+            "evidence_attachment_uploads": [],
+            "evidence_items": [],
+            "evidence_tag_assignments": [],
+            "evidence_versions": [],
+            "feedback_import_bundles": [],
+            "feedback_import_original_chunks": [],
+            "feedback_import_receipt_notes": [],
+            "feedback_import_records": [],
+            "feedback_import_tombstones": [],
+            "host_identity_accounts": [],
+            "host_identity_claims": [],
+            "host_identity_tombstones": [],
+            "ik_batches": [],
+            "ik_d1_assertions": [],
+            "ik_d1_creation_plans": [],
+            "ik_d1_custody_revisions": [],
+            "ik_d1_custody_states": [],
+            "ik_d1_entries": [],
+            "ik_d1_erased_sources": [],
+            "ik_d1_erased_targets": [],
+            "ik_d1_erasure_journal": [],
+            "ik_d1_erasure_progress": [],
+            "ik_d1_erasure_tally": [],
+            "ik_d1_history": [],
+            "ik_d1_indexed_jobs": [],
+            "ik_d1_native_staging": [],
+            "ik_d1_native_staging_index": [],
+            "ik_d1_native_staging_values": [],
+            "ik_d1_original_chunks": [],
+            "ik_d1_plan_chunks": [],
+            "ik_d1_plan_index": [],
+            "ik_d1_preparation_receipts": [],
+            "ik_d1_preparation_steps": [],
+            "ik_d1_publication_fences": [],
+            "ik_d1_retirements": [],
+            "ik_d1_reversal_fences": [],
+            "ik_d1_reversal_reports": [],
+            "ik_d1_staging": [],
+            "ik_d1_staging_chunks": [],
+            "ik_d1_staging_headers": [],
+            "ik_d1_staging_index": [],
+            "ik_d1_staging_originals": [],
+            "ik_d1_staging_pages": [],
+            "ik_d1_stream_origins": [],
+            "ik_d1_stream_pages": [],
+            "ik_d1_stream_revisions": [],
+            "ik_d1_streams": [],
+            "ik_jobs": [],
+            "ik_original_sets": [],
+            "ik_originals": [],
+            "ik_provenance": [],
+            "ik_sources": [],
+            "ik_stages": [],
+            "ik_targets": [],
+            "integration_attempts": [],
+            "integration_deliveries": [],
+            "integration_replays": [],
+            "integration_resolutions": [],
+            "learning_artifacts": [],
+            "learning_commitments": [],
+            "learning_contributions": [],
+            "learning_corrections": [],
+            "learning_erased_events": [],
+            "learning_erased_people": [],
+            "learning_invalidations": [],
+            "learning_investigations": [],
+            "learning_observations": [],
+            "learning_runs": [],
+            "learning_source_people": [],
+            "learning_sources": [],
+            "local_auth_outbox": [],
+            "mail_event_records": [],
+            "native_magic_links": [],
+            "native_moderation_events": [],
+            "native_rate_limits": [],
+            "native_requester_sessions": [],
+            "notification_attempts": [],
+            "notification_batches": [],
+            "notification_delivery_facts": [],
+            "notification_events": [],
+            "notification_intents": [],
+            "notification_link_epochs": [],
+            "notification_outbox": [],
+            "notification_outbox_attempts": [],
+            "operator_mail_suppressions": [],
+            "operator_sessions": [],
+            "operators": [
+              {
+                "id": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+                "email": "owner@example.test",
+                "display_name": "Owner",
+                "created_at": "2026-11-06T10:37:51.260Z",
+                "updated_at": "2026-11-06T10:37:51.260Z"
+              }
+            ],
+            "penny_ai_answers": [],
+            "penny_ai_capabilities": [],
+            "penny_ai_runs": [],
+            "penny_ai_settings": [],
+            "penny_board_owners": [],
+            "penny_browser_captures": [],
+            "penny_browser_receipts": [],
+            "penny_comment_receipts": [],
+            "penny_components": [],
+            "penny_discord_jobs": [],
+            "penny_discord_receipts": [],
+            "penny_discord_settings": [],
+            "penny_discord_sources": [],
+            "penny_email_capture_domains": [],
+            "penny_email_capture_messages": [],
+            "penny_email_capture_settings": [],
+            "penny_evidence_owners": [],
+            "penny_evidence_snoozes": [],
+            "penny_feature_requests": [],
+            "penny_feature_roadmap": [],
+            "penny_features": [],
+            "penny_frame_settings": [],
+            "penny_helpscout_captures": [],
+            "penny_helpscout_companies": [],
+            "penny_helpscout_connection": [],
+            "penny_helpscout_receipts": [],
+            "penny_helpscout_replies": [],
+            "penny_import_roadmaps": [],
+            "penny_integration_destinations": [],
+            "penny_integration_events": [],
+            "penny_integration_receipts": [],
+            "penny_integration_targets": [],
+            "penny_mail_identity": [],
+            "penny_merge_notice_recipients": [],
+            "penny_merge_notices": [],
+            "penny_note_mentions": [],
+            "penny_portal_branding": [],
+            "penny_priority_views": [],
+            "penny_products": [],
+            "penny_proxy_votes": [],
+            "penny_publication_schedules": [],
+            "penny_redaction_settings": [],
+            "penny_release_plan_items": [],
+            "penny_release_plans": [],
+            "penny_request_batch_items": [],
+            "penny_request_batches": [],
+            "penny_request_owners": [],
+            "penny_requester_oauth": [],
+            "penny_roadmap_dependencies": [],
+            "penny_scorecard_scores": [],
+            "penny_scorecard_versions": [
+              {
+                "id": "01M6R6ZBAR001BNDDDT176EE86",
+                "scorecard_id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+                "version": 1,
+                "name": "Synthetic B1 scorecard",
+                "criteria_json": "[{\"key\":\"impact\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]",
+                "created_by": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+                "created_at": "2026-11-06T10:37:51.314Z"
+              },
+              {
+                "id": "01M6R6ZBBZJEQFT4MRJFGVB377",
+                "scorecard_id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+                "version": 2,
+                "name": "Retained second version",
+                "criteria_json": "[{\"key\":\"impact\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]",
+                "created_by": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+                "created_at": "2026-11-06T10:37:51.356Z"
+              }
+            ],
+            "penny_scorecards": [
+              {
+                "id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+                "created_by": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+                "created_at": "2026-11-06T10:37:51.314Z"
+              }
+            ],
+            "penny_status_roadmap_settings": [
+              {
+                "singleton": 1,
+                "source": "request_statuses",
+                "board_slugs_json": "[]",
+                "columns_json": "[{\"status\":\"under_review\",\"label\":\"Under review\",\"visible\":true},{\"status\":\"planned\",\"label\":\"Planned\",\"visible\":true},{\"status\":\"in_progress\",\"label\":\"In progress\",\"visible\":true},{\"status\":\"shipped\",\"label\":\"Shipped\",\"visible\":true}]",
+                "shipped_days": null,
+                "updated_at": "2026-11-06T10:37:49.852Z"
+              }
+            ],
+            "penny_survey_forms": [],
+            "penny_survey_jobs": [],
+            "penny_survey_receipts": [],
+            "penny_survey_sources": [],
+            "penny_tracker_commands": [],
+            "penny_tracker_connections": [],
+            "penny_tracker_links": [],
+            "penny_tracker_receipts": [],
+            "penny_triage_reminders": [],
+            "penny_triage_settings": [
+              {
+                "singleton": 1,
+                "inbox_days": 7,
+                "comment_days": 7,
+                "response_days": 7,
+                "under_review_days": 28,
+                "planned_days": 28,
+                "in_progress_days": 28,
+                "updated_at": "2026-11-06T10:37:50.146Z"
+              }
+            ],
+            "penny_triage_status_clock": [],
+            "penny_vote_importance": [],
+            "penny_vote_importance_settings": [],
+            "penny_weekly_choices": [],
+            "penny_weekly_publications": [],
+            "penny_weekly_summary": [],
+            "release_attachments": [],
+            "release_draft_mappings": [],
+            "release_labels": [],
+            "release_outcomes": [],
+            "release_recipient_contexts": [],
+            "release_recipient_snapshots": [],
+            "release_target_snapshots": [],
+            "release_targets": [],
+            "release_versions": [],
+            "releases": [],
+            "request_attachment_uploads": [],
+            "request_categories": [],
+            "request_comment_edits": [],
+            "request_comments": [],
+            "request_content_submissions": [],
+            "request_evidence_contributions": [],
+            "request_evidence_links": [],
+            "request_follow_contributions": [],
+            "request_follows": [],
+            "request_internal_statuses": [],
+            "request_merge_attachment_transfers": [],
+            "request_merge_comment_transfers": [],
+            "request_merge_evidence_transfers": [],
+            "request_merge_follow_transfers": [],
+            "request_merge_vote_transfers": [],
+            "request_merges": [],
+            "request_moderation_appeals": [],
+            "request_moderation_events": [],
+            "request_notes": [],
+            "request_notification_mutes": [],
+            "request_status_templates": [],
+            "request_status_updates": [],
+            "request_submission_keys": [],
+            "request_tag_assignments": [],
+            "request_vote_contributions": [],
+            "request_vote_supporter_types": [],
+            "request_votes": [],
+            "requester_account_links": [],
+            "requester_addresses": [],
+            "requester_identity_merges": [],
+            "requester_notification_preferences": [],
+            "requester_pending_action_bindings": [],
+            "requester_pending_actions": [],
+            "requester_update_permissions": [],
+            "requester_write_guards": [],
+            "requesters": [],
+            "requests": [],
+            "roadmap_evidence_links": [],
+            "roadmap_items": [],
+            "roadmap_mapping_history": [],
+            "roadmap_publications": [],
+            "roadmap_request_mappings": [],
+            "roadmap_transitions": [],
+            "roadmap_update_contexts": [],
+            "roadmap_update_histories": [],
+            "roadmap_update_targets": [],
+            "roadmap_update_versions": [],
+            "tags": []
+          },
+          "files": [],
+          "sha256": "3ca0f0e1eee9f0e2ab9e4ba2fadee50e9b3350268c166fc21e6877774ee52859"
+        },
+        "journal": {
+          "version": 1,
+          "origin": "47c3cd0f1697cc173ed3bbb6314ae104",
+          "epoch": 1,
+          "tombstones": [
+            {
+              "epoch": 1,
+              "table_name": "penny_scorecard_scores",
+              "key_hash": "516aac7f92c8821b73fc509d6e77ae18813ebdf763a81d3506ad21b6ed28dc74"
+            },
+            {
+              "epoch": 1,
+              "table_name": "penny_triage_status_clock",
+              "key_hash": "03b0e94b46204743fbba2ddea4ac47c838da5b93370c19ee0369a064e224a9ca"
+            },
+            {
+              "epoch": 1,
+              "table_name": "requests",
+              "key_hash": "e43a687735c15b11aaf5e1f9792c272e9a6627f0f9bcb7f6b3534c44d3853e74"
+            }
+          ],
+          "sha256": "8978b877f3660bb8d4a99fee1fefb2d779e9e07aa1343f9f8d2b08ff7fc532e3"
+        }
+      }
+    }
+  ],
+  "persistedVersions": [
+    {
+      "id": "01M6R6ZBAR001BNDDDT176EE86",
+      "scorecard_id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+      "version": 1,
+      "name": "Synthetic B1 scorecard",
+      "criteria_json": "[{\"key\":\"impact\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]",
+      "created_by": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+      "created_at": "2026-11-06T10:37:51.314Z"
+    },
+    {
+      "id": "01M6R6ZBBZJEQFT4MRJFGVB377",
+      "scorecard_id": "01M6R6ZBARKDSSFS9JR3VAX29M",
+      "version": 2,
+      "name": "Retained second version",
+      "criteria_json": "[{\"key\":\"impact\",\"name\":\"Customer [erased]\",\"scale\":5,\"weight\":1}]",
+      "created_by": "01M6R6ZB8WZZ2BVKX8WT5E2QCJ",
+      "created_at": "2026-11-06T10:37:51.356Z"
+    }
+  ],
+  "summary": {
+    "erasure": 200,
+    "current": 200,
+    "history": 200,
+    "export": 200,
+    "exportError": null,
+    "criteriaKeys": [
+      [
+        "impact"
+      ],
+      [
+        "impact"
+      ]
+    ],
+    "criterionNames": [
+      [
+        "Customer [erased]"
+      ],
+      [
+        "Customer [erased]"
+      ]
+    ],
+    "outboundCalls": 0
+  },
+  "passed": true
+}

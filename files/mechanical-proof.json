@@ -1,0 +1,110 @@
+{
+  "source": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "main": "6c1eb018f6391de17e04fc8868c0c74f8732abd8",
+  "byte_comparisons": [
+    {
+      "path": "src/core/features/scorecards/input.ts",
+      "source_sha256": "fd6c48ed5842862fe62bb3f43f9f0d61943b1146b8b5a3a66582d31403e34e1c",
+      "candidate_sha256": "fd6c48ed5842862fe62bb3f43f9f0d61943b1146b8b5a3a66582d31403e34e1c",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/scorecards/ranking.ts",
+      "source_sha256": "737d55d991a3ed14228e8db70055bf4bfb11aec1255990562da10f0e0f78d3f9",
+      "candidate_sha256": "737d55d991a3ed14228e8db70055bf4bfb11aec1255990562da10f0e0f78d3f9",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/scorecards/repository.ts",
+      "source_sha256": "690096c42741da36d7e10ce7df57e11be4fb7f26dae8012b3425fc55339241f4",
+      "candidate_sha256": "690096c42741da36d7e10ce7df57e11be4fb7f26dae8012b3425fc55339241f4",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/scorecards/routes.ts",
+      "source_sha256": "0bf347bc474287837fbe396bbceaaad9e27414817138df7b288b291e8140f12b",
+      "candidate_sha256": "0bf347bc474287837fbe396bbceaaad9e27414817138df7b288b291e8140f12b",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/scorecards/archive.ts",
+      "source_sha256": "92995ba800a05191b805bf02567db668305f9af72f5f34b53a66211a43bd566b",
+      "candidate_sha256": "92995ba800a05191b805bf02567db668305f9af72f5f34b53a66211a43bd566b",
+      "unchanged": true
+    },
+    {
+      "path": "tests/base/scorecards.test.ts",
+      "source_sha256": "6e0e20ad149c7573285bdea3c51a8414f84914b14f0bbc1ab50842afea414f75",
+      "candidate_sha256": "6e0e20ad149c7573285bdea3c51a8414f84914b14f0bbc1ab50842afea414f75",
+      "unchanged": true
+    },
+    {
+      "path": "migrations/core/0110_scorecards.sql",
+      "source_sha256": "b7d1d60df9054b32a001045918fcc0fc6772c0e567ca28ab73ebfd8288d97e8d",
+      "candidate_sha256": "b7d1d60df9054b32a001045918fcc0fc6772c0e567ca28ab73ebfd8288d97e8d",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/data/erasure-dependencies.ts",
+      "source_sha256": "720d5e2c1cf17b4630b1195e03681b5292a2eea8cce4b9f38534129940bc39ca",
+      "candidate_sha256": "720d5e2c1cf17b4630b1195e03681b5292a2eea8cce4b9f38534129940bc39ca",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/data/archive.ts",
+      "source_sha256": "b0f4bb1337947867f7626f2dc236a77ad85e27b4f2d074bbe6dd34084560f801",
+      "candidate_sha256": "b0f4bb1337947867f7626f2dc236a77ad85e27b4f2d074bbe6dd34084560f801",
+      "unchanged": true
+    },
+    {
+      "path": "src/core/features/data/schema-inventory.json",
+      "source_sha256": "8541dc213a1cf03162e24d6fce26411a184fdfa8231004486009f02ef969744e",
+      "candidate_sha256": "8541dc213a1cf03162e24d6fce26411a184fdfa8231004486009f02ef969744e",
+      "unchanged": true
+    }
+  ],
+  "all_applied_migrations_unchanged": 105,
+  "parent_status_rows_preserved": 280,
+  "clause_status_before": "partial",
+  "clause_status_after": "partial",
+  "permanent_scorecard_registrations_before": 2,
+  "permanent_scorecard_registrations_after": 2,
+  "assertion_bytes_unchanged": true,
+  "generated_views_equal_main": true,
+  "changed_paths_from_source": [
+    "ACCEPTANCE.md",
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "OPERATIONS.md",
+    "docs/API.md",
+    "sources.lock.json",
+    "src/core/features/data/erasure-native.ts",
+    "src/core/features/data/erasure-redaction.ts",
+    "src/core/features/scorecards/erasure.ts",
+    "tests/base/fixtures/openapi-3.1-LICENSE.txt",
+    "tests/base/fixtures/openapi-3.1-NOTICE.txt",
+    "tests/base/fixtures/openapi-3.1-schema.json",
+    "tests/base/integration-openapi.test.ts"
+  ],
+  "changed_paths_from_main": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "OPERATIONS.md",
+    "migrations/core/0110_scorecards.sql",
+    "sources.lock.json",
+    "src/core/app/api.ts",
+    "src/core/features/data/archive.ts",
+    "src/core/features/data/erasure-dependencies.ts",
+    "src/core/features/data/erasure-native.ts",
+    "src/core/features/data/erasure-redaction.ts",
+    "src/core/features/data/schema-inventory.json",
+    "src/core/features/scorecards/archive.ts",
+    "src/core/features/scorecards/erasure.ts",
+    "src/core/features/scorecards/input.ts",
+    "src/core/features/scorecards/ranking.ts",
+    "src/core/features/scorecards/repository.ts",
+    "src/core/features/scorecards/routes.ts",
+    "tests/base/scorecards.test.ts"
+  ],
+  "candidate": "51cd7de98d013cc4e4dbcb97f4a8fac7a8194d52"
+}
