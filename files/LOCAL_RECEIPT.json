@@ -1,0 +1,48 @@
+{
+  "tag": "sd-penny-c-f99",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f99",
+  "head": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "checks": [
+    {
+      "name": "route-journeys",
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/scorecards.test.ts",
+      "exit": 0,
+      "started": "2026-11-06T10:02:41.371584+00:00",
+      "finished": "2026-11-06T10:02:49.311780+00:00",
+      "head": "599d82f10cb4a6c5746f3b68b66515eb4872826e"
+    },
+    {
+      "name": "migration-ledger",
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/hosted-export.test.ts -t Platform",
+      "exit": 0,
+      "started": "2026-11-06T10:02:49.311844+00:00",
+      "finished": "2026-11-06T10:02:57.799623+00:00",
+      "head": "599d82f10cb4a6c5746f3b68b66515eb4872826e"
+    },
+    {
+      "name": "typecheck",
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "started": "2026-11-06T10:02:57.799675+00:00",
+      "finished": "2026-11-06T10:03:19.676478+00:00",
+      "head": "599d82f10cb4a6c5746f3b68b66515eb4872826e"
+    },
+    {
+      "name": "first-party",
+      "command": "pnpm exec rer check --profile first-party",
+      "exit": 0,
+      "started": "2026-11-06T10:03:19.676547+00:00",
+      "finished": "2026-11-06T10:03:20.642893+00:00",
+      "head": "599d82f10cb4a6c5746f3b68b66515eb4872826e"
+    },
+    {
+      "name": "lock",
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "started": "2026-11-06T10:03:20.642942+00:00",
+      "finished": "2026-11-06T10:03:21.057977+00:00",
+      "head": "599d82f10cb4a6c5746f3b68b66515eb4872826e"
+    }
+  ]
+}

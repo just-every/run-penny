@@ -1,0 +1,26 @@
+{
+  "head": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "lock": {
+    "write": "node scripts/edition-authoring/cli.mjs lock",
+    "check": "node scripts/edition-authoring/cli.mjs check",
+    "exit": 0,
+    "sha256": "8026d7ef7ca0fe68d6dcad91d9eb15ebb0e533d0b3bbca61fdccb571ab2d2bd2"
+  },
+  "views": {
+    "write": "node src/base/contract-docs.mjs write",
+    "check": "node src/base/contract-docs.mjs check",
+    "exit": 0,
+    "restored": [
+      "ACCEPTANCE.md",
+      "docs/CLAIMS.md"
+    ]
+  },
+  "ledger": {
+    "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/hosted-export.test.ts -t Platform",
+    "exit": 0,
+    "passed": 1
+  },
+  "parentStatusRows": 281,
+  "candidateStatusRows": 281,
+  "workingTreeClean": true
+}

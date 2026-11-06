@@ -1,0 +1,82 @@
+{
+  "files": [
+    {
+      "blob": "b627b9ce8da37f6a1140cc58e61f24e8dbe698be",
+      "bytes": 815,
+      "path": "CANDIDATE_CI.log",
+      "sha256": "e27363f250531740944be8816064554cb49a590e3ffa933b8e5c6dfa942cee5c"
+    },
+    {
+      "blob": "c6296f9bba757ca746dbb167cee93396380c3799",
+      "bytes": 9102,
+      "path": "CI_RECEIPT.json",
+      "sha256": "0595e9966499e3c57fb6a9d13fc4c0b719061167d6a6d08c9fe7fed0b1d6467d"
+    },
+    {
+      "blob": "ad9cead4ffebb7bd20d4b880cd211efbfc06a611",
+      "bytes": 1677,
+      "path": "LOCAL_RECEIPT.json",
+      "sha256": "4984456b5ff977550e52bea51a69ca70b5ad733e09a2b71f7e11b7f8c2f86217"
+    },
+    {
+      "blob": "c686aa16c9f11c0ee07c06c82d813f95dec09988",
+      "bytes": 863,
+      "path": "MAIN_DIAGNOSTICS.md",
+      "sha256": "de829af2c27ea66386caa9cd47718976a3aad1cc5db68aec4344684bd6922445"
+    },
+    {
+      "blob": "632f8747501da70a608d7cd95bd9be31660c18a8",
+      "bytes": 752,
+      "path": "MECHANICAL.json",
+      "sha256": "58b256ba7003e0ca0239a1eabc9428cf0b58c6537313815f3edb1e96a52c17b7"
+    },
+    {
+      "blob": "dfc68c6a2bd0577afb7c693c9f3f3687b114194d",
+      "bytes": 312,
+      "path": "MIGRATION_LEDGER.log",
+      "sha256": "adf83bc56d3c63dc1831305882630d7442d813f556383030e94cc69498225120"
+    },
+    {
+      "blob": "b5608bbf46ab6130fc19c321cce5de59de0b92f7",
+      "bytes": 2266,
+      "path": "PROBES.md",
+      "sha256": "f908f1f5c8dd6b141e5f020c83fab2f8674b76cb46aa6cafcc5bc35bc2b08202"
+    },
+    {
+      "blob": "1a68683d60d777a809f96cd3a48af3bda935a161",
+      "bytes": 442,
+      "path": "PUSH_RECEIPT.json",
+      "sha256": "64a94cd04be1b1dde4233c94c609fd90a705f18fc729519248608ea410314e88"
+    },
+    {
+      "blob": "93303bc58b998e2a441649e4f51174be348dd350",
+      "bytes": 7560,
+      "path": "REPORT.md",
+      "sha256": "2da82a13e005218248de1205369175d62fbcd3618a4b14ac0674705d68648e36"
+    },
+    {
+      "blob": "d16b1ba99dca51acd2336871ea91b80af3e7cad8",
+      "bytes": 299,
+      "path": "ROUTE_JOURNEYS.log",
+      "sha256": "555c8ad24b5882cece123145458fcb67e039214e16e99ec3f44edf9ebc0b602f"
+    },
+    {
+      "blob": "aa2495fdf84d2e098002b641749960728a2e3930",
+      "bytes": 162,
+      "path": "TYPECHECK.log",
+      "sha256": "06dc68bd63e5a31247106eca2b338be98e6ca68822e77d55b2d1c343c429719e"
+    },
+    {
+      "blob": "0bdf8de6fd75f621dfa1fb2874d4907239559e87",
+      "bytes": 60,
+      "path": "VIEWS.log",
+      "sha256": "a0dc3e5a57608862eebb5d81291a8613096d4984f76019b102a0ac55b950fe97"
+    }
+  ],
+  "product_branch": "cloud/sd-penny-c-f99",
+  "product_head": "599d82f10cb4a6c5746f3b68b66515eb4872826e",
+  "ref": "refs/heads/evidence/sd-penny-c-f99",
+  "repository": "just-every/run-penny",
+  "schema": 1,
+  "tag": "sd-penny-c-f99"
+}

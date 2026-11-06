@@ -1,0 +1,6 @@
+shards (workspace-clock, true)	Check generated contract documents	﻿2026-11-06T10:02:36.2808229Z ##[group]Run node src/base/contract-docs.mjs check
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T10:02:36.2808622Z node src/base/contract-docs.mjs check
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T10:02:36.2829784Z shell: /usr/bin/bash -e {0}
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T10:02:36.2830612Z ##[endgroup]
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T10:02:36.4262658Z ACCEPTANCE.md: generated content differs; run contract-docs write.
+shards (workspace-clock, true)	Check generated contract documents	2026-11-06T10:02:36.4327480Z ##[error]Process completed with exit code 1.
