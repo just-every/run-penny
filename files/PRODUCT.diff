@@ -1,0 +1,174 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index aba7837..2cf5fa0 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,7 @@
+ ## Unreleased
+ 
+ - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
++- Refuse weekly requester summary enablement with the specific missing-postal reason and the existing email-settings recovery path. Preserve same-origin, current-owner and transaction admission. Extend the existing legacy route and mounted owner journeys with unchanged setting, audit, permission and notification records on refusal, then native postal confirmation and successful enablement at desktop and phone widths. NOTIFY-014 remains partial for its other obligations and live mail qualification. No migration or new configuration is required.
+ 
+ - Prove native learning refuses otherwise valid model output carrying identity, derived identity, grant or authority fields at root and option boundaries. The existing learning journey reads unchanged native authority and selected scope after each refusal, retains permitted originals without an artifact or commitment, and accepts valid output with native account derivation and metered run accounting. LEARN-001 stays partial for deployment principal pinning and live source and model qualification. No runtime, migration or configuration change is required.
+ 
+diff --git a/CONTRACT.md b/CONTRACT.md
+index 83ebc8c..e662655 100644
+--- a/CONTRACT.md
++++ b/CONTRACT.md
+@@ -3502,7 +3502,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
+ | `NOTIFY-011` | The author's vote and subscription | target | partial | `tests/base/requester-subscriptions.test.ts`; `visual/requester-subscriptions/NOTIFY-011/` | Verified submissions record the author vote and disclosed submission permission; publication notifies once, replies/status/release/rejection use the durable permission path, removing the vote retains it, and withdrawal/unsubscribe revoke it. Held-verification and board-off cases pass through routes; 1440/390 journeys pass. Gap: a separate SDK disclosure journey remains unproved; live inbox acceptance is R-6. |
+ | `NOTIFY-012` | Merge notice | target | done | `tests/base/merge-notices.test.ts`; `tests/browser/merge-notices.mjs` |  |
+ | `NOTIFY-013` | Sender identity | target | partial | `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/` | Provider-tested sender acceptance and refusal and configured sender and reply-to headers are implemented; real provider clients use HTTP-edge fixtures, and API and 1440/390 browser proof pass. CAP-009 proves the reciprocal capture-address exclusion through `tests/base/notifications.test.ts`. Gap: Admin-role sender settings remain unproved; live verified-domain, reply and inbox acceptance is R-6. |
+-| `NOTIFY-014` | Postal address and the mail it unlocks | target | partial | `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/` | Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved. |
++| `NOTIFY-014` | Postal address and the mail it unlocks | target | partial | `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/` | Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open. |
+ | `MEAS-001` | Amplitude | target | missing |  | Amplitude API fixtures return a feature's event counts over a window and a cohort that becomes a segment. |
+ | `MEAS-002` | Mixpanel | target | missing |  | Mixpanel API fixtures match MEAS-001's journey. |
+ | `MEAS-003` | PostHog, Segment and Vane | target | missing |  | PostHog, Vane and Segment fixtures produce the same feature usage counts for a linked roadmap item. |
+diff --git a/src/core/features/notifications/weekly-routes.ts b/src/core/features/notifications/weekly-routes.ts
+index 69d5796..fa756ea 100644
+--- a/src/core/features/notifications/weekly-routes.ts
++++ b/src/core/features/notifications/weekly-routes.ts
+@@ -17,6 +17,7 @@ export function registerWeeklyRoutes(app:Hono<OperatorMutationEnvironment>){
+  app.put('/api/operator/settings/weekly-summary',async c=>{
+   const runtime=c.get('runtime'),input=await parseInput(c.req.raw,z.object({enabled:z.boolean()}).strict()),{session,actor}=await integrationOperator(runtime,c.req.raw)
+   if(session.operator.role!=='owner')throw new NativeError('owner_required',403)
++  if(input.enabled&&!await runtime.database.binding.prepare("SELECT 1 FROM penny_mail_identity WHERE singleton=1 AND trim(postal_address)!=''").first())throw new NativeError('postal_address_required',409,'Record and confirm the business postal address in email settings before enabling weekly requester summaries.')
+   const guard=sessionGuard(session)
+   guard.sql+=" AND EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND role='owner') AND (?=0 OR EXISTS(SELECT 1 FROM penny_mail_identity WHERE singleton=1 AND trim(postal_address)!=''))";guard.params.push(session.operatorId,Number(input.enabled))
+   const db=guardedDatabase(runtime.database.binding,guard),now=new Date().toISOString()
+diff --git a/tests/base/mail-identity.test.ts b/tests/base/mail-identity.test.ts
+index 1a5d347..8807174 100644
+--- a/tests/base/mail-identity.test.ts
++++ b/tests/base/mail-identity.test.ts
+@@ -23,9 +23,19 @@ it('[NOTIFY-013][OPS-005] setup requires company and postal details, rejected se
+  const update=g.sent.at(-1)!;expect(update.from).toEqual({email:input.fromAddress,name:input.senderName});expect(update.reply_to?.email).toBe(input.replyTo);expect(body(update)).toContain(input.postalAddress)
+  // A legacy installation has already finished setup without a postal address.
+  await env.DB.prepare('DELETE FROM penny_mail_identity').run()
++ const custody=async()=>Object.fromEntries(await Promise.all(['penny_mail_identity','penny_weekly_summary','audit_entries','requester_update_permissions','notification_events','notification_intents','notification_batches','notification_attempts','notification_outbox','notification_outbox_attempts','notification_delivery_facts','penny_weekly_choices','penny_weekly_publications'].map(async table=>[table,(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY 1`).all()).results])))
++ const beforeWeekly=await custody()
++ const refused=await call('/api/operator/settings/weekly-summary',{enabled:true},g.operator,'PUT')
++ expect(refused.status).toBe(409)
++ expect(await refused.json()).toMatchObject({error:'postal_address_required',message:expect.stringMatching(/business postal address.*before enabling weekly requester summaries/iu)})
++ expect(await custody()).toEqual(beforeWeekly)
++ expect(await (await accepted(call('/api/operator/settings/weekly-summary',undefined,g.operator))).json()).toMatchObject({enabled:false})
+  await accepted(call('/api/operator/boards/subscriptions/vote-subscriptions',{enabled:false,version:g.disclosure.version},g.operator,'PUT'))
+  expect((await call('/api/operator/boards/subscriptions/vote-subscriptions',{enabled:true,version:g.disclosure.version+1},g.operator,'PUT')).status).toBe(409)
+  const before=g.sent.length;await g.status(slug,'planned');await g.flush();expect(g.sent.length).toBeGreaterThan(before)
+  expect(g.sent.filter(message=>message.personalizations[0].to[0].email===update.personalizations[0].to[0].email).length).toBeGreaterThan(1)
++ await accepted(call('/api/operator/settings/business',{companyName:input.companyName,postalAddress:input.postalAddress,confirmPostalAddress:true},g.operator,'PUT'))
++ await accepted(call('/api/operator/settings/weekly-summary',{enabled:true},g.operator,'PUT'))
++ expect(await (await accepted(call('/api/operator/settings/weekly-summary',undefined,g.operator))).json()).toMatchObject({enabled:true})
+  await proveReleaseMailIdentity()
+ })
+diff --git a/tests/base/weekly-summary-flow.ts b/tests/base/weekly-summary-flow.ts
+index ccb2223..2039e12 100644
+--- a/tests/base/weekly-summary-flow.ts
++++ b/tests/base/weekly-summary-flow.ts
+@@ -28,7 +28,26 @@ export async function proveWeeklySummary(){
+  await action(`/api/public/requests/${g.requests[0].slug}/vote`,{subscriptionVersion:enabled.version},voter)
+  await action(`/api/public/requests/${g.requests[0].slug}/vote`,{subscriptionVersion:enabled.version},g.person)
+  expect(await (await call('/api/public/requester/weekly-summary',undefined,voter)).json()).toMatchObject({subscribed:true,origin:'vote'})
++ const peerEmail=['synthetic-penny-weekly-peer','example.test'].join('@')
++ await action('/api/operator/settings/operators',{email:peerEmail})
++ const inviteToken=new URL(messages.findLast(message=>message.to===peerEmail)!.url).searchParams.get('token')
++ const joined=await call('/auth/confirm',{token:inviteToken});expect(joined.status).toBe(303)
++ const peer={Cookie:joined.headers.get('Set-Cookie')!.split(';')[0]}
++ const weeklyBefore=(await env.DB.prepare('SELECT * FROM penny_weekly_summary').all()).results
++ const auditsBefore=(await env.DB.prepare('SELECT * FROM audit_entries ORDER BY id').all()).results
++ expect((await call('/api/operator/settings/weekly-summary',{enabled:true},{...g.operator,Origin:'https://untrusted.invalid'},'PUT')).status).toBe(403)
++ expect((await call('/api/operator/settings/weekly-summary',{enabled:true},peer,'PUT')).status).toBe(403)
++ expect((await env.DB.prepare('SELECT * FROM penny_weekly_summary').all()).results).toEqual(weeklyBefore)
++ expect((await env.DB.prepare('SELECT * FROM audit_entries ORDER BY id').all()).results).toEqual(auditsBefore)
++ await env.DB.exec("CREATE TRIGGER refuse_weekly_audit BEFORE INSERT ON audit_entries WHEN NEW.action='notifications.weekly_setting' BEGIN SELECT RAISE(ABORT,'synthetic-penny-weekly-audit-failure'); END;")
++ expect((await call('/api/operator/settings/weekly-summary',{enabled:true},g.operator,'PUT')).status).toBe(503)
++ expect((await env.DB.prepare('SELECT * FROM penny_weekly_summary').all()).results).toEqual(weeklyBefore)
++ expect((await env.DB.prepare('SELECT * FROM audit_entries ORDER BY id').all()).results).toEqual(auditsBefore)
++ await env.DB.exec('DROP TRIGGER refuse_weekly_audit')
+  await action('/api/operator/settings/weekly-summary',{enabled:true},g.operator,'PUT')
++ expect(await (await action('/api/operator/settings/weekly-summary',undefined,g.operator,'GET')).json()).toMatchObject({enabled:true,canConfigure:true})
++ const actor=(await env.DB.prepare("SELECT p.id FROM operators p JOIN oa_operators o ON o.email=p.email WHERE o.role='owner'").first<{id:string}>())!
++ expect((await env.DB.prepare("SELECT actor_type,actor_id,details_json FROM audit_entries WHERE action='notifications.weekly_setting'").all()).results).toEqual([{actor_type:'operator',actor_id:actor.id,details_json:JSON.stringify({enabled:true})}])
+  for(const who of [g.person,control])await action('/api/public/requester/weekly-summary',{subscribed:true},who,'PATCH')
+  await action(`/api/operator/requests/${g.requests[0].slug}/status-updates`,{status:'planned',body:'Public weekly status',idempotencyKey:crypto.randomUUID()})
+  await action(`/api/operator/requests/${g.requests[0].slug}/comments`,{body:'Public weekly operator reply'})
+diff --git a/tests/browser/weekly-summary-choice.mjs b/tests/browser/weekly-summary-choice.mjs
+index 2834606..447cdcc 100644
+--- a/tests/browser/weekly-summary-choice.mjs
++++ b/tests/browser/weekly-summary-choice.mjs
+@@ -4,6 +4,8 @@ import assert from 'node:assert/strict'
+ export async function weeklySummaryChoice({browser,owner,runtime,viewport,inspect}) {
+  const {origin}=runtime,setting=owner.getByRole('region',{name:'Weekly requester summary',exact:true})
+  const ownerChoice=setting.getByRole('checkbox',{name:'Enable weekly requester summaries',exact:true})
++ // An upgraded installation can have completed setup before postal admission.
++ await runtime.db.prepare('DELETE FROM penny_mail_identity').run()
+  await owner.goto(origin+'/app/settings#weekly-summary',{waitUntil:'networkidle'})
+  await setting.getByRole('button',{name:'Save weekly summary setting',exact:true}).waitFor()
+  assert.equal(await ownerChoice.isChecked(),false,'weekly summaries start off')
+@@ -63,6 +65,30 @@ export async function weeklySummaryChoice({browser,owner,runtime,viewport,inspec
+   assert.equal(await choice().isChecked(),false)
+   assert.equal(await choice().isDisabled(),true,'owner-off prevents opting in')
+   await inspect('weekly-activity-unavailable',region(),page)
++  const custody=async()=>Object.fromEntries(await Promise.all(['penny_mail_identity','penny_weekly_summary','audit_entries','requester_update_permissions','notification_events','notification_intents','notification_batches','notification_attempts','notification_outbox','notification_outbox_attempts','notification_delivery_facts','penny_weekly_choices','penny_weekly_publications'].map(async table=>[table,(await runtime.db.prepare(`SELECT * FROM ${table} ORDER BY 1`).all()).results])))
++  const before=await custody()
++  await ownerChoice.check()
++  const refused=owner.waitForResponse(response=>new URL(response.url()).pathname==='/api/operator/settings/weekly-summary'&&response.request().method()==='PUT')
++  await setting.getByRole('button',{name:'Save weekly summary setting',exact:true}).click()
++  const refusal=await refused
++  assert.equal(refusal.status(),409)
++  const reason=await refusal.json()
++  assert.equal(reason.error,'postal_address_required')
++  await setting.getByRole('status').filter({hasText:reason.message}).waitFor()
++  assert.deepEqual(await custody(),before,'postal refusal changes no settings, audit, permissions or notifications')
++  await inspect('weekly-owner-postal-required',setting)
++  await owner.reload({waitUntil:'networkidle'})
++  assert.equal(await ownerChoice.isChecked(),false,'postal refusal does not save enablement')
++  await setting.getByRole('link',{name:'confirmed business postal address',exact:true}).click()
++  const business=owner.getByRole('region',{name:'Email identity and postal address',exact:true})
++  await business.getByLabel('Company name',{exact:true}).fill('Harbor Analytics')
++  await business.getByLabel('Business postal address',{exact:true}).fill('125 High Street, Boston, MA 02110, USA')
++  const confirmed=owner.waitForResponse(response=>new URL(response.url()).pathname==='/api/operator/settings/business'&&response.request().method()==='PUT')
++  await business.getByRole('button',{name:'Confirm company and postal address',exact:true}).click()
++  assert.equal((await confirmed).status(),200)
++  await business.getByLabel('Business postal address',{exact:true}).waitFor()
++  assert.equal(await runtime.db.prepare('SELECT postal_address FROM penny_mail_identity WHERE singleton=1').first('postal_address'),'125 High Street, Boston, MA 02110, USA')
++  await inspect('weekly-owner-postal-confirmed',business)
+   await enable(true)
+   await owner.reload({waitUntil:'networkidle'})
+   assert.equal(await ownerChoice.isChecked(),true,'owner setting persists')
+@@ -94,6 +120,6 @@ export async function weeklySummaryChoice({browser,owner,runtime,viewport,inspec
+   await inspect('weekly-activity-opted-out',region(),page)
+   assert.deepEqual(errors,[],'weekly choice has no browser errors or external requests')
+   assert.deepEqual(await context.cookies(),[],'requester verification remains cookie-free')
+-  console.log(`[NOTIFY-010] native owner setting, requester choice and owner-off opt-out passed at ${viewport.width}`)
++  console.log(`[NOTIFY-010 NOTIFY-014] native postal refusal and recovery, owner setting, requester choice and owner-off opt-out passed at ${viewport.width}`)
+  } finally {await context.close()}
+ }
+diff --git a/tests/browser/workspace-clock.mjs b/tests/browser/workspace-clock.mjs
+index 773ed8b..4b8f517 100644
+--- a/tests/browser/workspace-clock.mjs
++++ b/tests/browser/workspace-clock.mjs
+@@ -15,8 +15,15 @@ const browser=await chromium.launch(browserOptions())
+ try{
+  for(const viewport of [{width:1440,height:900},{width:390,height:844}]){
+   const runtime=await startBrowserRuntime(),context=await browser.newContext({viewport,timezoneId:'America/New_York'})
+-  const errors=[],external=[]
+-  context.on('page',page=>{page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(message.type()==='error')errors.push(message.text())});page.on('request',request=>{if(new URL(request.url()).origin!==runtime.origin)external.push(new URL(request.url()).origin)})})
++  const errors=[],external=[],postalDiagnostics=[]
++  const postalUrl=runtime.origin+'/api/operator/settings/weekly-summary'
++  let postalRefused=false
++  context.on('response',response=>{if(response.url()===postalUrl&&response.request().method()==='PUT'&&response.status()===409)postalRefused=true})
++  context.on('page',page=>{page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{
++   if(message.type()!=='error')return
++   if(postalRefused&&message.location().url===postalUrl&&message.text()==='Failed to load resource: the server responded with a status of 409 (Conflict)')postalDiagnostics.push(message.text())
++   else errors.push(message.text())
++  });page.on('request',request=>{if(new URL(request.url()).origin!==runtime.origin)external.push(new URL(request.url()).origin)})})
+   try{
+    const claim=await context.request.post(runtime.origin+'/auth/bootstrap',{headers:{Origin:runtime.origin},data:{token:'synthetic-base-browser-setup-token-12345',displayName:'Maya Chen',returnTo:'/setup'},maxRedirects:0})
+    assert.equal(claim.status(),303)
+@@ -85,6 +92,7 @@ try{
+    await page.reload({waitUntil:'networkidle'})
+    assert.equal(await settings.getByLabel('Workspace timezone',{exact:true}).inputValue(),'Europe/London')
+    await inspect('admin-settings',settings)
++   assert.deepEqual(postalDiagnostics,['Failed to load resource: the server responded with a status of 409 (Conflict)'],'only the verified postal refusal produces an expected HTTP diagnostic')
+    assert.deepEqual(errors,[])
+    assert.deepEqual(external,[])
+    console.log(`[OPS-008] setup, persisted quiet-hours off and legacy confirmation passed at ${viewport.width}`)

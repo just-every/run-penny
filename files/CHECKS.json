@@ -1,0 +1,128 @@
+{
+  "tag": "sd-penny-c-f57",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f57",
+  "head": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e",
+  "base": "ca50734876911283ca703df43f26836f310f67c0",
+  "mergedMain": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "createdAt": "2026-11-06T01:00:31.619014+00:00",
+  "checks": [
+    {
+      "command": "cloud_run npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0,
+      "note": "Frozen dependencies, project Node and emitted Worker; private settings are excluded from evidence."
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/mail-identity.test.ts tests/base/notifications.test.ts -t 'setup requires|public event intent'",
+      "exit": 0,
+      "testsPassed": 2,
+      "testsUnselected": 14,
+      "testedHead": "ca50734876911283ca703df43f26836f310f67c0"
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/mail-identity.test.ts tests/base/notifications.test.ts",
+      "exit": 0,
+      "testsPassed": 16,
+      "testsUnselected": 0,
+      "testedHead": "ca50734876911283ca703df43f26836f310f67c0"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "testedHead": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e"
+    },
+    {
+      "command": "cloud_run pnpm exec rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run timeout 1200 env PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_CLOCK_SHOTS=<packet>/browser node tests/browser/workspace-clock.mjs",
+      "exit": 0,
+      "widths": [
+        1440,
+        390
+      ],
+      "testedHead": "ca50734876911283ca703df43f26836f310f67c0",
+      "note": "Runtime, all affected source and test bytes unchanged on final head; git diff --quiet returned 0. All contexts and runtimes close in finally blocks."
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "note": "Immediately after write. Generated views then restored from main, as required."
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 1,
+      "testedHead": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e",
+      "note": "After restoring main views: ACCEPTANCE.md generated content differs. Expected candidate-only mechanical exception."
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "testedHead": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e"
+    },
+    {
+      "command": "cloud_run npx -y @runeditrun/rer build",
+      "exit": 0,
+      "testedHead": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e"
+    },
+    {
+      "command": "cloud_run pnpm exec vitest run --config vitest.base.config.ts tests/base/mail-identity.test.ts tests/base/notifications.test.ts",
+      "exit": 0,
+      "testsPassed": 16,
+      "testsUnselected": 0,
+      "testedHead": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e",
+      "note": "After the final merge and final exact-head build."
+    },
+    {
+      "command": "pnpm run verify:base-source",
+      "exit": 0,
+      "testedHead": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e"
+    },
+    {
+      "command": "cloud_run pnpm exec rer check --profile first-party",
+      "exit": 0,
+      "testedHead": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e"
+    }
+  ],
+  "countsBefore": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "countsAfter": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "newTestRegistrations": 0,
+  "removedAssertions": 0,
+  "productPush": {
+    "status": "success",
+    "attempts": 1,
+    "head": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e"
+  },
+  "migrations": "none",
+  "publicationScan": "Not run in cloud. Required exact-tree full-history scan is a Mac lander duty.",
+  "ci": {
+    "runId": 42140705822,
+    "event": "push",
+    "observedStatus": "completed",
+    "observedConclusion": "failure",
+    "head": "e460e24b0a505d2a72aa1beb873fd401b1b72b0e",
+    "generatedViewOnlyException": true,
+    "failedJobs": 29,
+    "failedStep": "Check generated contract documents",
+    "requiredRegeneration": "ACCEPTANCE.md",
+    "githubApiCalls": 3
+  },
+  "generatedViewException": "All 29 failing shards stop only at generated contract documents; source lock succeeded. Local exact-head check exits 1 only for ACCEPTANCE.md after restoring main views. No product tests ran in this CI; exact-head local touched tests pass 16 of 16."
+}
