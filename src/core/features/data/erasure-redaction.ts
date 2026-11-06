@@ -1,5 +1,6 @@
 import { NativeError } from '../auth/native-tokens'
 import { keyColumns, type Cell, type Row } from './archive'
+import {checkScorecardCopy,redactScorecardCopy,scorecardCopyWords} from '../scorecards/erasure'
 
 /** Erasing a person removes their own records. Records that belong to the
  * business or to other people stay, without the person's words:
@@ -45,7 +46,7 @@ export function planRedactions(found: { table: string; key: string; columns: str
    redactions.set(id(copy.table, copy.key), { ...copy, columns: [...new Set([...(existing?.columns ?? []), ...copy.columns])] })
   } else if (choices.has(copy.table)) {
    const row = rows.get(id(copy.table, copy.key))!
-   blockedCopies.push({ ...copy, resolvable: true, values: Object.fromEntries(copy.columns.map(column => [column, { current: String(row[column]), redacted: redact(String(row[column]), literals) }])) })
+   blockedCopies.push({ ...copy, resolvable: true, values: Object.fromEntries(copy.columns.map(column => [column, { current: String(row[column]), redacted: redactScorecardCopy(copy.table,column,String(row[column]),text=>redact(text,literals)) }])) })
   } else blockedCopies.push(copy)
  }
  return { blockedCopies, redactions: [...redactions.values()] }
@@ -58,10 +59,13 @@ export function checkCopyResolutions(blocked: BlockedCopy[], resolutions: CopyRe
  for (const copy of blocked) {
   const chosen = resolutions.filter(item => item.table === copy.table && item.key === copy.key)
   if (chosen.length !== 1) fail('erasure_ambiguous_copies')
+  const current=Object.fromEntries(Object.entries(copy.values??{}).map(([column,value])=>[column,value.current]))
+  const next=chosen[0].resolution==='rename'?chosen[0].values??{}:Object.fromEntries(Object.entries(copy.values??{}).map(([column,value])=>[column,value.redacted]))
+  checkScorecardCopy(copy.table,current,next)
   if (chosen[0].resolution !== 'rename') continue
   const values = chosen[0].values ?? {}
   if ([...Object.keys(values)].sort().join() !== [...copy.columns].sort().join() || Object.values(values).some(text => !text.trim())) fail('erasure_ambiguous_copies')
-  if (Object.values(values).some(text => literals.some(literal => text.includes(literal)))) fail('erasure_rename_repeats')
+  if (Object.entries(values).some(([column,text]) => (scorecardCopyWords(copy.table,column,text)??[text]).some(word=>literals.some(literal => word.includes(literal))))) fail('erasure_rename_repeats')
  }
 }
 
@@ -83,7 +87,7 @@ export function redactionStatements(db: D1Database, tables: Table[], plan: { blo
  const follow = new Map<string, string | null>(), chosen = new Map<string, Record<string, Cell>>()
  for (const copy of plan.blockedCopies) {
   const choice = resolutions.find(item => item.table === copy.table && item.key === copy.key)!, row = plan.rows.get(id(copy.table, copy.key))!
-  const set = Object.fromEntries(copy.columns.map(column => [column, choice.resolution === 'rename' ? choice.values![column] : redact(String(row[column]), literals)]))
+  const set = Object.fromEntries(copy.columns.map(column => [column, choice.resolution === 'rename' ? choice.values![column] : redactScorecardCopy(copy.table,column,String(row[column]),text=>redact(text,literals))]))
   for (const column of copy.columns) { const old = String(row[column]); follow.set(old, follow.has(old) && follow.get(old) !== set[column] ? null : String(set[column])) }
   chosen.set(id(copy.table, copy.key), set)
   update(copy.table, copy.key, set)

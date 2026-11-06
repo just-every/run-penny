@@ -4,6 +4,7 @@ import {canonical,schema,checkSchemaHeaders,schemaPart,type TableHeader,type Row
 import {readErasureFrontier,checkErasureRead,importCustody,type FrontierPage} from './erasure-read'
 import {checkClauseErasureEdges,expandClauseErasure,erasureFiles} from './erasure-dependencies'
 import {keptRequestWords,keptAuthor,keptRedaction,planRedactions,rowsKey} from './erasure-redaction'
+import {scorecardCopyWords} from '../scorecards/erasure'
 
 function fail(code:string,status:400|409|413=409):never{throw new NativeError(code,status)}
 const ident=(name:string)=>'"'+name+'"'
@@ -138,7 +139,7 @@ export function finishNativeScope(scope:NativeScope){
   (table==='roadmap_update_versions'&&row.published_at!==null&&['title','problem','body'].includes(column)))
  const copies:{table:string;key:string;columns:string[]}[]=[],redacted=learningRedactions(data,selected)
  const keptRow=(table:ErasureTable,row:Row)=>(kept[table.name]??[]).includes(row)
- for(const table of tables){if(['audit_entries','operators','operator_sessions'].includes(table.name))continue;for(const row of data[table.name]){if(marked(table,row))continue;const columns=Object.entries(row).filter(([column,value])=>!redacted(table.name,row,column)&&!(keptRow(table,row)&&column in keptRedaction)&&!['id','created_at','updated_at','token_hash','token','slug','storage_key','subject_hash','key_hash','body_hash'].includes(column)&&strings(value).some(text=>[...literals].some(literal=>text.includes(literal)&&!independentPublicPhrase(table.name,row,column,literal)))).map(([column])=>column);if(columns.length)copies.push({table:table.name,key:rowKey(table,row),columns})}}
+ for(const table of tables){if(['audit_entries','operators','operator_sessions'].includes(table.name))continue;for(const row of data[table.name]){if(marked(table,row))continue;const columns=Object.entries(row).filter(([column,value])=>!redacted(table.name,row,column)&&!(keptRow(table,row)&&column in keptRedaction)&&!['id','created_at','updated_at','token_hash','token','slug','storage_key','subject_hash','key_hash','body_hash'].includes(column)&&(typeof value==='string'?scorecardCopyWords(table.name,column,value)??strings(value):strings(value)).some(text=>[...literals].some(literal=>text.includes(literal)&&!independentPublicPhrase(table.name,row,column,literal)))).map(([column])=>column);if(columns.length)copies.push({table:table.name,key:rowKey(table,row),columns})}}
  const rows=new Map(tables.flatMap(table=>data[table.name].filter(row=>!marked(table,row)).map(row=>[rowsKey(table.name,rowKey(table,row)),row] as const)))
  const {blockedCopies,redactions}=planRedactions(copies,tables.flatMap(table=>(kept[table.name]??[]).map(row=>({table:table.name,key:rowKey(table,row)}))),rows,[...literals])
  for(const row of data.audit_entries)if(!audits.includes(row)&&strings(row.details_json).some(text=>[...ids,...literals].some(literal=>text.includes(literal))))blockedCopies.push({table:'audit_entries',key:rowKey(tables.find(table=>table.name==='audit_entries')!,row),columns:['details_json']})

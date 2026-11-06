@@ -102,3 +102,11 @@ and release publication retains its current target and mapping checks. Proxy
 votes grant neither verified identity nor email permission. Other operator
 resource families and complete lifecycle-webhook coverage remain unfinished
 under DATA-006.
+
+The offline contract journey validates the served document against the retained
+OpenAPI 3.1 structural schema and validates populated native responses against
+its response schemas. Each operation succeeds with only its declared scope;
+missing, invalid, insufficient and revoked credentials refuse without business
+changes. Native HTTP cases also cover server requests without Origin, foreign
+Origin and cross-site mutation refusals, malformed JSON, unsupported content
+types and oversized bodies.
