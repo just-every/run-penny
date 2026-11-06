@@ -143,17 +143,20 @@
       "missing": 78
     }
   },
-  "ci": [
-    {
-      "id": 42204073677,
-      "name": "Verify Penny",
-      "event": "push",
-      "status": "in_progress",
-      "conclusion": null,
-      "head_sha": "676857454ae3d817900f89ca1a104c7c2a7a1390",
-      "html_url": "https://github.com/just-every/run-penny/actions/runs/42204073677"
-    }
-  ],
+  "ci": {
+    "run_id": 42204073677,
+    "event": "push",
+    "conclusion": "failure",
+    "head_sha": "676857454ae3d817900f89ca1a104c7c2a7a1390",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42204073677",
+    "status": "completed",
+    "generated_view_exception": true,
+    "failed_shards": 29,
+    "failed_step": "Check generated contract documents",
+    "observed": "2026-11-06T10:44:36.329823+00:00",
+    "github_invocations": 6,
+    "failed_log_command": "gh run view 42204073677 --repo just-every/run-penny --job 127846256329 --log-failed"
+  },
   "publication": {
     "product_push": "succeeded first attempt",
     "scan": "fleet lander only; no cloud scan claimed",

@@ -43,7 +43,7 @@ PROBES.md records the concrete runtime probe results. All new text was checked f
 
 1. NOT MET for the full clause: the selected existing-resource journey passes, but remaining resources and webhook outcomes are omitted. No DONE claim.
 2. PASS for selected scope: nonempty native fixtures, least-scope successes and refused unsafe actions with unchanged custody, including replay. OpenAPI test lines 129–256.
-3. PENDING: exact-head branch Verify was discovered as running; the cloud run does not claim its conclusion. The native journey is included by the existing base shard glob.
+3. NOT ESTABLISHED for a DONE claim: exact-head Verify stopped before test execution solely on the required restored generated view. All 9 touched native tests passed locally on the exact SHA. The generated-view exception permits the branch handoff, with final generated-view Verify left to the lander.
 4. PASS for local proof: all 9 touched native tests reran after the candidate commit; no relevant bytes changed afterwards.
 5. UNCHANGED: no new inherited Base duty or acceptance sentence was introduced.
 6. PARTIAL accurately retained with its full existing Gap; generation and check pass before the required view restoration. Existing Judgment provenance remains unchanged because no status was promoted.
@@ -57,10 +57,12 @@ Pre-ready: the new response behaviors have concrete native assertions; all prior
 
 ## CI and publication custody
 
-Exact candidate push Verify: run 42204073677, event push, full head `676857454ae3d817900f89ca1a104c7c2a7a1390`, observed in_progress with no conclusion at discovery. URL: https://github.com/just-every/run-penny/actions/runs/42204073677 . No dispatch, rerun, failed-job log download or short-interval polling was performed. Three GitHub API calls were used at this observation, including one initial abbreviated-head query with no results and main's full-head status discovery.
+Exact candidate push Verify: run 42204073677, event push, full head `676857454ae3d817900f89ca1a104c7c2a7a1390`, completed with failure solely at Check generated contract documents in all 29 shards. The plan passed, source lock steps passed, and no shard test command ran. The same generated-view check reproduces locally with ACCEPTANCE.md generated content differs. This is precisely the brief’s allowed generated-view exception; it is not a passing CI test run. URL: https://github.com/just-every/run-penny/actions/runs/42204073677 . No dispatch, rerun or short-interval status polling was performed. Six GitHub invocations were used: the initial abbreviated-head query, main full-head discovery, candidate discovery, the candidate status poll more than 300 seconds later, the completed-run job listing and one failed-job archive read. The archive command was `gh run view 42204073677 --repo just-every/run-penny --job 127846256329 --log-failed`; its sanitized actual output is CI-FAILED.log. No repair round was needed or attempted.
 
 For baseline context only, main `6c1eb018f6391de17e04fc8868c0c74f8732abd8` has successful Verify runs 42201695865 and 42200169242 and successful Run site 42201695577. These are not presented as candidate proof.
 
 Product push custody is separate from evidence transfer. All report files are outside the product checkout and selected explicitly for the report-only evidence ref. Evidence transfer does not signify DONE, acceptance, READY or landing. Publication scanning and the guarded landing remain fleet work. There is no known real test failure or missing account blocking this selected slice.
 
 Evidence publication readback: the first report-only head `c0d3fb6994a18930981f35a7147fe6871ba08613` was fetched through the evidence entrypoint. Its manifest, product head and all 14 file hashes verified. EVIDENCE-TRANSFER.json is that actual readback receipt; the final evidence update includes it with the complete packet.
+
+Final CI receipt: CI.json, CI-JOBS.json and CI-FAILED.log supersede the earlier discovery-only observation. The run is eligible only under the explicit generated-view exception; final landing still requires the fleet’s regenerated views, exact-head green Verify and publication scan.
