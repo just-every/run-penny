@@ -3270,8 +3270,8 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | Clauses | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
 | Published | 59 | 56 | 1 | 116 |
-| Target and push further | 20 | 68 | 77 | 165 |
-| All | 79 | 124 | 78 | 281 |
+| Target and push further | 21 | 68 | 76 | 165 |
+| All | 80 | 124 | 77 | 281 |
 
 | Clause | Title | Kind | Status | Evidence | Gap |
 | --- | --- | --- | --- | --- | --- |
@@ -3403,7 +3403,7 @@ Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6
 | `CAP-003` | Zendesk | target | missing |  | Zendesk OAuth, API and webhook fixtures at the network edge: install, link, create and proxy-vote from the sidebar; tag-triggered capture creates one item per ticket however often the webhook replays; the status appears in the sidebar; uninstalling revokes and deletes the tokens. |
 | `CAP-004` | Intercom | target | missing |  | Intercom API and webhook fixtures run CAP-003's journey and show company attributes arriving as private segment attributes. |
 | `CAP-005` | HappyToHelp | target | missing |  | A journey against a running HappyToHelp test installation links a ticket, captures one by tag and receives the drafted status reply on that ticket. |
-| `CAP-006` | Help Scout | target | missing | `tests/browser/helpscout-capture.mjs`; `tests/base/upgrade.test.ts` | Help Scout API fixtures: link, create, tag capture and mapping, each once per conversation. |
+| `CAP-006` | Help Scout | target | done | `tests/browser/helpscout-capture.mjs`; `tests/base/upgrade.test.ts` | |
 | `CAP-007` | Gong | target | missing |  | Gong API fixtures: filtered calls are ingested, proposals carry exact transcript spans and timestamps, accounts map through Gong's CRM association, and the fixture records no request for an out-of-filter call. |
 | `CAP-008` | Call recorders, recordings and transcripts | target | missing |  | Fathom, Zoom, Google Meet, Fireflies, Grain and tl;dv fixtures each ingest one filtered call with timestamped spans and ignore an out-of-filter call; a VTT upload produces a searchable transcript whose highlight becomes evidence with a timestamp link; an audio upload shows progress, reserved and metered cost, and a visible failure when the provider fails. |
 | `CAP-009` | Email capture | target | done | `tests/base/penny-evidence.test.ts`; `tests/base/notifications.test.ts`; `tests/browser/operator-pages.mjs` |  |

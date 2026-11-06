@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 79 | 108 | 71 | 258 |
+| Core | 80 | 108 | 70 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 79 | 124 | 78 | 281 |
+| Full target | 80 | 124 | 77 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -1746,7 +1746,7 @@ Core · target · **missing** · Rules D-1, D-2
 
 #### CAP-006 — Help Scout
 
-Core · target · **missing** · Rules D-1, D-2
+Core · target · **done** · Rules D-1, D-2
 
 **Requirement.** A Help Scout sidebar app and tag-based capture with customer and company mapping, on CAP-003's terms.
 
@@ -1754,7 +1754,7 @@ Core · target · **missing** · Rules D-1, D-2
 1. Link, create, tag capture and mapping, each once per conversation.
 
 **Evidence.** `tests/browser/helpscout-capture.mjs`; `tests/base/upgrade.test.ts`
-**Gap.** Help Scout API fixtures: link, create, tag capture and mapping, each once per conversation.
+**Gap.** None.
 
 #### CAP-007 — Gong
 
