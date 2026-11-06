@@ -32,6 +32,7 @@ const accessibilityFailures = []
 const reviewWidths = [390]
 const captures = []
 const checks = []
+const docsRefusals = []
 const pageErrors = []
 const consoleErrors = [], externalRequests = [], expectedDiagnostics = []
 const expectedFailures = new Map(), observedFailures = new Set()
@@ -150,7 +151,7 @@ async function visit(page, width, { route, path, auth, contains, finalPath, stat
   if (contains) assert.ok(text.includes(contains), `${route} did not show expected content: ${contains}`)
   if (expectPage) await expectPage(page, route)
   checks.push({ route, requestedUrl: safeUrl(requestedUrl), finalUrl: safeUrl(page.url()), status: actualStatus, auth, contains: contains ?? null })
-  return { response, text }
+  return { response, text, serverText }
 }
 
 async function api(path, body, headers = {}, method = body === undefined ? 'GET' : 'POST') {
@@ -204,6 +205,55 @@ async function checkOperatorRoutes(page, width) {
   for (const item of routes) await visit(page, width, { ...item, auth: 'operator-session' })
 }
 
+// Use the mounted prose container and its actual content as the positive control:
+// docs use a div, so an absent article element alone would prove nothing.
+async function checkDocsRefusal(page, width) {
+  const known = await visit(page, width, { route: 'public-docs-page', path: `/docs/${docsSampleSlug}`, auth: 'public', contains: 'Install and deploy' })
+  const prose = page.locator('.docs-prose')
+  assert.equal(await prose.count(), 1, '[DOCS-001] the published page has a documentation body')
+  const paragraph = prose.locator('p').first()
+  const publishedText = (await paragraph.textContent()).trim()
+  const publishedHtml = await paragraph.innerHTML()
+  assert.ok(publishedText.length > 0 && publishedHtml.length > 0, '[DOCS-001] the published control has nonempty prose')
+  assert.match(known.serverText, /class="[^"]*docs-prose[^"]*"/, '[DOCS-001] the control is rendered in SSR bytes')
+  assert.ok(known.serverText.includes(publishedHtml), '[DOCS-001] SSR serves the same nonempty published prose')
+
+  for (const { route, path } of [
+    { route: 'public-docs-missing', path: '/docs/no-such-page' },
+    { route: 'public-docs-nested', path: `/docs/${docsSampleSlug}/no-such-page` },
+  ]) {
+    const missing = await visit(page, width, { route, path, status: 404, auth: 'public', contains: 'That page does not exist.' })
+    assert.doesNotMatch(missing.serverText, /class="[^"]*docs-(?:prose|page-head)[^"]*"|id="docs-content"|<article(?:\s|>)/i, '[DOCS-001] refused SSR has no documentation body or article')
+    assert.ok(!missing.serverText.includes(publishedHtml), '[DOCS-001] refused SSR excludes the published control prose')
+    assert.equal(await page.locator('.docs-prose, .docs-page-head, #docs-content, article').count(), 0, '[DOCS-001] hydrated refusal has no documentation body or article')
+    const hydrated = await page.locator('html').evaluate(element => element.outerHTML)
+    assert.ok(!hydrated.includes(publishedHtml) && !missing.text.includes(publishedText), '[DOCS-001] hydration does not restore published prose')
+    docsRefusals.push({ path, width, status: missing.response.status(), ssrProse: false, hydratedProse: false, control: `/docs/${docsSampleSlug}`, controlProseLength: publishedText.length })
+  }
+}
+
+// The shared route smoke asserts at 390; desktop is a capture of these same docs screens.
+async function captureDesktopDocs() {
+  const width = 1440
+  const context = await browser.newContext({ viewport: { width, height: 900 } })
+  try {
+    const page = await context.newPage()
+    watch(page)
+    for (const [route, path, status] of [
+      ['public-docs-page', `/docs/${docsSampleSlug}`, 200],
+      ['public-docs-missing', '/docs/no-such-page', 404],
+      ['public-docs-nested', `/docs/${docsSampleSlug}/no-such-page`, 404],
+    ]) {
+      expectedFailures.clear(); observedFailures.clear()
+      if (status >= 400) expectFailure(path, status)
+      const response = await page.goto(origin + path, { waitUntil: 'networkidle' })
+      await capture(page, route, origin + path, response.status(), 'public', width)
+    }
+  } finally {
+    await context.close()
+  }
+}
+
 async function checkPublicRoutes(page, width, requesterEmail) {
   const routes = [
     { route: 'public-root', path: '/', expectPage: assertLanding },
@@ -225,10 +275,9 @@ async function checkPublicRoutes(page, width, requesterEmail) {
     { route: 'worker-not-found', path: '/no-such-page', status: 404, contains: 'That page does not exist.' },
     { route: 'public-docs', path: '/docs', contains: 'Overview' },
     { route: 'public-docs-index', path: '/docs/', finalPath: '/docs', contains: 'Overview' },
-    { route: 'public-docs-page', path: `/docs/${docsSampleSlug}`, contains: 'Install and deploy' },
-    { route: 'public-docs-missing', path: '/docs/no-such-page', status: 404, contains: 'That page does not exist.' },
   ]
   for (const item of routes) await visit(page, width, { ...item, auth: 'public' })
+  await checkDocsRefusal(page, width)
 
   await visit(page, width, { route: 'requester-verify-invalid-link', path: `/portal/verify#token=${'A'.repeat(43)}`, auth: 'anonymous', contains: 'Verify your email' })
   expectFailure('/api/public/identity/email/verify',401)
@@ -482,6 +531,7 @@ try {
     await anonymousContext.close()
   }
 
+  await captureDesktopDocs()
   const mountedRoutes = await assertMountedRouteCoverage()
   const canonicalPath=path=>path.replace(/\/$/,'')==='/portal'?'/':path.replace(/\/$/,'')==='/portal/feedback'?'/portal/feedback':path==='/'?'/':path.replace(/\/$/,'')
   const stateCoverage=mountedRoutes.map(({sourcePath,file})=>({file,sourcePath,states:['empty','populated'].map(state=>{
@@ -500,7 +550,7 @@ try {
     runtime: 'Exact emitted production Start Worker modules in workerd; D1 migrations and Penny sample data seeded inside this browser test; local Base mail sent only to a test HTTP fixture; no hosted delivery claim.',
     browser: browserPath,
     viewports: reviewWidths,
-    mountedRoutes, stateCoverage,
+    mountedRoutes, stateCoverage, docsRefusals,
     captures,
     pageErrors, consoleErrors, externalRequests, expectedDiagnostics,
     layoutFailures,
@@ -509,7 +559,7 @@ try {
     checks,
   }
   await writeFile(join(output, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-  await writeFile(join(output, 'runtime.log'), `Captured ${captures.length} pages at 390px.\nChecked ${checks.length} route and auth states.\nPage errors: ${pageErrors.length}.\nLayout failures: ${layoutFailures.length}.\nDevelopment-copy failures: ${developmentCopyFailures.length}.\n`)
+  await writeFile(join(output, 'runtime.log'), `Captured ${captures.length} pages, including docs at 1440px and 390px.\nChecked ${checks.length} route and auth states.\nPage errors: ${pageErrors.length}.\nLayout failures: ${layoutFailures.length}.\nDevelopment-copy failures: ${developmentCopyFailures.length}.\n`)
   await writeFile(join(output, 'axe.json'), JSON.stringify(accessibilityFailures,null,2))
   assert.deepEqual(accessibilityFailures, [], '[BASE-PUBLIC-003] all public and operator route captures pass WCAG AA axe checks')
   assert.ok(captures.filter(c=>c.state==='populated').length>=58,'[BASE-PUBLIC-003] retain the original populated captures per width')

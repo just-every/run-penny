@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the mounted docs route journey with a nonempty published-page control, then unknown single and nested slugs. Assert real HTTP 404 and documentation prose and article exclusion in both SSR bytes and the hydrated document, with desktop and phone captures. DOCS-001 stays partial for its other named gaps. No runtime, migration or configuration change is required.
+
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
 
 - Prove native learning refuses otherwise valid model output carrying identity, derived identity, grant or authority fields at root and option boundaries. The existing learning journey reads unchanged native authority and selected scope after each refusal, retains permitted originals without an artifact or commitment, and accepts valid output with native account derivation and metered run accounting. LEARN-001 stays partial for deployment principal pinning and live source and model qualification. No runtime, migration or configuration change is required.
