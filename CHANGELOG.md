@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Serve an offline OpenAPI document at `/docs/openapi.json` for the existing scoped board, request, comment, status, release and proxy-vote operations. Share request validators with native routes and reconcile populated HTTP responses, invalid inputs, missing credentials and insufficient scopes in one built-Worker sanity journey, replacing the overlapping native publication registration with all of its assertions retained. Preserve native admission, explicit approval, held wording and consent boundaries. DATA-006 remains partial for other resource families, full pagination and filters, and lifecycle-webhook proof. No migration or configuration change is required.
+
 - Prove full and partial hierarchy-name search without a type filter, exact destinations across mixed paginated results, and independent destinations for equal-name products after navigation and reload. OPS-004 remains partial with its finer permissions and capacity proof open. No migration or configuration change.
 
 - Search native products, components and features by full or partial name alongside existing workspace records, retaining global ordering and pagination. Result links identify and focus the particular hierarchy record. Extend the existing native and mounted browser journeys with hierarchy identity, ordering, page boundaries and current authority checks. OPS-004 remains partial for finer record permissions and capacity proof. No migration or configuration change is required.
