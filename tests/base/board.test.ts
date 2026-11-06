@@ -110,6 +110,8 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  expect((await env.DB.prepare('SELECT count(*) AS n FROM operator_sessions').first<{n:number}>())!.n).toBe(0)
 })
 it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total',async()=>{
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-11-06T12:00:00.000Z'))
+ try{
  const g=await graph(),slug=await g.submit('With attachment');await g.approve(slug,'Public attachment request')
  const tag=await call('/api/operator/catalog/tags',{name:'Private enterprise context'},g.operator);expect(tag.status).toBe(201)
  const tagId=(await tag.json() as {id:string}).id
@@ -124,6 +126,7 @@ it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves privat
  for(let room=Math.floor((limits.uploadBytesPerRequest-await stored())/limits.uploadBytesPerFile);room>0;room--)expect((await pdf(limits.uploadBytesPerFile)).status).toBe(201);const left=limits.uploadBytesPerRequest-await stored(),objects=(await env.FILES.list()).objects.length;expect((await Promise.all([pdf(left),pdf(left)])).map(r=>r.status).sort(),'a request keeps its files within the per-request total').toEqual([201,400]);expect(await stored()).toBe(limits.uploadBytesPerRequest);expect((await env.FILES.list()).objects.length).toBe(objects+1)
  expect(await (await call(`/api/public/requests/${slug}`)).text()).not.toContain('Private enterprise context')
  await proveInternalBoardExclusion({...g,slug,file})
+ }finally{vi.useRealTimers()}
 })
 
 it('[BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back',async()=>{
