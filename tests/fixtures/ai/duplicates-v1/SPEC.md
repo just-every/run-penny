@@ -57,3 +57,11 @@ Keep this initial corpus stable. Never remove, shrink or relabel cases based on
 scores. Changes to examples or judgments require a new documented version.
 This set does not satisfy the other AI-011 corpora, configured-model reports,
 degraded-model gate, dated model receipts or R-13 theme adjudication.
+
+The existing command journey also writes a temporary control corpus beside its
+temporary report. Six identical export needs compete for five response slots;
+correction requests are labeled as different needs. Known returned ranks and
+the excluded sixth candidate exercise true positives, false positives, false
+negatives and true negatives independently of the scorer's formulas. The
+authored corpus above stays unchanged; this command control does not contribute
+to its reported quality or label counts.

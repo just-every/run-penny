@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "4d55893b3e852a9e1bb05800c815a3fbbe9db7e3e261cbcad691506cabaa2d06",
+      "sha256": "c74875e972acb37f4aaadcaf17f5a8054df399159a96540e839a477f71616b7e",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "808e601f5b1e981ae36a42d6c92736f85f5fd144816884bbc2b42bd092ba05a4",
+      "sha256": "9439ebc4b0a2cb8930af3bac0bd6297dbe2c494ad7f768f68bab20cc867deac4",
       "executable": false
     },
     "DEMO.md": {
@@ -9122,7 +9122,7 @@
       "executable": false
     },
     "tests/fixtures/ai/duplicates-v1/SPEC.md": {
-      "sha256": "5fc9734dbbb20d609926d998ec310783989d839aec25fcb842b14805ea995743",
+      "sha256": "90f7799cf2396427580584073e2c561e71bc4b9516730416a463106cefd2edf9",
       "executable": false
     },
     "tests/fixtures/ai/redaction-v1/cases.json": {
@@ -9294,7 +9294,7 @@
       "executable": false
     },
     "tests/runtime/ai-eval-command.mjs": {
-      "sha256": "58310bfba8df495dd97611f114855eccef68d1bdaa9f59248ac4fb84d9709e06",
+      "sha256": "d1cffa12807af3614ef3467740e9882313db4f2ff766f6e72e739898c10a2f2b",
       "executable": false
     },
     "tests/runtime/duplicate-suggestions-scale.mjs": {
