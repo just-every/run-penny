@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "d4f48db1b4a2f3e466891c016364b064dba54f2cce201146c5251d7e24f3ece4",
+      "sha256": "05c5b6ef75cc5639bcfc2c1ba0776d855c87da6fb6f7fc609c881cba0229f978",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "76a5b98f87c5ea5933049b17c2769c7fc9462067f01429491273b54de9fc1596",
+      "sha256": "618165610ddb30816125f143bee6931e303c7249a8e4cb94baf59bd716415a1c",
       "executable": false
     },
     "DEMO.md": {
@@ -8869,6 +8869,14 @@
       "sha256": "c0a09a3c501c404e52845892ff01acb0f145ddc7da0636776c0526b9670cf1c6",
       "executable": false
     },
+    "tests/browser/keyboard-controls.mjs": {
+      "sha256": "6bb5d50a9992406d3c3a6161a64ec9bf0d3a3df0c67a89acb56a708a14b8f485",
+      "executable": false
+    },
+    "tests/browser/keyboard-journey.mjs": {
+      "sha256": "97fcfb6dd4f174981c7b1df588ff9d8f812fcb28dabecf48cff569ba91a4f552",
+      "executable": false
+    },
     "tests/browser/learning-journey.mjs": {
       "sha256": "43369b0af3c8f3fdb0912732da5f6519cd13ccbc83daf706b6c02f2d59928e83",
       "executable": false
@@ -9050,7 +9058,7 @@
       "executable": false
     },
     "tests/browser/requester-board.mjs": {
-      "sha256": "82ac05e4b70fe781510f6c32065d71937f9696a55ec95385aeaf8b87db763e9d",
+      "sha256": "04affc073545ab09ce01d0188f81965e96c6d0bb8725dec2cc31bde7c260b3cb",
       "executable": false
     },
     "tests/browser/requester-comment-edit.mjs": {
