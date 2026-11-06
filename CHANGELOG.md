@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend REQ-019's existing internal-board journey with rendered roadmap detail responses for both sources and populated release list and detail responses through the API and portal. The public control remains readable while internal roadmap and refused release documents return 404. Preserve the native visibility, unchanged publication custody and scheduler mail assertions; REQ-019 remains partial for the omitted request-move and five-second withdrawal proof. No runtime, migration or configuration change is required.
+
 - Run REQ-019's existing internal-board exclusion journey through the emitted Worker's scheduled handler with a pinned clock. Correlate public status, reply and release mail with the native follower, durable delivery and accepted attempt, and prove suppressed private batches never reach the mail edge. Include release attempt custody in the unchanged-state refusal snapshot. Retain PARTIAL and the omitted request-move and five-second withdrawal proof. No runtime, migration or configuration change is required.
 
 - Strengthen LEARN-001's existing native model-boundary journey with a selected requester-authored request, account evidence and an existing explicit update permission. Forged root and option fields preserve populated identity, permission, follow and grant custody and create no derived work; valid output derives both requester and account dimensions from originals while retaining run accounting. LEARN-001 remains partial for deployment principal pinning and live qualification. No runtime, migration or configuration change is required.
