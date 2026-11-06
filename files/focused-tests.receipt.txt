@@ -1,0 +1,4 @@
+command=pnpm exec vitest run --config vitest.base.config.ts tests/base/request-status-workflow.test.ts tests/base/board.test.ts tests/base/requester-subscriptions.test.ts
+start=2026-11-06T02:01:34Z
+end=2026-11-06T02:01:55Z
+exit=0

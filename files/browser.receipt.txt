@@ -1,0 +1,4 @@
+command=PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=<packet>/browser cloud_run node tests/browser/request-decline.mjs
+start=2026-11-06T02:01:35Z
+end=2026-11-06T02:01:51Z
+exit=0

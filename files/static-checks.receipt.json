@@ -1,0 +1,50 @@
+[
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "run",
+      "typecheck"
+    ],
+    "start": "2026-11-06T02:02:39.947681+00:00",
+    "end": "2026-11-06T02:02:56.351422+00:00",
+    "exit": 0,
+    "log_sha256": "eaa95d9db081619ba59738af8d1b5b8eadce0d98ff3bd33f8df4619bf0e902af"
+  },
+  {
+    "name": "source-check",
+    "command": [
+      "pnpm",
+      "run",
+      "source:check"
+    ],
+    "start": "2026-11-06T02:02:56.351495+00:00",
+    "end": "2026-11-06T02:02:56.773669+00:00",
+    "exit": 0,
+    "log_sha256": "9c4a4d07fd52d634b49598fbcf45d354cc765c75031378e29599f5e23fc28100"
+  },
+  {
+    "name": "base-source-check",
+    "command": [
+      "pnpm",
+      "run",
+      "verify:base-source"
+    ],
+    "start": "2026-11-06T02:02:56.774051+00:00",
+    "end": "2026-11-06T02:02:57.040596+00:00",
+    "exit": 0,
+    "log_sha256": "58063cee43f152d66f1e06501ffa0ebd0be68b1286b8db2658183e11825be02a"
+  },
+  {
+    "name": "contract-check",
+    "command": [
+      "node",
+      "src/base/contract-docs.mjs",
+      "check"
+    ],
+    "start": "2026-11-06T02:02:57.040636+00:00",
+    "end": "2026-11-06T02:02:57.134802+00:00",
+    "exit": 1,
+    "log_sha256": "7ad216a96aec3893ae2ff91078f202d32a1232f8fefc9e6c15f2ec54b9e40063"
+  }
+]

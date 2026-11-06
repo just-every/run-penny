@@ -1,0 +1,117 @@
+{
+  "observed_utc": "2026-11-06T02:06:51.838031+00:00",
+  "head": "7d301296156d821e83b347292c1caecbeb600df3",
+  "branch": "cloud/sd-penny-c-f17",
+  "tracked_worktree_unchanged": true,
+  "index_unchanged": true,
+  "status_porcelain": "",
+  "browser_screenshots": [
+    {
+      "path": "browser/customer-declined-1440.png",
+      "bytes": 391123,
+      "sha256": "6ebed231a910bbe0e159e34980e3136457fa4cfa2d9b9d5737c1e405eebe4371"
+    },
+    {
+      "path": "browser/customer-declined-390.png",
+      "bytes": 251207,
+      "sha256": "227825bd910625cb715177eee8a0710638b02796fdbb9c3945c064e41ab760d5"
+    },
+    {
+      "path": "browser/customer-reopened-1440.png",
+      "bytes": 477126,
+      "sha256": "09e37389338da94fb08ed97c9cb4d771a5c2311dd6f7a52f99849c1dd94707ed"
+    },
+    {
+      "path": "browser/customer-reopened-390.png",
+      "bytes": 279447,
+      "sha256": "279ef88dbb75808360ca172c40f7220f461f53b5d632035dd705d1b35d4cc92c"
+    },
+    {
+      "path": "browser/declined-1440.png",
+      "bytes": 500381,
+      "sha256": "15522bdedd54f96256782afecd3710e38fada59027d4e54ffbdd53f1db431bf1"
+    },
+    {
+      "path": "browser/declined-390.png",
+      "bytes": 338369,
+      "sha256": "a781126a9d85b79c1a2ed7f138e52100d8ba1a6d58e650b908344ff08c08413f"
+    },
+    {
+      "path": "browser/declined-detail-1440.png",
+      "bytes": 208233,
+      "sha256": "79597ef045a69ba5d735e1ed94416bcc2691cf18ec154a03c7377b17f0ee21e3"
+    },
+    {
+      "path": "browser/declined-detail-390.png",
+      "bytes": 196569,
+      "sha256": "2573718c81ee7737f5250350f614abc890e00b1639a5f9dcdb13c249ced946e6"
+    },
+    {
+      "path": "browser/planned-1440.png",
+      "bytes": 498345,
+      "sha256": "fed1333c4a028996844f9cad56d2c62279459c4f75a4d8f0c4b154dda270ee35"
+    },
+    {
+      "path": "browser/planned-390.png",
+      "bytes": 336037,
+      "sha256": "3c2b8071b3eb590af4d6904d60bc27c76b8dd5607351efafa30050c158af63cf"
+    },
+    {
+      "path": "browser/planned-detail-1440.png",
+      "bytes": 206106,
+      "sha256": "67b8ddd588728dc2f3dc8699bf01c9b888ff85660e9b93453c86376ba39e9a21"
+    },
+    {
+      "path": "browser/planned-detail-390.png",
+      "bytes": 194287,
+      "sha256": "52fbd430a7b6a09db320a16e7f6678b6dc66311961da40d4c271c6c409ef1787"
+    },
+    {
+      "path": "browser/reason-required-1440.png",
+      "bytes": 500984,
+      "sha256": "c76a68fd907b017ae6bfa2f63aaa8dc2f5736fcaa7b8e776b6141fffa405073e"
+    },
+    {
+      "path": "browser/reason-required-390.png",
+      "bytes": 336599,
+      "sha256": "4b1d7fd8c8db4c6edf43a4c9aebdb8f95b8dc797edbe9d5d9dd8f00844a6a609"
+    },
+    {
+      "path": "browser/reason-required-detail-1440.png",
+      "bytes": 208888,
+      "sha256": "ba33a157f15871dec09ca79404395d8986259c647e7c3ff817f007d27dee5b5d"
+    },
+    {
+      "path": "browser/reason-required-detail-390.png",
+      "bytes": 194855,
+      "sha256": "7c645423a10f0f3d5e708d7b4568a330b699ae17d409380a8d305b94da63ae52"
+    },
+    {
+      "path": "browser/reversed-1440.png",
+      "bytes": 491555,
+      "sha256": "e1823c36228b1843f895cbb20bf409c5ab9b594d1af96fa9daffcb3d8fd1709e"
+    },
+    {
+      "path": "browser/reversed-390.png",
+      "bytes": 329990,
+      "sha256": "74beada14636902385121896b394f6b07a308edd0c989cf643fa0dcaf14fd1c8"
+    },
+    {
+      "path": "browser/reversed-detail-1440.png",
+      "bytes": 199570,
+      "sha256": "944edcaf75e61e17c3f404e2c866c57b01413d9542e16d9a110bd3c655826cf9"
+    },
+    {
+      "path": "browser/reversed-detail-390.png",
+      "bytes": 188309,
+      "sha256": "18ea641ee7efccf6e42d8161d92699c437e2722da3b82c4b4696582f7042b77b"
+    }
+  ],
+  "product_commits_created": 0,
+  "product_pushes": 0,
+  "PRs_created": 0,
+  "CI_API_calls": 0,
+  "CI_dispatches": 0,
+  "provider_calls": "none; paid and network edges use existing fixtures",
+  "browser_contexts_and_runtimes": "closed by journey finally blocks; no owned server remains"
+}

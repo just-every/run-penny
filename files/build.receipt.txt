@@ -1,0 +1,4 @@
+command=cloud_run npx -y @runeditrun/rer build
+start=2026-11-06T02:03:09Z
+end=2026-11-06T02:03:30Z
+exit=0

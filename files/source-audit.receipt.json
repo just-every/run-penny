@@ -1,0 +1,224 @@
+{
+  "source": "7d301296156d821e83b347292c1caecbeb600df3",
+  "comparison_main": "1d278bb9a1582cb59f92d7a41e131ed6286444c0",
+  "fresh_main": "84bad894d12e7f969f567177a126cb544a3237b1",
+  "observed_utc": "2026-11-06T02:04:24.389640+00:00",
+  "documents": {
+    "CONTRACT.md": {
+      "bytes": 351705,
+      "sha256": "9827207a74e95173d047a7a481047027fd043a1e5b0120199451f94f8125d029",
+      "immutable_raw_matches": true
+    },
+    "ACCEPTANCE.md": {
+      "bytes": 309987,
+      "sha256": "a1892ab4b7e449b40e22e11ee344bbf07d2e625d63a1bf79d9900d8e46e03378",
+      "immutable_raw_matches": true
+    },
+    "AGENTS.md": {
+      "bytes": 11191,
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968",
+      "immutable_raw_matches": true
+    }
+  },
+  "counts": {
+    "1d278bb9a1582cb59f92d7a41e131ed6286444c0": {
+      "counts": {
+        "done": 77,
+        "partial": 126,
+        "missing": 78
+      },
+      "ids": 281,
+      "REQ006": {
+        "title": "Voting",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/board.test.ts`",
+        "gap": "Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted."
+      },
+      "NOTIFY011": {
+        "title": "The author's vote and subscription",
+        "kind": "target",
+        "status": "partial",
+        "evidence": "`tests/base/requester-subscriptions.test.ts`; `visual/requester-subscriptions/NOTIFY-011/`",
+        "gap": "Verified submissions record the author vote and disclosed submission permission; publication notifies once, replies/status/release/rejection use the durable permission path, removing the vote retains it, and withdrawal/unsubscribe revoke it. Held-verification and board-off cases pass through routes; 1440/390 journeys pass. Gap: a separate SDK disclosure journey remains unproved; live inbox acceptance is R-6."
+      }
+    },
+    "7d301296156d821e83b347292c1caecbeb600df3": {
+      "counts": {
+        "done": 78,
+        "partial": 125,
+        "missing": 78
+      },
+      "ids": 281,
+      "REQ006": {
+        "title": "Voting",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/base/request-status-workflow.test.ts` \u2014 sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards (active statuses, Shipped and Declined refusal with unchanged participation, reopening and distinct totals); `tests/base/board.test.ts` \u2014 Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail (duplicate votes); `tests/base/requester-subscriptions.test.ts` \u2014 submission records one removable author vote and independent permission, delivers replies and status, and withdrawal revokes it (NOTIFY-011 author vote)",
+        "gap": ""
+      },
+      "NOTIFY011": {
+        "title": "The author's vote and subscription",
+        "kind": "target",
+        "status": "partial",
+        "evidence": "`tests/base/requester-subscriptions.test.ts`; `visual/requester-subscriptions/NOTIFY-011/`",
+        "gap": "Verified submissions record the author vote and disclosed submission permission; publication notifies once, replies/status/release/rejection use the durable permission path, removing the vote retains it, and withdrawal/unsubscribe revoke it. Held-verification and board-off cases pass through routes; 1440/390 journeys pass. Gap: a separate SDK disclosure journey remains unproved; live inbox acceptance is R-6."
+      }
+    },
+    "84bad894d12e7f969f567177a126cb544a3237b1": {
+      "counts": {
+        "done": 79,
+        "partial": 124,
+        "missing": 78
+      },
+      "ids": 281,
+      "REQ006": {
+        "title": "Voting",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/board.test.ts`",
+        "gap": "Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted."
+      },
+      "NOTIFY011": {
+        "title": "The author's vote and subscription",
+        "kind": "target",
+        "status": "partial",
+        "evidence": "`tests/base/requester-subscriptions.test.ts`; `visual/requester-subscriptions/NOTIFY-011/`",
+        "gap": "Verified submissions record the author vote and disclosed submission permission; publication notifies once, replies/status/release/rejection use the durable permission path, removing the vote retains it, and withdrawal/unsubscribe revoke it. Held-verification and board-off cases pass through routes; 1440/390 journeys pass. Gap: a separate SDK disclosure journey remains unproved; live inbox acceptance is R-6."
+      }
+    }
+  },
+  "source_clause_ids_unchanged_from_comparison_main": true,
+  "source_all_text_before_status_unchanged_from_comparison_main": true,
+  "fresh_main_all_text_before_status_unchanged_from_source": true,
+  "candidate_changed_status_rows": {
+    "REQ-006": {
+      "before": {
+        "title": "Voting",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/board.test.ts`",
+        "gap": "Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted."
+      },
+      "after": {
+        "title": "Voting",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/base/request-status-workflow.test.ts` \u2014 sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards (active statuses, Shipped and Declined refusal with unchanged participation, reopening and distinct totals); `tests/base/board.test.ts` \u2014 Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail (duplicate votes); `tests/base/requester-subscriptions.test.ts` \u2014 submission records one removable author vote and independent permission, delivers replies and status, and withdrawal revokes it (NOTIFY-011 author vote)",
+        "gap": ""
+      }
+    }
+  },
+  "fresh_main_changed_rows_from_candidate": {
+    "REQ-006": {
+      "candidate": {
+        "title": "Voting",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/base/request-status-workflow.test.ts` \u2014 sets a direct plan and ETA, resolves latest changes, configures private statuses and projects only eligible roadmap cards (active statuses, Shipped and Declined refusal with unchanged participation, reopening and distinct totals); `tests/base/board.test.ts` \u2014 Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail (duplicate votes); `tests/base/requester-subscriptions.test.ts` \u2014 submission records one removable author vote and independent permission, delivers replies and status, and withdrawal revokes it (NOTIFY-011 author vote)",
+        "gap": ""
+      },
+      "fresh_main": {
+        "title": "Voting",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/board.test.ts`",
+        "gap": "Refusing a vote outside Open, Under review, Planned or In progress, and the author's vote recorded at submission counting once, have no passing assertion; one vote per identity and the distinct-voter total are asserted."
+      }
+    },
+    "REQ-010": {
+      "candidate": {
+        "title": "Follow and consent",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/board.test.ts`",
+        "gap": "The unticked \"Email me updates\" control on submit and vote, the vote-subscription wording and its follow, the author's subscription, and the timestamped permission record from a follow or a tick have no passing assertion."
+      },
+      "fresh_main": {
+        "title": "Follow and consent",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/browser/requester-repair.mjs` with `tests/browser/requester-consent.mjs` \u2014 mounted explicit and automatic consent; `tests/base/requester-subscriptions.test.ts` \u2014 disclosed voting and submission, explicit consent address binding, exact grant time and unfollow revocation (`tests/base/request-consent.ts`)",
+        "gap": ""
+      }
+    },
+    "REQ-020": {
+      "candidate": {
+        "title": "Requester's own content",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/browser/requester-repair.mjs`",
+        "gap": "Gap: Own-comment editing, retention of approved public text during review, and auto-publish edit/history lack passing assertions."
+      },
+      "fresh_main": {
+        "title": "Requester's own content",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/ownership.test.ts` \u2014 requester comments retain approved public text through own-edit review and follow the request owner (native comment edit, rejection, approval, public readback, unchanged-state refusal and private activity isolation throughout review, and rejected-edit approval replay refusal); `tests/browser/requester-repair.mjs` with `tests/browser/requester-comment-edit.mjs` \u2014 mounted own-comment edit and operator rejection and approval, signed-out public wording and identity readback, activity and review screens at 1440 and 390",
+        "gap": "Gap: Request title and description edit retention, and auto-publish edits with earlier wording retained for operators still lack complete passing assertions. Holding-board own-comment editing and approved-text retention through pending, rejected and approved edits are proved."
+      }
+    },
+    "REQ-032": {
+      "candidate": {
+        "title": "Internal notes",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/penny-evidence.test.ts`",
+        "gap": "A note rendered distinctly from an operator comment has no passing assertion; its absence from portal responses, page metadata, releases and notifications is asserted."
+      },
+      "fresh_main": {
+        "title": "Internal notes",
+        "kind": "published",
+        "status": "done",
+        "evidence": "`tests/browser/internal-discussion.mjs` \u2014 native note and public comment controls on one approved request, distinct labelled rendering and unchanged identities after reload; `tests/base/penny-evidence.test.ts` \u2014 \"[AI-009 AI-006 EVID-006] answers and drafts resolve citations, enforce cost and role privacy, and send only to the chosen destination while keeping private records out of publication and requester mail\" checks portal responses, complete page metadata, releases and requester notifications.",
+        "gap": ""
+      }
+    },
+    "REL-005": {
+      "candidate": {
+        "title": "Customer-safe delivery",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/browser/loopjourney-release.mjs`",
+        "gap": "The owner's brand header (INT-008), sender identity (NOTIFY-013) and postal address (NOTIFY-014) in release email have no passing assertion in this clause's evidence; private context staying out of the public updates is asserted."
+      },
+      "fresh_main": {
+        "title": "Customer-safe delivery",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/browser/loopjourney-release.mjs`; `tests/base/mail-identity.test.ts` \u2014 setup requires company and postal details, rejected sender tests cannot save, and accepted identity reaches real follower and release transport; `tests/base/release-mail-identity.ts` \u2014 proveReleaseMailIdentity binds the native release delivery to its tested sender name, from address, reply-to, postal footer and signed-out unsubscribe, retaining wording and replay assertions.",
+        "gap": "The owner's brand header (INT-008) in release email and the remaining acceptance-point-1 email privacy obligations are unproved; private context staying out of the public updates is asserted. Live verified-domain, reply and inbox qualification remains held in R-6."
+      }
+    },
+    "LEARN-001": {
+      "candidate": {
+        "title": "Permitted originals",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/learning-stage2.test.ts`",
+        "gap": "The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted."
+      },
+      "fresh_main": {
+        "title": "Permitted originals",
+        "kind": "published",
+        "status": "partial",
+        "evidence": "`tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol",
+        "gap": "The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved."
+      }
+    }
+  },
+  "fresh_main_judged_from": "Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained.",
+  "candidate_changed_files": [
+    "CHANGELOG.md",
+    "CONTRACT.md",
+    "sources.lock.json",
+    "tests/base/request-status-workflow.test.ts"
+  ],
+  "runtime_routes_styles_migrations_unchanged_from_comparison_main": true,
+  "unchanged_existing_tests": {
+    "tests/base/board.test.ts": true,
+    "tests/base/requester-subscriptions.test.ts": true,
+    "tests/browser/request-decline.mjs": true
+  },
+  "status_rows_complete": true
+}

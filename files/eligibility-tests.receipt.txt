@@ -1,0 +1,4 @@
+command=pnpm exec vitest run --config vitest.base.config.ts tests/base/auth.test.ts -t requester-OAuth-verifies-at-the-provider-edge
+start=2026-11-06T02:02:38Z
+end=2026-11-06T02:02:49Z
+exit=0

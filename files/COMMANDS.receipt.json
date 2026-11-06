@@ -1,0 +1,300 @@
+{
+  "tag": "ct-judge-penny-req006-20261105-1305-sol1",
+  "source": "7d301296156d821e83b347292c1caecbeb600df3",
+  "completed_utc": "2026-11-06T02:09:25.198263+00:00",
+  "bootstrap": {
+    "global_identity_exit": 0,
+    "launcher_refresh_exit": 0,
+    "git_helper_setup_exit": 0,
+    "clone_exit": 0,
+    "repository_identity_exit": 0,
+    "dependency_install_exit": 0,
+    "setup_exit": 0
+  },
+  "executions": {
+    "focused-tests.receipt.txt": "command=pnpm exec vitest run --config vitest.base.config.ts tests/base/request-status-workflow.test.ts tests/base/board.test.ts tests/base/requester-subscriptions.test.ts\nstart=2026-11-06T02:01:34Z\nend=2026-11-06T02:01:55Z\nexit=0\n",
+    "eligibility-tests.receipt.txt": "command=pnpm exec vitest run --config vitest.base.config.ts tests/base/auth.test.ts -t requester-OAuth-verifies-at-the-provider-edge\nstart=2026-11-06T02:02:38Z\nend=2026-11-06T02:02:49Z\nexit=0\n",
+    "browser.receipt.txt": "command=PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=<packet>/browser cloud_run node tests/browser/request-decline.mjs\nstart=2026-11-06T02:01:35Z\nend=2026-11-06T02:01:51Z\nexit=0\n",
+    "build.receipt.txt": "command=cloud_run npx -y @runeditrun/rer build\nstart=2026-11-06T02:03:09Z\nend=2026-11-06T02:03:30Z\nexit=0\n"
+  },
+  "static_checks": [
+    {
+      "name": "typecheck",
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "start": "2026-11-06T02:02:39.947681+00:00",
+      "end": "2026-11-06T02:02:56.351422+00:00",
+      "exit": 0,
+      "log_sha256": "eaa95d9db081619ba59738af8d1b5b8eadce0d98ff3bd33f8df4619bf0e902af"
+    },
+    {
+      "name": "source-check",
+      "command": [
+        "pnpm",
+        "run",
+        "source:check"
+      ],
+      "start": "2026-11-06T02:02:56.351495+00:00",
+      "end": "2026-11-06T02:02:56.773669+00:00",
+      "exit": 0,
+      "log_sha256": "9c4a4d07fd52d634b49598fbcf45d354cc765c75031378e29599f5e23fc28100"
+    },
+    {
+      "name": "base-source-check",
+      "command": [
+        "pnpm",
+        "run",
+        "verify:base-source"
+      ],
+      "start": "2026-11-06T02:02:56.774051+00:00",
+      "end": "2026-11-06T02:02:57.040596+00:00",
+      "exit": 0,
+      "log_sha256": "58063cee43f152d66f1e06501ffa0ebd0be68b1286b8db2658183e11825be02a"
+    },
+    {
+      "name": "contract-check",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "start": "2026-11-06T02:02:57.040636+00:00",
+      "end": "2026-11-06T02:02:57.134802+00:00",
+      "exit": 1,
+      "log_sha256": "7ad216a96aec3893ae2ff91078f202d32a1232f8fefc9e6c15f2ec54b9e40063"
+    }
+  ],
+  "source_audit_file": "source-audit.receipt.json",
+  "immutable_sources_file": "immutable-source.receipt.json",
+  "terminal_custody_file": "terminal-custody.receipt.json",
+  "CI": {
+    "queries": 0,
+    "supplied_run_id": 42028886979,
+    "event": "push",
+    "head_sha": "7d301296156d821e83b347292c1caecbeb600df3",
+    "status": "completed",
+    "conclusion": "failure",
+    "provided_reason": "generated ACCEPTANCE.md and docs/CLAIMS.md freshness only; functional and aggregate jobs did not execute"
+  },
+  "secret_scan": "clean; only injected secret matches and token patterns checked, not a COMPLETE publication scan",
+  "files": [
+    {
+      "path": "PLAN.md",
+      "bytes": 3012,
+      "sha256": "5ca78abc93d837b282d80a53fcde7b3e3d517c31b7f6ca7ddd468519f5ba0472"
+    },
+    {
+      "path": "REPORT.md",
+      "bytes": 23548,
+      "sha256": "2c5d2514e222407f22b747d62368bc5ded303cc7507fc6de4750224d09236118"
+    },
+    {
+      "path": "VERDICT.md",
+      "bytes": 23548,
+      "sha256": "2c5d2514e222407f22b747d62368bc5ded303cc7507fc6de4750224d09236118"
+    },
+    {
+      "path": "base-source-check.log",
+      "bytes": 14287,
+      "sha256": "58063cee43f152d66f1e06501ffa0ebd0be68b1286b8db2658183e11825be02a"
+    },
+    {
+      "path": "browser/customer-declined-1440.png",
+      "bytes": 391123,
+      "sha256": "6ebed231a910bbe0e159e34980e3136457fa4cfa2d9b9d5737c1e405eebe4371"
+    },
+    {
+      "path": "browser/customer-declined-390.png",
+      "bytes": 251207,
+      "sha256": "227825bd910625cb715177eee8a0710638b02796fdbb9c3945c064e41ab760d5"
+    },
+    {
+      "path": "browser/customer-reopened-1440.png",
+      "bytes": 477126,
+      "sha256": "09e37389338da94fb08ed97c9cb4d771a5c2311dd6f7a52f99849c1dd94707ed"
+    },
+    {
+      "path": "browser/customer-reopened-390.png",
+      "bytes": 279447,
+      "sha256": "279ef88dbb75808360ca172c40f7220f461f53b5d632035dd705d1b35d4cc92c"
+    },
+    {
+      "path": "browser/declined-1440.png",
+      "bytes": 500381,
+      "sha256": "15522bdedd54f96256782afecd3710e38fada59027d4e54ffbdd53f1db431bf1"
+    },
+    {
+      "path": "browser/declined-390.png",
+      "bytes": 338369,
+      "sha256": "a781126a9d85b79c1a2ed7f138e52100d8ba1a6d58e650b908344ff08c08413f"
+    },
+    {
+      "path": "browser/declined-detail-1440.png",
+      "bytes": 208233,
+      "sha256": "79597ef045a69ba5d735e1ed94416bcc2691cf18ec154a03c7377b17f0ee21e3"
+    },
+    {
+      "path": "browser/declined-detail-390.png",
+      "bytes": 196569,
+      "sha256": "2573718c81ee7737f5250350f614abc890e00b1639a5f9dcdb13c249ced946e6"
+    },
+    {
+      "path": "browser/planned-1440.png",
+      "bytes": 498345,
+      "sha256": "fed1333c4a028996844f9cad56d2c62279459c4f75a4d8f0c4b154dda270ee35"
+    },
+    {
+      "path": "browser/planned-390.png",
+      "bytes": 336037,
+      "sha256": "3c2b8071b3eb590af4d6904d60bc27c76b8dd5607351efafa30050c158af63cf"
+    },
+    {
+      "path": "browser/planned-detail-1440.png",
+      "bytes": 206106,
+      "sha256": "67b8ddd588728dc2f3dc8699bf01c9b888ff85660e9b93453c86376ba39e9a21"
+    },
+    {
+      "path": "browser/planned-detail-390.png",
+      "bytes": 194287,
+      "sha256": "52fbd430a7b6a09db320a16e7f6678b6dc66311961da40d4c271c6c409ef1787"
+    },
+    {
+      "path": "browser/reason-required-1440.png",
+      "bytes": 500984,
+      "sha256": "c76a68fd907b017ae6bfa2f63aaa8dc2f5736fcaa7b8e776b6141fffa405073e"
+    },
+    {
+      "path": "browser/reason-required-390.png",
+      "bytes": 336599,
+      "sha256": "4b1d7fd8c8db4c6edf43a4c9aebdb8f95b8dc797edbe9d5d9dd8f00844a6a609"
+    },
+    {
+      "path": "browser/reason-required-detail-1440.png",
+      "bytes": 208888,
+      "sha256": "ba33a157f15871dec09ca79404395d8986259c647e7c3ff817f007d27dee5b5d"
+    },
+    {
+      "path": "browser/reason-required-detail-390.png",
+      "bytes": 194855,
+      "sha256": "7c645423a10f0f3d5e708d7b4568a330b699ae17d409380a8d305b94da63ae52"
+    },
+    {
+      "path": "browser/reversed-1440.png",
+      "bytes": 491555,
+      "sha256": "e1823c36228b1843f895cbb20bf409c5ab9b594d1af96fa9daffcb3d8fd1709e"
+    },
+    {
+      "path": "browser/reversed-390.png",
+      "bytes": 329990,
+      "sha256": "74beada14636902385121896b394f6b07a308edd0c989cf643fa0dcaf14fd1c8"
+    },
+    {
+      "path": "browser/reversed-detail-1440.png",
+      "bytes": 199570,
+      "sha256": "944edcaf75e61e17c3f404e2c866c57b01413d9542e16d9a110bd3c655826cf9"
+    },
+    {
+      "path": "browser/reversed-detail-390.png",
+      "bytes": 188309,
+      "sha256": "18ea641ee7efccf6e42d8161d92699c437e2722da3b82c4b4696582f7042b77b"
+    },
+    {
+      "path": "browser.log",
+      "bytes": 6085,
+      "sha256": "1cb0d56a9b18f61ce8f2ac810cb5d2116280cc7438806bcb83b7fe015a4ccb28"
+    },
+    {
+      "path": "browser.receipt.txt",
+      "bytes": 191,
+      "sha256": "d551019703d5535d1e7f0c782f0e4c20effed05d053f7742e5ba1a704e1d2784"
+    },
+    {
+      "path": "build.log",
+      "bytes": 42569,
+      "sha256": "9bce49bad7cc2b5b68fc72296054513ebd6315377ebe60f72429346673c2d73b"
+    },
+    {
+      "path": "build.receipt.txt",
+      "bytes": 106,
+      "sha256": "78fd70cd6b3faea2e4fe17757457b0436d4dbe15f73edd26c45d2008c82015cb"
+    },
+    {
+      "path": "contract-check.log",
+      "bytes": 135,
+      "sha256": "7ad216a96aec3893ae2ff91078f202d32a1232f8fefc9e6c15f2ec54b9e40063"
+    },
+    {
+      "path": "contract-parser.receipt.json",
+      "bytes": 369157,
+      "sha256": "613c89b83a46ea33fa0bf9d19a73587ad8769a589e1fce1f97edc116bf8f1a55"
+    },
+    {
+      "path": "dependency-install.log",
+      "bytes": 2421,
+      "sha256": "f76a73ef51da0fd467329ef7e8c238c99daaab8cd55e5ee6bbf5d40c35505e2b"
+    },
+    {
+      "path": "eligibility-tests.log",
+      "bytes": 420,
+      "sha256": "42e586b0b129bf1c777c8c716badec94dcd0b8fb2ded7aed7b81f3dae32b268c"
+    },
+    {
+      "path": "eligibility-tests.receipt.txt",
+      "bytes": 192,
+      "sha256": "c675d1e1163cdd36fd7072d87929a6a944de8804700ab5f212cfc6654dcc138f"
+    },
+    {
+      "path": "focused-tests.log",
+      "bytes": 410,
+      "sha256": "d92a7bb2224029ee01f7980db08644829c731c89fa59df663e5ed134f339b840"
+    },
+    {
+      "path": "focused-tests.receipt.txt",
+      "bytes": 230,
+      "sha256": "1ff84a600fe43c9740dad2a9e00752d50f9cea83cc46a0ebecc20b8f23902ae7"
+    },
+    {
+      "path": "immutable-source.receipt.json",
+      "bytes": 17281,
+      "sha256": "a229fcd8f6460a0108c5e32dc6edb1c0641a9d453caa61b9d6742ae0be062bc6"
+    },
+    {
+      "path": "setup.log",
+      "bytes": 2668799,
+      "sha256": "54f05c148be198ad43bb52f8452e2d192aa8a5e371888ad24ae9c5523492640e"
+    },
+    {
+      "path": "source-audit.receipt.json",
+      "bytes": 14521,
+      "sha256": "12b721c75d73d569b7af845e2382772142879157589769b867a70d6330f3112b"
+    },
+    {
+      "path": "source-check.log",
+      "bytes": 426341,
+      "sha256": "9c4a4d07fd52d634b49598fbcf45d354cc765c75031378e29599f5e23fc28100"
+    },
+    {
+      "path": "static-checks.receipt.json",
+      "bytes": 1246,
+      "sha256": "43ed555fd0d86871280cda47dd950967da9acd99ede3a90612823eb373cdeab4"
+    },
+    {
+      "path": "terminal-custody.receipt.json",
+      "bytes": 3903,
+      "sha256": "093c9814bb1ccbdd29a982f9e6c248423c00475f050648230538fba3436696e1"
+    },
+    {
+      "path": "terminal-remote-refs.receipt.txt",
+      "bytes": 130,
+      "sha256": "0cd18f1abcde4fce22c88778ffd333e00dea2cbdbe402f8a10a845590ebaf66d"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 227,
+      "sha256": "eaa95d9db081619ba59738af8d1b5b8eadce0d98ff3bd33f8df4619bf0e902af"
+    }
+  ]
+}

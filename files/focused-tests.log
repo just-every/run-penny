@@ -1,0 +1,12 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /home/agent/rer-consolidation/work/ct-judge-penny-req006-20261105-1305-sol1/run-penny
+
+
+ Test Files  3 passed (3)
+      Tests  10 passed (10)
+   Start at  02:01:35
+   Duration  20.62s (transform 1.80s, setup 0ms, import 5.73s, tests 13.45s, environment 0ms)
+

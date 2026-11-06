@@ -1,0 +1,15 @@
+# REQ-006 independent review plan
+
+Tag: ct-judge-penny-req006-20261105-1305-sol1
+Repository: just-every/run-penny (treat as public)
+Exact source: 7d301296156d821e83b347292c1caecbeb600df3
+Original source branch: cloud/sd-penny-c-f17
+Comparison main stated by commission: 1d278bb9a1582cb59f92d7a41e131ed6286444c0
+
+1. Apply fleet identity, launcher refresh, safe Git credential helper and managed-network instructions. Use only the decrypted fleet credential. Create one disposable shallow filtered checkout. No product commits, product pushes, PR, CI reads or mutations, dispatches, providers, source-pin changes, hold changes or landing.
+2. Read the supplied original excerpt and judge rules, then full pinned CONTRACT.md, ACCEPTANCE.md and AGENTS.md and all relied-on journeys and helpers. Retrieve immutable public raw sources too. Establish category, buyer and incumbents solely from pinned CONTRACT.md. Inspect the exact-source diff without importing acceptance from other candidates.
+3. Preserve the supplied frozen rubric: R1 distinct current voter totals, active-status eligibility, Shipped and Declined refusal with participation and reopening unchanged; R2 removable author vote counting once and existing NOTIFY-011 inheritance; R3 verified requester eligibility policy and default unchanged. Do not add criteria. Record every unmet outcome or concrete NEW exposure, loss, regression or correctness finding together.
+4. Run the focused existing public-door sanity journeys once at the exact source on populated data. Exercise both allowed and refused paths and unchanged state. Retain functional browser proof at 1440 and 390. No full suite, mutation, new per-point tests, baselines or live-provider requests. All commands and exits are captured honestly; INSPECTED and NOT RUN stay distinct from executed PASS.
+5. Compare candidate contract status and gap, acceptance, IDs and counts against stated main and a fresh main snapshot without changing either. Preserve all newer assertions, held proof, frozen rubrics and FIX lifetime. Inspect workflow inclusion; use only the supplied completed Verify 42028886979 receipt, which failed solely on generated views and skipped behavior. No CI poll, rerun or dispatch.
+6. Write VERDICT.md and REPORT.md with the full frozen rubric and rider table, public-door mapping, command results, exact status and gap, proposed counts and pending final integration guards. Conditional ACCEPT ON LANDING only if substantive outcomes pass; otherwise STAYS PARTIAL with all gaps. No status award or release.
+7. Publish only explicitly selected non-secret reports, receipts and functional browser artifacts via evidence/ct-judge-penny-req006-20261105-1305-sol1 using the supplied evidence entrypoint. Check identity and trailers. Verify product HEAD and tracked bytes unchanged. Delete the disposable checkout and dependencies after transport. Final CT POST includes exact source, verdict, counts, run ID and pending guards; final line READY refers to completed review only.

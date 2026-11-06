@@ -1,0 +1,373 @@
+{
+  "source": "7d301296156d821e83b347292c1caecbeb600df3",
+  "files": [
+    {
+      "path": "CONTRACT.md",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/CONTRACT.md",
+      "http_status": 200,
+      "bytes": 351705,
+      "sha256": "9827207a74e95173d047a7a481047027fd043a1e5b0120199451f94f8125d029",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "ACCEPTANCE.md",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/ACCEPTANCE.md",
+      "http_status": 200,
+      "bytes": 309987,
+      "sha256": "a1892ab4b7e449b40e22e11ee344bbf07d2e625d63a1bf79d9900d8e46e03378",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "AGENTS.md",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/AGENTS.md",
+      "http_status": 200,
+      "bytes": 11191,
+      "sha256": "5cfca6df1ffce5772ca0c1c4fbec94eaa47c8bcc8a04d904b259bdacc39ec968",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "RULINGS.md",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/RULINGS.md",
+      "http_status": 200,
+      "bytes": 10219,
+      "sha256": "d7a6d055f345370be57062ca0daf40d1b491a94da3fcb690fa3d442f8e98f868",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "BASELINE.md",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/BASELINE.md",
+      "http_status": 200,
+      "bytes": 6587,
+      "sha256": "854a33949f3c52c059f0983ef9d322b1b22dd786c4ded1583b9c05133e929214",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "HANDOVER.md",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/HANDOVER.md",
+      "http_status": 200,
+      "bytes": 13959,
+      "sha256": "af5fb2a44eb3f0b56fc66b8f0319e2ca9bb9552cd44baa80a9d5e602d58b9871",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "OPERATIONS.md",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/OPERATIONS.md",
+      "http_status": 200,
+      "bytes": 37064,
+      "sha256": "7e57ea50dad19fd45c77b8295b54a7b3bf090b220c852ad3ef587e8fa4c878e3",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "package.json",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/package.json",
+      "http_status": 200,
+      "bytes": 5965,
+      "sha256": "2956fe10930f469dfc870ae56b2fc907acc3f81bed63a28b888dfb23c2544b6f",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "vitest.base.config.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/vitest.base.config.ts",
+      "http_status": 200,
+      "bytes": 2556,
+      "sha256": "76ad6675aabcc4cc8d0f831167541de43d34a5426534ca3a440d352f8f8f4b42",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "verification.json",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/verification.json",
+      "http_status": 200,
+      "bytes": 7899,
+      "sha256": "d8db2050dc706da26dfbc5f2e72f190d4721efb76d60d9b66e78f5bf97d13b11",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": ".github/workflows/verify.yml",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/.github/workflows/verify.yml",
+      "http_status": 200,
+      "bytes": 3125,
+      "sha256": "4baf892a475f3f47d8d5cb726360b27f85cff4c6f475ba4e7d388a5d8786428a",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "scripts/verify-app.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/scripts/verify-app.mjs",
+      "http_status": 200,
+      "bytes": 1739,
+      "sha256": "4c3a87c809e2b671a555dc36171b60675f87be96362de7d2269d9f5e1c3100b6",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "scripts/verify-ci.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/scripts/verify-ci.mjs",
+      "http_status": 200,
+      "bytes": 11843,
+      "sha256": "869b3eb0dd41a034002133d4c18ad20a345c752571989f087b5902fed3485984",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/migration/generated-transport.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/migration/generated-transport.ts",
+      "http_status": 200,
+      "bytes": 982,
+      "sha256": "446d433790f9f6a113274c20beb5cebe51ac485c77fa84102cf86c97456313f3",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/request-status-workflow.test.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/request-status-workflow.test.ts",
+      "http_status": 200,
+      "bytes": 10500,
+      "sha256": "c7d2e61c5bc198a047d0a77bff46e59b7c5aeb76388f33db366b05f7f8699bf9",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/board.test.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/board.test.ts",
+      "http_status": 200,
+      "bytes": 14791,
+      "sha256": "1d8943fead813e292c2717374f43406670f340dc05cb92f658ee6b66f33b737a",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/requester-subscriptions.test.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/requester-subscriptions.test.ts",
+      "http_status": 200,
+      "bytes": 6232,
+      "sha256": "7f2271b409ff282d969b78c4438d9d172c1702e984b62075be90a26a2f86a72c",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/support.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/support.ts",
+      "http_status": 200,
+      "bytes": 4699,
+      "sha256": "dc87ded7066096665109c2accc562e9fd91e626978292723a5c8ec1b5b388e38",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/decision-loop-fixture.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/decision-loop-fixture.ts",
+      "http_status": 200,
+      "bytes": 4238,
+      "sha256": "965f0f3ad6c961bbe992820a8335f95f14398ee22cdd0de4db1aa32ecdf74697",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/subscription-fixture.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/subscription-fixture.ts",
+      "http_status": 200,
+      "bytes": 3853,
+      "sha256": "f485e2015d5859ba50b01ed2e86463ca5368d7e646f2a1b0896585ec59a45b60",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/explicit-consent-board.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/explicit-consent-board.ts",
+      "http_status": 200,
+      "bytes": 823,
+      "sha256": "90593703460f12eed77ae05399b27a20a058067aedad222a6a03c23189273302",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/custom-field-races.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/custom-field-races.ts",
+      "http_status": 200,
+      "bytes": 12975,
+      "sha256": "a440a3e138e5e5d42d8167e3cce249bfe37d3279f1aacc703514d6134a530330",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/review-race-storage.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/review-race-storage.ts",
+      "http_status": 200,
+      "bytes": 1652,
+      "sha256": "d2fb050a0b657583f971ea5045417f04b475d2bdb9521f04454d32f62bacc369",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/roadmap-update-publication.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/roadmap-update-publication.ts",
+      "http_status": 200,
+      "bytes": 4248,
+      "sha256": "1d31b11531ba58ad9f9d478bf67eea0674abd2a6604364aac0de18d9b49a8600",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/release-fixture.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/release-fixture.ts",
+      "http_status": 200,
+      "bytes": 2869,
+      "sha256": "e38bd8b2362c8e3535109c75bf2b1f0eab75edf75f2d3e3df057f083d47a004d",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/notification-regression-fixture.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/notification-regression-fixture.ts",
+      "http_status": 200,
+      "bytes": 2997,
+      "sha256": "e09aebbda2530c1ce8445012f4f20a4ef492046a62718b7112b7ab8acc9188ed",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/provider-messages.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/provider-messages.ts",
+      "http_status": 200,
+      "bytes": 892,
+      "sha256": "08269bb2a177ce939504f300957e3828768d72b5c675d9a89faf02f6ec052923",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/auth.test.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/auth.test.ts",
+      "http_status": 200,
+      "bytes": 18575,
+      "sha256": "fb5c35b044beef3e656cc43b9f3345354108840e80d642c70f15509bffae656e",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/base/requester-oauth-fixture.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/base/requester-oauth-fixture.ts",
+      "http_status": 200,
+      "bytes": 13473,
+      "sha256": "aeec54e4e8d56a67c40b294b96287c2f93f80a0f592d7eb5ff110d5b8c69a4e0",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/browser/request-decline.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/browser/request-decline.mjs",
+      "http_status": 200,
+      "bytes": 6392,
+      "sha256": "d8019ba2f165d035891a8309dd821c974ac7e1095f19e98009929d13085111be",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/browser/moderation-runtime.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/browser/moderation-runtime.mjs",
+      "http_status": 200,
+      "bytes": 4347,
+      "sha256": "e97836342d52835d857b27a873d48f6f3b1bf9aca03c2dfe9782e8d8a9008a30",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/browser/base-runtime.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/browser/base-runtime.mjs",
+      "http_status": 200,
+      "bytes": 4455,
+      "sha256": "e64cbc60b3cc1b8c15f39f9b66e4fcb6f66aeecf0d657ba4a8545a9dda1e99f9",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/browser/browser-options.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/browser/browser-options.mjs",
+      "http_status": 200,
+      "bytes": 868,
+      "sha256": "b65e6f23ac704b3eb8d1a5ff5577d3ce404dac7428ef7541d49f1d56cab898ad",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/browser/headless-executable.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/browser/headless-executable.mjs",
+      "http_status": 200,
+      "bytes": 1437,
+      "sha256": "7d84c36ede672de5316e599255b77ca51ac742c5cffb857c53542b0e7132033f",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "tests/browser/fresh-local-port.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/tests/browser/fresh-local-port.mjs",
+      "http_status": 200,
+      "bytes": 741,
+      "sha256": "b7429126f647fbd7fd6d7ad0b5d85771114dc6e625e800eae183198b23fd073a",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/auth/requester.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/auth/requester.ts",
+      "http_status": 200,
+      "bytes": 5168,
+      "sha256": "e444bd2101d63ccb33418ec45ef1ad555152bc1def7df23302f3dd99ae8c8e74",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/requests/native-submission.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/requests/native-submission.ts",
+      "http_status": 200,
+      "bytes": 6347,
+      "sha256": "81cad336e3387efa67b8fe09ddd2f7be55e13a4e1431aaadc3bb7472a70331a1",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/requests/write-repository.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/requests/write-repository.ts",
+      "http_status": 200,
+      "bytes": 19772,
+      "sha256": "2dedef7e02a1bcf8ae51a598af24a7190abdfab2e9fcca7acf65bd5d2a73e797",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/requests/write-admission.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/requests/write-admission.ts",
+      "http_status": 200,
+      "bytes": 3741,
+      "sha256": "39812b62caa53bfde8fe719a86560b81bd61628d3ea90645e2da7bc438b4e33f",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/requests/public-routes.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/requests/public-routes.ts",
+      "http_status": 200,
+      "bytes": 13328,
+      "sha256": "08da3b6dfe272971196ceef160dc5cd3ec2008789d654098f325e5b7aabf9360",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/requests/public-read-repository.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/requests/public-read-repository.ts",
+      "http_status": 200,
+      "bytes": 13534,
+      "sha256": "e40cc77c8610c3b0afb9db79b67f9fc7226e20abf74c0d4809ef0d991ca62fd7",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/requests/subscription-consent.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/requests/subscription-consent.ts",
+      "http_status": 200,
+      "bytes": 2789,
+      "sha256": "9840ca8d64382be61126c752f4cfcc88f8156a1146a2da51f733cb29e20f580b",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/requests/contributions.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/requests/contributions.ts",
+      "http_status": 200,
+      "bytes": 3327,
+      "sha256": "bd26323ee7c8f277ca2347b8d50d67b2df446cc9e5665b280406d502b8e55c1d",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/core/features/requests/status-sql.ts",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/core/features/requests/status-sql.ts",
+      "http_status": 200,
+      "bytes": 771,
+      "sha256": "107fc825cb8caa03d6b48e2794f004199668dec354dae179392ccded409f4da8",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/base/contract-docs.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/base/contract-docs.mjs",
+      "http_status": 200,
+      "bytes": 49754,
+      "sha256": "9c1d8f38c42cd18539792f71bda94cbcd6ebe30e25c884eb6af51de1dccabdfd",
+      "matches_pinned_checkout": true
+    },
+    {
+      "path": "src/base/seed-contract.mjs",
+      "url": "https://raw.githubusercontent.com/just-every/run-penny/7d301296156d821e83b347292c1caecbeb600df3/src/base/seed-contract.mjs",
+      "http_status": 200,
+      "bytes": 19462,
+      "sha256": "7beada5d271beaaf63d76e1f8cf2712ba906ec7d430f8312f4abedfad57428b4",
+      "matches_pinned_checkout": true
+    }
+  ]
+}
