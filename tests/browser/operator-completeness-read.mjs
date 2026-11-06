@@ -32,7 +32,24 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
     const global=await (await api(page,'/api/operator/search?'+new URLSearchParams({q}))).json()
     assert.equal(global.total,1,'[OPS-004] full and partial names work without a type filter')
     assert.deepEqual(global.items.map(({id,entity,title,href})=>({id,entity,title,href})),[{id:record.id,entity:record.entity,title:record.name,href:`/app/features#${record.entity}-${record.id}`}])
+    const peerResult=await api(peer,'/api/operator/search?'+new URLSearchParams({q}))
+    assert.equal(peerResult.status(),200,'[OPS-004] active peer keeps native hierarchy search admission')
+    assert.deepEqual((await peerResult.json()).items,global.items)
+    assert.equal((await api(peer,global.items[0].href)).status(),200,'[OPS-004] peer can open each returned hierarchy record')
+    await page.getByLabel('Search Penny',{exact:true}).fill(q)
+    await page.getByRole('button',{name:'Search',exact:true}).click()
+    await page.waitForURL(url=>url.searchParams.get('q')===q)
+    await page.getByRole('link',{name:record.name,exact:true}).waitFor()
+    assert.equal(await page.getByRole('link',{name:record.name,exact:true}).getAttribute('href'),global.items[0].href,'[OPS-004] full and partial name form results retain the record destination')
    }
+   const typeLabel=record.entity[0].toUpperCase()+record.entity.slice(1)
+   await page.getByRole('navigation',{name:'Search record types'}).getByRole('link',{name:typeLabel,exact:true}).click()
+   await page.waitForURL(url=>url.searchParams.get('entity')===record.entity)
+   assert.equal(new URL(page.url()).searchParams.get('q'),record.name.slice(7),'[OPS-004] hierarchy type selection retains the search wording')
+   assert.equal(await page.getByRole('navigation',{name:'Search record types'}).getByRole('link',{name:typeLabel,exact:true}).getAttribute('aria-current'),'page')
+   await page.getByRole('link',{name:record.name,exact:true}).waitFor()
+   await page.getByRole('navigation',{name:'Search record types'}).getByRole('link',{name:'All',exact:true}).click()
+   await page.waitForURL(url=>!url.searchParams.has('entity'))
   }
  }
  // Equal names are separate records; opening either result must preserve its identity.
@@ -45,7 +62,7 @@ export async function reviewPrivateSearch({page,peer,origin,capture,checks,width
   assert.deepEqual(sameName.items.map(({id,entity,title,href})=>({id,entity,title,href})),[hierarchy[0],duplicate].sort((a,b)=>a.id.localeCompare(b.id)).map(record=>({id:record.id,entity:record.entity,title:record.name,href:`/app/features#${record.entity}-${record.id}`})))
  }
  hierarchy.push(duplicate)
- await page.reload()
+ await page.goto(origin+'/app/search?q=privateproof')
  // Capture the real record destinations at both widths; behavioural assertions run at desktop.
  for(const record of hierarchy) {
   const destination=`/app/features#${record.entity}-${record.id}`
