@@ -57,10 +57,13 @@ export async function proveInternalBoardExclusion(subject:{operator:Record<strin
   const detail=await call(`/api/public/roadmap/${publicSlug}`);expect(detail.status).toBe(200)
   expect(await detail.json()).toEqual(cards[0])
   expect((await call(`/api/public/roadmap/${hiddenSlug}`)).status).toBe(404)
+  const publicDetail=await call(`/portal/roadmap/${publicSlug}`);expect(publicDetail.status).toBe(200)
+  const renderedDetail=await publicDetail.text();expect(renderedDetail).toContain(control.slug)
+  expect((await call(`/portal/roadmap/${hiddenSlug}`)).status).toBe(404)
   const page=await call('/portal/roadmap');expect(page.status).toBe(200)
   const rendered=await page.text();expect(rendered).toContain(publicSlug)
   for(const marker of [slug,hiddenTarget.publicSlug,'synthetic-penny-internal-target']){
-   expect(JSON.stringify(cards)).not.toContain(marker);expect(rendered).not.toContain(marker)
+   expect(JSON.stringify(cards)).not.toContain(marker);expect(rendered).not.toContain(marker);expect(renderedDetail).not.toContain(marker)
   }
  }
  const requests=await call('/api/public/requests');expect(requests.status).toBe(200)
@@ -79,9 +82,13 @@ export async function proveInternalBoardExclusion(subject:{operator:Record<strin
  expect(await refused.json()).toMatchObject({message:expect.stringContaining('Release targets')})
  expect(await releaseState()).toEqual(before)
  expect((await call(`/api/public/releases/${hiddenTarget.draft.slug}`)).status).toBe(404)
+ expect((await call(`/portal/updates/${hiddenTarget.draft.slug}`)).status).toBe(404)
  expect((await call(`/api/operator/releases/${publicTarget.draft.slug}/publish`,{},operator)).status).toBe(200)
- const released=await call('/api/public/releases');expect(released.status).toBe(200)
- const published=await released.text();expect(published).toContain(publicTarget.draft.slug);expect(published).not.toContain(hiddenTarget.draft.slug);expect(published).not.toContain(slug)
+ for(const path of ['/api/public/releases',`/api/public/releases/${publicTarget.draft.slug}`,'/portal/updates',`/portal/updates/${publicTarget.draft.slug}`]){
+  const released=await call(path);expect(released.status,path).toBe(200)
+  const published=await released.text();expect(published,path).toContain(publicTarget.draft.slug)
+  for(const marker of [slug,hiddenTarget.draft.slug,'synthetic-penny-internal-target'])expect(published,path).not.toContain(marker)
+ }
  const mailGraph=async()=>Object.fromEntries(await Promise.all(['request_status_updates','request_comments','notification_events','notification_intents','notification_batches'].map(async table=>[table,(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()).results])))
  const internalBefore=await mailGraph()
  expect((await call(`/api/operator/requests/${slug}/status-updates`,{status:'planned',body:'synthetic-penny-internal-status',pinned:false},operator)).status).toBe(404)
