@@ -3213,8 +3213,8 @@ Core · target · **partial**
 2. Response and resolution times on a fixture with a public comment, a status update, a snooze and a decline equal the hand-computed median and 90th percentile.
 3. A scheduled report sends once per period.
 
-**Evidence.** `src/core/features/releases/outcomes.ts`; `src/core/features/requests/operator-context.ts`
-**Gap.** Current per-account counts and release outcome totals ship today. Report totals reconcile with record counts on fixture data; response and resolution times on a fixture with a public comment, a status update, a snooze and a decline equal the hand-computed median and 90th percentile; a scheduled report sends once per period.
+**Evidence.** `src/core/features/releases/outcomes.ts`; `src/core/features/requests/operator-context.ts`; `tests/base/feedback-volume-report.test.ts` — native feedback volume reconciles private JSON and CSV windows without multiplying linked records
+**Gap.** Current per-account counts and release outcome totals remain. Native operator JSON and CSV feedback-volume reports reconcile request creation counts by current board and evidence capture counts by source, with explicit exclusive-end windows and UTC daily buckets. Remaining: dashboard presentation; votes over time; theme, segment and account report dimensions; top requests by voters, accounts and ARR; new and rising themes; response and resolution median and 90th percentile including snooze exclusion and NOTIFY-007 original-thread replies; scheduled email and Slack reports once per period. Commercial-role machinery, provider, device, account and cross-seed and Base prerequisites, all earlier ct and uip and payments holds, live qualification and release requirements remain held.
 
 #### MEAS-005 — Release adoption
 
