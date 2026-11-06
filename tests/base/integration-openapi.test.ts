@@ -41,12 +41,12 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
   const issue = async (scopes: string[]) => {
     const response = await call('/api/operator/integrations/keys', { name: 'synthetic-penny-1', scopes }, g.operator)
     expect(response.status).toBe(201)
-    const { token } = await response.json() as { token: string }
-    return { Authorization: 'Bearer ' + token }
+    const { token, credential } = await response.json() as { token: string; credential: { id: string } }
+    return { id: credential.id, headers: { Authorization: 'Bearer ' + token } }
   }
   // Retain the earlier native publication journey here, within the same API
   // contract flow, so the broader proof replaces its registration.
-  const issued = { headers: await issue(['requests:read', 'requests:write', 'comments:read', 'comments:write', 'status:read', 'status:write', 'releases:read', 'releases:write']) }
+  const issued = await issue(['requests:read', 'requests:write', 'comments:read', 'comments:write', 'status:read', 'status:write', 'releases:read', 'releases:write'])
  const slug=g.requests[0].slug
  const publicationSnapshot=async()=>({requests:await env.DB.prepare('SELECT count(*) n FROM requests').first('n'),comments:await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n'),updates:await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n'),permissions:await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')})
  const before=await publicationSnapshot()
@@ -68,7 +68,8 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
  expect(fresh.status).toBe(201)
  expect(await (await call('/api/v1/requests',undefined,issued.headers)).text()).not.toContain('Private unreviewed wording')
   const scopes = [...new Set(Object.values(document.paths).flatMap(methods => Object.values(methods).flatMap(op => op['x-required-scopes'])))]
-  const allowed = await issue(scopes), readOnly = await issue(['requests:read']), releaseOnly = await issue(['releases:read'])
+  const active = await issue(scopes), allowed = active.headers
+  const readOnly = (await issue(['requests:read'])).headers, releaseOnly = (await issue(['releases:read'])).headers
   const snapshot = async () => (await env.DB.batch([
     'requests', 'request_comments', 'request_status_updates', 'request_vote_contributions', 'request_votes',
     'penny_proxy_votes', 'requesters', 'requester_addresses', 'requester_update_permissions',
@@ -106,7 +107,7 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
     expect(document.components.securitySchemes[securityName]).toMatchObject({ type: 'http', scheme: 'bearer' })
     const wrongScope = operation['x-required-scopes'][0] === 'requests:read' ? releaseOnly : readOnly
     const before = await snapshot()
-    for (const headers of [{}, wrongScope]) {
+    for (const headers of [{}, { Authorization: 'Bearer synthetic-penny-invalid' }, wrongScope]) {
       const denied = await call(url, input.body, headers, method)
       expect(denied.status, operation.operationId + ' authority').toBe(401)
       validates(schemaFor(operation.responses[String(denied.status)].content['application/json'].schema.$ref), await denied.json())
@@ -116,10 +117,14 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
     // their invalid HTTP case; the contract does not invent query validation.
     const invalidUrl = operation.requestBody ? url : input.slug ? path.replace('{slug}', 'INVALID') : operation.operationId === 'findProxyContacts' ? path + '?q=' + 'x'.repeat(201) : operation.operationId === 'listRequests' ? path + '?sort=invalid' : url
     const invalidMethod = !operation.requestBody && invalidUrl === url ? 'PUT' : method
-    const invalid = await call(invalidUrl, operation.requestBody ? {} : undefined, allowed, invalidMethod)
-    expect(invalid.status, operation.operationId + ' invalid').toBe(invalidMethod === 'PUT' ? 404 : 400)
-    validates(schemaFor(operation.responses[String(invalid.status)].content['application/json'].schema.$ref), await invalid.json())
-    expect(await snapshot()).toEqual(before)
+    const invalidBodies = operation.requestBody ? [{}, { ...input.body as object, unexpected: true }] : [undefined]
+    for (const invalidBody of invalidBodies) {
+      if (operation.requestBody) validates(schemaFor(operation.requestBody.content['application/json'].schema.$ref), invalidBody, false)
+      const invalid = await call(invalidUrl, invalidBody, allowed, invalidMethod)
+      expect(invalid.status, operation.operationId + ' invalid').toBe(invalidMethod === 'PUT' ? 404 : 400)
+      validates(schemaFor(operation.responses[String(invalid.status)].content['application/json'].schema.$ref), await invalid.json())
+      expect(await snapshot()).toEqual(before)
+    }
     for (const parameter of operation.parameters) {
       const value = parameter.in === 'path' ? input.slug : new URL('https://penny.test' + url).searchParams.get(parameter.name)
       if (value !== null && value !== undefined) validates(parameter.schema, value)
@@ -165,10 +170,21 @@ it('[DATA-006] serves an offline OpenAPI contract and reconciles every documente
   expect(listing).not.toContain('synthetic-penny-held')
   expect(await env.DB.prepare('SELECT verified_at FROM requester_addresses WHERE requester_id=?').bind(proxyId).first()).toBeNull()
   expect(await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions WHERE requester_id=?').bind(proxyId).first('n')).toBe(0)
-  for (const path of ['/api/v1/unknown', '/docs/openapi-unknown.json']) expect((await call(path)).status).toBe(404)
+  for (const path of ['/api/v1/unknown', '/docs/openapi-unknown.json', '/docs/openapi.json/nested']) expect((await call(path)).status).toBe(404)
   expect((await call('/docs')).status).toBe(200)
   expect((await call('/api/operator/requests', undefined, allowed)).status).toBe(401)
   const beforeOriginRefusal = await snapshot()
   expect((await call('/api/v1/requests', { title: 'refused', description: 'refused', boardSlug: 'regression' }, { ...allowed, Origin: 'https://other.test' })).status).toBe(403)
   expect(await snapshot()).toEqual(beforeOriginRefusal)
+  // Read credentials remain server-held; Origin admission applies to mutations.
+  expect((await call('/api/v1/requests', undefined, { ...allowed, Origin: 'https://other.test' })).status).toBe(200)
+  expect((await call('/api/operator/integrations/keys/' + active.id, {}, g.operator, 'DELETE')).status).toBe(200)
+  const beforeRevoked = await snapshot()
+  for (const { path, method, operation } of operations) {
+    const input = cases[operation.operationId](), url = path.replace('{slug}', input.slug ?? '') + (input.query ?? '')
+    const response = await call(url, input.body, allowed, method)
+    expect(response.status, operation.operationId + ' revoked').toBe(401)
+    validates(schemaFor(operation.responses['401'].content['application/json'].schema.$ref), await response.json())
+    expect(await snapshot()).toEqual(beforeRevoked)
+  }
 })

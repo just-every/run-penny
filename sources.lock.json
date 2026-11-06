@@ -3398,7 +3398,7 @@
       "executable": false
     },
     "docs/API.md": {
-      "sha256": "93f6024410ec9be9cead92b0fd5fafa863227c7844c227f9676a9b99e428d8a2",
+      "sha256": "ae4bc7488e6cc9fb02175676a3cb4c8a901f74fbc6362d93d6258bb1fa2fc710",
       "executable": false
     },
     "docs/audit-api.md": {
@@ -6254,7 +6254,7 @@
       "executable": false
     },
     "src/core/features/integrations/openapi/document.ts": {
-      "sha256": "f91ec78fa38ce655138df15aded9bfbde5f94126c40798bc4cd0950da218a6b0",
+      "sha256": "1c4a49d7092ed1c485fa5fa7856a2af66cf4b5bcdb20fd1b804ec47e4e536d37",
       "executable": false
     },
     "src/core/features/integrations/openapi/inputs.ts": {
@@ -8442,7 +8442,7 @@
       "executable": false
     },
     "tests/base/integration-openapi.test.ts": {
-      "sha256": "83b130344ba6f81f0e27ccf0cee9df39004b86af7804ddf888c2d2d1eff641ac",
+      "sha256": "8153d091c107b6150ffc96ed0b703bcbe584cc2968f74ab21c1d6d73b9608531",
       "executable": false
     },
     "tests/base/internal-discussion.test.ts": {

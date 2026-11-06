@@ -92,7 +92,8 @@ without sign-in. It describes the existing native board, request, comment, statu
 release and proxy-vote operations with their request and response schemas and
 required key scopes. Issue a key in the authenticated integration settings and
 send it as a Bearer credential. Missing, expired, revoked and insufficient-scope
-keys return 401; a supplied Origin must match the installation.
+keys return 401. Mutations refuse a supplied foreign Origin and cross-site fetch
+metadata; server clients may omit Origin.
 
 Request lists support the documented filters; these operations return arrays
 without pagination. Requests created through this API remain held for native
