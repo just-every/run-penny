@@ -1,0 +1,5 @@
+PROBE REQ-019 point 1: native board visibility -> populated public roadmaps exclude subject; release 409 leaves publication, snapshots and outbox unchanged; queued and later internal activity sends no mail; public control delivers
+PROBE REQ-019 point 1 roadmap: PATCH /api/operator/boards/product visibility=internal -> both nonempty roadmap sources retain the public control; internal API and rendered detail doors return 404.
+PROBE REQ-019 point 1 release: POST /api/operator/releases/<subject>/publish -> 409; release, version, target, snapshot, outbox, attempt and audit rows unchanged; public control publishes and all four public read doors serve it.
+PROBE REQ-019 point 1 notifications: emitted Worker scheduled handler with a queued subject event and later status and reply attempts -> subject batches suppressed, later writes return 404 without graph changes, no subject mail; public control status, reply and release deliveries accepted once for the native follower.
+PROBE REQ-019 point 2: none, request movement and its five-second withdrawal proof are explicitly omitted by this brief.

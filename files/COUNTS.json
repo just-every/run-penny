@@ -1,0 +1,16 @@
+{
+  "before": {
+    "partial": 124,
+    "done": 79,
+    "missing": 78
+  },
+  "after": {
+    "partial": 124,
+    "done": 79,
+    "missing": 78
+  },
+  "statusRowsBefore": 281,
+  "statusRowsAfter": 281,
+  "testRegistrationsAdded": 0,
+  "testRegistrationsRemoved": 0
+}

@@ -1,0 +1,621 @@
+{
+  "jobs": [
+    {
+      "conclusion": "success",
+      "failedSteps": [],
+      "id": 127725286324,
+      "name": "plan",
+      "skippedSteps": []
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324903,
+      "name": "shards (workspace-clock, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324905,
+      "name": "shards (proxy-votes, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324922,
+      "name": "shards (rich-changelog, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324931,
+      "name": "shards (requester-board, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324933,
+      "name": "shards (base-1, false)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324934,
+      "name": "shards (triage-aging, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324937,
+      "name": "shards (import-roadmap, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324939,
+      "name": "shards (internal-discussion, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324951,
+      "name": "shards (older-archive, false)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324953,
+      "name": "shards (static, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324955,
+      "name": "shards (browser-capture, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324960,
+      "name": "shards (agent-door, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324967,
+      "name": "shards (ownership, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324986,
+      "name": "shards (browser, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324991,
+      "name": "shards (request-decline, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324996,
+      "name": "shards (roadmap-public-eta, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725324999,
+      "name": "shards (release-planning, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325004,
+      "name": "shards (import-statuses, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325008,
+      "name": "shards (requester-blocking, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325013,
+      "name": "shards (base-2, false)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325018,
+      "name": "shards (prioritisation, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325024,
+      "name": "shards (vote-importance, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325026,
+      "name": "shards (helpscout-capture, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325029,
+      "name": "shards (loop-health, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325089,
+      "name": "shards (merge-notices, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325123,
+      "name": "shards (dev-flows, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325142,
+      "name": "shards (survey-capture, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325151,
+      "name": "shards (product-hierarchy, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    },
+    {
+      "conclusion": "failure",
+      "failedSteps": [
+        {
+          "name": "Check generated contract documents",
+          "number": 5
+        }
+      ],
+      "id": 127725325160,
+      "name": "shards (discord-capture, true)",
+      "skippedSteps": [
+        "Run npm install --global pnpm@10.12.4",
+        "Cache frozen dependencies and Chromium",
+        "Run pnpm install --frozen-lockfile",
+        "Run pnpm run deps",
+        "Install Chromium and system libraries",
+        "Reserve disk for native runtime journeys",
+        "Run this shard",
+        "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
+      ]
+    }
+  ],
+  "total_count": 30
+}

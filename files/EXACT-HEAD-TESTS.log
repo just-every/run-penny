@@ -1,0 +1,40 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /workspace/run-penny
+
+ ✓ tests/base/board.test.ts > [DATA-004 BASE-ACCESS-004] custom-field writes require explicit same origin and reject removal during body read and commit 3243ms
+stderr | tests/base/board.test.ts > [DATA-004] concurrent definition edits and value saves cannot commit incompatible typed values
+Penny request failed {"method":"PATCH","route":"/api/operator/settings/custom-fields/:definitionId","name":"Error","code":"unclassified"}
+
+ ✓ tests/base/board.test.ts > [DATA-004] concurrent definition edits and value saves cannot commit incompatible typed values 3053ms
+stderr | tests/base/board.test.ts > [DATA-004 BASE-OPS-005] an erased entity cannot regain a value and clearing rolls back with its audit
+Penny request failed {"method":"PUT","route":"/api/operator/custom-fields/:entityType/:definitionId/:entityId","name":"Error","code":"unclassified"}
+
+ ✓ tests/base/board.test.ts > [DATA-004 BASE-OPS-005] an erased entity cannot regain a value and clearing rolls back with its audit 2609ms
+ ✓ tests/base/board.test.ts > [REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail 2416ms
+stdout | tests/base/board.test.ts > [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total
+PROBE REQ-019 point 1: native board visibility -> populated public roadmaps exclude subject; release 409 leaves publication, snapshots and outbox unchanged; queued and later internal activity sends no mail; public control delivers
+
+ ✓ tests/base/board.test.ts > [REQ-011/018/019 EVID-009] Base-signed board/tag management preserves private tags, separate file approval and the per-request attachment total 8216ms
+stderr | tests/base/board.test.ts > [BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back
+Penny request failed {"method":"DELETE","route":"/api/operator/catalog/tags/:id","name":"Error","code":"unclassified"}
+
+stderr | tests/base/board.test.ts > [BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back
+Penny request failed {"method":"PATCH","route":"/api/operator/boards/:slug","name":"Error","code":"unclassified"}
+
+stderr | tests/base/board.test.ts > [BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back
+Penny request failed {"method":"PUT","route":"/api/operator/settings/frames","name":"Error","code":"unclassified"}
+
+ ✓ tests/base/board.test.ts > [BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back 4469ms
+stderr | tests/base/board.test.ts > [BASE-OPS-005] publication and real scheduled mail retain feature outcomes; an unavailable audit prevents publication
+Penny request failed {"method":"POST","route":"/api/operator/releases/:slug/publish","name":"Error","code":"unclassified"}
+
+ ✓ tests/base/board.test.ts > [BASE-OPS-005] publication and real scheduled mail retain feature outcomes; an unavailable audit prevents publication 4950ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  05:11:11
+   Duration  37.63s (transform 3.23s, setup 0ms, import 7.26s, tests 28.96s, environment 0ms)
+

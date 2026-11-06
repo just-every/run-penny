@@ -1,0 +1,61 @@
+{
+  "head": "8c9ebbedf592f71279d2129393708a8d3d8accd5",
+  "clause": "REQ-019",
+  "acceptancePoint": 1,
+  "invokedBy": {
+    "file": "tests/base/board.test.ts",
+    "line": 45,
+    "helperInvocationLine": 61
+  },
+  "outcomes": [
+    {
+      "item": "Native public control, verified follower and approved mappings",
+      "file": "tests/base/internal-board-exclusion.ts",
+      "firstLine": 11,
+      "lastLine": 26
+    },
+    {
+      "item": "Populated baseline for both roadmap sources",
+      "file": "tests/base/internal-board-exclusion.ts",
+      "firstLine": 35,
+      "lastLine": 39
+    },
+    {
+      "item": "Queued native subject event and operator visibility change",
+      "file": "tests/base/internal-board-exclusion.ts",
+      "firstLine": 41,
+      "lastLine": 51
+    },
+    {
+      "item": "Nonempty roadmap APIs and rendered list and detail privacy",
+      "file": "tests/base/internal-board-exclusion.ts",
+      "firstLine": 52,
+      "lastLine": 68
+    },
+    {
+      "item": "Existing request and attachment refusals",
+      "file": "tests/base/internal-board-exclusion.ts",
+      "firstLine": 69,
+      "lastLine": 72
+    },
+    {
+      "item": "Unchanged publication custody and positive public release readback",
+      "file": "tests/base/internal-board-exclusion.ts",
+      "firstLine": 73,
+      "lastLine": 91
+    },
+    {
+      "item": "Later internal status and reply refusal without changes",
+      "file": "tests/base/internal-board-exclusion.ts",
+      "firstLine": 92,
+      "lastLine": 98
+    },
+    {
+      "item": "Native scheduled mail suppression, accepted public controls and replay",
+      "file": "tests/base/internal-board-exclusion.ts",
+      "firstLine": 100,
+      "lastLine": 144
+    }
+  ],
+  "acceptancePoint2": "Explicitly omitted; no move or five-second withdrawal claim"
+}

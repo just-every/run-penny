@@ -1,0 +1,111 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f75",
+  "head": "8c9ebbedf592f71279d2129393708a8d3d8accd5",
+  "base": "580c5541b47ab211ac4700ae64fcb724235a15aa",
+  "mainAtIntegration": "e9bc2b86ccd6f6fe2634ff5e0750e51c11b19d7f",
+  "files": {
+    "tests/base/board.test.ts": "b493a4b39a0a8e68acb4a67e4768038f80e4ca63f6bfbd24b1b6baa64aeb2d81",
+    "tests/base/notifications.test.ts": "1ea1bcf5a08808b65144f7684487ea2f8fffb92fc5d4f24eaa08c665ffa92e61",
+    "tests/base/internal-board-exclusion.ts": "828b6018b2a93a672c0bef0595f7001fcc1991e1d2f4d273e3ab0a8888572afc",
+    "tests/base/release-fixture.ts": "c9462d9fda538519f8e534032d7ac39657c481251a7524d0fc2d36eb41780515",
+    "src/core/features/roadmap/public-read-repository.ts": "757067caed93824fa0121cb50f339e57c308f1fb3b4ba8419019542a56aa036f",
+    "src/core/features/releases/publication.ts": "7f5d8c7badcb6baf11cde110f2db86a90fc8ed65c00c41ce0edc39431b5a0aad",
+    "src/core/features/notifications/eligibility.ts": "cef57cd298c944c7728962e4e7a7a69fbfa283fe9448ab697d9df2cbdc86a5c7"
+  },
+  "mechanical": {
+    "lock": {
+      "command": "node scripts/edition-authoring/cli.mjs lock, then check",
+      "exit": 0,
+      "exactHeadCheck": true
+    },
+    "views": {
+      "command": "node src/base/contract-docs.mjs write, then check",
+      "writeExit": 0,
+      "checkExit": 0,
+      "restoredFromMain": [
+        "ACCEPTANCE.md",
+        "docs/CLAIMS.md"
+      ],
+      "restoredViewCheck": {
+        "exit": 1,
+        "message": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+        "expectedByBrief": true
+      }
+    },
+    "ledger": {
+      "command": null,
+      "exit": 0,
+      "reason": "No migrations changed"
+    }
+  },
+  "localChecks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email <fleet identity> --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts tests/base/notifications.test.ts",
+      "exit": 0,
+      "tests": 22,
+      "timing": "supplied base before the added assertions"
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts",
+      "exit": 0,
+      "tests": 7,
+      "timing": "final test bytes before commit"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/board.test.ts --reporter=verbose",
+      "exit": 0,
+      "tests": 7,
+      "head": "8c9ebbedf592f71279d2129393708a8d3d8accd5",
+      "durationSeconds": 37.63
+    }
+  ],
+  "publicationScan": {
+    "status": "not run in cloud",
+    "responsibility": "fleet lander on the exact candidate from full history"
+  },
+  "browserProof": {
+    "status": "not applicable",
+    "reason": "No UI implementation or styling changed; the emitted Worker renders the document assertions"
+  },
+  "productPush": {
+    "attempts": 1,
+    "exit": 0,
+    "head": "8c9ebbedf592f71279d2129393708a8d3d8accd5"
+  },
+  "identityCheck": {
+    "commits": 3,
+    "allFleetAuthorAndCommitter": true,
+    "trailers": []
+  },
+  "ci": [
+    {
+      "conclusion": "failure",
+      "event": "push",
+      "head_sha": "8c9ebbedf592f71279d2129393708a8d3d8accd5",
+      "html_url": "https://github.com/just-every/run-penny/actions/runs/42166875903",
+      "id": 42166875903,
+      "name": "Verify Penny",
+      "status": "completed"
+    }
+  ],
+  "ciInterpretation": "Verify 42166875903 completed with failure only at generated contract documents in all 29 shards; plan succeeded and runtime shard commands were skipped. This is the brief permitted generated-view exception, not a green runtime CI claim.",
+  "ciGeneratedViewException": true,
+  "ciRuntimeShardsExecuted": false,
+  "terminalProductCustody": "READY for the fleet guarded lander under the generated-view exception",
+  "blockers": [],
+  "mainAtHandoff": "candidate remains branch-only; lane holds its supplied predecessor until landing",
+  "githubCalls": 3
+}
