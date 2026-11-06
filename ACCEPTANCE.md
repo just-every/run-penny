@@ -3266,7 +3266,7 @@ Core · target · **partial**
 1. OpenAPI contract tests exercise every resource through the public API.
 2. Each webhook's signature verifies and replays are rejected.
 
-**Evidence.** `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts`; `tests/base/integration-openapi.test.ts` — serves an offline OpenAPI contract and reconciles every documented operation with native allowed and unchanged-state refusal journeys, including official structural validation, least-scope server requests and HTTP admission (point 1, existing resource slice)
+**Evidence.** `src/core/features/integrations/api-routes.ts`; `tests/base/integration-api.test.ts`; `tests/base/integration-openapi.test.ts` — serves an offline OpenAPI contract and reconciles every documented operation with native allowed and unchanged-state refusal journeys, including official structural validation, least-scope server requests, HTTP admission, canonical and withdrawn results, held and draft isolation, board privacy variants and unchanged-state replay (point 1, existing resource slice)
 **Gap.** OpenAPI and native contract proof cover existing boards, requests, comments, status updates, releases and proxy-vote contact lookup and recording. Point 1 remains incomplete for other operator record types and their OpenAPI coverage and full pagination and filters; point 2 still requires each lifecycle webhook signature and replay proof. Existing provider, account, Base and publication-custody holds remain unchanged.
 
 ### Migration from each incumbent
