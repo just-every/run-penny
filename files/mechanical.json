@@ -1,0 +1,116 @@
+{
+  "head": "11be6a4569fc56196e3cfa1e40e04fa085112156",
+  "branch": "cloud/sd-penny-c-f64",
+  "contract_status_rows": 281,
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "DOCS-001": {
+    "before": "partial",
+    "after": "partial",
+    "point": 8
+  },
+  "checks": [
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0,
+      "log": "views-final-write.log"
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "log": "views-final-check.log",
+      "note": "Both generated views restored whole from origin main afterward."
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0,
+      "log": "lock-final.log"
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0,
+      "log": "lock-final-check.log"
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0,
+      "log": "typecheck.log"
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0,
+      "log": "first-party.log"
+    },
+    {
+      "command": "node --check tests/browser/route-review.mjs",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run timeout 1200 env TMPDIR=/tmp PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium node ../docs-probe.mjs",
+      "exit": 0,
+      "receipt": "PROBE.json"
+    },
+    {
+      "command": "cloud_run timeout 1200 env TMPDIR=/tmp PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_WORK_ROOT=<task work> PENNY_EVIDENCE=<task evidence> node tests/browser/route-review.mjs",
+      "exit": 0,
+      "receipt": "BROWSER_RECEIPT.json"
+    }
+  ],
+  "ledger": {
+    "command": "none",
+    "exit": 0,
+    "reason": "No migration changed."
+  },
+  "api_calls_used": 6,
+  "main_ci": {
+    "exact_sha": "84bad894d12e7f969f567177a126cb544a3237b1",
+    "branch_verify_green": 42138503924,
+    "run_site_green": 42140171051,
+    "later_main_verify_failed": 42140171112,
+    "failed_job": 127638280568,
+    "failed_step": "Run this shard",
+    "failed_log_command": "gh run view 42140171112 --repo just-every/run-penny --job 127638280568 --log-failed",
+    "log_command_exit": 0,
+    "log_bytes": 0,
+    "note": "No failure detail returned. Not rerun or repaired by this task."
+  },
+  "self_check": {
+    "existing_assertions_removed_or_narrowed": false,
+    "new_email_shaped_strings": 0,
+    "runtime_changes": false,
+    "ui_changes": false,
+    "new_test_registrations": 0,
+    "authority_erasure_replay": "No affected data or authority path; all existing holds retained.",
+    "publication_scan": "Cloud cannot run the fleet scanner; guarded lander must scan exact head from full history."
+  },
+  "proof_source": {
+    "runtime_equals_main": true,
+    "no_generated_views_committed": true,
+    "main_at_merge": "84bad894d12e7f969f567177a126cb544a3237b1",
+    "clean_after_commit": true
+  },
+  "product_pushed": true,
+  "focused_probe_exit": 0,
+  "prior_focused_probe": {
+    "tool_exit": 1,
+    "exception_output": null,
+    "observations": "All three public-door observations were written successfully. Diagnostic repeat recorded Node exit 0 and command exit 0."
+  },
+  "candidate_ci": {
+    "conclusion": "failure",
+    "head_sha": "11be6a4569fc56196e3cfa1e40e04fa085112156",
+    "html_url": "https://github.com/just-every/run-penny/actions/runs/42154024873",
+    "id": 42154024873,
+    "status": "completed"
+  },
+  "generated_view_exception": true,
+  "failed_job_count": 29
+}

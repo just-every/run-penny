@@ -1,0 +1,32 @@
+{
+  "head": "11be6a4569fc56196e3cfa1e40e04fa085112156",
+  "clean": true,
+  "width": 390,
+  "rows": [
+    {
+      "path": "/docs/install",
+      "status": 200,
+      "proseContainers": 1,
+      "controlTextLength": 233
+    },
+    {
+      "path": "/docs/no-such-page",
+      "status": 404,
+      "ssrDocumentationBody": false,
+      "hydratedDocumentationBodies": 0,
+      "ssrControlProse": false,
+      "hydratedControlProse": false
+    },
+    {
+      "path": "/docs/install/no-such-page",
+      "status": 404,
+      "ssrDocumentationBody": false,
+      "hydratedDocumentationBodies": 0,
+      "ssrControlProse": false,
+      "hydratedControlProse": false
+    }
+  ],
+  "pageErrors": [],
+  "journeyBlob": "fd4059aced83b84743616f8d063fc936cc8cf25f",
+  "runtime": "Emitted production Worker, fresh native D1, actual Chromium; no docs mock."
+}
