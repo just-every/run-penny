@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Extend the weekly-summary recovery journeys to prove postal confirmation alone leaves summaries off, owner enablement records one attributed settings change, and existing audit, permissions, notifications and requester choices remain intact. Refuse a removed operator through the native settings route while retaining same-origin, current-owner and rollback assertions. NOTIFY-014 remains partial with all earlier held obligations; no runtime, migration or configuration change is required.
+
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
 - Refuse weekly requester summary enablement with the specific missing-postal reason and the existing email-settings recovery path. Preserve same-origin, current-owner and transaction admission. Extend the existing legacy route and mounted owner journeys with unchanged setting, audit, permission and notification records on refusal, then native postal confirmation and successful enablement at desktop and phone widths. NOTIFY-014 remains partial for its other obligations and live mail qualification. No migration or new configuration is required.
 

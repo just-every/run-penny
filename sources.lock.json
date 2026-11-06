@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "5c95b769cb2376f1bcb61b9110be03a5e3c3aa263a439a2c0c6a9850c9e07391",
+      "sha256": "9e8434fa2cbd216c8e39467e24b8272a2cdcea73baff7e05654375fe30d72c0f",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "44ab664e2c5bf1d6730276b641eee2a93a67dc2809377d7e9ad4f83eb6c6e69c",
+      "sha256": "79de17832808464860d71b4b6262c5176edebbca0e0d81e45110a45f2ec76077",
       "executable": false
     },
     "DEMO.md": {
@@ -8438,7 +8438,7 @@
       "executable": false
     },
     "tests/base/mail-identity.test.ts": {
-      "sha256": "a36d0da627c82474e1bc01de352d6792c73471de4d54582b6c230ca5b95883fa",
+      "sha256": "35c2e7e804fe2948abc4a9524af8e2ebd30b2fc8b4807ad8447f41fef3930846",
       "executable": false
     },
     "tests/base/merge-notices.test.ts": {
@@ -8654,7 +8654,7 @@
       "executable": false
     },
     "tests/base/weekly-summary-flow.ts": {
-      "sha256": "0cf0ea6908a8b1c68971da5eeac3674a8eb824b2f213b2d0d54e7deecf703a94",
+      "sha256": "ec182fa847ae1da787b13dadc56a65836956046c3baf2b0c3ede6b0d9963447e",
       "executable": false
     },
     "tests/base/weekly-summary-portability.ts": {
@@ -9058,7 +9058,7 @@
       "executable": false
     },
     "tests/browser/weekly-summary-choice.mjs": {
-      "sha256": "07cc45f5960e32da04ba9e46fa5c85a1ab28e5d22e99737ef1379865a6733830",
+      "sha256": "f5d8280a0249261fd8afee307b0867337cb92042e2289d78431c15ada08aa856",
       "executable": false
     },
     "tests/browser/workspace-clock.mjs": {
