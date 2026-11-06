@@ -1,0 +1,47 @@
+{
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f65",
+  "head": "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23",
+  "tree": "77dc91c7be71821bd65cfa85ffdd8c2bd734b224",
+  "remote_head_verified": "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23",
+  "full_history": true,
+  "clean_product_checkout": true,
+  "generated_views_committed": false,
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "blob": "f798f2d03e877ee494095336bce42d227413cdfa",
+      "sha256": "579280e0751be06be32fe88f8c5c20c08c0e253adf5c4a4d790a0af064232db2"
+    },
+    {
+      "path": "CONTRACT.md",
+      "blob": "2ba2211e90ce9334b544dbd2e94bd4b2e6da938f",
+      "sha256": "cbc771ca8296b84cdfd15633222fc8eeabb8ff439177462ea42a8eabc7600fbd"
+    },
+    {
+      "path": "sources.lock.json",
+      "blob": "d18198f258fea4f2eb18d1ad158b744d72e81161",
+      "sha256": "83d5c79804dd12805cf0743185b76cc8cebec4800ca4d2900c1be6d3a71f0640"
+    },
+    {
+      "path": "src/core/features/categories/request-csv.ts",
+      "blob": "7d956fb288b0bc3b119252cbd4a60a6543da621e",
+      "sha256": "ef82caf58352c81184317a5589e5fc4454a642cd6ed80cea28c5718caededa96"
+    },
+    {
+      "path": "tests/base/board-categories.test.ts",
+      "blob": "b5505f05f6a3341a429612797c5d3039b2c5837d",
+      "sha256": "3308faa4bbf0098f18fd4a7a1e5f13b97158a942713cd45bd65993453fc28bd2"
+    },
+    {
+      "path": "tests/base/csv-vote-reconciliation.ts",
+      "blob": "25b9f635b3089eb23f2ff847c3327428cf2a1473",
+      "sha256": "d349818df975940d400feac2b4a14913e72329a0bbc89aaee9ee491be80743c7"
+    },
+    {
+      "path": "tests/base/proxy-votes.test.ts",
+      "blob": "33d81b6b620bd5ca970cdad05e449258156c1478",
+      "sha256": "672379fe99c9c5e1badce9306a2d6fab70c144d811cc94bba28fdc710ea3b205"
+    }
+  ]
+}

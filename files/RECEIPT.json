@@ -1,0 +1,130 @@
+{
+  "tag": "sd-penny-c-f65",
+  "repository": "just-every/run-penny",
+  "branch": "cloud/sd-penny-c-f65",
+  "head": "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23",
+  "recorded_at": "2026-11-06T02:57:37.757405+00:00",
+  "push": {
+    "command": "python3 $HOME/rer-consolidation/.tools/cloud-push.py origin cloud/sd-penny-c-f65",
+    "exit": 0,
+    "attempts": 1,
+    "status": "PUSH_OK"
+  },
+  "checks": [
+    {
+      "command": "npx -y @runeditrun/rer setup --owner-email <fleet owner> --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "npx -y @runeditrun/rer build",
+      "exit": 0
+    },
+    {
+      "command": "pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/board-categories.test.ts tests/base/proxy-votes.test.ts",
+      "exit": 0,
+      "test_files": 2,
+      "tests": 5,
+      "source_relation": "Final precommit source bytes are unchanged in the candidate."
+    },
+    {
+      "command": "npx -y @runeditrun/rer check --profile first-party",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs write",
+      "exit": 0
+    },
+    {
+      "command": "node src/base/contract-docs.mjs check",
+      "exit": 0,
+      "note": "Checked after write; generated views restored whole from origin main before commit."
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs lock",
+      "exit": 0
+    },
+    {
+      "command": "node scripts/edition-authoring/cli.mjs check",
+      "exit": 0
+    }
+  ],
+  "contract": {
+    "before": "partial",
+    "after": "partial",
+    "before_counts": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    },
+    "after_counts": {
+      "done": 79,
+      "partial": 124,
+      "missing": 78,
+      "total": 281
+    },
+    "parent_status_rows_retained": 281,
+    "parent_table_rows": 445,
+    "candidate_table_rows": 445,
+    "acceptance_changes": 0
+  },
+  "tests": {
+    "registration_delta": 0,
+    "deleted_assertions": 0,
+    "narrowed_assertions": 0,
+    "replaced_assertions": "Two substring-only CSV checks replaced with parsed row and count assertions."
+  },
+  "migrations": {
+    "changed": false,
+    "ledger": "not applicable"
+  },
+  "ui": {
+    "changed": false,
+    "screenshots": "not applicable"
+  },
+  "publication_scan": {
+    "status": "not run in cloud; fleet lander required"
+  },
+  "run_site": {
+    "status": "pending landing"
+  },
+  "pr": null,
+  "ci": {
+    "calls_used": 5,
+    "discovery": [
+      {
+        "conclusion": "failure",
+        "event": "push",
+        "head_sha": "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23",
+        "html_url": "https://github.com/just-every/run-penny/actions/runs/42153455617",
+        "id": 42153455617,
+        "name": "Verify Penny",
+        "status": "completed"
+      }
+    ],
+    "run_id": 42153455617,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "failed_jobs": 29,
+    "only_failure_step": "Check generated contract documents",
+    "eligible_for_ready_by_generated_view_exception": true
+  },
+  "candidate_generated_view_check": {
+    "command": "node src/base/contract-docs.mjs check",
+    "head": "6b1548b699a36a5ebc553ecfc9e57d29d7f88f23",
+    "exit": 1,
+    "expected": "Generated views restored from origin main; lander writes them."
+  },
+  "handoff": {
+    "product": "pushed",
+    "classification": "ready under the explicit generated-view exception",
+    "blockers": [],
+    "publication_scan": "fleet lander duty",
+    "run_site": "fleet lander duty"
+  }
+}
