@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "c7b6b4ab845c9fd7c27c2baf8938cd734025e3f1dc7d066d50752a2ec6d59b3b",
+      "sha256": "902dd89f11974ac0cfbc40cd7efb94b8048208407082350bf92361ff75ab7b5c",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "088466566a8b3953c16f04e5f5bcab50eb3277e0067cf10e62ce493163620e13",
+      "sha256": "ea3bb1234506a0eb6a9ae2704036a211cbe3d0ff1bb53d257fb13848088da1f9",
       "executable": false
     },
     "DEMO.md": {
@@ -6746,7 +6746,7 @@
       "executable": false
     },
     "src/core/features/notifications/weekly-routes.ts": {
-      "sha256": "49e0b9cd2c420a35342fa4309a10169ed5c48bf063acec0dcdc21ba9202ff8e2",
+      "sha256": "19a3f157291455df72b55bf45a063066c247b3167bd556ff204806ab298b0e79",
       "executable": false
     },
     "src/core/features/notifications/weekly-schedule.ts": {
@@ -8438,7 +8438,7 @@
       "executable": false
     },
     "tests/base/mail-identity.test.ts": {
-      "sha256": "927883977980909f930b43894f63daf9bca528a912e176c3b517a3e89d0cd817",
+      "sha256": "d15dd477b29c273ff4e646e6e6f309635f25034d12fd18cf10b22b91b9f150f5",
       "executable": false
     },
     "tests/base/merge-notices.test.ts": {
@@ -8654,7 +8654,7 @@
       "executable": false
     },
     "tests/base/weekly-summary-flow.ts": {
-      "sha256": "85f84afae953f82cc32801d3abf340e36eba09b0cf34d6af253b4e0fdf521c12",
+      "sha256": "eec172b06fb2017a867b9e8b6e2654a20424e74a1b5a0c5035d32f3d863b09a1",
       "executable": false
     },
     "tests/base/weekly-summary-portability.ts": {
@@ -9058,11 +9058,11 @@
       "executable": false
     },
     "tests/browser/weekly-summary-choice.mjs": {
-      "sha256": "4291a7e4851c8fcff53d17528a650cf1e1bacad8246b03813129941e4f99f573",
+      "sha256": "79a52bb2caec9a114b497beddc0229db755a941460d8f3f753a7467792b0bec5",
       "executable": false
     },
     "tests/browser/workspace-clock.mjs": {
-      "sha256": "8fa1067e58ad50cebc9d2bad95766d27c37c7d0cf1b74690e63f7ce409e07c0e",
+      "sha256": "1014850eff910a96fe60d8bfb5d525719dc675f354956840c63869847204b191",
       "executable": false
     },
     "tests/browser/zendesk-proxy-votes.mjs": {

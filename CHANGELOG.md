@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Extend the existing requester comment-edit journey with another requester's unchanged-state refusal and private activity isolation before, during and after review. Replaying approval of a rejected proposal is refused without changing comment custody, authenticated history or the public wording. Retain the mounted browser proof and REQ-020's partial status and existing remainders. No runtime, migration or configuration change is required.
+- Refuse weekly requester summary enablement with the specific missing-postal reason and the existing email-settings recovery path. Preserve same-origin, current-owner and transaction admission. Extend the existing legacy route and mounted owner journeys with unchanged setting, audit, permission and notification records on refusal, then native postal confirmation and successful enablement at desktop and phone widths. NOTIFY-014 remains partial for its other obligations and live mail qualification. No migration or new configuration is required.
 
 - Exercise holding-board comment edits through the mounted requester activity form and operator verdict controls. The existing requester repair journey now reads the signed-out discussion while edits await review and after rejection, then proves an approved replacement retains the comment identity and count after reload. Capture the affected activity, review and public pages at desktop and phone widths. REQ-020 remains partial for the existing request-edit and auto-publish-history gaps; no runtime, migration or configuration change is required.
 
