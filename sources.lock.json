@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "a95c19a27ea50abcbfb2f485b92ce758a7c3c656b886e09ea7346482c15396a3",
+      "sha256": "572a76b7e0dd66d1024add688de6697014a7b976e3c7d9859d980edc2223539c",
       "executable": false
     },
     "CLAUDE.md": {
@@ -8894,7 +8894,7 @@
       "executable": false
     },
     "tests/browser/keyboard-journey.mjs": {
-      "sha256": "97fcfb6dd4f174981c7b1df588ff9d8f812fcb28dabecf48cff569ba91a4f552",
+      "sha256": "22f16bcfa71640965ec29534c2a6c6fa17e5aaa934a6686254b4556bb8256227",
       "executable": false
     },
     "tests/browser/learning-journey.mjs": {
