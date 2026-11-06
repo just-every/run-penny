@@ -1,0 +1,30 @@
+{
+  "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+  "branch": "cloud/sd-penny-c-f113",
+  "refs": {
+    "refs/heads/cloud/sd-penny-c-f113": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+    "refs/heads/main": "f52beea3be587114d61166d21e4be26777fa96f3"
+  },
+  "product_push_verified": true,
+  "source_inputs": {
+    "tests/base/learning-stage3.test.ts": "6f6ea83343dd6184efaf406a8675c9c05ab5977b5d795ff1c151da24671eb12a",
+    "src/core/features/learning/controls.ts": "c02e0224f9f54f9e349029c3845c5a4d2b19480fbd724e9c85d0dbf3a900b963",
+    "sources.lock.json": "e6b25b1adc02e4914e1f3607313f2a885f04c9c916f55cb84018f20aca426dc7"
+  },
+  "candidate_commits": "b4b22d5b69770f0237169e4ad17a31ceb11247bb\nRun Edit Run fleet <fleet@runeditrun.com>\nRun Edit Run fleet <fleet@runeditrun.com>\n\n",
+  "clean": true,
+  "base_replay": "Recovered supplied expiry proof on current main without the supplied Evidence-cell edit; original refs unchanged",
+  "counts": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "verify_run": 42223627800,
+  "shallow": false,
+  "backup": {
+    "path": "/home/agent/rer-consolidation/work/sd-penny-c-f113/product-backup.bundle",
+    "sha256": "909e9791d0ad6643cf9419d67e979d0da34d50960726f8ec5a7e8bbf87dce174",
+    "verified": true,
+    "prerequisite": "f52beea3be587114d61166d21e4be26777fa96f3"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "--config",
+    "vitest.base.config.ts",
+    "tests/base/learning-stage3.test.ts",
+    "-t",
+    "scheduled refresh obtains new evidence"
+  ],
+  "mutation": "Remove only resume expiry refusal from controls.ts in a temporary working tree",
+  "exit": 1,
+  "expected": "A native expired-grant resume returns 200 instead of the required 409, so the journey fails",
+  "source_restored": true,
+  "restored_sha256": "c02e0224f9f54f9e349029c3845c5a4d2b19480fbd724e9c85d0dbf3a900b963"
+}

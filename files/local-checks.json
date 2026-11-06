@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+  "branch": "cloud/sd-penny-c-f113",
+  "node": "v22.20.0",
+  "checks": [
+    {
+      "name": "source-lock",
+      "command": [
+        "node",
+        "scripts/edition-authoring/cli.mjs",
+        "check"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:15:48.761256+00:00",
+      "exit": 0
+    },
+    {
+      "name": "contract-views",
+      "command": [
+        "node",
+        "src/base/contract-docs.mjs",
+        "check"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:15:49.177030+00:00",
+      "exit": 0
+    },
+    {
+      "name": "copied-source",
+      "command": [
+        "node",
+        "scripts/verify-base-source.mjs"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:15:49.292587+00:00",
+      "exit": 0
+    },
+    {
+      "name": "diff-hygiene",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:15:49.413209+00:00",
+      "exit": 0
+    },
+    {
+      "name": "clean-tree",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "HEAD"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:15:49.421413+00:00",
+      "exit": 0
+    },
+    {
+      "name": "contract-main-equality",
+      "command": [
+        "git",
+        "diff",
+        "--exit-code",
+        "origin/main",
+        "HEAD",
+        "--",
+        "CONTRACT.md",
+        "ACCEPTANCE.md",
+        "docs/CLAIMS.md"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:15:49.429273+00:00",
+      "exit": 0
+    },
+    {
+      "name": "typecheck",
+      "command": [
+        "pnpm",
+        "run",
+        "typecheck"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:15:49.433074+00:00",
+      "exit": 0
+    },
+    {
+      "name": "first-party",
+      "command": [
+        "pnpm",
+        "run",
+        "check",
+        "--",
+        "--profile",
+        "first-party"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:16:20.558746+00:00",
+      "exit": 0
+    },
+    {
+      "name": "touched-lint",
+      "command": [
+        "pnpm",
+        "exec",
+        "oxlint",
+        "tests/base/learning-stage3.test.ts"
+      ],
+      "head": "b4b22d5b69770f0237169e4ad17a31ceb11247bb",
+      "start": "2026-11-06T13:16:21.526267+00:00",
+      "exit": 0
+    }
+  ],
+  "touched_tests": {
+    "command": "pnpm exec vitest run --config vitest.base.config.ts tests/base/learning-stage3.test.ts",
+    "exit": 0,
+    "tests": 5,
+    "candidate_log": "candidate-tests.log",
+    "pinned_node_log": "pinned-node-tests.log",
+    "note": "Pinned-node suite and diagnostic mutation overlapped after baseline modules had loaded. Both outcomes were as expected; no product source was committed or pushed during mutation."
+  },
+  "ui": "not touched",
+  "migrations": "not touched",
+  "publication_scan": {
+    "complete": false,
+    "historyScanned": false,
+    "findings": null,
+    "status": "not run in cloud; fleet lander duty"
+  },
+  "counts_before": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  },
+  "counts_after": {
+    "done": 79,
+    "partial": 124,
+    "missing": 78
+  }
+}

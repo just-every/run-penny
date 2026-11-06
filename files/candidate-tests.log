@@ -1,0 +1,12 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ RUN  v4.1.11 /workspace/run-penny
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  13:12:52
+   Duration  29.47s (transform 2.18s, setup 0ms, import 4.85s, tests 23.77s, environment 0ms)
+

@@ -1,0 +1,4 @@
+{"time": "2026-11-06T13:12:52Z", "arguments": ["api", "repos/just-every/run-penny/actions/runs?head_sha=b4b22d5b69770f0237169e4ad17a31ceb11247bb&per_page=100"], "exit": 0}
+{"time": "2026-11-06T13:13:23.489027+00:00", "arguments": ["api", "repos/just-every/run-penny/actions/runs?head_sha=f52beea3be587114d61166d21e4be26777fa96f3&per_page=100", "--jq", "{workflow_runs: [.workflow_runs[] | {id,name,event,status,conclusion,head_sha,html_url}]}"], "exit": 0}
+{"time": "2026-11-06T13:16:22.534710+00:00", "arguments": ["api", "repos/just-every/run-penny/actions/runs/42223627800", "--jq", "{status,conclusion,head_sha,html_url}"], "exit": 0}
+{"time": "2026-11-06T13:21:23.450334+00:00", "arguments": ["api", "repos/just-every/run-penny/actions/runs/42223627800", "--jq", "{status,conclusion,head_sha,html_url}"], "exit": 0}
