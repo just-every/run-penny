@@ -6,6 +6,8 @@ export const decisionTags = (id: string) => `SELECT et.tag_id FROM candidate_bet
 export const roadmapTags = (id: string) => `SELECT ta.tag_id FROM roadmap_request_mappings rm JOIN request_tag_assignments ta ON ta.request_id=rm.request_id WHERE rm.roadmap_item_id=${id} AND rm.withdrawn_at IS NULL UNION SELECT et.tag_id FROM roadmap_evidence_links l JOIN evidence_tag_assignments et ON et.evidence_id=l.evidence_id WHERE l.roadmap_item_id=${id} UNION SELECT et.tag_id FROM roadmap_items ri JOIN candidate_bet_evidence_links l ON l.candidate_bet_id=ri.candidate_bet_id JOIN evidence_tag_assignments et ON et.evidence_id=l.evidence_id WHERE ri.id=${id}`
 export function tagRelation(entity: ListEntity): string {
  switch(entity) {
+ // Hierarchy records have no tag assignments. A tag-filtered search excludes them.
+ case 'products': case 'components': case 'features': return 'SELECT NULL WHERE 0'
  case 'requests': return requestTags('x.id')
  case 'evidence': return evidenceTags('x.id')
  case 'decisions': return decisionTags('x.id')
