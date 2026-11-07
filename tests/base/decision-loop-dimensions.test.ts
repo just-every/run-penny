@@ -6,16 +6,20 @@ import { seedLoop, request, json, evidence, bet, link, row, commitInput, operato
 
 beforeAll(async () => { await applyD1Migrations(env.DB, inject('migrations')); await seedLoop() })
 
-it('[DEC-001][DEC-002] requires question, owner, a bet and linked evidence, and reverses readiness when the final link is removed', async () => {
- const d=await json(request('/api/operator/decisions','POST',{question:''}),201)
+it('[DEC-001][DEC-002] retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness', async () => {
+ const d=await json(request('/api/operator/decisions','POST',{question:'',confidence:'low',reviewAt:'2026-11-12'}),201)
  expect(await row('decisions',d.id)).toMatchObject({state:'draft',owner_operator_id:null})
- await json(request(`/api/operator/decisions/${d.id}`,'PATCH',{question:'Which approach?',ownerOperatorId:null}))
+ expect(await json<OperatorDecisionBrief>(request(`/api/operator/decisions/${d.slug}`))).toMatchObject({id:d.id,slug:d.slug,question:'',owner:null,confidence:'low',reviewAt:'2026-11-12',bets:[]})
+ await json(request(`/api/operator/decisions/${d.id}`,'PATCH',{question:'Which approach?',ownerOperatorId:null,confidence:'medium',reviewAt:'2026-12-03'}))
+ expect(await json<OperatorDecisionBrief>(request(`/api/operator/decisions/${d.slug}`))).toMatchObject({id:d.id,slug:d.slug,question:'Which approach?',owner:null,confidence:'medium',reviewAt:'2026-12-03',state:'draft'})
  const a=await bet(d.id),e=await evidence();await link(e.id,a.id)
  expect(await row('decisions',d.id)).toMatchObject({state:'draft'})
- await json(request(`/api/operator/decisions/${d.id}`,'PATCH',{question:'Which approach?',ownerOperatorId:operatorId}))
+ await json(request(`/api/operator/decisions/${d.id}`,'PATCH',{question:'Which approach?',ownerOperatorId:operatorId,confidence:'high',reviewAt:'2027-01-14'}))
  expect(await row('decisions',d.id)).toMatchObject({state:'ready'})
- await json(request(`/api/operator/decisions/${d.id}`,'PATCH',{question:'',ownerOperatorId:operatorId}))
+ expect(await json<OperatorDecisionBrief>(request(`/api/operator/decisions/${d.slug}`))).toMatchObject({id:d.id,slug:d.slug,question:'Which approach?',owner:{id:operatorId},confidence:'high',reviewAt:'2027-01-14',evidenceCount:1,bets:[{id:a.id}]})
+ await json(request(`/api/operator/decisions/${d.id}`,'PATCH',{question:'',ownerOperatorId:operatorId,confidence:'high',reviewAt:null}))
  expect(await row('decisions',d.id)).toMatchObject({state:'draft'})
+ expect(await json<OperatorDecisionBrief>(request(`/api/operator/decisions/${d.slug}`))).toMatchObject({id:d.id,slug:d.slug,question:'',owner:{id:operatorId},confidence:'high',reviewAt:null,evidenceCount:1,bets:[{id:a.id}]})
  await json(request(`/api/operator/decisions/${d.id}`,'PATCH',{question:'Which approach?',ownerOperatorId:operatorId}))
  expect(await row('decisions',d.id)).toMatchObject({state:'ready'})
  await link(e.id,a.id,'supporting','DELETE')
