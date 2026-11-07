@@ -723,8 +723,8 @@ Core · published · **partial**
 **Acceptance.**
 1. A decision brief holds a question, an accountable owner, its linked evidence and accounts, its candidate bets with the counter-evidence and assumptions for each, a confidence level of low, medium, or high, a review date, and the requesters currently eligible under REL-004 through its mapped requests.
 
-**Evidence.** `tests/base/decision-loop-dimensions.test.ts`
-**Gap.** Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted.
+**Evidence.** `tests/base/decision-loop-dimensions.test.ts` — retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness; compares distinct stored relations, null provenance, shared evidence and offset instants without summing duplicate accounts
+**Gap.** Per-bet assumptions and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, each bet's counter-evidence count, low, medium and high confidence, and changed and cleared review dates under the same decision identity are asserted.
 
 #### DEC-003 — Comparable bets
 
