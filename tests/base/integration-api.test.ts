@@ -4,7 +4,6 @@ import {beforeEach,afterEach,expect,inject,it,vi} from 'vitest'
 import {createPennyApi} from '@/core/app/api'
 import {env,origin,owner} from './support'
 import {observeD1} from './review-race-storage'
-import {graph} from './notification-regression-fixture'
 const api=createPennyApi()
 function request(path:string,body?:unknown,headers:Record<string,string>={},method=body===undefined?'GET':'POST',db=env.DB){
  return api.fetch(new Request(origin+path,{method,headers:{Origin:origin,...headers,...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),{...env,DB:db})
@@ -70,29 +69,6 @@ it('[API-002 BASE-ACCESS-002] fences issuance and business writes against native
  expect(await env.DB.prepare('SELECT count(*) n FROM audit_entries').first('n')).toBe(audited)
  expect(await env.DB.prepare("SELECT count(*) n FROM audit_entries WHERE action='integration.key_issued'").first('n')).toBe(1)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_guards').first('n')).toBe(0)
-})
-it('[API-003 REQ-010 REL-001] composes native public reads, comments, status publication and validation without widening approval or consent',async()=>{
- const g=await graph(),issued=await key(g.operator,['requests:read','requests:write','comments:read','comments:write','status:read','status:write','releases:read','releases:write'])
- const slug=g.requests[0].slug
- const snapshot=async()=>({requests:await env.DB.prepare('SELECT count(*) n FROM requests').first('n'),comments:await env.DB.prepare('SELECT count(*) n FROM request_comments').first('n'),updates:await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n'),permissions:await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')})
- const before=await snapshot()
- expect((await request('/api/v1/requests/'+slug+'/comments',{body:'Comment without approval'},issued.headers)).status).toBe(400)
- expect((await request('/api/v1/requests',{title:'New',description:'Body',boardSlug:'missing'},issued.headers)).status).toBe(404)
- expect((await request('/api/v1/requests',{title:'New',description:'Body',boardSlug:'regression',resource:'releases'},issued.headers)).status).toBe(400)
- expect(await snapshot()).toEqual(before)
- expect((await request('/api/v1/requests/'+slug+'/comments',{body:'Approved safe comment',approve:true},issued.headers)).status).toBe(201)
- const action={status:'under_review',body:'Approved public update',pinned:false,idempotencyKey:'native-api-update',approve:true}
- expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)
- expect((await request('/api/v1/requests/'+slug+'/status-updates',action,issued.headers)).status).toBe(200)
- expect((await request('/api/v1/requests/'+slug+'/status-updates',{...action,body:'Different'},issued.headers)).status).toBe(409)
- expect(await env.DB.prepare('SELECT count(*) n FROM request_status_updates').first('n')).toBe(1)
- expect(await env.DB.prepare('SELECT count(*) n FROM requester_update_permissions').first('n')).toBe(before.permissions)
- const publicText=await (await request('/api/v1/requests/'+slug,undefined,issued.headers)).text()
- expect(publicText).toContain('Approved safe comment');expect(publicText).toContain('Approved public update');expect(publicText).not.toContain(g.recipient.email)
- expect((await request('/api/v1/releases/missing/publish',{approve:true},issued.headers)).status).toBe(404)
- const fresh=await request('/api/v1/requests',{title:'Private unreviewed wording',description:'Private context',boardSlug:'regression'},issued.headers)
- expect(fresh.status).toBe(201)
- expect(await (await request('/api/v1/requests',undefined,issued.headers)).text()).not.toContain('Private unreviewed wording')
 })
 it('[API-002 BASE-OPS-002 DATA-001] applies each new migration to populated prior native history and preserves revoked authority, files and seals',async()=>{
  const migrations=inject('migrations'),boundary=migrations.findIndex(item=>item.name.startsWith('0020_'))

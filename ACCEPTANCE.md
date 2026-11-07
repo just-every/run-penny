@@ -382,8 +382,8 @@ Core · published · **partial**
 1. The operation atomically moves the duplicate's evidence links, approved attachments, comments, and followers, collapses the combined votes so each identity counts once, keeps the duplicate's title and source as merge history, and answers the duplicate's public URL with a 301 to the canonical request.
 2. Merging a request that is itself a duplicate merges it into the canonical request at the end of its chain.
 
-**Evidence.** `tests/base/board.test.ts`
-**Gap.** Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted.
+**Evidence.** `tests/base/board.test.ts` — "Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail" proves exact evidence and follower unions, approved attachment identity, original bytes and retained origin, held-file exclusion, unchanged permission records and final-audit rollback through native merge, authenticated context, requester activity and public attachment routes; retains the 301, moved comments and collapsed votes.
+**Gap.** Keeping the duplicate's title and source as merge history and merging a duplicate into the end of its chain still lack passing assertions.
 
 #### REQ-009 — Unmerge
 
@@ -723,8 +723,8 @@ Core · published · **partial**
 **Acceptance.**
 1. A decision brief holds a question, an accountable owner, its linked evidence and accounts, its candidate bets with the counter-evidence and assumptions for each, a confidence level of low, medium, or high, a review date, and the requesters currently eligible under REL-004 through its mapped requests.
 
-**Evidence.** `tests/base/decision-loop-dimensions.test.ts`
-**Gap.** Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted.
+**Evidence.** `tests/base/decision-loop-dimensions.test.ts` — retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness; compares distinct stored relations, null provenance, shared evidence and offset instants without summing duplicate accounts
+**Gap.** Per-bet assumptions and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, each bet's counter-evidence count, low, medium and high confidence, and changed and cleared review dates under the same decision identity are asserted.
 
 #### DEC-003 — Comparable bets
 
@@ -1460,8 +1460,8 @@ Core · published · **partial**
 **Acceptance.**
 1. Imported/restored history creates no new publication or integration effect.
 
-**Evidence.** `tests/base/integration-api.test.ts`
-**Gap.** That imported or restored history creates no new publication or integration effect has no passing assertion: the cited upgrade case snapshots its tables after the import and compares them only across migrations, and no cited case restores an archive; prior history, including imported feedback, staying unchanged across each new migration is asserted.
+**Evidence.** `tests/base/integration-api.test.ts`; `tests/base/egress-delivery.test.ts` — selected public effects and durable receipts preserve custody across restart, with `tests/base/integration-effects.ts`
+**Gap.** Native saved-history and archive publication custody are asserted with complete approved records, sealed snapshots, public readback and unchanged integration identities. Broader API coverage and installation-authority portability remain unproved by this publication-only journey. Provider, device, account and cross-seed or Base prerequisites, earlier ct and payments holds and release requirements remain unchanged. Prior history, including imported feedback, staying unchanged across each new migration remains asserted.
 
 #### INT-001 — Explicit integration effects
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 
