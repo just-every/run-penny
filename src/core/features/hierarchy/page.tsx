@@ -1,3 +1,5 @@
+import {useEffect} from 'react'
+import {useLocation} from '@tanstack/react-router'
 import {useOperatorResource} from '@/core/app/ui/operator-resource'
 import {FoldOpenWhenEmpty} from '@/core/app/ui/fold-open-when-empty'
 import {OperatorPageHeader} from '@/core/app/ui/operator-page-header'
@@ -8,7 +10,13 @@ import {WorkspaceLink} from '@/core/features/workspace/ui/workspace-link'
 import type {Hierarchy,Feature,Named} from './types'
 
 export function HierarchyPage(){
+ const {hash}=useLocation()
  const [resource,reload]=useOperatorResource<Hierarchy>('/api/operator/hierarchy')
+ useEffect(()=>{
+  if(resource.kind!=='ready')return
+  const target=document.getElementById(hash.replace(/^#/,''))
+  if(target){target.scrollIntoView({block:'start'});target.focus({preventScroll:true})}
+ },[hash,resource])
  return <><OperatorPageHeader eyebrow="Product hierarchy" title="Bring related requests into one feature." art={null}>Keep products, components and features connected to their customer demand. All hierarchy and value figures stay private.</OperatorPageHeader>
  {resource.kind==='loading'?<OperatorResourceLoading label="Loading product hierarchy…"/>:resource.kind==='session_expired'?<OperatorSessionExpired/>:resource.kind!=='ready'?<OperatorResourceFailure title="Could not load the hierarchy." onRetry={reload}/>:<HierarchyBody data={resource.data} reload={reload}/>}</>
 }
@@ -18,12 +26,12 @@ function Editor({kind,record,parents,reload,empty}:{kind:'product'|'component'|'
 }
 function HierarchyBody({data,reload}:{data:Hierarchy;reload:()=>void}){
  return <div className="space-y-6"><section className={`${paperCardClass} p-5`} aria-label="Manage hierarchy"><h2 className="text-xl font-bold">Build your product map</h2><Editor kind="product" reload={reload} empty={!data.products.length}/>{data.products.length?<Editor kind="component" parents={data.products} reload={reload}/>:null}{data.components.length?<Editor kind="feature" parents={data.components.map(c=>({...c,name:`${data.products.find(p=>p.id===c.productId)?.name} / ${c.name}`}))} reload={reload}/>:null}</section>
- {data.products.map(product=><section key={product.id} className={`${paperCardClass} p-5`} aria-label={product.name}><h2 className="break-words text-2xl font-bold">{product.name}</h2><Editor kind="product" record={product} reload={reload}/>{data.components.filter(c=>c.productId===product.id).map(component=><div key={component.id} className="mt-6 border-t border-penny-line pt-5"><h3 className="break-words text-xl font-bold">{component.name}</h3><Editor kind="component" record={{...component,parentId:component.productId}} parents={data.products} reload={reload}/><div className="mt-4 grid min-w-0 gap-4 xl:grid-cols-2">{data.features.filter(f=>f.componentId===component.id).map(feature=><FeatureCard key={feature.id} feature={feature} data={data} reload={reload}/>)}</div>{!data.features.some(f=>f.componentId===component.id)?<p className="mt-3 text-penny-muted">No features in this component.</p>:null}</div>)}{!data.components.some(c=>c.productId===product.id)?<p className="mt-3 text-penny-muted">No components in this product.</p>:null}</section>)}
+ {data.products.map(product=><section key={product.id} id={`products-${product.id}`} tabIndex={-1} className={`${paperCardClass} scroll-mt-24 p-5`} aria-label={product.name}><h2 className="break-words text-2xl font-bold">{product.name}</h2><Editor kind="product" record={product} reload={reload}/>{data.components.filter(c=>c.productId===product.id).map(component=><div key={component.id} id={`components-${component.id}`} tabIndex={-1} className="mt-6 scroll-mt-24 border-t border-penny-line pt-5"><h3 className="break-words text-xl font-bold">{component.name}</h3><Editor kind="component" record={{...component,parentId:component.productId}} parents={data.products} reload={reload}/><div className="mt-4 grid min-w-0 gap-4 xl:grid-cols-2">{data.features.filter(f=>f.componentId===component.id).map(feature=><FeatureCard key={feature.id} feature={feature} data={data} reload={reload}/>)}</div>{!data.features.some(f=>f.componentId===component.id)?<p className="mt-3 text-penny-muted">No features in this component.</p>:null}</div>)}{!data.components.some(c=>c.productId===product.id)?<p className="mt-3 text-penny-muted">No components in this product.</p>:null}</section>)}
  </div>
 }
 function FeatureCard({feature,data,reload}:{feature:Feature;data:Hierarchy;reload:()=>void}){
  const d=feature.demand
- return <article className="min-w-0 rounded-lg border border-penny-line bg-penny-paper/60 p-4" aria-label={feature.name}><h4 className="break-words text-lg font-bold">{feature.name}</h4><dl className="mt-4 grid grid-cols-2 gap-4 text-sm">{[['Voters',d.voters],['Accounts',d.accounts],['Evidence items',d.evidence],['Recorded revenue (USD)',d.revenueCents===null?'Unknown':new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(d.revenueCents/100)]].map(([label,value])=><div key={label}><dt className="text-penny-muted">{label}</dt><dd className="mt-1 font-semibold">{value}</dd></div>)}</dl><p className="mt-3 text-xs text-penny-muted">Distinct people, accounts and evidence across linked requests. Recorded revenue counts each account once; it is not ARR or MRR.</p>
+ return <article id={`features-${feature.id}`} tabIndex={-1} className="scroll-mt-24 min-w-0 rounded-lg border border-penny-line bg-penny-paper/60 p-4" aria-label={feature.name}><h4 className="break-words text-lg font-bold">{feature.name}</h4><dl className="mt-4 grid grid-cols-2 gap-4 text-sm">{[['Voters',d.voters],['Accounts',d.accounts],['Evidence items',d.evidence],['Recorded revenue (USD)',d.revenueCents===null?'Unknown':new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(d.revenueCents/100)]].map(([label,value])=><div key={label}><dt className="text-penny-muted">{label}</dt><dd className="mt-1 font-semibold">{value}</dd></div>)}</dl><p className="mt-3 text-[13px] text-penny-muted">Distinct people, accounts and evidence across linked requests. Recorded revenue counts each account once; it is not ARR or MRR.</p>
  <Editor kind="feature" record={{...feature,parentId:feature.componentId}} parents={data.components} reload={reload}/>
  <h5 className="mt-5 font-semibold">Linked requests</h5>{feature.requests.length?<ul className="mt-2 space-y-2">{feature.requests.map(r=><li key={r.id}><WorkspaceLink className={`${textLinkClass} break-words`} href={`/app/moderation?q=${encodeURIComponent(r.title)}`}>{r.title}</WorkspaceLink></li>)}</ul>:<p className="mt-2 text-sm text-penny-muted">No requests linked.</p>}
  <h5 className="mt-5 font-semibold">Roadmap items</h5>{feature.roadmap.length?<ul className="mt-2 space-y-2">{feature.roadmap.map(r=><li key={r.id}><WorkspaceLink className={`${textLinkClass} break-words`} href={`/app/roadmap?q=${encodeURIComponent(r.title)}`}>{r.title}</WorkspaceLink></li>)}</ul>:<p className="mt-2 text-sm text-penny-muted">No roadmap items attached.</p>}
