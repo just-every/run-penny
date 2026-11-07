@@ -530,8 +530,8 @@ Core · published · **partial**
 1. A request on an internal board never appears in a portal response, on the public roadmap, in a release, or in a requester notification, whatever its own publication state.
 2. Moving a request to an internal board withdraws it from the portal within 5 seconds and its public URL returns 404.
 
-**Evidence.** `tests/base/board.test.ts`
-**Gap.** Keeping internal-board requests off the public roadmap, out of releases and out of requester notifications has no passing assertion in this clause's evidence; the request and attachment 404s are asserted.
+**Evidence.** `tests/base/board.test.ts` — Base-signed board and tag management, via `tests/base/internal-board-exclusion.ts` proveInternalBoardExclusion; `tests/base/notifications.test.ts` — rechecks each configured input after enqueue
+**Gap.** Moving a request to an internal board, including withdrawal from the portal within five seconds, has no passing assertion. Changing board visibility proves exclusion from populated public roadmaps, release-publication refusal with unchanged publication, snapshot and outbox state, queued-mail suppression and refusal of later public status and reply activity; it does not prove the request move.
 
 #### REQ-020 — Requester's own content
 

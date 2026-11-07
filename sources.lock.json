@@ -670,7 +670,7 @@
       "executable": false
     },
     "ACCEPTANCE.md": {
-      "sha256": "31d97e806d9f239b29cb531bbcbbccc836416176552a9a4c2e3b49342eb3206a",
+      "sha256": "a2a822a8a6b1e1a52196d8e6ecf6951749863e0a32117e0bcb044eac66db0266",
       "executable": false
     },
     "agent-surface.json": {
@@ -3354,7 +3354,7 @@
       "executable": false
     },
     "CHANGELOG.md": {
-      "sha256": "46a7ec29d72ebee8a4398e62fd72b294154702c0ecdbf8b125bcfd45cd979aaa",
+      "sha256": "0341abcbc44a437a5db7549f85f325dea096b1f5a27d0f09e75e57b7129b0c32",
       "executable": false
     },
     "CLAUDE.md": {
@@ -3366,7 +3366,7 @@
       "executable": false
     },
     "CONTRACT.md": {
-      "sha256": "60f580ea08ca3dd66d4a7763deb21b363809993c470382f8573572a89d778cef",
+      "sha256": "a90f53ad5aee1e37254229379429e3a521e62e8aefc7b194376a16e6798d5338",
       "executable": false
     },
     "DEMO.md": {
@@ -8346,7 +8346,7 @@
       "executable": false
     },
     "tests/base/board.test.ts": {
-      "sha256": "eb6c9450d0b84df1560e306de4bc358a75230795538de0ab9d9600b6d473050a",
+      "sha256": "13e4a8cd4f87955bf71d825b5ea01aa56b102b42d4a884f215af409e77920771",
       "executable": false
     },
     "tests/base/custody.test.ts": {
@@ -8477,6 +8477,10 @@
       "sha256": "1666edb62dc955dd3dcc51e085a65de3c8a790a287a8241992ce579fcf619e48",
       "executable": false
     },
+    "tests/base/internal-board-exclusion.ts": {
+      "sha256": "6c5ae2639c61d5931bc49bfa689ab51c18cb5acea235fe8ae0829243085256d9",
+      "executable": false
+    },
     "tests/base/internal-discussion.test.ts": {
       "sha256": "8d361651751aaacf8f930a108ce0cf91a7d0d241315a3d9fd0ed0ed238b115c1",
       "executable": false
@@ -8538,7 +8542,7 @@
       "executable": false
     },
     "tests/base/notifications.test.ts": {
-      "sha256": "c74d749c7f952363f659472fe9429171b410b8bebdf43609949df10e82e41f6a",
+      "sha256": "1ea1bcf5a08808b65144f7684487ea2f8fffb92fc5d4f24eaa08c665ffa92e61",
       "executable": false
     },
     "tests/base/operator-request-publication.ts": {
@@ -8626,7 +8630,7 @@
       "executable": false
     },
     "tests/base/release-fixture.ts": {
-      "sha256": "e38bd8b2362c8e3535109c75bf2b1f0eab75edf75f2d3e3df057f083d47a004d",
+      "sha256": "c9462d9fda538519f8e534032d7ac39657c481251a7524d0fc2d36eb41780515",
       "executable": false
     },
     "tests/base/release-mail-identity.ts": {
