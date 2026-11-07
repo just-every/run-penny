@@ -43,7 +43,7 @@ function operation(operationId: string, summary: string, scope: Scope, output: s
   const projection = operationId === 'findProxyContacts' ? 'Customer lookup returns private active contact choices; keep this votes:write key on the server.' : 'Request, board and release reads expose approved public projections.'
   return {
     operationId, summary, security: [{ integrationKey: [] }], 'x-required-scopes': [scope],
-    description: `Requires a current installation key with ${scope}. Missing, expired, revoked and insufficient-scope keys all return 401. Origin, when supplied, must match this installation; cross-site requests are refused. ${projection}`,
+    description: `Requires a current installation key with ${scope}. Missing, expired, revoked and insufficient-scope keys all return 401. Mutations refuse a supplied foreign Origin and cross-site fetch metadata; server clients may omit Origin. ${projection}`,
     parameters,
     ...(input ? { requestBody: { required: true, description: 'JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.', content: content(input) } } : {}),
     responses: {

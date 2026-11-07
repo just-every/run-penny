@@ -92,7 +92,8 @@ without sign-in. It describes the existing native board, request, comment, statu
 release and proxy-vote operations with their request and response schemas and
 required key scopes. Issue a key in the authenticated integration settings and
 send it as a Bearer credential. Missing, expired, revoked and insufficient-scope
-keys return 401; a supplied Origin must match the installation.
+keys return 401. Mutations refuse a supplied foreign Origin and cross-site fetch
+metadata; server clients may omit Origin.
 
 Request lists support the documented filters; these operations return arrays
 without pagination. Requests created through this API remain held for native
@@ -101,3 +102,11 @@ and release publication retains its current target and mapping checks. Proxy
 votes grant neither verified identity nor email permission. Other operator
 resource families and complete lifecycle-webhook coverage remain unfinished
 under DATA-006.
+
+The offline contract journey validates the served document against the retained
+OpenAPI 3.1 structural schema and validates populated native responses against
+its response schemas. Each operation succeeds with only its declared scope;
+missing, invalid, insufficient and revoked credentials refuse without business
+changes. Native HTTP cases also cover server requests without Origin, foreign
+Origin and cross-site mutation refusals, malformed JSON, unsupported content
+types and oversized bodies.

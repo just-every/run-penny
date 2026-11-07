@@ -1,3 +1,5 @@
+import { registerReportRoutes } from '@/core/features/reports/routes'
+import { registerAuditRoutes } from '@/core/features/audit/routes'
 import { registerOpenApiRoute } from '@/core/features/docs/openapi-route'
 import {registerSurveyRoutes} from '@/core/features/surveys/routes'
 import {registerHelpScoutRoutes} from '@/core/features/helpscout/routes'
@@ -111,6 +113,8 @@ export function createPennyApi(options: PennyAppOptions = {}) {
     context.res = await editorDocumentHeaders(context.res, context.get('runtime'), context.req.path)
   })
 
+  registerReportRoutes(app)
+  registerAuditRoutes(app)
   registerHelpScoutRoutes(app)
   registerBrowserCaptureRoutes(app)
   registerDiscordRoutes(app)
