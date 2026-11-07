@@ -3,6 +3,7 @@ import { afterAll,beforeAll,expect,inject,it,vi } from 'vitest'
 import { env,seedLoop,request,json,publicRequest } from './decision-loop-fixture'
 import { mockMail,owner,requester } from './support'
 import {explicitConsentBoard} from './explicit-consent-board'
+import { parseCsv } from './csv-vote-reconciliation'
 let previous:{id:string;slug:string}
 beforeAll(async()=>{
  const migrations=inject('migrations') as {name:string}[]
@@ -12,7 +13,7 @@ beforeAll(async()=>{
  await applyD1Migrations(env.DB,migrations as never)
 })
 afterAll(()=>vi.restoreAllMocks())
-it('[REQ-012][REQ-034][REQ-040] upgrades populated boards and supports category browsing, ranking, canonical merges and board participation/privacy through routes',async()=>{
+it('[REQ-012][REQ-034][REQ-040] upgrades populated boards and supports category browsing, ranking, canonical merges and board participation and privacy through routes',async()=>{
  expect(await json(request(`/api/public/requests/${previous.slug}`))).toMatchObject({title:'Safe request',category:null,voteCount:0})
  await json(request('/api/operator/boards','POST',{slug:'category-lab',name:'Category lab',visibility:'public'}),201)
  await explicitConsentBoard('category-lab',request)
@@ -92,7 +93,10 @@ it('[REQ-012][REQ-034][REQ-040] upgrades populated boards and supports category 
  expect((await boards()).some(b=>b.slug==='category-lab')).toBe(false)
  expect(await browse('trending')).toEqual([]);expect((await request(`/api/public/requests/${r.slug}`)).status).toBe(404)
  expect((await json<any[]>(request('/api/public/roadmap'))).some(c=>c.slug===r.slug)).toBe(false)
- const csv=await request('/api/operator/requests/export.csv');expect(csv.status).toBe(200);expect(await csv.text()).toContain('Platform')
+ const csv=await request('/api/operator/requests/export.csv');expect(csv.status).toBe(200)
+ const exportedRequests=parseCsv(await csv.text())
+ expect(exportedRequests.find(row=>row.request===r.slug)).toMatchObject({category:'Platform',vote_count:'1'})
+ expect(exportedRequests).toHaveLength((await env.DB.prepare('SELECT COUNT(*) n FROM requests').first<number>('n'))!)
  const portable=await json<any>(request('/api/operator/data/export'))
  expect(portable.archive.tables.requests.find((row:any)=>row.slug===r.slug).category_id).toBe(root.id)
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
