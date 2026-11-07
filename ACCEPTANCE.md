@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 79 | 108 | 71 | 258 |
+| Core | 79 | 109 | 70 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 79 | 124 | 78 | 281 |
+| Full target | 79 | 125 | 77 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -382,8 +382,8 @@ Core · published · **partial**
 1. The operation atomically moves the duplicate's evidence links, approved attachments, comments, and followers, collapses the combined votes so each identity counts once, keeps the duplicate's title and source as merge history, and answers the duplicate's public URL with a 301 to the canonical request.
 2. Merging a request that is itself a duplicate merges it into the canonical request at the end of its chain.
 
-**Evidence.** `tests/base/board.test.ts`
-**Gap.** Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted.
+**Evidence.** `tests/base/board.test.ts` — "Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail" proves exact evidence and follower unions, approved attachment identity, original bytes and retained origin, held-file exclusion, unchanged permission records and final-audit rollback through native merge, authenticated context, requester activity and public attachment routes; retains the 301, moved comments and collapsed votes.
+**Gap.** Keeping the duplicate's title and source as merge history and merging a duplicate into the end of its chain still lack passing assertions.
 
 #### REQ-009 — Unmerge
 
@@ -530,8 +530,8 @@ Core · published · **partial**
 1. A request on an internal board never appears in a portal response, on the public roadmap, in a release, or in a requester notification, whatever its own publication state.
 2. Moving a request to an internal board withdraws it from the portal within 5 seconds and its public URL returns 404.
 
-**Evidence.** `tests/base/board.test.ts`
-**Gap.** Keeping internal-board requests off the public roadmap, out of releases and out of requester notifications has no passing assertion in this clause's evidence; the request and attachment 404s are asserted.
+**Evidence.** `tests/base/board.test.ts` — Base-signed board and tag management, via `tests/base/internal-board-exclusion.ts` proveInternalBoardExclusion; `tests/base/notifications.test.ts` — rechecks each configured input after enqueue
+**Gap.** Moving a request to an internal board, including withdrawal from the portal within five seconds, has no passing assertion. Changing board visibility proves exclusion from populated public roadmaps, release-publication refusal with unchanged publication, snapshot and outbox state, queued-mail suppression and refusal of later public status and reply activity; it does not prove the request move.
 
 #### REQ-020 — Requester's own content
 
@@ -723,8 +723,8 @@ Core · published · **partial**
 **Acceptance.**
 1. A decision brief holds a question, an accountable owner, its linked evidence and accounts, its candidate bets with the counter-evidence and assumptions for each, a confidence level of low, medium, or high, a review date, and the requesters currently eligible under REL-004 through its mapped requests.
 
-**Evidence.** `tests/base/decision-loop-dimensions.test.ts`
-**Gap.** Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted.
+**Evidence.** `tests/base/decision-loop-dimensions.test.ts` — retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness; compares distinct stored relations, null provenance, shared evidence and offset instants without summing duplicate accounts
+**Gap.** Per-bet assumptions and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, each bet's counter-evidence count, low, medium and high confidence, and changed and cleared review dates under the same decision identity are asserted.
 
 #### DEC-003 — Comparable bets
 
@@ -1206,7 +1206,7 @@ Core · published · **partial**
 4. Model output cannot set identity or grants.
 
 **Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
-**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing existing identity, explicit update permissions, authority or selected scope, and create no derived artifacts. Valid output derives requester and account dimensions from selected native requests and evidence while retaining legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
@@ -1654,7 +1654,7 @@ Core · target · **partial** · Cites BASE-AUDIT-001, BASE-OPS-005
 
 #### OPS-006 — Saved views and filters
 
-Core · target · **missing**
+Core · target · **partial**
 
 **Requirement.** Every operator list (inbox, requests, features, evidence, accounts, roadmap, releases) filters on any field, custom field, tag, theme, segment, owner and date, chooses its columns and sort, and saves the result as a private or shared view.
 
@@ -1662,8 +1662,8 @@ Core · target · **missing**
 1. A browser test saves a filtered, sorted view, then a second operator opens the shared view and gets the same result set.
 2. A private view is not listed for them.
 
-**Evidence.** None.
-**Gap.** A browser test saves a filtered, sorted view, then a second operator opens the shared view and gets the same result set; a private view is not listed for them.
+**Evidence.** `tests/base/prioritisation.test.ts` — saves and shares transparent native-demand comparisons; `tests/browser/prioritisation.mjs` — prioritisation
+**Gap.** Native request prioritisation saves a title filter before existing formula sorting; a second operator reads the same complete ordered nonempty subset, while private views stay unlisted and unreadable. Remaining: saved views across the inbox, request queue, features, evidence, accounts, roadmap and releases; other field, custom-field, tag, theme, segment, owner and date filters; selectable columns and broader sort controls. Provider, device, account and cross-seed or Base prerequisites and earlier release holds remain unproved.
 
 #### OPS-007 — Person view
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 
