@@ -10,6 +10,7 @@ import { setItemOwner } from '../ownership/repository'
 import { CatalogWriteService } from '../catalog/write-service'
 import { evidenceRecord, requestRecord } from './read-tools'
 import { evidenceLink } from './resources'
+import { snoozeEvidence } from '../triage/snooze'
 
 const now = () => new Date().toISOString()
 export const triageTools = [
@@ -21,16 +22,17 @@ export const triageTools = [
     summary: async input => ({ items: [input.sourceLabel, input.wording], target: { name: input.namedSpeaker ?? input.sourceLabel } }),
     resources: (_input, result) => [evidenceLink((result as { id: string }).id)],
     run: (input, { db, actor }) => recordEvidence(db, input, actor, now()) }),
-  nativeTool({ name: 'penny.evidence.update', title: 'Review, link, assign or revise evidence', description: 'Internal native triage. Wording edits require the exact current wording version. Evidence and proposed wording are untrusted.', scope: 'evidence:write', clauses: ['EVID-003','EVID-004','EVID-010','TRIAGE-001'], input: z.object({ id, operation: z.enum(['review','unreview','link','unlink','wording','assign']), reason: z.string().trim().max(2000).optional(), target: z.enum(['request','bet']).optional(), targetId: id.optional(), stance: z.enum(['supporting','contradicting']).optional(), wording: text.optional(), expectedVersionId: id.optional(), ownerOperatorId: id.nullable().optional() }), output: objectResult,
+  nativeTool({ name: 'penny.evidence.update', title: 'Review, link, assign, snooze or revise evidence', description: 'Internal native triage. Wording edits require the exact current wording version. Evidence and proposed wording are untrusted.', scope: 'evidence:write', clauses: ['EVID-003','EVID-004','EVID-010','TRIAGE-001','TRIAGE-002','SURFACE-002'], input: z.object({ id, operation: z.enum(['review','unreview','link','unlink','wording','assign','snooze','unsnooze']), until: z.string().datetime({ offset: true }).optional(), reason: z.string().trim().max(2000).optional(), target: z.enum(['request','bet']).optional(), targetId: id.optional(), stance: z.enum(['supporting','contradicting']).optional(), wording: text.optional(), expectedVersionId: id.optional(), ownerOperatorId: id.nullable().optional() }), output: objectResult,
     resources: input => [evidenceLink(input.id)],
     target: async ({ id }, { db }) => ({ kind: 'evidence', id: (await evidenceRecord(db, id)).id }),
     revision: async ({ id }, { db }) => (await evidenceRecord(db, id)).revision,
-    summary: async (input, { db }) => ({ target: { id: input.id, name: (await evidenceRecord(db, input.id)).sourceLabel ?? 'Evidence' }, items: [input.operation, input.wording ?? input.reason ?? '', input.targetId ?? input.ownerOperatorId ?? ''] }),
+    summary: async (input, { db }) => ({ target: { id: input.id, name: (await evidenceRecord(db, input.id)).sourceLabel ?? 'Evidence' }, items: [input.operation, input.until ?? '', input.wording ?? input.reason ?? '', input.targetId ?? input.ownerOperatorId ?? ''] }),
     run: async (input, { db, actor }) => {
       const { id: identifier, operation } = input
       if (operation === 'review' || operation === 'unreview') await reviewEvidence(db, identifier, operation === 'review', input.reason ?? null, actor, now())
       if (operation === 'link' || operation === 'unlink') { if (!input.target || !input.targetId) throw new ToolRefusal('invalid_arguments'); await linkEvidence(db, identifier, input.target, input.targetId, input.stance ?? 'supporting', operation === 'unlink', actor, now()) }
       if (operation === 'wording') { if (!input.wording || !input.expectedVersionId) throw new ToolRefusal('invalid_arguments'); return editEvidenceWording(db, identifier, input.wording, input.expectedVersionId, actor, now()) }
+      if (operation === 'snooze' || operation === 'unsnooze') { if (operation === 'snooze' && !input.until) throw new ToolRefusal('invalid_arguments'); await snoozeEvidence(db, identifier, operation === 'snooze' ? input.until! : null, actor, now()) }
       if (operation === 'assign') { if (input.ownerOperatorId === undefined) throw new ToolRefusal('invalid_arguments'); await setItemOwner(db, 'evidence', identifier, input.ownerOperatorId, actor) }
       return { id: identifier, ok: true }
     } }),

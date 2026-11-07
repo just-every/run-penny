@@ -394,3 +394,43 @@ A reply posts only when the operator chooses a linked published public request a
 ## Discord capture upgrade
 
 Apply additive migrations `0096_discord_capture.sql` and `0097_discord_source_checks.sql` through `rer setup` or the existing hosted path. Configure the optional `PENNY_DISCORD` secret, enforcing GET service binding and owner-run Gateway relay only when enabling Discord. See [Discord capture](docs/DISCORD.md) for permissions, cursor recovery, source-removal policy and disconnect. Keep expanded schema on rollback. Restored capture stays disabled/held until deliberately reconfigured; never resume it under archived operator identity.
+
+## Native feedback-volume reports
+
+An active native operator session reads JSON from
+`/api/operator/reports/feedback-volume` or downloads CSV from
+`/api/operator/reports/feedback-volume.csv`. Both require `from` and `to` query
+parameters containing RFC 3339 timestamps with an explicit timezone. The window
+includes `from` and excludes `to`, must advance, and is bounded to 366 days.
+Offsets normalize to UTC. Unknown or repeated parameters and malformed dates
+return 400; missing, requester-only and revoked operator authority return 401.
+Responses are private and not cached. These routes grant no new role or API-key
+permission; finer commercial-role machinery remains unimplemented.
+
+Request volume counts each retained request row once at `requests.created_at`,
+grouped by its current board. It includes held, rejected, merged and archived-board
+records while they remain stored. Evidence volume counts each retained evidence
+item once at `evidence_items.created_at`, its capture time, grouped by `source_type`.
+The historical `observed_at` describes when the source event happened and is not
+the capture clock. Edits, versions, votes and links create no additional capture;
+multiple request links never multiply either count. Erased rows are absent from
+subsequent reports. This is current retained volume, not an immutable history of
+board movement or erasure, and not a vote or commercial-demand report.
+
+JSON returns `window`, `totals`, `requestsByBoard`, `evidenceBySource` and `daily`.
+Every UTC day intersecting the window appears, with zero counts for empty days;
+partial first and last days include only records inside the requested window.
+Daily entries contain both metric totals and the same board and source groups.
+Only nonempty groups appear. CSV contains the same window and daily totals and
+groups, with columns `from`, `to`, `period`, `date`, `metric`, `group_id`,
+`group_label` and `count`. An empty group id identifies a metric total; board
+groups use the slug and name, evidence groups the source type. Cells are quoted,
+embedded quotes are doubled, rows use CRLF, and potentially active spreadsheet
+formulas receive a leading apostrophe. These reports contain private board names
+and are never part of public request projections.
+
+This bounded count and export slice does not complete MEAS-004. Dashboards,
+votes, account and segment and theme dimensions, top requests, rising themes,
+response and resolution percentiles with snooze exclusion, original-thread
+response timing, and scheduled email and Slack delivery remain open. Existing
+provider and release holds remain unchanged.

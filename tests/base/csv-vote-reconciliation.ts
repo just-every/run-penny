@@ -44,6 +44,7 @@ export async function reconcileVoteCsv(operator:Record<string,string>,requester:
  expect(requests.map(row=>row.request).sort()).toEqual(expected.map(row=>row.slug).sort())
  expect(requests).toHaveLength((await env.DB.prepare('SELECT COUNT(*) n FROM requests').first<number>('n'))!)
  expect(voters).toHaveLength(expected.reduce((sum,row)=>sum+row.voters.length,0))
+ expect(requests.reduce((sum,row)=>sum+Number(row.vote_count),0)).toBe(voters.length)
  expect(voters).toHaveLength((await env.DB.prepare('SELECT COUNT(*) n FROM request_votes v JOIN requesters p ON p.id=v.requester_id JOIN requests r ON r.id=v.request_id WHERE p.blocked_at IS NULL AND r.withdrawn_at IS NULL').first<number>('n'))!)
  for(const fixture of expected){
   const row=requests.find(row=>row.request===fixture.slug)!,individuals=voters.filter(row=>row.request===fixture.slug)
@@ -51,6 +52,9 @@ export async function reconcileVoteCsv(operator:Record<string,string>,requester:
   expect(individuals.map(person=>({id:person.customer_id,name:person.customer,proxy:Number(person.proxy)})).sort((a,b)=>a.id.localeCompare(b.id)))
    .toEqual([...fixture.voters].sort((a,b)=>a.id.localeCompare(b.id)))
   expect(new Set(individuals.map(person=>person.customer_id)).size).toBe(individuals.length)
+  const publicResponse=await call(`/api/public/requests/${fixture.slug}`)
+  expect(publicResponse.status).toBe(200)
+  expect(await publicResponse.json()).toMatchObject({voteCount:fixture.voters.length})
   const response=await call(`/api/operator/requests/${fixture.slug}/context`,undefined,operator)
   expect(response.status).toBe(200)
   const context=await response.json() as {demand:{voteCount:number};voters:{id:string;nativeProxy:number;votedAt:string}[]}
@@ -63,6 +67,14 @@ export async function reconcileVoteCsv(operator:Record<string,string>,requester:
   }
  }
  for(const path of ['/api/operator/requests/export.csv','/api/operator/votes/export.csv'])
-  for(const headers of [{},requester])expect((await call(path,undefined,headers)).status).toBe(401)
+  for(const headers of [{},requester]){
+   const refused=await call(path,undefined,headers)
+   expect(refused.status).toBe(401)
+   const body=await refused.text()
+   for(const fixture of expected){
+    expect(body).not.toContain(fixture.slug)
+    for(const person of fixture.voters){expect(body).not.toContain(person.id);expect(body).not.toContain(person.name)}
+   }
+  }
  return voters
 }

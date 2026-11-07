@@ -34,7 +34,7 @@ async function deliverThroughCron(port:EnforcingEgress){
  return {state:delivery.state,outcome:JSON.parse(attempt!.outcome) as {kind:string;code:string;status?:number}}
 }
 
-it('[INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart',async()=>{
+it('[API-003 INT-001 INT-002 INT-003] selected public effects and durable receipts preserve custody across restart',async()=>{
  const g=await graph()
  // Without the relay nothing outbound is saved: the page says why instead of "saved".
  const target={name:'Public target',kind:'webhook',endpoint:'https://events.example.com/penny',events:['status.published']}
