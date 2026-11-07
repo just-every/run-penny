@@ -17,6 +17,7 @@ export function registerWeeklyRoutes(app:Hono<OperatorMutationEnvironment>){
  app.put('/api/operator/settings/weekly-summary',async c=>{
   const runtime=c.get('runtime'),input=await parseInput(c.req.raw,z.object({enabled:z.boolean()}).strict()),{session,actor}=await integrationOperator(runtime,c.req.raw)
   if(session.operator.role!=='owner')throw new NativeError('owner_required',403)
+  if(input.enabled&&!await runtime.database.binding.prepare("SELECT 1 FROM penny_mail_identity WHERE singleton=1 AND trim(postal_address)!=''").first())throw new NativeError('postal_address_required',409,'Record and confirm the business postal address in email settings before enabling weekly requester summaries.')
   const guard=sessionGuard(session)
   guard.sql+=" AND EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND role='owner') AND (?=0 OR EXISTS(SELECT 1 FROM penny_mail_identity WHERE singleton=1 AND trim(postal_address)!=''))";guard.params.push(session.operatorId,Number(input.enabled))
   const db=guardedDatabase(runtime.database.binding,guard),now=new Date().toISOString()

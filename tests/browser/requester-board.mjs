@@ -1,7 +1,9 @@
 import { chromium } from '@playwright/test'
+import { browserOptions } from './browser-options.mjs'
+import { proveKeyboardJourney } from './keyboard-journey.mjs'
 import { shot,manifest,openRequestControls } from './requester-evidence.mjs'
 import { requesterAuth } from './requester-auth.mjs'
-const browser=await chromium.launch({headless:true,args:['--use-mock-keychain','--password-store=basic']})
+const browser=await chromium.launch(browserOptions())
 let runtime
 const errors=[]
 try{
@@ -69,4 +71,5 @@ try{
  harness.assertNoRateLimits()
  harness.assertNoBrowserDiagnostics()
  await manifest('manifest',errors,[],origin)
+ await proveKeyboardJourney(browser)
 }catch(error){for(const context of browser.contexts())for(const page of context.pages()){console.error('Failure page: '+await page.locator('body').innerText());await page.screenshot({path:process.env.PENNY_EVIDENCE+'/failure-'+page.viewportSize().width+'-'+browser.contexts().indexOf(context)+'.png',fullPage:true})}throw error}finally{await browser.close();await runtime?.close()}

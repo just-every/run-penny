@@ -84,3 +84,29 @@ operator API request creation and approved operator comments remain available.
 Operators can download a private CSV of up to 2,000 requests, including parent
 category and category, at `/api/operator/requests/export.csv`. Larger exports
 return `csv_export_limit` (413); use the complete portable archive instead.
+
+## Machine-readable contract
+
+The installation serves its machine-readable OpenAPI document at `/docs/openapi.json`
+without sign-in. It describes the existing native board, request, comment, status,
+release and proxy-vote operations with their request and response schemas and
+required key scopes. Issue a key in the authenticated integration settings and
+send it as a Bearer credential. Missing, expired, revoked and insufficient-scope
+keys return 401. Mutations refuse a supplied foreign Origin and cross-site fetch
+metadata; server clients may omit Origin.
+
+Request lists support the documented filters; these operations return arrays
+without pagination. Requests created through this API remain held for native
+moderation. Comment, status and release publication require explicit approval,
+and release publication retains its current target and mapping checks. Proxy
+votes grant neither verified identity nor email permission. Other operator
+resource families and complete lifecycle-webhook coverage remain unfinished
+under DATA-006.
+
+The offline contract journey validates the served document against the retained
+OpenAPI 3.1 structural schema and validates populated native responses against
+its response schemas. Each operation succeeds with only its declared scope;
+missing, invalid, insufficient and revoked credentials refuse without business
+changes. Native HTTP cases also cover server requests without Origin, foreign
+Origin and cross-site mutation refusals, malformed JSON, unsupported content
+types and oversized bodies.

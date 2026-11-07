@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 79 | 108 | 71 | 258 |
+| Core | 79 | 109 | 70 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 79 | 124 | 78 | 281 |
+| Full target | 79 | 125 | 77 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -155,8 +155,8 @@ Core · published · **partial** · Rules D-3
 3. Product, component and feature results pass the same permission filtering as every other searched record: an operator who cannot open one does not see its name.
 4. The first page of results returns within 500ms.
 
-**Evidence.** `tests/base/product-hierarchy.test.ts` — populated upgrade, linked feature rollups, move custody and private source and archive boundaries: full and partial hierarchy names, mixed result identity, ranking and pagination; `tests/browser/operator-completeness-read.mjs` — reviewPrivateSearch: exact hierarchy destinations, including equal-name products, after navigation and reload; `tests/browser/operator-completeness-requester.mjs` — reviewRequesterPrivacy
-**Gap.** Named fields, including product, component and feature names, have native search and record-link proof. Finer record and role-permission completeness remains open with ROLE-001; the 500 ms first page has no seeded capacity p95 run on declared CI hardware at the estimated, untested `seed.json` limits (D-3).
+**Evidence.** `tests/browser/operator-completeness-requester.mjs`
+**Gap.** Search across every other named field ships; product, component and feature names are not yet searched (`src/core/features/workspace/list-repository.ts`), and the 500 ms first page has no seeded run at the `seed.json` limits (D-3).
 
 ### Evidence and accounts
 
@@ -1206,7 +1206,7 @@ Core · published · **partial**
 4. Model output cannot set identity or grants.
 
 **Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
-**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing existing identity, explicit update permissions, authority or selected scope, and create no derived artifacts. Valid output derives requester and account dimensions from selected native requests and evidence while retaining legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
@@ -2266,7 +2266,7 @@ Core · target · **done**
 
 #### AI-011 — Measured AI quality
 
-Core · target · **missing**
+Core · target · **partial**
 
 **Requirement.** Every AI capability that suggests, links, merges, classifies, extracts, flags or redacts is measured against a named, versioned, labeled fixture set held in the repository: `duplicates-v1` (at least 300 request pairs, at least 30% of them hard negatives that share key terms but differ in need, and paraphrase positives with no shared terms), `links-v1` (at least 200 inbox items labeled with their request or none, and their theme), `merges-v1` (a backlog of at least 500 requests across at least three boards with labeled duplicate clusters), `extraction-v1` (at least 50 tickets, calls, emails and threads with labeled request spans), `themes-v1` (at least 400 items with a three-level taxonomy, adjudicated), `spam-v1` (at least 300 submissions and comments labeled spam, abuse, personal data or clean) and `redaction-v1` (at least 200 excerpts with labeled sensitive spans). One evaluation command runs a capability over its set through the configured model adapter, with the model chosen per run.
 
@@ -2277,8 +2277,8 @@ Core · target · **missing**
 4. The lexical baseline (EVID-007) is evaluated on `duplicates-v1` without a model, so every report has a floor to beat; the baseline run needs no model.
 5. Each model evaluation is recorded as a dated receipt in CHANGELOG.md.
 
-**Evidence.** None.
-**Gap.** Each named set exists with its documented size and label mix; the evaluation command reports every figure for each set and exits non-zero on a deliberately degraded fixture model; the lexical baseline run needs no model. Only `redaction-v1` (210 synthetic excerpts) and a minimal runner exist.
+**Evidence.** `tests/fixtures/ai/duplicates-v1/SPEC.md`: versioned 300-pair authored corpus with 100 hard negatives and 100 disjoint-term paraphrase positives; `tests/runtime/ai-eval-command.mjs` — "proveAiEvaluationCommand", invoked by the existing `tests/runtime/duplicate-suggestions-scale.mjs` Verify journey, runs `scripts/ai-eval/run.mjs` through EVID-007's emitted public suggestion route in isolated D1, reconciles hand-labeled controls including native top-five competition and all four confusion outcomes, reports the corpus hash, precision, recall, F1, top-five and paraphrase recall, model and prompt inapplicability and zero provider cost, and retains `tests/fixtures/ai/redaction-v1/cases.json` (210 excerpts).
+**Gap.** Point 1: `links-v1`, `merges-v1`, `extraction-v1`, `themes-v1` and `spam-v1` remain missing, including R-13's two-person theme labeling and adjudication. Points 2, 3 and 5: configured-model reports and capability bars, the deliberately degraded fixture-model failure gate and dated model-evaluation receipts remain unproved. The lexical floor does not qualify AI-001 semantic quality or AI-012 automatic rules. Existing provider, device, account, Base, cross-seed, ct, UI and payment holds and release requirements remain unchanged.
 
 #### AI-012 — Evaluation gates automatic rules
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 
