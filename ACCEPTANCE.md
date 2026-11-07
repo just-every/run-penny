@@ -723,8 +723,8 @@ Core · published · **partial**
 **Acceptance.**
 1. A decision brief holds a question, an accountable owner, its linked evidence and accounts, its candidate bets with the counter-evidence and assumptions for each, a confidence level of low, medium, or high, a review date, and the requesters currently eligible under REL-004 through its mapped requests.
 
-**Evidence.** `tests/base/decision-loop-dimensions.test.ts`
-**Gap.** Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted.
+**Evidence.** `tests/base/decision-loop-dimensions.test.ts` — retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness; compares distinct stored relations, null provenance, shared evidence and offset instants without summing duplicate accounts
+**Gap.** Per-bet assumptions and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, each bet's counter-evidence count, low, medium and high confidence, and changed and cleared review dates under the same decision identity are asserted.
 
 #### DEC-003 — Comparable bets
 
@@ -1205,8 +1205,8 @@ Core · published · **partial**
 3. Requester/account links come only from native records; Orbit identity remains source-local and nullable.
 4. Model output cannot set identity or grants.
 
-**Evidence.** `tests/base/learning-stage2.test.ts`
-**Gap.** The deployment pinning the source installation and permitted source principals, and model output being unable to set identity or grants, have no passing assertion; separate original text, revision and time fields and nullable source identity are asserted.
+**Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
@@ -1219,8 +1219,8 @@ Core · published · **partial**
 2. Native/source corrections invalidate current derived work; operator contests are versioned.
 3. There is no automatic ranking, customer contact or publication.
 
-**Evidence.** `tests/base/learning-stage2.test.ts`
-**Gap.** Every option carrying the DEC-003 dimensions computed from originals, invalidation by native or source corrections with versioned operator contests, and the absence of automatic ranking, customer contact or publication have no passing assertion in this clause's evidence; validated spans, the clarification and the no-build option are asserted.
+**Evidence.** `tests/base/learning-stage2.test.ts` — "[LEARN-001] refuses model identity and grants, captures permitted originals and commits an accountable protocol" proves each option’s deduplicated native requester and account identities, supporting count and latest instant, contradiction identities and times, urgency, delivery shape and observable success measure, including a materially different no-build option; validated spans and the clarification remain asserted.
+**Gap.** Invalidation by native or source corrections with versioned operator contests, and the absence of automatic ranking, customer contact or publication still lack complete passing assertions in this clause’s evidence. Live model and source qualification and the provider, device, account, cross-seed and Base prerequisites remain held in their existing clauses and field-proof rows.
 
 #### LEARN-003 — Accountable pre-action choice
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 

@@ -1,13 +1,76 @@
 import {expect,inject,it,vi} from 'vitest'
 import {env} from 'cloudflare:workers'
 import {applyD1Migrations,reset} from 'cloudflare:test'
-import {call,json,fixture,path,bindings,sent,network,dimensionOriginals} from './learning-test-runtime'
+import {call,json,fixture,path,bindings,sent,network,resetLearning,dimensionOriginals} from './learning-test-runtime'
 import {learningOutput,dimensionOutput} from './learning-fixture'
 import type {validateLearning} from '@/core/features/learning/validation'
+import {base64urlEncode,sign} from '@/core/features/auth/tokens'
 import {digest} from '@/core/features/auth/native-tokens'
 import {canonical,hash,type exportArchive} from '@/core/features/data/archive'
 import {proveLearningRedaction} from './redaction-learning-door'
-it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact spans, computes each option from distinct originals, compares no-build and commits an immutable accountable protocol',async()=>{
+it('[LEARN-001] refuses model identity and grants, captures permitted originals and commits an accountable protocol',async()=>{
+ {
+ // Model fields are untrusted even when every required interpretation field is valid.
+ const native=await fixture({nativeOnly:true}),custom=bindings()
+ delete custom.PENNY_LEARNING
+ custom.PORTAL_IDENTITY_SECRET='synthetic-penny-host-signing-material'
+ const claim=base64urlEncode(new TextEncoder().encode(JSON.stringify({aud:'https://penny.test',issuedAt:new Date().toISOString(),email:['synthetic-penny-1','example.test'].join('@'),displayName:'Synthetic Penny person',accountId:'synthetic-penny-1',accountName:'Synthetic Penny account'})))
+ const identityHeaders={'X-Penny-Identity':claim,'X-Penny-Identity-Signature':base64urlEncode(await sign(custom.PORTAL_IDENTITY_SECRET,claim))}
+ await json(call('/api/public/identity/host',{},'',custom,'POST',identityHeaders))
+ const requesterId=await env.DB.prepare('SELECT id FROM requesters').first<string>('id'),accountId=await env.DB.prepare('SELECT id FROM accounts').first<string>('id')
+ expect(requesterId).toBeTruthy();expect(accountId).toBeTruthy()
+ await json(call('/api/operator/boards',{name:'Native learning feedback',slug:'native-learning',visibility:'public'},native.cookie,custom),201)
+ const request=await json<{slug:string}>(call('/api/public/requests',{title:'Preserve the customer handoff',description:'The existing handoff needs a checklist.',boardSlug:'native-learning',emailUpdates:true,idempotencyKey:crypto.randomUUID()},'',custom,'POST',identityHeaders),201)
+ const requestId=await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(request.slug).first<string>('id')
+ expect(requestId).toBeTruthy()
+ expect((await env.DB.prepare('SELECT requester_id,request_id,grant_origin,revoked_at FROM requester_update_permissions').all()).results).toEqual([{requester_id:requesterId,request_id:requestId,grant_origin:'explicit',revoked_at:null}])
+ const evidence=await json<{id:string}>(call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'Selected native account note',wording:'The existing handoff needs a checklist.',accountId,observedAt:'2026-10-01T00:00:00Z'},native.cookie,custom),201)
+ const investigation=await json<{id:string}>(call(path+'/investigations',{nativeEvidenceIds:[evidence.id],nativeRequestIds:[requestId],purpose:'Compare only the selected native account note and customer request',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:10000000,maxRunCostMicros:100000,intervalMinutes:60},native.cookie,custom),201)
+ const detailPath=path+`/investigations/${investigation.id}`
+ type Detail={investigation:Record<string,unknown>;observations:Record<string,unknown>[];artifacts:{id:string;body:{options:Record<string,unknown>[]}}[];commitments:unknown[];runs:{state:string;reason:string;actual_micros:number|null}[]}
+ const detail=()=>json<Detail>(call(detailPath,undefined,native.cookie,custom))
+ // Session use timestamps and run accounting may advance; identity, grants and
+ // selected scope must remain fixed. Read whole authority rows where possible.
+ const custody=async()=>({
+  identities:(await env.DB.batch(['requesters','requester_addresses','accounts','requester_account_links','host_identity_accounts','host_identity_claims','requester_update_permissions','request_follows','request_follow_contributions','native_requester_sessions','operators','oa_operators','learning_sources'].map(table=>env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`)))).map(result=>result.results),
+  sessions:(await env.DB.prepare('SELECT id,operator_id,revoked_at FROM oa_sessions ORDER BY id').all()).results,
+  grants:(await env.DB.prepare('SELECT id,source_id,question,purpose,native_evidence_ids_json,native_request_ids_json,state,native_operator_id,operator_version,actor_id,expires_at,budget_micros,max_run_cost_micros,interval_minutes,version,created_at FROM learning_investigations ORDER BY id').all()).results,
+ })
+ const fixedScope=(scope:Record<string,unknown>)=>Object.fromEntries(Object.entries(scope).filter(([key])=>!['spentMicros','actualCostMicros','reservedCostMicros','nextRunAt','lastReason'].includes(key)))
+ const before=await custody(),scope=fixedScope((await detail()).investigation)
+ const derived=async()=>(await env.DB.batch(['learning_artifacts','learning_contributions','learning_commitments'].map(table=>env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`)))).map(result=>result.results)
+ const beforeDerived=await derived()
+ const attacks=[
+  {requesterId:'synthetic-penny-forged-requester',accountId:'synthetic-penny-forged-account'},
+  {requester_id:requesterId,account_id:accountId},
+  {grant:{nativeOperatorId:'synthetic-penny-forged-operator',state:'active',nativeEvidenceIds:[native.evidence.id]},authority:{role:'owner',verified:true}},
+  {affectedRequesters:[requesterId],affectedAccounts:[accountId]},
+ ]
+ for(const boundary of ['root','option'] as const)for(const fields of attacks){
+  network.modelOutput=output=>boundary==='root'?{...output,...fields}:{...output,options:output.options.map((option,index)=>index===0?{...option,...fields}:option)}
+  try{expect(await json(call(detailPath+'/run',{},native.cookie,custom),409),boundary+JSON.stringify(fields)).toEqual({error:'learning_model_output_invalid'})}finally{network.modelOutput=undefined}
+  const refused=await detail()
+  expect(refused.artifacts).toEqual([]);expect(refused.commitments).toEqual([])
+  expect(await derived()).toEqual(beforeDerived)
+  expect(refused.runs.every(run=>run.state==='uncertain'&&run.reason==='learning_model_output_invalid'&&run.actual_micros===null)).toBe(true)
+  expect(await custody()).toEqual(before)
+  expect(fixedScope(refused.investigation)).toEqual(scope)
+  expect(refused.investigation).toMatchObject({spentMicros:refused.runs.length*100000,lastReason:'learning_model_output_invalid'})
+  expect(refused.observations).toHaveLength(2)
+  expect(refused.observations).toEqual(expect.arrayContaining([expect.objectContaining({evidence_id:evidence.id,requesterId:null,accountId}),expect.objectContaining({request_id:requestId,requesterId,accountId:null})]))
+  expect(JSON.stringify(refused)).not.toContain('synthetic-penny-forged')
+ }
+ const accepted=await json<{artifactId:string}>(call(detailPath+'/run',{},native.cookie,custom)),valid=await detail()
+ expect(valid.artifacts).toHaveLength(1);expect(valid.artifacts[0].id).toBe(accepted.artifactId)
+ for(const option of valid.artifacts[0].body.options)expect(option).toMatchObject({affectedRequesters:[requesterId],affectedAccounts:[accountId],supportingEvidenceCount:2})
+ expect(fixedScope(valid.investigation)).toEqual(scope)
+ expect(valid.runs.filter(run=>run.state==='complete')).toEqual([expect.objectContaining({reason:'material_learning',actual_micros:1100})])
+ expect(await custody()).toEqual(before)
+ expect(sent).toHaveLength(attacks.length*2+1);expect(sent.every(wire=>wire.startsWith('POST '))).toBe(true)
+ const usage=(await env.DB.prepare('SELECT state,actual_micros,input_tokens,output_tokens FROM penny_ai_runs ORDER BY rowid').all()).results
+ expect(usage).toHaveLength(sent.length);expect(usage.every(run=>run.state==='metered'&&run.actual_micros===1100&&run.input_tokens===100&&run.output_tokens===500)).toBe(true)
+ }
+ await resetLearning()
  const f=await fixture();network.sourceText=canonical({id:'cancellation',subject:'I cancelled because I could not hand off the report.',occurred_at:'2026-10-01T00:00:00.000Z',confidence:'observed'})
  const run=await json<{artifactId:string}>(call(path+`/investigations/${f.investigation.id}/run`,{},f.cookie))
  const detail=await json<{observations:Record<string,unknown>[];artifacts:{body:ReturnType<typeof learningOutput>;id:string}[]}>(call(path+`/investigations/${f.investigation.id}`,undefined,f.cookie));expect(detail.observations).toHaveLength(2);expect(detail.observations.every(o=>o.requester_id===null&&o.account_id===null)).toBe(true)
@@ -24,7 +87,7 @@ it('[LEARN-001] captures native and real-protocol Orbit facts, validates exact s
  const originals=await dimensionOriginals(f.cookie)
  const native=await json<{id:string}>(call(path+'/investigations',{nativeEvidenceIds:originals.map(o=>o.id),nativeRequestIds:[],question:'Which handoff intervention is supported?',purpose:'Compare declared native originals',expiresAt:'2099-01-01T00:00:00Z',budgetMicros:1000000,maxRunCostMicros:100000,intervalMinutes:60},f.cookie),201)
  const nativeUrl=path+`/investigations/${native.id}`,beforeNative=sent.length
- network.modelOutput=dimensionOutput
+ network.modelOutput=(_output,input)=>dimensionOutput(input)
  let nativeRun:{artifactId:string}
  try{nativeRun=await json(call(nativeUrl+'/run',{},f.cookie))}finally{network.modelOutput=undefined}
  const nativeDetail=await json<{observations:{id:string;evidence_id:string;wording:string;requesterId:string|null;accountId:string|null;observedAt:string}[];artifacts:{id:string;body:ReturnType<typeof validateLearning>}[]}>(call(nativeUrl,undefined,f.cookie))
