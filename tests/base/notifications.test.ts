@@ -114,7 +114,7 @@ it('[NOTIFY-002 REQ-019/022] rechecks each configured input after enqueue',async
  if(change==='block'||change==='author-block')await env.DB.prepare('UPDATE requesters SET blocked_at=? WHERE id=?').bind(time(),g.requesterId).run()
  if(change==='permission')await env.DB.prepare('UPDATE requester_update_permissions SET revoked_at=? WHERE requester_id=?').bind(time(),g.requesterId).run()
  if(change==='unpublish')await env.DB.prepare("UPDATE requests SET moderation_state='rejected' WHERE id=?").bind(g.requestId).run()
- if(change==='internal')await env.DB.exec("UPDATE boards SET visibility='internal'")
+ if(change==='internal')expect((await call('/api/operator/boards/product',{visibility:'internal'},g.operator,'PATCH')).status).toBe(200)
  const sent=capture();await drainNotifications(runtime(),()=>start+3600000)
  expect(sent).toHaveLength(0);expect(await batches()).toMatchObject([{state:'suppressed'}])
 
