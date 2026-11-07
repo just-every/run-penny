@@ -1,8 +1,12 @@
+import { proveAuditReadExport } from './audit-read-export'
 import {proveRoadmapPublication} from './roadmap-update-publication'
+import {proveInternalBoardExclusion} from './internal-board-exclusion'
 import './custom-field-races'
 import { applyD1Migrations,reset } from 'cloudflare:test'
 import { beforeEach,afterEach,vi, expect,inject,it } from 'vitest'
-import { call,env,owner,requester,mockMail,origin } from './support'
+import { call,env,owner,requester,mockMail,origin,uploadRequestAttachment,requestMergeCustody } from './support'
+import type { RequestContext } from '@/core/features/requests/operator-context'
+import type { PublicRequestDetail } from '@/core/shared/api/public'
 import { exports } from 'cloudflare:workers'
 import {explicitConsentBoard} from './explicit-consent-board'
 beforeEach(async()=>{await reset();await applyD1Migrations(env.DB,inject('migrations'));mockMail()});afterEach(()=>vi.restoreAllMocks())
@@ -33,9 +37,73 @@ it('[REQ-003/006/007/008/009/010/015] Base-signed operator moderates first posts
  expect((await call(`/api/operator/comments/${id}/moderate`,{verdict:'approved',publicAuthorDisplayName:'Approved person'},g.operator)).status).toBe(200)
  expect(await (await call(`/api/public/requests/${a}`)).json()).toMatchObject({comments:[{body:'Held comment',author:{displayName:'Approved person'}}]})
  expect((await call(`/api/operator/requests/${a}/status-updates`,{status:'under_review',body:'Reviewing this request.',pinned:true},g.operator)).status).toBe(200)
+ const sourceId=await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(a).first<string>('id')
+ const targetId=await env.DB.prepare('SELECT id FROM requests WHERE slug=?').bind(b).first<string>('id')
+ const originalEvidence=(await env.DB.prepare('SELECT request_id,evidence_id FROM request_evidence_links ORDER BY request_id').all<{request_id:string;evidence_id:string}>()).results
+ expect(originalEvidence.filter(row=>row.request_id===sourceId)).toHaveLength(1)
+ expect(originalEvidence.filter(row=>row.request_id===targetId)).toHaveLength(1)
+ const evidenceIds=originalEvidence.map(row=>row.evidence_id)
+ for(const [label,requests] of [['Source evidence',[sourceId]],['Canonical evidence',[targetId]],['Shared evidence',[sourceId,targetId]]] as const){
+  const created=await call('/api/operator/evidence',{sourceType:'free_text',sourceLabel:'synthetic-penny-1',wording:label,observedAt:'2026-11-01T10:00:00Z',requestLinks:requests.map(id=>({id,stance:'supporting'}))},g.operator)
+  expect(created.status,await created.clone().text()).toBe(201);evidenceIds.push((await created.json() as {id:string}).id)
+ }
+ const sourceFollower=await requester('Source follower'),targetFollower=await requester('Canonical follower')
+ for(const [slug,person] of [[a,sourceFollower],[b,targetFollower]] as const)expect((await call(`/api/public/requests/${slug}/follow`,{},person)).status).toBe(204)
+ const followers=(await env.DB.prepare('SELECT id FROM requesters ORDER BY id').all<{id:string}>()).results.map(row=>row.id)
+ expect(followers).toHaveLength(3)
+ const sourceBytes=new Uint8Array([137,80,78,71,1]),heldBytes=new Uint8Array([137,80,78,71,2]),targetBytes=new Uint8Array([137,80,78,71,3])
+ async function attach(slug:string,bytes:Uint8Array<ArrayBuffer>,name:string,approved:boolean){
+  const response=await uploadRequestAttachment(slug,new File([bytes],name,{type:'image/png'}),g.person)
+  expect(response.status).toBe(201);const file=(await response.json() as {id:string}).id
+  expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
+  if(approved)expect((await call(`/api/operator/attachments/${file}/moderate`,{verdict:'approved'},g.operator)).status).toBe(200)
+  return file
+ }
+ const approved=await attach(a,sourceBytes,'source.png',true),privateFile=await attach(a,heldBytes,'held.png',false),canonicalFile=await attach(b,targetBytes,'canonical.png',true)
+ const beforeMerge=await requestMergeCustody(),beforeFiles=beforeMerge.attachments
+ for(const requestId of [sourceId,targetId]){
+  expect(beforeMerge.request_evidence_links.filter(row=>row.request_id===requestId)).toHaveLength(3)
+  expect(beforeMerge.request_follows.filter(row=>row.request_id===requestId)).toHaveLength(2)
+ }
+ expect(beforeMerge.requester_update_permissions).toHaveLength(4)
+ for(const permission of beforeMerge.requester_update_permissions){expect(permission.id).toEqual(expect.any(String));expect(Number.isFinite(Date.parse(String(permission.granted_at)))).toBe(true)}
+ const objectsBefore=await env.FILES.list()
+ // Fail the final business write: every earlier transfer and projection must roll back with it.
+ await env.DB.exec("CREATE TRIGGER refuse_merge_audit BEFORE INSERT ON audit_entries WHEN NEW.action='request.merged' BEGIN SELECT RAISE(ABORT,'merge audit unavailable'); END")
+ const refused=await call(`/api/operator/requests/${a}/merge`,{targetSlug:b},g.operator)
+ expect(refused.status).toBe(503)
+ expect(await requestMergeCustody()).toEqual(beforeMerge)
+ expect(await env.FILES.list()).toEqual(objectsBefore)
+ expect((await call(`/api/public/requests/${a}`)).status).toBe(200)
+ expect(new Uint8Array(await (await call(`/api/public/attachments/${approved}`)).arrayBuffer())).toEqual(sourceBytes)
+ expect((await call(`/api/public/attachments/${privateFile}`)).status).toBe(404)
+ await env.DB.exec('DROP TRIGGER refuse_merge_audit')
  expect((await call(`/api/operator/requests/${a}/merge`,{targetSlug:b},g.operator)).status).toBe(200)
- expect((await call(`/api/public/requests/${a}`)).status).toBe(301)
+ const redirect=await call(`/api/public/requests/${a}`)
+ expect(redirect.status).toBe(301);expect(redirect.headers.get('Location')).toBe(`/api/public/requests/${b}`)
  expect(await (await call(`/api/public/requests/${b}`)).json()).toMatchObject({voteCount:1,comments:[{body:'Held comment'}]})
+ const merged=await requestMergeCustody()
+ expect(merged.request_evidence_links.map(row=>({requestId:row.request_id,evidenceId:row.evidence_id})).sort((x,y)=>String(x.evidenceId).localeCompare(String(y.evidenceId)))).toEqual(evidenceIds.sort().map(evidenceId=>({requestId:targetId,evidenceId})))
+ expect(merged.request_follows.map(row=>({requestId:row.request_id,requesterId:row.requester_id})).sort((x,y)=>String(x.requesterId).localeCompare(String(y.requesterId)))).toEqual(followers.map(requesterId=>({requestId:targetId,requesterId})))
+ for(const table of ['request_evidence_contributions','request_follow_contributions','request_vote_contributions','requester_update_permissions','requester_addresses','evidence_items','evidence_versions'])expect(merged[table],table).toEqual(beforeMerge[table])
+ for(const file of beforeFiles)expect(merged.attachments.find(row=>row.id===file.id)).toEqual({...file,request_id:file.id===approved?targetId:file.request_id})
+ expect(merged.request_merge_attachment_transfers.map(row=>row.attachment_id)).toEqual([approved])
+ const contextResponse=await call(`/api/operator/requests/${b}/context`,undefined,g.operator)
+ expect(contextResponse.status).toBe(200);const context=await contextResponse.json() as RequestContext
+ expect(context.demand).toMatchObject({voteCount:1,evidenceCount:5})
+ expect(context.attachments.map(row=>row.id).sort()).toEqual([approved,canonicalFile].sort())
+ expect(context.attachments.find(row=>row.id===approved)).toMatchObject({request_id:targetId,origin_request_id:sourceId})
+ const sourceContext=await (await call(`/api/operator/requests/${a}/context`,undefined,g.operator)).json() as RequestContext
+ expect(sourceContext.attachments.map(row=>row.id)).toEqual([privateFile])
+ for(const person of [g.person,sourceFollower,targetFollower]){
+  const response=await call('/api/public/requester/activity',undefined,person);expect(response.status).toBe(200)
+  expect((await response.json() as {follows:unknown[]}).follows).toEqual([{slug:b,title:'Target',mutedAt:null,available:1}])
+ }
+ const publicDetail=await (await call(`/api/public/requests/${b}`)).json() as PublicRequestDetail
+ expect(publicDetail.attachments.slice().sort((x,y)=>x.id.localeCompare(y.id))).toEqual([{id:approved,filename:'source.png',contentType:'image/png'},{id:canonicalFile,filename:'canonical.png',contentType:'image/png'}].sort((x,y)=>x.id.localeCompare(y.id)))
+ for(const [file,bytes] of [[approved,sourceBytes],[canonicalFile,targetBytes]] as const){const response=await call(`/api/public/attachments/${file}`);expect(response.status).toBe(200);expect(new Uint8Array(await response.arrayBuffer())).toEqual(bytes)}
+ expect((await call(`/api/public/attachments/${privateFile}`)).status).toBe(404)
+ expect(await env.FILES.list()).toEqual(objectsBefore)
  expect((await call(`/api/operator/requests/${a}/unmerge`,{},g.operator)).status).toBe(200)
  const published=await (await call(`/api/public/requests/${a}`)).text();expect(published).toContain('Held comment');expect(published).toContain('Reviewing this request.');expect(published).not.toContain('Private first-post wording')
  const actor=await env.DB.prepare('SELECT id FROM operators WHERE email=?').bind('owner@penny.invalid').first<{id:string}>();expect(actor!.id).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/)
@@ -55,8 +123,7 @@ it('[REQ-011/018/019 EVID-009] Base-signed board/tag management preserves privat
  expect(new Uint8Array(await (await call(`/api/public/attachments/${file}`)).arrayBuffer())).toEqual(new Uint8Array([137,80,78,71]))
  for(let room=Math.floor((limits.uploadBytesPerRequest-await stored())/limits.uploadBytesPerFile);room>0;room--)expect((await pdf(limits.uploadBytesPerFile)).status).toBe(201);const left=limits.uploadBytesPerRequest-await stored(),objects=(await env.FILES.list()).objects.length;expect((await Promise.all([pdf(left),pdf(left)])).map(r=>r.status).sort(),'a request keeps its files within the per-request total').toEqual([201,400]);expect(await stored()).toBe(limits.uploadBytesPerRequest);expect((await env.FILES.list()).objects.length).toBe(objects+1)
  expect(await (await call(`/api/public/requests/${slug}`)).text()).not.toContain('Private enterprise context')
- expect((await call('/api/operator/boards/product',{visibility:'internal'},g.operator,'PATCH')).status).toBe(200)
- expect((await call(`/api/public/requests/${slug}`)).status).toBe(404);expect((await call(`/api/public/attachments/${file}`)).status).toBe(404)
+ await proveInternalBoardExclusion({...g,slug,file})
 })
 
 it('[BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configuration revocation commit durable actor audits or roll back',async()=>{
@@ -95,6 +162,7 @@ it('[BASE-OPS-005 REQ-027] catalog destruction, board withdrawal and configurati
  expect(keyResponse.status).toBe(201);const key=await keyResponse.json() as {credential:{id:string}}
  expect((await call(`/api/operator/integrations/keys/${key.credential.id}`,undefined,g.operator,'DELETE')).status).toBe(200)
  expect(await env.DB.prepare("SELECT actor_id,entity_id FROM audit_entries WHERE action='integration.key_revoked'").first()).toEqual({actor_id:actor,entity_id:key.credential.id})
+ await proveAuditReadExport()
 })
 
 it('[BASE-OPS-005] publication and real scheduled mail retain feature outcomes; an unavailable audit prevents publication',async()=>{
