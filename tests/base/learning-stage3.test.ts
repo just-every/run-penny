@@ -360,6 +360,8 @@ async function proveResumeWindow(){
   await json(call(url+'/control',{action:'pause'},f.cookie))
   await json(call(controlUrl+'/control',{action:'pause'},f.cookie))
   const controlBefore=await json<{investigation:{version:number}}>(call(controlUrl,undefined,f.cookie))
+  const custody=async()=>Promise.all(['learning_investigations','learning_sources','learning_runs','penny_ai_runs','audit_entries','penny_integration_guards'].map(async table=>({table,rows:(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all<Record<string,unknown>>()).results})))
+  const paused=await custody(),controlGrant=paused.find(row=>row.table==='learning_investigations')!.rows.find(row=>row.id===f.investigation.id)!
 
   // The same current operator can resume a valid native grant at the instant
   // the shorter grant expires. No run or external work is requested.
@@ -368,11 +370,13 @@ async function proveResumeWindow(){
   const control=await json<{investigation:{state:string;version:number;lastReason:string};runs:unknown[]}>(call(controlUrl,undefined,f.cookie))
   expect(control.investigation).toMatchObject({state:'active',version:controlBefore.investigation.version+1,lastReason:'operator_resume'})
   expect(control.runs).toEqual([])
+  const resumed=await custody(),oldAudits=paused.find(row=>row.table==='audit_entries')!.rows,newAudits=resumed.find(row=>row.table==='audit_entries')!.rows.filter(row=>!oldAudits.some(old=>old.id===row.id))
+  expect(newAudits).toEqual([expect.objectContaining({actor_type:'operator',actor_id:controlGrant.actor_id,action:'learning.resumed',entity_type:'learning_investigation',entity_id:f.investigation.id,details_json:JSON.stringify({grantVersion:controlBefore.investigation.version+1}),occurred_at:new Date(now+60_000).toISOString()})])
+  expect(resumed).toEqual(paused.map(({table,rows})=>({table,rows:table==='learning_investigations'?rows.map(row=>row.id===f.investigation.id?{...row,state:'active',version:controlBefore.investigation.version+1,last_reason:'operator_resume',next_run_at:new Date(now+60_000).toISOString()}:row):table==='audit_entries'?[...rows,...newAudits]:rows})))
   const detail=await json<{investigation:{sourceId:string;state:string;version:number;expiresAt:string;spentMicros:number;budgetMicros:number;maxRunCostMicros:number};runs:unknown[]}>(call(url,undefined,f.cookie))
   expect(detail.investigation).toMatchObject({state:'paused',version:2,expiresAt,spentMicros:0})
   expect(detail.investigation.spentMicros+detail.investigation.maxRunCostMicros).toBeLessThan(detail.investigation.budgetMicros)
   expect(await env.DB.prepare('SELECT provider,state FROM learning_sources WHERE id=?').bind(detail.investigation.sourceId).first()).toEqual({provider:'native',state:'active'})
-  const custody=async()=>Promise.all(['learning_investigations','learning_sources','learning_runs','penny_ai_runs','audit_entries','penny_integration_guards'].map(async table=>({table,rows:(await env.DB.prepare(`SELECT * FROM ${table} ORDER BY rowid`).all()).results})))
   const before=await custody()
   expect(before.find(row=>row.table==='audit_entries')!.rows.length).toBeGreaterThan(0)
   expect(sent).toEqual([])
