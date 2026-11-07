@@ -1526,8 +1526,8 @@ Core · published · **partial**
 1. Only entered wording is sent.
 2. Native durable commands retain uncertain outcomes for explicit known-issue reconciliation and never create a duplicate automatically.
 
-**Evidence.** `tests/browser/integration-states.mjs`
-**Gap.** Gap: Complete Linear/Jira create and link from requests/decisions, entered-only wording and uncertain-outcome reconciliation lack passing assertions.
+**Evidence.** `tests/browser/integration-states.mjs` — native tracker actions in `tests/browser/integration-tracker-actions.mjs`: entered-only create and known linking; queued, sending and rejected reconciliation refusals; atomic uncertain reconciliation, identical replay and restart without another create.
+**Gap.** Complete Linear and Jira create and link qualification and remaining INT-005 proof outside this bounded reconciliation admission journey remain open. Provider-account holds and DELIV-002, DELIV-003, DELIV-006 and DELIV-008 prerequisites are unchanged.
 
 #### INT-006 — Private tracker receipts
 
