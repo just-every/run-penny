@@ -190,7 +190,9 @@
         "EVID-003",
         "EVID-004",
         "EVID-010",
-        "TRIAGE-001"
+        "TRIAGE-001",
+        "TRIAGE-002",
+        "SURFACE-002"
       ]
     },
     {
@@ -502,6 +504,48 @@
           "$from": "capture",
           "pointer": "/id"
         }
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "snooze",
+      "tool": "penny.evidence.update",
+      "args": {
+        "id": {
+          "$fixture": "snooze",
+          "pointer": "/id"
+        },
+        "operation": "snooze",
+        "until": {
+          "$fixture": "snooze",
+          "pointer": "/until"
+        }
+      },
+      "expect": [
+        {
+          "class": "standard",
+          "facts": {
+            "measure": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unsnooze",
+      "tool": "penny.evidence.update",
+      "args": {
+        "id": {
+          "$fixture": "snooze",
+          "pointer": "/id"
+        },
+        "operation": "unsnooze"
       },
       "expect": [
         {
