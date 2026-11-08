@@ -15,8 +15,15 @@ const browser=await chromium.launch(browserOptions())
 try{
  for(const viewport of [{width:1440,height:900},{width:390,height:844}]){
   const runtime=await startBrowserRuntime(),context=await browser.newContext({viewport,timezoneId:'America/New_York'})
-  const errors=[],external=[]
-  context.on('page',page=>{page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(message.type()==='error')errors.push(message.text())});page.on('request',request=>{if(new URL(request.url()).origin!==runtime.origin)external.push(new URL(request.url()).origin)})})
+  const errors=[],external=[],postalDiagnostics=[]
+  const postalUrl=runtime.origin+'/api/operator/settings/weekly-summary'
+  let postalRefused=false
+  context.on('response',response=>{if(response.url()===postalUrl&&response.request().method()==='PUT'&&response.status()===409)postalRefused=true})
+  context.on('page',page=>{page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{
+   if(message.type()!=='error')return
+   if(postalRefused&&message.location().url===postalUrl&&message.text()==='Failed to load resource: the server responded with a status of 409 (Conflict)')postalDiagnostics.push(message.text())
+   else errors.push(message.text())
+  });page.on('request',request=>{if(new URL(request.url()).origin!==runtime.origin)external.push(new URL(request.url()).origin)})})
   try{
    const claim=await context.request.post(runtime.origin+'/auth/bootstrap',{headers:{Origin:runtime.origin},data:{token:'synthetic-base-browser-setup-token-12345',displayName:'Maya Chen',returnTo:'/setup'},maxRedirects:0})
    assert.equal(claim.status(),303)
@@ -85,6 +92,7 @@ try{
    await page.reload({waitUntil:'networkidle'})
    assert.equal(await settings.getByLabel('Workspace timezone',{exact:true}).inputValue(),'Europe/London')
    await inspect('admin-settings',settings)
+   assert.deepEqual(postalDiagnostics,['Failed to load resource: the server responded with a status of 409 (Conflict)'],'only the verified postal refusal produces an expected HTTP diagnostic')
    assert.deepEqual(errors,[])
    assert.deepEqual(external,[])
    console.log(`[OPS-008] setup, persisted quiet-hours off and legacy confirmation passed at ${viewport.width}`)

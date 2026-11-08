@@ -6,7 +6,7 @@ export async function trackerCreateEdge(){
  const fixtures={}
  for(const provider of ['linear','jira'])fixtures[provider]=JSON.parse(await readFile(new URL(`../fixtures/integrations/${provider}/issue.json`,import.meta.url),'utf8'))
  const calls=[],expected=new Map()
- let uncertain=false
+ let uncertain=false,rejected=false,gate
  const worker={name:'tracker-create-edge',modules:true,compatibilityDate:'2026-08-31',script:`
  import {WorkerEntrypoint} from 'cloudflare:workers';
  export default class extends WorkerEntrypoint {async send(wire){
@@ -19,7 +19,15 @@ export async function trackerCreateEdge(){
   assert.deepEqual(body,expected.get(provider),'[INT-005] the entire outbound body contains entered wording and selected tracker routing only')
   assert.doesNotMatch(JSON.stringify(body),/Private original|Private signed|synthetic-penny-private|Renewal|revenue|requester_email/,'[INT-005] private notes, identity and commercial context never enter the wire')
   calls.push({provider,body,id:request.headers.get('penny-delivery-id')})
+  const pending=gate
+  if(pending){pending.entered();await pending.resumed}
+  if(rejected)return new Response(null,{status:400})
   return uncertain?new Response(null,{status:503}):Response.json(fixtures[provider],{status:provider==='jira'?201:200})
  }}
- return {worker,calls,expected,uncertain:value=>{uncertain=value}}
+ return {worker,calls,expected,uncertain:value=>{uncertain=value},reject:value=>{rejected=value},pause:()=>{
+  let entered,resume
+  const waiting=new Promise(resolve=>{entered=resolve}),resumed=new Promise(resolve=>{resume=resolve})
+  gate={entered,resumed}
+  return {entered:waiting,resume:()=>{resume();gate=undefined}}
+ }}
 }
