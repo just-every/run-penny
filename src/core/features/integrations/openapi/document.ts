@@ -41,9 +41,18 @@ type Parameter = { name: string; in: 'path' | 'query'; required?: boolean; schem
 const slug: Parameter = { name: 'slug', in: 'path', required: true, schema: jsonSchema(integrationSlug) }
 function operation(operationId: string, summary: string, scope: Scope, output: string, status = 200, input?: keyof typeof inputs, parameters: Parameter[] = []) {
   const projection = operationId === 'findProxyContacts' ? 'Customer lookup returns private active contact choices; keep this votes:write key on the server.' : 'Request, board and release reads expose approved public projections.'
+  const resultNotes: Record<string, string> = {
+    getRequest: 'A canonical lookup returns JSON with kind redirect and the canonical slug at status 200, not an HTTP redirect. A withdrawn published request returns kind withdrawn at status 200. Held, private and unknown requests return 404.',
+    listComments: 'Only a currently found public request exposes this list. Canonical lookup and withdrawn states return 404.',
+    listStatusUpdates: 'Only a currently found public request exposes this history. Canonical lookup and withdrawn states return 404.',
+    recordProxyVote: 'An existing customer vote returns created false without another demand contribution or permission. New proxy votes remain unverified and grant no email permission.',
+    publishStatus: 'Repeating identical wording under the same idempotency key returns the retained successful result without another update; changed wording conflicts.',
+    getRelease: 'Only a current published release is visible. Drafts and unknown releases return 404.',
+    publishRelease: 'Repeating publication returns the retained release and version identifiers without another recipient snapshot or notification.',
+  }
   return {
     operationId, summary, security: [{ integrationKey: [] }], 'x-required-scopes': [scope],
-    description: `Requires a current installation key with ${scope}. Missing, expired, revoked and insufficient-scope keys all return 401. Mutations refuse a supplied foreign Origin and cross-site fetch metadata; server clients may omit Origin. ${projection}`,
+    description: `Requires a current installation key with ${scope}. Missing, expired, revoked and insufficient-scope keys all return 401. Mutations refuse a supplied foreign Origin and cross-site fetch metadata; server clients may omit Origin. ${projection} ${resultNotes[operationId] ?? ''}`.trim(),
     parameters,
     ...(input ? { requestBody: { required: true, description: 'JSON body, at most 32 KiB. Text fields are trimmed before validation; unknown fields are refused.', content: content(input) } } : {}),
     responses: {

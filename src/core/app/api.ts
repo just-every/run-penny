@@ -1,4 +1,5 @@
 import { registerSegmentRoutes } from '@/core/features/segments/routes'
+import { registerReportRoutes } from '@/core/features/reports/routes'
 import { registerAuditRoutes } from '@/core/features/audit/routes'
 import { registerOpenApiRoute } from '@/core/features/docs/openapi-route'
 import {registerSurveyRoutes} from '@/core/features/surveys/routes'
@@ -114,6 +115,7 @@ export function createPennyApi(options: PennyAppOptions = {}) {
   })
 
   registerSegmentRoutes(app)
+  registerReportRoutes(app)
   registerAuditRoutes(app)
   registerHelpScoutRoutes(app)
   registerBrowserCaptureRoutes(app)

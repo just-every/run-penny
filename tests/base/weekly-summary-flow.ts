@@ -28,7 +28,32 @@ export async function proveWeeklySummary(){
  await action(`/api/public/requests/${g.requests[0].slug}/vote`,{subscriptionVersion:enabled.version},voter)
  await action(`/api/public/requests/${g.requests[0].slug}/vote`,{subscriptionVersion:enabled.version},g.person)
  expect(await (await call('/api/public/requester/weekly-summary',undefined,voter)).json()).toMatchObject({subscribed:true,origin:'vote'})
+ const peerEmail=['synthetic-penny-weekly-peer','example.test'].join('@')
+ await action('/api/operator/settings/operators',{email:peerEmail})
+ const inviteToken=new URL(messages.findLast(message=>message.to===peerEmail)!.url).searchParams.get('token')
+ const joined=await call('/auth/confirm',{token:inviteToken});expect(joined.status).toBe(303)
+ const peer={Cookie:joined.headers.get('Set-Cookie')!.split(';')[0]}
+ const weeklyBefore=(await env.DB.prepare('SELECT * FROM penny_weekly_summary').all()).results
+ const auditsBefore=(await env.DB.prepare('SELECT * FROM audit_entries ORDER BY id').all()).results
+ expect((await call('/api/operator/settings/weekly-summary',{enabled:true},{...g.operator,Origin:'https://untrusted.invalid'},'PUT')).status).toBe(403)
+ expect((await call('/api/operator/settings/weekly-summary',{enabled:true},peer,'PUT')).status).toBe(403)
+ expect((await env.DB.prepare('SELECT * FROM penny_weekly_summary').all()).results).toEqual(weeklyBefore)
+ expect((await env.DB.prepare('SELECT * FROM audit_entries ORDER BY id').all()).results).toEqual(auditsBefore)
+ const peerId=await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind(peerEmail).first('id')
+ await action(`/api/operator/settings/operators/${peerId}`,{},g.operator,'DELETE')
+ const afterRemoval=(await env.DB.prepare('SELECT * FROM audit_entries ORDER BY id').all()).results
+ expect((await call('/api/operator/settings/weekly-summary',{enabled:true},peer,'PUT')).status).toBe(401)
+ expect((await env.DB.prepare('SELECT * FROM penny_weekly_summary').all()).results).toEqual(weeklyBefore)
+ expect((await env.DB.prepare('SELECT * FROM audit_entries ORDER BY id').all()).results).toEqual(afterRemoval)
+ await env.DB.exec("CREATE TRIGGER refuse_weekly_audit BEFORE INSERT ON audit_entries WHEN NEW.action='notifications.weekly_setting' BEGIN SELECT RAISE(ABORT,'synthetic-penny-weekly-audit-failure'); END;")
+ expect((await call('/api/operator/settings/weekly-summary',{enabled:true},g.operator,'PUT')).status).toBe(503)
+ expect((await env.DB.prepare('SELECT * FROM penny_weekly_summary').all()).results).toEqual(weeklyBefore)
+ expect((await env.DB.prepare('SELECT * FROM audit_entries ORDER BY id').all()).results).toEqual(afterRemoval)
+ await env.DB.exec('DROP TRIGGER refuse_weekly_audit')
  await action('/api/operator/settings/weekly-summary',{enabled:true},g.operator,'PUT')
+ expect(await (await action('/api/operator/settings/weekly-summary',undefined,g.operator,'GET')).json()).toMatchObject({enabled:true,canConfigure:true})
+ const actor=(await env.DB.prepare("SELECT p.id FROM operators p JOIN oa_operators o ON o.email=p.email WHERE o.role='owner'").first<{id:string}>())!
+ expect((await env.DB.prepare("SELECT actor_type,actor_id,details_json FROM audit_entries WHERE action='notifications.weekly_setting'").all()).results).toEqual([{actor_type:'operator',actor_id:actor.id,details_json:JSON.stringify({enabled:true})}])
  for(const who of [g.person,control])await action('/api/public/requester/weekly-summary',{subscribed:true},who,'PATCH')
  await action(`/api/operator/requests/${g.requests[0].slug}/status-updates`,{status:'planned',body:'Public weekly status',idempotencyKey:crypto.randomUUID()})
  await action(`/api/operator/requests/${g.requests[0].slug}/comments`,{body:'Public weekly operator reply'})
