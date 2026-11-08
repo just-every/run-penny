@@ -382,8 +382,8 @@ Core · published · **partial**
 1. The operation atomically moves the duplicate's evidence links, approved attachments, comments, and followers, collapses the combined votes so each identity counts once, keeps the duplicate's title and source as merge history, and answers the duplicate's public URL with a 301 to the canonical request.
 2. Merging a request that is itself a duplicate merges it into the canonical request at the end of its chain.
 
-**Evidence.** `tests/base/board.test.ts`
-**Gap.** Moving the duplicate's evidence links, approved attachments and followers, keeping its title and source as merge history, and merging a duplicate into the end of its chain have no passing assertion; the 301, moved comments and collapsed votes are asserted.
+**Evidence.** `tests/base/board.test.ts` — "Base-signed operator moderates first posts, comments, status and merge reversal with real requester mail" proves exact evidence and follower unions, approved attachment identity, original bytes and retained origin, held-file exclusion, unchanged permission records and final-audit rollback through native merge, authenticated context, requester activity and public attachment routes; retains the 301, moved comments and collapsed votes.
+**Gap.** Keeping the duplicate's title and source as merge history and merging a duplicate into the end of its chain still lack passing assertions.
 
 #### REQ-009 — Unmerge
 
@@ -530,8 +530,8 @@ Core · published · **partial**
 1. A request on an internal board never appears in a portal response, on the public roadmap, in a release, or in a requester notification, whatever its own publication state.
 2. Moving a request to an internal board withdraws it from the portal within 5 seconds and its public URL returns 404.
 
-**Evidence.** `tests/base/board.test.ts`
-**Gap.** Keeping internal-board requests off the public roadmap, out of releases and out of requester notifications has no passing assertion in this clause's evidence; the request and attachment 404s are asserted.
+**Evidence.** `tests/base/board.test.ts` — Base-signed board and tag management, via `tests/base/internal-board-exclusion.ts` proveInternalBoardExclusion; `tests/base/notifications.test.ts` — rechecks each configured input after enqueue
+**Gap.** Moving a request to an internal board, including withdrawal from the portal within five seconds, has no passing assertion. Changing board visibility proves exclusion from populated public roadmap lists and rendered details for both sources, release-publication refusal with unchanged publication, snapshot, outbox and attempt state, nonempty public release list and detail readback, queued-mail suppression and refusal of later public status and reply activity; emitted-Worker scheduler drains bind public control deliveries to their recipient and durable attempts; it does not prove the request move.
 
 #### REQ-020 — Requester's own content
 
@@ -723,8 +723,8 @@ Core · published · **partial**
 **Acceptance.**
 1. A decision brief holds a question, an accountable owner, its linked evidence and accounts, its candidate bets with the counter-evidence and assumptions for each, a confidence level of low, medium, or high, a review date, and the requesters currently eligible under REL-004 through its mapped requests.
 
-**Evidence.** `tests/base/decision-loop-dimensions.test.ts`
-**Gap.** Per-bet assumptions, the low, medium or high confidence level, the review date, and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, and each bet's counter-evidence count are asserted.
+**Evidence.** `tests/base/decision-loop-dimensions.test.ts` — retains confidence and review-date edits on the same brief while requiring question, owner, a bet and linked evidence for readiness; compares distinct stored relations, null provenance, shared evidence and offset instants without summing duplicate accounts
+**Gap.** Per-bet assumptions and the requesters currently eligible under REL-004 through the mapped requests have no passing assertion, and the brief does not carry the eligible requesters yet; the question, accountable owner, candidate bets, linked evidence and accounts, each bet's counter-evidence count, low, medium and high confidence, and changed and cleared review dates under the same decision identity are asserted.
 
 #### DEC-003 — Comparable bets
 
@@ -951,8 +951,8 @@ Core · published · **partial**
 1. At publication Penny snapshots every release target and each recipient's linked request or evidence context, and a later merge, relink, or preference change does not alter that snapshot.
 2. *Policy: `release.recipient-eligibility.v1`; default: a permission record comes only from following a request (REQ-010), subscribing to updates (REL-012), voting on a board with vote subscriptions on (NOTIFY-008), submitting a request on such a board (NOTIFY-011) or an owner-selected migration carry-over (MIG-007, which makes its address eligible for email without verifying it); voting elsewhere and an operator-entered address grant nothing, and an operator's per-update choice to email captured contacts (NOTIFY-009) adds them to that one snapshot without a permission record.*
 
-**Evidence.** `tests/base/release-custody.test.ts`
-**Gap.** The snapshot staying unchanged after a later merge, relink or preference change, and the `release.recipient-eligibility.v1` default (which actions grant a permission record, that voting elsewhere and an operator-entered address grant none, and NOTIFY-009's one-snapshot addition) have no passing assertion; export and restore of the snapshot tables, an identity merge fenced while a send is in flight, and follower erasure are asserted.
+**Evidence.** `tests/base/release-custody.test.ts`; `tests/base/penny-releases.test.ts` — request mute retains update subscription and global unsubscribe withdraws permission while preserving votes, follows and release snapshots through request merge and roadmap relink; `tests/base/release-snapshot-stability.ts` — captureReleaseSnapshots, changeSnapshotSources and provePendingPreferenceWithdrawal; `tests/base/release-preference-stability.ts` — proveNativePreferenceWithdrawal exercises native global mute, per-request mute and subscription withdrawal with eligible mappings, an unaffected recipient and no replay after opting back in
+**Gap.** Evidence-linked captured-contact snapshot completeness and the complete `release.recipient-eligibility.v1` permission-source policy remain unproved, including MIG-007 carry-over, voting without subscription, operator-entered addresses and NOTIFY-009's one-snapshot addition without a permission record. Native request targets, recipient identities and contexts stay exactly unchanged after request merge, roadmap withdrawal and relink, and preference changes; current withdrawal prevents a pending delivery. Earlier export, restore, in-flight identity-merge fences and follower-erasure proof are retained.
 
 #### REL-005 — Customer-safe delivery
 
@@ -1206,7 +1206,7 @@ Core · published · **partial**
 4. Model output cannot set identity or grants.
 
 **Evidence.** `tests/base/learning-stage2.test.ts`: refuses model identity and grants, captures permitted originals and commits an accountable protocol
-**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing existing identity, explicit update permissions, authority or selected scope, and create no derived artifacts. Valid output derives requester and account dimensions from selected native requests and evidence while retaining legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
+**Gap.** The deployment pinning the source installation and permitted source principals has no passing assertion. Native runs refuse model-supplied identity and grants at root and option boundaries without changing authority or selected scope; valid output retains native identity derivation and legitimate run accounting. Separate original text, revision and time fields and nullable source identity are asserted. Live Orbit and model qualification and wider source qualification remain unproved.
 
 #### LEARN-002 — Contestable learning
 
@@ -1460,8 +1460,8 @@ Core · published · **partial**
 **Acceptance.**
 1. Imported/restored history creates no new publication or integration effect.
 
-**Evidence.** `tests/base/integration-api.test.ts`
-**Gap.** That imported or restored history creates no new publication or integration effect has no passing assertion: the cited upgrade case snapshots its tables after the import and compares them only across migrations, and no cited case restores an archive; prior history, including imported feedback, staying unchanged across each new migration is asserted.
+**Evidence.** `tests/base/integration-api.test.ts`; `tests/base/egress-delivery.test.ts` — selected public effects and durable receipts preserve custody across restart, with `tests/base/integration-effects.ts` and `tests/base/integration-publications.ts`
+**Gap.** Native saved-history preview, apply and replay and authenticated archive restore preserve complete approved records, sealed snapshots and public readback. Independent identity and content assertions cover the request, comment, status, roadmap and release records; integration identities and expected restore holds remain unchanged. Broader API coverage and installation-authority portability remain unproved by this publication-only journey. Provider, device, account and cross-seed or Base prerequisites, earlier ct and payments holds and release requirements remain unchanged. Prior history, including imported feedback, staying unchanged across each new migration remains asserted.
 
 #### INT-001 — Explicit integration effects
 
@@ -3161,8 +3161,8 @@ Core · target · **partial** · From NOTIFY-013
 4. Turning on author subscriptions and the weekly digest is refused with the reason, and boards created meanwhile start with vote subscriptions off.
 5. The overview shows the missing address until it is set.
 
-**Evidence.** `tests/base/mail-identity.test.ts`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
-**Gap.** Company/postal setup and the legacy prompt, the postal footer and automatic-subscription admission are implemented, with API and 1440/390 browser proof. Gap: refusing the unsupported carry-over, captured-contact and digest choices without a postal address remains unproved.
+**Evidence.** `tests/base/mail-identity.test.ts` — setup and legacy postal admission journey; `tests/base/weekly-summary-flow.ts` — proveWeeklySummary; `tests/browser/weekly-summary-choice.mjs` — weeklySummaryChoice via `tests/browser/workspace-clock.mjs`; `visual/requester-subscriptions/NOTIFY-013/`; `visual/requester-subscriptions/OPS-005/`
+**Gap.** Company and postal setup, the legacy prompt, postal footer and automatic-subscription admission are implemented. The weekly digest refuses a missing postal address with its reason, changes no settings, audit, permissions or notifications, and enables after native business-settings confirmation, with route and mounted owner-form proof at 1440 and 390. Recovery records one owner-attributed settings audit without granting permission, scheduling notification or sending mail; the native journey also refuses a removed operator and rolls back a failed settings audit. Remaining: MIG-007 carry-over and NOTIFY-009 captured-contact postal refusals; point 4's author-subscription and new-board obligations are outside this weekly-digest slice. R-6 live provider and mailbox qualification and all existing external holds remain open.
 
 ### Measurement and reporting
 
@@ -3253,8 +3253,8 @@ Core · target · **partial**
 **Acceptance.**
 1. A CSV export of fixture data reconciles its vote totals with its individual voter rows and with record counts.
 
-**Evidence.** `src/core/features/data/archive.ts`; `tests/base/hosted-export.test.ts`
-**Gap.** The complete JSON archive (DATA-001) remains the full backup and ships today. A CSV export of fixture data reconciles its vote totals with its individual voter rows and with record counts.
+**Evidence.** `tests/base/proxy-votes.test.ts` — records inbox-sourced customer demand once, without verification or consent, and collapses with the customer’s later own vote; `tests/base/proxy-votes.test.ts` — refuses stale or invalid authority and rolls back every effect if auditing fails; requester erasure removes proxy custody; `tests/base/csv-vote-reconciliation.ts` — reconcileVoteCsv; `tests/base/board-categories.test.ts` — upgrades populated boards and supports category browsing, ranking, canonical merges and board participation and privacy through routes; `src/core/features/data/archive.ts`; `tests/base/hosted-export.test.ts`
+**Gap.** Native request vote totals and individual-voter CSV rows reconcile zero, direct, mixed and proxy-only demand with public participation, authenticated context and fixture record counts, including an entirely zero-vote fixture with a header-only voter file, direct-vote removal and replay and erased-proxy refusal, without multiplying people across addresses or accounts; unauthenticated callers, requesters and revoked operators cannot read the exports or their request and voter identities. The complete JSON archive (DATA-001) remains the full backup. Gap: CSV exports for evidence and notes, features and hierarchy, accounts and requesters with attributes, roadmap items and releases; exports from saved views; and ROLE-001 field restrictions remain unproved. Existing provider, device, account, cross-seed and Base holds and release requirements remain open.
 
 #### DATA-006 — Complete API and webhooks
 
