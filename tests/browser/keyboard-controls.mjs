@@ -29,11 +29,13 @@ export async function keyboardControls(page){
   async type(control,value,label){await reach(control,label);await page.keyboard.type(value);await expect(control).toHaveValue(value)},
   async choose(control,value,label){
    await reach(control,label)
-   const index=await control.evaluate((select,value)=>[...select.options].findIndex(option=>option.value===value),value)
-   assert.ok(index>=0,`${label} has the intended choice`)
-   await page.keyboard.press('Home')
-   for(let step=0;step<index;step++)await page.keyboard.press('ArrowDown')
-   await page.keyboard.press('Enter')
+   const options=await control.evaluate(select=>[...select.options].map(option=>({value:option.value,label:option.label,disabled:option.disabled})))
+   const option=options.find(option=>option.value===value&&!option.disabled)
+   assert.ok(option,`${label} has the intended choice`)
+   assert.equal(options.filter(candidate=>!candidate.disabled&&candidate.label===option.label).length,1,`${label} has a unique keyboard label`)
+   // Closed-select typeahead works across platforms without opening a native picker.
+   await page.keyboard.type(option.label)
+   await page.keyboard.press('Tab')
    await expect(control).toHaveValue(value)
   },
   async activate(control,label,key='Enter'){await reach(control,label);await page.keyboard.press(key)},

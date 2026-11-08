@@ -3,12 +3,14 @@ import {applyD1Migrations,reset,createScheduledController} from 'cloudflare:test
 import {env,origin,owner} from './support'
 import {graph} from './notification-regression-fixture'
 import {releaseGraph} from './release-fixture'
-import {request,connection} from './integration-delivery-fixture'
-import {apply,feedbackFixture} from './feedback-import-fixture'
+import {request,connection,publicationCustody,integrationCustody,orderedRows} from './integration-delivery-fixture'
+import {apply,preview,complete,feedbackFixture,importPath} from './feedback-import-fixture'
+import {expectPublicationContent,expectPublicPublicationContent} from './integration-publications'
 import {createWebhookProtocol} from '../../base/modules/integrations/core/webhook'
 import {runNotificationSchedule} from '@/core/features/notifications/scheduled'
-import type {Archive,ErasureJournal} from '@/core/features/data/archive'
+import type {Archive,ErasureJournal,Row} from '@/core/features/data/archive'
 import type {WireRequest} from '../../base/modules/integrations/core/types'
+import {stableFeedbackId} from '@/core/features/imports/mapping-support'
 
 /** Selected effects and their portable custody, through native HTTP doors. */
 export async function proveExplicitIntegration(migrations:Parameters<typeof applyD1Migrations>[1]){
@@ -24,10 +26,16 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  const subject=await json<{id:string;slug:string}>('/api/operator/requests',{title:'synthetic-penny-private-title',description:'synthetic-penny-private-evidence',boardSlug:'regression'},201)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_targets').first('n')).toBe(0)
  await json('/api/operator/moderation/'+subject.slug,{verdict:'approved',title:'synthetic-penny-approved-request',description:'synthetic-penny-approved-description',boardSlug:'regression',displayName:'Product team'})
- await json('/api/operator/requests/'+subject.slug+'/comments',{body:'synthetic-penny-approved-reply'},201)
+ const comment=await json<{id:string}>('/api/operator/requests/'+subject.slug+'/comments',{body:'synthetic-penny-approved-reply'},201)
+ const statusKey=crypto.randomUUID()
  const publish=(body:string,status='under_review')=>call('/api/operator/requests/'+subject.slug+'/status-updates',{status,body,idempotencyKey:crypto.randomUUID()})
- expect((await publish('synthetic-penny-approved-status')).status).toBe(200)
+ await json('/api/operator/requests/'+subject.slug+'/status-updates',{status:'under_review',body:'synthetic-penny-approved-status',idempotencyKey:statusKey})
  const release=await releaseGraph(1,false,g)
+ const settings=await json<{settings:Record<string,unknown>}>('/api/operator/settings/status-roadmap')
+ await json('/api/operator/settings/status-roadmap',{...settings.settings,source:'approved_items'},200,'PUT')
+ const update=await json<{transitionId:string}>('/api/operator/roadmap/release-item/move',{status:'in_progress',reason:'synthetic-penny-publication-custody',idempotencyKey:crypto.randomUUID()})
+ await json('/api/operator/roadmap-updates/'+update.transitionId+'/publish',{})
+ const shipped=await json<{transitionId:string}>('/api/operator/roadmap/release-item/move',{status:'shipped',reason:'synthetic-penny-release-ready',idempotencyKey:crypto.randomUUID()})
  await json('/api/operator/releases/'+release.draft.slug+'/publish',{})
  const targets=async()=>(await env.DB.prepare('SELECT e.event,t.event_id,t.destination_id FROM penny_integration_targets t JOIN penny_integration_events e ON e.id=t.event_id ORDER BY t.id').all<{event:string;event_id:string;destination_id:string}>()).results
  const captured=await targets()
@@ -49,9 +57,66 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  for(const wire of calls){expect(wire.url).toBe('https://events.example.com/penny');expect(wire.body).not.toContain('synthetic-penny-private')}
  const completed=(await env.DB.prepare('SELECT * FROM integration_attempts ORDER BY id').all()).results
  expect(completed).toHaveLength(captured.length)
- // Saved history cannot manufacture a live event or outbound call.
- await apply(feedbackFixture('synthetic-penny-integration-history'),operator)
+ // A populated publication baseline makes accidental republishing observable.
+ const publications=await publicationCustody(),effects=await integrationCustody()
+ for(const [table,rows] of Object.entries(publications))expect(rows.length,table).toBeGreaterThan(0)
+ expect(publications.requests.find(row=>row.id===subject.id)).toMatchObject({public_title:'synthetic-penny-approved-request',public_description:'synthetic-penny-approved-description'})
+ expect(publications.request_comments).toMatchObject([{request_id:subject.id,body:'synthetic-penny-approved-reply',moderation_state:'approved'}])
+ expect(publications.request_status_updates).toMatchObject([{request_id:subject.id,body:'synthetic-penny-approved-status'}])
+ expect(publications.roadmap_update_versions.find(row=>row.id===update.transitionId)).toMatchObject({title:'Approved improvement',problem:'Approved problem',public_status:'in_progress',published_at:expect.any(String),snapshot_sealed_at:expect.any(String)})
+ expect(publications.release_versions).toMatchObject([{title:release.input.title,body:release.input.body,snapshot_sealed_at:expect.any(String)}])
+ const identities={subject,comment,statusKey,release,update,shipped}
+ expectPublicationContent(publications,identities)
+ const readPublic=async<T>(path:string)=>{
+  const response=await request(path,undefined,{},'GET',env.DB,edge)
+  expect(response.status,await response.clone().text()).toBe(200)
+  return response.json() as Promise<T>
+ }
+ const publicReadback=async()=>({
+  requests:await readPublic<unknown[]>('/api/public/requests'),
+  details:await Promise.all([subject,...g.requests].map(row=>readPublic<Record<string,unknown>>('/api/public/requests/'+row.slug))),
+  roadmap:await readPublic<unknown[]>('/api/public/roadmap'),
+  roadmapDetail:await readPublic<Record<string,unknown>>('/api/public/roadmap/safe-roadmap-token'),
+  releases:await readPublic<unknown[]>('/api/public/releases'),
+  releaseDetail:await readPublic<Record<string,unknown>>('/api/public/releases/'+release.draft.slug),
+ })
+ const visible=await publicReadback()
+ expect(visible.requests).toHaveLength(2);expect(visible.roadmap).toHaveLength(1);expect(visible.releases).toHaveLength(1)
+ expect(JSON.stringify(visible.details)).toContain('synthetic-penny-approved-reply')
+ expect(JSON.stringify(visible.details)).toContain('synthetic-penny-approved-status')
+ expect(JSON.stringify(visible.details)).toContain('Approved improvement')
+ expectPublicPublicationContent(visible,publications,identities)
+ const history=feedbackFixture('synthetic-penny-integration-history')
+ const heldHistory=async()=>{
+  const requests=(await env.DB.prepare("SELECT id,title,description,moderation_state,public_title,public_description,published_at FROM requests WHERE id IN (SELECT target_id FROM feedback_import_records WHERE target_kind='posts') ORDER BY id").all()).results
+  const expected=[['post-0','Readable labels','A supplied customer quote.'],['post-1','Duplicate labels','The same problem on mobile.'],['post-2','Older duplicate','Original older request.'],['post-3','Private account problem','Private strategy and customer context.']].map(([id,title,description])=>({id:stableFeedbackId(history.namespace,'posts',id),title,description,moderation_state:'awaiting_review',public_title:null,public_description:null,published_at:null})).sort((a,b)=>a.id.localeCompare(b.id))
+  expect(requests).toEqual(expected)
+  const comments=(await env.DB.prepare("SELECT id,body,moderation_state,published_at FROM request_comments WHERE moderation_state='awaiting_review' ORDER BY id").all()).results
+  expect(comments).toEqual([['comment-0','A multiline supplied comment.\nUnicode café.'],['comment-1','Private renewal conversation.']].map(([id,body])=>({id:stableFeedbackId(history.namespace,'comments',id),body,moderation_state:'awaiting_review',published_at:null})).sort((a,b)=>a.id.localeCompare(b.id)))
+  for(const row of expected)expect((await request('/api/public/requests/feedback-'+row.id.toLowerCase(),undefined,{},'GET',env.DB,edge)).status).toBe(404)
+ }
+ // Preview is read-only, and only its reviewed fingerprint admits held history.
+ const plan=await preview(history,operator)
+ expect(plan.counts.rejected).toBe(0)
+ expect(await env.DB.prepare('SELECT count(*) n FROM feedback_import_records').first('n')).toBe(0)
+ expect(await publicationCustody()).toEqual(publications);expect(await integrationCustody()).toEqual(effects)
+ expect(await publicReadback()).toEqual(visible)
+ const responseApply=await call(importPath+'/apply',{source:history,fingerprint:plan.fingerprint})
+ expect([200,202],await responseApply.clone().text()).toContain(responseApply.status)
+ const applied=await responseApply.json() as {id:string;state:string;checkpoint:number}
+ await complete(applied,operator)
+ await heldHistory()
+ expect(await publicationCustody()).toEqual(publications);expect(await integrationCustody()).toEqual(effects)
+ expect(await publicReadback()).toEqual(visible)
+ // Reapplying the saved file retains the same job and held record identities.
+ const heldRecords=orderedRows((await env.DB.prepare('SELECT * FROM feedback_import_records').all<Row>()).results)
+ expect((await apply(history,operator)).id).toBe(applied.id)
+ expect(orderedRows((await env.DB.prepare('SELECT * FROM feedback_import_records').all<Row>()).results)).toEqual(heldRecords)
+ await heldHistory()
+ expect(await publicationCustody()).toEqual(publications);expect(await integrationCustody()).toEqual(effects)
+ expect(await publicReadback()).toEqual(visible)
  await cron();expect(calls).toHaveLength(captured.length);expect(await targets()).toEqual(captured)
+ expect(await publicationCustody()).toEqual(publications);expect(await integrationCustody()).toEqual(effects)
  // A signed receiver contributes an actual retained receipt, never a fabricated row.
  const receiver=await connection(operator,'receiver',[],edge)
  const protocol=createWebhookProtocol({resolveDestination:async()=>origin,signingKey:async()=>Uint8Array.from(receiver.signingKey.match(/../g)!,value=>parseInt(value,16))})
@@ -64,6 +129,12 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  const slackEndpoint='https://hooks.slack.com/services/synthetic-penny-1/synthetic-penny-2/synthetic-penny-3'
  await json('/api/operator/integrations/destinations',{name:'synthetic-penny-portable-slack',kind:'slack',endpoint:slackEndpoint,events:['status.published']},201)
  const bundle=await json<{archive:Archive;journal:ErasureJournal}>('/api/operator/data/export')
+ for(const [table,rows] of Object.entries(publications)){
+  const portable=bundle.archive.tables[table].filter(row=>!['requests','request_comments'].includes(table)||row.moderation_state==='approved')
+  expect(orderedRows(portable),table).toEqual(rows)
+ }
+ const portableEffects=Object.fromEntries(Object.entries(effects).map(([table,rows])=>[table,orderedRows(rows.map(row=>table==='penny_integration_events'?{...row,held:1}:table==='penny_tracker_commands'?{...row,held:1}:table==='integration_deliveries'&&['queued','sending'].includes(String(row.state))?{...row,state:'uncertain',claim:null,claim_until:null}:row))]))
+ for(const [table,rows] of Object.entries(portableEffects))expect(orderedRows(bundle.archive.tables[table]),table).toEqual(rows)
  expect(bundle.archive.tables.penny_integration_targets).toEqual((await env.DB.prepare('SELECT * FROM penny_integration_targets ORDER BY id').all()).results)
  expect(bundle.archive.tables.integration_attempts).toEqual(completed)
  expect(bundle.archive.tables.penny_integration_receipts).toEqual(receipts)
@@ -71,7 +142,13 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  for(const value of [receiver.signingKey,slackEndpoint,'https://events.example.com/penny','https://events.example.com/replacement'])expect(JSON.stringify(bundle)).not.toContain(value)
  expect(bundle.archive.tables.penny_integration_credentials).toBeUndefined()
  await reset();await applyD1Migrations(env.DB,migrations);operator=await owner({timezone:'UTC'})
+ for(const rows of Object.values(await publicationCustody()))expect(rows).toEqual([])
  await json('/api/operator/data/import',bundle)
+ await heldHistory()
+ expect(await publicationCustody()).toEqual(publications)
+ expectPublicationContent(await publicationCustody(),identities)
+ expect(await integrationCustody()).toEqual(portableEffects)
+ expect(await publicReadback()).toEqual(visible)
  expect((await env.DB.prepare('SELECT * FROM integration_attempts ORDER BY id').all()).results).toEqual(completed)
  expect((await env.DB.prepare('SELECT * FROM penny_integration_receipts ORDER BY id').all()).results).toEqual(receipts)
  expect(await env.DB.prepare('SELECT count(*) n FROM penny_integration_credentials').first('n')).toBe(0)
@@ -81,5 +158,10 @@ export async function proveExplicitIntegration(migrations:Parameters<typeof appl
  await cron()
  // Even newly entered credentials do not acquire restored historical targets.
  await connection(operator,'webhook',events,edge);await cron()
+ await cron()
  expect(calls).toHaveLength(sent)
+ expect(await publicationCustody()).toEqual(publications)
+ expect(await integrationCustody()).toEqual(portableEffects)
+ expect(await publicReadback()).toEqual(visible)
+ console.info('PROBE API-003 point 1: native preview and apply, authenticated export and import and public readback preserve populated publications and effect identities; repeated drains add 0 outbound calls')
 }

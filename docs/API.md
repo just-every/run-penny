@@ -102,3 +102,26 @@ and release publication retains its current target and mapping checks. Proxy
 votes grant neither verified identity nor email permission. Other operator
 resource families and complete lifecycle-webhook coverage remain unfinished
 under DATA-006.
+
+The offline contract journey validates the served document against the retained
+OpenAPI 3.1 structural schema and validates populated native responses against
+its response schemas. Each operation succeeds with only its declared scope;
+missing, invalid, insufficient and revoked credentials refuse without business
+changes. Native HTTP cases also cover server requests without Origin, foreign
+Origin and cross-site mutation refusals, malformed JSON, unsupported content
+types and oversized bodies.
+
+The same journey covers ordinary response variants: held requests and draft
+releases stay unreadable until their native approval or publication; canonical
+request lookups return `{kind:"redirect",slug}` as JSON with status 200, while
+withdrawn published requests return `{kind:"withdrawn"}` with status 200. Their
+comment and status-history endpoints return 404. Unknown requests also return
+404. Board privacy settings can omit vote totals and the voter-list field,
+and enabled voter lists exclude proxy customers.
+
+Recording an existing customer's existing proxy vote returns `created:false`
+without another vote, contribution or permission. Replaying an identical status
+action returns its retained success, and repeated release publication returns
+the same release and version identifiers without another recipient snapshot or
+notification. The journey checks unchanged product and delivery custody on each
+replay and validates every response against the served schema.
