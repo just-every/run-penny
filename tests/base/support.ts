@@ -17,6 +17,16 @@ let ip=0
 export function call(path:string, body?:unknown, headers:Record<string,string>={}, method=body===undefined?'GET':'POST') {
  return exports.default.fetch(new Request(origin+path,{method,redirect:'manual',headers:{Host:'penny.test',Origin:origin,'CF-Connecting-IP':`198.18.${Math.floor(ip / 254) % 256}.${++ip % 254 + 1}`,...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}))
 }
+export function uploadRequestAttachment(slug:string,file:File,identity:Record<string,string>){
+ const body=new FormData();body.set('file',file)
+ return exports.default.fetch(new Request(origin+`/api/public/requests/${slug}/attachments`,{method:'POST',headers:{Origin:origin,...identity},body}))
+}
+/** Snapshot the business graph touched by a merge, including its late audit and notice writes. */
+export async function requestMergeCustody(){
+ const tables=['requests','request_canonical_roots','request_merges','request_merge_evidence_transfers','request_merge_vote_transfers','request_merge_follow_transfers','request_merge_comment_transfers','request_merge_attachment_transfers','request_votes','request_vote_contributions','request_follows','request_follow_contributions','request_evidence_links','request_evidence_contributions','evidence_items','evidence_versions','request_comments','attachments','request_attachment_uploads','requester_update_permissions','requester_addresses','request_tag_assignments','request_status_updates','penny_request_status','penny_merge_notices','penny_merge_notice_recipients','notification_events','notification_intents','notification_batches','notification_outbox','audit_entries']
+ const results=await env.DB.batch<Record<string,unknown>>(tables.map(table=>env.DB.prepare(`SELECT * FROM ${table}`)))
+ return Object.fromEntries(tables.map((table,index)=>[table,results[index].results.sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)))]))
+}
 export function finishFirstRun(cookie:{Cookie:string},timezone='Australia/Brisbane'){
  return exports.default.fetch(new Request(origin+'/setup',{method:'POST',redirect:'manual',headers:{Host:'penny.test',Origin:origin,...cookie,'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({confirm:'yes',companyName:'Test business',postalAddress:'1 Test Street',timezone,quietEnabled:'yes',quietStart:'20',quietEnd:'8'}).toString() }))
 }

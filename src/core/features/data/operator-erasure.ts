@@ -51,6 +51,7 @@ async function subject(db: D1Database, id: string): Promise<{ operator: Operator
 
 async function counts(db: D1Database, { operator, native }: { operator: Operator; native: Native }): Promise<Record<string, number>> {
  const queries: [string, D1PreparedStatement][] = [
+  ['penny_segments', db.prepare('SELECT count(*) n FROM penny_segments WHERE internal_owner_id=?').bind(operator.id)],
   ['penny_ai_answers', db.prepare('SELECT count(*) n FROM penny_ai_answers WHERE operator_id=?').bind(operator.id)],
   ['integration_deliveries', db.prepare("SELECT count(*) n FROM integration_deliveries WHERE namespace='penny-ask' AND id IN (SELECT 'answer:'||id FROM penny_ai_answers WHERE operator_id=?)").bind(operator.id)],
   ['integration_attempts', db.prepare("SELECT count(*) n FROM integration_attempts WHERE namespace='penny-ask' AND delivery_id IN (SELECT 'answer:'||id FROM penny_ai_answers WHERE operator_id=?)").bind(operator.id)],
@@ -91,7 +92,8 @@ export async function planOperatorErasure(db: D1Database, id: string): Promise<O
  await assertAgentCustodyClear(db)
  const found = await subject(db, id), current = (await state(db))!
  const planned = { counts: await counts(db, found), files: [] as string[], blockedCopies: await copies(db, found.operator, found.native) }
- const planHash = await hash({ origin: current.origin, epoch: current.epoch, table: 'operators', id, operator: found.operator, native: found.native, ...planned })
+ const segmentRules = (await db.prepare('SELECT * FROM penny_segments WHERE internal_owner_id=? ORDER BY id').bind(id).all<Row>()).results
+ const planHash = await hash({ origin: current.origin, epoch: current.epoch, table: 'operators', id, operator: found.operator, native: found.native, segmentRules, ...planned })
  return { table: 'operators', id, planHash, ...planned }
 }
 
@@ -121,7 +123,8 @@ export async function applyOperatorErasure(db: D1Database, operation: string, { 
   if (plan.planHash !== planHash || !resolved(plan, resolutions)) fail('erasure_plan_changed')
   const cleared = resolutions.filter(item => item.resolution === 'clear').map(item => item.id), confirmed = resolutions.filter(item => item.resolution === 'unrelated').map(item => item.id)
   const current = (await state(db))!, epoch = current.epoch + 1, journal = await readErasureJournal(db)
-  if (journal.tombstones.length + 1 > ERASURE_LIMITS.rows) fail('journal_limit', 413)
+  const segmentRules = (await db.prepare('SELECT id FROM penny_segments WHERE internal_owner_id=? ORDER BY id').bind(id).all<{id:string}>()).results
+  if (journal.tombstones.length + 1 + segmentRules.length > ERASURE_LIMITS.rows) fail('journal_limit', 413)
   const anonymous = createUlid().toLowerCase(), email = `operator-${anonymous}@erased.invalid`, now = new Date().toISOString(), epochMs = Date.now()
   const subjectHashes = await Promise.all([operator.email, operator.email.toLowerCase(), operator.id, ...(native ? [native.id] : [])].map(digest))
   const operatorsTable = (await schema(db)).find(table => table.name === 'operators')!
@@ -134,6 +137,10 @@ export async function applyOperatorErasure(db: D1Database, operation: string, { 
    guard('EXISTS(SELECT 1 FROM operators WHERE id=? AND email=? AND display_name=?)', operator.id, operator.email, operator.display_name),
    native ? guard("EXISTS(SELECT 1 FROM oa_operators WHERE id=? AND version=? AND status='inactive')", native.id, native.version) : guard('NOT EXISTS(SELECT 1 FROM oa_operators WHERE lower(email)=lower(?))', operator.email),
    db.prepare('UPDATE operators SET email=?,display_name=?,updated_at=? WHERE id=?').bind(email, LABEL, now, operator.id),
+   // A saved rule must never continue matching the erased person's opaque ID.
+   ...await Promise.all(segmentRules.map(async row => db.prepare('INSERT INTO data_tombstones(epoch,table_name,key_hash) VALUES(?,?,?)').bind(epoch, 'penny_segments', await hash([current.origin, 'penny_segments', canonical([row.id])])))),
+   db.prepare("UPDATE audit_entries SET entity_id=NULL,details_json=NULL,updated_at=? WHERE entity_type='segment' AND entity_id IN (SELECT id FROM penny_segments WHERE internal_owner_id=?)").bind(now, operator.id),
+   db.prepare('DELETE FROM penny_segments WHERE internal_owner_id=?').bind(operator.id),
    db.prepare("DELETE FROM integration_attempts WHERE namespace='penny-ask' AND delivery_id IN (SELECT 'answer:'||id FROM penny_ai_answers WHERE operator_id=?)").bind(operator.id),
    db.prepare("DELETE FROM integration_deliveries WHERE namespace='penny-ask' AND id IN (SELECT 'answer:'||id FROM penny_ai_answers WHERE operator_id=?)").bind(operator.id),
    db.prepare('DELETE FROM penny_ai_answers WHERE operator_id=?').bind(operator.id),

@@ -32,8 +32,16 @@ export async function linkTracker(runtime:PennyRuntime,request:Request,input:z.i
  if(commandId){
   const command=await db.prepare('SELECT * FROM penny_tracker_commands WHERE id=?').bind(commandId).first<TrackerCommand>()
   if(!command||command.connection_id!==connection.id||command.request_id!==(input.requestId??null)||command.decision_id!==(input.decisionId??null)||(command.link_id&&command.link_id!==id))throw new NativeError('tracker_command_conflict',409)
+  const outcome=JSON.stringify({kind:'accepted',code:'operator_known_issue'})
+  const delivery=await db.prepare('SELECT d.state,EXISTS(SELECT 1 FROM integration_resolutions r WHERE r.namespace=d.namespace AND r.delivery_id=d.id AND r.outcome=?) reconciled FROM integration_deliveries d WHERE d.namespace=? AND d.id=?').bind(outcome,trackerNamespace,commandId).first<{state:string;reconciled:number}>()
+  if(prior&&command.link_id===prior.id&&delivery?.state==='accepted'&&delivery.reconciled)return {id:prior.id,repeat:true}
+  if(delivery?.state!=='uncertain')throw new NativeError('tracker_command_conflict',409)
+  // Recheck the delivery and command inside the link transaction: a preflight
+  // read alone cannot fence a scheduler claim or a competing reconciliation.
+  guard.sql+=` AND EXISTS(SELECT 1 FROM penny_tracker_commands c JOIN integration_deliveries d ON d.id=c.id AND d.namespace=? WHERE c.id=? AND c.connection_id=? AND c.request_id IS ? AND c.decision_id IS ? AND c.link_id IS ? AND d.state='uncertain')`
+  guard.params.push(trackerNamespace,commandId,connection.id,input.requestId??null,input.decisionId??null,command.link_id)
   statements.push(db.prepare('UPDATE penny_tracker_commands SET link_id=? WHERE id=? AND link_id IS NULL').bind(id,commandId))
-  statements.push(db.prepare("INSERT INTO integration_resolutions(namespace,id,delivery_id,at,outcome) SELECT ?,?,?,?,? WHERE EXISTS(SELECT 1 FROM integration_deliveries WHERE namespace=? AND id=? AND state='uncertain')").bind(trackerNamespace,crypto.randomUUID(),commandId,Date.now(),JSON.stringify({kind:'accepted',code:'operator_known_issue'}),trackerNamespace,commandId))
+  statements.push(db.prepare("INSERT INTO integration_resolutions(namespace,id,delivery_id,at,outcome) SELECT ?,?,?,?,? WHERE EXISTS(SELECT 1 FROM integration_deliveries WHERE namespace=? AND id=? AND state='uncertain')").bind(trackerNamespace,crypto.randomUUID(),commandId,Date.now(),outcome,trackerNamespace,commandId))
   statements.push(db.prepare("UPDATE integration_deliveries SET state='accepted' WHERE namespace=? AND id=? AND state='uncertain'").bind(trackerNamespace,commandId))
  }
  await db.batch(statements)
