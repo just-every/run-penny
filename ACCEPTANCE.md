@@ -8,10 +8,10 @@ The primary journey: customers post, vote and follow on the owner's branded boar
 
 | Tier | Done | Partial | Missing | Total |
 | --- | ---: | ---: | ---: | ---: |
-| Core | 79 | 108 | 71 | 258 |
+| Core | 79 | 109 | 70 | 258 |
 | Agent surface | 0 | 16 | 5 | 21 |
 | Later | 0 | 0 | 2 | 2 |
-| Full target | 79 | 124 | 78 | 281 |
+| Full target | 79 | 125 | 77 | 281 |
 
 Judged from the code and tests at commit `4249757c7f9914e47903ec3d53b68298317ed6c7` (23 October 2026). REQ-032 additionally proved from code and tests at commit `1101045f75c39bc8d64aed3ac4fa4a5ae8870ddb` (5 November 2026); REQ-010 additionally proved from code and tests at commit `f83300f869afb058bf9fa2d671cf17f445e4c5cb` (5 November 2026); other judgments are retained. Field proof register: 17 rows; 0 passed, 0 failed, 17 not run.
 
@@ -2362,7 +2362,7 @@ Core · target · **missing** · Rules D-1
 
 #### SEG-006 — Dynamic segments
 
-Core · target · **missing**
+Core · target · **partial**
 
 **Requirement.** Operators save segments as rules over any account or requester attribute (plan is Enterprise and ARR at least $50,000; health at risk; churned in the last 90 days). Membership is recomputed within 5 minutes of a changed attribute reaching Penny (SEG-001's webhook and refresh timing), and every operator list, prioritization view, roadmap view, report and agent scope filters by segment. Segments and attributes are operator-only.
 
@@ -2371,8 +2371,8 @@ Core · target · **missing**
 2. Request, inbox and report filters agree on membership.
 3. No segment name or attribute appears in any public payload (DATA-002).
 
-**Evidence.** None.
-**Gap.** A base test changes an attribute and sees the account enter and leave a segment within 5 minutes; request, inbox and report filters agree on membership; no segment name or attribute appears in any public payload (DATA-002).
+**Evidence.** `tests/base/segments.test.ts` — saved native owner rules follow exact current account membership and refuse unauthorized or invalid saves without public exposure; native archives restore rules and membership while operator erasure removes targeted rules and fences replay
+**Gap.** Point 1 has native account internal-owner rule create, save, read and immediate exact entry and exit proof, with an unaffected account, current operator admission, populated upgrade and repeated no-op, archive restore, destination-owner rule edits and account reassignment, source-session write refusal and operator-reference erasure custody. Remaining: requester and other account attributes, commercial and custom fields and ROLE-001 restrictions; provider-origin attributes and SEG-001, SEG-002 and SEG-005 arrival and refresh timing; point 2 request, inbox and report membership agreement; filtering every operator list, prioritization view, roadmap view, report and agent scope; the segment UI; and point 3 certification across every public payload. Bounded nonempty public request list and detail exclusion is proved through their API responses and rendered documents only. All existing provider, device, account, cross-seed and Base prerequisites, ct and uip holds, payments holds and release requirements remain.
 
 #### SEG-007 — Customer-value demand
 
