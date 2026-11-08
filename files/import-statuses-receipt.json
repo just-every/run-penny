@@ -1,0 +1,7 @@
+{
+  "command": "cloud_run timeout 900 node scripts/verify-ci.mjs import-statuses",
+  "exit": 0,
+  "head": "fd9d46a022b2e9818cfa491096b61defb4797134",
+  "browser": "/usr/bin/chromium",
+  "test_changes": false
+}

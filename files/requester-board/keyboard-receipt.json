@@ -1,0 +1,359 @@
+{
+  "sourceCommit": "fd9d46a022b2e9818cfa491096b61defb4797134",
+  "dirty": false,
+  "generatedAt": "2026-11-08T11:14:42.277Z",
+  "runtime": {
+    "environment": "emitted local workerd with isolated D1/R2",
+    "capabilities": {
+      "transport": "sendgrid",
+      "testCustomers": false
+    },
+    "providerSends": false,
+    "node": "v24.19.0"
+  },
+  "captures": [
+    {
+      "file": "submitted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/portal/feedback/new",
+      "overflow": false,
+      "sha256": "b2594f604aee0c9e536387a2eb2036c3d714e6e2a42d1092db6666a448154c93"
+    },
+    {
+      "file": "approve-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/app/moderation",
+      "overflow": false,
+      "sha256": "4bca2edfb320d5a5e783a4ba5ea286e8334cefba690b444500a9de43042ad752"
+    },
+    {
+      "file": "vote-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/portal/feedback/feedback-01m6xdvbwdc3av5rf7ps96zb5v",
+      "overflow": false,
+      "sha256": "5729dedf911058da5e7175cec92451d68c25293cde3529dcbd9b825e934bf8c8"
+    },
+    {
+      "file": "follow-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/portal/feedback/feedback-01m6xdvbwdc3av5rf7ps96zb5v",
+      "overflow": false,
+      "sha256": "3ed2f52637e3be106222a6a54327eb66a06b90ad1de0ccaab1132ecb5de0186b"
+    },
+    {
+      "file": "comment-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/portal/feedback/feedback-01m6xdvbwdc3av5rf7ps96zb5v",
+      "overflow": false,
+      "sha256": "09199e111cc9440e421af7d5f72b0a27f3ca88c7a6a3909b9a728b2c9db391ab"
+    },
+    {
+      "file": "comment-approval-ready-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/app/moderation",
+      "overflow": false,
+      "sha256": "1aef235529a9a170a1efd56da397faba3c5d904e01fde3e4a977b7efc5224719"
+    },
+    {
+      "file": "comment-approved-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/app/moderation",
+      "overflow": false,
+      "sha256": "e2fe7c4a5812cf73e28bf829c06ba7673976be96db4da95574f623467ab0f9a9"
+    },
+    {
+      "file": "status-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/portal/feedback/feedback-01m6xdvbwdc3av5rf7ps96zb5v",
+      "overflow": false,
+      "sha256": "283cae00bf82b94c90345b084f526117dc2b72be89eda9323a93099f7d4c357b"
+    },
+    {
+      "file": "your-feedback-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "24a9b9dcf38e3c7a258cf8bd149d8f811e3d1ed3367ba4aed25032fc84b8faad"
+    },
+    {
+      "file": "search-filter-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44195/?q=Scheduled+exports&status=under_review",
+      "overflow": false,
+      "sha256": "30a4b3140f2d8776ba24939aa8942902c481a46f072205427173e6fdc80a20b4"
+    },
+    {
+      "file": "submitted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/portal/feedback/new",
+      "overflow": false,
+      "sha256": "02ca4a0f9ef7ee3980d4951c2c6edfbcb371b94f3b5d5c15795dfb2730567b3e"
+    },
+    {
+      "file": "approve-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/app/moderation",
+      "overflow": false,
+      "sha256": "f9212af94843e5d48f0b559cbdd539854b6ae258b21dfac4adc1640de38ebad5"
+    },
+    {
+      "file": "vote-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/portal/feedback/feedback-01m6xdvjktzab109eabkgxvzq7",
+      "overflow": false,
+      "sha256": "c1ba1cb3cc4c7e807bb274968f3b49b3ad6ba84a71b2a01ab109bf605cac8805"
+    },
+    {
+      "file": "follow-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/portal/feedback/feedback-01m6xdvjktzab109eabkgxvzq7",
+      "overflow": false,
+      "sha256": "141701f57c13cf3da05113fe1ea9b7b27eb3fe801a3d810cf5dfe434576031f9"
+    },
+    {
+      "file": "comment-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/portal/feedback/feedback-01m6xdvjktzab109eabkgxvzq7",
+      "overflow": false,
+      "sha256": "77ca623667c8e34437b43095614731ef2a52befb90419bca23a69e82737c3f85"
+    },
+    {
+      "file": "comment-approval-ready-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/app/moderation",
+      "overflow": false,
+      "sha256": "8f56b844906cdd6657d1d67a726b5ee4fb516db4d9f6f3a47f6f7cbb023dfec9"
+    },
+    {
+      "file": "comment-approved-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/app/moderation",
+      "overflow": false,
+      "sha256": "1778fcc53060ebf2af175a911f722753958a7ad67bebcfd692e90eb280f2e61c"
+    },
+    {
+      "file": "status-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/portal/feedback/feedback-01m6xdvjktzab109eabkgxvzq7",
+      "overflow": false,
+      "sha256": "ac664c32e4cf928f23b938043ab2fb4be29f4eeda714e9f2cb65ab10fbd991ac"
+    },
+    {
+      "file": "your-feedback-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/portal/feedback/activity",
+      "overflow": false,
+      "sha256": "34bc91ba97bd54d102e0fecef4b8362697f93359ad7dd1af01dfbb5b2a5bea06"
+    },
+    {
+      "file": "search-filter-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44195/?q=Scheduled+exports&status=under_review",
+      "overflow": false,
+      "sha256": "51dde527c111a9fb6e7b0934e6103003348cd12d7951bc02fe7413fd59920cba"
+    },
+    {
+      "file": "keyboard-submitted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44089/portal/feedback/new",
+      "overflow": false,
+      "sha256": "b2594f604aee0c9e536387a2eb2036c3d714e6e2a42d1092db6666a448154c93"
+    },
+    {
+      "file": "keyboard-voted-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44089/portal/feedback/feedback-01m6xdvwz567r6dj36xa5er4pq",
+      "overflow": false,
+      "sha256": "81ebc7220d3d677d145ef44d5291169e10ee3bc37648425c02b19c148a01a843"
+    },
+    {
+      "file": "keyboard-triaged-1440.jpg",
+      "width": 1440,
+      "url": "http://127.0.0.1:44089/app/feedback",
+      "overflow": false,
+      "sha256": "b13fe271f05613f218b8d141b708e06308623c4eefb87b7ef4e36d15d781f91f"
+    },
+    {
+      "file": "keyboard-submitted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44089/portal/feedback/new",
+      "overflow": false,
+      "sha256": "02ca4a0f9ef7ee3980d4951c2c6edfbcb371b94f3b5d5c15795dfb2730567b3e"
+    },
+    {
+      "file": "keyboard-voted-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44089/portal/feedback/feedback-01m6xdvwz567r6dj36xa5er4pq",
+      "overflow": false,
+      "sha256": "4e2b7534108d7e0559f7967919cf0fa8bc04fb271992deddab151444ee479254"
+    },
+    {
+      "file": "keyboard-triaged-390.jpg",
+      "width": 390,
+      "url": "http://127.0.0.1:44089/app/feedback",
+      "overflow": false,
+      "sha256": "528c0a86a26c33fad8744b09d7c7c51158bb117f0c92c9ee94d8328a04a01d36"
+    }
+  ],
+  "pageErrors": [],
+  "checks": [
+    {
+      "width": 1440,
+      "heldRequest": "01M6XDVYSGEVPDF29CBP3KCF3Z",
+      "votedRequest": "01M6XDVWZ567R6DJ36XA5ER4PQ",
+      "evidence": "attention-evidence",
+      "reason": "Matches the finance reporting need at 1440 pixels.",
+      "voter": "01M6XDVXHM1TX1ZA2CXZ7RQ4NX",
+      "operator": "01M6XDVW1PZ8CYB0CJKTXV8FY4",
+      "linkAudit": "01M6XDW0QJNYJ3T4QTNTZPTQMT",
+      "reviewAudit": "01M6XDW1E5V1J1M9VFSQ9J0EDC",
+      "submissionInput": {
+        "trace": [
+          {
+            "control": "submission title",
+            "tabs": 8
+          },
+          {
+            "control": "submission problem",
+            "tabs": 1
+          },
+          {
+            "control": "submission board",
+            "tabs": 1
+          },
+          {
+            "control": "submit held request",
+            "tabs": 4
+          }
+        ],
+        "pointer": [],
+        "focusCalls": 0
+      },
+      "voteInput": {
+        "trace": [
+          {
+            "control": "vote on approved request",
+            "tabs": 9
+          }
+        ],
+        "pointer": [],
+        "focusCalls": 0
+      },
+      "triageInput": {
+        "trace": [
+          {
+            "control": "open evidence controls",
+            "tabs": 56
+          },
+          {
+            "control": "evidence request",
+            "tabs": 3
+          },
+          {
+            "control": "save evidence link",
+            "tabs": 1
+          },
+          {
+            "control": "evidence review reason",
+            "tabs": 72
+          },
+          {
+            "control": "review linked evidence",
+            "tabs": 1
+          }
+        ],
+        "pointer": [],
+        "focusCalls": 0
+      },
+      "reloadInput": {
+        "trace": [
+          {
+            "control": "reopen persisted evidence links",
+            "tabs": 48
+          }
+        ],
+        "pointer": [],
+        "focusCalls": 0
+      }
+    },
+    {
+      "width": 390,
+      "heldRequest": "01M6XDW4JDDYHW3BTW3KYXCDPC",
+      "votedRequest": "01M6XDVWZ567R6DJ36XA5ER4PQ",
+      "evidence": "attention-evidence",
+      "reason": "Matches the finance reporting need at 390 pixels.",
+      "voter": "01M6XDW3AZQRGHNVGKBS5PRJQH",
+      "operator": "01M6XDVW1PZ8CYB0CJKTXV8FY4",
+      "linkAudit": "01M6XDW6A34D3DQD0DNF04W0CQ",
+      "reviewAudit": "01M6XDW6ZWD84QQJ9WQNXEKE69",
+      "submissionInput": {
+        "trace": [
+          {
+            "control": "submission title",
+            "tabs": 8
+          },
+          {
+            "control": "submission problem",
+            "tabs": 1
+          },
+          {
+            "control": "submission board",
+            "tabs": 1
+          },
+          {
+            "control": "submit held request",
+            "tabs": 4
+          }
+        ],
+        "pointer": [],
+        "focusCalls": 0
+      },
+      "voteInput": {
+        "trace": [
+          {
+            "control": "vote on approved request",
+            "tabs": 9
+          }
+        ],
+        "pointer": [],
+        "focusCalls": 0
+      },
+      "triageInput": {
+        "trace": [
+          {
+            "control": "open evidence controls",
+            "tabs": 45
+          },
+          {
+            "control": "evidence request",
+            "tabs": 3
+          },
+          {
+            "control": "save evidence link",
+            "tabs": 1
+          },
+          {
+            "control": "evidence review reason",
+            "tabs": 68
+          },
+          {
+            "control": "review linked evidence",
+            "tabs": 1
+          }
+        ],
+        "pointer": [],
+        "focusCalls": 0
+      },
+      "reloadInput": {
+        "trace": [
+          {
+            "control": "reopen persisted evidence links",
+            "tabs": 37
+          }
+        ],
+        "pointer": [],
+        "focusCalls": 0
+      }
+    }
+  ]
+}

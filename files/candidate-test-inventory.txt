@@ -1,0 +1,6 @@
+Original candidate test delta:
+A	tests/browser/keyboard-controls.mjs
+A	tests/browser/keyboard-journey.mjs
+M	tests/browser/requester-board.mjs
+
+Executed unchanged current-main requester-board.mjs, which imports proveKeyboardJourney and keyboardControls.

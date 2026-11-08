@@ -1,0 +1,43 @@
+{
+  "repository": "just-every/run-penny",
+  "run_id": 42475170311,
+  "head_sha": "fd9d46a022b2e9818cfa491096b61defb4797134",
+  "html_url": "https://github.com/just-every/run-penny/actions/runs/42475170311",
+  "status": "completed",
+  "conclusion": "failure",
+  "job_counts": {
+    "success": 1,
+    "failure": 29
+  },
+  "failure_step": "Check generated contract documents",
+  "observed_generator_message": "ACCEPTANCE.md: generated content differs; run contract-docs write.",
+  "source_lock_checks": "29/29 success",
+  "test_shard_commands": "29/29 skipped after the generated-view check",
+  "ready_basis": "explicit generated-view-only exemption in task; generated views intentionally not committed",
+  "ready_exempt": true,
+  "runtime_ci_pass_claimed": false,
+  "gh_invocations": 4,
+  "command_reads": [
+    {
+      "file": "ci-discovery.json",
+      "command": "gh api 'repos/just-every/run-penny/actions/runs?head_sha=fd9d46a022b2e9818cfa491096b61defb4797134&per_page=100'",
+      "observed_at": "2026-11-08T11:19:01.838993+00:00"
+    },
+    {
+      "file": "ci-run-status.json",
+      "command": "gh api repos/just-every/run-penny/actions/runs/42475170311 --jq '{status,conclusion,head_sha,html_url}'",
+      "observed_at": "2026-11-08T11:24:01.635625+00:00"
+    },
+    {
+      "file": "ci-jobs.json",
+      "command": "gh api 'repos/just-every/run-penny/actions/runs/42475170311/jobs?per_page=100'",
+      "observed_at": "2026-11-08T11:29:02.459919+00:00"
+    },
+    {
+      "file": "ci-failed-job.log",
+      "command": "gh run view 42475170311 --repo just-every/run-penny --job 128714801250 --log-failed",
+      "observed_at": "2026-11-08T11:34:30.334047+00:00"
+    }
+  ],
+  "blockers": []
+}

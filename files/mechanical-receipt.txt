@@ -1,0 +1,9 @@
+MECHANICAL lock=node scripts/edition-authoring/cli.mjs lock exit=0; views=node src/base/contract-docs.mjs write && node src/base/contract-docs.mjs check exit=0
+Source check: node scripts/edition-authoring/cli.mjs check exit=0, including after dependency/setup.
+Generated views restored: git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md exit=0.
+After restoration: node src/base/contract-docs.mjs check exit=1: ACCEPTANCE.md generated content differs; expected generated-view-only exemption.
+Final product diff: CONTRACT.md (A11Y-001 row only), sources.lock.json (CONTRACT.md sha256 only).
+Original head verified: 56d7cabddb344e8286aef98217c2da4dd5782f7b.
+Rebase base: 4eb55215274ec4f91e365c7ab1e85713ed626f57.
+Replay head: fd9d46a022b2e9818cfa491096b61defb4797134.
+History: original two candidate commits squashed while rebasing; one unpublished replay commit remains above main. Both rebase conflict stages generated and checked views, restored views and regenerated/checked the source lock before continuing. Original replay changes were resolved by retaining main's stronger test assertions and changelog; CONTRACT.md auto-merged only A11Y-001's row. Final row is byte-identical to original builder head; all 281 statuses and every other status row unchanged. ID-MAP unchanged.

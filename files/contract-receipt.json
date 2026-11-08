@@ -1,0 +1,22 @@
+{
+  "before": {
+    "partial": 124,
+    "done": 79,
+    "missing": 78
+  },
+  "after": {
+    "partial": 124,
+    "done": 79,
+    "missing": 78
+  },
+  "rows_before": 281,
+  "rows_after": 281,
+  "changed_rows": [
+    "A11Y-001"
+  ],
+  "all_statuses_unchanged": true,
+  "other_rows_preserved": true,
+  "candidate_row_exact": true,
+  "head": "fd9d46a022b2e9818cfa491096b61defb4797134",
+  "base": "4eb55215274ec4f91e365c7ab1e85713ed626f57"
+}

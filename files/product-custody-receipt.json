@@ -1,0 +1,18 @@
+{
+  "repository": "just-every/run-penny",
+  "product_branch": "cloud/sd-penny-c-f95-rb2",
+  "head": "fd9d46a022b2e9818cfa491096b61defb4797134",
+  "parent": "4eb55215274ec4f91e365c7ab1e85713ed626f57",
+  "remote_head": "fd9d46a022b2e9818cfa491096b61defb4797134",
+  "remote_ref": "refs/heads/cloud/sd-penny-c-f95-rb2",
+  "shallow": "false",
+  "partial_clone_filter": "blob:none",
+  "clean": true,
+  "changed_paths": [
+    "CONTRACT.md",
+    "sources.lock.json"
+  ],
+  "candidate_commits": 1,
+  "source_branch": "cloud/sd-penny-c-f95",
+  "source_branch_verified_head": "56d7cabddb344e8286aef98217c2da4dd5782f7b"
+}

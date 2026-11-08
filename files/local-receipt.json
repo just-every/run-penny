@@ -1,0 +1,35 @@
+{
+  "commands": [
+    {
+      "command": "cloud_run timeout 900 npx -y @runeditrun/rer setup --owner-email fleet@runeditrun.com --non-interactive",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run timeout 240 pnpm run typecheck",
+      "exit": 0
+    },
+    {
+      "command": "cloud_run timeout 240 pnpm run verify:base-source",
+      "exit": 0
+    },
+    {
+      "command": "PENNY_BROWSER_EXECUTABLE=/usr/bin/chromium PENNY_EVIDENCE=<packet>/requester-board cloud_run timeout 600 pnpm run test:browser",
+      "exit": 0
+    }
+  ],
+  "head": "fd9d46a022b2e9818cfa491096b61defb4797134",
+  "mechanical": {
+    "views_write": "node src/base/contract-docs.mjs write",
+    "views_write_exit": 0,
+    "views_check": "node src/base/contract-docs.mjs check",
+    "views_check_exit": 0,
+    "views_restored": "git checkout origin/main -- ACCEPTANCE.md docs/CLAIMS.md",
+    "lock": "node scripts/edition-authoring/cli.mjs lock",
+    "lock_exit": 0,
+    "lock_check": "node scripts/edition-authoring/cli.mjs check",
+    "lock_check_exit": 0
+  },
+  "runtime_node": "v24.19.0 (VM newer than repository pin; cloud toolchain retained it)",
+  "pnpm": "10.12.4",
+  "provider_credentials_used_by_dependencies": false
+}
