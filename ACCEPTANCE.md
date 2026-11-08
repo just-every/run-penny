@@ -3465,8 +3465,8 @@ Core · target · **partial** · Cites BASE-ACCESSIBILITY-001 · Register R-1, R
 1. Axe reports no serious or critical violation on every journey page of the portal, the widget and the operator app at both widths.
 2. Keyboard-only journeys submit, vote and triage at both widths.
 
-**Evidence.** `tests/browser/acceptance-audit.mjs`
-**Gap.** Axe runs on the existing journeys today. Axe on every journey page of the portal, widget and operator app at both widths, and keyboard-only submit, vote and triage journeys, lack passing assertions; the VPAT and the screen-reader review are R-1 and R-2.
+**Evidence.** `tests/browser/acceptance-audit.mjs`; `tests/browser/keyboard-journey.mjs` — proveKeyboardJourney: native submission, vote and evidence triage at both widths
+**Gap.** Native portal submission and voting, plus operator evidence linking and reasoned review, have keyboard-only journeys at both widths. Axe on every journey page of the portal, widget and operator app, widget keyboard journeys and broader Base accessibility proof remain unproved; the VPAT and human screen-reader review remain R-1 and R-2.
 
 ### Agents on the bet, not just the backlog
 
