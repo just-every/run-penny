@@ -11,7 +11,8 @@ export function snippetBeyondTitle(title: string, snippet: string): string {
  return s.slice(t.length).trim()
 }
 export function recordHref(entity: ListEntity, id: string, slug: string): string {
- const paths: Record<ListEntity,string>={requests:'/app/moderation',evidence:'/app/feedback',decisions:'/app/decisions',roadmap:'/app/roadmap',releases:'/app/releases',accounts:'/app/customers',requesters:'/app/customers'}
+ const paths: Record<ListEntity,string>={requests:'/app/moderation',evidence:'/app/feedback',decisions:'/app/decisions',roadmap:'/app/roadmap',releases:'/app/releases',accounts:'/app/customers',requesters:'/app/customers',products:'/app/features',components:'/app/features',features:'/app/features'}
+ if(['products','components','features'].includes(entity))return `${paths[entity]}#${entity}-${encodeURIComponent(id)}`
  if(['decisions','releases','accounts'].includes(entity))return `${paths[entity]}/${encodeURIComponent(slug)}`
  const hash=entity==='requests'?`request-${slug}`:`${entity}-${id}`
  return `${paths[entity]}?${entity==='requesters'?'directory=requesters&':''}item=${encodeURIComponent(id)}#${encodeURIComponent(hash)}`
