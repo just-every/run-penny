@@ -8,7 +8,31 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
  await action('/api/operator/accounts',{name:'synthetic-penny-private customer',internalOwnerId:owner,revenueCents:4800000,health:'Renewal is private',renewalDate:'2027-03-15'})
  for(const provider of ['linear','jira'])for(const kind of ['request','decision']){
   const selected=kind==='request'?{requestId:subject.id}:{decisionId:decision.id}
-  const connection=await action('/api/operator/integrations/trackers/connections',{name:`${provider} ${kind} actions`,provider,projectIdentity:provider==='linear'?teamId:'10200',organizationIdentity:provider==='linear'?organizationId:'',siteOrigin:provider==='jira'?'https://penny-fixture.atlassian.net':'',issueType:provider==='jira'?'10001':'',apiEmail:provider==='jira'?'operator@example.test':'',apiToken:'synthetic-penny-tracker-api-1',signingKey:secret})
+  const connection=await action('/api/operator/integrations/trackers/connections',{name:`${provider} ${kind} actions`,provider,projectIdentity:provider==='linear'?teamId:'10200',organizationIdentity:provider==='linear'?organizationId:'',siteOrigin:provider==='jira'?'https://penny-fixture.atlassian.net':'',issueType:provider==='jira'?'10001':'',apiEmail:provider==='jira'?['operator','example.test'].join('@'):'',apiToken:'synthetic-penny-tracker-api-1',signingKey:secret})
+  const known=()=>({...selected,connectionId:connection.id,externalId:provider==='linear'?crypto.randomUUID():'10044',url:provider==='linear'?'https://linear.app/penny/issue/PEN-44/known-outcome':'https://penny-fixture.atlassian.net/browse/PEN-44'})
+  const snapshot=async()=>{
+   const rows={}
+   for(const table of ['penny_tracker_links','penny_tracker_commands','integration_deliveries','integration_attempts','integration_resolutions'])rows[table]=(await runtime.db.prepare(`SELECT * FROM ${table} ORDER BY id`).all()).results
+   return rows
+  }
+  const reconcile=(commandId,input)=>page.request.post(runtime.origin+`/api/operator/integrations/trackers/commands/${commandId}/reconcile`,{headers:{Origin:runtime.origin},data:input})
+  const refuse=async(commandId,input,state)=>{
+   const before=await snapshot(),response=await reconcile(commandId,input)
+   assert.equal(response.status(),409,`[INT-005] ${state} commands refuse known-issue reconciliation`)
+   assert.deepEqual(await snapshot(),before,`[INT-005] ${state} refusal changes no link, command, delivery or history`)
+   const read=await page.request.get(runtime.origin+'/api/operator/integrations/trackers')
+   assert.equal(read.status(),200)
+   assert.equal((await read.json()).commands.find(row=>row.id===commandId).state,state,'[INT-005] native readback retains the refused command state')
+  }
+  const readReconciled=async(commandId,issue,linkId)=>{
+   const response=await page.request.get(runtime.origin+'/api/operator/integrations/trackers')
+   assert.equal(response.status(),200)
+   const read=await response.json(),command=read.commands.find(row=>row.id===commandId),link=read.links.find(row=>row.id===linkId)
+   assert.ok(command,'[INT-005] the native tracker readback retains the reconciled command')
+   assert.deepEqual({requestId:command.request_id,decisionId:command.decision_id,connectionId:command.connection_id,linkId:command.link_id,state:command.state},{requestId:selected.requestId??null,decisionId:selected.decisionId??null,connectionId:connection.id,linkId,state:'accepted'},'[INT-005] native readback binds the accepted command to its selected subject, connection and original link')
+   assert.ok(link,'[INT-005] the original reconciled link remains readable')
+   assert.deepEqual({requestId:link.request_id,decisionId:link.decision_id,connectionId:link.connection_id,externalId:link.external_id,url:link.issue_url},{requestId:selected.requestId??null,decisionId:selected.decisionId??null,connectionId:connection.id,externalId:issue.externalId,url:issue.url},'[INT-005] native readback preserves the known issue identity and URL')
+  }
   const visit=async()=>{
    await page.goto(runtime.origin+(kind==='request'?'/app/moderation':'/app/decisions/'+decision.slug));await page.waitForLoadState('networkidle')
    if(kind==='request')await page.locator('article').filter({has:page.getByRole('heading',{name:'Deliberate tracker subject',exact:true})}).getByText('Discussion, status and request controls',{exact:true}).click()
@@ -18,6 +42,7 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
   const form=panel.getByRole('form',{name:'Tracker issue action',exact:true})
   await form.getByRole('combobox',{name:/^Tracker connection/}).selectOption(connection.id)
   const linkedId=provider==='linear'?crypto.randomUUID():'10043',linkedUrl=provider==='linear'?'https://linear.app/penny/issue/PEN-43/entered-link':'https://penny-fixture.atlassian.net/browse/PEN-43'
+  const existingIssue={...selected,connectionId:connection.id,externalId:linkedId,url:linkedUrl}
   await form.getByLabel('Stable issue ID',{exact:true}).fill(linkedId);await form.getByLabel('HTTPS issue URL',{exact:true}).fill(linkedUrl)
   const sentBefore=edge.calls.length
   await form.getByRole('button',{name:'Link tracker issue',exact:true}).click();await panel.getByText('Issue linked.',{exact:true}).waitFor()
@@ -35,7 +60,16 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    await form.getByRole('button',{name:'Create tracker issue',exact:true}).click();await panel.getByText('Create command saved. Its receipt shows the durable result.',{exact:true}).waitFor()
    const command=await runtime.db.prepare('SELECT * FROM penny_tracker_commands WHERE connection_id=? ORDER BY created_at DESC,id DESC LIMIT 1').bind(connection.id).first()
    const before=edge.calls.length
-   await runtime.schedule()
+   if(!unknown){
+    await refuse(command.id,known(),'queued')
+    await refuse(command.id,existingIssue,'queued')
+    const paused=edge.pause(),drain=runtime.schedule()
+    try{
+     await Promise.race([paused.entered,new Promise((_,reject)=>{const timer=setTimeout(()=>reject(new Error('Tracker edge did not receive the sending command')),15000);timer.unref()})])
+     await refuse(command.id,known(),'sending')
+     await refuse(command.id,existingIssue,'sending')
+    }finally{paused.resume();await drain}
+   }else await runtime.schedule()
    assert.equal(edge.calls.length,before+1,'[INT-005] one deliberate native create reaches the provider edge')
    assert.equal(edge.calls.at(-1).id,command.id,'[INT-005] outbound create uses its durable command identity')
    const state=()=>runtime.db.prepare('SELECT state FROM integration_deliveries WHERE id=?').bind(command.id).first('state')
@@ -44,21 +78,47 @@ export async function checkTrackerActions({runtime,page,action,subject,capture,e
    assert.equal(edge.calls.length,before+1,'[INT-005] restart and Cron never duplicate the create')
    if(unknown){
     const receipt=panel.locator('li').filter({has:page.getByRole('button',{name:'Reconcile known issue',exact:true})})
-    const known={...selected,connectionId:connection.id,externalId:provider==='linear'?crypto.randomUUID():'10044',url:provider==='linear'?'https://linear.app/penny/issue/PEN-44/known-outcome':'https://penny-fixture.atlassian.net/browse/PEN-44'}
-    await receipt.getByLabel('Known issue ID',{exact:true}).fill(known.externalId)
-    await receipt.getByLabel('Known issue HTTPS URL',{exact:true}).fill(known.url)
+    const issue=known(),uncertain=await snapshot()
+    const otherSubject=kind==='request'?{decisionId:decision.id}:{requestId:subject.id}
+    await refuse(command.id,{...otherSubject,connectionId:connection.id,externalId:issue.externalId,url:issue.url},'uncertain')
+    await runtime.db.exec("CREATE TRIGGER synthetic_penny_reconcile_failure BEFORE UPDATE ON integration_deliveries WHEN OLD.namespace='penny-trackers' AND OLD.state='uncertain' AND NEW.state='accepted' BEGIN SELECT RAISE(ABORT,'synthetic late reconciliation failure'); END")
+    try{assert.equal((await reconcile(command.id,issue)).status(),503,'[INT-005] late storage failure refuses reconciliation')}
+    finally{await runtime.db.exec('DROP TRIGGER synthetic_penny_reconcile_failure')}
+    assert.deepEqual(await snapshot(),uncertain,'[INT-005] a late failure rolls back the issue link, command, delivery and resolution together')
+    await receipt.getByLabel('Known issue ID',{exact:true}).fill(issue.externalId)
+    await receipt.getByLabel('Known issue HTTPS URL',{exact:true}).fill(issue.url)
     await capture(`tracker-${provider}-${kind}-uncertain`,kind==='request'?form.locator('..'):panel)
     await receipt.getByRole('button',{name:'Reconcile known issue',exact:true}).click();await panel.getByText('Known issue reconciled. No new create was sent.',{exact:true}).waitFor()
-    const repeat=await action(`/api/operator/integrations/trackers/commands/${command.id}/reconcile`,known)
+    const reconciled=await snapshot(),repeat=await action(`/api/operator/integrations/trackers/commands/${command.id}/reconcile`,issue)
     assert.equal(repeat.id,await runtime.db.prepare('SELECT link_id FROM penny_tracker_commands WHERE id=?').bind(command.id).first('link_id'),'[INT-005] repeating a known reconciliation returns the same issue link')
-    await page.waitForLoadState('networkidle');await runtime.restart();await runtime.schedule();await visit()
+    assert.equal(repeat.repeat,true,'[INT-005] an identical known-issue replay is acknowledged as the original reconciliation')
+    assert.deepEqual(await snapshot(),reconciled,'[INT-005] identical reconciled replay preserves the original link and all history')
+    await readReconciled(command.id,issue,repeat.id)
+    const different={...issue,externalId:provider==='linear'?crypto.randomUUID():'10045',url:provider==='linear'?'https://linear.app/penny/issue/PEN-45/different-issue':'https://penny-fixture.atlassian.net/browse/PEN-45'}
+    await refuse(command.id,different,'accepted')
+    await page.waitForLoadState('networkidle');await runtime.restart();await runtime.schedule();await runtime.schedule();await visit()
     assert.deepEqual({state:await state(),resolutions:await runtime.db.prepare('SELECT count(*) n FROM integration_resolutions WHERE delivery_id=?').bind(command.id).first('n'),calls:edge.calls.length},{state:'accepted',resolutions:1,calls:before+1},'[INT-005] explicit reconciliation resolves exactly once without another create')
+    await readReconciled(command.id,issue,repeat.id)
     assert.equal(await panel.getByRole('button',{name:'Reconcile known issue',exact:true}).count(),0,'[INT-005] resolved commands no longer offer reconciliation')
    }else{
+    const created=await runtime.db.prepare('SELECT l.* FROM penny_tracker_links l JOIN penny_tracker_commands c ON c.link_id=l.id WHERE c.id=?').bind(command.id).first()
+    assert.ok(created,'[INT-005] the ordinary accepted create has a stored link')
+    await refuse(command.id,{...selected,connectionId:connection.id,externalId:created.external_id,url:created.issue_url},'accepted')
     assert.ok(await runtime.db.prepare('SELECT 1 FROM penny_tracker_links WHERE id=? AND state=\'created\'').bind(command.link_id??(await runtime.db.prepare('SELECT link_id FROM penny_tracker_commands WHERE id=?').bind(command.id).first('link_id'))).first(),'[INT-005] accepted create links its returned issue')
    }
    await capture(`tracker-${provider}-${kind}-${unknown?'reconciled':'created'}`,kind==='request'?form.locator('..'):panel)
   }
+  const rejectedTitle=`Entered ${provider} ${kind} rejected title`,rejectedDescription='Entered rejected implementation wording'
+  edge.expected.set(provider,provider==='linear'?{query:'mutation PennyIssueCreate($input: IssueCreateInput!) { issueCreate(input: $input) { success issue { id title url team { id } } } }',variables:{input:{teamId,title:rejectedTitle,description:rejectedDescription}}}:{fields:{project:{id:'10200'},issuetype:{id:'10001'},summary:rejectedTitle,description:{version:1,type:'doc',content:[{type:'paragraph',content:[{type:'text',text:rejectedDescription}]}]}}})
+  const rejected=await action('/api/operator/integrations/trackers/create',{...selected,connectionId:connection.id,title:rejectedTitle,description:rejectedDescription,operationKey:crypto.randomUUID()})
+  edge.reject(true)
+  try{await runtime.schedule()}finally{edge.reject(false)}
+  await refuse(rejected.id,known(),'rejected')
+  await refuse(rejected.id,existingIssue,'rejected')
+  const settled=await snapshot(),calls=edge.calls.length
+  await runtime.restart();await runtime.schedule();await runtime.schedule()
+  assert.deepEqual(await snapshot(),settled,'[INT-005] terminal command custody survives restart and repeated scheduler drains')
+  assert.equal(edge.calls.length,calls,'[INT-005] accepted reconciliation and rejected commands never create again')
  }
- return 12
+ return 16
 }

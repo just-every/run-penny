@@ -7,6 +7,7 @@ import { guardedDatabase } from '../integrations/guarded-database'
 import { NativeError } from '../auth/native-tokens'
 import { createUlid } from '@/core/shared/ulid'
 import { agingSummary } from './reminders'
+import { snoozeEvidence } from './snooze'
 const days=z.number().int().min(1).max(3650)
 const settings=z.object({inbox_days:days,comment_days:days,response_days:days,under_review_days:days,planned_days:days,in_progress_days:days}).strict()
 export type AgingPolicy=z.infer<typeof settings>
@@ -22,10 +23,7 @@ export function registerTriageRoutes(app:Hono<OperatorMutationEnvironment>){
  },true))
  app.patch('/api/operator/triage/evidence/:id/snooze',c=>admitted(c,async(db,actor)=>{
   const input=await parseMutationBody(c,z.object({until:z.string().datetime({offset:true}).nullable()}).strict());if(!input)return c.json({error:'validation_failed'},400)
-  const id=c.req.param('id'),now=new Date().toISOString(),until=input.until?new Date(input.until).toISOString():null
-  if(until&&until<=now)return c.json({error:'snooze_must_be_future'},400)
-  if(!await db.prepare('SELECT id FROM evidence_items WHERE id=?').bind(id).first())return c.json({error:'not_found'},404)
-  await db.batch([until?db.prepare('INSERT INTO penny_evidence_snoozes(evidence_id,until_at,updated_at) VALUES(?,?,?) ON CONFLICT(evidence_id) DO UPDATE SET until_at=excluded.until_at,updated_at=excluded.updated_at').bind(id,until,now):db.prepare('DELETE FROM penny_evidence_snoozes WHERE evidence_id=?').bind(id),audit(db,actor,until?'triage.snoozed':'triage.unsnoozed','evidence',id,now)])
+  await snoozeEvidence(db,c.req.param('id'),input.until,actor,new Date().toISOString())
   return c.json({ok:true})
  }))
 }

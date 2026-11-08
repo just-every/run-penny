@@ -6,6 +6,21 @@ const code = answer => answer.result?._meta?.['com.runeditrun/error']?.code ?? a
 const assert = (ok, message) => { if (!ok) { console.error('Native journey assertion: ' + message); throw Error(message); } };
 export default async function () { console.log('Native journey: conflict, stale version, original key ceiling, native attribution and retained-evidence erasure/restore refusals checked.'); }
 export async function afterStep({ phase, step, args, result, tool, request, origin, cookie, database }) {
+ if (step.id === 'snooze' || step.id === 'unsnooze') {
+  const db = await database('DB');
+  const peers = (await db.prepare('SELECT id FROM evidence_items WHERE source_label=? ORDER BY id').bind('Synthetic triage ' + phase).all()).results;
+  const peer = peers.find(row => row.id !== args.id);
+  assert(peer && peers.length === 2, 'Snooze parity needs separate native records');
+  const until = step.id === 'snooze' ? args.until : null;
+  const response = await request(origin + '/api/operator/triage/evidence/' + peer.id + '/snooze', { method: 'PATCH', headers: { Cookie: cookie, Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify({ until }) });
+  assert(response.ok, 'Native snooze parity write must succeed'); await response.body?.cancel();
+  const read = await request(origin + '/api/operator/triage', { headers: { Cookie: cookie } });
+  assert(read.ok, 'Native triage readback must succeed');
+  const summary = await read.json();
+  for (const id of [args.id, peer.id]) assert(until ? summary.snoozed.some(row => row.id === id && row.untilAt === until) : !summary.snoozed.some(row => row.id === id), 'HTTP and MCP must read back the same snooze date or clear');
+  const activity = await db.prepare('SELECT agent_id,sponsor_native_id,prepared_by,approvers_json FROM audit_entries WHERE action=? AND entity_id=? ORDER BY id DESC LIMIT 1').bind(until ? 'triage.snoozed' : 'triage.unsnoozed', args.id).first();
+  assert(activity?.agent_id && activity.sponsor_native_id && activity.prepared_by.includes(' for '), 'Native snooze activity must retain its agent and sponsor');
+ }
  if (phase === 'autonomous' && step.id === 'capture') {
   const changed = await tool(step.tool, { ...args, wording: 'A different proposed capture under the same key.' });
   assert(code(changed) === 'idempotency_conflict', 'Changed arguments must conflict');
