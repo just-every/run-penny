@@ -1,6 +1,6 @@
 import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
-import { providerMail,mailUnsubscribe } from '../auth/mail'
+import { providerMail,mailUnsubscribe,mailMissingReason } from '../auth/mail'
 import { createUlid } from '@/core/shared/ulid'
 import {requesterQuietHours} from '../settings/workspace-clock'
 import { retryAt,retryState,safeValidationCode,retryWindowMs } from '../notifications/attempt-policy'
@@ -49,7 +49,7 @@ async function deliver(runtime:PennyRuntime,row:Outbox,clock:()=>number){
   const initial=await releaseContent(db,row.id)
   if(!initial.length){await finish('suppressed','recipient_no_longer_eligible');return}
   const sender=providerMail(runtime)
-  if(!sender){await finish('failed','mail_configuration_missing');return}
+  if(!sender){await finish('failed',mailMissingReason(runtime));return}
   const mailHeaders=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!)
   const footer=await requesterMailFooter(runtime,row.requesterId,row.addressId,undefined,initial.flatMap(context=>context.requestSlug?[context.requestSlug]:[]))
   const globalLink=await unsubscribeUrl(runtime,{...row,email:initial[0].email},'all')

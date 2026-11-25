@@ -14,12 +14,14 @@ export function ownerInputs(env) {
   if (missing.length) { const error = new Error('missing-owner-input'); error.inputs = missing; throw error }
   if (!fields.accountId.valid(env.CLOUDFLARE_ACCOUNT_ID) || !fields.apiToken.valid(env.CLOUDFLARE_API_TOKEN) || !fields.OPERATOR_EMAIL.valid(env.OPERATOR_EMAIL)) throw new Error('invalid-owner-input')
   if (!fields.MAIL_PROVIDER.valid(env.MAIL_PROVIDER)) throw new Error('unsupported-mail-provider')
-  if (env.MAIL_PROVIDER === 'later' && env.MAIL_FROM?.trim()) throw new Error('incomplete-mail-provider')
+  // `later` and `none` (mail off: the owner signs in with `rer signin`) take no sender or key.
+  const mailless = env.MAIL_PROVIDER === 'later' || env.MAIL_PROVIDER === 'none'
+  if (mailless && env.MAIL_FROM?.trim()) throw new Error('incomplete-mail-provider')
   const timezone = env.WORKSPACE_TIMEZONE || 'UTC'
   if (!fields.WORKSPACE_TIMEZONE.valid(timezone)) throw new Error('invalid-workspace-timezone')
   // One credential name for every provider: Base's mail facade and rer's sign-in preflight read MAIL_API_KEY.
   if (env.SENDGRID_API_KEY || env.RESEND_API_KEY) throw new Error('renamed-mail-credential')
-  const credential = env.MAIL_PROVIDER === 'later' ? undefined : 'MAIL_API_KEY'
+  const credential = mailless ? undefined : 'MAIL_API_KEY'
   if (credential) {
     const missing = [credential, 'MAIL_FROM', ...(env.MAIL_PROVIDER === 'rer' ? ['MAIL_RELAY_URL'] : [])].filter(key => !env[key]?.trim())
     if (missing.length) { const error = new Error('missing-owner-input'); error.inputs = missing; throw error }

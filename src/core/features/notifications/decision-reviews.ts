@@ -1,7 +1,7 @@
 import {workspaceClock} from '../settings/workspace-clock'
 import type { PennyRuntime } from '@/core/app/runtime'
 import { createUlid } from '@/core/shared/ulid'
-import { authMail } from '../auth/mail'
+import { authMail,mailMissingReason } from '../auth/mail'
 import { retryAt,retryState,safeValidationCode } from './attempt-policy'
 
 /** Date-only review dates expire after that calendar date in the workspace zone. */
@@ -46,7 +46,7 @@ async function sendReview(runtime:PennyRuntime,row:{id:string;attempts:number;cr
   if(!recipient){await finish('failed','owner_no_longer_active');return}
   if(recipient.suppressed){await finish('failed','recipient_suppressed');return}
   const mail=authMail(runtime)
-  if(!mail){await finish('failed','mail_configuration_missing');return}
+  if(!mail){await finish('failed',mailMissingReason(runtime));return}
   const result=await mail.send({...(runtime.configuration.mailProvider==='sendgrid'?{customArgs:{rer_product:'penny',rer_penny_attempt:claim}}:{}),deliveryId:row.id,from:runtime.configuration.mailFrom!,to:[recipient.email],subject:`Decision review due: ${recipient.title.replace(/\s+/g,' ')}`,text:`Your decision is due for review. Record a review note and a new review date, or revise the commitment.\n\n${recipient.title}\n${runtime.configuration.appOrigin}/app/decisions/${recipient.slug}`,headers:{'Auto-Submitted':'auto-generated'}})
   // Explicit local capture completes the send, without inventing a provider receipt.
   if(result.status==='accepted'||result.status==='development'){await finish('accepted',null,result.providerMessageId);return}

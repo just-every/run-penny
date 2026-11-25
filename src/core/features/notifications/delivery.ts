@@ -1,7 +1,7 @@
 import { activateMergeNoticeStatements } from '../requests/merge-notices'
 import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import type { PennyRuntime } from '@/core/app/runtime'
-import { providerMail,mailUnsubscribe } from '@/core/features/auth/mail'
+import { providerMail,mailUnsubscribe,mailMissingReason } from '@/core/features/auth/mail'
 import { createUlid } from '@/core/shared/ulid'
 import {requesterQuietHours} from '../settings/workspace-clock'
 import { admitDelivery } from './delivery-admission'
@@ -70,7 +70,7 @@ async function deliver(runtime:PennyRuntime,batch:Batch,clock:()=>number){
   const recipient=await notificationContent(db,batch.id)
   if(!recipient){await finish('suppressed','recipient_no_longer_eligible');return}
   const sender=providerMail(runtime)
-  if(!sender){await finish('failed','mail_configuration_missing');return}
+  if(!sender){await finish('failed',mailMissingReason(runtime));return}
   const mailHeaders=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!)
   const footer=await requesterMailFooter(runtime,batch.requesterId,batch.addressId,recipient.requestId)
   const requestLink=await unsubscribeUrl(runtime,{...batch,email:recipient.email},recipient.requestId)

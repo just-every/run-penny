@@ -4,7 +4,7 @@ const inputs = {
   CLOUDFLARE_ACCOUNT_ID: 'the Cloudflare account that will own Penny’s Worker, database, files and queue',
   CLOUDFLARE_API_TOKEN: 'an account-scoped API token with Workers Scripts, D1, R2 Storage and Queues edit permissions',
   OPERATOR_EMAIL: 'the first owner’s email address, used to claim Penny and sign in',
-  MAIL_PROVIDER: 'the sign-in email provider: sendgrid or resend',
+  MAIL_PROVIDER: 'the sign-in email provider: sendgrid or resend, or none to run with mail off and sign in with rer signin',
   MAIL_FROM: 'a sender address on the email provider’s verified domain',
   MAIL_API_KEY: 'the selected email provider’s API key, used to send sign-in links',
   MAIL_RELAY_URL: 'the assigned HTTPS address of the managed mail relay',
@@ -23,7 +23,7 @@ export function missingOwnerInputs(names, command = deploymentCheckCommand()) {
 
 const causes = {
   'invalid-owner-input': 'The Cloudflare account, API token or owner email is invalid.',
-  'unsupported-mail-provider': 'Choose SendGrid or Resend for sign-in email.',
+  'unsupported-mail-provider': 'Choose SendGrid or Resend for sign-in email, or none to run with mail off.',
   'incomplete-mail-provider': 'The selected email provider needs a verified sender and its API key.',
   'renamed-mail-credential': 'Supply the selected email provider’s key as MAIL_API_KEY.',
   'conflicting-mail-provider': 'The email inputs belong to different providers. Keep only the selected provider’s inputs.',

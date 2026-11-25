@@ -63,6 +63,10 @@
           "label": "Set up later"
         },
         {
+          "value": "none",
+          "label": "No mail (sign in with rer signin)"
+        },
+        {
           "value": "rer",
           "label": "RER Managed mail"
         },

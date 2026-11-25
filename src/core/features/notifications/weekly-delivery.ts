@@ -1,5 +1,5 @@
 import type {PennyRuntime} from '@/core/app/runtime'
-import {providerMail,mailUnsubscribe} from '../auth/mail'
+import {providerMail,mailUnsubscribe,mailMissingReason} from '../auth/mail'
 import {requesterMailFooter,mailIdentity,identityHeaders} from '../settings/mail-identity'
 import {requesterQuietHours} from '../settings/workspace-clock'
 import {createUlid} from '@/core/shared/ulid'
@@ -37,7 +37,7 @@ async function deliver(runtime:PennyRuntime,row:Pending,clock:()=>number){
   const initial=await weeklyContent(db,row.id)
   if(!initial){await finish('suppressed','no_eligible_public_changes');return}
   const sender=providerMail(runtime)
-  if(!sender){await finish('failed','mail_configuration_missing');return}
+  if(!sender){await finish('failed',mailMissingReason(runtime));return}
   const headers=identityHeaders(await mailIdentity(runtime),runtime.configuration.mailFrom!),items=JSON.parse(initial.items) as {title:string;body:string;path:string}[]
   const requestSlugs=items.filter(item=>item.path.startsWith('/portal/feedback/')).map(item=>item.path.slice('/portal/feedback/'.length))
   const footer=await requesterMailFooter(runtime,row.requesterId,row.addressId,undefined,requestSlugs),link=await unsubscribeUrl(runtime,{...row,email:initial.email},'all')

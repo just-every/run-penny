@@ -67,7 +67,7 @@ Local mode needs no provider and sends no email at all: there is no outbox and n
 
 **Managed Penny gets email from RER.** You need no provider account, sender verification or API key entry. RER fills and hides `MAIL_PROVIDER=rer`, `MAIL_FROM`, `MAIL_RELAY_URL` and the installation's private `MAIL_API_KEY`. The relay adapter comes from pinned rer 0.2.22; RER issues the credential and keeps its upstream provider key out of Penny and its build.
 
-**Free and Assisted hosting keep SendGrid, Resend and set up later.** With your own provider, verify a sender address and supply its API key as `MAIL_API_KEY`. Choosing `later` leaves email actions unavailable and public reading available. [Email and notifications](/docs/email) covers the configuration and limits.
+**Free and Assisted hosting keep SendGrid, Resend and set up later.** With your own provider, verify a sender address and supply its API key as `MAIL_API_KEY`. Choosing `later` leaves email actions unavailable and public reading available; `none` does the same and also lets `rer signin` sign the owner in without mail. [Email and notifications](/docs/email) covers the configuration and limits.
 
 ## Deploy to Cloudflare
 

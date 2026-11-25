@@ -68,7 +68,7 @@ export function registerOperatorAuthRoutes(app: Hono<Environment>): void {
   app.all('/auth/*', async c => {
     // Penny has no roles, and review/password entry points are not exposed.
     // The provider routes answer only once the owner has linked an Auth install and enabled it.
-    if (!['/auth/session','/auth/confirm','/auth/bootstrap','/auth/magic-link','/auth/signout','/auth/settings/identity','/auth/setup-complete'].includes(c.req.path) && !c.req.path.startsWith('/auth/oidc/')) return c.json({error:'not_found'},404)
+    if (!['/auth/session','/auth/confirm','/auth/bootstrap','/auth/magic-link','/auth/signout','/auth/settings/identity','/auth/setup-complete','/auth/owner-signin'].includes(c.req.path) && !c.req.path.startsWith('/auth/oidc/')) return c.json({error:'not_found'},404)
     // Base's themed auth documents link only rer-theme.css; Penny's mark sizing lives in fonts.css, as on /setup.
     return pennyDocumentFonts((await fontDocumentResponse(await createAuthHandler(operatorAuth(c.get('runtime')))(c.req.raw)))!)
   })

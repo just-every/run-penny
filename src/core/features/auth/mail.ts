@@ -18,6 +18,8 @@ export function authMail(runtime:PennyRuntime):PennyMailSender|undefined {
  const sender=providerMail(runtime)
  return sender?{send:async message=>sender.send({...message,...identityHeaders(await mailIdentity(runtime),message.from)})}:undefined
 }
+/** Why no message can be sent: mail was turned off on purpose (MAIL_PROVIDER=none) or never configured. */
+export function mailMissingReason(runtime: PennyRuntime): 'mail_off' | 'mail_configuration_missing' { return runtime.configuration.mailOff ? 'mail_off' : 'mail_configuration_missing' }
 export function mailReady(runtime: PennyRuntime): boolean { return authMail(runtime) !== undefined }
 export function mailTransport(runtime: PennyRuntime): string { return mailReady(runtime) ? runtime.configuration.mailProvider! : 'unavailable' }
 

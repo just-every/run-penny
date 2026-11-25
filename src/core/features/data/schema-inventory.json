@@ -1407,6 +1407,18 @@
       "created_at"
     ]
   },
+  "oa_owner_signins": {
+    "classification": "installation",
+    "columns": [
+      "id",
+      "token_hash",
+      "operator_id",
+      "operator_version",
+      "created_at",
+      "expires_at",
+      "consumed_at"
+    ]
+  },
   "oa_provider_session_pins": {
     "classification": "installation",
     "columns": [

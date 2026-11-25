@@ -47,6 +47,10 @@ sending mail; Resend's webhook secret must also stay private.
 
 Penny sends only through the provider you name, so the key must belong to that provider. `MAIL_API_KEY` is the same name RER uses for Managed mail; older `SENDGRID_API_KEY` and `RESEND_API_KEY` settings are refused, so rename them when you upgrade. Set these as described in [Install and deploy](/docs/install). If the provider, key or sender is missing, deployed sign-in and requester verification say that email delivery is unavailable. Visitors can still read your public pages.
 
+### Mail off (`MAIL_PROVIDER=none`)
+
+For a hosted install that has no mail provider yet, such as a Business set up by an outside agent, deploy with `MAIL_PROVIDER=none`. No `MAIL_FROM` or `MAIL_API_KEY` is needed or accepted. Penny sends nothing: requester updates, release emails and decision reviews fail with the reason `mail_off`, and email sign-in and requester verification say delivery is unavailable. Public pages stay readable. The owner claims Penny with the setup token as usual, and signs in again with `rer signin` from the checkout that deployed it: it prints a one-time link for the owner, good for 15 minutes.
+
 ### On your computer
 
 Locally you need none of this. Penny Dev sends no email at all: there is no outbox, no captured message and no printed link. A customer therefore cannot verify an address locally, and the public **Submit feedback** page says so.

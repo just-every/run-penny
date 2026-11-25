@@ -2103,6 +2103,17 @@
       ]
     },
     {
+      "path": "migrations/core/0111_owner_signin.sql",
+      "originPath": "modules/operator-auth/accounts/schema/owner-signin.sql",
+      "revision": "2135c394939f4a737adabdc8003b0e667b31ac5a",
+      "files": {
+        "migrations/core/0111_owner_signin.sql": "98da904e768e35b43fb1be83d9dcc9c9b5d86ab3a795234ed5223c4fddc567d9"
+      },
+      "modes": {
+        "migrations/core/0111_owner_signin.sql": "100644"
+      }
+    },
+    {
       "path": "RUN-LOCALLY.md",
       "originPath": "export/RUN-LOCALLY.md",
       "revision": "11f94fec479228d71ba6d7dd6ea7796c0d42c544",

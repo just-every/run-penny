@@ -202,3 +202,23 @@ it('[OPS-002 BASE-ACCESS-004] an actor revoked after admission cannot commit an 
  expect(raced).toBe(true);expect(response.status).toBe(401);expect(messages).toHaveLength(0)
  expect(await env.DB.prepare('SELECT id FROM oa_operators WHERE email=?').bind('raced@example.test').first()).toBeNull()
 })
+
+it('[BASE-ACCESS-001] mail off (MAIL_PROVIDER=none): no link is mailed, and the owner signs in once with the grant `rer signin` writes',async()=>{
+ const claimed=await owner(),off={...env,PENNY_ENVIRONMENT:'production',MAIL_PROVIDER:'none',MAIL_FROM:undefined,MAIL_API_KEY:undefined} as typeof env
+ const app=createPennyApi(),send=(path:string,body?:unknown,headers:Record<string,string>={})=>app.fetch(new Request(origin+path,{method:body===undefined?'GET':'POST',redirect:'manual',headers:{Origin:origin,'CF-Connecting-IP':'198.51.100.7',...(body===undefined?{}:{'Content-Type':'application/json'}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})}),off)
+ messages.length=0
+ expect((await send('/api/auth/magic-link',{email:'owner@penny.invalid'})).status).toBe(503)
+ expect((await send('/api/public/identity/email',{email:'visitor@example.test',displayName:'Visitor'})).status).toBe(503)
+ expect(messages).toHaveLength(0)
+ // The same row, in the same table, that rer 0.2.133 writes: SELECT the claimed owner, store only the token's digest.
+ const token=btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''),now=Date.now()
+ await env.DB.prepare(`INSERT INTO oa_owner_signins(id,token_hash,operator_id,operator_version,created_at,expires_at)
+  SELECT ?,?,o.id,o.version,?,? FROM oa_operators o LEFT JOIN oa_bootstrap b ON b.claim_id=o.id WHERE o.role='owner' AND o.status='active' ORDER BY b.claim_id IS NULL,o.created_at,o.id LIMIT 1`)
+  .bind(crypto.randomUUID(),Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(`owner-signin\0${token}`))),b=>b.toString(16).padStart(2,'0')).join(''),now,now+900000).run()
+ expect((await send('/auth/owner-signin?token='+token)).status).toBe(200)
+ const signedIn=await send('/auth/owner-signin',{token});expect(signedIn.status).toBe(303)
+ const cookie=signedIn.headers.get('Set-Cookie')!.split(';')[0]
+ expect((await send('/api/auth/session',undefined,{Cookie:cookie})).status).toBe(200)
+ expect((await send('/auth/owner-signin',{token})).status).toBe(400)
+ expect(claimed.Cookie).toBeTruthy()
+})

@@ -75,6 +75,8 @@ export const commandAdapter = createCommandAdapter(lifecycle, {
   // A demo never opens the checkout's database (even a read rewrites SQLite's -shm index); it migrates its own.
   localPrerequisites: async ({ root, vars, email, demo }) => vars.PENNY_ENVIRONMENT === 'local' && vars.MAIL_PROVIDER === 'development' && Boolean(vars.AUTH_SECRET) && (demo || await operatorPrerequisites(root, email)),
   verify: ['pnpm', ['run', 'verify:app']], deploy: deployPenny,
+  // A deploy with MAIL_PROVIDER=none runs with mail off: the owner signs in with this command instead of an emailed link.
+  mailOffSignIn: 'rer signin',
   // Local dev identity: the local-only Worker entry, the build output rer build
   // scans for the dev layer, and the kept end-to-end email-link test.
   devIdentity: { entry: 'src/server.dev.ts', output: ['dist'], emailLinkTest: 'tests/installer/readme.test.mjs' },
