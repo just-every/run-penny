@@ -36,8 +36,7 @@ const definitions = {
     // Read native authority; only /auth/bootstrap may create it. A populated
     // store cannot be rebound by changing an email in a local settings file.
     const email = context.vars.OPERATOR_EMAIL
-    const sql = `SELECT (SELECT COUNT(*) FROM oa_bootstrap) AS installed, (SELECT COUNT(*) FROM oa_operators WHERE email='${email}' AND role='owner' AND status='active') AS ownerMatch;`
-    const output = await admissionOutput(context, 'Checking existing owner authority', 'pnpm', ['exec', 'wrangler', 'd1', 'execute', 'feedback-penny-local', '--local', '--persist-to', context.stateDirectory, '--command', sql, '--json'], { env })
+    const output = await admissionOutput(context, 'Checking existing owner authority', process.execPath, ['scripts/installer/owner-admission.mjs', context.stateDirectory, email], { env })
     const installed = [...output.matchAll(/"installed"\s*:\s*(\d+)/g)].at(-1)?.[1]
     const matched = [...output.matchAll(/"ownerMatch"\s*:\s*(\d+)/g)].at(-1)?.[1]
     if (installed === undefined || matched === undefined || (installed !== '0' && matched !== '1')) {

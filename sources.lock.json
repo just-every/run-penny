@@ -4554,7 +4554,7 @@
       "executable": false
     },
     "scripts/installer/local.mjs": {
-      "sha256": "8e0f7b5d7d9ebe12d736671d7705d90a1dd7f74edd033bb5b194e666abd97f34",
+      "sha256": "4a0882c9c61fc6baf47ddfe0c6dd24093043e1dea4421c8adde0e3406ab5b72c",
       "executable": false
     },
     "scripts/installer/manifest.mjs": {
