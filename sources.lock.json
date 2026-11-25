@@ -717,6 +717,10 @@
       "sha256": "0f6eefe2e2263442c222e1d440daa52335d560e7db72f6788d005ffc60045d5a",
       "executable": false
     },
+    "base/modules/agent-door/business-state.ts": {
+      "sha256": "fdce33b3b16e60856bde4089a9924d6df6c8ce864d48227c04b695764041a18a",
+      "executable": false
+    },
     "base/modules/agent-door/capabilities.d.mts": {
       "sha256": "af9a1d9f81a15df8caef2ab257c24b031dab60690984df557b9b82022888f339",
       "executable": false
@@ -753,12 +757,20 @@
       "sha256": "5a65a157a288507bb884105abbab65a0876b066f742a8474b33528333c9c0a73",
       "executable": false
     },
+    "base/modules/agent-door/conformance/business-stop.mjs": {
+      "sha256": "cefe5f3a8f37295e8080c3656a21405c9d7fa0f56be3dd46210d9119fa06333e",
+      "executable": false
+    },
     "base/modules/agent-door/conformance/crypto.mjs": {
       "sha256": "fea7829f3d31512f99649a657ecd641b554c158abd6caf99be1d4e9d357225ad",
       "executable": false
     },
     "base/modules/agent-door/conformance/discovery.mjs": {
       "sha256": "027d17955e99c80072501a5d921bb44420383bfe0a351ccbae412e8a8ad9c70d",
+      "executable": false
+    },
+    "base/modules/agent-door/conformance/erasure.mjs": {
+      "sha256": "1e33e00db3ba162c118ddfedc4802b3d073d82947603a1a02a4ae07adb8d8a02",
       "executable": false
     },
     "base/modules/agent-door/conformance/fixtures.mjs": {
@@ -809,6 +821,10 @@
       "sha256": "55b1dbca5dae59d28d8695297fcc9affb833a63e385e217aba1a0113cab406b7",
       "executable": false
     },
+    "base/modules/agent-door/conformance/relay.mjs": {
+      "sha256": "5af4d539acf1b274a95c3a1cbbe9e7358f7b92a49ad1e114a25b4c4283d09a57",
+      "executable": false
+    },
     "base/modules/agent-door/conformance/replay.mjs": {
       "sha256": "407a6b7cc91574588617868317346abc3f0e2c286e73b08da6c1d7f1c8a220ff",
       "executable": false
@@ -853,6 +869,10 @@
       "sha256": "2bedd64a69b1e2a7dc02f7218cdda66e541a955b1a0cfc289d15d96630e616e8",
       "executable": false
     },
+    "base/modules/agent-door/conformance/unpair.mjs": {
+      "sha256": "16502214c5a345bb6ea093d0438f3225da91df4e85bd8edd68685cb4c5e1d07c",
+      "executable": false
+    },
     "base/modules/agent-door/conformance/webhooks.mjs": {
       "sha256": "0ab018eacc5568b8f4e9c6302ed1ca28c01221cad943723136ff96544bf2a7ee",
       "executable": false
@@ -867,6 +887,10 @@
     },
     "base/modules/agent-door/credentials.ts": {
       "sha256": "3ba1d15f58c9ccbe69825a24abd1bfb82efffb299e0204109b4f8a1c68066500",
+      "executable": false
+    },
+    "base/modules/agent-door/erasure.ts": {
+      "sha256": "36c7dce2bf06a5cd2da7d4deaf57064861cae59d3336f892f046cda5f967b172",
       "executable": false
     },
     "base/modules/agent-door/errors.ts": {
@@ -925,6 +949,10 @@
       "sha256": "7647b1f8e8ab591423b645e37ac09bcddc88d99c269b1f136a69aa8db725fab3",
       "executable": false
     },
+    "base/modules/agent-door/policy-event.ts": {
+      "sha256": "9d4e4126529374aeb266c7f532d85f143f719bf6335f82407298ab6d4c52349f",
+      "executable": false
+    },
     "base/modules/agent-door/policy-store.ts": {
       "sha256": "11446ee7bbbb5ce0fd47c2435c9062a405087ff891c1b3199dfe9566259b36cb",
       "executable": false
@@ -965,8 +993,16 @@
       "sha256": "dacde9acbe799d2cd24da7a7b8ec4f84d7560b0eb0c2171a33cc79ac87a5a8df",
       "executable": false
     },
+    "base/modules/agent-door/relay.ts": {
+      "sha256": "9d794eb6c245e7cb3f7d744cef8245c5620f0f3e6a25ab47ff705ef0549bf3de",
+      "executable": false
+    },
     "base/modules/agent-door/resource-tool.ts": {
       "sha256": "6d70880fc5d58cfdb1c3ad10a5085eac684ed85639bbbf4a7ee4be307e538e5d",
+      "executable": false
+    },
+    "base/modules/agent-door/retired-refs.ts": {
+      "sha256": "a4d189941dc10e66f8dd61e7271ec2f8b357efe45a5481c0661bfac469ca056e",
       "executable": false
     },
     "base/modules/agent-door/reviews.ts": {
@@ -975,6 +1011,10 @@
     },
     "base/modules/agent-door/schema/agent-door.sql": {
       "sha256": "fd53bc564af6272965dcefbb1e48df69c350a4b42062689901b8a948f5865f96",
+      "executable": false
+    },
+    "base/modules/agent-door/schema/replay-aliases.sql": {
+      "sha256": "8ad6104039ba8ae3c07793e32d5ce4974bf440d56902c3b21d15d61bdfff27a8",
       "executable": false
     },
     "base/modules/agent-door/subscriptions.ts": {
@@ -1021,6 +1061,10 @@
       "sha256": "7f6d57ccdd2a7a4c6f0575378c4342a716c81cc3b5ed0974962a3515311644bb",
       "executable": false
     },
+    "base/modules/business-settings/retire.ts": {
+      "sha256": "9fae02fd215668adf25e03a03c6cc5992acd327f6f243b52077264a8a2258952",
+      "executable": false
+    },
     "base/modules/business-settings/role-domain.d.mts": {
       "sha256": "4e318e9b1b6fccb9eb7c17e7dbcbd1c3e0d51267dd9de3fbdf0531f48980f091",
       "executable": false
@@ -1037,12 +1081,24 @@
       "sha256": "51aa39622d866b987d71b6e37c9a8300e7f24c54a55611edaab669ed051b01cd",
       "executable": false
     },
+    "base/modules/business-settings/schema/0003_business_retired.sql": {
+      "sha256": "1bfc79bfe6432e03a4eba9843ab10fae6a501e7ac5b9fd98caf42054c9f36c0c",
+      "executable": false
+    },
     "base/modules/business-settings/store.ts": {
       "sha256": "3645f9e9f282f2aa5fc5f189188ddd7a139de6361ad1966bf50dfad83cee29d5",
       "executable": false
     },
     "base/modules/business-settings/team.ts": {
       "sha256": "bb079af46f6fd78d73457307e6e1bbed1095b42a9a14950943f178b08ff75aa4",
+      "executable": false
+    },
+    "base/modules/business-settings/testing/fixtures/keys.json": {
+      "sha256": "58d52a711a2f590fa538c7a1b7c77def73d8b10620eeb8df221d4c08a15efcd2",
+      "executable": false
+    },
+    "base/modules/business-settings/testing/index.mjs": {
+      "sha256": "942949cc72fcc7e3c9e53345cbb6232a4d5075e4733672a41c23656a811e90ed",
       "executable": false
     },
     "base/modules/business-settings/types.ts": {
@@ -4103,6 +4159,14 @@
     },
     "migrations/core/0111_owner_signin.sql": {
       "sha256": "98da904e768e35b43fb1be83d9dcc9c9b5d86ab3a795234ed5223c4fddc567d9",
+      "executable": false
+    },
+    "migrations/core/0112_agent_door_relay_upgrade.sql": {
+      "sha256": "51e74eaa1531ff28cbdcbc6d7147fb8a4944b102f825fa474897090372591f6e",
+      "executable": false
+    },
+    "migrations/core/0113_business_retired.sql": {
+      "sha256": "1bfc79bfe6432e03a4eba9843ab10fae6a501e7ac5b9fd98caf42054c9f36c0c",
       "executable": false
     },
     "OPERATIONS.json": {
