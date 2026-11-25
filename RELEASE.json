@@ -1,8 +1,8 @@
 {
   "version": "0.2.2",
   "previousVersion": "0.2.1",
-  "date": "2026-10-23",
-  "publicReleaseNotes": "Penny 0.2.2 keeps the feedback page readable while a workspace export or backup holds the data lock. On RER Managed, Penny 0.2.1 answered most GET /app/feedback requests with an error while an export was open; operator reads now check the session without waiting for the lock, changes still pause until the export ends, and the pause notice shows only on the feedback page and clears when the export is finished or aborted. The release also carries main's work since 0.2.1: email capture to a dedicated address (CAP-009), requester Google and GitHub sign-in (REQ-039), owner-enabled sensitive-evidence rules (AI-008, partial), cited AI summaries and reply drafts (AI-006), weekly requester summaries (NOTIFY-010, partial), audited request tag and assignment batches with undo (TRIAGE-005, partial), roadmap links to published releases and hardening fixes. Migrations 0088 to 0095 are additive. It runs on rer 0.2.80 and carries the hosted installation descriptor, mail setup and retained source custody for listing. Backup compatibility changes: v2 archives without the schemaObjects inventory are refused; create a fresh export from the existing installation with rer 0.2.80 before relying on restore. Local setup and dev on a Platform-migrated database, SendGrid duplicate suppression, live external feedback providers, hosted email capture and social sign-in, the weekly digest mailbox receipt and whole-product acceptance beyond the proved core loop remain known limits. Product screenshot: public/brand/releases/penny-0.2.2-1440.png",
+  "date": "2026-11-25",
+  "publicReleaseNotes": "Penny 0.2.2 supports hosted setup with mail off and owner sign-in through rer. It pins rer 0.2.113.\n\nDeploy with `MAIL_PROVIDER=none` to set up hosted Penny without a mail sender or API key. The setup owner signs in with `rer signin`. Notifications and other outbound messages report that mail is off.\n\nThis release also adds survey evidence capture, saved segments and AI answers. Owner sign-in grants stay local to the installation and outside portable archives.\n\nBack up Penny 0.2.1 before updating in place. Adopt 0.2.2 with the pinned rer 0.2.113 and apply the 26 pending migrations through the normal upgrade runner. Preserve the existing migration ledger and already applied SQL. Confirm owner access and check existing records before resuming writes.\n\nPenny 0.2.2 keeps the feedback page readable while a workspace export or backup holds the data lock. On RER Managed, Penny 0.2.1 answered most GET /app/feedback requests with an error while an export was open; operator reads now check the session without waiting for the lock, changes still pause until the export ends, and the pause notice shows only on the feedback page and clears when the export is finished or aborted. The release also carries main's work since 0.2.1: email capture to a dedicated address (CAP-009), requester Google and GitHub sign-in (REQ-039), owner-enabled sensitive-evidence rules (AI-008, partial), cited AI summaries and reply drafts (AI-006), weekly requester summaries (NOTIFY-010, partial), audited request tag and assignment batches with undo (TRIAGE-005, partial), roadmap links to published releases and hardening fixes. It runs on rer 0.2.113 and carries the hosted installation descriptor, mail setup and retained source custody for listing. Backup compatibility changes: v2 archives without the schemaObjects inventory are refused; create a fresh export from the existing installation with rer 0.2.113 before relying on restore. Local setup and dev on a Platform-migrated database, SendGrid duplicate suppression, live external feedback providers, hosted email capture and social sign-in, the weekly digest mailbox receipt and whole-product acceptance beyond the proved core loop remain known limits. Product screenshot: public/brand/releases/penny-0.2.2-1440.png",
   "contractChanges": {
     "ROLE-001": {
       "change": "changed",
@@ -138,8 +138,80 @@
     {
       "id": "0095_paged_redaction.sql",
       "buyerSteps": "Adds durable pages and content revision tracking for owner-authorized redaction runs. Existing rows and applied migration bytes are retained; unfinished executable redaction state stays local and is not portable."
+    },
+    {
+      "id": "0096_discord_capture.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0097_discord_source_checks.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0098_helpscout.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0099_browser_capture.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0100_agent_door.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0101_business_settings.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0102_business_people.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0103_agent_attribution.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0104_agent_custody_fence.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0105_agent_identity_custody.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0106_agent_native_actor_binding.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0107_survey_capture.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0108_ai_answers.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0109_duplicate_suggestion_indexes.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0110_saved_segments.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0111_owner_signin.sql",
+      "buyerSteps": "Apply with the upgrade runner. Creates the installation-only owner sign-in grant table and the views rer uses to find the setup owner."
+    },
+    {
+      "id": "0112_agent_door_relay_upgrade.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
+    },
+    {
+      "id": "0113_business_retired.sql",
+      "buyerSteps": "Back up first. Apply once through the normal upgrade runner in migration order, keeping previous entries in the migration ledger."
     }
   ],
   "breaking": true,
-  "agentUpdateInstructions": "Update from v0.2.1 with git pull, rer install and rer setup (hosted: rer deploy; RER Managed applies migrations through its own runner), preserving the owner, private settings, every product row, original file and the existing migration ledger. Setup applies the additive migrations 0088_email_capture.sql through 0095_paged_redaction.sql in order; never edit applied SQL, and keep the expanded schema when rolling source back. Use the exact rer 0.2.80 pin and the recorded Base copies at 11f94fec479228d71ba6d7dd6ea7796c0d42c544. Before retiring an existing installation, create a fresh rer 0.2.80 export and retain its paired erasure journal: older v2 archives without schemaObjects cannot be restored, and no automatic recovery path is provided. No owner reconfiguration is required: email capture, requester social sign-in, redaction rules and the weekly summary all start off or empty. Turning them on is owner action (a capture address routed to the Worker's email handler with Cloudflare Email Routing; the REQUESTER_GOOGLE_* and REQUESTER_GITHUB_* bindings with the enforcing PENNY_LEARNING_EGRESS service; redaction rules; the weekly summary switch), and provider credentials stay bindings, never in D1, settings forms or archives. Existing evidence keeps unknown (NULL) admitted-sender provenance; never infer it. Operator reads stay available while an export or backup holds the data lock and changes stay paused until it is finished or aborted; never clear data_state by hand. A local rer export or rer import on a database RER Platform migrated still requires every migration file of this version in rer_migrations by SHA-256 and otherwise refuses before writing. Restore into an empty destination with its paired latest erasure journal, before setup; restored batches are history only and restored publications and external effects stay held for explicit reconciliation. Local rer setup and rer dev still migrate with Wrangler and are not supported on a Platform-migrated database. SendGrid delivery keys remain correlation only, with ambiguous sends held; live external providers and whole-product acceptance retain the limits in ACCEPTANCE.md and HANDOVER.md."
+  "agentUpdateInstructions": "Update from v0.2.1 with git pull, rer install and rer setup (hosted: rer deploy; RER Managed applies migrations through its own runner), preserving the owner, private settings, every product row, original file and the existing migration ledger. Setup applies the migrations 0088_email_capture.sql through 0113_business_retired.sql in order; never edit applied SQL, and keep the expanded schema when rolling source back. Use the exact rer 0.2.113 pin and the recorded Base copies. Before retiring an existing installation, create a fresh rer 0.2.113 export and retain its paired erasure journal: older v2 archives without schemaObjects cannot be restored, and no automatic recovery path is provided. No owner reconfiguration is required: email capture, requester social sign-in, redaction rules and the weekly summary all start off or empty. Turning them on is owner action (a capture address routed to the Worker's email handler with Cloudflare Email Routing; the REQUESTER_GOOGLE_* and REQUESTER_GITHUB_* bindings with the enforcing PENNY_LEARNING_EGRESS service; redaction rules; the weekly summary switch), and provider credentials stay bindings, never in D1, settings forms or archives. Existing evidence keeps unknown (NULL) admitted-sender provenance; never infer it. Operator reads stay available while an export or backup holds the data lock and changes stay paused until it is finished or aborted; never clear data_state by hand. A local rer export or rer import on a database RER Platform migrated still requires every migration file of this version in rer_migrations by SHA-256 and otherwise refuses before writing. Restore into an empty destination with its paired latest erasure journal, before setup; restored batches are history only and restored publications and external effects stay held for explicit reconciliation. Local rer setup and rer dev still migrate with Wrangler and are not supported on a Platform-migrated database. SendGrid delivery keys remain correlation only, with ambiguous sends held; live external providers and whole-product acceptance retain the limits in ACCEPTANCE.md and HANDOVER.md. Deploy with `MAIL_PROVIDER=none` to set up hosted Penny without a mail sender or API key. The setup owner signs in with `rer signin`. Notifications and other outbound messages report that mail is off."
 }
