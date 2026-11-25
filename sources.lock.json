@@ -4565,6 +4565,10 @@
       "sha256": "b792913b7a8883307040ff0aca09deebcb9d5df52b0a5e196c34084efbd48015",
       "executable": false
     },
+    "scripts/installer/owner-admission.mjs": {
+      "sha256": "188618d7ac14f79a7974957d5b238f893f9279e78fd92107eec927282173e86a",
+      "executable": false
+    },
     "scripts/installer/owner-cli.mjs": {
       "sha256": "8cbb1cf3fcb3e8ab0f139a2f44f65d2b7f2e7c23d093c553d209ff4389b3909a",
       "executable": false
