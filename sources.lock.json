@@ -4101,6 +4101,10 @@
       "sha256": "376bd4fbd8dcd4784120b58460cf69559a912165c0c60aa0a1d6125741686817",
       "executable": false
     },
+    "migrations/core/0111_owner_signin.sql": {
+      "sha256": "98da904e768e35b43fb1be83d9dcc9c9b5d86ab3a795234ed5223c4fddc567d9",
+      "executable": false
+    },
     "OPERATIONS.json": {
       "sha256": "9c38e14d22b4ff12a1cb89f95f302da25048fc76a21e05cb94c84556002a171d",
       "executable": false
@@ -4586,7 +4590,7 @@
       "executable": false
     },
     "scripts/portability/migrations.mjs": {
-      "sha256": "5108a7d93dc0acde9831c8edadb07034ef1071947a9b20940e464d31d5bbd02f",
+      "sha256": "c783654ce9adeb5a48d7b738af6439356298c88738b4fe638c1f684de1f8cc0f",
       "executable": false
     },
     "scripts/portability/policy.ts": {
