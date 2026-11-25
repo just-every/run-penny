@@ -52,7 +52,7 @@ it('[SEG-006] saved native owner rules follow exact current account membership a
  await applyD1Migrations(env.DB, inject('migrations')); expect(await priorRows()).toEqual(before)
  const upgradedLedger = await ledger()
  expect(upgradedLedger.slice(0, ledgerBefore.length)).toEqual(ledgerBefore)
- expect(upgradedLedger.slice(ledgerBefore.length).map(row => row.name)).toEqual(['0110_saved_segments.sql'])
+ expect(upgradedLedger.slice(ledgerBefore.length).map(row => row.name)).toEqual(inject('migrations').filter(m => m.name >= '0110').map(m => m.name))
  await applyD1Migrations(env.DB, inject('migrations')); expect(await priorRows()).toEqual(before)
  expect(await ledger()).toEqual(upgradedLedger)
 

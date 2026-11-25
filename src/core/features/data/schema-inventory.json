@@ -3485,7 +3485,8 @@
       "sponsor_name",
       "revoked",
       "window",
-      "requests"
+      "requests",
+      "tombstone"
     ]
   },
   "agent_door_approvals": {
@@ -3520,7 +3521,8 @@
       "decision_id",
       "created_at",
       "state",
-      "outcome"
+      "outcome",
+      "expires_at"
     ]
   },
   "agent_door_events": {
@@ -3530,6 +3532,30 @@
       "id",
       "uri",
       "event"
+    ]
+  },
+  "agent_door_relay": {
+    "classification": "installation",
+    "columns": [
+      "sequence",
+      "decision_id",
+      "business"
+    ]
+  },
+  "agent_door_replay_aliases": {
+    "classification": "installation",
+    "columns": [
+      "agent",
+      "alias",
+      "call_id",
+      "tombstone"
+    ]
+  },
+  "agent_door_retired_refs": {
+    "classification": "installation",
+    "columns": [
+      "digest",
+      "marker"
     ]
   },
   "agent_door_reviews": {
@@ -3597,6 +3623,14 @@
       "value",
       "actor",
       "changed_at"
+    ]
+  },
+  "bs_retired": {
+    "classification": "installation",
+    "columns": [
+      "digest",
+      "invite",
+      "erasure_id"
     ]
   },
   "bs_settings": {

@@ -74,7 +74,7 @@ async function respond(request: Request, bindings: AppBindings, execution: Execu
       const business = await pennyBusiness(runtime).handle(request)
       if (business) return business
     }
-    if (['/mcp','/agents','/api/rer/agent-policy','/.well-known/oauth-protected-resource','/.well-known/oauth-protected-resource/mcp'].includes(url.pathname) || url.pathname.startsWith('/agents/')) {
+    if (['/mcp','/agents','/api/rer/agent-policy','/api/rer/agent-decisions','/.well-known/oauth-protected-resource','/.well-known/oauth-protected-resource/mcp'].includes(url.pathname) || url.pathname.startsWith('/agents/')) {
       const agent = await pennyAgentDoor(runtime).handle(request)
       if (agent) return agent
     }

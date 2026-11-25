@@ -12,7 +12,7 @@ const address=(number:number)=>[`synthetic-penny-${number}`,'example.test'].join
 export async function proveReleaseMailIdentity(){
  await reset();await applyD1Migrations(env.DB,inject('migrations'))
  vi.restoreAllMocks()
- vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date('2026-11-05T12:00:00.000Z'))
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date(vi.getRealSystemTime()).setUTCHours(12,0,0,0))
  const g=await releaseGraph(1),sent=provider()
  const identity={companyName:'synthetic-penny-1 business',senderName:'synthetic-penny-2 customer team',fromAddress:address(1),replyTo:address(2),postalAddress:'42 Synthetic Street, Brisbane QLD 4000'}
  const tested=await (await accepted(call('/api/operator/settings/mail/test',identity,g.operator))).json() as {testId:string;accepted:boolean}

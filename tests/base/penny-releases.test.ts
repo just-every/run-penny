@@ -124,7 +124,7 @@ it('[REL-003 REL-014] clock-advanced scheduled releases and status updates publi
  await proveScheduledPublications(g,nextDay,clock,cron,capture)
 })
 it('[REL-004 REL-012 REQ-025] request mute retains update subscription and global unsubscribe withdraws permission while preserving votes, follows and release snapshots through request merge and roadmap relink',async()=>{
- vi.useFakeTimers({toFake:['Date']});vi.setSystemTime('2026-11-05T12:00:00.000Z')
+ vi.useFakeTimers({toFake:['Date']});vi.setSystemTime(new Date(vi.getRealSystemTime()).setUTCHours(12,0,0,0))
  const g=await votedReleaseGraph(),subscriber=await requester('Subscriber only'),endpoint='/api/public/updates/subscription'
  expect((await call(endpoint,{subscribed:true},{},'PATCH')).status).toBe(401)
  await json(await call(endpoint,{subscribed:true},subscriber,'PATCH'))

@@ -15,7 +15,7 @@ async function json<T>(response:Response,status=200):Promise<T>{
 export async function proveNativePreferenceWithdrawal(){
  for(const preference of ['mute','subscription','request'] as const){
   await reset();await applyD1Migrations(env.DB,inject('migrations'))
-  vi.restoreAllMocks();vi.setSystemTime('2026-11-05T14:00:00.000Z')
+  vi.restoreAllMocks();vi.setSystemTime(new Date(vi.getRealSystemTime()).setUTCHours(14,0,0,0))
   const g=await releaseGraph(2),subscriber=await requester('synthetic-penny-9 subscriber')
   const endpoint='/api/public/updates/subscription',preferences='/api/public/requester/notifications'
   const subscription=await json<{subscribed:boolean;grantedAt:string}>(await call(endpoint,{subscribed:true},subscriber,'PATCH'))
