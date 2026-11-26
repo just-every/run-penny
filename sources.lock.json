@@ -630,7 +630,7 @@
       "executable": false
     },
     ".github/workflows/run-demo.yml": {
-      "sha256": "41365ec7c002e9451166313b085f9e64ed2e3ea002c27f3d5ead845bc9c302b2",
+      "sha256": "8bc045716ae59cb643898210282e9d36e9e8e2cfed16e48e54d464166f1b0536",
       "executable": false
     },
     ".github/workflows/run-site.yml": {
@@ -686,7 +686,7 @@
       "executable": false
     },
     "base-copies.json": {
-      "sha256": "ef62dc700839d032eb24e36ab686b85289242e742d1d4b0b5900a05ac6711ea2",
+      "sha256": "b0c105733be385e5e69149d18c1ef1eba696eeb30a97d8062f5d9beaedadcdca",
       "executable": false
     },
     "base/foundation/runtime/icon-head.ts": {
@@ -3426,7 +3426,7 @@
       "executable": false
     },
     "DEMO.md": {
-      "sha256": "7c9a25f6e462d771ea6ccf6136876111677832be46392ae56757674d4f3f0515",
+      "sha256": "5665c88d58c6262ff8cebad86a455834f534f17c04d9a6bc815dbd11fd61b2f5",
       "executable": false
     },
     "deploy-demo.json": {

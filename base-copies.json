@@ -10,6 +10,15 @@
       },
       "modes": {
         ".github/workflows/run-demo.yml": "100644"
+      },
+      "adapted": {
+        ".github/workflows/run-demo.yml": "11f94fec479228d71ba6d7dd6ea7796c0d42c544"
+      },
+      "acknowledged": {
+        ".github/workflows/run-demo.yml": {
+          "sha256": "8bc045716ae59cb643898210282e9d36e9e8e2cfed16e48e54d464166f1b0536",
+          "mode": "100644"
+        }
       }
     },
     {
@@ -1948,6 +1957,15 @@
       },
       "modes": {
         "DEMO.md": "100644"
+      },
+      "adapted": {
+        "DEMO.md": "11f94fec479228d71ba6d7dd6ea7796c0d42c544"
+      },
+      "acknowledged": {
+        "DEMO.md": {
+          "sha256": "5665c88d58c6262ff8cebad86a455834f534f17c04d9a6bc815dbd11fd61b2f5",
+          "mode": "100644"
+        }
       }
     },
     {
